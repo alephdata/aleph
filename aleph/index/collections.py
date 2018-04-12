@@ -9,7 +9,7 @@ from aleph.model import Entity
 from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
-from aleph.index.util import query_delete, unpack_result
+from aleph.index.util import query_delete, query_update, unpack_result
 from aleph.index.util import index_doc, index_form
 
 log = logging.getLogger(__name__)
@@ -99,7 +99,7 @@ def get_collection(collection_id):
     return unpack_result(result)
 
 
-def update_roles(collection):
+def update_collection_roles(collection):
     """Update the role visibility of objects which are part of collections."""
     roles = ', '.join([str(r) for r in collection.roles])
     body = {
@@ -108,9 +108,7 @@ def update_roles(collection):
             'inline': 'ctx._source.roles = [%s]' % roles
         }
     }
-    es.update_by_query(index=entity_index(),
-                       body=body,
-                       wait_for_completion=False)
+    query_update(entity_index(), body)
 
 
 def delete_collection(collection_id):

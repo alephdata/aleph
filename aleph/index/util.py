@@ -61,10 +61,20 @@ def query_delete(index, query):
                            body={'query': query},
                            conflicts='proceed',
                            timeout=TIMEOUT,
-                           request_timeout=REQUEST_TIMEOUT,
-                           wait_for_completion=True)
+                           request_timeout=REQUEST_TIMEOUT)
     except TransportError as terr:
         log.warning("Query delete failed: %s", terr)
+
+
+def query_update(index, body):
+    """Update all documents matching the given query."""
+    try:
+        es.update_by_query(index=index,
+                           body=body,
+                           conflicts='proceed',
+                           timeout=TIMEOUT)
+    except TransportError as terr:
+        log.warning("Query update failed: %s", terr)
 
 
 def index_doc(index, id, body):

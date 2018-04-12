@@ -18,6 +18,7 @@ from aleph.index.documents import index_document_id
 from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
+from aleph.logic.collections import update_collection_access
 from aleph.logic.scheduled import background
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
@@ -221,7 +222,8 @@ def publish(foreign_id):
     role = Role.by_foreign_id(Role.SYSTEM_GUEST)
     editor = Role.load_cli_user()
     update_permission(role, collection, True, False, editor=editor)
-    update_collection(collection, roles=True)
+    update_collection_access(collection.id)
+    update_collection(collection)
 
 
 @manager.command

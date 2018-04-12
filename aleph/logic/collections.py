@@ -6,7 +6,7 @@ from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index.collections import delete_collection as index_delete
 from aleph.index.collections import delete_documents as index_delete_documents
 from aleph.index.collections import delete_entities as index_delete_entities
-from aleph.index.collections import index_collection
+from aleph.index.collections import index_collection, update_collection_roles
 from aleph.logic.entities import update_entity_full
 from aleph.logic.xref import xref_collection
 from aleph.logic.util import ui_url
@@ -51,6 +51,14 @@ def index_collections():
     for collection in cq:
         log.info("Index [%s]: %s", collection.foreign_id, collection.label)
         index_collection(collection)
+
+
+@celery.task()
+def update_collection_access(collection_id):
+    """Re-write all etities in this collection to reflect updated roles."""
+    collection = Collection.by_id(collection_id)
+    log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
+    update_collection_roles(collection)
 
 
 @celery.task()

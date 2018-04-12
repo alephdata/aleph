@@ -6,7 +6,7 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible, check_editable, update_role
 from aleph.logic.permissions import update_permission
-from aleph.logic.collections import update_collection
+from aleph.logic.collections import update_collection, update_collection_access
 from aleph.notify import notify_role_template
 from aleph.serializers.roles import RoleSchema, PermissionSchema
 from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
@@ -153,5 +153,6 @@ def permissions_update(id):
                           permission['write'],
                           editor=request.authz.role)
 
-    update_collection(collection, roles=True)
+    update_collection(collection)
+    update_collection_access.apply_async([collection.id], priority=8)
     return permissions_index(id)
