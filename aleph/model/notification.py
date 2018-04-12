@@ -30,6 +30,17 @@ class Notification(db.Model, IdModel, DatedModel):
     def event(self, event):
         self._event = event.name
 
+    @property
+    def recipients(self):
+        q = db.session.query(Role)
+        q = q.join(Subscription, Subscription.role_id == Role.id)
+        q = q.filter(Subscription.channel.in_(self.channels))
+        q = q.filter(Role.email != None) # noqa
+        q = q.filter(Role.deleted_at == None) # noqa
+        q = q.filter(Subscription.deleted_at == None) # noqa
+        q = q.distinct()
+        return q
+
     def iterparams(self):
         if self.actor_id is not None:
             yield 'actor', Role, self.actor_id

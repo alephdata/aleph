@@ -146,6 +146,13 @@ MAIL_USE_TLS = env_bool('ALEPH_MAIL_TLS', False)
 MAIL_PORT = int(env.get('ALEPH_MAIL_PORT', 25))
 
 
+##############################################################################
+# Linked data notifications
+
+LDN_RECEIVER_URI = env.get('ALEPH_LDN_RECEIVER_URI')
+LDN_ACCESS_TOKEN = env.get('ALEPH_LDN_ACCESS_TOKEN')
+
+
 ###############################################################################
 # Database, search index and queue processing.
 
