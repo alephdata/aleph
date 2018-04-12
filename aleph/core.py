@@ -68,9 +68,9 @@ def create_app(config={}):
         worker_disable_rate_limits=True,
         result_persistent=False,
         beat_schedule={
-            'alert-every-night': {
-                'task': 'aleph.logic.alerts.check_alerts',
-                'schedule': crontab(hour=1, minute=30)
+            'background': {
+                'task': 'aleph.logic.scheduled.background',
+                'schedule': crontab(hour='*', minute=0)
             }
         },
     )

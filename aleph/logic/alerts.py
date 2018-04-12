@@ -14,19 +14,19 @@ from aleph.logic.notifications import publish
 log = logging.getLogger(__name__)
 
 
-@celery.task()
 def check_alerts():
-    """Go through all users and execute their alerts."""
-    for role in Role.all():
-        authz = Authz(role=role)
-        for alert in Alert.by_role(role).all():
-            check_alert(authz, alert)
+    """Go through all alerts."""
+    for alert in Alert.all():
+        check_alert(alert)
 
 
-def check_alert(authz, alert):
+def check_alert(alert):
+    authz = Authz(role=alert.role)
     query = alert_query(alert, authz)
+    found = 0
     for result in scan(es, query=query, index=entities_index()):
         entity = unpack_result(result)
+        found += 1
         params = {
             'alert': alert,
             'role': authz.role,
@@ -37,7 +37,7 @@ def check_alert(authz, alert):
                 params=params)
 
     alert.update()
-    # log.info('Found %d new results for: %s', results['total'], alert.label)
+    log.info('Found %d new results for: %s', found, alert.label)
     db.session.commit()
 
 

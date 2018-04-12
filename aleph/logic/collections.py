@@ -23,7 +23,7 @@ def update_collection(collection):
     log.info("Updating: %r", collection)
 
     if collection.deleted_at is not None:
-        index_delete(str(collection.id))
+        index_delete(collection.id)
         return
 
     if collection.casefile:
@@ -40,6 +40,7 @@ def update_collection(collection):
 
 def update_collections():
     cq = db.session.query(Collection)
+    cq = cq.order_by(Collection.id.desc())
     for collection in cq:
         update_collection(collection)
 
@@ -81,14 +82,14 @@ def delete_collection(collection_id, wait=False):
         return
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
-    deleted_at = datetime.utcnow()
+    deleted_at = collection.deleted_at or datetime.utcnow()
     index_delete(collection_id, wait=wait)
 
-    delete_documents(collection_id, wait=wait)
-    delete_entities(collection_id, wait=wait)
+    delete_documents(collection_id, deleted_at=deleted_at, wait=wait)
+    delete_entities(collection_id, deleted_at=deleted_at, wait=wait)
 
     log.info("Deleting cross-referencing matches...")
-    Match.delete_by_collection(collection_id)
+    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
 
     log.info("Deleting permissions...")
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
@@ -98,16 +99,16 @@ def delete_collection(collection_id, wait=False):
 
 
 @celery.task()
-def delete_entities(collection_id, wait=False):
-    deleted_at = datetime.utcnow()
+def delete_entities(collection_id, deleted_at=None, wait=False):
+    deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting entities...")
     Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_entities(collection_id, wait=wait)
 
 
 @celery.task()
-def delete_documents(collection_id, wait=False):
-    deleted_at = datetime.utcnow()
+def delete_documents(collection_id, deleted_at=None, wait=False):
+    deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting documents...")
     Document.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_documents(collection_id, wait=wait)
