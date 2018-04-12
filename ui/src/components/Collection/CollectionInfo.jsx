@@ -121,7 +121,7 @@ class CollectionInfo extends Component {
                  }
                  panel={<CollectionInfoContent collection={collection} schemata={collection.schemata}/>}
             />
-            <Tab id="xref"
+            {collectionXRefTab && <Tab id="xref"
                  disabled={!collectionXRefTab}
                  title={
                    <React.Fragment>
@@ -129,7 +129,7 @@ class CollectionInfo extends Component {
                    </React.Fragment>
                  }
                  panel={<CollectionInfoXref onCollectionXRefLoad={this.onCollectionXRefLoad} collection={collection}/>}
-            />
+            />}
 
           </Tabs>
         </div>
