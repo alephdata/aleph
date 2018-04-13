@@ -109,7 +109,7 @@ class EntityReferencesTable extends Component {
                 ))}
                 <td key="details" className="narrow">
                   <a onClick={this.onShowDetails(entity)}>
-                    <Icon icon="list-detail-view" />
+                    <span>Details</span>
                   </a>
                 </td>
               </tr>
