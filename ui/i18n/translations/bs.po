@@ -3,7 +3,7 @@
 # Lejla Camdzic <lejla@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-06T15:52:24.071Z\n"
+"POT-Creation-Date: 2018-04-11T10:15:31.260Z\n"
 "Last-Translator: Lejla Camdzic <lejla@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -236,6 +236,9 @@ msgstr "Kontakt"
 msgid "Contents"
 msgstr ""
 
+#. [document.countries]
+#. defaultMessage is:
+#. Countries
 #. [entity.column.countries]
 #. defaultMessage is:
 #. Countries
@@ -246,9 +249,6 @@ msgstr ""
 #. defaultMessage is:
 #. Countries
 #. [xref.countries]
-#. defaultMessage is:
-#. Countries
-#. [document.countries]
 #. defaultMessage is:
 #. Countries
 #. [search.facets.facet.countries]
@@ -280,6 +280,9 @@ msgstr "Povezane reference"
 msgid "Cross-referencing"
 msgstr "Referenciranje poveznica"
 
+#. [document.date]
+#. defaultMessage is:
+#. Date
 #. [email.date]
 #. defaultMessage is:
 #. Date
@@ -287,9 +290,6 @@ msgstr "Referenciranje poveznica"
 #. defaultMessage is:
 #. Date
 #. [xref.date]
-#. defaultMessage is:
-#. Date
-#. [document.date]
 #. defaultMessage is:
 #. Date
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -309,13 +309,6 @@ msgstr "Izbriši"
 #: i18n/messages.json
 msgid "Document Source URL"
 msgstr "URL izvora dokumenta"
-
-#. [document.not_found]
-#. defaultMessage is:
-#. Document not found
-#: i18n/messages.json
-msgid "Document not found"
-msgstr "Dokument nije pronađen"
 
 #. [signup.register.question]
 #. defaultMessage is:
@@ -359,12 +352,12 @@ msgstr "Uredi"
 msgid "Email address"
 msgstr "Mail adresa"
 
-#. [entity.not_found]
+#. [collection.info.explore_button]
 #. defaultMessage is:
-#. Entity not found
+#. Explore
 #: i18n/messages.json
-msgid "Entity not found"
-msgstr "Nema rezultata"
+msgid "Explore"
+msgstr ""
 
 #. [collection.edit.save_error]
 #. defaultMessage is:
@@ -623,6 +616,13 @@ msgstr "Nema rezultata pretrage"
 msgid "No tags found."
 msgstr ""
 
+#. [query.not_accessible]
+#. defaultMessage is:
+#. Not accessible!
+#: i18n/messages.json
+msgid "Not accessible!"
+msgstr ""
+
 #. [auth.unauthorized]
 #. defaultMessage is:
 #. Not authorized
@@ -701,26 +701,6 @@ msgstr "Šifre nisu iste"
 msgid "Phones"
 msgstr "Telefoni"
 
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#: i18n/messages.json i18n/messages.json
-msgid "Please contact the site admin to get an account"
-msgstr "Molim kontaktirajte administratora da biste otvorili profil"
-
-#. [preview.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#. [collection.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#: i18n/messages.json i18n/messages.json
-msgid "Please go to the login page."
-msgstr ""
-
 #. [preview]
 #. defaultMessage is:
 #. Preview
@@ -758,16 +738,6 @@ msgstr "Primalac"
 #: i18n/messages.json
 msgid "Register"
 msgstr "Registrujte se"
-
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#: i18n/messages.json i18n/messages.json
-msgid "Registration is disabled"
-msgstr "Registracija nije moguća"
 
 #. [entity.references.title]
 #. defaultMessage is:
@@ -807,13 +777,10 @@ msgstr "Količina usaglašenosti"
 #. [alerts.search]
 #. defaultMessage is:
 #. Search
-#. [collection.info..search_button]
-#. defaultMessage is:
-#. Search
 #. [home.search]
 #. defaultMessage is:
 #. Search
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Search"
 msgstr "Pretraži"
 
@@ -862,10 +829,10 @@ msgstr "Greška na serveru"
 #. [nav.settings]
 #. defaultMessage is:
 #. Settings
-#. [settings.title]
+#. [collection.info.edit_button]
 #. defaultMessage is:
 #. Settings
-#. [collection.info.edit_button]
+#. [settings.title]
 #. defaultMessage is:
 #. Settings
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -924,16 +891,16 @@ msgstr "Registracija"
 msgid "Size"
 msgstr "Veličina"
 
-#. [search.callout_first_part_description]
+#. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users, please
+#. Some sources are hidden from anonymous users. Please sign in to see all
+#. results you’re authorised to access!
 #: i18n/messages.json
-msgid "Some sources are hidden from anonymous users, please"
+msgid ""
+"Some sources are hidden from anonymous users. Please sign in to see all "
+"results you’re authorised to access!"
 msgstr ""
 
-#. [entity.column.collection_id]
-#. defaultMessage is:
-#. Source
 #. [collection.info.heading]
 #. defaultMessage is:
 #. Source
@@ -941,6 +908,9 @@ msgstr ""
 #. defaultMessage is:
 #. Source
 #. [entity.info.source]
+#. defaultMessage is:
+#. Source
+#. [entity.column.collection_id]
 #. defaultMessage is:
 #. Source
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -953,16 +923,6 @@ msgstr "Izvor"
 #: i18n/messages.json
 msgid "Source URL"
 msgstr "URL izvora"
-
-#. [preview.not_found]
-#. defaultMessage is:
-#. Source not found
-#. [collection.not_found]
-#. defaultMessage is:
-#. Source not found
-#: i18n/messages.json i18n/messages.json
-msgid "Source not found"
-msgstr "Izvor nije pronađen"
 
 #. [collection.edit.title]
 #. defaultMessage is:
@@ -1043,13 +1003,6 @@ msgstr ""
 msgid "There are no known relationships."
 msgstr "Nema poznatih veza."
 
-#. [login.not_available_desc]
-#. defaultMessage is:
-#. There is no login provider configured for this app
-#: i18n/messages.json
-msgid "There is no login provider configured for this app"
-msgstr ""
-
 #. [folder.empty]
 #. defaultMessage is:
 #. This folder is empty.
@@ -1088,10 +1041,10 @@ msgstr "Pokušajte opširniji pojam za pretragu"
 msgid "Try searching: {samples}"
 msgstr "Pokušajte pretražiti: {samples}"
 
-#. [entity.column.schema]
+#. [document.type]
 #. defaultMessage is:
 #. Type
-#. [document.type]
+#. [entity.column.schema]
 #. defaultMessage is:
 #. Type
 #: i18n/messages.json i18n/messages.json
@@ -1193,16 +1146,6 @@ msgid ""
 msgstr ""
 "Poslali smo Vam e-mail, molimo da pomoću linka završite svoju registraciju"
 
-#. [preview.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#. [collection.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#: i18n/messages.json i18n/messages.json
-msgid "You are not authorized to do this."
-msgstr ""
-
 #. [notifications.no_notifications]
 #. defaultMessage is:
 #. You do not have any notifications.
@@ -1295,13 +1238,6 @@ msgstr "osim:"
 #. results
 #: i18n/messages.json
 msgid "results"
-msgstr ""
-
-#. [search.callout_second_part_description]
-#. defaultMessage is:
-#. sign in to see all results you’re authorised to access.
-#: i18n/messages.json
-msgid "sign in to see all results you’re authorised to access."
 msgstr ""
 
 #. [country.total]

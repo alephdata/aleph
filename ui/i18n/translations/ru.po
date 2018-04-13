@@ -2,7 +2,7 @@
 # jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-06T15:52:24.071Z\n"
+"POT-Creation-Date: 2018-04-11T10:15:31.260Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -235,6 +235,9 @@ msgstr "Контакт"
 msgid "Contents"
 msgstr "Содержимое"
 
+#. [document.countries]
+#. defaultMessage is:
+#. Countries
 #. [entity.column.countries]
 #. defaultMessage is:
 #. Countries
@@ -245,9 +248,6 @@ msgstr "Содержимое"
 #. defaultMessage is:
 #. Countries
 #. [xref.countries]
-#. defaultMessage is:
-#. Countries
-#. [document.countries]
 #. defaultMessage is:
 #. Countries
 #. [search.facets.facet.countries]
@@ -279,6 +279,9 @@ msgstr "Перекрёстное сравнение"
 msgid "Cross-referencing"
 msgstr "Перекрёстное сравнение"
 
+#. [document.date]
+#. defaultMessage is:
+#. Date
 #. [email.date]
 #. defaultMessage is:
 #. Date
@@ -286,9 +289,6 @@ msgstr "Перекрёстное сравнение"
 #. defaultMessage is:
 #. Date
 #. [xref.date]
-#. defaultMessage is:
-#. Date
-#. [document.date]
 #. defaultMessage is:
 #. Date
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -308,13 +308,6 @@ msgstr "Удалить"
 #: i18n/messages.json
 msgid "Document Source URL"
 msgstr "Ссылка на источник документа"
-
-#. [document.not_found]
-#. defaultMessage is:
-#. Document not found
-#: i18n/messages.json
-msgid "Document not found"
-msgstr "Документ не найден"
 
 #. [signup.register.question]
 #. defaultMessage is:
@@ -358,12 +351,12 @@ msgstr "Редактирование"
 msgid "Email address"
 msgstr "Электронный адрес"
 
-#. [entity.not_found]
+#. [collection.info.explore_button]
 #. defaultMessage is:
-#. Entity not found
+#. Explore
 #: i18n/messages.json
-msgid "Entity not found"
-msgstr "Сущность не найдена"
+msgid "Explore"
+msgstr ""
 
 #. [collection.edit.save_error]
 #. defaultMessage is:
@@ -622,6 +615,13 @@ msgstr "Ничего не найдено"
 msgid "No tags found."
 msgstr "Теги не найдены"
 
+#. [query.not_accessible]
+#. defaultMessage is:
+#. Not accessible!
+#: i18n/messages.json
+msgid "Not accessible!"
+msgstr ""
+
 #. [auth.unauthorized]
 #. defaultMessage is:
 #. Not authorized
@@ -700,27 +700,6 @@ msgstr "Пароли не совпадают"
 msgid "Phones"
 msgstr "Номера телефонов"
 
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#. [signup.not_available_desc]
-#. defaultMessage is:
-#. Please contact the site admin to get an account
-#: i18n/messages.json i18n/messages.json
-msgid "Please contact the site admin to get an account"
-msgstr ""
-"Чтобы зарегистрироваться, обратитесь, пожалуйста, к администратору сайта"
-
-#. [preview.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#. [collection.not_auth_decr]
-#. defaultMessage is:
-#. Please go to the login page.
-#: i18n/messages.json i18n/messages.json
-msgid "Please go to the login page."
-msgstr "Пожалуйста, перейдите на страницу входа."
-
 #. [preview]
 #. defaultMessage is:
 #. Preview
@@ -758,16 +737,6 @@ msgstr "Получатель"
 #: i18n/messages.json
 msgid "Register"
 msgstr "Зарегистрироваться"
-
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#. [signup.not_available_title]
-#. defaultMessage is:
-#. Registration is disabled
-#: i18n/messages.json i18n/messages.json
-msgid "Registration is disabled"
-msgstr "Регистрация невозможна"
 
 #. [entity.references.title]
 #. defaultMessage is:
@@ -807,13 +776,10 @@ msgstr "Оценка"
 #. [alerts.search]
 #. defaultMessage is:
 #. Search
-#. [collection.info..search_button]
-#. defaultMessage is:
-#. Search
 #. [home.search]
 #. defaultMessage is:
 #. Search
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Search"
 msgstr "Поиск"
 
@@ -862,10 +828,10 @@ msgstr "Ошибка сервера"
 #. [nav.settings]
 #. defaultMessage is:
 #. Settings
-#. [settings.title]
+#. [collection.info.edit_button]
 #. defaultMessage is:
 #. Settings
-#. [collection.info.edit_button]
+#. [settings.title]
 #. defaultMessage is:
 #. Settings
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -924,17 +890,16 @@ msgstr "Зарегистрироваться"
 msgid "Size"
 msgstr "Размер"
 
-#. [search.callout_first_part_description]
+#. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users, please
+#. Some sources are hidden from anonymous users. Please sign in to see all
+#. results you’re authorised to access!
 #: i18n/messages.json
-msgid "Some sources are hidden from anonymous users, please"
+msgid ""
+"Some sources are hidden from anonymous users. Please sign in to see all "
+"results you’re authorised to access!"
 msgstr ""
-"Некоторые источники недоступны анонимным пользователям — авторизуйтесь!"
 
-#. [entity.column.collection_id]
-#. defaultMessage is:
-#. Source
 #. [collection.info.heading]
 #. defaultMessage is:
 #. Source
@@ -942,6 +907,9 @@ msgstr ""
 #. defaultMessage is:
 #. Source
 #. [entity.info.source]
+#. defaultMessage is:
+#. Source
+#. [entity.column.collection_id]
 #. defaultMessage is:
 #. Source
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -954,16 +922,6 @@ msgstr "Источник"
 #: i18n/messages.json
 msgid "Source URL"
 msgstr "Адрес источника"
-
-#. [preview.not_found]
-#. defaultMessage is:
-#. Source not found
-#. [collection.not_found]
-#. defaultMessage is:
-#. Source not found
-#: i18n/messages.json i18n/messages.json
-msgid "Source not found"
-msgstr "Источник не найден"
 
 #. [collection.edit.title]
 #. defaultMessage is:
@@ -1046,13 +1004,6 @@ msgstr ""
 msgid "There are no known relationships."
 msgstr "Взаимосвязи не обнаружены"
 
-#. [login.not_available_desc]
-#. defaultMessage is:
-#. There is no login provider configured for this app
-#: i18n/messages.json
-msgid "There is no login provider configured for this app"
-msgstr "Для данного приложения не настроена сторонняя авторизация"
-
 #. [folder.empty]
 #. defaultMessage is:
 #. This folder is empty.
@@ -1091,10 +1042,10 @@ msgstr "Попробуйте расширить критерии поиска"
 msgid "Try searching: {samples}"
 msgstr "Например, {samples}"
 
-#. [entity.column.schema]
+#. [document.type]
 #. defaultMessage is:
 #. Type
-#. [document.type]
+#. [entity.column.schema]
 #. defaultMessage is:
 #. Type
 #: i18n/messages.json i18n/messages.json
@@ -1194,16 +1145,6 @@ msgid ""
 "registration"
 msgstr "Мы отправили вам письмо с ссылкой для завершения регистрации"
 
-#. [preview.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#. [collection.not_auth]
-#. defaultMessage is:
-#. You are not authorized to do this.
-#: i18n/messages.json i18n/messages.json
-msgid "You are not authorized to do this."
-msgstr "Недостаточно прав."
-
 #. [notifications.no_notifications]
 #. defaultMessage is:
 #. You do not have any notifications.
@@ -1297,13 +1238,6 @@ msgstr "не:"
 #: i18n/messages.json
 msgid "results"
 msgstr "результаты"
-
-#. [search.callout_second_part_description]
-#. defaultMessage is:
-#. sign in to see all results you’re authorised to access.
-#: i18n/messages.json
-msgid "sign in to see all results you’re authorised to access."
-msgstr "Авторизуйтесь для просмотра всех доступных вам результатов."
 
 #. [country.total]
 #. defaultMessage is:

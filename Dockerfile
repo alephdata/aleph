@@ -1,10 +1,11 @@
 FROM alephdata/platform:2.0.5
 
 # Install Python dependencies
+RUN pip install --upgrade pip six setuptools wheel
 COPY requirements-generic.txt /tmp/
-RUN pip install -r /tmp/requirements-generic.txt && rm -rf /root/.cache
+RUN pip install --upgrade -r /tmp/requirements-generic.txt && rm -rf /root/.cache
 COPY requirements-toolkit.txt /tmp/
-RUN pip install -r /tmp/requirements-toolkit.txt && rm -rf /root/.cache
+RUN pip install --upgrade -r /tmp/requirements-toolkit.txt && rm -rf /root/.cache
 
 # Install aleph
 COPY . /aleph

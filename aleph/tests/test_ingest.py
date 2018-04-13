@@ -20,6 +20,7 @@ class IngestTestCase(TestCase):
         csv_path = self.get_fixture_path('experts.csv')
         document = Document.by_keys(collection=self.collection,
                                     foreign_id='experts.csv')
+        document.file_name = 'experts.csv'
         db.session.commit()
         db.session.refresh(document)
         ingest_document(document, csv_path)

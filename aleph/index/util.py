@@ -1,3 +1,4 @@
+import time
 import logging
 from banal import ensure_list
 from elasticsearch.helpers import bulk
@@ -10,8 +11,9 @@ log = logging.getLogger(__name__)
 
 # This means that text beyond the first 100 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 100
-TIMEOUT = '60m'
 REQUEST_TIMEOUT = 60 * 60 * 2
+TIMEOUT = '%ss' % REQUEST_TIMEOUT
+RETRY_DELAY = 10
 
 
 def unpack_result(res):
@@ -52,17 +54,42 @@ def bulk_op(iter, chunk_size=500):
          timeout=TIMEOUT)
 
 
-def query_delete(index, query, wait=True):
+def query_delete(index, query):
     "Delete all documents matching the given query inside the index."
     try:
         es.delete_by_query(index=index,
                            body={'query': query},
                            conflicts='proceed',
                            timeout=TIMEOUT,
-                           request_timeout=REQUEST_TIMEOUT,
-                           wait_for_completion=wait)
+                           request_timeout=REQUEST_TIMEOUT)
     except TransportError as terr:
         log.warning("Query delete failed: %s", terr)
+
+
+def query_update(index, body):
+    """Update all documents matching the given query."""
+    try:
+        es.update_by_query(index=index,
+                           body=body,
+                           conflicts='proceed',
+                           timeout=TIMEOUT)
+    except TransportError as terr:
+        log.warning("Query update failed: %s", terr)
+
+
+def index_doc(index, id, body):
+    """Index a single document and retry until it has been stored."""
+    while True:
+        try:
+            es.index(index=index,
+                     doc_type='doc',
+                     id=str(id),
+                     body=body)
+            body['id'] = str(id)
+            return body
+        except TransportError as terr:
+            log.warning("Index error [%s:%s]: %s", index, id, terr)
+            time.sleep(RETRY_DELAY)
 
 
 def index_form(texts):

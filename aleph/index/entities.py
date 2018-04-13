@@ -13,8 +13,8 @@ from normality import latinize_text
 
 from aleph.core import es
 from aleph.index.core import entity_index, entities_index
-from aleph.index.util import bulk_op, index_form
-from aleph.index.util import unpack_result
+from aleph.index.util import bulk_op, unpack_result
+from aleph.index.util import index_form, index_doc
 
 log = logging.getLogger(__name__)
 
@@ -162,9 +162,4 @@ def index_single(obj, data, texts):
     data['updated_at'] = obj.updated_at
     data = finalize_index(data, obj.model, texts)
     data = clean_dict(data)
-    es.index(index=entity_index(),
-             doc_type='doc',
-             id=str(obj.id),
-             body=data)
-    data['id'] = str(obj.id)
-    return data
+    return index_doc(entity_index(), obj.id, data)

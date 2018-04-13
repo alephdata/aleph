@@ -80,8 +80,7 @@ class NotificationsScreen extends React.Component {
             <Waypoint
               onEnter={this.getMoreResults}
               bottomOffset="-600px"
-              scrollableAncestor={window}
-            />
+              scrollableAncestor={window} />
           )}
           { result.isLoading && (
             <SectionLoading />

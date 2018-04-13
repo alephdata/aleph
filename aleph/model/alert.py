@@ -2,6 +2,7 @@ from datetime import datetime
 from normality import stringify
 
 from aleph.core import db
+from aleph.model.role import Role
 from aleph.model.entity import Entity
 from aleph.model.common import SoftDeleteModel
 
@@ -11,12 +12,15 @@ class Alert(db.Model, SoftDeleteModel):
     __tablename__ = 'alert'
 
     id = db.Column(db.Integer, primary_key=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     custom_label = db.Column(db.Unicode, nullable=True)
     query_text = db.Column(db.Unicode, nullable=True)
+    notified_at = db.Column(db.DateTime, nullable=True)
+
     entity_id = db.Column(db.String(32), db.ForeignKey('entity.id'), nullable=True)  # noqa
     entity = db.relationship(Entity, backref=db.backref('alerts', lazy='dynamic'))  # noqa
-    notified_at = db.Column(db.DateTime, nullable=True)
+
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
+    role = db.relationship(Role, backref=db.backref('alerts', lazy='dynamic'))  # noqa
 
     @property
     def label(self):

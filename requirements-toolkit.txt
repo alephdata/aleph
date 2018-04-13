@@ -1,11 +1,11 @@
 
-# Dependencies maintained by OCCRP/pudo
+# Dependencies maintained by OCCRP
 banal >= 0.3.3
 urlnormalizer >= 1.2.0
-followthemoney >= 0.6.6
+followthemoney >= 0.6.15
 fingerprints >= 0.5.3
-storagelayer >= 0.3.2
-exactitude >= 2.2.0
-ingestors >= 0.7.12
-normality >= 0.5.11
+storagelayer >= 0.4.1
+exactitude >= 2.3.3
+ingestors >= 0.7.17
+normality >= 0.5.12
 celestial >= 0.2.1

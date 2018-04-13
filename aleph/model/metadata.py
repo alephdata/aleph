@@ -141,10 +141,8 @@ class Metadata(object):
 
     @property
     def languages(self):
-        languages = set()
-        for lang in ensure_list(self.meta.get('languages')):
-            languages.update(exactitude.languages.normalize(lang))
-        return list(languages)
+        languages = self.meta.get('languages')
+        return exactitude.languages.normalize_set(languages)
 
     @languages.setter
     def languages(self, languages):
@@ -157,10 +155,8 @@ class Metadata(object):
 
     @property
     def countries(self):
-        countries = set()
-        for country in ensure_list(self.meta.get('countries')):
-            countries.update(exactitude.countries.normalize(country))
-        return list(countries)
+        countries = self.meta.get('countries')
+        return exactitude.countries.normalize_set(countries)
 
     @countries.setter
     def countries(self, countries):

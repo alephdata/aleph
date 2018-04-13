@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
+import queryString from 'query-string';
 import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'react-intl';
 import Waypoint from 'react-waypoint';
 
@@ -130,7 +131,6 @@ class SearchScreen extends React.Component {
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.onSignin = this.onSignin.bind(this);
-    this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
   componentDidMount() {
@@ -161,18 +161,18 @@ class SearchScreen extends React.Component {
 
   updateQuery(newQuery) {
     const { history, location } = this.props;
+    // make it so the preview disappears if the query is changed.
+    const parsedHash = queryString.parse(location.hash);
+    parsedHash['preview:id'] = undefined;
+    parsedHash['preview:type'] = undefined;
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
-      hash: location.hash,
+      hash: queryString.stringify(parsedHash),
     });
   }
 
   onSignin() {
-    this.setState({isSignupOpen: !this.state.isSignupOpen})
-  }
-
-  toggleAuthentication() {
     this.setState({isSignupOpen: !this.state.isSignupOpen})
   }
 
