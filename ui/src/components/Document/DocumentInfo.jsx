@@ -34,17 +34,17 @@ class DocumentInfo extends React.Component {
         {showToolbar && (
           <Toolbar className='toolbar-preview'>
             <Button icon="eye-open"
-              className="button-maximise button-hover"
+              className="button-maximise"
               onClick={toggleMaximise}>
               <FormattedMessage id="preview" defaultMessage="Preview"/>
             </Button>
             {doc.links && doc.links.ui && (
-              <Link to={getPath(doc.links.ui)} className="pt-button button-link button-hover">
+              <Link to={getPath(doc.links.ui)} className="pt-button button-link">
                 <span className={`pt-icon-folder-open`}/>
                 <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
               </Link>
             )}
-            <DownloadButton isPreview={true} className='button-hover' document={doc}/>
+            <DownloadButton isPreview={true} document={doc}/>
             <CloseButton/>
           </Toolbar>
         )}

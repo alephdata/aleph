@@ -49,6 +49,10 @@
     opacity: 1;
   }
 
+  .pt-button:hover {
+    background-color: $button-color-hover !important;
+  }
+
   .pt-button.pt-active {
     background: #fff !important;
     color: $aleph-sidebar-background !important;

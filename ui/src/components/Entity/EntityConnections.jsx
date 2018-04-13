@@ -29,7 +29,7 @@ class EntityConnections extends React.Component {
     return (
       <React.Fragment>
         {connectionsTotal && connectionsTotal > 0 && (
-          <div>
+          <div className='EntityConnections'>
                         <span className="relationship">
                            <FormattedMessage id='entity.connections.relationships' defaultMessage='Relationships'/>
                           </span>

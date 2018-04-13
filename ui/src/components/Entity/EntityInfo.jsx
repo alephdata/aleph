@@ -17,7 +17,7 @@ import ErrorScreen from "../ErrorMessages/ErrorScreen";
 const messages = defineMessages({
     no_data: {
         id: 'entity.info.no.data',
-        defaultMessage: 'We do not have data for this entity.'
+        defaultMessage: 'No further details on this entity contained in source.'
     }
 });
 
@@ -49,6 +49,7 @@ class EntityInfo extends React.Component {
         tagsTotal === undefined ?
             0 : tagsTotal : tagsTotal === undefined ?
             relationshipTotal : tagsTotal + relationshipTotal;
+    const titleUntitled = entity.name === '' || entity.name.length < 1 || entity.name === undefined;
     
     let sourceUrl = null;
     const entityProperties = _.values(schema.properties).filter((prop) => {
@@ -66,7 +67,7 @@ class EntityInfo extends React.Component {
       <DualPane.InfoPane className="EntityInfo with-heading">
         {showToolbar && (
           <Toolbar className="toolbar-preview">
-            <Link to={getPath(entity.links.ui)} className="pt-button button-link button-hover">
+            <Link to={getPath(entity.links.ui)} className="pt-button button-link">
               <span className={`pt-icon-folder-open`}/>
               <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
             </Link>
@@ -78,7 +79,7 @@ class EntityInfo extends React.Component {
             <Schema.Label schema={entity.schema} icon={true} />
           </span>
           <h1>
-            <Entity.Label entity={entity} addClass={true}/>
+            {!titleUntitled && <Entity.Label entity={entity} addClass={true}/>}
           </h1>
         </div>
         <div className="pane-content">

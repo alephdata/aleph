@@ -87,6 +87,6 @@ const mapStateToProps = (state, ownProps) => {
   return { fragment, references, activeTab };
 };
 
-EntityReferences = connect(mapStateToProps, {})(EntityReferences)
+EntityReferences = connect(mapStateToProps, {})(EntityReferences);
 EntityReferences = withRouter(EntityReferences);
 export default EntityReferences;

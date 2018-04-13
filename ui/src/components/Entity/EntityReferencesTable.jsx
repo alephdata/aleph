@@ -61,6 +61,10 @@ class EntityReferencesTable extends Component {
     }
   }
 
+  isFeaturedProp(propName) {
+    return propName !== 'contract' && propName !== 'role' && propName !== 'startDate' && propName !== 'endDate';
+  }
+
   render() {
     const { model, result, property } = this.props;
     const results = ensureArray(result.results);
@@ -77,10 +81,13 @@ class EntityReferencesTable extends Component {
         return false;
       }
       return (
-        (Array.isArray(model.featured) && model.featured.includes(prop.name))
-        || !!counts[prop.name]
+        (Array.isArray(model.featured) && model.featured.includes(prop.name) && this.isFeaturedProp(prop.name))
       );
     });
+
+    if(property.qname === 'ContractAward:contract') {
+      this.filterColumns(columns);
+    }
 
     columns.sort((a, b) =>  {
       return (counts[b.name] || 0) - (counts[a.name] || 0);

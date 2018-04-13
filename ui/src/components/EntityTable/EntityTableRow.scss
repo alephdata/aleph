@@ -1,7 +1,11 @@
-.collection-icon {
-  margin-left: 10px;
-}
+@import "src/app/variables.scss";
 
-.schema {
-  width: 8em;
+.EntityTable {
+  .collection-icon {
+    margin-left: $aleph-grid-size;
+  }
+
+  .schema {
+    width: 8em;
+  }
 }

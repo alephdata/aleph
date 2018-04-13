@@ -94,10 +94,6 @@ th.clickable {
   }
 }
 
-.button-hover:hover {
-  background-color: $button-color-hover !important;
-}
-
 /* This causes toasts to appear *below* the navbar instead of on top of it */
 .aleph-toaster {
   margin-top: $aleph-grid-size * 5;
