@@ -33,6 +33,7 @@ class Router extends Component {
   render() {
     const { metadata, session } = this.props;
     const isLoaded = metadata && metadata.app && session;
+
     if (!isLoaded) {
       return (
         <div className="RouterLoading">

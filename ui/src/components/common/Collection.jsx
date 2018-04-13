@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import c from 'classnames';
+import { Icon, Intent } from '@blueprintjs/core';
 
-import getPath from 'src/util/getPath';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 
@@ -23,7 +23,7 @@ class CollectionLabel extends Component {
 
 class CollectionLink extends Component {
   render() {
-    const { collection, icon = true, className, preview } = this.props;
+    const { collection, icon = true, className, preview, indexScreen } = this.props;
 
     if (preview === true) {
       // Displays in preview sidebar
@@ -31,13 +31,14 @@ class CollectionLink extends Component {
         <a href={`#preview:id=${collection.id}&preview:type=collection`}
            className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
+            {indexScreen !== true && <Icon className='collection-icon' icon='folder-open' intent={Intent.NONE}/>}
         </a>
       );
     } else {
       return (
-        <Link to={getPath(collection.links.ui)}
+        <Link to={`/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`}
               className={c('CollectionLink', className)}>
-          <Collection.Label collection={collection} icon={icon} />
+          <Collection.Label collection={collection} icon={icon} iconOpen={true} />
         </Link>
       );
     }
@@ -82,7 +83,7 @@ CollectionLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
   renderWhenLoading: PropTypes.node,
-}
+};
 
 class Collection {
   static Label = CollectionLabel;

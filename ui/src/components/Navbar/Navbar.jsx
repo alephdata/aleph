@@ -34,10 +34,6 @@ const messages = defineMessages({
   alert_add: {
     id: 'navbar.alert_add',
     defaultMessage: 'Add alert'
-  },
-  alert_remove: {
-    id: 'navbar.alert_remove',
-    defaultMessage: 'Alert on'
   }
 });
 

@@ -71,7 +71,7 @@ class EntityTable extends Component {
     };
 
     return (
-      <table className="data-table">
+      <table className="EntityTable data-table">
         <thead>
           <tr>
             <TH field="name" className="wide" sortable={true} />

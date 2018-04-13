@@ -35,7 +35,7 @@ class EntityLabel extends Component {
           {icon && <Schema.Icon schema={schema}/>}
           {icon && ' '}
           <FormattedMessage id='entity.label.missing'
-                            defaultMessage="Untitled" />
+          defaultMessage="Untitled" />
         </span>
       );
     }
@@ -135,7 +135,7 @@ EntityLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
   renderWhenLoading: PropTypes.node,
-}
+};
 
 class Entity {
   static Label = EntityLabel;

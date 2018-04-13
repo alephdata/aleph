@@ -1,11 +1,18 @@
 import React, {Component} from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import { NonIdealState } from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
 
 import './ErrorScreen.css';
+
+const messages = defineMessages({
+  no_path: {
+    id: 'error.screen.no_path',
+    defaultMessage: 'This path is not valid!'
+  }
+});
 
 class EmptyList extends Component {
   render() {
@@ -40,7 +47,7 @@ class PageNotFound extends Component {
           <DualPane.ContentPane>
             <NonIdealState
               visual={visual}
-              title={intl.formatMessage(title)}
+              title={title !== undefined ? intl.formatMessage(title) : intl.formatMessage(messages.no_path)}
               description={intl.formatMessage(description)}
             />
           </DualPane.ContentPane>

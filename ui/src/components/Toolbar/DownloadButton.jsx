@@ -5,7 +5,8 @@ import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 export class DownloadButton extends React.Component {
     render() {
-        const { session, document: doc } = this.props;
+        const { session, document: doc, isPreview } = this.props;
+        const className = isPreview === true ? this.props.className : '';
 
         // @TODO If email w/ attachments then pass them as array of download options
         let downloadLink;
@@ -24,7 +25,7 @@ export class DownloadButton extends React.Component {
                     </ul>
                 );
                 return (
-                    <div className="DownloadButton pt-button-group" style={this.props.style}>
+                    <div className={`DownloadButton pt-button-group ${className}`} style={this.props.style}>
                         <a href={session.token ? `${downloadLink[0].url}?api_key=${session.token}` : downloadLink[0].url} className="pt-button" rel="nofollow">
                             <span className="pt-icon-standard pt-icon-download"/>
                             <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
@@ -45,7 +46,7 @@ export class DownloadButton extends React.Component {
             } else {
                 // Render Download button with single button
                 return (
-                    <a href={session.token ? `${downloadLink.url}?api_key=${session.token}` : downloadLink.url} type="button" className="DownloadButton pt-button" style={this.props.style} rel="nofollow">
+                    <a href={session.token ? `${downloadLink.url}?api_key=${session.token}` : downloadLink.url} type="button" className={`DownloadButton pt-button ${className}`} style={this.props.style} rel="nofollow">
                         <span className="pt-icon-standard pt-icon-download"/>
                         <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
                     </a>

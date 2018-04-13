@@ -40,11 +40,11 @@ class DocumentInfo extends React.Component {
             </Button>
             {doc.links && doc.links.ui && (
               <Link to={getPath(doc.links.ui)} className="pt-button button-link">
-                <span className={`pt-icon-document`}/>
+                <span className={`pt-icon-folder-open`}/>
                 <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
               </Link>
             )}
-            <DownloadButton document={doc}/>
+            <DownloadButton isPreview={true} document={doc}/>
             <CloseButton/>
           </Toolbar>
         )}
@@ -94,7 +94,7 @@ class DocumentInfo extends React.Component {
               <Tab id="tags" disabled={!tagsTotal || tagsTotal === 0}
                 title={
                   <React.Fragment>
-                    <FormattedMessage id="document.info.tags" defaultMessage="Tags"/>
+                    <FormattedMessage id="document.info.tags" defaultMessage="Connections"/>
                     <TabCount count={tagsTotal} />
                   </React.Fragment>
                 }

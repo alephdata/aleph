@@ -8,6 +8,8 @@ import { Tag } from 'src/components/common';
 import { fetchEntityTags } from 'src/actions/index';
 import { selectEntityTags } from 'src/selectors';
 
+import './EntityInfoTags.css';
+
 class EntityInfoTags extends React.Component {
   componentDidMount() {
     this.fetchIfNeeded(this.props);
@@ -41,6 +43,9 @@ class EntityInfoTags extends React.Component {
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (
         <React.Fragment>
+          <span className="tags">
+          <FormattedMessage id='entity.info.tags' defaultMessage='Tags'/>
+                          </span>
           <p className="pt-text-muted">
             <FormattedMessage 
               id="entity.info.tags.empty_description"
@@ -52,6 +57,9 @@ class EntityInfoTags extends React.Component {
 
     return (
       <div className="tags">
+        <span className="tags">
+          <FormattedMessage id='entity.info.tags' defaultMessage='Tags'/>
+                          </span>
         <ul className="info-rank">
           { tags.results.map((tag) => (
             <li key={tag.id}>

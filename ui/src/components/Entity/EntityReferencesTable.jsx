@@ -50,11 +50,19 @@ class EntityReferencesTable extends Component {
     return (event) => {
       event.preventDefault();
       const fragment = new Fragment(history);
-      fragment.update({
-        'preview:type': 'entity',
-        'preview:id': entity.id
-      });
+      if(fragment.state['preview:id']) {
+        fragment.update({'preview:id': null});
+      } else {
+        fragment.update({
+          'preview:type': 'entity',
+          'preview:id': entity.id
+        });
+      }
     }
+  }
+
+  isFeaturedProp(propName) {
+    return propName !== 'contract' && propName !== 'role' && propName !== 'startDate' && propName !== 'endDate';
   }
 
   render() {
@@ -73,10 +81,13 @@ class EntityReferencesTable extends Component {
         return false;
       }
       return (
-        (Array.isArray(model.featured) && model.featured.includes(prop.name))
-        || !!counts[prop.name]
+        (Array.isArray(model.featured) && model.featured.includes(prop.name) && this.isFeaturedProp(prop.name))
       );
     });
+
+    if(property.qname === 'ContractAward:contract') {
+      this.filterColumns(columns);
+    }
 
     columns.sort((a, b) =>  {
       return (counts[b.name] || 0) - (counts[a.name] || 0);
@@ -105,7 +116,7 @@ class EntityReferencesTable extends Component {
                 ))}
                 <td key="details" className="narrow">
                   <a onClick={this.onShowDetails(entity)}>
-                    <Icon icon="list-detail-view" />
+                    <span>Details</span>
                   </a>
                 </td>
               </tr>
