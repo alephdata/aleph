@@ -19,6 +19,11 @@ class EntityTableRow extends Component {
         event.target.className.baseVal === 'pt-icon collection-icon') {
       return;
     }
+
+    // Do not show previews when in document mode, i.e. when viewing a folder.
+    if (this.props.documentMode) {
+      return;
+    }
     event.preventDefault();
     const { entity, history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
@@ -65,7 +70,7 @@ class EntityTableRow extends Component {
     return (
       <tr className={rowClassName} onClick={this.onRowClickHandler}>
         <td className="entity">
-          <Entity.Link preview={true} entity={entity} icon />
+          <Entity.Link preview={!documentMode} entity={entity} icon />
         </td>
         {!hideCollection && 
           <td className="collection">
