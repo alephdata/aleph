@@ -10,7 +10,7 @@ from aleph.core import es
 log = logging.getLogger(__name__)
 
 # This means that text beyond the first 100 MB will not be indexed
-INDEX_MAX_LEN = 1024 * 1024 * 100
+INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 2
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 RETRY_DELAY = 10

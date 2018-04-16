@@ -55,7 +55,9 @@
     </style>
   </head>
   <body>
-    <p>Dear {{role.name}},</p>
+    <p>
+      {% trans %}Dear {{role.name}},{% endtrans %}
+    </p>
     {% block content %}{% endblock %}
 
     <p class="footer">

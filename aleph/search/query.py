@@ -1,5 +1,5 @@
 import logging
-from pprint import pprint  # noqa
+from pprint import pprint, pformat  # noqa
 from elasticsearch.helpers import scan
 
 from aleph.core import es
@@ -161,7 +161,7 @@ class Query(object):
                 }
             }
 
-        # log.info("Query: %r", body)
+        # log.info("Query: %s", pformat(body))
         return body
 
     def search(self):
