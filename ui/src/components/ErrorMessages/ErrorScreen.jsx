@@ -10,25 +10,18 @@ import './ErrorScreen.css';
 const messages = defineMessages({
   no_path: {
     id: 'error.screen.no_path',
-    defaultMessage: 'This path is not valid!'
+    defaultMessage: 'The requested page could not be found.'
   }
 });
 
 class EmptyList extends Component {
   render() {
-    const {title, intl} = this.props;
-    let visual = this.props.visual !== undefined ? this.props.visual : 'error';
-    let description = this.props.description !== undefined ? this.props.description
-      : {id: 'error_desc', defaultMessage: ' '};
-
+    const { title, description = '', visual = 'error' } = this.props;
+    
     return (
       <div className='outer-div'>
         <div className='inner-div'>
-          <NonIdealState
-            visual={visual}
-            title={intl.formatMessage(title)}
-            description={intl.formatMessage(description)}
-          />
+          <NonIdealState visual={visual} title={title} description={description} />
         </div>
       </div>
     )
@@ -37,19 +30,14 @@ class EmptyList extends Component {
 
 class PageNotFound extends Component {
   render() {
-    const {intl, title} = this.props;
-    let visual = this.props.visual !== undefined ? this.props.visual : 'error';
-    let description = this.props.description !== undefined ? this.props.description
-      : {id: 'error_desc', defaultMessage: ' '};
+    const {intl, title, description = '', visual = 'error' } = this.props;
+    const message = title !== undefined ? title : intl.formatMessage(messages.no_path);
+    
     return (
       <Screen>
         <DualPane>
           <DualPane.ContentPane>
-            <NonIdealState
-              visual={visual}
-              title={title !== undefined ? intl.formatMessage(title) : intl.formatMessage(messages.no_path)}
-              description={intl.formatMessage(description)}
-            />
+            <NonIdealState visual={visual} title={message} description={description} />
           </DualPane.ContentPane>
         </DualPane>
       </Screen>
@@ -59,15 +47,13 @@ class PageNotFound extends Component {
 
 class ErrorScreenNoTranslation extends Component {
     render() {
-        const {title} = this.props;
+        const { title } = this.props;
 
         return (
             <Screen>
                 <DualPane>
                     <DualPane.ContentPane>
-                        <NonIdealState visual='error'
-                                       title={title}
-                        />
+                        <NonIdealState visual='error' title={title} />
                     </DualPane.ContentPane>
                 </DualPane>
             </Screen>
