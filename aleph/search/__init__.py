@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 class DocumentsQuery(AuthzQuery):
     TEXT_FIELDS = ['text']
     EXCLUDE_FIELDS = ['roles', 'text']
-    SORT_DEFAULT = ['_score', {'name.kw': 'asc'}]
+    SORT_DEFAULT = ['_score']
 
     def get_filters(self):
         filters = super(DocumentsQuery, self).get_filters()
@@ -78,7 +78,7 @@ class EntityDocumentsQuery(DocumentsQuery):
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['text']
     EXCLUDE_FIELDS = ['roles', 'text']
-    SORT_DEFAULT = ['_score', {'name.kw': 'asc'}]
+    SORT_DEFAULT = ['_score']
 
     def get_query(self):
         query = super(EntitiesQuery, self).get_query()
@@ -131,7 +131,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
 class CombinedQuery(AuthzQuery):
     TEXT_FIELDS = ['text']
     EXCLUDE_FIELDS = ['roles', 'text']
-    SORT_DEFAULT = ['_score', {'name.kw': 'asc'}]
+    SORT_DEFAULT = ['_score']
 
     def get_index(self):
         return entities_index()
