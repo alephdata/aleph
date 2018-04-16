@@ -1,7 +1,6 @@
-FROM alephdata/platform:2.0.5
+FROM alephdata/platform:2.0.6
 
 # Install Python dependencies
-RUN pip install --upgrade pip six setuptools wheel
 COPY requirements-generic.txt /tmp/
 RUN pip install --upgrade -r /tmp/requirements-generic.txt && rm -rf /root/.cache
 COPY requirements-toolkit.txt /tmp/
