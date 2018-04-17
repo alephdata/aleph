@@ -1,4 +1,6 @@
+import jwt
 from banal import ensure_list
+from datetime import datetime, timedelta
 
 from aleph.core import db, settings
 from aleph.model import Collection, Role, Permission
@@ -13,10 +15,9 @@ class Authz(object):
     READ = 'read'
     WRITE = 'write'
 
-    def __init__(self, role_id, roles, is_admin=False, role=None):
+    def __init__(self, role_id, roles, is_admin=False):
         self._cache = {}
         self.id = role_id
-        self._role = role
         self.logged_in = role_id is not None
         self.roles = set(roles)
         self.is_admin = is_admin
@@ -32,7 +33,35 @@ class Authz(object):
         roles.add(role.id)
         roles.add(Role.load_id(Role.SYSTEM_USER))
         roles.update([g.id for g in role.roles])
-        return cls(role.id, roles, is_admin=role.is_admin, role=role)
+        return cls(role.id, roles, is_admin=role.is_admin)
+
+    @classmethod
+    def from_token(cls, token, scope=None):
+        if token is None:
+            return
+        try:
+            data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
+            return cls(data.get('id'),
+                       data.get('roles'),
+                       data.get('is_admin', False))
+        except jwt.DecodeError:
+            return None
+
+    def to_token(self, scope=None, role=None):
+        exp = datetime.utcnow() + timedelta(days=1)
+        payload = {
+            'id': self.id,
+            'exp': exp,
+            'roles': list(self.roles),
+            'is_admin': self.is_admin
+        }
+        if role is not None:
+            from aleph.serializers.roles import RoleSchema
+            role, _ = RoleSchema().dump(role)
+            role.pop('created_at', None)
+            role.pop('updated_at', None)
+            payload['role'] = role
+        return jwt.encode(payload, settings.SECRET_KEY)
 
     def can(self, collection, action):
         """Query permissions to see if the user can perform the specified

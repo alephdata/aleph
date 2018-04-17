@@ -10,7 +10,6 @@ from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.roles import update_role
-from aleph.logic.sessions import create_token, check_token
 from aleph.views.util import get_best_next_url, parse_request, jsonify
 from aleph.serializers.roles import LoginSchema
 
@@ -19,25 +18,32 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)
 
 
-def _get_credential_role(credential):
-    data = check_token(credential)
-    if data is not None:
-        return Role.by_id(data.get('id'))
-    else:
-        return Role.by_api_key(credential)
+def _get_credential_authz(credential):
+    if credential is None or not len(credential):
+        return
+    if ' ' in credential:
+        mechanism, credential = credential.split(' ', 1)
+    authz = Authz.from_token(credential)
+    if authz is not None:
+        return authz
+
+    role = Role.by_api_key(credential)
+    if role is not None:
+        return Authz.from_role(role=role)
 
 
 @blueprint.before_app_request
 def load_role():
-    role = None
-    credential = request.headers.get('Authorization', '')
-    if len(credential):
-        if ' ' in credential:
-            mechanism, credential = credential.split(' ', 1)
-        role = _get_credential_role(credential)
-    elif 'api_key' in request.args:
-        role = _get_credential_role(request.args.get('api_key'))
-    request.authz = Authz.from_role(role)
+    authz = None
+
+    if 'Authorization' in request.headers:
+        credential = request.headers.get('Authorization')
+        authz = _get_credential_authz(credential)
+
+    if authz is None and 'api_key' in request.args:
+        authz = _get_credential_authz(request.args.get('api_key'))
+
+    request.authz = authz or Authz.from_role(role=None)
 
 
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
@@ -53,9 +59,10 @@ def password_login():
 
     update_role(role)
     db.session.commit()
+    authz = Authz.from_role(role)
     return jsonify({
         'status': 'ok',
-        'token': create_token(role)
+        'token': authz.to_token(role=role)
     })
 
 
@@ -87,10 +94,12 @@ def oauth_callback():
         update_role(role)
         db.session.commit()
         log.info("Logged in: %r", role)
+        authz = Authz.from_role(role)
+        token = authz.to_token(role=role)
         state = request.args.get('state')
         next_url = get_best_next_url(state, request.referrer)
         next_url, _ = urldefrag(next_url)
-        next_url = '%s#token=%s' % (next_url, create_token(role))
+        next_url = '%s#token=%s' % (next_url, token)
         return redirect(next_url)
 
     log.error("No OAuth handler for %r was installed.", oauth.provider.name)
