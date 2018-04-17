@@ -63,7 +63,7 @@ class ErrorScreenNoTranslation extends Component {
 
 class ErrorScreen extends Component {
   static PageNotFound = injectIntl(PageNotFound);
-  static EmptyList = injectIntl(EmptyList);
+  static EmptyList = EmptyList;
   static NoTranslation = ErrorScreenNoTranslation;
 }
 

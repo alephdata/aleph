@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {FormattedMessage, defineMessages} from 'react-intl';
+import {FormattedMessage, defineMessages, injectIntl} from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 import _ from 'lodash';
 
@@ -42,7 +42,7 @@ class EntityInfo extends React.Component {
   }
 
   render() {
-    const { references, entity, schema, tags, showToolbar } = this.props;
+    const { references, entity, schema, tags, intl, showToolbar } = this.props;
     const tagsTotal = tags !== undefined ? tags.total : undefined;
     const relationshipTotal = (references && !references.isFetching && references.results) ? references.results.length : undefined;
     const connectionsTotal = relationshipTotal === undefined ?
@@ -94,7 +94,7 @@ class EntityInfo extends React.Component {
                   <React.Fragment>
                     <ul className="info-sheet">
                       {entityProperties.length === 0 &&
-                          <ErrorScreen.EmptyList title={messages.no_data}/>
+                          <ErrorScreen.EmptyList title={intl.formatMessage(messages.no_data)}/>
                       }
                       { entityProperties.map((prop) => (
                         <li key={prop.name}>
@@ -163,4 +163,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, {fetchEntityReferences})(EntityInfo);
+EntityInfo = injectIntl(EntityInfo);
+EntityInfo = connect(mapStateToProps, {fetchEntityReferences})(EntityInfo);
+export default EntityInfo;

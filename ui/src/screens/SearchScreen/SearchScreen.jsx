@@ -177,7 +177,7 @@ class SearchScreen extends React.Component {
   }
 
   render() {
-    const {query, result, metadata, session} = this.props;
+    const {query, result, metadata, session, intl} = this.props;
     const {isSignupOpen} = this.state;
 
     return (
@@ -201,8 +201,9 @@ class SearchScreen extends React.Component {
             {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             {result.total === 0 &&
-            <ErrorScreen.EmptyList visual="search" title={messages.no_results_title}
-                                   description={messages.no_results_description}/>
+            <ErrorScreen.EmptyList visual="search"
+                                   title={intl.formatMessage(messages.no_results_title)}
+                                   description={intl.formatMessage(messages.no_results_description)}/>
             }
             <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication}/>
             <EntityTable query={query}
