@@ -24,9 +24,8 @@ const errorToastMiddleware = store => next => action => {
   if (errorActionTypes.includes(action.type)) {
     const defaultDescription = 'No clue how that happened.';
     const description = get(action, 'payload.error.message', defaultDescription);
-    const message = `${action.type}: ${description}`;
-    console.error(message);
-    showWarningToast(message);
+    showWarningToast(description);
+    console.error(action.type, description);
   }
 
   return newState;
