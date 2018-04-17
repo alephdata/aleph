@@ -10,18 +10,19 @@ import { SectionLoading } from 'src/components/common';
 class PreviewCollection extends React.Component {
 
   componentDidMount() {
-    this.fetchIfNeeded(this.props);
+    this.fetchIfNeeded();
   }
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.previewId !== newProps.previewId) {
-      this.fetchIfNeeded(newProps);
+  componentDidUpdate(prevProps) {
+    if (this.props.previewId !== prevProps.previewId) {
+      this.fetchIfNeeded();
     }
   }
 
   fetchIfNeeded(props) {
-    if (!props.collection || !props.collection.id) {
-      props.fetchCollection({ id: props.previewId });
+    const { collection, previewId } = this.props;
+    if (!collection || !collection.id) {
+      this.props.fetchCollection({ id: previewId });
     }
   }
 

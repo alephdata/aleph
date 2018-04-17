@@ -10,18 +10,19 @@ import { SectionLoading } from 'src/components/common';
 class PreviewEntity extends React.Component {
 
   componentDidMount() {
-    this.fetchIfNeeded(this.props);
+    this.fetchIfNeeded();
   }
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.previewId !== newProps.previewId) {
-      this.fetchIfNeeded(newProps);
+  componentDidUpdate(prevProps) {
+    if (this.props.previewId !== prevProps.previewId) {
+      this.fetchIfNeeded();
     }
   }
 
-  fetchIfNeeded(props) {
-    if (!props.entity || !props.entity.id) {
-      props.fetchEntity({ id: props.previewId });
+  fetchIfNeeded() {
+    const { entity, previewId } = this.props;
+    if (!entity || !entity.id) {
+      this.props.fetchEntity({ id: previewId });
     }
   }
 

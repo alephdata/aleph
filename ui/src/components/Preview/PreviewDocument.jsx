@@ -8,24 +8,27 @@ import { DocumentInfo } from 'src/components/Document';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import { SectionLoading } from 'src/components/common';
 
+
 class PreviewDocument extends React.Component {
 
   componentDidMount() {
-    this.fetchIfNeeded(this.props);
+    this.fetchIfNeeded();
   }
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.previewId !== newProps.previewId) {
-      this.fetchIfNeeded(newProps);
+  componentDidUpdate(prevProps) {
+    if (this.props.previewId !== prevProps.previewId) {
+      this.fetchIfNeeded();
     }
   }
 
-  fetchIfNeeded(props) {
-    props.fetchDocument({ id: props.previewId });
+  fetchIfNeeded() {
+    this.props.fetchDocument({ id: this.props.previewId });
   }
 
   render() {
     const { document, maximised } = this.props;
+
+    console.log('render PreviewDocument');
 
     if (document && document.error) {
       return <NonIdealState
@@ -36,12 +39,14 @@ class PreviewDocument extends React.Component {
     if (!document || !document.id) {
       return <SectionLoading/>;
     }
+
     if (maximised) {
       return <DocumentViewer document={document}
                              toggleMaximise={this.props.toggleMaximise}
                              showToolbar={true}
                              previewMode={true} />;
     }
+
     return <DocumentInfo document={document}
                          toggleMaximise={this.props.toggleMaximise}
                          showToolbar={true} />;
