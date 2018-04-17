@@ -23,7 +23,7 @@ def _get_credential_authz(credential):
         return
     if ' ' in credential:
         mechanism, credential = credential.split(' ', 1)
-    authz = Authz.from_token(credential)
+    authz = Authz.from_token(credential, scope=request.path)
     if authz is not None:
         return authz
 

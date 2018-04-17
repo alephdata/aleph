@@ -41,6 +41,8 @@ class Authz(object):
             return
         try:
             data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
+            if 'scope' in data and data.get('scope') != scope:
+                return None
             return cls(data.get('id'),
                        data.get('roles'),
                        data.get('is_admin', False))
@@ -55,6 +57,8 @@ class Authz(object):
             'roles': list(self.roles),
             'is_admin': self.is_admin
         }
+        if scope is not None:
+            payload['scope'] = scope
         if role is not None:
             from aleph.serializers.roles import RoleSchema
             role, _ = RoleSchema().dump(role)

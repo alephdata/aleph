@@ -125,11 +125,6 @@ class PdfViewer extends Component {
     const displayPdf = !searchMode && !searchPreview;
 
     if (displayPdf === true) {
-      let fileUrl = document.links.pdf;
-      if (session.token) {
-        fileUrl = `${fileUrl}?api_key=${session.token}`;
-      }
-    
       return (
         <React.Fragment>
           <div className="PdfViewer">
@@ -139,7 +134,7 @@ class PdfViewer extends Component {
                   <div ref={(ref) => this.pdfElement = ref}>
                       <Document
                         renderAnnotations={true}
-                        file={fileUrl}
+                        file={document.links.pdf}
                         onLoadSuccess={this.onDocumentLoad}
                         loading={(<SectionLoading />)}>
                       {/* 
