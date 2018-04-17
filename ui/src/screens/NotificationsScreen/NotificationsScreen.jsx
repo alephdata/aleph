@@ -94,7 +94,8 @@ class NotificationsScreen extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('notifications', location, {}, 'notifications');
+  const query = Query.fromLocation('notifications', location, {}, 'notifications')
+    .limit(100);
   const result = selectNotificationsResult(state, query);
   return { query, result };
 };
