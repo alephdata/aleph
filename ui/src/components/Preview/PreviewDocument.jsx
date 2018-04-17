@@ -28,8 +28,6 @@ class PreviewDocument extends React.Component {
   render() {
     const { document, maximised } = this.props;
 
-    console.log('render PreviewDocument');
-
     if (document && document.error) {
       return <NonIdealState
           title={document.error}
