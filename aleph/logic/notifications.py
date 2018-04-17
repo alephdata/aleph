@@ -2,7 +2,7 @@ import six
 import logging
 from banal import ensure_list
 
-from aleph.model import Role, Event, Events, Notification
+from aleph.model import Role, Event, Notification
 
 log = logging.getLogger(__name__)
 

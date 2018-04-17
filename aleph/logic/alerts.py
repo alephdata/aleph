@@ -21,7 +21,7 @@ def check_alerts():
 
 
 def check_alert(alert):
-    authz = Authz(role=alert.role)
+    authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
     found = 0
     for result in scan(es, query=query, index=entities_index()):
@@ -29,7 +29,7 @@ def check_alert(alert):
         found += 1
         params = {
             'alert': alert,
-            'role': authz.role,
+            'role': alert.role,
             'entity': entity
         }
         publish(Events.MATCH_ALERT,

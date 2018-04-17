@@ -37,7 +37,7 @@ def load_role():
         role = _get_credential_role(credential)
     elif 'api_key' in request.args:
         role = _get_credential_role(request.args.get('api_key'))
-    request.authz = Authz(role=role)
+    request.authz = Authz.from_role(role)
 
 
 @blueprint.route('/api/2/sessions/login', methods=['POST'])

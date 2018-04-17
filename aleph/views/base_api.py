@@ -54,7 +54,7 @@ def metadata():
             'locales': settings.UI_LANGUAGES
         },
         'categories': Collection.CATEGORIES,
-        'statistics': get_instance_stats(Authz()),
+        'statistics': get_instance_stats(Authz.from_role(None)),
         'countries': country_names,
         'languages': language_names,
         'schemata': model,

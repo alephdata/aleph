@@ -13,22 +13,26 @@ class Authz(object):
     READ = 'read'
     WRITE = 'write'
 
-    def __init__(self, role=None, override=False):
+    def __init__(self, role_id, roles, is_admin=False, role=None):
         self._cache = {}
-        self.roles = set([Role.load_id(Role.SYSTEM_GUEST)])
-        self.role = role
-        self.logged_in = role is not None
-        self.id = role.id if role is not None else None
-        self.is_admin = override
+        self.id = role_id
+        self._role = role
+        self.logged_in = role_id is not None
+        self.roles = set(roles)
+        self.is_admin = is_admin
         self.in_maintenance = settings.MAINTENANCE
         self.session_write = not self.in_maintenance and self.logged_in
 
-        if self.logged_in and not self.is_admin:
-            self.is_admin = role.is_admin
-            self.roles.add(role.id)
-            self.roles.add(Role.load_id(Role.SYSTEM_USER))
-            for group in role.roles:
-                self.roles.add(group.id)
+    @classmethod
+    def from_role(cls, role):
+        roles = set([Role.load_id(Role.SYSTEM_GUEST)])
+        if role is None:
+            return cls(None, roles)
+
+        roles.add(role.id)
+        roles.add(Role.load_id(Role.SYSTEM_USER))
+        roles.update([g.id for g in role.roles])
+        return cls(role.id, roles, is_admin=role.is_admin, role=role)
 
     def can(self, collection, action):
         """Query permissions to see if the user can perform the specified
