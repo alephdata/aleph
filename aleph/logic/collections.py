@@ -104,9 +104,6 @@ def delete_collection(collection_id):
     delete_documents(collection_id, deleted_at=deleted_at)
     delete_entities(collection_id, deleted_at=deleted_at)
 
-    log.info("Deleting cross-referencing matches...")
-    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
-
     log.info("Deleting permissions...")
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
 
@@ -120,6 +117,8 @@ def delete_entities(collection_id, deleted_at=None):
     log.info("Deleting entities...")
     Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_entities(collection_id)
+    log.info("Deleting cross-referencing matches...")
+    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
 
 
 @celery.task()
@@ -128,3 +127,5 @@ def delete_documents(collection_id, deleted_at=None):
     log.info("Deleting documents...")
     Document.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_documents(collection_id)
+    log.info("Deleting cross-referencing matches...")
+    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
