@@ -46,7 +46,7 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
     args = filter(lambda (k, v): k != '_', args)
     cache_parts = [args, vary, request._app_locale]
 
-    if vary_user:
+    if vary_user and request.authz.logged_in:
         cache_parts.extend((request.authz.roles))
         request._http_private = True
 
@@ -68,13 +68,17 @@ def cache_response(resp):
     if request.method != 'GET' or resp.status_code != 200:
         return resp
 
+    resp.vary.add('Accept-Language')
+    resp.vary.add('Authorization')
+
     if request._http_etag:
         resp.set_etag(request._http_etag)
+        resp.cache_control.max_age = 3600 * 12
+    else:
+        resp.expires = -1
 
     if request._http_private:
         resp.cache_control.private = True
-        resp.expires = -1
     else:
         resp.cache_control.public = True
-        resp.cache_control.max_age = 3600 * 12
     return resp
