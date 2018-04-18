@@ -26,9 +26,8 @@ class FolderViewer extends Component {
                         hasWarning={hasWarning}/>
           {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
-              <FormattedMessage
-                id="folder.empty"
-                defaultMessage="This folder is empty."/>
+              <FormattedMessage id="folder.empty"
+                                defaultMessage="This folder is empty." />
             </p>
           )}
         </div>
@@ -43,8 +42,15 @@ const mapStateToProps = (state, ownProps) => {
   // when a prefix is defined, we switch to recursive folder search - otherwise
   // a flat listing of the immediate children of this directory is shown.
   const prefix = Query.fromLocation('search', location, {}, 'document').getString('prefix'),
-        field = (prefix.length === 0 || queryText) ? 'filter:parent.id' : 'filter:ancestors',
-        context = {[field]: document.id};
+        hasSearch = (prefix.length !== 0 || queryText),
+        context = {};
+    
+  if (hasSearch) {
+    context['filter:ancestors'] = document.id;
+  } else {
+    context['filter:parent.id'] = document.id;
+    context['sort'] = 'name:asc';
+  }
 
   let query = Query.fromLocation('search', location, context, 'document').limit(50);
   if (queryText) {

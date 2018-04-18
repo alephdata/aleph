@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Icon } from "@blueprintjs/core";
 import Waypoint from 'react-waypoint';
 import _ from 'lodash';
 
@@ -64,7 +63,12 @@ class EntityReferencesTable extends Component {
   render() {
     const { model, result, property } = this.props;
     const results = ensureArray(result.results);
-    
+    const columns = _.map(model.featured, (name) => {
+      return model.properties[name];
+    }).filter((prop) => {
+      return prop.name !== property.name || !prop.caption;
+    });
+
     // count how often a prop is present and show only those with values:
     // const counts = {};
     // for (let res of results) {
@@ -72,13 +76,6 @@ class EntityReferencesTable extends Component {
     //     counts[key] = counts[key] ? counts[key] + 1 : 1;
     //   });
     // }
-
-    const columns = _.map(model.featured, (name) => {
-      return model.properties[name];
-    }).filter((prop) => {
-      return prop.name !== property.name || !prop.caption;
-    });
-
     // const columns = _.values(model.properties).filter((prop) => {
     //   if (prop.name === property.name || prop.caption) {
     //     return false;
