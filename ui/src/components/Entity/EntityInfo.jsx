@@ -49,7 +49,7 @@ class EntityInfo extends React.Component {
         tagsTotal === undefined ?
             0 : tagsTotal : tagsTotal === undefined ?
             relationshipTotal : tagsTotal + relationshipTotal;
-    const titleUntitled = entity.name === '' || entity.name.length < 1 || entity.name === undefined;
+    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
     
     let sourceUrl = null;
     const entityProperties = _.values(schema.properties).filter((prop) => {
@@ -67,10 +67,12 @@ class EntityInfo extends React.Component {
       <DualPane.InfoPane className="EntityInfo with-heading">
         {showToolbar && (
           <Toolbar className="toolbar-preview">
-            <Link to={getPath(entity.links.ui)} className="pt-button button-link">
-              <span className={`pt-icon-folder-open`}/>
-              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-            </Link>
+            {isThing && (
+              <Link to={getPath(entity.links.ui)} className="pt-button button-link">
+                <span className={`pt-icon-folder-open`}/>
+                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+              </Link>
+            )}
             <CloseButton/>
           </Toolbar>
         )}
@@ -79,7 +81,9 @@ class EntityInfo extends React.Component {
             <Schema.Label schema={entity.schema} icon={true} />
           </span>
           <h1>
-            {!titleUntitled && <Entity.Label entity={entity} addClass={true}/>}
+            {isThing && (
+              <Entity.Label entity={entity} addClass={true}/>
+            )}
           </h1>
         </div>
         <div className="pane-content">
