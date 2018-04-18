@@ -51,15 +51,15 @@ class Notification(db.Model, IdModel, DatedModel):
         return notf
 
     @classmethod
-    def by_role(cls, role):
+    def by_role_id(cls, role_id):
         columns = array_agg(Subscription.channel).label('channels')
         sq = db.session.query(columns)
         sq = sq.filter(Subscription.deleted_at == None)  # noqa
-        sq = sq.filter(Subscription.role_id == role.id)
+        sq = sq.filter(Subscription.role_id == role_id)
         sq = sq.cte('sq')
         q = cls.all()
         q = q.filter(or_(
-            cls.actor_id != role.id,
+            cls.actor_id != role_id,
             cls.actor_id == None  # noqa
         ))
         q = q.filter(cls.channels.overlap(sq.c.channels))

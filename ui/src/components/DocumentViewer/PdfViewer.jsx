@@ -112,7 +112,7 @@ class PdfViewer extends Component {
   }
   
   render() {
-    const { document, session, hashQuery, previewMode, result, query } = this.props;
+    const { document, hashQuery, previewMode, result, query } = this.props;
     const { width, numPages } = this.state;
     const pageNumber = (hashQuery.page && parseInt(hashQuery.page, 10) <= numPages) ? parseInt(hashQuery.page, 10) : 1;
 
@@ -125,11 +125,6 @@ class PdfViewer extends Component {
     const displayPdf = !searchMode && !searchPreview;
 
     if (displayPdf === true) {
-      let fileUrl = document.links.pdf;
-      if (session.token) {
-        fileUrl = `${fileUrl}?api_key=${session.token}`;
-      }
-    
       return (
         <React.Fragment>
           <div className="PdfViewer">
@@ -139,7 +134,7 @@ class PdfViewer extends Component {
                   <div ref={(ref) => this.pdfElement = ref}>
                       <Document
                         renderAnnotations={true}
-                        file={fileUrl}
+                        file={document.links.pdf}
                         onLoadSuccess={this.onDocumentLoad}
                         loading={(<SectionLoading />)}>
                       {/* 
@@ -214,7 +209,6 @@ const mapStateToProps = (state, ownProps) => {
   
   return {
     result: selectDocumentRecordsResult(state, query),
-    session: state.session,
     hashQuery: queryString.parse(location.hash),
     query: query
   }
