@@ -78,9 +78,13 @@ class ShallowCombinedSchema(BaseSchema):
             'ui': document_url(pk)
         }
         if data.get('content_hash'):
-            links['file'] = url_for('documents_api.file', document_id=pk)
+            links['file'] = url_for('documents_api.file',
+                                    document_id=pk,
+                                    _authorize=True)
         if schemata.intersection([Document.SCHEMA_PDF]):
-            links['pdf'] = url_for('documents_api.pdf', document_id=pk)
+            links['pdf'] = url_for('documents_api.pdf',
+                                   document_id=pk,
+                                   _authorize=True)
         if schemata.intersection([Document.SCHEMA_PDF, Document.SCHEMA_TABLE]):
             links['records'] = url_for('documents_api.records', document_id=pk)
         if schemata.intersection([Document.SCHEMA_FOLDER]):

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Icon } from "@blueprintjs/core";
 import Waypoint from 'react-waypoint';
 import _ from 'lodash';
 
@@ -61,37 +60,33 @@ class EntityReferencesTable extends Component {
     }
   }
 
-  isFeaturedProp(propName) {
-    return propName !== 'contract' && propName !== 'role' && propName !== 'startDate' && propName !== 'endDate';
-  }
-
   render() {
     const { model, result, property } = this.props;
     const results = ensureArray(result.results);
-    const counts = {};
-
-    for (let res of results) {
-      _.keys(res.properties).forEach((key) => {
-        counts[key] = counts[key] ? counts[key] + 1 : 1;
-      });
-    }
-
-    const columns = _.values(model.properties).filter((prop) => {
-      if (prop.name === property.name || prop.caption) {
-        return false;
-      }
-      return (
-        (Array.isArray(model.featured) && model.featured.includes(prop.name) && this.isFeaturedProp(prop.name))
-      );
+    const columns = _.map(model.featured, (name) => {
+      return model.properties[name];
+    }).filter((prop) => {
+      return prop.name !== property.name || !prop.caption;
     });
 
-    if(property.qname === 'ContractAward:contract') {
-      this.filterColumns(columns);
-    }
-
-    columns.sort((a, b) =>  {
-      return (counts[b.name] || 0) - (counts[a.name] || 0);
-    });
+    // count how often a prop is present and show only those with values:
+    // const counts = {};
+    // for (let res of results) {
+    //   _.keys(res.properties).forEach((key) => {
+    //     counts[key] = counts[key] ? counts[key] + 1 : 1;
+    //   });
+    // }
+    // const columns = _.values(model.properties).filter((prop) => {
+    //   if (prop.name === property.name || prop.caption) {
+    //     return false;
+    //   }
+    //   return (
+    //     (Array.isArray(model.featured) && model.featured.includes(prop.name))
+    //   );
+    // });
+    // columns.sort((a, b) =>  {
+    //   return (counts[b.name] || 0) - (counts[a.name] || 0);
+    // });
 
     return (
       <section className="EntityReferencesTable">

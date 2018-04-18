@@ -48,24 +48,24 @@ class Alert(db.Model, SoftDeleteModel):
         return False
 
     @classmethod
-    def by_id(cls, id, role=None):
+    def by_id(cls, id, role_id=None):
         q = cls.all().filter_by(id=id)
-        if role is not None:
-            q = q.filter(cls.role_id == role.id)
+        if role_id is not None:
+            q = q.filter(cls.role_id == role_id)
         return q.first()
 
     @classmethod
-    def by_role(cls, role):
+    def by_role_id(cls, role_id):
         q = cls.all()
-        q = q.filter(cls.role_id == role.id)
+        q = q.filter(cls.role_id == role_id)
         q = q.order_by(cls.created_at.desc())
         q = q.order_by(cls.id.desc())
         return q
 
     @classmethod
-    def create(cls, data, role):
+    def create(cls, data, role_id):
         alert = cls()
-        alert.role_id = role.id
+        alert.role_id = role_id
         alert.query_text = stringify(data.get('query_text'))
         alert.entity_id = stringify(data.get('entity_id'))
         alert.custom_label = stringify(data.get('label'))

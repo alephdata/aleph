@@ -18,7 +18,7 @@ class AlertsTestCase(TestCase):
 
     def test_notify(self):
         data = {'query_text': 'fruit', 'label': 'Test Alert'}
-        alert = Alert.create(data, self.role_email)
+        alert = Alert.create(data, self.role_email.id)
         alert.notified_at = datetime.utcnow() + timedelta(hours=72)
         db.session.commit()
 
@@ -40,7 +40,7 @@ class AlertsTestCase(TestCase):
 
     def test_notify_entity(self):
         data = {'query_text': 'kwazulu', 'label': 'Test Alert'}
-        alert = Alert.create(data, self.role_email)
+        alert = Alert.create(data, self.role_email.id)
         alert.notified_at = datetime.utcnow() - timedelta(hours=72)
         db.session.add(alert)
         db.session.commit()

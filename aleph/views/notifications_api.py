@@ -12,6 +12,6 @@ blueprint = Blueprint('notifications_api', __name__)
 @blueprint.route('/api/2/notifications', methods=['GET'])
 def index():
     require(request.authz.logged_in)
-    query = Notification.by_role(request.authz.role)
+    query = Notification.by_role_id(request.authz.id)
     result = DatabaseQueryResult(request, query, schema=NotificationSchema)
     return jsonify(result)

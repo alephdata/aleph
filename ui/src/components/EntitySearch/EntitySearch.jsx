@@ -71,18 +71,25 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, showLinksInPreview, hasWarning} = this.props;
+    const {query, result, showLinksInPreview, hasWarning, intl} = this.props;
     return (
       <React.Fragment>
         {result.total === 0 &&
         <section className="PartialError">
-          <ErrorScreen.EmptyList visual='search' title={messages.no_results_title}
-                                    description={messages.no_results_description}/>
+          <ErrorScreen.EmptyList visual='search'
+                                 title={intl.formatMessage(messages.no_results_title)}
+                                 description={intl.formatMessage(messages.no_results_description)}/>
         </section>
         }
         {hasWarning === true && <div className='warning-folder'>
-          <strong><FormattedMessage id="search.warning" defaultMessage="Warning!" />&nbsp;</strong>
-          <p><FormattedMessage id="search.not_properly_imported" defaultMessage="This folder is not properly imported!" /></p>
+          <strong>
+            <FormattedMessage id="search.warning"
+                              defaultMessage="Warning" />
+            &nbsp;
+          </strong>
+          <p>
+            <FormattedMessage id="search.not_properly_imported"
+                              defaultMessage="This folder is not properly imported!" /></p>
         </div>}
         <EntityTable query={query}
                      documentMode={this.props.documentMode}

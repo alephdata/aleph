@@ -16,7 +16,7 @@ export class DownloadButton extends React.Component {
 
         if (session && downloadLink) {
             if (Array.isArray(downloadLink)) {
-                // If passed an array, rrender Download button with multiple options
+                // If passed an array, render Download button with multiple options
                 let popoverContent = (
                     <ul className="pt-menu">
                         {downloadLink.map((item,i) => {
@@ -26,7 +26,7 @@ export class DownloadButton extends React.Component {
                 );
                 return (
                     <div className={`DownloadButton pt-button-group ${className}`} style={this.props.style}>
-                        <a href={session.token ? `${downloadLink[0].url}?api_key=${session.token}` : downloadLink[0].url} className="pt-button" rel="nofollow">
+                        <a href={downloadLink[0].url} className="pt-button" rel="nofollow">
                             <span className="pt-icon-standard pt-icon-download"/>
                             <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
                         </a>
@@ -46,7 +46,7 @@ export class DownloadButton extends React.Component {
             } else {
                 // Render Download button with single button
                 return (
-                    <a href={session.token ? `${downloadLink.url}?api_key=${session.token}` : downloadLink.url} type="button" className={`DownloadButton pt-button ${className}`} style={this.props.style} rel="nofollow">
+                    <a href={downloadLink.url} type="button" className={`DownloadButton pt-button ${className}`} style={this.props.style} rel="nofollow">
                         <span className="pt-icon-standard pt-icon-download"/>
                         <span><FormattedMessage id="document.download" defaultMessage="Download"/></span>
                     </a>
