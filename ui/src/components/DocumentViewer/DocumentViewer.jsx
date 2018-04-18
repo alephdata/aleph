@@ -45,14 +45,14 @@ class DocumentViewer extends React.Component {
       return <EmailViewer document={doc}/>;
     } else if (doc.schema === 'Table') {
       return <TableViewer document={doc} queryText={queryText}/>;
+    } else if (doc.schema === 'Image') {
+      return <ImageViewer document={doc}/>;
     } else if (doc.text && !doc.html) {
       return <TextViewer document={doc}/>;
     } else if (doc.html) {
       return <HtmlViewer document={doc}/>;
     } else if (doc.links && doc.links.pdf) {
       return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
-    } else if (doc.schema === 'Image') {
-      return <ImageViewer document={doc}/>;
     } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
       if (doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
       return <FolderViewer document={doc} queryText={queryText}/>;

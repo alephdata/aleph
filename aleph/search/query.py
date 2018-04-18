@@ -4,6 +4,7 @@ from elasticsearch.helpers import scan
 
 from aleph.core import es
 from aleph.index.util import authz_query, field_filter_query
+from aleph.index.util import REQUEST_TIMEOUT
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 
@@ -168,7 +169,8 @@ class Query(object):
         """Execute the query as assmbled."""
         # pprint(self.get_body())
         return es.search(index=self.get_index(),
-                         body=self.get_body())
+                         body=self.get_body(),
+                         request_timeout=REQUEST_TIMEOUT)
 
     def scan(self):
         """Return an iterator over the whole result set, unpaginated and
