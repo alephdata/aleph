@@ -1,9 +1,10 @@
+import _ from 'lodash';
 
 export function matchesKey(collectionId, otherId) {
   return collectionId + '*' + otherId;
 }
 
-export function selectResult(state, query, expand) {
+function selectResult(state, query, expand) {
   const key = query.toKey();
   const result = {
     isLoading: true,
@@ -14,19 +15,26 @@ export function selectResult(state, query, expand) {
   return result;
 }
 
+function selectObject(objects, id) {
+  if (!id || !_.has(objects, id)) {
+    return {id: id, isLoading: true}
+  }
+  return objects[id];
+}
+
 export function selectCollection(state, collectionId) {
   // get a collection from the store.
-  return state.collections[collectionId];
+  return selectObject(state.collections, collectionId);
 }
 
 export function selectEntity(state, entityId) {
   // get a collection from the store.
-  return state.entities[entityId];
+  return selectObject(state.entities, entityId);
 }
 
 export function selectDocumentRecord(state, recordId) {
   // get a collection from the store.
-  return state.documentRecords[recordId];
+  return selectObject(state.documentRecords, recordId);
 }
 
 export function selectCollectionsResult(state, query) {
@@ -46,5 +54,9 @@ export function selectNotificationsResult(state, query) {
 }
 
 export function selectEntityTags(state, entityId) {
-  return state.entityTags[entityId];
+  return selectObject(state.entityTags, entityId);
+}
+
+export function selectEntityReferences(state, entityId) {
+  return selectObject(state.entityReferences, entityId);
 }
