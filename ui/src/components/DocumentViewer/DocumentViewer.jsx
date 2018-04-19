@@ -98,6 +98,10 @@ class DocumentViewer extends React.Component {
   render() {
     const { document: doc, showToolbar, toggleMaximise, previewMode } = this.props;
     const { numberOfPages } = this.state;
+
+    if (doc.isLoading) {
+      return null;
+    }
     
     return <React.Fragment>
       {showToolbar && (
@@ -135,9 +139,7 @@ class DocumentViewer extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('search', location, {});
-  return {
-    queryText: query.getString('q')
-  }
+  return { queryText: query.getString('q') }
 }
 
 DocumentViewer = connect(mapStateToProps)(DocumentViewer);
