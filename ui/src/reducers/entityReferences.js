@@ -7,7 +7,7 @@ const initialState = {};
 
 export default createReducer({
     [fetchEntityReferences.START]: (state, { id }) =>
-      update(id, set('isFetching', true))(state),
+      update(id, set('isLoading', true))(state),
     [fetchEntityReferences.COMPLETE]: (state, { id, data }) =>
       set(id, data)(state),
 }, initialState);

@@ -1,11 +1,11 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import {FormattedMessage, defineMessages, injectIntl} from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
-import _ from 'lodash';
 
-import { Property, Entity, DualPane, TabCount, Schema, URL } from 'src/components/common';
+import { Property, Entity, DualPane, TabCount, Schema } from 'src/components/common';
 import { EntityConnections } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
@@ -44,7 +44,7 @@ class EntityInfo extends React.Component {
   render() {
     const { references, entity, schema, tags, intl, showToolbar } = this.props;
     const tagsTotal = tags !== undefined ? tags.total : undefined;
-    const relationshipTotal = (references && !references.isFetching && references.results) ? references.results.length : undefined;
+    const relationshipTotal = (references && !references.isLoading && references.results) ? references.results.length : undefined;
     const connectionsTotal = relationshipTotal === undefined ?
         tagsTotal === undefined ?
             0 : tagsTotal : tagsTotal === undefined ?

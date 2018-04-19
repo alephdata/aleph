@@ -1,21 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedNumber } from 'react-intl';
-import { Link } from 'react-router-dom';
 
 import { Schema } from 'src/components/common';
+
 
 class CollectionInfoContent extends React.Component {
   constructor() {
     super();
-
     this.state = {content: []};
-
     this.objectToList = this.objectToList.bind(this);
   }
 
   componentDidMount() {
-      this.objectToList(this.props.schemata)
+    this.objectToList(this.props.schemata)
   }
 
   sortByNumber(a,b) {
@@ -36,7 +34,6 @@ class CollectionInfoContent extends React.Component {
     }
 
     content.sort(this.sortByNumber);
-
     this.setState({content});
   }
 

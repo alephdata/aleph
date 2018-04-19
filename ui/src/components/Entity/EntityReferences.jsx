@@ -29,7 +29,7 @@ class EntityReferences extends React.Component {
     const { entity, references } = this.props;
     const { activeTab } = this.state;
 
-    if (!references || references.isFetching) {
+    if (!references || references.isLoading) {
       return null;
     }
 

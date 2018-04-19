@@ -7,10 +7,10 @@ import './DocumentContent.css';
 
 class DocumentContent extends React.Component {
   render() {
-    const { document: doc } = this.props;
+    const { document } = this.props;
     return (
       <DualPane.ContentPane className="DocumentContent">
-        <DocumentViewer document={doc} showToolbar={true} />
+        <DocumentViewer document={document} showToolbar={true} />
       </DualPane.ContentPane>
     );
   }

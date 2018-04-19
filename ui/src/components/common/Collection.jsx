@@ -64,7 +64,7 @@ class CollectionLoad extends Component {
   render() {
     const { collection, children, renderWhenLoading } = this.props;
     if (
-      (collection === undefined || collection.isFetching)
+      (collection === undefined || collection.isLoading)
       && renderWhenLoading !== undefined
     ) {
       return renderWhenLoading;
