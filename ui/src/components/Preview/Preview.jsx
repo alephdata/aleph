@@ -127,6 +127,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-Preview = connect(mapStateToProps, {})(Preview);
+Preview = connect(mapStateToProps, {}, null, { pure: false })(Preview);
 Preview = withRouter(Preview);
 export default Preview;

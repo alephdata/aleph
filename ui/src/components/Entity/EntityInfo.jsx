@@ -10,7 +10,7 @@ import { EntityConnections } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences } from 'src/actions/index';
-import { selectEntityTags } from 'src/selectors';
+import { selectEntityTags, selectEntityReferences } from 'src/selectors';
 import getPath from 'src/util/getPath';
 import ErrorScreen from "../ErrorMessages/ErrorScreen";
 
@@ -36,21 +36,32 @@ class EntityInfo extends React.Component {
 
   componentDidMount() {
     const { entity } = this.props;
-    if(!this.props.references && entity && entity.id) {
+    if(entity && entity.id) {
+      this.props.fetchEntityReferences(entity);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { entity } = this.props;
+    if(entity.id !== prevProps.entity.id) {
       this.props.fetchEntityReferences(entity);
     }
   }
 
   render() {
     const { references, entity, schema, tags, intl, showToolbar } = this.props;
-    const tagsTotal = tags !== undefined ? tags.total : undefined;
-    const relationshipTotal = (references && !references.isLoading && references.results) ? references.results.length : undefined;
-    const connectionsTotal = relationshipTotal === undefined ?
+    const tagsTotal = tags.isLoading ? undefined: tags.total;
+    const referencesTotal = references.isLoading ? undefined: references.results.length;
+    const connectionsTotal = referencesTotal === undefined ?
         tagsTotal === undefined ?
             0 : tagsTotal : tagsTotal === undefined ?
-            relationshipTotal : tagsTotal + relationshipTotal;
+            referencesTotal : tagsTotal + referencesTotal;
     const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
 
+    if (schema === undefined) {  // entity hasn't loaded.
+      return null;
+    }
+    
     const entityProperties = _.values(schema.properties).filter((prop) => {
       return !prop.caption && (schema.featured.indexOf(prop.name) !== -1 || entity.properties[prop.name]);
     });
@@ -140,12 +151,12 @@ class EntityInfo extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    references: state.entityReferences[ownProps.entity.id],
+    references: selectEntityReferences(state, ownProps.entity.id),
     schema: state.metadata.schemata[ownProps.entity.schema],
     tags: selectEntityTags(state, ownProps.entity.id)
   };
 };
 
 EntityInfo = injectIntl(EntityInfo);
-EntityInfo = connect(mapStateToProps, {fetchEntityReferences})(EntityInfo);
+EntityInfo = connect(mapStateToProps, { fetchEntityReferences }, null, { pure: false })(EntityInfo);
 export default EntityInfo;

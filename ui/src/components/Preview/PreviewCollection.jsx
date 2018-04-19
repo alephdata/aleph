@@ -46,5 +46,5 @@ const mapStateToProps = (state, ownProps) => {
   return { collection: selectCollection(state, ownProps.previewId) };
 };
 
-PreviewCollection = connect(mapStateToProps, { fetchCollection })(PreviewCollection);
+PreviewCollection = connect(mapStateToProps, { fetchCollection }, null, { pure: false })(PreviewCollection);
 export default PreviewCollection;

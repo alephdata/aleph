@@ -55,5 +55,5 @@ const mapStateToProps = (state, ownProps) => {
   return { document: selectEntity(state, ownProps.previewId) };
 };
 
-PreviewDocument = connect(mapStateToProps, { fetchDocument })(PreviewDocument);
+PreviewDocument = connect(mapStateToProps, { fetchDocument }, null, { pure: false })(PreviewDocument);
 export default PreviewDocument;

@@ -128,6 +128,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 };
 
-EntityReferencesTable = connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
+EntityReferencesTable = connect(mapStateToProps, { queryEntities }, null, { pure: false })(EntityReferencesTable);
 EntityReferencesTable = withRouter(EntityReferencesTable);
 export default EntityReferencesTable;

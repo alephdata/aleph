@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import { Screen, ScreenLoading, Breadcrumbs, DualPane, Entity } from 'src/components/common';
-import { EntityContent, EntityInfo } from 'src/components/Entity/';
+import { EntityReferences, EntityInfo } from 'src/components/Entity/';
 import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 
@@ -42,7 +42,9 @@ class EntityScreen extends Component {
       return (
         <Screen breadcrumbs={breadcrumbs} title={entity.name}>
           <DualPane>
-            <EntityContent entity={entity} />
+            <DualPane.ContentPane>
+              <EntityReferences entity={entity} />
+            </DualPane.ContentPane>
             <EntityInfo entity={entity} />
           </DualPane>
         </Screen>
