@@ -50,8 +50,7 @@ class EntityInfo extends React.Component {
             0 : tagsTotal : tagsTotal === undefined ?
             relationshipTotal : tagsTotal + relationshipTotal;
     const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
-    
-    let sourceUrl = null;
+
     const entityProperties = _.values(schema.properties).filter((prop) => {
       return !prop.caption && (schema.featured.indexOf(prop.name) !== -1 || entity.properties[prop.name]);
     });
@@ -116,19 +115,6 @@ class EntityInfo extends React.Component {
                 panel={
                   <React.Fragment>
                     <CollectionOverview collection={entity.collection} hasHeader={true}/>
-                    {sourceUrl && (
-                      <ul className='info-sheet'>
-                        <li>
-                          <span className="key">
-                            <FormattedMessage id="entity.info.source_url"
-                                              defaultMessage="Source URL"/>
-                          </span>
-                          <span className="value">
-                            <URL value={sourceUrl} />
-                          </span>
-                        </li>
-                      </ul>
-                    )}
                   </React.Fragment>
                 }
               />
