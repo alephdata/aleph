@@ -5,7 +5,7 @@ from followthemoney import model
 from ingestors import Result
 from ingestors.util import safe_string
 
-from aleph.core import db
+from aleph.core import db, settings
 from aleph.model import Document, DocumentRecord
 from aleph.model import DocumentTag, DocumentTagCollector
 
@@ -33,6 +33,10 @@ class DocumentResult(Result):
         self.document = document
         self.columns = OrderedDict()
         self.pages = []
+        ocr_languages = set(document.languages)
+        if document.collection.languages is not None:
+            ocr_languages.update(document.collection.languages)
+        ocr_languages.update(settings.OCR_DEFAULTS)
         bind = super(DocumentResult, self)
         bind.__init__(id=document.foreign_id,
                       checksum=document.content_hash,
@@ -49,6 +53,7 @@ class DocumentResult(Result):
                       published_at=document.meta.get('published_at'),
                       encoding=document.meta.get('encoding'),
                       languages=document.meta.get('languages', []),
+                      ocr_languages=ocr_languages,
                       size=document.file_size)
 
     def emit_page(self, index, text):

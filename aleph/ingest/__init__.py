@@ -14,7 +14,7 @@ def get_manager():
     """Get an ingestor manager, as a singleton instance."""
     if not hasattr(DocumentManager, '_instance'):
         DocumentManager._instance = DocumentManager(archive)
-        # log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
+        log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
     return DocumentManager._instance
 
 

@@ -89,12 +89,6 @@ class DocumentManager(Manager):
             return
 
         try:
-            if not len(document.languages):
-                document.languages = document.collection.languages
-
-            if not len(document.countries):
-                document.countries = document.collection.countries
-
             result = DocumentResult(self, document,
                                     file_path=file_path,
                                     role_id=role_id)
