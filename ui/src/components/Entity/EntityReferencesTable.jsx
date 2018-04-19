@@ -1,8 +1,8 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Waypoint from 'react-waypoint';
-import _ from 'lodash';
 
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
@@ -66,27 +66,8 @@ class EntityReferencesTable extends Component {
     const columns = _.map(model.featured, (name) => {
       return model.properties[name];
     }).filter((prop) => {
-      return prop.name !== property.name || !prop.caption;
+      return prop.name !== property.name && !prop.caption;
     });
-
-    // count how often a prop is present and show only those with values:
-    // const counts = {};
-    // for (let res of results) {
-    //   _.keys(res.properties).forEach((key) => {
-    //     counts[key] = counts[key] ? counts[key] + 1 : 1;
-    //   });
-    // }
-    // const columns = _.values(model.properties).filter((prop) => {
-    //   if (prop.name === property.name || prop.caption) {
-    //     return false;
-    //   }
-    //   return (
-    //     (Array.isArray(model.featured) && model.featured.includes(prop.name))
-    //   );
-    // });
-    // columns.sort((a, b) =>  {
-    //   return (counts[b.name] || 0) - (counts[a.name] || 0);
-    // });
 
     return (
       <section className="EntityReferencesTable">

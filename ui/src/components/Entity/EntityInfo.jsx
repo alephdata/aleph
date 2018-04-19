@@ -53,14 +53,7 @@ class EntityInfo extends React.Component {
     
     let sourceUrl = null;
     const entityProperties = _.values(schema.properties).filter((prop) => {
-      if (prop.caption) {
-        return false;
-      }
-      if (prop.name === 'sourceUrl' && entity.properties[prop.name]) {
-        sourceUrl = entity.properties[prop.name][0];
-        return false;
-      }
-      return entity.properties[prop.name];
+      return !prop.caption && (schema.featured.indexOf(prop.name) !== -1 || entity.properties[prop.name]);
     });
     
     return (

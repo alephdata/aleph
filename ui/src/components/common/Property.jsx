@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Component} from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -9,6 +10,10 @@ import ensureArray from 'src/util/ensureArray';
 import './Property.css';
 
 class Value extends Component {
+  shouldComponentUpdate(nextProps) {
+    return !_.isEqual(this.props.value, nextProps.value);
+  }
+
   render() {
     const {value, model} = this.props;
     if (!value) {
@@ -32,10 +37,8 @@ class Value extends Component {
 
 class Name extends Component {
   render() {
-    const {name, model} = this.props,
-          label = model.label || name;
-
-    return (<span>{label}</span>);
+    const {name, model} = this.props;
+    return (<span>{model.label || name}</span>);
   }
 }
 

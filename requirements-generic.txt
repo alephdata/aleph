@@ -55,11 +55,9 @@ backports.csv
 
 # Duplicative for speed of docker builds
 lxml
-parsedatetime>=2.1
-tesserocr>=2.2.2
-flanker>=0.4.38
-xlrd>=1.1.0
-phonenumbers>=8.8.4
+tesserocr
+xlrd
+phonenumbers
 python-levenshtein
 pycountry
 pypdf2

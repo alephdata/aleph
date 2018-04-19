@@ -9,3 +9,5 @@ exactitude >= 2.3.3
 ingestors >= 0.7.17
 normality >= 0.5.12
 celestial >= 0.2.1
+
+python-dateutil == 2.6.1
