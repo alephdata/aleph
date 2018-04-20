@@ -182,6 +182,7 @@ class Query(object):
         # pprint(self.get_body())
         return es.search(index=self.get_index(),
                          body=self.get_body(),
+                         request_cache=True,
                          request_timeout=REQUEST_TIMEOUT)
 
     def scan(self):
