@@ -5,7 +5,6 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
-import Fragment from 'src/app/Fragment';
 import { fetchFacet } from 'src/actions';
 import { CheckboxList } from 'src/components/common';
 
@@ -18,11 +17,13 @@ const messages = defineMessages({
   },
 })
 
+const defaultFacet = {}
+
 class SearchFacet extends Component {
   constructor(props)  {
     super(props);
+    this.state = {facet: defaultFacet, isExpanding: false};
     this.FACET_INCREMENT = 10;
-    this.state = { facet: {} };
     this.onToggleOpen = this.onToggleOpen.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.onClear = this.onClear.bind(this);
@@ -30,81 +31,72 @@ class SearchFacet extends Component {
   }
 
   componentDidMount() {
-    this.fetchIfNeeded();
-    this.updateFromProps(this.props);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this.fetchIfNeeded();
+    this.updateFacet(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    this.updateFromProps(nextProps);
+    this.updateFacet(nextProps);
   }
 
-  fetchIfNeeded() {
-    const { fetchFacet, facetQuery, isBlocked, isOpen } = this.props;
-    const key = facetQuery.toKey();
-    
-    if (isOpen && !isBlocked && this.state.key !== key) {
-      this.setState({ key: key });
-      fetchFacet({ query: facetQuery });
+  updateFacet(props) {
+    const { field, result, isOpen } = props;
+    if (isOpen && !result.isLoading) {
+      const facets = result.facets || {};
+      const facet = facets[field] || defaultFacet;
+      this.setState({facet, isExpanding: false});
     }
   }
 
-  updateFromProps(props) {
-    const result = props.facet;
-    if (result.total !== undefined && !result.isLoading) {
-      this.setState({
-        facet: result
-      })
+  updateFacetSize(newSize) {
+    const { query, field } = this.props;
+    let newQuery = query.set('facet_size:' + field, newSize);
+    if (!newSize) {
+      newQuery = newQuery.remove('facet', field);
+      newQuery = newQuery.add('facet_total:' + field, undefined);
+      newQuery = newQuery.set('facet_size:' + field, undefined);
+    } else { 
+      newQuery = newQuery.add('facet', field);
+      newQuery = newQuery.add('facet_total:' + field, true);
     }
-  }
-
-  updateFacetSize(facetSize) {
-    const { fragment, field } = this.props;
-    fragment.update({['facet:' + field]: facetSize});
+    this.props.updateQuery(newQuery);
+    this.setState({isExpanding: true});
   }
 
   showMore(event) {
     event.preventDefault();
-    this.updateFacetSize(parseInt(this.props.facetSize, 10) + this.FACET_INCREMENT);
+    this.updateFacetSize(this.props.facetSize + this.FACET_INCREMENT);
   }
 
   onToggleOpen() {
-    const defaultSize = this.props.defaultSize || this.FACET_INCREMENT;
-    const newSize = parseInt(this.props.facetSize, 10) > 0 ? 0 : defaultSize;
+    const { isOpen, facetSize } = this.props;
+    const newSize = isOpen ? undefined : (facetSize || this.FACET_INCREMENT);
     this.updateFacetSize(newSize);
   }
 
   onSelect(value) {
     const { field } = this.props;
-    let query = this.props.query;
-    query = query.toggleFilter(field, value)
-    this.props.updateQuery(query)
+    this.props.updateQuery(this.props.query.toggleFilter(field, value));
   }
 
   onClear(event) {
     event.stopPropagation();
     const { field } = this.props;
-    let query = this.props.query;
-    query = query.clearFilter(field);
-    this.props.updateQuery(query);
+    this.props.updateQuery(this.props.query.clearFilter(field));
   }
 
   render() {
-    const { query, facetSize, isOpen, isBlocked, field, label, icon, intl } = this.props;
-    const { facet } = this.state;
-    const current = query ? query.getFilter(field) : null;
+    const { query, facetSize, isOpen, result, field, label, icon, intl } = this.props;
+    const { facet, isExpanding } = this.state;
+    const current = query.getFilter(field);
     const count = current ? current.length : 0;
     const isFiltered = query.getFilter(field).length > 0;
     
     // The values array can include extra selected-but-zero-hit values that are
     // excluded from total, so we compare not against the array's length but
     // against the requested limit.
-    const hasMoreValues = parseInt(facetSize, 10) < facet.total;
-    const isUpdating = isBlocked || this.props.facet.total === undefined;
-    const isExpanding  = facet.values === undefined || (facet.total !== 0 && facet.values.length < Math.min(facet.total || 10000, parseInt(facetSize, 10)));
+    const hasMoreValues = facetSize < facet.total;
+    const isUpdating = result.isLoading;
+    // const isExpanding  = facet.values === undefined || (facet.total !== 0 && facet.values.length < Math.min(facet.total || 10000, facetSize));
 
     return (
       <div className="SearchFacet">
@@ -168,35 +160,14 @@ class SearchFacet extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const fragment = new Fragment(ownProps.history),
-        defaultSize = ownProps.defaultSize || 0,
-        facetSize = fragment.get('facet:' + ownProps.field) || defaultSize,
-        isOpen = facetSize > 0;
-
-  // this is hacky: block loading the facet until the main query result
-  // is pending, so the main result loads before the facets.
-  const isBlocked = state.results[ownProps.query.toKey()] === undefined;
-  
-  const facetQuery = ownProps.query
-      .limit(0) // The limit of the results, not the facets.
-      .clear('offset')
-      .sortBy(null)
-      .clearFacets()
-      .addFacet(ownProps.field)
-      .clearFilter(ownProps.field)
-      .set('facet_total', true)
-      .set('facet_values', isOpen)
-      .set('facet_size', facetSize);
-
-  const facet = state.facets[facetQuery.toKey()] || {};
+  const { query, field, defaultSize } = ownProps;
+  const facetSize = query.getInt('facet_size:' + field, defaultSize),
+        isOpen = query.hasFacet(field) && facetSize > 0;
 
   return {
-    facet: facet[ownProps.field] || {},
     facetSize: facetSize,
-    facetQuery: facetQuery,
-    isBlocked: isBlocked,
-    isOpen: isOpen,
-    fragment: fragment
+    defaultSize: defaultSize,
+    isOpen: isOpen
   };
 };
 

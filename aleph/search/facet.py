@@ -1,6 +1,5 @@
 import six
 from followthemoney import model
-from followthemoney.util import gettext
 from flask.ext.babel import get_locale
 from exactitude import countries, languages
 
@@ -31,10 +30,10 @@ class Facet(object):
         active = list(self.parser.filters.get(self.name, []))
         active.extend(self.parser.post_filters.get(self.name, []))
         data = {'filters': list(active)}
-        if self.parser.facet_total:
+        if self.parser.get_facet_total(self.name):
             data['total'] = self.cardinality.get('value')
 
-        if self.parser.facet_values:
+        if self.parser.get_facet_values(self.name):
             results = []
             for bucket in self.data.get('buckets', []):
                 key = six.text_type(bucket.get('key'))

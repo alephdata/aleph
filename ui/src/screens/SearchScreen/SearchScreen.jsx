@@ -188,12 +188,20 @@ class SearchScreen extends React.Component {
           <DualPane.InfoPane className="SearchFacetsPane">
             <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
-              <span className="total-icon pt-icon-standard pt-icon-search"/>
-              <FormattedNumber value={result.total !== undefined ? result.total : 0}/>&nbsp;<FormattedMessage
-                id="search.screen.results" defaultMessage="results"/>
-            </span>
+                <span className="total-icon pt-icon-standard pt-icon-search"/>
+                { !result.isLoading && (
+                  <React.Fragment>
+                    <FormattedNumber value={result.total}/>&nbsp;
+                    <FormattedMessage id="search.screen.results" defaultMessage="results"/>
+                  </React.Fragment>
+                )}
+                { result.isLoading && (
+                  <FormattedMessage id="search.screen.searching" defaultMessage="Searching..."/>
+                )}
+              </span>
             </div>
             <SearchFacets query={query}
+                          result={result}
                           updateQuery={this.updateQuery}
                           facets={this.state.facets}/>
           </DualPane.InfoPane>

@@ -138,6 +138,7 @@ class CollectionsIndexScreen extends Component {
             </p>
             <SearchFacets facets={this.state.facets}
                           query={query}
+                          result={result}
                           updateQuery={this.updateQuery}/>
           </DualPane.InfoPane>
           <DualPane.ContentPane>
@@ -167,7 +168,8 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections')
+  const context = {facet: ['category', 'countries']};
+  const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
 

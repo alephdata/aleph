@@ -6,13 +6,14 @@ import './SearchFacets.css';
 
 class SearchFacets extends Component {
   render() {
-    const { facets, query, updateQuery } = this.props;
+    const { facets, query, result, updateQuery } = this.props;
     return (
       <ul className="SearchFacets pt-large">
         {facets.map((facet) => (
           <li className="facet" key={facet.field}>
             <SearchFacet
               query={query}
+              result={result}
               updateQuery={updateQuery}
               field={facet.field}
               label={facet.label}
