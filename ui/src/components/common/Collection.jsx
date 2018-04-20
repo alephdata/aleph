@@ -12,7 +12,7 @@ class CollectionLabel extends Component {
   render() {
     const { collection, icon = true } = this.props;
 
-    if (collection === undefined || collection.isLoading) {
+    if (collection.id === undefined || collection.isLoading) {
       return null;
     }
 
@@ -29,7 +29,7 @@ class CollectionLink extends Component {
   render() {
     const { collection, icon = true, className, preview, indexScreen } = this.props;
 
-    if (collection === undefined || collection.isLoading) {
+    if (collection.id === undefined || collection.isLoading) {
       return null;
     }
 
@@ -54,17 +54,18 @@ class CollectionLink extends Component {
 }
 
 class CollectionLoad extends Component {
+
   componentDidMount() {
-    this.fetchIfNeeded();
+    this.fetchIfNeeded(this.props);
   }
 
-  componentDidUpdate() {
-    this.fetchIfNeeded();
+  componentWillReceiveProps(nextProps) {
+    this.fetchIfNeeded(nextProps);
   }
 
-  fetchIfNeeded() {
-    const { id, collection } = this.props;
-    if (collection.kind === undefined) {
+  fetchIfNeeded(props) {
+    const { id, collection } = props;
+    if (collection.id === undefined && !collection.isLoading) {
       this.props.fetchCollection({ id });
     }
   }
@@ -72,7 +73,7 @@ class CollectionLoad extends Component {
   render() {
     const { collection, children, renderWhenLoading } = this.props;
     if (
-      (collection === undefined || collection.isLoading)
+      (collection.id === undefined || collection.isLoading)
       && renderWhenLoading !== undefined
     ) {
       return renderWhenLoading;

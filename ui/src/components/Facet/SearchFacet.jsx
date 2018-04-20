@@ -39,8 +39,8 @@ class SearchFacet extends Component {
   }
 
   updateFacet(props) {
-    const { field, result, isOpen } = props;
-    if (isOpen && !result.isLoading) {
+    const { field, result } = props;
+    if (result.total !== undefined && !result.isLoading) {
       const facets = result.facets || {};
       const facet = facets[field] || defaultFacet;
       this.setState({facet, isExpanding: false});
@@ -74,14 +74,14 @@ class SearchFacet extends Component {
   }
 
   onSelect(value) {
-    const { field } = this.props;
-    this.props.updateQuery(this.props.query.toggleFilter(field, value));
+    const { field, query } = this.props;
+    this.props.updateQuery(query.toggleFilter(field, value));
   }
 
   onClear(event) {
     event.stopPropagation();
-    const { field } = this.props;
-    this.props.updateQuery(this.props.query.clearFilter(field));
+    const { field, query } = this.props;
+    this.props.updateQuery(query.clearFilter(field));
   }
 
   render() {
@@ -95,7 +95,7 @@ class SearchFacet extends Component {
     // excluded from total, so we compare not against the array's length but
     // against the requested limit.
     const hasMoreValues = facetSize < facet.total;
-    const isUpdating = result.isLoading;
+    const isUpdating = result.total === undefined || result.isLoading;
     // const isExpanding  = facet.values === undefined || (facet.total !== 0 && facet.values.length < Math.min(facet.total || 10000, facetSize));
 
     return (

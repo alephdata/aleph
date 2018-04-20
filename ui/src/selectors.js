@@ -7,7 +7,7 @@ export function matchesKey(collectionId, otherId) {
 function selectResult(state, query, expand) {
   const key = query.toKey();
   const result = {
-    isLoading: true,
+    isLoading: false,
     results: [],
     ...state.results[key]
   };
@@ -17,7 +17,7 @@ function selectResult(state, query, expand) {
 
 function selectObject(objects, id) {
   if (!id || !_.has(objects, id)) {
-    return {id: id, isLoading: true}
+    return {isLoading: false}
   }
   return objects[id];
 }

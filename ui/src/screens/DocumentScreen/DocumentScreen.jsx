@@ -24,7 +24,7 @@ class DocumentScreen extends Component {
 
   render() {
     const { document } = this.props;
-    if (document.isLoading) {
+    if (document.id === null) {
       return (<ScreenLoading />);
     }
 

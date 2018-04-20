@@ -21,7 +21,7 @@ class PreviewCollection extends React.Component {
 
   fetchIfNeeded(props) {
     const { collection, previewId } = this.props;
-    if (!collection || !collection.id) {
+    if (collection.id === undefined && !collection.isLoading) {
       this.props.fetchCollection({ id: previewId });
     }
   }
@@ -35,7 +35,7 @@ class PreviewCollection extends React.Component {
         />
     }
 
-    if (!collection || !collection.id) {
+    if (collection.id === undefined) {
       return <SectionLoading/>;
     }
     return <CollectionInfo collection={collection} showToolbar={true} />;

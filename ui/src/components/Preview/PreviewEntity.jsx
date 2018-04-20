@@ -35,7 +35,7 @@ class PreviewEntity extends React.Component {
       />
     }
 
-    if (!entity || !entity.id) {
+    if (entity.id === undefined) {
       return <SectionLoading/>;
     }
     return <EntityInfo entity={entity} showToolbar={true} />;

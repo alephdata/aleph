@@ -147,7 +147,7 @@ class SearchScreen extends React.Component {
 
   fetchIfNeeded() {
     const {result, query, queryEntities} = this.props;
-    if (result.isLoading || (result.status === 'error')) {
+    if (result.total === undefined && !result.isLoading) {
       queryEntities({query: query});
     }
   }
@@ -189,13 +189,13 @@ class SearchScreen extends React.Component {
             <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
                 <span className="total-icon pt-icon-standard pt-icon-search"/>
-                { !result.isLoading && (
+                { !(result.isLoading || result.total === undefined) && (
                   <React.Fragment>
                     <FormattedNumber value={result.total}/>&nbsp;
                     <FormattedMessage id="search.screen.results" defaultMessage="results"/>
                   </React.Fragment>
                 )}
-                { result.isLoading && (
+                { (result.isLoading || result.total === undefined) && (
                   <FormattedMessage id="search.screen.searching" defaultMessage="Searching..."/>
                 )}
               </span>
@@ -208,11 +208,12 @@ class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
             <QueryTags query={query} updateQuery={this.updateQuery}/>
-            {result.total === 0 &&
-            <ErrorScreen.EmptyList visual="search"
-                                   title={intl.formatMessage(messages.no_results_title)}
-                                   description={intl.formatMessage(messages.no_results_description)}/>
-            }
+
+            {result.total === 0 && (
+              <ErrorScreen.EmptyList visual="search"
+                                    title={intl.formatMessage(messages.no_results_title)}
+                                    description={intl.formatMessage(messages.no_results_description)}/>
+            )}
             <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication}/>
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
@@ -225,7 +226,7 @@ class SearchScreen extends React.Component {
                 scrollableAncestor={window}
               />
             )}
-            {result.isLoading && (
+            {result.total === undefined && (
               <SectionLoading/>
             )}
           </DualPane.ContentPane>
