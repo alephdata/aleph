@@ -41,10 +41,6 @@ class QueryParser(object):
         return items
 
     @property
-    def post_filters(self):
-        return self.prefixed_items('post_filter:')
-
-    @property
     def filters(self):
         return self.prefixed_items('filter:')
 
@@ -115,7 +111,8 @@ class SearchQueryParser(QueryParser):
         # Set of field names to facet by (i.e. include the count of distinct
         # values in the result set). These must match 'keyword' fields in the
         # index.
-        self.facet_names = self.getlist('facet')
+        self.facet_names = set(self.getlist('facet'))
+        self.facet_filters = self.facet_names.intersection(self.filters.keys())
 
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool('highlight', False)

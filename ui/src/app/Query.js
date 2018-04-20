@@ -198,18 +198,9 @@ class Query {
   }
 
   toParams() {
-    let params = {};
+    const params = {};
     this.fields().forEach((name) => {
       params[name] = this.getList(name);
-    });
-
-    // convert all filters which are being faceted on into post-filters.
-    this.getList('facet').forEach((facet) => {
-      let srcFilter = 'filter:' + facet,
-          dstFilter = 'post_' + srcFilter;
-      params[dstFilter] = _.union(ensureArray(params[srcFilter]),
-                                  ensureArray(params[dstFilter]));
-      delete params[srcFilter];
     });
     return params;
   }

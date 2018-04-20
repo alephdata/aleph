@@ -17,6 +17,7 @@ class Facet(object):
     def extract(self, aggregations, name):
         if aggregations is None:
             return {}
+        aggregations = aggregations.get('%s.filtered' % name, aggregations)
         data = aggregations.get('scoped', {}).get(name, {}).get(name)
         return data or aggregations.get(name, {})
 
@@ -28,8 +29,7 @@ class Facet(object):
 
     def to_dict(self):
         active = list(self.parser.filters.get(self.name, []))
-        active.extend(self.parser.post_filters.get(self.name, []))
-        data = {'filters': list(active)}
+        data = {'filters': active}
         if self.parser.get_facet_total(self.name):
             data['total'] = self.cardinality.get('value')
 

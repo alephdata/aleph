@@ -139,8 +139,7 @@ class SearchFacet extends Component {
           {facet.values !== undefined && (
             <CheckboxList items={facet.values}
                           selectedItems={current}
-                          onItemClick={this.onSelect}
-                          >
+                          onItemClick={this.onSelect}>
               {!isUpdating && hasMoreValues && (
                 <a className="ShowMore" onClick={this.showMore}>
                   <FormattedMessage id="search.facets.showMore"
@@ -150,7 +149,7 @@ class SearchFacet extends Component {
               )}
             </CheckboxList>
           )}
-          {((isUpdating || isExpanding) && isOpen) && (
+          {(isExpanding && isOpen) && (
             <Spinner className="pt-small spinner" />
           )}
         </Collapse>

@@ -36,14 +36,19 @@ def authz_query(authz):
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
         return {'match_all': {}}
-    return field_filter_query('roles', list(authz.roles))
+    return field_filter_query('roles', authz.roles)
 
 
 def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
-    values = ensure_list(values)
+    if isinstance(values, (set, list, tuple)):
+        values = list(values)
+    else:
+        values = ensure_list(values)
     if not len(values):
         return {'match_all': {}}
+    if field in ['_id', 'id']:
+        return {'ids': {'values': values}}
     if len(values) == 1:
         return {'term': {field: values[0]}}
     return {'terms': {field: values}}

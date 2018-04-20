@@ -64,7 +64,7 @@ class CollectionLoad extends Component {
 
   fetchIfNeeded() {
     const { id, collection } = this.props;
-    if (collection === undefined) {
+    if (collection.kind === undefined) {
       this.props.fetchCollection({ id });
     }
   }

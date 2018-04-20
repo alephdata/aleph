@@ -13,18 +13,8 @@ log = logging.getLogger(__name__)
 
 def convert_filters(filters):
     ret = []
-    id_values = []
-
     for field, values in filters.iteritems():
-        # Combine id or _id into one filter
-        if field in ['id', '_id']:
-            id_values.extend(values)
-        else:
-            ret.append(field_filter_query(field, list(values)))
-
-    if id_values:
-        ret.append({'ids': {'values': id_values}})
-
+        ret.append(field_filter_query(field, values))
     return ret
 
 
@@ -66,7 +56,11 @@ class Query(object):
 
     def get_filters(self):
         """Apply query filters from the user interface."""
-        filters = convert_filters(self.parser.filters)
+        filters = []
+        for field, values in self.parser.filters.iteritems():
+            if field not in self.parser.facet_names:
+                filters.append(field_filter_query(field, values))
+
         if len(self.parser.exclude):
             exclude = {'ids': {'values': self.parser.exclude}}
             filters.append({
@@ -74,9 +68,17 @@ class Query(object):
             })
         return filters
 
-    def get_post_filters(self):
+    def get_post_filters(self, exclude=None):
         """Apply post-aggregation query filters."""
-        return convert_filters(self.parser.post_filters)
+        filters = []
+        for field, values in self.parser.filters.iteritems():
+            if field == exclude:
+                continue
+            if field in self.parser.facet_filters:
+                filters.append(field_filter_query(field, values))
+        if not len(filters):
+            {'match_all': {}}
+        return {'bool': {'filter': filters}}
 
     def get_query(self):
         return {
@@ -92,8 +94,9 @@ class Query(object):
         """Aggregate the query in order to generate faceted results."""
         aggregations = {}
         for facet_name in self.parser.facet_names:
+            facet_aggregations = {}
             if self.parser.get_facet_values(facet_name):
-                aggregations[facet_name] = {
+                facet_aggregations[facet_name] = {
                     'terms': {
                         'field': facet_name,
                         'size': self.parser.get_facet_size(facet_name)
@@ -104,11 +107,27 @@ class Query(object):
                 # Option to return total distinct value counts for
                 # a given facet, instead of the top buckets.
                 agg_name = '%s.cardinality' % facet_name
-                aggregations[agg_name] = {
+                facet_aggregations[agg_name] = {
                     'cardinality': {
                         'field': facet_name
                     }
                 }
+
+            if not len(facet_aggregations):
+                break
+
+            # See here for an explanation of the whole post_filters and
+            # aggregation filters thing:
+            # https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-request-post-filter.html  # noqa
+            if len(self.parser.facet_filters):
+                agg_name = '%s.filtered' % facet_name
+                aggregations[agg_name] = {
+                    'filter': self.get_post_filters(exclude=facet_name),
+                    'aggregations': facet_aggregations
+                }
+            else:
+                aggregations.update(facet_aggregations)
+
         return aggregations
 
     def get_sort(self):
@@ -149,20 +168,13 @@ class Query(object):
             'from': self.parser.offset,
             'size': self.parser.limit,
             'aggregations': self.get_aggregations(),
+            'post_filter': self.get_post_filters(),
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
             '_source': self.get_source()
         }
 
-        post_filters = self.get_post_filters()
-        if post_filters:
-            body['post_filter'] = {
-                'bool': {
-                    'filter': post_filters
-                }
-            }
-
-        # log.info("Query: %s", pformat(body))
+        log.info("Query: %s", pformat(body))
         return body
 
     def search(self):
