@@ -12,6 +12,10 @@ class CollectionLabel extends Component {
   render() {
     const { collection, icon = true } = this.props;
 
+    if (collection === undefined || collection.isLoading) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         { collection.secret && icon && (<i className='fa fa-fw fa-lock' />) }
@@ -25,6 +29,10 @@ class CollectionLink extends Component {
   render() {
     const { collection, icon = true, className, preview, indexScreen } = this.props;
 
+    if (collection === undefined || collection.isLoading) {
+      return null;
+    }
+
     if (preview === true) {
       // Displays in preview sidebar
       return (
@@ -35,9 +43,9 @@ class CollectionLink extends Component {
         </a>
       );
     } else {
+      const url = `/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`;
       return (
-        <Link to={`/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`}
-              className={c('CollectionLink', className)}>
+        <Link to={url} className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} iconOpen={true} />
         </Link>
       );
@@ -77,8 +85,8 @@ class CollectionLoad extends Component {
 const mapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
-CollectionLoad = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 
+CollectionLoad = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 CollectionLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
