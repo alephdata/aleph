@@ -27,7 +27,7 @@ class EntityInfo extends React.Component {
     this.setState({ activeTabId });
   }
 
-  componentDidMount() {
+  componentDidMount(prevProps) {
     const { entity, references, tags } = this.props;
     if (entity.id !== undefined && references.total === undefined) {
       this.props.fetchEntityReferences(entity);

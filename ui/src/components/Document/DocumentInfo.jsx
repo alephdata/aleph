@@ -15,9 +15,7 @@ import { CollectionOverview } from 'src/components/Collection';
 class DocumentInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      activeTabId: 'overview'
-    };
+    this.state = { activeTabId: 'overview' };
     this.handleTabChange = this.handleTabChange.bind(this);
   }
   
@@ -109,7 +107,6 @@ class DocumentInfo extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  session: state.session,
   tags: selectEntityTags(state, ownProps.document.id)
 });
 

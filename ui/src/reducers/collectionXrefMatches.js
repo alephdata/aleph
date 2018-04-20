@@ -12,7 +12,10 @@ export default createReducer({
     set(matchesKey(id, otherId), result)(state),
 
   [fetchNextCollectionXrefMatches.START]: (state, { id, otherId }) =>
-    update(matchesKey(id, otherId), set('isExpanding', true))(state),
+    update(matchesKey(id, otherId), set('isLoading', true))(state),
+  
+  [fetchNextCollectionXrefMatches.ERROR]: (state, { id, otherId }) =>
+    update(matchesKey(id, otherId), set('isLoading', false))(state),
   
   [fetchNextCollectionXrefMatches.COMPLETE]: (state, { id, otherId, prevResult, nextResult }) =>
     set(matchesKey(id, otherId), combineResults(prevResult, nextResult))(state),

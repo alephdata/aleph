@@ -60,3 +60,11 @@ export function selectEntityTags(state, entityId) {
 export function selectEntityReferences(state, entityId) {
   return selectObject(state.entityReferences, entityId);
 }
+
+export function selectCollectionXrefIndex(state, collectionId) {
+  return selectObject(state.collectionXrefIndex, collectionId);
+}
+
+export function selectCollectionXrefMatches(state, collectionId, otherId) {
+  return selectObject(state.collectionXrefMatches, matchesKey(collectionId, otherId));
+}

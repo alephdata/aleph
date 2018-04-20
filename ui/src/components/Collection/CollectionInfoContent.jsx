@@ -1,20 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { FormattedNumber } from 'react-intl';
 
 import { Schema } from 'src/components/common';
 
 
 class CollectionInfoContent extends React.Component {
-  constructor() {
-    super();
-    this.state = {content: []};
-    this.objectToList = this.objectToList.bind(this);
-  }
-
-  componentDidMount() {
-    this.objectToList(this.props.schemata)
-  }
 
   sortByNumber(a,b) {
     if (a.number < b.number)
@@ -24,22 +14,16 @@ class CollectionInfoContent extends React.Component {
     return 0;
   }
 
-  objectToList(object) {
+  render() {
+    const { collection } = this.props;
     let content = [];
 
-    for (let key in object) {
-      if (object.hasOwnProperty(key)) {
-        content.push({name: key, number: object[key]});
+    for (let key in collection.schemata) {
+      if (collection.schemata.hasOwnProperty(key)) {
+        content.push({name: key, number: collection.schemata[key]});
       }
     }
-
     content.sort(this.sortByNumber);
-    this.setState({content});
-  }
-
-  render() {
-    const { content } = this.state;
-    const { collection } = this.props;
 
     return (
       <div className="xrefs">
@@ -60,9 +44,4 @@ class CollectionInfoContent extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-  };
-};
-
-export default connect(mapStateToProps)(CollectionInfoContent);
+export default CollectionInfoContent;
