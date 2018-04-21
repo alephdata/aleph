@@ -27,13 +27,14 @@ class CollectionInfo extends Component {
   }
   
   componentDidMount() {
-    const { collection, xrefIndex } = this.props;
-    if (collection.id !== undefined && xrefIndex.results === undefined && !xrefIndex.isLoading) {
-      this.props.fetchCollectionXrefIndex(collection);
-    }
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
     const { collection, xrefIndex } = this.props;
     if (collection.id !== undefined && xrefIndex.results === undefined && !xrefIndex.isLoading) {
       this.props.fetchCollectionXrefIndex(collection);

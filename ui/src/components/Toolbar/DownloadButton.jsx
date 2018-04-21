@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 
 class DownloadButton extends React.Component {

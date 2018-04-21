@@ -22,22 +22,16 @@ class EntityInfo extends React.Component {
     };
     this.handleTabChange = this.handleTabChange.bind(this);
   }
-  
-  handleTabChange(activeTabId: TabId) {
-    this.setState({ activeTabId });
-  }
 
   componentDidMount(prevProps) {
-    const { entity, references, tags } = this.props;
-    if (entity.id !== undefined && references.total === undefined) {
-      this.props.fetchEntityReferences(entity);
-    }
-    if (entity.id !== undefined && tags.total === undefined) {
-      this.props.fetchEntityTags(entity);
-    }
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
     const { entity, references, tags } = this.props;
     if (entity.id !== undefined && references.total === undefined && !references.isLoading) {
       this.props.fetchEntityReferences(entity);
@@ -45,6 +39,10 @@ class EntityInfo extends React.Component {
     if (entity.id !== undefined && tags.total === undefined && !tags.isLoading) {
       this.props.fetchEntityTags(entity);
     }
+  }
+
+  handleTabChange(activeTabId) {
+    this.setState({ activeTabId });
   }
 
   render() {

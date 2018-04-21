@@ -20,22 +20,23 @@ class DocumentInfo extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
   }
   
-  handleTabChange(activeTabId: TabId) {
-    this.setState({ activeTabId });
-  }
-  
   componentDidMount(prevProps) {
-    const { document, tags } = this.props;
-    if (document.id !== undefined && tags.total === undefined) {
-      this.props.fetchEntityTags(document);
-    }
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
     const { document, tags } = this.props;
     if (document.id !== undefined && tags.total === undefined && !tags.isLoading) {
       this.props.fetchEntityTags(document);
     }
+  }
+
+  handleTabChange(activeTabId: TabId) {
+    this.setState({ activeTabId });
   }
 
   render() {

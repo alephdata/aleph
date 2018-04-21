@@ -1,7 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { Popover, PopoverInteractionKind, Position } from "@blueprintjs/core";
 
 import getPath from 'src/util/getPath';
 
