@@ -14,10 +14,10 @@ class PagingButtons extends React.Component {
         const parsedHash = queryString.parse(loc.hash);
         const currentPage = (parsedHash.page && parseInt(parsedHash.page, 10) <= numberOfPages) ? parseInt(parsedHash.page, 10) : 1;
 
-        parsedHash.page = currentPage-1;
+        parsedHash.page = currentPage - 1;
         const prevButtonLink = queryString.stringify(parsedHash);
 
-        parsedHash.page = currentPage+1;
+        parsedHash.page = currentPage + 1;
         const nextButtonLink = queryString.stringify(parsedHash);
 
         // Only displays paging buttons on PDF docs

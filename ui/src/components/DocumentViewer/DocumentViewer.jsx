@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button } from "@blueprintjs/core";
 
 import Query from 'src/app/Query';
-import { Toolbar, CloseButton, DownloadButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
+import { Toolbar, CloseButton, DownloadButton, ParentButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
 import TextViewer from './TextViewer';
@@ -106,20 +106,23 @@ class DocumentViewer extends React.Component {
     return <React.Fragment>
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
-          {previewMode === true && toggleMaximise && (
-            <Button icon="eye-open"
-              className="button-maximise"
-              onClick={toggleMaximise}>
-              <FormattedMessage id="info" defaultMessage="Info"/>
-            </Button>
-          )}
-          {previewMode === true && (
-            <Link to={getPath(doc.links.ui)} className="pt-button button-link">
-              <span className={`pt-icon-folder-open`}/>
-              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-            </Link>
-          )}
-          <DownloadButton isPreview={previewMode} document={doc}/>
+          <div className="pt-button-group">
+            {previewMode === true && toggleMaximise && (
+              <Button icon="eye-open"
+                className="button-maximise"
+                onClick={toggleMaximise}>
+                <FormattedMessage id="info" defaultMessage="Info"/>
+              </Button>
+            )}
+            {previewMode === true && (
+              <Link to={getPath(doc.links.ui)} className="pt-button button-link">
+                <span className={`pt-icon-folder-open`}/>
+                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+              </Link>
+            )}
+            <ParentButton isPreview={previewMode} document={doc}/>
+            <DownloadButton isPreview={previewMode} document={doc}/>
+          </div>
           {numberOfPages !== null && numberOfPages > 0 && (
             <PagingButtons document={doc} numberOfPages={numberOfPages}/>
           )}

@@ -54,7 +54,7 @@ class EntityTable extends Component {
     const { result, query, intl, showLinksInPreview, location: loc, history: hist } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
 
-    if (!result || !result.results || result.total === 0) {
+    if (result.total === undefined || result.total === 0) {
       return null;
     }
 
@@ -105,5 +105,4 @@ class EntityTable extends Component {
 }
 
 EntityTable = withRouter(EntityTable);
-
 export default injectIntl(EntityTable);
