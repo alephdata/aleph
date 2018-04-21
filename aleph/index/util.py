@@ -41,10 +41,7 @@ def authz_query(authz):
 
 def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
-    if isinstance(values, (set, list, tuple)):
-        values = list(values)
-    else:
-        values = ensure_list(values)
+    values = ensure_list(values)
     if not len(values):
         return {'match_all': {}}
     if field in ['_id', 'id']:
