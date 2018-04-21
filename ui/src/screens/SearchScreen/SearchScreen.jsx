@@ -69,8 +69,8 @@ const messages = defineMessages({
 
 class SearchScreen extends React.Component {
   constructor(props) {
-    const {intl} = props;
     super(props);
+    const {intl} = props;
 
     const facets = [
       {
@@ -176,9 +176,7 @@ class SearchScreen extends React.Component {
     const {query, result, intl} = this.props;
 
     return (
-      <Screen query={query}
-              updateQuery={this.updateQuery}
-              title={query.getString('q')}>
+      <Screen query={query} updateQuery={this.updateQuery} title={query.getString('q')}>
         <DualPane className="SearchScreen">
           <DualPane.InfoPane className="SearchFacetsPane">
             <div className='total-count pt-text-muted'>
@@ -203,16 +201,15 @@ class SearchScreen extends React.Component {
           <DualPane.ContentPane>
             <SignInCallout/>
             <QueryTags query={query} updateQuery={this.updateQuery}/>
-
-            {result.total === 0 && (
-              <ErrorScreen.EmptyList visual="search"
-                                    title={intl.formatMessage(messages.no_results_title)}
-                                    description={intl.formatMessage(messages.no_results_description)}/>
-            )}
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
                          result={result}
                          showLinksInPreview={true}/>
+            {result.total === 0 && (
+              <ErrorScreen.EmptyList visual="search"
+                                     title={intl.formatMessage(messages.no_results_title)}
+                                     description={intl.formatMessage(messages.no_results_description)}/>
+            )}
             {!result.isLoading && result.next && (
               <Waypoint
                 onEnter={this.getMoreResults}
