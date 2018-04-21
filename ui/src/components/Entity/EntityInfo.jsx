@@ -2,24 +2,17 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import { Property, Entity, DualPane, TabCount, Schema } from 'src/components/common';
 import { EntityConnections } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
-import { fetchEntityReferences } from 'src/actions/index';
+import { fetchEntityReferences, fetchEntityTags } from 'src/actions/index';
 import { selectEntityTags, selectEntityReferences } from 'src/selectors';
 import getPath from 'src/util/getPath';
-import ErrorScreen from "../ErrorMessages/ErrorScreen";
 
-const messages = defineMessages({
-    no_data: {
-        id: 'entity.info.no.data',
-        defaultMessage: 'No further details on this entity contained in source.'
-    }
-});
 
 class EntityInfo extends React.Component {
   constructor(props) {
@@ -29,33 +22,34 @@ class EntityInfo extends React.Component {
     };
     this.handleTabChange = this.handleTabChange.bind(this);
   }
-  
-  handleTabChange(activeTabId: TabId) {
-    this.setState({ activeTabId });
-  }
 
-  componentDidMount() {
-    const { entity } = this.props;
-    if(entity && entity.id) {
-      this.props.fetchEntityReferences(entity);
-    }
+  componentDidMount(prevProps) {
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
-    const { entity } = this.props;
-    if(entity.id !== prevProps.entity.id) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { entity, references, tags } = this.props;
+    if (entity.id !== undefined && references.total === undefined && !references.isLoading) {
       this.props.fetchEntityReferences(entity);
+    }
+    if (entity.id !== undefined && tags.total === undefined && !tags.isLoading) {
+      this.props.fetchEntityTags(entity);
     }
   }
 
+  handleTabChange(activeTabId) {
+    this.setState({ activeTabId });
+  }
+
   render() {
-    const { references, entity, schema, tags, intl, showToolbar } = this.props;
-    const tagsTotal = tags.isLoading ? undefined: tags.total;
-    const referencesTotal = references.isLoading ? undefined: references.results.length;
-    const connectionsTotal = referencesTotal === undefined ?
-        tagsTotal === undefined ?
-            0 : tagsTotal : tagsTotal === undefined ?
-            referencesTotal : tagsTotal + referencesTotal;
+    const { references, entity, schema, tags, showToolbar } = this.props;
+    const tagsTotal = tags.total === undefined ? undefined: tags.total;
+    const referencesTotal = references.results === undefined ? undefined: references.results.length;
+    const connectionsTotal = referencesTotal === undefined || tagsTotal === undefined ? undefined : tagsTotal + referencesTotal;
     const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
 
     if (schema === undefined) {  // entity hasn't loaded.
@@ -100,9 +94,6 @@ class EntityInfo extends React.Component {
                 panel={
                   <React.Fragment>
                     <ul className="info-sheet">
-                      {entityProperties.length === 0 &&
-                          <ErrorScreen.EmptyList title={intl.formatMessage(messages.no_data)}/>
-                      }
                       { entityProperties.map((prop) => (
                         <li key={prop.name}>
                           <span className="key">
@@ -129,7 +120,7 @@ class EntityInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="connections" disabled={!connectionsTotal || connectionsTotal === 0}
+              <Tab id="connections" disabled={connectionsTotal === undefined || connectionsTotal === 0}
                 title={
                   <React.Fragment>
                     <FormattedMessage id="entity.info.connections" defaultMessage="Connections"/>
@@ -137,9 +128,9 @@ class EntityInfo extends React.Component {
                   </React.Fragment>
                 }
                 panel={
-                    <React.Fragment>
-                        <EntityConnections connectionsTotal={connectionsTotal} references={references} entity={entity}/>
-                    </React.Fragment>
+                  <React.Fragment>
+                    <EntityConnections tags={tags} references={references} entity={entity}/>
+                  </React.Fragment>
                 }
               />
           </Tabs>
@@ -150,13 +141,13 @@ class EntityInfo extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { entity } = ownProps;
   return {
-    references: selectEntityReferences(state, ownProps.entity.id),
-    schema: state.metadata.schemata[ownProps.entity.schema],
-    tags: selectEntityTags(state, ownProps.entity.id)
+    references: selectEntityReferences(state, entity.id),
+    tags: selectEntityTags(state, entity.id),
+    schema: state.metadata.schemata[entity.schema]
   };
 };
 
-EntityInfo = injectIntl(EntityInfo);
-EntityInfo = connect(mapStateToProps, { fetchEntityReferences }, null, { pure: false })(EntityInfo);
+EntityInfo = connect(mapStateToProps, { fetchEntityReferences, fetchEntityTags }, null, { pure: false })(EntityInfo);
 export default EntityInfo;

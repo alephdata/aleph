@@ -88,7 +88,7 @@ class TableViewer extends Component {
             scrollableAncestor={window}
           />
         )}
-        {result.isLoading && (
+        {result.total === null && (
           <SectionLoading />
         )}
       </div>

@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
+import c from 'classnames';
 
 import EntityTableRow from './EntityTableRow';
 import { SortableTH } from 'src/components/common';
+
+import './EntityTable.css';
+
 
 const messages = defineMessages({
   column_name: {
@@ -33,6 +37,19 @@ const messages = defineMessages({
 });
 
 class EntityTable extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {result: props.result};
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { result } = nextProps;
+    if (result.total !== undefined) {
+      this.setState({ result })
+    }
+  }
+
   sortColumn(field) {
     const { query, updateQuery } = this.props;
     const { field: sortedField, desc } = query.getSort();
@@ -51,10 +68,12 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { result, query, intl, showLinksInPreview, location: loc, history: hist } = this.props;
+    const { query, intl, showLinksInPreview, location, history } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
+    const isLoading = this.props.result.total === undefined;
+    const { result } = this.state;
 
-    if (!result || !result.results || result.total === 0) {
+    if (result.total === 0 && result.page === 1) {
       return null;
     }
 
@@ -88,15 +107,16 @@ class EntityTable extends Component {
             )}
           </tr>
         </thead>
-        <tbody>
-          {result.results.map(entity =>
+        <tbody className={c({'updating': isLoading})}>
+          {result.results !== undefined && result.results.map(entity =>
             <EntityTableRow key={entity.id}
                             entity={entity}
                             hideCollection={hideCollection}
                             documentMode={documentMode}
                             showLinksInPreview={showLinksInPreview}
-                            location={loc}
-                            history={hist} />
+                            showSkeleton={isLoading}
+                            location={location}
+                            history={history} />
           )}
         </tbody>
       </table>
@@ -104,6 +124,6 @@ class EntityTable extends Component {
   }
 }
 
+EntityTable = injectIntl(EntityTable);
 EntityTable = withRouter(EntityTable);
-
-export default injectIntl(EntityTable);
+export default EntityTable;

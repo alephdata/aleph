@@ -16,15 +16,15 @@ class EntityScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { entityId } = this.props;
-    if (entityId !== prevProps.entityId) {
+    const { entityId, entity } = this.props;
+    if (entity.id === undefined && !entity.isLoading) {
       this.props.fetchEntity({ id: entityId });
     }
   }
 
   render() {
       const { entity } = this.props;
-      if (entity.isLoading) {
+      if (entity.id === undefined) {
         return (<ScreenLoading />);
       }
       if (entity.error) {

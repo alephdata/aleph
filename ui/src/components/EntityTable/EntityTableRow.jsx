@@ -3,7 +3,6 @@ import queryString from 'query-string';
 
 import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
-import './EntityTableRow.css';
 
 class EntityTableRow extends Component {
   constructor(props) {
@@ -50,11 +49,13 @@ class EntityTableRow extends Component {
   shouldComponentUpdate(nextProps) {
     // Only update if the ID of the entity has changed *or* location has updated
     return this.props.entity.id !== nextProps.entity.id ||
-        this.props.location !== nextProps.location;
+        this.props.location.hash !== nextProps.location.hash ||
+        this.props.showSkeleton !== nextProps.showSkeleton;
   }
 
   render() {
-    const { entity, hideCollection, documentMode, className, location: loc } = this.props;
+    const { entity, className, location: loc } = this.props;
+    const { hideCollection, documentMode } = this.props;
     const parsedHash = queryString.parse(loc.hash);
     
     let rowClassName = (className) ? `${className} nowrap` : 'nowrap';

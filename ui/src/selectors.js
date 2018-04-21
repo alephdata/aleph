@@ -1,13 +1,9 @@
 import _ from 'lodash';
 
-export function matchesKey(collectionId, otherId) {
-  return collectionId + '*' + otherId;
-}
-
 function selectResult(state, query, expand) {
   const key = query.toKey();
   const result = {
-    isLoading: true,
+    isLoading: false,
     results: [],
     ...state.results[key]
   };
@@ -17,7 +13,7 @@ function selectResult(state, query, expand) {
 
 function selectObject(objects, id) {
   if (!id || !_.has(objects, id)) {
-    return {id: id, isLoading: true}
+    return {isLoading: false}
   }
   return objects[id];
 }
@@ -59,4 +55,12 @@ export function selectEntityTags(state, entityId) {
 
 export function selectEntityReferences(state, entityId) {
   return selectObject(state.entityReferences, entityId);
+}
+
+export function selectCollectionXrefIndex(state, collectionId) {
+  return selectObject(state.collectionXrefIndex, collectionId);
+}
+
+export function selectCollectionXrefMatches(state, query) {
+  return selectObject(state.collectionXrefMatches, query.toKey());
 }

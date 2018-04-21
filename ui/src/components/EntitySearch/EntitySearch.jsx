@@ -104,7 +104,7 @@ class EntitySearch extends Component {
             scrollableAncestor={window}
           />
         )}
-        {result.isLoading && (
+        {(result.isLoading || result.total === null) && (
           <SectionLoading/>
         )}
       </React.Fragment>

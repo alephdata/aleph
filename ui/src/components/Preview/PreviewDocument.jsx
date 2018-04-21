@@ -34,7 +34,7 @@ class PreviewDocument extends React.Component {
       />
     }
 
-    if (!document || !document.id) {
+    if (document.id === undefined) {
       return <SectionLoading/>;
     }
 

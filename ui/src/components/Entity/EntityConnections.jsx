@@ -1,5 +1,4 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import {FormattedNumber, FormattedMessage} from 'react-intl';
 import {Link} from 'react-router-dom';
 
@@ -20,19 +19,18 @@ class EntityConnections extends React.Component {
     const tabName = 'references-' + reference.property.qname;
     const query = queryString.stringify({'content:tab': tabName});
     return path + '#' + query;
-
   }
 
   render() {
-    const {connectionsTotal, references, entity} = this.props;
+    const {tags, references, entity} = this.props;
 
     return (
       <React.Fragment>
-        {connectionsTotal && connectionsTotal > 0 && (
+        {references.total !== undefined && references.total > 0 && (
           <div className='EntityConnections'>
-                        <span className="relationship">
-                           <FormattedMessage id='entity.connections.relationships' defaultMessage='Relationships'/>
-                          </span>
+            <span className="relationship">
+              <FormattedMessage id='entity.connections.relationships' defaultMessage='Relationships'/>
+            </span>
             <ul className="info-rank">
               {references.results.map((ref) => (
                 <li key={ref.property.qname}>
@@ -48,17 +46,12 @@ class EntityConnections extends React.Component {
                 </li>
               ))}
             </ul>
-            <EntityInfoTags entity={entity}/>
           </div>
         )}
-        {connectionsTotal === 0 && <ul/>}
+        <EntityInfoTags tags={tags} entity={entity}/>
       </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {};
-};
-
-export default connect(mapStateToProps, {})(EntityConnections)
+export default EntityConnections;

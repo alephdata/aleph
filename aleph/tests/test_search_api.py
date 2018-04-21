@@ -33,11 +33,11 @@ class SearchApiTestCase(TestCase):
         assert '"ru"' in text, lang_facet
 
     def test_facet_counts(self):
-        res = self.client.get('/api/2/search?facet=languages&facet_total=true')
+        res = self.client.get('/api/2/search?facet=languages&facet_total:languages=true')  # noqa
         assert res.status_code == 200, res
         lang_facet = res.json['facets']['languages']
         assert lang_facet['total'] == 2
-        res = self.client.get('/api/2/search?facet=banana&facet_total=true')
+        res = self.client.get('/api/2/search?facet=banana&facet_total:banana=true')  # noqa
         assert res.status_code == 200, res
         banana_facet = res.json['facets']['banana']
         assert banana_facet['total'] == 0
@@ -55,7 +55,7 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/2/search?facet=schema&filter:schema=Company')  # noqa
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 1, facet['values']
+        assert len(facet['values']) == 4, facet['values']
         assert facet['values'][0]['label'] == 'Companies', facet
 
         res = self.client.get('/api/2/search?facet=schema&post_filter:schema=Company')  # noqa

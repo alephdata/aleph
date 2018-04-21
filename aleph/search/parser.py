@@ -41,10 +41,6 @@ class QueryParser(object):
         return items
 
     @property
-    def post_filters(self):
-        return self.prefixed_items('post_filter:')
-
-    @property
     def filters(self):
         return self.prefixed_items('filter:')
 
@@ -115,13 +111,8 @@ class SearchQueryParser(QueryParser):
         # Set of field names to facet by (i.e. include the count of distinct
         # values in the result set). These must match 'keyword' fields in the
         # index.
-        self.facet_names = self.getlist('facet')
-        # Number of distinct values to be included (i.e. top N)
-        self.facet_size = self.getint('facet_size', 50)
-        # Flag to perform a count of the total number of distinct values.
-        self.facet_total = self.getbool('facet_total', False)
-        # Flag to disable returning actual values (i.e. count only)
-        self.facet_values = self.getbool('facet_values', True)
+        self.facet_names = set(self.getlist('facet'))
+        self.facet_filters = self.facet_names.intersection(self.filters.keys())
 
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool('highlight', False)
@@ -129,3 +120,17 @@ class SearchQueryParser(QueryParser):
         self.highlight_length = self.getint('highlight_length', 100)
         # Number of snippets per document, 0 = return full document text.
         self.highlight_count = self.getint('highlight_count', 5)
+
+    def get_facet_size(self, name):
+        """Number of distinct values to be included (i.e. top N)."""
+        return self.getint('facet_size:%s' % name, 50)
+
+    def get_facet_total(self, name):
+        """Flag to perform a count of the total number of distinct values."""
+        return self.getbool('facet_total:%s' % name, False)
+
+    def get_facet_values(self, name):
+        """Flag to disable returning actual values (i.e. count only)."""
+        if self.get_facet_size(name) == 0:
+            return False
+        return self.getbool('facet_values:%s' % name, True)

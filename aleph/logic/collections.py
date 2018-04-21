@@ -41,19 +41,19 @@ def update_collection(collection):
 def update_collections():
     cq = db.session.query(Collection)
     cq = cq.order_by(Collection.id.desc())
-    for collection in cq:
+    for collection in cq.all():
         update_collection(collection)
 
 
 def index_collections():
     cq = db.session.query(Collection)
     cq = cq.order_by(Collection.id.desc())
-    for collection in cq:
+    for collection in cq.all():
         log.info("Index [%s]: %s", collection.foreign_id, collection.label)
         index_collection(collection)
 
 
-@celery.task()
+@celery.task(priority=8)
 def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
     collection = Collection.by_id(collection_id)

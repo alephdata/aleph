@@ -6,32 +6,26 @@ import { Tab, Tabs } from "@blueprintjs/core";
 
 import { selectEntityReferences } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
-import { TabCount, Property } from 'src/components/common';
+import { TabCount, Property, SectionLoading } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
+
 
 class EntityReferences extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
     this.handleTabChange = this.handleTabChange.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ activeTab: nextProps.activeTab });
-  }
-  
   handleTabChange(activeTab) {
     const { fragment } = this.props;
     fragment.update({'content:tab': activeTab});
-    this.setState({ activeTab })
   }
   
   render() {
-    const { entity, references } = this.props;
-    const { activeTab } = this.state;
+    const { entity, references, activeTab } = this.props;
 
-    if (references.isLoading) {
-      return null;
+    if (references.results === undefined) {
+      return <SectionLoading />;
     }
 
     if (!references.results.length) {
@@ -82,7 +76,7 @@ class EntityReferences extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const fragment = new Fragment(ownProps.history);
   const references = selectEntityReferences(state, ownProps.entity.id);
-  const reference = (!references.isLoading && references.results.length) ? references.results[0] : undefined;
+  const reference = (!references.isLoading && references.results !== undefined && references.results.length) ? references.results[0] : undefined;
   const defaultTab = reference ? 'references-' + reference.property.qname : undefined;
   const activeTab = fragment.get('content:tab') || defaultTab;
   return { fragment, references, activeTab };

@@ -29,17 +29,11 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
   return { id, data: response.data};
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
-export const fetchCollectionXrefIndex = asyncActionCreator((id) => async dispatch => {
+export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async dispatch => {
   const response = await endpoint.get(`collections/${id}/xref`);
   return { id, data: response.data};
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 
-export const fetchCollectionXrefMatches = asyncActionCreator((id, otherId) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/xref/${otherId}?limit=50`);
-  return { id, otherId, result: response.data};
-}, { name: 'FETCH_COLLECTION_XREF_MATCHES' });
-
-export const fetchNextCollectionXrefMatches = asyncActionCreator((id, otherId, result) => async dispatch => {
-  const response = await endpoint.get(result.next);
-  return { id, otherId, prevResult: result, nextResult: response.data};
-}, { name: 'FETCH_COLLECTION_XREF_NEXT_MATCHES' });
+export const queryXrefMatches = asyncActionCreator((query) => async dispatch => {
+  return queryEndpoint(query);
+}, { name: 'QUERY_XREF_MATCHES' });

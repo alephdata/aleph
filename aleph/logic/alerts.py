@@ -35,10 +35,12 @@ def check_alert(alert):
         publish(Events.MATCH_ALERT,
                 actor_id=entity.get('uploader_id'),
                 params=params)
+        db.session.flush()
 
     alert.update()
     log.info('Found %d new results for: %s', found, alert.label)
     db.session.commit()
+    db.session.close()
 
 
 def alert_query(alert, authz):

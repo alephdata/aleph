@@ -4,10 +4,12 @@ import {Link} from 'react-router-dom';
 import {FormattedMessage} from 'react-intl';
 import {Button, Tab, Tabs} from "@blueprintjs/core";
 
+import { fetchCollectionXrefIndex } from 'src/actions';
+import { selectCollectionXrefIndex } from 'src/selectors';
 import {Toolbar, CloseButton} from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
-import {DualPane} from 'src/components/common';
+import {DualPane, TabCount} from 'src/components/common';
 import {CollectionInfoXref, CollectionOverview, CollectionInfoContent} from 'src/components/Collection';
 
 class CollectionInfo extends Component {
@@ -15,50 +17,46 @@ class CollectionInfo extends Component {
     super(props);
     this.state = {
       activeTabId: 'overview',
-      collectionInfoIsOpen: false,
-      collectionXRefTab: false,
+      settingsIsOpen: false,
       accessIsOpen: false
     };
 
     this.handleTabChange = this.handleTabChange.bind(this);
-    this.toggleCollectionEdit = this.toggleCollectionEdit.bind(this);
-    this.onCollectionXRefLoad = this.onCollectionXRefLoad.bind(this);
+    this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleAccess = this.toggleAccess.bind(this);
   }
+  
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      collectionXRefTab: false
-    });
+  componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { collection, xrefIndex } = this.props;
+    if (collection.id !== undefined && xrefIndex.results === undefined && !xrefIndex.isLoading) {
+      this.props.fetchCollectionXrefIndex(collection);
+    }
   }
 
   handleTabChange(activeTabId: TabId) {
     this.setState({activeTabId});
   }
 
-  toggleCollectionEdit() {
-    this.setState({
-      collectionInfoIsOpen: !this.state.collectionInfoIsOpen
-    })
+  toggleSettings() {
+    this.setState({ settingsIsOpen: !this.state.settingsIsOpen });
   }
 
   toggleAccess() {
-    this.setState({
-      accessIsOpen: !this.state.accessIsOpen
-    })
-  }
-
-  onCollectionXRefLoad(collection, xRefs) {
-    if (xRefs && xRefs.total && xRefs.total > 0) {
-      this.setState({
-        collectionXRefTab: true
-      });
-    }
+    this.setState({ accessIsOpen: !this.state.accessIsOpen });
   }
 
   render() {
-    const {collection, showToolbar} = this.props;
-    const {permissions, activeTabId, collectionXRefTab, collectionInfoIsOpen, accessIsOpen} = this.state;
+    const {collection, showToolbar, xrefIndex} = this.props;
+    const {activeTabId, settingsIsOpen, accessIsOpen} = this.state;
+    const hasXref = xrefIndex.results !== undefined && xrefIndex.results.length > 0;
 
     // @TODO Discussion: 'Search Collection' link to update the current query?
     return (
@@ -71,13 +69,13 @@ class CollectionInfo extends Component {
             </Link>
             {collection.writeable &&
             <React.Fragment>
-              <Button icon="cog" onClick={this.toggleCollectionEdit}>
+              <Button icon="cog" onClick={this.toggleSettings}>
                 <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
               </Button>
               <CollectionEditDialog
                 collection={collection}
-                isOpen={collectionInfoIsOpen}
-                toggleDialog={this.toggleCollectionEdit}
+                isOpen={settingsIsOpen}
+                toggleDialog={this.toggleSettings}
               />
               <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
                 <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
@@ -86,7 +84,6 @@ class CollectionInfo extends Component {
                 collection={collection}
                 isOpen={accessIsOpen}
                 toggleDialog={this.toggleAccess}
-                permissions={permissions}
               />
             </React.Fragment>}
             <CloseButton/>
@@ -121,14 +118,15 @@ class CollectionInfo extends Component {
                  }
                  panel={<CollectionInfoContent collection={collection} schemata={collection.schemata}/>}
             />
-            {collectionXRefTab && <Tab id="xref"
-                 disabled={!collectionXRefTab}
+            {hasXref && <Tab id="xref"
+                 disabled={!hasXref}
                  title={
                    <React.Fragment>
                      <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
-                   </React.Fragment>
+                     <TabCount count={xrefIndex.total} />
+                  </React.Fragment>
                  }
-                 panel={<CollectionInfoXref onCollectionXRefLoad={this.onCollectionXRefLoad} collection={collection}/>}
+                 panel={<CollectionInfoXref xrefIndex={xrefIndex} collection={collection} />}
             />}
 
           </Tabs>
@@ -139,7 +137,9 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {}
+  return {
+    xrefIndex: selectCollectionXrefIndex(state, ownProps.collection.id)
+  }
 };
 
-export default connect(mapStateToProps, {})(CollectionInfo);
+export default connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionInfo);

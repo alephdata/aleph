@@ -16,8 +16,7 @@ import {
   fetchCollectionPermissions,
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
-  fetchCollectionXrefMatches,
-  fetchNextCollectionXrefMatches
+  queryXrefMatches
 } from './collectionActions';
 import {
   queryEntities,
@@ -47,8 +46,7 @@ export {
   fetchCollectionPermissions,
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
-  fetchCollectionXrefMatches,
-  fetchNextCollectionXrefMatches,
+  queryXrefMatches,
   queryNotifications
 };
 

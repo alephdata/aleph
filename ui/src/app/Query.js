@@ -45,6 +45,20 @@ class Query {
     return _.toString(_.head(this.getList(name)));
   }
 
+  getInt(name, missing = 0) {
+    if (!this.has(name)) {
+      return missing;
+    }
+    return parseInt(this.getString(name), 10);
+  }
+
+  getBool(name, missing = false) {
+    if (!this.has(name)) {
+      return missing;
+    }
+    return this.getString(name) === 'true';
+  }
+
   toggle(name, value) {
     let values = this.getList(name);
     return this.set(name, _.xor(values, [value]));
@@ -150,6 +164,10 @@ class Query {
     return this.add('facet', value);
   }
 
+  hasFacet(value) {
+    return this.getList('facet').indexOf(value) !== -1;
+  }
+
   clearFacets() {
     return this.set('facet', []);
   }
@@ -180,18 +198,9 @@ class Query {
   }
 
   toParams() {
-    let params = {};
+    const params = {};
     this.fields().forEach((name) => {
       params[name] = this.getList(name);
-    });
-
-    // convert all filters which are being faceted on into post-filters.
-    this.getList('facet').forEach((facet) => {
-      let srcFilter = 'filter:' + facet,
-          dstFilter = 'post_' + srcFilter;
-      params[dstFilter] = _.union(ensureArray(params[srcFilter]),
-                                  ensureArray(params[dstFilter]));
-      delete params[srcFilter];
     });
     return params;
   }

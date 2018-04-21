@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import c from 'classnames';
-import { Icon, Intent } from '@blueprintjs/core';
 
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
@@ -11,6 +10,10 @@ import { selectCollection } from 'src/selectors';
 class CollectionLabel extends Component {
   render() {
     const { collection, icon = true } = this.props;
+
+    if (collection.id === undefined) {
+      return null;
+    }
 
     return (
       <React.Fragment>
@@ -23,7 +26,11 @@ class CollectionLabel extends Component {
 
 class CollectionLink extends Component {
   render() {
-    const { collection, icon = true, className, preview, indexScreen } = this.props;
+    const { collection, icon = true, className, preview } = this.props;
+
+    if (collection.id === undefined) {
+      return null;
+    }
 
     if (preview === true) {
       // Displays in preview sidebar
@@ -31,13 +38,12 @@ class CollectionLink extends Component {
         <a href={`#preview:id=${collection.id}&preview:type=collection`}
            className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} />
-            {indexScreen !== true && <Icon className='collection-icon' icon='folder-open' intent={Intent.NONE}/>}
         </a>
       );
     } else {
+      const url = `/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`;
       return (
-        <Link to={`/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`}
-              className={c('CollectionLink', className)}>
+        <Link to={url} className={c('CollectionLink', className)}>
           <Collection.Label collection={collection} icon={icon} iconOpen={true} />
         </Link>
       );
@@ -46,17 +52,18 @@ class CollectionLink extends Component {
 }
 
 class CollectionLoad extends Component {
+
   componentDidMount() {
-    this.fetchIfNeeded();
+    this.fetchIfNeeded(this.props);
   }
 
-  componentDidUpdate() {
-    this.fetchIfNeeded();
+  componentWillReceiveProps(nextProps) {
+    this.fetchIfNeeded(nextProps);
   }
 
-  fetchIfNeeded() {
-    const { id, collection } = this.props;
-    if (collection === undefined) {
+  fetchIfNeeded(props) {
+    const { id, collection } = props;
+    if (collection.id === undefined && !collection.isLoading) {
       this.props.fetchCollection({ id });
     }
   }
@@ -64,7 +71,7 @@ class CollectionLoad extends Component {
   render() {
     const { collection, children, renderWhenLoading } = this.props;
     if (
-      (collection === undefined || collection.isLoading)
+      (collection.id === undefined || collection.isLoading)
       && renderWhenLoading !== undefined
     ) {
       return renderWhenLoading;
@@ -77,8 +84,8 @@ class CollectionLoad extends Component {
 const mapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
-CollectionLoad = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 
+CollectionLoad = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 CollectionLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,

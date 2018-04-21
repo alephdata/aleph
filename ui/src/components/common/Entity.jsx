@@ -9,7 +9,8 @@ import c from 'classnames';
 
 import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
-import { fetchEntity } from 'src/actions/index';
+import { fetchEntity } from 'src/actions';
+import { selectEntity } from 'src/selectors';
 
 import './Entity.css';
 
@@ -108,7 +109,7 @@ class EntityLoad extends Component {
 
   fetchIfNeeded() {
     const { id, entity } = this.props;
-    if (entity === undefined) {
+    if (entity.id === undefined && !entity.isLoading) {
       this.props.fetchEntity({ id });
     }
   }
@@ -116,7 +117,7 @@ class EntityLoad extends Component {
   render() {
     const { entity, children, renderWhenLoading } = this.props;
     if (
-      (entity === undefined || entity.isLoading)
+      (entity.id === undefined || entity.isLoading)
       && renderWhenLoading !== undefined
     ) {
       return renderWhenLoading;
@@ -127,7 +128,7 @@ class EntityLoad extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  entity: state.entities[ownProps.id],
+  entity: selectEntity(state, ownProps.id),
 });
 EntityLoad = connect(mapStateToProps, { fetchEntity })(EntityLoad);
 

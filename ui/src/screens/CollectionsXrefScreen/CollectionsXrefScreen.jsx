@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
 import Waypoint from 'react-waypoint';
 
-import {
-    fetchCollection,
-    fetchCollectionXrefMatches,
-    fetchNextCollectionXrefMatches,
-    fetchCollectionXrefIndex } from 'src/actions';
+import Query from 'src/app/Query';
+import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
 import { Entity, Screen, Date, Country, ScreenLoading, SectionLoading, Breadcrumbs } from 'src/components/common';
-import { matchesKey, selectCollection } from 'src/selectors';
+import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
 import './CollectionsXrefScreen.css';
@@ -18,8 +15,7 @@ import './CollectionsXrefScreen.css';
 
 class CollectionsXrefScreen extends Component {
   constructor() {
-    super()
-
+    super();
     this.onOtherChange = this.onOtherChange.bind(this)
     this.onLoadMore = this.onLoadMore.bind(this)
   }
@@ -36,18 +32,18 @@ class CollectionsXrefScreen extends Component {
   }
 
   fetchData() {
-    const { collectionId, otherId, index } = this.props;
+    const { collectionId, otherId, index, query } = this.props;
     const { collection, other } = this.props;
-    if (!collection || !collection.id) {
+    if (collection.id === undefined) {
       this.props.fetchCollection({ id: collectionId });
     }
-    if (!other || !other.id) {
+    if (other.id === undefined) {
       this.props.fetchCollection({ id: otherId });
     }
-    if (!index || !index.total) {
-      this.props.fetchCollectionXrefIndex(collectionId);
+    if (index.total === undefined) {
+      this.props.fetchCollectionXrefIndex({id: collectionId});
     }
-    this.props.fetchCollectionXrefMatches(collectionId, otherId);
+    this.props.queryXrefMatches({ query });
   }
 
   onOtherChange({ target }) {
@@ -60,16 +56,15 @@ class CollectionsXrefScreen extends Component {
   }
 
   onLoadMore() {
-    const { collectionId, otherId, matches } = this.props;
-    if (matches.next && !matches.isExpanding) {
-      this.props.fetchNextCollectionXrefMatches(collectionId, otherId, matches);
-    } 
+    const { query, matches } = this.props;
+    if (!matches.isLoading && matches.next) {
+      this.props.queryXrefMatches({query, next: matches.next});
+    }
   }
 
   render() {
     const { collection, other, index, matches } = this.props;
-    const loading = !collection || !collection.id || !other || !other.id || !matches || !index;
-    if (loading) {
+    if (collection.id === undefined || other.id === undefined || index.total === undefined) {
       return <ScreenLoading />;
     }
 
@@ -88,10 +83,10 @@ class CollectionsXrefScreen extends Component {
           <thead>
             <tr>
               <th></th>
-              <th colSpan="3">
+              <th colSpan="3" width="45%">
                 {collection.label}
               </th>
-              <th colSpan="3">
+              <th colSpan="3" width="45%">
                 <div className="pt-select pt-fill">
                   <select id="other" onChange={this.onOtherChange} value={other.id}>
                     { index.results.map((res) => (
@@ -135,13 +130,20 @@ class CollectionsXrefScreen extends Component {
             </tr>
           </thead>
           <tbody>
-            { matches.results.map((match) => (
+            { matches.total === undefined && (
+              <tr key="loading">
+                <td colSpan="7">
+                  <SectionLoading />
+                </td>
+              </tr>
+            )}
+            { matches.total !== undefined && matches.results.map((match) => (
               <tr key={match.id}>
                 <td className="numeric narrow">
                   <FormattedNumber value={parseInt(match.score, 10)} />
                 </td>
                 <td className="entity">
-                  <Entity.Link entity={match.entity} icon />
+                  <Entity.Link entity={match.entity} preview={true} icon />
                 </td>
                 <td className="date">
                   <Date.Earliest values={match.entity.dates} />
@@ -150,7 +152,7 @@ class CollectionsXrefScreen extends Component {
                   <Country.List codes={match.entity.countries} short />
                 </td>
                 <td className="entity">
-                  <Entity.Link entity={match.match} icon />
+                  <Entity.Link entity={match.match} preview={true} icon />
                 </td>
                 <td className="date">
                   <Date.Earliest values={match.match.dates} />
@@ -169,7 +171,7 @@ class CollectionsXrefScreen extends Component {
             scrollableAncestor={window}
           />
         )}
-        { matches.isExpanding && (
+        { matches.isLoading && (
           <SectionLoading />
         )}
       </Screen>
@@ -179,18 +181,22 @@ class CollectionsXrefScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId, otherId } = ownProps.match.params;
-  const collection = selectCollection(state, collectionId);
-  const other = selectCollection(state, otherId);
-  const matchKey = matchesKey(collectionId, otherId);
-  const matches = state.collectionXrefMatches[matchKey];
-  const index = state.collectionXrefIndex[collectionId];
-  return { collectionId, otherId, collection, other, matches, index };
+  const path = `collections/${collectionId}/xref/${otherId}`;
+  const query = new Query(path, {}).limit(50);
+  return {
+    collectionId, otherId, query,
+    collection: selectCollection(state, collectionId),
+    other: selectCollection(state, otherId),
+    matches: selectCollectionXrefMatches(state, query),
+    index: selectCollectionXrefIndex(state, collectionId)
+  };
 };
 
-CollectionsXrefScreen = withRouter(injectIntl(CollectionsXrefScreen));
-export default connect(mapStateToProps, {
+CollectionsXrefScreen = withRouter(CollectionsXrefScreen);
+CollectionsXrefScreen = connect(mapStateToProps, {
   fetchCollection,
-  fetchCollectionXrefMatches,
-  fetchNextCollectionXrefMatches,
-  fetchCollectionXrefIndex
+  fetchCollectionXrefIndex,
+  queryXrefMatches
 })(CollectionsXrefScreen);
+
+export default CollectionsXrefScreen;

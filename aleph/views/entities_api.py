@@ -88,6 +88,7 @@ def references(id):
         })
     return jsonify({
         'status': 'ok',
+        'total': len(results),
         'results': results
     })
 

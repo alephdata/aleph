@@ -7,9 +7,8 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';
-import { Screen, Breadcrumbs, DualPane, SectionLoading, CalloutBox } from 'src/components/common';
+import { Screen, Breadcrumbs, DualPane, SectionLoading, SignInCallout } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import { CollectionListItem } from 'src/components/Collection';
 
@@ -34,7 +33,7 @@ const messages = defineMessages({
 class CollectionsIndexScreen extends Component {
   constructor(props) {
     super(props);
-    const {intl} = props;
+    const { intl } = props;
 
     this.state = {
       queryPrefix: props.query.getString('prefix'),
@@ -51,15 +50,12 @@ class CollectionsIndexScreen extends Component {
           icon: 'globe',
           defaultSize: 300
         },
-      ],
-      isSignupOpen: false
+      ]
     };
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
-    this.onSignin = this.onSignin.bind(this);
-    this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
   componentDidMount() {
@@ -98,17 +94,9 @@ class CollectionsIndexScreen extends Component {
     }
   }
 
-  onSignin() {
-    this.setState({isSignupOpen: !this.state.isSignupOpen})
-  }
-
-  toggleAuthentication() {
-    this.setState({isSignupOpen: !this.state.isSignupOpen})
-  }
-
   render() {
-    const {result, query, intl, metadata, session} = this.props;
-    const {queryPrefix, isSignupOpen} = this.state;
+    const {result, query, intl} = this.props;
+    const {queryPrefix} = this.state;
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -138,11 +126,11 @@ class CollectionsIndexScreen extends Component {
             </p>
             <SearchFacets facets={this.state.facets}
                           query={query}
+                          result={result}
                           updateQuery={this.updateQuery}/>
           </DualPane.InfoPane>
           <DualPane.ContentPane>
-            <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication}/>
-            {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
+            <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <ul className="results">
               {result.results.map(res =>
@@ -167,15 +155,14 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const query = Query.fromLocation('collections', ownProps.location, {}, 'collections')
+  const context = {facet: ['category', 'countries']};
+  const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
 
   return {
     query: query,
-    result: selectCollectionsResult(state, query),
-    metadata: state.metadata,
-    session: state.session
+    result: selectCollectionsResult(state, query)
   };
 }
 

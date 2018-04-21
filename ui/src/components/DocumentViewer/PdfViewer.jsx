@@ -47,15 +47,15 @@ class PdfViewer extends Component {
     // This will mostly do nothing, because nothing will have changed - which 
     // is fine, but in practice in a simple way to trigger once after a short 
     // delay to allow time for the view to do a first render.
-    setTimeout(() => {
-      // We only want to do anything if the size *has not* been calculated yet.
-      // This is because rendering a PDF can change it slightly but we don't
-      // want to flash the entire PDF render (as it's slow) just to change
-      // it by a 1 or 2 pixels.
-      if (this.state.width === null) {
-        this.onResize();
-      }
-    }, 1000);
+    // setTimeout(() => {
+    //   // We only want to do anything if the size *has not* been calculated yet.
+    //   // This is because rendering a PDF can change it slightly but we don't
+    //   // want to flash the entire PDF render (as it's slow) just to change
+    //   // it by a 1 or 2 pixels.
+    //   if (this.state.width === null) {
+    //     this.onResize();
+    //   }
+    // }, 1000);
   }
 
   componentDidMount() {
