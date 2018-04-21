@@ -53,7 +53,7 @@ def index_collections():
         index_collection(collection)
 
 
-@celery.task()
+@celery.task(priority=8)
 def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
     collection = Collection.by_id(collection_id)
