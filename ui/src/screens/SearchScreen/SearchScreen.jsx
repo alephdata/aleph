@@ -8,12 +8,11 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryEntities} from 'src/actions';
 import {selectEntitiesResult} from 'src/selectors';
-import { Screen, DualPane, SectionLoading, CalloutBox } from 'src/components/common';
+import { Screen, DualPane, SectionLoading, SignInCallout } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
-import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './SearchScreen.css';
 
@@ -126,11 +125,10 @@ class SearchScreen extends React.Component {
         icon: 'person'
       }
     ];
-    this.state = {facets: facets, isSignupOpen: false};
+    this.state = {facets: facets};
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
-    this.onSignin = this.onSignin.bind(this);
   }
 
   componentDidMount() {
@@ -146,7 +144,7 @@ class SearchScreen extends React.Component {
   }
 
   fetchIfNeeded() {
-    const {result, query, queryEntities} = this.props;
+    const { result, query, queryEntities } = this.props;
     if (result.total === undefined && !result.isLoading) {
       queryEntities({query: query});
     }
@@ -172,13 +170,10 @@ class SearchScreen extends React.Component {
     });
   }
 
-  onSignin() {
-    this.setState({isSignupOpen: !this.state.isSignupOpen})
-  }
+  
 
   render() {
-    const {query, result, metadata, session, intl} = this.props;
-    const {isSignupOpen} = this.state;
+    const {query, result, intl} = this.props;
 
     return (
       <Screen query={query}
@@ -206,7 +201,7 @@ class SearchScreen extends React.Component {
                           facets={this.state.facets}/>
           </DualPane.InfoPane>
           <DualPane.ContentPane>
-            {!session.loggedIn && <CalloutBox onClick={this.onSignin} className='callout'/>}
+            <SignInCallout/>
             <QueryTags query={query} updateQuery={this.updateQuery}/>
 
             {result.total === 0 && (
@@ -214,7 +209,6 @@ class SearchScreen extends React.Component {
                                     title={intl.formatMessage(messages.no_results_title)}
                                     description={intl.formatMessage(messages.no_results_description)}/>
             )}
-            <AuthenticationDialog auth={metadata.auth} isOpen={isSignupOpen} toggleDialog={this.toggleAuthentication}/>
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
                          result={result}
@@ -247,7 +241,7 @@ const mapStateToProps = (state, ownProps) => {
   };
   const query = Query.fromLocation('search', location, context, '');
   const result = selectEntitiesResult(state, query);
-  return {query, result, metadata: state.metadata, session: state.session};
+  return { query, result };
 };
 
 SearchScreen = connect(mapStateToProps, { queryEntities })(SearchScreen);

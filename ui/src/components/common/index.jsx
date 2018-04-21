@@ -1,5 +1,5 @@
 import Breadcrumbs from './Breadcrumbs';
-import CalloutBox from './CalloutBox';
+import SignInCallout from './SignInCallout';
 import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
@@ -23,7 +23,7 @@ import URL from './URL';
 
 export {
     Breadcrumbs,
-    CalloutBox,
+    SignInCallout,
     Category,
     CheckboxList,
     Collection,

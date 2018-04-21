@@ -69,7 +69,7 @@ class CollectionInfo extends Component {
             </Link>
             {collection.writeable &&
             <React.Fragment>
-              <Button icon="cog" onClick={this.toggleCollectionEdit}>
+              <Button icon="cog" onClick={this.toggleSettings}>
                 <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
               </Button>
               <CollectionEditDialog
