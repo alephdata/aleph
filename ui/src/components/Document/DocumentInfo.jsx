@@ -7,6 +7,7 @@ import { Tab, Tabs, Button } from "@blueprintjs/core";
 import getPath from 'src/util/getPath';
 import { URL, DualPane, TabCount, Schema, Entity } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
+import { fetchEntityTags } from 'src/actions/index';
 import { Toolbar, CloseButton, DownloadButton } from 'src/components/Toolbar';
 import { EntityInfoTags } from 'src/components/Entity';
 import { DocumentMetadata } from 'src/components/Document';
@@ -22,11 +23,24 @@ class DocumentInfo extends React.Component {
   handleTabChange(activeTabId: TabId) {
     this.setState({ activeTabId });
   }
+  
+  componentDidMount(prevProps) {
+    const { document, tags } = this.props;
+    if (document.id !== undefined && tags.total === undefined) {
+      this.props.fetchEntityTags(document);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { document, tags } = this.props;
+    if (document.id !== undefined && tags.total === undefined && !tags.isLoading) {
+      this.props.fetchEntityTags(document);
+    }
+  }
 
   render() {
     const { document: doc, tags, showToolbar, toggleMaximise } = this.props;
-    const tagsTotal = tags !== undefined ? tags.total : undefined;
-    
+
     return (
       <DualPane.InfoPane className="DocumentInfo with-heading">
         {showToolbar && (
@@ -89,14 +103,14 @@ class DocumentInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="tags" disabled={!tagsTotal || tagsTotal === 0}
+              <Tab id="tags" disabled={tags.total === undefined}
                 title={
                   <React.Fragment>
                     <FormattedMessage id="document.info.tags" defaultMessage="Connections"/>
-                    <TabCount count={tagsTotal} />
+                    <TabCount count={tags.total} />
                   </React.Fragment>
                 }
-                panel={<EntityInfoTags entity={doc} />}
+                panel={<EntityInfoTags tags={tags} entity={doc} />}
               />
               <Tabs.Expander />
           </Tabs>
@@ -110,4 +124,4 @@ const mapStateToProps = (state, ownProps) => ({
   tags: selectEntityTags(state, ownProps.document.id)
 });
 
-export default connect(mapStateToProps)(DocumentInfo);
+export default connect(mapStateToProps, { fetchEntityTags })(DocumentInfo);
