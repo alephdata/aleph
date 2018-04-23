@@ -151,7 +151,7 @@ def permissions_update(id):
                           collection,
                           permission['read'],
                           permission['write'],
-                          editor=request.authz.id)
+                          editor_id=request.authz.id)
 
     update_collection(collection)
     update_collection_access.apply_async([collection.id], priority=8)
