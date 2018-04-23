@@ -40,7 +40,6 @@ def check_alert(alert):
     alert.update()
     log.info('Found %d new results for: %s', found, alert.label)
     db.session.commit()
-    db.session.close()
 
 
 def alert_query(alert, authz):
