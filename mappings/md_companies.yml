@@ -80,7 +80,7 @@ md_companies:
           keys:
             - Company_Name
             - Company_IDNO
-            - Director
+            - Founder
           properties:
             owner:
               entity: founder
