@@ -29,11 +29,9 @@ class PreviewDocument extends React.Component {
 
   render() {
     const { document, maximised } = this.props;
-
     if (document.error !== undefined) {
       return <ErrorSection title={document.error} />
     }
-
     if (document.id === undefined) {
       return <SectionLoading/>;
     }
@@ -44,7 +42,6 @@ class PreviewDocument extends React.Component {
                              showToolbar={true}
                              previewMode={true} />;
     }
-
     return <DocumentInfo document={document}
                          toggleMaximise={this.props.toggleMaximise}
                          showToolbar={true} />;

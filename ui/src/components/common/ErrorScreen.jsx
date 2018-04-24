@@ -3,17 +3,18 @@ import { NonIdealState } from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
+import ErrorSection from 'src/components/common/ErrorSection';
 
 
 class ErrorScreen extends Component {
   render() {
-    const { title, description = '', visual = 'error' } = this.props;
+    const { title } = this.props;
 
     return (
       <Screen title={title}>
         <DualPane>
           <DualPane.ContentPane>
-            <NonIdealState visual={visual} title={title} description={description} />
+            <ErrorSection {...this.props} />
           </DualPane.ContentPane>
         </DualPane>
       </Screen>

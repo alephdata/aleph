@@ -4,7 +4,6 @@ import asyncActionCreator from './asyncActionCreator';
 import { suggestRoles, fetchRole, updateRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
 import { queryNotifications } from './notificationActions';
-import { fetchFacet } from './facetActions';
 import {
   fetchDocument,
   queryDocumentRecords,
@@ -39,7 +38,6 @@ export {
   fetchEntityTags,
   fetchDocument,
   queryDocumentRecords,
-  fetchFacet,
   queryCollections,
   fetchCollection,
   updateCollection,

@@ -5,7 +5,6 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { fetchFacet } from 'src/actions';
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.css';
@@ -171,6 +170,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 SearchFacet = injectIntl(SearchFacet);
-SearchFacet = connect(mapStateToProps, { fetchFacet })(SearchFacet);
+SearchFacet = connect(mapStateToProps)(SearchFacet);
 SearchFacet = withRouter(SearchFacet);
 export default SearchFacet;
