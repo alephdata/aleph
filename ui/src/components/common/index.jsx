@@ -15,6 +15,8 @@ import Schema from './Schema';
 import Screen from './Screen';
 import ScreenLoading from './ScreenLoading';
 import SectionLoading from './SectionLoading';
+import ErrorScreen from './ErrorScreen';
+import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
 import TabCount from './TabCount';
@@ -39,6 +41,8 @@ export {
     Screen,
     ScreenLoading,
     SectionLoading,
+    ErrorScreen,
+    ErrorSection,
     SinglePane,
     SortableTH,
     TabCount,

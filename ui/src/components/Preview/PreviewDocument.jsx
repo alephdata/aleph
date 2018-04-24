@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NonIdealState } from '@blueprintjs/core';
 
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import { DocumentInfo } from 'src/components/Document';
 import { DocumentViewer } from 'src/components/DocumentViewer';
-import { SectionLoading } from 'src/components/common';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 
 
 class PreviewDocument extends React.Component {
@@ -22,16 +21,17 @@ class PreviewDocument extends React.Component {
   }
 
   fetchIfNeeded() {
-    this.props.fetchDocument({ id: this.props.previewId });
+    const { document } = this.props;
+    if (!document.isLoading && !document.error) {
+      this.props.fetchDocument({ id: this.props.previewId });
+    }
   }
 
   render() {
     const { document, maximised } = this.props;
 
-    if (document && document.error) {
-      return <NonIdealState
-          title={document.error}
-      />
+    if (document.error !== undefined) {
+      return <ErrorSection title={document.error} />
     }
 
     if (document.id === undefined) {

@@ -103,8 +103,10 @@ class EntityLoad extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate() {
-    this.fetchIfNeeded();
+  componentDidUpdate(prevProps) {
+    if (prevProps.id !== this.props.id) {
+      this.fetchIfNeeded();
+    }
   }
 
   fetchIfNeeded() {

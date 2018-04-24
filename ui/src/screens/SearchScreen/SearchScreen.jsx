@@ -8,11 +8,10 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryEntities} from 'src/actions';
 import {selectEntitiesResult} from 'src/selectors';
-import { Screen, DualPane, SectionLoading, SignInCallout } from 'src/components/common';
+import { Screen, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
-import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import './SearchScreen.css';
 
@@ -206,9 +205,9 @@ class SearchScreen extends React.Component {
                          result={result}
                          showLinksInPreview={true}/>
             {result.total === 0 && (
-              <ErrorScreen.EmptyList visual="search"
-                                     title={intl.formatMessage(messages.no_results_title)}
-                                     description={intl.formatMessage(messages.no_results_description)}/>
+              <ErrorSection visual="search"
+                            title={intl.formatMessage(messages.no_results_title)}
+                            description={intl.formatMessage(messages.no_results_description)}/>
             )}
             {!result.isLoading && result.next && (
               <Waypoint

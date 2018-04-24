@@ -4,9 +4,8 @@ import { injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
-import { Screen, Entity, Breadcrumbs, ScreenLoading, DualPane } from 'src/components/common';
+import { Screen, Entity, Breadcrumbs, ScreenLoading, ErrorScreen, DualPane } from 'src/components/common';
 import { DocumentContent, DocumentInfo } from '../../components/Document';
-import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 
 class DocumentScreen extends Component {
@@ -29,7 +28,7 @@ class DocumentScreen extends Component {
     }
 
     if (document.error) {
-      return (<ErrorScreen.NoTranslation title={document.error}/>);
+      return (<ErrorScreen title={document.error}/>);
     }
 
     const breadcrumbs = (

@@ -4,9 +4,8 @@ import { injectIntl } from 'react-intl';
 
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
-import { Screen, ScreenLoading, Breadcrumbs, DualPane, Entity } from 'src/components/common';
+import { Screen, ScreenLoading, Breadcrumbs, DualPane, Entity, ErrorScreen } from 'src/components/common';
 import { EntityReferences, EntityInfo } from 'src/components/Entity/';
-import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 
 class EntityScreen extends Component {
@@ -28,7 +27,7 @@ class EntityScreen extends Component {
         return (<ScreenLoading />);
       }
       if (entity.error) {
-        return (<ErrorScreen.NoTranslation title={entity.error}/>);
+        return (<ErrorScreen title={entity.error}/>);
       }
 
       const breadcrumbs = (

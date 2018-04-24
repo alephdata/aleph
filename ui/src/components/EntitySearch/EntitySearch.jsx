@@ -9,8 +9,7 @@ import Query from 'src/app/Query';
 import {queryEntities} from 'src/actions';
 import {selectEntitiesResult} from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
-import SectionLoading from 'src/components/common/SectionLoading';
-import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 
 import './style.css';
 
@@ -24,6 +23,7 @@ const messages = defineMessages({
     defaultMessage: 'Try making your search more general',
   }
 });
+
 
 class EntitySearch extends Component {
   constructor(props) {
@@ -76,9 +76,9 @@ class EntitySearch extends Component {
       <React.Fragment>
         {result.total === 0 &&
         <section className="PartialError">
-          <ErrorScreen.EmptyList visual='search'
-                                 title={intl.formatMessage(messages.no_results_title)}
-                                 description={intl.formatMessage(messages.no_results_description)}/>
+          <ErrorSection visual='search'
+                        title={intl.formatMessage(messages.no_results_title)}
+                        description={intl.formatMessage(messages.no_results_description)}/>
         </section>
         }
         {hasWarning === true && <div className='warning-folder'>

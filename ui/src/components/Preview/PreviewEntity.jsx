@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NonIdealState } from '@blueprintjs/core';
 
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import { EntityInfo } from 'src/components/Entity';
-import { SectionLoading } from 'src/components/common';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 
 class PreviewEntity extends React.Component {
 
@@ -21,20 +20,16 @@ class PreviewEntity extends React.Component {
 
   fetchIfNeeded() {
     const { entity, previewId } = this.props;
-    if (!entity || !entity.id) {
+    if (entity.id === undefined && !entity.isLoading && !entity.error) {
       this.props.fetchEntity({ id: previewId });
     }
   }
 
   render() {
     const { entity } = this.props;
-
-    if (entity && entity.error) {
-      return <NonIdealState
-          title={entity.error}
-      />
+    if (entity.error !== undefined) {
+      return <ErrorSection title={entity.error} />
     }
-
     if (entity.id === undefined) {
       return <SectionLoading/>;
     }
