@@ -20,15 +20,15 @@ class PreviewCollection extends React.Component {
 
   fetchIfNeeded(props) {
     const { collection, previewId } = this.props;
-    if (collection.id === undefined && !collection.isLoading && !collection.error) {
+    if (collection.id === undefined && !collection.isLoading) {
       this.props.fetchCollection({ id: previewId });
     }
   }
 
   render() {
     const { collection } = this.props;
-    if (collection.error !== undefined) {
-      return <ErrorSection title={collection.error} />
+    if (collection.isError) {
+      return <ErrorSection error={collection.error} />
     }
     if (collection.id === undefined) {
       return <SectionLoading/>;

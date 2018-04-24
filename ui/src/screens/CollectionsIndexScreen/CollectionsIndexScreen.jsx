@@ -7,7 +7,7 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';
-import { Screen, Breadcrumbs, DualPane, SectionLoading, SignInCallout } from 'src/components/common';
+import { Screen, Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import { CollectionListItem } from 'src/components/Collection';
@@ -69,7 +69,7 @@ class CollectionsIndexScreen extends Component {
   }
 
   fetchData() {
-    let {query} = this.props;
+    let { query } = this.props;
     this.props.queryCollections({query});
   }
 
@@ -142,8 +142,11 @@ class CollectionsIndexScreen extends Component {
                   scrollableAncestor={window}
                 />
               )}
+              {result.isError && (
+                <ErrorSection error={result.error} />
+              )}
               {result.isLoading && (
-                <SectionLoading/>
+                <SectionLoading />
               )}
             </ul>
           </DualPane.ContentPane>

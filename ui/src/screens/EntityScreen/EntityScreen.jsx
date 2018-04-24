@@ -26,8 +26,8 @@ class EntityScreen extends Component {
       if (entity.id === undefined) {
         return (<ScreenLoading />);
       }
-      if (entity.error) {
-        return (<ErrorScreen title={entity.error}/>);
+      if (entity.isError) {
+        return (<ErrorScreen error={entity.error}/>);
       }
 
       const breadcrumbs = (

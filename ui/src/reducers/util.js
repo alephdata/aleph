@@ -12,10 +12,23 @@ export function cacheResults(state, { result }) {
 }
 
 export function updateLoading(value) {
-  return function(state, { query, result }) {
-    if (query !== undefined) {
+  return function(state, { query, result, error, args }) {
+    if (error !== undefined) {
+      const key = args.query.toKey();
+      state = {
+        ...state,
+        [key]: {
+          isLoading: false,
+          isError: true,
+          error
+        }
+      };
+    } else if (query !== undefined) {
       const key = query.toKey();
-      assign(state[key], {isLoading: value});
+      assign(state[key], {
+        isLoading: value,
+        isError: false
+      });
     }
     return state;
   }

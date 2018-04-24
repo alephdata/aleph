@@ -27,8 +27,8 @@ class DocumentScreen extends Component {
       return (<ScreenLoading />);
     }
 
-    if (document.error) {
-      return (<ErrorScreen title={document.error}/>);
+    if (document.isError) {
+      return (<ErrorScreen error={document.error}/>);
     }
 
     const breadcrumbs = (

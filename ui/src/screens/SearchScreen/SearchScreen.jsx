@@ -187,8 +187,11 @@ class SearchScreen extends React.Component {
                     <FormattedMessage id="search.screen.results" defaultMessage="results"/>
                   </React.Fragment>
                 )}
-                { (result.isLoading || result.total === undefined) && (
+                { result.isLoading && (
                   <FormattedMessage id="search.screen.searching" defaultMessage="Searching..."/>
+                )}
+                { result.isError && (
+                  <FormattedMessage id="search.screen.error" defaultMessage="Error"/>
                 )}
               </span>
             </div>
@@ -216,7 +219,7 @@ class SearchScreen extends React.Component {
                 scrollableAncestor={window}
               />
             )}
-            {result.total === undefined && (
+            {result.isLoading && (
               <SectionLoading/>
             )}
           </DualPane.ContentPane>

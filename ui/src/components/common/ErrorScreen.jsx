@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { NonIdealState } from '@blueprintjs/core';
 
 import Screen from 'src/components/common/Screen';
 import DualPane from 'src/components/common/DualPane';
@@ -8,10 +7,11 @@ import ErrorSection from 'src/components/common/ErrorSection';
 
 class ErrorScreen extends Component {
   render() {
-    const { title } = this.props;
+    const { title = '', error } = this.props;
+    const screenTitle = error === undefined ? title : error.message;
 
     return (
-      <Screen title={title}>
+      <Screen title={screenTitle}>
         <DualPane>
           <DualPane.ContentPane>
             <ErrorSection {...this.props} />

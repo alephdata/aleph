@@ -20,15 +20,15 @@ class PreviewEntity extends React.Component {
 
   fetchIfNeeded() {
     const { entity, previewId } = this.props;
-    if (entity.id === undefined && !entity.isLoading && !entity.error) {
+    if (entity.id === undefined && !entity.isLoading) {
       this.props.fetchEntity({ id: previewId });
     }
   }
 
   render() {
     const { entity } = this.props;
-    if (entity.error !== undefined) {
-      return <ErrorSection title={entity.error} />
+    if (entity.isError) {
+      return <ErrorSection error={entity.error} />
     }
     if (entity.id === undefined) {
       return <SectionLoading/>;

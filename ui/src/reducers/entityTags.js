@@ -6,8 +6,12 @@ import { fetchEntityTags } from 'src/actions';
 const initialState = {};
 
 export default createReducer({
-    [fetchEntityTags.START]: (state, { id }) =>
-      update(id, set('isLoading', true))(state),
-    [fetchEntityTags.COMPLETE]: (state, { id, data }) =>
-      set(id, data)(state),
+  [fetchEntityTags.START]: (state, { id }) =>
+    update(id, set('isLoading', true))(state),
+
+  [fetchEntityTags.ERROR]: (state, { error, args: { id } }) =>
+    set(id, { isLoading: false, isError: true, error: error })(state),
+
+  [fetchEntityTags.COMPLETE]: (state, { id, data }) =>
+    set(id, data)(state),
 }, initialState);

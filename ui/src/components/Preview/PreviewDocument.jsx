@@ -22,15 +22,15 @@ class PreviewDocument extends React.Component {
 
   fetchIfNeeded() {
     const { document } = this.props;
-    if (!document.isLoading && !document.error) {
+    if (!document.isLoading) {
       this.props.fetchDocument({ id: this.props.previewId });
     }
   }
 
   render() {
     const { document, maximised } = this.props;
-    if (document.error !== undefined) {
-      return <ErrorSection title={document.error} />
+    if (document.isError) {
+      return <ErrorSection error={document.error} />
     }
     if (document.id === undefined) {
       return <SectionLoading/>;
