@@ -23,11 +23,12 @@ class EntityScreen extends Component {
 
   render() {
       const { entity } = this.props;
-      if (entity.id === undefined) {
-        return (<ScreenLoading />);
-      }
       if (entity.isError) {
-        return (<ErrorScreen error={entity.error}/>);
+        return <ErrorScreen error={entity.error}/>;
+      }
+  
+      if (entity.id === undefined) {
+        return <ScreenLoading />;
       }
 
       const breadcrumbs = (

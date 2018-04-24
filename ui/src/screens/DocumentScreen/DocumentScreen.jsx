@@ -23,12 +23,11 @@ class DocumentScreen extends Component {
 
   render() {
     const { document } = this.props;
-    if (document.id === null) {
-      return (<ScreenLoading />);
-    }
-
     if (document.isError) {
-      return (<ErrorScreen error={document.error}/>);
+      return <ErrorScreen error={document.error} />;
+    }
+    if (document.id === null) {
+      return <ScreenLoading />;
     }
 
     const breadcrumbs = (

@@ -7,11 +7,8 @@ import { CollectionInfo, CollectionContent } from 'src/components/Collection';
 class CollectionScreen extends Component {
   render() {
     const { collection } = this.props;
-
-    if (collection.error) {
-      return (
-        <ErrorScreen title={collection.error}/>
-      )
+    if (collection.isError) {
+      return <ErrorScreen error={collection.error} />;
     }
 
     return (

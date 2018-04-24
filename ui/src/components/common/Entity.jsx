@@ -118,10 +118,7 @@ class EntityLoad extends Component {
 
   render() {
     const { entity, children, renderWhenLoading } = this.props;
-    if (
-      (entity.id === undefined || entity.isLoading)
-      && renderWhenLoading !== undefined
-    ) {
+    if (entity.isLoading && renderWhenLoading !== undefined) {
       return renderWhenLoading;
     } else {
       return children(entity);
