@@ -6,6 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button } from "@blueprintjs/core";
 
 import Query from 'src/app/Query';
+import { ErrorSection } from 'src/components/common';
 import { Toolbar, CloseButton, DownloadButton, ParentButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
@@ -17,6 +18,10 @@ import FolderViewer from './FolderViewer';
 import EmailViewer from './EmailViewer';
 
 const messages = defineMessages({
+  no_viewer: {
+    id: 'document.viewer.no_viewer',
+    defaultMessage: 'No preview is available for this document',
+  },
   ignored_file: {
     id: 'document.viewer.ignored_file',
     defaultMessage: 'The system does not work with these types of files. Please download it so you’ll be able to see it.',
@@ -39,59 +44,30 @@ class DocumentViewer extends React.Component {
   }
 
   renderContent() {
-    const { document: doc, intl, queryText, previewMode} = this.props;
+    const { document: doc, intl, queryText, previewMode } = this.props;
     
     if (doc.schema === 'Email') {
-      return <EmailViewer document={doc}/>;
+      return <EmailViewer document={doc} queryText={queryText} />;
     } else if (doc.schema === 'Table') {
-      return <TableViewer document={doc} queryText={queryText}/>;
+      return <TableViewer document={doc} queryText={queryText} />;
     } else if (doc.schema === 'Image') {
-      return <ImageViewer document={doc}/>;
+      return <ImageViewer document={doc} queryText={queryText} />;
     } else if (doc.text && !doc.html) {
-      return <TextViewer document={doc}/>;
+      return <TextViewer document={doc} queryText={queryText} />;
     } else if (doc.html) {
-      return <HtmlViewer document={doc}/>;
+      return <HtmlViewer document={doc} queryText={queryText} />;
     } else if (doc.links && doc.links.pdf) {
       return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
     } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
-      if (doc.status === 'fail') return <FolderViewer hasWarning={true} document={doc} queryText={queryText}/>;
-      return <FolderViewer document={doc} queryText={queryText}/>;
-    } else if(doc.schema === 'Document') {
-      return <section className="PartialError outer-div">
-        <div className="pt-non-ideal-state inner-div">
-          <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-            <span className="pt-icon pt-icon-issue"/>
-          </div>
-          <h4 className="pt-non-ideal-state-title">
-            <FormattedMessage
-              id="document.no_viewer"
-              defaultMessage="No preview is available for this document"/>
-          </h4>
-          <div className="pt-non-ideal-state-description">
-            { intl.formatMessage(messages.ignored_file)}
-          </div>
-        </div>
-      </section>
-    } else if(doc.status === 'fail') {
-      return <section className="PartialError outer-div">
-      <div className="pt-non-ideal-state inner-div">
-        <div className="pt-non-ideal-state-visual pt-non-ideal-state-icon">
-          <span className="pt-icon pt-icon-issue"/>
-        </div>
-        <h4 className="pt-non-ideal-state-title">
-          <FormattedMessage
-            id="document.no_viewer"
-            defaultMessage="No preview is available for this document"/>
-        </h4>
-        <div className="pt-non-ideal-state-description">
-          { doc.error_message }
-        </div>
-      </div>
-    </section>
-    } else {
-      // If document is still loading we still need to return something
-      // (or it will trigger an error)
-      return null;
+      return <FolderViewer document={doc} queryText={queryText} hasWarning={doc.status === 'fail'} />;
+    } else if (doc.schema === 'Document') {
+      return <ErrorSection visual='issue'
+                           title={intl.formatMessage(messages.no_viewer)}
+                           description={intl.formatMessage(messages.ignored_file)} />
+    } else if (doc.status === 'fail') {
+      return <ErrorSection visual='issue'
+                           title={intl.formatMessage(messages.no_viewer)}
+                           description={doc.error_message} />
     }
   }
   

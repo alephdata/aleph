@@ -11,19 +11,23 @@ import './FolderViewer.css';
 
 class FolderViewer extends Component {
   render() {
-    const { document, query, hasWarning } = this.props;
-    
-    if (!document || !document.id || !document.links) {
-      return null;
-    }
+    const { document, query } = this.props;
 
     return (
       <React.Fragment>
         <div id="children" className="FolderViewer">
-          <EntitySearch query={query}
-                        hideCollection={true}
-                        documentMode={true}
-                        hasWarning={hasWarning}/>
+          {document.status === 'fail' && (
+            <div className='warning-folder'>
+              <strong>
+                <FormattedMessage id="search.warning" defaultMessage="Warning" />
+              </strong>
+              <p>
+                <FormattedMessage id="search.not_properly_imported"
+                                  defaultMessage="This folder is not fully imported." />
+              </p>
+            </div>
+          )}
+          <EntitySearch query={query} hideCollection={true} documentMode={true} />
           {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
               <FormattedMessage id="folder.empty"
@@ -57,9 +61,7 @@ const mapStateToProps = (state, ownProps) => {
     query = query.setString('prefix', queryText);
   }
 
-  return {
-    query: query
-  }
+  return { query }
 }
 
 FolderViewer = connect(mapStateToProps)(FolderViewer);
