@@ -104,7 +104,7 @@ class DocumentInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="tags" disabled={tags.total === undefined}
+              <Tab id="tags" disabled={tags.total === undefined || tags.total === 0}
                 title={
                   <React.Fragment>
                     <FormattedMessage id="document.info.tags" defaultMessage="Connections"/>

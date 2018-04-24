@@ -11,8 +11,6 @@ import {selectEntitiesResult} from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 
-import './style.css';
-
 const messages = defineMessages({
   no_results_title: {
     id: 'search.no_results_title',
@@ -71,7 +69,7 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, showLinksInPreview, hasWarning, intl} = this.props;
+    const {query, result, hasWarning, intl} = this.props;
     return (
       <React.Fragment>
         {result.total === 0 && (
@@ -85,8 +83,7 @@ class EntitySearch extends Component {
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
-                     result={result}
-                     showLinksInPreview={showLinksInPreview}/>
+                     result={result} />
         {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}

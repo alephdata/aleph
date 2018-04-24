@@ -92,7 +92,7 @@ class DocumentViewer extends React.Component {
             )}
             {previewMode === true && (
               <Link to={getPath(doc.links.ui)} className="pt-button button-link">
-                <span className={`pt-icon-folder-open`}/>
+                <span className={`pt-icon-document-open`}/>
                 <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
               </Link>
             )}

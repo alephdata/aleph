@@ -205,8 +205,7 @@ class SearchScreen extends React.Component {
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
-                         result={result}
-                         showLinksInPreview={true}/>
+                         result={result} />
             {result.total === 0 && (
               <ErrorSection visual="search"
                             title={intl.formatMessage(messages.no_results_title)}

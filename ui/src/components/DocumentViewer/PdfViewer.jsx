@@ -47,15 +47,16 @@ class PdfViewer extends Component {
     // This will mostly do nothing, because nothing will have changed - which 
     // is fine, but in practice in a simple way to trigger once after a short 
     // delay to allow time for the view to do a first render.
-    // setTimeout(() => {
-    //   // We only want to do anything if the size *has not* been calculated yet.
-    //   // This is because rendering a PDF can change it slightly but we don't
-    //   // want to flash the entire PDF render (as it's slow) just to change
-    //   // it by a 1 or 2 pixels.
-    //   if (this.state.width === null) {
-    //     this.onResize();
-    //   }
-    // }, 1000);
+
+    setTimeout(() => {
+      // We only want to do anything if the size *has not* been calculated yet.
+      // This is because rendering a PDF can change it slightly but we don't
+      // want to flash the entire PDF render (as it's slow) just to change
+      // it by a 1 or 2 pixels.
+      if (this.state.width === null) {
+        this.onResize();
+      }
+    }, 1000);
   }
 
   componentDidMount() {
@@ -116,7 +117,7 @@ class PdfViewer extends Component {
     const { width, numPages } = this.state;
     const pageNumber = (hashQuery.page && parseInt(hashQuery.page, 10) <= numPages) ? parseInt(hashQuery.page, 10) : 1;
 
-    if (!document || !document.links || !document.links.pdf) {
+    if (document.id === undefined) {
       return null;
     }
 
@@ -135,8 +136,7 @@ class PdfViewer extends Component {
                       <Document
                         renderAnnotations={true}
                         file={document.links.pdf}
-                        onLoadSuccess={this.onDocumentLoad}
-                        loading={(<SectionLoading />)}>
+                        onLoadSuccess={this.onDocumentLoad}>
                       {/* 
                           Only render Page when width has been set and numPages has been figured out.
                           This limits flashing / visible resizing when displaying page for the first time.
@@ -197,11 +197,12 @@ const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
 
   const path = document.links ? document.links.records : null;
-  let query = Query.fromLocation(path, location, { 
-      highlight: true,
-      highlight_count: 10,
-      highlight_length: 120
-    }, 'document').limit(50);
+  const context = { 
+    highlight: true,
+    highlight_count: 10,
+    highlight_length: 120
+  };
+  let query = Query.fromLocation(path, location, context, 'document').limit(50);
 
   if (queryText.length > 0) {
     query = query.setString('prefix', queryText);
