@@ -8,7 +8,7 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
-import { Screen, SinglePane, SectionLoading } from 'src/components/common';
+import { Screen, SinglePane, SectionLoading, ErrorScreen } from 'src/components/common';
 import Notification from 'src/components/Notification/Notification';
 
 import './NotificationsScreen.css';
@@ -60,6 +60,10 @@ class NotificationsScreen extends React.Component {
 
   render() {
     const { result, intl } = this.props;
+
+    if (result.isError) {
+      return <ErrorScreen error={result.error} />
+    }
 
     return (
       <Screen title={intl.formatMessage(messages.title)}>
