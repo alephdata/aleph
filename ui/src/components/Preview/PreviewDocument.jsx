@@ -29,23 +29,19 @@ class PreviewDocument extends React.Component {
   }
 
   render() {
-    const { document, maximised } = this.props;
+    const { document, parsedHash } = this.props;
     if (document.isError) {
       return <ErrorSection error={document.error} />
     }
     if (document.id === undefined) {
       return <SectionLoading/>;
     }
-
-    if (maximised) {
-      return <DocumentViewer document={document}
-                             toggleMaximise={this.props.toggleMaximise}
-                             showToolbar={true}
-                             previewMode={true} />;
+    if (parsedHash['mode'] === 'info') {
+      return <DocumentInfo document={document} showToolbar={true} />;
     }
-    return <DocumentInfo document={document}
-                         toggleMaximise={this.props.toggleMaximise}
-                         showToolbar={true} />;
+    return <DocumentViewer document={document}
+                           showToolbar={true}
+                           previewMode={true} />;
   }
 }
 

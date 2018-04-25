@@ -7,6 +7,7 @@ import { queryNotifications } from './notificationActions';
 import {
   fetchDocument,
   queryDocumentRecords,
+  fetchDocumentPage
 } from './documentActions';
 import {
   queryCollections,
@@ -38,6 +39,7 @@ export {
   fetchEntityTags,
   fetchDocument,
   queryDocumentRecords,
+  fetchDocumentPage,
   queryCollections,
   fetchCollection,
   updateCollection,

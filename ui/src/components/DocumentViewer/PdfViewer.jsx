@@ -9,8 +9,8 @@ import classNames from 'classnames';
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
 import { SectionLoading } from 'src/components/common';
-import { queryDocumentRecords } from 'src/actions';
-import { selectDocumentRecordsResult } from 'src/selectors';
+import { queryDocumentRecords, fetchDocumentPage } from 'src/actions';
+import { selectDocumentRecordsResult, selectDocumentPage } from 'src/selectors';
 
 import './PdfViewer.css';
 
@@ -27,12 +27,11 @@ class PdfViewer extends Component {
   }
 
   onDocumentLoad(pdfInfo) {
-    this.setState({
-      numPages: pdfInfo.numPages
-    });
+    this.setState({ numPages: pdfInfo.numPages });
 
-    if (this.props.onDocumentLoad)
-      this.props.onDocumentLoad(pdfInfo)
+    if (this.props.onDocumentLoad) {
+      this.props.onDocumentLoad(pdfInfo);
+    }
 
     // Handle a resize event (to check document width) after loading
     // Note: onDocumentLoad actualy happens *before* rendering, but the
@@ -40,19 +39,20 @@ class PdfViewer extends Component {
     // shouldComponentUpdate code in this component.
     this.onResize();
 
-    setTimeout(() => {
-      // We only want to do anything if the size *has not* been calculated yet.
-      // This is because rendering a PDF can change it slightly but we don't
-      // want to flash the entire PDF render (as it's slow) just to change
-      // it by a 1 or 2 pixels.
-      if (this.state.width === null) {
-        this.onResize();
-      }
-    }, 1000);
+    // setTimeout(() => {
+    //   // We only want to do anything if the size *has not* been calculated yet.
+    //   // This is because rendering a PDF can change it slightly but we don't
+    //   // want to flash the entire PDF render (as it's slow) just to change
+    //   // it by a 1 or 2 pixels.
+    //   if (this.state.width === null) {
+    //     this.onResize();
+    //   }
+    // }, 1500);
   }
 
   componentDidMount() {
     this.fetchRecords();
+    this.fetchPage();
     this.onResize();
     window.addEventListener("resize", throttle(this.onResize, 1000))
   }
@@ -62,18 +62,29 @@ class PdfViewer extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { document, page, query, mode } = this.props;
     if (this.state.width === null) {
       this.onResize();
     }
-    if (!this.props.query.sameAs(prevProps.query)) {
+    if (!query.sameAs(prevProps.query)) {
       this.fetchRecords();
+    }
+    if (document.id !== prevProps.document.id || page !== prevProps.page) {
+      this.fetchPage();
     }
   }
 
   fetchRecords() {
-    const { queryDocumentRecords, query } = this.props;
-    if (query.path) {
-      queryDocumentRecords({query})
+    const { query, result } = this.props;
+    if (result.total === undefined && !result.isLoading && query.path && query.hasQuery()) {
+      this.props.queryDocumentRecords({query})
+    }
+  }
+
+  fetchPage() {
+    const { document, page, pageResult } = this.props;
+    if (pageResult.id === undefined && !pageResult.isLoading) {
+      this.props.fetchDocumentPage({documentId: document.id, page});
     }
   }
   
@@ -105,86 +116,82 @@ class PdfViewer extends Component {
   }
   
   render() {
-    const { document, hashQuery, previewMode, result, query } = this.props;
+    const { document, mode, page, pageResult, previewMode, result, query } = this.props;
     const { width, numPages } = this.state;
-    const pageNumber = (hashQuery.page && parseInt(hashQuery.page, 10) <= numPages) ? parseInt(hashQuery.page, 10) : 1;
 
     if (document.id === undefined) {
       return null;
     }
 
-    const searchMode = hashQuery['mode'] === 'search' && query.hasQuery();
-    const searchPreview = previewMode && (query.hasQuery() && (result.isLoading || result.total > 0));
-    const displayPdf = !searchMode && !searchPreview;
-
-    if (displayPdf === true) {
-      return (
-        <React.Fragment>
-          <div className="PdfViewer">
-            <div className="outer">
-              <div id="PdfViewer" className="inner">
-                <div className="document">
-                  <div ref={(ref) => this.pdfElement = ref}>
-                      <Document
-                        renderAnnotations={true}
-                        file={document.links.pdf}
-                        onLoadSuccess={this.onDocumentLoad}>
-                      {/* 
-                          Only render Page when width has been set and numPages has been figured out.
-                          This limits flashing / visible resizing when displaying page for the first time.
-                      */}
-                      {width !== null && numPages > 0 && (
-                        <Page pageNumber={pageNumber} className="page" width={width}/>
-                      )}
-                    </Document>
-                  </div>
+    return (
+      <div className="PdfViewer">
+        <div className="outer">
+          <div id="PdfViewer" className="inner">
+            { mode === 'text' && (
+              <div className="document">
+                {pageResult.id !== undefined && (
+                  <pre>{pageResult.text}</pre>
+                )}
+                {pageResult.id === undefined && (
+                  <SectionLoading />
+                )}
+              </div>
+            )}
+            { mode === 'view' && (
+              <div className="document">
+                <div ref={(ref) => this.pdfElement = ref}>
+                  <Document
+                    renderAnnotations={true}
+                    file={document.links.pdf}
+                    onLoadSuccess={this.onDocumentLoad}>
+                  {/* 
+                      Only render Page when width has been set and numPages has been figured out.
+                      This limits flashing / visible resizing when displaying page for the first time.
+                  */}
+                  {width !== null && numPages > 0 && (
+                    <Page pageNumber={page} className="page" width={width}/>
+                  )}
+                  </Document>
                 </div>
               </div>
-            </div>
-          </div>
-        </React.Fragment>
-      );
-    } else {
-      return (
-        <React.Fragment>
-          <div className="PdfViewer">
-            <div className="outer">
-              <div className="search-results">
-                <div className="pages">
-                  {result.total === undefined && <SectionLoading /> }
-                  {result.total !== undefined && result.results.length === 0 &&
-                    <p className="no-results pt-text-muted">No results.</p>
-                  }
-                  <ul>
-                    {result !== null && result.results.length > 0 && result.results.map((res, index) => (
-                      <li key={`page-${res.id}`}>
-                        <p>
-                          <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: pageNumber === res.index})}>
-                            <span className={`pt-icon-document`}/> Page {res.index}
-                          </a>
-                        </p>
-                        <p>
-                          <a onClick={(e) => this.onSearchResultClick(e, res)} className="pt-text-muted">
-                            { res.highlight !== undefined && (
-                              <span dangerouslySetInnerHTML={{__html: res.highlight.join('  …  ')}} />
-                            )}
-                          </a>
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            )}
+            { mode === 'search' && (
+              <div className="pages">
+                {result.total === undefined && <SectionLoading /> }
+                {result.total !== undefined && result.results.length === 0 &&
+                  <p className="no-results pt-text-muted">No results.</p>
+                }
+                <ul>
+                  {result !== null && result.results.length > 0 && result.results.map((res, index) => (
+                    <li key={`page-${res.id}`}>
+                      <p>
+                        <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: page === res.index})}>
+                          <span className={`pt-icon-document`}/> Page {res.index}
+                        </a>
+                      </p>
+                      <p>
+                        <a onClick={(e) => this.onSearchResultClick(e, res)} className="pt-text-muted">
+                          { res.highlight !== undefined && (
+                            <span dangerouslySetInnerHTML={{__html: res.highlight.join('  …  ')}} />
+                          )}
+                        </a>
+                      </p>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
+            )}
           </div>
-        </React.Fragment>
-      );
-    }
+        </div>
+      </div>
+    );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText } = ownProps;
+  const { document, location, queryText, previewMode } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+  const page = parseInt(hashQuery.page, 10) || 1;
 
   const path = document.links ? document.links.records : null;
   const context = { 
@@ -198,13 +205,17 @@ const mapStateToProps = (state, ownProps) => {
     query = query.setString('prefix', queryText);
   }
   
+  const defaultMode = (previewMode && query.hasQuery()) ? 'search' : 'view';
+  const mode = hashQuery.mode || defaultMode;
   return {
     result: selectDocumentRecordsResult(state, query),
-    hashQuery: queryString.parse(location.hash),
+    pageResult: selectDocumentPage(state, document.id, page),
+    page: page,
+    mode: mode,
     query: query
   }
 }
 
-PdfViewer = connect(mapStateToProps, { queryDocumentRecords })(PdfViewer);
+PdfViewer = connect(mapStateToProps, { queryDocumentRecords, fetchDocumentPage })(PdfViewer);
 PdfViewer = withRouter(PdfViewer);
 export default PdfViewer

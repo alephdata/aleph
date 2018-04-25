@@ -7,7 +7,7 @@ import { Button } from "@blueprintjs/core";
 
 import Query from 'src/app/Query';
 import { ErrorSection } from 'src/components/common';
-import { Toolbar, CloseButton, DownloadButton, ParentButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
+import { Toolbar, CloseButton, DownloadButton, ParentButton, PagingButtons, DocumentSearch, ModeButtons } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
 import TextViewer from './TextViewer';
@@ -72,7 +72,7 @@ class DocumentViewer extends React.Component {
   }
   
   render() {
-    const { document: doc, showToolbar, toggleMaximise, previewMode } = this.props;
+    const { document: doc, showToolbar, previewMode } = this.props;
     const { numberOfPages } = this.state;
 
     if (doc.isLoading) {
@@ -82,28 +82,20 @@ class DocumentViewer extends React.Component {
     return <React.Fragment>
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
-          <div className="pt-button-group">
-            {previewMode === true && toggleMaximise && (
-              <Button icon="eye-open"
-                className="button-maximise"
-                onClick={toggleMaximise}>
-                <FormattedMessage id="info" defaultMessage="Info"/>
-              </Button>
-            )}
-            {previewMode === true && (
-              <Link to={getPath(doc.links.ui)} className="pt-button button-link">
-                <span className={`pt-icon-document-open`}/>
-                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-              </Link>
-            )}
-            <ParentButton isPreview={previewMode} document={doc}/>
-            <DownloadButton isPreview={previewMode} document={doc}/>
-          </div>
+          <ModeButtons isPreview={previewMode} document={doc} />
+          {previewMode === true && (
+            <Link to={getPath(doc.links.ui)} className="pt-button button-link">
+              <span className={`pt-icon-share`}/>
+              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+            </Link>
+          )}
+          <ParentButton isPreview={previewMode} document={doc} />
+          <DownloadButton isPreview={previewMode} document={doc} />
           {numberOfPages !== null && numberOfPages > 0 && (
             <PagingButtons document={doc} numberOfPages={numberOfPages}/>
           )}
           {previewMode === true && (
-            <CloseButton/>
+            <CloseButton />
           )}
           {previewMode !== true && (
             <DocumentSearch document={doc} />

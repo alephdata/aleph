@@ -11,3 +11,9 @@ export const fetchDocument = asyncActionCreator(({ id }) => async dispatch => {
 export const queryDocumentRecords = asyncActionCreator((query) => async dispatch => {
   return queryEndpoint(query);
 }, { name: 'QUERY_DOCUMENT_RECORDS' });
+
+export const fetchDocumentPage = asyncActionCreator(({ documentId, page }) => async dispatch => {
+  const response = await endpoint.get(`documents/${documentId}/records/${page}`);
+  return { documentId, page, data: response.data };
+}, { name: 'FETCH_DOCUMENT_PAGE' });
+

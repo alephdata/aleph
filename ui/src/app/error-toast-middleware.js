@@ -29,7 +29,7 @@ const errorToastMiddleware = store => next => action => {
   if (errorActionTypes.includes(action.type)) {
     const defaultDescription = 'He\'s dead, Jim.';
     const statusCode = get(action, 'payload.error.response.status');
-    if (statusCode !== 403) {
+    if (statusCode !== 403 && statusCode !== 401) {
       const description = get(action, 'payload.error.message', defaultDescription);
       showWarningToast(description);
       // console.error(action.type, description);
