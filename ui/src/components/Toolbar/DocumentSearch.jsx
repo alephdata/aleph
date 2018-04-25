@@ -17,7 +17,7 @@ class DocumentSearch extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        queryText: props.query.getString('prefix')
+        queryText: props.query.getString('q')
       };
       this.onSearchQueryChange = this.onSearchQueryChange.bind(this);
       this.onSubmitSearch = this.onSubmitSearch.bind(this);
@@ -29,7 +29,7 @@ class DocumentSearch extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-      this.setState({ queryText: newProps.query.getString('prefix')});
+      this.setState({ queryText: newProps.query.getString('q')});
     }
 
     onSubmitSearch(event) {
@@ -42,7 +42,7 @@ class DocumentSearch extends React.Component {
 
       history.push({
           pathname: location.pathname,
-          search: query.setString('prefix', queryText).toLocation(),
+          search: query.setString('q', queryText).toLocation(),
           hash: queryString.stringify(hashQuery)
       });
     }

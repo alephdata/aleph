@@ -43,10 +43,10 @@ class FolderViewer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
-  // when a prefix is defined, we switch to recursive folder search - otherwise
+  // when a query is defined, we switch to recursive folder search - otherwise
   // a flat listing of the immediate children of this directory is shown.
-  const prefix = Query.fromLocation('search', location, {}, 'document').getString('prefix'),
-        hasSearch = (prefix.length !== 0 || queryText),
+  const q = Query.fromLocation('search', location, {}, 'document').getString('q'),
+        hasSearch = (q.length !== 0 || queryText),
         context = {};
     
   if (hasSearch) {
@@ -58,7 +58,7 @@ const mapStateToProps = (state, ownProps) => {
 
   let query = Query.fromLocation('search', location, context, 'document').limit(50);
   if (queryText) {
-    query = query.setString('prefix', queryText);
+    query = query.setString('q', queryText);
   }
 
   return { query }

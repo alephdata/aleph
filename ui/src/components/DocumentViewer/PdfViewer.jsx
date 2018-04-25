@@ -116,7 +116,7 @@ class PdfViewer extends Component {
     e.preventDefault();
     history.push({
       pathname: getPath(document.links.ui),
-      search: queryString.stringify({documentprefix: query.getString('prefix')}),
+      search: queryString.stringify({documentq: query.getString('q')}),
       hash: `page=${res.index}&mode=view`
     });
   }
@@ -216,7 +216,7 @@ const mapStateToProps = (state, ownProps) => {
   let query = Query.fromLocation(path, location, context, 'document').limit(50);
 
   if (queryText.length > 0) {
-    query = query.setString('prefix', queryText);
+    query = query.setString('q', queryText);
   }
 
   const mode = hashQuery.mode || 'view';
