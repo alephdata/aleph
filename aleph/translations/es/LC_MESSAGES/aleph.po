@@ -8,8 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-03-28 10:23+0200\n"
+"POT-Creation-Date: 2018-04-25 15:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -20,108 +21,132 @@ msgstr ""
 
 #: aleph/settings.py:44
 msgid "Aleph"
-msgstr ""
+msgstr "Aleph"
 
 #: aleph/settings.py:54
 msgid "TeliaSonera"
-msgstr ""
+msgstr "TeliaSonera"
 
 #: aleph/settings.py:54
 msgid "Vladimir Putin"
-msgstr ""
+msgstr "Vladimir Putin"
 
 #: aleph/model/collection.py:24
 msgid "News archives"
-msgstr ""
+msgstr "Archivos de noticias"
 
 #: aleph/model/collection.py:25
 msgid "Leaks"
-msgstr ""
+msgstr "Filtraciones"
 
 #: aleph/model/collection.py:26
 msgid "Land registry"
-msgstr ""
+msgstr "Registro catastral"
 
 #: aleph/model/collection.py:27
 msgid "Gazettes"
-msgstr ""
+msgstr "Boletines"
 
 #: aleph/model/collection.py:28
 msgid "Court archives"
-msgstr ""
+msgstr "Archivos judiciales"
 
 #: aleph/model/collection.py:29
 msgid "Company registries"
-msgstr ""
+msgstr "Registros empresariales"
 
 #: aleph/model/collection.py:30
 msgid "Watchlists"
-msgstr ""
+msgstr "Listas de seguimiento"
 
 #: aleph/model/collection.py:31
 msgid "Personal collections"
-msgstr ""
+msgstr "Colecciones personales"
 
 #: aleph/model/collection.py:32
 msgid "Sanctions lists"
-msgstr ""
+msgstr "Listas de sanciones"
 
 #: aleph/model/collection.py:33
 msgid "Scrapes"
-msgstr ""
+msgstr "Extraccciones"
 
 #: aleph/model/collection.py:34
 msgid "Procurement"
-msgstr ""
+msgstr "Obtención"
 
 #: aleph/model/collection.py:35
 msgid "Grey literature"
-msgstr ""
+msgstr "Literatura Gris"
 
 #: aleph/model/collection.py:36
 msgid "Licenses and concessions"
-msgstr ""
+msgstr "Licencias y concesiones"
 
 #: aleph/model/collection.py:37
 msgid "Regulatory filings"
-msgstr ""
+msgstr "Documentación regulatoria"
 
 #: aleph/model/collection.py:38
 msgid "Other material"
-msgstr ""
+msgstr "Otro material"
 
 #: aleph/model/event.py:42
 msgid "{{actor}} changed the settings of {{collection}}."
-msgstr ""
+msgstr "{{actor}} ha cambiado la configuración de {{collection}}."
 
 #: aleph/model/event.py:48
 msgid "{{actor}} uploaded {{document}} to {{collection}}."
-msgstr ""
+msgstr "{{actor}} subió {{document}} a {{collection}}."
 
 #: aleph/model/event.py:57
 msgid "{{entity}} matches your alert for {{alert}}."
-msgstr ""
+msgstr "{{entity}} coincide con tu alerta de {{alert}}."
 
 #: aleph/model/event.py:67
 msgid "{{actor}} gave {{role}} access to {{collection}}."
-msgstr ""
+msgstr "{{actor}} le otorgó {{role}} acceso a {{collection}}."
 
 #: aleph/model/event.py:82
 msgid "{{actor}} removed access to {{collection}} from {{role}}."
+msgstr "{{actor}} eliminó el acceso a {{collection}} de {{role}}."
+
+#: aleph/templates/email/layout.html:59
+#, python-format
+msgid ""
+"\n"
+"        Dear %(name)s,\n"
+"      "
 msgstr ""
 
-#: aleph/views/base_api.py:76
+#: aleph/templates/email/layout.html:67
+#, python-format
+msgid ""
+"\n"
+"          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>.\n"
+"        "
+msgstr ""
+
+#: aleph/templates/email/registration_code.html:5
+#, python-format
+msgid ""
+"\n"
+"      To complete your registration, please visit <a href=\"%(url)s\">our signup page</a>.\n"
+"    "
+msgstr ""
+
+#: aleph/views/base_api.py:75
 msgid "/api/1/ is deprecated, please use /api/2/."
-msgstr ""
+msgstr "/ api / 1 / está obsoleto, use / api / 2 /."
 
-#: aleph/views/base_api.py:84
+#: aleph/views/base_api.py:83
 msgid "You are not authorized to do this."
-msgstr ""
+msgstr "Usted no está autorizado para hacer esto."
 
-#: aleph/views/base_api.py:93
+#: aleph/views/base_api.py:92
 msgid "This path does not exist."
-msgstr ""
+msgstr "Esta ruta no existe."
 
-#: aleph/views/base_api.py:109
+#: aleph/views/base_api.py:108
 msgid "Access token has expired."
-msgstr ""
+msgstr "El token de acceso ha expirado."

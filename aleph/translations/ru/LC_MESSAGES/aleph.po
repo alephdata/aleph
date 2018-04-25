@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-04-06 17:53+0200\n"
+"POT-Creation-Date: 2018-04-25 15:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -112,18 +112,42 @@ msgstr ""
 msgid "{{actor}} removed access to {{collection}} from {{role}}."
 msgstr "{{actor}} удалил права {{role}} для доступа к {{collection}}."
 
-#: aleph/views/base_api.py:76
+#: aleph/templates/email/layout.html:59
+#, python-format
+msgid ""
+"\n"
+"        Dear %(name)s,\n"
+"      "
+msgstr ""
+
+#: aleph/templates/email/layout.html:67
+#, python-format
+msgid ""
+"\n"
+"          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>.\n"
+"        "
+msgstr ""
+
+#: aleph/templates/email/registration_code.html:5
+#, python-format
+msgid ""
+"\n"
+"      To complete your registration, please visit <a href=\"%(url)s\">our signup page</a>.\n"
+"    "
+msgstr ""
+
+#: aleph/views/base_api.py:75
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
 
-#: aleph/views/base_api.py:84
+#: aleph/views/base_api.py:83
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:93
+#: aleph/views/base_api.py:92
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:109
+#: aleph/views/base_api.py:108
 msgid "Access token has expired."
 msgstr "Ключ доступа устарел."

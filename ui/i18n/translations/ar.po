@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-04-11T10:15:31.260Z\n"
+"POT-Creation-Date: 2018-04-25T13:08:25.196Z\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,13 +88,6 @@ msgstr ""
 #. Alert
 #: i18n/messages.json
 msgid "Alert"
-msgstr ""
-
-#. [navbar.alert_remove]
-#. defaultMessage is:
-#. Alert on
-#: i18n/messages.json
-msgid "Alert on"
 msgstr ""
 
 #. [signup.login]
@@ -212,10 +205,13 @@ msgstr ""
 msgid "Confirm password"
 msgstr ""
 
+#. [document.info.tags]
+#. defaultMessage is:
+#. Connections
 #. [entity.info.connections]
 #. defaultMessage is:
 #. Connections
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Connections"
 msgstr ""
 
@@ -349,6 +345,13 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
+#. [search.screen.error]
+#. defaultMessage is:
+#. Error
+#: i18n/messages.json
+msgid "Error"
+msgstr ""
+
 #. [collection.info.explore_button]
 #. defaultMessage is:
 #. Explore
@@ -438,6 +441,13 @@ msgstr ""
 #. Imported
 #: i18n/messages.json
 msgid "Imported"
+msgstr ""
+
+#. [document.mode.info]
+#. defaultMessage is:
+#. Info
+#: i18n/messages.json
+msgid "Info"
 msgstr ""
 
 #. [collection.edit.info.label]
@@ -582,7 +592,7 @@ msgstr ""
 msgid "No options"
 msgstr ""
 
-#. [document.no_viewer]
+#. [document.viewer.no_viewer]
 #. defaultMessage is:
 #. No preview is available for this document
 #: i18n/messages.json
@@ -654,7 +664,7 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#. [collection .info.overview]
+#. [collection.info.overview]
 #. defaultMessage is:
 #. Overview
 #. [document.info.overview]
@@ -698,16 +708,6 @@ msgstr ""
 msgid "Phones"
 msgstr ""
 
-#. [preview]
-#. defaultMessage is:
-#. Preview
-#. [preview]
-#. defaultMessage is:
-#. Preview
-#: i18n/messages.json i18n/messages.json
-msgid "Preview"
-msgstr ""
-
 #. [nav.alerts_tooltip]
 #. defaultMessage is:
 #. Receive alerts for new results
@@ -736,10 +736,13 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
+#. [entity.connections.relationships]
+#. defaultMessage is:
+#. Relationships
 #. [entity.references.title]
 #. defaultMessage is:
 #. Relationships
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Relationships"
 msgstr ""
 
@@ -809,6 +812,13 @@ msgstr ""
 msgid "Search {total} public records and leaks from {collections} sources"
 msgstr ""
 
+#. [search.screen.searching]
+#. defaultMessage is:
+#. Searching...
+#: i18n/messages.json
+msgid "Searching..."
+msgstr ""
+
 #. [search.placeholder]
 #. defaultMessage is:
 #. Search…
@@ -836,11 +846,32 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#. [document.mode.text.tooltip]
+#. defaultMessage is:
+#. Show extracted text
+#: i18n/messages.json
+msgid "Show extracted text"
+msgstr ""
+
 #. [search.facets.showMore]
 #. defaultMessage is:
 #. Show more…
 #: i18n/messages.json
 msgid "Show more…"
+msgstr ""
+
+#. [document.mode.info.tooltip]
+#. defaultMessage is:
+#. Show properties and details
+#: i18n/messages.json
+msgid "Show properties and details"
+msgstr ""
+
+#. [document.mode.view.tooltip]
+#. defaultMessage is:
+#. Show the document
+#: i18n/messages.json
+msgid "Show the document"
 msgstr ""
 
 #. [password_auth.signin]
@@ -914,13 +945,6 @@ msgstr ""
 msgid "Source"
 msgstr ""
 
-#. [entity.info.source_url]
-#. defaultMessage is:
-#. Source URL
-#: i18n/messages.json
-msgid "Source URL"
-msgstr ""
-
 #. [collection.edit.title]
 #. defaultMessage is:
 #. Source settings
@@ -966,14 +990,18 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#. [document.info.tags]
-#. defaultMessage is:
-#. Tags
 #. [entity.info.tags]
 #. defaultMessage is:
 #. Tags
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Tags"
+msgstr ""
+
+#. [document.mode.text]
+#. defaultMessage is:
+#. Text
+#: i18n/messages.json
+msgid "Text"
 msgstr ""
 
 #. [auth.bad_request]
@@ -981,6 +1009,13 @@ msgstr ""
 #. The Server did not accept your input
 #: i18n/messages.json
 msgid "The Server did not accept your input"
+msgstr ""
+
+#. [error.screen.not_found]
+#. defaultMessage is:
+#. The requested page could not be found.
+#: i18n/messages.json
+msgid "The requested page could not be found."
 msgstr ""
 
 #. [document.viewer.ignored_file]
@@ -1009,9 +1044,9 @@ msgstr ""
 
 #. [search.not_properly_imported]
 #. defaultMessage is:
-#. This folder is not properly imported!
+#. This folder is not fully imported.
 #: i18n/messages.json
-msgid "This folder is not properly imported!"
+msgid "This folder is not fully imported."
 msgstr ""
 
 #. [alerts.topic]
@@ -1072,6 +1107,13 @@ msgstr ""
 msgid "Untitled"
 msgstr ""
 
+#. [document.parent.nav]
+#. defaultMessage is:
+#. Up
+#: i18n/messages.json
+msgid "Up"
+msgstr ""
+
 #. [alerts.save]
 #. defaultMessage is:
 #. Update
@@ -1117,18 +1159,21 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
+#. [document.mode.view]
+#. defaultMessage is:
+#. View
 #. [collection.edit.permissionstable.view]
 #. defaultMessage is:
 #. View
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "View"
 msgstr ""
 
 #. [search.warning]
 #. defaultMessage is:
-#. Warning!
+#. Warning
 #: i18n/messages.json
-msgid "Warning!"
+msgid "Warning"
 msgstr ""
 
 #. [signup.inbox.desc]
