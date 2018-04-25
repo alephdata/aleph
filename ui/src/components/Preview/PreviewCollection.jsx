@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
@@ -41,5 +42,6 @@ const mapStateToProps = (state, ownProps) => {
   return { collection: selectCollection(state, ownProps.previewId) };
 };
 
-PreviewCollection = connect(mapStateToProps, { fetchCollection }, null, { pure: false })(PreviewCollection);
+PreviewCollection = connect(mapStateToProps, { fetchCollection })(PreviewCollection);
+PreviewCollection = withRouter(PreviewCollection);
 export default PreviewCollection;

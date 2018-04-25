@@ -70,7 +70,7 @@ class CollectionsIndexScreen extends Component {
 
   fetchIfNeeded() {
     let { query, result } = this.props;
-    if (!result.isLoading) {
+    if (result.total === undefined && !result.isLoading) {
       this.props.queryCollections({ query });
     }
   }

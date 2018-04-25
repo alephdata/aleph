@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
@@ -52,5 +53,6 @@ const mapStateToProps = (state, ownProps) => {
   return { document: selectEntity(state, ownProps.previewId) };
 };
 
-PreviewDocument = connect(mapStateToProps, { fetchDocument }, null, { pure: false })(PreviewDocument);
+PreviewDocument = connect(mapStateToProps, { fetchDocument })(PreviewDocument);
+PreviewDocument = withRouter(PreviewDocument);
 export default PreviewDocument;

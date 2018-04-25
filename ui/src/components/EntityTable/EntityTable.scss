@@ -1,15 +1,11 @@
 @import "src/app/variables.scss";
 
 .EntityTable {
-  .collection-icon {
-    margin-left: $aleph-grid-size;
-  }
-
   .schema {
-    width: 8em;
+    max-width: 8em;
   }
 
   .updating {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 }

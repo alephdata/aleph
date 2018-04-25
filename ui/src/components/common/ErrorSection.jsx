@@ -17,7 +17,7 @@ class ErrorSection extends Component {
   componentDidMount() {
     const { error, session } = this.props;
     const statusCode = get(error, 'response.status');
-    if (statusCode === 403 && !session.loggedIn) {
+    if ((statusCode === 401 || statusCode === 403) && !session.loggedIn) {
       this.onSignIn();
     }
   }

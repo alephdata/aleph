@@ -42,22 +42,13 @@ export function updateLoading(value) {
 
 export function updateResults(state, { query, result }) {
   const key = query.toKey(),
-        previous = state[key] && state[key].total !== undefined ? state[key] : {};
+        previous = state[key] && state[key].total !== undefined ? state[key] : {},
+        results = result.results.map((r) => r.id);
   
-  result = {
-    ...result,
-    isLoading: false,
-    results: result.results.map((r) => r.id)
-  }
-  if (previous.page === undefined) {
-    return { ...state, [key]: result};
-  }
+  result = { ...result, isLoading: false, results };
   // don't overwrite existing results
-  if (previous.offset < result.offset) {
-      state[key] = {
-        ...result,
-        results: [...previous.results, ...result.results]
-      }
+  if (previous.page !== undefined && previous.offset < result.offset) {
+    result = { ...result, results: [...previous.results, ...result.results] };
   }
-  return state;
+  return { ...state, [key]: result};
 }
