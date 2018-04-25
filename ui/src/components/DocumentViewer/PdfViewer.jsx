@@ -39,15 +39,13 @@ class PdfViewer extends Component {
     // shouldComponentUpdate code in this component.
     this.onResize();
 
-    // setTimeout(() => {
-    //   // We only want to do anything if the size *has not* been calculated yet.
-    //   // This is because rendering a PDF can change it slightly but we don't
-    //   // want to flash the entire PDF render (as it's slow) just to change
-    //   // it by a 1 or 2 pixels.
-    //   if (this.state.width === null) {
-    //     this.onResize();
-    //   }
-    // }, 1500);
+    setTimeout(() => {
+      // We only want to do anything if the size *has not* been calculated yet.
+      // This is because rendering a PDF can change it slightly but we don't
+      // want to flash the entire PDF render (as it's slow) just to change
+      // it by a 1 or 2 pixels.
+      this.onResize();
+    }, 1000);
   }
 
   componentDidMount() {
@@ -62,9 +60,14 @@ class PdfViewer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { document, page, query, mode } = this.props;
+    const { document, page, query } = this.props;
     if (this.state.width === null) {
       this.onResize();
+    }
+    if (this.props.mode !== prevProps.mode) {
+      setTimeout(() => {
+        this.onResize();
+      }, 400);
     }
     if (!query.sameAs(prevProps.query)) {
       this.fetchRecords();

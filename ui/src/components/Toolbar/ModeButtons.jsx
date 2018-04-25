@@ -1,12 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { Tooltip, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
 import getPath from 'src/util/getPath';
 
+
+const messages = defineMessages({
+  mode_view: {
+    id: 'document.mode.view.tooltip',
+    defaultMessage: 'Show the document',
+  },
+  mode_info: {
+    id: 'document.mode.info.tooltip',
+    defaultMessage: 'Show properties and details',
+  },
+  mode_text: {
+    id: 'document.mode.text.tooltip',
+    defaultMessage: 'Show extracted text',
+  }
+});
 
 class ModeButtons extends React.Component {
   constructor(props) {
@@ -26,7 +42,7 @@ class ModeButtons extends React.Component {
   }
 
   render() {
-    const { document, mode, isPreview } = this.props;
+    const { document, mode, isPreview, intl } = this.props;
     // const className = isPreview === true ? this.props.className : '';
     const hasTextMode = ['Pages', 'Image'].indexOf(document.schema) !== -1;
     const hasSearchMode = ['Pages'].indexOf(document.schema) !== -1;
@@ -35,31 +51,37 @@ class ModeButtons extends React.Component {
     return (
       <div className="pt-button-group">
         { hasModifiers && (
-          <a onClick={(e) => this.setMode(e, 'view')}
-             className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'view'})}>
-            <span className="pt-icon-standard pt-icon-document"/>
-            { !isPreview && (
-              <FormattedMessage id="document.mode.view" defaultMessage="View"/>
-            )}
-          </a>
+          <Tooltip content={intl.formatMessage(messages.mode_view)} position={Position.BOTTOM_RIGHT}>
+            <a onClick={(e) => this.setMode(e, 'view')}
+              className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'view'})}>
+              <span className="pt-icon-standard pt-icon-document"/>
+              { !isPreview && (
+                <FormattedMessage id="document.mode.view" defaultMessage="View"/>
+              )}
+            </a>
+          </Tooltip>
         )}
         { isPreview && (
-          <a onClick={(e) => this.setMode(e, 'info')}
-             className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'info'})}>
-            <span className="pt-icon-standard pt-icon-info-sign"/>
-            { !isPreview && (
-              <FormattedMessage id="document.mode.info" defaultMessage="Info"/>
-            )}
-          </a>
+          <Tooltip content={intl.formatMessage(messages.mode_info)} position={Position.BOTTOM_RIGHT}>
+            <a onClick={(e) => this.setMode(e, 'info')}
+              className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'info'})}>
+              <span className="pt-icon-standard pt-icon-info-sign"/>
+              { !isPreview && (
+                <FormattedMessage id="document.mode.info" defaultMessage="Info"/>
+              )}
+            </a>
+          </Tooltip>
         )}
         { hasTextMode && (
-          <a onClick={(e) => this.setMode(e, 'text')}
-             className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'text'})}>
-            <span className="pt-icon-standard pt-icon-align-justify"/>
-            { !isPreview && (
-              <FormattedMessage id="document.mode.text" defaultMessage="Text"/>
-            )}
-          </a>
+          <Tooltip content={intl.formatMessage(messages.mode_text)} position={Position.BOTTOM_RIGHT}>
+            <a onClick={(e) => this.setMode(e, 'text')}
+              className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'text'})}>
+              <span className="pt-icon-standard pt-icon-align-justify"/>
+              { !isPreview && (
+                <FormattedMessage id="document.mode.text" defaultMessage="Text"/>
+              )}
+            </a>
+          </Tooltip>
         )}
       </div>
     );
@@ -75,4 +97,5 @@ const mapStateToProps = (state, ownProps) => {
 
 ModeButtons = connect(mapStateToProps, {})(ModeButtons);
 ModeButtons = withRouter(ModeButtons);
+ModeButtons = injectIntl(ModeButtons);
 export default ModeButtons;
