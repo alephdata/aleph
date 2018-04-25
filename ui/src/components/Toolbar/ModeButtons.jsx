@@ -6,8 +6,6 @@ import { Tooltip, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import getPath from 'src/util/getPath';
-
 
 const messages = defineMessages({
   mode_view: {
@@ -61,17 +59,6 @@ class ModeButtons extends React.Component {
             </a>
           </Tooltip>
         )}
-        { isPreview && (
-          <Tooltip content={intl.formatMessage(messages.mode_info)} position={Position.BOTTOM_RIGHT}>
-            <a onClick={(e) => this.setMode(e, 'info')}
-              className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'info'})}>
-              <span className="pt-icon-standard pt-icon-info-sign"/>
-              { !isPreview && (
-                <FormattedMessage id="document.mode.info" defaultMessage="Info"/>
-              )}
-            </a>
-          </Tooltip>
-        )}
         { hasTextMode && (
           <Tooltip content={intl.formatMessage(messages.mode_text)} position={Position.BOTTOM_RIGHT}>
             <a onClick={(e) => this.setMode(e, 'text')}
@@ -79,6 +66,17 @@ class ModeButtons extends React.Component {
               <span className="pt-icon-standard pt-icon-align-justify"/>
               { !isPreview && (
                 <FormattedMessage id="document.mode.text" defaultMessage="Text"/>
+              )}
+            </a>
+          </Tooltip>
+        )}
+        { isPreview && (
+          <Tooltip content={intl.formatMessage(messages.mode_info)} position={Position.BOTTOM_RIGHT}>
+            <a onClick={(e) => this.setMode(e, 'info')}
+              className={c('ModeButtons', 'pt-button', {'pt-active': mode === 'info'})}>
+              <span className="pt-icon-standard pt-icon-info-sign"/>
+              { !isPreview && (
+                <FormattedMessage id="document.mode.info" defaultMessage="Info"/>
               )}
             </a>
           </Tooltip>

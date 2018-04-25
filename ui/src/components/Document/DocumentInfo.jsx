@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-import { Tab, Tabs, Button } from "@blueprintjs/core";
+import { Tab, Tabs } from "@blueprintjs/core";
 
 import getPath from 'src/util/getPath';
 import { URL, DualPane, TabCount, Schema, Entity } from 'src/components/common';

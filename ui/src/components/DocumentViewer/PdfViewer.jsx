@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
+import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 import classNames from 'classnames';
@@ -39,24 +40,25 @@ class PdfViewer extends Component {
     // shouldComponentUpdate code in this component.
     this.onResize();
 
-    setTimeout(() => {
+    this.resizeTimeout = setTimeout(() => {
       // We only want to do anything if the size *has not* been calculated yet.
       // This is because rendering a PDF can change it slightly but we don't
       // want to flash the entire PDF render (as it's slow) just to change
       // it by a 1 or 2 pixels.
       this.onResize();
-    }, 1000);
+    }, 350);
   }
 
   componentDidMount() {
     this.fetchRecords();
     this.fetchPage();
     this.onResize();
-    window.addEventListener("resize", throttle(this.onResize, 1000))
+    window.addEventListener("resize", throttle(this.onResize, 500))
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", throttle(this.onResize, 1000))
+    clearTimeout(this.resizeTimeout);
+    window.removeEventListener("resize", throttle(this.onResize, 500))
   }
 
   componentDidUpdate(prevProps) {
@@ -65,9 +67,10 @@ class PdfViewer extends Component {
       this.onResize();
     }
     if (this.props.mode !== prevProps.mode) {
-      setTimeout(() => {
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = setTimeout(() => {
         this.onResize();
-      }, 400);
+      }, 350);
     }
     if (!query.sameAs(prevProps.query)) {
       this.fetchRecords();
@@ -78,8 +81,8 @@ class PdfViewer extends Component {
   }
 
   fetchRecords() {
-    const { query, result } = this.props;
-    if (result.total === undefined && !result.isLoading && query.path && query.hasQuery()) {
+    const { query, result, isSearch } = this.props;
+    if (result.total === undefined && !result.isLoading && isSearch) {
       this.props.queryDocumentRecords({query})
     }
   }
@@ -114,16 +117,20 @@ class PdfViewer extends Component {
     history.push({
       pathname: getPath(document.links.ui),
       search: queryString.stringify({documentprefix: query.getString('prefix')}),
-      hash: `page=${res.index}`
+      hash: `page=${res.index}&mode=view`
     });
   }
   
   render() {
-    const { document, mode, page, pageResult, previewMode, result, query } = this.props;
+    const { document, mode, page, pageResult, result, query, isSearch } = this.props;
     const { width, numPages } = this.state;
 
     if (document.id === undefined) {
       return null;
+    }
+
+    if (isSearch && result.total === undefined) {
+      return <SectionLoading />;
     }
 
     return (
@@ -142,46 +149,50 @@ class PdfViewer extends Component {
             )}
             { mode === 'view' && (
               <div className="document">
-                <div ref={(ref) => this.pdfElement = ref}>
-                  <Document
-                    renderAnnotations={true}
-                    file={document.links.pdf}
-                    onLoadSuccess={this.onDocumentLoad}>
-                  {/* 
-                      Only render Page when width has been set and numPages has been figured out.
-                      This limits flashing / visible resizing when displaying page for the first time.
-                  */}
-                  {width !== null && numPages > 0 && (
-                    <Page pageNumber={page} className="page" width={width}/>
-                  )}
-                  </Document>
-                </div>
-              </div>
-            )}
-            { mode === 'search' && (
-              <div className="pages">
-                {result.total === undefined && <SectionLoading /> }
-                {result.total !== undefined && result.results.length === 0 &&
-                  <p className="no-results pt-text-muted">No results.</p>
-                }
-                <ul>
-                  {result !== null && result.results.length > 0 && result.results.map((res, index) => (
-                    <li key={`page-${res.id}`}>
-                      <p>
-                        <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: page === res.index})}>
-                          <span className={`pt-icon-document`}/> Page {res.index}
-                        </a>
-                      </p>
-                      <p>
-                        <a onClick={(e) => this.onSearchResultClick(e, res)} className="pt-text-muted">
-                          { res.highlight !== undefined && (
-                            <span dangerouslySetInnerHTML={{__html: res.highlight.join('  …  ')}} />
-                          )}
-                        </a>
-                      </p>
-                    </li>
-                  ))}
-                </ul>
+                {result.total === 0 && (
+                  <div className="pt-callout pt-intent-warning pt-icon-search">
+                    <FormattedMessage id="document.search.no_match"
+                                      defaultMessage="No page within this document matches your search." />
+                  </div>
+                )}
+                {(!isSearch || result.total === 0) && (
+                  <div ref={(ref) => this.pdfElement = ref}>
+                    <Document renderAnnotations={true}
+                              file={document.links.pdf}
+                              loading={<SectionLoading />}
+                              onLoadSuccess={this.onDocumentLoad}>
+                    {/* 
+                        Only render Page when width has been set and numPages has been figured out.
+                        This limits flashing / visible resizing when displaying page for the first time.
+                    */}
+                    {width !== null && numPages > 0 && (
+                      <Page pageNumber={page}
+                            className="page"
+                            width={width} />
+                    )}
+                    </Document>
+                  </div>
+                )}
+                {isSearch && (
+                  <div className="pages">
+                    <ul>
+                      {result.results.map((res, index) => (
+                        <li key={`page-${res.id}`}>
+                          <p>
+                            <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: page === res.index})}>
+                              <span className={`pt-icon-document`}/> Page {res.index}
+                            </a>
+                          </p>
+                          <p>
+                            { res.highlight !== undefined && (
+                              <span dangerouslySetInnerHTML={{__html: res.highlight.join('  …  ')}} />
+                            )}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -207,14 +218,14 @@ const mapStateToProps = (state, ownProps) => {
   if (queryText.length > 0) {
     query = query.setString('prefix', queryText);
   }
-  
-  const defaultMode = (previewMode && query.hasQuery()) ? 'search' : 'view';
-  const mode = hashQuery.mode || defaultMode;
+
+  const mode = hashQuery.mode || 'view';
   return {
     result: selectDocumentRecordsResult(state, query),
     pageResult: selectDocumentPage(state, document.id, page),
+    isSearch: (previewMode && query.hasQuery() && mode === 'view') || (mode === 'search'),
     page: page,
-    mode: mode,
+    mode: mode === 'search' ? 'view' : mode,
     query: query
   }
 }

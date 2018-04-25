@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button } from "@blueprintjs/core";
 
 import Query from 'src/app/Query';
 import { ErrorSection } from 'src/components/common';
@@ -82,6 +81,7 @@ class DocumentViewer extends React.Component {
     return <React.Fragment>
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
+          <ParentButton isPreview={previewMode} document={doc} />
           <ModeButtons isPreview={previewMode} document={doc} />
           {previewMode === true && (
             <Link to={getPath(doc.links.ui)} className="pt-button button-link">
@@ -89,7 +89,6 @@ class DocumentViewer extends React.Component {
               <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
             </Link>
           )}
-          <ParentButton isPreview={previewMode} document={doc} />
           <DownloadButton isPreview={previewMode} document={doc} />
           {numberOfPages !== null && numberOfPages > 0 && (
             <PagingButtons document={doc} numberOfPages={numberOfPages}/>
