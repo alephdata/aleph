@@ -26,20 +26,20 @@ class PagingButtons extends React.Component {
       currentPage && currentPage > 0 &&
       numberOfPages && numberOfPages > 0) {
       return (
-          <ButtonGroup className="PagingButtons" minimal={false} style={{float: 'left'}}>
-              <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={currentPage <= 1}/>
-              <Button disabled className="PagingText">
-                  <FormattedMessage
-                      id="document.paging"
-                      defaultMessage="Page {currentPage} of {numberOfPages}"
-                      values={{
-                          currentPage: currentPage,
-                          numberOfPages: numberOfPages
-                      }}
-                  />
-              </Button>
-              <AnchorButton href={`#${nextButtonLink}`} icon="arrow-right" disabled={currentPage >= numberOfPages}/>
-          </ButtonGroup>
+        <ButtonGroup className="PagingButtons" minimal={false} style={{float: 'left'}}>
+          <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={currentPage <= 1}/>
+          <Button disabled className="PagingText">
+            <FormattedMessage
+                id="document.paging"
+                defaultMessage="Page {currentPage} of {numberOfPages}"
+                values={{
+                    currentPage: currentPage,
+                    numberOfPages: numberOfPages
+                }}
+            />
+          </Button>
+          <AnchorButton href={`#${nextButtonLink}`} icon="arrow-right" disabled={currentPage >= numberOfPages}/>
+        </ButtonGroup>
       );
     } else {
       return null

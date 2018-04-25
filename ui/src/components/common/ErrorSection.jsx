@@ -15,7 +15,7 @@ class ErrorSection extends Component {
   }
 
   componentDidMount() {
-    const { error, metadata, session } = this.props;
+    const { error, session } = this.props;
     const statusCode = get(error, 'response.status');
     if (statusCode === 403 && !session.loggedIn) {
       this.onSignIn();
@@ -27,7 +27,7 @@ class ErrorSection extends Component {
   }
 
   render() {
-    const { error, metadata, session } = this.props;
+    const { error, metadata } = this.props;
     const { title = '', description = '', visual = 'error' } = this.props;
     const message = error === undefined ? title : error.message;
 
@@ -45,7 +45,7 @@ class ErrorSection extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {metadata: state.metadata, session: state.session};
+  return { metadata: state.metadata, session: state.session };
 };
 
 ErrorSection = connect(mapStateToProps)(ErrorSection);

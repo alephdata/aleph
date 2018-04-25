@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import Waypoint from 'react-waypoint';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
-import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
 import {queryEntities} from 'src/actions';
@@ -69,7 +68,7 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, hasWarning, intl} = this.props;
+    const {query, result, intl} = this.props;
     return (
       <React.Fragment>
         {result.total === 0 && (
@@ -100,7 +99,7 @@ class EntitySearch extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location, context, prefix, query} = ownProps;
+  const {location, context = {}, prefix, query} = ownProps;
 
   // We normally only want Things, not Intervals (relations between things).
   const contextWithDefaults = {
@@ -120,19 +119,4 @@ const mapStateToProps = (state, ownProps) => {
 EntitySearch = connect(mapStateToProps, {queryEntities})(EntitySearch);
 EntitySearch = withRouter(EntitySearch);
 EntitySearch = injectIntl(EntitySearch);
-
-EntitySearch.propTypes = {
-  context: PropTypes.object,
-  documentMode: PropTypes.bool,
-  hideCollection: PropTypes.bool,
-  prefix: PropTypes.string,
-};
-
-EntitySearch.defaultProps = {
-  context: {},
-  documentMode: false,
-  hideCollection: false,
-  prefix: '',
-};
-
 export default EntitySearch;

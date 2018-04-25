@@ -43,16 +43,16 @@ class NotificationsScreen extends React.Component {
   }
 
   fetchIfNeeded() {
-    const { result, query, queryNotifications } = this.props;
+    const { result, query } = this.props;
     if (result.total === undefined && !result.isLoading) {
-      queryNotifications({ query });
+      this.props.queryNotifications({ query });
     }
   }
 
   getMoreResults() {
-    const { query, result, queryNotifications } = this.props;
+    const { query, result } = this.props;
     if (!result.isLoading && result.next) {
-      queryNotifications({ query, next: result.next });
+      this.props.queryNotifications({ query, next: result.next });
     }
   }
 

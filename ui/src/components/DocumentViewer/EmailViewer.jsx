@@ -138,5 +138,4 @@ const mapStateToProps = (state, ownProps) => {
 
 EmailViewer = connect(mapStateToProps)(EmailViewer);
 EmailViewer = withRouter(EmailViewer);
-
 export default EmailViewer;

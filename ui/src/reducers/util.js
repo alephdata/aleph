@@ -15,7 +15,7 @@ export function updateLoading(value) {
   return function(state, { query, result, error, args }) {
     if (error !== undefined) {
       const key = args.query.toKey();
-      state = {
+      return {
         ...state,
         [key]: {
           isLoading: false,
@@ -23,12 +23,18 @@ export function updateLoading(value) {
           error
         }
       };
-    } else if (query !== undefined) {
+    }
+    if (query !== undefined) {
       const key = query.toKey();
-      assign(state[key], {
-        isLoading: value,
-        isError: false
-      });
+      const result = state[key] || {};
+      return {
+        ...state,
+        [key]: {
+          ...result,
+          isLoading: value,
+          isError: false
+        }
+      };
     }
     return state;
   }
@@ -36,7 +42,7 @@ export function updateLoading(value) {
 
 export function updateResults(state, { query, result }) {
   const key = query.toKey(),
-        previous = state[key] || {};
+        previous = state[key] && state[key].total !== undefined ? state[key] : {};
   
   result = {
     ...result,

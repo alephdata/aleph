@@ -69,7 +69,7 @@ const messages = defineMessages({
 class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
-    const {intl} = props;
+    const { intl } = props;
 
     const facets = [
       {
@@ -168,8 +168,6 @@ class SearchScreen extends React.Component {
       hash: queryString.stringify(parsedHash),
     });
   }
-
-  
 
   render() {
     const {query, result, intl} = this.props;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Spinner } from '@blueprintjs/core';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
@@ -9,9 +8,9 @@ import classNames from 'classnames';
 
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
+import { SectionLoading } from 'src/components/common';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
-import SectionLoading from 'src/components/common/SectionLoading';
 
 import './PdfViewer.css';
 
@@ -40,13 +39,6 @@ class PdfViewer extends Component {
     // rendering calls happen a bit too often as we don't have sophisticated
     // shouldComponentUpdate code in this component.
     this.onResize();
-    
-    // @FIXME As a bit of a hack, resize event (to check document width) 1 
-    // second after the document has loaded.
-    //
-    // This will mostly do nothing, because nothing will have changed - which 
-    // is fine, but in practice in a simple way to trigger once after a short 
-    // delay to allow time for the view to do a first render.
 
     setTimeout(() => {
       // We only want to do anything if the size *has not* been calculated yet.
@@ -159,10 +151,8 @@ class PdfViewer extends Component {
             <div className="outer">
               <div className="search-results">
                 <div className="pages">
-                  {(result === null || result.isLoading === true) &&
-                    <Spinner className="pt-small spinner" />
-                  }
-                  {result !== null && result.isLoading === false && result.results.length === 0 &&
+                  {result.total === undefined && <SectionLoading /> }
+                  {result.total !== undefined && result.results.length === 0 &&
                     <p className="no-results pt-text-muted">No results.</p>
                   }
                   <ul>
