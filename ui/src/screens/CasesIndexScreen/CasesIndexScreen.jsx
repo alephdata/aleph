@@ -3,12 +3,12 @@ import {connect} from 'react-redux';
 import {injectIntl, FormattedMessage, defineMessages} from 'react-intl';
 import {debounce} from 'lodash';
 import Waypoint from 'react-waypoint';
-import { NonIdealState, Button } from '@blueprintjs/core';
+import {NonIdealState, Button} from '@blueprintjs/core';
 import pallete from 'google-palette';
 
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';
-import { Screen, Breadcrumbs, DualPane, SectionLoading } from 'src/components/common';
+import {Screen, Breadcrumbs, DualPane, SectionLoading} from 'src/components/common';
 import CaseIndexTable from "../../components/CaseIndexTable/CaseIndexTable";
 import Query from "../../app/Query";
 import CaseExplanationBox from "../../components/Case/CaseExplanationBox";
@@ -47,7 +47,7 @@ class CasesIndexScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props !== nextProps) {
+    if (this.props !== nextProps) {
       //this.fetchData();
     }
   }
@@ -62,7 +62,7 @@ class CasesIndexScreen extends Component {
   }
 
   fetchPermissions() {
-    const { result } = this.props;
+    const {result} = this.props;
     if (result.total !== 0) {
       /*result.results.map((collection) => {
         console.log(collection)
@@ -81,16 +81,16 @@ class CasesIndexScreen extends Component {
   }
 
   toggleCreateCase() {
-    this.setState({ dialogIsOpen: !this.state.dialogIsOpen });
+    this.setState({dialogIsOpen: !this.state.dialogIsOpen});
   }
 
   render() {
     const {result, query, intl} = this.props;
-    const { dialogIsOpen } = this.state;
+    const {dialogIsOpen} = this.state;
     const hasCases = result.total !== 0;
 
     let scheme = pallete.listSchemes('mpn65')[0];
-    let colors = scheme.apply(scheme, [result.total] );
+    let colors = scheme.apply(scheme, [result.total]);
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -112,13 +112,13 @@ class CasesIndexScreen extends Component {
             <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
             {result.total !== 0 && <CaseIndexTable query={query}
                                                    colors={colors}
-                         updateQuery={this.updateQuery}
-                         result={result}/>}
+                                                   updateQuery={this.updateQuery}
+                                                   result={result}/>}
             {result.total === 0 && (
               <div className='error-and-add-button'>
                 <NonIdealState visual="search"
                                title={intl.formatMessage(messages.no_results_title)}
-                               description={intl.formatMessage(messages.no_results_description)} />
+                               description={intl.formatMessage(messages.no_results_description)}/>
                 <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button pt-intent-primary">
                   <FormattedMessage id="case.add" defaultMessage="Add new case"/>
                 </Button>
@@ -138,7 +138,8 @@ class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const context = {
     facet: ['category', 'countries'],
-    'filter:kind': 'casefile' };
+    'filter:kind': 'casefile'
+  };
   const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
     .sortBy('count', true)
     .limit(30);

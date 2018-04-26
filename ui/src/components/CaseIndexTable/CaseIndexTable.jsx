@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router';
+import {defineMessages, injectIntl} from 'react-intl';
+import {connect} from 'react-redux';
 
 import CaseTableRow from './CaseTableRow';
-import { SortableTH } from 'src/components/common';
+import {SortableTH} from 'src/components/common';
 import {fetchCollectionPermissions} from "src/actions";
 
 const messages = defineMessages({
@@ -34,15 +34,15 @@ class CaseIndexTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { result } = nextProps;
+    const {result} = nextProps;
     if (result.total !== undefined) {
-      this.setState({ result })
+      this.setState({result})
     }
   }
 
   sortColumn(field) {
-    const { query, updateQuery } = this.props;
-    const { field: sortedField, desc } = query.getSort();
+    const {query, updateQuery} = this.props;
+    const {field: sortedField, desc} = query.getSort();
     // Toggle through sorting states: ascending, descending, or unsorted.
     let newQuery;
     if (sortedField !== field) {
@@ -58,15 +58,15 @@ class CaseIndexTable extends Component {
   }
 
   render() {
-    const { query, intl, location, history, colors } = this.props;
-    const { result } = this.state;
+    const {query, intl, location, history, colors} = this.props;
+    const {result} = this.state;
 
     if (result.total === 0 && result.page === 1) {
       return null;
     }
 
-    const TH = ({ sortable, field, ...otherProps }) => {
-      const { field: sortedField, desc } = query.getSort();
+    const TH = ({sortable, field, ...otherProps}) => {
+      const {field: sortedField, desc} = query.getSort();
       return (
         <SortableTH sortable={sortable}
                     sorted={sortedField === field && (desc ? 'desc' : 'asc')}
@@ -95,7 +95,7 @@ class CaseIndexTable extends Component {
                         color={colors[index]}
                         casefile={casefile}
                         location={location}
-                        history={history} />
+                        history={history}/>
         )}
         </tbody>
       </table>
@@ -104,8 +104,7 @@ class CaseIndexTable extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-  };
+  return {};
 };
 
 CaseIndexTable = injectIntl(CaseIndexTable);

@@ -63,14 +63,14 @@ class CreateCaseDialog extends Component {
   }
 
   onDeleteRole(role) {
-    const { permissions } = this.state;
+    const {permissions} = this.state;
     const newPermissions = permissions.filter((permission) => permission.role.id !== role.role.id);
     this.setState({permissions: newPermissions});
   }
 
   async onAddCase() {
-    const { intl, updateCollectionPermissions, createCollection } = this.props;
-    const { permissions, collection } = this.state;
+    const {intl, updateCollectionPermissions, createCollection} = this.props;
+    const {permissions, collection} = this.state;
 
     try {
       let createdCollection = await createCollection(collection);
@@ -157,16 +157,18 @@ class CreateCaseDialog extends Component {
             </thead>
             <tbody>
             {permissions.map((permission) =>
-            <tr key={permission.role.id + 1}>
-              <td>{permission.role.name}</td>
-              <td>{permission.role.email}</td>
-              <td><a onClick={(e) => this.onDeleteRole(permission, e)}><FormattedMessage id="case.remove" defaultMessage="Remove"/></a></td>
-            </tr>)}
+              <tr key={permission.role.id + 1}>
+                <td>{permission.role.name}</td>
+                <td>{permission.role.email}</td>
+                <td><a onClick={(e) => this.onDeleteRole(permission, e)}><FormattedMessage id="case.remove"
+                                                                                           defaultMessage="Remove"/></a>
+                </td>
+              </tr>)}
             </tbody>
           </table>}
-            <Button className="pt-intent-primary pt-large button-margin" onClick={this.onAddCase}>
-              <FormattedMessage id="case.create" defaultMessage="Create case"/>
-            </Button>
+          <Button className="pt-intent-primary pt-large button-margin" onClick={this.onAddCase}>
+            <FormattedMessage id="case.create" defaultMessage="Create case"/>
+          </Button>
         </div>
       </Dialog>
     );

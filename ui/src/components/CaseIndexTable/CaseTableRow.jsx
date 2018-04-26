@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import queryString from 'query-string';
-import { FormattedMessage } from 'react-intl';
-import { Icon } from '@blueprintjs/core';
+import {FormattedMessage} from 'react-intl';
+import {Icon} from '@blueprintjs/core';
 
-import { Date } from 'src/components/common';
+import {Date} from 'src/components/common';
 
 
 class CaseTableRow extends Component {
@@ -19,7 +19,7 @@ class CaseTableRow extends Component {
 
   onRowClickHandler(event) {
     event.preventDefault();
-    const { history, location } = this.props;
+    const {history, location} = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     history.replace({
@@ -30,13 +30,13 @@ class CaseTableRow extends Component {
   }
 
   render() {
-    const { casefile, className, color } = this.props;
+    const {casefile, className, color} = this.props;
 
     let rowClassName = (className) ? `${className} nowrap` : 'nowrap';
 
     return (
       <tr className={rowClassName} onClick={this.onRowClickHandler}>
-        <td> <Icon icon="square" iconSize={25} color={color} style={{backgroundColor: color, opacity: 0.6}}/></td>
+        <td><Icon icon="square" iconSize={25} color={color} style={{backgroundColor: color, opacity: 0.6}}/></td>
         <td className="schema">
           {casefile.label}
         </td>
@@ -48,7 +48,8 @@ class CaseTableRow extends Component {
         <td className="date">
           <Date value={casefile.created_at}/>
         </td>
-        <td><a onClick={(e) => this.onDeleteRole(casefile, e)}><FormattedMessage id="case.index.remove" defaultMessage="Remove"/></a></td>
+        <td><a onClick={(e) => this.onDeleteRole(casefile, e)}><FormattedMessage id="case.index.remove"
+                                                                                 defaultMessage="Remove"/></a></td>
       </tr>
     );
   }
