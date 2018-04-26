@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 import { set, update } from 'lodash/fp';
 
-import { fetchCollection, updateCollection, queryCollections, createCollection } from 'src/actions';
+import { fetchCollection, updateCollection, queryCollections, createCollection, deleteCollection } from 'src/actions';
 import { cacheResults } from './util';
 
 const initialState = {};
@@ -23,4 +23,7 @@ export default createReducer({
 
   [createCollection.COMPLETE]: (state, { data }) =>
     set(data)(state),
+
+  [deleteCollection.COMPLETE]: (state, { data }) =>
+  set(data)(state),
 }, initialState);

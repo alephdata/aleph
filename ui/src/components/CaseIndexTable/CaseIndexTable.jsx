@@ -80,7 +80,7 @@ class CaseIndexTable extends Component {
     return (
       <table className="CaseTable case-table" align="center">
         <thead>
-        <tr>
+        <tr key={0}>
           <th/>
           <TH field="title"/>
           <TH field="summary"/>

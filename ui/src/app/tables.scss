@@ -105,6 +105,11 @@ table.case-table {
     background: none;
   }
 
+  tr:hover {
+    white-space: nowrap;
+    background: $aleph-table-heading-background;
+  }
+
   tbody tr td {
     border-bottom: none;
   }

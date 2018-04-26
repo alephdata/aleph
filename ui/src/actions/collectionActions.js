@@ -16,6 +16,11 @@ export const updateCollection = asyncActionCreator((collection) => async dispatc
   return {id: collection.id, data: response.data};
 }, {name: 'UPDATE_COLLECTION'});
 
+export const deleteCollection = asyncActionCreator((collection) => async dispatch => {
+  const response = await endpoint.delete(`collections`, collection);
+  return {data: response.data};
+}, {name: 'DELETE_COLLECTION'});
+
 export const createCollection = asyncActionCreator((collection) => async dispatch => {
   const response = await endpoint.post(`collections`, collection);
   return {data: response.data};

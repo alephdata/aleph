@@ -14,7 +14,8 @@ import {
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
   queryXrefMatches,
-  createCollection
+  createCollection,
+  deleteCollection
 } from './collectionActions';
 import {
   queryEntities,
@@ -46,7 +47,8 @@ export {
   fetchCollectionXrefIndex,
   queryXrefMatches,
   queryNotifications,
-  createCollection
+  createCollection,
+  deleteCollection
 };
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {

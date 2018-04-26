@@ -94,7 +94,7 @@ class CreateCaseDialog extends Component {
     let collectionNew = this.state.collection;
     let summary = target.value;
     collectionNew.summary = summary;
-    this.setState({summary: target.value, collection: collectionNew});
+    this.setState({summary: summary, collection: collectionNew});
   }
 
   render() {
