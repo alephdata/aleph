@@ -16,11 +16,12 @@ log = logging.getLogger(__name__)
 
 def check_alerts():
     """Go through all alerts."""
-    for alert in Alert.all():
-        check_alert(alert)
+    for alert_id in Alert.all_ids():
+        check_alert(alert_id)
 
 
-def check_alert(alert):
+def check_alert(alert_id):
+    alert = Alert.by_id(alert_id)
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
     found = 0
@@ -35,11 +36,12 @@ def check_alert(alert):
         publish(Events.MATCH_ALERT,
                 actor_id=entity.get('uploader_id'),
                 params=params)
-        db.session.flush()
+        db.session.commit()
 
     alert.update()
     log.info('Found %d new results for: %s', found, alert.label)
     db.session.commit()
+    db.session.close()
 
 
 def alert_query(alert, authz):

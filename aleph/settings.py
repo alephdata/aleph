@@ -142,8 +142,8 @@ MAIL_FROM = env.get('ALEPH_MAIL_FROM', 'aleph@domain.com')
 MAIL_SERVER = env.get('ALEPH_MAIL_HOST', 'localhost')
 MAIL_USERNAME = env.get('ALEPH_MAIL_USERNAME')
 MAIL_PASSWORD = env.get('ALEPH_MAIL_PASSWORD')
-MAIL_USE_TLS = env_bool('ALEPH_MAIL_TLS', False)
-MAIL_PORT = int(env.get('ALEPH_MAIL_PORT', 25))
+MAIL_USE_SSL = env_bool('ALEPH_MAIL_SSL', True)
+MAIL_PORT = int(env.get('ALEPH_MAIL_PORT', 465))
 
 
 ##############################################################################

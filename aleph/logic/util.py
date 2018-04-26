@@ -1,5 +1,4 @@
 from urlparse import urljoin
-from normality import stringify
 from urlnormalizer import query_string
 
 from aleph.core import app_ui_url
@@ -23,9 +22,3 @@ def entity_url(entity_id=None, **query):
 
 def document_url(document_id=None, **query):
     return ui_url('documents', id=document_id, **query)
-
-
-def quoted(text):
-    text = stringify(text)
-    if text is not None:
-        return '"%s"' % text

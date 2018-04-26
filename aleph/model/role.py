@@ -47,6 +47,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     password_digest = db.Column(db.Unicode, nullable=True)
     password = None
     reset_token = db.Column(db.Unicode, nullable=True)
+    notified_at = db.Column(db.DateTime, nullable=True)
+
     permissions = db.relationship('Permission', backref='role')
 
     @property
@@ -173,6 +175,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def all_groups(cls):
         return cls.all().filter(Role.type != Role.USER)
+
+    @classmethod
+    def all_users(cls, has_email=False):
+        q = cls.all().filter(Role.type == Role.USER)
+        if has_email:
+            q = q.filter(Role.email != None)  # noqa
+        return q
 
     def set_password(self, secret):
         """Hashes and sets the role password.

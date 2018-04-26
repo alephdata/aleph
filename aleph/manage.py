@@ -19,7 +19,7 @@ from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.collections import update_collection_access
-from aleph.logic.scheduled import background
+from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
 from aleph.logic.xref import xref_collection
@@ -47,7 +47,8 @@ def collections():
 @manager.command
 def scheduled():
     """Run scheduled clean-up and notification operations."""
-    background()
+    hourly()
+    daily()
 
 
 @manager.command
