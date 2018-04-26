@@ -37,8 +37,12 @@ class DocumentSearch extends React.Component {
       const { queryText } = this.state;
       event.preventDefault();
       const hashQuery = queryString.parse(location.hash);
-      hashQuery['mode'] = 'search';
-      hashQuery['page'] = undefined;
+      if (queryText && queryText.length > 0) {
+        hashQuery['mode'] = 'search';
+        hashQuery['page'] = undefined;
+      } else {
+        hashQuery['mode'] = 'view';
+      }
 
       history.push({
           pathname: location.pathname,
