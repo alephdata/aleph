@@ -46,7 +46,7 @@ class CreateCaseDialog extends Component {
       project: '',
       summary: '',
       permissions: [],
-      collection: {caseFile: true}
+      collection: {casefile: true}
     };
 
     this.onAddCase = this.onAddCase.bind(this);
@@ -73,8 +73,8 @@ class CreateCaseDialog extends Component {
     const { permissions, collection } = this.state;
 
     try {
-      console.log(collection)
-      await createCollection(collection);
+      let createdCollection = await createCollection(collection);
+      await updateCollectionPermissions(createdCollection.data.id, permissions);
       showSuccessToast(intl.formatMessage(messages.save_success));
       this.props.toggleDialog();
     } catch (e) {

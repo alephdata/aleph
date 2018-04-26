@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import c from 'classnames';
+import { connect } from 'react-redux';
 
 import CaseTableRow from './CaseTableRow';
 import { SortableTH } from 'src/components/common';
-
-//import './EntityTable.css';
+import {fetchCollectionPermissions} from "src/actions";
 
 const messages = defineMessages({
   column_title: {
@@ -59,8 +58,7 @@ class CaseIndexTable extends Component {
   }
 
   render() {
-    const { query, intl, location, history } = this.props;
-    const isLoading = this.props.result.total === undefined;
+    const { query, intl, location, history, colors } = this.props;
     const { result } = this.state;
 
     if (result.total === 0 && result.page === 1) {
@@ -80,22 +78,24 @@ class CaseIndexTable extends Component {
     };
 
     return (
-      <table className="CaseTable data-table">
+      <table className="CaseTable case-table" align="center">
         <thead>
         <tr>
-          <TH field="title" className="wide" sortable={true} />
-          <TH field="summary" />
-          <TH field="shared" />
-          <TH field="date" sortable={true} />
+          <th/>
+          <TH field="title"/>
+          <TH field="summary"/>
+          <TH field="shared"/>
+          <TH field="date"/>
+          <th/>
         </tr>
         </thead>
-        <tbody className={c({'updating': isLoading})}>
-        {result.results !== undefined && result.results.map(casefile =>
+        <tbody>
+        {result.results !== undefined && result.results.map((casefile, index) =>
           <CaseTableRow key={casefile.id}
+                        color={colors[index]}
                         casefile={casefile}
-                          showSkeleton={isLoading}
-                          location={location}
-                          history={history} />
+                        location={location}
+                        history={history} />
         )}
         </tbody>
       </table>
@@ -103,6 +103,11 @@ class CaseIndexTable extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+  };
+};
+
 CaseIndexTable = injectIntl(CaseIndexTable);
 CaseIndexTable = withRouter(CaseIndexTable);
-export default CaseIndexTable;
+export default connect(mapStateToProps, {fetchCollectionPermissions})(CaseIndexTable);

@@ -4,6 +4,7 @@ import {injectIntl, FormattedMessage, defineMessages} from 'react-intl';
 import {debounce} from 'lodash';
 import Waypoint from 'react-waypoint';
 import { NonIdealState, Button } from '@blueprintjs/core';
+import pallete from 'google-palette';
 
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';
@@ -37,22 +38,39 @@ class CasesIndexScreen extends Component {
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
+    this.fetchPermissions = this.fetchPermissions.bind(this);
   }
 
   componentDidMount() {
     this.fetchData();
+
   }
 
-  componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchData();
+  componentWillReceiveProps(nextProps) {
+    if(this.props !== nextProps) {
+      //this.fetchData();
     }
+  }
+
+  componentDidUpdate() {
+    this.fetchPermissions();
   }
 
   fetchData() {
     let {query} = this.props;
     this.props.queryCollections({query});
   }
+
+  fetchPermissions() {
+    const { result } = this.props;
+    if (result.total !== 0) {
+      /*result.results.map((collection) => {
+        console.log(collection)
+        return this.props.fetchCollectionPermissions(collection.id);
+      });*/
+    }
+  }
+
 
   updateQuery(newQuery) {
     const {history, location} = this.props;
@@ -67,9 +85,12 @@ class CasesIndexScreen extends Component {
   }
 
   render() {
-    const {result, query, intl, collection} = this.props;
+    const {result, query, intl} = this.props;
     const { dialogIsOpen } = this.state;
-    console.log(result)
+    const hasCases = result.total !== 0;
+
+    let scheme = pallete.listSchemes('mpn65')[0];
+    let colors = scheme.apply(scheme, [result.total] );
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -88,8 +109,9 @@ class CasesIndexScreen extends Component {
               isOpen={dialogIsOpen}
               toggleDialog={this.toggleCreateCase}
             />
-            <CaseExplanationBox/>
+            <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
             {result.total !== 0 && <CaseIndexTable query={query}
+                                                   colors={colors}
                          updateQuery={this.updateQuery}
                          result={result}/>}
             {result.total === 0 && (
@@ -102,13 +124,6 @@ class CasesIndexScreen extends Component {
                 </Button>
               </div>
             )}
-            {/*{!result.isLoading && result.next && (
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-600px"
-                scrollableAncestor={window}
-              />
-            )}*/}
             {result.total === undefined && (
               <SectionLoading/>
             )}
@@ -127,6 +142,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
+
   return {
     query: query,
     result: selectCollectionsResult(state, query)

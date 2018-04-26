@@ -11,6 +11,7 @@
     "dotenv": "^5.0.0",
     "filesize": "^3.5.11",
     "font-awesome": "^4.7.0",
+    "google-palette": "^1.1.0",
     "jwt-decode": "latest",
     "lodash": "^4.17.4",
     "node-sass-package-importer": "^3.0.4",

@@ -95,6 +95,26 @@ table.data-table {
   }
 }
 
+table.case-table {
+  @extend .data-table;
+
+  width: 80%;
+  padding-top: 2em;
+
+  th {
+    background: none;
+  }
+
+  tbody tr td {
+    border-bottom: none;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+}
+
 table.settings-table {
   @extend .data-table;
 
