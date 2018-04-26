@@ -55,12 +55,18 @@
     </style>
   </head>
   <body>
-    <p>Dear {{role.name}},</p>
+    <p>
+      {% trans name=role.name %}
+        Dear {{name}},
+      {% endtrans %}
+    </p>
     {% block content %}{% endblock %}
 
     <p class="footer">
       {% block footer %}
-        This email was sent by <a href="{{ui_url}}">{{app_title}}</a>.
+        {% trans %}
+          This email was sent by <a href="{{ui_url}}">{{app_title}}</a>.
+        {% endtrans %}
       {% endblock %}
     </p>
   </body>

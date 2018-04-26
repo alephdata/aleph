@@ -1,30 +1,41 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 
 import SectionLoading from 'src/components/common/SectionLoading';
 
 import './ImageViewer.css';
 
+
 class ImageViewer extends Component {
   render() {
-    const { document, session } = this.props;
+    const { document, mode } = this.props;
     if (!document.links || !document.links.file) {
-        return <SectionLoading />;
+      return <SectionLoading />;
     }
-    const imageUrl = session.token ? `${document.links.file}?api_key=${session.token}` : document.links.file;
 
-    return (
-      <React.Fragment>
-        <div className="ImageViewer">
-          <img src={imageUrl} alt={document.file_name} />
+    return (<div className="outer">
+        <div className="inner ImageViewer">
+          { mode === 'text' && (
+            <pre>{document.text}</pre>
+          )}
+          { mode !== 'text' && (
+            <img src={document.links.file} alt={document.file_name} />
+          )}
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  session: state.session,
-});
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+  const mode = hashQuery.mode || 'view';
+  return { mode };
+}
 
-export default connect(mapStateToProps)(ImageViewer);
+ImageViewer = connect(mapStateToProps)(ImageViewer);
+ImageViewer = withRouter(ImageViewer);
+export default ImageViewer

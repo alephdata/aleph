@@ -16,10 +16,10 @@
     float: left;
   }
 
-  > .button-close {
+  .button-close {
     margin: 0;
     float: right;
-    border-radius: 0;
+    // border-radius: 0;
   }
   
   .DocumentSearch {
@@ -47,6 +47,10 @@
 
   .PagingText.pt-disabled {
     opacity: 1;
+  }
+
+  .pt-button:hover {
+    background-color: $button-color-hover !important;
   }
 
   .pt-button.pt-active {

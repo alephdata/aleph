@@ -9,7 +9,8 @@ import c from 'classnames';
 
 import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
-import { fetchEntity } from 'src/actions/index';
+import { fetchEntity } from 'src/actions';
+import { selectEntity } from 'src/selectors';
 
 import './Entity.css';
 
@@ -35,7 +36,7 @@ class EntityLabel extends Component {
           {icon && <Schema.Icon schema={schema}/>}
           {icon && ' '}
           <FormattedMessage id='entity.label.missing'
-                            defaultMessage="Untitled" />
+          defaultMessage="Untitled" />
         </span>
       );
     }
@@ -102,23 +103,22 @@ class EntityLoad extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate() {
-    this.fetchIfNeeded();
+  componentDidUpdate(prevProps) {
+    if (prevProps.id !== this.props.id) {
+      this.fetchIfNeeded();
+    }
   }
 
   fetchIfNeeded() {
     const { id, entity } = this.props;
-    if (entity === undefined) {
+    if (entity.id === undefined && !entity.isLoading) {
       this.props.fetchEntity({ id });
     }
   }
 
   render() {
     const { entity, children, renderWhenLoading } = this.props;
-    if (
-      (entity === undefined || entity.isFetching)
-      && renderWhenLoading !== undefined
-    ) {
+    if (entity.isLoading && renderWhenLoading !== undefined) {
       return renderWhenLoading;
     } else {
       return children(entity);
@@ -127,7 +127,7 @@ class EntityLoad extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  entity: state.entities[ownProps.id],
+  entity: selectEntity(state, ownProps.id),
 });
 EntityLoad = connect(mapStateToProps, { fetchEntity })(EntityLoad);
 
@@ -135,7 +135,7 @@ EntityLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
   renderWhenLoading: PropTypes.node,
-}
+};
 
 class Entity {
   static Label = EntityLabel;

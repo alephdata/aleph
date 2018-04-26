@@ -43,7 +43,10 @@ def index_document(document):
     if document.status == Document.STATUS_PENDING:
         return
 
-    log.info("Index document [%s]: %s", document.id, document.title)
+    name = document.title
+    if name is None:
+        name = document.file_name
+    log.info("Index document [%s]: %s", document.id, name)
     texts = list(document.texts)
     data = {
         'status': document.status,
@@ -52,7 +55,7 @@ def index_document(document):
         'error_message': document.error_message,
         'uploader_id': document.uploader_id,
         'title': document.title,
-        'name': document.title,
+        'name': name,
         'summary': document.summary,
         'author': document.author,
         'generator': document.generator,
@@ -91,6 +94,7 @@ def index_document(document):
             data[field] = list(values)
         else:
             data[field].extend(values)
+        texts.extend(values)
 
     return index_single(document, data, texts)
 

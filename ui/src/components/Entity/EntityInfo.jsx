@@ -1,18 +1,18 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 import { Link } from 'react-router-dom';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
-import _ from 'lodash';
 
-import { Property, Entity, DualPane, TabCount, Schema, URL } from 'src/components/common';
-import { EntityInfoTags } from 'src/components/Entity';
+import { Property, Entity, DualPane, TabCount, Schema } from 'src/components/common';
+import { EntityConnections } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
-import { fetchEntityReferences } from 'src/actions/index';
-import { selectEntityTags } from 'src/selectors';
+import { fetchEntityReferences, fetchEntityTags } from 'src/actions/index';
+import { selectEntityTags, selectEntityReferences } from 'src/selectors';
 import getPath from 'src/util/getPath';
+
 
 class EntityInfo extends React.Component {
   constructor(props) {
@@ -22,51 +22,54 @@ class EntityInfo extends React.Component {
     };
     this.handleTabChange = this.handleTabChange.bind(this);
   }
-  
-  handleTabChange(activeTabId: TabId) {
-    this.setState({ activeTabId });
+
+  componentDidMount(prevProps) {
+    this.fetchIfNeeded();
   }
 
-  componentDidMount() {
-    const { entity } = this.props;
-    if(!this.props.references && entity && entity.id) {
+  componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { entity, references, tags } = this.props;
+    if (entity.id !== undefined && references.total === undefined && !references.isLoading) {
       this.props.fetchEntityReferences(entity);
+    }
+    if (entity.id !== undefined && tags.total === undefined && !tags.isLoading) {
+      this.props.fetchEntityTags(entity);
     }
   }
 
-  referenceLink(reference) {
-    const { entity } = this.props;
-    const path = getPath(entity.links.ui);
-    const tabName = 'references-' + reference.property.qname;
-    const query = queryString.stringify({'content:tab': tabName})
-    return path + '#' + query;
+  handleTabChange(activeTabId) {
+    this.setState({ activeTabId });
   }
 
   render() {
     const { references, entity, schema, tags, showToolbar } = this.props;
-    const tagsTotal = tags !== undefined ? tags.total : undefined;
-    const connectionsTotal = (references && !references.isFetching && references.results) ? references.results.length : undefined;
+    const tagsTotal = tags.total === undefined ? undefined: tags.total;
+    const referencesTotal = references.results === undefined ? undefined: references.results.length;
+    const connectionsTotal = referencesTotal === undefined || tagsTotal === undefined ? undefined : tagsTotal + referencesTotal;
+    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
+
+    if (schema === undefined) {  // entity hasn't loaded.
+      return null;
+    }
     
-    let sourceUrl = null;
     const entityProperties = _.values(schema.properties).filter((prop) => {
-      if (prop.caption) {
-        return false;
-      }
-      if (prop.name === 'sourceUrl' && entity.properties[prop.name]) {
-        sourceUrl = entity.properties[prop.name][0]
-        return false;
-      }
-      return entity.properties[prop.name];
+      return !prop.caption && (schema.featured.indexOf(prop.name) !== -1 || entity.properties[prop.name]);
     });
     
     return (
       <DualPane.InfoPane className="EntityInfo with-heading">
         {showToolbar && (
           <Toolbar className="toolbar-preview">
-            <Link to={getPath(entity.links.ui)} className="pt-button button-link">
-              <span className={`pt-icon-folder-open`}/>
-              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-            </Link>
+            {isThing && (
+              <Link to={getPath(entity.links.ui)} className="pt-button button-link">
+                <span className={`pt-icon-share`}/>
+                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+              </Link>
+            )}
             <CloseButton/>
           </Toolbar>
         )}
@@ -75,7 +78,9 @@ class EntityInfo extends React.Component {
             <Schema.Label schema={entity.schema} icon={true} />
           </span>
           <h1>
-            <Entity.Label entity={entity} addClass={true}/>
+            {isThing && (
+              <Entity.Label entity={entity} addClass={true}/>
+            )}
           </h1>
         </div>
         <div className="pane-content">
@@ -112,23 +117,10 @@ class EntityInfo extends React.Component {
                 panel={
                   <React.Fragment>
                     <CollectionOverview collection={entity.collection} hasHeader={true}/>
-                    {sourceUrl && (
-                      <ul className='info-sheet'>
-                        <li>
-                          <span className="key">
-                            <FormattedMessage id="entity.info.source_url"
-                                              defaultMessage="Source URL"/>
-                          </span>
-                          <span className="value">
-                            <URL value={sourceUrl} />
-                          </span>
-                        </li>
-                      </ul>
-                    )}
                   </React.Fragment>
                 }
               />
-              <Tab id="connections" disabled={!connectionsTotal || connectionsTotal === 0}
+              <Tab id="connections" disabled={connectionsTotal === undefined || connectionsTotal === 0}
                 title={
                   <React.Fragment>
                     <FormattedMessage id="entity.info.connections" defaultMessage="Connections"/>
@@ -137,36 +129,10 @@ class EntityInfo extends React.Component {
                 }
                 panel={
                   <React.Fragment>
-                    {connectionsTotal && connectionsTotal > 0 && (
-                      <ul className="info-rank">
-                        { references.results.map((ref) => (
-                          <li key={ref.property.qname}>
-                            <span className="key">
-                              <Schema.Icon schema={ref.schema} />{' '}
-                              <Link to={this.referenceLink(ref)}>
-                                <Property.Reverse model={ref.property} />
-                              </Link>
-                            </span>
-                            <span className="value">
-                              <FormattedNumber value={ref.count} />
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    <EntityConnections tags={tags} references={references} entity={entity}/>
                   </React.Fragment>
                 }
               />
-              <Tab id="tags" disabled={!tagsTotal || tagsTotal === 0}
-                title={
-                  <React.Fragment>
-                    <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
-                    <TabCount count={tagsTotal} />
-                  </React.Fragment>
-                }
-                panel={<EntityInfoTags entity={entity} />}
-              />
-              <Tabs.Expander />
           </Tabs>
         </div>
       </DualPane.InfoPane>
@@ -175,11 +141,13 @@ class EntityInfo extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { entity } = ownProps;
   return {
-    references: state.entityReferences[ownProps.entity.id],
-    schema: state.metadata.schemata[ownProps.entity.schema],
-    tags: selectEntityTags(state, ownProps.entity.id)
+    references: selectEntityReferences(state, entity.id),
+    tags: selectEntityTags(state, entity.id),
+    schema: state.metadata.schemata[entity.schema]
   };
 };
 
-export default connect(mapStateToProps, {fetchEntityReferences})(EntityInfo);
+EntityInfo = connect(mapStateToProps, { fetchEntityReferences, fetchEntityTags }, null, { pure: false })(EntityInfo);
+export default EntityInfo;

@@ -8,7 +8,7 @@ from werkzeug.exceptions import BadRequest
 from followthemoney import model
 
 from aleph.core import settings, app_ui_url
-from aleph.model import Entity
+from aleph.model import Entity, Role
 from aleph.search import SearchQueryParser
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.views.util import jsonify
@@ -76,7 +76,10 @@ def reconcile_op(query):
 
 def reconcile_index():
     domain = app_ui_url.strip('/')
-    api_key = request.authz.role.api_key if request.authz.logged_in else None
+    api_key = None
+    if request.authz.logged_in:
+        role = Role.by_id(request.authz.id)
+        api_key = role.api_key
     meta = {
         'name': settings.APP_TITLE,
         'identifierSpace': 'http://rdf.freebase.com/ns/type.object.id',

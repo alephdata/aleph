@@ -4,8 +4,8 @@ from banal import ensure_list
 from elasticsearch.helpers import scan
 
 from aleph.authz import Authz
-from aleph.core import db, es, celery
-from aleph.model import Role, Alert, Events
+from aleph.core import db, es
+from aleph.model import Alert, Events
 from aleph.index.core import entities_index
 from aleph.index.entities import get_entity
 from aleph.index.util import unpack_result, authz_query
@@ -21,7 +21,7 @@ def check_alerts():
 
 
 def check_alert(alert):
-    authz = Authz(role=alert.role)
+    authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
     found = 0
     for result in scan(es, query=query, index=entities_index()):
@@ -29,12 +29,13 @@ def check_alert(alert):
         found += 1
         params = {
             'alert': alert,
-            'role': authz.role,
+            'role': alert.role,
             'entity': entity
         }
         publish(Events.MATCH_ALERT,
                 actor_id=entity.get('uploader_id'),
                 params=params)
+        db.session.flush()
 
     alert.update()
     log.info('Found %d new results for: %s', found, alert.label)

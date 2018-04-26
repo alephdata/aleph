@@ -1,5 +1,5 @@
 import logging
-# from logging.handlers import SMTPHandler
+from banal import ensure_list
 from urlparse import urlparse, urljoin
 from werkzeug.local import LocalProxy
 from flask import Flask, request
@@ -70,8 +70,7 @@ def create_app(config={}):
         beat_schedule={
             'background': {
                 'task': 'aleph.logic.scheduled.background',
-                'schedule': crontab(hour='*', minute=0),
-                'priority': 7
+                'schedule': crontab(hour='*', minute=0)
             }
         },
     )
@@ -148,7 +147,12 @@ def url_for(*a, **kw):
     try:
         kw['_external'] = False
         query = kw.pop('_query', None)
+        authorize = kw.pop('_authorize', False)
         path = flask_url_for(*a, **kw)
+        if authorize is True:
+            token = request.authz.to_token(scope=path)
+            query = list(ensure_list(query))
+            query.append(('api_key', token))
         return url_external(path, query)
     except RuntimeError:
         return None

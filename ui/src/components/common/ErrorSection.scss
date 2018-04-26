@@ -1,0 +1,12 @@
+@import 'src/app/variables.scss';
+
+.ErrorSection {
+  display: table;
+  height: 100%;
+  width: 100%;
+
+  .inner-div {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}

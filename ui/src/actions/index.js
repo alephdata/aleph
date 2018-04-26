@@ -4,10 +4,10 @@ import asyncActionCreator from './asyncActionCreator';
 import { suggestRoles, fetchRole, updateRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
 import { queryNotifications } from './notificationActions';
-import { fetchFacet } from './facetActions';
 import {
   fetchDocument,
   queryDocumentRecords,
+  fetchDocumentPage
 } from './documentActions';
 import {
   queryCollections,
@@ -16,8 +16,7 @@ import {
   fetchCollectionPermissions,
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
-  fetchCollectionXrefMatches,
-  fetchNextCollectionXrefMatches
+  queryXrefMatches
 } from './collectionActions';
 import {
   queryEntities,
@@ -40,15 +39,14 @@ export {
   fetchEntityTags,
   fetchDocument,
   queryDocumentRecords,
-  fetchFacet,
+  fetchDocumentPage,
   queryCollections,
   fetchCollection,
   updateCollection,
   fetchCollectionPermissions,
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
-  fetchCollectionXrefMatches,
-  fetchNextCollectionXrefMatches,
+  queryXrefMatches,
   queryNotifications
 };
 

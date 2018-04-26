@@ -15,7 +15,6 @@ import collectionXrefMatches from './collectionXrefMatches';
 import results from './results';
 import alerts from './alerts';
 import notifications from './notifications';
-import facets from './facets';
 
 const rootReducer = combineReducers({
   metadata,
@@ -33,7 +32,6 @@ const rootReducer = combineReducers({
   collectionXrefIndex,
   collectionXrefMatches,
   results,
-  facets,
 });
 
 export default rootReducer;

@@ -1,10 +1,6 @@
-import logging
-
 from aleph.core import es, cache
 from aleph.index.util import authz_query
 from aleph.index.core import entities_index, collections_index
-
-log = logging.getLogger(__name__)
 
 
 @cache.memoize(3600 * 2)
@@ -33,7 +29,6 @@ def get_instance_stats(authz):
         }
     }
     collections = es.search(index=collections_index(), body=query)
-    log.debug("Generated stats for %r.", authz_query(authz))
     return {
         'entities': entities.get('hits').get('total'),
         'collections': collections.get('hits').get('total')

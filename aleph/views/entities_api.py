@@ -88,6 +88,7 @@ def references(id):
         })
     return jsonify({
         'status': 'ok',
+        'total': len(results),
         'results': results
     })
 
@@ -106,7 +107,7 @@ def tags(id):
             'value': value,
             'field': field,
             'count': total,
-            'results': link 
+            'results': link
         })
 
     results.sort(key=lambda p: p['count'], reverse=True)

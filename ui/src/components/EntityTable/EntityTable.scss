@@ -1,0 +1,11 @@
+@import "src/app/variables.scss";
+
+.EntityTable {
+  .schema {
+    max-width: 8em;
+  }
+
+  .updating {
+    opacity: 0.4;
+  }
+}

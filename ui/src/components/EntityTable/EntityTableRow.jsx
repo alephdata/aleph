@@ -3,6 +3,7 @@ import queryString from 'query-string';
 
 import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
+
 class EntityTableRow extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +14,13 @@ class EntityTableRow extends Component {
     // If the target that was clicked was not a link then find the the first 
     // link and simulate clicking the link in it, which will load the preview.
     // (If the target *was* a link does not do anything.)
-    if (event.target.classList.contains('CollectionLink')) {
+    if (event.target.classList.contains('CollectionLink') ||
+        event.target.className.baseVal === 'pt-icon collection-icon') {
+      return;
+    }
+
+    // Do not show previews when in document mode, i.e. when viewing a folder.
+    if (this.props.documentMode) {
       return;
     }
     event.preventDefault();
@@ -41,19 +48,17 @@ class EntityTableRow extends Component {
   
   shouldComponentUpdate(nextProps) {
     // Only update if the ID of the entity has changed *or* location has updated
-    if (this.props.entity.id !== nextProps.entity.id ||
-        this.props.location !== nextProps.location) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.props.entity.id !== nextProps.entity.id ||
+        this.props.location.hash !== nextProps.location.hash ||
+        this.props.showSkeleton !== nextProps.showSkeleton;
   }
 
   render() {
-    const { entity, hideCollection, documentMode, className, location: loc } = this.props;
+    const { entity, className, location: loc } = this.props;
+    const { hideCollection, documentMode } = this.props;
     const parsedHash = queryString.parse(loc.hash);
     
-    let rowClassName = (className) ? `${className} nowrap` : 'nowrap'
+    let rowClassName = (className) ? `${className} nowrap` : 'nowrap';
 
     // Select the current row if the ID of the entity matches the ID of the
     // current object being previewed. We do this so that if a link is shared
@@ -66,7 +71,7 @@ class EntityTableRow extends Component {
     return (
       <tr className={rowClassName} onClick={this.onRowClickHandler}>
         <td className="entity">
-          <Entity.Link preview={true} entity={entity} icon />
+          <Entity.Link preview={!documentMode} entity={entity} icon />
         </td>
         {!hideCollection && 
           <td className="collection">

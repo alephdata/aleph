@@ -1,9 +1,8 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Icon } from "@blueprintjs/core";
 import Waypoint from 'react-waypoint';
-import _ from 'lodash';
 
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
@@ -50,36 +49,24 @@ class EntityReferencesTable extends Component {
     return (event) => {
       event.preventDefault();
       const fragment = new Fragment(history);
-      fragment.update({
-        'preview:type': 'entity',
-        'preview:id': entity.id
-      });
+      if(fragment.state['preview:id']) {
+        fragment.update({'preview:id': null});
+      } else {
+        fragment.update({
+          'preview:type': 'entity',
+          'preview:id': entity.id
+        });
+      }
     }
   }
 
   render() {
     const { model, result, property } = this.props;
     const results = ensureArray(result.results);
-    const counts = {};
-
-    for (let res of results) {
-      _.keys(res.properties).forEach((key) => {
-        counts[key] = counts[key] ? counts[key] + 1 : 1;
-      });
-    }
-
-    const columns = _.values(model.properties).filter((prop) => {
-      if (prop.name === property.name || prop.caption) {
-        return false;
-      }
-      return (
-        (Array.isArray(model.featured) && model.featured.includes(prop.name))
-        || !!counts[prop.name]
-      );
-    });
-
-    columns.sort((a, b) =>  {
-      return (counts[b.name] || 0) - (counts[a.name] || 0);
+    const columns = _.map(model.featured, (name) => {
+      return model.properties[name];
+    }).filter((prop) => {
+      return prop.name !== property.name && !prop.caption;
     });
 
     return (
@@ -105,7 +92,7 @@ class EntityReferencesTable extends Component {
                 ))}
                 <td key="details" className="narrow">
                   <a onClick={this.onShowDetails(entity)}>
-                    <Icon icon="list-detail-view" />
+                    <span>Details</span>
                   </a>
                 </td>
               </tr>
@@ -141,6 +128,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 };
 
-EntityReferencesTable = connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
+EntityReferencesTable = connect(mapStateToProps, { queryEntities }, null, { pure: false })(EntityReferencesTable);
 EntityReferencesTable = withRouter(EntityReferencesTable);
 export default EntityReferencesTable;

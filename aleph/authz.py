@@ -1,4 +1,6 @@
+import jwt
 from banal import ensure_list
+from datetime import datetime, timedelta
 
 from aleph.core import db, settings
 from aleph.model import Collection, Role, Permission
@@ -13,22 +15,57 @@ class Authz(object):
     READ = 'read'
     WRITE = 'write'
 
-    def __init__(self, role=None, override=False):
+    def __init__(self, role_id, roles, is_admin=False):
         self._cache = {}
-        self.roles = set([Role.load_id(Role.SYSTEM_GUEST)])
-        self.role = role
-        self.logged_in = role is not None
-        self.id = role.id if role is not None else None
-        self.is_admin = override
+        self.id = role_id
+        self.logged_in = role_id is not None
+        self.roles = set(roles)
+        self.is_admin = is_admin
         self.in_maintenance = settings.MAINTENANCE
         self.session_write = not self.in_maintenance and self.logged_in
 
-        if self.logged_in and not self.is_admin:
-            self.is_admin = role.is_admin
-            self.roles.add(role.id)
-            self.roles.add(Role.load_id(Role.SYSTEM_USER))
-            for group in role.roles:
-                self.roles.add(group.id)
+    @classmethod
+    def from_role(cls, role):
+        roles = set([Role.load_id(Role.SYSTEM_GUEST)])
+        if role is None:
+            return cls(None, roles)
+
+        roles.add(role.id)
+        roles.add(Role.load_id(Role.SYSTEM_USER))
+        roles.update([g.id for g in role.roles])
+        return cls(role.id, roles, is_admin=role.is_admin)
+
+    @classmethod
+    def from_token(cls, token, scope=None):
+        if token is None:
+            return
+        try:
+            data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
+            if 'scope' in data and data.get('scope') != scope:
+                return None
+            return cls(data.get('id'),
+                       data.get('roles'),
+                       data.get('is_admin', False))
+        except jwt.DecodeError:
+            return None
+
+    def to_token(self, scope=None, role=None):
+        exp = datetime.utcnow() + timedelta(days=1)
+        payload = {
+            'id': self.id,
+            'exp': exp,
+            'roles': list(self.roles),
+            'is_admin': self.is_admin
+        }
+        if scope is not None:
+            payload['scope'] = scope
+        if role is not None:
+            from aleph.serializers.roles import RoleSchema
+            role, _ = RoleSchema().dump(role)
+            role.pop('created_at', None)
+            role.pop('updated_at', None)
+            payload['role'] = role
+        return jwt.encode(payload, settings.SECRET_KEY)
 
     def can(self, collection, action):
         """Query permissions to see if the user can perform the specified

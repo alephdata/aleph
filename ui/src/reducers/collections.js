@@ -10,10 +10,10 @@ export default createReducer({
   [queryCollections.COMPLETE]: cacheResults,
 
   [fetchCollection.START]: (state, { id }) =>
-    update(id, set('isFetching', true))(state),
+    update(id, set('isLoading', true))(state),
 
   [fetchCollection.ERROR]: (state, { error, args: { id } }) =>
-    set(id, { error: error.message})(state),
+    set(id, { isLoading: false, isError: true, error: error })(state),
 
   [fetchCollection.COMPLETE]: (state, { id, data }) =>
     set(id, data)(state),

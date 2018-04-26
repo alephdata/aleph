@@ -10,7 +10,7 @@ from aleph.core import es
 log = logging.getLogger(__name__)
 
 # This means that text beyond the first 100 MB will not be indexed
-INDEX_MAX_LEN = 1024 * 1024 * 100
+INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 2
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 RETRY_DELAY = 10
@@ -36,12 +36,18 @@ def authz_query(authz):
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
         return {'match_all': {}}
-    return {'terms': {'roles': list(authz.roles)}}
+    return field_filter_query('roles', authz.roles)
 
 
 def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
     values = ensure_list(values)
+    if not len(values):
+        return {'match_all': {}}
+    if field in ['_id', 'id']:
+        return {'ids': {'values': values}}
+    if len(values) == 1:
+        return {'term': {field: values[0]}}
     return {'terms': {field: values}}
 
 

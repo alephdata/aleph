@@ -88,7 +88,7 @@ class TableViewer extends Component {
             scrollableAncestor={window}
           />
         )}
-        {result.isLoading && (
+        {result.total === null && (
           <SectionLoading />
         )}
       </div>
@@ -103,7 +103,7 @@ const mapStateToProps = (state, ownProps) => {
     .limit(50);
 
   if (queryText) {
-    query = query.setString('prefix', queryText);
+    query = query.setString('q', queryText);
   }
 
   return {

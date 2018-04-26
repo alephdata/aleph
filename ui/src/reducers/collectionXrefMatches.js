@@ -1,20 +1,28 @@
 import { createReducer } from 'redux-act';
-import { set, update } from 'lodash/fp';
 
-import { fetchCollectionXrefMatches, fetchNextCollectionXrefMatches } from 'src/actions';
-import { matchesKey } from 'src/selectors';
-import { combineResults } from 'src/reducers/util';
+import { queryXrefMatches } from 'src/actions';
+import { updateLoading } from 'src/reducers/util';
 
 const initialState = {};
 
+export function updateMatches(state, { query, result }) {
+  const key = query.toKey(),
+        previous = state[key] || {};
+
+  if (previous.page === undefined) {
+    return { ...state, [key]: result };
+  }
+  // append to existing results
+  if (previous.offset < result.offset) {
+    const results = [...previous.results, ...result.results];
+    state[key] = { ...result, results: results };
+  }
+  return state;
+}
+
+
 export default createReducer({
-  [fetchCollectionXrefMatches.COMPLETE]: (state, { id, otherId, result }) =>
-    set(matchesKey(id, otherId), result)(state),
-
-  [fetchNextCollectionXrefMatches.START]: (state, { id, otherId }) =>
-    update(matchesKey(id, otherId), set('isExpanding', true))(state),
-  
-  [fetchNextCollectionXrefMatches.COMPLETE]: (state, { id, otherId, prevResult, nextResult }) =>
-    set(matchesKey(id, otherId), combineResults(prevResult, nextResult))(state),
-
+  [queryXrefMatches.START]: updateLoading(true),
+  [queryXrefMatches.ERROR]: updateLoading(false),
+  [queryXrefMatches.COMPLETE]: updateMatches,
 }, initialState);

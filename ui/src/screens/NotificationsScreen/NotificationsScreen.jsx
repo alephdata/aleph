@@ -8,7 +8,7 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
-import { Screen, SinglePane, SectionLoading } from 'src/components/common';
+import { Screen, SinglePane, SectionLoading, ErrorScreen } from 'src/components/common';
 import Notification from 'src/components/Notification/Notification';
 
 import './NotificationsScreen.css';
@@ -37,29 +37,31 @@ class NotificationsScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Check for a change of query, as unconditionally calling fetchIfNeeded
-    // could cause an infinite loop (if fetching fails).
     if (!this.props.query.sameAs(prevProps.query)) {
       this.fetchIfNeeded();
     }
   }
 
   fetchIfNeeded() {
-    const { result, query, queryNotifications } = this.props;
-    if (result.isLoading || (result.status === 'error')) {
-      queryNotifications({ query });
+    const { result, query } = this.props;
+    if (result.total === undefined && !result.isLoading) {
+      this.props.queryNotifications({ query });
     }
   }
 
   getMoreResults() {
-    const { query, result, queryNotifications } = this.props;
+    const { query, result } = this.props;
     if (!result.isLoading && result.next) {
-      queryNotifications({ query, next: result.next });
+      this.props.queryNotifications({ query, next: result.next });
     }
   }
 
   render() {
     const { result, intl } = this.props;
+
+    if (result.isError) {
+      return <ErrorScreen error={result.error} />
+    }
 
     return (
       <Screen title={intl.formatMessage(messages.title)}>
@@ -94,7 +96,8 @@ class NotificationsScreen extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('notifications', location, {}, 'notifications');
+  const query = Query.fromLocation('notifications', location, {}, 'notifications')
+    .limit(100);
   const result = selectNotificationsResult(state, query);
   return { query, result };
 };

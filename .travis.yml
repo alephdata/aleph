@@ -45,3 +45,9 @@ after_success:
       docker push alephdata/ui:latest ;
       docker push alephdata/ui:$TRAVIS_TAG ;
     fi
+  - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
+      docker tag alephdata/aleph:latest alephdata/aleph:occrp ;
+      docker push alephdata/aleph:occrp ;
+      docker tag alephdata/ui:latest alephdata/ui:occrp ;
+      docker push alephdata/ui:occrp ;
+    fi

@@ -6,6 +6,7 @@ from celestial.types import PDF
 from aleph.core import archive, db
 from aleph.model import Document, DocumentRecord
 from aleph.logic.documents import update_document, delete_document
+from aleph.logic.documents import document_url
 from aleph.logic.collections import update_collection
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_db_document, get_index_document
@@ -16,6 +17,15 @@ from aleph.search import DocumentsQuery, RecordsQuery
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
+
+
+def _resp_canonical(resp, document_id):
+    # EXPERIMENTAL HACK
+    # the idea here is to tell search engines that they should not index
+    # source documents, but instead go for the UI version of the site.
+    link_header = '<%s>; rel="canonical"' % document_url(document_id)
+    resp.headers['Link'] = link_header
+    return resp
 
 
 @blueprint.route('/api/2/documents', methods=['GET'])
@@ -68,16 +78,18 @@ def _serve_archive(content_hash, file_name, mime_type):
                                file_name=file_name,
                                mime_type=mime_type)
     if url is not None:
-        return redirect(url)
+        resp = redirect(url)
+        print resp
+        return resp
 
-    enable_cache()
     try:
         local_path = archive.load_file(content_hash, file_name=file_name)
         if local_path is None:
             raise NotFound("File does not exist.")
 
-        return send_file(open(local_path, 'rb'),
+        return send_file(local_path,
                          as_attachment=True,
+                         conditional=True,
                          attachment_filename=file_name,
                          mimetype=mime_type)
     finally:
@@ -87,9 +99,10 @@ def _serve_archive(content_hash, file_name, mime_type):
 @blueprint.route('/api/2/documents/<int:document_id>/file')
 def file(document_id):
     document = get_db_document(document_id)
-    return _serve_archive(document.content_hash,
+    resp = _serve_archive(document.content_hash,
                           document.safe_file_name,
                           document.mime_type)
+    return _resp_canonical(resp, document_id)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/pdf')
@@ -100,7 +113,8 @@ def pdf(document_id):
     file_name = document.safe_file_name
     if document.pdf_version != document.content_hash:
         file_name = '%s.pdf' % file_name
-    return _serve_archive(document.pdf_version, file_name, PDF)
+    resp = _serve_archive(document.pdf_version, file_name, PDF)
+    return _resp_canonical(resp, document_id)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/records')

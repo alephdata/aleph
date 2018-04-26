@@ -18,7 +18,7 @@ BULK_PAGE = 500
 
 
 def update_entity(entity):
-    update_entity_full.apply_async([entity.id], priority=7)
+    update_entity_full.apply_async([entity.id])
     return index_entity(entity)
 
 
@@ -27,7 +27,7 @@ def delete_entity(entity, deleted_at=None):
     update_entity_full(entity.id)
 
 
-@celery.task()
+@celery.task(priority=5)
 def update_entity_full(entity_id):
     """Perform update operations on entities."""
     query = db.session.query(Entity).filter(Entity.id == entity_id)

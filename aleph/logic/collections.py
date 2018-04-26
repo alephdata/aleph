@@ -36,19 +36,19 @@ def update_collection(collection):
 def update_collections():
     cq = db.session.query(Collection)
     cq = cq.order_by(Collection.id.desc())
-    for collection in cq:
+    for collection in cq.all():
         update_collection(collection)
 
 
 def index_collections():
     cq = db.session.query(Collection)
     cq = cq.order_by(Collection.id.desc())
-    for collection in cq:
+    for collection in cq.all():
         log.info("Index [%s]: %s", collection.foreign_id, collection.label)
         index_collection(collection)
 
 
-@celery.task()
+@celery.task(priority=8)
 def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
     collection = Collection.by_id(collection_id)
@@ -99,9 +99,6 @@ def delete_collection(collection_id):
     delete_documents(collection_id, deleted_at=deleted_at)
     delete_entities(collection_id, deleted_at=deleted_at)
 
-    log.info("Deleting cross-referencing matches...")
-    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
-
     log.info("Deleting permissions...")
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
 
@@ -115,6 +112,8 @@ def delete_entities(collection_id, deleted_at=None):
     log.info("Deleting entities...")
     Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_entities(collection_id)
+    log.info("Deleting cross-referencing matches...")
+    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
 
 
 @celery.task()
@@ -123,3 +122,5 @@ def delete_documents(collection_id, deleted_at=None):
     log.info("Deleting documents...")
     Document.delete_by_collection(collection_id, deleted_at=deleted_at)
     index_delete_documents(collection_id)
+    log.info("Deleting cross-referencing matches...")
+    Match.delete_by_collection(collection_id, deleted_at=deleted_at)

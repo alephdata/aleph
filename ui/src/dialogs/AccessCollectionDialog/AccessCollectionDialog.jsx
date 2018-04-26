@@ -56,22 +56,26 @@ class AccessCollectionDialog extends Component {
     this.fetchPermissions();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { collection } = this.props;
-    if (!collection || (nextProps.collection && nextProps.collection.id !== collection.id)) {
+  componentDidUpdate(prevProps) {
+    const { collection, permissions } = this.props;
+    if (prevProps.collection && prevProps.collection.id !== collection.id) {
       this.fetchPermissions();
+    }
+    if (!this.state.permissions.length && permissions) {
+      this.setState({permissions: permissions});
     }
   }
 
   fetchPermissions() {
     const { collection } = this.props;
+    this.setState({permissions: []});
     if (collection && collection.writeable) {
       this.props.fetchCollectionPermissions(collection.id);
     }
   }
 
   filterPermissions(type) {
-    const { permissions } = this.props;
+    const { permissions } = this.state;
     return permissions.filter((perm) =>
       perm.role.type === type
     );
@@ -84,7 +88,7 @@ class AccessCollectionDialog extends Component {
   }
 
   onToggle(permission, flag) {
-    const permissions = this.props.permissions.map((perm) => {
+    const permissions = this.state.permissions.map((perm) => {
       if (perm.role.id === permission.role.id) {
         perm[flag] = !perm[flag];
       }
@@ -184,7 +188,7 @@ class AccessCollectionDialog extends Component {
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.collection.id;
   return {
-    permissions: state.collectionPermissions[collectionId] || []
+    permissions: state.collectionPermissions[collectionId]
   };
 };
 

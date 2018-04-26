@@ -1,40 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NonIdealState } from '@blueprintjs/core';
+import { withRouter } from 'react-router';
 
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import { EntityInfo } from 'src/components/Entity';
-import { SectionLoading } from 'src/components/common';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 
 class PreviewEntity extends React.Component {
 
   componentDidMount() {
-    this.fetchIfNeeded(this.props);
+    this.fetchIfNeeded();
   }
 
-  componentWillReceiveProps(newProps) {
-    if (this.props.previewId !== newProps.previewId) {
-      this.fetchIfNeeded(newProps);
+  componentDidUpdate(prevProps) {
+    if (this.props.previewId !== prevProps.previewId) {
+      this.fetchIfNeeded();
     }
   }
 
-  fetchIfNeeded(props) {
-    if (!props.entity || !props.entity.id) {
-      props.fetchEntity({ id: props.previewId });
+  fetchIfNeeded() {
+    const { entity, previewId } = this.props;
+    if (entity.id === undefined && !entity.isLoading) {
+      this.props.fetchEntity({ id: previewId });
     }
   }
 
   render() {
     const { entity } = this.props;
-
-    if (entity && entity.error) {
-      return <NonIdealState
-          title={entity.error}
-      />
+    if (entity.isError) {
+      return <ErrorSection error={entity.error} />
     }
-
-    if (!entity || !entity.id) {
+    if (entity.id === undefined) {
       return <SectionLoading/>;
     }
     return <EntityInfo entity={entity} showToolbar={true} />;
@@ -46,4 +43,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 PreviewEntity = connect(mapStateToProps, { fetchEntity })(PreviewEntity);
+PreviewEntity = withRouter(PreviewEntity);
 export default PreviewEntity;

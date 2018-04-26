@@ -7,9 +7,15 @@ const initialState = {
 };
 
 export default createReducer({
-  [fetchMetadata.START]: state => ({ isLoaded: false }),
+  [fetchMetadata.START]: state => ({ isLoading: true, isError: false }),
+  [fetchMetadata.ERROR]: (state, { error }) => ({
+    isLoading: false,
+    isError: true,
+    error 
+  }),
   [fetchMetadata.COMPLETE]: (state, { metadata }) => ({
     ...metadata,
-    isLoaded: true
+    isLoading: false,
+    isError: false
   }),
 }, initialState);

@@ -11,24 +11,27 @@ import './FolderViewer.css';
 
 class FolderViewer extends Component {
   render() {
-    const { document, query, hasWarning } = this.props;
-    
-    if (!document || !document.id || !document.links) {
-      return null;
-    }
+    const { document, query } = this.props;
 
     return (
       <React.Fragment>
         <div id="children" className="FolderViewer">
-          <EntitySearch query={query}
-                        hideCollection={true}
-                        documentMode={true}
-                        hasWarning={hasWarning}/>
+          {document.status === 'fail' && (
+            <div className='warning-folder'>
+              <strong>
+                <FormattedMessage id="search.warning" defaultMessage="Warning" />
+              </strong>
+              <p>
+                <FormattedMessage id="search.not_properly_imported"
+                                  defaultMessage="This folder is not fully imported." />
+              </p>
+            </div>
+          )}
+          <EntitySearch query={query} hideCollection={true} documentMode={true} />
           {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
-              <FormattedMessage
-                id="folder.empty"
-                defaultMessage="This folder is empty."/>
+              <FormattedMessage id="folder.empty"
+                                defaultMessage="This folder is empty." />
             </p>
           )}
         </div>
@@ -40,20 +43,25 @@ class FolderViewer extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
-  // when a prefix is defined, we switch to recursive folder search - otherwise
+  // when a query is defined, we switch to recursive folder search - otherwise
   // a flat listing of the immediate children of this directory is shown.
-  const prefix = Query.fromLocation('search', location, {}, 'document').getString('prefix'),
-        field = (prefix.length === 0 || queryText) ? 'filter:parent.id' : 'filter:ancestors',
-        context = {[field]: document.id};
+  const q = Query.fromLocation('search', location, {}, 'document').getString('q'),
+        hasSearch = (q.length !== 0 || queryText),
+        context = {};
+    
+  if (hasSearch) {
+    context['filter:ancestors'] = document.id;
+  } else {
+    context['filter:parent.id'] = document.id;
+    context['sort'] = 'name:asc';
+  }
 
   let query = Query.fromLocation('search', location, context, 'document').limit(50);
   if (queryText) {
-    query = query.setString('prefix', queryText);
+    query = query.setString('q', queryText);
   }
 
-  return {
-    query: query
-  }
+  return { query }
 }
 
 FolderViewer = connect(mapStateToProps)(FolderViewer);

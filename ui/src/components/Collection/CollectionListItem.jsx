@@ -9,7 +9,7 @@ import './CollectionListItem.css';
 
 class CollectionListItem extends Component {
   shouldComponentUpdate(nextProps) {
-    return !this.props.collection.id || this.props.collection.id !== nextProps.collection.id;
+    return this.props.collection.id !== nextProps.collection.id;
   }
 
   render() {

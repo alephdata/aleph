@@ -1,26 +1,18 @@
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 import { injectIntl } from 'react-intl';
 
-import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection } from 'src/components/common';
+import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection, ErrorScreen } from 'src/components/common';
 import { CollectionInfo, CollectionContent } from 'src/components/Collection';
-import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 class CollectionScreen extends Component {
   render() {
     const { collection } = this.props;
-
-    if (collection.error) {
-      return (
-          <ErrorScreen.NoTranslation title={collection.error}/>
-      )
+    if (collection.isError) {
+      return <ErrorScreen error={collection.error} />;
     }
 
     return (
-      <Screen breadcrumbs={<Breadcrumbs collection={collection} />}>
-        <Helmet>
-          <title>{collection.label}</title>
-        </Helmet>
+      <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection} />}>
         <DualPane>
           <CollectionInfo collection={collection} />
           <CollectionContent collection={collection} />

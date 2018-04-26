@@ -1,5 +1,5 @@
 import Breadcrumbs from './Breadcrumbs';
-import CalloutBox from './CalloutBox';
+import SignInCallout from './SignInCallout';
 import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
@@ -15,6 +15,8 @@ import Schema from './Schema';
 import Screen from './Screen';
 import ScreenLoading from './ScreenLoading';
 import SectionLoading from './SectionLoading';
+import ErrorScreen from './ErrorScreen';
+import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
 import TabCount from './TabCount';
@@ -23,7 +25,7 @@ import URL from './URL';
 
 export {
     Breadcrumbs,
-    CalloutBox,
+    SignInCallout,
     Category,
     CheckboxList,
     Collection,
@@ -39,6 +41,8 @@ export {
     Screen,
     ScreenLoading,
     SectionLoading,
+    ErrorScreen,
+    ErrorSection,
     SinglePane,
     SortableTH,
     TabCount,
