@@ -1,0 +1,30 @@
+@import "src/app/variables.scss";
+
+.CaseExplanationBox {
+  width: 100%;
+  background-color: rgba(14,94,143,0.92);
+  height: $aleph-grid-size * 24.2;
+
+  .title-explanation {
+    font-size: $aleph-grid-size * 4;
+    color: white;
+  }
+
+  .description-explanation {
+    width: 75em;
+    padding-top: 2em;
+    color: white;
+  }
+
+  .explanation {
+    padding-left: 17em;
+    padding-top: 3em;
+    display: inline-flex;
+  }
+
+  .explanation-padding {
+    padding-left: 5em;
+    margin-top: -1em
+  }
+
+}

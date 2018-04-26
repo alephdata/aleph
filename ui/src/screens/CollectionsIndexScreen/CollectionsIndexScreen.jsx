@@ -155,7 +155,8 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const context = {facet: ['category', 'countries']};
+  const context = {
+    facet: ['category', 'countries']};
   const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
@@ -164,7 +165,7 @@ const mapStateToProps = (state, ownProps) => {
     query: query,
     result: selectCollectionsResult(state, query)
   };
-}
+};
 
 CollectionsIndexScreen = injectIntl(CollectionsIndexScreen);
 CollectionsIndexScreen = connect(mapStateToProps, {queryCollections})(CollectionsIndexScreen);

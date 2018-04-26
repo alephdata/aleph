@@ -33,7 +33,7 @@ const rootReducer = combineReducers({
   collectionXrefIndex,
   collectionXrefMatches,
   results,
-  facets,
+  facets
 });
 
 export default rootReducer;

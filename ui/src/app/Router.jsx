@@ -17,6 +17,7 @@ import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsSc
 import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
 import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
+import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import { DocumentRedirectScreen } from 'src/components/Document';
 
 import './Router.css';
@@ -52,6 +53,7 @@ class Router extends Component {
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/collections" exact component={CollectionsIndexScreen}/>
+        <Route path="/cases" exact component={CasesIndexScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>

@@ -5,10 +5,7 @@ import { suggestRoles, fetchRole, updateRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
 import { queryNotifications } from './notificationActions';
 import { fetchFacet } from './facetActions';
-import {
-  fetchDocument,
-  queryDocumentRecords,
-} from './documentActions';
+import { fetchDocument, queryDocumentRecords } from './documentActions';
 import {
   queryCollections,
   fetchCollection,
@@ -16,7 +13,8 @@ import {
   fetchCollectionPermissions,
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
-  queryXrefMatches
+  queryXrefMatches,
+  createCollection
 } from './collectionActions';
 import {
   queryEntities,
@@ -47,7 +45,8 @@ export {
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
   queryXrefMatches,
-  queryNotifications
+  queryNotifications,
+  createCollection
 };
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {

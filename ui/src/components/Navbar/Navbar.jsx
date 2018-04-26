@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { ControlGroup, InputGroup, Intent, Switch, Position, Tooltip } from "@blueprintjs/core";
+import { ControlGroup, InputGroup, Intent, Switch, Position, Tooltip, NavbarDivider } from "@blueprintjs/core";
 import classNames from 'classnames';
 
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
@@ -182,6 +182,10 @@ class Navbar extends React.Component {
             <div className="pt-navbar-heading">
               <Link to="/">{metadata.app.title}</Link>
             </div>
+            <NavbarDivider />
+            {session && session.loggedIn === true && <div>
+              <Link to="/cases">Cases</Link>
+            </div>}
             {!isHomepage && (
               <form onSubmit={this.onSubmit} className='navbar-search-form'>
                 <ControlGroup fill={true}>
