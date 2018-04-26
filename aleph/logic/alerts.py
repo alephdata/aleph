@@ -68,12 +68,7 @@ def alert_query(alert, authz):
         for field in ['names', 'fingerprints', 'emails', 'phones']:
             for value in ensure_list(entity.get(field)):
                 clauses.append({'term': {field: value}})
-                clauses.append({
-                    "multi_match": {
-                        "query": value,
-                        "fields": ['text']
-                    }
-                })
+                clauses.append({'match_phrase': {'text': value}})
 
     return {
         'query': {
