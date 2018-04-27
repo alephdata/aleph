@@ -1,6 +1,7 @@
 import six
 import logging
 from banal import ensure_list
+from datetime import datetime, timedelta
 
 from aleph.core import db
 from aleph.model import Role, Alert, Event, Notification
@@ -99,7 +100,8 @@ def generate_digest():
 def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
-    q = Notification.by_role(role)
+    since = datetime.utcnow() - timedelta(hours=25)
+    q = Notification.by_role(role, since=since)
     total_count = q.count()
     if total_count == 0:
         return

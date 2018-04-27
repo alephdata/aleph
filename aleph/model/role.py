@@ -1,5 +1,5 @@
 import logging
-
+from datetime import datetime
 from flask import current_app
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
@@ -103,6 +103,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.name = name
             role.type = type
             role.is_admin = False
+            role.notified_at = datetime.utcnow()
 
         if role.api_key is None:
             role.api_key = make_textid()

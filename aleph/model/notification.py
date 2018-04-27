@@ -62,7 +62,7 @@ class Notification(db.Model, IdModel, DatedModel):
         return notf
 
     @classmethod
-    def by_role(cls, role):
+    def by_role(cls, role, since=None):
         columns = array_agg(Subscription.channel).label('channels')
         sq = db.session.query(columns)
         sq = sq.filter(Subscription.deleted_at == None)  # noqa
@@ -75,6 +75,8 @@ class Notification(db.Model, IdModel, DatedModel):
         ))
         q = q.filter(cls.channels.overlap(sq.c.channels))
         q = q.filter(cls._event.in_(Events.names()))
+        if since is not None:
+            q = q.filter(cls.created_at >= since)
         if role.notified_at is not None:
             q = q.filter(cls.created_at >= role.notified_at)
         q = q.order_by(cls.created_at.desc())
