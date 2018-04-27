@@ -134,13 +134,6 @@ class CollectionsXrefScreen extends Component {
             </tr>
           </thead>
           <tbody>
-            { matches.total === undefined && (
-              <tr key="loading">
-                <td colSpan="7">
-                  <SectionLoading />
-                </td>
-              </tr>
-            )}
             { matches.total !== undefined && matches.results.map((match) => (
               <tr key={match.id}>
                 <td className="numeric narrow">
