@@ -6,8 +6,8 @@ from celestial.types import PDF
 from aleph.core import archive, db
 from aleph.model import Document, DocumentRecord
 from aleph.logic.documents import update_document, delete_document
-from aleph.logic.documents import document_url
 from aleph.logic.collections import update_collection
+from aleph.logic.util import document_url
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_db_document, get_index_document
 from aleph.views.util import jsonify, parse_request, sanitize_html

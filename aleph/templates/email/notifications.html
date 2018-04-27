@@ -1,0 +1,21 @@
+{% extends "email/layout.html" %}
+
+{% block content %}
+  <p>
+    {% trans %}
+      You have {{total_count}} pending notifications. Here are the latest
+      updates you may be interested in:
+    {% endtrans %}
+  </p>
+  <ul>
+      {% for notification in notifications %}
+        <li>{{notification | safe}}</li>
+      {% endfor %}
+  </ul>
+  <p>
+    {% trans %}
+      Browse and manage all of your notifications here:
+    {% endtrans %}
+    <a href="{{manage_url}}">{{manage_url}}</a>
+  </p>
+{% endblock %}

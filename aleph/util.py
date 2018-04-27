@@ -53,6 +53,13 @@ def dict_list(data, *keys):
     return []
 
 
+def html_link(text, link):
+    text = text or '[untitled]'
+    if link is None:
+        return "<span class='reference'>%s</span>" % text
+    return "<a class='reference' href='%s'>%s</a>" % (link, text)
+
+
 class SessionTask(Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):

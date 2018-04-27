@@ -68,9 +68,13 @@ def create_app(config={}):
         worker_disable_rate_limits=True,
         result_persistent=False,
         beat_schedule={
-            'background': {
-                'task': 'aleph.logic.scheduled.background',
+            'hourly': {
+                'task': 'aleph.logic.scheduled.hourly',
                 'schedule': crontab(hour='*', minute=0)
+            },
+            'daily': {
+                'task': 'aleph.logic.scheduled.daily',
+                'schedule': crontab(hour=5, minute=0)
             }
         },
     )

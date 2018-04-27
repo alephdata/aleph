@@ -29,6 +29,7 @@ class EntityScreen extends Component {
   
       if (entity.id === undefined) {
         return <ScreenLoading />;
+
       }
 
       const breadcrumbs = (
@@ -60,3 +61,9 @@ const mapStateToProps = (state, ownProps) => {
 EntityScreen = connect(mapStateToProps, { fetchEntity }, null, { pure: false })(EntityScreen);
 EntityScreen = injectIntl(EntityScreen);
 export default EntityScreen;
+
+
+
+
+
+

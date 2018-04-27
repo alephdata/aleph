@@ -6,8 +6,8 @@ import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'rea
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
-import {queryEntities} from 'src/actions';
-import {selectEntitiesResult} from 'src/selectors';
+import { queryEntities } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
 import { Screen, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';

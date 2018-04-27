@@ -47,3 +47,10 @@ class NotificationsApiTestCase(TestCase):
         role = not0['params']['role']
         assert isinstance(role, dict), not0
         assert 'actor' in not0['params'], not0['params']
+
+        res = self.client.delete('/api/2/notifications', headers=headers)
+        assert res.status_code == 202, res
+
+        res = self.client.get('/api/2/notifications', headers=headers)
+        assert res.status_code == 200, res
+        assert res.json['total'] == 0, res.json
