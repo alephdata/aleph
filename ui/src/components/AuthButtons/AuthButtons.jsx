@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@blueprintjs/core";
 
 import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
-import AlertsDialog from 'src/dialogs/AlertsDialog/AlertsDialog';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './AuthButtons.css';
@@ -33,12 +32,10 @@ class AuthButtons extends Component {
     super();
     this.state = {
       settingsIsOpen: false,
-      alertsIsOpen: false,
       isSignupOpen: false
     };
 
     this.toggleSettings = this.toggleSettings.bind(this);
-    this.toggleAlerts = this.toggleAlerts.bind(this);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
@@ -52,12 +49,6 @@ class AuthButtons extends Component {
   toggleSettings() {
     this.setState({
       settingsIsOpen: !this.state.settingsIsOpen
-    })
-  }
-
-  toggleAlerts() {
-    this.setState({
-      alertsIsOpen: !this.state.alertsIsOpen
     })
   }
 
