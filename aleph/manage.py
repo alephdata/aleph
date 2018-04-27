@@ -222,7 +222,7 @@ def publish(foreign_id):
         raise ValueError("No such collection: %r" % foreign_id)
     role = Role.by_foreign_id(Role.SYSTEM_GUEST)
     editor = Role.load_cli_user()
-    update_permission(role, collection, True, False, editor=editor)
+    update_permission(role, collection, True, False, editor_id=editor.id)
     update_collection_access(collection.id)
     update_collection(collection)
 
