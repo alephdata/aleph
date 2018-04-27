@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db, settings
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
+from aleph.util import anonymize_email
 
 log = logging.getLogger(__name__)
 
@@ -58,6 +59,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @property
     def is_public(self):
         return self.id in self.public_roles()
+
+    @property
+    def label(self):
+        return anonymize_email(self.name, self.email)
 
     def update(self, data):
         self.name = data.get('name', self.name)

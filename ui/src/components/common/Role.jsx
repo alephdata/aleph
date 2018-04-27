@@ -30,16 +30,19 @@ class Label extends Component {
   }
 
   render() {
-    const { role, icon = true } = this.props;
-
+    const { role, icon = true, long = false } = this.props;
     if (!role) {
       return null;
     }
-
     return (
       <span>
-        { icon && (<i className='fa fa-fw fa-user-circle-o' />) }
-        { role.name }
+        { icon && (
+          <React.Fragment>
+            <i className='fa fa-fw fa-user-circle-o' />
+            {' '}
+          </React.Fragment>
+        )}
+        { long ? role.label : role.name }
       </span>
     );
   }
@@ -78,14 +81,14 @@ class Select extends Component {
               className={modifiers.active ? Classes.ACTIVE : ""}
               key={role.id}
               onClick={handleClick}
-              text={role.name}
+              text={role.label}
       />;
   }
 
   render () {
     const { intl, role } = this.props;
     const { suggested } = this.state;
-    const label = role ? role.name : intl.formatMessage(messages.label);
+    const label = role ? role.label : intl.formatMessage(messages.label);
   
     return <BlueprintSelect
               initialContent={
