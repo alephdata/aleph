@@ -6,13 +6,12 @@ import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'rea
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
-import {queryEntities} from 'src/actions';
-import {selectEntitiesResult} from 'src/selectors';
-import { Screen, DualPane, SectionLoading, SignInCallout } from 'src/components/common';
+import { queryEntities } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
+import { Screen, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
-import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
 
 import './SearchScreen.css';
 
@@ -70,7 +69,7 @@ const messages = defineMessages({
 class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
-    const {intl} = props;
+    const { intl } = props;
 
     const facets = [
       {
@@ -170,8 +169,6 @@ class SearchScreen extends React.Component {
     });
   }
 
-  
-
   render() {
     const {query, result, intl} = this.props;
 
@@ -188,8 +185,11 @@ class SearchScreen extends React.Component {
                     <FormattedMessage id="search.screen.results" defaultMessage="results"/>
                   </React.Fragment>
                 )}
-                { (result.isLoading || result.total === undefined) && (
+                { result.isLoading && (
                   <FormattedMessage id="search.screen.searching" defaultMessage="Searching..."/>
+                )}
+                { result.isError && (
+                  <FormattedMessage id="search.screen.error" defaultMessage="Error"/>
                 )}
               </span>
             </div>
@@ -203,12 +203,11 @@ class SearchScreen extends React.Component {
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <EntityTable query={query}
                          updateQuery={this.updateQuery}
-                         result={result}
-                         showLinksInPreview={true}/>
+                         result={result} />
             {result.total === 0 && (
-              <ErrorScreen.EmptyList visual="search"
-                                     title={intl.formatMessage(messages.no_results_title)}
-                                     description={intl.formatMessage(messages.no_results_description)}/>
+              <ErrorSection visual="search"
+                            title={intl.formatMessage(messages.no_results_title)}
+                            description={intl.formatMessage(messages.no_results_description)}/>
             )}
             {!result.isLoading && result.next && (
               <Waypoint
@@ -217,7 +216,7 @@ class SearchScreen extends React.Component {
                 scrollableAncestor={window}
               />
             )}
-            {result.total === undefined && (
+            {result.isLoading && (
               <SectionLoading/>
             )}
           </DualPane.ContentPane>

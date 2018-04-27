@@ -30,6 +30,17 @@ class Notification(db.Model, IdModel, DatedModel):
     def event(self, event):
         self._event = event.name
 
+    @property
+    def recipients(self):
+        q = db.session.query(Role)
+        q = q.join(Subscription, Subscription.role_id == Role.id)
+        q = q.filter(Subscription.channel.in_(self.channels))
+        q = q.filter(Role.email != None) # noqa
+        q = q.filter(Role.deleted_at == None) # noqa
+        q = q.filter(Subscription.deleted_at == None) # noqa
+        q = q.distinct()
+        return q
+
     def iterparams(self):
         if self.actor_id is not None:
             yield 'actor', Role, self.actor_id
@@ -51,19 +62,23 @@ class Notification(db.Model, IdModel, DatedModel):
         return notf
 
     @classmethod
-    def by_role_id(cls, role_id):
+    def by_role(cls, role, since=None):
         columns = array_agg(Subscription.channel).label('channels')
         sq = db.session.query(columns)
         sq = sq.filter(Subscription.deleted_at == None)  # noqa
-        sq = sq.filter(Subscription.role_id == role_id)
+        sq = sq.filter(Subscription.role_id == role.id)
         sq = sq.cte('sq')
         q = cls.all()
         q = q.filter(or_(
-            cls.actor_id != role_id,
+            cls.actor_id != role.id,
             cls.actor_id == None  # noqa
         ))
         q = q.filter(cls.channels.overlap(sq.c.channels))
         q = q.filter(cls._event.in_(Events.names()))
+        if since is not None:
+            q = q.filter(cls.created_at >= since)
+        if role.notified_at is not None:
+            q = q.filter(cls.created_at >= role.notified_at)
         q = q.order_by(cls.created_at.desc())
         q = q.order_by(cls.id.desc())
         return q

@@ -23,97 +23,44 @@ $pagesWidth: 150px;
         padding: $aleph-grid-size;
         border-bottom: 1px solid $aleph-border-color;
       }
-      
-      .spinner {
-        display: block;
-        text-align: center;
-        margin: $aleph-grid-size auto;
-      }
     }
 
-    .search-results {
-      flex: 1;
-      
-      .pages {
-        display: block;
+    .pages {
+      display: block;
 
-        .no-results {
+      .ErrorSection { 
+        padding-top: $aleph-grid-size * 2;
+      }
+
+      ul {
+        padding-left: 0;
+        margin: 0;
+
+        li {
+          list-style: none;
           padding: $aleph-grid-size;
-          text-align: center;
-        }
+          border-bottom: 1px solid $aleph-border-color;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
 
-        ul {
-          padding-left: 0;
-          margin: 0;
-          li {
-            list-style: none;
-            padding: $aleph-grid-size;
-            border-bottom: 1px solid $aleph-border-color;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
+          p { 
+            margin-bottom: 0;
 
-            p { 
-              margin-bottom: 0;
-              a {
-                text-decoration: none;
-              }
-              em {
-                background: $aleph-text-highlight-color;
-                font-style: normal;
-              }
+            a {
+              text-decoration: none;
             }
-            
-            p:first-child { 
-              margin-bottom: $aleph-grid-size;
-              font-weight: bold;
+            em {
+              background: $aleph-text-highlight-color;
+              font-style: normal;
             }
           }
-        }
-      }
-    }
-    
-    &.with-search-results {
-      padding-left: $pagesWidth + ($aleph-grid-size * 4);
-      
-      .pages {
-        flex: 1;
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: $pagesWidth;
-        border-right: 1px solid $aleph-border-color;
-        border-bottom: 1px solid $aleph-border-color;
-        background: white;
-        overflow: auto;
-    
-        ul {
-          padding-left: 0;
-          margin: 0;
-          li {
-            list-style: none;
-            padding: 0;
-            border-bottom: 1px solid $aleph-border-color;
-            
-            a {
-              text-align: right; 
-            }
-                        
-            .no-results,
-            a {
-              padding: $aleph-grid-size;
-              display: block;
-            }
-            
-            a.active {
-              color: white;
-              background: $aleph-link-color;
-            }
+          
+          p:first-child { 
+            margin-bottom: $aleph-grid-size;
+            font-weight: bold;
           }
         }
-    
       }
     }
 

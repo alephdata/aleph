@@ -4,7 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
 import EntityTableRow from './EntityTableRow';
-import { SortableTH } from 'src/components/common';
+import { SortableTH, ErrorSection } from 'src/components/common';
 
 import './EntityTable.css';
 
@@ -45,7 +45,7 @@ class EntityTable extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { result } = nextProps;
-    if (result.total !== undefined) {
+    if (result.total !== undefined || result.isError) {
       this.setState({ result })
     }
   }
@@ -68,10 +68,14 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { query, intl, showLinksInPreview, location, history } = this.props;
+    const { query, intl, location, history } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
+
+    if (result.isError) {
+      return <ErrorSection error={result.error} />;
+    }
 
     if (result.total === 0 && result.page === 1) {
       return null;
@@ -113,8 +117,6 @@ class EntityTable extends Component {
                             entity={entity}
                             hideCollection={hideCollection}
                             documentMode={documentMode}
-                            showLinksInPreview={showLinksInPreview}
-                            showSkeleton={isLoading}
                             location={location}
                             history={history} />
           )}

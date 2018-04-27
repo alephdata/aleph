@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { NonIdealState } from '@blueprintjs/core';
+import { withRouter } from 'react-router';
 
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import { DocumentInfo } from 'src/components/Document';
 import { DocumentViewer } from 'src/components/DocumentViewer';
-import { SectionLoading } from 'src/components/common';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 
 
 class PreviewDocument extends React.Component {
@@ -22,32 +22,26 @@ class PreviewDocument extends React.Component {
   }
 
   fetchIfNeeded() {
-    this.props.fetchDocument({ id: this.props.previewId });
+    const { document } = this.props;
+    if (!document.isLoading) {
+      this.props.fetchDocument({ id: this.props.previewId });
+    }
   }
 
   render() {
-    const { document, maximised } = this.props;
-
-    if (document && document.error) {
-      return <NonIdealState
-          title={document.error}
-      />
+    const { document, parsedHash } = this.props;
+    if (document.isError) {
+      return <ErrorSection error={document.error} />
     }
-
     if (document.id === undefined) {
       return <SectionLoading/>;
     }
-
-    if (maximised) {
-      return <DocumentViewer document={document}
-                             toggleMaximise={this.props.toggleMaximise}
-                             showToolbar={true}
-                             previewMode={true} />;
+    if (parsedHash['mode'] === 'info') {
+      return <DocumentInfo document={document} showToolbar={true} />;
     }
-
-    return <DocumentInfo document={document}
-                         toggleMaximise={this.props.toggleMaximise}
-                         showToolbar={true} />;
+    return <DocumentViewer document={document}
+                           showToolbar={true}
+                           previewMode={true} />;
   }
 }
 
@@ -55,5 +49,6 @@ const mapStateToProps = (state, ownProps) => {
   return { document: selectEntity(state, ownProps.previewId) };
 };
 
-PreviewDocument = connect(mapStateToProps, { fetchDocument }, null, { pure: false })(PreviewDocument);
+PreviewDocument = connect(mapStateToProps, { fetchDocument })(PreviewDocument);
+PreviewDocument = withRouter(PreviewDocument);
 export default PreviewDocument;

@@ -12,10 +12,29 @@ export function cacheResults(state, { result }) {
 }
 
 export function updateLoading(value) {
-  return function(state, { query, result }) {
+  return function(state, { query, result, error, args }) {
+    if (error !== undefined) {
+      const key = args.query.toKey();
+      return {
+        ...state,
+        [key]: {
+          isLoading: false,
+          isError: true,
+          error
+        }
+      };
+    }
     if (query !== undefined) {
       const key = query.toKey();
-      assign(state[key], {isLoading: value});
+      const result = state[key] || {};
+      return {
+        ...state,
+        [key]: {
+          ...result,
+          isLoading: value,
+          isError: false
+        }
+      };
     }
     return state;
   }
@@ -23,22 +42,13 @@ export function updateLoading(value) {
 
 export function updateResults(state, { query, result }) {
   const key = query.toKey(),
-        previous = state[key] || {};
+        previous = state[key] && state[key].total !== undefined ? state[key] : {},
+        results = result.results.map((r) => r.id);
   
-  result = {
-    ...result,
-    isLoading: false,
-    results: result.results.map((r) => r.id)
-  }
-  if (previous.page === undefined) {
-    return { ...state, [key]: result};
-  }
+  result = { ...result, isLoading: false, results };
   // don't overwrite existing results
-  if (previous.offset < result.offset) {
-      state[key] = {
-        ...result,
-        results: [...previous.results, ...result.results]
-      }
+  if (previous.page !== undefined && previous.offset < result.offset) {
+    result = { ...result, results: [...previous.results, ...result.results] };
   }
-  return state;
+  return { ...state, [key]: result};
 }

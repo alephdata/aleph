@@ -11,15 +11,10 @@ from aleph.index.core import entities_index
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
 from aleph.index.util import authz_query, field_filter_query
-from aleph.logic.util import ui_url
 from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
 BULK_PAGE = 500
-
-
-def entity_url(entity_id=None, **query):
-    return ui_url('entities', id=entity_id, **query)
 
 
 def update_entity(entity):

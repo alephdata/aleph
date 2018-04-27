@@ -56,6 +56,14 @@ COLLECTION_MAPPING = {
                 }
             }
         },
+        "team": {
+            "type": "object",
+            "properties": {
+                "id": {"type": "keyword"},
+                "type": {"type": "keyword"},
+                "name": {"type": "keyword"}
+            }
+        },
     }
 }
 

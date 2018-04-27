@@ -9,8 +9,8 @@ export default createReducer({
   [fetchCollectionXrefIndex.START]: (state, { id }) =>
     update(id, set('isLoading', true))(state),
 
-  [fetchCollectionXrefIndex.ERROR]: (state, { id }) =>
-    update(id, set('isLoading', false))(state),
+  [fetchCollectionXrefIndex.ERROR]: (state, { error, args: { id } }) =>
+    set(id, { isLoading: false, isError: true, error: error })(state),
 
   [fetchCollectionXrefIndex.COMPLETE]: (state, { id, data }) =>
     set(id, data)(state),

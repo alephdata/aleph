@@ -6,7 +6,7 @@ from marshmallow.fields import Dict, Boolean, Url
 from marshmallow.validate import Length
 
 from aleph.core import url_for
-from aleph.logic.collections import collection_url
+from aleph.logic.util import collection_url
 from aleph.serializers.common import BaseSchema, flatten_id
 from aleph.serializers.common import Category, Country, Language
 from aleph.serializers.roles import RoleReferenceSchema
@@ -33,6 +33,7 @@ class CollectionSchema(BaseSchema):
     category = Category(missing=Collection.DEFAULT)
     creator_id = String(allow_none=True)
     creator = Nested(RoleReferenceSchema(), dump_only=True)
+    team = List(Nested(RoleReferenceSchema()), dump_only=True)
     count = Integer(dump_only=True)
     schemata = Dict(dump_only=True, default={})
 

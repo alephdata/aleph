@@ -1,5 +1,5 @@
 import logging
-
+from datetime import datetime
 from flask import current_app
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from aleph.core import db, settings
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
+from aleph.util import anonymize_email
 
 log = logging.getLogger(__name__)
 
@@ -47,6 +48,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     password_digest = db.Column(db.Unicode, nullable=True)
     password = None
     reset_token = db.Column(db.Unicode, nullable=True)
+    notified_at = db.Column(db.DateTime, nullable=True)
+
     permissions = db.relationship('Permission', backref='role')
 
     @property
@@ -56,6 +59,10 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @property
     def is_public(self):
         return self.id in self.public_roles()
+
+    @property
+    def label(self):
+        return anonymize_email(self.name, self.email)
 
     def update(self, data):
         self.name = data.get('name', self.name)
@@ -101,6 +108,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.name = name
             role.type = type
             role.is_admin = False
+            role.notified_at = datetime.utcnow()
 
         if role.api_key is None:
             role.api_key = make_textid()
@@ -173,6 +181,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def all_groups(cls):
         return cls.all().filter(Role.type != Role.USER)
+
+    @classmethod
+    def all_users(cls, has_email=False):
+        q = cls.all().filter(Role.type == Role.USER)
+        if has_email:
+            q = q.filter(Role.email != None)  # noqa
+        return q
 
     def set_password(self, secret):
         """Hashes and sets the role password.

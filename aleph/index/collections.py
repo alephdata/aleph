@@ -5,7 +5,7 @@ from pprint import pprint  # noqa
 from normality import normalize
 
 from aleph.core import es
-from aleph.model import Entity
+from aleph.model import Entity, Role
 from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index
@@ -35,6 +35,7 @@ def index_collection(collection):
         'casefile': collection.casefile,
         'roles': collection.roles,
         'schemata': {},
+        'team': []
     }
     texts = [v for v in data.values() if isinstance(v, six.string_types)]
 
@@ -45,6 +46,14 @@ def index_collection(collection):
             'name': collection.creator.name
         }
         texts.append(collection.creator.name)
+
+    for role in collection.team:
+        data['team'].append({
+            'id': role.id,
+            'type': role.type,
+            'name': role.name
+        })
+        # texts.append(role.name)
 
     # Compute some statistics on the content of a collection.
     query = {

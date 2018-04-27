@@ -66,7 +66,7 @@ class EntityInfo extends React.Component {
           <Toolbar className="toolbar-preview">
             {isThing && (
               <Link to={getPath(entity.links.ui)} className="pt-button button-link">
-                <span className={`pt-icon-folder-open`}/>
+                <span className={`pt-icon-share`}/>
                 <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
               </Link>
             )}

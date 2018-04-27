@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from itsdangerous import BadSignature
+from flask.ext.babel import gettext
 
 from aleph.core import db, settings, app_ui_url
 from aleph.search import QueryParser, DatabaseQueryResult
@@ -7,7 +8,7 @@ from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible, check_editable, update_role
 from aleph.logic.permissions import update_permission
 from aleph.logic.collections import update_collection, update_collection_access
-from aleph.notify import notify_role_template
+from aleph.notify import notify_role
 from aleph.serializers.roles import RoleSchema, PermissionSchema
 from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.util import require, get_db_collection, jsonify, parse_request
@@ -24,7 +25,7 @@ def suggest():
         # Do not return 400 because it's a routine event.
         return jsonify({
             'status': 'error',
-            'message': 'prefix filter is too short',
+            'message': gettext('prefix filter is too short'),
             'results': [],
             'total': 0
         })
@@ -40,12 +41,12 @@ def create_code():
     signature = Role.SIGNATURE.dumps(data['email'])
     url = '{}activate/{}'.format(app_ui_url, signature)
     role = Role(email=data['email'], name='Visitor')
-    notify_role_template(role, 'Registration',
-                         'email/registration_code.html',
-                         url=url)
+    notify_role(role, gettext('Registration'),
+                'email/registration_code.html',
+                url=url)
     return jsonify({
         'status': 'ok',
-        'message': 'To proceed, please check your email.'
+        'message': gettext('To proceed, please check your email.')
     })
 
 
@@ -60,14 +61,14 @@ def create():
     except BadSignature:
         return jsonify({
             'status': 'error',
-            'message': 'Invalid code'
+            'message': gettext('Invalid code')
         }, status=400)
 
     role = Role.by_email(email)
     if role is not None:
         return jsonify({
             'status': 'error',
-            'message': 'Email is already registered'
+            'message': gettext('Email is already registered')
         }, status=409)
 
     role = Role.load_or_create(

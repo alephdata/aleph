@@ -1,18 +1,14 @@
 import React, {Component} from 'react';
 import Waypoint from 'react-waypoint';
-import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
-import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
 import {queryEntities} from 'src/actions';
 import {selectEntitiesResult} from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
-import SectionLoading from 'src/components/common/SectionLoading';
-import ErrorScreen from 'src/components/ErrorMessages/ErrorScreen';
-
-import './style.css';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 
 const messages = defineMessages({
   no_results_title: {
@@ -24,6 +20,7 @@ const messages = defineMessages({
     defaultMessage: 'Try making your search more general',
   }
 });
+
 
 class EntitySearch extends Component {
   constructor(props) {
@@ -71,32 +68,21 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, showLinksInPreview, hasWarning, intl} = this.props;
+    const {query, result, intl} = this.props;
     return (
       <React.Fragment>
-        {result.total === 0 &&
-        <section className="PartialError">
-          <ErrorScreen.EmptyList visual='search'
-                                 title={intl.formatMessage(messages.no_results_title)}
-                                 description={intl.formatMessage(messages.no_results_description)}/>
-        </section>
-        }
-        {hasWarning === true && <div className='warning-folder'>
-          <strong>
-            <FormattedMessage id="search.warning"
-                              defaultMessage="Warning" />
-            &nbsp;
-          </strong>
-          <p>
-            <FormattedMessage id="search.not_properly_imported"
-                              defaultMessage="This folder is not properly imported!" /></p>
-        </div>}
+        {result.total === 0 && (
+          <section className="PartialError">
+            <ErrorSection visual='search'
+                          title={intl.formatMessage(messages.no_results_title)}
+                          description={intl.formatMessage(messages.no_results_description)}/>
+          </section>
+        )}
         <EntityTable query={query}
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
-                     result={result}
-                     showLinksInPreview={showLinksInPreview}/>
+                     result={result} />
         {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}
@@ -113,7 +99,7 @@ class EntitySearch extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location, context, prefix, query} = ownProps;
+  const {location, context = {}, prefix, query} = ownProps;
 
   // We normally only want Things, not Intervals (relations between things).
   const contextWithDefaults = {
@@ -133,19 +119,4 @@ const mapStateToProps = (state, ownProps) => {
 EntitySearch = connect(mapStateToProps, {queryEntities})(EntitySearch);
 EntitySearch = withRouter(EntitySearch);
 EntitySearch = injectIntl(EntitySearch);
-
-EntitySearch.propTypes = {
-  context: PropTypes.object,
-  documentMode: PropTypes.bool,
-  hideCollection: PropTypes.bool,
-  prefix: PropTypes.string,
-};
-
-EntitySearch.defaultProps = {
-  context: {},
-  documentMode: false,
-  hideCollection: false,
-  prefix: '',
-};
-
 export default EntitySearch;

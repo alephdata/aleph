@@ -54,15 +54,17 @@ class CollectionLink extends Component {
 class CollectionLoad extends Component {
 
   componentDidMount() {
-    this.fetchIfNeeded(this.props);
+    this.fetchIfNeeded();
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.fetchIfNeeded(nextProps);
+  componentDidUpdate(prevProps) {
+    if (prevProps.id !== this.props.id) {
+      this.fetchIfNeeded();
+    }
   }
 
-  fetchIfNeeded(props) {
-    const { id, collection } = props;
+  fetchIfNeeded() {
+    const { id, collection } = this.props;
     if (collection.id === undefined && !collection.isLoading) {
       this.props.fetchCollection({ id });
     }
@@ -70,10 +72,7 @@ class CollectionLoad extends Component {
 
   render() {
     const { collection, children, renderWhenLoading } = this.props;
-    if (
-      (collection.id === undefined || collection.isLoading)
-      && renderWhenLoading !== undefined
-    ) {
+    if (collection.isLoading && renderWhenLoading !== undefined) {
       return renderWhenLoading;
     } else {
       return children(collection);

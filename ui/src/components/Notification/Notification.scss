@@ -1,8 +1,8 @@
 @import "src/app/variables.scss";
 
 .Notification {
-    padding-top: $aleph-grid-size;
-    padding-bottom: $aleph-grid-size * 1.5;
+    padding: $aleph-grid-size;
+    line-height: 1.5em;
     border-bottom: 1px solid $aleph-border-color;
 
     .timestamp {

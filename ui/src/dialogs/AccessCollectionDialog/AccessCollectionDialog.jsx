@@ -25,7 +25,7 @@ class PermissionRow extends Component {
     const { permission, onToggle } = this.props;
     return (<tr>
       <td>
-        {permission.role.name}
+        <Role.Label role={permission.role} long={true} icon={false} />
       </td>
       <td className='other-rows'>
         <Checkbox checked={permission.read}
@@ -100,10 +100,9 @@ class AccessCollectionDialog extends Component {
   async onSave() {
     const { intl, collection, updateCollectionPermissions } = this.props;
     const { permissions } = this.state;
-
-    await updateCollectionPermissions(collection.id, permissions);
     this.props.toggleDialog();
     showSuccessToast(intl.formatMessage(messages.save_success));
+    await updateCollectionPermissions(collection.id, permissions);
   }
 
   render() {

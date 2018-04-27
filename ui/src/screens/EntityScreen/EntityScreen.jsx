@@ -4,9 +4,8 @@ import { injectIntl } from 'react-intl';
 
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
-import { Screen, ScreenLoading, Breadcrumbs, DualPane, Entity } from 'src/components/common';
+import { Screen, ScreenLoading, Breadcrumbs, DualPane, Entity, ErrorScreen } from 'src/components/common';
 import { EntityReferences, EntityInfo } from 'src/components/Entity/';
-import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 
 class EntityScreen extends Component {
@@ -24,11 +23,13 @@ class EntityScreen extends Component {
 
   render() {
       const { entity } = this.props;
-      if (entity.id === undefined) {
-        return (<ScreenLoading />);
+      if (entity.isError) {
+        return <ErrorScreen error={entity.error}/>;
       }
-      if (entity.error) {
-        return (<ErrorScreen.NoTranslation title={entity.error}/>);
+  
+      if (entity.id === undefined) {
+        return <ScreenLoading />;
+
       }
 
       const breadcrumbs = (
@@ -60,3 +61,9 @@ const mapStateToProps = (state, ownProps) => {
 EntityScreen = connect(mapStateToProps, { fetchEntity }, null, { pure: false })(EntityScreen);
 EntityScreen = injectIntl(EntityScreen);
 export default EntityScreen;
+
+
+
+
+
+

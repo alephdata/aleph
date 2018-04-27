@@ -16,7 +16,6 @@ class Preview extends React.Component {
       previewBottom: 0,
     };
     this.handleScroll = this.handleScroll.bind(this);
-    this.toggleMaximise = this.toggleMaximise.bind(this);
   }
 
   componentDidMount() {
@@ -65,20 +64,8 @@ class Preview extends React.Component {
     })
   }
   
-  toggleMaximise() {
-    const { parsedHash, history, location } = this.props;
-    parsedHash['preview:maximised'] = !this.props.maximised;
-    history.replace({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
-    });
-    // @EXPERIMENTAL - Enable if content padding is enabled in handleScroll()
-    // this.handleScroll();
-  }
-  
   render() {
-    const { previewId, previewType, maximised } = this.props;
+    const { previewId, previewType, parsedHash } = this.props;
     const { previewTop, previewBottom } = this.state;
     let className = 'Preview';
 
@@ -92,7 +79,7 @@ class Preview extends React.Component {
     }
 
     // Only allow Preview to have be maximised for document previews
-    if (maximised === true && previewType === 'document') {
+    if (previewType === 'document' && parsedHash['mode'] !== 'info') {
       className = classnames('maximised', className);
     }
 
@@ -108,9 +95,7 @@ class Preview extends React.Component {
           <PreviewCollection previewId={previewId} />
         )}
         {previewType === 'document' && (
-          <PreviewDocument previewId={previewId}
-                           maximised={maximised}
-                           toggleMaximise={this.toggleMaximise} />
+          <PreviewDocument previewId={previewId} parsedHash={parsedHash} />
         )}
       </div>
     );
@@ -122,7 +107,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     previewId: parsedHash['preview:id'],
     previewType: parsedHash['preview:type'],
-    maximised: parsedHash['preview:maximised'] === 'true',
     parsedHash: parsedHash
   };
 };

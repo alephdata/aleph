@@ -7,7 +7,7 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';
-import { Screen, Breadcrumbs, DualPane, SectionLoading, SignInCallout } from 'src/components/common';
+import { Screen, Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import { CollectionListItem } from 'src/components/Collection';
@@ -59,18 +59,20 @@ class CollectionsIndexScreen extends Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
     if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchData();
+      this.fetchIfNeeded();
     }
   }
 
-  fetchData() {
-    let {query} = this.props;
-    this.props.queryCollections({query});
+  fetchIfNeeded() {
+    let { query, result } = this.props;
+    if (result.total === undefined && !result.isLoading) {
+      this.props.queryCollections({ query });
+    }
   }
 
   onChangeQueryPrefix({target}) {
@@ -95,8 +97,8 @@ class CollectionsIndexScreen extends Component {
   }
 
   render() {
-    const {result, query, intl} = this.props;
-    const {queryPrefix} = this.state;
+    const { result, query, intl } = this.props;
+    const { queryPrefix } = this.state;
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -133,19 +135,22 @@ class CollectionsIndexScreen extends Component {
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <ul className="results">
-              {result.results.map(res =>
+              {result.results !== undefined && result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res}/>
               )}
-              {!result.isLoading && result.next && (
-                <Waypoint
-                  onEnter={this.bottomReachedHandler}
-                  scrollableAncestor={window}
-                />
-              )}
-              {result.isLoading && (
-                <SectionLoading/>
-              )}
             </ul>
+            {!result.isLoading && result.next && (
+              <Waypoint
+                onEnter={this.bottomReachedHandler}
+                scrollableAncestor={window}
+              />
+            )}
+            {result.isError && (
+              <ErrorSection error={result.error} />
+            )}
+            {result.isLoading && (
+              <SectionLoading />
+            )}
           </DualPane.ContentPane>
         </DualPane>
       </Screen>
@@ -155,12 +160,11 @@ class CollectionsIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const context = {
-    facet: ['category', 'countries']};
-  const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
+  const { location } = ownProps;
+  const context = { facet: ['category', 'countries'] };
+  const query = Query.fromLocation('collections', location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
-
   return {
     query: query,
     result: selectCollectionsResult(state, query)

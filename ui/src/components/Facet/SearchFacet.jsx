@@ -5,7 +5,6 @@ import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'r
 import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { fetchFacet } from 'src/actions';
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.css';
@@ -90,13 +89,8 @@ class SearchFacet extends Component {
     const current = query.getFilter(field);
     const count = current ? current.length : 0;
     const isFiltered = query.getFilter(field).length > 0;
-    
-    // The values array can include extra selected-but-zero-hit values that are
-    // excluded from total, so we compare not against the array's length but
-    // against the requested limit.
     const hasMoreValues = facetSize < facet.total;
-    const isUpdating = result.total === undefined || result.isLoading;
-    // const isExpanding  = facet.values === undefined || (facet.total !== 0 && facet.values.length < Math.min(facet.total || 10000, facetSize));
+    const isUpdating = result.total === undefined;
 
     return (
       <div className="SearchFacet">
@@ -171,6 +165,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 SearchFacet = injectIntl(SearchFacet);
-SearchFacet = connect(mapStateToProps, { fetchFacet })(SearchFacet);
+SearchFacet = connect(mapStateToProps)(SearchFacet);
 SearchFacet = withRouter(SearchFacet);
 export default SearchFacet;

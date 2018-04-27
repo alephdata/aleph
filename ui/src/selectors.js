@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import { documentRecordKey } from 'src/reducers/documentRecords';
+
 function selectResult(state, query, expand) {
   const key = query.toKey();
   const result = {
@@ -31,6 +33,11 @@ export function selectEntity(state, entityId) {
 export function selectDocumentRecord(state, recordId) {
   // get a collection from the store.
   return selectObject(state.documentRecords, recordId);
+}
+
+export function selectDocumentPage(state, documentId, page) {
+  const key = documentRecordKey(documentId, page);
+  return selectObject(state.documentRecords, key);
 }
 
 export function selectCollectionsResult(state, query) {

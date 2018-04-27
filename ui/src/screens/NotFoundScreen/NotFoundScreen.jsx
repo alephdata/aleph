@@ -1,0 +1,21 @@
+import React, { Component } from 'react';
+import { injectIntl, defineMessages } from 'react-intl';
+
+import { ErrorScreen } from 'src/components/common';
+
+const messages = defineMessages({
+  not_found: {
+    id: 'error.screen.not_found',
+    defaultMessage: 'The requested page could not be found.'
+  }
+});
+
+class NotFoundScreen extends Component {
+  render() {
+    const { intl } = this.props;
+    return <ErrorScreen title={intl.formatMessage(messages.not_found)} />
+  }
+}
+
+NotFoundScreen = injectIntl(NotFoundScreen);
+export default NotFoundScreen;

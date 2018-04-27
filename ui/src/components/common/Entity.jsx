@@ -65,10 +65,6 @@ class EntityLink extends Component {
       const parsedHash = queryString.parse(location.hash);
       parsedHash['preview:id'] = entity.id;
       parsedHash['preview:type'] = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
-      if (parsedHash['preview:type'] === 'document' && !parsedHash['preview:maximised']) {
-        parsedHash['preview:maximised'] = 'true';
-      }
-
       history.replace({
         pathname: location.pathname,
         search: location.search,
@@ -103,8 +99,10 @@ class EntityLoad extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate() {
-    this.fetchIfNeeded();
+  componentDidUpdate(prevProps) {
+    if (prevProps.id !== this.props.id) {
+      this.fetchIfNeeded();
+    }
   }
 
   fetchIfNeeded() {
@@ -116,10 +114,7 @@ class EntityLoad extends Component {
 
   render() {
     const { entity, children, renderWhenLoading } = this.props;
-    if (
-      (entity.id === undefined || entity.isLoading)
-      && renderWhenLoading !== undefined
-    ) {
+    if (entity.isLoading && renderWhenLoading !== undefined) {
       return renderWhenLoading;
     } else {
       return children(entity);

@@ -1,15 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
-import { NonIdealState } from '@blueprintjs/core';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { NonIdealState, Button } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
-import { queryNotifications } from 'src/actions';
+import { queryNotifications, deleteNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
-import { Screen, SinglePane, SectionLoading } from 'src/components/common';
+import { Screen, DualPane, SectionLoading, ErrorScreen } from 'src/components/common';
+import { Toolbar } from 'src/components/Toolbar';
+// import { showSuccessToast } from "src/app/toast";
 import Notification from 'src/components/Notification/Notification';
+import AlertsManager from 'src/components/AlertsManager/AlertsManager';
 
 import './NotificationsScreen.css';
 
@@ -17,19 +20,21 @@ import './NotificationsScreen.css';
 const messages = defineMessages({
   title: {
     id: 'notifications.title',
-    defaultMessage: 'Your notifications',
+    defaultMessage: 'Recent notifications',
   },
   no_notifications: {
     id: 'notifications.no_notifications',
-    defaultMessage: 'You do not have any notifications.',
-  }
+    defaultMessage: 'You do not have any notifications',
+  },
 });
 
 
 class NotificationsScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {isMarkedRead: false};
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.onMarkRead = this.onMarkRead.bind(this);
   }
 
   componentDidMount() {
@@ -37,55 +42,75 @@ class NotificationsScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Check for a change of query, as unconditionally calling fetchIfNeeded
-    // could cause an infinite loop (if fetching fails).
     if (!this.props.query.sameAs(prevProps.query)) {
       this.fetchIfNeeded();
     }
   }
 
   fetchIfNeeded() {
-    const { result, query, queryNotifications } = this.props;
-    if (result.isLoading || (result.status === 'error')) {
-      queryNotifications({ query });
+    const { result, query } = this.props;
+    if (result.total === undefined && !result.isLoading) {
+      this.props.queryNotifications({ query });
     }
   }
 
   getMoreResults() {
-    const { query, result, queryNotifications } = this.props;
+    const { query, result } = this.props;
     if (!result.isLoading && result.next) {
-      queryNotifications({ query, next: result.next });
+      this.props.queryNotifications({ query, next: result.next });
     }
+  }
+
+  async onMarkRead(event) {
+    event.preventDefault();
+    this.setState({isMarkedRead: true});
+    await this.props.deleteNotifications();
+    // showSuccessToast(intl.formatMessage(messages.marked_read));
   }
 
   render() {
     const { result, intl } = this.props;
+    const { isMarkedRead } = this.state;
+    const canMarkRead = !isMarkedRead && result.total !== undefined && result.total > 0;
+
+    if (result.isError) {
+      return <ErrorScreen error={result.error} />
+    }
 
     return (
       <Screen title={intl.formatMessage(messages.title)}>
-        <SinglePane className="NotificationsScreen" limitedWidth={true}>
-          { result.total === 0 &&
-            <NonIdealState visual="issue"
-                           title={intl.formatMessage(messages.no_notifications)} />
-          }
-          { result.total !== 0 &&
-            <ul className="notifications-list">
-              {result.results.map((notification) =>
-                <Notification key={notification.id}
-                              notification={notification} />
-              )}
-            </ul>
-          }
-          { !result.isLoading && result.next && (
-            <Waypoint
-              onEnter={this.getMoreResults}
-              bottomOffset="-600px"
-              scrollableAncestor={window} />
-          )}
-          { result.isLoading && (
-            <SectionLoading />
-          )}
-        </SinglePane>
+        <DualPane className="NotificationsScreen">
+          <AlertsManager/>
+          <DualPane.ContentPane>
+            <Toolbar>
+              <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
+                <FormattedMessage id="notifications.mark_read"
+                                  defaultMessage="Mark as seen" />
+              </Button>
+            </Toolbar>
+            { result.total === 0 &&
+              <NonIdealState visual="notifications"
+                            title={intl.formatMessage(messages.no_notifications)} />
+            }
+            { result.total !== 0 &&
+              <ul className="notifications-list">
+                {result.results.map((notification) =>
+                  <Notification key={notification.id}
+                                notification={notification} />
+                )}
+              </ul>
+            }
+            { !result.isLoading && result.next && (
+              <Waypoint
+                onEnter={this.getMoreResults}
+                bottomOffset="-600px"
+                scrollableAncestor={window} />
+            )}
+            { result.isLoading && (
+              <SectionLoading />
+            )}
+          </DualPane.ContentPane>
+        </DualPane>
       </Screen>
     )
   }
@@ -95,11 +120,11 @@ class NotificationsScreen extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('notifications', location, {}, 'notifications')
-    .limit(100);
+    .limit(40);
   const result = selectNotificationsResult(state, query);
   return { query, result };
 };
 
-NotificationsScreen = connect(mapStateToProps, { queryNotifications })(NotificationsScreen);
+NotificationsScreen = connect(mapStateToProps, { queryNotifications, deleteNotifications })(NotificationsScreen);
 NotificationsScreen = withRouter(NotificationsScreen);
 export default injectIntl(NotificationsScreen);

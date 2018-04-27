@@ -6,7 +6,7 @@ import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
 import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
-import { Entity, Screen, Date, Country, ScreenLoading, SectionLoading, Breadcrumbs } from 'src/components/common';
+import { Entity, Screen, Date, Country, ScreenLoading, SectionLoading, Breadcrumbs, ErrorScreen } from 'src/components/common';
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
@@ -64,6 +64,10 @@ class CollectionsXrefScreen extends Component {
 
   render() {
     const { collection, other, index, matches } = this.props;
+    const error = collection.error || other.error || index.error || matches.error;
+    if (error !== undefined) {
+      return <ErrorScreen error={error} />
+    }
     if (collection.id === undefined || other.id === undefined || index.total === undefined) {
       return <ScreenLoading />;
     }
@@ -130,13 +134,6 @@ class CollectionsXrefScreen extends Component {
             </tr>
           </thead>
           <tbody>
-            { matches.total === undefined && (
-              <tr key="loading">
-                <td colSpan="7">
-                  <SectionLoading />
-                </td>
-              </tr>
-            )}
             { matches.total !== undefined && matches.results.map((match) => (
               <tr key={match.id}>
                 <td className="numeric narrow">

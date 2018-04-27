@@ -4,13 +4,8 @@ from aleph.core import celery
 from aleph.model import Document
 from aleph.index import documents as index
 from aleph.analyze import analyze_document
-from aleph.logic.util import ui_url
 
 log = logging.getLogger(__name__)
-
-
-def document_url(document_id=None, **query):
-    return ui_url('documents', id=document_id, **query)
 
 
 def update_document(document):
