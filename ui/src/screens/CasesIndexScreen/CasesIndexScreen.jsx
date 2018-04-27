@@ -2,19 +2,20 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl, FormattedMessage, defineMessages} from 'react-intl';
 import {debounce} from 'lodash';
-import Waypoint from 'react-waypoint';
-import {NonIdealState, Button} from '@blueprintjs/core';
+import {NonIdealState, Button, Alert} from '@blueprintjs/core';
 import pallete from 'google-palette';
 
-import {queryCollections} from 'src/actions';
+import {queryCollections, deleteCollection} from 'src/actions';
+
 import {selectCollectionsResult} from 'src/selectors';
-import {Screen, Breadcrumbs, DualPane, SectionLoading} from 'src/components/common';
-import CaseIndexTable from "../../components/CaseIndexTable/CaseIndexTable";
-import Query from "../../app/Query";
+import {Screen, Breadcrumbs, SinglePane, SectionLoading} from 'src/components/common';
+import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
+import Query from "src/app/Query";
 import CaseExplanationBox from "../../components/Case/CaseExplanationBox";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
 import './CasesIndexScreen.css';
+import {showSuccessToast} from "../../app/toast";
 
 const messages = defineMessages({
   no_results_title: {
@@ -24,6 +25,14 @@ const messages = defineMessages({
   no_results_description: {
     id: 'cases.no_results_description',
     defaultMessage: 'Try adding new case.',
+  },
+  save_success: {
+    id: 'cases.edit.save_success',
+    defaultMessage: 'Your deleted case.',
+  },
+  save_error: {
+    id: 'cases.edit.save_error',
+    defaultMessage: 'Failed to delete case.',
   }
 });
 
@@ -32,45 +41,31 @@ class CasesIndexScreen extends Component {
     super(props);
 
     this.state = {
-      dialogIsOpen: false
+      dialogIsOpen: false,
+      alertIsOpen: false,
+      casefile: {}
       //queryPrefix: props.query.getString('prefix')
     };
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
-    this.fetchPermissions = this.fetchPermissions.bind(this);
+    this.toggleAlert = this.toggleAlert.bind(this);
+    this.onDeleteCase = this.onDeleteCase.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchData();
-
+  async componentDidMount() {
+    await this.fetchData();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props !== nextProps) {
+    console.log(this.props, nextProps)
       //this.fetchData();
-    }
   }
 
-  componentDidUpdate() {
-    this.fetchPermissions();
-  }
-
-  fetchData() {
+  async fetchData() {
     let {query} = this.props;
-    this.props.queryCollections({query});
+    await this.props.queryCollections({query});
   }
-
-  fetchPermissions() {
-    const {result} = this.props;
-    if (result.total !== 0) {
-      /*result.results.map((collection) => {
-        console.log(collection)
-        return this.props.fetchCollectionPermissions(collection.id);
-      });*/
-    }
-  }
-
 
   updateQuery(newQuery) {
     const {history, location} = this.props;
@@ -84,9 +79,29 @@ class CasesIndexScreen extends Component {
     this.setState({dialogIsOpen: !this.state.dialogIsOpen});
   }
 
+  toggleAlert(casefile) {
+    this.setState({
+      alertIsOpen: !this.state.alertIsOpen,
+      casefile: casefile !== undefined ? casefile : {}
+    });
+  }
+
+  async onDeleteCase() {
+    const {casefile} = this.state;
+    const {intl} = this.props;
+
+    try {
+      await this.props.deleteCollection(casefile);
+      await this.fetchData();
+      showSuccessToast(intl.formatMessage(messages.save_success));
+    } catch (e) {
+      alert(intl.formatMessage(messages.save_error));
+    }
+  }
+
   render() {
     const {result, query, intl} = this.props;
-    const {dialogIsOpen} = this.state;
+    const {dialogIsOpen, alertIsOpen} = this.state;
     const hasCases = result.total !== 0;
 
     let scheme = pallete.listSchemes('mpn65')[0];
@@ -103,8 +118,16 @@ class CasesIndexScreen extends Component {
 
     return (
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs}>
-        <DualPane>
-          <DualPane.ContentPane>
+        <SinglePane>
+          <Alert isOpen={alertIsOpen} onClose={this.toggleAlert} cancelButtonText='Cancel' confirmButtonText='Confirm' onConfirm={this.onDeleteCase}>
+            <p>
+              <FormattedMessage id="cases.browser.alert"
+                                defaultMessage="Are you sure you want to delete this case and"/>&nbsp;
+              <b>
+                <FormattedMessage id="cases.browser.all.files" defaultMessage="all files"/></b>&nbsp;
+              <FormattedMessage id="cases.browser.within" defaultMessage="within it?"/>
+            </p>
+          </Alert>
             <CreateCaseDialog
               isOpen={dialogIsOpen}
               toggleDialog={this.toggleCreateCase}
@@ -113,7 +136,8 @@ class CasesIndexScreen extends Component {
             {result.total !== 0 && <CaseIndexTable query={query}
                                                    colors={colors}
                                                    updateQuery={this.updateQuery}
-                                                   result={result}/>}
+                                                   result={result}
+                                                   deleteCase={this.toggleAlert}/>}
             {result.total === 0 && (
               <div className='error-and-add-button'>
                 <NonIdealState visual="search"
@@ -127,8 +151,7 @@ class CasesIndexScreen extends Component {
             {result.total === undefined && (
               <SectionLoading/>
             )}
-          </DualPane.ContentPane>
-        </DualPane>
+        </SinglePane>
       </Screen>
     );
   }
@@ -143,6 +166,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
+  console.log('ovdje', selectCollectionsResult(state, query))
 
   return {
     query: query,
@@ -151,5 +175,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CasesIndexScreen = injectIntl(CasesIndexScreen);
-CasesIndexScreen = connect(mapStateToProps, {queryCollections})(CasesIndexScreen);
+CasesIndexScreen = connect(mapStateToProps, {queryCollections, deleteCollection})(CasesIndexScreen);
 export default CasesIndexScreen;

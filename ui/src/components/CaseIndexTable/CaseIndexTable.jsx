@@ -58,7 +58,7 @@ class CaseIndexTable extends Component {
   }
 
   render() {
-    const {query, intl, location, history, colors} = this.props;
+    const {query, intl, location, history, colors, deleteCase} = this.props;
     const {result} = this.state;
 
     if (result.total === 0 && result.page === 1) {
@@ -95,7 +95,8 @@ class CaseIndexTable extends Component {
                         color={colors[index]}
                         casefile={casefile}
                         location={location}
-                        history={history}/>
+                        history={history}
+                        deleteCase={deleteCase}/>
         )}
         </tbody>
       </table>

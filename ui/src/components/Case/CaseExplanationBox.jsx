@@ -29,7 +29,7 @@ class CaseExplanationBox extends Component {
               <FormattedMessage id="case.description"
                                 defaultMessage="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."/>
             </p>
-            {hasCases && <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button pt-intent-primary">
+            {hasCases && <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button">
               <FormattedMessage id="case.add" defaultMessage="Add new case"/>
             </Button>}
           </div>

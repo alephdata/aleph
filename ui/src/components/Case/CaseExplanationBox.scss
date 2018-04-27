@@ -2,7 +2,7 @@
 
 .CaseExplanationBox {
   width: 100%;
-  background-color: rgba(14,94,143,0.92);
+  background-color: $aleph-sidebar-background;
   height: $aleph-grid-size * 24.2;
 
   .title-explanation {

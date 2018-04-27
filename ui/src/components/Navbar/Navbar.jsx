@@ -182,7 +182,7 @@ class Navbar extends React.Component {
             <div className="pt-navbar-heading">
               <Link to="/">{metadata.app.title}</Link>
             </div>
-            <NavbarDivider />
+            {session && session.loggedIn === true && <NavbarDivider />}
             {session && session.loggedIn === true && <div>
               <Link to="/cases">Cases</Link>
             </div>}

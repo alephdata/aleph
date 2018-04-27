@@ -8,6 +8,13 @@ import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 class CaseScreen extends Component {
   render() {
+    const { collection } = this.props;
+
+    if (collection.error) {
+      return (
+        <ErrorScreen.NoTranslation title={collection.error}/>
+      )
+    }
     return (
       <div></div>
     );

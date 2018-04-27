@@ -17,7 +17,7 @@ export const updateCollection = asyncActionCreator((collection) => async dispatc
 }, {name: 'UPDATE_COLLECTION'});
 
 export const deleteCollection = asyncActionCreator((collection) => async dispatch => {
-  const response = await endpoint.delete(`collections`, collection);
+  const response = await endpoint.delete(`collections/${collection.id}`, collection);
   return {data: response.data};
 }, {name: 'DELETE_COLLECTION'});
 
