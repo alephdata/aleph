@@ -8,10 +8,11 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import { queryNotifications, deleteNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
-import { Screen, SinglePane, SectionLoading, ErrorScreen } from 'src/components/common';
+import { Screen, DualPane, SectionLoading, ErrorScreen } from 'src/components/common';
 import { Toolbar } from 'src/components/Toolbar';
 // import { showSuccessToast } from "src/app/toast";
 import Notification from 'src/components/Notification/Notification';
+import AlertsManager from 'src/components/AlertsManager/AlertsManager';
 
 import './NotificationsScreen.css';
 
@@ -23,7 +24,7 @@ const messages = defineMessages({
   },
   no_notifications: {
     id: 'notifications.no_notifications',
-    defaultMessage: 'You do not have any notifications.',
+    defaultMessage: 'You do not have any notifications',
   },
 });
 
@@ -62,7 +63,6 @@ class NotificationsScreen extends React.Component {
 
   async onMarkRead(event) {
     event.preventDefault();
-    console.log('pressed');
     this.setState({isMarkedRead: true});
     await this.props.deleteNotifications();
     // showSuccessToast(intl.formatMessage(messages.marked_read));
@@ -71,6 +71,7 @@ class NotificationsScreen extends React.Component {
   render() {
     const { result, intl } = this.props;
     const { isMarkedRead } = this.state;
+    const canMarkRead = !isMarkedRead && result.total !== undefined && result.total > 0;
 
     if (result.isError) {
       return <ErrorScreen error={result.error} />
@@ -78,35 +79,38 @@ class NotificationsScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)}>
-        <SinglePane className="NotificationsScreen" limitedWidth={true}>
-          <Toolbar>
-            <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={isMarkedRead}>
-              <FormattedMessage id="notifications.mark_read"
-                                defaultMessage="Mark as seen" />
-            </Button>
-          </Toolbar>
-          { result.total === 0 &&
-            <NonIdealState visual="notifications"
-                           title={intl.formatMessage(messages.no_notifications)} />
-          }
-          { result.total !== 0 &&
-            <ul className="notifications-list">
-              {result.results.map((notification) =>
-                <Notification key={notification.id}
-                              notification={notification} />
-              )}
-            </ul>
-          }
-          { !result.isLoading && result.next && (
-            <Waypoint
-              onEnter={this.getMoreResults}
-              bottomOffset="-600px"
-              scrollableAncestor={window} />
-          )}
-          { result.isLoading && (
-            <SectionLoading />
-          )}
-        </SinglePane>
+        <DualPane className="NotificationsScreen">
+          <AlertsManager/>
+          <DualPane.ContentPane>
+            <Toolbar>
+              <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
+                <FormattedMessage id="notifications.mark_read"
+                                  defaultMessage="Mark as seen" />
+              </Button>
+            </Toolbar>
+            { result.total === 0 &&
+              <NonIdealState visual="notifications"
+                            title={intl.formatMessage(messages.no_notifications)} />
+            }
+            { result.total !== 0 &&
+              <ul className="notifications-list">
+                {result.results.map((notification) =>
+                  <Notification key={notification.id}
+                                notification={notification} />
+                )}
+              </ul>
+            }
+            { !result.isLoading && result.next && (
+              <Waypoint
+                onEnter={this.getMoreResults}
+                bottomOffset="-600px"
+                scrollableAncestor={window} />
+            )}
+            { result.isLoading && (
+              <SectionLoading />
+            )}
+          </DualPane.ContentPane>
+        </DualPane>
       </Screen>
     )
   }

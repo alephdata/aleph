@@ -1,0 +1,12 @@
+@import "src/app/variables.scss";
+
+.AlertsManager {
+    .add-form {
+        padding-bottom: $aleph-grid-size;
+    }
+
+    .alert-label {
+        font-weight: bold;
+        vertical-align: middle;
+    }
+}

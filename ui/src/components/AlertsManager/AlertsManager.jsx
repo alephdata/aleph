@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import { NonIdealState, Dialog } from '@blueprintjs/core';
+import { NonIdealState, Dialog, Button, Icon, Tooltip } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { SectionLoading } from 'src/components/common';
+import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
-import './AlertsDialog.css';
+import './AlertsManager.css';
 
 const messages = defineMessages({
   title: {
@@ -21,11 +21,19 @@ const messages = defineMessages({
   },
   add_placeholder: {
     id: 'alerts.add_placeholder',
-    defaultMessage: 'Receive e-mail when there are new results.',
+    defaultMessage: 'Keep track of searches...',
   },
   no_alerts: {
     id: 'alerts.no_alerts',
-    defaultMessage: 'You have no notifications set up.',
+    defaultMessage: 'You are not tracking any searches',
+  },
+  search_alert: {
+    id: 'alerts.search_alert',
+    defaultMessage: 'Search for {label}',
+  },
+  delete_alert: {
+    id: 'alerts.search_alert',
+    defaultMessage: 'Stop tracking',
   }
 });
 
@@ -78,13 +86,15 @@ class AlertsDialog extends Component {
   render() {
     const {alerts, intl} = this.props;
     return (
-      <Dialog icon="notifications" className="AlertsDialog"
-              isOpen={this.props.isOpen}
-              onClose={this.props.toggleDialog}
-              title={intl.formatMessage(messages.title)}>
-        <div className="pt-dialog-body">
+      <DualPane.InfoPane className="AlertsManager with-heading">
+        <div className="pane-heading">
+          <h1>
+            <FormattedMessage id="alerts.title" defaultMessage="Your notifications"/>
+          </h1>
+        </div>
+        <div className="pane-content">
           <form onSubmit={this.onAddAlert}>
-            <div className="pt-control-group pt-fill">
+            <div className="pt-control-group pt-fill add-form">
               <div className="pt-input-group pt-large pt-fill">
                 <input type="text"
                   autoFocus={true}
@@ -94,7 +104,7 @@ class AlertsDialog extends Component {
                   onChange={this.onChangeAddingInput}
                   value={this.state.newAlert} />
               </div>
-              <button className="pt-button pt-large pt-fixed pt-intent-primary" onClick={this.onAddAlert}>
+              <button className="pt-button pt-large pt-fixed" onClick={this.onAddAlert}>
                 <FormattedMessage id="alerts.add" defaultMessage="Add alert"/>
               </button>
             </div>
@@ -103,35 +113,28 @@ class AlertsDialog extends Component {
             <SectionLoading />
           )}
           { alerts.page !== undefined && !alerts.results.length && (
-            <NonIdealState visual="eye-off"
-                           title={intl.formatMessage(messages.no_alerts)}/>
+            <ErrorSection visual="eye-off"
+                          title={intl.formatMessage(messages.no_alerts)}/>
           )}
           { alerts.page !== undefined && alerts.results.length > 0 && (
-            <table className="AlertsTable settings-table">
-              <thead>
-                <tr>
-                  <th>
-                    <FormattedMessage id="alerts.topic" defaultMessage="Topic"/>
-                  </th>
-                  <th className="narrow">
-                    <FormattedMessage id="alerts.search" defaultMessage="Search"/>
-                  </th>
-                  <th className="narrow">
-                    <FormattedMessage id="alerts.delete" defaultMessage="Delete"/>
-                  </th>
-                </tr>
-              </thead>
+            <table className="alerts-table settings-table">
               <tbody>
                 {alerts.results.map((item) => (
                   <tr key={item.id}>
-                    <td>
+                    <td className="alert-label">
                       {item.label}
                     </td>
-                    <td onClick={() => this.onSearch(item.label)} className="toggle">
-                      <i className="fa fa-search" aria-hidden="true"/>
+                    <td className="narrow">
+                      <Tooltip content={intl.formatMessage(messages.search_alert, {label: item.label})}>
+                        <Button icon="search" minimal={true} small={true}
+                                onClick={() => this.onSearch(item.label)} />
+                      </Tooltip>
                     </td>
-                    <td onClick={() => this.onDeleteAlert(item.id)} className="toggle">
-                      <i className="fa fa-trash-o" aria-hidden="true"/>
+                    <td className="narrow">
+                      <Tooltip content={intl.formatMessage(messages.delete_alert)}>
+                        <Button icon="cross" minimal={true} small={true}
+                                onClick={() => this.onDeleteAlert(item.id)} />
+                      </Tooltip>
                     </td>
                   </tr>
                 ))}
@@ -139,7 +142,7 @@ class AlertsDialog extends Component {
             </table>
           )}
         </div>
-      </Dialog>
+      </DualPane.InfoPane>
     );
   }
 }

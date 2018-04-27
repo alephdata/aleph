@@ -10,10 +10,6 @@ import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/Authenticatio
 import './AuthButtons.css';
 
 const messages = defineMessages({
-  alerts: {
-    id: 'nav.manage_alerts',
-    defaultMessage: 'Manage alerts',
-  },
   view_notifications: {
     id: 'nav.view_notifications',
     defaultMessage: 'Notifications',
@@ -74,12 +70,11 @@ class AuthButtons extends Component {
           <Popover content={
             <Menu>
               <Link to="/notifications" className="pt-menu-item">
-                <Icon icon="timeline-events" /> {' '}
+                <Icon icon="notifications" /> {' '}
                 <div className="pt-text-overflow-ellipsis pt-fill">
                   {intl.formatMessage(messages.view_notifications)}
                 </div>
               </Link>
-              <MenuItem icon="notifications" onClick={this.toggleAlerts} text={intl.formatMessage(messages.alerts)+'…'} />
               <MenuItem icon="cog" onClick={this.toggleSettings} text={intl.formatMessage(messages.settings)+'…'} />
               <MenuDivider />
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
@@ -88,7 +83,6 @@ class AuthButtons extends Component {
             <Button icon="user" className="pt-minimal" />
           </Popover>
 
-          <AlertsDialog isOpen={this.state.alertsIsOpen} toggleDialog={this.toggleAlerts} />
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
         </span>
       )
