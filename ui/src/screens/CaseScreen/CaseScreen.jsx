@@ -4,7 +4,6 @@ import { injectIntl } from 'react-intl';
 
 import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection } from 'src/components/common';
 import { CollectionInfo, CollectionContent } from 'src/components/Collection';
-import ErrorScreen from "../../components/ErrorMessages/ErrorScreen";
 
 class CaseScreen extends Component {
   render() {
@@ -12,7 +11,7 @@ class CaseScreen extends Component {
 
     if (collection.error) {
       return (
-        <ErrorScreen.NoTranslation title={collection.error}/>
+        {/*<ErrorScreen.NoTranslation title={collection.error}/>*/}
       )
     }
     return (

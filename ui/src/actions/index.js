@@ -3,8 +3,6 @@ import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 import { suggestRoles, fetchRole, updateRole } from './roleActions';
 import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
-import { queryNotifications } from './notificationActions';
-import { fetchDocument, queryDocumentRecords } from './documentActions';
 import { queryNotifications, deleteNotifications } from './notificationActions';
 import {
   fetchDocument,
