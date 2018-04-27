@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import { SectionLoading } from 'src/components/common';
-import {fetchAlerts, addAlert, deleteAlert} from 'src/actions';
+import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
 import './AlertsDialog.css';
 

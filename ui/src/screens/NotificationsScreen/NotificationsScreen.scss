@@ -10,7 +10,14 @@
     box-shadow: none !important;
   }
 
+  .mark-read {
+    float: right;
+    margin-right: 0;
+  }
+
   ul.notifications-list {
     list-style-type: none;
+    padding: 0;
+    margin: 0;
   }
 }

@@ -3,8 +3,8 @@ import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import {Callout, Intent, Dialog, MenuDivider, Button} from '@blueprintjs/core';
 
-import {endpoint} from 'src/app/api';
-import {xhrErrorToast} from 'src/components/auth/xhrToast';
+import { endpoint } from 'src/app/api';
+import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 import {loginWithPassword, loginWithToken} from "src/actions/sessionActions";

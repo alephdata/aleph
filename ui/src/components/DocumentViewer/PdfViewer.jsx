@@ -122,7 +122,7 @@ class PdfViewer extends Component {
   }
   
   render() {
-    const { document, mode, page, pageResult, result, query, isSearch } = this.props;
+    const { document, mode, page, pageResult, result, isSearch } = this.props;
     const { width, numPages } = this.state;
 
     if (document.id === undefined) {
