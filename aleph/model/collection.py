@@ -91,6 +91,14 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return self._roles
 
     @property
+    def team(self):
+        q = Role.all()
+        q = q.filter(Role.type != Role.SYSTEM)
+        q = q.filter(Role.id == Permission.role_id)
+        q = q.filter(Permission.collection_id == self.id)
+        return q
+
+    @property
     def kind(self):
         return 'casefile' if self.casefile else 'source'
 

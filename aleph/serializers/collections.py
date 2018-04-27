@@ -33,6 +33,7 @@ class CollectionSchema(BaseSchema):
     category = Category(missing=Collection.DEFAULT)
     creator_id = String(allow_none=True)
     creator = Nested(RoleReferenceSchema(), dump_only=True)
+    team = List(Nested(RoleReferenceSchema()), dump_only=True)
     count = Integer(dump_only=True)
     schemata = Dict(dump_only=True, default={})
 
