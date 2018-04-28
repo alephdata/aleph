@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { NonIdealState, Dialog, Button, Icon, Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';

@@ -106,8 +106,12 @@ def create_app(config={}):
 
 @babel.localeselector
 def determine_locale():
-    locale = request.accept_languages.best_match(settings.UI_LANGUAGES)
-    locale = locale or str(babel.default_locale)
+    try:
+        options = settings.UI_LANGUAGES
+        locale = request.accept_languages.best_match(options)
+        locale = locale or str(babel.default_locale)
+    except RuntimeError:
+        locale = str(babel.default_locale)
     set_model_locale(locale)
     return locale
 
