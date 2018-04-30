@@ -22,8 +22,8 @@ class EntityInfoReferences extends React.Component {
   }
 
   render() {
-    const {references, entity} = this.props;
-    if (references.total === undefined || references.total == 0) {
+    const { references } = this.props;
+    if (references.total === undefined || references.total === 0) {
       return null;
     }
 
