@@ -5,7 +5,7 @@ from followthemoney import model
 from followthemoney.util import merge_data
 
 from aleph.core import es, db, celery
-from aleph.model import Collection, Entity, Alert
+from aleph.model import Collection, Entity
 from aleph.index import index_entity
 from aleph.index.core import entities_index
 from aleph.index.entities import index_bulk
@@ -35,7 +35,6 @@ def update_entity_full(entity_id):
     if entity is None:
         log.error("No entity with ID: %r", entity_id)
         return
-    Alert.dedupe(entity.id)
     index_entity(entity)
     index_collection(entity.collection)
 

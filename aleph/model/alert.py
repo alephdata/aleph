@@ -30,6 +30,10 @@ class Alert(db.Model, SoftDeleteModel):
             return self.entity.name
         return self.query_text
 
+    @property
+    def norm_text(self):
+        return stringify(self.query_text)
+
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
@@ -41,11 +45,13 @@ class Alert(db.Model, SoftDeleteModel):
         db.session.flush()
 
     def is_same(self, other):
-        if other.role_id == self.role_id:
-            if other.entity_id == self.entity_id:
-                if other.query_text == self.query_text:
-                    return True
-        return False
+        if other.role_id != self.role_id:
+            return False
+        if other.entity_id != self.entity_id:
+            return False
+        if other.norm_text != self.norm_text:
+            return False
+        return True
 
     @classmethod
     def by_id(cls, id, role_id=None):
@@ -73,8 +79,8 @@ class Alert(db.Model, SoftDeleteModel):
         return alert
 
     @classmethod
-    def dedupe(cls, entity_id):
-        alerts = cls.all().filter_by(entity_id=entity_id).all()
+    def dedupe(cls):
+        alerts = cls.all()
         for left in alerts:
             for right in alerts:
                 if left.id >= right.id:
