@@ -11,7 +11,7 @@ class CollectionLabel extends Component {
   render() {
     const { collection, icon = true } = this.props;
 
-    if (collection.id === undefined) {
+    if (collection === undefined || collection.id === undefined) {
       return null;
     }
 
@@ -28,7 +28,7 @@ class CollectionLink extends Component {
   render() {
     const { collection, icon = true, className, preview } = this.props;
 
-    if (collection.id === undefined) {
+    if (collection === undefined || collection.id === undefined) {
       return null;
     }
 

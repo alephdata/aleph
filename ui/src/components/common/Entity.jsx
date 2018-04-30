@@ -16,15 +16,18 @@ import './Entity.css';
 
 class EntityLabel extends Component {
   render() {
-    const { icon = false, truncate } = this.props;
-    let { title, name: entityName, file_name, schema } = this.props.entity;
+    const { entity, icon = false, truncate } = this.props;
+    if (entity === undefined) {
+      return null;
+    }
+    let { title, name: entityName, file_name: fileName, schema } = entity;
     
     // Trim names *before* checking to see which ones look okay to use
     title = title ? title.trim() : null;
     entityName = entityName ? entityName.trim() : null;
-    file_name = file_name ? file_name.trim() : null;
+    fileName = fileName ? fileName.trim() : null;
     
-    let text = title || entityName || file_name;
+    let text = title || entityName || fileName;
 
     if (truncate) {
       text = truncateText(text, truncate);
