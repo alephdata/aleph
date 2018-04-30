@@ -5,10 +5,7 @@ import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/compone
 
 
 class EntityTableRow extends Component {
-  constructor(props) {
-    super(props);
-  }
-  
+
   shouldComponentUpdate(nextProps) {
     // Only update if the ID of the entity has changed *or* location has updated
     return this.props.entity.id !== nextProps.entity.id ||

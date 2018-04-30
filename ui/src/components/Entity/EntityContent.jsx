@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import { selectEntityReferences } from 'src/selectors';
+import Query from 'src/app/Query';
+import { selectEntityReferences, selectEntitiesResult } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
-import { TabCount, Property, SectionLoading, ErrorSection } from 'src/components/common';
+import { TabCount, Property, SectionLoading, ErrorSection, DualPane } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
+import { EntitySimilarTable } from 'src/components/Entity';
 
 const messages = defineMessages({
   no_relationships: {
@@ -29,19 +31,19 @@ class EntityReferences extends React.Component {
 
   handleTabChange(activeTab) {
     const { fragment } = this.props;
-    fragment.update({'content:tab': activeTab});
+    fragment.update({'mode': activeTab});
   }
   
   render() {
-    const { entity, references, intl, activeTab } = this.props;
+    const { entity, references, similarResult, intl, activeTab } = this.props;
 
     if (references.total === undefined) {
       return <SectionLoading />;
     }
 
     return (
-      <section>
-        <Tabs id="EntityReferenceTabs" onChange={this.handleTabChange} selectedTabId={activeTab}>
+      <DualPane.ContentPane>
+        <Tabs onChange={this.handleTabChange} selectedTabId={activeTab}>
           { references.total === 0 && (
             <Tab id="default" key="default"
                  title={intl.formatMessage(messages.default_tab)}
@@ -61,19 +63,33 @@ class EntityReferences extends React.Component {
                     property={ref.property}
                   />} />
           ))}
+          <Tab id="similar" key="similar" disabled={similarResult.total === undefined || similarResult.total === 0}
+               title={<React.Fragment>
+                  <FormattedMessage id="entity.content.similar_tab" defaultMessage="Similar" />
+                  <TabCount count={similarResult.total} />
+                </React.Fragment>}
+               panel={<EntitySimilarTable entity={entity} />}
+            />
         </Tabs>
-      </section>
+      </DualPane.ContentPane>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { links = {} } = ownProps.entity;
   const fragment = new Fragment(ownProps.history);
   const references = selectEntityReferences(state, ownProps.entity.id);
   const reference = (!references.isLoading && references.results !== undefined && references.results.length) ? references.results[0] : undefined;
   const defaultTab = reference ? 'references-' + reference.property.qname : 'default';
-  const activeTab = fragment.get('content:tab') || defaultTab;
-  return { fragment, references, activeTab };
+  const activeTab = fragment.get('mode') || defaultTab;
+  
+  const similarPath = links.self ? links.self + '/similar' : undefined;
+  const similarQuery = Query.fromLocation(similarPath, {}, {}, 'similar');
+
+  return { fragment, references, activeTab,
+    similarResult: selectEntitiesResult(state, similarQuery)
+  };
 };
 
 EntityReferences = connect(mapStateToProps, {}, null, { pure: false })(EntityReferences);
