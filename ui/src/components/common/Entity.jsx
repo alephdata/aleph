@@ -66,8 +66,14 @@ class EntityLink extends Component {
 
     if (preview === true) {
       const parsedHash = queryString.parse(location.hash);
-      parsedHash['preview:id'] = entity.id;
-      parsedHash['preview:type'] = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
+      const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
+      if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
+        parsedHash['preview:id'] = undefined;
+        parsedHash['preview:type'] = undefined;  
+      } else {
+        parsedHash['preview:id'] = entity.id;
+        parsedHash['preview:type'] = previewType;
+      }
       history.replace({
         pathname: location.pathname,
         search: location.search,
