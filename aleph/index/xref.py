@@ -10,16 +10,16 @@ FIELDS_XREF = ['schema', 'schemata', 'collection_id', 'name',
                'countries', 'schemata', 'identifiers', 'addresses']
 
 
-def entity_query(sample, collection_id=None, query=None):
+def entity_query(sample, collection_id=None, query=None, broad=False):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
 
     # Do not attempt to find xrefs for entity types such as land, buildings,
     # etc.
     schema = model.get(sample.get('schema'))
-    if schema is None or not schema.fuzzy:
+    if schema is None:
         return {'match_none': {}}
-    if Document.SCHEMA in schema.names:
+    if not broad and not schema.fuzzy:
         return {'match_none': {}}
 
     if query is None:
@@ -31,6 +31,7 @@ def entity_query(sample, collection_id=None, query=None):
                 'must_not': []
             }
         }
+
     required = []
 
     if collection_id is not None:
@@ -38,7 +39,7 @@ def entity_query(sample, collection_id=None, query=None):
             'term': {'collection_id': collection_id}
         })
 
-    for fp in sample.get('fingerprints', []):
+    for fp in sample.get('fingerprints', [])[:50]:
         required.append({
             'fuzzy': {
                 'fingerprints': {
@@ -48,6 +49,15 @@ def entity_query(sample, collection_id=None, query=None):
                 }
             }
         })
+
+    if Document.SCHEMA in schema.names:
+        for name in sample.get('names', [])[:50]:
+            required.append({
+                'multi_match': {
+                    'query': name,
+                    'fields': ['names^3', 'text']
+                }
+            })
 
     for index in ['emails', 'phones']:
         for value in sample.get(index, []):
@@ -101,8 +111,13 @@ def entity_query(sample, collection_id=None, query=None):
         })
 
     # filter types which cannot be resolved via fuzzy matching.
-    query['bool']['must_not'].append([
+    query['bool']['must_not'].extend([
         {"ids": {"values": [sample.get('id')]}},
         {"terms": {"schema": [s.name for s in model if not s.fuzzy]}}
     ])
+    if sample.get('content_hash'):
+        # Do not try to find other copies of the same document
+        query['bool']['must_not'].append({
+            "term": {"schema": sample.get('content_hash')}
+        })
     return query

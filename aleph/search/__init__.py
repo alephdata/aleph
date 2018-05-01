@@ -101,7 +101,7 @@ class SimilarEntitiesQuery(EntitiesQuery):
 
     def get_query(self):
         query = super(SimilarEntitiesQuery, self).get_query()
-        return entity_query(self.entity, query=query)
+        return entity_query(self.entity, query=query, broad=True)
 
 
 class SuggestEntitiesQuery(EntitiesQuery):

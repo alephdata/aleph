@@ -7,7 +7,6 @@ import { queryEntities } from 'src/actions/index';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 
-// import './EntityReferencesTable.css';
 
 class EntitySimilarTable extends Component {
   constructor(props) {
@@ -34,15 +33,17 @@ class EntitySimilarTable extends Component {
 
   render() {
     const { query, result } = this.props;
+    if (result.total === undefined) {
+      return null;
+    }
     return <EntityTable query={query} result={result} />;
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { links = {} } = ownProps.entity;
-  const path = links.self ? links.self + '/similar' : undefined;
+  const { id } = ownProps.entity;
+  const path = id ? `entities/${id}/similar` : undefined;
   const query = Query.fromLocation(path, {}, {}, 'similar');
-
   return {
     query: query,
     result: selectEntitiesResult(state, query)

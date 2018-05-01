@@ -8,7 +8,7 @@ export default class TextLoading extends React.Component {
   render() {
     const { loading, children } = this.props;
     if (loading) {
-      return (<span class="TextLoading">
+      return (<span className="TextLoading">
         <FormattedMessage id="text.loading" defaultMessage="Loading…" />
       </span>);
     }
