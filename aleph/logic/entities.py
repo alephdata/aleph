@@ -157,7 +157,7 @@ def entity_tags(entity, authz):
     # often they've been mentioned in other entities.
     for field in FIELDS:
         for value in entity.get(field, []):
-            if value is None:
+            if value is None or not len(value):
                 continue
             queries.append({})
             queries.append({

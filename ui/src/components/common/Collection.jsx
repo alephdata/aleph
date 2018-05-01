@@ -16,10 +16,10 @@ class CollectionLabel extends Component {
     }
 
     return (
-      <React.Fragment>
+      <span className="CollectionLabel" title={collection.label}>
         { collection.secret && icon && (<i className='fa fa-fw fa-lock' />) }
         { collection.label }
-      </React.Fragment>
+      </span>
     );
   }
 }

@@ -77,14 +77,14 @@ class EntityReferences extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { links = {} } = ownProps.entity;
+  const { id } = ownProps.entity;
   const fragment = new Fragment(ownProps.history);
   const references = selectEntityReferences(state, ownProps.entity.id);
   const reference = (!references.isLoading && references.results !== undefined && references.results.length) ? references.results[0] : undefined;
   const defaultTab = reference ? 'references-' + reference.property.qname : 'default';
   const activeTab = fragment.get('mode') || defaultTab;
   
-  const similarPath = links.self ? links.self + '/similar' : undefined;
+  const similarPath = id ? `entities/${id}/similar` : undefined;
   const similarQuery = Query.fromLocation(similarPath, {}, {}, 'similar');
 
   return { fragment, references, activeTab,

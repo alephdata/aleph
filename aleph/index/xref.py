@@ -1,7 +1,8 @@
 import logging
+from banal import ensure_list
 from followthemoney import model
 
-from aleph.model import Document
+# from aleph.model import Document
 
 log = logging.getLogger(__name__)
 
@@ -33,39 +34,36 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
         }
 
     required = []
-
-    if collection_id is not None:
-        query['bool']['must'].append({
-            'term': {'collection_id': collection_id}
-        })
-
-    for fp in sample.get('fingerprints', [])[:50]:
+    for fp in ensure_list(sample.get('fingerprints'))[:50]:
         required.append({
             'fuzzy': {
                 'fingerprints': {
                     'value': fp,
-                    'fuzziness': 2,
-                    'boost': 3.0
+                    'fuzziness': 1,
+                    'boost': 2.0
                 }
             }
         })
 
-    if Document.SCHEMA in schema.names:
-        for name in sample.get('names', [])[:50]:
-            required.append({
-                'multi_match': {
-                    'query': name,
-                    'fields': ['names^3', 'text']
-                }
-            })
+    for name in ensure_list(sample.get('names'))[:50]:
+        required.append({
+            'multi_match': {
+                'query': name,
+                'fields': ['names^2', 'text'],
+                'cutoff_frequency': 0.0001,
+                'boost': 0.5
+            }
+        })
 
     for index in ['emails', 'phones']:
-        for value in sample.get(index, []):
+        for value in ensure_list(sample.get(index)):
+            if value is None or not len(value):
+                continue
             required.append({
                 'term': {
                     index: {
                         'value': value,
-                        'boost': 2
+                        'boost': 3.0
                     }
                 }
             })
@@ -73,6 +71,11 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
     if not len(required):
         # e.g. a document from which no features have been extracted.
         return {'match_none': {}}
+
+    if collection_id is not None:
+        query['bool']['must'].append({
+            'term': {'collection_id': collection_id}
+        })
 
     # make it mandatory to have either a fingerprint or name match
     query['bool']['must'].append({
@@ -84,30 +87,23 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
 
     # boost by "contributing criteria"
     for field in ['dates', 'countries', 'schemata', 'identifiers']:
-        for val in sample.get(field, []):
+        for value in ensure_list(sample.get(field)):
+            if value is None or not len(value):
+                continue
             query['bool']['should'].append({
-                'term': {field: val}
+                'term': {
+                    field: {
+                        'value': value,
+                        'boost': 0.5
+                    }
+                }
             })
 
-    for val in sample.get('addresses', []):
+    for value in ensure_list(sample.get('addresses')):
+        if value is None or not len(value):
+                continue
         query['bool']['should'].append({
-            'common': {
-                field: {
-                    'query': val
-                }
-            }
-        })
-
-    # TODO: put names in FIELDS_XREF up there ^^^
-    for value in sample.get('names', []):
-        query['bool']['should'].append({
-            'match': {
-                'names.text': {
-                    'query': value,
-                    'operator': 'and',
-                    'cutoff_frequency': 0.01,
-                }
-            }
+            'common': {field: {'query': value}}
         })
 
     # filter types which cannot be resolved via fuzzy matching.
