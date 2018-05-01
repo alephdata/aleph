@@ -6,10 +6,6 @@ from followthemoney import model
 
 log = logging.getLogger(__name__)
 
-FIELDS_XREF = ['schema', 'schemata', 'collection_id', 'name',
-               'fingerprints', 'emails', 'phones', 'dates',
-               'countries', 'schemata', 'identifiers', 'addresses']
-
 
 def entity_query(sample, collection_id=None, query=None, broad=False):
     """Given a document or entity in indexed form, build a query that
