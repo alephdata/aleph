@@ -255,7 +255,7 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         data = {
             'schema': 'Person',
-            'name': "Osama ben Ladyn",
+            'name': "Osama bin Ladyn",
             'collection_id': self.col.id
         }
         res = self.client.post(url,
