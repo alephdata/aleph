@@ -66,9 +66,10 @@ def bulk_load_query(collection_id, query):
         return
 
     mapping = model.make_mapping(query, key_prefix=collection.foreign_id)
+    records_total = len(mapping.source) or 'streaming'
     entities = {}
-    total = 0
-    for idx, record in enumerate(mapping.source.records, 1):
+    entities_count = 0
+    for records_index, record in enumerate(mapping.source.records, 1):
         for entity in mapping.map(record).values():
             entity_id = entity.get('id')
             if entity_id is None:
@@ -79,11 +80,14 @@ def bulk_load_query(collection_id, query):
             # describes all the directors of a single company.
             base = entities.get(entity_id, {})
             entities[entity_id] = merge_data(entity, base)
-            total += 1
+            entities_count += 1
 
-        if idx % 1000 == 0:
-            log.info("[%s] Loaded %s records, %s entities...",
-                     collection.foreign_id, idx, total)
+        if records_index > 0 and records_index % 1000 == 0:
+            log.info("[%s] Loaded %s records (%s), %s entities...",
+                     collection.foreign_id,
+                     records_index,
+                     records_total,
+                     entities_count)
 
         if len(entities) >= BULK_PAGE:
             index_bulk(collection, entities, chunk_size=BULK_PAGE)
