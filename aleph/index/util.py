@@ -47,6 +47,18 @@ def field_filter_query(field, values):
     if field in ['_id', 'id']:
         return {'ids': {'values': values}}
     if len(values) == 1:
+        if field in ['names', 'addresses']:
+            field = '%s.text' % field
+            return {
+                'match': {
+                    field: {
+                        'query': values[0],
+                        'operator': 'and',
+                        'zero_terms_query': 'all',
+                        'cutoff_frequency': 0.0001
+                    }
+                }
+            }
         return {'term': {field: values[0]}}
     return {'terms': {field: values}}
 
