@@ -1,10 +1,10 @@
 import React from 'react';
-import {withRouter} from 'react-router';
-import {connect} from 'react-redux';
-import {Helmet} from 'react-helmet';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import { Helmet } from 'react-helmet';
 import c from 'classnames';
 
-import {Navbar} from 'src/components/Navbar';
+import { Navbar } from 'src/components/Navbar';
 import Preview from "src/components/Preview/Preview";
 import Footer from "../Footer/Footer";
 
@@ -30,7 +30,7 @@ class Screen extends React.Component {
       <div className={c("Screen", className)}>
         <Helmet titleTemplate={`%s - ${metadata.app.title}`}>
           <title>{this.props.title || metadata.app.title}</title>
-          <link rel="shortcut icon" href={metadata.app.favicon}/>
+          <link rel="shortcut icon" href={metadata.app.favicon} />
         </Helmet>
 
         <Navbar metadata={metadata}

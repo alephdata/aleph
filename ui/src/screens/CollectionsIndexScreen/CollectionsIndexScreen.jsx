@@ -15,6 +15,10 @@ import { CollectionListItem } from 'src/components/Collection';
 import './CollectionsIndexScreen.css';
 
 const messages = defineMessages({
+  title: {
+    id: 'collections.index.title',
+    defaultMessage: 'Sources'
+  },
   filter: {
     id: 'collectionbrowser.filter',
     defaultMessage: 'Filter sources',
@@ -110,7 +114,9 @@ class CollectionsIndexScreen extends Component {
     </Breadcrumbs>);
 
     return (
-      <Screen className="CollectionsIndexScreen" breadcrumbs={breadcrumbs}>
+      <Screen className="CollectionsIndexScreen"
+              breadcrumbs={breadcrumbs}
+              title={intl.formatMessage(messages.title)}>
         <DualPane>
           <DualPane.InfoPane>
             <div className="pt-input-group pt-fill">

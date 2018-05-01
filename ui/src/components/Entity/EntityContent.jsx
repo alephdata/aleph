@@ -7,7 +7,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 import Query from 'src/app/Query';
 import { selectEntityReferences, selectEntitiesResult } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
-import { TabCount, Property, SectionLoading, ErrorSection, DualPane } from 'src/components/common';
+import { TabCount, Property, SectionLoading, ErrorSection, DualPane, TextLoading } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
 import { EntitySimilarTable } from 'src/components/Entity';
 
@@ -63,11 +63,11 @@ class EntityReferences extends React.Component {
                     property={ref.property}
                   />} />
           ))}
-          <Tab id="similar" key="similar" disabled={similarResult.total === undefined || similarResult.total === 0}
-               title={<React.Fragment>
+          <Tab id="similar" key="similar" disabled={similarResult.total === 0}
+               title={<TextLoading loading={similarResult.total === undefined}>
                   <FormattedMessage id="entity.content.similar_tab" defaultMessage="Similar" />
                   <TabCount count={similarResult.total} />
-                </React.Fragment>}
+                </TextLoading>}
                panel={<EntitySimilarTable entity={entity} />}
             />
         </Tabs>
