@@ -32,7 +32,7 @@ class CaseTableRow extends Component {
     const {casefile, color} = this.props;
 
     return (
-      <tr key={casefile.id} className='nowrap'>
+      <tr key={casefile.id + 1} className='nowrap'>
         <td><Icon icon="square" iconSize={25} color={color} style={{backgroundColor: color, opacity: 0.6}}/></td>
         <td className="schema">
           <Link to={`/cases/${casefile.id}`}>{casefile.label}</Link>

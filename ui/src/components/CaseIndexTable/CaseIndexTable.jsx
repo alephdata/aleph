@@ -40,23 +40,6 @@ class CaseIndexTable extends Component {
     }
   }
 
-  sortColumn(field) {
-    const {query, updateQuery} = this.props;
-    const {field: sortedField, desc} = query.getSort();
-    // Toggle through sorting states: ascending, descending, or unsorted.
-    let newQuery;
-    if (sortedField !== field) {
-      newQuery = query.sortBy(field, false);
-    } else {
-      if (!desc) {
-        newQuery = query.sortBy(field, true);
-      } else {
-        newQuery = query.sortBy(null);
-      }
-    }
-    updateQuery(newQuery);
-  }
-
   render() {
     const {query, intl, location, history, colors, deleteCase} = this.props;
     const {result} = this.state;
@@ -70,7 +53,6 @@ class CaseIndexTable extends Component {
       return (
         <SortableTH sortable={sortable}
                     sorted={sortedField === field && (desc ? 'desc' : 'asc')}
-                    onClick={() => this.sortColumn(field)}
                     {...otherProps}>
           {intl.formatMessage(messages[`column_${field}`])}
         </SortableTH>

@@ -5,7 +5,7 @@ import {debounce} from 'lodash';
 import {NonIdealState, Button, Alert} from '@blueprintjs/core';
 import pallete from 'google-palette';
 
-import {queryCollections, deleteCollection} from 'src/actions';
+import {queryCollections, deleteCollection, updateCollectionPermissions, createCollection} from 'src/actions';
 
 import {selectCollectionsResult} from 'src/selectors';
 import {Screen, Breadcrumbs, SinglePane, SectionLoading} from 'src/components/common';
@@ -26,13 +26,21 @@ const messages = defineMessages({
     id: 'cases.no_results_description',
     defaultMessage: 'Try adding new case.',
   },
-  save_success: {
+  delete_success: {
     id: 'cases.edit.save_success',
     defaultMessage: 'Your deleted case.',
   },
-  save_error: {
+  delete_error: {
     id: 'cases.edit.save_error',
     defaultMessage: 'Failed to delete case.',
+  },
+  save_success: {
+    id: 'case.save_success',
+    defaultMessage: 'You have created a case.',
+  },
+  save_error: {
+    id: 'case.save_error',
+    defaultMessage: 'Failed to create a case.',
   }
 });
 
@@ -43,14 +51,14 @@ class CasesIndexScreen extends Component {
     this.state = {
       dialogIsOpen: false,
       alertIsOpen: false,
-      casefile: {}
-      //queryPrefix: props.query.getString('prefix')
+      casefile: {},
+      result: []
     };
 
-    this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.toggleAlert = this.toggleAlert.bind(this);
     this.onDeleteCase = this.onDeleteCase.bind(this);
+    this.onAddCase = this.onAddCase.bind(this);
   }
 
   async componentDidMount() {
@@ -58,21 +66,17 @@ class CasesIndexScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps)
-      //this.fetchData();
+    console.log(this.state, nextProps, this.props)
+    if (this.state.result.results !== undefined)
+      if (this.state.result.results.length !== nextProps.result.results.length || nextProps.result.results !== undefined) {
+        this.setState({result: nextProps.result})
+      }
   }
 
   async fetchData() {
     let {query} = this.props;
     await this.props.queryCollections({query});
-  }
-
-  updateQuery(newQuery) {
-    const {history, location} = this.props;
-    history.push({
-      pathname: location.pathname,
-      search: newQuery.toLocation()
-    });
+    this.setState({result: this.props.result})
   }
 
   toggleCreateCase() {
@@ -89,10 +93,22 @@ class CasesIndexScreen extends Component {
   async onDeleteCase() {
     const {casefile} = this.state;
     const {intl} = this.props;
-
     try {
       await this.props.deleteCollection(casefile);
       await this.fetchData();
+      showSuccessToast(intl.formatMessage(messages.delete_success));
+    } catch (e) {
+      alert(intl.formatMessage(messages.delete_error));
+    }
+  }
+
+  async onAddCase(collection, permissions) {
+    const {intl, updateCollectionPermissions, createCollection} = this.props;
+    try {
+      let createdCollection = await createCollection(collection);
+      await updateCollectionPermissions(createdCollection.data.id, permissions);
+      await this.fetchData();
+      this.toggleCreateCase();
       showSuccessToast(intl.formatMessage(messages.save_success));
     } catch (e) {
       alert(intl.formatMessage(messages.save_error));
@@ -100,8 +116,8 @@ class CasesIndexScreen extends Component {
   }
 
   render() {
-    const {result, query, intl} = this.props;
-    const {dialogIsOpen, alertIsOpen} = this.state;
+    const {query, intl} = this.props;
+    const {dialogIsOpen, alertIsOpen, result} = this.state;
     const hasCases = result.total !== 0;
 
     let scheme = pallete.listSchemes('mpn65')[0];
@@ -119,7 +135,8 @@ class CasesIndexScreen extends Component {
     return (
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs}>
         <SinglePane>
-          <Alert isOpen={alertIsOpen} onClose={this.toggleAlert} cancelButtonText='Cancel' confirmButtonText='Confirm' onConfirm={this.onDeleteCase}>
+          <Alert isOpen={alertIsOpen} onClose={this.toggleAlert} cancelButtonText='Cancel' confirmButtonText='Confirm'
+                 onConfirm={this.onDeleteCase}>
             <p>
               <FormattedMessage id="cases.browser.alert"
                                 defaultMessage="Are you sure you want to delete this case and"/>&nbsp;
@@ -128,29 +145,29 @@ class CasesIndexScreen extends Component {
               <FormattedMessage id="cases.browser.within" defaultMessage="within it?"/>
             </p>
           </Alert>
-            <CreateCaseDialog
-              isOpen={dialogIsOpen}
-              toggleDialog={this.toggleCreateCase}
-            />
-            <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
-            {result.total !== 0 && <CaseIndexTable query={query}
-                                                   colors={colors}
-                                                   updateQuery={this.updateQuery}
-                                                   result={result}
-                                                   deleteCase={this.toggleAlert}/>}
-            {result.total === 0 && (
-              <div className='error-and-add-button'>
-                <NonIdealState visual="search"
-                               title={intl.formatMessage(messages.no_results_title)}
-                               description={intl.formatMessage(messages.no_results_description)}/>
-                <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button pt-intent-primary">
-                  <FormattedMessage id="case.add" defaultMessage="Add new case"/>
-                </Button>
-              </div>
-            )}
-            {result.total === undefined && (
-              <SectionLoading/>
-            )}
+          <CreateCaseDialog
+            isOpen={dialogIsOpen}
+            onAddCase={this.onAddCase}
+            toggleDialog={this.toggleCreateCase}
+          />
+          <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
+          {result.total !== 0 && <CaseIndexTable query={query}
+                                                 colors={colors}
+                                                 result={result}
+                                                 deleteCase={this.toggleAlert}/>}
+          {result.total === 0 && (
+            <div className='error-and-add-button'>
+              <NonIdealState visual="search"
+                             title={intl.formatMessage(messages.no_results_title)}
+                             description={intl.formatMessage(messages.no_results_description)}/>
+              <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button pt-intent-primary">
+                <FormattedMessage id="case.add" defaultMessage="Add new case"/>
+              </Button>
+            </div>
+          )}
+          {result.total === undefined && (
+            <SectionLoading/>
+          )}
         </SinglePane>
       </Screen>
     );
@@ -159,14 +176,14 @@ class CasesIndexScreen extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
+  const {location} = ownProps;
   const context = {
     facet: ['category', 'countries'],
     'filter:kind': 'casefile'
   };
-  const query = Query.fromLocation('collections', ownProps.location, context, 'collections')
+  const query = Query.fromLocation('collections', location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
-  console.log('ovdje', selectCollectionsResult(state, query))
 
   return {
     query: query,
@@ -175,5 +192,10 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CasesIndexScreen = injectIntl(CasesIndexScreen);
-CasesIndexScreen = connect(mapStateToProps, {queryCollections, deleteCollection})(CasesIndexScreen);
+CasesIndexScreen = connect(mapStateToProps, {
+  queryCollections,
+  deleteCollection,
+  updateCollectionPermissions,
+  createCollection
+})(CasesIndexScreen);
 export default CasesIndexScreen;

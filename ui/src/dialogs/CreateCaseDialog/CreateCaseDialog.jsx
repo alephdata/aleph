@@ -27,14 +27,6 @@ const messages = defineMessages({
   create_case: {
     id: 'case.title',
     defaultMessage: 'Create case'
-  },
-  save_success: {
-    id: 'case.save_success',
-    defaultMessage: 'You have created a case.',
-  },
-  save_error: {
-    id: 'case.save_error',
-    defaultMessage: 'Failed to create a case.',
   }
 });
 
@@ -68,19 +60,11 @@ class CreateCaseDialog extends Component {
     this.setState({permissions: newPermissions});
   }
 
-  async onAddCase() {
-    const {intl, updateCollectionPermissions, createCollection} = this.props;
+  onAddCase() {
+    const {onAddCase} = this.props;
     const {permissions, collection} = this.state;
 
-    try {
-      let createdCollection = await createCollection(collection);
-      await updateCollectionPermissions(createdCollection.data.id, permissions);
-      showSuccessToast(intl.formatMessage(messages.save_success));
-      this.props.toggleDialog();
-    } catch (e) {
-      alert(intl.formatMessage(messages.save_error));
-    }
-
+    onAddCase(collection, permissions);
   }
 
   onChangeProject({target}) {
