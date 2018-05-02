@@ -5,13 +5,6 @@ import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/compone
 
 
 class EntityTableRow extends Component {
-
-  shouldComponentUpdate(nextProps) {
-    // Only update if the ID of the entity has changed *or* location has updated
-    return this.props.entity.id !== nextProps.entity.id ||
-        this.props.location.hash !== nextProps.location.hash;
-  }
-
   render() {
     const { entity, className, location: loc } = this.props;
     const { hideCollection, documentMode } = this.props;

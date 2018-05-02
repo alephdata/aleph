@@ -56,7 +56,6 @@ class CollectionInfo extends Component {
   render() {
     const {collection, showToolbar, xrefIndex} = this.props;
     const {activeTabId, settingsIsOpen, accessIsOpen} = this.state;
-    const hasXref = xrefIndex.results !== undefined && xrefIndex.results.length > 0;
 
     // @TODO Discussion: 'Search Collection' link to update the current query?
     return (
@@ -120,7 +119,7 @@ class CollectionInfo extends Component {
             />
             <Tab id="xref" disabled={xrefIndex.total === 0}
                  title={
-                   <TextLoading loading={xrefIndex.total == undefined}>
+                   <TextLoading loading={xrefIndex.total === undefined}>
                      <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
                      <TabCount count={xrefIndex.total} />
                   </TextLoading>

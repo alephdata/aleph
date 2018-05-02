@@ -14,6 +14,7 @@ import { selectEntity } from 'src/selectors';
 
 import './Entity.css';
 
+
 class EntityLabel extends Component {
   shouldComponentUpdate(nextProps) {
     const { entity = {} } = this.props;
