@@ -15,6 +15,12 @@ import { selectEntity } from 'src/selectors';
 import './Entity.css';
 
 class EntityLabel extends Component {
+  shouldComponentUpdate(nextProps) {
+    const { entity = {} } = this.props;
+    const { entity: nextEntity = {} } = nextProps;
+    return entity.id !== nextEntity.id;
+  }
+
   render() {
     const { entity, icon = false, truncate } = this.props;
     if (entity === undefined) {
