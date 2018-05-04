@@ -16,6 +16,9 @@ log = logging.getLogger(__name__)
 
 def check_alerts():
     """Go through all alerts."""
+    Alert.dedupe()
+    db.session.commit()
+
     for alert_id in Alert.all_ids():
         check_alert(alert_id)
 

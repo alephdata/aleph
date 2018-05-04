@@ -11,6 +11,10 @@ import { Screen } from 'src/components/common';
 import './HomeScreen.css';
 
 const messages = defineMessages({
+  title: {
+    id: 'home.title',
+    defaultMessage: 'Find public records and leaks',
+  },
   search_placeholder: {
     id: 'home.search_placeholder',
     defaultMessage: 'Try searching: {samples}',
@@ -24,10 +28,7 @@ const messages = defineMessages({
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      value: ''
-    };
-
+    this.state = { value: '' };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -52,11 +53,11 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const {intl, metadata, statistics} = this.props;
+    const { intl, metadata, statistics } = this.props;
     const samples = metadata.app.samples.join(', ');
     
     return (
-      <Screen isHomepage={true}>
+      <Screen isHomepage={true} title={intl.formatMessage(messages.title)}>
         <section className='HomePage'>
           <div className='outer-searchbox'>
             <div className='inner-searchbox'>

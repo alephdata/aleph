@@ -1,13 +1,12 @@
 
 # Dependencies maintained by OCCRP
-banal >= 0.3.5
-urlnormalizer >= 1.2.0
-followthemoney >= 0.7.3
-fingerprints >= 0.5.3
-storagelayer >= 0.4.1
-exactitude >= 2.3.3
-ingestors >= 0.7.17
-normality >= 0.5.12
-celestial >= 0.2.1
-
-python-dateutil == 2.6.1
+banal==0.3.5
+urlnormalizer==1.2.0
+followthemoney==0.7.8
+fingerprints==0.5.4
+storagelayer==0.4.1
+exactitude==2.3.3
+ingestors==0.9.2
+normality==0.5.12
+celestial==0.2.3
+pdflib==0.1.6

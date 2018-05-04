@@ -5,7 +5,7 @@ from elasticsearch.helpers import scan
 from aleph.core import db, es, celery
 from aleph.model import Match, Document
 from aleph.index.core import entities_index
-from aleph.index.xref import entity_query, FIELDS_XREF
+from aleph.index.xref import entity_query
 from aleph.index.util import unpack_result
 
 log = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ def xref_collection(collection_id, other_id=None):
     query = {'term': {'collection_id': collection_id}}
     query = {
         'query': query,
-        '_source': FIELDS_XREF
+        '_source': {'excludes': ['text', 'properties.*']}
     }
     scanner = scan(es,
                    index=entities_index(),
@@ -66,7 +66,4 @@ def xref_collection(collection_id, other_id=None):
 
     for i, res in enumerate(scanner):
         res = unpack_result(res)
-        # xref_item.apply_async(args=[res],
-        #                       kwargs={'collection_id': other_id},
-        #                       priority=4)
         xref_item(res, collection_id=other_id)

@@ -1,3 +1,4 @@
+import logging
 from flask import Blueprint, request
 from itsdangerous import BadSignature
 from flask.ext.babel import gettext
@@ -15,6 +16,7 @@ from aleph.views.util import require, get_db_collection, jsonify, parse_request
 from aleph.views.util import obj_or_404
 
 blueprint = Blueprint('roles_api', __name__)
+log = logging.getLogger(__name__)
 
 
 @blueprint.route('/api/2/roles/_suggest', methods=['GET'])
@@ -41,6 +43,7 @@ def create_code():
     signature = Role.SIGNATURE.dumps(data['email'])
     url = '{}activate/{}'.format(app_ui_url, signature)
     role = Role(email=data['email'], name='Visitor')
+    log.info("Confirmation URL [%r]: %s", role, url)
     notify_role(role, gettext('Registration'),
                 'email/registration_code.html',
                 url=url)

@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import getPath from 'src/util/getPath';
-import { URL, DualPane, TabCount, Schema, Entity } from 'src/components/common';
+import { URL, DualPane, TabCount, Schema, Entity, TextLoading } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
 import { fetchEntityTags } from 'src/actions/index';
 import { Toolbar, CloseButton, DownloadButton, ModeButtons } from 'src/components/Toolbar';
@@ -100,12 +100,12 @@ class DocumentInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="tags" disabled={tags.total === undefined || tags.total === 0}
+              <Tab id="tags" disabled={tags.total === 0}
                 title={
-                  <React.Fragment>
+                  <TextLoading loading={tags.total === undefined}>
                     <FormattedMessage id="document.info.tags" defaultMessage="Connections"/>
                     <TabCount count={tags.total} />
-                  </React.Fragment>
+                  </TextLoading>
                 }
                 panel={<EntityInfoTags tags={tags} entity={doc} />}
               />

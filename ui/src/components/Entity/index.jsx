@@ -1,13 +1,15 @@
 import EntityReferencesTable from './EntityReferencesTable';
-import EntityReferences from './EntityReferences';
+import EntityContent from './EntityContent';
 import EntityInfoTags from './EntityInfoTags';
+import EntityInfoReferences from './EntityInfoReferences';
+import EntitySimilarTable from './EntitySimilarTable';
 import EntityInfo from './EntityInfo';
-import EntityConnections from './EntityConnections';
 
 export {
     EntityInfo,
     EntityInfoTags,
-    EntityReferences,
-    EntityReferencesTable,
-    EntityConnections
+    EntityInfoReferences,
+    EntityContent,
+    EntitySimilarTable,
+    EntityReferencesTable
 }

@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import queryString from 'query-string';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
@@ -8,48 +9,78 @@ import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 
 class CollectionLabel extends Component {
+  shouldComponentUpdate(nextProps) {
+    const { collection = {} } = this.props;
+    const { collection: nextCollection = {} } = nextProps;
+    return collection.id !== nextCollection.id;
+  }
+
   render() {
     const { collection, icon = true } = this.props;
 
-    if (collection.id === undefined) {
+    if (collection === undefined || collection.id === undefined) {
       return null;
     }
 
     return (
-      <React.Fragment>
+      <span className="CollectionLabel" title={collection.label}>
         { collection.secret && icon && (<i className='fa fa-fw fa-lock' />) }
         { collection.label }
-      </React.Fragment>
+      </span>
     );
   }
 }
 
 class CollectionLink extends Component {
-  render() {
-    const { collection, icon = true, className, preview } = this.props;
+  constructor() {
+    super();
+    this.onClick = this.onClick.bind(this);
+  }
 
-    if (collection.id === undefined) {
-      return null;
-    }
+  onClick(event) {
+    const { collection, history, location, preview } = this.props;
+    const previewType = 'collection';
+    event.preventDefault();
 
     if (preview === true) {
-      // Displays in preview sidebar
-      return (
-        <a href={`#preview:id=${collection.id}&preview:type=collection`}
-           className={c('CollectionLink', className)}>
-          <Collection.Label collection={collection} icon={icon} />
-        </a>
-      );
+      const parsedHash = queryString.parse(location.hash);
+      if (parsedHash['preview:id'] === collection.id && parsedHash['preview:type'] === previewType) {
+        parsedHash['preview:id'] = undefined;
+        parsedHash['preview:type'] = undefined;  
+      } else {
+        parsedHash['preview:id'] = collection.id;
+        parsedHash['preview:type'] = previewType;
+      }
+      history.replace({
+        pathname: location.pathname,
+        search: location.search,
+        hash: queryString.stringify(parsedHash),
+      });
     } else {
-      const url = `/search?filter:collection_id=${collection.id}#preview:id=${collection.id}&preview:type=collection`;
-      return (
-        <Link to={url} className={c('CollectionLink', className)}>
-          <Collection.Label collection={collection} icon={icon} iconOpen={true} />
-        </Link>
-      );
+      history.push({
+        pathname: '/search',
+        search: queryString.stringify({'filter:collection_id': collection.id}),
+        hash: queryString.stringify({
+          'preview:id': collection.id,
+          'preview:type': previewType
+        }),
+      });
     }
   }
+
+  render() {
+    const { collection, icon = true, className } = this.props;
+    if (collection === undefined || collection.id === undefined) {
+      return null;
+    }
+    return (<a className={c('CollectionLink', className)} onClick={this.onClick}>
+      <Collection.Label collection={collection} icon={icon} />
+    </a>);
+  }
 }
+
+CollectionLink = withRouter(CollectionLink);
+
 
 class CollectionLoad extends Component {
 

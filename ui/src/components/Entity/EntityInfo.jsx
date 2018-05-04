@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import { Property, Entity, DualPane, TabCount, Schema } from 'src/components/common';
-import { EntityConnections } from 'src/components/Entity';
+import { Property, Entity, DualPane, TabCount, Schema, TextLoading } from 'src/components/common';
+import { EntityInfoTags, EntityInfoReferences } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences, fetchEntityTags } from 'src/actions/index';
@@ -120,16 +120,17 @@ class EntityInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="connections" disabled={connectionsTotal === undefined || connectionsTotal === 0}
+              <Tab id="connections" disabled={connectionsTotal === 0}
                 title={
-                  <React.Fragment>
+                  <TextLoading loading={connectionsTotal === undefined}>
                     <FormattedMessage id="entity.info.connections" defaultMessage="Connections"/>
                     <TabCount count={connectionsTotal} />
-                  </React.Fragment>
+                  </TextLoading>
                 }
                 panel={
                   <React.Fragment>
-                    <EntityConnections tags={tags} references={references} entity={entity}/>
+                    <EntityInfoReferences references={references} entity={entity}/>
+                    <EntityInfoTags tags={tags} entity={entity}/>
                   </React.Fragment>
                 }
               />

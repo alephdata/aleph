@@ -49,8 +49,11 @@ class EntityReferencesTable extends Component {
     return (event) => {
       event.preventDefault();
       const fragment = new Fragment(history);
-      if(fragment.state['preview:id']) {
-        fragment.update({'preview:id': null});
+      if(fragment.state['preview:id'] === entity.id && fragment.state['preview:type'] === 'entity') {
+        fragment.update({
+          'preview:id': undefined,
+          'preview:type': undefined
+        });
       } else {
         fragment.update({
           'preview:type': 'entity',
@@ -128,6 +131,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 };
 
-EntityReferencesTable = connect(mapStateToProps, { queryEntities }, null, { pure: false })(EntityReferencesTable);
+EntityReferencesTable = connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
 EntityReferencesTable = withRouter(EntityReferencesTable);
 export default EntityReferencesTable;

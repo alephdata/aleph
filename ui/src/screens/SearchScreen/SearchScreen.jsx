@@ -63,6 +63,10 @@ const messages = defineMessages({
   no_results_description: {
     id: 'search.no_results_description',
     defaultMessage: 'Try making your search more general',
+  },
+  page_title: {
+    id: 'search.title',
+    defaultMessage: 'Search',
   }
 });
 
@@ -171,9 +175,9 @@ class SearchScreen extends React.Component {
 
   render() {
     const {query, result, intl} = this.props;
-
+    const title = query.getString('q') || intl.formatMessage(messages.page_title);
     return (
-      <Screen query={query} updateQuery={this.updateQuery} title={query.getString('q')}>
+      <Screen query={query} updateQuery={this.updateQuery} title={title}>
         <DualPane className="SearchScreen">
           <DualPane.InfoPane className="SearchFacetsPane">
             <div className='total-count pt-text-muted'>

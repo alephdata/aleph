@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 import Waypoint from 'react-waypoint';
 
 import Query from 'src/app/Query';
@@ -11,6 +11,13 @@ import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatche
 import getPath from 'src/util/getPath';
 
 import './CollectionsXrefScreen.css';
+
+const messages = defineMessages({
+  title: {
+    id: 'collections.xref.title',
+    defaultMessage: 'Compare entities between collections'
+  }
+});
 
 
 class CollectionsXrefScreen extends Component {
@@ -63,7 +70,7 @@ class CollectionsXrefScreen extends Component {
   }
 
   render() {
-    const { collection, other, index, matches } = this.props;
+    const { collection, other, index, matches, intl } = this.props;
     const error = collection.error || other.error || index.error || matches.error;
     if (error !== undefined) {
       return <ErrorScreen error={error} />
@@ -82,7 +89,7 @@ class CollectionsXrefScreen extends Component {
     </Breadcrumbs>)
     
     return (
-      <Screen title={collection.label} breadcrumbs={breadcrumbs}>
+      <Screen title={intl.formatMessage(messages.title)} breadcrumbs={breadcrumbs}>
         <table className="CollectionXrefScreen data-table">
           <thead>
             <tr>
@@ -190,6 +197,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CollectionsXrefScreen = withRouter(CollectionsXrefScreen);
+CollectionsXrefScreen = injectIntl(CollectionsXrefScreen);
 CollectionsXrefScreen = connect(mapStateToProps, {
   fetchCollection,
   fetchCollectionXrefIndex,

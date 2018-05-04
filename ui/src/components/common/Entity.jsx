@@ -14,17 +14,27 @@ import { selectEntity } from 'src/selectors';
 
 import './Entity.css';
 
+
 class EntityLabel extends Component {
+  shouldComponentUpdate(nextProps) {
+    const { entity = {} } = this.props;
+    const { entity: nextEntity = {} } = nextProps;
+    return entity.id !== nextEntity.id;
+  }
+
   render() {
-    const { icon = false, truncate } = this.props;
-    let { title, name: entityName, file_name, schema } = this.props.entity;
+    const { entity, icon = false, truncate } = this.props;
+    if (entity === undefined) {
+      return null;
+    }
+    let { title, name: entityName, file_name: fileName, schema } = entity;
     
     // Trim names *before* checking to see which ones look okay to use
     title = title ? title.trim() : null;
     entityName = entityName ? entityName.trim() : null;
-    file_name = file_name ? file_name.trim() : null;
+    fileName = fileName ? fileName.trim() : null;
     
-    let text = title || entityName || file_name;
+    let text = title || entityName || fileName;
 
     if (truncate) {
       text = truncateText(text, truncate);
@@ -63,8 +73,14 @@ class EntityLink extends Component {
 
     if (preview === true) {
       const parsedHash = queryString.parse(location.hash);
-      parsedHash['preview:id'] = entity.id;
-      parsedHash['preview:type'] = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
+      const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
+      if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
+        parsedHash['preview:id'] = undefined;
+        parsedHash['preview:type'] = undefined;  
+      } else {
+        parsedHash['preview:id'] = entity.id;
+        parsedHash['preview:type'] = previewType;
+      }
       history.replace({
         pathname: location.pathname,
         search: location.search,

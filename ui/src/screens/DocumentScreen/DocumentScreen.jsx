@@ -26,7 +26,7 @@ class DocumentScreen extends Component {
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
-    if (document.id === null) {
+    if (document === undefined || document.id === undefined) {
       return <ScreenLoading />;
     }
 

@@ -19,11 +19,11 @@ class FolderViewer extends Component {
           {document.status === 'fail' && (
             <div className='warning-folder'>
               <strong>
-                <FormattedMessage id="search.warning" defaultMessage="Warning" />
+                <FormattedMessage id="search.warning" defaultMessage="Warning:" />{' '}
               </strong>
               <p>
                 <FormattedMessage id="search.not_properly_imported"
-                                  defaultMessage="This folder is not fully imported." />
+                                  defaultMessage="this folder is not fully imported" />
               </p>
             </div>
           )}
@@ -31,7 +31,7 @@ class FolderViewer extends Component {
           {document.children === 0 && (
             <p className="folder-empty pt-text-muted">
               <FormattedMessage id="folder.empty"
-                                defaultMessage="This folder is empty." />
+                                defaultMessage="This folder is empty" />
             </p>
           )}
         </div>

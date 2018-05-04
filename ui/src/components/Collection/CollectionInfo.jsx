@@ -9,7 +9,7 @@ import { selectCollectionXrefIndex } from 'src/selectors';
 import {Toolbar, CloseButton} from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
-import {DualPane, TabCount} from 'src/components/common';
+import { DualPane, TabCount, TextLoading } from 'src/components/common';
 import {CollectionInfoXref, CollectionOverview, CollectionInfoContent} from 'src/components/Collection';
 
 class CollectionInfo extends Component {
@@ -56,7 +56,6 @@ class CollectionInfo extends Component {
   render() {
     const {collection, showToolbar, xrefIndex} = this.props;
     const {activeTabId, settingsIsOpen, accessIsOpen} = this.state;
-    const hasXref = xrefIndex.results !== undefined && xrefIndex.results.length > 0;
 
     // @TODO Discussion: 'Search Collection' link to update the current query?
     return (
@@ -118,17 +117,15 @@ class CollectionInfo extends Component {
                  }
                  panel={<CollectionInfoContent collection={collection} schemata={collection.schemata}/>}
             />
-            {hasXref && <Tab id="xref"
-                 disabled={!hasXref}
+            <Tab id="xref" disabled={xrefIndex.total === 0}
                  title={
-                   <React.Fragment>
+                   <TextLoading loading={xrefIndex.total === undefined}>
                      <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
                      <TabCount count={xrefIndex.total} />
-                  </React.Fragment>
+                  </TextLoading>
                  }
                  panel={<CollectionInfoXref xrefIndex={xrefIndex} collection={collection} />}
-            />}
-
+            />
           </Tabs>
         </div>
       </DualPane.InfoPane>
