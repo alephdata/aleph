@@ -34,15 +34,15 @@ class SearchAlert extends React.Component {
   }
 
   componentDidMount() {
-    const { alerts } = this.props;
-    if (!alerts || !alerts.results) {
+    const { session, alerts } = this.props;
+    if (session.loggedIn && (!alerts || !alerts.results)) {
       this.props.fetchAlerts();
     }
   }
 
   alertExists() {
-    const { queryText, alerts } = this.props;
-    if (!alerts || !alerts.results || !queryText) {
+    const { queryText, session, alerts } = this.props;
+    if (!session.loggedIn || !alerts || !alerts.results || !queryText) {
       return false;
     }
     return !!alerts.results.some((a) => {
