@@ -25,5 +25,5 @@ export default createReducer({
     set(data)(state),
 
   [deleteCollection.COMPLETE]: (state, { data }) =>
-  set(data)(state),
+    set(data)(state),
 }, initialState);

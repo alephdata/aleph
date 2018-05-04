@@ -74,7 +74,7 @@ class CaseIndexTable extends Component {
         <tbody>
         {result.results !== undefined && result.results.map((casefile, index) =>
           <CaseTableRow key={casefile.id}
-                        color={colors[index]}
+                        colors={colors}
                         casefile={casefile}
                         location={location}
                         history={history}

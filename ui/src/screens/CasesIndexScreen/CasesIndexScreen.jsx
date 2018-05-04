@@ -66,7 +66,6 @@ class CasesIndexScreen extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.state, nextProps, this.props)
     if (this.state.result.results !== undefined)
       if (this.state.result.results.length !== nextProps.result.results.length || nextProps.result.results !== undefined) {
         this.setState({result: nextProps.result})
@@ -75,7 +74,9 @@ class CasesIndexScreen extends Component {
 
   async fetchData() {
     let {query} = this.props;
-    await this.props.queryCollections({query});
+    this.props.queryCollections({query}).then(function(value){
+      //console.log(value)
+    });
     this.setState({result: this.props.result})
   }
 
@@ -120,8 +121,21 @@ class CasesIndexScreen extends Component {
     const {dialogIsOpen, alertIsOpen, result} = this.state;
     const hasCases = result.total !== 0;
 
-    let scheme = pallete.listSchemes('mpn65')[0];
-    let colors = scheme.apply(scheme, [result.total]);
+    let colors = [];
+    if(result.results !== undefined) {
+      result.results.map(function(casefile) {
+        let a = 250 + parseInt(casefile.id);
+        let b = 256 + parseInt(casefile.id);
+        let c = 256 + parseInt(casefile.id);
+        let color =  'rgb(' +
+          a + ',' +
+          b + ',' +
+          c + ')';
+        colors.push({[casefile.id]: color});
+      });
+    }
+
+    console.log(colors);
 
     const breadcrumbs = (<Breadcrumbs>
       <li>

@@ -1,12 +1,13 @@
 import { createReducer } from 'redux-act';
 
-import { updateResults, updateLoading } from 'src/reducers/util';
+import { updateResults, updateLoading, deleteCatche } from 'src/reducers/util';
 
 import {
   queryCollections,
   queryEntities,
   queryDocumentRecords,
   queryNotifications,
+  deleteCollection
 } from 'src/actions';
 
 const initialState = {};
@@ -24,4 +25,5 @@ export default createReducer({
   [queryNotifications.START]: updateLoading(true),
   [queryNotifications.ERROR]: updateLoading(false),
   [queryNotifications.COMPLETE]: updateResults,
+  [deleteCollection.COMPLETE]: deleteCatche
 }, initialState);
