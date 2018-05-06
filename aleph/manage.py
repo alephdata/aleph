@@ -41,7 +41,7 @@ manager.add_command('routes', ShowUrls)
 def collections():
     """List all collections."""
     for collection in Collection.all():
-        print collection.id, collection.foreign_id, collection.label
+        print(collection.id, collection.foreign_id, collection.label)
 
 
 @manager.command
@@ -57,11 +57,10 @@ def scheduled():
 @manager.option('-f', '--foreign_id', dest='foreign_id')
 def crawldir(path, language=None, country=None, foreign_id=None):
     """Crawl the given directory."""
-    path = decode_path(path)
+    path = decode_path(os.path.abspath(os.path.normpath(path)))
     if path is None or not os.path.exists(path):
         log.error("Invalid path: %r", path)
         return
-    path = os.path.abspath(os.path.normpath(path))
     path_name = os.path.basename(path)
 
     if foreign_id is None:
