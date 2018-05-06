@@ -23,7 +23,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   unoservice:
-    image: alephdata/unoservice:1.0.7
+    image: alephdata/unoservice:1.1.0
     tmpfs:
       - /tmp
       - /root/.config
