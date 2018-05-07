@@ -10,16 +10,17 @@ from aleph.index.records import index_records, clear_records
 from aleph.index.entities import get_entity, delete_entity, index_single
 
 log = logging.getLogger(__name__)
+MAX_TAGS_PER_DOCUMENT = 1000
 
 
 @celery.task()
-def index_document_id(document_id):
+def index_document_id(document_id, update=True):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
         return
     index_document(document)
-    index_records(document)
+    index_records(document, update=update)
 
 
 def generate_tags(document):
@@ -28,7 +29,7 @@ def generate_tags(document):
     q = db.session.query(DocumentTag)
     q = q.filter(DocumentTag.document_id == document.id)
     q = q.order_by(DocumentTag.weight.desc())
-    for tag in q:
+    for tag in q.limit(MAX_TAGS_PER_DOCUMENT):
         type_ = DocumentTag.TYPES[tag.type]
         values = type_.normalize(tag.text,
                                  cleaned=True,

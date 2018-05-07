@@ -3,9 +3,12 @@ import logging
 from banal import ensure_list
 from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
-from normality import stringify, latinize_text, collapse_spaces
+from normality import stringify
 
 from aleph.core import es
+from aleph.index.core import record_index
+from aleph.index.core import entity_index
+from aleph.index.core import collection_index
 
 log = logging.getLogger(__name__)
 
@@ -14,6 +17,19 @@ INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 2
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 RETRY_DELAY = 10
+
+
+def all_indexes():
+    return [collection_index(), entity_index(), record_index()]
+
+
+def refresh_index(index=None):
+    """Run a refresh to apply all indexing changes."""
+    if index is None:
+        index = all_indexes()
+    es.indices.refresh(index=all_indexes(),
+                       ignore=[404, 400],
+                       ignore_unavailable=True)
 
 
 def unpack_result(res):
@@ -128,15 +144,6 @@ def index_form(texts):
         text = stringify(text)
         if text is None:
             continue
-        text = collapse_spaces(text)
         total_len += len(text)
         results.append(text)
-
-        # Make latinized text version
-        latin = latinize_text(text)
-        latin = stringify(latin)
-        if latin is None or latin == text:
-            continue
-        total_len += len(latin)
-        results.append(latin)
     return results

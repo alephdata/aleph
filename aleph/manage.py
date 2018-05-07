@@ -14,7 +14,6 @@ from aleph.views import mount_app_blueprints
 from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
-from aleph.index.documents import index_document_id
 from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
@@ -22,6 +21,7 @@ from aleph.logic.collections import update_collection_access
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
+from aleph.logic.documents import index_documents
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
 from aleph.util import load_config_file
@@ -153,22 +153,15 @@ def xref(foreign_id):
 
 
 @manager.command
-def index(foreign_id=None):
+def index(foreign_id=None, initial=False):
     """Index documents in the given collection (or throughout)."""
-    q = Document.all_ids()
-    # re-index newest document first.
-    q = q.order_by(Document.id.desc())
+    collection_id = None
     if foreign_id:
         collection = Collection.by_foreign_id(foreign_id)
         if collection is None:
             raise ValueError("No such collection: %r" % foreign_id)
-        q = q.filter(Document.collection_id == collection.id)
-    for idx, (doc_id,) in enumerate(q.yield_per(5000), 1):
-        index_document_id.apply_async([doc_id], priority=1)
-        if idx % 1000 == 0:
-            log.info("Index: %s documents...", idx)
-    if foreign_id is None:
-        update_collections()
+        collection = collection.id
+    index_documents(collection_id=collection_id, update=not initial)
 
 
 @manager.command

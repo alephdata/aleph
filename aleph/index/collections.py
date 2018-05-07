@@ -5,7 +5,7 @@ from pprint import pprint  # noqa
 from normality import normalize
 
 from aleph.core import es
-from aleph.model import Entity, Role
+from aleph.model import Entity
 from aleph.index.core import collection_index, collections_index
 from aleph.index.core import entities_index, entity_index
 from aleph.index.core import records_index

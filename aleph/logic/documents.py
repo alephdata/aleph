@@ -3,6 +3,7 @@ import logging
 from aleph.core import celery
 from aleph.model import Document
 from aleph.index import documents as index
+from aleph.index.documents import index_document_id
 from aleph.analyze import analyze_document
 
 log = logging.getLogger(__name__)
@@ -35,3 +36,18 @@ def process_document(document):
     analyze_document(document)
     index.index_document(document)
     index.index_records(document)
+
+
+def index_documents(collection_id=None, update=True):
+    """Re-index all documents (in the given collection, or globally)."""
+    q = Document.all_ids()
+    # re-index newest document first.
+    q = q.order_by(Document.id.desc())
+    if collection_id is not None:
+        q = q.filter(Document.collection_id == collection_id)
+    for idx, (doc_id,) in enumerate(q.yield_per(100000), 1):
+        index_document_id.apply_async([doc_id],
+                                      dict(update=update),
+                                      priority=1)
+        if idx % 10000 == 0:
+            log.info("Queued: %s documents...", idx)

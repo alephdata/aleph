@@ -8,8 +8,9 @@ from faker import Factory
 from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
-from aleph.index import delete_index, upgrade_search, flush_index
+from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.core import collection_index, entity_index, record_index
+from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
 from aleph.logic.collections import update_collection, update_collections
 from aleph.core import db, es, create_app
@@ -77,7 +78,7 @@ class TestCase(FlaskTestCase):
         update_collection(collection)
 
     def flush_index(self):
-        flush_index()
+        refresh_index()
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))

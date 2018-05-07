@@ -162,6 +162,7 @@ ALEMBIC_DIR = path.join(path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
 
 ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
+ELASTICSEARCH_SHARDS = int(env.get('ALEPH_ELASTICSEARCH_SHARDS', 5))
 
 # Disable delayed processing via queue
 EAGER = env_bool('ALEPH_EAGER', False)
