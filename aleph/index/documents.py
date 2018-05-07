@@ -29,7 +29,8 @@ def generate_tags(document):
     q = db.session.query(DocumentTag)
     q = q.filter(DocumentTag.document_id == document.id)
     q = q.order_by(DocumentTag.weight.desc())
-    for tag in q.limit(MAX_TAGS_PER_DOCUMENT):
+    q = q.limit(MAX_TAGS_PER_DOCUMENT)
+    for tag in q.all():
         type_ = DocumentTag.TYPES[tag.type]
         values = type_.normalize(tag.text,
                                  cleaned=True,

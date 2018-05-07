@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/elasticsearch:6.2.4-vendor0
+    image: alephdata/platform-elasticsearch:6.2.4
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-log:/var/log
@@ -23,7 +23,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   unoservice:
-    image: alephdata/unoservice:1.2.1
+    image: alephdata/unoservice:1.2.2
     scale: 3
     tmpfs:
       - /tmp
