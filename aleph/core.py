@@ -129,7 +129,7 @@ def get_app_ui_url():
 def get_es():
     if not hasattr(settings, '_es_instance'):
         url = settings.ELASTICSEARCH_URL
-        settings._es_instance = Elasticsearch(url, timeout=120)
+        settings._es_instance = Elasticsearch(url)
     return settings._es_instance
 
 
