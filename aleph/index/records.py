@@ -16,7 +16,7 @@ def clear_records(document_id, refresh=True):
     q = {'term': {'document_id': document_id}}
     query_delete(records_index(), q)
     if refresh:
-        refresh_index()
+        refresh_index(index=records_index())
 
 
 def generate_records(document):
@@ -49,7 +49,7 @@ def index_records(document, update=True):
     while True:
         try:
             bulk_op(generate_records(document))
-            refresh_index()
+            refresh_index(index=records_index())
             return
         except BulkIndexError as exc:
             log.exception(exc)

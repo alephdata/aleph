@@ -45,6 +45,7 @@ def index_collections():
     cq = cq.order_by(Collection.id.desc())
     for collection in cq.all():
         log.info("Index [%s]: %s", collection.foreign_id, collection.label)
+        index_delete(collection.id)
         index_collection(collection)
 
 

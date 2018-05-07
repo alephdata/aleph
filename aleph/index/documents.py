@@ -14,13 +14,14 @@ MAX_TAGS_PER_DOCUMENT = 1000
 
 
 @celery.task()
-def index_document_id(document_id, update=True):
+def index_document_id(document_id):
     document = Document.by_id(document_id)
     if document is None:
         log.info("Could not find document: %r", document_id)
         return
+    delete_document(document.id)
     index_document(document)
-    index_records(document, update=update)
+    index_records(document, update=True)
 
 
 def generate_tags(document):

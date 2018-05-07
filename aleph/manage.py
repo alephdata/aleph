@@ -153,7 +153,7 @@ def xref(foreign_id):
 
 
 @manager.command
-def index(foreign_id=None, initial=False):
+def index(foreign_id=None):
     """Index documents in the given collection (or throughout)."""
     collection_id = None
     if foreign_id:
@@ -161,7 +161,7 @@ def index(foreign_id=None, initial=False):
         if collection is None:
             raise ValueError("No such collection: %r" % foreign_id)
         collection = collection.id
-    index_documents(collection_id=collection_id, update=not initial)
+    index_documents(collection_id=collection_id)
 
 
 @manager.command

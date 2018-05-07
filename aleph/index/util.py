@@ -6,9 +6,7 @@ from elasticsearch import TransportError
 from normality import stringify
 
 from aleph.core import es
-from aleph.index.core import record_index
-from aleph.index.core import entity_index
-from aleph.index.core import collection_index
+from aleph.index.core import all_indexes
 
 log = logging.getLogger(__name__)
 
@@ -17,10 +15,6 @@ INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 2
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 RETRY_DELAY = 10
-
-
-def all_indexes():
-    return [collection_index(), entity_index(), record_index()]
 
 
 def refresh_index(index=None):

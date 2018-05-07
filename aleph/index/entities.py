@@ -44,20 +44,24 @@ def get_entity(entity_id):
     """Fetch an entity from the index."""
     if entity_id is None:
         return None
-    result = es.get(index=entities_index(),
-                    doc_type='doc',
-                    id=entity_id,
-                    ignore=[404],
-                    _source_exclude=['text'])
-    return unpack_result(result)
+    for index in entities_index().split(','):
+        result = es.get(index=entities_index(),
+                        doc_type='doc',
+                        id=entity_id,
+                        ignore=[404],
+                        _source_exclude=['text'])
+        result = unpack_result(result)
+        if result is not None:
+            return result
 
 
 def delete_entity(entity_id):
     """Delete an entity from the index."""
-    es.delete(index=entities_index(),
-              doc_type='doc',
-              id=entity_id,
-              ignore=[404])
+    for index in entities_index().split(','):
+        es.delete(index=index,
+                  doc_type='doc',
+                  id=entity_id,
+                  ignore=[404])
 
 
 def _index_updates(collection, entities):
@@ -78,7 +82,7 @@ def _index_updates(collection, entities):
     if not len(entities):
         return
 
-    result = es.mget(index=entities_index(),
+    result = es.mget(index=entity_index(),
                      doc_type='doc',
                      body={'ids': entities.keys()},
                      _source=['schema', 'properties', 'created_at'])

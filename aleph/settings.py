@@ -17,15 +17,15 @@ def env_bool(name, default=False):
     return default
 
 
-def env_list(name, default=[], seperator=':'):
+def env_list(name, default='', separator=':'):
     """Extract a list of values from the environment consistently.
 
     Multiple values are by default expected to be separated by a colon (':'),
     like in the UNIX $PATH variable.
     """
-    if name in env:
-        return [e.strip() for e in env.get(name).split(seperator)]
-    return default
+    if name not in env:
+        return default
+    return [e.strip() for e in env.get(name).split(separator)]
 
 
 # Show error messages to the user.
@@ -55,7 +55,7 @@ SAMPLE_SEARCHES = [lazy_gettext('TeliaSonera'), lazy_gettext('Vladimir Putin')]
 SAMPLE_SEARCHES = env_list('ALEPH_SAMPLE_SEARCHES', SAMPLE_SEARCHES)
 
 # Cross-origin resource sharing
-CORS_ORIGINS = env_list('ALEPH_CORS_ORIGINS', seperator='|')
+CORS_ORIGINS = env_list('ALEPH_CORS_ORIGINS', separator='|')
 
 
 ###############################################################################
@@ -163,6 +163,18 @@ ALEMBIC_DIR = path.abspath(ALEMBIC_DIR)
 
 ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
 ELASTICSEARCH_SHARDS = int(env.get('ALEPH_ELASTICSEARCH_SHARDS', 5))
+
+ENTITIES_INDEX = '%s-entity-v1' % APP_NAME
+ENTITIES_INDEX = env.get('ALEPH_ENTITIES_INDEX', ENTITIES_INDEX)
+ENTITIES_INDEX_SET = env_list('ALEPH_ENTITIES_INDEX_SET', [ENTITIES_INDEX])
+
+RECORDS_INDEX = '%s-record-v1' % APP_NAME
+RECORDS_INDEX = env.get('ALEPH_RECORDS_INDEX', RECORDS_INDEX)
+RECORDS_INDEX_SET = env_list('ALEPH_RECORDS_INDEX_SETs', [RECORDS_INDEX])
+
+COLLECTIONS_INDEX = '%s-collection-v1' % APP_NAME
+COLLECTIONS_INDEX = env.get('ALEPH_COLLECTIONS_INDEX', COLLECTIONS_INDEX)
+
 
 # Disable delayed processing via queue
 EAGER = env_bool('ALEPH_EAGER', False)

@@ -2,14 +2,12 @@ import logging
 from copy import deepcopy
 
 from aleph.core import es
-from aleph.index.core import record_index
-from aleph.index.core import entity_index
-from aleph.index.core import collection_index
+from aleph.index.core import record_index, entity_index
+from aleph.index.core import collections_index, all_indexes
 from aleph.index.mapping import RECORD_MAPPING
 from aleph.index.mapping import ENTITY_MAPPING
 from aleph.index.mapping import COLLECTION_MAPPING
 from aleph.index.mapping import INDEX_SETTINGS
-from aleph.index.util import all_indexes
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +15,7 @@ log = logging.getLogger(__name__)
 def upgrade_search():
     """Add any missing properties to the index mappings."""
     INDEXES = [
-        (collection_index(), COLLECTION_MAPPING),
+        (collections_index(), COLLECTION_MAPPING),
         (entity_index(), ENTITY_MAPPING),
         (record_index(), RECORD_MAPPING),
     ]

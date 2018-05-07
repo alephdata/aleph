@@ -3,29 +3,28 @@ from aleph.core import settings
 
 def entity_index():
     """Index that us currently written by new queries."""
-    return '%s-entity-v1' % settings.APP_NAME
+    return settings.ENTITIES_INDEX
 
 
 def entities_index():
     """Combined index to run all queries against."""
-    return entity_index()
+    return ','.join(settings.ENTITIES_INDEX_SET)
 
 
 def record_index():
     """Index that us currently written by new queries."""
-    return '%s-record-v1' % settings.APP_NAME
+    return settings.RECORDS_INDEX
 
 
 def records_index():
     """Combined index to run all queries against."""
-    return record_index()
-
-
-def collection_index():
-    """Index that us currently written by new queries."""
-    return '%s-collection-v1' % settings.APP_NAME
+    return ','.join(settings.RECORDS_INDEX_SET)
 
 
 def collections_index():
     """Combined index to run all queries against."""
-    return collection_index()
+    return settings.COLLECTIONS_INDEX
+
+
+def all_indexes():
+    return ','.join([collections_index(), entities_index(), records_index()])
