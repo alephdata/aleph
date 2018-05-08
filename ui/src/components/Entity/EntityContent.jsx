@@ -35,7 +35,8 @@ class EntityReferences extends React.Component {
   }
   
   render() {
-    const { entity, references, similarResult, intl, activeTab } = this.props;
+    const { entity, references, intl, activeTab } = this.props;
+    const { similarResult, similarQuery } = this.props;
 
     if (references.total === undefined) {
       return <SectionLoading />;
@@ -68,8 +69,10 @@ class EntityReferences extends React.Component {
                   <FormattedMessage id="entity.content.similar_tab" defaultMessage="Similar" />
                   <TabCount count={similarResult.total} />
                 </TextLoading>}
-               panel={<EntitySimilarTable entity={entity} />}
-            />
+               panel={<EntitySimilarTable entity={entity}
+                                          query={similarQuery}
+                                          result={similarResult} />} 
+          />
         </Tabs>
       </DualPane.ContentPane>
     );
@@ -85,10 +88,11 @@ const mapStateToProps = (state, ownProps) => {
   const activeTab = fragment.get('mode') || defaultTab;
   
   const similarPath = id ? `entities/${id}/similar` : undefined;
-  const similarQuery = Query.fromLocation(similarPath, {}, {}, 'similar');
+  const similarQuery = Query.fromLocation(similarPath, {}, {}, 'similar').limit(75);
 
   return { fragment, references, activeTab,
-    similarResult: selectEntitiesResult(state, similarQuery)
+    similarResult: selectEntitiesResult(state, similarQuery),
+    similarQuery: similarQuery
   };
 };
 

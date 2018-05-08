@@ -3,9 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Waypoint from 'react-waypoint';
 
-import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions/index';
-import { selectEntitiesResult } from 'src/selectors';
 import { SectionLoading } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 
@@ -29,7 +27,7 @@ class EntitySimilarTable extends Component {
 
   fetchData() {
     const { query, result } = this.props;
-    if (result.total === undefined && !result.isLoading) {
+    if (result.total === undefined && !result.isLoading && !result.isError) {
       this.props.queryEntities({ query });
     }
   }
@@ -63,13 +61,7 @@ class EntitySimilarTable extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { id } = ownProps.entity;
-  const path = id ? `entities/${id}/similar` : undefined;
-  const query = Query.fromLocation(path, {}, {}, 'similar');
-  return {
-    query: query,
-    result: selectEntitiesResult(state, query)
-  }
+  return {}
 };
 
 EntitySimilarTable = connect(mapStateToProps, { queryEntities })(EntitySimilarTable);
