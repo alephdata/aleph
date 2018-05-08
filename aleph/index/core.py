@@ -11,6 +11,11 @@ def entities_index():
     return ','.join(settings.ENTITIES_INDEX_SET)
 
 
+def entities_index_list():
+    """Combined index to run all queries against."""
+    return settings.ENTITIES_INDEX_SET
+
+
 def record_index():
     """Index that us currently written by new queries."""
     return settings.RECORDS_INDEX

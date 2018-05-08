@@ -12,7 +12,7 @@ from elasticsearch import TransportError
 from normality import latinize_text
 
 from aleph.core import es
-from aleph.index.core import entity_index, entities_index
+from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result
 from aleph.index.util import index_form, index_doc
 
@@ -44,7 +44,7 @@ def get_entity(entity_id):
     """Fetch an entity from the index."""
     if entity_id is None:
         return None
-    for index in entities_index().split(','):
+    for index in entities_index_list():
         result = es.get(index=index,
                         doc_type='doc',
                         id=entity_id,
@@ -57,7 +57,7 @@ def get_entity(entity_id):
 
 def delete_entity(entity_id):
     """Delete an entity from the index."""
-    for index in entities_index().split(','):
+    for index in entities_index_list():
         es.delete(index=index,
                   doc_type='doc',
                   id=entity_id,
