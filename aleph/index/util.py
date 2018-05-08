@@ -21,9 +21,13 @@ def refresh_index(index=None):
     """Run a refresh to apply all indexing changes."""
     if index is None:
         index = all_indexes()
-    es.indices.refresh(index=all_indexes(),
-                       ignore=[404, 400],
-                       ignore_unavailable=True)
+    try:
+        es.indices.refresh(index=all_indexes(),
+                           ignore=[404, 400],
+                           ignore_unavailable=True)
+    except TransportError as terr:
+        log.warning("Index refresh failed: %s", terr)
+        time.sleep(RETRY_DELAY)
 
 
 def unpack_result(res):
@@ -98,6 +102,7 @@ def query_delete(index, query):
                            request_timeout=REQUEST_TIMEOUT)
     except TransportError as terr:
         log.warning("Query delete failed: %s", terr)
+        time.sleep(RETRY_DELAY)
 
 
 def query_update(index, body):
@@ -109,6 +114,7 @@ def query_update(index, body):
                            timeout=TIMEOUT)
     except TransportError as terr:
         log.warning("Query update failed: %s", terr)
+        time.sleep(RETRY_DELAY)
 
 
 def index_doc(index, id, body):
