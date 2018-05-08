@@ -12,7 +12,7 @@ from elasticsearch import TransportError
 from normality import latinize_text
 
 from aleph.core import es
-from aleph.index.core import entity_index, entities_index, entities_index_list
+from aleph.index.core import entity_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result
 from aleph.index.util import index_form, index_doc
 

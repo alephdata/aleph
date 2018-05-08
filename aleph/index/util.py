@@ -63,13 +63,16 @@ def field_filter_query(field, values):
         if field in ['names', 'addresses']:
             field = '%s.text' % field
             return {
-                'match': {
-                    field: {
-                        'query': values[0],
-                        'operator': 'and',
-                        'zero_terms_query': 'all',
-                        'cutoff_frequency': 0.0001
-                    }
+                # 'match': {
+                #     field: {
+                #         'query': values[0],
+                #         'operator': 'and',
+                #         'zero_terms_query': 'all',
+                #         'cutoff_frequency': 0.0001
+                #     }
+                # }
+                'match_phrase': {
+                    field: values[0]
                 }
             }
         return {'term': {field: values[0]}}
