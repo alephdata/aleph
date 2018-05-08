@@ -24,7 +24,6 @@ services:
 
   unoservice:
     image: alephdata/unoservice:1.2.2
-    scale: 3
     tmpfs:
       - /tmp
       - /root/.config
@@ -35,7 +34,6 @@ services:
   worker:
     build: .
     command: celery -A aleph.queues -B -c 1 -l INFO worker
-    scale: 4
     restart: on-failure
     links:
       - postgres
@@ -52,7 +50,6 @@ services:
   shell:
     build: .
     command: /bin/bash
-    scale: 2
     links:
       - postgres
       - elasticsearch
