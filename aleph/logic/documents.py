@@ -38,7 +38,7 @@ def process_document(document):
     index.index_records(document)
 
 
-def index_documents(collection_id=None, update=True):
+def index_documents(collection_id=None):
     """Re-index all documents (in the given collection, or globally)."""
     q = Document.all_ids()
     # re-index newest document first.
@@ -46,8 +46,6 @@ def index_documents(collection_id=None, update=True):
     if collection_id is not None:
         q = q.filter(Document.collection_id == collection_id)
     for idx, (doc_id,) in enumerate(q.yield_per(100000), 1):
-        index_document_id.apply_async([doc_id],
-                                      dict(update=update),
-                                      priority=1)
+        index_document_id.apply_async([doc_id], priority=1)
         if idx % 10000 == 0:
             log.info("Queued: %s documents...", idx)
