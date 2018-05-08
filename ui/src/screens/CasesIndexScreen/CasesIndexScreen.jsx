@@ -11,7 +11,7 @@ import {selectCollectionsResult} from 'src/selectors';
 import {Screen, Breadcrumbs, SinglePane, SectionLoading} from 'src/components/common';
 import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
 import Query from "src/app/Query";
-import CaseExplanationBox from "../../components/Case/CaseExplanationBox";
+import CaseExplanationBox from "src/components/Case/CaseExplanationBox";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
 import './CasesIndexScreen.css';
@@ -41,8 +41,14 @@ const messages = defineMessages({
   save_error: {
     id: 'case.save_error',
     defaultMessage: 'Failed to create a case.',
-  }
+  },
+  filter: {
+  id: 'navbar.search_cases_placeholder',
+    defaultMessage: 'Search cases'
+}
 });
+
+const maxNumColor = 65;
 
 class CasesIndexScreen extends Component {
   constructor(props) {
@@ -52,13 +58,16 @@ class CasesIndexScreen extends Component {
       dialogIsOpen: false,
       alertIsOpen: false,
       casefile: {},
-      result: []
+      result: [],
+      queryPrefix: props.query.getString('prefix')
     };
 
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.toggleAlert = this.toggleAlert.bind(this);
     this.onDeleteCase = this.onDeleteCase.bind(this);
     this.onAddCase = this.onAddCase.bind(this);
+    this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
+    this.updateQuery = debounce(this.updateQuery.bind(this), 200);
   }
 
   async componentDidMount() {
@@ -70,6 +79,19 @@ class CasesIndexScreen extends Component {
       if (this.state.result.results.length !== nextProps.result.results.length || nextProps.result.results !== undefined) {
         this.setState({result: nextProps.result})
       }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!this.props.query.sameAs(prevProps.query)) {
+      this.fetchIfNeeded();
+    }
+  }
+
+  fetchIfNeeded() {
+    let { query, result } = this.props;
+    if (result.total === undefined && !result.isLoading) {
+      this.props.queryCollections({ query });
+    }
   }
 
   async fetchData() {
@@ -116,26 +138,27 @@ class CasesIndexScreen extends Component {
     }
   }
 
+  onChangeQueryPrefix({target}) {
+    this.setState({queryPrefix: target.value});
+    const query = this.props.query.set('prefix', target.value);
+    this.updateQuery(query);
+  }
+
+  updateQuery(newQuery) {
+    const {history, location} = this.props;
+    history.push({
+      pathname: location.pathname,
+      search: newQuery.toLocation()
+    });
+  }
+
   render() {
     const {query, intl} = this.props;
-    const {dialogIsOpen, alertIsOpen, result} = this.state;
+    const {dialogIsOpen, alertIsOpen, result, queryPrefix} = this.state;
     const hasCases = result.total !== 0;
 
-    let colors = [];
-    if(result.results !== undefined) {
-      result.results.map(function(casefile) {
-        let a = 250 + parseInt(casefile.id);
-        let b = 256 + parseInt(casefile.id);
-        let c = 256 + parseInt(casefile.id);
-        let color =  'rgb(' +
-          a + ',' +
-          b + ',' +
-          c + ')';
-        colors.push({[casefile.id]: color});
-      });
-    }
-
-    console.log(colors);
+    let scheme = pallete.listSchemes('mpn65')[0];
+    let colors = scheme.apply(scheme, [maxNumColor]);
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -165,6 +188,12 @@ class CasesIndexScreen extends Component {
             toggleDialog={this.toggleCreateCase}
           />
           <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
+          <div className="pt-input-group filter-cases">
+            <i className="pt-icon pt-icon-search"/>
+            <input className="pt-input" type="search"
+                   placeholder={intl.formatMessage(messages.filter)}
+                   onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
+          </div>
           {result.total !== 0 && <CaseIndexTable query={query}
                                                  colors={colors}
                                                  result={result}

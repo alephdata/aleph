@@ -1,10 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
+import {Link} from 'react-router-dom';
+import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
 import queryString from 'query-string';
-import { ControlGroup, InputGroup, NavbarDivider } from "@blueprintjs/core";
+import {ControlGroup, InputGroup, NavbarDivider} from "@blueprintjs/core";
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
@@ -29,9 +29,9 @@ class Navbar extends React.Component {
   }
 
   componentDidMount() {
-    const { query } = this.props;
+    const {query} = this.props;
     if (query !== undefined) {
-      this.setState({ searchValue: query.getString('q') })
+      this.setState({searchValue: query.getString('q')})
     }
   }
 
@@ -39,23 +39,23 @@ class Navbar extends React.Component {
     if (this.props.location.pathname === '/search') {
       return
     }
-      
+
     if (nextProps.query && nextProps.query.state.q !== this.state.searchValue) {
-      this.setState({ searchValue: nextProps.query.getString('q') })
+      this.setState({searchValue: nextProps.query.getString('q')})
     }
   }
-  
-  onChange({ target }) {
-    this.setState({ searchValue: target.value })
+
+  onChange({target}) {
+    this.setState({searchValue: target.value});
   }
 
   onSubmit(event) {
-    const { query, updateQuery } = this.props;
+    const {query, updateQuery} = this.props;
     event.preventDefault();
     if (updateQuery !== undefined) {
       updateQuery(query.set('q', this.state.searchValue));
     } else {
-      const { history } = this.props;
+      const {history} = this.props;
       history.push({
         pathname: '/search',
         search: queryString.stringify({
@@ -64,24 +64,24 @@ class Navbar extends React.Component {
       })
     }
   }
-  
+
   render() {
-    const { metadata, session, intl, isHomepage } = this.props;
-    const { searchValue } = this.state;
-    
+    const {metadata, session, intl, isHomepage} = this.props;
+    const {searchValue} = this.state;
+
     return (
       <div id="Navbar" className="Navbar">
         <nav className="pt-navbar">
           <div className="pt-navbar-group pt-align-left">
             <div className="pt-navbar-heading">
               <Link to="/">
-                <img src={metadata.app.logo} alt={metadata.app.title} />
+                <img src={metadata.app.logo} alt={metadata.app.title}/>
               </Link>
             </div>
             <div className="pt-navbar-heading">
               <Link to="/">{metadata.app.title}</Link>
             </div>
-            {session && session.loggedIn === true && <NavbarDivider />}
+            {session && session.loggedIn === true && <NavbarDivider/>}
             {session && session.loggedIn === true && <div>
               <Link to="/cases">Cases</Link>
             </div>}
@@ -94,19 +94,19 @@ class Navbar extends React.Component {
                     className="pt-large"
                     onChange={this.onChange} value={searchValue}
                     placeholder={intl.formatMessage(messages.search_placeholder)}
-                    rightElement={<SearchAlert queryText={searchValue} />}
+                    rightElement={<SearchAlert queryText={searchValue}/>}
                   />
                 </ControlGroup>
               </form>
-            )} 
+            )}
           </div>
           <div className="pt-navbar-group pt-align-right">
             <Link to="/collections" className="pt-minimal pt-button pt-icon-database">
               <FormattedMessage id="nav.collections" defaultMessage="Sources"/>
             </Link>
             <div className="pt-navbar-divider"/>
-            <AuthButtons session={session} auth={metadata.auth} />
-            <LanguageMenu />
+            <AuthButtons session={session} auth={metadata.auth}/>
+            <LanguageMenu/>
           </div>
         </nav>
       </div>

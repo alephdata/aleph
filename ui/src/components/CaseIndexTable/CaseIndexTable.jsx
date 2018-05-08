@@ -72,9 +72,9 @@ class CaseIndexTable extends Component {
         </tr>
         </thead>
         <tbody>
-        {result.results !== undefined && result.results.map((casefile, index) =>
+        {result.results !== undefined && colors !== null && result.results.map((casefile, index) =>
           <CaseTableRow key={casefile.id}
-                        colors={colors}
+                        color={colors[casefile.id % 65]}
                         casefile={casefile}
                         location={location}
                         history={history}

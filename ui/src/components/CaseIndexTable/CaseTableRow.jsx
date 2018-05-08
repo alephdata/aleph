@@ -20,11 +20,6 @@ class CaseTableRow extends Component {
     this.onOpenAlert = this.onOpenAlert.bind(this);
   }
 
-  componentDidMount() {
-    let color = this.getProperColor(this.props.colors, this.props.casefile.id);
-    console.log('did', color, this.props.casefile.id);
-  }
-
   async onDeleteCase(casefile) {
     this.props.deleteCase(casefile);
   }
@@ -33,23 +28,8 @@ class CaseTableRow extends Component {
     this.setState({isAlertOpen: !this.state.isAlertOpen});
   }
 
-  getProperColor(colors, casefileId) {
-    colors.map(function (color, index) {
-      if(color[casefileId] !== undefined) {
-        console.log('uslo', color[casefileId])
-        return color[casefileId];
-      }
-    });
-
-    console.log('nee')
-    return null;
-  }
-
   render() {
-    const {casefile, colors} = this.props;
-    //let color = this.getProperColor(colors, casefile.id);
-    //console.log(color)
-    let color = 'white';
+    const {casefile, color} = this.props;
 
     return (
       <tr key={casefile.id + 1} className='nowrap'>
