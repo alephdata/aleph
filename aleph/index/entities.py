@@ -45,7 +45,7 @@ def get_entity(entity_id):
     if entity_id is None:
         return None
     for index in entities_index().split(','):
-        result = es.get(index=entities_index(),
+        result = es.get(index=index,
                         doc_type='doc',
                         id=entity_id,
                         ignore=[404],

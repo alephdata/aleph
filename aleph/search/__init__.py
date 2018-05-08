@@ -3,8 +3,7 @@ from followthemoney import model
 
 from aleph.model import Document, DocumentRecord
 from aleph.index.xref import entity_query
-from aleph.index.core import entities_index
-from aleph.index.core import records_index
+from aleph.index.core import entities_index, records_index
 from aleph.index.core import collections_index
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa

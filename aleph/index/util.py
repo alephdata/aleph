@@ -28,6 +28,9 @@ def refresh_index(index=None):
 
 def unpack_result(res):
     """Turn a document hit from ES into a more traditional JSON object."""
+    error = res.get('error')
+    if error is not None:
+        raise RuntimeError("Query error: %(reason)s" % error)
     if res.get('found') is False:
         return
     data = res.get('_source', {})
