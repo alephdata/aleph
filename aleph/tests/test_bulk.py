@@ -4,7 +4,6 @@ from unittest import skip  # noqa
 from aleph.util import load_config_file
 from aleph.logic.entities import bulk_load
 from aleph.model import Collection
-from aleph.index import flush_index
 from aleph.tests.util import TestCase
 
 
@@ -30,7 +29,7 @@ class BulkLoadTestCase(TestCase):
         assert coll.category == 'scrape', coll.category
 
         _, headers = self.login(is_admin=True)
-        flush_index()
+        self.flush_index()
 
         res = self.client.get('/api/2/entities?q=friede+springer',
                               headers=headers)
@@ -53,7 +52,7 @@ class BulkLoadTestCase(TestCase):
         assert coll.category == 'scrape', coll.category
 
         _, headers = self.login(is_admin=True)
-        flush_index()
+        self.flush_index()
 
         count = Collection.all().count()
         assert 1 == count, count

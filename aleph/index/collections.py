@@ -5,10 +5,8 @@ from pprint import pprint  # noqa
 from normality import normalize
 
 from aleph.core import es
-from aleph.model import Entity, Role
-from aleph.index.core import collection_index, collections_index
-from aleph.index.core import entities_index, entity_index
-from aleph.index.core import records_index
+from aleph.model import Entity
+from aleph.index.core import collections_index, entities_index, records_index
 from aleph.index.util import query_delete, query_update, unpack_result
 from aleph.index.util import index_doc, index_form
 
@@ -95,7 +93,7 @@ def index_collection(collection):
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    return index_doc(collection_index(), collection.id, data)
+    return index_doc(collections_index(), collection.id, data)
 
 
 def get_collection(collection_id):
@@ -117,7 +115,7 @@ def update_collection_roles(collection):
             'inline': 'ctx._source.roles = [%s]' % roles
         }
     }
-    query_update(entity_index(), body)
+    query_update(entities_index(), body)
 
 
 def delete_collection(collection_id):

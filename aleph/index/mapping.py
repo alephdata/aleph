@@ -1,3 +1,4 @@
+from aleph import settings
 
 PARTIAL_DATE = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 
@@ -16,6 +17,7 @@ COLLECTION_MAPPING = {
     "properties": {
         "label": {
             "type": "text",
+            "analyzer": "icu_latin",
             "fields": {
                 "kw": {
                     "type": "keyword"
@@ -33,7 +35,7 @@ COLLECTION_MAPPING = {
         "data_url": {"type": "keyword"},
         "info_url": {"type": "keyword"},
         "kind": {"type": "keyword"},
-        "text": {"type": "text"},
+        "text": {"type": "text", "analyzer": "icu_latin"},
         "casefile": {"type": "boolean"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
@@ -73,8 +75,7 @@ RECORD_MAPPING = {
         "collection_id": {"type": "keyword"},
         "document_id": {"type": "keyword"},
         "index": {"type": "long"},
-        "sheet": {"type": "long"},
-        "text": {"type": "text"}
+        "text": {"type": "text", "analyzer": "icu_latin"}
     }
 }
 
@@ -84,10 +85,9 @@ ENTITY_MAPPING = {
         "title": {"type": "text"},
         "name": {
             "type": "text",
+            "analyzer": "icu_latin",
             "fields": {
-                "kw": {
-                    "type": "keyword"
-                }
+                "kw": {"type": "keyword"}
             }
         },
         "schema": {"type": "keyword"},
@@ -143,10 +143,8 @@ ENTITY_MAPPING = {
         "author": {"type": "keyword"},
         "generator": {"type": "keyword"},
         "summary": {"type": "text"},
-        "text": {"type": "text"},
-        "properties": {
-            "type": "object"
-        },
+        "text": {"type": "text", "analyzer": "icu_latin"},
+        "properties": {"type": "object"},
         "parent": {
             "type": "object",
             "properties": {
@@ -167,4 +165,24 @@ ENTITY_MAPPING = {
             }
         }
     ]
+}
+
+INDEX_SETTINGS = {
+    "index": {
+        "number_of_shards": settings.ELASTICSEARCH_SHARDS,
+        "analysis": {
+            "analyzer": {
+                "icu_latin": {
+                    "tokenizer": "lowercase",
+                    "filter": ["latinize"]
+                }
+            },
+            "filter": {
+                "latinize": {
+                    "type": "icu_transform",
+                    "id": "Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC"  # noqa
+                }
+            }
+        }
+    }
 }

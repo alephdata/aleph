@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.0.0
+    image: alephdata/platform-elasticsearch:6.2.4
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-log:/var/log
@@ -23,7 +23,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   unoservice:
-    image: alephdata/unoservice:1.0.7
+    image: alephdata/unoservice:1.2.2
     restart: on-failure
     tmpfs:
       - /tmp
@@ -54,13 +54,6 @@ services:
       ALEPH_OAUTH: 'false'
       ALEPH_EAGER: 'true'
       ALEPH_ARCHIVE_TYPE: 'file'
-      ALEPH_ARCHIVE_PATH: '/data'
-      POLYGLOT_DATA_PATH: /polyglot
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      UNOSERVICE_URL: http://unoservice:3000/convert
-      C_FORCE_ROOT: 'true'
     env_file:
       - aleph.env
 
@@ -88,13 +81,6 @@ services:
       ALEPH_CACHE: 'false'
       ALEPH_EAGER: 'true'
       ALEPH_ARCHIVE_TYPE: 'file'
-      ALEPH_ARCHIVE_PATH: '/data'
-      POLYGLOT_DATA_PATH: /polyglot
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      UNOSERVICE_URL: http://unoservice:3000/convert
-      C_FORCE_ROOT: 'true'
     env_file:
       - aleph.env
   

@@ -1,13 +1,15 @@
 from __future__ import absolute_import
 
+import logging
 from banal import ensure_list, first
-from collections import OrderedDict
 from marshmallow import Schema, post_dump
 
 from aleph.core import es
 from aleph.model import Role, Document, Entity, Collection
-from aleph.index.core import entities_index, collections_index
+from aleph.index.core import entities_index_list, collections_index
 from aleph.index.util import unpack_result
+
+log = logging.getLogger(__name__)
 
 
 class ExpandableSchema(Schema):
@@ -30,22 +32,25 @@ class ExpandableSchema(Schema):
             cache[(Role, str(role.id))] = role
 
     def _resolve_index(self, cache):
-        queries = OrderedDict()
+        queries = []
         for (type_, id_) in cache.keys():
             if type_ in [Collection]:
                 index = collections_index()
-                queries[(type_, id_)] = {'_index': index, '_id': id_}
+                query = {'_index': index, '_id': id_}
+                queries.append(((type_, id_), query))
             elif type_ in [Document, Entity]:
-                index = entities_index()
-                queries[(type_, id_)] = {'_index': index, '_id': id_}
+                for index in entities_index_list():
+                    query = {'_index': index, '_id': id_}
+                    queries.append(((type_, id_), query))
 
         if not len(queries):
             return
 
-        results = es.mget(body={'docs': queries.values()},
+        results = es.mget(body={'docs': [q[1] for q in queries]},
                           _source_exclude=['text'])
-        for key, doc in zip(queries.keys(), results['docs']):
-            cache[key] = unpack_result(doc)
+        for (key, _), doc in zip(queries, results['docs']):
+            if cache.get(key) is None:
+                cache[key] = unpack_result(doc)
 
     @post_dump(pass_many=True)
     def expand(self, objs, many=False):

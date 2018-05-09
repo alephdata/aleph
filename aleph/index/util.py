@@ -3,9 +3,10 @@ import logging
 from banal import ensure_list
 from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
-from normality import stringify, latinize_text, collapse_spaces
+from normality import stringify
 
 from aleph.core import es
+from aleph.index.core import all_indexes
 
 log = logging.getLogger(__name__)
 
@@ -16,8 +17,24 @@ TIMEOUT = '%ss' % REQUEST_TIMEOUT
 RETRY_DELAY = 10
 
 
+def refresh_index(index=None):
+    """Run a refresh to apply all indexing changes."""
+    if index is None:
+        index = all_indexes()
+    try:
+        es.indices.refresh(index=all_indexes(),
+                           ignore=[404, 400],
+                           ignore_unavailable=True)
+    except TransportError as terr:
+        log.warning("Index refresh failed: %s", terr)
+        time.sleep(RETRY_DELAY)
+
+
 def unpack_result(res):
     """Turn a document hit from ES into a more traditional JSON object."""
+    error = res.get('error')
+    if error is not None:
+        raise RuntimeError("Query error: %(reason)s" % error)
     if res.get('found') is False:
         return
     data = res.get('_source', {})
@@ -50,13 +67,16 @@ def field_filter_query(field, values):
         if field in ['names', 'addresses']:
             field = '%s.text' % field
             return {
-                'match': {
-                    field: {
-                        'query': values[0],
-                        'operator': 'and',
-                        'zero_terms_query': 'all',
-                        'cutoff_frequency': 0.0001
-                    }
+                # 'match': {
+                #     field: {
+                #         'query': values[0],
+                #         'operator': 'and',
+                #         'zero_terms_query': 'all',
+                #         'cutoff_frequency': 0.0001
+                #     }
+                # }
+                'match_phrase': {
+                    field: values[0]
                 }
             }
         return {'term': {field: values[0]}}
@@ -82,6 +102,7 @@ def query_delete(index, query):
                            request_timeout=REQUEST_TIMEOUT)
     except TransportError as terr:
         log.warning("Query delete failed: %s", terr)
+        time.sleep(RETRY_DELAY)
 
 
 def query_update(index, body):
@@ -93,6 +114,7 @@ def query_update(index, body):
                            timeout=TIMEOUT)
     except TransportError as terr:
         log.warning("Query update failed: %s", terr)
+        time.sleep(RETRY_DELAY)
 
 
 def index_doc(index, id, body):
@@ -128,15 +150,6 @@ def index_form(texts):
         text = stringify(text)
         if text is None:
             continue
-        text = collapse_spaces(text)
         total_len += len(text)
         results.append(text)
-
-        # Make latinized text version
-        latin = latinize_text(text)
-        latin = stringify(latin)
-        if latin is None or latin == text:
-            continue
-        total_len += len(latin)
-        results.append(latin)
     return results

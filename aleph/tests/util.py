@@ -8,8 +8,9 @@ from faker import Factory
 from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
-from aleph.index import delete_index, upgrade_search, flush_index
-from aleph.index.core import collection_index, entity_index, record_index
+from aleph.index.admin import delete_index, upgrade_search
+from aleph.index.core import all_indexes
+from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
 from aleph.logic.collections import update_collection, update_collections
 from aleph.core import db, es, create_app
@@ -44,6 +45,11 @@ class TestCase(FlaskTestCase):
         settings.DATABASE_URI = DB_URI
         settings.QUEUE = False
         settings.MAIL_SERVER = None
+        settings.ENTITIES_INDEX = '%s_entity' % APP_NAME
+        settings.ENTITIES_INDEX_SET = [settings.ENTITIES_INDEX]
+        settings.RECORDS_INDEX = '%s_records' % APP_NAME
+        settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
+        settings.COLLECTIONS_INDEX = '%s_collection' % APP_NAME
         app = create_app({})
         mount_app_blueprints(app)
         return app
@@ -77,7 +83,7 @@ class TestCase(FlaskTestCase):
         update_collection(collection)
 
     def flush_index(self):
-        flush_index()
+        refresh_index()
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
@@ -99,12 +105,7 @@ class TestCase(FlaskTestCase):
             delete_index()
             upgrade_search()
         else:
-            indexes = [
-                collection_index(),
-                entity_index(),
-                record_index()
-            ]
-            es.delete_by_query(index=indexes,
+            es.delete_by_query(index=all_indexes(),
                                body={'query': {'match_all': {}}},
                                refresh=True,
                                conflicts='proceed')

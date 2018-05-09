@@ -1,4 +1,3 @@
-from aleph.index import flush_index
 from aleph.logic import delete_collection
 from aleph.model import Collection
 from aleph.tests.util import TestCase
@@ -15,6 +14,6 @@ class IndexTestCase(TestCase):
         res = self.client.get('/api/2/search?q="mention fruit"')
         assert res.json['total'] == 1, res.json
         delete_collection(collection.id)
-        flush_index()
+        self.flush_index()
         res = self.client.get('/api/2/search?q="mention fruit"')
         assert res.json['total'] == 0, res.json

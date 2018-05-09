@@ -8,4 +8,9 @@
   margin-right: $aleph-grid-size;
   margin-bottom: $aleph-grid-size;  
   font-weight: bold;
+
+  a, a:hover {
+    color: white;
+    text-decoration: none;
+  }
 }

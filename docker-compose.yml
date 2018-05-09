@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.2
+    image: alephdata/platform-elasticsearch:6.2.4
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-log:/var/log
@@ -23,7 +23,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   unoservice:
-    image: alephdata/unoservice:1.0.7
+    image: alephdata/unoservice:1.2.2
     tmpfs:
       - /tmp
       - /root/.config
@@ -33,7 +33,7 @@ services:
 
   worker:
     build: .
-    command: celery -A aleph.queues -B -c 4 -l INFO worker
+    command: celery -A aleph.queues -B -c 1 -l INFO worker
     restart: on-failure
     links:
       - postgres
@@ -44,14 +44,24 @@ services:
     volumes:
       - archive-data:/data
       - polyglot:/polyglot
-    environment:
-      C_FORCE_ROOT: 'true'
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      ALEPH_ARCHIVE_PATH: /data
-      POLYGLOT_DATA_PATH: /polyglot
-      UNOSERVICE_URL: http://unoservice:3000/convert
+    env_file:
+      - aleph.env
+  
+  shell:
+    build: .
+    command: /bin/bash
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - unoservice
+      - worker
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+      - polyglot:/polyglot
+      - "./mappings:/aleph/mappings"
+      - "/:/host"
     env_file:
       - aleph.env
 
@@ -67,14 +77,6 @@ services:
     volumes:
       - archive-data:/data
       - polyglot:/polyglot
-    environment:
-      C_FORCE_ROOT: 'true'
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      ALEPH_ARCHIVE_PATH: /data
-      POLYGLOT_DATA_PATH: /polyglot
-      UNOSERVICE_URL: http://unoservice:3000/convert
     env_file:
       - aleph.env
 
@@ -88,16 +90,10 @@ services:
       - elasticsearch
       - rabbitmq
       - worker
+    tmpfs: /tmp
     volumes:
       - archive-data:/data
       - polyglot:/polyglot
-    environment:
-      ALEPH_ELASTICSEARCH_URI: http://elasticsearch:9200/
-      ALEPH_DATABASE_URI: postgresql://aleph:aleph@postgres/aleph
-      ALEPH_BROKER_URI: amqp://guest:guest@rabbitmq:5672
-      ALEPH_ARCHIVE_PATH: /data
-      POLYGLOT_DATA_PATH: /polyglot
-      UNOSERVICE_URL: http://unoservice:3000/convert
     env_file:
       - aleph.env
 
