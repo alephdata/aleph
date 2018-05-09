@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 
 import CaseTableRow from './CaseTableRow';
 import {SortableTH} from 'src/components/common';
+import {getColor} from 'src/util/colorScheme';
+
 import {fetchCollectionPermissions} from "src/actions";
 
 const messages = defineMessages({
@@ -74,7 +76,7 @@ class CaseIndexTable extends Component {
         <tbody>
         {result.results !== undefined && colors !== null && result.results.map((casefile, index) =>
           <CaseTableRow key={casefile.id}
-                        color={colors[casefile.id % 65]}
+                        color={getColor(casefile.id)}
                         casefile={casefile}
                         location={location}
                         history={history}

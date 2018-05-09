@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {injectIntl, FormattedMessage, defineMessages} from 'react-intl';
 import {debounce} from 'lodash';
 import {NonIdealState, Button, Alert} from '@blueprintjs/core';
-import pallete from 'google-palette';
 
 import {queryCollections, deleteCollection, updateCollectionPermissions, createCollection} from 'src/actions';
 
@@ -11,11 +10,12 @@ import {selectCollectionsResult} from 'src/selectors';
 import {Screen, Breadcrumbs, SinglePane, SectionLoading} from 'src/components/common';
 import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
 import Query from "src/app/Query";
-import CaseExplanationBox from "src/components/Case/CaseExplanationBox";
+import { CaseExplanationBox } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
+import {showSuccessToast} from "src/app/toast";
+import { getColors } from 'src/util/colorScheme';
 
 import './CasesIndexScreen.css';
-import {showSuccessToast} from "../../app/toast";
 
 const messages = defineMessages({
   no_results_title: {
@@ -47,8 +47,6 @@ const messages = defineMessages({
     defaultMessage: 'Search cases'
 }
 });
-
-const maxNumColor = 65;
 
 class CasesIndexScreen extends Component {
   constructor(props) {
@@ -96,9 +94,7 @@ class CasesIndexScreen extends Component {
 
   async fetchData() {
     let {query} = this.props;
-    this.props.queryCollections({query}).then(function(value){
-      //console.log(value)
-    });
+    this.props.queryCollections({query});
     this.setState({result: this.props.result})
   }
 
@@ -157,8 +153,7 @@ class CasesIndexScreen extends Component {
     const {dialogIsOpen, alertIsOpen, result, queryPrefix} = this.state;
     const hasCases = result.total !== 0;
 
-    let scheme = pallete.listSchemes('mpn65')[0];
-    let colors = scheme.apply(scheme, [maxNumColor]);
+    let colors = getColors();
 
     const breadcrumbs = (<Breadcrumbs>
       <li>

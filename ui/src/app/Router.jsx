@@ -54,7 +54,7 @@ class Router extends Component {
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/collections" exact component={CollectionsIndexScreen}/>
         <Route path="/cases" exact component={CasesIndexScreen}/>
-        <Route path="/cases/:casefileId" exact component={CaseScreen}/>
+        <Route path="/cases/:collectionId" exact component={CaseScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
