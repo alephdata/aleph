@@ -19,8 +19,10 @@ class RegexAnalyzer(EntityAnalyzer):
 
     def extract(self, collector, document):
         for text in document.texts:
+
             for match in self.RE.finditer(text):
                 match_text = self.extract_match(document, match)
+
                 if match_text is not None:
                     collector.emit(match_text, self.TYPE)
 
@@ -43,3 +45,35 @@ class PhoneNumberAnalyzer(RegexAnalyzer):
 
     def __init__(self):
         self.active = settings.ANALYZE_PHONES
+
+class IPV4Analyzer(RegexAnalyzer):
+    REGEX = '(([2][5][0-5]\.)|([2][0-4][0-9]\.)|([0-1]?[0-9]?[0-9]\.)){3}'+'(([2][5][0-5])|([2][0-4][0-9])|([0-1]?[0-9]?[0-9]))'
+
+    RE = re.compile(REGEX, re.IGNORECASE)
+    ORIGIN = 'regex:ipv4'
+    TYPE = DocumentTag.TYPE_IPV4
+
+    def __init__(self):
+        self.active = settings.ANALYZE_IPV4
+
+
+class IPV6Analyzer(RegexAnalyzer):
+    REGEX='(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'
+
+    RE = re.compile(REGEX, re.IGNORECASE)
+    ORIGIN = 'regex:ipv6'
+    TYPE = DocumentTag.TYPE_IPV6
+
+    def __init__(self):
+        self.active = settings.ANALYZE_IPV6
+
+
+class IBANAnalyzer(RegexAnalyzer):
+    REGEX = '([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})'
+
+    RE = re.compile(REGEX, re.IGNORECASE)
+    ORIGIN = 'regex:iban'
+    TYPE = DocumentTag.TYPE_IBAN
+
+    def __init__(self):
+        self.active = settings.ANALYZE_IBAN

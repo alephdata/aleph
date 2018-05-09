@@ -18,6 +18,10 @@ class DocumentTag(db.Model, IdModel):
     TYPE_PERSON = 'person'
     TYPE_ORGANIZATION = 'organization'
     TYPE_LOCATION = 'location'
+    TYPE_IPV4 = 'ipv4'
+    TYPE_IPV6 = 'ipv6'
+    TYPE_IBAN = 'iban'
+
 
     TYPES = {
         TYPE_PERSON: exactitude.names,
@@ -25,6 +29,9 @@ class DocumentTag(db.Model, IdModel):
         TYPE_EMAIL: exactitude.emails,
         TYPE_PHONE: exactitude.phones,
         TYPE_LOCATION: exactitude.addresses,
+        TYPE_IPV4: exactitude.ipv4s,
+        TYPE_IPV6: exactitude.ipv6s,
+        TYPE_IBAN: exactitude.ibans,
     }
 
     id = db.Column(db.BigInteger, primary_key=True)
@@ -74,6 +81,7 @@ class DocumentTagCollector(object):
     def emit(self, text, type, key=None, weight=1):
         "Create a tag, this can be called multiple times with the same text."
         cleaner = DocumentTag.TYPES[type]
+
         text = stringify(text)
         text = cleaner.clean(text, countries=self.document.countries)
 
