@@ -18,12 +18,12 @@ export const updateCollection = asyncActionCreator((collection) => async dispatc
 
 export const deleteCollection = asyncActionCreator((collection) => async dispatch => {
   const response = await endpoint.delete(`collections/${collection.id}`, collection);
-  return {data: response.data};
+  return {id: collection.id, data: response.data};
 }, {name: 'DELETE_COLLECTION'});
 
 export const createCollection = asyncActionCreator((collection) => async dispatch => {
   const response = await endpoint.post(`collections`, collection);
-  return {data: response.data};
+  return {id: response.id, data: response.data};
 }, {name: 'CREATE_COLLECTION'});
 
 export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {

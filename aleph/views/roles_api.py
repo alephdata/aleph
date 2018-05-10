@@ -112,10 +112,10 @@ def update(id):
 @blueprint.route('/api/2/collections/<int:id>/permissions')
 def permissions_index(id):
     collection = get_db_collection(id, request.authz.WRITE)
+    roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection.id)
     permissions = []
-    roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
     for permission in q.all():
         if not check_visible(permission.role, request.authz):
             continue
@@ -127,6 +127,8 @@ def permissions_index(id):
     # select in the UI even if they are not currently associated with the
     # collection.
     for role in roles:
+        if collection.casefile and role.is_public:
+            continue
         permissions.append({
             'collection_id': collection.id,
             'write': False,
@@ -150,6 +152,9 @@ def permissions_update(id):
         role = Role.by_id(role_id)
         if not check_visible(role, request.authz):
             continue
+        if collection.casefile and role.is_public:
+            permission['read'] = False
+            permission['write'] = False
 
         update_permission(role,
                           collection,
