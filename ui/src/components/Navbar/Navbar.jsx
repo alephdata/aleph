@@ -103,8 +103,8 @@ class Navbar extends React.Component {
             )}
           </div>
           <div className="pt-navbar-group pt-align-right">
-            <Link to="/collections" className="pt-minimal pt-button pt-icon-database">
-              <FormattedMessage id="nav.collections" defaultMessage="Sources"/>
+            <Link to="/sources" className="pt-minimal pt-button pt-icon-database">
+              <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
             </Link>
             <div className="pt-navbar-divider"/>
             <AuthButtons session={session} auth={metadata.auth}/>

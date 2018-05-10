@@ -13,7 +13,7 @@ import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
-import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
+import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
 import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
@@ -52,7 +52,7 @@ class Router extends Component {
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
-        <Route path="/collections" exact component={CollectionsIndexScreen}/>
+        <Route path="/sources" exact component={SourcesIndexScreen}/>
         <Route path="/cases" exact component={CasesIndexScreen}/>
         <Route path="/cases/:collectionId" exact component={CaseScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
