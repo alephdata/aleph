@@ -6,10 +6,9 @@ export function mapById(result) {
 }
 
 export function cacheResults(state, { result }) {
-  let a = assignWith(assign)(state, mapById(result));
   // The search results may contain only a subset of the object's fields, so
   // to not erase any existing value, we do a shallow merge of object fields.
-  return a;
+  return assignWith(assign)(state, mapById(result));
 }
 
 export function updateLoading(value) {
@@ -54,6 +53,6 @@ export function updateResults(state, { query, result }) {
   return { ...state, [key]: result};
 }
 
-export function deleteCatche() {
+export function flushResults() {
   return {}
 }
