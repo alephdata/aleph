@@ -36,7 +36,8 @@ def generate_tags(document):
         values = type_.normalize(tag.text,
                                  cleaned=True,
                                  countries=document.countries)
-        tags[tag.field].update(values)
+        if tag.field is not None:
+            tags[tag.field].update(values)
 
     # pprint(dict(tags))
     return tags.items()

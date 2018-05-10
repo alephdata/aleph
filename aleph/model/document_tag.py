@@ -21,7 +21,6 @@ class DocumentTag(db.Model, IdModel):
     TYPE_IP = 'ip'
     TYPE_IBAN = 'iban'
 
-
     TYPES = {
         TYPE_PERSON: exactitude.names,
         TYPE_ORGANIZATION: exactitude.names,

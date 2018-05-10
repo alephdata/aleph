@@ -31,7 +31,6 @@ setup(
             'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer',
             'ip = aleph.analyze.regex:IPAnalyzer',
             'iban = aleph.analyze.regex:IBANAnalyzer'
-
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',
