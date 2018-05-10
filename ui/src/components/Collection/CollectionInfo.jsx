@@ -6,11 +6,11 @@ import {Button, Tab, Tabs} from "@blueprintjs/core";
 
 import { fetchCollectionXrefIndex } from 'src/actions';
 import { selectCollectionXrefIndex } from 'src/selectors';
-import {Toolbar, CloseButton} from 'src/components/Toolbar';
+import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
-import { DualPane, TabCount, TextLoading } from 'src/components/common';
-import {CollectionInfoXref, CollectionOverview, CollectionInfoContent} from 'src/components/Collection';
+import { Collection, DualPane, TabCount, TextLoading } from 'src/components/common';
+import { CollectionInfoXref, CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
 
 class CollectionInfo extends Component {
   constructor(props) {
@@ -90,7 +90,13 @@ class CollectionInfo extends Component {
         )}
         <div className="pane-heading">
           <span>
-            <FormattedMessage id="collection.info.heading" defaultMessage="Source"/>
+            <Collection.Label collection={collection} label={false} />
+            { collection.casefile && (
+              <FormattedMessage id="collection.info.case" defaultMessage="Casefile"/>
+            )}
+            { !collection.casefile && (
+              <FormattedMessage id="collection.info.source" defaultMessage="Source"/>
+            )}
           </span>
           <h1>
             {collection.label}
