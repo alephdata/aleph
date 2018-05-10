@@ -7,7 +7,8 @@ import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/act
 import { Role } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 
-import './AccessCollectionDialog.css';
+import './CollectionAccessDialog.css';
+
 
 const messages = defineMessages({
   title: {
@@ -19,6 +20,7 @@ const messages = defineMessages({
     defaultMessage: 'Your changes are saved.',
   },
 });
+
 
 class PermissionRow extends Component {
   render() {
@@ -40,7 +42,7 @@ class PermissionRow extends Component {
 }
 
 
-class AccessCollectionDialog extends Component {
+class CollectionAccessDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -184,6 +186,7 @@ class AccessCollectionDialog extends Component {
   }
 }
 
+
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.collection.id;
   return {
@@ -191,5 +194,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-AccessCollectionDialog = injectIntl(AccessCollectionDialog);
-export default connect(mapStateToProps, {updateCollectionPermissions, fetchCollectionPermissions})(AccessCollectionDialog);
+
+CollectionAccessDialog = injectIntl(CollectionAccessDialog);
+CollectionAccessDialog = connect(mapStateToProps, {updateCollectionPermissions, fetchCollectionPermissions})(CollectionAccessDialog)
+export default CollectionAccessDialog;

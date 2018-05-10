@@ -8,7 +8,7 @@ import { fetchCollectionXrefIndex } from 'src/actions';
 import { selectCollectionXrefIndex } from 'src/selectors';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
-import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
+import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import { Collection, DualPane, TabCount, TextLoading } from 'src/components/common';
 import { CollectionInfoXref, CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
 
@@ -79,7 +79,7 @@ class CollectionInfo extends Component {
               <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
                 <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
               </Button>
-              <AccessCollectionDialog
+              <CollectionAccessDialog
                 collection={collection}
                 isOpen={accessIsOpen}
                 toggleDialog={this.toggleAccess}

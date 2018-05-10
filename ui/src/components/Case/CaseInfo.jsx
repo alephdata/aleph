@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from "react-router";
 import {defineMessages, injectIntl} from 'react-intl';
 import {Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon} from "@blueprintjs/core";
-import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
+import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 
 import { DualPane } from 'src/components/common';
@@ -110,7 +110,7 @@ class CaseInfo extends Component {
           <MenuItem active={settings} onClick={this.toggleSettings} className='menu-item-padding' text='Settings' icon='cog' />
           <MenuItem active={access} onClick={this.toggleAccess} className='menu-item-padding' text='Access' icon='key' />
         </Menu>
-        <AccessCollectionDialog
+        <CollectionAccessDialog
           collection={casefile}
           isOpen={access}
           toggleDialog={this.toggleAccess}
