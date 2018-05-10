@@ -16,6 +16,7 @@ import {showSuccessToast} from "src/app/toast";
 import { getColors } from 'src/util/colorScheme';
 
 import './CasesIndexScreen.css';
+import ErrorScreen from "../../components/common/ErrorScreen";
 
 const messages = defineMessages({
   no_results_title: {
@@ -43,9 +44,13 @@ const messages = defineMessages({
     defaultMessage: 'Failed to create a case.',
   },
   filter: {
-  id: 'navbar.search_cases_placeholder',
+  id: 'case.search_cases_placeholder',
     defaultMessage: 'Search cases'
-}
+},
+  not_found: {
+    id: 'case.not.found',
+    defaultMessage: 'Log in to create your own case files, upload documents and manage your investigations!'
+  }
 });
 
 class CasesIndexScreen extends Component {
@@ -149,9 +154,13 @@ class CasesIndexScreen extends Component {
   }
 
   render() {
-    const {query, intl} = this.props;
+    const {query, intl, session} = this.props;
     const {dialogIsOpen, alertIsOpen, result, queryPrefix} = this.state;
     const hasCases = result.total !== 0;
+
+    if(session && !session.loggedIn) {
+      return <ErrorScreen title={intl.formatMessage(messages.not_found)}/>
+    }
 
     let colors = getColors();
 
@@ -225,7 +234,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     query: query,
-    result: selectCollectionsResult(state, query)
+    result: selectCollectionsResult(state, query),
+    session: state.session
   };
 };
 
