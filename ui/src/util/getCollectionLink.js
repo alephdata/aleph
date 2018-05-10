@@ -3,7 +3,7 @@ import queryString from 'query-string';
 export default function getCollectionLink(collection) {
   if (collection.casefile) {
     return {
-      pathname: '/cases/' + collection
+      pathname: '/cases/' + collection.id
     };
   } else {
     return {

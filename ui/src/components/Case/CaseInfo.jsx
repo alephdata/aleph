@@ -7,7 +7,7 @@ import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/Collectio
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 
 import { DualPane } from 'src/components/common';
-import {getColor} from "src/util/colorScheme";
+import { getColor } from "src/util/colorScheme";
 
 import './CaseInfo.css';
 
