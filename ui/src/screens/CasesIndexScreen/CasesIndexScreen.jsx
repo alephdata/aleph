@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -23,14 +24,6 @@ const messages = defineMessages({
     id: 'cases.no_results_description',
     defaultMessage: 'Try adding new case.',
   },
-  save_success: {
-    id: 'case.save_success',
-    defaultMessage: 'You have created a case.',
-  },
-  save_error: {
-    id: 'case.save_error',
-    defaultMessage: 'Failed to create a case.',
-  },
   filter: {
     id: 'case.search_cases_placeholder',
     defaultMessage: 'Search cases'
@@ -54,6 +47,7 @@ class CasesIndexScreen extends Component {
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
@@ -96,7 +90,7 @@ class CasesIndexScreen extends Component {
     const { queryPrefix } = this.state;
     const hasCases = result.total !== 0;
 
-    if(session && !session.loggedIn) {
+    if (session && !session.loggedIn) {
       return <ErrorScreen title={intl.formatMessage(messages.not_found)}/>
     }
 
@@ -149,7 +143,7 @@ class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const {location} = ownProps;
   const context = {
-    facet: ['category', 'countries'],
+    facet: [ 'category', 'countries' ],
     'filter:kind': 'casefile'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')

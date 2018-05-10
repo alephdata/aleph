@@ -31,6 +31,7 @@ const messages = defineMessages({
     id: "case.title",
     defaultMessage: "Create a new casefile"
   }
+
 });
 
 

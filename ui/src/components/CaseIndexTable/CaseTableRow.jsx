@@ -39,6 +39,11 @@ class CaseTableRow extends Component {
           {collection.summary}
         </td>
         <td className="schema">
+          {casefile.team !== undefined && casefile.team.map(function (member) {
+            if(member.type === 'user') {
+              return member.name + ", "
+            }
+          })}
         </td>
         <td className="date">
           <Date value={collection.created_at}/>
