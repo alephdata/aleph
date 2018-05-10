@@ -16,7 +16,6 @@ class CaseTableRow extends Component {
       deleteIsOpen: false,
       color: ''
     };
-
     this.toggleDeleteCase = this.toggleDeleteCase.bind(this);
   }
 

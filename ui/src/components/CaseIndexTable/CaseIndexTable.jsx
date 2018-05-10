@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
 
 import CaseTableRow from './CaseTableRow';
 import { SortableTH } from 'src/components/common';
@@ -25,7 +24,6 @@ const messages = defineMessages({
 });
 
 class CaseIndexTable extends Component {
-
   constructor(props) {
     super(props);
     this.state = { result: props.result };

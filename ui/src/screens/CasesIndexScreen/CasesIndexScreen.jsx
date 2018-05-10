@@ -4,19 +4,15 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';
 import { NonIdealState, Button } from '@blueprintjs/core';
 
-import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
-
-import { selectCollectionsResult } from 'src/selectors';
-import { Screen, Breadcrumbs, SinglePane, SectionLoading } from 'src/components/common';
-import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
 import Query from "src/app/Query";
+import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
+import { selectCollectionsResult } from 'src/selectors';
+import { Screen, Breadcrumbs, ErrorScreen, SinglePane, SectionLoading } from 'src/components/common';
+import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
 import { CaseExplanationBox } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
-import { showSuccessToast } from "src/app/toast";
-import { getColors } from 'src/util/colorScheme';
 
 import './CasesIndexScreen.css';
-import ErrorScreen from "../../components/common/ErrorScreen";
 
 const messages = defineMessages({
   no_results_title: {
@@ -45,32 +41,23 @@ const messages = defineMessages({
   }
 });
 
+
 class CasesIndexScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       createIsOpen: false,
-      casefile: {},
-      result: [],
       queryPrefix: props.query.getString('prefix')
     };
 
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
-    this.onAddCase = this.onAddCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
   }
 
-  async componentDidMount() {
-    await this.fetchData();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.state.result.results !== undefined)
-      if (this.state.result.results.length !== nextProps.result.results.length || nextProps.result.results !== undefined) {
-        this.setState({result: nextProps.result})
-      }
+  componentDidMount() {
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
@@ -81,32 +68,13 @@ class CasesIndexScreen extends Component {
 
   fetchIfNeeded() {
     let { query, result } = this.props;
-    if (result.total === undefined && !result.isLoading) {
+    if (result.total === undefined && !result.isLoading && !result.isError) {
       this.props.queryCollections({ query });
     }
   }
 
-  async fetchData() {
-    let {query} = this.props;
-    this.props.queryCollections({query});
-    this.setState({result: this.props.result})
-  }
-
   toggleCreateCase() {
     this.setState({createIsOpen: !this.state.createIsOpen});
-  }
-
-  async onAddCase(collection, permissions) {
-    const {intl, updateCollectionPermissions, createCollection} = this.props;
-    try {
-      let createdCollection = await createCollection(collection);
-      await updateCollectionPermissions(createdCollection.data.id, permissions);
-      await this.fetchData();
-      this.toggleCreateCase();
-      showSuccessToast(intl.formatMessage(messages.save_success));
-    } catch (e) {
-      alert(intl.formatMessage(messages.save_error));
-    }
   }
 
   onChangeQueryPrefix({target}) {
@@ -124,15 +92,13 @@ class CasesIndexScreen extends Component {
   }
 
   render() {
-    const { query, intl, session } = this.props;
-    const { result, queryPrefix } = this.state;
+    const { query, result, intl, session } = this.props;
+    const { queryPrefix } = this.state;
     const hasCases = result.total !== 0;
 
     if(session && !session.loggedIn) {
       return <ErrorScreen title={intl.formatMessage(messages.not_found)}/>
     }
-
-    let colors = getColors();
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -147,7 +113,6 @@ class CasesIndexScreen extends Component {
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs}>
         <SinglePane>
           <CreateCaseDialog isOpen={this.state.createIsOpen}
-                            onAddCase={this.onAddCase}
                             toggleDialog={this.toggleCreateCase} />
           <CaseExplanationBox hasCases={hasCases}
                               toggleCreateCase={this.toggleCreateCase} />
@@ -159,7 +124,6 @@ class CasesIndexScreen extends Component {
           </div>
           {result.total !== 0 && (
             <CaseIndexTable query={query}
-                            colors={colors}
                             result={result} />
           )}
           {result.total === 0 && (

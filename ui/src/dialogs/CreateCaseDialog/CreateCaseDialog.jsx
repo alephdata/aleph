@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {Dialog, Button, Intent} from "@blueprintjs/core";
-import {defineMessages, FormattedMessage, injectIntl} from "react-intl";
-import {connect} from "react-redux";
-import {withRouter} from "react-router";
+import { Dialog, Button, Intent } from "@blueprintjs/core";
+import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
-import {createCollection, updateCollectionPermissions} from "src/actions";
-import {Role} from "src/components/common";
+import { createCollection, updateCollectionPermissions } from "src/actions";
+import { showWarningToast } from "src/app/toast";
+import { Role } from "src/components/common";
 
 import "./CreateCaseDialog.css";
 
@@ -26,68 +27,78 @@ const messages = defineMessages({
     id: "case.users",
     defaultMessage: "Search users",
   },
-  create_case: {
+  title: {
     id: "case.title",
     defaultMessage: "Create a new casefile"
   }
 });
 
-class CreateCaseDialog extends Component {
 
+class CreateCaseDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      permissions: [],
-      collection: {casefile: true}
+      collection: {
+        label: '',
+        summary: '',
+        casefile: true
+      },
+      permissions: []
     };
 
     this.onAddCase = this.onAddCase.bind(this);
-    this.onChangeProject = this.onChangeProject.bind(this);
+    this.onChangeLabel = this.onChangeLabel.bind(this);
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onAddRole = this.onAddRole.bind(this);
     this.onDeleteRole = this.onDeleteRole.bind(this);
   }
 
   onAddRole(role) {
-    const {permissions} = this.state;
+    const { permissions } = this.state;
     permissions.push({role: role, read: true, write: false});
     this.setState({permissions: permissions});
   }
 
   onDeleteRole(role) {
-    const {permissions} = this.state;
+    const { permissions } = this.state;
     const newPermissions = permissions.filter((permission) => permission.role.id !== role.role.id);
     this.setState({permissions: newPermissions});
   }
 
-  onAddCase() {
-    const {onAddCase} = this.props;
-    const {permissions, collection} = this.state;
-
-    onAddCase(collection, permissions);
+  async onAddCase() {
+    const { history } = this.props;
+    const { collection, permissions } = this.state;
+    try {
+      const response = await this.props.createCollection(collection);
+      const collectionId = response.data.id;
+      await this.props.updateCollectionPermissions(collectionId, permissions);
+      history.push({ pathname: '/cases/' + collectionId });
+    } catch (e) {
+      showWarningToast(e.message);
+    }
   }
 
-  onChangeProject({target}) {
-    let collectionNew = this.state.collection;
-    collectionNew.label = target.value;
-    this.setState({collection: collectionNew});
+  onChangeLabel({target}) {
+    const { collection } = this.state;
+    collection.label = target.value;
+    this.setState({collection: collection});
   }
 
   onChangeSummary({target}) {
-    let collectionNew = this.state.collection;
-    collectionNew.summary = target.value;
-    this.setState({collection: collectionNew});
+    const { collection } = this.state;
+    collection.summary = target.value;
+    this.setState({collection: collection});
   }
 
   render() {
-    const {intl} = this.props;
-    const {permissions} = this.state;
+    const { intl } = this.props;
+    const { collection, permissions } = this.state;
     const exclude = permissions.map((perm) => perm.role.id);
 
     return (
       <Dialog icon="briefcase" className="CreateCaseDialog"
               isOpen={this.props.isOpen}
-              title={intl.formatMessage(messages.create_case)}
+              title={intl.formatMessage(messages.title)}
               onClose={this.props.toggleDialog}>
         <div className="pt-dialog-body">
           <div className="pt-form-group">
@@ -102,24 +113,26 @@ class CreateCaseDialog extends Component {
                      autoComplete="off"
                      placeholder={intl.formatMessage(messages.untitled_label)}
                      onChange={this.onChangeLabel}
-                     value={this.state.collection.label}/>
+                     value={collection.label} />
             </div>
           </div>
           <div className="pt-form-group">
             <label className="pt-label">
-              <FormattedMessage id="case.choose.summary" defaultMessage="Describe it briefly:"/>
+              <FormattedMessage id="case.choose.summary"
+                                defaultMessage="Describe it briefly:"/>
             </label>
             <div className="pt-input-group pt-fill">
               <textarea id="summary"
                         className="pt-input"
                         placeholder={intl.formatMessage(messages.summary)}
                         onChange={this.onChangeSummary}
-                        value={this.state.collection.summary} />
+                        value={collection.summary} />
             </div>
           </div>
           <div className="pt-form-group">
             <label className="pt-label">
-              <FormattedMessage id="case.share.with" defaultMessage="Share with"/>
+              <FormattedMessage id="case.share.with"
+                                defaultMessage="Share with"/>
             </label>
             <div className="pt-input-group pt-fill">
               <Role.Select onSelect={this.onAddRole}
@@ -129,7 +142,9 @@ class CreateCaseDialog extends Component {
           {permissions.length !== 0 && <table className="settings-table">
             <thead>
               <tr key={0}>
-                <th><FormattedMessage id="case.name" defaultMessage="Name"/></th>
+                <th>
+                  <FormattedMessage id="case.name"
+                                    defaultMessage="Name"/></th>
                 <th/>
               </tr>
             </thead>
@@ -137,9 +152,11 @@ class CreateCaseDialog extends Component {
               {permissions.map((permission) =>
                 <tr key={permission.role.id + 1}>
                   <td>{permission.role.name}</td>
-                  <td>{permission.role.email}</td>
-                  <td><a onClick={(e) => this.onDeleteRole(permission, e)}><FormattedMessage id="case.remove"
-                                                                                            defaultMessage="Remove"/></a>
+                  <td>
+                    <a onClick={(e) => this.onDeleteRole(permission, e)}>
+                      <FormattedMessage id="case.remove"
+                                        defaultMessage="Remove"/>
+                    </a>
                   </td>
                 </tr>
               )}
@@ -149,10 +166,9 @@ class CreateCaseDialog extends Component {
         </div>
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
-            <Button
-              intent={Intent.PRIMARY}
-              onClick={this.onAddCase}
-              text={intl.formatMessage(messages.save)} />
+            <Button intent={Intent.PRIMARY}
+                    onClick={this.onAddCase}
+                    text={intl.formatMessage(messages.save)} />
           </div>
         </div>
       </Dialog>
