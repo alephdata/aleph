@@ -78,9 +78,7 @@ def _serve_archive(content_hash, file_name, mime_type):
                                file_name=file_name,
                                mime_type=mime_type)
     if url is not None:
-        resp = redirect(url)
-        print resp
-        return resp
+        return redirect(url)
 
     try:
         local_path = archive.load_file(content_hash, file_name=file_name)
