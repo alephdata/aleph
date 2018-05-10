@@ -19,6 +19,7 @@ import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import CollectionRedirectScreen from 'src/screens/CollectionRedirectScreen/CollectionRedirectScreen';
 import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
 import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
+import { CaseDocumentsContent } from 'src/components/Case';
 
 import './Router.css';
 
@@ -55,6 +56,7 @@ class Router extends Component {
         <Route path="/sources" exact component={SourcesIndexScreen}/>
         <Route path="/cases" exact component={CasesIndexScreen}/>
         <Route path="/cases/:collectionId" exact component={CaseScreen}/>
+        <Route path="/cases/:collectionId/documents" exact component={CaseDocumentsContent}/>
         <Route path="/collections/:collectionId" exact component={CollectionRedirectScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>

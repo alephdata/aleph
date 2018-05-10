@@ -93,7 +93,7 @@ class CaseInfo extends Component {
         <Menu className='pt-large' large={true}>
           <Popover content={<Menu>
             {cases.map(function (file, index) {
-              if (file.id !== casefile.id) {
+              if(file.id !== casefile.id) {
                 return <MenuItem onClick={(e) => onChange(file)} key={index} text={file.label} />
               }
             })}
@@ -103,7 +103,7 @@ class CaseInfo extends Component {
           </Popover>
           <MenuDivider/>
           <MenuItem active={home} onClick={this.onClickHome} className='menu-item-padding' icon='home' text={intl.formatMessage(messages.home)}/>
-          <MenuItem active={timeline} onClick={this.onClickTimelSine} className='menu-item-padding' icon='timeline-events' text={intl.formatMessage(messages.timeline)}/>
+          <MenuItem active={timeline} onClick={this.onClickTimeline} className='menu-item-padding' icon='timeline-events' text={intl.formatMessage(messages.timeline)}/>
           <MenuItem active={documents} onClick={this.onClickDocuments} className='menu-item-padding' icon='folder-close' text={intl.formatMessage(messages.documents)}/>
           <MenuItem active={notes} onClick={this.onClickNotes} className='menu-item-padding' icon='annotation' text={intl.formatMessage(messages.notes)}/>
           <MenuDivider/>

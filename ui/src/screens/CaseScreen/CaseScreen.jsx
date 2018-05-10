@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection, ErrorScreen } from 'src/components/common';
-import { CaseInfo, CaseContent } from 'src/components/Case';
-import {queryCollections} from "../../actions";
-import {selectCollectionsResult} from "../../selectors";
+import { CaseInfo, CaseContent, CaseDocumentsContent } from 'src/components/Case';
+import { queryCollections } from "../../actions";
+import { selectCollectionsResult } from "../../selectors";
 import Query from "src/app/Query";
 
 class CaseScreen extends Component {
@@ -28,17 +28,21 @@ class CaseScreen extends Component {
   }
 
   render() {
-    const { collection, result } = this.props;
+    const {collection, result} = this.props;
+    console.log(this.props);
 
     if (collection.isError) {
-      return <ErrorScreen error={collection.error} />;
+      return <ErrorScreen error={collection.error}/>;
     }
 
     return (
-      <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection} />}>
+      <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection}/>}>
         <DualPane>
-          <CaseInfo cases={result.results} casefile={collection} />
-          <CaseContent collection={collection} />
+          <CaseInfo cases={result.results} casefile={collection}/>
+          <div>
+            {this.props.children}
+          </div>
+          <CaseContent collection={collection}/>
         </DualPane>
       </Screen>
     );
