@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import CaseTableRow from './CaseTableRow';
 import {SortableTH} from 'src/components/common';
-import {getColor} from 'src/util/colorScheme';
+import { getColor } from 'src/util/colorScheme';
 
 import {fetchCollectionPermissions} from "src/actions";
 
@@ -74,10 +74,10 @@ class CaseIndexTable extends Component {
         </tr>
         </thead>
         <tbody>
-        {result.results !== undefined && colors !== null && result.results.map((casefile, index) =>
-          <CaseTableRow key={casefile.id}
-                        color={getColor(casefile.id)}
-                        casefile={casefile}
+        {result.results !== undefined && colors !== null && result.results.map((collection, index) =>
+          <CaseTableRow key={collection.id}
+                        color={getColor(collection.id)}
+                        collection={collection}
                         location={location}
                         history={history}
                         deleteCase={deleteCase}/>

@@ -5,11 +5,9 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router";
 
 import {createCollection, updateCollectionPermissions} from "src/actions";
-
 import {Role} from "src/components/common";
 
 import "./CreateCaseDialog.css";
-import {showSuccessToast} from "../../app/toast";
 
 const messages = defineMessages({
   untitled_label: {

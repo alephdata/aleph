@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {injectIntl, FormattedMessage, defineMessages} from 'react-intl';
-import {debounce} from 'lodash';
-import {NonIdealState, Button, Alert} from '@blueprintjs/core';
+import { connect } from 'react-redux';
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { debounce } from 'lodash';
+import { NonIdealState, Button } from '@blueprintjs/core';
 
-import {queryCollections, deleteCollection, updateCollectionPermissions, createCollection} from 'src/actions';
+import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
 
-import {selectCollectionsResult} from 'src/selectors';
-import {Screen, Breadcrumbs, SinglePane, SectionLoading} from 'src/components/common';
+import { selectCollectionsResult } from 'src/selectors';
+import { Screen, Breadcrumbs, SinglePane, SectionLoading } from 'src/components/common';
 import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
 import Query from "src/app/Query";
 import { CaseExplanationBox } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
-import {showSuccessToast} from "src/app/toast";
+import { showSuccessToast } from "src/app/toast";
 import { getColors } from 'src/util/colorScheme';
 
 import './CasesIndexScreen.css';
@@ -27,14 +27,6 @@ const messages = defineMessages({
     id: 'cases.no_results_description',
     defaultMessage: 'Try adding new case.',
   },
-  delete_success: {
-    id: 'cases.edit.save_success',
-    defaultMessage: 'Your deleted case.',
-  },
-  delete_error: {
-    id: 'cases.edit.save_error',
-    defaultMessage: 'Failed to delete case.',
-  },
   save_success: {
     id: 'case.save_success',
     defaultMessage: 'You have created a case.',
@@ -44,9 +36,9 @@ const messages = defineMessages({
     defaultMessage: 'Failed to create a case.',
   },
   filter: {
-  id: 'case.search_cases_placeholder',
+    id: 'case.search_cases_placeholder',
     defaultMessage: 'Search cases'
-},
+  },
   not_found: {
     id: 'case.not.found',
     defaultMessage: 'Log in to create your own case files, upload documents and manage your investigations!'
@@ -58,16 +50,13 @@ class CasesIndexScreen extends Component {
     super(props);
 
     this.state = {
-      dialogIsOpen: false,
-      alertIsOpen: false,
+      createIsOpen: false,
       casefile: {},
       result: [],
       queryPrefix: props.query.getString('prefix')
     };
 
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
-    this.toggleAlert = this.toggleAlert.bind(this);
-    this.onDeleteCase = this.onDeleteCase.bind(this);
     this.onAddCase = this.onAddCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
@@ -104,26 +93,7 @@ class CasesIndexScreen extends Component {
   }
 
   toggleCreateCase() {
-    this.setState({dialogIsOpen: !this.state.dialogIsOpen});
-  }
-
-  toggleAlert(casefile) {
-    this.setState({
-      alertIsOpen: !this.state.alertIsOpen,
-      casefile: casefile !== undefined ? casefile : {}
-    });
-  }
-
-  async onDeleteCase() {
-    const {casefile} = this.state;
-    const {intl} = this.props;
-    try {
-      await this.props.deleteCollection(casefile);
-      await this.fetchData();
-      showSuccessToast(intl.formatMessage(messages.delete_success));
-    } catch (e) {
-      alert(intl.formatMessage(messages.delete_error));
-    }
+    this.setState({createIsOpen: !this.state.createIsOpen});
   }
 
   async onAddCase(collection, permissions) {
@@ -154,8 +124,8 @@ class CasesIndexScreen extends Component {
   }
 
   render() {
-    const {query, intl, session} = this.props;
-    const {dialogIsOpen, alertIsOpen, result, queryPrefix} = this.state;
+    const { query, intl, session } = this.props;
+    const { result, queryPrefix } = this.state;
     const hasCases = result.total !== 0;
 
     if(session && !session.loggedIn) {
@@ -176,31 +146,22 @@ class CasesIndexScreen extends Component {
     return (
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs}>
         <SinglePane>
-          <Alert isOpen={alertIsOpen} onClose={this.toggleAlert} cancelButtonText='Cancel' confirmButtonText='Confirm'
-                 onConfirm={this.onDeleteCase}>
-            <p>
-              <FormattedMessage id="cases.browser.alert"
-                                defaultMessage="Are you sure you want to delete this case and"/>&nbsp;
-              <b>
-                <FormattedMessage id="cases.browser.all.files" defaultMessage="all files"/></b>&nbsp;
-              <FormattedMessage id="cases.browser.within" defaultMessage="within it?"/>
-            </p>
-          </Alert>
-          <CreateCaseDialog
-            isOpen={dialogIsOpen}
-            onAddCase={this.onAddCase}
-            toggleDialog={this.toggleCreateCase} />
-          <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
+          <CreateCaseDialog isOpen={this.state.createIsOpen}
+                            onAddCase={this.onAddCase}
+                            toggleDialog={this.toggleCreateCase} />
+          <CaseExplanationBox hasCases={hasCases}
+                              toggleCreateCase={this.toggleCreateCase} />
           <div className="pt-input-group filter-cases">
             <i className="pt-icon pt-icon-search"/>
             <input className="pt-input" type="search"
                    placeholder={intl.formatMessage(messages.filter)}
                    onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
           </div>
-          {result.total !== 0 && <CaseIndexTable query={query}
-                                                 colors={colors}
-                                                 result={result}
-                                                 deleteCase={this.toggleAlert}/>}
+          {result.total !== 0 && (
+            <CaseIndexTable query={query}
+                            colors={colors}
+                            result={result} />
+          )}
           {result.total === 0 && (
             <div className='error-and-add-button'>
               <NonIdealState visual="search"
@@ -241,7 +202,6 @@ const mapStateToProps = (state, ownProps) => {
 CasesIndexScreen = injectIntl(CasesIndexScreen);
 CasesIndexScreen = connect(mapStateToProps, {
   queryCollections,
-  deleteCollection,
   updateCollectionPermissions,
   createCollection
 })(CasesIndexScreen);
