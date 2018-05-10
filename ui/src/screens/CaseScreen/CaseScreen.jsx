@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 
 import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection, ErrorScreen } from 'src/components/common';
 import { CaseInfo, CaseContent, CaseDocumentsContent } from 'src/components/Case';
-import { queryCollections } from "../../actions";
-import { selectCollectionsResult } from "../../selectors";
+import { queryCollections } from "src/actions";
+import { selectCollectionsResult } from "src/selectors";
 import Query from "src/app/Query";
 
 class CaseScreen extends Component {
@@ -67,10 +67,10 @@ const mapStateToProps = (state, ownProps) => {
 
 CaseScreen = injectIntl(CaseScreen);
 CaseScreen = connect(mapStateToProps, {queryCollections})(CaseScreen);
-export default ({match, ...otherProps}) => (
+export default ({ match, ...otherProps }) => (
   <Collection.Load
     id={match.params.collectionId}
-    renderWhenLoading={<ScreenLoading/>}
+    renderWhenLoading={<ScreenLoading />}
   >{collection => (
     <CaseScreen collection={collection} {...otherProps} />
   )}</Collection.Load>

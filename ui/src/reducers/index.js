@@ -31,7 +31,7 @@ const rootReducer = combineReducers({
   collectionPermissions,
   collectionXrefIndex,
   collectionXrefMatches,
-  results,
+  results
 });
 
 export default rootReducer;

@@ -1,12 +1,14 @@
 import { createReducer } from 'redux-act';
 
-import { updateResults, updateLoading } from 'src/reducers/util';
+import { updateResults, updateLoading, flushResults } from 'src/reducers/util';
 
 import {
   queryCollections,
   queryEntities,
   queryDocumentRecords,
   queryNotifications,
+  createCollection,
+  deleteCollection,
 } from 'src/actions';
 
 const initialState = {};
@@ -24,4 +26,9 @@ export default createReducer({
   [queryNotifications.START]: updateLoading(true),
   [queryNotifications.ERROR]: updateLoading(false),
   [queryNotifications.COMPLETE]: updateResults,
+
+  // Clear out the results cache when operations are performed that
+  // may affect the content of the results.
+  [createCollection.COMPLETE]: flushResults,
+  [deleteCollection.COMPLETE]: flushResults,
 }, initialState);

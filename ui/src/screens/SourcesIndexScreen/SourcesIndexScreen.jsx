@@ -12,7 +12,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import { CollectionListItem } from 'src/components/Collection';
 
-import './CollectionsIndexScreen.css';
+import './SourcesIndexScreen.css';
 
 const messages = defineMessages({
   title: {
@@ -34,7 +34,7 @@ const messages = defineMessages({
 });
 
 
-class CollectionsIndexScreen extends Component {
+class SourcesIndexScreen extends Component {
   constructor(props) {
     super(props);
     const { intl } = props;
@@ -114,7 +114,7 @@ class CollectionsIndexScreen extends Component {
     </Breadcrumbs>);
 
     return (
-      <Screen className="CollectionsIndexScreen"
+      <Screen className="SourcesIndexScreen"
               breadcrumbs={breadcrumbs}
               title={intl.formatMessage(messages.title)}>
         <DualPane>
@@ -167,7 +167,10 @@ class CollectionsIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const context = { facet: ['category', 'countries'] };
+  const context = {
+    facet: ['category', 'countries'],
+    'filter:kind': 'source'
+  };
   const query = Query.fromLocation('collections', location, context, 'collections')
     .sortBy('count', true)
     .limit(30);
@@ -175,8 +178,8 @@ const mapStateToProps = (state, ownProps) => {
     query: query,
     result: selectCollectionsResult(state, query)
   };
-}
+};
 
-CollectionsIndexScreen = injectIntl(CollectionsIndexScreen);
-CollectionsIndexScreen = connect(mapStateToProps, {queryCollections})(CollectionsIndexScreen);
-export default CollectionsIndexScreen;
+SourcesIndexScreen = injectIntl(SourcesIndexScreen);
+SourcesIndexScreen = connect(mapStateToProps, {queryCollections})(SourcesIndexScreen);
+export default SourcesIndexScreen;
