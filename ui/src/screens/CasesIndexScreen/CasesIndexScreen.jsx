@@ -189,8 +189,7 @@ class CasesIndexScreen extends Component {
           <CreateCaseDialog
             isOpen={dialogIsOpen}
             onAddCase={this.onAddCase}
-            toggleDialog={this.toggleCreateCase}
-          />
+            toggleDialog={this.toggleCreateCase} />
           <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
           <div className="pt-input-group filter-cases">
             <i className="pt-icon pt-icon-search"/>
