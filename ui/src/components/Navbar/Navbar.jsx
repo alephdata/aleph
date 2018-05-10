@@ -81,10 +81,12 @@ class Navbar extends React.Component {
             <div className="pt-navbar-heading">
               <Link to="/">{metadata.app.title}</Link>
             </div>
-            {session && session.loggedIn === true && <NavbarDivider/>}
-            {session && session.loggedIn === true && <div>
-              <Link to="/cases">Cases</Link>
-            </div>}
+            {/*
+              {session && session.loggedIn === true && <NavbarDivider/>}
+              {session && session.loggedIn === true && <div>
+                <Link to="/cases">Cases</Link>
+              </div>}
+            */}
             {!isHomepage && (
               <form onSubmit={this.onSubmit} className='navbar-search-form'>
                 <ControlGroup fill={true}>
