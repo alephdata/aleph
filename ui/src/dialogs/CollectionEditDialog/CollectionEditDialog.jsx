@@ -10,15 +10,19 @@ import { updateCollection } from "src/actions";
 const messages = defineMessages({
   placeholder_label: {
     id: 'collection.edit.info.placeholder_label',
-    defaultMessage: 'A label for this source',
+    defaultMessage: 'A label',
   },
   placeholder_summary: {
     id: 'collection.edit.info.placeholder_summary',
-    defaultMessage: 'A brief summary of this source',
+    defaultMessage: 'A brief summary',
   },
-  title : {
-    id: 'collection.edit.title',
+  source_title : {
+    id: 'collection.edit.title.source',
     defaultMessage: 'Source settings'
+  },
+  case_title : {
+    id: 'collection.edit.title.case',
+    defaultMessage: 'Case settings'
   },
   save_button: {
     id: 'collection.edit.info.save',
@@ -89,12 +93,15 @@ class CollectionEditDialog extends Component {
   render() {
     const { intl, categories } = this.props;
     const { collection } = this.state;
+    const title = collection.casefile ? 
+                  intl.formatMessage(messages.case_title) :
+                  intl.formatMessage(messages.source_title);
     return (
       <Dialog
         icon="cog"
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
-        title={intl.formatMessage(messages.title)}>
+        title={title}>
         <div className="pt-dialog-body">
           <div className="pt-form-group">
               <label className="pt-label">
@@ -110,21 +117,23 @@ class CollectionEditDialog extends Component {
                      value={collection.label || ''}/>
             </div>
           </div>
-          <div className="pt-form-group">
+          { !collection.casefile && (
+            <div className="pt-form-group">
               <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
-            <div className="pt-select pt-fill">
-              <select id="category" onChange={this.onFieldChange} value={collection.category}>
-                {!collection.category && <option key='--' value='' selected>--</option>}
-                { Object.keys(categories).map((key) => (
-                  <option key={key} value={key}>
-                    {categories[key]}
-                  </option>
-                ))}
-              </select>
+              <div className="pt-select pt-fill">
+                <select id="category" onChange={this.onFieldChange} value={collection.category}>
+                  {!collection.category && <option key='--' value='' selected>--</option>}
+                  { Object.keys(categories).map((key) => (
+                    <option key={key} value={key}>
+                      {categories[key]}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
+          )}
           <div className="pt-form-group">
               <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.summary" defaultMessage="Summary"/>
