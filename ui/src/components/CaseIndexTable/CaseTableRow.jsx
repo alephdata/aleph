@@ -39,7 +39,7 @@ class CaseTableRow extends Component {
           {collection.summary}
         </td>
         <td className="schema">
-          {casefile.team !== undefined && casefile.team.map(function (member) {
+          {collection.team !== undefined && collection.team.map(function (member) {
             if(member.type === 'user') {
               return member.name + ", "
             }

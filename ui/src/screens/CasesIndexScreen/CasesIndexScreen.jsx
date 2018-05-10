@@ -38,7 +38,6 @@ const messages = defineMessages({
 class CasesIndexScreen extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       createIsOpen: false,
       queryPrefix: props.query.getString('prefix')
@@ -47,7 +46,6 @@ class CasesIndexScreen extends Component {
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
-    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {

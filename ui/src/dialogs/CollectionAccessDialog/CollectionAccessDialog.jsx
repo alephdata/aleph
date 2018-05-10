@@ -13,7 +13,7 @@ import './CollectionAccessDialog.css';
 const messages = defineMessages({
   title: {
     id: 'collection.edit.title',
-    defaultMessage: 'Manage collection permissions',
+    defaultMessage: 'Access control',
   },
   save_success: {
     id: 'collection.edit.save_success',

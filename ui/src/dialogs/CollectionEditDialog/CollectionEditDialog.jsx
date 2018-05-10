@@ -165,19 +165,22 @@ class CollectionEditDialog extends Component {
               onChange={this.onSelectCountries}
               codes={collection.countries} />
           </div>
-          <div className="pt-form-group">
+          { !collection.casefile && (
+            <div className="pt-form-group">
               <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.import.id" defaultMessage="Import ID"/>
               </label>
-            <div className="pt-form-content">
-              <input className="pt-input pt-fill"
-                     type="text"
-                     dir="auto"
-                     disabled
-                     value={collection.foreign_id || ''}
-              />
+              <div className="pt-form-content">
+                <input className="pt-input pt-fill"
+                      type="text"
+                      dir="auto"
+                      disabled
+                      value={collection.foreign_id || ''}
+                />
+              </div>
             </div>
-          </div>
+          )}
+          
         </div>
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">

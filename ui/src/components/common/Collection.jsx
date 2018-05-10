@@ -8,6 +8,7 @@ import c from 'classnames';
 
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
+import getCollectionLink from 'src/util/getCollectionLink';
 
 import './Collection.css';
 
@@ -66,14 +67,7 @@ class CollectionLink extends Component {
         hash: queryString.stringify(parsedHash),
       });
     } else {
-      history.push({
-        pathname: '/search',
-        search: queryString.stringify({'filter:collection_id': collection.id}),
-        hash: queryString.stringify({
-          'preview:id': collection.id,
-          'preview:type': previewType
-        }),
-      });
+      history.push(getCollectionLink(collection));
     }
   }
 

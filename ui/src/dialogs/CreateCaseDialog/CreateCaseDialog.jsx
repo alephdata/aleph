@@ -7,6 +7,7 @@ import { withRouter } from "react-router";
 import { createCollection, updateCollectionPermissions } from "src/actions";
 import { showWarningToast } from "src/app/toast";
 import { Role } from "src/components/common";
+import getCollectionLink from 'src/util/getCollectionLink';
 
 import "./CreateCaseDialog.css";
 
@@ -73,7 +74,7 @@ class CreateCaseDialog extends Component {
       const response = await this.props.createCollection(collection);
       const collectionId = response.data.id;
       await this.props.updateCollectionPermissions(collectionId, permissions);
-      history.push({ pathname: '/cases/' + collectionId });
+      history.push(getCollectionLink(collection));
     } catch (e) {
       showWarningToast(e.message);
     }
