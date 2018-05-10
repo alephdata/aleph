@@ -35,8 +35,6 @@ class CreateCaseDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      project: '',
-      summary: '',
       permissions: [],
       collection: {casefile: true}
     };
@@ -69,16 +67,14 @@ class CreateCaseDialog extends Component {
 
   onChangeProject({target}) {
     let collectionNew = this.state.collection;
-    let name = target.value;
-    collectionNew.label = name;
-    this.setState({project: name, collection: collectionNew});
+    collectionNew.label = target.value;
+    this.setState({collection: collectionNew});
   }
 
   onChangeSummary({target}) {
     let collectionNew = this.state.collection;
-    let summary = target.value;
-    collectionNew.summary = summary;
-    this.setState({summary: summary, collection: collectionNew});
+    collectionNew.summary = target.value;
+    this.setState({collection: collectionNew});
   }
 
   render() {
@@ -104,7 +100,7 @@ class CreateCaseDialog extends Component {
                      autoComplete="off"
                      placeholder={intl.formatMessage(messages.untitled_project)}
                      onChange={this.onChangeProject}
-                     value={this.state.project}/>
+                     value={this.state.collection.label}/>
             </div>
           </div>
           <div className="pt-form-group">
@@ -119,7 +115,7 @@ class CreateCaseDialog extends Component {
                      autoComplete="off"
                      placeholder={intl.formatMessage(messages.summary)}
                      onChange={this.onChangeSummary}
-                     value={this.state.summary}/>
+                     value={this.state.collection.summary}/>
             </div>
           </div>
           <div className="pt-form-group">
