@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
-import {Dialog, Button} from '@blueprintjs/core';
-import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
+import React, { Component } from 'react';
+import { Dialog, Button } from '@blueprintjs/core';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-import {createCollection, updateCollectionPermissions} from 'src/actions';
+import { createCollection, updateCollectionPermissions } from 'src/actions';
 
-import {Role} from 'src/components/common';
+import { Role } from 'src/components/common';
 
 import './CreateCaseDialog.css';
-import {showSuccessToast} from "../../app/toast";
+import { showSuccessToast } from "../../app/toast";
 
 const messages = defineMessages({
   untitled_project: {
@@ -27,7 +27,15 @@ const messages = defineMessages({
   create_case: {
     id: 'case.title',
     defaultMessage: 'Create case'
-  }
+  },
+  save_error: {
+    id: 'case.save_error',
+    defaultMessage: 'Failed to create a case.',
+  },
+  save_success: {
+    id: 'case.save_success',
+    defaultMessage: 'You have created a case.',
+  },
 });
 
 class CreateCaseDialog extends Component {
@@ -58,11 +66,18 @@ class CreateCaseDialog extends Component {
     this.setState({permissions: newPermissions});
   }
 
-  onAddCase() {
-    const {onAddCase} = this.props;
+  async onAddCase() {
+    const {intl} = this.props;
     const {permissions, collection} = this.state;
-
-    onAddCase(collection, permissions);
+    try {
+      let createdCollection = await this.props.createCollection(collection);
+      await this.props.updateCollectionPermissions(createdCollection.data.id, permissions);
+      await this.props.fetchData();
+      this.props.toggleDialog();
+      showSuccessToast(intl.formatMessage(messages.save_success));
+    } catch (e) {
+      alert(intl.formatMessage(messages.save_error));
+    }
   }
 
   onChangeProject({target}) {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {FormattedMessage} from 'react-intl';
-import {Icon, Alert} from '@blueprintjs/core';
+import {Icon} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
 import {Date} from 'src/components/common';
@@ -41,6 +41,11 @@ class CaseTableRow extends Component {
           {casefile.summary}
         </td>
         <td className="schema">
+          {casefile.team !== undefined && casefile.team.map(function (member) {
+            if(member.type === 'user') {
+              return member.name + ", "
+            }
+          })}
         </td>
         <td className="date">
           <Date value={casefile.created_at}/>

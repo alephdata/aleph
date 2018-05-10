@@ -1,18 +1,18 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {injectIntl, FormattedMessage, defineMessages} from 'react-intl';
-import {debounce} from 'lodash';
-import {NonIdealState, Button, Alert} from '@blueprintjs/core';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { debounce } from 'lodash';
+import { NonIdealState, Button, Alert } from '@blueprintjs/core';
 
-import {queryCollections, deleteCollection, updateCollectionPermissions, createCollection} from 'src/actions';
+import { queryCollections, deleteCollection, updateCollectionPermissions, createCollection } from 'src/actions';
 
-import {selectCollectionsResult} from 'src/selectors';
-import {Screen, Breadcrumbs, SinglePane, SectionLoading} from 'src/components/common';
+import { selectCollectionsResult } from 'src/selectors';
+import { Screen, Breadcrumbs, SinglePane, SectionLoading } from 'src/components/common';
 import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
 import Query from "src/app/Query";
 import { CaseExplanationBox } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
-import {showSuccessToast} from "src/app/toast";
+import { showSuccessToast } from "src/app/toast";
 import { getColors } from 'src/util/colorScheme';
 
 import './CasesIndexScreen.css';
@@ -35,18 +35,10 @@ const messages = defineMessages({
     id: 'cases.edit.save_error',
     defaultMessage: 'Failed to delete case.',
   },
-  save_success: {
-    id: 'case.save_success',
-    defaultMessage: 'You have created a case.',
-  },
-  save_error: {
-    id: 'case.save_error',
-    defaultMessage: 'Failed to create a case.',
-  },
   filter: {
-  id: 'case.search_cases_placeholder',
+    id: 'case.search_cases_placeholder',
     defaultMessage: 'Search cases'
-},
+  },
   not_found: {
     id: 'case.not.found',
     defaultMessage: 'Log in to create your own case files, upload documents and manage your investigations!'
@@ -68,9 +60,9 @@ class CasesIndexScreen extends Component {
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.toggleAlert = this.toggleAlert.bind(this);
     this.onDeleteCase = this.onDeleteCase.bind(this);
-    this.onAddCase = this.onAddCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   async componentDidMount() {
@@ -91,9 +83,9 @@ class CasesIndexScreen extends Component {
   }
 
   fetchIfNeeded() {
-    let { query, result } = this.props;
+    let {query, result} = this.props;
     if (result.total === undefined && !result.isLoading) {
-      this.props.queryCollections({ query });
+      this.props.queryCollections({query});
     }
   }
 
@@ -126,18 +118,6 @@ class CasesIndexScreen extends Component {
     }
   }
 
-  async onAddCase(collection, permissions) {
-    const {intl, updateCollectionPermissions, createCollection} = this.props;
-    try {
-      let createdCollection = await createCollection(collection);
-      await updateCollectionPermissions(createdCollection.data.id, permissions);
-      await this.fetchData();
-      this.toggleCreateCase();
-      showSuccessToast(intl.formatMessage(messages.save_success));
-    } catch (e) {
-      alert(intl.formatMessage(messages.save_error));
-    }
-  }
 
   onChangeQueryPrefix({target}) {
     this.setState({queryPrefix: target.value});
@@ -158,7 +138,7 @@ class CasesIndexScreen extends Component {
     const {dialogIsOpen, alertIsOpen, result, queryPrefix} = this.state;
     const hasCases = result.total !== 0;
 
-    if(session && !session.loggedIn) {
+    if (session && !session.loggedIn) {
       return <ErrorScreen title={intl.formatMessage(messages.not_found)}/>
     }
 
@@ -188,7 +168,7 @@ class CasesIndexScreen extends Component {
           </Alert>
           <CreateCaseDialog
             isOpen={dialogIsOpen}
-            onAddCase={this.onAddCase}
+            fetchData={this.fetchData}
             toggleDialog={this.toggleCreateCase}
           />
           <CaseExplanationBox hasCases={hasCases} toggleCreateCase={this.toggleCreateCase}/>
@@ -225,7 +205,7 @@ class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const {location} = ownProps;
   const context = {
-    facet: ['category', 'countries'],
+    facet: [ 'category', 'countries' ],
     'filter:kind': 'casefile'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')
