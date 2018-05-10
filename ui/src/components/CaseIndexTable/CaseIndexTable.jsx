@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router';
-import {defineMessages, injectIntl} from 'react-intl';
-import {connect} from 'react-redux';
+import { defineMessages, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 
 import CaseTableRow from './CaseTableRow';
-import {SortableTH} from 'src/components/common';
-import { getColor } from 'src/util/colorScheme';
-
-import {fetchCollectionPermissions} from "src/actions";
+import { SortableTH } from 'src/components/common';
 
 const messages = defineMessages({
   column_title: {
@@ -32,7 +28,7 @@ class CaseIndexTable extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {result: props.result};
+    this.state = { result: props.result };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,8 +39,8 @@ class CaseIndexTable extends Component {
   }
 
   render() {
-    const {query, intl, location, history, colors, deleteCase} = this.props;
-    const {result} = this.state;
+    const { query, intl } = this.props;
+    const { result } = this.state;
 
     if (result.total === 0 && result.page === 1) {
       return null;
@@ -70,17 +66,13 @@ class CaseIndexTable extends Component {
           <TH field="summary"/>
           <TH field="shared"/>
           <TH field="date"/>
-          <th/>
+          <th />
         </tr>
         </thead>
         <tbody>
-        {result.results !== undefined && colors !== null && result.results.map((collection, index) =>
+        {result.results !== undefined && result.results.map((collection, index) =>
           <CaseTableRow key={collection.id}
-                        color={getColor(collection.id)}
-                        collection={collection}
-                        location={location}
-                        history={history}
-                        deleteCase={deleteCase}/>
+                        collection={collection} />
         )}
         </tbody>
       </table>
@@ -88,10 +80,5 @@ class CaseIndexTable extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {};
-};
-
 CaseIndexTable = injectIntl(CaseIndexTable);
-CaseIndexTable = withRouter(CaseIndexTable);
-export default connect(mapStateToProps, {fetchCollectionPermissions})(CaseIndexTable);
+export default CaseIndexTable;

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { Alert, Intent } from "@blueprintjs/core";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
+import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 
 import { Role } from "src/components/common";
@@ -30,12 +31,15 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { intl, collection } = this.props;
+    const { intl, collection, history } = this.props;
     try {
       await this.props.deleteCollection(collection);
-      this.props.toggleDialog();
+      history.push({
+        pathname: collection.casefile ? '/cases' : '/collections'
+      });
     } catch (e) {
       showWarningToast(intl.formatMessage(messages.delete_error));
+      this.props.toggleDialog();
     }
   }
 
@@ -62,4 +66,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CollectionDeleteDialog = injectIntl(CollectionDeleteDialog);
+CollectionDeleteDialog = withRouter(CollectionDeleteDialog);
 export default connect(mapStateToProps, {deleteCollection})(CollectionDeleteDialog);

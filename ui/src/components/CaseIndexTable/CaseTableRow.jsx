@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {FormattedMessage} from 'react-intl';
 import {Icon} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
 import { Date } from 'src/components/common';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { deleteCollection } from 'src/actions';
+import { getColor } from 'src/util/colorScheme';
+
 
 class CaseTableRow extends Component {
   constructor(props) {
@@ -24,7 +25,9 @@ class CaseTableRow extends Component {
   }
 
   render() {
-    const { collection, color } = this.props;
+    const { collection } = this.props;
+    const color = getColor(collection.id);
+    
     return (
       <tr key={collection.id + 1} className='nowrap'>
         <td>
@@ -43,7 +46,7 @@ class CaseTableRow extends Component {
         </td>
         <td>
           <a onClick={this.toggleDeleteCase}>
-            <FormattedMessage id="case.index.remove" defaultMessage="Remove"/>
+            <Icon icon="trash" />
           </a>
         </td>
         <CollectionDeleteDialog collection={collection}
