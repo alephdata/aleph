@@ -4,6 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button, MenuItem, Position, Classes, Alignment } from "@blueprintjs/core";
 import { Select as BlueprintSelect } from "@blueprintjs/select";
 
+import wordList from 'src/util/wordList';
 import { suggestRoles } from "src/actions";
 
 import './Role.css';
@@ -45,6 +46,19 @@ class Label extends Component {
         { long ? role.label : role.name }
       </span>
     );
+  }
+}
+
+
+class List extends Component {
+  render() {
+    const { roles } = this.props;
+    
+    if (!roles) return null;
+    const names = roles.map((role, i) => {
+      return <Label key={role.id} role={role} {...this.props} />;
+    });
+    return (<span>{ wordList(names, ', ') }</span>);
   }
 }
 
@@ -120,6 +134,7 @@ class Select extends Component {
 
 class Role {
   static Label = Label;
+  static List = List;
   static Select = connect(null, {suggestRoles})(injectIntl(Select));;
 }
 

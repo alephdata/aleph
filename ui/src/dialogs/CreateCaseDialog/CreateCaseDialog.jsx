@@ -57,7 +57,7 @@ class CreateCaseDialog extends Component {
 
   onAddRole(role) {
     const { permissions } = this.state;
-    permissions.push({role: role, read: true, write: false});
+    permissions.push({role: role, read: true, write: true});
     this.setState({permissions: permissions});
   }
 
@@ -153,7 +153,9 @@ class CreateCaseDialog extends Component {
             <tbody>
               {permissions.map((permission) =>
                 <tr key={permission.role.id + 1}>
-                  <td>{permission.role.name}</td>
+                  <td>
+                    <Role.Label role={permission.role} icon={false} long={true} />
+                  </td>
                   <td>
                     <a onClick={(e) => this.onDeleteRole(permission, e)}>
                       <FormattedMessage id="case.remove"

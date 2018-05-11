@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Dialog, Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
+import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { Role, Country } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 import { updateCollection } from "src/actions";
@@ -24,6 +25,10 @@ const messages = defineMessages({
     id: 'collection.edit.title.case',
     defaultMessage: 'Case settings'
   },
+  delete_button: {
+    id: 'collection.edit.info.delete',
+    defaultMessage: 'Delete',
+  },
   save_button: {
     id: 'collection.edit.info.save',
     defaultMessage: 'Save changes',
@@ -42,15 +47,16 @@ const messages = defineMessages({
 class CollectionEditDialog extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       collection: props.collection,
+      deleteIsOpen: false
     };
 
     this.onSave = this.onSave.bind(this);
     this.onSelectCountries = this.onSelectCountries.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
+    this.toggleDeleteCollection = this.toggleDeleteCollection.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -63,6 +69,10 @@ class CollectionEditDialog extends Component {
     const { collection } = this.props;
     collection[target.id] = target.value;
     this.setState({collection: collection});
+  }
+  
+  toggleDeleteCollection() {
+    this.setState({deleteIsOpen: !this.state.deleteIsOpen});
   }
 
   onSelectCountries(countries) {
@@ -185,12 +195,18 @@ class CollectionEditDialog extends Component {
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
             <Button
+              intent={Intent.DANGER}
+              onClick={this.toggleDeleteCollection}
+              text={intl.formatMessage(messages.delete_button)} />
+            <Button
               intent={Intent.PRIMARY}
               onClick={this.onSave}
-              text={intl.formatMessage(messages.save_button)}
-            />
+              text={intl.formatMessage(messages.save_button)} />
           </div>
         </div>
+        <CollectionDeleteDialog isOpen={this.state.deleteIsOpen}
+                                collection={collection}
+                                toggleDialog={this.toggleDeleteCollection} />
       </Dialog>
     );
   }

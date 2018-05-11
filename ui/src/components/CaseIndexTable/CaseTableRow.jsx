@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Icon} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
-import { Date } from 'src/components/common';
+import { Date, Role } from 'src/components/common';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { deleteCollection } from 'src/actions';
 import { getColor } from 'src/util/colorScheme';
@@ -38,12 +38,8 @@ class CaseTableRow extends Component {
         <td className="schema">
           {collection.summary}
         </td>
-        <td className="schema">
-          {collection.team !== undefined && collection.team.map(function (member) {
-            if(member.type === 'user') {
-              return member.name + ", "
-            }
-          })}
+        <td className="roles">
+          <Role.List roles={collection.team} icon={false} />
         </td>
         <td className="date">
           <Date value={collection.created_at}/>
