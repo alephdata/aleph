@@ -24,7 +24,7 @@ class Notification extends Component {
       return <Entity.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
-      return <span>{object.label}</span>;
+      return object.label;
     }
     if (type === 'role') {
       return <Role.Label role={object} />;

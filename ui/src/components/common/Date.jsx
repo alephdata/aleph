@@ -26,11 +26,7 @@ class Date extends Component {
     if (!value) return null;
 
     let date = value.split('T')[0];
-    return (
-      <span className='Date' title={value}>
-        { date }
-      </span>
-    );
+    return (<span className='Date' title={value}>{date}</span>);
   }
 }
 

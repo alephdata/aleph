@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import filesize from 'filesize';
 
 
@@ -12,12 +12,7 @@ class FileSize extends Component {
     if (!value) {
       return null;
     }
-
-    return (
-      <span className='FileSize'>
-        { filesize(value, {round: 0}) }
-      </span>
-    );
+    return filesize(value, {round: 0});
   }
 }
 

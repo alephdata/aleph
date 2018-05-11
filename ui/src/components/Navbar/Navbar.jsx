@@ -30,19 +30,9 @@ class Navbar extends React.Component {
   }
 
   componentDidMount() {
-    const {query} = this.props;
+    const { query } = this.props;
     if (query !== undefined) {
       this.setState({searchValue: query.getString('q')})
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.location.pathname === '/search') {
-      return
-    }
-
-    if (nextProps.query && nextProps.query.state.q !== this.state.searchValue) {
-      this.setState({searchValue: nextProps.query.getString('q')})
     }
   }
 
@@ -51,12 +41,11 @@ class Navbar extends React.Component {
   }
 
   onSubmit(event) {
-    const {query, updateQuery} = this.props;
+    const { query, updateQuery, history } = this.props;
     event.preventDefault();
     if (updateQuery !== undefined) {
       updateQuery(query.set('q', this.state.searchValue));
     } else {
-      const {history} = this.props;
       history.push({
         pathname: '/search',
         search: queryString.stringify({

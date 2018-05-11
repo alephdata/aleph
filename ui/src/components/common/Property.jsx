@@ -20,18 +20,18 @@ class Value extends Component {
       return null;
     }
     if (model.type === 'country') {
-      return (<Country.Name code={value} />);
+      return <Country.Name code={value} />;
     }
     if (model.type === 'url' || model.type === 'uri') {
-      return (<URL value={value} />);
+      return <URL value={value} />;
     }
     if (model.type === 'entity') {
-      return (<Entity.Link entity={value} icon />);
+      return <Entity.Link entity={value} icon />;
     }
     if (model.type === 'date') {
-      return (<Date value={value} />);
+      return <Date value={value} />;
     }
-    return (<span title={value}>{value}</span>);
+    return value;
   }
 }
 

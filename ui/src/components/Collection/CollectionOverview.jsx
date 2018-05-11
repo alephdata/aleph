@@ -14,19 +14,23 @@ class CollectionOverview extends Component {
 
     return (
       <React.Fragment>
-        {hasHeader && <h4>
-          <Collection.Link collection={collection}/>
-        </h4>}
+        {hasHeader && (
+          <h4>
+            <Collection.Link collection={collection} />
+          </h4>
+        )}
         <p>{collection.summary}</p>
         <ul className='info-sheet'>
-          <li>
-            <span className="key">
-              <FormattedMessage id="collection.category" defaultMessage="Category"/>
-            </span>
-            <span className="value">
-              <Category collection={collection} />
-            </span>
-          </li>
+          { !collection.casefile && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.category" defaultMessage="Category"/>
+              </span>
+              <span className="value">
+                <Category collection={collection} />
+              </span>
+            </li>
+          )}
           { collection.creator && (
             <li>
               <span className="key">

@@ -19,11 +19,12 @@ class FolderViewer extends Component {
           {document.status === 'fail' && (
             <div className='warning-folder'>
               <strong>
-                <FormattedMessage id="search.warning" defaultMessage="Warning:" />{' '}
+                <FormattedMessage id="search.warning" defaultMessage="Warning:" />
               </strong>
+              &nbsp;
               <p>
                 <FormattedMessage id="search.not_properly_imported"
-                                  defaultMessage="this folder is not fully imported" />
+                                  defaultMessage="This folder is not fully imported." />
               </p>
             </div>
           )}
