@@ -1,5 +1,5 @@
 import logging
-from urlparse import urldefrag
+from urllib.parse import urldefrag
 from flask import Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized

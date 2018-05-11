@@ -112,7 +112,7 @@ class SearchQueryParser(QueryParser):
         # values in the result set). These must match 'keyword' fields in the
         # index.
         self.facet_names = set(self.getlist('facet'))
-        self.facet_filters = self.facet_names.intersection(self.filters.keys())
+        self.facet_filters = self.facet_names.intersection(list(self.filters.keys()))
 
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool('highlight', False)

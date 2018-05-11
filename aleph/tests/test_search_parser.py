@@ -21,7 +21,7 @@ class QueryParserTestCase(TestCase):
         self.assertEqual(args.offset, 5)
 
     def test_filters(self):
-        self.assertItemsEqual(args.filters.keys(), ['key1', 'key2', 'key3'])
+        self.assertItemsEqual(list(args.filters.keys()), ['key1', 'key2', 'key3'])
         self.assertEqual(args.filters['key1'], set(['foo1', 'foo2']))
         self.assertEqual(args.filters['key2'], set(['foo3', 'foo5']))
         self.assertEqual(args.filters['key3'], set(['foo4']))

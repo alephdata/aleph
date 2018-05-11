@@ -27,7 +27,7 @@ class EntitiesTestCase(TestCase):
             'properties': {
                 'country': 'pa',
                 'summary': 'a fictional teddy bear created by A. A. Milne',
-                'alias': [u'Puh der Bär', 'Pooh Bear']
+                'alias': ['Puh der Bär', 'Pooh Bear']
             }
         }, self.col)
         self.other = Entity.create({
@@ -36,7 +36,7 @@ class EntitiesTestCase(TestCase):
             'properties': {
                 'country': 'de',
                 'description': 'he is a bear',
-                'alias': [u'Puh der Bär']
+                'alias': ['Puh der Bär']
             }
         }, self.col)
         self.alert = Alert()

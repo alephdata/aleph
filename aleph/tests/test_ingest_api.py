@@ -1,5 +1,5 @@
 import json
-from StringIO import StringIO
+from io import StringIO
 
 from aleph.core import db
 from aleph.model import Collection
