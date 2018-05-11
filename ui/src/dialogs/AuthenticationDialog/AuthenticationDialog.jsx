@@ -43,9 +43,6 @@ class AuthenticationDialog extends Component {
     this.onOAuthLogin = this.onOAuthLogin.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
-
   onOAuthLogin() {
     const { auth } = this.props.metadata;
     if (auth.oauth_uri) {

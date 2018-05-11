@@ -72,10 +72,7 @@ class List extends Component {
 class MultiSelect extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      codes: props.codes || []
-    };
+    this.state = {};
 
     this.itemRenderer = this.itemRenderer.bind(this);
     this.itemFilter = this.itemFilter.bind(this);
@@ -84,8 +81,8 @@ class MultiSelect extends Component {
     this.tagRenderer = this.tagRenderer.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({codes: nextProps.codes});
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return { codes: nextProps.codes || [] };
   }
 
   itemRenderer(item, { modifiers, handleClick }) {

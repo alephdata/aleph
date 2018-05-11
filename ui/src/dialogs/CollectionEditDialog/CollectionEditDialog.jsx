@@ -63,10 +63,8 @@ class CollectionEditDialog extends Component {
     this.toggleDeleteCollection = this.toggleDeleteCollection.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      collection: nextProps.collection
-    });
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return { collection: nextProps.collection };
   }
 
   onFieldChange({target}) {

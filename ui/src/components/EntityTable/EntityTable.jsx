@@ -43,11 +43,9 @@ class EntityTable extends Component {
     this.state = {result: props.result};
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     const { result } = nextProps;
-    if (result.total !== undefined || result.isError) {
-      this.setState({ result })
-    }
+    return (result.total !== undefined || result.isError) ? { result } : null;
   }
 
   sortColumn(field) {

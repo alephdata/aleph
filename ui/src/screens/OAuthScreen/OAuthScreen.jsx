@@ -7,16 +7,16 @@ import {loginWithToken} from "src/actions/sessionActions";
 
 
 class OAuthScreen extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const parsedHash = queryString.parse(window.location.hash);
     if (parsedHash.token) {
       this.props.loginWithToken(parsedHash.token);
+      return null;
     }
   }
 
   render() {
     const { session } = this.props;
-
     if (session.loggedIn) {
       return <Redirect to="/"/>;
     } else {
