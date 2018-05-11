@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { ErrorSection } from 'src/components/common';
-import { Toolbar, CloseButton, DownloadButton, ParentButton, PagingButtons, DocumentSearch, ModeButtons } from 'src/components/Toolbar';
+import { Toolbar, CloseButton, ParentButton, PagingButtons, DocumentSearch, ModeButtons } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import TableViewer from './TableViewer';
 import TextViewer from './TextViewer';
@@ -89,7 +89,6 @@ class DocumentViewer extends React.Component {
               <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
             </Link>
           )}
-          <DownloadButton isPreview={previewMode} document={doc} />
           {numberOfPages !== null && numberOfPages > 0 && (
             <PagingButtons document={doc} numberOfPages={numberOfPages}/>
           )}
