@@ -31,9 +31,7 @@ class Name extends Component {
           label = short ? codeLabel : (countries[code] || codeLabel);
     
     if (!code) return null;
-    return (
-      <span>{ label }</span>
-    );
+    return label;
   }
 }
 
@@ -61,10 +59,7 @@ class List extends Component {
       const numberToKeep = truncate - 1;
       names = [...names.slice(0, numberToKeep), ellipsis];
     }
-
-    return (
-      <span>{ wordList(names, ', ') }</span>
-    );
+    return wordList(names, ', ');
   }
 }
 
