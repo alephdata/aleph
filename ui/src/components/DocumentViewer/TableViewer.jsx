@@ -66,7 +66,7 @@ class TableViewer extends Component {
     const value = _.get(result.results, [rowIndex, 'data', columnName], '');
     return <Cell loading={loading}>
       <TruncatedFormat detectTruncation={true}>
-        {value}
+        {value || ''}
       </TruncatedFormat>
     </Cell>
   }
