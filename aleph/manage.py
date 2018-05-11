@@ -95,7 +95,7 @@ def flush(foreign_id):
     collection = Collection.by_foreign_id(foreign_id, deleted=True)
     if collection is None:
         raise ValueError("No such collection: %r" % foreign_id)
-    delete_collection(collection.id)
+    delete_collection(collection)
 
 
 @manager.command
