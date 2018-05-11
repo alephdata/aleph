@@ -1,6 +1,6 @@
 import logging
 from banal import ensure_list
-from urlparse import urlparse, urljoin
+from six.moves.urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
 from flask import Flask, request
 from flask import url_for as flask_url_for

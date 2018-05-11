@@ -5,9 +5,8 @@ import mimetypes
 import exactitude
 from banal import ensure_list
 from collections import Mapping
-from urllib import unquote
-from urlparse import urlparse
 from celestial import normalize_mimetype, DEFAULT
+from six.moves.urllib.parse import unquote, urlparse
 
 from normality import safe_filename, stringify, slugify
 

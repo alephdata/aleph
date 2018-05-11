@@ -50,11 +50,6 @@ flexmock==0.10.2
 coverage
 coveralls
 
-# Python 3 backports
-functools32==3.2.3.post2
-subprocess32==3.2.7
-backports.csv==1.0.5
-
 # Duplicative for speed of docker builds
 lxml==4.2.1
 tesserocr==2.2.2
