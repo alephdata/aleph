@@ -1,5 +1,5 @@
-
 import React, {Component} from 'react';
+import Waypoint from 'react-waypoint';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';
@@ -80,6 +80,13 @@ class CasesIndexScreen extends Component {
     });
   }
 
+  getMoreResults() {
+    const {query, result, queryCollections} = this.props;
+    if (!result.isLoading && result.next) {
+      queryCollections({query, next: result.next});
+    }
+  }
+
   render() {
     const { query, result, intl, session } = this.props;
     const { queryPrefix } = this.state;
@@ -125,9 +132,16 @@ class CasesIndexScreen extends Component {
               </Button>
             </div>
           )}
-          {result.total === undefined && (
-            <SectionLoading/>
-          )}
+          {!result.isLoading && result.next && (
+              <Waypoint
+                onEnter={this.getMoreResults}
+                bottomOffset="-600px"
+                scrollableAncestor={window}
+              />
+            )}
+            {result.isLoading && (
+              <SectionLoading/>
+            )}
         </SinglePane>
       </Screen>
     );

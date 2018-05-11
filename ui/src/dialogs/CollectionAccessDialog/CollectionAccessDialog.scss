@@ -1,16 +1,11 @@
 @import "src/app/variables.scss";
 
 .CollectionAccessDialog {
-  .other-rows {
-    margin: auto;
-    width: 10%;
-  }
-
   .pt-control.pt-checkbox {
     margin-bottom: 0;
   }
 
   .header-topic {
-    font-weight: 700;
+    font-weight: bold;
   }
 }
