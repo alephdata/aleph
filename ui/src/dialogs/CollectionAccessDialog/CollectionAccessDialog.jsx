@@ -7,18 +7,20 @@ import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/act
 import { Role } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 
-import './AccessCollectionDialog.css';
+import './CollectionAccessDialog.css';
+
 
 const messages = defineMessages({
   title: {
     id: 'collection.edit.title',
-    defaultMessage: 'Manage collection permissions',
+    defaultMessage: 'Access control',
   },
   save_success: {
     id: 'collection.edit.save_success',
     defaultMessage: 'Your changes are saved.',
   },
 });
+
 
 class PermissionRow extends Component {
   render() {
@@ -40,13 +42,12 @@ class PermissionRow extends Component {
 }
 
 
-class AccessCollectionDialog extends Component {
+class CollectionAccessDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
       permissions: []
     };
-
     this.onAddRole = this.onAddRole.bind(this);
     this.onToggle = this.onToggle.bind(this);
     this.onSave = this.onSave.bind(this);
@@ -58,7 +59,8 @@ class AccessCollectionDialog extends Component {
 
   componentDidUpdate(prevProps) {
     const { collection, permissions } = this.props;
-    if (prevProps.collection && prevProps.collection.id !== collection.id) {
+    if (prevProps.collection && collection.id !== undefined && prevProps.collection.id !== collection.id) {
+      this.setState({permissions: []});
       this.fetchPermissions();
     }
     if (!this.state.permissions.length && permissions) {
@@ -108,12 +110,12 @@ class AccessCollectionDialog extends Component {
   render() {
     const {collection, intl} = this.props;
     const {permissions} = this.state;
-    const exclude = permissions.map((perm) => perm.role.id);
 
-    if (!collection || !collection.writeable) {
+    if (!collection || !collection.writeable || !permissions) {
       return null;
     }
 
+    const exclude = permissions.map((perm) => perm.role.id);
     return (
       <Dialog icon="key" className="AlertsDialog"
               isOpen={this.props.isOpen}
@@ -184,6 +186,7 @@ class AccessCollectionDialog extends Component {
   }
 }
 
+
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.collection.id;
   return {
@@ -191,5 +194,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-AccessCollectionDialog = injectIntl(AccessCollectionDialog);
-export default connect(mapStateToProps, {updateCollectionPermissions, fetchCollectionPermissions})(AccessCollectionDialog);
+
+CollectionAccessDialog = injectIntl(CollectionAccessDialog);
+CollectionAccessDialog = connect(mapStateToProps, {updateCollectionPermissions, fetchCollectionPermissions})(CollectionAccessDialog)
+export default CollectionAccessDialog;

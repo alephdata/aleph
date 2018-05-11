@@ -11,20 +11,20 @@ export const fetchCollection = asyncActionCreator(({ id }) => async dispatch => 
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION' });
 
+export const createCollection = asyncActionCreator((collection) => async dispatch => {
+  const response = await endpoint.post(`collections`, collection);
+  return {id: response.id, data: response.data};
+}, {name: 'CREATE_COLLECTION'});
+
 export const updateCollection = asyncActionCreator((collection) => async dispatch => {
   const response = await endpoint.post(`collections/${collection.id}`, collection);
   return {id: collection.id, data: response.data};
 }, {name: 'UPDATE_COLLECTION'});
 
 export const deleteCollection = asyncActionCreator((collection) => async dispatch => {
-  const response = await endpoint.delete(`collections/${collection.id}`, collection);
-  return {id: collection.id, data: response.data};
+  await endpoint.delete(`collections/${collection.id}`, collection);
+  return {id: collection.id};
 }, {name: 'DELETE_COLLECTION'});
-
-export const createCollection = asyncActionCreator((collection) => async dispatch => {
-  const response = await endpoint.post(`collections`, collection);
-  return {id: response.id, data: response.data};
-}, {name: 'CREATE_COLLECTION'});
 
 export const fetchCollectionPermissions = asyncActionCreator((id) => async dispatch => {
   const response = await endpoint.get(`collections/${id}/permissions`);

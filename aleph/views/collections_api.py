@@ -83,5 +83,5 @@ def mapping_process(id):
 @blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    delete_collection.apply_async([collection.id], priority=7)
+    delete_collection(collection)
     return jsonify({'status': 'accepted'}, status=202)

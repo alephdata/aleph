@@ -14,6 +14,7 @@ const errorActionTypes = [
   // actions.fetchDocument.ERROR,
   // actions.fetchCollection.ERROR,
   // actions.queryDocumentRecords.ERROR,
+  actions.deleteCollection.ERROR,
   actions.updateCollection.ERROR,
   actions.updateCollectionPermissions.ERROR,
   actions.deleteAlert.ERROR,

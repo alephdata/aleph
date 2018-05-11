@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 import {withRouter} from "react-router";
 import {defineMessages, injectIntl} from 'react-intl';
 import {Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon} from "@blueprintjs/core";
-import AccessCollectionDialog from 'src/dialogs/AccessCollectionDialog/AccessCollectionDialog';
+import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 
 import { DualPane } from 'src/components/common';
-import {getColor} from "src/util/colorScheme";
+import { getColor } from "src/util/colorScheme";
 
 import './CaseInfo.css';
 
@@ -93,7 +93,7 @@ class CaseInfo extends Component {
         <Menu className='pt-large' large={true}>
           <Popover content={<Menu>
             {cases.map(function (file, index) {
-              if(file.id !== casefile.id) {
+              if (file.id !== casefile.id) {
                 return <MenuItem onClick={(e) => onChange(file)} key={index} text={file.label} />
               }
             })}
@@ -110,7 +110,7 @@ class CaseInfo extends Component {
           <MenuItem active={settings} onClick={this.toggleSettings} className='menu-item-padding' text='Settings' icon='cog' />
           <MenuItem active={access} onClick={this.toggleAccess} className='menu-item-padding' text='Access' icon='key' />
         </Menu>
-        <AccessCollectionDialog
+        <CollectionAccessDialog
           collection={casefile}
           isOpen={access}
           toggleDialog={this.toggleAccess}

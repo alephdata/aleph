@@ -1,5 +1,5 @@
 import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
-import {MenuItem, Classes, Position} from '@blueprintjs/core'
+import {MenuItem, Classes, Position} from '@blueprintjs/core';
 import {MultiSelect as BlueprintMultiSelect} from "@blueprintjs/select";
 
 import wordList from 'src/util/wordList';

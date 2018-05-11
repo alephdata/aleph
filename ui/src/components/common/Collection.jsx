@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
+import { Icon } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
+import getCollectionLink from 'src/util/getCollectionLink';
+
+import './Collection.css';
+
 
 class CollectionLabel extends Component {
   shouldComponentUpdate(nextProps) {
@@ -16,20 +21,25 @@ class CollectionLabel extends Component {
   }
 
   render() {
-    const { collection, icon = true } = this.props;
-
+    const { collection, icon = true, label = true } = this.props;
     if (collection === undefined || collection.id === undefined) {
       return null;
     }
 
     return (
       <span className="CollectionLabel" title={collection.label}>
-        { collection.secret && icon && (<i className='fa fa-fw fa-lock' />) }
-        { collection.label }
+        { collection.secret && !collection.casefile && icon && (
+          <Icon icon="lock" />
+        )}
+        { collection.casefile && icon && (
+          <Icon icon="briefcase" />
+        )}
+        { label && collection.label }
       </span>
     );
   }
 }
+
 
 class CollectionLink extends Component {
   constructor() {
@@ -57,14 +67,7 @@ class CollectionLink extends Component {
         hash: queryString.stringify(parsedHash),
       });
     } else {
-      history.push({
-        pathname: '/search',
-        search: queryString.stringify({'filter:collection_id': collection.id}),
-        hash: queryString.stringify({
-          'preview:id': collection.id,
-          'preview:type': previewType
-        }),
-      });
+      history.push(getCollectionLink(collection));
     }
   }
 
@@ -110,6 +113,7 @@ class CollectionLoad extends Component {
     }
   }
 }
+
 
 const mapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),

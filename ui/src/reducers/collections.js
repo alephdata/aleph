@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { set, update } from 'lodash/fp';
+import { set, unset, update } from 'lodash/fp';
 
 import { fetchCollection, updateCollection, queryCollections, createCollection, deleteCollection } from 'src/actions';
 import { cacheResults } from './util';
@@ -25,5 +25,5 @@ export default createReducer({
     set(id, data)(state),
 
   [deleteCollection.COMPLETE]: (state, { id, data }) =>
-    set(id, undefined)(state),
+    unset(id)(state),
 }, initialState);

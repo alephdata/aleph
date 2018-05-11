@@ -4,7 +4,8 @@ import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
 import queryString from 'query-string';
-import {ControlGroup, InputGroup, NavbarDivider} from "@blueprintjs/core";
+import { ControlGroup, InputGroup } from "@blueprintjs/core";
+// import {ControlGroup, InputGroup, NavbarDivider} from "@blueprintjs/core";
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';

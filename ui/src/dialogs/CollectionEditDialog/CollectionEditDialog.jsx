@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Dialog, Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
+import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { Role, Country } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 import { updateCollection } from "src/actions";
@@ -10,15 +11,23 @@ import { updateCollection } from "src/actions";
 const messages = defineMessages({
   placeholder_label: {
     id: 'collection.edit.info.placeholder_label',
-    defaultMessage: 'A label for this source',
+    defaultMessage: 'A label',
   },
   placeholder_summary: {
     id: 'collection.edit.info.placeholder_summary',
-    defaultMessage: 'A brief summary of this source',
+    defaultMessage: 'A brief summary',
   },
-  title : {
-    id: 'collection.edit.title',
+  source_title : {
+    id: 'collection.edit.title.source',
     defaultMessage: 'Source settings'
+  },
+  case_title : {
+    id: 'collection.edit.title.case',
+    defaultMessage: 'Case settings'
+  },
+  delete_button: {
+    id: 'collection.edit.info.delete',
+    defaultMessage: 'Delete',
   },
   save_button: {
     id: 'collection.edit.info.save',
@@ -38,15 +47,16 @@ const messages = defineMessages({
 class CollectionEditDialog extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       collection: props.collection,
+      deleteIsOpen: false
     };
 
     this.onSave = this.onSave.bind(this);
     this.onSelectCountries = this.onSelectCountries.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
+    this.toggleDeleteCollection = this.toggleDeleteCollection.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,6 +69,10 @@ class CollectionEditDialog extends Component {
     const { collection } = this.props;
     collection[target.id] = target.value;
     this.setState({collection: collection});
+  }
+  
+  toggleDeleteCollection() {
+    this.setState({deleteIsOpen: !this.state.deleteIsOpen});
   }
 
   onSelectCountries(countries) {
@@ -89,12 +103,15 @@ class CollectionEditDialog extends Component {
   render() {
     const { intl, categories } = this.props;
     const { collection } = this.state;
+    const title = collection.casefile ? 
+                  intl.formatMessage(messages.case_title) :
+                  intl.formatMessage(messages.source_title);
     return (
       <Dialog
         icon="cog"
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
-        title={intl.formatMessage(messages.title)}>
+        title={title}>
         <div className="pt-dialog-body">
           <div className="pt-form-group">
               <label className="pt-label">
@@ -110,21 +127,23 @@ class CollectionEditDialog extends Component {
                      value={collection.label || ''}/>
             </div>
           </div>
-          <div className="pt-form-group">
+          { !collection.casefile && (
+            <div className="pt-form-group">
               <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
-            <div className="pt-select pt-fill">
-              <select id="category" onChange={this.onFieldChange} value={collection.category}>
-                {!collection.category && <option key='--' value='' selected>--</option>}
-                { Object.keys(categories).map((key) => (
-                  <option key={key} value={key}>
-                    {categories[key]}
-                  </option>
-                ))}
-              </select>
+              <div className="pt-select pt-fill">
+                <select id="category" onChange={this.onFieldChange} value={collection.category}>
+                  {!collection.category && <option key='--' value='' selected>--</option>}
+                  { Object.keys(categories).map((key) => (
+                    <option key={key} value={key}>
+                      {categories[key]}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
+          )}
           <div className="pt-form-group">
               <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.summary" defaultMessage="Summary"/>
@@ -156,29 +175,38 @@ class CollectionEditDialog extends Component {
               onChange={this.onSelectCountries}
               codes={collection.countries} />
           </div>
-          <div className="pt-form-group">
+          { !collection.casefile && (
+            <div className="pt-form-group">
               <label className="pt-label">
                 <FormattedMessage id="collection.edit.info.import.id" defaultMessage="Import ID"/>
               </label>
-            <div className="pt-form-content">
-              <input className="pt-input pt-fill"
-                     type="text"
-                     dir="auto"
-                     disabled
-                     value={collection.foreign_id || ''}
-              />
+              <div className="pt-form-content">
+                <input className="pt-input pt-fill"
+                      type="text"
+                      dir="auto"
+                      disabled
+                      value={collection.foreign_id || ''}
+                />
+              </div>
             </div>
-          </div>
+          )}
+          
         </div>
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
             <Button
+              intent={Intent.DANGER}
+              onClick={this.toggleDeleteCollection}
+              text={intl.formatMessage(messages.delete_button)} />
+            <Button
               intent={Intent.PRIMARY}
               onClick={this.onSave}
-              text={intl.formatMessage(messages.save_button)}
-            />
+              text={intl.formatMessage(messages.save_button)} />
           </div>
         </div>
+        <CollectionDeleteDialog isOpen={this.state.deleteIsOpen}
+                                collection={collection}
+                                toggleDialog={this.toggleDeleteCollection} />
       </Dialog>
     );
   }
