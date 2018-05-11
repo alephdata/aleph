@@ -42,7 +42,7 @@ table {
       a:link, 
       a:visited,
       a:hover,
-      a:active,{
+      a:active {
         color: white;
       }
     }
@@ -93,6 +93,31 @@ table.data-table {
   tbody tr:first-child td {
     box-shadow: inset 0 $table-border-width 0 0 $aleph-table-border-color;
   }
+}
+
+table.case-table {
+  @extend .data-table;
+
+  width: 80%;
+  padding-top: 2em;
+
+  th {
+    background: none;
+  }
+
+  tr:hover {
+    white-space: nowrap;
+    background: $aleph-table-heading-background;
+  }
+
+  tbody tr td {
+    border-bottom: none;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
 }
 
 table.settings-table {

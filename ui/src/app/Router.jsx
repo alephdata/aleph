@@ -6,17 +6,19 @@ import { Spinner } from '@blueprintjs/core';
 import { fetchMetadata } from 'src/actions';
 import NotFoundScreen from 'src/screens/NotFoundScreen/NotFoundScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
-import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
 import OAuthScreen from "src/screens/OAuthScreen/OAuthScreen";
 import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
 import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
 import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
-import CollectionsIndexScreen from 'src/screens/CollectionsIndexScreen/CollectionsIndexScreen';
+import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
 import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
-import { DocumentRedirectScreen } from 'src/components/Document';
+import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
+import CollectionRedirectScreen from 'src/screens/CollectionRedirectScreen/CollectionRedirectScreen';
+import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
+import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
 
 import './Router.css';
 
@@ -50,8 +52,10 @@ class Router extends Component {
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
-        <Route path="/collections" exact component={CollectionsIndexScreen}/>
-        <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+        <Route path="/sources" exact component={SourcesIndexScreen}/>
+        <Route path="/cases" exact component={CasesIndexScreen}/>
+        <Route path="/cases/:collectionId" exact component={CaseScreen}/>
+        <Route path="/collections/:collectionId" exact component={CollectionRedirectScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/notifications" exact component={NotificationsScreen}/>

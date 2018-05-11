@@ -52,3 +52,7 @@ export function updateResults(state, { query, result }) {
   }
   return { ...state, [key]: result};
 }
+
+export function flushResults() {
+  return {}
+}

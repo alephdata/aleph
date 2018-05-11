@@ -8,6 +8,8 @@
     
     .pt-navbar-heading {
       font-weight: bold;
+      margin-right: 0 !important;
+      margin-left: $aleph-grid-size * 1.5;
     }
 
     .pt-popover-target {

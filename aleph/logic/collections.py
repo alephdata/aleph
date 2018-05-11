@@ -3,10 +3,7 @@ from datetime import datetime
 
 from aleph.core import db, celery
 from aleph.model import Collection, Document, Entity, Match, Permission
-from aleph.index.collections import delete_collection as index_delete
-from aleph.index.collections import delete_documents as index_delete_documents
-from aleph.index.collections import delete_entities as index_delete_entities
-from aleph.index.collections import index_collection, update_collection_roles
+from aleph.index import collections as index
 from aleph.logic.entities import update_entity_full
 from aleph.logic.xref import xref_collection
 
@@ -18,7 +15,7 @@ def update_collection(collection):
     log.info("Updating: %r", collection)
 
     if collection.deleted_at is not None:
-        index_delete(collection.id)
+        index.delete_collection(collection.id)
         return
 
     if collection.casefile:
@@ -30,7 +27,7 @@ def update_collection(collection):
     for entity in eq:
         update_entity_full.apply_async([entity.id], priority=1)
 
-    return index_collection(collection)
+    return index.index_collection(collection)
 
 
 def update_collections():
@@ -45,8 +42,8 @@ def index_collections():
     cq = cq.order_by(Collection.id.desc())
     for collection in cq.all():
         log.info("Index [%s]: %s", collection.foreign_id, collection.label)
-        index_delete(collection.id)
-        index_collection(collection)
+        index.delete_collection(collection.id)
+        index.index_collection(collection)
 
 
 @celery.task(priority=8)
@@ -54,7 +51,7 @@ def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
     collection = Collection.by_id(collection_id)
     log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
-    update_collection_roles(collection)
+    index.update_collection_roles(collection)
 
 
 @celery.task()
@@ -82,8 +79,15 @@ def process_collection(collection_id):
     update_collection(collection)
 
 
+def delete_collection(collection):
+    collection.delete()
+    db.session.commit()
+    index.delete_collection(collection.id)
+    delete_collection_content.apply_async([collection.id], priority=7)
+
+
 @celery.task()
-def delete_collection(collection_id):
+def delete_collection_content(collection_id):
     # Deleting a collection affects many associated objects and requires
     # checks, so this is done manually and in detail here.
     q = db.session.query(Collection)
@@ -95,7 +99,7 @@ def delete_collection(collection_id):
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     deleted_at = collection.deleted_at or datetime.utcnow()
-    index_delete(collection_id)
+    index.delete_collection(collection_id)
 
     delete_documents(collection_id, deleted_at=deleted_at)
     delete_entities(collection_id, deleted_at=deleted_at)
@@ -112,7 +116,7 @@ def delete_entities(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting entities...")
     Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
-    index_delete_entities(collection_id)
+    index.delete_entities(collection_id)
     log.info("Deleting cross-referencing matches...")
     Match.delete_by_collection(collection_id, deleted_at=deleted_at)
 
@@ -122,6 +126,6 @@ def delete_documents(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting documents...")
     Document.delete_by_collection(collection_id, deleted_at=deleted_at)
-    index_delete_documents(collection_id)
+    index.delete_documents(collection_id)
     log.info("Deleting cross-referencing matches...")
     Match.delete_by_collection(collection_id, deleted_at=deleted_at)

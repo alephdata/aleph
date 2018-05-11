@@ -16,7 +16,9 @@ import {
   fetchCollectionPermissions,
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
-  queryXrefMatches
+  queryXrefMatches,
+  createCollection,
+  deleteCollection
 } from './collectionActions';
 import {
   queryEntities,
@@ -24,7 +26,6 @@ import {
   fetchEntityReferences,
   fetchEntityTags
 } from './entityActions';
-
 
 export {
   suggestRoles,
@@ -48,6 +49,8 @@ export {
   fetchCollectionXrefIndex,
   queryXrefMatches,
   queryNotifications,
+  createCollection,
+  deleteCollection,
   deleteNotifications
 };
 

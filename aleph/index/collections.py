@@ -122,6 +122,7 @@ def delete_collection(collection_id):
     """Delete all documents from a particular collection."""
     es.delete(index=collections_index(),
               doc_type='doc',
+              refresh=True,
               id=collection_id,
               ignore=[404])
 

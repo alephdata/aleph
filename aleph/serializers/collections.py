@@ -19,7 +19,7 @@ class CollectionSchema(BaseSchema):
     ]
 
     label = String(validate=Length(min=2, max=500), required=True)
-    foreign_id = String()
+    foreign_id = String(missing=None)
     kind = String(dump_only=True)
     casefile = Boolean(missing=None)
     summary = String(allow_none=True)

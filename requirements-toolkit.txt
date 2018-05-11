@@ -7,6 +7,6 @@ fingerprints==0.5.4
 storagelayer==0.4.1
 exactitude==2.3.3
 ingestors==0.9.4
-normality==0.5.12
+normality==0.6.0
 celestial==0.2.3
 pdflib==0.1.6
