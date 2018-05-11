@@ -43,7 +43,7 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
     request._http_cache = True
     args = sorted(set(request.args.items()))
     # jquery where is your god now?!?
-    args = filter(lambda (k, v): k != '_', args)
+    args = [(k, v) for (k, v) in args if k != '_']
     cache_parts = [args, vary, request._app_locale]
 
     if vary_user and request.authz.logged_in:
