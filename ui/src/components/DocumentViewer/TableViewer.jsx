@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Cell, Column, TruncatedFormat, Table } from "@blueprintjs/table";
+import { Cell, Column, TruncatedFormat, Table, TableLoadingOption } from "@blueprintjs/table";
 
 import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
@@ -73,14 +73,19 @@ class TableViewer extends Component {
 
   render() {
     const { document, result } = this.props;
+    const loadingOptions = []
+    if (document.id === undefined) {
+      return null;
+    }
     if (result.total === undefined) {
-      return <SectionLoading />
+      loadingOptions.push(TableLoadingOption.CELLS);
     }
     return (
       <div className="TableViewer">
         <Table numRows={result.total}
-               // enableGhostCells={true}
+               enableGhostCells={true}
                enableRowHeader={true}
+               loadingOptions={loadingOptions}
                onVisibleCellsChange={this.onVisibleCellsChange}>
           {document.columns.map((column, i) => 
             <Column key={i} id={i} name={column} cellRenderer={this.renderCell} />  
