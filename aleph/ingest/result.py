@@ -109,7 +109,7 @@ class DocumentResult(Result):
         doc.modified_at = self.modified_at or doc.meta.get('modified_at')
         doc.published_at = self.published_at or doc.meta.get('published_at')
         doc.headers = self.headers or doc.meta.get('headers')
-        doc.columns = self.columns.keys()
+        doc.columns = list(self.columns.keys())
         doc.body_raw = self.body_html
         doc.body_text = self.body_text
 

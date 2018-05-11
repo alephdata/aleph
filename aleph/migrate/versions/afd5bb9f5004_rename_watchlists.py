@@ -28,7 +28,7 @@ def upgrade():
     tmp_type.create(bind, checkfirst=False)
     op.execute('ALTER TABLE permission ALTER COLUMN resource_type TYPE perm_type_coll'
                ' USING resource_type::text::perm_type_coll;')
-    op.alter_column('permission', u'resource_type', type_=tmp_type,
+    op.alter_column('permission', 'resource_type', type_=tmp_type,
                     existing_type=old_type)
     meta = sa.MetaData()
     meta.bind = bind

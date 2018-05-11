@@ -125,13 +125,13 @@ def upgrade():
     op.drop_index('ix_document_record_doc', table_name='document_record')
     op.create_index(op.f('ix_processing_log_source_location'), 'processing_log', ['source_location'], unique=False)
     op.drop_index('ix_processing_log_source_loc', table_name='processing_log')
-    op.add_column(u'reference', sa.Column('entity_id', sa.String(length=32), nullable=True))
+    op.add_column('reference', sa.Column('entity_id', sa.String(length=32), nullable=True))
     op.create_foreign_key('ix_reference_fk', 'reference', 'entity', ['entity_id'], ['id'])
 
 
 def downgrade():
     op.drop_constraint('ix_reference_fk', 'reference', type_='foreignkey')
-    op.drop_column(u'reference', 'entity_id')
+    op.drop_column('reference', 'entity_id')
     op.create_index('ix_processing_log_source_loc', 'processing_log', ['source_location'], unique=False)
     op.drop_index(op.f('ix_processing_log_source_location'), table_name='processing_log')
     op.create_index('ix_document_record_doc', 'document_record', ['document_id'], unique=False)

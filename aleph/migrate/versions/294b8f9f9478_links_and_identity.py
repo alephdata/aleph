@@ -22,7 +22,7 @@ def upgrade():
     table = meta.tables['entity_identity']
     bind.execute(table.delete())
 
-    op.drop_column(u'collection', 'generate_entities')
+    op.drop_column('collection', 'generate_entities')
 
     op.create_table('link',
         sa.Column('id', sa.String(length=32), nullable=False),
@@ -44,14 +44,14 @@ def upgrade():
     op.create_index(op.f('ix_link_target_id'), 'link', ['target_id'], unique=False)
     op.create_index(op.f('ix_link_type'), 'link', ['type'], unique=False)
 
-    op.add_column(u'entity_identity', sa.Column('match_id', sa.String(length=254), nullable=False))
-    op.add_column(u'entity_identity', sa.Column('judge_id', sa.Integer(), nullable=True))
-    op.add_column(u'entity_identity', sa.Column('judgement', sa.Integer(), nullable=False))
+    op.add_column('entity_identity', sa.Column('match_id', sa.String(length=254), nullable=False))
+    op.add_column('entity_identity', sa.Column('judge_id', sa.Integer(), nullable=True))
+    op.add_column('entity_identity', sa.Column('judgement', sa.Integer(), nullable=False))
     op.create_index(op.f('ix_entity_identity_match_id'), 'entity_identity', ['match_id'], unique=False)
     op.drop_index('ix_entity_identity_identity', table_name='entity_identity')
     op.create_foreign_key(None, 'entity_identity', 'entity', ['entity_id'], ['id'])
     op.create_foreign_key(None, 'entity_identity', 'role', ['judge_id'], ['id'])
-    op.drop_column(u'entity_identity', 'identity')
+    op.drop_column('entity_identity', 'identity')
 
 
 def downgrade():

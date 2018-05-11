@@ -39,7 +39,7 @@ class AhoCorasickEntityAnalyzer(EntityAnalyzer):
 
     def build_automaton(self):
         q = Entity.all()
-        q = q.filter(Entity.schema.in_(self.TYPES.keys()))
+        q = q.filter(Entity.schema.in_(list(self.TYPES.keys())))
 
         matches = {}
         for entity in q:
@@ -61,7 +61,7 @@ class AhoCorasickEntityAnalyzer(EntityAnalyzer):
             return
 
         automaton = Automaton()
-        for term, entities in matches.iteritems():
+        for term, entities in matches.items():
             automaton.add_word(term, entities)
         automaton.make_automaton()
         return automaton

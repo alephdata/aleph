@@ -15,11 +15,11 @@ down_revision = 'aca5ebda9763'
 
 
 def upgrade():
-    op.drop_constraint(u'entity_building_address_id_fkey', 'entity', type_='foreignkey')
-    op.drop_constraint(u'entity_headquarters_address_id_fkey', 'entity', type_='foreignkey')
-    op.drop_constraint(u'entity_postal_address_id_fkey', 'entity', type_='foreignkey')
-    op.drop_constraint(u'entity_registered_address_id_fkey', 'entity', type_='foreignkey')
-    op.drop_constraint(u'entity_residential_address_id_fkey', 'entity', type_='foreignkey')
+    op.drop_constraint('entity_building_address_id_fkey', 'entity', type_='foreignkey')
+    op.drop_constraint('entity_headquarters_address_id_fkey', 'entity', type_='foreignkey')
+    op.drop_constraint('entity_postal_address_id_fkey', 'entity', type_='foreignkey')
+    op.drop_constraint('entity_registered_address_id_fkey', 'entity', type_='foreignkey')
+    op.drop_constraint('entity_residential_address_id_fkey', 'entity', type_='foreignkey')
     op.drop_table('entity_contact_detail')
     op.drop_table('entity_identifier')
     op.drop_table('entity_address')
