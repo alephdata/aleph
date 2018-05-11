@@ -14,9 +14,7 @@ class Category extends Component {
     const { collection, categories } = this.props;
     let category = collection ? collection.category : this.props.category;
     const label = categories[category] || <FormattedMessage id="category.other" defaultMessage="Other"/>;
-    return (
-      <span>{ label }</span>
-    );
+    return label;
   }
 }
 
