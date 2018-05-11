@@ -73,8 +73,7 @@ class CaseIndexTable extends Component {
         </thead>
         <tbody>
         {result.results !== undefined && result.results.map((collection, index) =>
-          <CaseTableRow key={collection.id}
-                        collection={collection} />
+          <CaseTableRow key={collection.id} collection={collection} />
         )}
         </tbody>
       </table>

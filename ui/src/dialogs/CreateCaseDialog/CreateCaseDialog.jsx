@@ -66,9 +66,10 @@ class CreateCaseDialog extends Component {
     this.setState({permissions: newPermissions});
   }
 
-  async onAddCase() {
+  async onAddCase(event) {
     const { history } = this.props;
     const { collection, permissions } = this.state;
+    event.preventDefault();
     try {
       const response = await this.props.createCollection(collection);
       const collectionId = response.data.id;
@@ -101,80 +102,82 @@ class CreateCaseDialog extends Component {
               isOpen={this.props.isOpen}
               title={intl.formatMessage(messages.title)}
               onClose={this.props.toggleDialog}>
-        <div className="pt-dialog-body">
-          <div className="pt-form-group">
-            <label className="pt-label">
-              <FormattedMessage id="case.choose.name" defaultMessage="Choose a title:"/>
-            </label>
-            <div className="pt-input-group pt-large pt-fill">
-              <input id="label"
-                     type="text"
-                     autoFocus={true}
-                     className="pt-input"
-                     autoComplete="off"
-                     placeholder={intl.formatMessage(messages.untitled_label)}
-                     onChange={this.onChangeLabel}
-                     value={collection.label} />
+        <form onSubmit={this.onAddCase}>
+          <div className="pt-dialog-body">
+            <div className="pt-form-group">
+              <label className="pt-label">
+                <FormattedMessage id="case.choose.name" defaultMessage="Choose a title:"/>
+              </label>
+              <div className="pt-input-group pt-large pt-fill">
+                <input id="label"
+                      type="text"
+                      autoFocus={true}
+                      className="pt-input"
+                      autoComplete="off"
+                      placeholder={intl.formatMessage(messages.untitled_label)}
+                      onChange={this.onChangeLabel}
+                      value={collection.label} />
+              </div>
+            </div>
+            <div className="pt-form-group">
+              <label className="pt-label">
+                <FormattedMessage id="case.choose.summary"
+                                  defaultMessage="Describe it briefly:"/>
+              </label>
+              <div className="pt-input-group pt-fill">
+                <textarea id="summary"
+                          className="pt-input"
+                          placeholder={intl.formatMessage(messages.summary)}
+                          onChange={this.onChangeSummary}
+                          value={collection.summary} />
+              </div>
+            </div>
+            <div className="pt-form-group">
+              <label className="pt-label">
+                <FormattedMessage id="case.share.with"
+                                  defaultMessage="Share with"/>
+              </label>
+              <div className="pt-input-group pt-fill">
+                <Role.Select onSelect={this.onAddRole}
+                            exclude={exclude} />
+              </div>
+            </div>
+            {permissions.length !== 0 && (
+              <table className="settings-table">
+                <thead>
+                  <tr key={0}>
+                    <th>
+                      <FormattedMessage id="case.name"
+                                        defaultMessage="Name"/></th>
+                    <th/>
+                  </tr>
+                </thead>
+                <tbody>
+                  {permissions.map((permission) =>
+                    <tr key={permission.role.id + 1}>
+                      <td>
+                        <Role.Label role={permission.role} icon={false} long={true} />
+                      </td>
+                      <td>
+                        <a onClick={(e) => this.onDeleteRole(permission, e)}>
+                          <FormattedMessage id="case.remove"
+                                            defaultMessage="Remove"/>
+                        </a>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+          )}
+          </div>
+          <div className="pt-dialog-footer">
+            <div className="pt-dialog-footer-actions">
+              <Button type="submit"
+                      intent={Intent.PRIMARY}
+                      text={intl.formatMessage(messages.save)} />
             </div>
           </div>
-          <div className="pt-form-group">
-            <label className="pt-label">
-              <FormattedMessage id="case.choose.summary"
-                                defaultMessage="Describe it briefly:"/>
-            </label>
-            <div className="pt-input-group pt-fill">
-              <textarea id="summary"
-                        className="pt-input"
-                        placeholder={intl.formatMessage(messages.summary)}
-                        onChange={this.onChangeSummary}
-                        value={collection.summary} />
-            </div>
-          </div>
-          <div className="pt-form-group">
-            <label className="pt-label">
-              <FormattedMessage id="case.share.with"
-                                defaultMessage="Share with"/>
-            </label>
-            <div className="pt-input-group pt-fill">
-              <Role.Select onSelect={this.onAddRole}
-                           exclude={exclude} />
-            </div>
-          </div>
-          {permissions.length !== 0 && <table className="settings-table">
-            <thead>
-              <tr key={0}>
-                <th>
-                  <FormattedMessage id="case.name"
-                                    defaultMessage="Name"/></th>
-                <th/>
-              </tr>
-            </thead>
-            <tbody>
-              {permissions.map((permission) =>
-                <tr key={permission.role.id + 1}>
-                  <td>
-                    <Role.Label role={permission.role} icon={false} long={true} />
-                  </td>
-                  <td>
-                    <a onClick={(e) => this.onDeleteRole(permission, e)}>
-                      <FormattedMessage id="case.remove"
-                                        defaultMessage="Remove"/>
-                    </a>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>}
-          
-        </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
-            <Button type="submit"
-                    intent={Intent.PRIMARY}
-                    onClick={this.onAddCase}
-                    text={intl.formatMessage(messages.save)} />
-          </div>
-        </div>
+        </form>
       </Dialog>
     );
   }

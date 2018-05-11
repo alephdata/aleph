@@ -42,7 +42,6 @@ class CasesIndexScreen extends Component {
       createIsOpen: false,
       queryPrefix: props.query.getString('prefix')
     };
-
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
@@ -53,9 +52,7 @@ class CasesIndexScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
