@@ -15,14 +15,14 @@ class SearchApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         # assert '<em>banana</em>' in res.data, res.json
-        assert 'Public Collection' in res.data, res.json
-        assert 'Secret Document' not in res.data, res.json
+        assert b'Public Collection' in res.data, res.json
+        assert b'Secret Document' not in res.data, res.json
 
         _, headers = self.login(is_admin=True)
         res = self.client.get('/api/2/search?q=banana', headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 3, res.json
-        assert 'Secret Document' in res.data, res.json
+        assert b'Secret Document' in res.data, res.json
 
     def test_facet_attribute(self):
         res = self.client.get('/api/2/search?facet=languages')

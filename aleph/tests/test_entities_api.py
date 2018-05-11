@@ -269,7 +269,7 @@ class EntitiesApiTestCase(TestCase):
         data = res.json
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
-        assert 'Pooh' not in res.data, res.data
+        assert b'Pooh' not in res.data, res.data
 
     def test_entity_references(self):
         db_uri = 'file://' + self.get_fixture_path('experts.csv')

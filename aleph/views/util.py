@@ -189,6 +189,8 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, (datetime, date)):
             return obj.isoformat()
+        if isinstance(obj, bytes):
+            return obj.decode('utf-8')
         if isinstance(obj, LazyString):
             return six.text_type(obj)
         if isinstance(obj, set):
