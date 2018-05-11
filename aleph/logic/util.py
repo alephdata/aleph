@@ -8,7 +8,7 @@ def ui_url(resource, id=None, **query):
     """Make a UI link."""
     if id is not None:
         resource = '%s/%s' % (resource, id)
-    url = urljoin(app_ui_url, resource)
+    url = urljoin(str(app_ui_url), str(resource))
     return url + query_string(list(query.items()))
 
 
