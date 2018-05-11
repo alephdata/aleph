@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Checkbox, Dialog } from '@blueprintjs/core';
+import { Button, Checkbox, Dialog, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
@@ -18,6 +18,14 @@ const messages = defineMessages({
   save_success: {
     id: 'collection.edit.save_success',
     defaultMessage: 'Your changes are saved.',
+  },
+  cancel_button: {
+    id: 'collection.edit.cancel_button',
+    defaultMessage: 'Cancel',
+  },
+  save_button: {
+    id: 'collection.edit.save_button',
+    defaultMessage: 'Save changes',
   },
 });
 
@@ -173,12 +181,17 @@ class CollectionAccessDialog extends Component {
               </tr>
               </tbody>
             </table>
-            <div className="save">
-              <Button className="pt-intent-primary pt-large" onClick={this.onSave}>
-                <FormattedMessage id="collection.info.permissions.update"
-                                  defaultMessage="Save"/>
-              </Button>
-            </div>
+          </div>
+        </div>
+        <div className="pt-dialog-footer">
+          <div className="pt-dialog-footer-actions">
+            <Button
+              onClick={this.props.toggleDialog}
+              text={intl.formatMessage(messages.cancel_button)} />
+            <Button
+              intent={Intent.PRIMARY}
+              onClick={this.onSave}
+              text={intl.formatMessage(messages.save_button)} />
           </div>
         </div>
       </Dialog>

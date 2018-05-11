@@ -29,6 +29,10 @@ const messages = defineMessages({
     id: 'collection.edit.info.delete',
     defaultMessage: 'Delete',
   },
+  cancel_button: {
+    id: 'collection.edit.info.cancel',
+    defaultMessage: 'Cancel',
+  },
   save_button: {
     id: 'collection.edit.info.save',
     defaultMessage: 'Save changes',
@@ -198,6 +202,9 @@ class CollectionEditDialog extends Component {
               intent={Intent.DANGER}
               onClick={this.toggleDeleteCollection}
               text={intl.formatMessage(messages.delete_button)} />
+            <Button
+              onClick={this.props.toggleDialog}
+              text={intl.formatMessage(messages.cancel_button)} />
             <Button
               intent={Intent.PRIMARY}
               onClick={this.onSave}
