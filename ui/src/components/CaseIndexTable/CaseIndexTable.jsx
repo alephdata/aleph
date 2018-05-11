@@ -4,6 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import CaseTableRow from './CaseTableRow';
 import { SortableTH } from 'src/components/common';
 
+
 const messages = defineMessages({
   column_title: {
     id: 'case.column.title',
@@ -23,10 +24,13 @@ const messages = defineMessages({
   }
 });
 
+
 class CaseIndexTable extends Component {
   constructor(props) {
     super(props);
-    this.state = { result: props.result };
+    this.state = {
+      result: props.result
+    };
   }
 
   componentWillReceiveProps(nextProps) {

@@ -32,7 +32,6 @@ const messages = defineMessages({
     id: "case.title",
     defaultMessage: "Create a new casefile"
   }
-
 });
 
 
@@ -74,7 +73,7 @@ class CreateCaseDialog extends Component {
       const response = await this.props.createCollection(collection);
       const collectionId = response.data.id;
       await this.props.updateCollectionPermissions(collectionId, permissions);
-      history.push(getCollectionLink(collection));
+      history.push(getCollectionLink(response.data));
     } catch (e) {
       showWarningToast(e.message);
     }
@@ -170,7 +169,8 @@ class CreateCaseDialog extends Component {
         </div>
         <div className="pt-dialog-footer">
           <div className="pt-dialog-footer-actions">
-            <Button intent={Intent.PRIMARY}
+            <Button type="submit"
+                    intent={Intent.PRIMARY}
                     onClick={this.onAddCase}
                     text={intl.formatMessage(messages.save)} />
           </div>

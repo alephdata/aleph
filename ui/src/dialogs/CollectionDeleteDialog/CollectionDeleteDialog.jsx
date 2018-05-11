@@ -1,11 +1,11 @@
 import React, {Component} from "react";
+import queryString from 'query-string';
 import { Alert, Intent } from "@blueprintjs/core";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
 
 import { deleteCollection } from "src/actions";
-import { showWarningToast } from "src/app/toast";
 
 
 const messages = defineMessages({
@@ -31,12 +31,12 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { intl, collection } = this.props;
-    try {
-      await this.props.deleteCollection(collection);
-    } catch (e) {
-      showWarningToast(intl.formatMessage(messages.delete_error));
-    }
+    const { collection, history } = this.props;
+    this.props.deleteCollection(collection);
+    history.push({
+      pathname: '/cases',
+      search: queryString.stringify({'_deleted': collection.id})
+    });
   }
 
   render() {

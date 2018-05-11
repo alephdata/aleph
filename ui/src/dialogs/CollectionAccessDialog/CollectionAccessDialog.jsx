@@ -48,7 +48,6 @@ class CollectionAccessDialog extends Component {
     this.state = {
       permissions: []
     };
-
     this.onAddRole = this.onAddRole.bind(this);
     this.onToggle = this.onToggle.bind(this);
     this.onSave = this.onSave.bind(this);
@@ -60,7 +59,8 @@ class CollectionAccessDialog extends Component {
 
   componentDidUpdate(prevProps) {
     const { collection, permissions } = this.props;
-    if (prevProps.collection && prevProps.collection.id !== collection.id) {
+    if (prevProps.collection && collection.id !== undefined && prevProps.collection.id !== collection.id) {
+      this.setState({permissions: []});
       this.fetchPermissions();
     }
     if (!this.state.permissions.length && permissions) {
@@ -110,12 +110,12 @@ class CollectionAccessDialog extends Component {
   render() {
     const {collection, intl} = this.props;
     const {permissions} = this.state;
-    const exclude = permissions.map((perm) => perm.role.id);
 
-    if (!collection || !collection.writeable) {
+    if (!collection || !collection.writeable || !permissions) {
       return null;
     }
 
+    const exclude = permissions.map((perm) => perm.role.id);
     return (
       <Dialog icon="key" className="AlertsDialog"
               isOpen={this.props.isOpen}

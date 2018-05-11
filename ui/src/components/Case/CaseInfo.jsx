@@ -93,7 +93,7 @@ class CaseInfo extends Component {
         <Menu className='pt-large' large={true}>
           <Popover content={<Menu>
             {cases.map(function (file, index) {
-              if(file.id !== casefile.id) {
+              if (file.id !== casefile.id) {
                 return <MenuItem onClick={(e) => onChange(file)} key={index} text={file.label} />
               }
             })}
