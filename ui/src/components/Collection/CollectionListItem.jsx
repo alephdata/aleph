@@ -8,10 +8,6 @@ import { Date, Category, Country, Collection } from 'src/components/common';
 import './CollectionListItem.css';
 
 class CollectionListItem extends Component {
-  shouldComponentUpdate(nextProps) {
-    return this.props.collection.id !== nextProps.collection.id;
-  }
-
   render() {
     const { collection } = this.props;
     if (!collection || !collection.id) {
