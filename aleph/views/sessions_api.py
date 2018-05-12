@@ -96,6 +96,7 @@ def oauth_callback():
         log.info("Logged in: %r", role)
         authz = Authz.from_role(role)
         token = authz.to_token(role=role)
+        token = token.decode('utf-8')
         state = request.args.get('state')
         next_url = get_best_next_url(state, request.referrer)
         next_url, _ = urldefrag(next_url)
