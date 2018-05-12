@@ -73,8 +73,8 @@ class CollectionLink extends Component {
 
   render() {
     const { collection, icon = true, className } = this.props;
-    if (collection === undefined || collection.id === undefined) {
-      return null;
+    if (collection === undefined || collection.links === undefined) {
+      return <Collection.Label collection={collection} icon={icon} />;
     }
     return (<a className={c('CollectionLink', className)} onClick={this.onClick}>
       <Collection.Label collection={collection} icon={icon} />

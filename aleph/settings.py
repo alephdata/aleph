@@ -2,11 +2,9 @@
 #
 # You should never edit this file directly for deployment or in the developer
 # setup. Wherever possible use environment variables to override the
-# defaults. If that is not sufficient, point the envrionment variable
-# ALEPH_SETTINGS to a new Python file that overrides the settings you need to
-# alter.
+# defaults.
 from os import environ, path
-from banal.bools import BOOL_TRUEISH
+from banal.bools import as_bool
 from flask.ext.babel import lazy_gettext
 
 
@@ -14,20 +12,17 @@ def env(name, default=None):
     value = environ.get('ALEPH_%s' % name)
     if value is not None:
         return str(value)
-    return default
+    if default is not None:
+        return str(default)
 
 
 def env_bool(name, default=False):
     """Extract a boolean value from the environment consistently."""
-    value = env(name)
-    if value is None:
-        return default
-    return value.lower().strip() in BOOL_TRUEISH
+    return as_bool(env(name), default=default)
 
 
 def env_list(name, default='', separator=':'):
     """Extract a list of values from the environment consistently.
-
     Multiple values are by default expected to be separated by a colon (':'),
     like in the UNIX $PATH variable.
     """
@@ -61,7 +56,7 @@ URL_SCHEME = env('URL_SCHEME', 'http')
 
 # Shown on the home page as a few sample queries:
 SAMPLE_SEARCHES = [lazy_gettext('TeliaSonera'), lazy_gettext('Vladimir Putin')]
-SAMPLE_SEARCHES = env('SAMPLE_SEARCHES', SAMPLE_SEARCHES)
+SAMPLE_SEARCHES = env_list('SAMPLE_SEARCHES', SAMPLE_SEARCHES)
 
 # Cross-origin resource sharing
 CORS_ORIGINS = env_list('CORS_ORIGINS', separator='|')
@@ -83,7 +78,7 @@ ARCHIVE_BUCKET = env('ARCHIVE_BUCKET')
 ARCHIVE_PATH = env('ARCHIVE_PATH')
 ARCHIVE_AWS_KEY_ID = environ.get('AWS_ACCESS_KEY_ID')
 ARCHIVE_AWS_SECRET = environ.get('AWS_SECRET_ACCESS_KEY')
-ARCHIVE_AWS_REGION = environ.get('ALEPH_ARCHIVE_REGION', 'eu-west-1')
+ARCHIVE_AWS_REGION = environ.get('ARCHIVE_REGION', 'eu-west-1')
 
 ##############################################################################
 # Security and authentication.
@@ -101,7 +96,7 @@ SYSTEM_USER = env('SYSTEM_USER', 'system:aleph')
 # Configure your OAUTH login provider, providing the details as described in
 # https://flask-oauthlib.readthedocs.io/en/latest/client.html
 #
-OAUTH = env_bool('ALEPH_OAUTH', False)
+OAUTH = env_bool('OAUTH', False)
 OAUTH_NAME = env('OAUTH_NAME', 'google')
 OAUTH_KEY = env('OAUTH_KEY')
 OAUTH_SECRET = env('OAUTH_SECRET')

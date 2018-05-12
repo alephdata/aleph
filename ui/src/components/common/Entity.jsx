@@ -45,8 +45,7 @@ class EntityLabel extends Component {
         <span className='EntityLabel untitled'>
           {icon && <Schema.Icon schema={schema}/>}
           {icon && ' '}
-          <FormattedMessage id='entity.label.missing'
-          defaultMessage="Untitled" />
+          <FormattedMessage id='entity.label.missing' defaultMessage="Untitled" />
         </span>
       );
     }

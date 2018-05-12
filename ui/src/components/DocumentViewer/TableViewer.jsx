@@ -7,7 +7,6 @@ import { Cell, Column, TruncatedFormat, Table, TableLoadingOption } from "@bluep
 import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
-import SectionLoading from 'src/components/common/SectionLoading';
 
 import './TableViewer.css';
 
