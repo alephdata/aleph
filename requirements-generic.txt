@@ -23,6 +23,7 @@ gunicorn==19.7.1
 XlsxWriter==1.0.4
 polyglot==16.7.4
 pycld2==0.31
+morfessor==2.0.4
 langid==1.1.6
 blinker==1.4
 Babel==2.5.1
@@ -59,7 +60,6 @@ phonenumbers==8.9.4
 python-levenshtein==0.12.0
 pycountry==18.2.23
 openpyxl==2.5.3
-flanker==0.4.38
 dbf==0.97.2
 python-dateutil==2.6.1
 python-magic==0.4.15

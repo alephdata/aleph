@@ -60,7 +60,8 @@ class IngestApiTestCase(TestCase):
         assert res.json['total'] == 1, res.json
         res = self.client.get('/api/2/documents/1',
                               headers=headers)
-        assert res.json['countries'] == ['de', 'us'], res.json
+        assert 'de' in res.json['countries'], res.json
+        assert 'us' in res.json['countries'], res.json
         res = self.client.get('/api/2/documents/1/file',
                               headers=headers)
         assert b'Klaus Trutzel' in res.data

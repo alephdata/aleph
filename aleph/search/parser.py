@@ -29,7 +29,7 @@ class QueryParser(object):
     def page(self):
         if self.limit == 0:
             return 1
-        return (self.offset / self.limit) + 1
+        return (self.offset // self.limit) + 1
 
     def prefixed_items(self, prefix):
         items = {}
@@ -61,7 +61,7 @@ class QueryParser(object):
 
     @property
     def items(self):
-        for (key, value) in self.args.iteritems(multi=True):
+        for (key, value) in self.args.items(multi=True):
             if key == 'offset':
                 continue
             value = stringify(value, encoding='utf-8')
