@@ -1,3 +1,4 @@
+import os
 import time
 import grpc
 import regex
@@ -11,6 +12,7 @@ from aleph.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
 from aleph.services.entityextract_pb2 import ExtractedEntity  # noqa
 
 log = logging.getLogger('service')
+LANGUAGES = os.listdir('/data/polyglot_data/ner2')
 CLEAN = regex.compile('(^[^\w]*|[^\w]*$)')
 TYPES = {
     'I-PER': 'PERSON',
@@ -28,6 +30,8 @@ class PolyglotServicer(EntityExtractServicer):
 
         entity_count = 0
         for language in request.languages:
+            if language not in LANGUAGES:
+                continue
             try:
                 parsed = Text(text, hint_language_code=language)
                 for entity in parsed.entities:
