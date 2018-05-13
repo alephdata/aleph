@@ -21,7 +21,7 @@ class AhoCorasickEntityAnalyzer(EntityAnalyzer):
     }
 
     def __init__(self):
-        self.active = settings.ANALYZE_POLYGLOT
+        self.active = settings.ANALYZE_CORASICK
 
     def match_form(self, text):
         """Turn a string into a form appropriate for name matching."""

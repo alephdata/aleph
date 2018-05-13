@@ -1,14 +1,13 @@
 syntax = "proto3";
 
-package alephprotos;
+package alephservices;
 
 // The EntityService provides a simple extractor for NLP services that
 // accept a stream of text objects (with language metadata) and return
 // a set of entities extracted from the source text.
 service EntityExtract {
-
     // Extract entities from the given text.
-    rpc Extract (stream Text) returns (stream Entity);
+    rpc Extract (Text) returns (stream ExtractedEntity);
 }
 
 // A text from entities are to be extracted, including language metadata.
@@ -22,7 +21,7 @@ message Text {
 
 // An extracted entity, ie. a reference to a real-world person, company
 // or location. Includes type and offset information.
-message Entity {
+message ExtractedEntity {
     string label = 1;
     uint32 offset = 2;
     uint32 length = 3;

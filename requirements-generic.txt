@@ -21,9 +21,6 @@ marshmallow==2.13.5
 psycopg2-binary==2.7.4
 gunicorn==19.7.1
 XlsxWriter==1.0.4
-polyglot==16.7.4
-pycld2==0.31
-morfessor==2.0.4
 langid==1.1.6
 blinker==1.4
 Babel==2.5.1
@@ -40,6 +37,7 @@ regex>=2017.12.09
 rdflib==4.2.1
 idna==2.6.0
 requests==2.18.4
+grpcio==1.11.0
 
 # Error reporting
 raven[flask]

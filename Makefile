@@ -1,10 +1,11 @@
+VERSION=2.0.13
 COMPOSE=docker-compose -f docker-compose.dev.yml 
 DEVDOCKER=$(COMPOSE) run --rm app
 
 all: build upgrade web
 
 services:
-	$(COMPOSE) up -d rabbitmq unoservice postgres elasticsearch
+	$(COMPOSE) up -d rabbitmq unoservice postgres elasticsearch extract-polyglot
 
 shell: services    
 	$(DEVDOCKER) /bin/bash
@@ -17,9 +18,6 @@ upgrade: build
 	sleep 4
 	$(DEVDOCKER) aleph upgrade
 	$(DEVDOCKER) celery purge -f -A aleph.queues
-
-installdata:
-	$(DEVDOCKER) aleph installdata
 
 web: services
 	$(COMPOSE) up api ui
@@ -50,7 +48,7 @@ build:
 	$(COMPOSE) build
 
 dev: 
-	pip install -q transifex-client bumpversion babel
+	pip install -q transifex-client bumpversion babel grpcio-tools grpcio
 
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev
@@ -59,5 +57,11 @@ translate: dev
 	tx pull --all
 	pybabel compile -d aleph/translations -D aleph -f
 
+protoc: dev
+	python -m grpc_tools.protoc -Iservices/protos --python_out=. --grpc_python_out=. ./services/protos/aleph/services/*.proto
+	python -m grpc_tools.protoc -Iservices/protos \
+				 --python_out=services/extract-polyglot \
+				 --grpc_python_out=services/extract-polyglot \
+				 ./services/protos/aleph/services/entityextract.proto
 
-.PHONY: build
+.PHONY: build services

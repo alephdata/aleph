@@ -33,6 +33,12 @@ services:
     expose:
       - 3000
 
+  extract-polyglot:
+    build: services/extract-polyglot
+    restart: on-failure
+    expose:
+      - 50000
+
   app:
     build: .
     command: /bin/bash
@@ -41,10 +47,10 @@ services:
       - elasticsearch
       - rabbitmq
       - unoservice
+      - extract-polyglot
     tmpfs: /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
       - "./:/aleph"
       - "./mappings:/aleph/mappings"
       - "/:/host"
@@ -71,10 +77,10 @@ services:
       - elasticsearch
       - rabbitmq
       - unoservice
+      - extract-polyglot
     tmpfs: /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
       - "./aleph:/aleph/aleph"
       - "/:/host"
     environment:
@@ -105,7 +111,6 @@ services:
 
 volumes:
   archive-data: {}
-  polyglot: {}
   elasticsearch-data: {}
   elasticsearch-log: {}
   postgres-data: {}

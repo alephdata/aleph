@@ -133,12 +133,14 @@ UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
 
 # Analyzers to be used for tag extraction:
 ANALYZE_LANGUAGE = env_bool('ANAYZE_LANGUAGE', True)
-ANALYZE_POLYGLOT = env_bool('ANAYZE_POLYGLOT', True)
 ANALYZE_CORASICK = env_bool('ANAYZE_CORASICK', True)
 ANALYZE_PHONES = env_bool('ANAYZE_PHONES', True)
 ANALYZE_EMAILS = env_bool('ANAYZE_EMAILS', True)
 ANALYZE_IP = env_bool('ANAYZE_IP', True)
 ANALYZE_IBAN = env_bool('ANAYZE_IBAN', True)
+
+# gRPC extractor services
+POLYGLOT_SERVICE = env('POLYGLOT_SERVICE', 'extract-polyglot:50000')
 
 
 ##############################################################################

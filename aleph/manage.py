@@ -11,7 +11,6 @@ from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db, destroy_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
-from aleph.analyze import install_analyzers
 from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.logic.collections import update_collection, update_collections
@@ -225,12 +224,6 @@ def upgrade():
     upgrade_db()
     upgrade_search()
     archive.upgrade()
-
-
-@manager.command
-def installdata():
-    """Install data needed for linguistic processing."""
-    install_analyzers()
 
 
 @manager.command

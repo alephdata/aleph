@@ -1,18 +1,10 @@
 import logging
-from polyglot.downloader import downloader
 
 from aleph.core import db
 from aleph.util import get_extensions
 
 
 log = logging.getLogger(__name__)
-
-
-def install_analyzers():
-    """Download linguistic resources for the analyzers."""
-    for task in ['embeddings2', 'ner2']:
-        log.info("Downloading linguistic resources: %r...", task)
-        downloader.download('TASK:%s' % task, quiet=True)
 
 
 def analyze_document(document):
