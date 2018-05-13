@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from itsdangerous import BadSignature
 from flask.ext.babel import gettext
 
-from aleph.core import db, settings, app_ui_url
+from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible, check_editable, update_role
@@ -41,7 +41,7 @@ def suggest():
 def create_code():
     data = parse_request(RoleCodeCreateSchema)
     signature = Role.SIGNATURE.dumps(data['email'])
-    url = '{}activate/{}'.format(app_ui_url, signature)
+    url = '{}activate/{}'.format(settings.APP_UI_URL, signature)
     role = Role(email=data['email'], name='Visitor')
     log.info("Confirmation URL [%r]: %s", role, url)
     notify_role(role, gettext('Registration'),

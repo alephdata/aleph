@@ -1,12 +1,11 @@
 import os
-import six
 import cgi
 import mimetypes
 import exactitude
 from banal import ensure_list
 from collections import Mapping
 from celestial import normalize_mimetype, DEFAULT
-from six.moves.urllib.parse import unquote, urlparse
+from urllib.parse import unquote, urlparse
 
 from normality import safe_filename, stringify, slugify
 
@@ -23,7 +22,7 @@ class Metadata(object):
             return False
         if isinstance(value, (list, set, tuple)):
             return len(value) > 0
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             return len(value.strip()) > 0
         return True
 

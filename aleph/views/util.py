@@ -1,4 +1,3 @@
-import six
 import json
 import types
 from hashlib import sha1
@@ -192,7 +191,7 @@ class JSONEncoder(json.JSONEncoder):
         if isinstance(obj, bytes):
             return obj.decode('utf-8')
         if isinstance(obj, LazyString):
-            return six.text_type(obj)
+            return str(obj)
         if isinstance(obj, set):
             return [o for o in obj]
         if hasattr(obj, 'to_dict'):

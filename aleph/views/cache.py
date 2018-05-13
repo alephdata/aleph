@@ -1,4 +1,3 @@
-import six
 import logging
 from banal import hash_data
 from flask.ext.babel import get_locale
@@ -24,7 +23,7 @@ def setup_caching():
     """Set some request attributes at the beginning of the request.
     By default, caching will be disabled."""
     locale = get_locale()
-    request._app_locale = six.text_type(locale)
+    request._app_locale = str(locale)
     request._http_cache = False
     request._http_private = False
     request._http_etag = None

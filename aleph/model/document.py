@@ -1,4 +1,3 @@
-import six
 import logging
 from followthemoney import model
 from sqlalchemy import func
@@ -175,7 +174,7 @@ class Document(db.Model, DatedModel, Metadata):
     @property
     def texts(self):
         for text in self.raw_texts:
-            if not isinstance(text, six.string_types):
+            if not isinstance(text, str):
                 continue
             if not len(text):
                 continue

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import logging
 from banal import ensure_list, first
 from marshmallow import Schema, post_dump
