@@ -12,6 +12,7 @@ services:
 
   elasticsearch:
     image: alephdata/platform-elasticsearch:6.2.4
+    restart: on-failure
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-log:/var/log
@@ -40,7 +41,7 @@ services:
       - elasticsearch
       - rabbitmq
       - unoservice
-    # tmpfs: /tmp
+    tmpfs: /tmp
     volumes:
       - archive-data:/data
       - polyglot:/polyglot
@@ -70,6 +71,7 @@ services:
       - elasticsearch
       - rabbitmq
       - unoservice
+    tmpfs: /tmp
     volumes:
       - archive-data:/data
       - polyglot:/polyglot

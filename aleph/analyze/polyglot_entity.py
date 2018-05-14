@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import regex
 import logging
 from polyglot.text import Text

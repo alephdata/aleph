@@ -40,6 +40,7 @@ clean:
 	find . -name '*.egg' -exec rm -f {} +
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
+	find . -type d -name __pycache__ -exec rm -r {} \+
 	find ui/src -name '*.css' -exec rm -f {} +
 
 rebuild:

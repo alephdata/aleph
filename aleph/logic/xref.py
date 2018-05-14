@@ -64,6 +64,6 @@ def xref_collection(collection_id, other_id=None):
                    query=query,
                    scroll='15m')
 
-    for i, res in enumerate(scanner):
+    for res in scanner:
         res = unpack_result(res)
         xref_item(res, collection_id=other_id)

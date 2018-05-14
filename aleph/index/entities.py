@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import time
 import logging
 import fingerprints
@@ -84,7 +82,7 @@ def _index_updates(collection, entities):
 
     result = es.mget(index=entity_index(),
                      doc_type='doc',
-                     body={'ids': entities.keys()},
+                     body={'ids': list(entities.keys())},
                      _source=['schema', 'properties', 'created_at'])
     for doc in result.get('docs', []):
         if not doc.get('found', False):

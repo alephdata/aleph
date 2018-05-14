@@ -38,7 +38,7 @@ def unpack_result(res):
     if res.get('found') is False:
         return
     data = res.get('_source', {})
-    data['id'] = res.get('_id')
+    data['id'] = str(res.get('_id'))
     if '_score' in res:
         data['score'] = res.get('_score')
     if 'highlight' in res:

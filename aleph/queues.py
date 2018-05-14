@@ -1,5 +1,4 @@
 from aleph.core import create_app, celery as app  # noqa
-
 from aleph.ingest import ingest  # noqa
 from aleph.index.documents import index_document_id  # noqa
 from aleph.logic.entities import bulk_load_query  # noqa

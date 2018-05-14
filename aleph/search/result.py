@@ -1,4 +1,3 @@
-import six
 import math
 
 from aleph.core import url_external
@@ -28,7 +27,7 @@ class QueryResult(object):
         if page < 1 or page > self.pages:
             return None
         offset = (page - 1) * self.parser.limit
-        args = [('offset', six.text_type(offset))]
+        args = [('offset', str(offset))]
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
 

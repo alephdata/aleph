@@ -35,12 +35,12 @@ def upgrade():
             'collection_id': ent['collection_id']
         })
         bind.execute(q)
-    op.drop_constraint(u'entity_collection_id_fkey', 'entity',
+    op.drop_constraint('entity_collection_id_fkey', 'entity',
                        type_='foreignkey')
-    op.drop_column(u'entity', 'collection_id')
+    op.drop_column('entity', 'collection_id')
 
 
 def downgrade():
-    op.add_column(u'entity', sa.Column('collection_id', sa.INTEGER(), autoincrement=False, nullable=True))  # noqa
-    op.create_foreign_key(u'entity_collection_id_fkey', 'entity', 'collection', ['collection_id'], ['id'])  # noqa
+    op.add_column('entity', sa.Column('collection_id', sa.INTEGER(), autoincrement=False, nullable=True))  # noqa
+    op.create_foreign_key('entity_collection_id_fkey', 'entity', 'collection', ['collection_id'], ['id'])  # noqa
     op.drop_table('collection_entity')

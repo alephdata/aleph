@@ -1,6 +1,6 @@
 import logging
 from banal import ensure_list
-from urlparse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
 from flask import Flask, request
 from flask import url_for as flask_url_for
@@ -122,15 +122,14 @@ def configure_alembic(config):
     return config
 
 
-def get_app_ui_url():
-    return settings.APP_UI_URL
-
-
 def get_es():
     if not hasattr(settings, '_es_instance'):
         url = settings.ELASTICSEARCH_URL
         timeout = settings.ELASTICSEARCH_TIMEOUT
-        settings._es_instance = Elasticsearch(url, timeout=timeout)
+        settings._es_instance = Elasticsearch(url,
+                                              sniff_on_start=True,
+                                              sniff_on_connection_fail=True,
+                                              timeout=timeout)
     return settings._es_instance
 
 
@@ -146,7 +145,6 @@ def get_archive():
     return settings._aleph_archive
 
 
-app_ui_url = LocalProxy(get_app_ui_url)
 es = LocalProxy(get_es)
 archive = LocalProxy(get_archive)
 

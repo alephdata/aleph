@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
-import { Schema, Tag, Country, Language, Category, Collection, Entity, TextLoading } from 'src/components/common';
+import { Schema, Tag, Country, Language, Category, Collection, Entity } from 'src/components/common';
 
 import './QueryFilterTag.css';
 
@@ -39,37 +39,33 @@ class QueryFilterTag extends PureComponent {
       case 'collection_id':
         return (
           <Collection.Load id={value} renderWhenLoading={'…'}>{collection => (
-            <TextLoading loading={collection.id === undefined}>
-              <Collection.Link collection={collection} />
-            </TextLoading>
+            <Collection.Link collection={collection} />
           )}</Collection.Load>
         );
       case 'ancestors':
       case 'parent.id':
-        return (
-          <React.Fragment>
-            <FormattedMessage id="search.filterTag.ancestors" defaultMessage="in:" />
-            <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+        return (       
+          <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+            <React.Fragment>
+              <FormattedMessage id="search.filterTag.ancestors" defaultMessage="in:" />
               <Entity.Label entity={entity} icon />
-            )}</Entity.Load>
-          </React.Fragment>
+            </React.Fragment>
+          )}</Entity.Load>
         );
       case 'exclude':
         return (
-          <React.Fragment>
-            <FormattedMessage id="search.filterTag.exclude" defaultMessage="not:" />
-            <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+          <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+            <React.Fragment>
+              <FormattedMessage id="search.filterTag.exclude" defaultMessage="not:" />
               <Entity.Label entity={entity} icon />
-            )}</Entity.Load>
-          </React.Fragment>
+            </React.Fragment>
+          )}</Entity.Load>
         );
       case 'entities':
         return (
-          <React.Fragment>
-            <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
-              <Entity.Label entity={entity} icon />
-            )}</Entity.Load>
-          </React.Fragment>
+          <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
+            <Entity.Label entity={entity} icon />
+          )}</Entity.Load>
         );
       case 'names':
       case 'identifiers':
@@ -78,7 +74,8 @@ class QueryFilterTag extends PureComponent {
       case 'addresses':
         return (
           <React.Fragment>
-            <Tag.Icon field={filter} /> {value}
+            <Tag.Icon field={filter} />
+            {value}
           </React.Fragment>
         );
       default:

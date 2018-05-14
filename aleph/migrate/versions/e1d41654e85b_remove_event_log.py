@@ -13,7 +13,7 @@ down_revision = 'ea39c04daca4'
 
 
 def upgrade():
-    op.drop_constraint(u'event_log_role_id_fkey',
+    op.drop_constraint('event_log_role_id_fkey',
                        'event_log', type_='foreignkey')
     op.drop_table('event_log')
 

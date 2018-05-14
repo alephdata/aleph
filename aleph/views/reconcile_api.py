@@ -7,7 +7,7 @@ from flask import Blueprint, request, url_for
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
 
-from aleph.core import settings, app_ui_url
+from aleph.core import settings
 from aleph.model import Entity, Role
 from aleph.search import SearchQueryParser
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
@@ -75,7 +75,7 @@ def reconcile_op(query):
 
 
 def reconcile_index():
-    domain = app_ui_url.strip('/')
+    domain = settings.APP_UI_URL.strip('/')
     api_key = None
     if request.authz.logged_in:
         role = Role.by_id(request.authz.id)

@@ -16,7 +16,7 @@ class QueryTestCase(TestCase):
     # using assertEquals, so it fails to allow lists to be
     # in any order
     def assertDictEqual(self, d1, d2, msg=None):
-        for k, v1 in d1.iteritems():
+        for k, v1 in d1.items():
             self.assertIn(k, d2, msg)
             v2 = d2[k]
             self.assertEqual(v1, v2, msg)

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import logging
 from pprint import pprint  # noqa
 from collections import defaultdict

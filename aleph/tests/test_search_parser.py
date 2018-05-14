@@ -16,12 +16,13 @@ args = QueryParser([
     ('mybadbool', 'oui')
 ], None)
 
+
 class QueryParserTestCase(TestCase):
     def test_offset(self):
         self.assertEqual(args.offset, 5)
 
     def test_filters(self):
-        self.assertItemsEqual(args.filters.keys(), ['key1', 'key2', 'key3'])
+        self.assertCountEqual(list(args.filters.keys()), ['key1', 'key2', 'key3'])  # noqa
         self.assertEqual(args.filters['key1'], set(['foo1', 'foo2']))
         self.assertEqual(args.filters['key2'], set(['foo3', 'foo5']))
         self.assertEqual(args.filters['key3'], set(['foo4']))

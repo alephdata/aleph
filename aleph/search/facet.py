@@ -1,6 +1,5 @@
-import six
-from followthemoney import model
 from flask.ext.babel import get_locale
+from followthemoney import model
 from exactitude import countries, languages
 
 from aleph.model import Collection
@@ -36,7 +35,7 @@ class Facet(object):
         if self.parser.get_facet_values(self.name):
             results = []
             for bucket in self.data.get('buckets', []):
-                key = six.text_type(bucket.get('key'))
+                key = str(bucket.get('key'))
                 results.append({
                     'id': key,
                     'label': key,
@@ -101,6 +100,6 @@ class CollectionFacet(Facet):
 
     def update(self, result, key):
         for collection in self.collections:
-            if six.text_type(collection.id) == key:
+            if str(collection.id) == key:
                 result['label'] = collection.label
                 result['category'] = collection.category

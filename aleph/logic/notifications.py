@@ -1,4 +1,3 @@
-import six
 import logging
 from banal import ensure_list
 from datetime import datetime, timedelta
@@ -53,7 +52,7 @@ def resolve_id(object_id, clazz):
 
 def channel(obj, clazz=None):
     clazz = clazz or type(obj)
-    if clazz in six.string_types:
+    if clazz == str:
         return obj
 
     obj = object_id(obj, clazz=clazz)
@@ -83,7 +82,7 @@ def publish(event, actor_id=None, params=None, channels=None):
 def render_notification(notification):
     """ Generate a text version of the notification, suitable for use
     in an email or text message. """
-    message = six.text_type(notification.event.template)
+    message = str(notification.event.template)
     for name, clazz, value in notification.iterparams():
         template = '{{%s}}' % name
         text = html_link(*resolve_id(value, clazz))

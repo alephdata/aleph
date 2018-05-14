@@ -1,4 +1,3 @@
-import six
 import logging
 import exactitude
 from pprint import pprint  # noqa
@@ -35,7 +34,7 @@ def index_collection(collection):
         'schemata': {},
         'team': []
     }
-    texts = [v for v in data.values() if isinstance(v, six.string_types)]
+    texts = [v for v in data.values() if isinstance(v, str)]
 
     if collection.creator is not None:
         data['creator'] = {

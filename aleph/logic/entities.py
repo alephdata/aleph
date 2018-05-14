@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import logging
 from followthemoney import model
 from followthemoney.util import merge_data
