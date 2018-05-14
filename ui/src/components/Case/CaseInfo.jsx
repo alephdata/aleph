@@ -3,13 +3,16 @@ import {connect} from 'react-redux';
 import {withRouter} from "react-router";
 import {defineMessages, injectIntl} from 'react-intl';
 import {Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon} from "@blueprintjs/core";
+
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
-
-import { DualPane } from 'src/components/common';
+import { DualPane, ScreenLoading, Collection } from 'src/components/common';
 import { getColor } from "src/util/colorScheme";
+import { selectCollectionsResult } from "src/selectors";
 
 import './CaseInfo.css';
+import Query from "../../app/Query";
+import { queryCollections } from "../../actions";
 
 const messages = defineMessages({
   home: {
@@ -83,23 +86,23 @@ class CaseInfo extends Component {
   }
 
   render() {
-    const { casefile, cases, intl } = this.props;
+    const { collection, result, intl } = this.props;
     const { home, timeline, documents, notes, settings, access } = this.state;
-    const color = getColor(casefile.id);
+    const color = getColor(collection.id);
     const onChange = this.onChangeCase;
 
     return (
       <DualPane.InfoPane className="CaseInfo with-heading">
         <Menu className='pt-large' large={true}>
           <Popover content={<Menu>
-            {cases.map(function (file, index) {
-              if(file.id !== casefile.id) {
+            {result.results.map(function (file, index) {
+              if (file.id !== collection.id) {
                 return <MenuItem onClick={(e) => onChange(file)} key={index} text={file.label} />
               }
             })}
           </Menu>} className='case-file-dropdown' icon='search' text='Case' position={Position.LEFT_TOP}>
             <Button icon={<Icon icon='square' iconSize={Icon.SIZE_LARGE} color={color} style={{backgroundColor: color, opacity: 0.6}}/>}
-                    rightIcon="menu-open" className='pt-fill pt-align-left' text={casefile.label} />
+                    rightIcon="menu-open" className='pt-fill pt-align-left' text={collection.label} />
           </Popover>
           <MenuDivider/>
           <MenuItem active={home} onClick={this.onClickHome} className='menu-item-padding' icon='home' text={intl.formatMessage(messages.home)}/>
@@ -111,12 +114,12 @@ class CaseInfo extends Component {
           <MenuItem active={access} onClick={this.toggleAccess} className='menu-item-padding' text='Access' icon='key' />
         </Menu>
         <CollectionAccessDialog
-          collection={casefile}
+          collection={collection}
           isOpen={access}
           toggleDialog={this.toggleAccess}
         />
         <CollectionEditDialog
-          collection={casefile}
+          collection={collection}
           isOpen={settings}
           toggleDialog={this.toggleSettings}
         />
@@ -126,11 +129,29 @@ class CaseInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
+  const {location} = ownProps;
+  const context = {
+    facet: [ 'category', 'countries' ],
+    'filter:kind': 'casefile'
+  };
+  const query = Query.fromLocation('collections', location, context, 'collections')
+    .sortBy('count', true)
+    .limit(30);
 
-  }
+  return {
+    query: query,
+    result: selectCollectionsResult(state, query)
+  };
 };
 
 CaseInfo = withRouter(CaseInfo);
 CaseInfo = injectIntl(CaseInfo);
-export default connect(mapStateToProps, { })(CaseInfo);
+CaseInfo = connect(mapStateToProps, {queryCollections})(CaseInfo);
+export default ({ match, ...otherProps }) => (
+  <Collection.Load
+    id={match.params.collectionId}
+    renderWhenLoading={<ScreenLoading />}
+  >{collection => (
+    <CaseInfo collection={collection} {...otherProps} />
+  )}</Collection.Load>
+);

@@ -10,10 +10,14 @@ import { selectCollectionsResult } from "../../selectors";
 import Query from "src/app/Query";
 =======
 import { Screen, Breadcrumbs, DualPane, ErrorScreen } from 'src/components/common';
-import { CaseInfo, CaseContent } from 'src/components/Case';
+import { CaseInfo } from 'src/components/Case';
 import { queryCollections } from "src/actions";
 import { withRouter } from "react-router";
+<<<<<<< HEAD
 >>>>>>> working on file upload screen, made case screen and added file upload react package
+=======
+import { selectCollection } from "../../selectors";
+>>>>>>> refactoring Case Screen
 
 class CaseScreen extends Component {
   constructor(props) {
@@ -29,8 +33,7 @@ class CaseScreen extends Component {
   }
 
   render() {
-    const {collection, result} = this.props;
-    //console.log(this.props);
+    const {collection} = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error}/>;
@@ -39,11 +42,10 @@ class CaseScreen extends Component {
     return (
       <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection}/>}>
         <DualPane>
-          <CaseInfo cases={result.results} casefile={collection}/>
+          <CaseInfo/>
           <div>
             {this.props.children}
           </div>
-          <CaseContent collection={collection}/>
         </DualPane>
       </Screen>
     );
@@ -60,6 +62,7 @@ const mapStateToProps = (state, ownProps) => {
     .sortBy('count', true)
     .limit(30);
   return {
+    collection: selectCollection(state, ownProps.previewId)
   };
 };
 

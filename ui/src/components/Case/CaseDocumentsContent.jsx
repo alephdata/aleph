@@ -21,7 +21,7 @@ class CaseDocumentsContent extends Component {
     console.log(collection)
 
     return (
-      <CaseScreen collection={collection} result={this.props.result}>
+      <CaseScreen collection={collection}>
         <div className="react-file-drop-demo">
           <FileDrop onDrop={this.handleDrop}>
             Drop some files here!
@@ -33,27 +33,9 @@ class CaseDocumentsContent extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location} = ownProps;
-  const context = {
-    facet: [ 'category', 'countries' ],
-    'filter:kind': 'casefile'
-  };
-  const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', true)
-    .limit(30);
-
   return {
-    query: query,
-    result: selectCollectionsResult(state, query)
   };
 };
 
 CaseDocumentsContent = connect(mapStateToProps, {queryCollections})(CaseDocumentsContent);
-export default ({ match, ...otherProps }) => (
-  <Collection.Load
-    id={match.params.collectionId}
-    renderWhenLoading={<ScreenLoading />}
-  >{collection => (
-    <CaseDocumentsContent collection={collection} {...otherProps} />
-  )}</Collection.Load>
-);
+export default CaseDocumentsContent;
