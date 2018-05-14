@@ -40,6 +40,7 @@ async def convert(request):
 
         extension = normalize_extension(upload.filename)
         mime_type = normalize_mimetype(upload.content_type, default=None)
+        log.info('PDF convert: %s [%s]', upload.filename, mime_type)
         filters = list(FORMATS.get_filters(extension, mime_type))
         timeout = int(request.query.get('timeout', 300))
         timeout = max(10, timeout - 5)

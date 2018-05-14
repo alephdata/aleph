@@ -27,7 +27,7 @@ install:
   - docker build -t alephdata/aleph:latest .
   - docker build -t alephdata/ui:latest ui
   - docker-compose -f docker-compose.dev.yml build
-  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch unoservice
+  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
   - sleep 4
 
 script:

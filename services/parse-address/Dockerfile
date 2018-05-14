@@ -1,4 +1,4 @@
-
+FROM python:3.6-stretch
 
 # sudo apt-get install curl autoconf automake libtool pkg-config
 # git clone https://github.com/openvenues/libpostal
