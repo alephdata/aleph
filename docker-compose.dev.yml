@@ -23,8 +23,8 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
-  unoservice:
-    image: alephdata/unoservice:1.2.2
+  convert-document:
+    build: services/convert-document
     restart: on-failure
     tmpfs:
       - /tmp
@@ -38,6 +38,12 @@ services:
     restart: on-failure
     expose:
       - 50000
+  
+  # extract-spacy:
+  #   build: services/extract-spacy
+  #   restart: on-failure
+  #   expose:
+  #     - 50000
 
   app:
     build: .
@@ -46,7 +52,7 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
-      - unoservice
+      - convert-document
       - extract-polyglot
     tmpfs: /tmp
     volumes:
@@ -76,7 +82,7 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
-      - unoservice
+      - convert-document
       - extract-polyglot
     tmpfs: /tmp
     volumes:

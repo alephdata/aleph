@@ -1,4 +1,5 @@
 sudo: required
+
 services:
   - docker
 
@@ -6,8 +7,6 @@ env:
   global:
     - ALEPH_DATABASE_NAME=aleph
     - ALEPH_DATABASE_URI=postgresql://localhost/$ALEPH_DATABASE_NAME
-    - OAUTH_KEY=fake
-    - OAUTH_SECRET=fake
     - DOCKER_COMPOSE_VERSION=1.16.1
     - DOCKER_IMAGE_NAME=alephdata/aleph
 

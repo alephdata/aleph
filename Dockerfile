@@ -19,8 +19,7 @@ ENV C_FORCE_ROOT=true \
     ALEPH_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph \
     ALEPH_BROKER_URI=amqp://guest:guest@rabbitmq:5672 \
     ALEPH_ARCHIVE_PATH=/data \
-    POLYGLOT_DATA_PATH=/polyglot \
-    UNOSERVICE_URL=http://unoservice:3000/convert
+    UNOSERVICE_URL=http://convert-document:3000/convert
 
 # Run the green unicorn
 CMD gunicorn -w 5 -b 0.0.0.0:8000 --name aleph_gunicorn \

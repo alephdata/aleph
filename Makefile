@@ -5,7 +5,8 @@ DEVDOCKER=$(COMPOSE) run --rm app
 all: build upgrade web
 
 services:
-	$(COMPOSE) up -d rabbitmq unoservice postgres elasticsearch extract-polyglot
+	$(COMPOSE) up -d rabbitmq postgres elasticsearch
+	$(COMPOSE) up -d convert-document extract-polyglot
 
 shell: services    
 	$(DEVDOCKER) /bin/bash
