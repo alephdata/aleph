@@ -7,15 +7,15 @@ from threading import Lock
 from tempfile import mkstemp
 from celestial import normalize_mimetype, normalize_extension
 
-from unoservice.convert import FORMATS, PdfConverter
-from unoservice.util import ConversionFailure
+from convert.converter import FORMATS, PdfConverter
+from convert.util import ConversionFailure
 
 MEGABYTE = 1024 * 1024
 BUFFER_SIZE = 8 * MEGABYTE
 MAX_UPLOAD = 800 * MEGABYTE
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('aiohttp').setLevel(logging.WARNING)
-log = logging.getLogger('unoservice')
+log = logging.getLogger('convert')
 
 lock = Lock()
 converter = PdfConverter()

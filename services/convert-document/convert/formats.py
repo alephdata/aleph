@@ -1,7 +1,7 @@
 from lxml import etree
 from collections import defaultdict, OrderedDict
 from celestial import normalize_mimetype
-from unoservice.util import parse_extensions
+from convert.util import parse_extensions
 
 NS = {'oor': 'http://openoffice.org/2001/registry'}
 NAME = '{%s}name' % NS['oor']

@@ -9,9 +9,9 @@ import subprocess
 from tempfile import mkstemp
 from com.sun.star.beans import PropertyValue
 
-from unoservice.formats import Formats
-from unoservice.util import ConversionFailure
-from unoservice.util import handle_timeout
+from convert.formats import Formats
+from convert.util import ConversionFailure
+from convert.util import handle_timeout
 
 CONNECTION_STRING = "socket,host=localhost,port=%s;urp;StarOffice.ComponentContext"  # noqa
 COMMAND = 'soffice --nologo --headless --nocrashreport --nodefault --nofirststartwizard --norestore --invisible --accept="%s"'  # noqa
