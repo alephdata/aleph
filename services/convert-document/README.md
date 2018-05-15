@@ -30,3 +30,7 @@ Now, files can be sent to the service:
 ```shell
 curl -o out.pdf -F format=pdf -F 'file=@mydoc.doc' http://localhost:3000/convert
 ```
+
+```shell
+make build && docker-compose -f docker-compose.dev.yml stop convert-document && docker-compose -f docker-compose.dev.yml up -d convert-document
+```

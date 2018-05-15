@@ -27,6 +27,7 @@ class PdfConverter(object):
     """Launch a background instance of LibreOffice and convert documents
     to PDF using it's filters.
     """
+
     PDF_FILTERS = (
         ("com.sun.star.text.GenericTextDocument", "writer_pdf_Export"),
         ("com.sun.star.text.WebDocument", "writer_web_pdf_Export"),
@@ -37,6 +38,7 @@ class PdfConverter(object):
 
     def __init__(self, host=None, port=None):
         self.port = port or DEFAULT_PORT
+        self.connection = CONNECTION_STRING % self.port
         self.desktop = None
         self.process = None
 
@@ -49,24 +51,29 @@ class PdfConverter(object):
             log.info("LibreOffice not running; reset.")
             self.terminate()
 
-        connection = CONNECTION_STRING % self.port
         if self.process is None:
+            self.desktop = None
             log.info("Starting headless LibreOffice...")
-            command = COMMAND % connection
+            command = COMMAND % self.connection
             self.process = subprocess.Popen(command,
                                             shell=True,
                                             stdin=None,
                                             stdout=None,
                                             stderr=None)
-            await asyncio.sleep(5)
-            self.desktop = None
 
-        if self.desktop is None:
-            log.info("Connecting to UNO service...")
+        while self.desktop is None:
+            self.desktop = self.connect()
+            await asyncio.sleep(1)
+
+    def connect(self):
+        log.info("Connecting to UNO service...")
+        try:
             local_context = uno.getComponentContext()
             resolver = self._svc_create(local_context, RESOLVER_CLASS)
-            context = resolver.resolve("uno:%s" % connection)
-            self.desktop = self._svc_create(context, DESKTOP_CLASS)
+            context = resolver.resolve("uno:%s" % self.connection)
+            return self._svc_create(context, DESKTOP_CLASS)
+        except Exception:
+            return None
 
     def terminate(self):
         if self.desktop is not None:
@@ -83,9 +90,12 @@ class PdfConverter(object):
             if self.process.poll() is None:
                 log.info("Killing LibreOffice process...")
                 self.process.kill()
+                self.process.wait()
             self.process = None
 
-    def open_document(self, input_url, filters):
+    def open_document(self, file_name, filters):
+        file_name = os.path.abspath(file_name)
+        input_url = uno.systemPathToFileUrl(file_name)
         for filter_name in filters:
             props = self.property_tuple({
                 "Hidden": True,
@@ -104,33 +114,27 @@ class PdfConverter(object):
             return doc
         raise ConversionFailure("Cannot open this document")
 
-    def convert_file(self, file_name, filters, timeout=300):
-        fd, output_filename = mkstemp(suffix='.pdf')
-        os.close(fd)
+    def get_output_properties(self, doc):
+        for (service, pdf) in self.PDF_FILTERS:
+            if doc.supportsService(service):
+                return self.property_tuple({
+                    "FilterName": pdf,
+                    "MaxImageResolution": 300,
+                    "SelectPdfVersion": 1,
+                })
+        raise ConversionFailure("PDF export not supported.")
 
-        file_name = os.path.abspath(file_name)
-        input_url = uno.systemPathToFileUrl(file_name)
-        output_url = uno.systemPathToFileUrl(output_filename)
-
+    def convert_file(self, file_name, out_file, filters, timeout=300):
+        output_url = uno.systemPathToFileUrl(out_file)
         # Trigger SIGALRM after the timeout has passed.
         signal.signal(signal.SIGALRM, handle_timeout)
         signal.alarm(timeout)
         try:
-            doc = self.open_document(input_url, filters)
-            for (service, pdf) in self.PDF_FILTERS:
-                if doc.supportsService(service):
-                    prop = self.property_tuple({
-                        "FilterName": pdf,
-                        "MaxImageResolution": 300,
-                        "SelectPdfVersion": 1,
-                    })
-                    doc.storeToURL(output_url, prop)
-                    doc.close(True)
-                    return output_filename
-            raise ConversionFailure("Cannot export to PDF")
-        except Exception:
-            os.unlink(output_filename)
-            raise
+            doc = self.open_document(file_name, filters)
+            prop = self.get_output_properties(doc)
+            doc.storeToURL(output_url, prop)
+            doc.dispose()
+            doc.close(True)
         finally:
             signal.alarm(0)
 

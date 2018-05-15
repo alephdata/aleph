@@ -3,7 +3,6 @@ import shutil
 import logging
 import asyncio
 from aiohttp import web
-from threading import Lock
 from tempfile import mkstemp
 from celestial import normalize_mimetype, normalize_extension
 
@@ -16,8 +15,6 @@ MAX_UPLOAD = 800 * MEGABYTE
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('aiohttp').setLevel(logging.WARNING)
 log = logging.getLogger('convert')
-
-lock = Lock()
 converter = PdfConverter()
 
 
@@ -26,21 +23,20 @@ async def info(request):
 
 
 async def convert(request):
-    acquired = lock.acquire(blocking=False)
-    if not acquired:
-        return web.Response(status=503)
     data = await request.post()
     upload = data['file']
+    extension = normalize_extension(upload.filename)
+    mime_type = normalize_mimetype(upload.content_type, default=None)
+    log.info('PDF convert: %s [%s]', upload.filename, mime_type)
     fd, upload_file = mkstemp()
-    out_file = None
+    os.close(fd)
+    fd, out_file = mkstemp(suffix='.pdf')
+    os.close(fd)
+
     try:
-        os.close(fd)
         with open(upload_file, 'wb') as fh:
             shutil.copyfileobj(upload.file, fh, BUFFER_SIZE)
 
-        extension = normalize_extension(upload.filename)
-        mime_type = normalize_mimetype(upload.content_type, default=None)
-        log.info('PDF convert: %s [%s]', upload.filename, mime_type)
         filters = list(FORMATS.get_filters(extension, mime_type))
         timeout = int(request.query.get('timeout', 300))
         timeout = max(10, timeout - 5)
@@ -48,13 +44,11 @@ async def convert(request):
         await asyncio.sleep(0)
         await converter.prepare()
         await asyncio.sleep(0)
-        out_file = converter.convert_file(upload_file,
-                                          filters,
-                                          timeout=timeout)
-        out_size = 0
-        if os.path.exists(out_file):
-            out_size = os.path.getsize(out_file)
-        lock.release()
+        converter.convert_file(upload_file, out_file, filters,
+                               timeout=timeout)
+        out_size = os.path.getsize(out_file)
+        if out_size == 0:
+            raise ConversionFailure("Could not convert.")
         await asyncio.sleep(0)
 
         response = web.StreamResponse()
@@ -71,19 +65,15 @@ async def convert(request):
     except Exception as exc:
         log.exception('Conversion failed.')
         converter.terminate()
-        lock.release()
-        status = 400 if isinstance(exc, ConversionFailure) else 503
-        return web.Response(text=str(exc), status=status)
+        if isinstance(exc, ConversionFailure):
+            return web.Response(text=str(exc), status=400)
+        return web.Response(text=str(exc), status=503)
     finally:
-        if os.path.exists(upload_file):
-            os.remove(upload_file)
-        if out_file is not None and os.path.exists(out_file):
-            os.remove(out_file)
+        os.remove(upload_file)
+        os.remove(out_file)
 
 
 app = web.Application(client_max_size=MAX_UPLOAD)
 app.add_routes([web.get('/', info)])
-app.add_routes([web.get('/convert', info)])
-app.add_routes([web.post('/', convert)])
 app.add_routes([web.post('/convert', convert)])
 web.run_app(app, port=3000)
