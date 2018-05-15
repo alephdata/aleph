@@ -30,8 +30,7 @@ purge:
 	$(DEVDOCKER) celery purge -f -A aleph.queues
 
 stop:
-	$(COMPOSE) down
-	$(COMPOSE) rm -f
+	$(COMPOSE) down --remove-orphans
 
 clean:
 	rm -rf dist build .eggs ui/build
