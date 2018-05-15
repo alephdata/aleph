@@ -10,10 +10,13 @@ from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
 
 log = logging.getLogger('service')
 LANGUAGES = ['en', 'de', 'es', 'pt', 'fr', 'it', 'nl']
+
+# https://spacy.io/api/annotation#named-entities
 LABELS = {
-    'I-PER': 'PERSON',
-    'I-ORG': 'ORGANIZATION',
-    'I-LOC': 'LOCATION'
+    'PERSON': 'PERSON',
+    'NORP': 'ORGANIZATION',
+    'ORG': 'ORGANIZATION',
+    'GPE': 'LOCATION'
 }
 
 
@@ -28,16 +31,19 @@ class SpacyServicer(EntityExtractServicer):
         entity_count = 0
         for language in request.languages:
             if language not in LANGUAGES:
+                log.debug("Language not suported: %s", language)
                 continue
             if language not in self.MODELS:
+                log.info("Loading spaCy model: %s", language)
                 self.MODELS[language] = spacy.load(language)
             nlp = self.MODELS.get(language)
             try:
                 doc = nlp(request.text)
                 for entity in doc.ents:
+                    # log.info("Entity: %s, %s", entity.text, entity.label)
                     if len(entity.text) < 4 or len(entity.text) > 200:
                         continue
-                    type_ = LABELS.get(entity.label)
+                    type_ = LABELS.get(entity.label_)
                     if type_ is None:
                         continue
                     length = entity.end_char - entity.start_char
