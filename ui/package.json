@@ -18,7 +18,7 @@
     "node-sass-package-importer": "^3.0.4",
     "normalizr": "^3.2.2",
     "numeral": "^2.0.6",
-    "query-string": "^6.1.0",
+    "query-string": "^4.3.4",
     "react": "^16.3.2",
     "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^16.3.2",
