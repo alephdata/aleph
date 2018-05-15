@@ -48,7 +48,7 @@ build:
 	$(COMPOSE) build
 
 dev: 
-	pip install -q transifex-client bumpversion babel grpcio-tools grpcio
+	pip install -q transifex-client bumpversion babel
 
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev
@@ -56,12 +56,5 @@ translate: dev
 	tx push --source
 	tx pull --all
 	pybabel compile -d aleph/translations -D aleph -f
-
-protoc: dev
-	python -m grpc_tools.protoc -Iservices/protos --python_out=. --grpc_python_out=. ./services/protos/aleph/services/*.proto
-	python -m grpc_tools.protoc -Iservices/protos \
-				 --python_out=services/extract-polyglot \
-				 --grpc_python_out=services/extract-polyglot \
-				 ./services/protos/aleph/services/entityextract.proto
 
 .PHONY: build services

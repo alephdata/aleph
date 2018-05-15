@@ -7,9 +7,9 @@ from concurrent import futures
 from normality import collapse_spaces
 from polyglot.text import Text
 
-from aleph.services.entityextract_pb2_grpc import add_EntityExtractServicer_to_server  # noqa
-from aleph.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
-from aleph.services.entityextract_pb2 import ExtractedEntity  # noqa
+from alephclient.services.entityextract_pb2_grpc import add_EntityExtractServicer_to_server  # noqa
+from alephclient.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
+from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
 
 log = logging.getLogger('service')
 LANGUAGES = os.listdir('/data/polyglot_data/ner2')

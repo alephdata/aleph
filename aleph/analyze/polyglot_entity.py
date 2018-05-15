@@ -3,9 +3,9 @@ import logging
 
 from aleph import settings
 from aleph.analyze.analyzer import EntityAnalyzer
-from aleph.services.entityextract_pb2_grpc import EntityExtractStub
-from aleph.services.entityextract_pb2 import ExtractedEntity, Text
 from aleph.model import DocumentTag
+from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
+from alephclient.services.entityextract_pb2 import ExtractedEntity, Text
 
 log = logging.getLogger(__name__)
 TYPE = ExtractedEntity.Type.Value

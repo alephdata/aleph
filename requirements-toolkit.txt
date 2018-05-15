@@ -10,3 +10,4 @@ ingestors==0.10.0
 normality==0.6.1
 celestial==0.2.3
 pdflib==0.1.6
+alephclient==0.6.0

@@ -13,7 +13,7 @@ setup(
     keywords='',
     author='OCCRP Data Team',
     author_email='data@occrp.org',
-    url='http://aleph.readthedocs.io',
+    url='https://github.com/alephdata/aleph/wiki',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
     namespace_packages=[],
