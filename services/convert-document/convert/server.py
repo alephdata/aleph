@@ -39,10 +39,7 @@ async def convert(request):
 
         filters = list(FORMATS.get_filters(extension, mime_type))
         timeout = int(request.query.get('timeout', 300))
-        timeout = max(10, timeout - 5)
 
-        await asyncio.sleep(0)
-        await converter.prepare()
         await asyncio.sleep(0)
         converter.convert_file(upload_file, out_file, filters,
                                timeout=timeout)
@@ -62,11 +59,12 @@ async def convert(request):
                     break
                 await response.write(chunk)
         return response
+    except ConversionFailure as fail:
+        log.info("Failed to convert: %s", fail)
+        return web.Response(text=str(fail), status=400)
     except Exception as exc:
-        log.exception('Conversion failed.')
+        log.exception('System error: %s.', exc)
         converter.terminate()
-        if isinstance(exc, ConversionFailure):
-            return web.Response(text=str(exc), status=400)
         return web.Response(text=str(exc), status=503)
     finally:
         os.remove(upload_file)
