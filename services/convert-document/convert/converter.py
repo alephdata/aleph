@@ -6,7 +6,6 @@ import signal
 import asyncio
 import logging
 import subprocess
-from tempfile import mkstemp
 from com.sun.star.beans import PropertyValue
 
 from convert.formats import Formats
