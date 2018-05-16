@@ -3,6 +3,8 @@ version: "2"
 services:
   postgres:
     image: postgres:10.0
+    ports:
+      - "15432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -39,11 +41,11 @@ services:
     expose:
       - 50000
   
-  # extract-spacy:
-  #   build: services/extract-spacy
-  #   restart: on-failure
-  #   expose:
-  #     - 50000
+  extract-spacy:
+    build: services/extract-spacy
+    restart: on-failure
+    expose:
+      - 50000
 
   app:
     build: .
