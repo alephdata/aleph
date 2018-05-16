@@ -17,7 +17,11 @@ import { withRouter } from "react-router";
 >>>>>>> working on file upload screen, made case screen and added file upload react package
 =======
 import { selectCollection } from "../../selectors";
+<<<<<<< HEAD
 >>>>>>> refactoring Case Screen
+=======
+import { fetchCollection } from "../../actions";
+>>>>>>> fixed case screen and case info
 
 class CaseScreen extends Component {
   constructor(props) {
@@ -29,7 +33,16 @@ class CaseScreen extends Component {
   }
 
   async componentDidMount() {
+    const { collectionId } = this.props;
+    this.props.fetchCollection({ id: collectionId });
     this.setState({result: this.props.result})
+  }
+
+  componentDidUpdate(prevProps) {
+    const { collectionId } = this.props;
+    if (collectionId !== prevProps.collectionId) {
+      this.props.fetchCollection({ id: collectionId });
+    }
   }
 
   render() {
@@ -42,7 +55,7 @@ class CaseScreen extends Component {
     return (
       <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection}/>}>
         <DualPane>
-          <CaseInfo/>
+          <CaseInfo collection={collection}/>
           <div>
             {this.props.children}
           </div>
@@ -53,20 +66,13 @@ class CaseScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location} = ownProps;
-  const context = {
-    facet: ['category', 'countries'],
-    'filter:kind': 'casefile'
-  };
-  const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', true)
-    .limit(30);
+  const { collectionId } = ownProps.match.params;
   return {
-    collection: selectCollection(state, ownProps.previewId)
-  };
+    collectionId,
+    collection: selectCollection(state, collectionId) };
 };
 
 CaseScreen = injectIntl(CaseScreen);
+CaseScreen = connect(mapStateToProps, {queryCollections, fetchCollection})(CaseScreen);
 CaseScreen = withRouter(CaseScreen);
-CaseScreen = connect(mapStateToProps, {queryCollections})(CaseScreen);
 export default (CaseScreen);

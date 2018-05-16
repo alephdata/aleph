@@ -18,7 +18,6 @@ class CaseDocumentsContent extends Component {
 
   render() {
     const { collection } = this.props;
-    console.log(collection)
 
     return (
       <CaseScreen collection={collection}>
