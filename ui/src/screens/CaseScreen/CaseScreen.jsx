@@ -7,6 +7,7 @@ import { CaseInfo } from 'src/components/Case';
 import { queryCollections } from "src/actions";
 import { withRouter } from "react-router";
 import { selectCollection } from "../../selectors";
+import { fetchCollection } from "../../actions";
 
 class CaseScreen extends Component {
   constructor(props) {
@@ -18,7 +19,16 @@ class CaseScreen extends Component {
   }
 
   async componentDidMount() {
+    const { collectionId } = this.props;
+    this.props.fetchCollection({ id: collectionId });
     this.setState({result: this.props.result})
+  }
+
+  componentDidUpdate(prevProps) {
+    const { collectionId } = this.props;
+    if (collectionId !== prevProps.collectionId) {
+      this.props.fetchCollection({ id: collectionId });
+    }
   }
 
   render() {
@@ -31,7 +41,7 @@ class CaseScreen extends Component {
     return (
       <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection}/>}>
         <DualPane>
-          <CaseInfo/>
+          <CaseInfo collection={collection}/>
           <div>
             {this.props.children}
           </div>
@@ -42,13 +52,13 @@ class CaseScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state)
+  const { collectionId } = ownProps.match.params;
   return {
-    collection: selectCollection(state, ownProps.previewId)
-  };
+    collectionId,
+    collection: selectCollection(state, collectionId) };
 };
 
 CaseScreen = injectIntl(CaseScreen);
+CaseScreen = connect(mapStateToProps, {queryCollections, fetchCollection})(CaseScreen);
 CaseScreen = withRouter(CaseScreen);
-CaseScreen = connect(mapStateToProps, {queryCollections})(CaseScreen);
 export default (CaseScreen);
