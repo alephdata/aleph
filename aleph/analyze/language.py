@@ -1,7 +1,6 @@
 import logging
 
 from aleph import settings
-from aleph.model import Document
 from aleph.analyze.analyzer import Analyzer
 
 log = logging.getLogger(__name__)
@@ -12,12 +11,6 @@ THRESHOLD = 0.8
 class LanguageAnalyzer(Analyzer):
     PRIORITY = 100
     MAX_LENGTH = 40000
-    IGNORED = [
-        Document.SCHEMA,
-        Document.SCHEMA_PACKAGE,
-        Document.SCHEMA_FOLDER,
-        Document.SCHEMA_WORKBOOK,
-    ]
 
     def __init__(self):
         self.active = settings.ANALYZE_LANGUAGE
@@ -47,7 +40,7 @@ class LanguageAnalyzer(Analyzer):
         return '\n\n'.join(parts)
 
     def analyze(self, document):
-        if document.schema in self.IGNORED:
+        if not document.supports_nlp:
             return
         text = self._text_sample(document)
         lang, score = self.identifier.classify(text)

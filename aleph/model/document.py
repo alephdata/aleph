@@ -24,6 +24,8 @@ class Document(db.Model, DatedModel, Metadata):
     SCHEMA_HTML = 'HyperText'
     SCHEMA_PDF = 'Pages'
     SCHEMA_IMAGE = 'Image'
+    SCHEMA_AUDIO = 'Audio'
+    SCHEMA_VIDEO = 'Video'
     SCHEMA_TABLE = 'Table'
     SCHEMA_EMAIL = 'Email'
 
@@ -59,13 +61,23 @@ class Document(db.Model, DatedModel, Metadata):
     def supports_records(self):
         # Slightly unintuitive naming: this just checks the document type,
         # not if there actually are any records.
-        if self.schema not in [self.SCHEMA_PDF, self.SCHEMA_TABLE]:
-            return False
-        return True
+        return self.schema in [self.SCHEMA_PDF, self.SCHEMA_TABLE]
 
     @property
     def supports_pages(self):
         return self.schema == self.SCHEMA_PDF
+
+    @property
+    def supports_nlp(self):
+        structural = [
+            Document.SCHEMA,
+            Document.SCHEMA_PACKAGE,
+            Document.SCHEMA_FOLDER,
+            Document.SCHEMA_WORKBOOK,
+            Document.SCHEMA_VIDEO,
+            Document.SCHEMA_AUDIO,
+        ]
+        return self.schema not in structural
 
     @property
     def ancestors(self):

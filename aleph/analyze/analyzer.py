@@ -17,17 +17,9 @@ class Analyzer(object):
 
 
 class EntityAnalyzer(Analyzer):
-    IGNORED = [
-        Document.SCHEMA,
-        Document.SCHEMA_PACKAGE,
-        Document.SCHEMA_FOLDER,
-        Document.SCHEMA_WORKBOOK,
-        # Document.SCHEMA_IMAGE,
-        # Document.SCHEMA_TABLE
-    ]
 
     def analyze(self, document):
-        if document.schema in self.IGNORED:
+        if not document.supports_nlp:
             return
 
         collector = DocumentTagCollector(document, self.ORIGIN)
