@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
+import { Link } from 'react-router-dom';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@blueprintjs/core";
 
@@ -40,7 +41,6 @@ class CaseInfo extends Component {
     const {intl} = this.props;
 
     this.state = {
-      activeTab: 0,
       settings: false,
       access: false,
       tabItems: [
@@ -49,45 +49,48 @@ class CaseInfo extends Component {
           name: 'Home',
           icon: 'home',
           text: intl.formatMessage(messages.home),
+          url: '/'
         }, {
           index: 1,
           name: 'Timeline',
           icon: 'timeline-events',
-          text: intl.formatMessage(messages.timeline)
+          text: intl.formatMessage(messages.timeline),
+          url: '/timeline'
         }, {
           index: 2,
           name: 'Documents',
           icon: 'folder-close',
-          text: intl.formatMessage(messages.documents)
+          text: intl.formatMessage(messages.documents),
+          url: '/documents'
         }, {
           index: 3,
           name: 'Notes',
           icon: 'annotation',
-          text: intl.formatMessage(messages.notes)
+          text: intl.formatMessage(messages.notes),
+          url: '/notes'
         }
       ]
     };
 
-    this.onChangeCase = this.onChangeCase.bind(this);
-    this.onClickTab = this.onClickTab.bind(this);
     this.toggleAccess = this.toggleAccess.bind(this);
     this.toggleSettings = this.toggleSettings.bind(this);
+    this.onClickTab = this.onClickTab.bind(this);
   }
 
-  onChangeCase(casefile) {
+  onClickTab(collectionId, url) {
     const {history} = this.props;
     history.push({
-      pathname: '/cases/' + casefile.id,
+      pathname: '/cases/' + collectionId + url
     });
   }
 
   async componentDidMount() {
-    await this.fetchIfNeeded();
+    //await this.fetchIfNeeded();
   }
 
   async componentDidUpdate(prevProps) {
     if (prevProps.id !== this.props.id) {
-      await this.fetchIfNeeded();
+      //await this.fetchIfNeeded();
     }
   }
 
@@ -96,10 +99,6 @@ class CaseInfo extends Component {
     if (result.total === undefined && !result.isLoading && !result.isError) {
       this.props.queryCollections({query});
     }
-  }
-
-  onClickTab(index) {
-    this.setState({activeTab: index});
   }
 
   toggleSettings() {
@@ -111,14 +110,13 @@ class CaseInfo extends Component {
   }
 
   render() {
-    const {collection, result} = this.props;
-    const {activeTab, settings, access, tabItems} = this.state;
+    const {collection, result, activeTab} = this.props;
+    const {settings, access, tabItems} = this.state;
     const color = getColor(collection.id);
-    const onChange = this.onChangeCase;
 
-    if (collection.isLoading) {
+/*    if (collection.isLoading) {
       return <ScreenLoading/>;
-    }
+    }*/
 
     return (
       <DualPane.InfoPane className="CaseInfo with-heading">
@@ -126,18 +124,22 @@ class CaseInfo extends Component {
           <Popover content={<Menu>
             {result.results.map(function (file, index) {
               if (file.id !== collection.id) {
-                return <MenuItem onClick={(e) => onChange(file)} key={index} text={file.label}/>
+                return <Link key={index} to={'/cases/' + file.id} className="pt-menu-item">
+                  <div className="pt-text-overflow-ellipsis pt-fill">
+                    {file.label}
+                  </div>
+                </Link>
               }
             })}
-          </Menu>} className='case-file-dropdown' icon='search' text='Case' position={Position.RIGHT_TOP}>
+          </Menu>} className='case-file-dropdown' icon='search' text='Case' position={Position.BOTTOM_RIGHT}>
             <Button icon={<Icon icon='square' iconSize={Icon.SIZE_LARGE} color={color}
                                 style={{backgroundColor: color, opacity: 0.6}}/>}
                     rightIcon="menu-open" className='pt-fill pt-align-left' text={collection.label}/>
           </Popover>
           <MenuDivider/>
           ﻿{tabItems.map((item, index) =>
-          <MenuItem key={index} active={item.index === activeTab} onClick={(e) => this.onClickTab(index)}
-                    className='menu-item-padding' icon={item.icon} text={item.text}/>)
+          <MenuItem key={index} active={item.name === activeTab}
+                    className='menu-item-padding' icon={item.icon} text={item.text} onClick={(e) => this.onClickTab(collection.id, item.url)}/>)
         }
           <MenuDivider/>
           <MenuItem active={settings} onClick={this.toggleSettings} className='menu-item-padding'

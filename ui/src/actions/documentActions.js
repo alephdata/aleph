@@ -17,3 +17,19 @@ export const fetchDocumentPage = asyncActionCreator(({ documentId, page }) => as
   return { documentId, page, data: response.data };
 }, { name: 'FETCH_DOCUMENT_PAGE' });
 
+export const uploadDocument = asyncActionCreator((collectionId, file, onUploadProgress) => async dispatch => {
+  const formData = new FormData();
+  formData.append('file', file);
+  //formData.append('meta', ' ');
+  const config = {
+    onUploadProgress,
+    headers: {
+      'content-type': 'multipart/form-data',
+    }
+  };
+
+  const response = await endpoint.post(`collections/${collectionId}/ingest`, formData, config);
+  console.log('res', response)
+  return { file: response.data};
+}, { name: 'UPLOAD_DOCUMENT' });
+

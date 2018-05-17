@@ -8,14 +8,13 @@ import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 import './FolderViewer.css';
 
-
 class FolderViewer extends Component {
   render() {
-    const { document, query } = this.props;
+    const { document, query, className } = this.props;
 
     return (
       <React.Fragment>
-        <div id="children" className="FolderViewer">
+        <div id="children" className={`FolderViewer ${className}`}>
           {document.status === 'fail' && (
             <div className='warning-folder'>
               <strong>
@@ -63,7 +62,7 @@ const mapStateToProps = (state, ownProps) => {
   }
 
   return { query }
-}
+};
 
 FolderViewer = connect(mapStateToProps)(FolderViewer);
 FolderViewer = withRouter(FolderViewer);
