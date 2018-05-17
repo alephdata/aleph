@@ -32,7 +32,7 @@ class CaseScreen extends Component {
   }
 
   render() {
-    const {collection} = this.props;
+    const {collection, activeTab, className} = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error}/>;
@@ -41,10 +41,12 @@ class CaseScreen extends Component {
     return (
       <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection}/>}>
         <DualPane>
-          <CaseInfo collection={collection}/>
-          <div>
-            {this.props.children}
-          </div>
+          <CaseInfo activeTab={activeTab} collection={collection}/>
+          <DualPane.ContentPane>
+            <div className={className}>
+              {this.props.children}
+            </div>
+          </DualPane.ContentPane>
         </DualPane>
       </Screen>
     );
