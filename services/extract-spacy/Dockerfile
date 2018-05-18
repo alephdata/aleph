@@ -1,4 +1,4 @@
-FROM alephdata/platform-spacy
+FROM alephdata/platform-spacy:2.1.4
 
 ADD setup.py service.py /service/
 RUN pip install -q -e /service

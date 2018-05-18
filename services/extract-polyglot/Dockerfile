@@ -1,4 +1,4 @@
-FROM alephdata/platform-polyglot
+FROM alephdata/platform-polyglot:2.1.4
 
 ADD setup.py service.py /service/
 RUN pip install -q -e /service

@@ -1,4 +1,4 @@
-FROM alephdata/platform-libreoffice
+FROM alephdata/platform-libreoffice:2.1.4
 
 RUN pip3 install -q aiohttp \
                     celestial>=0.2.3 \
