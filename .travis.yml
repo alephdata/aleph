@@ -26,6 +26,9 @@ install:
   - echo "${TRAVIS_BRANCH}"
   - docker build -t alephdata/aleph:latest .
   - docker build -t alephdata/ui:latest ui
+  - docker build -t alephdata/aleph-convert-document:latest services/convert-document
+  - docker build -t alephdata/aleph-extract-polyglot:latest services/extract-polyglot
+  - docker build -t alephdata/aleph-extract-spacy:latest services/extract-spacy
   - docker-compose -f docker-compose.dev.yml build
   - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
   - sleep 4
@@ -37,6 +40,15 @@ after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # push tag as well
   - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
+      docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:$TRAVIS_TAG ;
+      docker push alephdata/aleph-convert-document:latest ;
+      docker push alephdata/aleph-convert-document:$TRAVIS_TAG ;
+      docker tag alephdata/aleph-extract-polyglot:latest alephdata/aleph-extract-polyglot:$TRAVIS_TAG ;
+      docker push alephdata/aleph-extract-polyglot:latest ;
+      docker push alephdata/aleph-extract-polyglot:$TRAVIS_TAG ;
+      docker tag alephdata/aleph-extract-spacy:latest alephdata/aleph-extract-spacy:$TRAVIS_TAG ;
+      docker push alephdata/aleph-extract-spacy:latest ;
+      docker push alephdata/aleph-extract-spacy:$TRAVIS_TAG ;
       docker tag alephdata/aleph:latest alephdata/aleph:$TRAVIS_TAG ;
       docker push alephdata/aleph:latest ;
       docker push alephdata/aleph:$TRAVIS_TAG ;
@@ -45,6 +57,12 @@ after_success:
       docker push alephdata/ui:$TRAVIS_TAG ;
     fi
   - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
+      docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:occrp ;
+      docker push alephdata/aleph-convert-document:occrp ;
+      docker tag alephdata/aleph-extract-polyglot:latest alephdata/aleph-extract-polyglot:occrp ;
+      docker push alephdata/aleph-extract-polyglot:occrp ;
+      docker tag alephdata/aleph-extract-spacy:latest alephdata/aleph-extract-spacy:occrp ;
+      docker push alephdata/aleph-extract-spacy:occrp
       docker tag alephdata/aleph:latest alephdata/aleph:occrp ;
       docker push alephdata/aleph:occrp ;
       docker tag alephdata/ui:latest alephdata/ui:occrp ;

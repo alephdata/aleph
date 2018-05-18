@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/platform-elasticsearch:6.2.4
+    image: alephdata/platform-elasticsearch:2.0.13
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-log:/var/log
@@ -22,25 +22,43 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
-  unoservice:
-    image: alephdata/unoservice:1.2.2
+  convert-document:
+    build: services/convert-document
+    restart: on-failure
     tmpfs:
       - /tmp
       - /root/.config
-    restart: on-failure
+    mem_limit: 2g
     expose:
       - 3000
 
+  extract-polyglot:
+    build: services/extract-polyglot
+    restart: on-failure
+    mem_limit: 3g
+    expose:
+      - 50000
+  
+  extract-spacy:
+    build: services/extract-spacy
+    restart: on-failure
+    mem_limit: 3g
+    expose:
+      - 50000
+
   worker:
     build: .
-    command: celery -A aleph.queues -B -c 1 -l INFO worker
+    command: celery -A aleph.queues -B -c 4 -l INFO worker
     restart: on-failure
     links:
       - postgres
       - elasticsearch
       - rabbitmq
-      - unoservice
-    tmpfs: /tmp
+      - convert-document
+      - extract-polyglot
+      - extract-spacy
+    tmpfs:
+      - /tmp
     volumes:
       - archive-data:/data
       - polyglot:/polyglot
@@ -54,12 +72,14 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
-      - unoservice
+      - convert-document
+      - extract-polyglot
+      - extract-spacy
       - worker
-    tmpfs: /tmp
+    tmpfs:
+      - /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
       - "./mappings:/aleph/mappings"
       - "/:/host"
     env_file:
@@ -73,10 +93,13 @@ services:
       - elasticsearch
       - rabbitmq
       - worker
-    tmpfs: /tmp
+      - convert-document
+      - extract-polyglot
+      - extract-spacy
+    tmpfs:
+      - /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
     env_file:
       - aleph.env
 
@@ -90,10 +113,10 @@ services:
       - elasticsearch
       - rabbitmq
       - worker
-    tmpfs: /tmp
+    tmpfs:
+      - /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
     env_file:
       - aleph.env
 
@@ -119,7 +142,6 @@ services:
 volumes:
   assets: {}
   archive-data: {}
-  polyglot: {}
   postgres-data: {}
   rabbitmq-data: {}
   elasticsearch-data: {}
