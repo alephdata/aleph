@@ -29,7 +29,7 @@ class QueryParser(object):
     def page(self):
         if self.limit == 0:
             return 1
-        return (self.offset / self.limit) + 1
+        return (self.offset // self.limit) + 1
 
     def prefixed_items(self, prefix):
         items = {}
@@ -61,7 +61,7 @@ class QueryParser(object):
 
     @property
     def items(self):
-        for (key, value) in self.args.iteritems(multi=True):
+        for (key, value) in self.args.items(multi=True):
             if key == 'offset':
                 continue
             value = stringify(value, encoding='utf-8')
@@ -112,7 +112,8 @@ class SearchQueryParser(QueryParser):
         # values in the result set). These must match 'keyword' fields in the
         # index.
         self.facet_names = set(self.getlist('facet'))
-        self.facet_filters = self.facet_names.intersection(self.filters.keys())
+        filter_names = list(self.filters.keys())
+        self.facet_filters = self.facet_names.intersection(filter_names)
 
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool('highlight', False)

@@ -28,6 +28,6 @@ def downgrade():
         sa.Column('start_entity_id', sa.VARCHAR(length=32), autoincrement=False, nullable=True),
         sa.Column('weight', sa.INTEGER(), autoincrement=False, nullable=True),
         sa.Column('end_collection_id', postgresql.ARRAY(INTEGER()), autoincrement=False, nullable=True),
-        sa.ForeignKeyConstraint(['start_entity_id'], [u'entity.id'], name=u'path_start_entity_id_fkey'),
-        sa.PrimaryKeyConstraint('id', name=u'path_pkey')
+        sa.ForeignKeyConstraint(['start_entity_id'], ['entity.id'], name='path_start_entity_id_fkey'),
+        sa.PrimaryKeyConstraint('id', name='path_pkey')
     )

@@ -16,7 +16,7 @@ down_revision = 'fc8e0d91bf41'
 def upgrade():
     op.add_column('path', sa.Column('weight', sa.Integer(), nullable=True))
     op.drop_index('ix_path_end_collection_id', table_name='path')
-    op.drop_constraint(u'path_end_collection_id_fkey', 'path',
+    op.drop_constraint('path_end_collection_id_fkey', 'path',
                        type_='foreignkey')
     op.drop_column('path', 'end_collection_id')
     col = postgresql.ARRAY(sa.Integer())

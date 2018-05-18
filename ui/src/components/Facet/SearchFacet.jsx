@@ -29,21 +29,16 @@ class SearchFacet extends Component {
     this.showMore = this.showMore.bind(this);
   }
 
-  componentDidMount() {
-    this.updateFacet(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.updateFacet(nextProps);
-  }
-
-  updateFacet(props) {
-    const { field, result } = props;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { field, result } = nextProps;
     if (result.total !== undefined && !result.isLoading) {
       const facets = result.facets || {};
-      const facet = facets[field] || defaultFacet;
-      this.setState({facet, isExpanding: false});
+      return {
+        facet: facets[field] || defaultFacet,
+        isExpanding: false
+      };
     }
+    return null
   }
 
   updateFacetSize(newSize) {

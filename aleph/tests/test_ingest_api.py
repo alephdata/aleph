@@ -1,5 +1,5 @@
 import json
-from StringIO import StringIO
+from io import BytesIO
 
 from aleph.core import db
 from aleph.model import Collection
@@ -44,7 +44,7 @@ class IngestApiTestCase(TestCase):
         }
         data = {
             'meta': json.dumps(meta),
-            'foo': open(self.csv_path),
+            'foo': open(self.csv_path, 'rb'),
         }
         res = self.client.post(self.url,
                                data=data,
@@ -60,10 +60,11 @@ class IngestApiTestCase(TestCase):
         assert res.json['total'] == 1, res.json
         res = self.client.get('/api/2/documents/1',
                               headers=headers)
-        assert res.json['countries'] == ['de', 'us'], res.json
+        assert 'de' in res.json['countries'], res.json
+        assert 'us' in res.json['countries'], res.json
         res = self.client.get('/api/2/documents/1/file',
                               headers=headers)
-        assert 'Klaus Trutzel' in res.data
+        assert b'Klaus Trutzel' in res.data
         assert 'text/csv' in res.content_type, res.content_type
 
     def test_upload_html_doc(self):
@@ -76,7 +77,7 @@ class IngestApiTestCase(TestCase):
         }
         data = {
             'meta': json.dumps(meta),
-            'foo': open(html_path)
+            'foo': open(html_path, 'rb')
         }
         res = self.client.post(self.url,
                                data=data,
@@ -100,7 +101,7 @@ class IngestApiTestCase(TestCase):
 
         res = self.client.get('/api/2/documents/1/file',
                               headers=headers)
-        assert 'KDE2' in res.data
+        assert b'KDE2' in res.data
         assert 'text/html' in res.content_type, res.content_type
 
     def test_invalid_meta(self):
@@ -108,7 +109,7 @@ class IngestApiTestCase(TestCase):
         meta = {'title': 3, 'file_name': ''}
         data = {
             'meta': json.dumps(meta),
-            'foo': (StringIO("this is a futz with a banana"), 'futz.html')
+            'foo': (BytesIO(b"this is a futz with a banana"), 'futz.html')
         }
         res = self.client.post(self.url,
                                data=data,
@@ -120,9 +121,9 @@ class IngestApiTestCase(TestCase):
         meta = {'title': 'test', 'foreign_id': 'test'}
         data = {
             'meta': json.dumps(meta),
-            'foo': (StringIO("this is a futz with a banana"), 'futz.html'),
-            'bar': (StringIO("this is a shmoo with a banana"), 'bar.html'),
-            'quix': (StringIO("this is a lala with a banana"), 'qux.html')
+            'foo': (BytesIO(b"this is a futz with a banana"), 'futz.html'),
+            'bar': (BytesIO(b"this is a shmoo with a banana"), 'bar.html'),
+            'quix': (BytesIO(b"this is a lala with a banana"), 'qux.html')
         }
         res = self.client.post(self.url,
                                data=data,
@@ -132,9 +133,7 @@ class IngestApiTestCase(TestCase):
     def test_invalid_directory_without_foreign_id(self):
         _, headers = self.login(is_admin=True)
         meta = {'title': 'test'}
-        data = {
-            'meta': json.dumps(meta)
-        }
+        data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url,
                                data=data,
                                headers=headers)
@@ -147,9 +146,7 @@ class IngestApiTestCase(TestCase):
             'foreign_id': 'directory',
             'schema': 'Folder'
         }
-        data = {
-            'meta': json.dumps(meta)
-        }
+        data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url,
                                data=data,
                                headers=headers)
@@ -164,9 +161,7 @@ class IngestApiTestCase(TestCase):
             'foreign_id': 'subdirectory',
             'parent': {'foreign_id': 'directory'}
         }
-        data = {
-            'meta': json.dumps(meta)
-        }
+        data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url,
                                data=data,
                                headers=headers)

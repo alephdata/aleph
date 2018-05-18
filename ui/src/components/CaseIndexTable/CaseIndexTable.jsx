@@ -33,11 +33,9 @@ class CaseIndexTable extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {result} = nextProps;
-    if (result.total !== undefined) {
-      this.setState({result})
-    }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { result } = nextProps;
+    return result.total !== undefined ? { result } : null;
   }
 
   render() {

@@ -19,13 +19,13 @@ def upgrade():
                     sa.Column('collection_id', sa.Integer(), nullable=True),
                     sa.ForeignKeyConstraint(['collection_id'], ['collection.id'],),
                     sa.ForeignKeyConstraint(['document_id'], ['document.id'], ))
-    op.add_column(u'collection',
+    op.add_column('collection',
                   sa.Column('category', sa.Unicode(), nullable=True))
-    op.add_column(u'collection',
+    op.add_column('collection',
                   sa.Column('generate_entities', sa.Boolean(), nullable=True))
-    op.add_column(u'crawler_state', sa.Column('collection_id', sa.Integer(),
+    op.add_column('crawler_state', sa.Column('collection_id', sa.Integer(),
                   nullable=True))
-    op.add_column(u'permission', sa.Column('collection_id', sa.Integer(),
+    op.add_column('permission', sa.Column('collection_id', sa.Integer(),
                   nullable=True))
 
     bind = op.get_bind()
@@ -47,7 +47,7 @@ def upgrade():
         new_id = rp.inserted_primary_key.pop()
         id_map[source_id] = new_id
 
-    print 'Re-writing permissions...'
+    print('Re-writing permissions...')
     perm_table = meta.tables['permission']
     q = sa.select([perm_table]).where(perm_table.c.resource_type == 'source')
     for perm in bind.execute(q).fetchall():
@@ -68,7 +68,7 @@ def upgrade():
     # q = sa.delete(perm_table).where(perm_table.c.resource_type == 'source')
     # bind.execute(q)
 
-    print 'Re-writing crawler states...'
+    print('Re-writing crawler states...')
     cs_table = meta.tables['crawler_state']
     rp = bind.execute(sa.select([cs_table]))
     while True:
@@ -80,7 +80,7 @@ def upgrade():
         bind.execute(q)
 
     # print 'DOING DOCS NOW'
-    print 'Writing document/collection associations...'
+    print('Writing document/collection associations...')
     doc_table = meta.tables['document']
     coll_doc_table = meta.tables['collection_document']
     rp = bind.execute(sa.select([doc_table]))

@@ -6,6 +6,8 @@ import { Tooltip, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
+import DownloadButton from 'src/components/Toolbar/DownloadButton';
+
 
 const messages = defineMessages({
   mode_view: {
@@ -70,6 +72,7 @@ class ModeButtons extends React.Component {
             </a>
           </Tooltip>
         )}
+        <DownloadButton isPreview={isPreview} document={document} />
         { isPreview && (
           <Tooltip content={intl.formatMessage(messages.mode_info)} position={Position.BOTTOM_RIGHT}>
             <a onClick={(e) => this.setMode(e, 'info')}

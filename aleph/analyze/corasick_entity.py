@@ -28,18 +28,18 @@ class AhoCorasickEntityAnalyzer(EntityAnalyzer):
         # The goal of this function is not to retain a readable version of the
         # string, but rather to yield a normalised version suitable for
         # comparisons and machine analysis.
-        text = normalize(text, lowercase=True, ascii=True)
+        text = normalize(text, lowercase=True, latinize=True)
         if text is None:
             return
         # TODO: this is a weird heuristic, but to avoid overly aggressive
         # matching it may make sense:
         if ' ' not in text:
             return
-        return text.encode('utf-8')
+        return text
 
     def build_automaton(self):
         q = Entity.all()
-        q = q.filter(Entity.schema.in_(self.TYPES.keys()))
+        q = q.filter(Entity.schema.in_(list(self.TYPES.keys())))
 
         matches = {}
         for entity in q:
@@ -61,7 +61,7 @@ class AhoCorasickEntityAnalyzer(EntityAnalyzer):
             return
 
         automaton = Automaton()
-        for term, entities in matches.iteritems():
+        for term, entities in matches.items():
             automaton.add_word(term, entities)
         automaton.make_automaton()
         return automaton

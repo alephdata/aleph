@@ -1,4 +1,3 @@
-import six
 import logging
 from flask import Blueprint, request
 from flask.ext.babel import gettext, get_locale
@@ -9,7 +8,7 @@ from followthemoney.exc import InvalidData
 from jwt import ExpiredSignatureError
 
 from aleph import __version__
-from aleph.core import settings, app_ui_url, url_for
+from aleph.core import settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.logic.statistics import get_instance_stats
@@ -46,11 +45,11 @@ def metadata():
         'app': {
             'title': settings.APP_TITLE,
             'version': __version__,
-            'ui_uri': six.text_type(app_ui_url),
+            'ui_uri': settings.APP_UI_URL,
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,
             'favicon': settings.APP_FAVICON,
-            'locale': six.text_type(locale),
+            'locale': str(locale),
             'locales': settings.UI_LANGUAGES
         },
         'categories': Collection.CATEGORIES,

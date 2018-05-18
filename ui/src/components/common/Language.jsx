@@ -16,22 +16,20 @@ class Name extends Component {
           label = languages[code] || codeLabel;
     
     if (!code) return null;
-    return (
-      <span>{ label }</span>
-    );
+    return label;
   }
 }
 
 class List extends Component {
   render() {
     const { codes, languages } = this.props;
-    
-    if (!codes) return null;
+    if (!codes || codes.length === 0) {
+      return null;
+    }
     const names = codes.map((code, i) => {
       return <Name languages={languages} code={code} key={code} />;
     });
-    
-    return (<span>{ wordList(names, ', ') }</span>);
+    return wordList(names, ', ');
   }
 }
 

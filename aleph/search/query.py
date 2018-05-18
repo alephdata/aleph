@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 def convert_filters(filters):
     ret = []
-    for field, values in filters.iteritems():
+    for field, values in filters.items():
         ret.append(field_filter_query(field, values))
     return ret
 
@@ -57,7 +57,7 @@ class Query(object):
     def get_filters(self):
         """Apply query filters from the user interface."""
         filters = []
-        for field, values in self.parser.filters.iteritems():
+        for field, values in self.parser.filters.items():
             if field not in self.parser.facet_names:
                 filters.append(field_filter_query(field, values))
 
@@ -71,7 +71,7 @@ class Query(object):
     def get_post_filters(self, exclude=None):
         """Apply post-aggregation query filters."""
         filters = []
-        for field, values in self.parser.filters.iteritems():
+        for field, values in self.parser.filters.items():
             if field == exclude:
                 continue
             if field in self.parser.facet_filters:

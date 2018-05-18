@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -14,7 +14,7 @@ const messages = defineMessages({
 });
 
 class LogoutScreen extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const {logout, history, intl} = this.props;
     logout();
     showSuccessToast(intl.formatMessage(messages.success));
@@ -22,7 +22,7 @@ class LogoutScreen extends Component {
   }
 
   render() {
-    return <div>Logout ...</div>;
+    return null;
   }
 }
 

@@ -41,6 +41,6 @@ def downgrade():
     sa.Column('error_type', sa.VARCHAR(), autoincrement=False, nullable=True),
     sa.Column('error_message', sa.VARCHAR(), autoincrement=False, nullable=True),
     sa.Column('error_details', sa.VARCHAR(), autoincrement=False, nullable=True),
-    sa.PrimaryKeyConstraint('id', name=u'processing_log_pkey')
+    sa.PrimaryKeyConstraint('id', name='processing_log_pkey')
     )
     op.drop_table('event')

@@ -1,53 +1,29 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Waypoint from 'react-waypoint';
+import { Cell, Column, TruncatedFormat, Table, TableLoadingOption } from "@blueprintjs/table";
 
 import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult } from 'src/selectors';
-import SectionLoading from 'src/components/common/SectionLoading';
 
+import './TableViewer.css';
 
-class Table extends Component {
-  render() {
-    const { columnNames, records } = this.props;
-
-    return (
-      <React.Fragment>
-        <div style={{width: '100%', flex: 1, overflow: 'auto'}}>
-          <table className="data-table">
-            <thead>
-              <tr>
-                {columnNames.map((columnName, index) => (
-                  <th key={columnName}>
-                    {columnName}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {records.map(record => (
-                <tr key={record.id}>
-                  {columnNames.map(columnName => (
-                    <td key={columnName}>
-                      {record.data[columnName] || '–'}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </React.Fragment>
-    );
-  }
-}
 
 class TableViewer extends Component {
   constructor(props) {
-    super(props);  
-    this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
+    super(props);
+    this.state = { requestedRow: 0 };
+    this.renderCell = this.renderCell.bind(this);
+    this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
+  }
+  
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { result } = nextProps;
+    return {
+      requestedRow: Math.max(prevState.requestedRow, result.results.length)
+    }
   }
 
   componentDidMount() {
@@ -55,8 +31,14 @@ class TableViewer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
+    const { query, result } = this.props;
+    if (!query.sameAs(prevProps.query)) {
       this.fetchRecords();
+    }
+    if (this.state.requestedRow > result.results.length) {
+      if (!result.isLoading && result.next) {
+        this.props.queryDocumentRecords({query, next: result.next})
+      }
     }
   }
 
@@ -66,31 +48,48 @@ class TableViewer extends Component {
       queryDocumentRecords({query})
     }
   }
-  
-  bottomReachedHandler() {
-    const { query, result, queryDocumentRecords } = this.props;
-    if (!result.isLoading && result.next) {
-      queryDocumentRecords({query, next: result.next})
-    };
+
+  onVisibleCellsChange(row) {
+    const maxResult = this.state.requestedRow;
+    if (row.rowIndexEnd >= (maxResult - 10)) {
+      const { result } = this.props;
+      const nextResult = result.offset + (result.limit * 2);
+      this.setState({requestedRow: nextResult});
+    }
+  }
+
+  renderCell(rowIndex, colIndex) {
+    const { result, document } = this.props;
+    const columnName = document.columns[colIndex];
+    const loading = rowIndex >= result.results.length;
+    const value = _.get(result.results, [rowIndex, 'data', columnName], '');
+    return <Cell loading={loading}>
+      <TruncatedFormat detectTruncation={true}>
+        {value || ''}
+      </TruncatedFormat>
+    </Cell>
   }
 
   render() {
     const { document, result } = this.props;
-    const columnNames = document.columns;
-
+    const loadingOptions = []
+    if (document.id === undefined) {
+      return null;
+    }
+    if (result.total === undefined) {
+      loadingOptions.push(TableLoadingOption.CELLS);
+    }
     return (
       <div className="TableViewer">
-        <Table columnNames={columnNames} records={result.results} />
-        {!result.isLoading && result.next && (
-          <Waypoint
-            onEnter={this.bottomReachedHandler}
-            bottomOffset="-600px"
-            scrollableAncestor={window}
-          />
-        )}
-        {result.total === null && (
-          <SectionLoading />
-        )}
+        <Table numRows={result.total}
+               enableGhostCells={true}
+               enableRowHeader={true}
+               loadingOptions={loadingOptions}
+               onVisibleCellsChange={this.onVisibleCellsChange}>
+          {document.columns.map((column, i) => 
+            <Column key={i} id={i} name={column} cellRenderer={this.renderCell} />  
+          )}
+        </Table>
       </div>
     );
   }

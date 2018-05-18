@@ -18,13 +18,14 @@ def check_alerts():
     """Go through all alerts."""
     Alert.dedupe()
     db.session.commit()
-
     for alert_id in Alert.all_ids():
         check_alert(alert_id)
 
 
 def check_alert(alert_id):
     alert = Alert.by_id(alert_id)
+    if alert is None:
+        return
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
     found = 0

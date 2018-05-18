@@ -23,20 +23,22 @@ const messages = defineMessages({
 class SettingsDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = {role: props.role};
+    this.state = {
+      role: props.role
+    };
     this.onSave = this.onSave.bind(this);
     this.onChangeInput = this.onChangeInput.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { role } = this.props.role;
+  componentDidUpdate(prevProps) {
+    const { role } = this.props;
 
-    if (nextProps.isOpen && !this.props.isOpen) {
-      this.props.fetchRole(this.props.role.id);
+    if (!prevProps.isOpen && this.props.isOpen) {
+      this.props.fetchRole(role.id);
     }
 
-    if (nextProps.role && (!role || !role.updated_at) && nextProps.role.updated_at) {
-      this.setState({ role: nextProps.role });
+    if (this.state.role.id !== role.id) {
+      this.setState({ role: role });
     }
   }
 

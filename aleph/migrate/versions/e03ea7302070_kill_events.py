@@ -25,5 +25,5 @@ def downgrade():
     sa.Column('origin', sa.VARCHAR(), autoincrement=False, nullable=True),
     sa.Column('data', postgresql.JSONB(), autoincrement=False, nullable=True),
     sa.Column('created_at', postgresql.TIMESTAMP(), autoincrement=False, nullable=True),
-    sa.PrimaryKeyConstraint('id', name=u'event_pkey')
+    sa.PrimaryKeyConstraint('id', name='event_pkey')
     )

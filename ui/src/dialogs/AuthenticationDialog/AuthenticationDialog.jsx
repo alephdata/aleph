@@ -43,9 +43,6 @@ class AuthenticationDialog extends Component {
     this.onOAuthLogin = this.onOAuthLogin.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
-
   onOAuthLogin() {
     const { auth } = this.props.metadata;
     if (auth.oauth_uri) {
@@ -122,11 +119,13 @@ class AuthenticationDialog extends Component {
                 </div>
               </span>}
           </section>
-          <MenuDivider className='menu-divider'/>
           {auth.oauth_uri && (
-            <Button icon="log-in" className="pt-large pt-fill" onClick={this.onOAuthLogin}>
-              <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth"/>
-            </Button>
+            <React.Fragment>
+              <MenuDivider className='menu-divider'/>
+              <Button icon="log-in" className="pt-large pt-fill" onClick={this.onOAuthLogin}>
+                <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth"/>
+              </Button>
+            </React.Fragment>
           )}
         </div>
       </Dialog>

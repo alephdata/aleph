@@ -26,16 +26,14 @@ class EventsRegistry(type):
         super(EventsRegistry, cls).__init__(name, bases, dct)
 
 
-class Events(object):
-    __metaclass__ = EventsRegistry
-
+class Events(object, metaclass=EventsRegistry):
     @classmethod
     def get(cls, name):
         return cls.registry.get(name)
 
     @classmethod
     def names(cls):
-        return cls.registry.keys()
+        return list(cls.registry.keys())
 
     # UPDATE COLLECTION (collection)
     UPDATE_COLLECTION = Event(

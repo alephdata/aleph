@@ -15,7 +15,7 @@ def get_extensions(section):
     if not EXTENSIONS[section]:
         for ep in iter_entry_points(section):
             EXTENSIONS[section][ep.name] = ep.load()
-    return EXTENSIONS[section].values()
+    return list(EXTENSIONS[section].values())
 
 
 def load_config_file(file_path):

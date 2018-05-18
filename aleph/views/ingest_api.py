@@ -50,7 +50,7 @@ def _load_metadata(collection):
     try:
         meta = json.loads(request.form.get('meta', '{}'))
     except Exception as ex:
-        raise BadRequest(unicode(ex))
+        raise BadRequest(str(ex))
 
     validate_data(meta, DocumentCreateSchema)
     foreign_id = stringify(meta.get('foreign_id'))

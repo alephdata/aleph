@@ -18,12 +18,12 @@ def upgrade():
                     'crawler_state', ['collection_id'], unique=False)
     op.drop_index('ix_crawler_state_source_id',
                   table_name='crawler_state')
-    op.drop_constraint(u'crawler_state_source_id_fkey',
+    op.drop_constraint('crawler_state_source_id_fkey',
                        'crawler_state', type_='foreignkey')
     op.create_foreign_key(None, 'crawler_state',
                           'collection', ['collection_id'], ['id'])
     op.drop_index('ix_document_source_id', table_name='document')
-    op.drop_constraint(u'document_source_id_fkey', 'document',
+    op.drop_constraint('document_source_id_fkey', 'document',
                        type_='foreignkey')
     op.drop_column('crawler_state', 'source_id')
     op.drop_column('document', 'source_id')

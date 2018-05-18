@@ -1,4 +1,3 @@
-import six
 import json
 import types
 from hashlib import sha1
@@ -6,7 +5,7 @@ from datetime import datetime, date
 from flask import Response, request
 from flask_babel.speaklater import LazyString
 from normality import stringify
-from urlparse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin
 from werkzeug.exceptions import MethodNotAllowed, Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
 from lxml.etree import tostring
@@ -165,15 +164,14 @@ def cache_hash(*a, **kw):
 
     def cache_str(o):
         if isinstance(o, (types.FunctionType, types.BuiltinFunctionType,
-                          types.MethodType, types.BuiltinMethodType,
-                          types.UnboundMethodType)):
+                          types.MethodType, types.BuiltinMethodType)):
             return getattr(o, 'func_name', 'func')
         if isinstance(o, dict):
             o = [k + ':' + cache_str(v) for k, v in o.items()]
         if isinstance(o, (list, tuple, set)):
             o = sorted(map(cache_str, o))
             o = '|'.join(o)
-        if isinstance(o, basestring):
+        if isinstance(o, str):
             return o
         if hasattr(o, 'updated_at'):
             return cache_str((repr(o), o.updated_at))
@@ -190,8 +188,10 @@ class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, (datetime, date)):
             return obj.isoformat()
+        if isinstance(obj, bytes):
+            return obj.decode('utf-8')
         if isinstance(obj, LazyString):
-            return six.text_type(obj)
+            return str(obj)
         if isinstance(obj, set):
             return [o for o in obj]
         if hasattr(obj, 'to_dict'):

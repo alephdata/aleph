@@ -13,10 +13,10 @@ down_revision = 'dfd8b2480e1b'
 
 
 def upgrade():
-    op.drop_constraint(u'cache_key_key', 'cache', type_='unique')
+    op.drop_constraint('cache_key_key', 'cache', type_='unique')
     op.create_index(op.f('ix_cache_key'), 'cache', ['key'], unique=False)
 
 
 def downgrade():
     op.drop_index(op.f('ix_cache_key'), table_name='cache')
-    op.create_unique_constraint(u'cache_key_key', 'cache', ['key'])
+    op.create_unique_constraint('cache_key_key', 'cache', ['key'])

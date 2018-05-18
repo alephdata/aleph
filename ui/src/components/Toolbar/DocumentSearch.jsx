@@ -28,8 +28,10 @@ class DocumentSearch extends React.Component {
       this.setState({ queryText });
     }
 
-    componentWillReceiveProps(newProps) {
-      this.setState({ queryText: newProps.query.getString('q')});
+    static getDerivedStateFromProps(nextProps, prevState) {
+      return {
+        queryText: nextProps.query.getString('q')
+      };
     }
 
     onSubmitSearch(event) {

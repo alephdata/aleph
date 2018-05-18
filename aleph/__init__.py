@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 # specific loggers
 logging.getLogger('flanker').setLevel(logging.WARNING)
+logging.getLogger('flanker.addresslib').setLevel(logging.ERROR)
 logging.getLogger('langid').setLevel(logging.WARNING)
 logging.getLogger('rdflib').setLevel(logging.WARNING)
 logging.getLogger('requests').setLevel(logging.WARNING)

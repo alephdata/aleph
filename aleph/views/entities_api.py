@@ -2,7 +2,7 @@ from banal import as_bool
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney.util import merge_data
-from six.moves.urllib.parse import quote
+from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
