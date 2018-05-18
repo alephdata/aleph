@@ -141,6 +141,7 @@ ANALYZE_IBAN = env_bool('ANAYZE_IBAN', True)
 
 # gRPC extractor services
 POLYGLOT_SERVICE = env('POLYGLOT_SERVICE', 'extract-polyglot:50000')
+SPACY_SERVICE = env('SPACY_SERVICE', 'extract-spacy:50000')
 
 
 ##############################################################################
