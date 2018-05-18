@@ -30,6 +30,8 @@ class RoleSchema(BaseSchema):
         if not data['writeable']:
             data.pop('password', None)
             data.pop('has_password', None)
+            data.pop('api_key', None)
+            data.pop('email', None)
         if data['type'] != Role.USER:
             data.pop('api_key', None)
             data.pop('email', None)
