@@ -1,4 +1,4 @@
-FROM alephdata/platform:2.1.0
+FROM alephdata/platform:2.1.4
 
 # Install Python dependencies
 COPY requirements-generic.txt /tmp/
