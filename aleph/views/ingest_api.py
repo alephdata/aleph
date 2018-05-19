@@ -8,11 +8,11 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 
-from aleph.ingest import ingest_document
 from aleph.model import Document, Events
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
 from aleph.logic.notifications import publish
+from aleph.logic.documents import ingest_document
 from aleph.views.util import jsonify, validate_data
 from aleph.views.util import get_db_collection
 

@@ -5,8 +5,8 @@ from ingestors.util import remove_directory
 
 from aleph.core import db, archive, celery
 from aleph.model import Document
-from aleph.ingest.manager import DocumentManager
-from aleph.ingest.result import DocumentResult
+from aleph.logic.documents import DocumentManager
+from aleph.logic.documents.result import DocumentResult
 from aleph.index import documents as index
 from aleph.analyze import analyze_document
 
@@ -19,6 +19,13 @@ def get_manager():
         DocumentManager._instance = DocumentManager(archive)
         log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
     return DocumentManager._instance
+
+
+def process_document(document):
+    """Perform post-ingest tasks like analysis and indexing."""
+    analyze_document(document)
+    index.index_document(document)
+    index.index_records(document)
 
 
 def ingest_document(document, file_path, role_id=None):
@@ -71,12 +78,11 @@ def ingest(document_id, file_path=None):
         log.debug('Ingested [%s:%s]: %s',
                   document.id, document.schema, document.name)
         db.session.commit()
-        analyze_document(document)
-        index.index_document(document)
-        index.index_records(document)
+        process_document(document)
     except Exception:
+        log.exception("Ingest failed [%s]: %s", document.id, document.name)
         db.session.rollback()
-        raise
+        db.session.close()
     finally:
         # Removing the temp_path given to storagelayer makes it redundant
         # to also call cleanup on the archive.

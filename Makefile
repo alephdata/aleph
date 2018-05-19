@@ -42,11 +42,8 @@ clean:
 	find . -type d -name __pycache__ -exec rm -r {} \+
 	find ui/src -name '*.css' -exec rm -f {} +
 
-rebuild:
-	$(COMPOSE) build --pull --no-cache
-
 build:
-	$(COMPOSE) build
+	$(COMPOSE) build --pull
 
 dev: 
 	pip install -q transifex-client bumpversion babel

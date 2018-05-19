@@ -264,5 +264,13 @@ class Document(db.Model, DatedModel, Metadata):
             q = q.filter(cls.collection_id == collection_id)
         return q.first()
 
+    @classmethod
+    def max_id(cls, collection_id=None):
+        q = cls.all_ids()
+        if collection_id is not None:
+            q = q.filter(cls.collection_id == collection_id)
+        q = q.order_by(cls.id.desc())
+        return q.first()
+
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)

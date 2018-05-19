@@ -3,7 +3,6 @@ import logging
 from aleph.core import db
 from aleph.util import get_extensions
 
-
 log = logging.getLogger(__name__)
 
 

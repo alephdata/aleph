@@ -1,8 +1,8 @@
 from aleph.core import create_app, celery as app  # noqa
-from aleph.ingest import ingest  # noqa
 from aleph.index.documents import index_document_id  # noqa
 from aleph.logic.entities import bulk_load_query  # noqa
 from aleph.logic.collections import process_collection, delete_collection  # noqa
+from aleph.logic.documents import ingest  # noqa
 from aleph.logic.scheduled import hourly, daily  # noqa
 from aleph.logic.xref import xref_collection # noqa
 from aleph.logic.alerts import check_alerts  # noqa

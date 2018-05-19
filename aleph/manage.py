@@ -11,12 +11,12 @@ from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db, destroy_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
-from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.collections import update_collection_access
+from aleph.logic.documents import ingest_document, ingest
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load

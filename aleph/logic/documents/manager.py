@@ -5,7 +5,7 @@ from ingestors.util import decode_path
 
 from aleph.core import db, settings
 from aleph.model import Document, Cache
-from aleph.ingest.result import DocumentResult
+from aleph.logic.documents.result import DocumentResult
 
 log = logging.getLogger(__name__)
 
@@ -52,6 +52,6 @@ class DocumentManager(Manager):
         doc.file_name = file_name or doc.meta.get('file_name')
         doc.mime_type = mime_type or doc.meta.get('mime_type')
 
-        from aleph.ingest import ingest_document
+        from aleph.logic.documents.ingest import ingest_document
         ingest_document(doc, file_path, role_id=parent.document.uploader_id)
         return DocumentResult(self, doc, file_path=file_path)
