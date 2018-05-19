@@ -5,7 +5,7 @@ from ingestors.util import remove_directory
 
 from aleph.core import db, archive, celery
 from aleph.model import Document
-from aleph.logic.documents import DocumentManager
+from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
 from aleph.index import documents as index
 from aleph.analyze import analyze_document
