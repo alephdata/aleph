@@ -45,9 +45,7 @@ def index_document(document):
         delete_entity(document.id)
         return
 
-    name = document.title
-    if name is None:
-        name = document.file_name
+    name = document.name
     log.info("Index document [%s]: %s", document.id, name)
     data = {
         'status': document.status,

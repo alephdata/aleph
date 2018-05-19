@@ -58,6 +58,17 @@ class Document(db.Model, DatedModel, Metadata):
         return model.get(self.schema)
 
     @property
+    def name(self):
+        if self.title is not None:
+            return self.title
+        if self.file_name is not None:
+            return self.file_name
+        if self.source_url is not None:
+            return self.source_url
+        if self.content_hash is not None:
+            return self.content_hash
+
+    @property
     def supports_records(self):
         # Slightly unintuitive naming: this just checks the document type,
         # not if there actually are any records.
