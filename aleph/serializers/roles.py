@@ -15,26 +15,27 @@ class RoleSchema(BaseSchema):
     email = String(dump_only=True)
     label = String(dump_only=True)
     api_key = String(dump_only=True)
-    password = String(validate=MIN_LENGTH, missing=None)
+    password = String(validate=MIN_LENGTH,
+                      missing=None,
+                      load_only=True)
     type = String(dump_only=True)
-    is_admin = Boolean(dump_only=True)
     has_password = Boolean(dump_only=True)
 
     @post_dump
     def transient(self, data):
         pk = str(data.get('id'))
-        data['links'] = {
-            'self': url_for('roles_api.view', id=pk)
-        }
         data['writeable'] = str(request.authz.id) == pk
         if not data['writeable']:
-            data.pop('password', None)
             data.pop('has_password', None)
             data.pop('api_key', None)
             data.pop('email', None)
         if data['type'] != Role.USER:
             data.pop('api_key', None)
             data.pop('email', None)
+        data.pop('password', None)
+        data['links'] = {
+            'self': url_for('roles_api.view', id=pk)
+        }
         return data
 
 
