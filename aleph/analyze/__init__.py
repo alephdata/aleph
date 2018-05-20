@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 def analyze_document(document):
     """Run analyzers (such as NER) on a given document."""
-    log.info("Analyze document [%s]: %s", document.id, document.title)
+    log.info("Analyze document [%s]: %s", document.id, document.name)
     analyzers = get_extensions('aleph.analyzers')
     analyzers = sorted(analyzers, key=lambda a: a.PRIORITY, reverse=True)
 

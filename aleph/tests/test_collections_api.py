@@ -2,7 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Entity
-from aleph.logic import update_collection
+from aleph.logic.collections import update_collection
 from aleph.tests.util import TestCase
 
 
