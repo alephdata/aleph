@@ -39,6 +39,7 @@ def ingest_document(document, file_path, role_id=None):
         # Directories cannot be archived first and then processed
         # later. So they are effectively sent into a short-cut here
         if os.path.isdir(file_path):
+            db.session.commit()
             return ingest(document.id, file_path=file_path)
         document.content_hash = archive.archive_file(file_path)
 

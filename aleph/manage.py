@@ -85,6 +85,7 @@ def crawldir(path, language=None, country=None, foreign_id=None):
     document = Document.by_keys(collection=collection,
                                 foreign_id=path)
     document.file_name = path_name
+    db.session.commit()
     ingest_document(document, path, role_id=role.id)
 
 
