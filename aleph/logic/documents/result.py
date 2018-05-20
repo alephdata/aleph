@@ -23,6 +23,8 @@ class DocumentResult(Result):
         (Result.FLAG_HTML, Document.SCHEMA_HTML),
         (Result.FLAG_WORKBOOK, Document.SCHEMA_WORKBOOK),
         (Result.FLAG_IMAGE, Document.SCHEMA_IMAGE),
+        (Result.FLAG_VIDEO, Document.SCHEMA_VIDEO),
+        (Result.FLAG_AUDIO, Document.SCHEMA_AUDIO),
         (Result.FLAG_TABULAR, Document.SCHEMA_TABLE),
         (Result.FLAG_EMAIL, Document.SCHEMA_EMAIL),
     )
