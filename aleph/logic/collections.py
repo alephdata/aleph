@@ -5,6 +5,7 @@ from aleph.core import db, celery
 from aleph.model import Collection, Document, Entity, Match, Permission
 from aleph.index import collections as index
 from aleph.logic.entities import update_entity_full
+from aleph.logic.documents.ingest import ingest
 from aleph.logic.xref import xref_collection
 
 log = logging.getLogger(__name__)
@@ -57,7 +58,6 @@ def update_collection_access(collection_id):
 @celery.task()
 def process_collection(collection_id):
     """Re-analyze the elements of this collection, documents and entities."""
-    from aleph.ingest import ingest
     q = db.session.query(Collection).filter(Collection.id == collection_id)
     collection = q.first()
     if collection is None:

@@ -2,7 +2,7 @@
 
 from aleph.core import db
 from aleph.model import Collection, Document, DocumentRecord
-from aleph.ingest import ingest_document
+from aleph.logic.documents import ingest_document
 from aleph.tests.util import TestCase
 
 

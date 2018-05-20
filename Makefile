@@ -1,10 +1,13 @@
+VERSION=2.0.13
 COMPOSE=docker-compose -f docker-compose.dev.yml 
 DEVDOCKER=$(COMPOSE) run --rm app
 
 all: build upgrade web
 
 services:
-	$(COMPOSE) up -d rabbitmq unoservice postgres elasticsearch
+	$(COMPOSE) up -d --remove-orphans \
+		rabbitmq postgres elasticsearch \
+		convert-document extract-polyglot extract-spacy
 
 shell: services    
 	$(DEVDOCKER) /bin/bash
@@ -18,9 +21,6 @@ upgrade: build
 	$(DEVDOCKER) aleph upgrade
 	$(DEVDOCKER) celery purge -f -A aleph.queues
 
-installdata:
-	$(DEVDOCKER) aleph installdata
-
 web: services
 	$(COMPOSE) up api ui
 
@@ -31,8 +31,7 @@ purge:
 	$(DEVDOCKER) celery purge -f -A aleph.queues
 
 stop:
-	$(COMPOSE) down
-	$(COMPOSE) rm -f
+	$(COMPOSE) down --remove-orphans
 
 clean:
 	rm -rf dist build .eggs ui/build
@@ -43,11 +42,8 @@ clean:
 	find . -type d -name __pycache__ -exec rm -r {} \+
 	find ui/src -name '*.css' -exec rm -f {} +
 
-rebuild:
-	$(COMPOSE) build --pull --no-cache
-
 build:
-	$(COMPOSE) build
+	$(COMPOSE) build --pull
 
 dev: 
 	pip install -q transifex-client bumpversion babel
@@ -59,5 +55,4 @@ translate: dev
 	tx pull --all
 	pybabel compile -d aleph/translations -D aleph -f
 
-
-.PHONY: build
+.PHONY: build services

@@ -3,6 +3,8 @@ version: "2"
 services:
   postgres:
     image: postgres:10.0
+    ports:
+      - "15432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -23,8 +25,8 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
-  unoservice:
-    image: alephdata/unoservice:1.2.2
+  convert-document:
+    build: services/convert-document
     restart: on-failure
     tmpfs:
       - /tmp
@@ -33,6 +35,18 @@ services:
     expose:
       - 3000
 
+  extract-polyglot:
+    build: services/extract-polyglot
+    restart: on-failure
+    expose:
+      - 50000
+  
+  extract-spacy:
+    build: services/extract-spacy
+    restart: on-failure
+    expose:
+      - 50000
+
   app:
     build: .
     command: /bin/bash
@@ -40,11 +54,12 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
-      - unoservice
+      - convert-document
+      - extract-polyglot
+      - extract-spacy
     tmpfs: /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
       - "./:/aleph"
       - "./mappings:/aleph/mappings"
       - "/:/host"
@@ -70,11 +85,12 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
-      - unoservice
+      - convert-document
+      - extract-polyglot
+      - extract-spacy
     tmpfs: /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
       - "./aleph:/aleph/aleph"
       - "/:/host"
     environment:
@@ -105,7 +121,6 @@ services:
 
 volumes:
   archive-data: {}
-  polyglot: {}
   elasticsearch-data: {}
   elasticsearch-log: {}
   postgres-data: {}

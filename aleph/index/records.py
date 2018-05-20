@@ -39,13 +39,11 @@ def generate_records(document):
             log.info("Indexed [%s]: %s records...", document.id, idx)
 
 
-def index_records(document, update=True):
+def index_records(document):
     if not document.supports_records:
         return
 
-    if update is True:
-        clear_records(document.id, refresh=False)
-
+    clear_records(document.id, refresh=False)
     while True:
         try:
             bulk_op(generate_records(document))
