@@ -66,9 +66,13 @@ class DocumentResult(Result):
         db.session.add(record)
 
     def _emit_iterator_rows(self, iterator):
-        for row in iterator:
-            for column in row.keys():
+        for data in iterator:
+            for column in data.keys():
+                column = safe_string(column)
                 self.columns[column] = None
+            row = {}
+            for key, value in data.items():
+                row[key] = safe_string(value)
             yield row
 
     def emit_rows(self, iterator):
@@ -95,7 +99,7 @@ class DocumentResult(Result):
                 schema = model[name]
 
         doc.schema = schema.name
-        doc.foreign_id = self.id
+        doc.foreign_id = safe_string(self.id)
         doc.content_hash = self.checksum or doc.content_hash
         doc.title = self.title or doc.meta.get('title')
         doc.file_name = self.file_name or doc.meta.get('file_name')

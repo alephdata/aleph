@@ -81,9 +81,9 @@ def ingest(document_id, file_path=None):
         db.session.commit()
         process_document(document)
     except Exception:
-        log.exception("Ingest failed [%s]: %s", document.id, document.name)
         db.session.rollback()
         db.session.close()
+        log.exception("Ingest failed [%s]: %s", document.id, document.name)
     finally:
         # Removing the temp_path given to storagelayer makes it redundant
         # to also call cleanup on the archive.
