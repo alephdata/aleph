@@ -62,7 +62,7 @@ after_success:
       docker tag alephdata/aleph-extract-polyglot:latest alephdata/aleph-extract-polyglot:occrp ;
       docker push alephdata/aleph-extract-polyglot:occrp ;
       docker tag alephdata/aleph-extract-spacy:latest alephdata/aleph-extract-spacy:occrp ;
-      docker push alephdata/aleph-extract-spacy:occrp
+      docker push alephdata/aleph-extract-spacy:occrp ;
       docker tag alephdata/aleph:latest alephdata/aleph:occrp ;
       docker push alephdata/aleph:occrp ;
       docker tag alephdata/ui:latest alephdata/ui:occrp ;
