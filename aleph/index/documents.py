@@ -5,7 +5,7 @@ from collections import defaultdict
 from aleph.core import celery, db
 from aleph.model import Document, DocumentTag
 from aleph.index.records import index_records, clear_records
-from aleph.index.entities import get_entity, delete_entity, index_single
+from aleph.index.entities import delete_entity, index_single
 
 log = logging.getLogger(__name__)
 MAX_TAGS_PER_DOCUMENT = 1000
@@ -17,9 +17,8 @@ def index_document_id(document_id):
     if document is None:
         log.info("Could not find document: %r", document_id)
         return
-    delete_document(document.id)
     index_document(document)
-    index_records(document, update=True)
+    index_records(document)
 
 
 def generate_tags(document):
@@ -43,13 +42,11 @@ def generate_tags(document):
 
 def index_document(document):
     if document.status == Document.STATUS_PENDING:
+        delete_entity(document.id)
         return
 
-    name = document.title
-    if name is None:
-        name = document.file_name
+    name = document.name
     log.info("Index document [%s]: %s", document.id, name)
-    texts = list(document.texts)
     data = {
         'status': document.status,
         'content_hash': document.content_hash,
@@ -81,6 +78,8 @@ def index_document(document):
         'ancestors': document.ancestors,
         'children': document.children.count()
     }
+
+    texts = list(document.texts)
     texts.extend(document.columns)
 
     if document.parent_id is not None:
@@ -99,11 +98,6 @@ def index_document(document):
         texts.extend(values)
 
     return index_single(document, data, texts)
-
-
-def get_document(document_id):
-    """Fetch a document from the index."""
-    return get_entity(document_id)
 
 
 def delete_document(document_id):

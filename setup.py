@@ -13,7 +13,7 @@ setup(
     keywords='',
     author='OCCRP Data Team',
     author_email='data@occrp.org',
-    url='http://aleph.readthedocs.io',
+    url='https://github.com/alephdata/aleph/wiki',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'test']),
     namespace_packages=[],
@@ -28,7 +28,8 @@ setup(
             'emails = aleph.analyze.regex:EMailAnalyzer',
             'phones = aleph.analyze.regex:PhoneNumberAnalyzer',
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
-            'polyglot = aleph.analyze.polyglot_entity:PolyglotEntityAnalyzer',
+            'polyglot = aleph.analyze.extract_entity:PolyglotEntityExtractor',
+            'spacy = aleph.analyze.extract_entity:SpacyEntityExtractor',
             'ip = aleph.analyze.regex:IPAnalyzer',
             'iban = aleph.analyze.regex:IBANAnalyzer'
         ],

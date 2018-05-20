@@ -5,7 +5,7 @@ from followthemoney import model
 from ingestors import Result
 from ingestors.util import safe_string
 
-from aleph.core import db, settings
+from aleph.core import db, archive, settings
 from aleph.model import Document, DocumentRecord
 from aleph.model import DocumentTag, DocumentTagCollector
 
@@ -27,9 +27,8 @@ class DocumentResult(Result):
         (Result.FLAG_EMAIL, Document.SCHEMA_EMAIL),
     )
 
-    def __init__(self, manager, document, file_path=None, role_id=None):
+    def __init__(self, manager, document, file_path=None):
         self.manager = manager
-        self.role_id = role_id
         self.document = document
         self.columns = OrderedDict()
         self.pages = []
@@ -75,7 +74,7 @@ class DocumentResult(Result):
         self.document.insert_records(0, self._emit_iterator_rows(iterator))
 
     def emit_pdf_alternative(self, file_path):
-        content_hash = self.manager.archive.archive_file(file_path)
+        content_hash = archive.archive_file(file_path)
         self.document.pdf_version = content_hash
 
     def update(self):
