@@ -5,7 +5,7 @@ from followthemoney import model
 from ingestors import Result
 from ingestors.util import safe_string
 
-from aleph.core import db, settings
+from aleph.core import db, archive, settings
 from aleph.model import Document, DocumentRecord
 from aleph.model import DocumentTag, DocumentTagCollector
 
@@ -23,13 +23,14 @@ class DocumentResult(Result):
         (Result.FLAG_HTML, Document.SCHEMA_HTML),
         (Result.FLAG_WORKBOOK, Document.SCHEMA_WORKBOOK),
         (Result.FLAG_IMAGE, Document.SCHEMA_IMAGE),
+        (Result.FLAG_VIDEO, Document.SCHEMA_VIDEO),
+        (Result.FLAG_AUDIO, Document.SCHEMA_AUDIO),
         (Result.FLAG_TABULAR, Document.SCHEMA_TABLE),
         (Result.FLAG_EMAIL, Document.SCHEMA_EMAIL),
     )
 
-    def __init__(self, manager, document, file_path=None, role_id=None):
+    def __init__(self, manager, document, file_path=None):
         self.manager = manager
-        self.role_id = role_id
         self.document = document
         self.columns = OrderedDict()
         self.pages = []
@@ -65,9 +66,13 @@ class DocumentResult(Result):
         db.session.add(record)
 
     def _emit_iterator_rows(self, iterator):
-        for row in iterator:
-            for column in row.keys():
+        for data in iterator:
+            for column in data.keys():
+                column = safe_string(column)
                 self.columns[column] = None
+            row = {}
+            for key, value in data.items():
+                row[key] = safe_string(value)
             yield row
 
     def emit_rows(self, iterator):
@@ -75,7 +80,7 @@ class DocumentResult(Result):
         self.document.insert_records(0, self._emit_iterator_rows(iterator))
 
     def emit_pdf_alternative(self, file_path):
-        content_hash = self.manager.archive.archive_file(file_path)
+        content_hash = archive.archive_file(file_path)
         self.document.pdf_version = content_hash
 
     def update(self):
@@ -94,7 +99,7 @@ class DocumentResult(Result):
                 schema = model[name]
 
         doc.schema = schema.name
-        doc.foreign_id = self.id
+        doc.foreign_id = safe_string(self.id)
         doc.content_hash = self.checksum or doc.content_hash
         doc.title = self.title or doc.meta.get('title')
         doc.file_name = self.file_name or doc.meta.get('file_name')

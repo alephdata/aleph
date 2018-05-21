@@ -1,11 +1,10 @@
-FROM alephdata/platform:2.1.0
+FROM alephdata/platform:2.1.4
 
 # Install Python dependencies
 COPY requirements-generic.txt /tmp/
 RUN pip install -q -r /tmp/requirements-generic.txt && rm -rf /root/.cache
 COPY requirements-toolkit.txt /tmp/
 RUN pip install -q -r /tmp/requirements-toolkit.txt && rm -rf /root/.cache
-RUN pip install -U git+https://github.com/mailgun/flanker.git@ce552940497d10a167aa5ee25c0ef8a89f3e080f#egg=flanker
 
 # Install aleph
 COPY . /aleph
@@ -19,8 +18,7 @@ ENV C_FORCE_ROOT=true \
     ALEPH_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph \
     ALEPH_BROKER_URI=amqp://guest:guest@rabbitmq:5672 \
     ALEPH_ARCHIVE_PATH=/data \
-    POLYGLOT_DATA_PATH=/polyglot \
-    UNOSERVICE_URL=http://unoservice:3000/convert
+    UNOSERVICE_URL=http://convert-document:3000/convert
 
 # Run the green unicorn
 CMD gunicorn -w 5 -b 0.0.0.0:8000 --name aleph_gunicorn \

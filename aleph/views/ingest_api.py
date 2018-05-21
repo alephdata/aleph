@@ -8,13 +8,13 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 
-from aleph.ingest import ingest_document
-from aleph.model import Document
+from aleph.model import Document, Events
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
+from aleph.logic.notifications import publish
+from aleph.logic.documents import ingest_document
 from aleph.views.util import jsonify, validate_data
 from aleph.views.util import get_db_collection
-
 
 blueprint = Blueprint('ingest_api', __name__)
 
@@ -88,7 +88,8 @@ def ingest_upload(id):
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
             document.update(meta)
-            ingest_document(document, path, role_id=request.authz.id)
+            document.uploader_id = request.authz.id
+            ingest_document(document, path)
             documents.append(document)
 
         if not len(request.files):
@@ -101,12 +102,21 @@ def ingest_upload(id):
                                         foreign_id=foreign_id)
             document.schema = Document.SCHEMA_FOLDER
             document.update(meta)
-            ingest_document(document, None,
-                            role_id=request.authz.id,
-                            shallow=True)
+            document.uploader_id = request.authz.id
+            ingest_document(document, None)
             documents.append(document)
     finally:
         shutil.rmtree(upload_dir)
+
+    if collection.casefile:
+        for document in documents:
+            params = {
+                'document': document,
+                'collection': collection
+            }
+            publish(Events.INGEST_DOCUMENT,
+                    actor_id=document.uploader_id,
+                    params=params)
 
     # Update child counts in index.
     if parent_id is not None:

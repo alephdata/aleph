@@ -59,7 +59,7 @@ class DocumentViewer extends React.Component {
       return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
     } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
       return <FolderViewer document={doc} queryText={queryText} hasWarning={doc.status === 'fail'} />;
-    } else if (doc.schema === 'Document') {
+    } else if (doc.schema === 'Document' || doc.schema === 'Audio' || doc.schema === 'Video') {
       return <ErrorSection visual='issue'
                            title={intl.formatMessage(messages.no_viewer)}
                            description={intl.formatMessage(messages.ignored_file)} />

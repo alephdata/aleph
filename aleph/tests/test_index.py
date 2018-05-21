@@ -1,5 +1,5 @@
-from aleph.logic import delete_collection
 from aleph.model import Collection
+from aleph.logic.collections import delete_collection
 from aleph.tests.util import TestCase
 
 

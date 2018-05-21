@@ -11,13 +11,12 @@ from aleph.core import create_app, archive
 from aleph.model import db, upgrade_db, destroy_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
-from aleph.analyze import install_analyzers
-from aleph.ingest import ingest_document, ingest
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.collections import update_collection_access
+from aleph.logic.documents import ingest_document, ingest
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
@@ -86,6 +85,7 @@ def crawldir(path, language=None, country=None, foreign_id=None):
     document = Document.by_keys(collection=collection,
                                 foreign_id=path)
     document.file_name = path_name
+    db.session.commit()
     ingest_document(document, path, role_id=role.id)
 
 
@@ -225,12 +225,6 @@ def upgrade():
     upgrade_db()
     upgrade_search()
     archive.upgrade()
-
-
-@manager.command
-def installdata():
-    """Install data needed for linguistic processing."""
-    install_analyzers()
 
 
 @manager.command

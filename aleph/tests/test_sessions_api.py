@@ -1,7 +1,7 @@
 import jwt
 from aleph.core import db, settings
 from aleph.model import Collection
-from aleph.logic import update_collection
+from aleph.logic.collections import update_collection
 from aleph.tests.util import TestCase
 from aleph.tests.factories.models import RoleFactory
 
