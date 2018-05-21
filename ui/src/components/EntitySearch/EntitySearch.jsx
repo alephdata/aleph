@@ -68,9 +68,10 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, intl} = this.props;
+    const {query, result, intl, className} = this.props;
+    console.log(result.results)
     return (
-      <React.Fragment>
+      <div className={className}>
         {result.total === 0 && (
           <section className="PartialError">
             <ErrorSection visual='search'
@@ -93,7 +94,7 @@ class EntitySearch extends Component {
         {(result.isLoading || result.total === null) && (
           <SectionLoading/>
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }

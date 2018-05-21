@@ -84,23 +84,6 @@ class CaseInfo extends Component {
     });
   }
 
-  async componentDidMount() {
-    //await this.fetchIfNeeded();
-  }
-
-  async componentDidUpdate(prevProps) {
-    if (prevProps.id !== this.props.id) {
-      //await this.fetchIfNeeded();
-    }
-  }
-
-  async fetchIfNeeded() {
-    const {query, result} = this.props;
-    if (result.total === undefined && !result.isLoading && !result.isError) {
-      this.props.queryCollections({query});
-    }
-  }
-
   toggleSettings() {
     this.setState({settings: !this.state.settings});
   }

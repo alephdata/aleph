@@ -29,7 +29,6 @@ export const uploadDocument = asyncActionCreator((collectionId, file, onUploadPr
   };
 
   const response = await endpoint.post(`collections/${collectionId}/ingest`, formData, config);
-  console.log('res', response)
   return { file: response.data};
 }, { name: 'UPLOAD_DOCUMENT' });
 
