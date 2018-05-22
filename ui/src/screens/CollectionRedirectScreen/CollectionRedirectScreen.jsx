@@ -27,6 +27,7 @@ class CollectionRedirectScreen extends Component {
       return <ScreenLoading />;
     }
     history.replace(getCollectionLink(collection));
+    return null;
   }
 }
 
