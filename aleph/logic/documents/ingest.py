@@ -83,6 +83,7 @@ def ingest(document_id, file_path=None):
     except Exception:
         db.session.rollback()
         db.session.close()
+        document = Document.by_id(document_id)
         log.exception("Ingest failed [%s]: %s", document.id, document.name)
     finally:
         # Removing the temp_path given to storagelayer makes it redundant
