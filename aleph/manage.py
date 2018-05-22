@@ -12,6 +12,7 @@ from aleph.model import db, upgrade_db, destroy_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index, upgrade_search
+from aleph.logic.collections import create_collection
 from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
@@ -52,9 +53,8 @@ def scheduled():
 
 @manager.command
 @manager.option('-l', '--language', dest='language', nargs='*')
-@manager.option('-c', '--country', dest='country', nargs='*')
 @manager.option('-f', '--foreign_id', dest='foreign_id')
-def crawldir(path, language=None, country=None, foreign_id=None):
+def crawldir(path, language=None, foreign_id=None):
     """Crawl the given directory."""
     path = decode_path(os.path.abspath(os.path.normpath(path)))
     if path is None or not os.path.exists(path):
@@ -65,28 +65,15 @@ def crawldir(path, language=None, country=None, foreign_id=None):
     if foreign_id is None:
         foreign_id = 'directory:%s' % slugify(path)
 
-    role = Role.load_cli_user()
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        collection = Collection.create({
-            'foreign_id': foreign_id,
-            'label': path_name,
-            'casefile': False
-        }, role=role)
-
-    if language is not None:
-        collection.languages = [language]
-    if country is not None:
-        collection.countries = [country]
-    db.session.commit()
-    update_collection(collection)
-
-    log.info('Crawling %r to %r...', path, collection.foreign_id)
-    document = Document.by_keys(collection=collection,
-                                foreign_id=path)
+    collection = create_collection(foreign_id, {
+        'label': path_name,
+        'languages': language
+    })
+    log.info('Crawling %s to %s...', path, foreign_id)
+    document = Document.by_keys(collection=collection, foreign_id=path)
     document.file_name = path_name
     db.session.commit()
-    ingest_document(document, path, role_id=role.id)
+    ingest_document(document, path)
 
 
 @manager.command

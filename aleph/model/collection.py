@@ -1,5 +1,5 @@
 import logging
-from banal import as_bool
+from banal import as_bool, ensure_list
 from datetime import datetime
 from flask.ext.babel import lazy_gettext
 from sqlalchemy.dialects.postgresql import ARRAY
@@ -69,8 +69,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.data_url = data.get('data_url', self.data_url)
         self.category = data.get('category') or self.DEFAULT
         self.casefile = as_bool(data.get('casefile'), default=False)
-        self.countries = data.get('countries', [])
-        self.languages = data.get('languages', [])
+        self.countries = ensure_list(data.get('countries', []))
+        self.languages = ensure_list(data.get('languages', []))
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))
         self.creator = creator

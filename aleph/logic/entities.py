@@ -31,7 +31,6 @@ def update_entity_full(entity_id):
     query = db.session.query(Entity).filter(Entity.id == entity_id)
     entity = query.first()
     if entity is None:
-        log.error("No entity with ID: %r", entity_id)
         return
     index_entity(entity)
     index_collection(entity.collection)
@@ -43,15 +42,10 @@ def bulk_load(config):
     This is done by mapping the rows in the source data to entities and links
     which can be understood by the entity index.
     """
+    from aleph.logic.collections import create_collection
     for foreign_id, data in config.items():
-        collection = Collection.by_foreign_id(foreign_id)
-        if collection is None:
-            data['foreign_id'] = foreign_id
-            data['label'] = data.get('label', foreign_id)
-            collection = Collection.create(data)
-
-        db.session.commit()
-        index_collection(collection)
+        data['label'] = data.get('label', foreign_id)
+        collection = create_collection(foreign_id, data)
         for query in dict_list(data, 'queries', 'query'):
             bulk_load_query.apply_async([collection.id, query], priority=6)
 
