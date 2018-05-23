@@ -12,7 +12,7 @@ Flask_Babel==0.11.2
 SQLAlchemy==1.2.7
 alembic==0.8.6
 
-celery==4.1.0
+celery==4.1.1
 elasticsearch==6.2.0
 marshmallow==2.13.5
 psycopg2-binary==2.7.4
