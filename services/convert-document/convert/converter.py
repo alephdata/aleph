@@ -82,7 +82,7 @@ class PdfConverter(object):
     def convert_file(self, file_name, out_file, filters, timeout=300):
         # Trigger SIGALRM after the timeout has passed.
         signal.signal(signal.SIGALRM, handle_timeout)
-        signal.alarm(timeout)
+        signal.alarm(max(3, timeout - 3))
         doc = None
         try:
             desktop = self.connect()
@@ -100,13 +100,9 @@ class PdfConverter(object):
                 output_url = uno.systemPathToFileUrl(out_file)
                 prop = self.get_output_properties(doc)
                 doc.storeToURL(output_url, prop)
+                doc.dispose()
+                doc.close(True)
         finally:
-            try:
-                if doc is not None:
-                    doc.dispose()
-                    doc.close(True)
-            except Exception:
-                pass
             signal.alarm(0)
 
     def get_input_properties(self, filter_name):
