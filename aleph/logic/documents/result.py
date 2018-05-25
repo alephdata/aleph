@@ -70,10 +70,7 @@ class DocumentResult(Result):
             for column in data.keys():
                 column = safe_string(column)
                 self.columns[column] = None
-            row = {}
-            for key, value in data.items():
-                row[key] = safe_string(value)
-            yield row
+            yield data
 
     def emit_rows(self, iterator):
         """Emit rows of a tabular iterator."""
