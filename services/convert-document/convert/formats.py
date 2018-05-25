@@ -1,7 +1,6 @@
 from lxml import etree
 from collections import defaultdict, OrderedDict
-from celestial import normalize_mimetype
-from convert.util import parse_extensions
+from celestial import normalize_mimetype, normalize_extension
 
 NS = {'oor': 'http://openoffice.org/2001/registry'}
 NAME = '{%s}name' % NS['oor']
@@ -34,8 +33,17 @@ class Formats(object):
                 if media_type is not None:
                     self.media_types[media_type].append(name)
 
-                for ext in parse_extensions(node.get('Extensions')):
+                for ext in self.parse_extensions(node.get('Extensions')):
                     self.extensions[ext].append(name)
+
+    def parse_extensions(self, extensions):
+        if extensions is not None:
+            for ext in extensions.split(' '):
+                if ext == '*':
+                    continue
+                ext = normalize_extension(ext)
+                if ext is not None:
+                    yield ext
 
     def get_filters(self, extension, media_type):
         filters = OrderedDict()

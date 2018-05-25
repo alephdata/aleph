@@ -7,7 +7,7 @@ RUN mkdir -p /convert
 COPY setup.py /convert
 COPY convert /convert/convert
 WORKDIR /convert
-RUN pip3 install -e . 
+RUN pip3 install -q -e . 
 
 HEALTHCHECK --interval=10s --timeout=302s --start-period=4s --retries=3 \
     CMD curl --fail http://localhost:3000 || exit 1

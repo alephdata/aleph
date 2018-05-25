@@ -7,7 +7,7 @@ from tempfile import mkstemp
 from celestial import normalize_mimetype, normalize_extension
 
 from convert.converter import FORMATS, PdfConverter
-from convert.util import ConversionFailure
+from convert.converter import ConversionFailure
 
 MEGABYTE = 1024 * 1024
 BUFFER_SIZE = 8 * MEGABYTE
@@ -65,7 +65,6 @@ async def convert(request):
     except Exception as exc:
         log.exception('System error: %s.', exc)
         converter.terminate()
-        return web.Response(text=str(exc), status=503)
     finally:
         os.remove(upload_file)
         os.remove(out_file)

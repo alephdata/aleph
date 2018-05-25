@@ -3,15 +3,13 @@
 import os
 import uno
 import time
-import signal
 import logging
 import subprocess
+from threading import Timer
 from com.sun.star.beans import PropertyValue
 from com.sun.star.connection import NoConnectException
 
 from convert.formats import Formats
-from convert.util import ConversionFailure
-from convert.util import handle_timeout
 
 CONNECTION_STRING = "socket,host=localhost,port=%s,tcpNoDelay=1;urp;StarOffice.ComponentContext"  # noqa
 COMMAND = 'soffice --nologo --headless --nocrashreport --nodefault --nofirststartwizard --norestore --invisible --accept="%s"'  # noqa
@@ -21,6 +19,10 @@ DEFAULT_PORT = 6519
 FORMATS = Formats()
 
 log = logging.getLogger(__name__)
+
+
+class ConversionFailure(Exception):
+    pass
 
 
 class PdfConverter(object):
@@ -47,23 +49,15 @@ class PdfConverter(object):
         return ctx.ServiceManager.createInstanceWithContext(clazz, ctx)
 
     def terminate(self):
-        if self.process is None:
-            return
-
-        # Check if the LibreOffice process is still running
-        if self.process.poll() is None:
-            log.info("Killing LibreOffice process...")
-            self.process.kill()
-            self.process.wait()
-        self.process = None
+        # FIXME: this was done after discovering that killing the LO
+        # process will only terminating it after the current request
+        # is processed, which may well be never.
+        log.warning("Hard timeout.")
+        os._exit(1)
 
     def connect(self):
         # Check if the LibreOffice process has an exit code
         if self.process is None or self.process.poll() is not None:
-            log.info("LibreOffice not running; reset.")
-            self.terminate()
-
-        if self.process is None:
             log.info("Starting headless LibreOffice...")
             command = COMMAND % self.connection
             self.process = subprocess.Popen(command,
@@ -80,10 +74,8 @@ class PdfConverter(object):
                 time.sleep(1)
 
     def convert_file(self, file_name, out_file, filters, timeout=300):
-        # Trigger SIGALRM after the timeout has passed.
-        signal.signal(signal.SIGALRM, handle_timeout)
-        signal.alarm(max(3, timeout - 3))
-        doc = None
+        timer = Timer(timeout, self.terminate)
+        timer.start()
         try:
             desktop = self.connect()
             if desktop is None:
@@ -103,7 +95,7 @@ class PdfConverter(object):
                 doc.dispose()
                 doc.close(True)
         finally:
-            signal.alarm(0)
+            timer.cancel()
 
     def get_input_properties(self, filter_name):
         return self.property_tuple({
