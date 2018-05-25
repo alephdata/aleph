@@ -74,7 +74,8 @@ class DocumentResult(Result):
 
     def emit_rows(self, iterator):
         """Emit rows of a tabular iterator."""
-        self.document.insert_records(0, self._emit_iterator_rows(iterator))
+        iterator = self._emit_iterator_rows(iterator)
+        DocumentRecord.insert_records(self.document.id, iterator)
 
     def emit_pdf_alternative(self, file_path):
         content_hash = archive.archive_file(file_path)

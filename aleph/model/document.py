@@ -157,22 +157,6 @@ class Document(db.Model, DatedModel, Metadata):
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)
 
-    def insert_records(self, sheet, iterable, chunk_size=1000):
-        chunk = []
-        for index, data in enumerate(iterable):
-            chunk.append({
-                'document_id': self.id,
-                'index': index,
-                'sheet': sheet,
-                'data': data
-            })
-            if len(chunk) >= chunk_size:
-                db.session.bulk_insert_mappings(DocumentRecord, chunk)
-                chunk = []
-
-        if len(chunk):
-            db.session.bulk_insert_mappings(DocumentRecord, chunk)
-
     @property
     def raw_texts(self):
         yield self.title

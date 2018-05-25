@@ -35,6 +35,22 @@ class DocumentRecord(db.Model):
         return q
 
     @classmethod
+    def insert_records(cls, document_id, iterable, chunk_size=1000):
+        chunk = []
+        for index, data in enumerate(iterable):
+            chunk.append({
+                'document_id': document_id,
+                'index': index,
+                'data': data
+            })
+            if len(chunk) >= chunk_size:
+                db.session.bulk_insert_mappings(DocumentRecord, chunk)
+                chunk = []
+
+        if len(chunk):
+            db.session.bulk_insert_mappings(DocumentRecord, chunk)
+
+    @classmethod
     def by_index(cls, document_id, index):
         q = db.session.query(cls)
         q = db.session.query(DocumentRecord)
