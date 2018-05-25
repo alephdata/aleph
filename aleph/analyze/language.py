@@ -41,7 +41,9 @@ class LanguageAnalyzer(Analyzer):
 
     def analyze(self, document):
         if not document.supports_nlp:
+            document.languages = []
             return
+
         text = self._text_sample(document)
         lang, score = self.identifier.classify(text)
         if score >= THRESHOLD:
