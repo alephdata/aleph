@@ -82,7 +82,6 @@ def ingest(document_id, file_path=None):
         process_document(document)
     except Exception:
         db.session.rollback()
-        db.session.close()
         document = Document.by_id(document_id)
         log.exception("Ingest failed [%s]: %s", document.id, document.name)
     finally:
