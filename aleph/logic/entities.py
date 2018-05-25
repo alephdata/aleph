@@ -129,7 +129,7 @@ def entity_references(entity, authz):
     res = es.msearch(index=entities_index(), body=queries)
     for prop, resp in zip(properties, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
-        if total > 0:
+        if total is not None and total > 0:
             yield (prop, total)
 
 
@@ -174,5 +174,5 @@ def entity_tags(entity, authz):
     res = es.msearch(index=entities_index(), body=queries)
     for (field, value), resp in zip(pivots, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
-        if total > 0:
+        if total is not None and total > 0:
             yield (field, value, total)
