@@ -61,7 +61,6 @@ services:
       - /tmp
     volumes:
       - archive-data:/data
-      - polyglot:/polyglot
     env_file:
       - aleph.env
   
