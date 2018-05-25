@@ -37,6 +37,7 @@ class DocumentRecord(db.Model):
     @classmethod
     def insert_records(cls, document_id, iterable, chunk_size=1000):
         chunk = []
+        table = cls.__table__
         for index, data in enumerate(iterable):
             chunk.append({
                 'document_id': document_id,
@@ -44,11 +45,13 @@ class DocumentRecord(db.Model):
                 'data': data
             })
             if len(chunk) >= chunk_size:
-                db.session.bulk_insert_mappings(DocumentRecord, chunk)
+                q = table.insert().values(chunk)
+                db.session.execute(q)
                 chunk = []
 
         if len(chunk):
-            db.session.bulk_insert_mappings(DocumentRecord, chunk)
+            q = table.insert().values(chunk)
+            db.session.execute(q)
 
     @classmethod
     def by_index(cls, document_id, index):
