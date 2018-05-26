@@ -88,14 +88,13 @@ class TestCase(FlaskTestCase):
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
-    def load_fixtures(self, file_name, process_documents=True):
+    def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
         update_collections()
-        if process_documents:
-            for doc in Document.all():
-                process_document(doc)
+        for doc in Document.all():
+            process_document(doc)
         self.flush_index()
 
     def setUp(self):

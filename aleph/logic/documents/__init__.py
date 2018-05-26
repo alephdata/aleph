@@ -1,5 +1,6 @@
 import logging
 
+from aleph.core import settings, celery
 from aleph.model import Document
 from aleph.index import documents as index
 from aleph.index.documents import index_document_id
@@ -23,14 +24,18 @@ def delete_document(document, deleted_at=None):
     document.delete(deleted_at=deleted_at)
 
 
-def index_documents(collection_id=None):
-    """Re-index all documents (in the given collection, or globally)."""
-    q = Document.all_ids()
-    # re-index newest document first.
-    q = q.order_by(Document.id.desc())
-    if collection_id is not None:
-        q = q.filter(Document.collection_id == collection_id)
-    for idx, (doc_id,) in enumerate(q.yield_per(100000), 1):
-        index_document_id.apply_async([doc_id], priority=1)
+@celery.task(priority=1)
+def process_documents(collection_id=None, failed_only=False, index_only=False):
+    """Re-ingest or re-index all documents. Can be filtered to cover only
+    documents which failed to properly import last time, or those which
+    are part of a particular collection."""
+    q = Document.find_ids(collection_id=collection_id,
+                          failed_only=failed_only)
+    q = q.all() if settings.EAGER else q.yield_per(5000)
+    for idx, (doc_id,) in enumerate(q, 1):
+        if index_only:
+            index_document_id.apply_async([doc_id], priority=1)
+        else:
+            ingest.apply_async([doc_id], priority=1)
         if idx % 10000 == 0:
-            log.info("Queued: %s documents...", idx)
+            log.info("Process: %s documents...", idx)

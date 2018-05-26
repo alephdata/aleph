@@ -7,7 +7,7 @@ from aleph.core import db
 from aleph.model import Collection, Role
 from aleph.search import CollectionsQuery
 from aleph.logic.collections import delete_collection, update_collection
-from aleph.logic.collections import process_collection
+from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query
 from aleph.logic.triples import export_collection
 from aleph.serializers import CollectionSchema
@@ -60,7 +60,9 @@ def update(id):
 @blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
 def process(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    process_collection.apply_async([collection.id], priority=2)
+    # re-process the documents
+    process_documents.delay(collection_id=collection.id)
+    update_collection(collection)
     return jsonify({'status': 'accepted'}, status=202)
 
 

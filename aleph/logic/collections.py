@@ -6,8 +6,8 @@ from aleph.core import db, celery
 from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission
 from aleph.index import collections as index
-from aleph.logic.entities import update_entity_full
-from aleph.logic.documents.ingest import ingest
+from aleph.logic.entities import process_entities
+from aleph.logic.documents import process_documents
 from aleph.logic.xref import xref_collection
 
 log = logging.getLogger(__name__)
@@ -31,20 +31,15 @@ def create_collection(foreign_id, data, role=None):
 def update_collection(collection):
     """Create or update a collection."""
     log.info("Updating: %r", collection)
-
     if collection.deleted_at is not None:
         index.delete_collection(collection.id)
         return
 
+    # re-process entities
+    process_entities.delay(collection_id=collection.id)
+
     if collection.casefile:
         xref_collection.apply_async([collection.id], priority=2)
-        # TODO: rebuild dossiers
-
-    eq = db.session.query(Entity.id)
-    eq = eq.filter(Entity.collection_id == collection.id)
-    for entity in eq:
-        update_entity_full.apply_async([entity.id], priority=1)
-
     return index.index_collection(collection)
 
 
@@ -70,30 +65,6 @@ def update_collection_access(collection_id):
     collection = Collection.by_id(collection_id)
     log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
     index.update_collection_roles(collection)
-
-
-@celery.task()
-def process_collection(collection_id):
-    """Re-analyze the elements of this collection, documents and entities."""
-    q = db.session.query(Collection).filter(Collection.id == collection_id)
-    collection = q.first()
-    if collection is None:
-        log.error("No collection with ID: %r", collection_id)
-
-    # re-process the documents
-    q = db.session.query(Document)
-    q = q.filter(Document.collection_id == collection_id)
-    q = q.filter(Document.parent_id == None)  # noqa
-    for document in q:
-        ingest.apply_async([document.id], priority=1)
-
-    # re-process entities
-    q = db.session.query(Entity)
-    q = q.filter(Entity.collection_id == collection.id)
-    for entity in q:
-        update_entity_full(entity.id)
-
-    update_collection(collection)
 
 
 def delete_collection(collection):
@@ -128,7 +99,6 @@ def delete_collection_content(collection_id):
     db.session.commit()
 
 
-@celery.task()
 def delete_entities(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting entities...")
@@ -138,7 +108,6 @@ def delete_entities(collection_id, deleted_at=None):
     Match.delete_by_collection(collection_id, deleted_at=deleted_at)
 
 
-@celery.task()
 def delete_documents(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting documents...")

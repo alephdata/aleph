@@ -249,12 +249,14 @@ class Document(db.Model, DatedModel, Metadata):
         return q.first()
 
     @classmethod
-    def max_id(cls, collection_id=None):
+    def find_ids(cls, collection_id=None, failed_only=False):
         q = cls.all_ids()
         if collection_id is not None:
             q = q.filter(cls.collection_id == collection_id)
-        q = q.order_by(cls.id.desc())
-        return q.first()
+        if failed_only:
+            q = q.filter(cls.status != cls.STATUS_SUCCESS)
+        q = q.order_by(cls.id.asc())
+        return q
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)

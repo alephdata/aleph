@@ -14,14 +14,14 @@ from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.logic.collections import create_collection
 from aleph.logic.collections import update_collection, update_collections
-from aleph.logic.collections import process_collection, delete_entities
 from aleph.logic.collections import delete_collection, delete_documents
+from aleph.logic.collections import delete_entities
 from aleph.logic.collections import update_collection_access
-from aleph.logic.documents import ingest_document, ingest
+from aleph.logic.documents import ingest_document
+from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
-from aleph.logic.documents import index_documents
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
 from aleph.util import load_config_file
@@ -35,6 +35,13 @@ mount_app_blueprints(app)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 manager.add_command('routes', ShowUrls)
+
+
+def get_collection(foreign_id):
+    collection = Collection.by_foreign_id(foreign_id, deleted=True)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    return collection
 
 
 @manager.command
@@ -79,18 +86,14 @@ def crawldir(path, language=None, foreign_id=None):
 @manager.command
 def flush(foreign_id):
     """Reset the crawler state for a given collecton."""
-    collection = Collection.by_foreign_id(foreign_id, deleted=True)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
+    collection = get_collection(foreign_id)
     delete_collection(collection)
 
 
 @manager.command
 def flushdocuments(foreign_id):
     """Delete all documents from given collection."""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
+    collection = get_collection(foreign_id)
     delete_documents(collection.id)
     db.session.commit()
 
@@ -98,57 +101,30 @@ def flushdocuments(foreign_id):
 @manager.command
 def flushentities(foreign_id):
     """Delete all entities from given collection."""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
+    collection = get_collection(foreign_id)
     delete_entities(collection.id)
     db.session.commit()
 
 
 @manager.command
-def process(foreign_id):
+@manager.option('-f', '--foreign_id')
+@manager.option('-i', '--index', default=False)
+@manager.option('-r', '--retry', default=False)
+def process(foreign_id=None, index=False, retry=False):
     """Re-process documents in the given collection."""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
-    process_collection(collection.id)
-
-
-@manager.command
-def retry(foreign_id=None):
-    """Retry importing documents which were not successfully parsed."""
-    q = Document.all_ids()
-    q = q.filter(Document.status != Document.STATUS_SUCCESS)
-    if foreign_id is not None:
-        collection = Collection.by_foreign_id(foreign_id)
-        q = q.filter(Document.collection_id == collection.id)
-
-    log.info("Retry: %s documents", q.count())
-    for idx, (doc_id,) in enumerate(q.all(), 1):
-        ingest.apply_async([doc_id], priority=1)
-        if idx % 1000 == 0:
-            log.info("Process: %s documents...", idx)
+    collection_id = None
+    if foreign_id:
+        collection_id = get_collection(foreign_id).id
+    process_documents(collection_id=collection_id,
+                      index_only=index,
+                      failed_only=retry)
 
 
 @manager.command
 def xref(foreign_id):
     """Cross-reference all entities and documents in a collection."""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
+    collection = get_collection(foreign_id)
     xref_collection(collection.id)
-
-
-@manager.command
-def index(foreign_id=None):
-    """Index documents in the given collection (or throughout)."""
-    collection_id = None
-    if foreign_id:
-        collection = Collection.by_foreign_id(foreign_id)
-        if collection is None:
-            raise ValueError("No such collection: %r" % foreign_id)
-        collection = collection.id
-    index_documents(collection_id=collection_id)
 
 
 @manager.command

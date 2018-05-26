@@ -16,24 +16,21 @@ BULK_PAGE = 500
 
 
 def update_entity(entity):
-    update_entity_full.apply_async([entity.id])
     return index_entity(entity)
 
 
 def delete_entity(entity, deleted_at=None):
     entity.delete(deleted_at=deleted_at)
-    update_entity_full(entity.id)
 
 
-@celery.task(priority=5)
-def update_entity_full(entity_id):
-    """Perform update operations on entities."""
-    query = db.session.query(Entity).filter(Entity.id == entity_id)
-    entity = query.first()
-    if entity is None:
-        return
-    index_entity(entity)
-    index_collection(entity.collection)
+@celery.task(priority=1)
+def process_entities(collection_id=None):
+    # re-process entities
+    q = db.session.query(Entity)
+    if collection_id is not None:
+        q = q.filter(Entity.collection_id == collection_id)
+    for entity in q:
+        index_entity(entity)
 
 
 def bulk_load(config):
