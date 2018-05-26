@@ -17,7 +17,7 @@ class EntityInfoReferences extends React.Component {
     const { entity } = this.props;
     const path = getPath(entity.links.ui);
     const tabName = 'references-' + reference.property.qname;
-    const query = queryString.stringify({'content:tab': tabName});
+    const query = queryString.stringify({'mode': tabName});
     return path + '#' + query;
   }
 
