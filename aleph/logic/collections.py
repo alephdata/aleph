@@ -7,7 +7,6 @@ from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission
 from aleph.index import collections as index
 from aleph.logic.entities import process_entities
-from aleph.logic.documents import process_documents
 from aleph.logic.xref import xref_collection
 
 log = logging.getLogger(__name__)

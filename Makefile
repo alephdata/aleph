@@ -17,7 +17,7 @@ test: build
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
-	sleep 4
+	sleep 10
 	$(DEVDOCKER) aleph upgrade
 	$(DEVDOCKER) celery purge -f -A aleph.queues
 

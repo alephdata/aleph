@@ -35,14 +35,14 @@ services:
   extract-polyglot:
     build: services/extract-polyglot
     restart: on-failure
-    mem_limit: 3g
+    mem_limit: 2g
     expose:
       - 50000
   
   extract-spacy:
     build: services/extract-spacy
     restart: on-failure
-    mem_limit: 3g
+    mem_limit: 2g
     expose:
       - 50000
 
@@ -61,6 +61,7 @@ services:
       - /tmp
     volumes:
       - archive-data:/data
+      - "/:/host"
     env_file:
       - aleph.env
   
