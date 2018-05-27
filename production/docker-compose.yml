@@ -3,8 +3,6 @@ version: "2"
 services:
   postgres:
     image: postgres:10.0
-    ports:
-      - "15432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -14,7 +12,6 @@ services:
 
   elasticsearch:
     image: alephdata/platform-elasticsearch:2.1.4
-    restart: on-failure
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-log:/var/log
@@ -26,29 +23,50 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   convert-document:
-    build: services/convert-document
+    image: alephdata/aleph-convert-document
     restart: on-failure
     tmpfs:
       - /tmp
       - /root/.config
-    mem_limit: 1g
+    mem_limit: 2g
     expose:
       - 3000
 
   extract-polyglot:
-    build: services/extract-polyglot
+    image: alephdata/aleph-extract-polyglot
     restart: on-failure
+    mem_limit: 2g
     expose:
       - 50000
   
   extract-spacy:
-    build: services/extract-spacy
+    image: alephdata/aleph-extract-spacy
     restart: on-failure
+    mem_limit: 2g
     expose:
       - 50000
 
-  app:
-    build: .
+  worker:
+    image: alephdata/aleph
+    command: celery -A aleph.queues -B -c 4 -l INFO worker
+    restart: on-failure
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - convert-document
+      - extract-polyglot
+      - extract-spacy
+    tmpfs:
+      - /tmp
+    volumes:
+      - archive-data:/data
+      - "/:/host"
+    env_file:
+      - aleph.env
+  
+  shell:
+    image: alephdata/aleph
     command: /bin/bash
     links:
       - postgres
@@ -57,71 +75,61 @@ services:
       - convert-document
       - extract-polyglot
       - extract-spacy
-    tmpfs: /tmp
+      - worker
+    tmpfs:
+      - /tmp
     volumes:
       - archive-data:/data
-      - "./:/aleph"
       - "./mappings:/aleph/mappings"
       - "/:/host"
-    environment:
-      ALEPH_DEBUG: 'true'
-      ALEPH_SECRET_KEY: 'development'
-      ALEPH_CACHE: 'false'
-      ALEPH_OAUTH: 'false'
-      ALEPH_EAGER: 'true'
-      ALEPH_ARCHIVE_TYPE: 'file'
     env_file:
       - aleph.env
 
-  api:
-    build: .
-    command: python aleph/manage.py runserver -h 0.0.0.0 -p 5000
-    expose:
-      - 5000
-    ports:
-      - "5000:5000"
-    restart: on-failure
+  beat:
+    image: alephdata/aleph
+    command: celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db
     links:
       - postgres
       - elasticsearch
       - rabbitmq
+      - worker
       - convert-document
       - extract-polyglot
       - extract-spacy
-    tmpfs: /tmp
+    tmpfs:
+      - /tmp
     volumes:
       - archive-data:/data
-      - "./aleph:/aleph/aleph"
-      - "/:/host"
-    environment:
-      ALEPH_DEBUG: 'true'
-      ALEPH_SECRET_KEY: 'development'
-      ALEPH_CACHE: 'false'
-      ALEPH_EAGER: 'true'
-      ALEPH_ARCHIVE_TYPE: 'file'
-    env_file:
-      - aleph.env
-  
-  ui:
-    build: ui
-    links:
-      - api
-    command: npm run start
-    ports:
-      - "8080:3000"
-    volumes:
-      - "./ui/src:/alephui/src"
-      - "./ui/public:/alephui/public"
-      - "./ui/.tx:/alephui/.tx"
-      - "./ui/package.json:/alephui/package.json"
-    environment:
-      REACT_APP_API_ENDPOINT: '/api/2'
     env_file:
       - aleph.env
 
+  api:
+    image: alephdata/aleph
+    command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+    expose:
+      - "8000"
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - worker
+    tmpfs:
+      - /tmp
+    volumes:
+      - archive-data:/data
+    env_file:
+      - aleph.env
+
+  web:
+    build: web
+    links:
+      - api
+    ports:
+      - "8080:8080"
+
 volumes:
   archive-data: {}
-  elasticsearch-data: {}
-  elasticsearch-log: {}
   postgres-data: {}
   rabbitmq-data: {}
+  elasticsearch-data: {}
+  elasticsearch-log: {}
