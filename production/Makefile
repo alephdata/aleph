@@ -1,4 +1,3 @@
-VERSION=2.0.13
 DOCKER=docker-compose run --rm shell
 
 all: pull upgrade up

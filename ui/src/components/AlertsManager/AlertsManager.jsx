@@ -12,7 +12,7 @@ import './AlertsManager.css';
 
 const messages = defineMessages({
   title: {
-    id: 'alerts.title',
+    id: 'alerts.heading',
     defaultMessage: 'Manage your alerts',
   },
   save_button: {
@@ -28,11 +28,11 @@ const messages = defineMessages({
     defaultMessage: 'You are not tracking any searches',
   },
   search_alert: {
-    id: 'alerts.search_alert',
+    id: 'alerts.alert.search',
     defaultMessage: 'Search for {label}',
   },
   delete_alert: {
-    id: 'alerts.search_alert',
+    id: 'alerts.alert.delete',
     defaultMessage: 'Stop tracking',
   }
 });

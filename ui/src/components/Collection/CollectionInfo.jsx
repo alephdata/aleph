@@ -126,7 +126,7 @@ class CollectionInfo extends Component {
             <Tab id="xref" disabled={xrefIndex.total === 0}
                  title={
                    <TextLoading loading={xrefIndex.total === undefined}>
-                     <FormattedMessage id="collection.info.source" defaultMessage="Cross-reference"/>
+                     <FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>
                      <TabCount count={xrefIndex.total} />
                   </TextLoading>
                  }

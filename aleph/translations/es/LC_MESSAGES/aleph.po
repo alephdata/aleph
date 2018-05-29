@@ -8,26 +8,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-04-25 15:07+0200\n"
+"POT-Creation-Date: 2018-05-29 08:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.5.1\n"
+"Generated-By: Babel 2.5.3\n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: aleph/settings.py:44
+#: aleph/settings.py:48
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/settings.py:54
+#: aleph/settings.py:58
 msgid "TeliaSonera"
 msgstr "TeliaSonera"
 
-#: aleph/settings.py:54
+#: aleph/settings.py:58
 msgid "Vladimir Putin"
 msgstr "Vladimir Putin"
 
@@ -91,27 +91,27 @@ msgstr "Documentación regulatoria"
 msgid "Other material"
 msgstr "Otro material"
 
-#: aleph/model/event.py:42
+#: aleph/model/event.py:40
 msgid "{{actor}} changed the settings of {{collection}}."
 msgstr "{{actor}} ha cambiado la configuración de {{collection}}."
 
-#: aleph/model/event.py:48
+#: aleph/model/event.py:46
 msgid "{{actor}} uploaded {{document}} to {{collection}}."
 msgstr "{{actor}} subió {{document}} a {{collection}}."
 
-#: aleph/model/event.py:57
+#: aleph/model/event.py:55
 msgid "{{entity}} matches your alert for {{alert}}."
 msgstr "{{entity}} coincide con tu alerta de {{alert}}."
 
-#: aleph/model/event.py:67
+#: aleph/model/event.py:65
 msgid "{{actor}} gave {{role}} access to {{collection}}."
 msgstr "{{actor}} le otorgó {{role}} acceso a {{collection}}."
 
-#: aleph/model/event.py:82
+#: aleph/model/event.py:80
 msgid "{{actor}} removed access to {{collection}} from {{role}}."
 msgstr "{{actor}} eliminó el acceso a {{collection}} de {{role}}."
 
-#: aleph/templates/email/layout.html:59
+#: aleph/templates/email/layout.html:45
 #, python-format
 msgid ""
 "\n"
@@ -119,12 +119,28 @@ msgid ""
 "      "
 msgstr ""
 
-#: aleph/templates/email/layout.html:67
+#: aleph/templates/email/layout.html:53
 #, python-format
 msgid ""
 "\n"
 "          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>.\n"
 "        "
+msgstr ""
+
+#: aleph/templates/email/notifications.html:5
+#, python-format
+msgid ""
+"\n"
+"      You have %(total_count)s pending notifications. Here are the latest\n"
+"      updates you may be interested in:\n"
+"    "
+msgstr ""
+
+#: aleph/templates/email/notifications.html:16
+msgid ""
+"\n"
+"      Browse and manage all of your notifications here:\n"
+"    "
 msgstr ""
 
 #: aleph/templates/email/registration_code.html:5
@@ -135,18 +151,38 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:75
+#: aleph/views/base_api.py:74
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/ api / 1 / está obsoleto, use / api / 2 /."
 
-#: aleph/views/base_api.py:83
+#: aleph/views/base_api.py:82
 msgid "You are not authorized to do this."
 msgstr "Usted no está autorizado para hacer esto."
 
-#: aleph/views/base_api.py:92
+#: aleph/views/base_api.py:91
 msgid "This path does not exist."
 msgstr "Esta ruta no existe."
 
-#: aleph/views/base_api.py:108
+#: aleph/views/base_api.py:107
 msgid "Access token has expired."
 msgstr "El token de acceso ha expirado."
+
+#: aleph/views/roles_api.py:30
+msgid "prefix filter is too short"
+msgstr ""
+
+#: aleph/views/roles_api.py:47
+msgid "Registration"
+msgstr ""
+
+#: aleph/views/roles_api.py:52
+msgid "To proceed, please check your email."
+msgstr ""
+
+#: aleph/views/roles_api.py:67
+msgid "Invalid code"
+msgstr ""
+
+#: aleph/views/roles_api.py:74
+msgid "Email is already registered"
+msgstr ""

@@ -1,4 +1,3 @@
-VERSION=2.0.13
 COMPOSE=docker-compose -f docker-compose.dev.yml 
 DEVDOCKER=$(COMPOSE) run --rm app
 
