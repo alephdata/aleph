@@ -30,15 +30,14 @@ class SettingsDialog extends Component {
     this.onChangeInput = this.onChangeInput.bind(this);
   }
 
+  static getDerivedStateFromProps(props, state) {
+    return { role: props.role };
+  }
+
   componentDidUpdate(prevProps) {
     const { role } = this.props;
-
     if (!prevProps.isOpen && this.props.isOpen) {
       this.props.fetchRole(role.id);
-    }
-
-    if (this.state.role.id !== role.id) {
-      this.setState({ role: role });
     }
   }
 
