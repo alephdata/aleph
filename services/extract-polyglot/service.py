@@ -50,15 +50,15 @@ class PolyglotServicer(EntityExtractServicer):
                                           type=TYPES[entity.tag])
             except Exception:
                 log.exception("Cannot extract. Language: %s", language)
-        log.info("Extract: extracted %s entities.", entity_count)
+        # log.info("Extract: extracted %s entities.", entity_count)
 
 
-def serve():
+def serve(port):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_EntityExtractServicer_to_server(PolyglotServicer(), server)
-    server.add_insecure_port('[::]:50000')
+    server.add_insecure_port(port)
     server.start()
-    log.info("Server started: [::]:50000")
+    log.info("Server started: %s", port)
     try:
         while True:
             time.sleep(84600)
@@ -69,4 +69,4 @@ def serve():
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logging.getLogger('polyglot').setLevel(logging.INFO)
-    serve()
+    serve('[::]:50000')

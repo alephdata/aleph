@@ -1,5 +1,4 @@
 import grpc
-import time
 import logging
 
 from aleph import settings
@@ -23,11 +22,12 @@ class EntityExtractor(EntityAnalyzer):
     def __init__(self):
         self.active = self.SERVICE is not None
 
-    def get_service(self):
+    def get_channel(self):
         cls = type(self)
         if not hasattr(cls, '_channel') or cls._channel is None:
-            channel = grpc.insecure_channel(self.SERVICE)
-        return EntityExtractStub(channel)
+            options = (('grpc.lb_policy_name', 'round_robin'),)
+            cls._channel = grpc.insecure_channel(cls.SERVICE, options)
+        return cls._channel
 
     def reset(self):
         cls = type(self)
@@ -43,16 +43,16 @@ class EntityExtractor(EntityAnalyzer):
                 continue
             text = Text(text=text, languages=languages)
             try:
-                service = self.get_service()
+                channel = self.get_channel()
+                service = EntityExtractStub(channel)
                 for entity in service.Extract(text):
                     type_ = self.TYPES.get(entity.type)
                     if type_ is None:
                         continue
                     collector.emit(entity.label, type_)
-            except Exception:
-                log.exception('RPC call failed')
+            except grpc.RpcError as exc:
+                log.warning("gRPC Error: %s", exc)
                 self.reset()
-                time.sleep(1)
 
         if len(collector):
             log.info('%s Extracted %s entities.', self.SERVICE, len(collector))
