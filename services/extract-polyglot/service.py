@@ -28,7 +28,6 @@ class PolyglotServicer(EntityExtractServicer):
         if text is None or not len(text.strip()):
             return
 
-        entity_count = 0
         for language in request.languages:
             if language not in LANGUAGES:
                 continue
@@ -38,23 +37,21 @@ class PolyglotServicer(EntityExtractServicer):
                     label = ' '.join(entity)
                     label = CLEAN.sub(' ', label)
                     label = collapse_spaces(label)
-                    if len(label) < 4 or len(label) > 200:
+                    if len(label) < 4 or len(label) > 100:
                         continue
                     if ' ' not in label:
                         continue
                     length = entity.end - entity.start
-                    entity_count += 1
                     yield ExtractedEntity(label=label,
                                           offset=entity.start,
                                           length=length,
                                           type=TYPES[entity.tag])
             except Exception:
                 log.exception("Cannot extract. Language: %s", language)
-        # log.info("Extract: extracted %s entities.", entity_count)
 
 
 def serve(port):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
     add_EntityExtractServicer_to_server(PolyglotServicer(), server)
     server.add_insecure_port(port)
     server.start()

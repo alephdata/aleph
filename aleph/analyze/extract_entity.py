@@ -22,40 +22,40 @@ class EntityExtractor(EntityAnalyzer):
     def __init__(self):
         self.active = self.SERVICE is not None
 
-    def get_channel(self):
-        cls = type(self)
-        if not hasattr(cls, '_channel') or cls._channel is None:
-            options = (('grpc.lb_policy_name', 'round_robin'),)
-            cls._channel = grpc.insecure_channel(cls.SERVICE, options)
-        return cls._channel
+    # def get_channel(self):
+    #     cls = type(self)
+    #     if not hasattr(cls, '_channel') or cls._channel is None:
+    #         options = (('grpc.lb_policy_name', 'round_robin'),)
+    #         cls._channel = grpc.insecure_channel(cls.SERVICE, options)
+    #     return cls._channel
 
-    def reset(self):
-        cls = type(self)
-        cls._channel = None
+    # def reset(self):
+    #     cls = type(self)
+    #     cls._channel = None
 
     def extract(self, collector, document):
         languages = list(document.languages)
         if not len(languages):
             languages = [settings.DEFAULT_LANGUAGE]
 
-        for text in document.texts:
-            if len(text) <= self.MIN_LENGTH:
-                continue
-            text = Text(text=text, languages=languages)
-            try:
-                channel = self.get_channel()
-                service = EntityExtractStub(channel)
+        try:
+            channel = grpc.insecure_channel(self.SERVICE)
+            service = EntityExtractStub(channel)
+            for text in document.texts:
+                if len(text) <= self.MIN_LENGTH:
+                    continue
+
+                text = Text(text=text, languages=languages)    
                 for entity in service.Extract(text):
                     type_ = self.TYPES.get(entity.type)
                     if type_ is None:
                         continue
                     collector.emit(entity.label, type_)
-            except grpc.RpcError as exc:
-                log.warning("gRPC Error: %s", exc)
-                self.reset()
 
-        if len(collector):
             log.info('%s Extracted %s entities.', self.SERVICE, len(collector))
+        except grpc.RpcError as exc:
+            log.warning("gRPC Error: %s", exc)
+            # self.reset()
 
 
 class PolyglotEntityExtractor(EntityExtractor):

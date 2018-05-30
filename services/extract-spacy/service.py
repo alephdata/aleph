@@ -28,7 +28,6 @@ class SpacyServicer(EntityExtractServicer):
         if text is None or not len(text.strip()):
             return
 
-        entity_count = 0
         for language in request.languages:
             if language not in LANGUAGES:
                 log.debug("Language not suported: %s", language)
@@ -41,24 +40,25 @@ class SpacyServicer(EntityExtractServicer):
                 doc = nlp(request.text)
                 for entity in doc.ents:
                     # log.info("Entity: %s, %s", entity.text, entity.label)
-                    if len(entity.text) < 4 or len(entity.text) > 200:
+                    text = entity.text.strip()
+                    if len(text) < 4 or len(text) > 100:
+                        continue
+                    if ' ' not in text:
                         continue
                     type_ = LABELS.get(entity.label_)
                     if type_ is None:
                         continue
                     length = entity.end_char - entity.start_char
-                    entity_count += 1
-                    yield ExtractedEntity(label=entity.text,
+                    yield ExtractedEntity(label=text,
                                           offset=entity.start_char,
                                           length=length,
                                           type=type_)
             except Exception:
                 log.exception("Cannot extract. Language: %s", language)
-        # log.info("Extract: extracted %s entities.", entity_count)
 
 
 def serve(port):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
     add_EntityExtractServicer_to_server(SpacyServicer(), server)
     server.add_insecure_port(port)
     server.start()
