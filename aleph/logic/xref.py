@@ -11,8 +11,7 @@ from aleph.index.util import unpack_result
 log = logging.getLogger(__name__)
 
 
-@celery.task()
-def xref_item(item, collection_id=None):
+def _xref_item(item, collection_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
     name = item.get('name') or item.get('title')
     query = entity_query(item, collection_id=collection_id)
@@ -48,7 +47,6 @@ def xref_item(item, collection_id=None):
         obj.match_collection_id = source.get('collection_id')
         obj.score = result.get('_score')
         db.session.add(obj)
-    db.session.commit()
 
 
 @celery.task()
@@ -62,8 +60,11 @@ def xref_collection(collection_id, other_id=None):
     scanner = scan(es,
                    index=entities_index(),
                    query=query,
-                   scroll='15m')
-
-    for res in scanner:
+                   scroll='30m')
+    for idx, res in enumerate(scanner):
         res = unpack_result(res)
-        xref_item(res, collection_id=other_id)
+        _xref_item(res, collection_id=other_id)
+        if idx % 1000 == 0:
+            db.session.commit()
+            db.session.expunge_all()
+    db.session.commit()

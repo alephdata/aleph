@@ -40,7 +40,7 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
 export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/xref`);
+  const response = await endpoint.get(`collections/${id}/xref?limit=1000`);
   return { id, data: response.data};
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 
