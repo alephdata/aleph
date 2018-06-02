@@ -3,13 +3,15 @@ import { connect } from "react-redux";
 import { ProgressBar, Button, FileInput } from '@blueprintjs/core';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 
-import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
+import { Screen, Breadcrumbs, ErrorScreen, SinglePane, SectionLoading } from 'src/components/common';
+import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection, uploadDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
 
-import './CaseDocumentsContent.css';
+import './CaseDocumentsScreen.css';
 import { showSuccessToast, showErrorToast } from "src/app/toast";
+
 
 const messages = defineMessages({
   save_success: {
@@ -21,6 +23,7 @@ const messages = defineMessages({
     defaultMessage: 'You did not upload your file!'
   }
 });
+
 
 class CaseDocumentsContent extends Component {
 
@@ -41,7 +44,6 @@ class CaseDocumentsContent extends Component {
   async componentDidMount() {
     const {collectionId} = this.props;
     this.props.fetchCollection({id: collectionId});
-    this.setState({result: this.props.result})
   }
 
   componentDidUpdate(prevProps) {
@@ -77,36 +79,42 @@ class CaseDocumentsContent extends Component {
   }
 
   render() {
-    const {context} = this.props;
-    const {percentCompleted, file} = this.state;
+    const { collection } = this.props;
+    const { percentCompleted, file } = this.state;
+
+    if (!collection.id) {
+      return <SectionLoading />;
+    }
+
+    const context = {
+      'filter:collection_id': collection.id
+    };
 
     return (
-      <CaseScreen className='CaseDocuments' activeTab='Documents'>
-        <ProgressBar value={percentCompleted} animate={false} stripes={false} className='pt-intent-success case-upload-progress-bar'/>
-        <form className='case-upload' onSubmit={this.onFormSubmit}>
-          <div className='case-file-input'>
-            <FileInput text="Choose file..." onInputChange={this.onChange} />
-            <p className='uploaded-file'>{file === null ? '': file.name}</p>
-          </div>
-          <Button className="pt-intent-primary pt-button case-upload-button" type="submit"><FormattedMessage id="case.upload" defaultMessage="Upload"/></Button>
-        </form>
-        <EntitySearch className='case-viewer' context={context} hideCollection={true} />
-      </CaseScreen>
+      <Screen title={collection.label}
+              breadcrumbs={<Breadcrumbs collection={collection}/>}
+              className='CaseDocumentsScreen'>
+        <CaseContext collection={collection} activeTab='Documents'>
+          <ProgressBar value={percentCompleted} animate={false} stripes={false} className='pt-intent-success case-upload-progress-bar'/>
+          <form className='case-upload' onSubmit={this.onFormSubmit}>
+            <div className='case-file-input'>
+              <FileInput text="Choose file..." onInputChange={this.onChange} />
+              <p className='uploaded-file'>{file === null ? '': file.name}</p>
+            </div>
+            <Button className="pt-intent-primary pt-button case-upload-button" type="submit"><FormattedMessage id="case.upload" defaultMessage="Upload"/></Button>
+          </form>
+          <EntitySearch className='case-viewer' context={context} hideCollection={true} />
+        </CaseContext>
+      </Screen>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {collectionId} = ownProps.match.params;
-
-  const context = {
-    'filter:collection_id': collectionId
-  };
-
+  const { collectionId } = ownProps.match.params;
   return {
     collectionId,
-    collection: selectCollection(state, collectionId),
-    context
+    collection: selectCollection(state, collectionId)
   };
 };
 

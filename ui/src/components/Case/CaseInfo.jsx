@@ -49,9 +49,9 @@ class CaseInfo extends Component {
           name: 'Home',
           icon: 'home',
           text: intl.formatMessage(messages.home),
-          url: '/'
+          url: ''
         }, {
-          index: 2,
+          index: 1,
           name: 'Documents',
           icon: 'folder-close',
           text: intl.formatMessage(messages.documents),
@@ -84,10 +84,6 @@ class CaseInfo extends Component {
     const {collection, result, activeTab} = this.props;
     const {settings, access, tabItems} = this.state;
     const color = getColor(collection.id);
-
-/*    if (collection.isLoading) {
-      return <ScreenLoading/>;
-    }*/
 
     return (
       <DualPane.InfoPane className="CaseInfo with-heading">

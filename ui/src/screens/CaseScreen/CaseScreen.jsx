@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
-import { withRouter } from "react-router";
-import { injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import { Screen, Breadcrumbs, DualPane, ErrorScreen } from 'src/components/common';
-import { CaseInfo } from 'src/components/Case';
-import { queryCollections } from "src/actions";
-import { selectCollection } from "../../selectors";
-import { selectCollectionsResult } from "../../selectors";
-import { fetchCollection } from "../../actions";
-
+import { Screen, Breadcrumbs, ErrorScreen, SinglePane, SectionLoading } from 'src/components/common';
+import CaseContext from "src/components/Case/CaseContext";
+import { fetchCollection } from "src/actions";
+import { selectCollection } from "src/selectors";
 
 class CaseScreen extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      result: []
-    }
+  constructor() {
+    super();
   }
 
   async componentDidMount() {
@@ -34,22 +26,14 @@ class CaseScreen extends Component {
   }
 
   render() {
-    const {collection, activeTab, className} = this.props;
-
-    if (collection.isError) {
-      return <ErrorScreen error={collection.error}/>;
-    }
-
+    const {collection} = this.props;
     return (
-      <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection}/>}>
-        <DualPane>
-          <CaseInfo activeTab={activeTab} collection={collection}/>
-          <DualPane.ContentPane>
-            <div className={className}>
-              {this.props.children}
-            </div>
-          </DualPane.ContentPane>
-        </DualPane>
+      <Screen title={collection.label}
+              breadcrumbs={<Breadcrumbs collection={collection}/>}
+              className='CaseScreen'>
+        <CaseContext collection={collection} activeTab='Home'>
+          { 'this is the case home page' }
+        </CaseContext>
       </Screen>
     );
   }
@@ -62,7 +46,5 @@ const mapStateToProps = (state, ownProps) => {
     collection: selectCollection(state, collectionId) };
 };
 
-CaseScreen = injectIntl(CaseScreen);
-CaseScreen = connect(mapStateToProps, {queryCollections, fetchCollection})(CaseScreen);
-CaseScreen = withRouter(CaseScreen);
-export default (CaseScreen);
+CaseScreen = connect(mapStateToProps, {fetchCollection})(CaseScreen);
+export default CaseScreen;
