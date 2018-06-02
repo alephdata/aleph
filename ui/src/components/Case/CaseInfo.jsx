@@ -51,24 +51,12 @@ class CaseInfo extends Component {
           text: intl.formatMessage(messages.home),
           url: '/'
         }, {
-          index: 1,
-          name: 'Timeline',
-          icon: 'timeline-events',
-          text: intl.formatMessage(messages.timeline),
-          url: '/timeline'
-        }, {
           index: 2,
           name: 'Documents',
           icon: 'folder-close',
           text: intl.formatMessage(messages.documents),
           url: '/documents'
-        }, {
-          index: 3,
-          name: 'Notes',
-          icon: 'annotation',
-          text: intl.formatMessage(messages.notes),
-          url: '/notes'
-        }
+        },
       ]
     };
 

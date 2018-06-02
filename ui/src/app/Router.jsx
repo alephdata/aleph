@@ -56,8 +56,6 @@ class Router extends Component {
         <Route path="/cases" exact component={CasesIndexScreen}/>
         <Route path="/cases/:collectionId" exact component={CaseHomeContent}/>
         <Route path="/cases/:collectionId/documents" exact component={CaseDocumentsContent}/>
-        <Route path="/cases/:collectionId/timeline" exact component={CaseTimelineContent}/>
-        <Route path="/cases/:collectionId/notes" exact component={CaseNotesContent}/>
         <Route path="/collections/:collectionId" exact component={CollectionRedirectScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
