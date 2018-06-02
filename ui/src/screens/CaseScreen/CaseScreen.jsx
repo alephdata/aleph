@@ -1,27 +1,15 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router";
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-<<<<<<< HEAD
-import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection, ErrorScreen } from 'src/components/common';
-import { CaseInfo, CaseContent, CaseDocumentsContent } from 'src/components/Case';
-import { queryCollections } from "../../actions";
-import { selectCollectionsResult } from "../../selectors";
-import Query from "src/app/Query";
-=======
 import { Screen, Breadcrumbs, DualPane, ErrorScreen } from 'src/components/common';
 import { CaseInfo } from 'src/components/Case';
 import { queryCollections } from "src/actions";
-import { withRouter } from "react-router";
-<<<<<<< HEAD
->>>>>>> working on file upload screen, made case screen and added file upload react package
-=======
 import { selectCollection } from "../../selectors";
-<<<<<<< HEAD
->>>>>>> refactoring Case Screen
-=======
+import { selectCollectionsResult } from "../../selectors";
 import { fetchCollection } from "../../actions";
->>>>>>> fixed case screen and case info
+
 
 class CaseScreen extends Component {
   constructor(props) {
