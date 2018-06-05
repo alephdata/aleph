@@ -7,7 +7,7 @@ import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@b
 
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
-import { DualPane, ScreenLoading } from 'src/components/common';
+import { DualPane } from 'src/components/common';
 import { getColor } from "src/util/colorScheme";
 import { selectCollectionsResult } from "src/selectors";
 import Query from "src/app/Query";
@@ -84,19 +84,18 @@ class CaseInfo extends Component {
     const {collection, result, activeTab} = this.props;
     const {settings, access, tabItems} = this.state;
     const color = getColor(collection.id);
+    const collections = result.results.filter((coll) => coll.id !== collection.id);
 
     return (
       <DualPane.InfoPane className="CaseInfo with-heading">
         <Menu className='pt-large' large={true}>
           <Popover content={<Menu>
-            {result.results.map(function (file, index) {
-              if (file.id !== collection.id) {
-                return <Link key={index} to={'/cases/' + file.id} className="pt-menu-item">
-                  <div className="pt-text-overflow-ellipsis pt-fill">
-                    {file.label}
-                  </div>
-                </Link>
-              }
+            {collections.map(function (file, index) {
+              return <Link key={index} to={'/cases/' + file.id} className="pt-menu-item">
+                <div className="pt-text-overflow-ellipsis pt-fill">
+                  {file.label}
+                </div>
+              </Link>
             })}
           </Menu>} className='case-file-dropdown' icon='search' text='Case' position={Position.BOTTOM_RIGHT}>
             <Button icon={<Icon icon='square' iconSize={Icon.SIZE_LARGE} color={color}
@@ -104,10 +103,10 @@ class CaseInfo extends Component {
                     rightIcon="menu-open" className='pt-fill pt-align-left' text={collection.label}/>
           </Popover>
           <MenuDivider/>
-          ﻿{tabItems.map((item, index) =>
-          <MenuItem key={index} active={item.name === activeTab}
-                    className='menu-item-padding' icon={item.icon} text={item.text} onClick={(e) => this.onClickTab(collection.id, item.url)}/>)
-        }
+          {tabItems.map((item, index) =>
+            <MenuItem key={index} active={item.name === activeTab}
+                      className='menu-item-padding' icon={item.icon} text={item.text} onClick={(e) => this.onClickTab(collection.id, item.url)}/>)
+          }
           <MenuDivider/>
           <MenuItem active={settings} onClick={this.toggleSettings} className='menu-item-padding'
                     text='Settings' icon='cog'/>

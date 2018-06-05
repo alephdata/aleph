@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
-import { Screen, Breadcrumbs, ErrorScreen, SinglePane, SectionLoading } from 'src/components/common';
+import { Screen, Breadcrumbs } from 'src/components/common';
 import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
 
 class CaseScreen extends Component {
-
-  constructor() {
-    super();
-  }
-
-  async componentDidMount() {
+  componentDidMount() {
     const { collectionId } = this.props;
     this.props.fetchCollection({ id: collectionId });
-    this.setState({result: this.props.result})
   }
 
   componentDidUpdate(prevProps) {

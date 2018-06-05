@@ -3,7 +3,7 @@ import { withRouter } from "react-router";
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { Screen, Breadcrumbs, DualPane, ErrorScreen } from 'src/components/common';
+import { DualPane, ErrorScreen } from 'src/components/common';
 import { CaseInfo } from 'src/components/Case';
 import { queryCollections } from "src/actions";
 import { selectCollection } from "../../selectors";

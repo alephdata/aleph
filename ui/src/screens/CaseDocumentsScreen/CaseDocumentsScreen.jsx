@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { ProgressBar, Button, FileInput } from '@blueprintjs/core';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 
-import { Screen, Breadcrumbs, ErrorScreen, SinglePane, SectionLoading } from 'src/components/common';
+import { Screen, Breadcrumbs, SectionLoading } from 'src/components/common';
 import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection, uploadDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
