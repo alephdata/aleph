@@ -4,9 +4,8 @@ $breadcrumb-line-height: $pt-icon-size-large - 1px !default;
 
 .Footer {
   width : 100%;
-  background-color: $aleph-footer-background;
-  position: fixed !important;
   bottom: 0;
+  background-color: $aleph-footer-background;
   font-size: $pt-font-size-large;
   padding: ($aleph-grid-size / 2) $aleph-grid-size ($aleph-grid-size / 2) $aleph-grid-size;
 

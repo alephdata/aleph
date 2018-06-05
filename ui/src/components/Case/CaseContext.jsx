@@ -1,17 +1,44 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Icon } from '@blueprintjs/core';
 import { withRouter } from "react-router";
-import { injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
+import c from 'classnames';
 
-import { DualPane, ErrorScreen } from 'src/components/common';
+import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
+import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
+import { DualPane, ErrorScreen, Collection } from 'src/components/common';
 import { CaseInfo } from 'src/components/Case';
 import { queryCollections } from "src/actions";
 import { selectCollection } from "../../selectors";
 import { selectCollectionsResult } from "../../selectors";
 import { fetchCollection } from "../../actions";
+import { getColor } from "src/util/colorScheme";
+
+import './CaseContext.css';
 
 
 class CaseContext extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSettingsOpen: false,
+      isAccessOpen: false,
+    };
+
+    this.toggleAccess = this.toggleAccess.bind(this);
+    this.toggleSettings = this.toggleSettings.bind(this);
+  }
+
+  toggleSettings() {
+    this.setState({isSettingsOpen: !this.state.isSettingsOpen});
+  }
+
+  toggleAccess() {
+    this.setState({isAccessOpen: !this.state.isAccessOpen});
+  }
+
   render() {
     const {collection, activeTab, className} = this.props;
 
@@ -20,18 +47,40 @@ class CaseContext extends Component {
     }
 
     return (
-      <DualPane>
-        <CaseInfo activeTab={activeTab} collection={collection}/>
-        <DualPane.ContentPane>
-          <div className={className}>
-            {this.props.children}
-          </div>
-        </DualPane.ContentPane>
-      </DualPane>
+      <div className="CaseContext">
+        <div className="case-menu" style={{backgroundColor: getColor(collection.id)}}>
+          <Collection.Link collection={collection} />
+          <Link to={`/cases/${collection.id}/documents`}
+                className={c("menu-item", {"active": activeTab === 'Documents'})}>
+            <Icon icon="folder-close" />
+            <FormattedMessage id="case.context.documents" defaultMessage="Documents" />
+          </Link>
+          <a className={c("menu-item")} onClick={this.toggleAccess}>
+            <Icon icon="key" />
+            <FormattedMessage id="case.context.access" defaultMessage="Access control" />
+          </a>
+          <a className="menu-item" onClick={this.toggleSettings}>
+            <Icon icon="cog" />
+            <FormattedMessage id="case.context.settings" defaultMessage="Settings" />
+          </a>
+        </div>
+        <div className={className}>
+          {this.props.children}
+        </div>
+        <CollectionAccessDialog
+          collection={collection}
+          isOpen={this.state.isAccessOpen}
+          toggleDialog={this.toggleAccess}
+        />
+        <CollectionEditDialog
+          collection={collection}
+          isOpen={this.state.isSettingsOpen}
+          toggleDialog={this.toggleSettings}
+        />
+      </div>
     );
   }
 }
 
-CaseContext = injectIntl(CaseContext);
 CaseContext = withRouter(CaseContext);
 export default (CaseContext);

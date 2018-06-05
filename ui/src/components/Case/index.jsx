@@ -1,7 +1,7 @@
 import CaseExplanationBox from './CaseExplanationBox';
-import CaseInfo from './CaseInfo';
+import CaseContext from './CaseContext';
 
 export {
   CaseExplanationBox,
-  CaseInfo
+  CaseContext
 };

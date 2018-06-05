@@ -46,7 +46,7 @@ class DocumentScreen extends Component {
 
     return (
       <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
-        <CaseContext collection={document.collection} activeTab='Documents'>
+        <CaseContext collection={document.collection} activeTab="Documents">
           <DualPane>
             <DocumentContent document={document} />
             <DocumentInfo document={document} />
