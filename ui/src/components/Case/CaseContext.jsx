@@ -12,15 +12,11 @@ import { fetchCollection } from "../../actions";
 
 
 class CaseContext extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const {collection, activeTab, className} = this.props;
 
-    if (collection.isError) {
-      return <ErrorScreen error={collection.error}/>;
+    if (!collection.casefile) {
+      return this.props.children;
     }
 
     return (

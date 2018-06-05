@@ -5,6 +5,7 @@ import { injectIntl } from 'react-intl';
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import { Screen, Entity, Breadcrumbs, ScreenLoading, ErrorScreen, DualPane } from 'src/components/common';
+import CaseContext from "src/components/Case/CaseContext";
 import { DocumentContent, DocumentInfo } from '../../components/Document';
 
 
@@ -45,10 +46,12 @@ class DocumentScreen extends Component {
 
     return (
       <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
-        <DualPane>
-          <DocumentContent document={document} />
-          <DocumentInfo document={document} />
-        </DualPane>
+        <CaseContext collection={document.collection} activeTab='Documents'>
+          <DualPane>
+            <DocumentContent document={document} />
+            <DocumentInfo document={document} />
+          </DualPane>
+        </CaseContext>
       </Screen>
     );
   }

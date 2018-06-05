@@ -4,9 +4,10 @@ import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 import Waypoint from 'react-waypoint';
 
+import { Entity, Screen, Date, Country, ScreenLoading, SectionLoading, Breadcrumbs, ErrorScreen } from 'src/components/common';
+import CaseContext from "src/components/Case/CaseContext";
 import Query from 'src/app/Query';
 import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
-import { Entity, Screen, Date, Country, ScreenLoading, SectionLoading, Breadcrumbs, ErrorScreen } from 'src/components/common';
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
@@ -90,94 +91,96 @@ class CollectionsXrefScreen extends Component {
     
     return (
       <Screen title={intl.formatMessage(messages.title)} breadcrumbs={breadcrumbs}>
-        <table className="CollectionXrefScreen data-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th colSpan="3" width="45%">
-                {collection.label}
-              </th>
-              <th colSpan="3" width="45%">
-                <div className="pt-select pt-fill">
-                  <select id="other" onChange={this.onOtherChange} value={other.id}>
-                    { index.results.map((res) => (
-                      <option key={res.collection.id} value={res.collection.id}>
-                        {res.collection.label} ({res.matches})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </th>
-            </tr>
-            <tr>
-              <th className="numeric narrow">
-                <FormattedMessage id="xref.score"
-                                  defaultMessage="Score" />
-              </th>
-              <th>
-                <FormattedMessage id="xref.name"
-                                  defaultMessage="Name" />
-              </th>
-              <th>
-                <FormattedMessage id="xref.date"
-                                  defaultMessage="Date" />
-              </th>
-              <th>
-                <FormattedMessage id="xref.countries"
-                                  defaultMessage="Countries" />
-              </th>
-              <th>
-                <FormattedMessage id="xref.name"
-                                  defaultMessage="Name" />
-              </th>
-              <th>
-                <FormattedMessage id="xref.date"
-                                  defaultMessage="Date" />
-              </th>
-              <th>
-                <FormattedMessage id="xref.countries"
-                                  defaultMessage="Countries" />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            { matches.total !== undefined && matches.results.map((match) => (
-              <tr key={match.id}>
-                <td className="numeric narrow">
-                  <FormattedNumber value={parseInt(match.score, 10)} />
-                </td>
-                <td className="entity">
-                  <Entity.Link entity={match.entity} preview={true} icon />
-                </td>
-                <td className="date">
-                  <Date.Earliest values={match.entity.dates} />
-                </td>
-                <td>
-                  <Country.List codes={match.entity.countries} short />
-                </td>
-                <td className="entity">
-                  <Entity.Link entity={match.match} preview={true} icon />
-                </td>
-                <td className="date">
-                  <Date.Earliest values={match.match.dates} />
-                </td>
-                <td>
-                  <Country.List codes={match.match.countries} short />
-                </td>
+        <CaseContext collection={collection}>
+          <table className="CollectionXrefScreen data-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th colSpan="3" width="45%">
+                  {collection.label}
+                </th>
+                <th colSpan="3" width="45%">
+                  <div className="pt-select pt-fill">
+                    <select id="other" onChange={this.onOtherChange} value={other.id}>
+                      { index.results.map((res) => (
+                        <option key={res.collection.id} value={res.collection.id}>
+                          {res.collection.label} ({res.matches})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        { !matches.isExpanding && matches.next && (
-          <Waypoint
-            onEnter={this.onLoadMore}
-            bottomOffset="-600px"
-            scrollableAncestor={window}
-          />
-        )}
-        { matches.isLoading && (
-          <SectionLoading />
-        )}
+              <tr>
+                <th className="numeric narrow">
+                  <FormattedMessage id="xref.score"
+                                    defaultMessage="Score" />
+                </th>
+                <th>
+                  <FormattedMessage id="xref.name"
+                                    defaultMessage="Name" />
+                </th>
+                <th>
+                  <FormattedMessage id="xref.date"
+                                    defaultMessage="Date" />
+                </th>
+                <th>
+                  <FormattedMessage id="xref.countries"
+                                    defaultMessage="Countries" />
+                </th>
+                <th>
+                  <FormattedMessage id="xref.name"
+                                    defaultMessage="Name" />
+                </th>
+                <th>
+                  <FormattedMessage id="xref.date"
+                                    defaultMessage="Date" />
+                </th>
+                <th>
+                  <FormattedMessage id="xref.countries"
+                                    defaultMessage="Countries" />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              { matches.total !== undefined && matches.results.map((match) => (
+                <tr key={match.id}>
+                  <td className="numeric narrow">
+                    <FormattedNumber value={parseInt(match.score, 10)} />
+                  </td>
+                  <td className="entity">
+                    <Entity.Link entity={match.entity} preview={true} icon />
+                  </td>
+                  <td className="date">
+                    <Date.Earliest values={match.entity.dates} />
+                  </td>
+                  <td>
+                    <Country.List codes={match.entity.countries} short />
+                  </td>
+                  <td className="entity">
+                    <Entity.Link entity={match.match} preview={true} icon />
+                  </td>
+                  <td className="date">
+                    <Date.Earliest values={match.match.dates} />
+                  </td>
+                  <td>
+                    <Country.List codes={match.match.countries} short />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          { !matches.isExpanding && matches.next && (
+            <Waypoint
+              onEnter={this.onLoadMore}
+              bottomOffset="-600px"
+              scrollableAncestor={window}
+            />
+          )}
+          { matches.isLoading && (
+            <SectionLoading />
+          )}
+        </CaseContext>
       </Screen>
     )
   }

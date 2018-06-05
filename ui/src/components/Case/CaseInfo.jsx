@@ -18,71 +18,46 @@ import './CaseInfo.css';
 
 const messages = defineMessages({
   home: {
-    id: 'case.info.home',
+    id: 'case.context.home',
     defaultMessage: 'Home'
   },
-  timeline: {
-    id: 'case.info.timeline',
-    defaultMessage: 'Timeline'
+  settings: {
+    id: 'case.context.settings',
+    defaultMessage: 'Settings'
+  },
+  access: {
+    id: 'case.context.access',
+    defaultMessage: 'Access'
   },
   documents: {
-    id: 'case.info.documents',
+    id: 'case.context.documents',
     defaultMessage: 'Documents'
-  },
-  notes: {
-    id: 'case.info.notes',
-    defaultMessage: 'Notes'
-  },
+  }
 });
 
 class CaseInfo extends Component {
   constructor(props) {
     super(props);
-    const {intl} = this.props;
 
     this.state = {
-      settings: false,
-      access: false,
-      tabItems: [
-        {
-          index: 0,
-          name: 'Home',
-          icon: 'home',
-          text: intl.formatMessage(messages.home),
-          url: ''
-        }, {
-          index: 1,
-          name: 'Documents',
-          icon: 'folder-close',
-          text: intl.formatMessage(messages.documents),
-          url: '/documents'
-        },
-      ]
+      isSettingsOpen: false,
+      isAccessOpen: false,
     };
 
     this.toggleAccess = this.toggleAccess.bind(this);
     this.toggleSettings = this.toggleSettings.bind(this);
-    this.onClickTab = this.onClickTab.bind(this);
-  }
-
-  onClickTab(collectionId, url) {
-    const {history} = this.props;
-    history.push({
-      pathname: '/cases/' + collectionId + url
-    });
   }
 
   toggleSettings() {
-    this.setState({settings: !this.state.settings});
+    this.setState({isSettingsOpen: !this.state.isSettingsOpen});
   }
 
   toggleAccess() {
-    this.setState({access: !this.state.access});
+    this.setState({isAccessOpen: !this.state.isAccessOpen});
   }
 
   render() {
-    const {collection, result, activeTab} = this.props;
-    const {settings, access, tabItems} = this.state;
+    const {collection, result, activeTab, intl} = this.props;
     const color = getColor(collection.id);
     const collections = result.results.filter((coll) => coll.id !== collection.id);
 
@@ -100,27 +75,41 @@ class CaseInfo extends Component {
           </Menu>} className='case-file-dropdown' icon='search' text='Case' position={Position.BOTTOM_RIGHT}>
             <Button icon={<Icon icon='square' iconSize={Icon.SIZE_LARGE} color={color}
                                 style={{backgroundColor: color, opacity: 0.6}}/>}
-                    rightIcon="menu-open" className='pt-fill pt-align-left' text={collection.label}/>
+                    rightIcon="menu-open"
+                    className='pt-fill pt-align-left'
+                    text={collection.label}/>
           </Popover>
           <MenuDivider/>
-          {tabItems.map((item, index) =>
-            <MenuItem key={index} active={item.name === activeTab}
-                      className='menu-item-padding' icon={item.icon} text={item.text} onClick={(e) => this.onClickTab(collection.id, item.url)}/>)
-          }
+          <MenuItem key={0}
+                    active={'Home' === activeTab}
+                    className='menu-item-padding'
+                    icon="home"
+                    text={intl.formatMessage(messages.home)}
+                    href={'/cases/' + collection.id} />
+          <MenuItem key={1}
+                    active={'Documents' === activeTab}
+                    className='menu-item-padding'
+                    icon="folder-close"
+                    text={intl.formatMessage(messages.documents)}
+                    href={'/cases/' + collection.id + '/documents'} />
           <MenuDivider/>
-          <MenuItem active={settings} onClick={this.toggleSettings} className='menu-item-padding'
-                    text='Settings' icon='cog'/>
-          <MenuItem active={access} onClick={this.toggleAccess} className='menu-item-padding'
-                    text='Access' icon='key'/>
+          <MenuItem onClick={this.toggleSettings}
+                    className='menu-item-padding'
+                    text={intl.formatMessage(messages.settings)}
+                    icon='cog'/>
+          <MenuItem onClick={this.toggleAccess}
+                    className='menu-item-padding'
+                    text={intl.formatMessage(messages.access)}
+                    icon='key'/>
         </Menu>
         <CollectionAccessDialog
           collection={collection}
-          isOpen={access}
+          isOpen={this.state.isAccessOpen}
           toggleDialog={this.toggleAccess}
         />
         <CollectionEditDialog
           collection={collection}
-          isOpen={settings}
+          isOpen={this.state.isSettingsOpen}
           toggleDialog={this.toggleSettings}
         />
       </DualPane.InfoPane>
@@ -129,7 +118,7 @@ class CaseInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location} = ownProps;
+  const { location } = ownProps;
   const context = {
     facet: [ 'category', 'countries' ],
     'filter:kind': 'casefile'
