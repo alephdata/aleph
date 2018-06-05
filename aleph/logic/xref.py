@@ -48,7 +48,6 @@ def _xref_item(item, collection_id=None):
         obj.score = result.get('_score')
         db.session.add(obj)
     db.session.commit()
-    db.session.expunge_all()
 
 
 @celery.task()
