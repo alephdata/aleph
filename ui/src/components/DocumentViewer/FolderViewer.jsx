@@ -28,12 +28,6 @@ class FolderViewer extends Component {
             </div>
           )}
           <EntitySearch query={query} hideCollection={true} documentMode={true} />
-          {document.children === 0 && (
-            <p className="folder-empty pt-text-muted">
-              <FormattedMessage id="folder.empty"
-                                defaultMessage="This folder is empty" />
-            </p>
-          )}
         </div>
       </React.Fragment>
     );

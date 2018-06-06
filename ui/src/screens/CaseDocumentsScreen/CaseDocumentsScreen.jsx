@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 
-import { Screen, Breadcrumbs, SectionLoading } from 'src/components/common';
-import { Toolbar, FolderButtons } from 'src/components/Toolbar';
+import { Screen, Breadcrumbs, ScreenLoading } from 'src/components/common';
+import { Toolbar, DocumentUploadButton, DocumentFolderButton, CollectionSearch } from 'src/components/Toolbar';
 import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
@@ -28,12 +27,13 @@ class CaseDocumentsContent extends Component {
   render() {
     const { collection } = this.props;
 
-    if (!collection.id) {
-      return <SectionLoading />;
+    if (collection === undefined || collection.id === undefined) {
+      return <ScreenLoading />;
     }
 
     const context = {
-      'filter:collection_id': collection.id
+      'filter:collection_id': collection.id,
+      'empty:parent': true
     };
 
     return (
@@ -42,7 +42,11 @@ class CaseDocumentsContent extends Component {
               className='CaseDocumentsScreen'>
         <CaseContext collection={collection} activeTab='Documents'>
           <Toolbar>
-            <FolderButtons collection={collection} />
+            <div className="pt-button-group">
+              <DocumentFolderButton collection={collection} />
+              <DocumentUploadButton collection={collection} />
+            </div>
+            <CollectionSearch collection={collection} />
           </Toolbar>
           <EntitySearch context={context}
                         hideCollection={true}
@@ -61,6 +65,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-CaseDocumentsContent = injectIntl(CaseDocumentsContent);
 CaseDocumentsContent = connect(mapStateToProps, {fetchCollection})(CaseDocumentsContent);
 export default CaseDocumentsContent;

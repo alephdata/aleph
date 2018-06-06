@@ -1,11 +1,10 @@
 import React, {Component} from "react";
-import { ProgressBar, Intent, Dialog, Button } from "@blueprintjs/core";
-import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
+import { Intent, Dialog, Button } from "@blueprintjs/core";
+import { defineMessages, injectIntl } from "react-intl";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 
 import { ingestDocument } from "src/actions";
-import { showSuccessToast, showErrorToast } from "src/app/toast";
 
 const messages = defineMessages({
   title: {
@@ -38,7 +37,7 @@ class DocumentFolderDialog extends Component {
 
   async onFormSubmit(event) {
     event.preventDefault();
-    const { intl, collection, parent, history } = this.props;
+    const { collection, parent, history } = this.props;
     const { title } = this.state;
     try {
       let foreignId = title;

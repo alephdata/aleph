@@ -10,12 +10,21 @@ class ParentButton extends React.Component {
     const { document, isPreview } = this.props;
     const className = isPreview === true ? this.props.className : '';
 
-    if (document.parent === undefined || isPreview) {
+    if (isPreview || !document.collection) {
       return null;
+    }
+    
+    const { collection } = document;
+    if (document.parent === undefined && !collection.casefile) {
+      return null;
+    }
+    let path = `/cases/${collection.id}/documents`;
+    if (document.parent !== undefined) {
+      path = getPath(document.parent.links.ui);
     }
 
     return (
-      <Link to={getPath(document.parent.links.ui)} className={`ParentButton pt-button ${className}`}>
+      <Link to={path} className={`ParentButton pt-button ${className}`}>
         <span className="pt-icon-standard pt-icon-folder-open"/>
         <span>
           <FormattedMessage id="document.parent.nav" defaultMessage="Up"/>

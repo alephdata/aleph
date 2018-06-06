@@ -59,7 +59,7 @@ class DocumentSearch extends React.Component {
       }
 
       return (
-        <form onSubmit={this.onSubmitSearch} className="DocumentSearch">
+        <form onSubmit={this.onSubmitSearch} className="DocumentSearch search-box">
           <div className="pt-input-group">
             <span className="pt-icon pt-icon-search"/>
             <input className="pt-input" type="search" dir="auto"
@@ -82,5 +82,4 @@ const mapStateToProps = (state, ownProps) => {
 DocumentSearch = connect(mapStateToProps)(DocumentSearch);
 DocumentSearch = withRouter(DocumentSearch);
 DocumentSearch = injectIntl(DocumentSearch);
-
 export default DocumentSearch;

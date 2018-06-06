@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { ProgressBar, Intent, Dialog, Button } from "@blueprintjs/core";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
 import { ingestDocument } from "src/actions";
 import { showSuccessToast, showErrorToast } from "src/app/toast";
@@ -53,7 +54,7 @@ class DocumentUploadDialog extends Component {
 
   async onFormSubmit(event) {
     event.preventDefault();
-    const { intl, collection, parent } = this.props;
+    const { intl, collection, parent, history } = this.props;
     try {
       for (let file of this.state.files) {
         this.setState({percentCompleted: 0, uploadingFile: file});
@@ -66,6 +67,11 @@ class DocumentUploadDialog extends Component {
       }
       showSuccessToast(intl.formatMessage(messages.success));
       this.props.toggleDialog();
+      // history.push({
+      //   pathname: history.location.pathname,
+      //   search: history.location.search,
+      //   fragment: history.location.fragment
+      // });
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
       console.log(e);
@@ -142,4 +148,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 DocumentUploadDialog = injectIntl(DocumentUploadDialog);
+DocumentUploadDialog = withRouter(DocumentUploadDialog);
 export default connect(mapStateToProps, {ingestDocument})(DocumentUploadDialog);

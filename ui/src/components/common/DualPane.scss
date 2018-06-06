@@ -8,6 +8,7 @@ $aleph-infobar-width: $aleph-grid-size * 40;
   flex-flow: row nowrap;
   align-content: stretch;
   align-items: stretch;
+  min-height: 90vh;
 }
 
 .DualPane .ContentPane {
