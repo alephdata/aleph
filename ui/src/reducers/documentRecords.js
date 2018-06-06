@@ -3,8 +3,7 @@ import { set, update } from 'lodash/fp';
 
 import {
   queryDocumentRecords,
-  fetchDocumentPage,
-  uploadDocument
+  fetchDocumentPage
 } from 'src/actions';
 import { cacheResults } from './util';
 
@@ -24,9 +23,5 @@ export default createReducer({
   [fetchDocumentPage.COMPLETE]: (state, { documentId, page, data }) =>
     set(documentRecordKey(documentId, page), data)(state),
 
-  [queryDocumentRecords.COMPLETE]: cacheResults,
-
-  [uploadDocument.START]: (state, { documentId, file }) =>
-    update(documentId, set('isLoading', true))(state)
-
+  [queryDocumentRecords.COMPLETE]: cacheResults
 }, initialState);

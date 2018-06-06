@@ -2,9 +2,8 @@ import React, {Component} from "react";
 import { ProgressBar, Intent, Dialog, Button } from "@blueprintjs/core";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 
-import { uploadDocument } from "src/actions";
+import { ingestDocument } from "src/actions";
 import { showSuccessToast, showErrorToast } from "src/app/toast";
 import wordList from 'src/util/wordList';
 
@@ -13,7 +12,7 @@ import "./DocumentUploadDialog.css";
 const messages = defineMessages({
   title: {
     id: "document.upload.title",
-    defaultMessage: "Upload a document"
+    defaultMessage: "Upload documents"
   },
   save: {
     id: 'document.upload.save',
@@ -54,11 +53,16 @@ class DocumentUploadDialog extends Component {
 
   async onFormSubmit(event) {
     event.preventDefault();
-    const { intl, collection } = this.props;
+    const { intl, collection, parent } = this.props;
     try {
       for (let file of this.state.files) {
         this.setState({percentCompleted: 0, uploadingFile: file});
-        await this.props.uploadDocument(collection.id, file, this.onUploadProgress);
+        const metadata = {
+          'file_name': file.name,
+          'mime_type': file.type,
+          'parent': parent
+        };
+        await this.props.ingestDocument(collection.id, metadata, file, this.onUploadProgress);
       }
       showSuccessToast(intl.formatMessage(messages.success));
       this.props.toggleDialog();
@@ -138,5 +142,4 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 DocumentUploadDialog = injectIntl(DocumentUploadDialog);
-DocumentUploadDialog = withRouter(DocumentUploadDialog);
-export default connect(mapStateToProps, {uploadDocument})(DocumentUploadDialog);
+export default connect(mapStateToProps, {ingestDocument})(DocumentUploadDialog);

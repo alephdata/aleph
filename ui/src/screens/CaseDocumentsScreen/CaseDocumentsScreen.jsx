@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 import { Screen, Breadcrumbs, SectionLoading } from 'src/components/common';
 import { Toolbar, FolderButtons } from 'src/components/Toolbar';
 import CaseContext from "src/components/Case/CaseContext";
-import { fetchCollection, uploadDocument } from "src/actions";
+import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
 
@@ -62,5 +62,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CaseDocumentsContent = injectIntl(CaseDocumentsContent);
-CaseDocumentsContent = connect(mapStateToProps, {fetchCollection, uploadDocument})(CaseDocumentsContent);
+CaseDocumentsContent = connect(mapStateToProps, {fetchCollection})(CaseDocumentsContent);
 export default CaseDocumentsContent;

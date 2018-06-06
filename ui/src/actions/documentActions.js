@@ -17,13 +17,12 @@ export const fetchDocumentPage = asyncActionCreator(({ documentId, page }) => as
   return { documentId, page, data: response.data };
 }, { name: 'FETCH_DOCUMENT_PAGE' });
 
-export const uploadDocument = asyncActionCreator((collectionId, file, onUploadProgress) => async dispatch => {
+export const ingestDocument = asyncActionCreator((collectionId, metadata, file, onUploadProgress) => async dispatch => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('meta', JSON.stringify({
-    'file_name': file.name,
-    'mime_type': file.type
-  }));
+  if (file) {
+    formData.append('file', file);
+  }
+  formData.append('meta', JSON.stringify(metadata));
   const config = {
     onUploadProgress,
     headers: {
@@ -31,6 +30,6 @@ export const uploadDocument = asyncActionCreator((collectionId, file, onUploadPr
     }
   };
   const response = await endpoint.post(`collections/${collectionId}/ingest`, formData, config);
-  return { file: response.data };
-}, { name: 'UPLOAD_DOCUMENT' });
+  return { documents: response.data.documents };
+}, { name: 'INGEST_DOCUMENT' });
 
