@@ -60,12 +60,16 @@ class Query(object):
         for field, values in self.parser.filters.items():
             if field not in self.parser.facet_names:
                 filters.append(field_filter_query(field, values))
+        return filters
+
+    def get_negative_filters(self):
+        """Apply negative filters."""
+        filters = []
+        for field, values in self.parser.empties.items():
+            filters.append({'exists': {'field': field}})
 
         if len(self.parser.exclude):
-            exclude = {'ids': {'values': self.parser.exclude}}
-            filters.append({
-                'bool': {'must_not': exclude}
-            })
+            filters.append({'ids': {'values': self.parser.exclude}})
         return filters
 
     def get_post_filters(self, exclude=None):
@@ -85,7 +89,7 @@ class Query(object):
             'bool': {
                 'should': [],
                 'must': self.get_text_query(),
-                'must_not': [],
+                'must_not': self.get_negative_filters(),
                 'filter': self.get_filters()
             }
         }
@@ -173,8 +177,7 @@ class Query(object):
             'highlight': self.get_highlight(),
             '_source': self.get_source()
         }
-
-        # log.info("Query: %s", pformat(body))
+        log.info("Query: %s", pformat(body))
         return body
 
     def search(self):
