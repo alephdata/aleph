@@ -162,6 +162,6 @@ def permissions_update(id):
                           permission['write'],
                           editor_id=request.authz.id)
 
+    update_collection_access.delay(id)
     update_collection(collection)
-    update_collection_access.apply_async([collection.id], priority=8)
     return permissions_index(id)
