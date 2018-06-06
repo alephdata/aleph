@@ -47,6 +47,7 @@ def _xref_item(item, collection_id=None):
         obj.match_collection_id = source.get('collection_id')
         obj.score = result.get('_score')
         db.session.add(obj)
+    db.session.commit()
 
 
 @celery.task()
@@ -64,7 +65,3 @@ def xref_collection(collection_id, other_id=None):
     for idx, res in enumerate(scanner):
         res = unpack_result(res)
         _xref_item(res, collection_id=other_id)
-        if idx % 1000 == 0:
-            db.session.commit()
-            db.session.expunge_all()
-    db.session.commit()
