@@ -8,10 +8,8 @@ import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
 
-import './CaseDocumentsScreen.css';
 
-
-class CaseDocumentsContent extends Component {
+class CollectionDocumentsScreen extends Component {
   async componentDidMount() {
     const {collectionId} = this.props;
     this.props.fetchCollection({id: collectionId});
@@ -65,5 +63,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-CaseDocumentsContent = connect(mapStateToProps, {fetchCollection})(CaseDocumentsContent);
-export default CaseDocumentsContent;
+CollectionDocumentsScreen = connect(mapStateToProps, {fetchCollection})(CollectionDocumentsScreen);
+export default CollectionDocumentsScreen;

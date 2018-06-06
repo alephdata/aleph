@@ -44,7 +44,7 @@ class CaseContext extends Component {
       <div className="CaseContext">
         <div className="case-menu" style={{backgroundColor: getColor(collection.id)}}>
           <Collection.Link collection={collection} />
-          <Link to={`/cases/${collection.id}/documents`}
+          <Link to={`/collections/${collection.id}/documents`}
                 className={c("menu-item", {"active": activeTab === 'Documents'})}>
             <Icon icon="folder-close" />
             <FormattedMessage id="case.context.documents" defaultMessage="Documents" />
