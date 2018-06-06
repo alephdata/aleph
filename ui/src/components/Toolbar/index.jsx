@@ -4,6 +4,7 @@ import DownloadButton from './DownloadButton';
 import ModeButtons from './ModeButtons';
 import ParentButton from './ParentButton';
 import PagingButtons from './PagingButtons';
+import FolderButtons from './FolderButtons';
 import DocumentSearch from './DocumentSearch';
 
 export {
@@ -13,5 +14,6 @@ export {
     ModeButtons,
     ParentButton,
     PagingButtons,
+    FolderButtons,
     DocumentSearch
 };

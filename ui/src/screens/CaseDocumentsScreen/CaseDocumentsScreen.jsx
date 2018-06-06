@@ -1,46 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { ProgressBar, Button, FileInput } from '@blueprintjs/core';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
 
 import { Screen, Breadcrumbs, SectionLoading } from 'src/components/common';
+import { Toolbar, FolderButtons } from 'src/components/Toolbar';
 import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection, uploadDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
 
 import './CaseDocumentsScreen.css';
-import { showSuccessToast, showErrorToast } from "src/app/toast";
-
-
-const messages = defineMessages({
-  save_success: {
-    id: 'case_upload_success',
-    defaultMessage: 'You have successfully uploaded file!'
-  },
-  save_error: {
-    id: 'case_upload_error',
-    defaultMessage: 'You did not upload your file!'
-  }
-});
 
 
 class CaseDocumentsContent extends Component {
-
-  constructor() {
-    super();
-
-    this.state = {
-      file: null,
-      percentCompleted: 0
-    };
-
-    this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.fileUpload = this.fileUpload.bind(this);
-    this.onUploadProgress = this.onUploadProgress.bind(this);
-  }
-
   async componentDidMount() {
     const {collectionId} = this.props;
     this.props.fetchCollection({id: collectionId});
@@ -53,34 +25,8 @@ class CaseDocumentsContent extends Component {
     }
   }
 
-  async onFormSubmit(e) {
-    e.preventDefault();
-    await this.fileUpload(this.state.file);
-  }
-
-  onChange(e) {
-    this.setState({file: e.target.files[ 0 ]})
-  }
-
-  onUploadProgress(progressEvent) {
-    let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-    this.setState({percentCompleted: percentCompleted});
-  }
-
-  async fileUpload(file) {
-    const {intl} = this.props;
-    try {
-      await this.props.uploadDocument(this.props.collectionId, file, this.onUploadProgress);
-      showSuccessToast(intl.formatMessage(messages.save_success));
-    } catch (e) {
-      showErrorToast(intl.formatMessage(messages.save_error));
-      console.log(e)
-    }
-  }
-
   render() {
     const { collection } = this.props;
-    const { percentCompleted, file } = this.state;
 
     if (!collection.id) {
       return <SectionLoading />;
@@ -95,15 +41,12 @@ class CaseDocumentsContent extends Component {
               breadcrumbs={<Breadcrumbs collection={collection}/>}
               className='CaseDocumentsScreen'>
         <CaseContext collection={collection} activeTab='Documents'>
-          <ProgressBar value={percentCompleted} animate={false} stripes={false} className='pt-intent-success case-upload-progress-bar'/>
-          <form className='case-upload' onSubmit={this.onFormSubmit}>
-            <div className='case-file-input'>
-              <FileInput text="Choose file..." onInputChange={this.onChange} />
-              <p className='uploaded-file'>{file === null ? '': file.name}</p>
-            </div>
-            <Button className="pt-intent-primary pt-button case-upload-button" type="submit"><FormattedMessage id="case.upload" defaultMessage="Upload"/></Button>
-          </form>
-          <EntitySearch className='case-viewer' context={context} hideCollection={true} />
+          <Toolbar>
+            <FolderButtons collection={collection} />
+          </Toolbar>
+          <EntitySearch context={context}
+                        hideCollection={true}
+                        documentMode={true} />
         </CaseContext>
       </Screen>
     );

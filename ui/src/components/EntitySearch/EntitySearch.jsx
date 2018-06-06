@@ -69,7 +69,6 @@ class EntitySearch extends Component {
 
   render() {
     const {query, result, intl, className} = this.props;
-    console.log(result.results)
     return (
       <div className={className}>
         {result.total === 0 && (

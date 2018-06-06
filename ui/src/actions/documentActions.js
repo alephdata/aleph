@@ -20,15 +20,17 @@ export const fetchDocumentPage = asyncActionCreator(({ documentId, page }) => as
 export const uploadDocument = asyncActionCreator((collectionId, file, onUploadProgress) => async dispatch => {
   const formData = new FormData();
   formData.append('file', file);
-  //formData.append('meta', ' ');
+  formData.append('meta', JSON.stringify({
+    'file_name': file.name,
+    'mime_type': file.type
+  }));
   const config = {
     onUploadProgress,
     headers: {
       'content-type': 'multipart/form-data',
     }
   };
-
   const response = await endpoint.post(`collections/${collectionId}/ingest`, formData, config);
-  return { file: response.data};
+  return { file: response.data };
 }, { name: 'UPLOAD_DOCUMENT' });
 

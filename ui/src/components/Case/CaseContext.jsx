@@ -3,17 +3,11 @@ import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 import { withRouter } from "react-router";
 import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
 import c from 'classnames';
 
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
-import { DualPane, ErrorScreen, Collection } from 'src/components/common';
-import { CaseInfo } from 'src/components/Case';
-import { queryCollections } from "src/actions";
-import { selectCollection } from "../../selectors";
-import { selectCollectionsResult } from "../../selectors";
-import { fetchCollection } from "../../actions";
+import { Collection } from 'src/components/common';
 import { getColor } from "src/util/colorScheme";
 
 import './CaseContext.css';
