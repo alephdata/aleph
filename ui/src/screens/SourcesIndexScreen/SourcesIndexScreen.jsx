@@ -118,7 +118,7 @@ class SourcesIndexScreen extends Component {
               breadcrumbs={breadcrumbs}
               title={intl.formatMessage(messages.title)}>
         <DualPane>
-          <DualPane.InfoPane>
+          <DualPane.SidePane>
             <div className="pt-input-group pt-fill">
               <i className="pt-icon pt-icon-search"/>
               <input className="pt-input" type="search"
@@ -136,7 +136,7 @@ class SourcesIndexScreen extends Component {
                           query={query}
                           result={result}
                           updateQuery={this.updateQuery}/>
-          </DualPane.InfoPane>
+          </DualPane.SidePane>
           <DualPane.ContentPane>
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery}/>

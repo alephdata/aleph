@@ -1,27 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { withRouter } from 'react-router';
 
 import { Screen, Breadcrumbs } from 'src/components/common';
 import CaseContext from "src/components/Case/CaseContext";
 import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
+import NotificationList from 'src/components/Notification/NotificationList';
+import Query from 'src/app/Query';
 import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
 
+
 class CaseScreen extends Component {
   componentDidMount() {
-    const { collectionId } = this.props;
-    this.props.fetchCollection({ id: collectionId });
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
     const { collectionId } = this.props;
     if (collectionId !== prevProps.collectionId) {
-      this.props.fetchCollection({ id: collectionId });
+      this.fetchIfNeeded();
     }
   }
 
+  fetchIfNeeded() {
+    const { collectionId } = this.props;
+    this.props.fetchCollection({ id: collectionId });
+  }
+
   render() {
-    const {collection} = this.props;
+    const { collection, notificationsQuery } = this.props;
     return (
       <Screen title={collection.label}
               breadcrumbs={<Breadcrumbs collection={collection}/>}
@@ -30,7 +38,7 @@ class CaseScreen extends Component {
           <Toolbar>
             <CollectionSearch collection={collection} />
           </Toolbar>
-          { 'this is the case home page' }
+          <NotificationList query={notificationsQuery} />
         </CaseContext>
       </Screen>
     );
@@ -38,11 +46,17 @@ class CaseScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
   const { collectionId } = ownProps.match.params;
+  const path = `collections/${collectionId}/notifications`;
+  const query = Query.fromLocation(path, location, {}, 'notifications').limit(40);
   return {
     collectionId,
-    collection: selectCollection(state, collectionId) };
+    collection: selectCollection(state, collectionId),
+    notificationsQuery: query
+  };
 };
 
-CaseScreen = connect(mapStateToProps, {fetchCollection})(CaseScreen);
+CaseScreen = connect(mapStateToProps, { fetchCollection })(CaseScreen);
+CaseScreen = withRouter(CaseScreen);
 export default CaseScreen;

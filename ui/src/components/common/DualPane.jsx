@@ -8,11 +8,18 @@ class InfoPane extends Component {
     const { children, className } = this.props;
     return (
       <aside className={`InfoPane ${className}`} style={this.props.style}>
-        <div className="InfoPane-content-container">
-          <div className="InfoPane-content">
-            {children}
-          </div>
-        </div>
+        {children}
+      </aside>
+    );
+  }
+}
+
+class SidePane extends Component {
+  render() {
+    const { children, className } = this.props;
+    return (
+      <aside className={`SidePane ${className}`} style={this.props.style}>
+        {children}
       </aside>
     );
   }
@@ -20,9 +27,9 @@ class InfoPane extends Component {
 
 class ContentPane extends Component {
   render() {
-    const { children, className, limitedWidth } = this.props;
+    const { children, className = '' } = this.props;
     return (
-      <main className={c('ContentPane', { 'limited-width': limitedWidth }, className)} style={this.props.style}>
+      <main className={c('ContentPane', className)} style={this.props.style}>
         {children}
       </main>
     );
@@ -31,6 +38,7 @@ class ContentPane extends Component {
 
 class DualPane extends Component {
   static InfoPane = InfoPane;
+  static SidePane = SidePane;
   static ContentPane = ContentPane;
 
   render() {

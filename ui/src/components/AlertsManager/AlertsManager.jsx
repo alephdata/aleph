@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
-import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
+import { DualPane, ErrorSection } from 'src/components/common';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
 import './AlertsManager.css';
@@ -65,6 +65,9 @@ class AlertsDialog extends Component {
     const { newAlert } = this.state;
     event.preventDefault();
     this.setState({newAlert: ''});
+    if (!newAlert.strip().length) {
+      return;
+    }
     await this.props.addAlert({query_text: newAlert});
     await this.props.fetchAlerts();
   }
@@ -84,65 +87,65 @@ class AlertsDialog extends Component {
   }
 
   render() {
-    const {alerts, intl} = this.props;
+    const { alerts, intl } = this.props;
+    const { newAlert } = this.state;
+
     return (
-      <DualPane.InfoPane className="AlertsManager with-heading">
-        <div className="pane-heading">
-          <h1>
-            <FormattedMessage id="alerts.title" defaultMessage="Your notifications"/>
-          </h1>
+      <DualPane.SidePane className="AlertsManager">
+        <div className="pt-callout pt-intent-primary">
+          <h4 className="pt-callout-title">
+            <FormattedMessage id="alert.manager.title" defaultMessage="Tracking alerts" />
+          </h4>
+          <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity matches any of the alerts you have set up below." />
         </div>
-        <div className="pane-content">
-          <form onSubmit={this.onAddAlert}>
-            <div className="pt-control-group pt-fill add-form">
-              <div className="pt-input-group pt-large pt-fill">
-                <input type="text"
-                  autoFocus={true}
-                  className="pt-input"
-                  autoComplete="off"
-                  placeholder={intl.formatMessage(messages.add_placeholder)}
-                  onChange={this.onChangeAddingInput}
-                  value={this.state.newAlert} />
-              </div>
-              <button className="pt-button pt-large pt-fixed" onClick={this.onAddAlert}>
-                <FormattedMessage id="alerts.add" defaultMessage="Add alert"/>
-              </button>
+        <form onSubmit={this.onAddAlert} className="add-form">
+          <div className="pt-control-group pt-fill">
+            <div className="pt-input-group pt-fill">
+              <input type="text"
+                autoFocus={true}
+                className="pt-input"
+                autoComplete="off"
+                placeholder={intl.formatMessage(messages.add_placeholder)}
+                onChange={this.onChangeAddingInput}
+                value={newAlert} />
             </div>
-          </form>
-          { alerts.page === undefined && (
-            <SectionLoading />
-          )}
-          { alerts.page !== undefined && !alerts.results.length && (
-            <ErrorSection visual="eye-off"
-                          title={intl.formatMessage(messages.no_alerts)}/>
-          )}
-          { alerts.page !== undefined && alerts.results.length > 0 && (
-            <table className="alerts-table settings-table">
-              <tbody>
-                {alerts.results.map((item) => (
-                  <tr key={item.id}>
-                    <td className="alert-label">
-                      {item.label}
-                    </td>
-                    <td className="narrow">
-                      <Tooltip content={intl.formatMessage(messages.search_alert, {label: item.label})}>
-                        <Button icon="search" minimal={true} small={true}
-                                onClick={() => this.onSearch(item.label)} />
-                      </Tooltip>
-                    </td>
-                    <td className="narrow">
-                      <Tooltip content={intl.formatMessage(messages.delete_alert)}>
-                        <Button icon="cross" minimal={true} small={true}
-                                onClick={() => this.onDeleteAlert(item.id)} />
-                      </Tooltip>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </DualPane.InfoPane>
+            <button className="pt-button pt-fixed"
+                    disabled={newAlert.length === 0}
+                    onClick={this.onAddAlert}>
+              <FormattedMessage id="alerts.add" defaultMessage="Add alert"/>
+            </button>
+          </div>
+        </form>
+        { alerts.page !== undefined && !alerts.results.length && (
+          <ErrorSection visual="eye-off"
+                        title={intl.formatMessage(messages.no_alerts)}/>
+        )}
+        { alerts.page !== undefined && alerts.results.length > 0 && (
+          <table className="alerts-table settings-table">
+            <tbody>
+              {alerts.results.map((item) => (
+                <tr key={item.id}>
+                  <td className="alert-label">
+                    {item.label}
+                  </td>
+                  <td className="narrow">
+                    <Tooltip content={intl.formatMessage(messages.search_alert, {label: item.label})}>
+                      <Button icon="search" minimal={true} small={true}
+                              onClick={() => this.onSearch(item.label)} />
+                    </Tooltip>
+                  </td>
+                  <td className="narrow">
+                    <Tooltip content={intl.formatMessage(messages.delete_alert)}>
+                      <Button icon="cross" minimal={true} small={true}
+                              onClick={() => this.onDeleteAlert(item.id)} />
+                    </Tooltip>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </DualPane.SidePane>
     );
   }
 }

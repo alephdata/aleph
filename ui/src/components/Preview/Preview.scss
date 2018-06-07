@@ -1,5 +1,4 @@
 @import "src/app/variables.scss";
-@import "src/components/common/DualPane.scss";
 
 .Preview {
   /* CSS based on .DualPane .InfoPane
@@ -11,7 +10,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: $aleph-infobar-width;
+  width: $aleph-sidebar-width;
   box-shadow: $pt-elevation-shadow-3;
   
   background: $aleph-content-background;
@@ -19,7 +18,7 @@
   transition: width 0.3s ease-in-out;
   
   > * {
-   min-width: $aleph-infobar-width;
+   min-width: $aleph-sidebar-width;
   }
   
   &.hidden {
