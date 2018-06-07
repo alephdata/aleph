@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import { Screen, Breadcrumbs } from 'src/components/common';
 import CaseContext from "src/components/Case/CaseContext";
+import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
 import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
 
@@ -26,6 +27,9 @@ class CaseScreen extends Component {
               breadcrumbs={<Breadcrumbs collection={collection}/>}
               className='CaseScreen'>
         <CaseContext collection={collection} activeTab='Home'>
+          <Toolbar>
+            <CollectionSearch collection={collection} />
+          </Toolbar>
           { 'this is the case home page' }
         </CaseContext>
       </Screen>

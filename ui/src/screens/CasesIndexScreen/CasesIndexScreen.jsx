@@ -3,14 +3,13 @@ import Waypoint from 'react-waypoint';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';
-import { NonIdealState, Button } from '@blueprintjs/core';
+import { NonIdealState, Button, Icon } from '@blueprintjs/core';
 
 import Query from "src/app/Query";
 import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import { Screen, Breadcrumbs, ErrorScreen, SinglePane, SectionLoading } from 'src/components/common';
-import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
-import { CaseExplanationBox } from "src/components/Case";
+import { CaseExplanationBox, CaseIndexTable } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
 import './CasesIndexScreen.css';
@@ -110,8 +109,23 @@ class CasesIndexScreen extends Component {
         <SinglePane>
           <CreateCaseDialog isOpen={this.state.createIsOpen}
                             toggleDialog={this.toggleCreateCase} />
-          <CaseExplanationBox hasCases={hasCases}
-                              toggleCreateCase={this.toggleCreateCase} />
+          <div className='explanation'>
+            <div className='explanation-inner'>
+              <Icon icon="briefcase" iconSize={100} color='white'/>
+              <div className='explanation-padding'>
+                <h1 className='title-explanation'>
+                  <FormattedMessage id="case.question" defaultMessage="What are cases?"/>
+                </h1>
+                <p className='description-explanation'>
+                  <FormattedMessage id="case.description"
+                                    defaultMessage="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."/>
+                </p>
+                {hasCases && <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button">
+                  <FormattedMessage id="case.add" defaultMessage="Add new case"/>
+                </Button>}
+              </div>
+            </div>
+          </div>
           <div className="pt-input-group filter-cases">
             <i className="pt-icon pt-icon-search"/>
             <input className="pt-input" type="search"
@@ -133,15 +147,13 @@ class CasesIndexScreen extends Component {
             </div>
           )}
           {!result.isLoading && result.next && (
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-600px"
-                scrollableAncestor={window}
-              />
-            )}
-            {result.isLoading && (
-              <SectionLoading/>
-            )}
+              <Waypoint onEnter={this.getMoreResults}
+                        bottomOffset="-600px"
+                        scrollableAncestor={window} />
+          )}
+          {result.isLoading && (
+            <SectionLoading/>
+          )}
         </SinglePane>
       </Screen>
     );

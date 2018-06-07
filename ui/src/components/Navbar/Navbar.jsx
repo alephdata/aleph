@@ -71,12 +71,6 @@ class Navbar extends React.Component {
             <div className="pt-navbar-heading">
               <Link to="/">{metadata.app.title}</Link>
             </div>
-            {/*
-              {session && session.loggedIn === true && <NavbarDivider/>}
-              {session && session.loggedIn === true && <div>
-                <Link to="/cases">Cases</Link>
-              </div>}
-            */}
             {!isHomepage && (
               <form onSubmit={this.onSubmit} className='navbar-search-form'>
                 <ControlGroup fill={true}>
@@ -95,6 +89,12 @@ class Navbar extends React.Component {
           <div className="pt-navbar-group pt-align-right">
             <Link to="/sources" className="pt-minimal pt-button pt-icon-database">
               <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
+            </Link>
+            {/*
+              
+            */}
+            <Link to="/cases" className="pt-minimal pt-button pt-icon-briefcase">
+              <FormattedMessage id="nav.cases" defaultMessage="Case files"/>
             </Link>
             <div className="pt-navbar-divider"/>
             <AuthButtons session={session} auth={metadata.auth}/>

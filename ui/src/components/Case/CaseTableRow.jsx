@@ -30,7 +30,7 @@ class CaseTableRow extends Component {
     return (
       <tr key={collection.id + 1} className='nowrap'>
         <td>
-          <Icon icon="square" iconSize={25} color={color} style={{backgroundColor: color, opacity: 0.6}}/>
+          <Icon icon="square" iconSize={25} color={color} style={{backgroundColor: color}}/>
         </td>
         <td className="schema">
           <Link to={`/cases/${collection.id}`}>{collection.label}</Link>
