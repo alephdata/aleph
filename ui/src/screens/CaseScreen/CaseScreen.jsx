@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router';
 
-import { Screen, Breadcrumbs } from 'src/components/common';
+import { Screen, Breadcrumbs, DualPane } from 'src/components/common';
+import { CollectionInfoContent, CollectionOverview } from 'src/components/Collection';
 import CaseContext from "src/components/Case/CaseContext";
 import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
@@ -38,7 +39,15 @@ class CaseScreen extends Component {
           <Toolbar>
             <CollectionSearch collection={collection} />
           </Toolbar>
-          <NotificationList query={notificationsQuery} />
+          <DualPane>
+            <DualPane.ContentPane>
+              <NotificationList query={notificationsQuery} />
+            </DualPane.ContentPane>
+            <DualPane.SidePane>
+              <CollectionOverview collection={collection} />
+              <CollectionInfoContent collection={collection} />
+            </DualPane.SidePane>
+          </DualPane>
         </CaseContext>
       </Screen>
     );

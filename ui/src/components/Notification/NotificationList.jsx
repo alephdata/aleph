@@ -5,7 +5,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
-import { SectionLoading } from 'src/components/common';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 import Notification from './Notification';
 import { queryNotifications } from "src/actions";
 import { selectNotificationsResult } from "src/selectors";
@@ -55,22 +55,20 @@ class NotificationList extends Component {
     return (
       <React.Fragment>
         { result.total === 0 &&
-                <NonIdealState visual="notifications"
-                              title={intl.formatMessage(messages.no_notifications)} />
+          <ErrorSection visual="notifications"
+                        title={intl.formatMessage(messages.no_notifications)} />
         }
         { result.total !== 0 &&
           <ul className="NotificationList">
-            {result.results.map((notification) =>
-              <Notification key={notification.id}
-                            notification={notification} />
+            {result.results.map((notif) =>
+              <Notification key={notif.id} notification={notif} />
             )}
           </ul>
         }
         { !result.isLoading && result.next && (
-          <Waypoint
-            onEnter={this.getMoreResults}
-            bottomOffset="-600px"
-            scrollableAncestor={window} />
+          <Waypoint onEnter={this.getMoreResults}
+                    bottomOffset="-600px"
+                    scrollableAncestor={window} />
         )}
         { result.isLoading && (
           <SectionLoading />
