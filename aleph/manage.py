@@ -72,7 +72,8 @@ def crawldir(path, language=None, foreign_id=None):
     if foreign_id is None:
         foreign_id = 'directory:%s' % slugify(path)
 
-    collection = create_collection(foreign_id, {
+    collection = create_collection({
+        'foreign_id': foreign_id,
         'label': path_name,
         'languages': language
     })

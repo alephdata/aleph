@@ -4,7 +4,8 @@ from tempfile import mkdtemp
 from ingestors.util import remove_directory
 
 from aleph.core import db, archive, celery
-from aleph.model import Document
+from aleph.model import Document, Events
+from aleph.logic.notifications import publish
 from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
 from aleph.index import documents as index
@@ -50,7 +51,7 @@ def ingest_document(document, file_path, role_id=None):
 
 
 @celery.task()
-def ingest(document_id, file_path=None):
+def ingest(document_id, file_path=None, refresh=False):
     """Process a given document by extracting its contents.
     This may include creating or updating child documents."""
     document = Document.by_id(document_id)
@@ -78,6 +79,14 @@ def ingest(document_id, file_path=None):
 
         log.debug('Ingested [%s:%s]: %s',
                   document.id, document.schema, document.name)
+        if document.collection.casefile and not refresh:
+            params = {
+                'collection': document.collection,
+                'document': document
+            }
+            publish(Events.INGEST_DOCUMENT,
+                    actor_id=document.uploader_id,
+                    params=params)
         db.session.commit()
         process_document(document)
     except Exception:

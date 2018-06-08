@@ -120,11 +120,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return q
 
     @classmethod
-    def create(cls, data, role=None):
+    def create(cls, data, role=None, created_at=None):
         foreign_id = data.get('foreign_id') or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
         if collection is None:
             collection = cls()
+            collection.created_at = created_at
             collection.foreign_id = foreign_id
         collection.update(data, creator=role)
         collection.deleted_at = None
