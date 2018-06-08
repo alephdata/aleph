@@ -22,11 +22,6 @@ class Breadcrumbs extends Component {
     return (
       <nav className="Breadcrumbs">
         <ul className="pt-breadcrumbs">
-          <li key='root'>
-            <Link to="/" className="pt-breadcrumb">
-              { app.title }
-            </Link>
-          </li>
           {collectionCrumbs}
           {children}
         </ul>

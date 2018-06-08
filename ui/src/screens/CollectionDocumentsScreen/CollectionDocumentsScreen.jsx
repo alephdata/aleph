@@ -31,6 +31,7 @@ class CollectionDocumentsScreen extends Component {
 
     const context = {
       'filter:collection_id': collection.id,
+      'filter:schemata': 'Document',
       'empty:parent': true
     };
 
