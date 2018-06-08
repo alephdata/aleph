@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Icon} from '@blueprintjs/core';
 import {Link} from 'react-router-dom';
 
-import { Date, Role } from 'src/components/common';
+import { Date, Role, Collection } from 'src/components/common';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { deleteCollection } from 'src/actions';
 import { getColor } from 'src/util/colorScheme';
@@ -28,31 +28,27 @@ class CaseTableRow extends Component {
     const color = getColor(collection.id);
     
     return (
-      <tr key={collection.id + 1} className='nowrap'>
-        <td>
-          <Icon icon="square" iconSize={25} color={color} style={{backgroundColor: color}}/>
-        </td>
-        <td className="schema">
-          <Link to={`/cases/${collection.id}`}>{collection.label}</Link>
-        </td>
-        <td className="schema">
-          {collection.summary}
-        </td>
-        <td className="roles">
-          <Role.List roles={collection.team} icon={false} />
-        </td>
-        <td className="date">
-          <Date value={collection.created_at}/>
-        </td>
-        <td>
-          <a onClick={this.toggleDeleteCase}>
-            <Icon icon="trash" />
-          </a>
-        </td>
-        <CollectionDeleteDialog collection={collection}
-                                isOpen={this.state.deleteIsOpen}
-                                toggleDialog={this.toggleDeleteCase} />
-      </tr>
+      <React.Fragment>
+        <tr key={collection.id + '-meta'} className='nowrap'>
+          <td className="schema">
+            <Collection.Link collection={collection} />
+          </td>
+          <td className="roles">
+            <Role.List roles={collection.team} icon={false} />
+          </td>
+          <td className="date">
+            <Date value={collection.created_at}/>
+          </td>
+          <td>
+            <a onClick={this.toggleDeleteCase}>
+              <Icon icon="trash" />
+            </a>
+          </td>
+          <CollectionDeleteDialog collection={collection}
+                                  isOpen={this.state.deleteIsOpen}
+                                  toggleDialog={this.toggleDeleteCase} />
+        </tr>
+      </React.Fragment>
     );
   }
 }

@@ -63,9 +63,7 @@ class CaseIndexTable extends Component {
       <table className="CaseIndexTable" align="center">
         <thead>
           <tr key={0}>
-            <th/>
             <TH field="title"/>
-            <TH field="summary"/>
             <TH field="shared"/>
             <TH field="date"/>
             <th />
