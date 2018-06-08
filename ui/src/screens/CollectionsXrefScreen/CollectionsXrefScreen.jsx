@@ -91,7 +91,7 @@ class CollectionsXrefScreen extends Component {
     
     return (
       <Screen title={intl.formatMessage(messages.title)} breadcrumbs={breadcrumbs}>
-        <CaseContext collection={collection}>
+        <CaseContext collection={collection} activeTab='Xref'>
           <table className="CollectionXrefScreen data-table">
             <thead>
               <tr>
@@ -171,10 +171,9 @@ class CollectionsXrefScreen extends Component {
             </tbody>
           </table>
           { !matches.isExpanding && matches.next && (
-            <Waypoint
-              onEnter={this.onLoadMore}
-              bottomOffset="-600px"
-              scrollableAncestor={window}
+            <Waypoint onEnter={this.onLoadMore}
+                      bottomOffset="-600px"
+                      scrollableAncestor={window}
             />
           )}
           { matches.isLoading && (
@@ -187,9 +186,10 @@ class CollectionsXrefScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
   const { collectionId, otherId } = ownProps.match.params;
   const path = `collections/${collectionId}/xref/${otherId}`;
-  const query = new Query(path, {}).limit(50);
+  const query = new Query(path, location, {}, 'xref').limit(40);
   return {
     collectionId, otherId, query,
     collection: selectCollection(state, collectionId),

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 import { withRouter } from "react-router";
@@ -8,6 +9,8 @@ import c from 'classnames';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import { Collection } from 'src/components/common';
+import { fetchCollectionXrefIndex } from 'src/actions';
+import { selectCollectionXrefIndex } from 'src/selectors';
 import { getColor } from "src/util/colorScheme";
 
 import './CaseContext.css';
@@ -25,6 +28,21 @@ class CaseContext extends Component {
     this.toggleSettings = this.toggleSettings.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { collection, xrefIndex } = this.props;
+    if (collection.casefile && xrefIndex.results === undefined && !xrefIndex.isLoading) {
+      this.props.fetchCollectionXrefIndex(collection);
+    }
+  }
+
   toggleSettings() {
     this.setState({isSettingsOpen: !this.state.isSettingsOpen});
   }
@@ -34,10 +52,16 @@ class CaseContext extends Component {
   }
 
   render() {
-    const {collection, activeTab, className} = this.props;
+    const {collection, xrefIndex, activeTab, className} = this.props;
 
     if (!collection.casefile) {
       return this.props.children;
+    }
+
+    let xrefUrl = null;
+    if (xrefIndex.results !== undefined && xrefIndex.results.length) {
+      const other = xrefIndex.results[0].collection;
+      xrefUrl = `/collections/${collection.id}/xref/${other.id}`;
     }
 
     return (
@@ -49,6 +73,13 @@ class CaseContext extends Component {
             <Icon icon="folder-close" />
             <FormattedMessage id="case.context.documents" defaultMessage="Documents" />
           </Link>
+          { xrefUrl && (
+            <Link to={xrefUrl}
+                  className={c("menu-item", {"active": activeTab === 'Xref'})}>
+              <Icon icon="resolve" />
+              <FormattedMessage id="case.context.crossref" defaultMessage="Cross-referencing" />
+            </Link>
+          )}
           <a className={c("menu-item")} onClick={this.toggleAccess}>
             <Icon icon="key" />
             <FormattedMessage id="case.context.access" defaultMessage="Access control" />
@@ -76,5 +107,12 @@ class CaseContext extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const { collection } = ownProps;
+  const xrefIndex = selectCollectionXrefIndex(state, collection.id);
+  return { xrefIndex };
+};
+
 CaseContext = withRouter(CaseContext);
+CaseContext = connect(mapStateToProps, { fetchCollectionXrefIndex })(CaseContext);
 export default (CaseContext);

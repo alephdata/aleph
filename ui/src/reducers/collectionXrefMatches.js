@@ -13,11 +13,13 @@ export function updateMatches(state, { query, result }) {
     return { ...state, [key]: result };
   }
   // append to existing results
-  if (previous.offset < result.offset) {
-    const results = [...previous.results, ...result.results];
-    state[key] = { ...result, results: results };
-  }
-  return state;
+  return {
+    ...state,
+    [key]: {
+      ...result,
+      results: [...previous.results, ...result.results]
+    }
+  };
 }
 
 

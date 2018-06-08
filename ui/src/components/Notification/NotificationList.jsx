@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import { NonIdealState } from '@blueprintjs/core';
 import Waypoint from 'react-waypoint';
 
 import { SectionLoading, ErrorSection } from 'src/components/common';
@@ -36,9 +35,12 @@ class NotificationList extends Component {
     }
   }
 
+  // componentWillUnmount() {
+  // }
+
   fetchIfNeeded() {
     const { result, query } = this.props;
-    if (result.total === undefined && !result.isLoading) {
+    if (!result.isLoading) {
       this.props.queryNotifications({ query });
     }
   }
