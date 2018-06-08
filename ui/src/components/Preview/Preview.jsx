@@ -62,7 +62,7 @@ class Preview extends React.Component {
   
   render() {
     const { previewId, previewType, parsedHash } = this.props;
-    const { previewTop, previewBottom } = this.state;
+    const { previewTop } = this.state;
     let className = 'Preview';
 
     if (previewId === undefined || previewId === null) {

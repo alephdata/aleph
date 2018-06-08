@@ -52,7 +52,7 @@ class CaseContext extends Component {
   }
 
   render() {
-    const {collection, xrefIndex, activeTab, className} = this.props;
+    const {collection, xrefIndex, activeTab} = this.props;
 
     if (!collection.casefile) {
       return this.props.children;
@@ -89,9 +89,7 @@ class CaseContext extends Component {
             <FormattedMessage id="case.context.settings" defaultMessage="Settings" />
           </a>
         </div>
-        <div className={className}>
-          {this.props.children}
-        </div>
+        {this.props.children}
         <CollectionAccessDialog
           collection={collection}
           isOpen={this.state.isAccessOpen}
