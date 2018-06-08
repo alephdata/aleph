@@ -9,7 +9,6 @@ import {
   queryNotifications,
   createCollection,
   deleteCollection,
-  ingestDocument,
 } from 'src/actions';
 
 const initialState = {};

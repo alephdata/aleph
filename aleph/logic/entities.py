@@ -41,8 +41,9 @@ def bulk_load(config):
     """
     from aleph.logic.collections import create_collection
     for foreign_id, data in config.items():
+        data['foreign_id'] = foreign_id
         data['label'] = data.get('label', foreign_id)
-        collection = create_collection(foreign_id, data)
+        collection = create_collection(data)
         for query in dict_list(data, 'queries', 'query'):
             bulk_load_query.apply_async([collection.id, query], priority=6)
 
