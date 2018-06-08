@@ -8,7 +8,7 @@ import { NonIdealState, Button, Icon } from '@blueprintjs/core';
 import Query from "src/app/Query";
 import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
-import { Screen, Breadcrumbs, ErrorScreen, DualPane, SinglePane, SectionLoading } from 'src/components/common';
+import { Screen, Breadcrumbs, ErrorScreen, DualPane, SectionLoading } from 'src/components/common';
 import { CaseIndexTable } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
@@ -97,7 +97,6 @@ class CasesIndexScreen extends Component {
   render() {
     const { query, result, intl, session } = this.props;
     const { queryPrefix } = this.state;
-    const hasCases = result.total !== 0;
 
     if (session && !session.loggedIn) {
       return <ErrorScreen title={intl.formatMessage(messages.not_found)}/>
@@ -140,9 +139,7 @@ class CasesIndexScreen extends Component {
           </DualPane.ContentPane>
         </DualPane>
         <DualPane>
-          <DualPane.SidePane>
-            
-          </DualPane.SidePane>
+          <DualPane.SidePane></DualPane.SidePane>
           <DualPane.ContentPane>
             {result.total !== 0 && (
               <CaseIndexTable query={query}
