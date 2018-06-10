@@ -25,7 +25,11 @@ def upgrade_search():
         if index == record_index():
             # optimise records for bulk write
             settings['index']['refresh_interval'] = '-1'
-        es.indices.create(index, body=settings, ignore=[404, 400])
+        body = {
+            'settings': settings,
+            'mappings': {'doc': mapping}
+        }
+        es.indices.create(index, body=body, ignore=[404, 400])
         es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
         es.indices.open(index=index, ignore=[400, 404])
         es.indices.refresh(index=index, ignore=[400, 404])
