@@ -95,8 +95,8 @@ class SimilarEntitiesQuery(EntitiesQuery):
     """Given an entity, find the most similar other entities."""
 
     def __init__(self, parser, entity=None):
-        super(SimilarEntitiesQuery, self).__init__(parser)
         self.entity = entity
+        super(SimilarEntitiesQuery, self).__init__(parser)
 
     def get_query(self):
         query = super(SimilarEntitiesQuery, self).get_query()
