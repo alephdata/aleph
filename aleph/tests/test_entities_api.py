@@ -25,10 +25,9 @@ class EntitiesApiTestCase(TestCase):
         }, self.col)
         db.session.commit()
         index_entity(self.ent)
+        self.flush_index()
 
     def test_index(self):
-        index_entity(self.ent)
-        self.flush_index()
         res = self.client.get('/api/2/entities?facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
@@ -241,7 +240,6 @@ class EntitiesApiTestCase(TestCase):
         assert 'Laden' in data['results'][0]['name'], data
 
     def test_similar_entity(self):
-        self.flush_index()
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {

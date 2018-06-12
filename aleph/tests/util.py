@@ -104,12 +104,14 @@ class TestCase(FlaskTestCase):
             destroy_db()
             db.create_all()
             delete_index()
-            upgrade_search()  
-        
+            upgrade_search()
+
+        self.flush_index()
         es.delete_by_query(index=all_indexes(),
                            body={'query': {'match_all': {}}},
                            refresh=True,
                            conflicts='proceed')
+
         for table in reversed(db.metadata.sorted_tables):
             q = 'TRUNCATE %s RESTART IDENTITY CASCADE;' % table.name
             db.engine.execute(q)
