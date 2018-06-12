@@ -4,7 +4,10 @@ import DownloadButton from './DownloadButton';
 import ModeButtons from './ModeButtons';
 import ParentButton from './ParentButton';
 import PagingButtons from './PagingButtons';
+import CollectionSearch from './CollectionSearch';
 import DocumentSearch from './DocumentSearch';
+import DocumentUploadButton from './DocumentUploadButton';
+import DocumentFolderButton from './DocumentFolderButton';
 
 export {
     Toolbar,
@@ -13,5 +16,8 @@ export {
     ModeButtons,
     ParentButton,
     PagingButtons,
-    DocumentSearch
+    DocumentSearch,
+    CollectionSearch,
+    DocumentUploadButton,
+    DocumentFolderButton,
 };

@@ -1,21 +1,29 @@
+@import "src/app/variables.scss";
+
 .CasesIndexScreen {
+  .explainer {
+    background-color: black;
+    background-image: url("../../assets/europe_asia_dark.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 
-  .error-and-add-button {
-    margin-top: 5em;
-    text-align: center;
-  }
+    .ContentPane, .SidePane {
+      margin-top: 5vh;
+      margin-bottom: 5vh;
+    }
 
-  .add-case-button {
-    margin-top: 2em;
-  }
+    &, h1 {
+      color: white;
+    }
 
-  .ContentPane {
-    padding: 0 !important;
-  }
-
-  .filter-cases {
-      width: 30em;
-      margin-top: 2em;
-      margin-left: 14em;
+    .pt-icon {
+      float: right;
+    }
+    
+    p.description-explanation {
+      margin-bottom: $aleph-grid-size * 2;
+      line-height: 1.5em;
+    }
   }
 }

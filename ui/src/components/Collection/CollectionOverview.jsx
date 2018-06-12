@@ -6,7 +6,7 @@ import { Category, Language, Country, Role, Date, Collection } from 'src/compone
 
 class CollectionOverview extends Component {
   render() {
-    const { collection, hasHeader } = this.props;
+    const { collection, hasHeader = false } = this.props;
     
     // If collection data it hasn't loaded yet don't attempt to draw anything
     if (!collection)

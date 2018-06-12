@@ -9,6 +9,7 @@ import c from 'classnames';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
+import { getColor } from 'src/util/colorScheme';
 
 import './Collection.css';
 
@@ -32,7 +33,7 @@ class CollectionLabel extends Component {
           <Icon icon="lock" />
         )}
         { collection.casefile && icon && (
-          <Icon icon="briefcase" />
+          <Icon icon="briefcase" style={{color: getColor(collection.id)}} />
         )}
         { label && collection.label }
       </span>

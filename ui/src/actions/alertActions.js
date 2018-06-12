@@ -1,9 +1,10 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
+import { MAX_RESULTS } from './util';
 
 
 export const fetchAlerts = asyncActionCreator(() => async dispatch => {
-  const params = {limit: 9999};
+  const params = {limit: MAX_RESULTS};
   const response = await endpoint.get('alerts', {params: params});
   return { alerts: response.data };
 }, { name: 'FETCH_ALERTS' });

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import { Collection } from 'src/components/common';
 
@@ -8,7 +6,7 @@ import './Breadcrumbs.css';
 
 class Breadcrumbs extends Component {
   render() {
-    const { collection, children, app } = this.props;
+    const { collection, children } = this.props;
 
     let collectionCrumbs = [];
     if (collection) {
@@ -22,11 +20,6 @@ class Breadcrumbs extends Component {
     return (
       <nav className="Breadcrumbs">
         <ul className="pt-breadcrumbs">
-          <li key='root'>
-            <Link to="/" className="pt-breadcrumb">
-              { app.title }
-            </Link>
-          </li>
           {collectionCrumbs}
           {children}
         </ul>
@@ -35,8 +28,4 @@ class Breadcrumbs extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  app: state.metadata.app,
-});
-
-export default connect(mapStateToProps)(Breadcrumbs);
+export default Breadcrumbs;

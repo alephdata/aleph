@@ -12,12 +12,16 @@ import { SectionLoading, ErrorSection } from 'src/components/common';
 
 const messages = defineMessages({
   no_results_title: {
-    id: 'search.no_results_title',
+    id: 'entity.search.no_results_title',
     defaultMessage: 'No search results',
   },
   no_results_description: {
-    id: 'search.no_results_description',
+    id: 'entity.search.no_results_description',
     defaultMessage: 'Try making your search more general',
+  },
+  empty_title: {
+    id: 'entity.search.empty_title',
+    defaultMessage: 'This folder is empty',
   }
 });
 
@@ -45,7 +49,7 @@ class EntitySearch extends Component {
   fetchIfNeeded() {
     const {query, result, queryEntities} = this.props;
     if ((result.pages === undefined || (result.status === 'error'))) {
-      queryEntities({query: query});
+      queryEntities({ query });
     }
   }
 
@@ -68,14 +72,21 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, intl} = this.props;
+    const {query, result, intl, className} = this.props;
+    const isEmpty = !query.hasQuery();
     return (
-      <React.Fragment>
+      <div className={className}>
         {result.total === 0 && (
           <section className="PartialError">
-            <ErrorSection visual='search'
-                          title={intl.formatMessage(messages.no_results_title)}
-                          description={intl.formatMessage(messages.no_results_description)}/>
+            { !isEmpty && (
+              <ErrorSection visual='search'
+                            title={intl.formatMessage(messages.no_results_title)}
+                            description={intl.formatMessage(messages.no_results_description)} />
+            )}
+            { isEmpty && (
+              <ErrorSection visual='folder-open'
+                            title={intl.formatMessage(messages.empty_title)} />
+            )}
           </section>
         )}
         <EntityTable query={query}
@@ -93,7 +104,7 @@ class EntitySearch extends Component {
         {(result.isLoading || result.total === null) && (
           <SectionLoading/>
         )}
-      </React.Fragment>
+      </div>
     );
   }
 }

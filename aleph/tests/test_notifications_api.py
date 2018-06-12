@@ -13,7 +13,7 @@ class NotificationsApiTestCase(TestCase):
         super(NotificationsApiTestCase, self).setUp()
         self.rolex = self.create_user(foreign_id='rolex')
         self.admin = self.create_user(foreign_id='admin')
-        self.col = self.create_collection()
+        self.col = self.create_collection(creator=self.admin)
         update_role(self.rolex)
         update_role(self.admin)
         event = Events.PUBLISH_COLLECTION
@@ -54,3 +54,12 @@ class NotificationsApiTestCase(TestCase):
         res = self.client.get('/api/2/notifications', headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
+
+    def test_notifications_by_collection(self):
+        url = '/api/2/collections/%s/notifications' % self.col.id
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+        _, headers = self.login(foreign_id='admin')
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res
+        assert res.json['total'] == 2, res.json

@@ -40,16 +40,11 @@ class AuthButtons extends Component {
   }
 
   toggleAuthentication() {
-    this.setState({
-      isSignupOpen: !this.state.isSignupOpen
-    })
+    this.setState({isSignupOpen: !this.state.isSignupOpen})
   }
 
-
   toggleSettings() {
-    this.setState({
-      settingsIsOpen: !this.state.settingsIsOpen
-    })
+    this.setState({settingsIsOpen: !this.state.settingsIsOpen})
   }
 
   render() {

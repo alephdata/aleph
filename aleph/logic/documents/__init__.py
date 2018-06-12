@@ -36,6 +36,6 @@ def process_documents(collection_id=None, failed_only=False, index_only=False):
         if index_only:
             index_document_id.apply_async([doc_id], priority=1)
         else:
-            ingest.apply_async([doc_id], priority=1)
+            ingest.apply_async([doc_id], {'refresh': True}, priority=1)
         if idx % 10000 == 0:
             log.info("Process: %s documents...", idx)

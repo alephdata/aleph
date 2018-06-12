@@ -1,5 +1,7 @@
 import { endpoint } from 'src/app/api';
 
+export const MAX_RESULTS = 9999;
+
 export async function queryEndpoint({query, next}) {
   // run a standard Query object against the API endpoint 
   // given by `path`. If the argument `next` is given, it

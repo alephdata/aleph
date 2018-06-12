@@ -140,9 +140,9 @@ class CollectionInfo extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    xrefIndex: selectCollectionXrefIndex(state, ownProps.collection.id)
-  }
+  const xrefIndex = selectCollectionXrefIndex(state, ownProps.collection.id);
+  return { xrefIndex };
 };
 
-export default connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionInfo);
+CollectionInfo = connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionInfo);
+export default CollectionInfo;

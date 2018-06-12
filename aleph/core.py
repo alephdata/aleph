@@ -54,9 +54,6 @@ def create_app(config={}):
     celery.conf.update(
         imports=('aleph.queues'),
         broker_url=settings.BROKER_URI,
-        # broker_connection_retry=False,
-        broker_connection_max_retries=3,
-        broker_pool_limit=None,
         task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
@@ -65,7 +62,6 @@ def create_app(config={}):
         task_default_queue=settings.QUEUE_NAME,
         task_default_routing_key=settings.QUEUE_ROUTING_KEY,
         worker_max_tasks_per_child=500,
-        worker_disable_rate_limits=True,
         result_persistent=False,
         beat_schedule={
             'hourly': {

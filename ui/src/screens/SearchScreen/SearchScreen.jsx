@@ -179,7 +179,7 @@ class SearchScreen extends React.Component {
     return (
       <Screen query={query} updateQuery={this.updateQuery} title={title}>
         <DualPane className="SearchScreen">
-          <DualPane.InfoPane className="SearchFacetsPane">
+          <DualPane.SidePane>
             <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
                 <span className="total-icon pt-icon-standard pt-icon-search"/>
@@ -201,7 +201,7 @@ class SearchScreen extends React.Component {
                           result={result}
                           updateQuery={this.updateQuery}
                           facets={this.state.facets}/>
-          </DualPane.InfoPane>
+          </DualPane.SidePane>
           <DualPane.ContentPane>
             <SignInCallout/>
             <QueryTags query={query} updateQuery={this.updateQuery}/>

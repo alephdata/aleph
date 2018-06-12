@@ -1,9 +1,7 @@
-import CaseContent from './CaseContent';
-import CaseExplanationBox from './CaseExplanationBox';
-import CaseInfo from './CaseInfo';
+import CaseIndexTable from './CaseIndexTable';
+import CaseContext from './CaseContext';
 
 export {
-  CaseContent,
-  CaseExplanationBox,
-  CaseInfo,
+  CaseIndexTable,
+  CaseContext
 };

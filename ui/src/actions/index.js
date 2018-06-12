@@ -7,7 +7,8 @@ import { queryNotifications, deleteNotifications } from './notificationActions';
 import {
   fetchDocument,
   queryDocumentRecords,
-  fetchDocumentPage
+  fetchDocumentPage,
+  ingestDocument
 } from './documentActions';
 import {
   queryCollections,
@@ -51,7 +52,8 @@ export {
   queryNotifications,
   createCollection,
   deleteCollection,
-  deleteNotifications
+  deleteNotifications,
+  ingestDocument
 };
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {

@@ -4,8 +4,9 @@ from followthemoney import model
 from followthemoney.exc import InvalidMapping
 
 from aleph.core import db
-from aleph.model import Collection, Role
+from aleph.model import Role
 from aleph.search import CollectionsQuery
+from aleph.logic.collections import create_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query
@@ -29,9 +30,7 @@ def create():
     require(request.authz.logged_in)
     data = parse_request(CollectionSchema)
     role = Role.by_id(request.authz.id)
-    collection = Collection.create(data, role)
-    db.session.commit()
-    update_collection(collection)
+    collection = create_collection(data, role=role)
     return view(collection.id)
 
 

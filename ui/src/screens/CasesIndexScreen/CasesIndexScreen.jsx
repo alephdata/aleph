@@ -3,14 +3,13 @@ import Waypoint from 'react-waypoint';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';
-import { NonIdealState, Button } from '@blueprintjs/core';
+import { Button, Icon } from '@blueprintjs/core';
 
 import Query from "src/app/Query";
 import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
-import { Screen, Breadcrumbs, ErrorScreen, SinglePane, SectionLoading } from 'src/components/common';
-import CaseIndexTable from "src/components/CaseIndexTable/CaseIndexTable";
-import { CaseExplanationBox } from "src/components/Case";
+import { Screen, Breadcrumbs, ErrorScreen, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
+import { CaseIndexTable } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
 import './CasesIndexScreen.css';
@@ -18,11 +17,7 @@ import './CasesIndexScreen.css';
 const messages = defineMessages({
   no_results_title: {
     id: 'cases.no_results_title',
-    defaultMessage: 'No cases',
-  },
-  no_results_description: {
-    id: 'cases.no_results_description',
-    defaultMessage: 'Try adding new case.',
+    defaultMessage: 'You do not have any case files yet',
   },
   filter: {
     id: 'case.search_cases_placeholder',
@@ -40,7 +35,15 @@ class CasesIndexScreen extends Component {
     super(props);
     this.state = {
       createIsOpen: false,
-      queryPrefix: props.query.getString('prefix')
+      queryPrefix: props.query.getString('prefix'),
+      // facets: [
+      //   {
+      //     field: 'countries',
+      //     label: intl.formatMessage(messages.facet_countries),
+      //     icon: 'globe',
+      //     defaultSize: 300
+      //   },
+      // ]
     };
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
@@ -90,7 +93,6 @@ class CasesIndexScreen extends Component {
   render() {
     const { query, result, intl, session } = this.props;
     const { queryPrefix } = this.state;
-    const hasCases = result.total !== 0;
 
     if (session && !session.loggedIn) {
       return <ErrorScreen title={intl.formatMessage(messages.not_found)}/>
@@ -107,42 +109,56 @@ class CasesIndexScreen extends Component {
 
     return (
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs}>
-        <SinglePane>
-          <CreateCaseDialog isOpen={this.state.createIsOpen}
-                            toggleDialog={this.toggleCreateCase} />
-          <CaseExplanationBox hasCases={hasCases}
-                              toggleCreateCase={this.toggleCreateCase} />
-          <div className="pt-input-group filter-cases">
-            <i className="pt-icon pt-icon-search"/>
-            <input className="pt-input" type="search"
-                   placeholder={intl.formatMessage(messages.filter)}
-                   onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
-          </div>
-          {result.total !== 0 && (
-            <CaseIndexTable query={query}
-                            result={result} />
-          )}
-          {result.total === 0 && (
-            <div className='error-and-add-button'>
-              <NonIdealState visual="search"
-                             title={intl.formatMessage(messages.no_results_title)}
-                             description={intl.formatMessage(messages.no_results_description)}/>
-              <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button pt-intent-primary">
-                <FormattedMessage id="case.add" defaultMessage="Add new case"/>
+        <DualPane className="explainer">
+          <DualPane.SidePane>
+            <Icon icon="briefcase" iconSize={100} />
+          </DualPane.SidePane>
+          <DualPane.ContentPane>
+            <h1 className='title-explanation'>
+              <FormattedMessage id="case.question" defaultMessage="Manage your investigations"/>
+            </h1>
+            <p className='description-explanation'>
+              <FormattedMessage id="case.description"
+                                defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."/>
+            </p>
+            <div className="pt-control-group">
+              <div className="pt-input-group">
+                <i className="pt-icon pt-icon-search"/>
+                <input className="pt-input" 
+                      placeholder={intl.formatMessage(messages.filter)}
+                      onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
+              </div>
+              <Button onClick={this.toggleCreateCase} icon="plus" className="pt-intent-primary">
+                <FormattedMessage id="case.add" defaultMessage="New casefile"/>
               </Button>
             </div>
-          )}
-          {!result.isLoading && result.next && (
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-600px"
-                scrollableAncestor={window}
-              />
+          </DualPane.ContentPane>
+        </DualPane>
+        <DualPane>
+          <DualPane.SidePane></DualPane.SidePane>
+          <DualPane.ContentPane>
+            {result.total !== 0 && (
+              <CaseIndexTable query={query}
+                              result={result} />
+            )}
+            {result.total === 0 && (
+              <div className='error-and-add-button'>
+                <ErrorSection visual="search"
+                              title={intl.formatMessage(messages.no_results_title)} />
+              </div>
+            )}
+            {!result.isLoading && result.next && (
+                <Waypoint onEnter={this.getMoreResults}
+                          bottomOffset="-600px"
+                          scrollableAncestor={window} />
             )}
             {result.isLoading && (
               <SectionLoading/>
             )}
-        </SinglePane>
+          </DualPane.ContentPane>
+        </DualPane>
+        <CreateCaseDialog isOpen={this.state.createIsOpen}
+                          toggleDialog={this.toggleCreateCase} />
       </Screen>
     );
   }
@@ -152,7 +168,7 @@ class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const {location} = ownProps;
   const context = {
-    facet: [ 'category', 'countries' ],
+    facet: ['category'],
     'filter:kind': 'casefile'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')

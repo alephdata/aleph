@@ -1,73 +1,71 @@
 import React, { Component } from 'react';
-import { injectIntl } from 'react-intl';
-import {connect} from 'react-redux';
+import { connect } from "react-redux";
+import { withRouter } from 'react-router';
 
-import { Screen, ScreenLoading, Breadcrumbs, DualPane, Collection, ErrorScreen } from 'src/components/common';
-import { CaseInfo, CaseContent } from 'src/components/Case';
-import {queryCollections} from "../../actions";
-import {selectCollectionsResult} from "../../selectors";
-import Query from "src/app/Query";
+import { Screen, Breadcrumbs, DualPane } from 'src/components/common';
+import { CollectionInfoContent, CollectionOverview } from 'src/components/Collection';
+import CaseContext from "src/components/Case/CaseContext";
+import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
+import NotificationList from 'src/components/Notification/NotificationList';
+import Query from 'src/app/Query';
+import { fetchCollection } from "src/actions";
+import { selectCollection } from "src/selectors";
+
 
 class CaseScreen extends Component {
-  constructor(props) {
-    super(props);
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
 
-    this.state = {
-      result: []
+  componentDidUpdate(prevProps) {
+    const { collectionId } = this.props;
+    if (collectionId !== prevProps.collectionId) {
+      this.fetchIfNeeded();
     }
   }
 
-  async componentDidMount() {
-    await this.fetchData();
-  }
-
-  async fetchData() {
-    let {query} = this.props;
-    this.props.queryCollections({query});
-    this.setState({result: this.props.result})
+  fetchIfNeeded() {
+    const { collectionId } = this.props;
+    this.props.fetchCollection({ id: collectionId });
   }
 
   render() {
-    const { collection, result } = this.props;
-
-    if (collection.isError) {
-      return <ErrorScreen error={collection.error} />;
-    }
-
+    const { collection, notificationsQuery } = this.props;
     return (
-      <Screen title={collection.label} breadcrumbs={<Breadcrumbs collection={collection} />}>
-        <DualPane>
-          <CaseInfo cases={result.results} casefile={collection} />
-          <CaseContent collection={collection} />
-        </DualPane>
+      <Screen title={collection.label}
+              breadcrumbs={<Breadcrumbs collection={collection}/>}
+              className='CaseScreen'>
+        <CaseContext collection={collection} activeTab='Home'>
+          <Toolbar>
+            <CollectionSearch collection={collection} />
+          </Toolbar>
+          <DualPane>
+            <DualPane.ContentPane>
+              <NotificationList query={notificationsQuery} />
+            </DualPane.ContentPane>
+            <DualPane.SidePane>
+              <CollectionOverview collection={collection} />
+              <CollectionInfoContent collection={collection} />
+            </DualPane.SidePane>
+          </DualPane>
+        </CaseContext>
       </Screen>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location} = ownProps;
-  const context = {
-    facet: ['category', 'countries'],
-    'filter:kind': 'casefile'
-  };
-  const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', true)
-    .limit(30);
-
+  const { location } = ownProps;
+  const { collectionId } = ownProps.match.params;
+  const path = `collections/${collectionId}/notifications`;
+  const query = Query.fromLocation(path, location, {}, 'notifications').limit(40);
   return {
-    query: query,
-    result: selectCollectionsResult(state, query)
+    collectionId,
+    collection: selectCollection(state, collectionId),
+    notificationsQuery: query
   };
 };
 
-CaseScreen = injectIntl(CaseScreen);
-CaseScreen = connect(mapStateToProps, {queryCollections})(CaseScreen);
-export default ({ match, ...otherProps }) => (
-  <Collection.Load
-    id={match.params.collectionId}
-    renderWhenLoading={<ScreenLoading />}
-  >{collection => (
-    <CaseScreen collection={collection} {...otherProps} />
-  )}</Collection.Load>
-);
+CaseScreen = connect(mapStateToProps, { fetchCollection })(CaseScreen);
+CaseScreen = withRouter(CaseScreen);
+export default CaseScreen;

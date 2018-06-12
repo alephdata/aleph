@@ -1,6 +1,6 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint } from './util';
+import { queryEndpoint, MAX_RESULTS } from './util';
 
 export const queryCollections = asyncActionCreator((query) => async dispatch => {
   return queryEndpoint(query);
@@ -40,7 +40,8 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
 export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async dispatch => {
-  const response = await endpoint.get(`collections/${id}/xref?limit=1000`);
+  const params = {limit: MAX_RESULTS};
+  const response = await endpoint.get(`collections/${id}/xref`, {params: params});
   return { id, data: response.data};
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 

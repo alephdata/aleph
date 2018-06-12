@@ -1,12 +1,6 @@
 @import "src/app/variables.scss";
 
 .SearchScreen {
-  .SearchFacetsPane {
-    border: none !important;
-    box-shadow: none !important;
-    padding: $aleph-grid-size;
-  }
-
   .total-count-span {
     display: inline-flex;
     padding-left: 1.3em;
@@ -21,7 +15,6 @@
     align-items: center;
     background: $aleph-facet-background !important;
     height: 3em !important;
-    margin-top: $aleph-grid-size;
   }
 
   .total-icon {

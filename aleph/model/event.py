@@ -35,6 +35,12 @@ class Events(object, metaclass=EventsRegistry):
     def names(cls):
         return list(cls.registry.keys())
 
+    # CREATE COLLECTION (collection)
+    CREATE_COLLECTION = Event(
+        template=lazy_gettext('{{actor}} created {{collection}}.'),  # noqa
+        params={'collection': Collection}
+    )
+
     # UPDATE COLLECTION (collection)
     UPDATE_COLLECTION = Event(
         template=lazy_gettext('{{actor}} changed the settings of {{collection}}.'),  # noqa

@@ -1,10 +1,10 @@
 import logging
-from banal import ensure_list
 from datetime import datetime
 
 from aleph.core import db, celery
 from aleph.model import Collection, Document, Entity, Match
-from aleph.model import Role, Permission
+from aleph.model import Role, Permission, Events
+from aleph.logic.notifications import publish
 from aleph.index import collections as index
 from aleph.logic.entities import process_entities
 from aleph.logic.xref import xref_collection
@@ -12,16 +12,14 @@ from aleph.logic.xref import xref_collection
 log = logging.getLogger(__name__)
 
 
-def create_collection(foreign_id, data, role=None):
+def create_collection(data, role=None):
     role = role or Role.load_cli_user()
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        data['foreign_id'] = foreign_id
-        collection = Collection.create(data, role=role)
-    else:
-        languages = ensure_list(data.get('languages'))
-        if len(languages):
-            collection.languages = languages
+    created_at = datetime.utcnow()
+    collection = Collection.create(data, role=role, created_at=created_at)
+    if collection.created_at == created_at:
+        publish(Events.CREATE_COLLECTION,
+                actor_id=role.id,
+                params={'collection': collection})
     db.session.commit()
     index.index_collection(collection)
     return collection

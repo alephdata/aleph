@@ -4,6 +4,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import CaseTableRow from './CaseTableRow';
 import { SortableTH } from 'src/components/common';
 
+import './CaseIndexTable.css';
+
 
 const messages = defineMessages({
   column_title: {
@@ -58,21 +60,19 @@ class CaseIndexTable extends Component {
     };
 
     return (
-      <table className="CaseTable case-table" align="center">
+      <table className="CaseIndexTable" align="center">
         <thead>
-        <tr key={0}>
-          <th/>
-          <TH field="title"/>
-          <TH field="summary"/>
-          <TH field="shared"/>
-          <TH field="date"/>
-          <th />
-        </tr>
+          <tr key={0}>
+            <TH field="title"/>
+            <TH field="shared"/>
+            <TH field="date"/>
+            <th />
+          </tr>
         </thead>
         <tbody>
-        {result.results !== undefined && result.results.map((collection, index) =>
-          <CaseTableRow key={collection.id} collection={collection} />
-        )}
+          {result.results !== undefined && result.results.map((collection, index) =>
+            <CaseTableRow key={collection.id} collection={collection} />
+          )}
         </tbody>
       </table>
     );

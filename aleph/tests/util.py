@@ -1,6 +1,7 @@
 import os
 import shutil
 from tempfile import mkdtemp
+from flask import current_app
 from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
 from faker import Factory

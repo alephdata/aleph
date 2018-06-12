@@ -82,3 +82,12 @@ class Notification(db.Model, IdModel, DatedModel):
         q = q.order_by(cls.created_at.desc())
         q = q.order_by(cls.id.desc())
         return q
+
+    @classmethod
+    def by_channel(cls, channel):
+        q = cls.all()
+        q = q.filter(cls.channels.any(channel))
+        q = q.filter(cls._event.in_(Events.names()))
+        q = q.order_by(cls.created_at.desc())
+        q = q.order_by(cls.id.desc())
+        return q

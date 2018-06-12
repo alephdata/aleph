@@ -22,6 +22,7 @@
     "react": "^16.3.2",
     "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^16.3.2",
+    "react-file-drop": "^0.2.4",
     "react-helmet": "^5.2.0",
     "react-intl": "^2.4.0",
     "react-pdf": "^3.0.5",

@@ -7,7 +7,8 @@ import queryString from 'query-string';
 import c from 'classnames';
 
 import DownloadButton from 'src/components/Toolbar/DownloadButton';
-
+import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
+import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 
 const messages = defineMessages({
   mode_view: {
@@ -50,6 +51,8 @@ class ModeButtons extends React.Component {
 
     return (
       <div className="pt-button-group">
+        <DocumentFolderButton collection={document.collection} parent={document} />
+        <DocumentUploadButton collection={document.collection} parent={document} />
         { hasModifiers && (
           <Tooltip content={intl.formatMessage(messages.mode_view)} position={Position.BOTTOM_RIGHT}>
             <a onClick={(e) => this.setMode(e, 'view')}

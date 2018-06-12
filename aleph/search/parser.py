@@ -45,6 +45,10 @@ class QueryParser(object):
         return self.prefixed_items('filter:')
 
     @property
+    def empties(self):
+        return self.prefixed_items('empty:')
+
+    @property
     def exclude(self):
         return self.getlist('exclude')
 
