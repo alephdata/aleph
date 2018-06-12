@@ -3,12 +3,12 @@ import Waypoint from 'react-waypoint';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';
-import { NonIdealState, Button, Icon } from '@blueprintjs/core';
+import { Button, Icon } from '@blueprintjs/core';
 
 import Query from "src/app/Query";
 import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
-import { Screen, Breadcrumbs, ErrorScreen, DualPane, SectionLoading } from 'src/components/common';
+import { Screen, Breadcrumbs, ErrorScreen, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
 import { CaseIndexTable } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
@@ -17,11 +17,7 @@ import './CasesIndexScreen.css';
 const messages = defineMessages({
   no_results_title: {
     id: 'cases.no_results_title',
-    defaultMessage: 'No cases',
-  },
-  no_results_description: {
-    id: 'cases.no_results_description',
-    defaultMessage: 'Try adding new case.',
+    defaultMessage: 'You do not have any case files yet',
   },
   filter: {
     id: 'case.search_cases_placeholder',
@@ -147,12 +143,8 @@ class CasesIndexScreen extends Component {
             )}
             {result.total === 0 && (
               <div className='error-and-add-button'>
-                <NonIdealState visual="search"
-                              title={intl.formatMessage(messages.no_results_title)}
-                              description={intl.formatMessage(messages.no_results_description)}/>
-                <Button onClick={this.toggleCreateCase} icon="plus" className="add-case-button pt-intent-primary">
-                  <FormattedMessage id="case.add" defaultMessage="Add new case"/>
-                </Button>
+                <ErrorSection visual="search"
+                              title={intl.formatMessage(messages.no_results_title)} />
               </div>
             )}
             {!result.isLoading && result.next && (

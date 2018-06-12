@@ -91,11 +91,10 @@ class Navbar extends React.Component {
               <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
             </Link>
             {/*
-              
+              <Link to="/cases" className="pt-minimal pt-button pt-icon-briefcase">
+                <FormattedMessage id="nav.cases" defaultMessage="Case files"/>
+              </Link>  
             */}
-            <Link to="/cases" className="pt-minimal pt-button pt-icon-briefcase">
-              <FormattedMessage id="nav.cases" defaultMessage="Case files"/>
-            </Link>
             <div className="pt-navbar-divider"/>
             <AuthButtons session={session} auth={metadata.auth}/>
             <LanguageMenu/>
