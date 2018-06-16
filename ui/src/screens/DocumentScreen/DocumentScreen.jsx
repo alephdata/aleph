@@ -4,7 +4,10 @@ import { injectIntl } from 'react-intl';
 
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
-import { Screen, Entity, Breadcrumbs, ScreenLoading, ErrorScreen, DualPane } from 'src/components/common';
+import { Entity, Breadcrumbs, DualPane } from 'src/components/common';
+import Screen from 'src/components/Screen/Screen';
+import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import CaseContext from "src/components/Case/CaseContext";
 import { DocumentContent, DocumentInfo } from '../../components/Document';
 
@@ -28,7 +31,7 @@ class DocumentScreen extends Component {
       return <ErrorScreen error={document.error} />;
     }
     if (document === undefined || document.id === undefined) {
-      return <ScreenLoading />;
+      return <LoadingScreen />;
     }
 
     const breadcrumbs = (

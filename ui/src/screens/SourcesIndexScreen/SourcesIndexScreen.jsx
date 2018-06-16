@@ -7,9 +7,10 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';
-import { Screen, Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
+import { Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
+import Screen from 'src/components/Screen/Screen';
 import { CollectionListItem } from 'src/components/Collection';
 
 import './SourcesIndexScreen.css';

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
-import { ScreenLoading } from 'src/components/common';
+import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import getCollectionLink from 'src/util/getCollectionLink';
 
 
@@ -24,7 +24,7 @@ class CollectionRedirectScreen extends Component {
   render() {
     const { collection, history } = this.props;
     if (collection.id === undefined) {
-      return <ScreenLoading />;
+      return <LoadingScreen />;
     }
     history.replace(getCollectionLink(collection));
     return null;

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
 
 import queryString from "query-string";
-import {loginWithToken} from "src/actions/sessionActions";
+import { loginWithToken } from "src/actions/sessionActions";
 
 
 class OAuthScreen extends Component {

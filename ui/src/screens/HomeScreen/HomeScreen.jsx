@@ -6,7 +6,7 @@ import numeral from 'numeral';
 import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
 
 import { fetchStatistics } from 'src/actions/index';
-import { Screen } from 'src/components/common';
+import Screen from 'src/components/Screen/Screen';
 
 import './HomeScreen.css';
 

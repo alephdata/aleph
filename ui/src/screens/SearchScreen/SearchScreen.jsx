@@ -8,10 +8,11 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { Screen, DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
+import { DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
+import Screen from 'src/components/Screen/Screen';
 
 import './SearchScreen.css';
 

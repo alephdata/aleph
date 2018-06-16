@@ -4,7 +4,10 @@ import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 import Waypoint from 'react-waypoint';
 
-import { Entity, Screen, Date, Country, ScreenLoading, SectionLoading, Breadcrumbs, ErrorScreen } from 'src/components/common';
+import { Entity, Date, Country, SectionLoading, Breadcrumbs } from 'src/components/common';
+import Screen from 'src/components/Screen/Screen';
+import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import CaseContext from "src/components/Case/CaseContext";
 import Query from 'src/app/Query';
 import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
@@ -77,7 +80,7 @@ class CollectionsXrefScreen extends Component {
       return <ErrorScreen error={error} />
     }
     if (collection.id === undefined || other.id === undefined || index.total === undefined) {
-      return <ScreenLoading />;
+      return <LoadingScreen />;
     }
 
     const breadcrumbs = (<Breadcrumbs collection={collection}>

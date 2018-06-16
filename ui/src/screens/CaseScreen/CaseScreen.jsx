@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router';
 
-import { Screen, Breadcrumbs, DualPane } from 'src/components/common';
+import Screen from 'src/components/Screen/Screen';
+import { Breadcrumbs, DualPane } from 'src/components/common';
 import { CollectionInfoContent, CollectionOverview } from 'src/components/Collection';
 import CaseContext from "src/components/Case/CaseContext";
 import { Toolbar, CollectionSearch } from 'src/components/Toolbar';

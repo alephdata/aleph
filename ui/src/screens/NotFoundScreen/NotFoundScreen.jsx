@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
 
-import { ErrorScreen } from 'src/components/common';
+import ErrorScreen from 'src/components/Screen/ErrorScreen';
+
 
 const messages = defineMessages({
   not_found: {

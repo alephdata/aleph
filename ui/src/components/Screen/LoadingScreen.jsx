@@ -1,13 +1,13 @@
 import React from 'react';
 import { Spinner } from '@blueprintjs/core';
 
-import { Screen } from 'src/components/common';
+import Screen from 'src/components/Screen/Screen';
 
-import './ScreenLoading.css';
+import './LoadingScreen.css';
 
-const ScreenLoading = () => (
+const LoadingScreen = () => (
   <Screen>
-    <div className="ScreenLoading">
+    <div className="LoadingScreen">
       <div className="spinner">
         <Spinner className="pt-large"/>
       </div>
@@ -15,4 +15,4 @@ const ScreenLoading = () => (
   </Screen>
 );
 
-export default ScreenLoading;
+export default LoadingScreen;

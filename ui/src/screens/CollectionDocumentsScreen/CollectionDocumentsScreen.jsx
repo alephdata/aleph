@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 
-import { Screen, Breadcrumbs, ScreenLoading } from 'src/components/common';
+import { Breadcrumbs } from 'src/components/common';
 import { Toolbar, DocumentUploadButton, DocumentFolderButton, CollectionSearch } from 'src/components/Toolbar';
+import Screen from 'src/components/Screen/Screen';
+import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
@@ -26,7 +28,7 @@ class CollectionDocumentsScreen extends Component {
     const { collection } = this.props;
 
     if (collection === undefined || collection.id === undefined) {
-      return <ScreenLoading />;
+      return <LoadingScreen />;
     }
 
     const context = {

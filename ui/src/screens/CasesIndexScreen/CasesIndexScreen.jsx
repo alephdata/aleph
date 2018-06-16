@@ -8,7 +8,8 @@ import { Button, Icon } from '@blueprintjs/core';
 import Query from "src/app/Query";
 import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
-import { Screen, Breadcrumbs, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
+import Screen from 'src/components/Screen/Screen';
+import { Breadcrumbs, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
 import { CaseIndexTable } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 

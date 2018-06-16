@@ -6,11 +6,13 @@ import { Button } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import { deleteNotifications } from 'src/actions';
-import { Screen, DualPane, ErrorScreen } from 'src/components/common';
-import { Toolbar } from 'src/components/Toolbar';
-// import { showSuccessToast } from "src/app/toast";
+import {  DualPane } from 'src/components/common';
+import Toolbar from 'src/components/Toolbar/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
 import AlertsManager from 'src/components/AlertsManager/AlertsManager';
+import Screen from 'src/components/Screen/Screen';
+import ErrorScreen from 'src/components/Screen/ErrorScreen';
+
 import { selectNotificationsResult } from "src/selectors";
 
 import './NotificationsScreen.css';
