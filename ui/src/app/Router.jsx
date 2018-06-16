@@ -69,7 +69,10 @@ class Router extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {metadata: state.metadata, session: state.session};
+  return {
+    metadata: state.metadata,
+    session: state.session
+  };
 };
 
 Router = connect(mapStateToProps, { fetchMetadata })(Router);

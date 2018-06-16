@@ -35,7 +35,6 @@ class NotificationsScreen extends React.Component {
     event.preventDefault();
     this.setState({isMarkedRead: true});
     await this.props.deleteNotifications();
-    // showSuccessToast(intl.formatMessage(messages.marked_read));
   }
 
   render() {
@@ -48,7 +47,7 @@ class NotificationsScreen extends React.Component {
     }
 
     return (
-      <Screen title={intl.formatMessage(messages.title)}>
+      <Screen title={intl.formatMessage(messages.title)} requireSession={true}>
         <DualPane className="NotificationsScreen">
           <DualPane.ContentPane>
             <Toolbar>

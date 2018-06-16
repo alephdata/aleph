@@ -8,7 +8,7 @@ import { Button, Icon } from '@blueprintjs/core';
 import Query from "src/app/Query";
 import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
-import { Screen, Breadcrumbs, ErrorScreen, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
+import { Screen, Breadcrumbs, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
 import { CaseIndexTable } from "src/components/Case";
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
@@ -91,12 +91,8 @@ class CasesIndexScreen extends Component {
   }
 
   render() {
-    const { query, result, intl, session } = this.props;
+    const { query, result, intl } = this.props;
     const { queryPrefix } = this.state;
-
-    if (session && !session.loggedIn) {
-      return <ErrorScreen title={intl.formatMessage(messages.not_found)}/>
-    }
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -108,7 +104,7 @@ class CasesIndexScreen extends Component {
     </Breadcrumbs>);
 
     return (
-      <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs}>
+      <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs} requireSession={true}>
         <DualPane className="explainer">
           <DualPane.SidePane>
             <Icon icon="briefcase" iconSize={100} />
@@ -177,8 +173,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     query: query,
-    result: selectCollectionsResult(state, query),
-    session: state.session
+    result: selectCollectionsResult(state, query)
   };
 };
 
