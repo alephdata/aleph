@@ -91,12 +91,10 @@ class Select extends Component {
   }
 
   renderRole(role, { handleClick, modifiers }) {
-    return <MenuItem
-              className={modifiers.active ? Classes.ACTIVE : ""}
-              key={role.id}
-              onClick={handleClick}
-              text={role.label}
-      />;
+    return <MenuItem className={modifiers.active ? Classes.ACTIVE : ""}
+                     key={role.id}
+                     onClick={handleClick}
+                     text={role.label} />;
   }
 
   render () {
