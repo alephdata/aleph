@@ -60,6 +60,8 @@ def index_collections():
 def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
     collection = Collection.by_id(collection_id)
+    if collection is None:
+        return
     log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
     index.update_collection_roles(collection)
 

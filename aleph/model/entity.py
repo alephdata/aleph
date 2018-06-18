@@ -34,6 +34,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     @property
     def names(self):
         names = set([self.name])
+        if self.model is None:
+            return names
         for name, prop in self.model.properties.items():
             if prop.type_name not in ['name']:
                 continue

@@ -105,7 +105,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if role is None:
             role = cls()
             role.foreign_id = foreign_id
-            role.name = name
+            role.name = name or email
             role.type = type
             role.is_admin = False
             role.notified_at = datetime.utcnow()
