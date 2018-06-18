@@ -15,6 +15,10 @@
       display: none;
     }
 
+    .back-button {
+      display: none;
+    }
+
     img {
       height: 32px;
     }
@@ -60,6 +64,11 @@
 
     .icon {
       display: none;
+    }
+
+    .hide {
+      width: 100%;
+      margin-top: 0.3em;
     }
   }
 
@@ -200,6 +209,10 @@
     padding: 5px;
     height: 50px;
     background-color: white;
+
+    .back-button {
+      display: block !important;
+    }
   }
 
   .responsive-search-icon {

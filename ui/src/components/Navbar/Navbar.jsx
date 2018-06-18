@@ -90,7 +90,7 @@ class Navbar extends React.Component {
             </div>
             {!isHomepage && (
               <div className={searchOpen ? 'responsive-input' : 'hide'}>
-                <button type="button" className="pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
+                <button type="button" className="back-button pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
                 <form onSubmit={this.onSubmit} className='navbar-search-form'>
                   <ControlGroup fill={true}>
                     <InputGroup
