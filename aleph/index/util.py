@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 # This means that text beyond the first 100 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 500
-REQUEST_TIMEOUT = 60 * 60 * 2
+REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 RETRY_DELAY = 10
 
@@ -111,7 +111,8 @@ def query_update(index, body):
         es.update_by_query(index=index,
                            body=body,
                            conflicts='proceed',
-                           timeout=TIMEOUT)
+                           timeout=TIMEOUT,
+                           request_timeout=REQUEST_TIMEOUT)
     except TransportError as terr:
         log.warning("Query update failed: %s", terr)
         time.sleep(RETRY_DELAY)
