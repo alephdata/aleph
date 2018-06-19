@@ -28,7 +28,7 @@ const messages = defineMessages({
 class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {searchValue: '', responsive: false, searchOpen: false};
+    this.state = {searchValue: '', isMenuOpen: false, searchOpen: false};
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -63,7 +63,7 @@ class Navbar extends React.Component {
   }
 
   onOpenMenu() {
-    this.setState({responsive: !this.state.responsive});
+    this.setState({isMenuOpen: !this.state.isMenuOpen});
   }
 
   onToggleSearch() {
@@ -72,7 +72,7 @@ class Navbar extends React.Component {
 
   render() {
     const {metadata, session, intl, isHomepage} = this.props;
-    const {searchValue, responsive, searchOpen} = this.state;
+    const {searchValue, isMenuOpen, searchOpen} = this.state;
 
     return (
       <div id="Navbar" className="Navbar">
@@ -89,7 +89,7 @@ class Navbar extends React.Component {
               </div>
             </div>
             {!isHomepage && (
-              <div className={searchOpen ? 'responsive-input' : 'hide'}>
+              <div className={searchOpen ? 'full-length-input' : 'hide'}>
                 <button type="button" className="back-button pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
                 <form onSubmit={this.onSubmit} className='navbar-search-form'>
                   <ControlGroup fill={true}>
@@ -106,16 +106,16 @@ class Navbar extends React.Component {
               </div>
 
             )}
-            <div className={`search-and-burger ${isHomepage && 'burger-fixed'}`}>
+            <div className={`search-and-burger-icons ${isHomepage && 'burger-fixed'}`}>
               {!isHomepage && (<a href="#" className={'search-icon icon'} onClick={this.onToggleSearch}>
                 <Icon icon='search'/>
               </a>)}
-              <a href="#" className={`menu-icon icon ${responsive && 'responsive-icon'}`} onClick={this.onOpenMenu}>
+              <a href="#" className={`menu-icon icon ${isMenuOpen && 'burger-icon'}`} onClick={this.onOpenMenu}>
                 <Icon icon='menu'/>
               </a>
             </div>
           </div>
-          <div className={`topnav pt-navbar-group pt-align-right ${responsive && 'responsive'}`} id="navbarSupportedContent">
+          <div className={`navbar-options pt-navbar-group pt-align-right ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
             <div className='menu-items'>
               <Link to="/sources" className="pt-minimal pt-button pt-icon-database">
                 <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
