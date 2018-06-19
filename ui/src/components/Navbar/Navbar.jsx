@@ -106,7 +106,7 @@ class Navbar extends React.Component {
               </div>
 
             )}
-            <div className='search-and-burger'>
+            <div className={`search-and-burger ${isHomepage && 'burger-fixed'}`}>
               {!isHomepage && (<a href="#" className={'search-icon icon'} onClick={this.onToggleSearch}>
                 <Icon icon='search'/>
               </a>)}
