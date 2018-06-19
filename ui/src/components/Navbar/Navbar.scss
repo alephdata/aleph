@@ -2,7 +2,6 @@
 
 .Navbar {
   .pt-navbar {
-
     display: flex;
     justify-content: space-between;
 
@@ -72,7 +71,7 @@
     }
   }
 
-  .topnav {
+  .navbar-options {
 
     a, div, span {
       background-color: white;
@@ -132,11 +131,11 @@
       margin-right: 1em;
     }
 
-    .responsive-icon {
+    .burger-icon {
       display: none;
     }
 
-    .responsive-input {
+    .full-length-input {
       display: inline-flex !important;
       position: fixed;
       top: 0;
@@ -151,19 +150,11 @@
       }
     }
 
-    .responsive-search-icon {
-      display: none !important;
-    }
-
-    .responsive-navbar {
-      display: none !important;
-    }
-
     .hide {
       display: none !important;
     }
 
-    .search-and-burger {
+    .search-and-burger-icons {
       width: 100%;
     }
   }
@@ -184,7 +175,7 @@
         display: inline-flex !important;
       }
 
-      .topnav {
+      .navbar-options {
         width: 100% !important;
         display: none !important;
 
@@ -209,7 +200,7 @@
         }
       }
 
-      .responsive {
+      .show-menu-dropdown {
         position: relative;
         display: flex !important;
 
@@ -238,7 +229,7 @@
         margin-top: 1em;
       }
 
-      .search-and-burger {
+      .search-and-burger-icons {
         display: flex;
         justify-content: flex-end;
         padding-left: 1em;
