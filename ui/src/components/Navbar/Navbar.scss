@@ -79,11 +79,11 @@
     }
 
     .pt-popover-wrapper {
-      padding-top: 5px;
+      padding-top: $aleph-grid-size * 5;
     }
 
     .pt-navbar-divider {
-      margin-top: 10px;
+      margin-top: $aleph-grid-size * 10x;
     }
 
     .menu-items {
@@ -99,7 +99,7 @@
 
     .alert-toggle {
       .pt-button {
-        height: 40px;
+        height: $aleph-grid-size * 40;
         .pt-icon-notifications {
           margin-left: $aleph-grid-size/2;
         }
@@ -141,8 +141,8 @@
       top: 0;
       left: 0;
       right: 0;
-      padding: 5px;
-      height: 50px;
+      padding: $aleph-grid-size * 5;
+      height: $aleph-grid-size * 50;
       background-color: white;
 
       .back-button {
@@ -185,8 +185,8 @@
           flex-direction: column !important;
           float: left;
           margin-top: 9.4em;
-          border: 1px solid rgba(16, 22, 26, 0.2);
-          box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+          border: $aleph-grid-size * 1 solid rgba(16, 22, 26, 0.2);
+          box-shadow: 0 $aleph-grid-size * 8 $aleph-grid-size * 16 0 rgba(0, 0, 0, 0.2);
         }
 
         .pt-popover-wrapper {
