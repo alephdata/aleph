@@ -110,7 +110,7 @@ class Navbar extends React.Component {
               {!isHomepage && (<a href="#" className={'search-icon icon'} onClick={this.onToggleSearch}>
                 <Icon icon='search'/>
               </a>)}
-              <a href="#" className={`icon ${responsive && 'responsive-icon'}`} onClick={this.onOpenMenu}>
+              <a href="#" className={`menu-icon icon ${responsive && 'responsive-icon'}`} onClick={this.onOpenMenu}>
                 <Icon icon='menu'/>
               </a>
             </div>
