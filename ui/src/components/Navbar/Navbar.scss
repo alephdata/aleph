@@ -83,7 +83,7 @@
     }
 
     .pt-navbar-divider {
-      margin-top: $aleph-grid-size * 10x;
+      margin-top: $aleph-grid-size * 10;
     }
 
     .menu-items {
@@ -101,7 +101,7 @@
       .pt-button {
         height: $aleph-grid-size * 40;
         .pt-icon-notifications {
-          margin-left: $aleph-grid-size/2;
+          margin-left: $aleph-grid-size / 2;
         }
       }
 
