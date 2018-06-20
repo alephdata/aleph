@@ -4,9 +4,7 @@ import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
 import queryString from 'query-string';
-import c from 'classnames';
 import { ControlGroup, InputGroup, Icon } from "@blueprintjs/core";
-// import {ControlGroup, InputGroup, NavbarDivider} from "@blueprintjs/core";
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
@@ -62,11 +60,13 @@ class Navbar extends React.Component {
     }
   }
 
-  onOpenMenu() {
+  onOpenMenu(event) {
+    event.preventDefault();
     this.setState({isMenuOpen: !this.state.isMenuOpen});
   }
 
-  onToggleSearch() {
+  onToggleSearch(event) {
+    event.preventDefault();
     this.setState({searchOpen: !this.state.searchOpen});
   }
 
@@ -107,10 +107,10 @@ class Navbar extends React.Component {
 
             )}
             <div className={`search-and-burger-icons ${isHomepage && 'burger-fixed'}`}>
-              {!isHomepage && (<a href="#" className={'search-icon icon'} onClick={this.onToggleSearch}>
+              {!isHomepage && (<a className={'search-icon icon'} onClick={this.onToggleSearch}>
                 <Icon icon='search'/>
               </a>)}
-              <a href="#" className={`menu-icon icon ${isMenuOpen && 'burger-icon'}`} onClick={this.onOpenMenu}>
+              <a className={`menu-icon icon ${isMenuOpen && 'burger-icon'}`} onClick={this.onOpenMenu}>
                 <Icon icon='menu'/>
               </a>
             </div>
