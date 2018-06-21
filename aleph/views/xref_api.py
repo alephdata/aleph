@@ -13,7 +13,7 @@ blueprint = Blueprint('xref_api', __name__)
 @blueprint.route('/api/2/collections/<int:id>/xref', methods=['GET'])
 def index(id):
     collection = get_db_collection(id)
-    parser = QueryParser(request.args, request.authz, limit=10)
+    parser = QueryParser(request.args, request.authz)
     q = Match.group_by_collection(collection.id, authz=request.authz)
     result = DatabaseQueryResult(request, q,
                                  parser=parser,
