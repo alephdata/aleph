@@ -80,7 +80,7 @@ class EmailViewer extends React.Component {
                 </tbody>
               </table>
             </div>
-            <Tabs id="EmailTabs"  large="true" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
+            <Tabs id="EmailTabs" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
               <Tab id="email"
                 title={
                   <React.Fragment>

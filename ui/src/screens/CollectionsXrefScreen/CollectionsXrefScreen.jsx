@@ -151,24 +151,42 @@ class CollectionsXrefScreen extends Component {
                   <td className="numeric narrow">
                     <FormattedNumber value={parseInt(match.score, 10)} />
                   </td>
-                  <td className="entity">
-                    <Entity.Link entity={match.entity} preview={true} icon />
-                  </td>
-                  <td className="date">
-                    <Date.Earliest values={match.entity.dates} />
-                  </td>
-                  <td>
-                    <Country.List codes={match.entity.countries} short />
-                  </td>
-                  <td className="entity">
-                    <Entity.Link entity={match.match} preview={true} icon />
-                  </td>
-                  <td className="date">
-                    <Date.Earliest values={match.match.dates} />
-                  </td>
-                  <td>
-                    <Country.List codes={match.match.countries} short />
-                  </td>
+                  {match.entity && (
+                    <React.Fragment>
+                      <td className="entity">
+                        <Entity.Link entity={match.entity} preview={true} icon />
+                      </td>
+                      <td className="date">
+                        <Date.Earliest values={match.entity.dates} />
+                      </td>
+                      <td>
+                        <Country.List codes={match.entity.countries} short />
+                      </td>
+                    </React.Fragment>
+                  )}
+                  {!match.entity && (
+                    <td colSpan="3">
+                      <FormattedMessage id="xref.missing" defaultMessage="(missing)" />
+                    </td>
+                  )}
+                  {match.match && (
+                    <React.Fragment>
+                      <td className="entity">
+                        <Entity.Link entity={match.match} preview={true} icon />
+                      </td>
+                      <td className="date">
+                        <Date.Earliest values={match.match.dates} />
+                      </td>
+                      <td>
+                        <Country.List codes={match.match.countries} short />
+                      </td>
+                    </React.Fragment>
+                  )}
+                  {!match.match && (
+                    <td colSpan="3">
+                      <FormattedMessage id="xref.missing" defaultMessage="(missing)" />
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
