@@ -103,3 +103,14 @@ th.clickable {
 .aleph-toaster {
   margin-top: $aleph-grid-size * 5;
 }
+
+//small screen
+@media screen and (max-width: $aleph-screen-xs-max-width) {
+  .visible-sm-block {
+    display: block !important;
+  }
+
+  .visible-sm-flex {
+    display: flex !important;
+  }
+}

@@ -74,11 +74,6 @@
   .navbar-options {
     padding-left: 1em;
 
-    a, div, span {
-      background-color: white;
-      position: relative;
-    }
-
     .pt-popover-wrapper {
       padding-top: $aleph-grid-size * 0.5;
     }
@@ -124,7 +119,6 @@
 
     a.icon {
       float: right;
-      display: block !important;
       margin-top: 1em;
     }
 
@@ -137,7 +131,6 @@
     }
 
     .full-length-input {
-      display: inline-flex !important;
       position: fixed;
       top: 0;
       left: 0;
@@ -145,14 +138,10 @@
       padding: $aleph-grid-size * 0.5;
       height: $aleph-grid-size * 5;
       background-color: white;
-
-      .back-button {
-        display: block !important;
-      }
     }
 
     .hide {
-      display: none !important;
+      display: none;
     }
 
     .search-and-burger-icons {
@@ -167,23 +156,33 @@
     .pt-navbar {
       flex-direction: column;
 
+      .show-menu-dropdown {
+        .pt-button {
+          background-color: white;
+        }
+      }
+
       .navbar-header-search {
-        width: 100%;
-        display: inline-flex !important;
+        display: flex;
       }
 
       .navbar-languages {
-        display: inline-flex !important;
+        display: flex;
       }
 
       .navbar-options {
-        width: 100% !important;
-        display: none !important;
+        width: 100%;
+        display: none;
+
+        a, div, span {
+          background-color: white;
+          position: relative;
+        }
 
         .menu-items {
-          width: 100% !important;
-          display: flex !important;
-          flex-direction: column !important;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
           float: left;
           margin-top: 9.4em;
           border: $aleph-grid-size * 0.1 solid rgba(16, 22, 26, 0.2);
@@ -197,13 +196,13 @@
         }
 
         .pt-navbar-divider {
-          display: none !important;
+          display: none;
         }
       }
 
       .show-menu-dropdown {
         position: relative;
-        display: flex !important;
+        display: flex;
 
         a, div, span {
           float: left;
@@ -211,22 +210,22 @@
         }
 
         ul {
-          width: 100% !important;
+          width: 100%;
         }
 
         .pt-button {
-          align-items: left !important;
-          justify-content: left !important;
+          align-items: left;
+          justify-content: left;
         }
       }
 
       .heading-title {
-        padding-right: 1em !important;
+        padding-right: 1em;
       }
 
       a.menu-icon {
         float: right;
-        display: block !important;
+        display: block;
         margin-top: 1em;
       }
 
