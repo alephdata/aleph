@@ -4,6 +4,8 @@ import {withRouter} from 'react-router';
 import queryString from 'query-string';
 import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'react-intl';
 import Waypoint from 'react-waypoint';
+import { Icon } from '@blueprintjs/core';
+import c from 'classnames';
 
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
@@ -129,10 +131,11 @@ class SearchScreen extends React.Component {
         icon: 'person'
       }
     ];
-    this.state = {facets: facets};
+    this.state = {facets: facets, toggle: false};
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.toggleFacets = this.toggleFacets.bind(this);
   }
 
   componentDidMount() {
@@ -174,14 +177,29 @@ class SearchScreen extends React.Component {
     });
   }
 
+  toggleFacets() {
+    this.setState({toggle: !this.state.toggle});
+  }
+
   render() {
     const {query, result, intl} = this.props;
+    const {toggle} = this.state;
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
+    const toggleClass = toggle ? 'show' : 'hide';
+
     return (
       <Screen query={query} updateQuery={this.updateQuery} title={title}>
         <DualPane className="SearchScreen">
           <DualPane.SidePane>
-            <div className='total-count pt-text-muted'>
+            <div onClick={this.toggleFacets} className='opener clickable total-count pt-text-muted'>
+              <Icon icon={`caret-right`} className={c('caret', {rotate: true})} />
+              <span className='total-count-span'>
+                <span className="total-icon pt-icon-standard pt-icon-filter-list"/>
+                Filters
+              </span>
+            </div>
+            <div className={toggleClass}>
+              <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
                 <span className="total-icon pt-icon-standard pt-icon-search"/>
                 { !(result.isLoading || result.total === undefined) && (
@@ -197,11 +215,12 @@ class SearchScreen extends React.Component {
                   <FormattedMessage id="search.screen.error" defaultMessage="Error"/>
                 )}
               </span>
+              </div>
+              <SearchFacets query={query}
+                            result={result}
+                            updateQuery={this.updateQuery}
+                            facets={this.state.facets}/>
             </div>
-            <SearchFacets query={query}
-                          result={result}
-                          updateQuery={this.updateQuery}
-                          facets={this.state.facets}/>
           </DualPane.SidePane>
           <DualPane.ContentPane>
             <SignInCallout/>
