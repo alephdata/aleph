@@ -89,8 +89,8 @@ class Navbar extends React.Component {
               </div>
             </div>
             {!isHomepage && (
-              <div className={searchOpen ? 'full-length-input' : 'hide'}>
-                <button type="button" className="back-button pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
+              <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'hide'}>
+                <button type="button" className="back-button visible-sm-block pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
                 <form onSubmit={this.onSubmit} className='navbar-search-form'>
                   <ControlGroup fill={true}>
                     <InputGroup
@@ -107,10 +107,10 @@ class Navbar extends React.Component {
 
             )}
             <div className={`search-and-burger-icons ${isHomepage && 'burger-fixed'}`}>
-              {!isHomepage && (<a className={'search-icon icon'} onClick={this.onToggleSearch}>
+              {!isHomepage && (<a className={'search-icon icon visible-sm-block'} onClick={this.onToggleSearch}>
                 <Icon icon='search'/>
               </a>)}
-              <a className={`menu-icon icon ${isMenuOpen && 'burger-icon'}`} onClick={this.onOpenMenu}>
+              <a className={`menu-icon icon visible-sm-block ${isMenuOpen && 'burger-icon'}`} onClick={this.onOpenMenu}>
                 <Icon icon='menu'/>
               </a>
             </div>
