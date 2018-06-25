@@ -13,6 +13,19 @@
 //small screen
 @media screen and (max-width: $aleph-screen-sm-max-width) {
   .EntityTable {
+    .header-country, .header-dates, .header-size, .header-schema {
+      display: none;
+    }
+
+    .country, .date, .file-size, .schema {
+      display: none;
+    }
+  }
+}
+
+//medium screen
+@media screen and (max-width: $aleph-screen-md-max-width) {
+  .EntityTable {
     .header-country, .header-dates, .header-size {
       display: none;
     }
