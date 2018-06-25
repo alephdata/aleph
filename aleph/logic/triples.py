@@ -47,7 +47,7 @@ def date_lit(value):
 
 
 def itergraph(graph):
-    nt = graph.serialize(format='ntriples')
+    nt = graph.serialize(format='nt')
     for line in nt.splitlines():
         if len(line):
             yield line

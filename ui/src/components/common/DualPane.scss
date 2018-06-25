@@ -85,3 +85,10 @@
     width: initial;
   }
 }
+
+//small screen
+@media screen and (max-width: $aleph-screen-sm-max-width) {
+  .ContentPane {
+    order: 2;
+  }
+}

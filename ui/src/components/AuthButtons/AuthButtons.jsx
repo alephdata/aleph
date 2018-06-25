@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@blueprintjs/core";
 
@@ -51,8 +51,8 @@ class AuthButtons extends Component {
     const {session, auth, intl} = this.props;
 
     if (session.loggedIn) {
-      return ( 
-        <span className="AuthButtons">
+      return (
+          <span className="AuthButtons">
           <Popover content={
             <Menu>
               <Link to="/notifications" className="pt-menu-item">
@@ -65,8 +65,10 @@ class AuthButtons extends Component {
               <MenuDivider />
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
             </Menu>
-            } position={Position.BOTTOM_LEFT}>
-            <Button icon="user" className="pt-minimal" />
+          } position={Position.BOTTOM_LEFT}>
+            <Button icon="user" className="pt-minimal navbar-option-title">
+              <FormattedMessage id="nav.profile" defaultMessage="Profile"/>
+            </Button>
           </Popover>
 
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
@@ -76,7 +78,7 @@ class AuthButtons extends Component {
 
     if (auth.password_login_uri || auth.oauth_uri) {
       return (
-        <span className="AuthButtons">
+          <span className="AuthButtons">
           <Menu className='menu-item-width' key='signin'>
             <MenuItem icon='log-in' onClick={this.toggleAuthentication} text={intl.formatMessage(messages.signin)} />
             <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
