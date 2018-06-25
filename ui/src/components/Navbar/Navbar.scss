@@ -76,10 +76,6 @@
   .navbar-options {
     padding-left: 1em;
 
-    .pt-popover-wrapper {
-      padding-top: $aleph-grid-size * 0.5;
-    }
-
     .pt-navbar-divider {
       margin-top: $aleph-grid-size;
     }
@@ -194,6 +190,7 @@
         }
 
         .pt-popover-wrapper {
+          padding-top: $aleph-grid-size * 0.5;
           span {
             display: block;
           }
