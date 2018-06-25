@@ -30,7 +30,7 @@ class LanguageMenu extends Component {
 
     return (
       <Popover content={content} position={Position.BOTTOM_LEFT}>
-        <Button icon="translate" className="pt-minimal navbar-languages">
+        <Button icon="translate" className="pt-minimal navbar-option-title">
           <FormattedMessage id="nav.languages" defaultMessage="Languages"/>
         </Button>
       </Popover>
