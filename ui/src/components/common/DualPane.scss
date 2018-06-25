@@ -20,7 +20,7 @@
 %SidePane {
   flex: none;
   width: $aleph-sidebar-width;
-  border-right: 0px;
+  border-right: 0;
   overflow-x: hidden; // just in case.
   min-height: 100%;
 }
@@ -32,7 +32,7 @@
 
 .DualPane .InfoPane {
   @extend %SidePane;
-  border-right: 0px;
+  border-right: 0;
   box-shadow: $pt-elevation-shadow-3;
   background: $aleph-content-background;
   min-height: 100%;
@@ -68,27 +68,25 @@
   }
 }
 
-
-@media screen and (max-width: $aleph-sidebar-width * 2) {
+//small screen
+@media screen and (max-width: $aleph-screen-sm-max-width) {
   .DualPane {
-    flex-flow: column nowrap;
-    overflow: auto;
-  }
+    flex-flow: column;
 
-  .DualPane .InfoPane, .DualPane .SidePane {
-    width: initial;
-    margin: 0;
-    margin-bottom: $aleph-grid-size;
-  }
+    .ContentPane {
+      order: 2;
+    }
 
-  .DualPane .ContentPane {
-    width: initial;
+    .InfoPane {
+      width: 100% !important;
+      margin-bottom: 1em;
+    }
   }
 }
 
-//small screen
-@media screen and (max-width: $aleph-screen-sm-max-width) {
-  .ContentPane {
-    order: 2;
+//medium screen
+@media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
+  .InfoPane {
+    width: $aleph-sidebar-md-width !important;
   }
 }
