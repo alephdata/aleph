@@ -21,21 +21,34 @@
     margin-right: 0.5em;
   }
 
+  .facets {
+    display: none;
+    cursor: pointer;
+    margin-top: 0.5em;
+
+    & > .caret {
+      margin-right: $aleph-grid-size * 0.5;
+      transition: transform 100ms;
+
+      &.rotate {
+        transform: rotate(90deg);
+      }
+    }
+  }
 }
 
-@media screen and (max-width: $aleph-screen-xs-max-width) {
+@media screen and (max-width: $aleph-screen-sm-max-width) {
   .hide {
     display: none;
   }
 
   .show {
     display: block;
-    padding-top: 1em;
+    background-color: $aleph-facet-background !important;
   }
 
-  .SearchFacet {
-    & > .opener {
-      background-color: white !important;
-    }
+  .SidePane {
+    padding-bottom: 0 !important;
   }
+
 }

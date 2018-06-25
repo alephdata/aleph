@@ -191,15 +191,7 @@ class SearchScreen extends React.Component {
       <Screen query={query} updateQuery={this.updateQuery} title={title}>
         <DualPane className="SearchScreen">
           <DualPane.SidePane>
-            <div onClick={this.toggleFacets} className='opener clickable total-count pt-text-muted'>
-              <Icon icon={`caret-right`} className={c('caret', {rotate: true})} />
-              <span className='total-count-span'>
-                <span className="total-icon pt-icon-standard pt-icon-filter-list"/>
-                Filters
-              </span>
-            </div>
-            <div className={toggleClass}>
-              <div className='total-count pt-text-muted'>
+            <div className='total-count pt-text-muted'>
               <span className='total-count-span'>
                 <span className="total-icon pt-icon-standard pt-icon-search"/>
                 { !(result.isLoading || result.total === undefined) && (
@@ -215,7 +207,15 @@ class SearchScreen extends React.Component {
                   <FormattedMessage id="search.screen.error" defaultMessage="Error"/>
                 )}
               </span>
-              </div>
+            </div>
+            <div onClick={this.toggleFacets} className='visible-md-flex facets total-count pt-text-muted'>
+              <Icon icon={`caret-right`} className={c('caret', {rotate: toggle})} />
+              <span className='total-count-span'>
+                <span className="total-icon pt-icon-standard pt-icon-filter-list"/>
+                Filters
+              </span>
+            </div>
+            <div className={toggleClass}>
               <SearchFacets query={query}
                             result={result}
                             updateQuery={this.updateQuery}
