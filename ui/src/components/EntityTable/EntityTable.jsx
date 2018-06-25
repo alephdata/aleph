@@ -8,7 +8,6 @@ import { SortableTH, ErrorSection } from 'src/components/common';
 
 import './EntityTable.css';
 
-
 const messages = defineMessages({
   column_name: {
     id: 'entity.column.name',
@@ -79,10 +78,11 @@ class EntityTable extends Component {
       return null;
     }
 
-    const TH = ({ sortable, field, ...otherProps }) => {
+    const TH = ({ sortable, field, className, ...otherProps }) => {
       const { field: sortedField, desc } = query.getSort();
       return (
         <SortableTH sortable={sortable}
+                    className={className}
                     sorted={sortedField === field && (desc ? 'desc' : 'asc')}
                     onClick={() => this.sortColumn(field)}
                     {...otherProps}>
@@ -101,11 +101,11 @@ class EntityTable extends Component {
             }
             <TH field="schema" />
             {!documentMode && (
-              <TH field="countries" sortable={true} />
+              <TH className='header-country' field="countries" sortable={true} />
             )}
-            <TH field="dates" sortable={true} />
+            <TH className='header-dates' field="dates" sortable={true} />
             {documentMode && (
-              <TH field="file_size" sortable={true} />
+              <TH className='header-size' field="file_size" sortable={true} />
             )}
           </tr>
         </thead>

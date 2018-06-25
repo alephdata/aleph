@@ -9,3 +9,15 @@
     opacity: 0.4;
   }
 }
+
+@media screen and (max-width: $aleph-screen-sm-max-width) {
+  .EntityTable {
+    .header-country, .header-dates, .header-size {
+      display: none;
+    }
+
+    .country, .date, .file-size {
+      display: none;
+    }
+  }
+}
