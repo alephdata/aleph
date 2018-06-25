@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@blueprintjs/core";
 
@@ -66,7 +66,9 @@ class AuthButtons extends Component {
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
             </Menu>
           } position={Position.BOTTOM_LEFT}>
-            <Button icon="user" className="pt-minimal" />
+            <Button icon="user" className="pt-minimal navbar-option-title">
+              <FormattedMessage id="nav.profile" defaultMessage="Profile"/>
+            </Button>
           </Popover>
 
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />

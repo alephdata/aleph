@@ -10,8 +10,10 @@
       display: flex;
     }
 
-    .navbar-languages {
-      display: none;
+    .navbar-option-title {
+      span {
+        display: none;
+      }
     }
 
     .back-button {
@@ -166,8 +168,10 @@
         display: flex;
       }
 
-      .navbar-languages {
-        display: flex;
+      .navbar-option-title {
+        span {
+          display: flex;
+        }
       }
 
       .navbar-options {
