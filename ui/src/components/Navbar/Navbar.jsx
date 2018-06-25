@@ -110,8 +110,10 @@ class Navbar extends React.Component {
               {!isHomepage && (<a className={'search-icon icon visible-sm-block'} onClick={this.onToggleSearch}>
                 <Icon icon='search'/>
               </a>)}
-              <a className={`menu-icon icon visible-sm-block ${isMenuOpen && 'burger-icon'}`} onClick={this.onOpenMenu}>
-                <Icon icon='menu'/>
+              <a className={`menu-icon icon visible-sm-block ${isMenuOpen && 'transform'}`} onClick={this.onOpenMenu}>
+                <div className="bar1"/>
+                <div className="bar2"/>
+                <div className="bar3"/>
               </a>
             </div>
           </div>
