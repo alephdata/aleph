@@ -180,11 +180,13 @@
         }
 
         .menu-items {
+          position: fixed;
+          left: 0;
+          margin-top: 4.5em;
           width: 100%;
           display: flex;
           flex-direction: column;
           float: left;
-          margin-top: 9.4em;
           border: $aleph-grid-size * 0.1 solid rgba(16, 22, 26, 0.2);
           box-shadow: 0 $aleph-grid-size * 0.8 $aleph-grid-size * 1.6 0 rgba(0, 0, 0, 0.2);
         }
