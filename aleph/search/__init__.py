@@ -129,7 +129,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
 
 class CombinedQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text']
+    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
     SORT_DEFAULT = ['_score']
 
     def get_index(self):
