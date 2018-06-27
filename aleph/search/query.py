@@ -82,8 +82,6 @@ class Query(object):
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
-        if not len(filters):
-            return {'match_all': {}}
         return {'bool': {'filter': filters}}
 
     def get_query(self):

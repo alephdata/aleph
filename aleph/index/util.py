@@ -97,8 +97,8 @@ def cleanup_query(body):
             if len(parts):
                 bool_query[section] = parts
     body['query'] = {'bool': bool_query}
-    if 'match_all' in body.get('post_filter', {}):
-        body.pop('post_filter')
+    # if not len(body.get('post_filter', {}).get('bool', {}).get('filter', [])):
+    #     body.pop('post_filter')
     if not len(body.get('highlight', {})):
         body.pop('highlight')
     if not len(body.get('aggregations', {})):
@@ -171,7 +171,7 @@ def index_form(texts):
             if total_len > INDEX_MAX_LEN:
                 break
 
-        if not isinstance(text, str):
+        if isinstance(text, str):
             total_len += len(text)
             results.append(text)
     return results
