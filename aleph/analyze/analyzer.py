@@ -1,6 +1,6 @@
 import logging
 
-from aleph.model import Document, DocumentTagCollector
+from aleph.model import DocumentTagCollector
 
 
 log = logging.getLogger(__name__)

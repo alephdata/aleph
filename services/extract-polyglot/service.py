@@ -51,9 +51,8 @@ class PolyglotServicer(EntityExtractServicer):
                         types[label] = entity.tag
                 except Exception:
                     log.exception("Cannot extract. Language: %s", language)
-        total_labels = sum(labels.values())
         for label in labels:
-            weight = labels[label] / total_labels
+            weight = labels[label]
             entity = entities.entities.add()
             entity.label = label
             entity.weight = weight
