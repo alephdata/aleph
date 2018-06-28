@@ -32,25 +32,27 @@ class EntityExtractor(EntityAnalyzer):
     # def reset(self):
     #     cls = type(self)
     #     cls._channel = None
-
-    def extract(self, collector, document):
+    def make_iterator(self, document):
         languages = list(document.languages)
         if not len(languages):
             languages = [settings.DEFAULT_LANGUAGE]
+        for text in document.texts:
+            if len(text) <= self.MIN_LENGTH:
+                continue
+            text = Text(text=text, languages=languages)
+            yield text
+
+    def extract(self, collector, document):
 
         try:
             channel = grpc.insecure_channel(self.SERVICE)
             service = EntityExtractStub(channel)
-            for text in document.texts:
-                if len(text) <= self.MIN_LENGTH:
+            entities = service.Extract(self.make_iterator(document)).entities
+            for entity in entities:
+                type_ = self.TYPES.get(entity.type)
+                if type_ is None:
                     continue
-
-                text = Text(text=text, languages=languages)    
-                for entity in service.Extract(text):
-                    type_ = self.TYPES.get(entity.type)
-                    if type_ is None:
-                        continue
-                    collector.emit(entity.label, type_)
+                collector.emit(entity.label, type_)
 
             log.info('%s Extracted %s entities.', self.SERVICE, len(collector))
         except grpc.RpcError as exc:

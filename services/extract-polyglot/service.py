@@ -1,53 +1,64 @@
 import os
 import time
-import grpc
 import regex
 import logging
+from collections import Counter
 from concurrent import futures
+
+import grpc
 from normality import collapse_spaces
 from polyglot.text import Text
 
 from alephclient.services.entityextract_pb2_grpc import add_EntityExtractServicer_to_server  # noqa
 from alephclient.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
-from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
+from alephclient.services.entityextract_pb2 import ExtractedEntity, ExtractedEntitySet  # noqa
 
 log = logging.getLogger('service')
 LANGUAGES = os.listdir('/data/polyglot_data/ner2')
 CLEAN = regex.compile('(^[^\w]*|[^\w]*$)')
 TYPES = {
-    'I-PER': 'PERSON',
-    'I-ORG': 'ORGANIZATION',
-    'I-LOC': 'LOCATION'
+    'I-PER': ExtractedEntity.PERSON,
+    'I-ORG': ExtractedEntity.ORGANIZATION,
+    'I-LOC': ExtractedEntity.LOCATION
 }
 
 
 class PolyglotServicer(EntityExtractServicer):
 
-    def Extract(self, request, context):
-        text = request.text
-        if text is None or not len(text.strip()):
-            return
-
-        for language in request.languages:
-            if language not in LANGUAGES:
+    def Extract(self, request_iterator, context):
+        entities = ExtractedEntitySet(entities=[])
+        labels = Counter()
+        types = {}
+        for text_obj in request_iterator:
+            text = text_obj.text
+            if text is None or not len(text.strip()):
                 continue
-            try:
-                parsed = Text(text, hint_language_code=language)
-                for entity in parsed.entities:
-                    label = ' '.join(entity)
-                    label = CLEAN.sub(' ', label)
-                    label = collapse_spaces(label)
-                    if len(label) < 4 or len(label) > 100:
-                        continue
-                    if ' ' not in label:
-                        continue
-                    length = entity.end - entity.start
-                    yield ExtractedEntity(label=label,
-                                          offset=entity.start,
-                                          length=length,
-                                          type=TYPES[entity.tag])
-            except Exception:
-                log.exception("Cannot extract. Language: %s", language)
+
+            for language in text_obj.languages:
+                if language not in LANGUAGES:
+                    continue
+                try:
+                    parsed = Text(text, hint_language_code=language)
+                    for entity in parsed.entities:
+                        label = ' '.join(entity)
+                        label = CLEAN.sub(' ', label)
+                        label = collapse_spaces(label)
+                        if len(label) < 4 or len(label) > 100:
+                            continue
+                        if ' ' not in label:
+                            continue
+                        labels[label] += 1
+                        types[label] = entity.tag
+                except Exception:
+                    log.exception("Cannot extract. Language: %s", language)
+        total_labels = sum(labels.values())
+        for label in labels:
+            weight = labels[label] / total_labels
+            entity = entities.entities.add()
+            entity.label = label
+            entity.weight = weight
+            entity.type = TYPES[types[label]]
+        return entities
 
 
 def serve(port):

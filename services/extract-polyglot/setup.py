@@ -6,6 +6,6 @@ setup(
     install_requires=[
         'grpcio',
         'grpcio-tools',
-        'alephclient==0.6.0'
+        'alephclient==0.6.6'
     ],
 )
