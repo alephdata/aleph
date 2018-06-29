@@ -1,4 +1,3 @@
-# add frequency cut as parameter
 import string
 import ahocorasick
 import zipfile
@@ -10,14 +9,14 @@ import time
 from concurrent import futures
 from collections import Counter
 
-from alephclient.services.entityextract_pb2_grpc import add_EntityExtractServicer_to_server  # noqa
-from alephclient.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
-from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
+from alephclient.services.geoextract_pb2_grpc import add_GeoExtractServicer_to_server  # noqa
+from alephclient.services.geoextract_pb2_grpc import GeoExtractServicer  # noqa
+from alephclient.services.geoextract_pb2 import CountryTags  # noqa
 
 log = logging.getLogger('service')
 
 
-class GeoExtractServicer(EntityExtractServicer):
+class GeoExtractServicer(GeoExtractServicer):
 
     def __init__(self, geo_corpus_path):
         self.max_tags = 3
@@ -66,9 +65,17 @@ class GeoExtractServicer(EntityExtractServicer):
             ngram_out.append(' '.join(input[i:i+ngram_range]))
         return ngram_out
 
-    def extract(self, doc):
+    def extract(self, request_iterator):
 
         mention_tags = []
+        doc = ""
+
+        for text_obj in request_iterator:
+            text = text_obj.text
+            if text is None or not len(text.strip()):
+                continue
+            doc += text
+
         for word in str.split(doc, ' '):
             for index, value in self.country_automaton.iter(word):
                 if self.clean_str(str(value[1])) in self.excluded_tags:
@@ -106,8 +113,10 @@ class GeoExtractServicer(EntityExtractServicer):
 
 
 def serve(port):
+    geo_corpus_path = "/tmp/countries.zip"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
-    add_EntityExtractServicer_to_server(GeoExtractServicer(), server)
+    add_GeoExtractServicer_to_server(GeoExtractServicer(geo_corpus_path),
+                                     server)
     server.add_insecure_port(port)
     server.start()
     log.info("Server started: %s", port)

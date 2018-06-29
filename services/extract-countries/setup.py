@@ -4,13 +4,8 @@ setup(
     name='service',
     packages=find_packages(),
     install_requires=[
-        'string',
-        'ahocorasick',
-        'zipfile',
-        'csv',
-        'io',
-        'collections',
+        'pyahocorasick',
         'grpcio-tools',
-        'alephclient==0.6.0'
+        'alephclient==0.6.4'
     ],
 )
