@@ -106,14 +106,21 @@ th.clickable {
 
 //small screen
 @media screen and (max-width: $aleph-screen-sm-max-width) {
-    .visible-md-flex {
-      display: flex !important;
-    }
   .visible-sm-block {
     display: block !important;
   }
 
   .visible-sm-flex {
+    display: flex !important;
+  }
+
+  .visible-sm-none {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: $aleph-screen-md-max-width) {
+  .visible-md-flex {
     display: flex !important;
   }
 }
