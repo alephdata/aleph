@@ -66,7 +66,7 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { query, intl, location, history } = this.props;
+    const { query, intl, location, history, writable } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
@@ -95,6 +95,9 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
+            {writable && (
+              <TH field="select_all"/>
+            )}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
               <TH field="collection_id" />

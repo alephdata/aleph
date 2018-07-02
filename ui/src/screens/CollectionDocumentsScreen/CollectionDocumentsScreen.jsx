@@ -10,7 +10,6 @@ import { fetchCollection } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
 
-
 class CollectionDocumentsScreen extends Component {
   async componentDidMount() {
     const {collectionId} = this.props;
@@ -46,12 +45,14 @@ class CollectionDocumentsScreen extends Component {
             <div className="pt-button-group">
               <DocumentFolderButton collection={collection} />
               <DocumentUploadButton collection={collection} />
+              {collection.writeable && <button type="button" className="pt-button pt-icon-delete" disabled={true}>Delete</button>}
             </div>
             <CollectionSearch collection={collection} />
           </Toolbar>
           <EntitySearch context={context}
                         hideCollection={true}
-                        documentMode={true} />
+                        documentMode={true}
+                        writable={collection.writeable} />
         </CaseContext>
       </Screen>
     );

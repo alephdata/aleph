@@ -72,7 +72,7 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, intl, className} = this.props;
+    const {query, result, intl, className, writable} = this.props;
     const isEmpty = !query.hasQuery();
     return (
       <div className={className}>
@@ -93,7 +93,8 @@ class EntitySearch extends Component {
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
-                     result={result} />
+                     result={result}
+                     writable={writable}/>
         {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}
