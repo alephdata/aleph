@@ -6,6 +6,6 @@ setup(
     install_requires=[
         'pyahocorasick',
         'grpcio-tools',
-        'alephclient==0.6.4'
+        'alephclient==0.6.5'
     ],
 )

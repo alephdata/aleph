@@ -9,9 +9,10 @@ import time
 from concurrent import futures
 from collections import Counter
 
-from alephclient.services.geoextract_pb2_grpc import add_GeoExtractServicer_to_server  # noqa
-from alephclient.services.geoextract_pb2_grpc import GeoExtractServicer  # noqa
-from alephclient.services.geoextract_pb2 import CountryTags  # noqa
+from alephclient.services.geoextract_pb2_grpc import (
+    add_GeoExtractServicer_to_server, GeoExtractServicer
+)
+from alephclient.services.geoextract_pb2 import CountryTags
 
 log = logging.getLogger('service')
 
@@ -35,11 +36,11 @@ class GeoExtractServicer(GeoExtractServicer):
                 if row[7] not in ['PCLI', 'ADM1']:
                     continue
 
-                geonameid = row[0]
-                name = row[1]
+                # geonameid = row[0]
+                # name = row[1]
                 asciiname = row[2]
                 alternatenames = row[3]
-                feature_code = row[7]
+                # feature_code = row[7]
                 country_code = row[8]
 
                 self.country_automaton.add_word(str(asciiname),
@@ -61,11 +62,11 @@ class GeoExtractServicer(GeoExtractServicer):
     def ngrams(self, doc_in, ngram_range):
         doc_in = doc_in.split(' ')
         ngram_out = []
-        for i in range(len(input)-ngram_range+1):
-            ngram_out.append(' '.join(input[i:i+ngram_range]))
+        for i in range(len(doc_in) - ngram_range + 1):
+            ngram_out.append(' '.join(doc_in[i:i+ngram_range]))
         return ngram_out
 
-    def extract(self, request_iterator):
+    def ExtractCountries(self, request_iterator, context):
 
         mention_tags = []
         doc = ""
@@ -104,19 +105,21 @@ class GeoExtractServicer(GeoExtractServicer):
 
         for tag_num in range(1, self.max_tags + 1):
             if len(top_n) >= tag_num:
-                print ('tag is ' + str(top_n[tag_num-1]))
-                print('freq is ' + str(top_n[tag_num-1][1]/word_count))
+                log.info('tag is ' + str(top_n[tag_num-1]))
+                log.info('freq is ' + str(top_n[tag_num-1][1]/word_count))
                 if top_n[tag_num-1][1]/word_count >= self.tag_freq_cut:
                     doc_tags.append(top_n[tag_num-1][0])
 
-        return doc_tags
+        countries = CountryTags(countries=doc_tags)
+        return countries
 
 
 def serve(port):
     geo_corpus_path = "/tmp/countries.zip"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
-    add_GeoExtractServicer_to_server(GeoExtractServicer(geo_corpus_path),
-                                     server)
+    add_GeoExtractServicer_to_server(
+        GeoExtractServicer(geo_corpus_path), server
+    )
     server.add_insecure_port(port)
     server.start()
     log.info("Server started: %s", port)

@@ -47,6 +47,13 @@ services:
     expose:
       - 50000
 
+  extract-countries:
+    build: services/extract-countries
+    restart: on-failure
+    mem_limit: 2g
+    expose:
+      - 50000
+
   app:
     build: .
     command: /bin/bash
@@ -57,6 +64,7 @@ services:
       - convert-document
       - extract-polyglot
       - extract-spacy
+      - extract-countries
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -88,6 +96,7 @@ services:
       - convert-document
       - extract-polyglot
       - extract-spacy
+      - extract-countries
     tmpfs: /tmp
     volumes:
       - archive-data:/data

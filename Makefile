@@ -6,7 +6,7 @@ all: build upgrade web
 services:
 	$(COMPOSE) up -d --remove-orphans \
 		rabbitmq postgres elasticsearch \
-		convert-document extract-polyglot extract-spacy
+		convert-document extract-polyglot extract-spacy extract-countries
 
 shell: services    
 	$(DEVDOCKER) /bin/bash
