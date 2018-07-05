@@ -66,7 +66,7 @@ services:
   app:
     build:
       context: .
-      context_from:
+      cache_from:
       - alephdata/aleph:latest
     command: /bin/bash
     links:
@@ -96,7 +96,7 @@ services:
   api:
     build:
       context: .
-      context_from:
+      cache_from:
       - alephdata/aleph:latest
     command: python aleph/manage.py runserver -h 0.0.0.0 -p 5000
     expose:
@@ -129,7 +129,7 @@ services:
   ui:
     build:
       context: ui
-      context_from:
+      cache_from:
       - alephdata/ui:latest
     links:
       - api
