@@ -10,6 +10,11 @@ env:
     - DOCKER_COMPOSE_VERSION=1.16.1
     - DOCKER_IMAGE_NAME=alephdata/aleph
 
+# addons:
+#   apt:
+#     packages:
+#       - docker-ce
+
 before_install:
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
@@ -21,14 +26,19 @@ before_install:
   - sudo echo "ALEPH_DATABASE_NAME=$ALEPH_DATABASE_NAME\nALEPH_DATABASE_URI=$ALEPH_DATABASE_URI\nOAUTH_KEY=$OAUTH_KEY\nOAUTH_SECRET=$OAUTH_SECRET" >> aleph.env
   - docker --version
   - docker-compose --version
+  - docker pull alephdata/aleph:latest
+  - docker pull alephdata/ui:latest
+  - docker pull alephdata/aleph-convert-document:latest
+  - docker pull alephdata/aleph-extract-polyglot
+  - docker pull alephdata/aleph-extract-spacy
 
 install:
   - echo "${TRAVIS_BRANCH}"
-  - docker build -t alephdata/aleph:latest .
-  - docker build -t alephdata/ui:latest ui
-  - docker build -t alephdata/aleph-convert-document:latest services/convert-document
-  - docker build -t alephdata/aleph-extract-polyglot:latest services/extract-polyglot
-  - docker build -t alephdata/aleph-extract-spacy:latest services/extract-spacy
+  - docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:latest .
+  - docker build --cache-from alephdata/ui:latest -t alephdata/ui:latest ui
+  - docker build --cache-from alephdata/aleph-convert-document:latest -t alephdata/aleph-convert-document:latest services/convert-document
+  - docker build --cache-from alephdata/aleph-extract-polyglot:latest -t alephdata/aleph-extract-polyglot:latest services/extract-polyglot
+  - docker build --cache-from alephdata/aleph-extract-spacy:latest -t alephdata/aleph-extract-spacy:latest services/extract-spacy
   - docker-compose -f docker-compose.dev.yml build
   - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
   - sleep 4
