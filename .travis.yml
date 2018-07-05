@@ -39,12 +39,11 @@ install:
   - docker build --cache-from alephdata/aleph-convert-document:latest -t alephdata/aleph-convert-document:latest services/convert-document
   - docker build --cache-from alephdata/aleph-extract-polyglot:latest -t alephdata/aleph-extract-polyglot:latest services/extract-polyglot
   - docker build --cache-from alephdata/aleph-extract-spacy:latest -t alephdata/aleph-extract-spacy:latest services/extract-spacy
-  - docker-compose -f docker-compose.dev.yml build
-  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
+  - docker-compose -f docker-compose.test.yml up -d postgres elasticsearch
   - sleep 4
 
 script:
-  - docker-compose -f docker-compose.dev.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
+  - docker-compose -f docker-compose.test.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
