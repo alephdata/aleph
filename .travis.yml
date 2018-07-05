@@ -27,7 +27,7 @@ before_install:
   - docker --version
   - docker-compose --version
   - docker pull alephdata/aleph:latest
-  - docker pull alephdata/ui:latest
+  # - docker pull alephdata/ui:latest
   - docker pull alephdata/aleph-convert-document:latest
   # - docker pull alephdata/aleph-extract-polyglot
   # - docker pull alephdata/aleph-extract-spacy
