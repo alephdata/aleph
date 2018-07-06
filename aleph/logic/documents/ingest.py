@@ -39,18 +39,12 @@ def ingest_document(document, file_path, role_id=None):
     if role_id is not None:
         document.uploader_id = role_id
 
-    if file_path is not None:
-        # Directories cannot be archived first and then processed
-        # later. So they are effectively sent into a short-cut here
-        if os.path.isdir(file_path):
-            db.session.commit()
-            return ingest(document.id, file_path=file_path)
+    if file_path is not None and os.path.isfile(file_path):
         document.content_hash = archive.archive_file(file_path)
 
     db.session.commit()
     priority = 5 if document.collection.casefile else 3
-    ingest.apply_async(args=[document.id],
-                       priority=priority)
+    ingest.apply_async(args=[document.id], kwargs={'file_path': file_path}, priority=priority)
 
 
 @celery.task()
