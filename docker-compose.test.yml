@@ -35,18 +35,6 @@ services:
     expose:
       - 3000
 
-  # extract-polyglot:
-  #   image: alephdata/aleph-extract-polyglot:latest
-  #   restart: on-failure
-  #   expose:
-  #     - 50000
-  
-  # extract-spacy:
-  #   image: alephdata/aleph-extract-spacy:latest
-  #   restart: on-failure
-  #   expose:
-  #     - 50000
-
   app:
     image: alephdata/aleph:latest
     command: /bin/bash
@@ -55,8 +43,6 @@ services:
       - elasticsearch
       - rabbitmq
       - convert-document
-      # - extract-polyglot
-      # - extract-spacy
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -86,8 +72,6 @@ services:
       - elasticsearch
       - rabbitmq
       - convert-document
-      # - extract-polyglot
-      # - extract-spacy
     tmpfs: /tmp
     volumes:
       - archive-data:/data
