@@ -30,8 +30,13 @@ class EntitySearch extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      selectedRows: []
+    };
+
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.updateSelection = this.updateSelection.bind(this);
   }
 
   componentDidMount() {
@@ -71,8 +76,40 @@ class EntitySearch extends Component {
     });
   }
 
+  updateSelection(entity) {
+    let selectedRows = [];
+    if(entity === null) { //if user clicked select all
+      if(this.props.result.results.length === this.state.selectedRows.length) {
+        this.setState({selectedRows: selectedRows});
+      } else {
+        if(this.props.result.results !== undefined) {
+          this.props.result.results.map(entity => selectedRows.push(entity))
+        }
+
+        this.setState({selectedRows: selectedRows });
+      }
+    } else { //if user clicked on row
+      selectedRows = this.state.selectedRows;
+      let indexOfSelectedRow = -1;
+      for(let i = 0; i < selectedRows.length; i++){
+        if(selectedRows[i].id === entity.id) indexOfSelectedRow = i;
+      }
+      if(indexOfSelectedRow === -1) {
+        selectedRows.push(entity);
+        this.setState({selectedRows: selectedRows});
+      } else {
+        selectedRows.splice(indexOfSelectedRow, 1);
+        this.setState({selectedRows: selectedRows});
+      }
+    }
+
+    this.props.disableOrEnableDelete(selectedRows.length === 0);
+    this.props.setDocuments(selectedRows);
+  }
+
   render() {
     const {query, result, intl, className, writable} = this.props;
+    const { selectedRows } = this.state;
     const isEmpty = !query.hasQuery();
     return (
       <div className={className}>
@@ -94,7 +131,9 @@ class EntitySearch extends Component {
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
                      result={result}
-                     writable={writable}/>
+                     writable={writable}
+                     updateSelection={this.updateSelection}
+                     selectedRows={selectedRows}/>
         {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}

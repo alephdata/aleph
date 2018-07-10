@@ -132,7 +132,7 @@ class CasesIndexScreen extends Component {
           </DualPane.ContentPane>
         </DualPane>
         <DualPane>
-          <DualPane.SidePane></DualPane.SidePane>
+          <DualPane.SidePane/>
           <DualPane.ContentPane>
             {result.total !== 0 && (
               <CaseIndexTable query={query}

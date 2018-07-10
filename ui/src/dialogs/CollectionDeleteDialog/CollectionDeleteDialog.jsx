@@ -5,8 +5,7 @@ import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
 
-import { deleteCollection } from "src/actions";
-
+import { deleteCollection, deleteDocument } from "src/actions";
 
 const messages = defineMessages({
   button_confirm: {
@@ -31,12 +30,23 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { collection, history } = this.props;
-    this.props.deleteCollection(collection);
-    history.push({
-      pathname: '/cases',
-      search: queryString.stringify({'_deleted': collection.id})
-    });
+    const { collection, history, documents } = this.props;
+    if(collection !== undefined) {
+      this.props.deleteCollection(collection);
+      history.push({
+        pathname: '/cases',
+        search: queryString.stringify({'_deleted': collection.id})
+      });
+    } else {
+      let collection = documents[0].collection;
+      for(let i = 0; i < documents.length; i++) {
+        this.props.deleteDocument({document: documents[i]})
+        history.push({
+          pathname: '/collections/' + collection.id + '/documents',
+          search: queryString.stringify({'_deleted': documents[i].id})
+        });
+      }
+    }
   }
 
   render() {
@@ -63,4 +73,4 @@ const mapStateToProps = (state, ownProps) => {
 
 CollectionDeleteDialog = injectIntl(CollectionDeleteDialog);
 CollectionDeleteDialog = withRouter(CollectionDeleteDialog);
-export default connect(mapStateToProps, { deleteCollection })(CollectionDeleteDialog);
+export default connect(mapStateToProps, { deleteCollection, deleteDocument })(CollectionDeleteDialog);

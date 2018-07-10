@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
+import { Checkbox } from '@blueprintjs/core';
 
 import EntityTableRow from './EntityTableRow';
 import { SortableTH, ErrorSection } from 'src/components/common';
 
 import './EntityTable.css';
-
 
 const messages = defineMessages({
   column_name: {
@@ -40,7 +40,12 @@ class EntityTable extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {result: props.result};
+    this.state = {
+      result: props.result
+    };
+
+    this.onSelectAll = this.onSelectAll.bind(this);
+    this.onSelectRow = this.onSelectRow.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -65,11 +70,26 @@ class EntityTable extends Component {
     updateQuery(newQuery);
   }
 
+  onSelectAll() {
+    this.props.updateSelection(null);
+    /*let selectedRows = [];
+    if(this.props.result.results !== undefined) {
+      this.props.result.results.map(entity => selectedRows.push(entity.id))
+    }
+
+    this.setState({selectAll: !this.state.selectAll, selectedRows: !this.state.selectAll ? selectedRows : []});*/
+  }
+
+  onSelectRow(entity) {
+    this.props.updateSelection(entity);
+  }
+
   render() {
-    const { query, intl, location, history, writable } = this.props;
+    const { query, intl, location, history, writable, selectedRows } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
+    const selectAll = selectedRows.length === result.results.length;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -96,7 +116,9 @@ class EntityTable extends Component {
         <thead>
           <tr>
             {writable && (
-              <TH field="select_all"/>
+              <th>
+                <Checkbox checked={selectAll} label="Select all" onChange={this.onSelectAll} />
+              </th>
             )}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
@@ -119,7 +141,10 @@ class EntityTable extends Component {
                             hideCollection={hideCollection}
                             documentMode={documentMode}
                             location={location}
-                            history={history} />
+                            history={history}
+                            writable={writable}
+                            onSelectRow={this.onSelectRow}
+                            selectedRows={selectedRows}/>
           )}
         </tbody>
       </table>

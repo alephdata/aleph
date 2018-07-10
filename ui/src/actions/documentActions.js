@@ -33,3 +33,8 @@ export const ingestDocument = asyncActionCreator((collectionId, metadata, file, 
   return { documents: response.data.documents };
 }, { name: 'INGEST_DOCUMENT' });
 
+export const deleteDocument = asyncActionCreator(({document}) => async dispatch => {
+    await endpoint.delete(`documents/${document.id}`, document);
+  return {id: document.id};
+}, { name: 'DELETE_DOCUMENT' });
+
