@@ -54,7 +54,7 @@ class GeoExtractServicer(GeoExtractServicer):
                 names = [normalize(n) for n in names]
 
                 for name in names:
-                    if name is None or len(name) < 5:
+                    if name is None or len(name) < 4:
                         continue
                     names_count += 1
                     self.automaton.add_word(name, country)
