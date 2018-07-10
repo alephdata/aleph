@@ -82,6 +82,7 @@ def create_app(config={}):
     babel.init_app(app)
     cache.init_app(app, config={'CACHE_TYPE': 'simple'})
     CORS(app, origins=settings.CORS_ORIGINS)
+    db.app = app
 
     # Enable raven to submit issues to sentry if a DSN is defined. This will
     # report errors from Flask and Celery operation modes to Sentry.

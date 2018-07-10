@@ -21,22 +21,18 @@ class CountryExtractor(Analyzer):
         if not len(languages):
             languages = [settings.DEFAULT_LANGUAGE]
         for text in document.texts:
-            text = Text(text=text, languages=languages)
-            yield text
+            yield Text(text=text, languages=languages)
 
     def analyze(self, document):
-        languages = list(document.languages)
-        if not len(languages):
-            languages = [settings.DEFAULT_LANGUAGE]
+        if len(document.countries):
+            return
+
         try:
             channel = grpc.insecure_channel(self.SERVICE)
             service = GeoExtractStub(channel)
-            log.info("Service connection established!")
-            countries = service.ExtractCountries(
-                self.make_iterator(document)
-            )
-            countries = countries.countries
-            for country in countries:
+            texts = self.make_iterator(document)
+            countries = service.ExtractCountries(texts)
+            for country in countries.countries:
                 document.add_country(country)
         except grpc.RpcError as exc:
             log.warning("gRPC Error: %s", exc)
