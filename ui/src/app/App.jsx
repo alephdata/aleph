@@ -44,7 +44,7 @@ const getLocale = function(store) {
   if (metadata && metadata.app) {
     return metadata.app.locale;
   }
-}
+};
 
 // Configure endpoint to add session bearer token.
 endpoint.interceptors.request.use(config => {
