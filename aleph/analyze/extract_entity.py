@@ -46,7 +46,7 @@ class EntityExtractor(EntityAnalyzer):
                 if len(text) <= self.MIN_LENGTH:
                     continue
 
-                text = Text(text=text, languages=languages)    
+                text = Text(text=text, languages=languages)
                 for entity in service.Extract(text):
                     type_ = self.TYPES.get(entity.type)
                     if type_ is None:
