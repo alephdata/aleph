@@ -13,12 +13,8 @@ class ParentButton extends React.Component {
     if (isPreview || !document.collection) {
       return null;
     }
-    
-    const { collection } = document;
-    if (document.parent === undefined && !collection.casefile) {
-      return null;
-    }
-    let path = `/collections/${collection.id}/documents`;
+
+    let path = `/collections/${document.collection.id}/documents`;
     if (document.parent !== undefined) {
       path = getPath(document.parent.links.ui);
     }

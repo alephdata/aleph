@@ -23,7 +23,7 @@ class EntityLabel extends Component {
   }
 
   render() {
-    const { entity, icon = false, truncate } = this.props;
+    const { entity, icon = false, documentMode = false, truncate } = this.props;
     if (entity === undefined) {
       return null;
     }
@@ -38,6 +38,10 @@ class EntityLabel extends Component {
 
     if (truncate) {
       text = truncateText(text, truncate);
+    }
+
+    if (documentMode) {
+      text = fileName || text;
     }
 
     if (!text || !text.length || text.length < 1) {
@@ -93,14 +97,14 @@ class EntityLink extends Component {
   }
 
   render() {
-    const { entity, className, icon, truncate } = this.props;
+    const { entity, className } = this.props;
     if (!entity || !entity.links || !entity.schemata) {
-      return <Entity.Label entity={entity} icon={icon} truncate={truncate}/>;
+      return <Entity.Label {...this.props} />;
     }
 
     return (
       <a onClick={this.onClick} className={c('EntityLink', className)}>
-        <Entity.Label entity={entity} icon={icon} truncate={truncate} />
+        <Entity.Label {...this.props} />
       </a>
     );
   }
