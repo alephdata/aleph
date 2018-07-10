@@ -83,6 +83,29 @@ def field_filter_query(field, values):
     return {'terms': {field: values}}
 
 
+def cleanup_query(body):
+    """Make a query simpler and more readable. This largely exists for 
+    debugging help, since ES should be able to perform the same
+    optimisations internally."""
+    query = body.get('query', {})
+    bool_query = query.get('bool', {})
+    for section in ['filter', 'must', 'must_not', 'should']:
+            parts = []
+            for part in bool_query.pop(section, []):
+                if 'match_all' not in part:
+                    parts.append(part)
+            if len(parts):
+                bool_query[section] = parts
+    body['query'] = {'bool': bool_query}
+    # if not len(body.get('post_filter', {}).get('bool', {}).get('filter', [])):
+    #     body.pop('post_filter')
+    if not len(body.get('highlight', {})):
+        body.pop('highlight')
+    if not len(body.get('aggregations', {})):
+        body.pop('aggregations')
+    return body
+
+
 def bulk_op(iter, chunk_size=500):
     """Standard parameters for bulk operations."""
     bulk(es, iter,
@@ -148,9 +171,7 @@ def index_form(texts):
             if total_len > INDEX_MAX_LEN:
                 break
 
-        text = stringify(text)
-        if text is None:
-            continue
-        total_len += len(text)
-        results.append(text)
+        if isinstance(text, str):
+            total_len += len(text)
+            results.append(text)
     return results

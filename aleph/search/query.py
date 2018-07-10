@@ -4,7 +4,7 @@ from elasticsearch.helpers import scan
 
 from aleph.core import es
 from aleph.index.util import authz_query, field_filter_query
-from aleph.index.util import REQUEST_TIMEOUT
+from aleph.index.util import cleanup_query, REQUEST_TIMEOUT
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 
@@ -41,7 +41,9 @@ class Query(object):
                 "simple_query_string": {
                     "query": self.parser.text,
                     "fields": self.TEXT_FIELDS,
-                    "default_operator": "AND"
+                    "default_operator": "AND",
+                    "minimum_should_match": "67%",
+                    "lenient": True
                 }
             })
         if self.parser.prefix:
@@ -80,8 +82,6 @@ class Query(object):
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
-        if not len(filters):
-            {'match_all': {}}
         return {'bool': {'filter': filters}}
 
     def get_query(self):
@@ -167,7 +167,7 @@ class Query(object):
         return source
 
     def get_body(self):
-        body = {
+        body = cleanup_query({
             'query': self.get_query(),
             'from': self.parser.offset,
             'size': self.parser.limit,
@@ -175,18 +175,21 @@ class Query(object):
             'post_filter': self.get_post_filters(),
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
+            # 'profile': True,
             '_source': self.get_source()
-        }
+        })
         # log.info("Query: %s", pformat(body))
         return body
 
     def search(self):
         """Execute the query as assmbled."""
-        # pprint(self.get_body())
-        return es.search(index=self.get_index(),
-                         body=self.get_body(),
-                         request_cache=True,
-                         request_timeout=REQUEST_TIMEOUT)
+        result = es.search(index=self.get_index(),
+                           body=self.get_body(),
+                           request_cache=True,
+                           request_timeout=REQUEST_TIMEOUT)
+        log.info("Took: %sms", result.get('took'))
+        # log.info("%s", pformat(result))
+        return result
 
     def scan(self):
         """Return an iterator over the whole result set, unpaginated and

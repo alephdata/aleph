@@ -61,7 +61,7 @@ def xref_collection(collection_id, other_id=None):
     scanner = scan(es,
                    index=entities_index(),
                    query=query,
-                   scroll='30m')
+                   scroll='1400m')
     for idx, res in enumerate(scanner):
         res = unpack_result(res)
         _xref_item(res, collection_id=other_id)

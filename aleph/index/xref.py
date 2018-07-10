@@ -32,10 +32,11 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
     required = []
     for fp in ensure_list(sample.get('fingerprints'))[:50]:
         required.append({
-            'fuzzy': {
+            'match': {
                 'fingerprints': {
-                    'value': fp,
+                    'query': fp,
                     'fuzziness': 1,
+                    'operator': 'and',
                     'boost': 2.0
                 }
             }
@@ -43,11 +44,14 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
 
     for name in ensure_list(sample.get('names'))[:50]:
         required.append({
-            'multi_match': {
-                'query': name,
-                'fields': ['names^2', 'text'],
-                'cutoff_frequency': 0.0001,
-                'boost': 0.5
+            'match': {
+                'names.text': {
+                    'query': name,
+                    'operator': 'and',
+                    'minimum_should_match': '67%',
+                    # 'cutoff_frequency': 0.0001,
+                    # 'boost': 0.5
+                }
             }
         })
 
@@ -59,7 +63,7 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
                 'term': {
                     index: {
                         'value': value,
-                        'boost': 3.0
+                        'boost': 5.0
                     }
                 }
             })

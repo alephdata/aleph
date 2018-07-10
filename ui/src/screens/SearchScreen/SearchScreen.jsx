@@ -186,6 +186,7 @@ class SearchScreen extends React.Component {
     const {toggle} = this.state;
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const toggleClass = toggle ? 'show' : 'hide';
+    const plusMinusIcon = toggle ? 'minus' : 'plus';
 
     return (
       <Screen query={query} updateQuery={this.updateQuery} title={title}>
@@ -208,11 +209,10 @@ class SearchScreen extends React.Component {
                 )}
               </span>
             </div>
-            <div onClick={this.toggleFacets} className='visible-md-flex facets total-count pt-text-muted'>
-              <Icon icon={`caret-right`} className={c('caret', {rotate: toggle})} />
+            <div onClick={this.toggleFacets} className='visible-sm-flex facets total-count pt-text-muted'>
+              <Icon icon={plusMinusIcon} />
               <span className='total-count-span'>
-                <span className="total-icon pt-icon-standard pt-icon-filter-list"/>
-                Filters
+                <FormattedMessage id="search.screen.filters" defaultMessage="Filters"/>
               </span>
             </div>
             <div className={toggleClass}>

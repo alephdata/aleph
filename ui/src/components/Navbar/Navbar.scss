@@ -124,10 +124,6 @@
       margin-right: 1em;
     }
 
-    .burger-icon {
-      display: none;
-    }
-
     .full-length-input {
       position: fixed;
       top: 0;
@@ -154,10 +150,34 @@
     .pt-navbar {
       flex-direction: column;
 
+      .transform {
+        .bar1 {
+          -webkit-transform: rotate(-45deg) translate(0, 6px);
+          transform: rotate(-45deg) translate(0, 6px);
+        }
+
+        .bar2 {
+          opacity: 0;
+        }
+
+        .bar3 {
+          -webkit-transform: rotate(45deg) translate(-1px, -8px);
+          transform: rotate(45deg) translate(-1px, -8px);
+        }
+      }
+
       .show-menu-dropdown {
         .pt-button {
           background-color: white;
         }
+      }
+
+      .bar1, .bar2, .bar3 {
+        width: 20px;
+        height: 2px;
+        background-color: #333;
+        margin: 3px 0;
+        transition: 0.4s;
       }
 
       .navbar-header-search {
@@ -180,11 +200,13 @@
         }
 
         .menu-items {
+          position: fixed;
+          left: 0;
+          margin-top: 4.5em;
           width: 100%;
           display: flex;
           flex-direction: column;
           float: left;
-          margin-top: 9.1em;
           border: $aleph-grid-size * 0.1 solid rgba(16, 22, 26, 0.2);
           box-shadow: 0 $aleph-grid-size * 0.8 $aleph-grid-size * 1.6 0 rgba(0, 0, 0, 0.2);
         }
