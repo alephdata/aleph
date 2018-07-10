@@ -24,7 +24,7 @@ class CountryExtractor(Analyzer):
             yield Text(text=text, languages=languages)
 
     def analyze(self, document):
-        if len(document.countries):
+        if not document.supports_nlp or len(document.countries):
             return
 
         try:
@@ -38,4 +38,4 @@ class CountryExtractor(Analyzer):
             log.warning("gRPC Error: %s", exc)
 
         if len(document.countries):
-            log.info("Countries for [%s]: %r", document.id, document.countries)
+            log.info("Countries [%s]: %r", document.id, document.countries)

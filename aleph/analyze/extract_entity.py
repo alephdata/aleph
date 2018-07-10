@@ -23,17 +23,6 @@ class EntityExtractor(EntityAnalyzer):
     def __init__(self):
         self.active = self.SERVICE is not None
 
-    # def get_channel(self):
-    #     cls = type(self)
-    #     if not hasattr(cls, '_channel') or cls._channel is None:
-    #         options = (('grpc.lb_policy_name', 'round_robin'),)
-    #         cls._channel = grpc.insecure_channel(cls.SERVICE, options)
-    #     return cls._channel
-
-    # def reset(self):
-    #     cls = type(self)
-    #     cls._channel = None
-
     def extract(self, collector, document):
         languages = list(document.languages)
         if not len(languages):
@@ -56,7 +45,6 @@ class EntityExtractor(EntityAnalyzer):
             log.info('%s Extracted %s entities.', self.SERVICE, len(collector))
         except grpc.RpcError as exc:
             log.warning("gRPC Error: %s", exc)
-            # self.reset()
 
 
 class PolyglotEntityExtractor(EntityExtractor):
