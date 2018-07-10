@@ -65,7 +65,7 @@ class AlertsDialog extends Component {
     const { newAlert } = this.state;
     event.preventDefault();
     this.setState({newAlert: ''});
-    if (!newAlert.strip().length) {
+    if (!newAlert.split().length) {
       return;
     }
     await this.props.addAlert({query_text: newAlert});
