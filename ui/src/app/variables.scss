@@ -4,7 +4,11 @@
 $aleph-grid-size: $pt-grid-size;
 $aleph-font-size: $pt-font-size;
 $aleph-line-height: $pt-line-height;
-$aleph-border-radius: $pt-border-radius; 
+$aleph-border-radius: $pt-border-radius;
+
+$aleph-screen-xs-max-width: 575px;
+$aleph-screen-md-max-width: 980px;
+$aleph-screen-lg-max-width: 1200px;
 
 $aleph-page-background: $light-gray5;
 $aleph-banner-background: $dark-gray3;

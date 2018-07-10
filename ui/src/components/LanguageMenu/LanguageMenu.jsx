@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Button, Popover, Position, Menu, MenuItem } from '@blueprintjs/core';
+import {FormattedMessage} from 'react-intl';
 
 import { setLocale } from 'src/actions';
 
@@ -25,11 +26,13 @@ class LanguageMenu extends Component {
                     onClick={this.onSetLanguage(locale)} />
         ))}
       </Menu>
-    )
+    );
 
     return (
       <Popover content={content} position={Position.BOTTOM_LEFT}>
-        <Button icon="translate" className="pt-minimal" />
+        <Button icon="translate" className="pt-minimal navbar-option-title">
+          <FormattedMessage id="nav.languages" defaultMessage="Languages"/>
+        </Button>
       </Popover>
     );
   }

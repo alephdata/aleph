@@ -1,0 +1,111 @@
+version: "2"
+
+services:
+  postgres:
+    image: postgres:10.0
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: aleph
+      POSTGRES_PASSWORD: aleph
+      POSTGRES_DATABASE: aleph
+
+  elasticsearch:
+    image: alephdata/platform-elasticsearch:2.1.4
+    restart: on-failure
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+      - elasticsearch-log:/var/log
+
+  rabbitmq:
+    image: rabbitmq
+    hostname: queue
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  convert-document:
+    image: alephdata/aleph-convert-document:latest
+    restart: on-failure
+    tmpfs:
+      - /tmp
+      - /root/.config
+    mem_limit: 1g
+    expose:
+      - 3000
+
+  app:
+    image: alephdata/aleph:latest
+    command: /bin/bash
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - convert-document
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+      - "./:/aleph"
+      - "./mappings:/aleph/mappings"
+      - "/:/host"
+    environment:
+      ALEPH_DEBUG: 'true'
+      ALEPH_SECRET_KEY: 'development'
+      ALEPH_CACHE: 'false'
+      ALEPH_OAUTH: 'false'
+      ALEPH_EAGER: 'true'
+      ALEPH_ARCHIVE_TYPE: 'file'
+    env_file:
+      - aleph.env
+
+  api:
+    image: alephdata/aleph:latest
+    command: python aleph/manage.py runserver -h 0.0.0.0 -p 5000
+    expose:
+      - 5000
+    ports:
+      - "5000:5000"
+    restart: on-failure
+    links:
+      - postgres
+      - elasticsearch
+      - rabbitmq
+      - convert-document
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+      - "./aleph:/aleph/aleph"
+      - "/:/host"
+    environment:
+      ALEPH_DEBUG: 'true'
+      ALEPH_SECRET_KEY: 'development'
+      ALEPH_CACHE: 'false'
+      ALEPH_EAGER: 'true'
+      ALEPH_ARCHIVE_TYPE: 'file'
+    env_file:
+      - aleph.env
+  
+  ui:
+    image: alephdata/ui:latest
+    links:
+      - api
+    command: npm run start
+    ports:
+      - "8080:3000"
+    volumes:
+      - "./ui/src:/alephui/src"
+      - "./ui/public:/alephui/public"
+      - "./ui/.tx:/alephui/.tx"
+      - "./ui/package.json:/alephui/package.json"
+    environment:
+      REACT_APP_API_ENDPOINT: '/api/2'
+    env_file:
+      - aleph.env
+
+volumes:
+  archive-data: {}
+  elasticsearch-data: {}
+  elasticsearch-log: {}
+  postgres-data: {}
+  rabbitmq-data: {}

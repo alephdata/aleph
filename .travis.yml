@@ -21,25 +21,25 @@ before_install:
   - sudo echo "ALEPH_DATABASE_NAME=$ALEPH_DATABASE_NAME\nALEPH_DATABASE_URI=$ALEPH_DATABASE_URI\nOAUTH_KEY=$OAUTH_KEY\nOAUTH_SECRET=$OAUTH_SECRET" >> aleph.env
   - docker --version
   - docker-compose --version
+  - docker pull alephdata/aleph:latest
 
 install:
   - echo "${TRAVIS_BRANCH}"
-  - docker build -t alephdata/aleph:latest .
-  - docker build -t alephdata/ui:latest ui
-  - docker build -t alephdata/aleph-convert-document:latest services/convert-document
-  - docker build -t alephdata/aleph-extract-polyglot:latest services/extract-polyglot
-  - docker build -t alephdata/aleph-extract-spacy:latest services/extract-spacy
-  - docker-compose -f docker-compose.dev.yml build
-  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
+  - docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:latest .
+  - docker build --cache-from alephdata/ui:latest -t alephdata/ui:latest ui
+  - docker build --cache-from alephdata/aleph-convert-document:latest -t alephdata/aleph-convert-document:latest services/convert-document
+  - docker-compose -f docker-compose.test.yml up -d postgres elasticsearch
   - sleep 4
 
 script:
-  - docker-compose -f docker-compose.dev.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
+  - docker-compose -f docker-compose.test.yml run --rm app /aleph/contrib/devwrapper.sh /aleph/contrib/test.sh
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # push tag as well
   - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
+      docker build -t alephdata/aleph-extract-polyglot:latest services/extract-polyglot
+      docker build -t alephdata/aleph-extract-spacy:latest services/extract-spacy
       docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:$TRAVIS_TAG ;
       docker push alephdata/aleph-convert-document:latest ;
       docker push alephdata/aleph-convert-document:$TRAVIS_TAG ;
@@ -57,6 +57,8 @@ after_success:
       docker push alephdata/ui:$TRAVIS_TAG ;
     fi
   - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
+      docker build -t alephdata/aleph-extract-polyglot:latest services/extract-polyglot
+      docker build -t alephdata/aleph-extract-spacy:latest services/extract-spacy
       docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:occrp ;
       docker push alephdata/aleph-convert-document:occrp ;
       docker tag alephdata/aleph-extract-polyglot:latest alephdata/aleph-extract-polyglot:occrp ;
