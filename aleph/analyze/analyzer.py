@@ -51,13 +51,10 @@ class TextIterator(object):
 
     def _text_iterator(self, ctx, document):
         _request_ctx_stack.push(ctx)
-        try:
-            languages = list(document.languages)
-            if not len(languages):
-                languages = [settings.DEFAULT_LANGUAGE]
-            for text in document.texts:
-                if text is None or len(text) <= self.MIN_LENGTH:
-                    continue
-                yield Text(text=text, languages=languages)
-        finally:
-            _request_ctx_stack.pop()
+        languages = list(document.languages)
+        if not len(languages):
+            languages = [settings.DEFAULT_LANGUAGE]
+        for text in document.texts:
+            if text is None or len(text) <= self.MIN_LENGTH:
+                continue
+            yield Text(text=text, languages=languages)
