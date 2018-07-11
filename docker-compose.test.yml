@@ -26,7 +26,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   convert-document:
-    build: services/convert-document
+    image: alephdata/aleph-convert-document:latest
     restart: on-failure
     tmpfs:
       - /tmp
@@ -35,36 +35,14 @@ services:
     expose:
       - 3000
 
-  extract-polyglot:
-    build: services/extract-polyglot
-    restart: on-failure
-    expose:
-      - 50000
-  
-  extract-spacy:
-    build: services/extract-spacy
-    restart: on-failure
-    expose:
-      - 50000
-
-  extract-countries:
-    build: services/extract-countries
-    restart: on-failure
-    mem_limit: 2g
-    expose:
-      - 50000
-
   app:
-    build: .
+    image: alephdata/aleph:latest
     command: /bin/bash
     links:
       - postgres
       - elasticsearch
       - rabbitmq
       - convert-document
-      - extract-polyglot
-      - extract-spacy
-      - extract-countries
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -82,7 +60,7 @@ services:
       - aleph.env
 
   api:
-    build: .
+    image: alephdata/aleph:latest
     command: python aleph/manage.py runserver -h 0.0.0.0 -p 5000
     expose:
       - 5000
@@ -94,9 +72,6 @@ services:
       - elasticsearch
       - rabbitmq
       - convert-document
-      - extract-polyglot
-      - extract-spacy
-      - extract-countries
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -112,7 +87,7 @@ services:
       - aleph.env
   
   ui:
-    build: ui
+    image: alephdata/ui:latest
     links:
       - api
     command: npm run start
