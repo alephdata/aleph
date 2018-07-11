@@ -1,7 +1,6 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import {Redirect} from 'react-router';
 
 import queryString from "query-string";
 import { loginWithToken } from "src/actions/sessionActions";
@@ -18,15 +17,11 @@ class OAuthScreen extends Component {
   }
 
   render() {
-    const { session, location } = this.props;
+    const { location } = this.props;
     const query = queryString.parse(location.search);
     const nextPath = query.path || '/';
-    if (session.loggedIn) {  
-      return <Redirect to={nextPath} />;
-    } else {
-      window.location.replace(nextPath);
-      return null;
-    }
+    window.location.replace(nextPath);
+    return null;
   }
 }
 

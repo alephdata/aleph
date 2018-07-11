@@ -1,6 +1,5 @@
 import { get } from 'lodash';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import React, {Component} from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
@@ -28,14 +27,14 @@ class ErrorSection extends Component {
   }
 
   render() {
-    const { error, metadata, location } = this.props;
+    const { error, metadata } = this.props;
     const { title = '', description = '', visual = 'error' } = this.props;
     const message = error === undefined ? title : error.message;
 
     return (
       <React.Fragment>
         <AuthenticationDialog auth={metadata.auth}
-                              nextPath={location.pathname}
+                              nextPath={window.location.href}
                               isOpen={this.state.isOpen}
                               toggleDialog={this.onSignIn} />
         <div className='ErrorSection'>
@@ -53,5 +52,4 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 ErrorSection = connect(mapStateToProps)(ErrorSection);
-ErrorSection = withRouter(ErrorSection);
 export default ErrorSection;
