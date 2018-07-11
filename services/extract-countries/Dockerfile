@@ -5,7 +5,9 @@ RUN apt-get -qq -y update \
     && apt-get -qq -y autoremove && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN wget -q -O /tmp/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip
+RUN wget -q -O /tmp/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
+    && zgrep "ADM1\|PCLI" /tmp/allCountries.zip >/tmp/allCountries.filtered.txt \
+    && rm /tmp/allCountries.zip
 RUN mkdir /service
 
 ADD setup.py /service/

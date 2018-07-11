@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 
 class CountryExtractor(Analyzer):
-    SERVICE = settings.GEOEXTRACT_SERVICE
+    SERVICE = settings.COUNTRIES_SERVICE
 
     def __init__(self):
         self.active = self.SERVICE is not None

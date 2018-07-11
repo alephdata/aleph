@@ -2,7 +2,6 @@ import io
 import csv
 import grpc
 import time
-import zipfile
 import logging
 import ahocorasick
 from concurrent import futures
@@ -30,17 +29,13 @@ class GeoExtractServicer(GeoExtractServicer):
     MAX_TAGS = 3
     TAG_FREQUENCY_CUT = 0.01
 
-    def __init__(self, geo_corpus_path):
+    def __init__(self, corpus_path):
         self.automaton = ahocorasick.Automaton()
 
         log.info("Building country automaton...")
         names_count = 0
-        with zipfile.ZipFile(geo_corpus_path, "r") as zf:
-            all_geonames = zf.open("allCountries.txt", "r")
-            wrapped = io.TextIOWrapper(all_geonames, 'utf-8')
-            reader = csv.reader(wrapped, delimiter='\t')
-
-            for row in reader:
+        with io.open(corpus_path, 'r', encoding='utf-8') as fh:
+            for row in csv.reader(fh, delimiter='\t'):
                 if row[7] in self.FEATURES:
                     continue
 
@@ -51,16 +46,16 @@ class GeoExtractServicer(GeoExtractServicer):
                 names = set(row[3].split(','))
                 names.add(row[1])
                 names.add(row[2])
-                names = [normalize(n) for n in names]
 
                 for name in names:
+                    name = normalize(name)
                     if name is None or len(name) < 4:
                         continue
                     names_count += 1
                     self.automaton.add_word(name, country)
 
         self.automaton.make_automaton()
-        log.info("...done: %s", names_count)
+        log.info("...done: %s names", names_count)
 
     def ExtractCountries(self, request_iterator, context):
         country_tags = []
@@ -91,11 +86,9 @@ class GeoExtractServicer(GeoExtractServicer):
 
 
 def serve(port):
-    geo_corpus_path = "/tmp/allCountries.zip"
+    corpus_path = '/tmp/allCountries.filtered.txt'
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
-    add_GeoExtractServicer_to_server(
-        GeoExtractServicer(geo_corpus_path), server
-    )
+    add_GeoExtractServicer_to_server(GeoExtractServicer(corpus_path), server)
     server.add_insecure_port(port)
     server.start()
     log.info("Server started: %s", port)
