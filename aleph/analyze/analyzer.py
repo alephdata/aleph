@@ -1,5 +1,4 @@
 import logging
-from flask import current_app
 from flask import _request_ctx_stack
 
 from aleph import settings
