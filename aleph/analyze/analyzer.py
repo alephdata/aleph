@@ -39,31 +39,25 @@ class TextIterator(object):
     MIN_LENGTH = 100
 
     def text_iterator(self, document):
-        # app = current_app._get_current_object()
-        # print(_request_ctx_stack, _request_ctx_stack.top)
+        # gRPC seemingly starts a non-flask thread to consume the
+        # input iterable for request-iterating services. This means
+        # that database queries on db.session will fail unless an
+        # active request context exists for the thread. This hack
+        # does this, but not via the proposed "with app.app_context()"
+        # approach, which didn't always work. Instead, the request
+        # context is transplanted manually. Not a proud moment.
         ctx = _request_ctx_stack.top
         return self._text_iterator(ctx, document)
 
     def _text_iterator(self, ctx, document):
-        # print(_request_ctx_stack, _request_ctx_stack.top)
         _request_ctx_stack.push(ctx)
-        # with app.app_context():
-        languages = list(document.languages)
-        if not len(languages):
-            languages = [settings.DEFAULT_LANGUAGE]
-        for text in document.texts:
-            if text is None or len(text) <= self.MIN_LENGTH:
-                continue
-            yield Text(text=text, languages=languages)
-
-    # def text_iterator(self, document):
-    #     return iter(list(self._text_iterator(document)))
-
-    # def _text_iterator(self, document):
-    #     languages = list(document.languages)
-    #     if not len(languages):
-    #         languages = [settings.DEFAULT_LANGUAGE]
-    #     for text in document.texts:
-    #         if text is None or len(text) <= self.MIN_LENGTH:
-    #             continue
-    #         yield Text(text=text, languages=languages)
+        try:
+            languages = list(document.languages)
+            if not len(languages):
+                languages = [settings.DEFAULT_LANGUAGE]
+            for text in document.texts:
+                if text is None or len(text) <= self.MIN_LENGTH:
+                    continue
+                yield Text(text=text, languages=languages)
+        finally:
+            _request_ctx_stack.pop()
