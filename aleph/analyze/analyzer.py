@@ -1,5 +1,6 @@
 import logging
 from flask import current_app
+from flask import _request_ctx_stack
 
 from aleph import settings
 from aleph.model import DocumentTagCollector
@@ -38,15 +39,31 @@ class TextIterator(object):
     MIN_LENGTH = 100
 
     def text_iterator(self, document):
-        app = current_app._get_current_object()
-        return self._text_iterator(app, document)
+        # app = current_app._get_current_object()
+        # print(_request_ctx_stack, _request_ctx_stack.top)
+        ctx = _request_ctx_stack.top
+        return self._text_iterator(ctx, document)
 
-    def _text_iterator(self, app, document):
-        with app.app_context():
-            languages = list(document.languages)
-            if not len(languages):
-                languages = [settings.DEFAULT_LANGUAGE]
-            for text in document.texts:
-                if text is None or len(text) <= self.MIN_LENGTH:
-                    continue
-                yield Text(text=text, languages=languages)
+    def _text_iterator(self, ctx, document):
+        # print(_request_ctx_stack, _request_ctx_stack.top)
+        _request_ctx_stack.push(ctx)
+        # with app.app_context():
+        languages = list(document.languages)
+        if not len(languages):
+            languages = [settings.DEFAULT_LANGUAGE]
+        for text in document.texts:
+            if text is None or len(text) <= self.MIN_LENGTH:
+                continue
+            yield Text(text=text, languages=languages)
+
+    # def text_iterator(self, document):
+    #     return iter(list(self._text_iterator(document)))
+
+    # def _text_iterator(self, document):
+    #     languages = list(document.languages)
+    #     if not len(languages):
+    #         languages = [settings.DEFAULT_LANGUAGE]
+    #     for text in document.texts:
+    #         if text is None or len(text) <= self.MIN_LENGTH:
+    #             continue
+    #         yield Text(text=text, languages=languages)
