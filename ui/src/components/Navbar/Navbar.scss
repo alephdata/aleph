@@ -73,11 +73,15 @@
     }
   }
 
+  .pt-popover-wrapper {
+    padding-top: $aleph-grid-size * 0.5;
+  }
+
   .navbar-options {
-    padding-left: 1em;
+    padding-left: 2em;
 
     .pt-navbar-divider {
-      margin-top: $aleph-grid-size;
+      margin: 10px 0 0 30px;
     }
 
     .menu-items {
@@ -212,8 +216,6 @@
         }
 
         .pt-popover-wrapper {
-          padding-top: $aleph-grid-size * 0.5;
-
           span {
             display: block;
           }
