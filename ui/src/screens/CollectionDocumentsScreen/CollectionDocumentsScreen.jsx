@@ -9,7 +9,7 @@ import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection, deleteDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
-import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
+import DeleteDialog from 'src/dialogs/DeleteDialog/DeleteDialog';
 
 class CollectionDocumentsScreen extends Component {
   constructor(props) {
@@ -22,7 +22,6 @@ class CollectionDocumentsScreen extends Component {
     };
 
     this.disableOrEnableDelete = this.disableOrEnableDelete.bind(this);
-    this.onDeleteFiles = this.onDeleteFiles.bind(this);
     this.setDocuments = this.setDocuments.bind(this);
     this.toggleDeleteCase = this.toggleDeleteCase.bind(this);
   }
@@ -45,13 +44,6 @@ class CollectionDocumentsScreen extends Component {
 
   disableOrEnableDelete(isDisabled) {
     this.setState({isDeleteDisabled: isDisabled});
-  }
-
-  onDeleteFiles() {
-    /*const { selectedFiles } = this.state;
-    for(let i = 0; i < selectedFiles.length; i++) {
-      this.props.deleteDocument({document: selectedFiles[i]})
-    }*/
   }
 
   toggleDeleteCase() {
@@ -96,7 +88,7 @@ class CollectionDocumentsScreen extends Component {
                         writable={collection.writeable}
                         disableOrEnableDelete={this.disableOrEnableDelete}
                         setDocuments={this.setDocuments}/>
-          <CollectionDeleteDialog documents={selectedFiles}
+          <DeleteDialog documents={selectedFiles}
                                   isOpen={this.state.deleteIsOpen}
                                   toggleDialog={this.toggleDeleteCase} />
         </CaseContext>

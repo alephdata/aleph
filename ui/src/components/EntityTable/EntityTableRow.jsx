@@ -21,8 +21,10 @@ class EntityTableRow extends Component {
     const { hideCollection, documentMode , writable, selectedRows} = this.props;
     const parsedHash = queryString.parse(loc.hash);
     let isSelected = false;
-    for(let i = 0; i < selectedRows.length; i++) {
-      if(selectedRows[i].id === entity.id) isSelected = true;
+    if(writable) {
+      for(let i = 0; i < selectedRows.length; i++) {
+        if(selectedRows[i].id === entity.id) isSelected = true;
+      }
     }
     
     let rowClassName = (className) ? `${className} nowrap` : 'nowrap';

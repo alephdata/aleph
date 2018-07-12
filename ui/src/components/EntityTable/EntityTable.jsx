@@ -89,7 +89,7 @@ class EntityTable extends Component {
     const { hideCollection = false, documentMode = false } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
-    const selectAll = selectedRows.length === result.results.length;
+    const selectAll = selectedRows !== undefined ? selectedRows.length === result.results.length : false;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -117,7 +117,7 @@ class EntityTable extends Component {
           <tr>
             {writable && (
               <th>
-                <Checkbox checked={selectAll} label="Select all" onChange={this.onSelectAll} />
+                <Checkbox checked={selectAll} onChange={this.onSelectAll} />
               </th>
             )}
             <TH field="name" className="wide" sortable={true} />

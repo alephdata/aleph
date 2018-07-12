@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Dialog, Button, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
+import DeleteDialog from 'src/dialogs/DeleteDialog/DeleteDialog';
 import { Role, Country } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 import { updateCollection } from "src/actions";
@@ -209,7 +209,7 @@ class CollectionEditDialog extends Component {
               text={intl.formatMessage(messages.save_button)} />
           </div>
         </div>
-        <CollectionDeleteDialog isOpen={this.state.deleteIsOpen}
+        <DeleteDialog isOpen={this.state.deleteIsOpen}
                                 collection={collection}
                                 toggleDialog={this.toggleDeleteCollection} />
       </Dialog>

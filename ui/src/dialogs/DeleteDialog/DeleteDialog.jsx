@@ -23,7 +23,7 @@ const messages = defineMessages({
 });
 
 
-class CollectionDeleteDialog extends Component {
+class DeleteDialog extends Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
@@ -43,7 +43,7 @@ class CollectionDeleteDialog extends Component {
         this.props.deleteDocument({document: documents[i]})
         history.push({
           pathname: '/collections/' + collection.id + '/documents',
-          search: queryString.stringify({'_deleted': documents[i].id})
+          //search: queryString.stringify({'_deleted': documents[i].id})
         });
       }
     }
@@ -71,6 +71,6 @@ const mapStateToProps = (state, ownProps) => {
   return {};
 };
 
-CollectionDeleteDialog = injectIntl(CollectionDeleteDialog);
-CollectionDeleteDialog = withRouter(CollectionDeleteDialog);
-export default connect(mapStateToProps, { deleteCollection, deleteDocument })(CollectionDeleteDialog);
+DeleteDialog = injectIntl(DeleteDialog);
+DeleteDialog = withRouter(DeleteDialog);
+export default connect(mapStateToProps, { deleteCollection, deleteDocument })(DeleteDialog);
