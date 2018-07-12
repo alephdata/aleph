@@ -7,7 +7,7 @@ import { endpoint } from 'src/app/api';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
-import {loginWithPassword, loginWithToken} from "src/actions/sessionActions";
+import { loginWithPassword, loginWithToken } from "src/actions/sessionActions";
 
 import './AuthenticationDialog.css';
 
@@ -66,7 +66,9 @@ class AuthenticationDialog extends Component {
   }
 
   onLogin(data) {
+    const { nextPath } = this.props;
     this.props.loginWithPassword(data.email, data.password);
+    window.location.replace(nextPath);
   }
 
   onRegisterClick() {
