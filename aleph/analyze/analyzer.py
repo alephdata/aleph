@@ -1,8 +1,7 @@
 import logging
-from flask import _request_ctx_stack
 
 from aleph import settings
-from aleph.core import celery
+from aleph.core import celery, db
 from aleph.model import DocumentTagCollector
 from alephclient.services.common_pb2 import Text
 
@@ -43,6 +42,7 @@ class TextIterator(object):
         # input iterable for request-iterating services. This means
         # that database queries on db.session will fail unless an
         # active request context exists for the thread.
+        db.app = celery.app
         with celery.app.app_context():
             languages = list(document.languages)
             if not len(languages):
