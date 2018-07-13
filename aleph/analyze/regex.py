@@ -43,7 +43,7 @@ class PhoneNumberAnalyzer(RegexAnalyzer):
 
 
 class IPAnalyzer(RegexAnalyzer):
-    REGEX = r'\b([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([A-f0-9:]+:+)+[A-f0-9]+)\b'  # noqa
+    REGEX = r'\b(0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5]))\b'  # noqa
     RE = re.compile(REGEX, re.IGNORECASE)
     ORIGIN = 'regex:ip'
     TYPE = DocumentTag.TYPE_IP
