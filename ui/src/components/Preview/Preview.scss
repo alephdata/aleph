@@ -13,10 +13,12 @@
   width: $aleph-sidebar-width;
   box-shadow: $pt-elevation-shadow-3;
   padding: 0 !important;
-  
   background: $aleph-content-background;
   overflow-x: hidden; // just in case.
   transition: width 0.3s ease-in-out;
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    left: 0;
+  }
   
   > * {
    min-width: $aleph-sidebar-sm-width;
@@ -31,6 +33,9 @@
   &.maximised {
     width: 50%;
     max-width: $alpeh-preview-pane-width;
+    @media screen and (max-width: $aleph-screen-sm-max-width) {
+      width: 90%;
+    }
   }
   
   h1, h2 {
@@ -70,14 +75,4 @@
     }
   }
   
-}
-
-//small screen
-@media screen and (max-width: $aleph-screen-sm-max-width) {
-  .Preview {
-    left: 0;
-  }
-  .Preview.maximised {
-    width: 90%;
-  }
 }
