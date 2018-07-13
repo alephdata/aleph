@@ -3,7 +3,6 @@ import queryString from 'query-string';
 
 import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
-
 class EntityTableRow extends Component {
   render() {
     const { entity, className, location: loc } = this.props;

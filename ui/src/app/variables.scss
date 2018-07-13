@@ -6,7 +6,7 @@ $aleph-font-size: $pt-font-size;
 $aleph-line-height: $pt-line-height;
 $aleph-border-radius: $pt-border-radius;
 
-$aleph-screen-xs-max-width: 575px;
+$aleph-screen-sm-max-width: 575px;
 $aleph-screen-md-max-width: 980px;
 $aleph-screen-lg-max-width: 1200px;
 
@@ -34,6 +34,9 @@ $aleph-visited-link-color: darken($aleph-link-color, 10%);
 $alpeh-preview-pane-width: 1024px;
 $aleph-single-pane-width: 1024px;
 $aleph-sidebar-width: $aleph-grid-size * 40;
+$aleph-infopane-md-width: $aleph-grid-size * 300;
+$aleph-sidebar-sm-width: $aleph-grid-size * 20;
+$aleph-sidepane-md-width: $aleph-grid-size * 25;
 
 $aleph-text-highlight-color: yellow;
 

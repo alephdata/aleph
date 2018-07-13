@@ -3,7 +3,9 @@
 .SearchFacets {
   display: flex;
   flex-flow: column nowrap;
-
   padding-left: 0;
   list-style: none;
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    margin-top: 0;
+  }
 }

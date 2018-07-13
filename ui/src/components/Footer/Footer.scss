@@ -20,6 +20,9 @@ $breadcrumb-line-height: $pt-icon-size-large - 1px !default;
     padding: 0;
     background: unset;
     box-shadow: none;
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      display: none;
+    }
 
     ul.pt-breadcrumbs {
       height: unset;

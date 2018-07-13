@@ -14,9 +14,9 @@ const messages = defineMessages({
     id: 'search.facets.clear_filter',
     defaultMessage: 'Clear this filter',
   },
-})
+});
 
-const defaultFacet = {}
+const defaultFacet = {};
 
 class SearchFacet extends Component {
   constructor(props)  {
