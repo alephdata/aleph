@@ -62,8 +62,10 @@ class AuthenticationDialog extends Component {
     });
   }
 
-  onLogin(data) {
-    this.props.loginWithPassword(data.email, data.password);
+  async onLogin(data) {
+    const { nextPath } = this.props;
+    await this.props.loginWithPassword(data.email, data.password);
+    window.location.replace(nextPath || '/');
   }
 
   onRegisterClick() {
