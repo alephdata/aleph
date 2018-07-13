@@ -11,7 +11,7 @@ from flask_cors import CORS
 from flask_caching import Cache
 from flask.ext.babel import Babel
 from kombu import Queue
-from celery import Celery
+from celery import Celery, Task
 from celery.schedules import crontab
 from followthemoney import set_model_locale
 from raven.contrib.flask import Sentry
@@ -74,7 +74,6 @@ def create_app(config={}):
             }
         },
     )
-    celery.app = app
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
     configure_oauth(app)

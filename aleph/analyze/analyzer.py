@@ -1,7 +1,6 @@
 import logging
 
 from aleph import settings
-from aleph.core import celery, db
 from aleph.model import DocumentTagCollector
 from alephclient.services.common_pb2 import Text
 
@@ -38,16 +37,18 @@ class TextIterator(object):
     MIN_LENGTH = 100
 
     def text_iterator(self, document):
+        texts = self._text_iterator(document)
+        return iter(list(texts))
+
+    def _text_iterator(self, document):
         # gRPC seemingly starts a non-flask thread to consume the
         # input iterable for request-iterating services. This means
         # that database queries on db.session will fail unless an
         # active request context exists for the thread.
-        db.app = celery.app
-        with celery.app.app_context():
-            languages = list(document.languages)
-            if not len(languages):
-                languages = [settings.DEFAULT_LANGUAGE]
-            for text in document.texts:
-                if text is None or len(text) <= self.MIN_LENGTH:
-                    continue
-                yield Text(text=text, languages=languages)
+        languages = list(document.languages)
+        if not len(languages):
+            languages = [settings.DEFAULT_LANGUAGE]
+        for text in document.texts:
+            if text is None or len(text) <= self.MIN_LENGTH:
+                continue
+            yield Text(text=text, languages=languages)
