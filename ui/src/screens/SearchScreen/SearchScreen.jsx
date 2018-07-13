@@ -131,7 +131,7 @@ class SearchScreen extends React.Component {
         icon: 'person'
       }
     ];
-    this.state = {facets: facets, toggle: false};
+    this.state = {facets: facets, hideFacets: false};
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -178,15 +178,15 @@ class SearchScreen extends React.Component {
   }
 
   toggleFacets() {
-    this.setState({toggle: !this.state.toggle});
+    this.setState({hideFacets: !this.state.hideFacets});
   }
 
   render() {
     const {query, result, intl} = this.props;
-    const {toggle} = this.state;
+    const {hideFacets} = this.state;
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
-    const toggleClass = toggle ? 'show' : 'hide';
-    const plusMinusIcon = toggle ? 'minus' : 'plus';
+    const hideFacetsClass = hideFacets ? 'show' : 'hide';
+    const plusMinusIcon = hideFacets ? 'minus' : 'plus';
 
     return (
       <Screen query={query} updateQuery={this.updateQuery} title={title}>
@@ -215,7 +215,7 @@ class SearchScreen extends React.Component {
                 <FormattedMessage id="search.screen.filters" defaultMessage="Filters"/>
               </span>
             </div>
-            <div className={toggleClass}>
+            <div className={hideFacetsClass}>
               <SearchFacets query={query}
                             result={result}
                             updateQuery={this.updateQuery}
