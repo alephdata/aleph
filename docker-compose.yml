@@ -46,6 +46,13 @@ services:
     expose:
       - 50000
 
+  extract-countries:
+    build: services/extract-countries
+    restart: on-failure
+    mem_limit: 2g
+    expose:
+      - 50000
+
   worker:
     build: .
     command: celery -A aleph.queues -B -c 4 -l INFO worker
@@ -57,6 +64,7 @@ services:
       - convert-document
       - extract-polyglot
       - extract-spacy
+      - extract-countries
     tmpfs:
       - /tmp
     volumes:
@@ -75,6 +83,7 @@ services:
       - convert-document
       - extract-polyglot
       - extract-spacy
+      - extract-countries
       - worker
     tmpfs:
       - /tmp
@@ -96,6 +105,7 @@ services:
       - convert-document
       - extract-polyglot
       - extract-spacy
+      - extract-countries
     tmpfs:
       - /tmp
     volumes:

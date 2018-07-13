@@ -49,6 +49,9 @@ after_success:
       docker tag alephdata/aleph-extract-spacy:latest alephdata/aleph-extract-spacy:$TRAVIS_TAG ;
       docker push alephdata/aleph-extract-spacy:latest ;
       docker push alephdata/aleph-extract-spacy:$TRAVIS_TAG ;
+      docker tag alephdata/aleph-extract-countries:latest alephdata/aleph-extract-countries:$TRAVIS_TAG ;
+      docker push alephdata/aleph-extract-countries:latest ;
+      docker push alephdata/aleph-extract-countries:$TRAVIS_TAG ;
       docker tag alephdata/aleph:latest alephdata/aleph:$TRAVIS_TAG ;
       docker push alephdata/aleph:latest ;
       docker push alephdata/aleph:$TRAVIS_TAG ;
@@ -65,6 +68,8 @@ after_success:
       docker push alephdata/aleph-extract-polyglot:occrp ;
       docker tag alephdata/aleph-extract-spacy:latest alephdata/aleph-extract-spacy:occrp ;
       docker push alephdata/aleph-extract-spacy:occrp ;
+      docker tag alephdata/aleph-extract-countries:latest alephdata/aleph-extract-countries:occrp ;
+      docker push alephdata/aleph-extract-countries:occrp ;
       docker tag alephdata/aleph:latest alephdata/aleph:occrp ;
       docker push alephdata/aleph:occrp ;
       docker tag alephdata/ui:latest alephdata/ui:occrp ;

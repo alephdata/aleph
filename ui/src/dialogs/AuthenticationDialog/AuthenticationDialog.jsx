@@ -7,7 +7,7 @@ import { endpoint } from 'src/app/api';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
-import {loginWithPassword, loginWithToken} from "src/actions/sessionActions";
+import { loginWithPassword, loginWithToken } from "src/actions/sessionActions";
 
 import './AuthenticationDialog.css';
 
@@ -44,10 +44,13 @@ class AuthenticationDialog extends Component {
   }
 
   onOAuthLogin() {
+    const { nextPath } = this.props;
     const { auth } = this.props.metadata;
     if (auth.oauth_uri) {
       const location = window.location;
-      const targetUrl = `${location.protocol}//${location.host}/oauth`;
+      const nextPathEnc = encodeURIComponent(nextPath || '/');
+      const targetUrl = `${location.protocol}//${location.host}/oauth?path=${nextPathEnc}`;
+      console.log('target', targetUrl, nextPath);
       const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
       window.location.replace(`/api/2/sessions/oauth${loginUrlQueryString}`);
     }

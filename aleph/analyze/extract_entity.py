@@ -2,17 +2,16 @@ import grpc
 import logging
 
 from aleph import settings
-from aleph.analyze.analyzer import EntityAnalyzer
+from aleph.analyze.analyzer import EntityAnalyzer, TextIterator
 from aleph.model import DocumentTag
 from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
-from alephclient.services.entityextract_pb2 import ExtractedEntity, Text
+from alephclient.services.entityextract_pb2 import ExtractedEntity
 
 log = logging.getLogger(__name__)
 TYPE = ExtractedEntity.Type.Value
 
 
-class EntityExtractor(EntityAnalyzer):
-    MIN_LENGTH = 100
+class EntityExtractor(EntityAnalyzer, TextIterator):
     TYPES = {
         TYPE('PERSON'): DocumentTag.TYPE_PERSON,
         TYPE('ORGANIZATION'): DocumentTag.TYPE_ORGANIZATION,
@@ -22,40 +21,20 @@ class EntityExtractor(EntityAnalyzer):
     def __init__(self):
         self.active = self.SERVICE is not None
 
-    # def get_channel(self):
-    #     cls = type(self)
-    #     if not hasattr(cls, '_channel') or cls._channel is None:
-    #         options = (('grpc.lb_policy_name', 'round_robin'),)
-    #         cls._channel = grpc.insecure_channel(cls.SERVICE, options)
-    #     return cls._channel
-
-    # def reset(self):
-    #     cls = type(self)
-    #     cls._channel = None
-
     def extract(self, collector, document):
-        languages = list(document.languages)
-        if not len(languages):
-            languages = [settings.DEFAULT_LANGUAGE]
-
         try:
             channel = grpc.insecure_channel(self.SERVICE)
             service = EntityExtractStub(channel)
-            for text in document.texts:
-                if len(text) <= self.MIN_LENGTH:
+            texts = self.text_iterator(document)
+            entities = service.Extract(texts)
+            for entity in entities.entities:
+                type_ = self.TYPES.get(entity.type)
+                if type_ is None:
                     continue
-
-                text = Text(text=text, languages=languages)    
-                for entity in service.Extract(text):
-                    type_ = self.TYPES.get(entity.type)
-                    if type_ is None:
-                        continue
-                    collector.emit(entity.label, type_)
-
+                collector.emit(entity.label, type_, weight=entity.weight)
             log.info('%s Extracted %s entities.', self.SERVICE, len(collector))
         except grpc.RpcError as exc:
             log.warning("gRPC Error: %s", exc)
-            # self.reset()
 
 
 class PolyglotEntityExtractor(EntityExtractor):
