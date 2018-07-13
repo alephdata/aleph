@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import {Component} from 'react';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router';
+import {withRouter} from 'react-router';
 
 import queryString from "query-string";
 import { loginWithToken } from "src/actions/sessionActions";
@@ -8,7 +8,8 @@ import { loginWithToken } from "src/actions/sessionActions";
 
 class OAuthScreen extends Component {
   componentDidMount() {
-    const parsedHash = queryString.parse(window.location.hash);
+    const { location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
     if (parsedHash.token) {
       this.props.loginWithToken(parsedHash.token);
       return null;
@@ -16,17 +17,16 @@ class OAuthScreen extends Component {
   }
 
   render() {
-    const { session } = this.props;
-    if (session.loggedIn) {
-      return <Redirect to="/"/>;
-    } else {
-      window.location.replace('/');
-      return null;
-    }
+    const { location } = this.props;
+    const query = queryString.parse(location.search);
+    const nextPath = query.path || '/';
+    window.location.replace(nextPath);
+    return null;
   }
 }
 
 const mapStateToProps = ({ session }) => ({ session });
 
 OAuthScreen = connect(mapStateToProps, {loginWithToken})(OAuthScreen);
+OAuthScreen = withRouter(OAuthScreen);
 export default OAuthScreen;

@@ -33,7 +33,10 @@ class ErrorSection extends Component {
 
     return (
       <React.Fragment>
-        <AuthenticationDialog auth={metadata.auth} isOpen={this.state.isOpen} toggleDialog={this.onSignIn}/>
+        <AuthenticationDialog auth={metadata.auth}
+                              nextPath={window.location.href}
+                              isOpen={this.state.isOpen}
+                              toggleDialog={this.onSignIn} />
         <div className='ErrorSection'>
           <div className='inner-div'>
             <NonIdealState visual={visual} title={message} description={description} />

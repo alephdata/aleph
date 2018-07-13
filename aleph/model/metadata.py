@@ -43,6 +43,7 @@ class Metadata(object):
             values.append(value)
         if len(values):
             self.meta[field] = values
+        self.update_meta()
 
     @property
     def title(self):

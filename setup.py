@@ -31,7 +31,8 @@ setup(
             'polyglot = aleph.analyze.extract_entity:PolyglotEntityExtractor',
             'spacy = aleph.analyze.extract_entity:SpacyEntityExtractor',
             'ip = aleph.analyze.regex:IPAnalyzer',
-            'iban = aleph.analyze.regex:IBANAnalyzer'
+            'iban = aleph.analyze.regex:IBANAnalyzer',
+            'country = aleph.analyze.country:CountryExtractor',
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

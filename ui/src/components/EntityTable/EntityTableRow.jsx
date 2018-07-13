@@ -43,7 +43,9 @@ class EntityTableRow extends Component {
           <Checkbox checked={isSelected} onChange={this.onSelect} />
         </td>}
         <td className="entity">
-          <Entity.Link preview={!documentMode} entity={entity} icon />
+          <Entity.Link preview={!documentMode}
+                       documentMode={documentMode}
+                       entity={entity} icon />
         </td>
         {!hideCollection && 
           <td className="collection">
