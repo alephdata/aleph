@@ -99,7 +99,7 @@ class EntityTable extends Component {
             {!hideCollection && 
               <TH field="collection_id" />
             }
-            <TH className='header-schema visible-sm-none' field="schema" sortable={true} />
+            <TH className='header-schema visible-md-none' field="schema" sortable={true} />
             {!documentMode && (
               <TH className='header-country' field="countries" sortable={true} />
             )}

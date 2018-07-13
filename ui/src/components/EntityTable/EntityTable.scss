@@ -10,27 +10,14 @@
   }
 }
 
-//small screen
-@media screen and (max-width: $aleph-screen-sm-max-width) {
-  .EntityTable {
-    .header-country, .header-dates, .header-size {
-      display: none;
-    }
-
-    .country, .date, .file-size, .schema {
-      display: none;
-    }
-  }
-}
-
-//medium screen
+//medium and small screen
 @media screen and (max-width: $aleph-screen-md-max-width) {
   .EntityTable {
     .header-country, .header-dates, .header-size {
       display: none;
     }
 
-    .country, .date, .file-size {
+    .country, .date, .file-size, .schema {
       display: none;
     }
   }
