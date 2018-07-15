@@ -34,7 +34,7 @@ def extract_polyglot(text, language):
             category = POLYGLOT_TYPES.get(entity.tag)
             if category is not None:
                 # TODO: do we need start, end offsets?
-                yield label, category
+                yield label, category, entity.start, entity.end
     except Exception:
         log.exception("Cannot extract. Language: %s", language)
 
@@ -48,9 +48,9 @@ def extract_spacy(text, language):
     nlp = SPACY_MODELS.get(language)
     try:
         doc = nlp(text)
-        for entity in doc.ents:
-            category = SPACY_TYPES.get(entity.label_)
+        for ent in doc.ents:
+            category = SPACY_TYPES.get(ent.label_)
             if category is not None:
-                yield entity.text, category
+                yield ent.text, category, ent.start, ent.end
     except Exception:
         log.exception("Cannot extract. Language: %s", language)

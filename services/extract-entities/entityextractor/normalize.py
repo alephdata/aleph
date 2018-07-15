@@ -1,4 +1,5 @@
 import re
+from Levenshtein import setmedian
 from normality import normalize, collapse_spaces
 
 MAX_LENGTH = 100
@@ -17,8 +18,14 @@ def clean_label(text):
     text = collapse_spaces(text)
     if not len(text) or len(text) < MIN_LENGTH:
         return
+    if ' ' not in text:
+        return
     return text
 
 
 def label_key(label):
     return normalize(label, ascii=True)
+
+
+def select_label(labels):
+    return setmedian(labels)

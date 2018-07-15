@@ -6,19 +6,24 @@ from alephclient.services.entityextract_pb2_grpc import add_EntityExtractService
 from alephclient.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
 from alephclient.services.entityextract_pb2 import ExtractedEntity, ExtractedEntitySet  # noqa
 
-log = logging.getLogger(__name__)
+from entityextractor.aggregate import EntityAggregator
+
+log = logging.getLogger('entityextractor.service')
 
 
 class EntityExtractorServicer(EntityExtractServicer):
 
     def Extract(self, request_iterator, context):
         entities = ExtractedEntitySet(entities=[])
-        # for label in labels:
-        #     weight = labels[label]
-        #     entity = entities.entities.add()
-        #     entity.label = label
-        #     entity.weight = weight
-        #     entity.type = TYPES[types[label]]
+        aggregator = EntityAggregator()
+        for req in request_iterator:
+            aggregator.extract(req.text, req.languages)
+
+        for (label, category, weight) in aggregator.entities():
+            entity = entities.entities.add()
+            entity.label = label
+            entity.weight = weight
+            entity.type = category
         return entities
 
 
