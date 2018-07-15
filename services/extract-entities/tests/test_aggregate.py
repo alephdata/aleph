@@ -6,20 +6,20 @@ class TestAggregate(object):
     def test_aggregator(self):
         agg = EntityAggregator()
         assert len(agg) == 0, agg
-        agg.feed('test', 'test', (0, 4))
-        assert len(agg) == 1, agg
-        agg.feed('TEST ', 'test', (6, 11))
-        assert len(agg) == 1, agg
-        agg.feed('BANANA ', 'test', (12, 80))
-        assert len(agg) == 2, agg
+        agg.feed('test this', 'test', (1, 0, 8))
+        assert len(agg) == 1, len(agg)
+        agg.feed('TEST THIS ', 'test', (2, 16, 25))
+        assert len(agg) == 1, len(agg)
+        agg.feed('BANANA SPLIT ', 'test', (3, 12, 80))
+        assert len(agg) == 2, len(agg)
 
     def test_entities(self):
         agg = EntityAggregator()
-        agg.feed('test', 'baa', (0, 4))
-        agg.feed('test ', 'baa', (0, 4))
-        agg.feed('TEST', 'boo', (0, 4))
+        agg.feed('test this', 'baa', (1, 0, 8))
+        agg.feed('test this', 'baa', (2, 0, 8))
+        agg.feed('TEST THIS', 'boo', (3, 0, 8))
         for label, category, weight in agg.entities:
-            assert label == 'test', label
+            assert label == 'test this', label
             assert category == 'baa', label
             assert weight == 3, weight
 

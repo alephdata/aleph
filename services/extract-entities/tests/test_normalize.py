@@ -8,7 +8,9 @@ class TestNormalize(object):
         assert clean_label(None) is None
         assert clean_label('xx') is None  # too short
         assert clean_label('Mr. Clean and Proper') == 'Clean and Proper'
-        assert clean_label('The Thing') == 'Thing'
+        assert clean_label('The Thing') is None  # single token
+        assert clean_label('The Thing Bling') == 'Thing Bling'
+        assert clean_label('of The Thing Bling') == 'Thing Bling'
 
     def test_label_key(self):
         assert label_key('') is None

@@ -5,7 +5,7 @@ from normality import normalize, collapse_spaces
 MAX_LENGTH = 100
 MIN_LENGTH = 4
 
-CLEANUP = r'^\W*((mr|ms|miss|the|of|de)\.?\s+)?(?P<term>.*?)([\'’]s)?\W*$'
+CLEANUP = r'^\W*((mr|ms|miss|the|of|de)\.?\s+)*(?P<term>.*?)([\'’]s)?\W*$'
 CLEANUP = re.compile(CLEANUP, re.I | re.U)
 
 

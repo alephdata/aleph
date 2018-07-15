@@ -19,7 +19,7 @@ class EntityExtractorServicer(EntityExtractServicer):
         for req in request_iterator:
             aggregator.extract(req.text, req.languages)
 
-        for (label, category, weight) in aggregator.entities():
+        for (label, category, weight) in aggregator.entities:
             entity = entities.entities.add()
             entity.label = label
             entity.weight = weight
@@ -43,4 +43,5 @@ def serve(port):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logging.getLogger('entityextractor').setLevel(logging.INFO)
+    logging.getLogger('polyglot').setLevel(logging.INFO)
     serve('[::]:50000')

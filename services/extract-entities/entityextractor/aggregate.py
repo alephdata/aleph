@@ -44,13 +44,15 @@ class EntityAggregator(object):
 
     def __init__(self):
         self.groups = []
+        self.record = 0
 
     def extract(self, text, languages):
+        self.record += 1
         for language in languages:
             for (l, c, s, e) in extract_polyglot(text, language):
-                self.feed(l, c, (s, e))
+                self.feed(l, c, (self.record, s, e))
             for (l, c, s, e) in extract_spacy(text, language):
-                self.feed(l, c, (s, e))
+                self.feed(l, c, (self.record, s, e))
 
     def feed(self, label, category, span):
         label = clean_label(label)
