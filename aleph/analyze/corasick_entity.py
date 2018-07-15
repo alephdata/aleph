@@ -22,6 +22,14 @@ class AhoCorasickEntityAnalyzer(EntityAnalyzer):
 
     def __init__(self):
         self.active = settings.ANALYZE_CORASICK
+        if self.active:
+            # This is technically incorrect because database entities can be 
+            # added at any time and the automaton here will not be updated.
+            # In earlier versions of Aleph there used to be a lot of code to
+            # make sure this was always the latest version. It produced a lot
+            # of overhead, while the workers are restarted every couple of
+            # minutes anyway -- so: meh.
+            self.automaton = self.build_automaton()
 
     def match_form(self, text):
         """Turn a string into a form appropriate for name matching."""
@@ -65,20 +73,6 @@ class AhoCorasickEntityAnalyzer(EntityAnalyzer):
             automaton.add_word(term, entities)
         automaton.make_automaton()
         return automaton
-
-    @property
-    def automaton(self):
-        """Generate an Aho-Corasick matcher for database-stored entities."""
-        # This is technically incorrect because database entities can be 
-        # added at any time and the automaton here will not be updated.
-        # In earlier versions of Aleph there used to be a lot of code to
-        # make sure this was always the latest version. It produced a lot
-        # of overhead, while the workers are restarted every couple of
-        # minutes anyway -- so: meh.
-        cls = type(self)
-        if not hasattr(cls, '_automaton'):
-            cls._automaton = self.build_automaton()
-        return cls._automaton
 
     def extract(self, collector, document):
         if self.automaton is None:

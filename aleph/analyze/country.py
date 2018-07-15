@@ -12,14 +12,15 @@ class CountryExtractor(Analyzer, TextIterator):
 
     def __init__(self):
         self.active = settings.COUNTRIES_SERVICE is not None
+        if self.active:
+            self.channel = grpc.insecure_channel(settings.COUNTRIES_SERVICE)
 
     def analyze(self, document):
         if not document.supports_nlp or len(document.countries):
             return
 
         try:
-            channel = grpc.insecure_channel(settings.COUNTRIES_SERVICE)
-            service = GeoExtractStub(channel)
+            service = GeoExtractStub(self.channel)
             texts = self.text_iterator(document)
             countries = service.ExtractCountries(texts)
             for country in countries.countries:

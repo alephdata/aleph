@@ -20,14 +20,16 @@ class EntityExtractor(EntityAnalyzer, TextIterator):
     }
 
     def __init__(self):
-        self.active = settings.ENTITIES_SERVICE is not None
+        service = settings.ENTITIES_SERVICE
+        self.active = service is not None
+        if self.active:
+            self.channel = grpc.insecure_channel(service)
 
     def extract(self, collector, document):
         DocumentTagCollector(document, 'polyglot').save()
         DocumentTagCollector(document, 'spacy').save()
         try:
-            channel = grpc.insecure_channel(settings.ENTITIES_SERVICE)
-            service = EntityExtractStub(channel)
+            service = EntityExtractStub(self.channel)
             texts = self.text_iterator(document)
             entities = service.Extract(texts)
             for entity in entities.entities:
