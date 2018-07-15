@@ -1,4 +1,5 @@
 
+all: test
 
 build:
 	docker build -t alephdata/aleph-extract-entities .

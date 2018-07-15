@@ -71,6 +71,11 @@ class EntityAggregator(object):
     @property
     def entities(self):
         for group in self.groups:
+            # When we have many results, don't return entities which
+            # were only found a single time.
+            if len(self) > 100 and group.weight == 1:
+                continue
+
             yield group.label, group.category, group.weight
 
     def __len__(self):
