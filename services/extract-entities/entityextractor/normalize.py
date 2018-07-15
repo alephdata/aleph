@@ -1,9 +1,24 @@
-from normality import collapse_spaces
+import re
+from normality import normalize, collapse_spaces
+
+MAX_LENGTH = 100
+MIN_LENGTH = 4
+
+CLEANUP = r'^\W*((mr|ms|miss|the|of|de)\.?\s+)?(?P<term>.*?)([\'’]s)?\W*$'
+CLEANUP = re.compile(CLEANUP, re.I | re.U)
 
 
 def clean_label(text):
-    return collapse_spaces(text)
+    if text is None or len(text) > MAX_LENGTH:
+        return
+    match = CLEANUP.match(text)
+    if match is not None:
+        text = match.group('term')
+    text = collapse_spaces(text)
+    if not len(text) or len(text) < MIN_LENGTH:
+        return
+    return text
 
 
 def label_key(label):
-    pass
+    return normalize(label, ascii=True)

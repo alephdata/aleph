@@ -1,10 +1,10 @@
 FROM alephdata/platform-ner:2.2.0
 
 RUN mkdir -p /service
-ADD requirements.txt /service
+ADD requirements.txt /service/
 RUN pip install -q -r /service/requirements.txt
-ADD setup.py entityextractor tests /service/
-RUN pip install -q -e /service
+COPY . /service/
+RUN pip install -e /service
 WORKDIR /service
 
 HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
