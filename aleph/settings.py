@@ -140,8 +140,7 @@ ANALYZE_IP = env_bool('ANAYZE_IP', True)
 ANALYZE_IBAN = env_bool('ANAYZE_IBAN', True)
 
 # gRPC extractor services
-POLYGLOT_SERVICE = env('POLYGLOT_SERVICE', 'extract-polyglot:50000')
-SPACY_SERVICE = env('SPACY_SERVICE', 'extract-spacy:50000')
+ENTITIES_SERVICE = env('ENTITIES_SERVICE', 'extract-entities:50000')
 COUNTRIES_SERVICE = env('COUNTRIES_SERVICE', 'extract-countries:50000')
 
 

@@ -3,7 +3,7 @@ import logging
 
 from aleph import settings
 from aleph.analyze.analyzer import EntityAnalyzer, TextIterator
-from aleph.model import DocumentTag
+from aleph.model import DocumentTag, DocumentTagCollector
 from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
 from alephclient.services.entityextract_pb2 import ExtractedEntity
 
@@ -12,18 +12,21 @@ TYPE = ExtractedEntity.Type.Value
 
 
 class EntityExtractor(EntityAnalyzer, TextIterator):
+    ORIGIN = 'ner'
     TYPES = {
-        TYPE('PERSON'): DocumentTag.TYPE_PERSON,
-        TYPE('ORGANIZATION'): DocumentTag.TYPE_ORGANIZATION,
-        TYPE('COMPANY'): DocumentTag.TYPE_ORGANIZATION,
+        ExtractedEntity.PERSON: DocumentTag.TYPE_PERSON,
+        ExtractedEntity.ORGANIZATION: DocumentTag.TYPE_ORGANIZATION,
+        ExtractedEntity.COMPANY: DocumentTag.TYPE_ORGANIZATION,
     }
 
     def __init__(self):
-        self.active = self.SERVICE is not None
+        self.active = settings.ENTITIES_SERVICE is not None
 
     def extract(self, collector, document):
+        DocumentTagCollector(document, 'polyglot').save()
+        DocumentTagCollector(document, 'spacy').save()
         try:
-            channel = grpc.insecure_channel(self.SERVICE)
+            channel = grpc.insecure_channel(settings.ENTITIES_SERVICE)
             service = EntityExtractStub(channel)
             texts = self.text_iterator(document)
             entities = service.Extract(texts)
@@ -32,16 +35,6 @@ class EntityExtractor(EntityAnalyzer, TextIterator):
                 if type_ is None:
                     continue
                 collector.emit(entity.label, type_, weight=entity.weight)
-            log.info('%s Extracted %s entities.', self.SERVICE, len(collector))
+            log.info('Extracted %s entities.', len(collector))
         except grpc.RpcError as exc:
             log.warning("gRPC Error: %s", exc)
-
-
-class PolyglotEntityExtractor(EntityExtractor):
-    ORIGIN = 'polyglot'
-    SERVICE = settings.POLYGLOT_SERVICE
-
-
-class SpacyEntityExtractor(EntityExtractor):
-    ORIGIN = 'spacy'
-    SERVICE = settings.SPACY_SERVICE

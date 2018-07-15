@@ -17,7 +17,6 @@ services:
     restart: on-failure
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-      - elasticsearch-log:/var/log
 
   rabbitmq:
     image: rabbitmq
@@ -35,14 +34,8 @@ services:
     expose:
       - 3000
 
-  extract-polyglot:
-    build: services/extract-polyglot
-    restart: on-failure
-    expose:
-      - 50000
-  
-  extract-spacy:
-    build: services/extract-spacy
+  extract-entities:
+    build: services/extract-entities
     restart: on-failure
     expose:
       - 50000
@@ -62,8 +55,7 @@ services:
       - elasticsearch
       - rabbitmq
       - convert-document
-      - extract-polyglot
-      - extract-spacy
+      - extract-entities
       - extract-countries
     tmpfs: /tmp
     volumes:
@@ -94,8 +86,7 @@ services:
       - elasticsearch
       - rabbitmq
       - convert-document
-      - extract-polyglot
-      - extract-spacy
+      - extract-entities
       - extract-countries
     tmpfs: /tmp
     volumes:
@@ -131,6 +122,5 @@ services:
 volumes:
   archive-data: {}
   elasticsearch-data: {}
-  elasticsearch-log: {}
   postgres-data: {}
   rabbitmq-data: {}

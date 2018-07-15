@@ -9,17 +9,16 @@ log = logging.getLogger(__name__)
 
 
 class CountryExtractor(Analyzer, TextIterator):
-    SERVICE = settings.COUNTRIES_SERVICE
 
     def __init__(self):
-        self.active = self.SERVICE is not None
+        self.active = settings.COUNTRIES_SERVICE is not None
 
     def analyze(self, document):
         if not document.supports_nlp or len(document.countries):
             return
 
         try:
-            channel = grpc.insecure_channel(self.SERVICE)
+            channel = grpc.insecure_channel(settings.COUNTRIES_SERVICE)
             service = GeoExtractStub(channel)
             texts = self.text_iterator(document)
             countries = service.ExtractCountries(texts)
