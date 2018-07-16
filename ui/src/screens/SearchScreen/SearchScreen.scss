@@ -3,7 +3,7 @@
 .SearchScreen {
   .total-count-span {
     display: inline-flex;
-    padding-left: 1.3em;
+    padding-left: 0.5em;
     font-size: 1.1em;
     font-weight: bold;
   }
@@ -19,5 +19,26 @@
 
   .total-icon {
     margin-right: 0.5em;
+  }
+
+  .facets {
+    display: none;
+    cursor: pointer;
+    margin-top: 0.5em;
+  }
+}
+
+@media screen and (max-width: $aleph-screen-sm-max-width) {
+  .hide {
+    display: none;
+  }
+
+  .show {
+    display: block;
+    background-color: $aleph-facet-background !important;
+  }
+
+  .SidePane {
+    padding-bottom: 0 !important;
   }
 }

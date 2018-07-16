@@ -3,9 +3,25 @@
 .EntityTable {
   .schema {
     max-width: 8em;
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      display: none;
+    }
   }
 
   .updating {
     opacity: 0.4;
+  }
+}
+
+//medium and small screen
+@media screen and (max-width: $aleph-screen-md-max-width) {
+  .EntityTable {
+    .header-country, .header-dates, .header-size {
+      display: none;
+    }
+
+    .country, .date, .file-size {
+      display: none;
+    }
   }
 }

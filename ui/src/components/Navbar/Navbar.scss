@@ -4,6 +4,9 @@
   .pt-navbar {
     display: flex;
     justify-content: space-between;
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      flex-direction: column;
+    }
 
     .navbar-header-search {
       width: 100%;
@@ -13,6 +16,9 @@
     .navbar-option-title {
       span {
         display: none;
+        @media screen and (max-width: $aleph-screen-md-max-width) {
+          display: flex;
+        }
       }
     }
 
@@ -31,7 +37,14 @@
     }
 
     .heading-title {
+      white-space: nowrap;
       padding-right: 18.5em;
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        display: none;
+      }
+      @media screen and (max-width: $aleph-screen-md-max-width) {
+        padding-right: 1em;
+      }
     }
 
     .pt-popover-target {
@@ -65,24 +78,53 @@
 
     .icon {
       display: none;
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        float: right;
+        margin-top: 1em;
+      }
     }
 
     .hide {
       width: 100%;
       margin-top: 0.3em;
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        display: none;
+      }
     }
   }
 
+  .pt-popover-wrapper {
+    padding-top: $aleph-grid-size * 0.5;
+  }
+
   .navbar-options {
-    padding-left: 1em;
+    padding-left: 2em;
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      width: 100%;
+      display: none;
+    }
 
     .pt-navbar-divider {
-      margin-top: $aleph-grid-size;
+      margin: 10px 0 0 30px;
+      @media screen and (max-width: $aleph-screen-md-max-width) {
+        display: none;
+      }
     }
 
     .menu-items {
       display: flex;
       flex-direction: row;
+      @media screen and (max-width: $aleph-screen-md-max-width) {
+        position: fixed !important;
+        left: 0;
+        margin-top: 4.5em;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        float: left;
+        border: $aleph-grid-size * 0.1 solid rgba(16, 22, 26, 0.2);
+        box-shadow: 0 $aleph-grid-size * 0.8 $aleph-grid-size * 1.6 0 rgba(0, 0, 0, 0.2);
+      }
     }
 
   }
@@ -109,16 +151,8 @@
 }
 
 //small screen
-@media screen and (max-width: $aleph-screen-xs-max-width) {
+@media screen and (max-width: $aleph-screen-sm-max-width) {
   .Navbar {
-    .heading-title {
-      display: none;
-    }
-
-    a.icon {
-      float: right;
-      margin-top: 1em;
-    }
 
     a.search-icon {
       margin-right: 1em;
@@ -134,10 +168,6 @@
       background-color: white;
     }
 
-    .hide {
-      display: none;
-    }
-
     .search-and-burger-icons {
       width: 100%;
     }
@@ -148,8 +178,6 @@
 @media screen and (max-width: $aleph-screen-md-max-width) {
   .Navbar {
     .pt-navbar {
-      flex-direction: column;
-
       .transform {
         .bar1 {
           -webkit-transform: rotate(-45deg) translate(0, 6px);
@@ -166,12 +194,6 @@
         }
       }
 
-      .show-menu-dropdown {
-        .pt-button {
-          background-color: white;
-        }
-      }
-
       .bar1, .bar2, .bar3 {
         width: 20px;
         height: 2px;
@@ -180,46 +202,20 @@
         transition: 0.4s;
       }
 
-      .navbar-header-search {
+      /*.navbar-header-search {
         display: flex;
-      }
-
-      .navbar-option-title {
-        span {
-          display: flex;
-        }
-      }
+      }*/
 
       .navbar-options {
-        width: 100%;
-        display: none;
-
         a, div, span {
           background-color: white;
           position: relative;
         }
 
-        .menu-items {
-          position: fixed;
-          left: 0;
-          margin-top: 4.5em;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          float: left;
-          border: $aleph-grid-size * 0.1 solid rgba(16, 22, 26, 0.2);
-          box-shadow: 0 $aleph-grid-size * 0.8 $aleph-grid-size * 1.6 0 rgba(0, 0, 0, 0.2);
-        }
-
         .pt-popover-wrapper {
-          padding-top: $aleph-grid-size * 0.5;
           span {
             display: block;
           }
-        }
-
-        .pt-navbar-divider {
-          display: none;
         }
       }
 
@@ -239,11 +235,8 @@
         .pt-button {
           align-items: left;
           justify-content: left;
+          background-color: white;
         }
-      }
-
-      .heading-title {
-        padding-right: 1em;
       }
 
       a.menu-icon {

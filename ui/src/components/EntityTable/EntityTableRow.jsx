@@ -4,7 +4,6 @@ import { Checkbox } from '@blueprintjs/core';
 
 import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
-
 class EntityTableRow extends Component {
   constructor(props) {
     super(props);
