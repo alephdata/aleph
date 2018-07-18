@@ -14,7 +14,6 @@ services:
     image: alephdata/platform-elasticsearch:2.1.4
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-      - elasticsearch-log:/var/log
 
   rabbitmq:
     image: rabbitmq
@@ -32,17 +31,10 @@ services:
     expose:
       - 3000
 
-  extract-polyglot:
-    build: services/extract-polyglot
+  extract-entities:
+    build: services/extract-entities
     restart: on-failure
-    mem_limit: 2g
-    expose:
-      - 50000
-  
-  extract-spacy:
-    build: services/extract-spacy
-    restart: on-failure
-    mem_limit: 2g
+    mem_limit: 4g
     expose:
       - 50000
 
@@ -62,8 +54,7 @@ services:
       - elasticsearch
       - rabbitmq
       - convert-document
-      - extract-polyglot
-      - extract-spacy
+      - extract-entities
       - extract-countries
     tmpfs:
       - /tmp
@@ -81,8 +72,7 @@ services:
       - elasticsearch
       - rabbitmq
       - convert-document
-      - extract-polyglot
-      - extract-spacy
+      - extract-entities
       - extract-countries
       - worker
     tmpfs:
@@ -103,8 +93,7 @@ services:
       - rabbitmq
       - worker
       - convert-document
-      - extract-polyglot
-      - extract-spacy
+      - extract-entities
       - extract-countries
     tmpfs:
       - /tmp
@@ -155,4 +144,3 @@ volumes:
   postgres-data: {}
   rabbitmq-data: {}
   elasticsearch-data: {}
-  elasticsearch-log: {}

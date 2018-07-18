@@ -17,7 +17,6 @@ services:
     restart: on-failure
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-      - elasticsearch-log:/var/log
 
   rabbitmq:
     image: rabbitmq
@@ -106,6 +105,5 @@ services:
 volumes:
   archive-data: {}
   elasticsearch-data: {}
-  elasticsearch-log: {}
   postgres-data: {}
   rabbitmq-data: {}

@@ -45,7 +45,8 @@ class TestCase(FlaskTestCase):
         settings.DATABASE_URI = DB_URI
         settings.QUEUE = False
         settings.MAIL_SERVER = None
-        # settings.COUNTRIES_SERVICE = None
+        settings.COUNTRIES_SERVICE = None
+        settings.ENTITIES_SERVICE = None
         settings.ENTITIES_INDEX = '%s_entity' % APP_NAME
         settings.ENTITIES_INDEX_SET = [settings.ENTITIES_INDEX]
         settings.RECORDS_INDEX = '%s_records' % APP_NAME
