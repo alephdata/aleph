@@ -28,6 +28,17 @@ def configure_oauth(app):
 
 
 @signals.handle_oauth_session.connect
+def handle_azure_oauth(sender, provider=None, oauth=None):
+    from aleph.model import Role
+    if 'login.microsoftonline.com' not in provider.base_url:
+        return
+    token = (oauth.get('access_token'), '')
+    me = provider.get('me?fields=id,name,email', token=token)
+    user_id = 'azure:%s' % me.data.get('id')
+    return Role.load_or_create(user_id, Role.USER, me.data.get('name'),
+                               email=me.data.get('email'))
+
+@signals.handle_oauth_session.connect
 def handle_google_oauth(sender, provider=None, oauth=None):
     from aleph.model import Role
     if 'googleapis.com' not in provider.base_url:
