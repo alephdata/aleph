@@ -27,8 +27,7 @@ install:
   - echo "${TRAVIS_BRANCH}"
   - docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:latest .
   - docker build --cache-from alephdata/ui:latest -t alephdata/ui:latest ui
-  - docker build --cache-from alephdata/aleph-convert-document:latest -t alephdata/aleph-convert-document:latest services/convert-document
-  - docker build --cache-from alephdata/aleph-extract-entities:latest -t alephdata/aleph-extract-entities:latest services/extract-entities
+  - docker build -t alephdata/aleph-convert-document:latest services/convert-document
   - docker-compose -f docker-compose.test.yml up -d postgres elasticsearch
   - sleep 4
 
@@ -42,9 +41,11 @@ after_success:
       docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:$TRAVIS_TAG ;
       docker push alephdata/aleph-convert-document:latest ;
       docker push alephdata/aleph-convert-document:$TRAVIS_TAG ;
+      docker build -t alephdata/aleph-extract-entities:latest services/extract-entities ;
       docker tag alephdata/aleph-extract-entities:latest alephdata/aleph-extract-entities:$TRAVIS_TAG ;
       docker push alephdata/aleph-extract-entities:latest ;
       docker push alephdata/aleph-extract-entities:$TRAVIS_TAG ;
+      docker build -t alephdata/aleph-extract-countries:latest services/extract-countries ;
       docker tag alephdata/aleph-extract-countries:latest alephdata/aleph-extract-countries:$TRAVIS_TAG ;
       docker push alephdata/aleph-extract-countries:latest ;
       docker push alephdata/aleph-extract-countries:$TRAVIS_TAG ;
@@ -56,11 +57,11 @@ after_success:
       docker push alephdata/ui:$TRAVIS_TAG ;
     fi
   - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
-      docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:occrp ;
+      docker build -t alephdata/aleph-convert-document:occrp services/convert-document ;
       docker push alephdata/aleph-convert-document:occrp ;
-      docker tag alephdata/aleph-extract-entities:latest alephdata/aleph-extract-entities:occrp ;
+      docker build -t alephdata/aleph-extract-entities:occrp services/extract-entities ;
       docker push alephdata/aleph-extract-entities:occrp ;
-      docker tag alephdata/aleph-extract-countries:latest alephdata/aleph-extract-countries:occrp ;
+      docker build -t alephdata/aleph-extract-countries:occrp services/extract-countries ;
       docker push alephdata/aleph-extract-countries:occrp ;
       docker tag alephdata/aleph:latest alephdata/aleph:occrp ;
       docker push alephdata/aleph:occrp ;
