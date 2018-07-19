@@ -24,7 +24,7 @@ COLLECTION_MAPPING = {
                 }
             }
         },
-        "roles": {"type": "long"},
+        "roles": {"type": "keyword"},
         "foreign_id": {"type": "keyword"},
         "languages": {"type": "keyword"},
         "countries": {"type": "keyword"},
@@ -97,12 +97,11 @@ ENTITY_MAPPING = {
         "error_message": {"type": "text"},
         "content_hash": {"type": "keyword"},
         "foreign_id": {"type": "keyword"},
-        "foreign_ids": {"type": "keyword"},
         "file_name": {"type": "keyword"},
         "collection_id": {"type": "keyword"},
-        "roles": {"type": "long"},
+        "roles": {"type": "keyword"},
         "uploader_id": {"type": "long"},
-        "children": {"type": "long"},
+        "children": {"type": "keyword"},
         "source_url": {"type": "keyword"},
         "extension": {"type": "keyword"},
         "mime_type": {"type": "keyword"},
