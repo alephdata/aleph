@@ -1,0 +1,26 @@
+FROM python:3.6-stretch
+
+RUN apt-get -qq -y update \
+    && apt-get -qq -y install build-essential \
+        # python deps (mostly to install their dependencies)
+        python3-pip python3-dev python3-pil libboost-python-dev \
+        # libraries
+        libxslt1-dev libpq-dev libgsf-1-dev \
+        zlib1g-dev libicu-dev libxml2-dev \
+        libtiff5-dev libjpeg-dev libfreetype6-dev libwebp-dev liblcms2-dev \
+        # tesseract
+        libtesseract-dev tesseract-ocr-all libleptonica-dev \
+    && apt-get -qq -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN mkdir /service
+ADD setup.py /service/
+RUN pip install -q -e /service
+ADD service.py /service/
+
+HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
+    CMD curl --fail http://localhost:50000 || exit 1
+
+EXPOSE 50000
+CMD ["python", "/service/service.py"]
