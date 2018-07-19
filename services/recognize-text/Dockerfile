@@ -17,10 +17,10 @@ RUN apt-get -qq -y update \
 RUN mkdir /service
 ADD setup.py /service/
 RUN pip install -q -e /service
-ADD service.py /service/
+COPY . /service/
 
 HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
     CMD curl --fail http://localhost:50000 || exit 1
 
 EXPOSE 50000
-CMD ["python", "/service/service.py"]
+CMD ["python", "/service/textrecognizer/service.py"]

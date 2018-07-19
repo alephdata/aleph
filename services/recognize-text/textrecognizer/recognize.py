@@ -6,6 +6,8 @@ from threading import local
 from banal import ensure_list
 from tesserocr import PyTessBaseAPI, PSM  # noqa
 
+from textrecognizer.languages import normalize_language
+
 log = logging.getLogger(__name__)
 
 
@@ -16,18 +18,6 @@ class OCR(object):
         self.prefix = os.environ.get('TESSDATA_PREFIX', self.prefix)
         self.prefix = prefix or self.prefix
         self.thread = local()
-
-    def normalize_language(self, language):
-        """Turn some ISO2 language codes into ISO3 codes."""
-        # tesserocr.get_languages()
-        if language is None:
-            return set()
-        lang = language.lower().strip()
-        matches = set()
-        for (code, aliases) in self.LANGUAGES.items():
-            if lang == code or lang in aliases:
-                matches.add(code)
-        return matches
 
     def get_api(self, languages):
         if not hasattr(self.thread, 'api'):
@@ -40,7 +30,7 @@ class OCR(object):
         """Extract text from a binary string of data."""
         codes = set(['eng'])
         for lang in ensure_list(codes):
-            codes.update(self.normalize_language(lang))
+            codes.update(normalize_language(lang))
         languages = '+'.join(sorted(codes))
         api = self.get_api(languages)
 

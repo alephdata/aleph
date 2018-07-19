@@ -1,14 +1,27 @@
 from setuptools import setup, find_packages
 
+
 setup(
-    name='service',
-    packages=find_packages(),
+    name='textrecognizer',
+    version='0.0.1',
+    author='Organized Crime and Corruption Reporting Project',
+    author_email='pudo@occrp.org',
+    url='https://occrp.org',
+    license='MIT',
+    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    namespace_packages=[],
+    include_package_data=True,
+    package_data={},
     install_requires=[
         'pyicu',
+        'banal',
+        'pillow',
+        'grpcio',
+        'pytest',
         'normality',
-        # 'grpcio-tools',
         'tesserocr',
         'languagecodes',
         'alephclient==0.6.7'
     ],
+    zip_safe=False
 )

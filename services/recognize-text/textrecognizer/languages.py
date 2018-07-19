@@ -98,3 +98,16 @@ LANGUAGES = {
     'vie': ['vi'],
     'yid': ['yi']
 }
+
+
+def normalize_language(language):
+    """Turn some ISO2 language codes into ISO3 codes."""
+    # tesserocr.get_languages()
+    if language is None:
+        return set()
+    lang = language.lower().strip()
+    matches = set()
+    for (code, aliases) in LANGUAGES.items():
+        if lang == code or lang in aliases:
+            matches.add(code)
+    return matches
