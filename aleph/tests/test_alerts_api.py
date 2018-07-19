@@ -82,7 +82,7 @@ class AlertsApiTestCase(TestCase):
                                data=jdata,
                                headers=headers,
                                content_type='application/json')
-        assert res.status_code == 200, res.json
+        assert res.status_code == 204, res.status_code
 
         count = Alert.all().count()
         url = '/api/2/alerts/%s' % res.json['id']
