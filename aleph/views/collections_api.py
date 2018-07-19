@@ -62,7 +62,7 @@ def process(id):
     # re-process the documents
     process_documents.delay(collection_id=collection.id)
     update_collection(collection)
-    return jsonify({'status': 'accepted'}, status=202)
+    return ('', 204)
 
 
 @blueprint.route('/api/2/collections/<int:id>/mapping', methods=['POST', 'PUT'])  # noqa
@@ -78,11 +78,11 @@ def mapping_process(id):
             bulk_load_query.apply_async([collection.id, query], priority=6)
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
-    return jsonify({'status': 'accepted'}, status=202)
+    return ('', 204)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     collection = get_db_collection(id, request.authz.WRITE)
     delete_collection(collection)
-    return jsonify({'status': 'accepted'}, status=202)
+    return ('', 204)
