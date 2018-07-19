@@ -39,4 +39,4 @@ def delete(id):
     alert = obj_or_404(Alert.by_id(id, role_id=request.authz.id))
     alert.delete()
     db.session.commit()
-    return jsonify({'status': 'ok'})
+    return ('', 204)

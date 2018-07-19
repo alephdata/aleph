@@ -155,4 +155,4 @@ def delete(id):
     delete_entity(entity)
     db.session.commit()
     update_collection(entity.collection)
-    return jsonify({'status': 'ok'}, status=410)
+    return ('', 204)
