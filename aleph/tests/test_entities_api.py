@@ -212,10 +212,10 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities/%s' % data['id']
         res = self.client.delete(url,
                                  headers=headers)
-        assert res.status_code == 410, (res.status_code, res.json)
+        assert res.status_code == 204, res.status_code
         res = self.client.get(url,
                               headers=headers)
-        assert res.status_code == 404, (res.status_code, res.json)
+        assert res.status_code == 404, res.status_code
 
     def test_suggest_entity(self):
         _, headers = self.login(is_admin=True)
