@@ -100,12 +100,12 @@ OAUTH = env_bool('OAUTH', False)
 OAUTH_NAME = env('OAUTH_NAME', 'google')
 OAUTH_KEY = env('OAUTH_KEY')
 OAUTH_SECRET = env('OAUTH_SECRET')
-OAUTH_SCOPE = env('OAUTH_SCOPE', 'https://www.googleapis.com/auth/userinfo.email')  # noqa
-OAUTH_BASE_URL = env('OAUTH_BASE_URL', 'https://www.googleapis.com/oauth2/v1/')  # noqa
+OAUTH_SCOPE = env('OAUTH_SCOPE')
+OAUTH_BASE_URL = env('OAUTH_BASE_URL')
 OAUTH_REQUEST_TOKEN_URL = env('OAUTH_REQUEST_TOKEN_URL')
 OAUTH_TOKEN_METHOD = env('OAUTH_TOKEN_METHOD', 'POST')
-OAUTH_TOKEN_URL = env('OAUTH_TOKEN_URL', 'https://accounts.google.com/o/oauth2/token')  # noqa
-OAUTH_AUTHORIZE_URL = env('OAUTH_AUTHORIZE_URL', 'https://accounts.google.com/o/oauth2/auth')  # noqa
+OAUTH_TOKEN_URL = env('OAUTH_TOKEN_URL')
+OAUTH_AUTHORIZE_URL = env('OAUTH_AUTHORIZE_URL')
 
 # Disable password-based authentication for SSO settings:
 PASSWORD_LOGIN = env_bool('PASSWORD_LOGIN', not OAUTH)
