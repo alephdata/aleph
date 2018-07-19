@@ -112,6 +112,8 @@ class EntityTable extends Component {
       );
     };
 
+    console.log("ukupno", result.total);
+
     return (
       <table className="EntityTable data-table">
         <thead>

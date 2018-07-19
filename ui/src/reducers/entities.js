@@ -1,10 +1,11 @@
 import { createReducer } from 'redux-act';
-import { set, update } from 'lodash/fp';
+import { set, unset, update } from 'lodash/fp';
 
 import {
   queryEntities,
   fetchDocument,
   fetchEntity,
+  deleteDocument
 } from 'src/actions';
 import { cacheResults } from './util';
 
@@ -26,5 +27,8 @@ export default createReducer({
     [fetchEntity.COMPLETE]: (state, { id, data }) =>
       set(id, data)(state),
 
-    [queryEntities.COMPLETE]: cacheResults
+    [queryEntities.COMPLETE]: cacheResults,
+
+  [deleteDocument.COMPLETE]: (state, { id, data }) =>
+    unset(id)(state),
 }, initialState);

@@ -54,5 +54,6 @@ export function updateResults(state, { query, result }) {
 }
 
 export function flushResults() {
+  console.log('HI HI')
   return {}
 }

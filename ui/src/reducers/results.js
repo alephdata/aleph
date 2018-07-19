@@ -9,6 +9,7 @@ import {
   queryNotifications,
   createCollection,
   deleteCollection,
+  deleteDocument
 } from 'src/actions';
 
 const initialState = {};
@@ -31,5 +32,6 @@ export default createReducer({
   // may affect the content of the results.
   [createCollection.COMPLETE]: flushResults,
   [deleteCollection.COMPLETE]: flushResults,
+  [deleteDocument.COMPLETE]: flushResults,
   // [ingestDocument.COMPLETE]: flushResults
 }, initialState);

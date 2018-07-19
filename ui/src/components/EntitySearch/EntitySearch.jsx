@@ -159,6 +159,7 @@ const mapStateToProps = (state, ownProps) => {
     ...context,
   };
   const searchQuery = query !== undefined ? query : Query.fromLocation('search', location, contextWithDefaults, prefix);
+  console.log('HA HU', state, selectEntitiesResult(state, searchQuery))
   const result = selectEntitiesResult(state, searchQuery);
 
   return {

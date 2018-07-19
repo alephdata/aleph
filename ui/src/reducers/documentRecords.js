@@ -25,7 +25,4 @@ export default createReducer({
     set(documentRecordKey(documentId, page), data)(state),
 
   [queryDocumentRecords.COMPLETE]: cacheResults,
-
-  [deleteDocument.COMPLETE]: (state, { id, data }) =>
-  unset(id)(state),
 }, initialState);

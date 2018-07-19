@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Icon} from '@blueprintjs/core';
 
 import { Date, Role, Collection } from 'src/components/common';
-import DeleteDialog from 'src/dialogs/DeleteDialog/DeleteDialog';
+import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { deleteCollection } from 'src/actions';
 
 class CaseTableRow extends Component {
@@ -39,7 +39,7 @@ class CaseTableRow extends Component {
               <Icon icon="trash" />
             </a>
           </td>
-          <DeleteDialog collection={collection}
+          <CollectionDeleteDialog collection={collection}
                                   isOpen={this.state.deleteIsOpen}
                                   toggleDialog={this.toggleDeleteCase} />
         </tr>

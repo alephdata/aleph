@@ -1,11 +1,10 @@
-import React, {Component} from "react";
-import queryString from 'query-string';
+import React, { Component } from "react";
 import { Alert, Intent } from "@blueprintjs/core";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
 
-import { deleteCollection, deleteDocument } from "src/actions";
+import { deleteCollection } from "src/actions";
 
 const messages = defineMessages({
   button_confirm: {
@@ -23,34 +22,22 @@ const messages = defineMessages({
 });
 
 
-class DeleteDialog extends Component {
+class CollectionDeleteDialog extends Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
   }
 
   async onDelete() {
-    const { collection, history, documents } = this.props;
-    if(collection !== undefined) {
-      this.props.deleteCollection(collection);
-      history.push({
-        pathname: '/cases',
-        search: queryString.stringify({'_deleted': collection.id})
-      });
-    } else {
-      let collection = documents[0].collection;
-      for(let i = 0; i < documents.length; i++) {
-        this.props.deleteDocument({document: documents[i]})
-        history.push({
-          pathname: '/collections/' + collection.id + '/documents',
-          //search: queryString.stringify({'_deleted': documents[i].id})
-        });
-      }
-    }
+    const {collection, history} = this.props;
+    this.props.deleteCollection(collection);
+    history.push({
+      pathname: '/cases'
+    });
   }
 
   render() {
-    const { intl } = this.props;
+    const {intl} = this.props;
     return (
       <Alert isOpen={this.props.isOpen}
              onClose={this.props.toggleDialog}
@@ -61,7 +48,7 @@ class DeleteDialog extends Component {
              onCancel={this.props.toggleDialog}
              onConfirm={this.onDelete}>
         <FormattedMessage id="collection.delete.question"
-                          defaultMessage="Are you sure you want to delete all contained items?" />
+                          defaultMessage="Are you sure you want to delete all contained items?"/>
       </Alert>
     );
   }
@@ -71,6 +58,6 @@ const mapStateToProps = (state, ownProps) => {
   return {};
 };
 
-DeleteDialog = injectIntl(DeleteDialog);
-DeleteDialog = withRouter(DeleteDialog);
-export default connect(mapStateToProps, { deleteCollection, deleteDocument })(DeleteDialog);
+CollectionDeleteDialog = injectIntl(CollectionDeleteDialog);
+CollectionDeleteDialog = withRouter(CollectionDeleteDialog);
+export default connect(mapStateToProps, {deleteCollection})(CollectionDeleteDialog);

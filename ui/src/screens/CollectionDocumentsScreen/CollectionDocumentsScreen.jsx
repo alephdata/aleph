@@ -10,7 +10,7 @@ import CaseContext from "src/components/Case/CaseContext";
 import { fetchCollection, deleteDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
-import DeleteDialog from 'src/dialogs/DeleteDialog/DeleteDialog';
+import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 
 class CollectionDocumentsScreen extends Component {
   constructor(props) {
@@ -34,7 +34,8 @@ class CollectionDocumentsScreen extends Component {
 
   componentDidUpdate(prevProps) {
     const {collectionId} = this.props;
-    if (collectionId !== prevProps.collectionId) {
+    if (collectionId !== prevProps.collectionId || this.props.collection.count !== prevProps.collection.count) {
+      console.log('uslo')
       this.props.fetchCollection({id: collectionId});
     }
   }
@@ -93,7 +94,7 @@ class CollectionDocumentsScreen extends Component {
                         writable={collection.writeable}
                         disableOrEnableDelete={this.disableOrEnableDelete}
                         setDocuments={this.setDocuments}/>
-          <DeleteDialog documents={selectedFiles}
+          <DocumentDeleteDialog documents={selectedFiles}
                                   isOpen={this.state.deleteIsOpen}
                                   toggleDialog={this.toggleDeleteCase} />
         </CaseContext>
