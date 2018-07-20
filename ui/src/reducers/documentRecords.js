@@ -24,4 +24,5 @@ export default createReducer({
     set(documentRecordKey(documentId, page), data)(state),
 
   [queryDocumentRecords.COMPLETE]: cacheResults
+
 }, initialState);

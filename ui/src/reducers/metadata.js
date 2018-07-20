@@ -1,5 +1,4 @@
 import { createReducer } from 'redux-act';
-
 import { fetchMetadata } from 'src/actions';
 
 const initialState = {
