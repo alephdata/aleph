@@ -1,10 +1,13 @@
 FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get -qq -y update \
+RUN apt-get update -y \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:alex-p/tesseract-ocr \
+    && apt-get update -y \
     && apt-get -qq -y install build-essential \
         # python deps (mostly to install their dependencies)
-        python3-pip python3-dev python3-pil libboost-python-dev \
+        python3-pip python3-dev python3-pil \
         # libraries
         libxslt1-dev libpq-dev libgsf-1-dev \
         zlib1g-dev libicu-dev libxml2-dev \
@@ -18,7 +21,7 @@ RUN apt-get -qq -y update \
 RUN mkdir -p /service
 WORKDIR /service
 ADD setup.py /service/
-RUN pip3 install -q -e /service
+RUN pip3 install -e /service
 COPY . /service/
 
 HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \

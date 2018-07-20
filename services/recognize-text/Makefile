@@ -2,7 +2,8 @@
 all: test
 
 build:
-	docker build -t alephdata/aleph-recognize-text .
+	docker build --cache-from alephdata/aleph-recognize-text \
+		-t alephdata/aleph-recognize-text .
 
 test: build
 	docker run -ti alephdata/aleph-recognize-text pytest

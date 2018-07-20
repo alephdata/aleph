@@ -3,7 +3,7 @@ import logging
 from io import BytesIO
 from PIL import Image
 from threading import local
-from tesserocr import PyTessBaseAPI, PSM  # noqa
+from tesserocr import PyTessBaseAPI, PSM, OEM  # noqa
 
 from textrecognizer.languages import get_languages
 
@@ -19,6 +19,9 @@ class OCR(object):
 
     def get_api(self, languages):
         if not hasattr(self.thread, 'api'):
+            # api = PyTessBaseAPI(oem=OEM.TESSERACT_LSTM_COMBINED,
+            #                     path=PATH,
+            #                     lang=languages)
             api = PyTessBaseAPI(path=PATH, lang=languages)
             self.thread.api = api
         return self.thread.api
