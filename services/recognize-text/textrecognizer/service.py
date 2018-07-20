@@ -2,22 +2,32 @@ import grpc
 import time
 import logging
 from concurrent import futures
-
 from alephclient.services.ocr_pb2_grpc import (
     add_RecognizeTextServicer_to_server, RecognizeTextServicer
 )
-# from alephclient.services.ocr_pb2 import Image
+from alephclient.services.ocr_pb2 import Image
+
+from textrecognizer.recognize import OCR, PSM
 
 log = logging.getLogger('service')
 
 
 class OCRServicer(RecognizeTextServicer):
 
+    MODES = {
+        Image.PAGE: PSM.AUTO_OSD,
+        Image.WORD: PSM.SINGLE_WORD,
+        Image.CHARACTER: PSM.SINGLE_CHAR
+    }
+
     def __init__(self):
-        self.recognizer = None
+        self.recognizer = OCR()
 
     def Recognize(self, image, context):
-        pass
+        mode = self.MODES.get(image.mode, PSM.AUTO_OSD)
+        return self.recognizer.extract_text(image.data,
+                                            languages=image.languages,
+                                            mode=mode)
 
 
 def serve(port):
@@ -35,5 +45,4 @@ def serve(port):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    logging.getLogger('service').setLevel(logging.INFO)
     serve('[::]:50000')

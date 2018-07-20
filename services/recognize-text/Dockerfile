@@ -14,7 +14,8 @@ RUN apt-get -qq -y update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN mkdir /service
+RUN mkdir -p /service
+WORKDIR /service
 ADD setup.py /service/
 RUN pip install -q -e /service
 COPY . /service/
