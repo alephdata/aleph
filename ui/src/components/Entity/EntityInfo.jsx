@@ -10,7 +10,7 @@ import { EntityInfoTags, EntityInfoReferences } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences, fetchEntityTags } from 'src/actions/index';
-import { selectEntityTags, selectEntityReferences } from 'src/selectors';
+import { selectEntityTags, selectEntityReferences, selectMetadata } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
 
@@ -148,7 +148,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),
-    schema: state.metadata.schemata[entity.schema]
+    schema: selectMetadata(state).schemata[entity.schema]
   };
 };
 

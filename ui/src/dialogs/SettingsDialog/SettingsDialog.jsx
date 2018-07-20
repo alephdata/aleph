@@ -6,6 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import c from 'classnames';
 
 import { updateRole, fetchRole } from 'src/actions';
+import { selectSession } from 'src/selectors';
 
 
 const messages = defineMessages({
@@ -199,7 +200,7 @@ class SettingsDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    session: state.session,
+    session: selectSession(state),
     role: state.session.role
   };
 };

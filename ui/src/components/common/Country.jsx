@@ -5,6 +5,7 @@ import { MenuItem, Classes, Position } from '@blueprintjs/core';
 import { MultiSelect as BlueprintMultiSelect } from "@blueprintjs/select";
 
 import wordList from 'src/util/wordList';
+import { selectMetadata } from 'src/selectors';
 
 import './Country.css';
 
@@ -153,7 +154,7 @@ class MultiSelect extends Component {
 }
 
 const mapStateToProps = state => ({
-  countries: state.metadata.countries,
+  countries: selectMetadata(state).countries,
 });
 
 class Country extends Component {

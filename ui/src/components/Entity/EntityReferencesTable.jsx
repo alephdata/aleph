@@ -7,7 +7,7 @@ import Waypoint from 'react-waypoint';
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
 import { queryEntities } from 'src/actions/index';
-import { selectEntitiesResult } from 'src/selectors';
+import { selectEntitiesResult, selectMetadata } from 'src/selectors';
 import { SectionLoading, Property } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 
@@ -125,7 +125,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query: query,
     result: selectEntitiesResult(state, query),
-    model: state.metadata.schemata[ownProps.schema]
+    model: selectMetadata(state).schemata[ownProps.schema]
   }
 };
 

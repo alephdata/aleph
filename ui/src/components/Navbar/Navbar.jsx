@@ -9,6 +9,7 @@ import { ControlGroup, InputGroup, Icon } from "@blueprintjs/core";
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
+import { selectSession } from 'src/selectors';
 
 import './Navbar.css';
 
@@ -141,7 +142,7 @@ class Navbar extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { session: state.session };
+  return { session: selectSession(state) };
 };
 
 Navbar = connect(mapStateToProps, {})(Navbar);

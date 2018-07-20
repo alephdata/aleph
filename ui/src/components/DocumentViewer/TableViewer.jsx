@@ -6,7 +6,7 @@ import { Cell, Column, TruncatedFormat, Table, TableLoadingOption } from "@bluep
 
 import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
-import { selectDocumentRecordsResult } from 'src/selectors';
+import { selectDocumentRecordsResult, selectMetadata } from 'src/selectors';
 
 import './TableViewer.css';
 
@@ -103,7 +103,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query: query,
     result: selectDocumentRecordsResult(state, query),
-    model: state.metadata.schemata[ownProps.schema]
+    model: selectMetadata(state).schemata[ownProps.schema]
   }
 }
 
