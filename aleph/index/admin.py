@@ -30,7 +30,7 @@ def upgrade_search():
             'mappings': {'doc': mapping}
         }
         es.indices.create(index, body=body, ignore=[404, 400])
-        es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
+        # es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
         es.indices.open(index=index, ignore=[400, 404])
         es.indices.refresh(index=index, ignore=[400, 404])
         es.indices.clear_cache(index=index, ignore=[400, 404])

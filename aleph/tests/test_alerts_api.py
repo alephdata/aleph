@@ -82,13 +82,12 @@ class AlertsApiTestCase(TestCase):
                                data=jdata,
                                headers=headers,
                                content_type='application/json')
-        assert res.status_code == 200, res.json
+        assert res.status_code == 200, res.status_code
 
         count = Alert.all().count()
         url = '/api/2/alerts/%s' % res.json['id']
-        res = self.client.delete(url,
-                                 headers=headers)
-        assert res.status_code == 200, res.json
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res.json
         new_count = Alert.all().count()
         real_count = db.session.query(Alert).count()
         assert count == real_count, (count, real_count)

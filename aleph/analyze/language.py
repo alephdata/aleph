@@ -14,19 +14,12 @@ class LanguageAnalyzer(Analyzer):
 
     def __init__(self):
         self.active = settings.ANALYZE_LANGUAGE
-
-    @property
-    def identifier(self):
-        cls = type(self)
-        if not hasattr(cls, '_id'):
-            # https://github.com/saffsd/langid.py
+        if self.active:
             from langid.langid import LanguageIdentifier as lid, model
-            cls._id = lid.from_modelstring(model, norm_probs=True)
-            if len(settings.LANGUAGES):
-                langs = set(settings.LANGUAGES)
-                langs = langs.intersection(cls._id.nb_classes)
-                cls._id.set_languages(langs)
-        return cls._id
+            self.identifier = lid.from_modelstring(model, norm_probs=True)
+            langs = set(settings.LANGUAGES)
+            langs = langs.intersection(self.identifier.nb_classes)
+            self.identifier.set_languages(langs)
 
     def _text_sample(self, document):
         """Generate a text sample of limited length."""

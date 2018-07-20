@@ -69,7 +69,7 @@ def delete(document_id):
     document = get_db_document(document_id, request.authz.WRITE)
     delete_document(document)
     update_collection(document.collection)
-    return jsonify({'status': 'ok'}, status=410)
+    return ('', 204)
 
 
 def _serve_archive(content_hash, file_name, mime_type):

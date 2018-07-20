@@ -5,7 +5,6 @@ import queryString from 'query-string';
 import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'react-intl';
 import Waypoint from 'react-waypoint';
 import { Icon } from '@blueprintjs/core';
-import c from 'classnames';
 
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';

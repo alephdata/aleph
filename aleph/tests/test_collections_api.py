@@ -95,7 +95,7 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         res = self.client.delete(url,
                                  headers=headers)
-        assert res.status_code == 202, res
+        assert res.status_code == 204, res
         res = self.client.get(url,
                               headers=headers)
         assert res.status_code == 404, res
