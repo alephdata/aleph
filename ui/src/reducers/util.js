@@ -1,17 +1,21 @@
 import _ from 'lodash';
 
 
-export function updateResults(state, { query, result }) {
-  const key = query.toKey(),
-        previous = state[key] && state[key].total !== undefined ? state[key] : {},
-        results = result.results.map((r) => r.id);
-  
-  result = { ...result, isLoading: false, shouldLoad: false, results };
-  // don't overwrite existing results
-  if (previous.page !== undefined && previous.offset < result.offset) {
-    result = { ...result, results: [...previous.results, ...result.results] };
+export function mergeResults(previous, current) {
+  if (previous === undefined || previous.limit === undefined) {
+    return current;
   }
-  return { ...state, [key]: result};
+  if (current.offset === (previous.limit + previous.offset)) {
+    return { ...current, results: [...previous.results, ...current.results] };
+  }
+  return current;
+}
+
+
+export function updateResults(state, { query, result }) {
+  const key = query.toKey();
+  const res = { ...result, results: result.results.map((r) => r.id) };
+  return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
 
 
