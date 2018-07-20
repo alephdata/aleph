@@ -1,5 +1,4 @@
 import { createReducer } from 'redux-act';
-import { set, update } from 'lodash/fp';
 
 import { fetchCollectionPermissions, updateCollectionPermissions } from 'src/actions';
 import { objectLoadStart, objectLoadError, objectLoadComplete } from 'src/reducers/util';
@@ -14,9 +13,9 @@ export default createReducer({
     objectLoadError(state, id, error),
 
   [fetchCollectionPermissions.COMPLETE]: (state, { id, data }) =>
-    objectLoadComplete(state, id, data.results),
+    objectLoadComplete(state, id, data),
 
   [updateCollectionPermissions.COMPLETE]: (state, { id, data }) =>
-    objectLoadComplete(state, id, data.results),
+    objectLoadComplete(state, id, data),
 
 }, initialState);

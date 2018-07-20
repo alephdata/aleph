@@ -5,8 +5,8 @@ import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
-import {queryEntities} from 'src/actions';
-import {selectEntitiesResult} from 'src/selectors';
+import { queryEntities } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 

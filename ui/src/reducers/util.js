@@ -1,18 +1,4 @@
-import keyBy from 'lodash/keyBy';
-import { assign, assignWith } from 'lodash/fp';
 import _ from 'lodash';
-
-export function mapById(result) {
-  return result ? keyBy(result.results, 'id') : {};
-}
-
-export function cacheResults(state, { result }) {
-  // The search results may contain only a subset of the object's fields, so
-  // to not erase any existing value, we do a shallow merge of object fields.
-  result.isLoading = false;
-  result.shouldLoad = false;
-  return assignWith(assign)(state, mapById(result));
-}
 
 export function updateLoading(value) {
   return function(state, { query, result, error, args }) {
@@ -67,7 +53,7 @@ export function flushResults(state, { query, result }) {
 
 export function objectLoadStart(state, id) {
   return _.merge(state, {
-    id: {
+    [id]: {
       isLoading: true,
       shouldLoad: false
     }
@@ -76,7 +62,7 @@ export function objectLoadStart(state, id) {
 
 export function objectLoadError(state, id, error) {
   return _.merge(state, {
-    id: {
+    [id]: {
       isLoading: false,
       isError: true,
       shouldLoad: true,
@@ -87,7 +73,7 @@ export function objectLoadError(state, id, error) {
 
 export function objectLoadComplete(state, id, data) {
   return _.merge(state, {
-    id: {
+    [id]: {
       isLoading: false,
       isError: false,
       shouldLoad: false,
@@ -101,3 +87,12 @@ export function objectDelete(state, id) {
   return state;
 }
 
+
+export function resultObjects(state, result) {
+  if (result.results !== undefined) {
+    for (let object of result.results) {
+      objectLoadComplete(state, object.id, object);
+    }  
+  }
+  return state;
+}

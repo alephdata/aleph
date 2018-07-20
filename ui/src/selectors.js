@@ -85,6 +85,10 @@ export function selectEntityReferences(state, entityId) {
   return selectObject(state.entityReferences, entityId);
 }
 
+export function selectCollectionPermissions(state, collectionId) {
+  return selectObject(state.collectionPermissions, collectionId);
+}
+
 export function selectCollectionXrefIndex(state, collectionId) {
   return selectObject(state.collectionXrefIndex, collectionId);
 }
