@@ -44,16 +44,12 @@ class EntitySearch extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Check for a change of query, as unconditionally calling fetchIfNeeded
-    // could cause an infinite loop (if fetching fails).
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
-    const {query, result, queryEntities} = this.props;
-    if ((result.pages === undefined || (result.status === 'error'))) {
+    const { query, result, queryEntities } = this.props;
+    if (result.shouldLoad) {
       queryEntities({ query });
     }
   }
@@ -108,9 +104,10 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const {query, result, intl, className, writable} = this.props;
+    const { query, result, intl, className, writable } = this.props;
     const { selectedRows } = this.state;
     const isEmpty = !query.hasQuery();
+
     return (
       <div className={className}>
         {result.total === 0 && (
@@ -141,7 +138,7 @@ class EntitySearch extends Component {
             scrollableAncestor={window}
           />
         )}
-        {(result.isLoading || result.total === null) && (
+        {result.isLoading && (
           <SectionLoading/>
         )}
       </div>
@@ -159,12 +156,9 @@ const mapStateToProps = (state, ownProps) => {
     ...context,
   };
   const searchQuery = query !== undefined ? query : Query.fromLocation('search', location, contextWithDefaults, prefix);
-  console.log('HA HU', state, selectEntitiesResult(state, searchQuery))
-  const result = selectEntitiesResult(state, searchQuery);
-
   return {
     query: searchQuery,
-    result,
+    result: selectEntitiesResult(state, searchQuery)
   };
 };
 

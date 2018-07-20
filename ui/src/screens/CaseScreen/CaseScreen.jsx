@@ -19,15 +19,14 @@ class CaseScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { collectionId } = this.props;
-    if (collectionId !== prevProps.collectionId) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
-    const { collectionId } = this.props;
-    this.props.fetchCollection({ id: collectionId });
+    const { collectionId, collection } = this.props;
+    if (collection.shouldLoad) {
+      this.props.fetchCollection({ id: collectionId });
+    }
   }
 
   render() {

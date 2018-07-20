@@ -11,13 +11,11 @@ export function mergeResults(previous, current) {
   return current;
 }
 
-
 export function updateResults(state, { query, result }) {
   const key = query.toKey();
   const res = { ...result, results: result.results.map((r) => r.id) };
   return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
-
 
 export function invalidateResults(state) {
   for (let value of state) {
@@ -27,43 +25,36 @@ export function invalidateResults(state) {
 }
 
 export function objectLoadStart(state, id) {
-  return _.merge(state, {
-    [id]: { isLoading: true, shouldLoad: false }
-  });
+  const object = { isLoading: true, shouldLoad: false }
+  return { ...state, [id]: _.merge({}, state[id], object) };
 }
-
 
 export function resultLoadStart(state, query) {
   return objectLoadStart(state, query.toKey());
 }
 
-
 export function objectLoadError(state, id, error) {
-  return _.merge(state, {
-    [id]: {
-      isLoading: false,
-      isError: true,
-      shouldLoad: true,
-      error
-    }
-  });
+  const object = {
+    isLoading: false,
+    isError: true,
+    shouldLoad: true,
+    error
+  };
+  return { ...state, [id]: _.merge({}, state[id], object) };
 }
-
 
 export function resultLoadError(state, query, error) {
   return objectLoadError(state, query.toKey(), error);
 }
 
-
 export function objectLoadComplete(state, id, data) {
-  return _.merge(state, {
-    [id]: {
-      isLoading: false,
-      isError: false,
-      shouldLoad: false,
-      ...data
-    }
-  });
+  const object = {
+    ...data,
+    isLoading: false,
+    isError: false,
+    shouldLoad: false
+  }
+  return { ...state, [id]: _.merge({}, state[id], object) };
 }
 
 export function objectDelete(state, id) {
@@ -71,11 +62,10 @@ export function objectDelete(state, id) {
   return state;
 }
 
-
 export function resultObjects(state, result) {
   if (result.results !== undefined) {
     for (let object of result.results) {
-      objectLoadComplete(state, object.id, object);
+      state = objectLoadComplete(state, object.id, object);
     }  
   }
   return state;

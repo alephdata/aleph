@@ -25,14 +25,12 @@ class EntityReferencesTable extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchData();
-    }
+    this.fetchData();
   }
 
   fetchData() {
     const { query, result } = this.props;
-    if (result.total === undefined) {
+    if (result.shouldLoad) {
       this.props.queryEntities({ query });
     }
   }

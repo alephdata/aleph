@@ -142,17 +142,13 @@ class SearchScreen extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Check for a change of query, as unconditionally calling fetchIfNeeded
-    // could cause an infinite loop (if fetching fails).
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
-    const { result, query, queryEntities } = this.props;
-    if (result.total === undefined && !result.isLoading) {
-      queryEntities({query: query});
+    const { result, query } = this.props;
+    if (result.shouldLoad) {
+      this.props.queryEntities({query: query});
     }
   }
 

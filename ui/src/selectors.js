@@ -7,6 +7,7 @@ function selectResult(state, query, expand) {
   const key = query.toKey();
   const result = {
     isLoading: false,
+    isError: false,
     shouldLoad: true,
     results: [],
     ...state.results[key]
@@ -19,6 +20,7 @@ function selectObject(objects, id) {
   if (!id || !_.has(objects, id)) {
     return {
       isLoading: false,
+      isError: false,
       shouldLoad: true,
     }
   }
@@ -26,19 +28,19 @@ function selectObject(objects, id) {
 }
 
 export function selectMetadata(state) {
-  return state.metadata;
+  return selectObject(state, 'metadata');
 }
 
 export function selectStatistics(state) {
-  return state.statistics;
+  return selectObject(state, 'statistics');
 }
 
 export function selectSession(state) {
-  return state.session;
+  return selectObject(state, 'session');
 }
 
 export function selectAlerts(state) {
-  return state.alerts;
+  return selectObject(state, 'alerts');
 }
 
 export function selectCollection(state, collectionId) {

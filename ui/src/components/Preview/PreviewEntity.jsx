@@ -14,14 +14,12 @@ class PreviewEntity extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.previewId !== prevProps.previewId) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
     const { entity, previewId } = this.props;
-    if (entity.id === undefined && !entity.isLoading) {
+    if (entity.shouldLoad) {
       this.props.fetchEntity({ id: previewId });
     }
   }

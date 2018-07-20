@@ -27,15 +27,17 @@ class CollectionDocumentsScreen extends Component {
     this.toggleDeleteCase = this.toggleDeleteCase.bind(this);
   }
 
-  async componentDidMount() {
-    const {collectionId} = this.props;
-    this.props.fetchCollection({id: collectionId});
+  componentDidMount() {
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
-    const {collectionId} = this.props;
-    if (collectionId !== prevProps.collectionId || this.props.collection.count !== prevProps.collection.count) {
-      console.log('uslo')
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const {collectionId, collection} = this.props;
+    if (collection.shouldLoad) {
       this.props.fetchCollection({id: collectionId});
     }
   }
@@ -60,7 +62,7 @@ class CollectionDocumentsScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
-    if (collection === undefined || collection.isLoading) {
+    if (collection.id === undefined || collection.isLoading) {
       return <LoadingScreen />;
     }
 

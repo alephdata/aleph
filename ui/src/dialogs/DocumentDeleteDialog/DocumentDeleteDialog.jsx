@@ -33,11 +33,11 @@ class DocumentDeleteDialog extends Component {
 
     let collection = documents[ 0 ].collection;
     for (let i = 0; i < documents.length; i++) {
-      this.props.deleteDocument({document: documents[ i ]});
-      history.push({
-        pathname: '/collections/' + collection.id + '/documents'
-      });
+      this.props.deleteDocument({document: documents[i]});
     }
+    history.push({
+      pathname: '/collections/' + collection.id + '/documents'
+    });
   }
 
   render() {

@@ -43,14 +43,12 @@ class EntityTable extends Component {
     this.state = {
       result: props.result
     };
-
-    this.onSelectAll = this.onSelectAll.bind(this);
     this.onSelectRow = this.onSelectRow.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { result } = nextProps;
-    return (result.total !== undefined || result.isError) ? { result } : null;
+    return (!result.isLoading) ? { result } : null;
   }
 
   sortColumn(field) {
@@ -68,16 +66,6 @@ class EntityTable extends Component {
       }
     }
     updateQuery(newQuery);
-  }
-
-  onSelectAll() {
-    this.props.updateSelection(null);
-    /*let selectedRows = [];
-    if(this.props.result.results !== undefined) {
-      this.props.result.results.map(entity => selectedRows.push(entity.id))
-    }
-
-    this.setState({selectAll: !this.state.selectAll, selectedRows: !this.state.selectAll ? selectedRows : []});*/
   }
 
   onSelectRow(entity) {
@@ -111,8 +99,6 @@ class EntityTable extends Component {
         </SortableTH>
       );
     };
-
-    console.log("ukupno", result.total);
 
     return (
       <table className="EntityTable data-table">

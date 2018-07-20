@@ -34,10 +34,10 @@ class EntityInfo extends React.Component {
   fetchIfNeeded() {
     const { entity, references, tags } = this.props;
     if (entity.id !== undefined) {
-      if (references.total === undefined && !references.isLoading && !references.isError) {
+      if (references.shouldLoad) {
         this.props.fetchEntityReferences(entity);
       }
-      if (tags.total === undefined && !tags.isLoading && !tags.isError) {
+      if (tags.shouldLoad) {
         this.props.fetchEntityTags(entity);
       }
     }
