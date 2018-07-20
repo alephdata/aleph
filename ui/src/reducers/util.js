@@ -1,35 +1,5 @@
 import _ from 'lodash';
 
-export function updateLoading(value) {
-  return function(state, { query, result, error, args }) {
-    if (error !== undefined) {
-      const key = args.query.toKey();
-      return {
-        ...state,
-        [key]: {
-          isLoading: false,
-          isError: true,
-          shouldLoad: true,
-          error
-        }
-      };
-    }
-    if (query !== undefined) {
-      const key = query.toKey();
-      const result = state[key] || {};
-      return {
-        ...state,
-        [key]: {
-          ...result,
-          isLoading: value,
-          isError: false,
-          shouldLoad: false
-        }
-      };
-    }
-    return state;
-  }
-}
 
 export function updateResults(state, { query, result }) {
   const key = query.toKey(),
@@ -44,7 +14,8 @@ export function updateResults(state, { query, result }) {
   return { ...state, [key]: result};
 }
 
-export function flushResults(state, { query, result }) {
+
+export function invalidateResults(state) {
   for (let value of state) {
     value.shouldLoad = true;
   }
@@ -53,12 +24,15 @@ export function flushResults(state, { query, result }) {
 
 export function objectLoadStart(state, id) {
   return _.merge(state, {
-    [id]: {
-      isLoading: true,
-      shouldLoad: false
-    }
+    [id]: { isLoading: true, shouldLoad: false }
   });
 }
+
+
+export function resultLoadStart(state, query) {
+  return objectLoadStart(state, query.toKey());
+}
+
 
 export function objectLoadError(state, id, error) {
   return _.merge(state, {
@@ -70,6 +44,12 @@ export function objectLoadError(state, id, error) {
     }
   });
 }
+
+
+export function resultLoadError(state, query, error) {
+  return objectLoadError(state, query.toKey(), error);
+}
+
 
 export function objectLoadComplete(state, id, data) {
   return _.merge(state, {
