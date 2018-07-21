@@ -18,15 +18,12 @@ export function updateResults(state, { query, result }) {
 }
 
 export function invalidateResults(state) {
-  for (let value of state) {
-    value.shouldLoad = true;
-  }
-  return state;
+  return {};
 }
 
 export function objectLoadStart(state, id) {
   const object = { isLoading: true, shouldLoad: false }
-  return { ...state, [id]: _.merge({}, state[id], object) };
+  return { ...state, [id]: _.assign({}, state[id], object) };
 }
 
 export function resultLoadStart(state, query) {
@@ -40,7 +37,7 @@ export function objectLoadError(state, id, error) {
     shouldLoad: true,
     error
   };
-  return { ...state, [id]: _.merge({}, state[id], object) };
+  return { ...state, [id]: _.assign({}, state[id], object) };
 }
 
 export function resultLoadError(state, query, error) {
@@ -54,7 +51,7 @@ export function objectLoadComplete(state, id, data) {
     isError: false,
     shouldLoad: false
   }
-  return { ...state, [id]: _.merge({}, state[id], object) };
+  return { ...state, [id]: _.assign({}, state[id], object) };
 }
 
 export function objectDelete(state, id) {

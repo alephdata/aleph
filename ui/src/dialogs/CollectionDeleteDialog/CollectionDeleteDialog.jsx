@@ -30,7 +30,7 @@ class CollectionDeleteDialog extends Component {
 
   async onDelete() {
     const {collection, history} = this.props;
-    this.props.deleteCollection(collection);
+    await this.props.deleteCollection(collection);
     history.push({
       pathname: '/cases'
     });

@@ -7,7 +7,7 @@ from aleph.core import es
 from aleph.model import Entity
 from aleph.index.core import collections_index, entities_index, records_index
 from aleph.index.util import query_delete, query_update, unpack_result
-from aleph.index.util import index_doc, index_form
+from aleph.index.util import index_doc, index_form, refresh_index
 
 log = logging.getLogger(__name__)
 
@@ -92,7 +92,9 @@ def index_collection(collection):
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    return index_doc(collections_index(), collection.id, data)
+    data = index_doc(collections_index(), collection.id, data)
+    refresh_index(index=collections_index())
+    return data
 
 
 def get_collection(collection_id):
