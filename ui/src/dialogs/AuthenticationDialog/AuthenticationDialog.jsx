@@ -8,6 +8,7 @@ import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 import { loginWithPassword, loginWithToken } from "src/actions/sessionActions";
+import { selectMetadata } from 'src/selectors';
 
 import './AuthenticationDialog.css';
 
@@ -138,7 +139,9 @@ class AuthenticationDialog extends Component {
   }
 }
 
-const mapStateToProps = ({metadata}) => ({metadata});
+const mapStateToProps = (state, ownProps) => {
+  return { metadata: selectMetadata(state) };
+};
 
 AuthenticationDialog = connect(mapStateToProps, {loginWithToken, loginWithPassword})(injectIntl(AuthenticationDialog));
 export default AuthenticationDialog;
