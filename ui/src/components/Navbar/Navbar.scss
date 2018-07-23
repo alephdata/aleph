@@ -93,10 +93,6 @@
     }
   }
 
-  .pt-popover-wrapper {
-    padding-top: $aleph-grid-size * 0.5;
-  }
-
   .navbar-options {
     padding-left: 2em;
     @media screen and (max-width: $aleph-screen-md-max-width) {
@@ -105,7 +101,7 @@
     }
 
     .pt-navbar-divider {
-      margin: 10px 0 0 30px;
+      margin: 6px 20px 0 20px;
       @media screen and (max-width: $aleph-screen-md-max-width) {
         display: none;
       }
@@ -117,7 +113,7 @@
       @media screen and (max-width: $aleph-screen-md-max-width) {
         position: fixed !important;
         left: 0;
-        margin-top: 4.5em;
+        margin-top: 5em;
         width: 100%;
         display: flex;
         flex-direction: column;
