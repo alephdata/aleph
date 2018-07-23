@@ -74,8 +74,8 @@ after_success:
       docker push alephdata/aleph-extract-entities:occrp ;
       docker tag alephdata/aleph-extract-countries alephdata/aleph-extract-countries:occrp ;
       docker push alephdata/aleph-extract-countries:occrp ;
-      docker tag alephdata/aleph:latest alephdata/aleph:occrp ;
+      docker tag alephdata/aleph alephdata/aleph:occrp ;
       docker push alephdata/aleph:occrp ;
-      docker tag alephdata/ui:latest alephdata/ui:occrp ;
+      docker tag alephdata/ui alephdata/ui:occrp ;
       docker push alephdata/ui:occrp ;
     fi
