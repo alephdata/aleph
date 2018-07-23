@@ -40,7 +40,7 @@ class OCR(object):
             # TODO: play with contrast and sharpening the images.
             api.SetImage(image)
             text = api.GetUTF8Text()
-            log.info("Extracted %s chars, languages: %s", len(text), languages)
+            log.info("Extracted %s characters", len(text))
             return text
         except Exception as ex:
             log.exception("Failed to OCR: %s", languages)

@@ -27,7 +27,8 @@ install:
   - echo "${TRAVIS_BRANCH}"
   - docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:latest .
   - docker build --cache-from alephdata/ui:latest -t alephdata/ui:latest ui
-  - docker build -t alephdata/aleph-convert-document:latest services/convert-document
+  - docker build --cache-from alephdata/aleph-convert-document:latest \
+      -t alephdata/aleph-convert-document:latest services/convert-document
   - docker-compose -f docker-compose.test.yml up -d postgres elasticsearch
   - sleep 4
 
@@ -41,6 +42,9 @@ after_success:
       docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:$TRAVIS_TAG ;
       docker push alephdata/aleph-convert-document:latest ;
       docker push alephdata/aleph-convert-document:$TRAVIS_TAG ;
+      docker tag alephdata/aleph-recognize-text:latest alephdata/aleph-recognize-text:$TRAVIS_TAG ;
+      docker push alephdata/aleph-recognize-text:latest ;
+      docker push alephdata/aleph-recognize-text:$TRAVIS_TAG ;  
       docker build -t alephdata/aleph-extract-entities:latest services/extract-entities ;
       docker tag alephdata/aleph-extract-entities:latest alephdata/aleph-extract-entities:$TRAVIS_TAG ;
       docker push alephdata/aleph-extract-entities:latest ;
@@ -59,6 +63,8 @@ after_success:
   - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
       docker build -t alephdata/aleph-convert-document:occrp services/convert-document ;
       docker push alephdata/aleph-convert-document:occrp ;
+      docker build -t alephdata/aleph-recognize-text:occrp services/recognize-text ;
+      docker push alephdata/aleph-recognize-text:occrp ;
       docker build -t alephdata/aleph-extract-entities:occrp services/extract-entities ;
       docker push alephdata/aleph-extract-entities:occrp ;
       docker build -t alephdata/aleph-extract-countries:occrp services/extract-countries ;
