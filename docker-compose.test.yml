@@ -34,6 +34,13 @@ services:
     expose:
       - 3000
 
+  # recognize-text:
+  #   build: services/recognize-text
+  #   restart: on-failure
+  #   mem_limit: 2g
+  #   expose:
+  #     - 50000
+
   app:
     image: alephdata/aleph:latest
     command: /bin/bash

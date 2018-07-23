@@ -7,7 +7,7 @@ services:
 	$(COMPOSE) up -d --remove-orphans \
 		rabbitmq postgres elasticsearch \
 		convert-document extract-entities \
-		extract-countries
+		extract-countries recognize-text
 
 shell: services    
 	$(DEVDOCKER) /bin/bash
