@@ -1,11 +1,11 @@
 import logging
+from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
+from alephclient.services.entityextract_pb2 import ExtractedEntity
 
 from aleph import settings
 from aleph.services import ServiceClientMixin
 from aleph.analyze.analyzer import EntityAnalyzer, TextIterator
 from aleph.model import DocumentTag, DocumentTagCollector
-from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
-from alephclient.services.entityextract_pb2 import ExtractedEntity
 
 log = logging.getLogger(__name__)
 TYPE = ExtractedEntity.Type.Value

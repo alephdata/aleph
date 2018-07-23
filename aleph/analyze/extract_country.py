@@ -1,9 +1,9 @@
 import logging
+from alephclient.services.geoextract_pb2_grpc import GeoExtractStub
 
 from aleph import settings
 from aleph.services import ServiceClientMixin
 from aleph.analyze.analyzer import Analyzer, TextIterator
-from alephclient.services.geoextract_pb2_grpc import GeoExtractStub
 
 log = logging.getLogger(__name__)
 

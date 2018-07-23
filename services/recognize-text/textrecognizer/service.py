@@ -6,6 +6,7 @@ from alephclient.services.ocr_pb2_grpc import (
     add_RecognizeTextServicer_to_server, RecognizeTextServicer
 )
 from alephclient.services.ocr_pb2 import Image
+from alephclient.services.common_pb2 import Text
 
 from textrecognizer.recognize import OCR, PSM
 
@@ -25,9 +26,10 @@ class OCRServicer(RecognizeTextServicer):
 
     def Recognize(self, image, context):
         mode = self.MODES.get(image.mode, PSM.AUTO_OSD)
-        return self.recognizer.extract_text(image.data,
+        text = self.recognizer.extract_text(image.data,
                                             languages=image.languages,
                                             mode=mode)
+        return Text(text=text)
 
 
 def serve(port):
