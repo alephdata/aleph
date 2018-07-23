@@ -27,8 +27,8 @@ install:
   - echo "${TRAVIS_BRANCH}"
   - docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:latest .
   - docker build --cache-from alephdata/ui:latest -t alephdata/ui:latest ui
-  - docker build --cache-from alephdata/aleph-convert-document:latest \
-      -t alephdata/aleph-convert-document:latest services/convert-document
+  - docker build --cache-from alephdata/aleph-convert-document:latest -t alephdata/aleph-convert-document:latest services/convert-document
+  # - docker build -t alephdata/aleph-recognize-text:occrp services/recognize-text
   - docker-compose -f docker-compose.test.yml up -d postgres elasticsearch
   - sleep 4
 
@@ -42,6 +42,7 @@ after_success:
       docker tag alephdata/aleph-convert-document:latest alephdata/aleph-convert-document:$TRAVIS_TAG ;
       docker push alephdata/aleph-convert-document:latest ;
       docker push alephdata/aleph-convert-document:$TRAVIS_TAG ;
+      docker build -t alephdata/aleph-recognize-text:occrp services/recognize-text ;
       docker tag alephdata/aleph-recognize-text:latest alephdata/aleph-recognize-text:$TRAVIS_TAG ;
       docker push alephdata/aleph-recognize-text:latest ;
       docker push alephdata/aleph-recognize-text:$TRAVIS_TAG ;  
