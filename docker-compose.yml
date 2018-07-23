@@ -44,6 +44,13 @@ services:
     mem_limit: 2g
     expose:
       - 50000
+  
+  recognize-text:
+    build: services/recognize-text
+    restart: on-failure
+    mem_limit: 2g
+    expose:
+      - 50000
 
   worker:
     build: .
@@ -56,6 +63,7 @@ services:
       - convert-document
       - extract-entities
       - extract-countries
+      - recognize-text
     tmpfs:
       - /tmp
     volumes:
@@ -74,6 +82,7 @@ services:
       - convert-document
       - extract-entities
       - extract-countries
+      - recognize-text
       - worker
     tmpfs:
       - /tmp
@@ -95,6 +104,7 @@ services:
       - convert-document
       - extract-entities
       - extract-countries
+      - recognize-text
     tmpfs:
       - /tmp
     volumes:

@@ -141,7 +141,10 @@ ANALYZE_IBAN = env_bool('ANAYZE_IBAN', True)
 
 # gRPC extractor services
 ENTITIES_SERVICE = env('ENTITIES_SERVICE', 'extract-entities:50000')
-COUNTRIES_SERVICE = env('COUNTRIES_SERVICE', 'extract-countries:50000')
+COUNTRIES_SERVICE = None  # 'extract-countries:50000'
+COUNTRIES_SERVICE = env('COUNTRIES_SERVICE', COUNTRIES_SERVICE)
+OCR_SERVICE = None  # 'recognize-text:50000'
+OCR_SERVICE = env('OCR_SERVICE', OCR_SERVICE)
 
 
 ##############################################################################

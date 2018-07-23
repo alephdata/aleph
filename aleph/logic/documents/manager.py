@@ -3,9 +3,10 @@ import logging
 from ingestors import Manager
 from ingestors.util import decode_path
 
-from aleph.core import db, settings
+from aleph.core import db
 from aleph.model import Document, Cache
 from aleph.logic.documents.result import DocumentResult
+from aleph.logic.documents.ocr import TextRecognizerService
 
 log = logging.getLogger(__name__)
 
@@ -20,10 +21,10 @@ class DocumentManager(Manager):
     RESULT_CLASS = DocumentResult
 
     def __init__(self, archive):
-        super(DocumentManager, self).__init__({
-            'PDF_OCR_PAGES': True,
-            'OCR_DEFAULTS': settings.OCR_DEFAULTS
-        })
+        ocr_service = None
+        if TextRecognizerService.SERVICE:
+            ocr_service = TextRecognizerService()
+        super(DocumentManager, self).__init__({}, ocr_service=ocr_service)
         self.archive = archive
 
     def before(self, result):
