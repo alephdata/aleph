@@ -32,11 +32,13 @@ def handle_azure_oauth(sender, provider=None, oauth=None):
     from aleph.model import Role
     if 'login.microsoftonline.com' not in provider.base_url:
         return
-    token = (oauth.get('access_token'), '')
-    me = provider.get('me?fields=id,name,email', token=token)
-    user_id = 'azure:%s' % me.data.get('id')
-    return Role.load_or_create(user_id, Role.USER, me.data.get('name'),
-                               email=me.data.get('email'))
+
+    token_data = jwt.decode(oauth.get('id_token'), verify=False) # TODO: verify=True
+
+
+    user_id = 'azure:%s' % token_data['upn']
+    return Role.load_or_create(user_id, Role.USER, token_data['name'],
+                               email=token_data['upn'])
 
 @signals.handle_oauth_session.connect
 def handle_google_oauth(sender, provider=None, oauth=None):
