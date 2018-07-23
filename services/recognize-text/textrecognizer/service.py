@@ -47,4 +47,5 @@ def serve(port):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger('PIL').setLevel(logging.INFO)
     serve('[::]:50000')

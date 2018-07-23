@@ -1,4 +1,3 @@
-import os
 import logging
 from io import BytesIO
 from PIL import Image
@@ -8,8 +7,6 @@ from tesserocr import PyTessBaseAPI, PSM, OEM  # noqa
 from textrecognizer.languages import get_languages
 
 log = logging.getLogger(__name__)
-PATH = '/usr/share/tesseract-ocr/'
-PATH = os.environ.get('TESSDATA_PREFIX', PATH)
 
 
 class OCR(object):
@@ -22,7 +19,7 @@ class OCR(object):
             # api = PyTessBaseAPI(oem=OEM.TESSERACT_LSTM_COMBINED,
             #                     path=PATH,
             #                     lang=languages)
-            api = PyTessBaseAPI(path=PATH, lang=languages)
+            api = PyTessBaseAPI(lang=languages)
             self.thread.api = api
         return self.thread.api
 
@@ -33,7 +30,7 @@ class OCR(object):
         api = self.get_api(languages)
 
         if languages != api.GetInitLanguagesAsString():
-            api.Init(path=PATH, lang=languages)
+            api.Init(lang=languages)
 
         if mode != api.GetPageSegMode():
             api.SetPageSegMode(mode)
@@ -42,7 +39,9 @@ class OCR(object):
             image = Image.open(BytesIO(data))
             # TODO: play with contrast and sharpening the images.
             api.SetImage(image)
-            return api.GetUTF8Text()
+            text = api.GetUTF8Text()
+            log.info("Extracted %s chars, languages: %s", len(text), languages)
+            return text
         except Exception as ex:
             log.exception("Failed to OCR: %s", languages)
             return None

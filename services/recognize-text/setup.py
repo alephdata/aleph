@@ -16,7 +16,7 @@ setup(
         'pyicu',
         'banal',
         'pillow',
-        'grpcio',
+        'grpcio==1.11.0',
         'pytest',
         'normality',
         'tesserocr',

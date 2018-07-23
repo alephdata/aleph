@@ -24,9 +24,10 @@ class CountryExtractor(Analyzer, TextIterator, ServiceClientMixin):
             countries = service.ExtractCountries(texts)
             for country in countries.countries:
                 document.add_country(country)
+
+            log.info("Countries [%s]: %r", document.id, document.countries)
         except self.Error as exc:
             log.exception("gRPC Error: %s", self.SERVICE)
             self.reset_channel()
 
-        if len(document.countries):
-            log.info("Countries [%s]: %r", document.id, document.countries)
+        

@@ -6,7 +6,7 @@ from ingestors.util import decode_path
 from aleph.core import db
 from aleph.model import Document, Cache
 from aleph.logic.documents.result import DocumentResult
-from aleph.logic.documents.ocr import OCRService
+from aleph.logic.documents.ocr import TextRecognizerService
 
 log = logging.getLogger(__name__)
 
@@ -22,8 +22,8 @@ class DocumentManager(Manager):
 
     def __init__(self, archive):
         ocr_service = None
-        if OCRService.SERVICE:
-            ocr_service = OCRService()
+        if TextRecognizerService.SERVICE:
+            ocr_service = TextRecognizerService()
         super(DocumentManager, self).__init__({}, ocr_service=ocr_service)
         self.archive = archive
 

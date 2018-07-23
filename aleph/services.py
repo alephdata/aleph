@@ -9,9 +9,9 @@ class ServiceClientMixin(object):
     @property
     def channel(self):
         """Lazily connect to the RPC service."""
-        if self.has_channel:
+        if not self.has_channel():
             return
-        if hasattr(self, '_channel') or self._channel is None:
+        if not hasattr(self, '_channel') or self._channel is None:
             self._channel = grpc.insecure_channel(self.SERVICE)
         return self._channel
 
