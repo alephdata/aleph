@@ -21,6 +21,10 @@ table {
     text-overflow: unset;
   }
 
+  tr td.select {
+    width: 1%;
+  }
+
   tr td.file-size {
     width: 10%;
     white-space: nowrap;

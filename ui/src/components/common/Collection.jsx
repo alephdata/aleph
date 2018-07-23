@@ -93,14 +93,12 @@ class CollectionLoad extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.id !== this.props.id) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
     const { id, collection } = this.props;
-    if (collection.id === undefined && !collection.isLoading) {
+    if (collection.shouldLoad) {
       this.props.fetchCollection({ id });
     }
   }

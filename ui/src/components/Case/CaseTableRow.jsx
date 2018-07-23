@@ -6,7 +6,6 @@ import { Date, Role, Collection } from 'src/components/common';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { deleteCollection } from 'src/actions';
 
-
 class CaseTableRow extends Component {
   constructor(props) {
     super(props);

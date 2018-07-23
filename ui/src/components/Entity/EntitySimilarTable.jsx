@@ -20,14 +20,12 @@ class EntitySimilarTable extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchData();
-    }
+    this.fetchData();
   }
 
   fetchData() {
     const { query, result } = this.props;
-    if (result.total === undefined && !result.isLoading && !result.isError) {
+    if (result.shouldLoad) {
       this.props.queryEntities({ query });
     }
   }

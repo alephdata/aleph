@@ -1,10 +1,12 @@
 import { createReducer } from 'redux-act';
 
 import { queryNotifications } from 'src/actions';
-import { cacheResults } from './util';
+import { resultObjects } from './util';
 
 const initialState = {};
 
 export default createReducer({
-  [queryNotifications.COMPLETE]: cacheResults,
+  [queryNotifications.COMPLETE]: (state, { result }) =>
+    resultObjects(state, result),
+
 }, initialState);

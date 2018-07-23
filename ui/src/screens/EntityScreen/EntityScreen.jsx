@@ -13,13 +13,16 @@ import { EntityContent, EntityInfo } from 'src/components/Entity/';
 
 class EntityScreen extends Component {
   componentDidMount() {
-    const { entityId } = this.props;
-    this.props.fetchEntity({ id: entityId });
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
     const { entityId, entity } = this.props;
-    if (entity.id === undefined && !entity.isLoading) {
+    if (entity.shouldLoad) {
       this.props.fetchEntity({ id: entityId });
     }
   }

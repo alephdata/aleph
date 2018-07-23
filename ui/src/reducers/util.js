@@ -1,58 +1,69 @@
-import keyBy from 'lodash/keyBy';
-import { assign, assignWith } from 'lodash/fp';
+import _ from 'lodash';
 
-export function mapById(result) {
-  return result ? keyBy(result.results, 'id') : {};
-}
 
-export function cacheResults(state, { result }) {
-  // The search results may contain only a subset of the object's fields, so
-  // to not erase any existing value, we do a shallow merge of object fields.
-  return assignWith(assign)(state, mapById(result));
-}
-
-export function updateLoading(value) {
-  return function(state, { query, result, error, args }) {
-    if (error !== undefined) {
-      const key = args.query.toKey();
-      return {
-        ...state,
-        [key]: {
-          isLoading: false,
-          isError: true,
-          error
-        }
-      };
-    }
-    if (query !== undefined) {
-      const key = query.toKey();
-      const result = state[key] || {};
-      return {
-        ...state,
-        [key]: {
-          ...result,
-          isLoading: value,
-          isError: false
-        }
-      };
-    }
-    return state;
+export function mergeResults(previous, current) {
+  if (previous === undefined || previous.limit === undefined) {
+    return current;
   }
+  if (current.offset === (previous.limit + previous.offset)) {
+    return { ...current, results: [...previous.results, ...current.results] };
+  }
+  return current;
 }
 
 export function updateResults(state, { query, result }) {
-  const key = query.toKey(),
-        previous = state[key] && state[key].total !== undefined ? state[key] : {},
-        results = result.results.map((r) => r.id);
-  
-  result = { ...result, isLoading: false, results };
-  // don't overwrite existing results
-  if (previous.page !== undefined && previous.offset < result.offset) {
-    result = { ...result, results: [...previous.results, ...result.results] };
-  }
-  return { ...state, [key]: result};
+  const key = query.toKey();
+  const res = { ...result, results: result.results.map((r) => r.id) };
+  return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
 
-export function flushResults() {
-  return {}
+export function invalidateResults(state) {
+  return {};
+}
+
+export function objectLoadStart(state, id) {
+  const object = { isLoading: true, shouldLoad: false }
+  return { ...state, [id]: _.assign({}, state[id], object) };
+}
+
+export function resultLoadStart(state, query) {
+  return objectLoadStart(state, query.toKey());
+}
+
+export function objectLoadError(state, id, error) {
+  const object = {
+    isLoading: false,
+    isError: true,
+    shouldLoad: true,
+    error
+  };
+  return { ...state, [id]: _.assign({}, state[id], object) };
+}
+
+export function resultLoadError(state, query, error) {
+  return objectLoadError(state, query.toKey(), error);
+}
+
+export function objectLoadComplete(state, id, data) {
+  const object = {
+    ...data,
+    isLoading: false,
+    isError: false,
+    shouldLoad: false
+  }
+  return { ...state, [id]: _.assign({}, state[id], object) };
+}
+
+export function objectDelete(state, id) {
+  _.unset(state, id);
+  return state;
+}
+
+export function resultObjects(state, result) {
+  if (result.results !== undefined) {
+    for (let object of result.results) {
+      state = objectLoadComplete(state, object.id, object);
+    }  
+  }
+  return state;
 }

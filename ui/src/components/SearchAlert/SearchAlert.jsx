@@ -6,6 +6,7 @@ import { Tooltip } from "@blueprintjs/core";
 import c from 'classnames';
 
 import { addAlert, deleteAlert, fetchAlerts } from 'src/actions';
+import { selectSession, selectAlerts } from 'src/selectors';
 
 
 const messages = defineMessages({
@@ -97,8 +98,8 @@ class SearchAlert extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    alerts: state.alerts,
-    session: state.session,
+    alerts: selectAlerts(state),
+    session: selectSession(state),
   }
 };
 

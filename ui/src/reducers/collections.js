@@ -1,29 +1,30 @@
 import { createReducer } from 'redux-act';
-import { set, unset, update } from 'lodash/fp';
 
 import { fetchCollection, updateCollection, queryCollections, createCollection, deleteCollection } from 'src/actions';
-import { cacheResults } from './util';
+import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects } from 'src/reducers/util';
 
 const initialState = {};
 
 export default createReducer({
-  [queryCollections.COMPLETE]: cacheResults,
+  [queryCollections.COMPLETE]: (state, { result }) => 
+    resultObjects(state, result),
 
   [fetchCollection.START]: (state, { id }) =>
-    update(id, set('isLoading', true))(state),
+    objectLoadStart(state, id),
 
   [fetchCollection.ERROR]: (state, { error, args: { id } }) =>
-    set(id, { isLoading: false, isError: true, error: error })(state),
+    objectLoadError(state, id, error),
 
   [fetchCollection.COMPLETE]: (state, { id, data }) =>
-    set(id, data)(state),
+    objectLoadComplete(state, id, data),
 
   [updateCollection.COMPLETE]: (state, { id, data }) =>
-    set(id, data)(state),
+    objectLoadComplete(state, id, data),
 
   [createCollection.COMPLETE]: (state, { id, data }) =>
-    set(id, data)(state),
+    objectLoadComplete(state, id, data),
 
   [deleteCollection.COMPLETE]: (state, { id, data }) =>
-    unset(id)(state),
+    objectDelete(state, id),
+
 }, initialState);

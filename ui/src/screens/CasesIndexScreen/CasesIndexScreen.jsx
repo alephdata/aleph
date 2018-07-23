@@ -61,7 +61,7 @@ class CasesIndexScreen extends Component {
 
   fetchIfNeeded() {
     let { query, result } = this.props;
-    if (result.total === undefined && !result.isLoading && !result.isError) {
+    if (result.shouldLoad) {
       this.props.queryCollections({ query });
     }
   }
@@ -132,7 +132,7 @@ class CasesIndexScreen extends Component {
           </DualPane.ContentPane>
         </DualPane>
         <DualPane>
-          <DualPane.SidePane></DualPane.SidePane>
+          <DualPane.SidePane/>
           <DualPane.ContentPane>
             {result.total !== 0 && (
               <CaseIndexTable query={query}

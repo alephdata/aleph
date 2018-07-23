@@ -8,7 +8,8 @@ import {
   fetchDocument,
   queryDocumentRecords,
   fetchDocumentPage,
-  ingestDocument
+  ingestDocument,
+  deleteDocument
 } from './documentActions';
 import {
   queryCollections,
@@ -53,7 +54,8 @@ export {
   createCollection,
   deleteCollection,
   deleteNotifications,
-  ingestDocument
+  ingestDocument,
+  deleteDocument
 };
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {

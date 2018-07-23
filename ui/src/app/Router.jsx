@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
 import { fetchMetadata } from 'src/actions';
+import { selectSession, selectMetadata } from 'src/selectors';
 import NotFoundScreen from 'src/screens/NotFoundScreen/NotFoundScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
 import OAuthScreen from "src/screens/OAuthScreen/OAuthScreen";
@@ -70,8 +71,8 @@ class Router extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    metadata: state.metadata,
-    session: state.session
+    metadata: selectMetadata(state),
+    session: selectSession(state)
   };
 };
 

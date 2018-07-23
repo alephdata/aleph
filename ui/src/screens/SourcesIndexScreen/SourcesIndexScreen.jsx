@@ -68,14 +68,12 @@ class SourcesIndexScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
     let { query, result } = this.props;
-    if (result.total === undefined && !result.isLoading) {
+    if (result.shouldLoad) {
       this.props.queryCollections({ query });
     }
   }

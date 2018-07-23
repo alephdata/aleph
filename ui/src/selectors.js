@@ -2,10 +2,13 @@ import _ from 'lodash';
 
 import { documentRecordKey } from 'src/reducers/documentRecords';
 
+
 function selectResult(state, query, expand) {
   const key = query.toKey();
   const result = {
     isLoading: false,
+    isError: false,
+    shouldLoad: true,
     results: [],
     ...state.results[key]
   };
@@ -15,9 +18,29 @@ function selectResult(state, query, expand) {
 
 function selectObject(objects, id) {
   if (!id || !_.has(objects, id)) {
-    return {isLoading: false}
+    return {
+      isLoading: false,
+      isError: false,
+      shouldLoad: true,
+    }
   }
   return objects[id];
+}
+
+export function selectMetadata(state) {
+  return selectObject(state, 'metadata');
+}
+
+export function selectStatistics(state) {
+  return selectObject(state, 'statistics');
+}
+
+export function selectSession(state) {
+  return selectObject(state, 'session');
+}
+
+export function selectAlerts(state) {
+  return selectObject(state, 'alerts');
 }
 
 export function selectCollection(state, collectionId) {
@@ -62,6 +85,10 @@ export function selectEntityTags(state, entityId) {
 
 export function selectEntityReferences(state, entityId) {
   return selectObject(state.entityReferences, entityId);
+}
+
+export function selectCollectionPermissions(state, collectionId) {
+  return selectObject(state.collectionPermissions, collectionId);
 }
 
 export function selectCollectionXrefIndex(state, collectionId) {

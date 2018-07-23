@@ -3,7 +3,6 @@ import logging
 from banal import ensure_list
 from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
-from normality import stringify
 
 from aleph.core import es
 from aleph.index.core import all_indexes
@@ -84,7 +83,7 @@ def field_filter_query(field, values):
 
 
 def cleanup_query(body):
-    """Make a query simpler and more readable. This largely exists for 
+    """Make a query simpler and more readable. This largely exists for
     debugging help, since ES should be able to perform the same
     optimisations internally."""
     query = body.get('query', {})
@@ -97,8 +96,6 @@ def cleanup_query(body):
             if len(parts):
                 bool_query[section] = parts
     body['query'] = {'bool': bool_query}
-    # if not len(body.get('post_filter', {}).get('bool', {}).get('filter', [])):
-    #     body.pop('post_filter')
     if not len(body.get('highlight', {})):
         body.pop('highlight')
     if not len(body.get('aggregations', {})):
