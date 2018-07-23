@@ -29,9 +29,9 @@ setup(
             'phones = aleph.analyze.regex:PhoneNumberAnalyzer',
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'ner = aleph.analyze.extract_entity:EntityExtractor',
+            'country = aleph.analyze.extract_country:CountryExtractor',
             'ip = aleph.analyze.regex:IPAnalyzer',
             'iban = aleph.analyze.regex:IBANAnalyzer',
-            'country = aleph.analyze.country:CountryExtractor',
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',
