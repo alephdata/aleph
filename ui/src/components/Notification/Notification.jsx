@@ -31,6 +31,17 @@ class Notification extends Component {
     }
   }
 
+  convertUTCDateToLocalDate(date) {
+    let newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+    let offset = date.getTimezoneOffset() / 60;
+    let hours = date.getHours();
+
+    newDate.setHours(hours - offset);
+
+    return newDate;
+  }
+
   render() {
     const { event, id, created_at } = this.props.notification;
     const parts = event.template.split(/({{|}})/);
@@ -50,10 +61,12 @@ class Notification extends Component {
       }
     }
 
+    let createdDate = this.convertUTCDateToLocalDate(new Date(created_at));
+
     return (
       <li key={id} className="Notification">
         <div className="timestamp">
-          <FormattedRelative value={created_at}/>
+          <FormattedRelative value={createdDate.toString()}/>
         </div>
         <React.Fragment>
           {message.map((m, i) => (
