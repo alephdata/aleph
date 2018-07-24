@@ -20,7 +20,7 @@ setup(
         'pytest',
         'normality',
         'tesserocr',
-        'languagecodes',
+        'languagecodes>=1.0.4',
         'alephclient==0.6.7'
     ],
     zip_safe=False
