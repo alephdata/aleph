@@ -33,7 +33,7 @@ def _get_credential_authz(credential):
 
 
 @blueprint.before_app_request
-def load_role():
+def decode_authz():
     authz = None
 
     if 'Authorization' in request.headers:
