@@ -23,6 +23,8 @@ def index_document_id(document_id):
 
 def generate_tags(document):
     """Transform document tag objects into normalized tag snippets."""
+    if document.status == Document.STATUS_PENDING:
+        return []
     tags = defaultdict(set)
     q = db.session.query(DocumentTag)
     q = q.filter(DocumentTag.document_id == document.id)
@@ -41,10 +43,6 @@ def generate_tags(document):
 
 
 def index_document(document):
-    if document.status == Document.STATUS_PENDING:
-        delete_entity(document.id)
-        return
-
     name = document.name
     log.info("Index document [%s]: %s", document.id, name)
     data = {

@@ -48,7 +48,10 @@ def ingest_document(document, file_path, role_id=None):
         document.content_hash = archive.archive_file(file_path)
 
     db.session.commit()
-    priority = 5 if document.collection.casefile else 3
+    priority = 3
+    if document.collection.casefile:
+        index_document(document)
+        priority = 5
     ingest.apply_async(args=[document.id],
                        priority=priority)
 
