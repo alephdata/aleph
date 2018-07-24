@@ -43,6 +43,7 @@ class TestCase(FlaskTestCase):
         settings.ARCHIVE_TYPE = 'file'
         settings.ARCHIVE_PATH = self.temp_dir
         settings.DATABASE_URI = DB_URI
+        settings.ALEPH_PASSWORD_LOGIN = True
         settings.QUEUE = False
         settings.MAIL_SERVER = None
         settings.COUNTRIES_SERVICE = None

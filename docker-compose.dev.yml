@@ -1,4 +1,4 @@
-version: "2"
+version: "3.2"
 
 services:
   postgres:
@@ -25,37 +25,49 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   convert-document:
-    build: services/convert-document
+    build:
+      context: services/convert-document
+      cache_from: 
+        - alephdata/aleph-convert-document
     restart: on-failure
     tmpfs:
       - /tmp
       - /root/.config
-    mem_limit: 1g
     expose:
       - 3000
 
   extract-entities:
-    build: services/extract-entities
+    build: 
+      context: services/extract-entities
+      cache_from: 
+        - alephdata/aleph-extract-entities
     restart: on-failure
     expose:
       - 50000
 
   extract-countries:
-    build: services/extract-countries
+    build: 
+      context: services/extract-countries
+      cache_from: 
+        - alephdata/aleph-extract-countries
     restart: on-failure
-    mem_limit: 2g
     expose:
       - 50000
 
   recognize-text:
-    build: services/recognize-text
+    build: 
+      context: services/recognize-text
+      cache_from: 
+        - alephdata/aleph-recognize-text
     restart: on-failure
-    mem_limit: 2g
     expose:
       - 50000
 
   app:
-    build: .
+    build: 
+      context: .
+      cache_from: 
+        - alephdata/aleph
     command: /bin/bash
     links:
       - postgres
@@ -82,7 +94,10 @@ services:
       - aleph.env
 
   api:
-    build: .
+    build: 
+      context: .
+      cache_from: 
+        - alephdata/aleph
     command: python aleph/manage.py runserver -h 0.0.0.0 -p 5000
     expose:
       - 5000
@@ -112,7 +127,10 @@ services:
       - aleph.env
   
   ui:
-    build: ui
+    build: 
+      context: ui
+      cache_from: 
+        - alephdata/aleph-ui
     links:
       - api
     command: npm run start
