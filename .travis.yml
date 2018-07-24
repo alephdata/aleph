@@ -49,15 +49,15 @@ after_success:
       docker tag alephdata/aleph-convert-document alephdata/aleph-convert-document:$TRAVIS_TAG ;
       docker push alephdata/aleph-convert-document ;
       docker push alephdata/aleph-convert-document:$TRAVIS_TAG ;
-      # docker tag alephdata/aleph-recognize-text alephdata/aleph-recognize-text:$TRAVIS_TAG ;
-      # docker push alephdata/aleph-recognize-text ;
-      # docker push alephdata/aleph-recognize-text:$TRAVIS_TAG ;  
+      docker tag alephdata/aleph-recognize-text alephdata/aleph-recognize-text:$TRAVIS_TAG ;
+      docker push alephdata/aleph-recognize-text ;
+      docker push alephdata/aleph-recognize-text:$TRAVIS_TAG ;  
       docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:$TRAVIS_TAG ;
       docker push alephdata/aleph-extract-entities ;
       docker push alephdata/aleph-extract-entities:$TRAVIS_TAG ;
-      # docker tag alephdata/aleph-extract-countries alephdata/aleph-extract-countries:$TRAVIS_TAG ;
-      # docker push alephdata/aleph-extract-countries ;
-      # docker push alephdata/aleph-extract-countries:$TRAVIS_TAG ;
+      docker tag alephdata/aleph-extract-countries alephdata/aleph-extract-countries:$TRAVIS_TAG ;
+      docker push alephdata/aleph-extract-countries ;
+      docker push alephdata/aleph-extract-countries:$TRAVIS_TAG ;
       docker tag alephdata/aleph alephdata/aleph:$TRAVIS_TAG ;
       docker push alephdata/aleph ;
       docker push alephdata/aleph:$TRAVIS_TAG ;
@@ -68,12 +68,12 @@ after_success:
   - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
       docker tag alephdata/aleph-convert-document alephdata/aleph-convert-document:occrp ;
       docker push alephdata/aleph-convert-document:occrp ;
-      # docker tag alephdata/aleph-recognize-text alephdata/aleph-recognize-text:occrp ;
-      # docker push alephdata/aleph-recognize-text:occrp ;
+      docker tag alephdata/aleph-recognize-text alephdata/aleph-recognize-text:occrp ;
+      docker push alephdata/aleph-recognize-text:occrp ;
       docker tag alephdata/aleph-extract-entities alephdata/aleph-extract-entities:occrp ;
       docker push alephdata/aleph-extract-entities:occrp ;
-      # docker tag alephdata/aleph-extract-countries alephdata/aleph-extract-countries:occrp ;
-      # docker push alephdata/aleph-extract-countries:occrp ;
+      docker tag alephdata/aleph-extract-countries alephdata/aleph-extract-countries:occrp ;
+      docker push alephdata/aleph-extract-countries:occrp ;
       docker tag alephdata/aleph alephdata/aleph:occrp ;
       docker push alephdata/aleph:occrp ;
       docker tag alephdata/ui alephdata/ui:occrp ;
