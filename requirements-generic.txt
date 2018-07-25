@@ -48,7 +48,6 @@ coveralls
 
 # Duplicative for speed of docker builds
 lxml==4.2.3
-tesserocr==2.2.2
 xlrd==1.1.0
 phonenumbers==8.9.10
 python-levenshtein==0.12.0

@@ -21,21 +21,11 @@ before_install:
   - sudo echo "ALEPH_DATABASE_NAME=$ALEPH_DATABASE_NAME\nALEPH_DATABASE_URI=$ALEPH_DATABASE_URI\nOAUTH_KEY=$OAUTH_KEY\nOAUTH_SECRET=$OAUTH_SECRET" >> aleph.env
   - docker --version
   - docker-compose --version
-  - docker pull alephdata/aleph
-  - docker pull alephdata/ui
-  - docker pull alephdata/aleph-convert-document
-  - docker pull alephdata/aleph-recognize-text
-  - docker pull alephdata/aleph-extract-entities
-  - docker pull alephdata/aleph-extract-countries
+  - make pull
 
 install:
   - echo "${TRAVIS_BRANCH}"
-  - docker build --cache-from alephdata/aleph -t alephdata/aleph .
-  - docker build --cache-from alephdata/ui -t alephdata/ui ui
-  - docker build --cache-from alephdata/aleph-convert-document -t alephdata/aleph-convert-document services/convert-document
-  - docker build --cache-from alephdata/aleph-recognize-text -t alephdata/aleph-recognize-text services/recognize-text
-  - docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities services/extract-entities
-  - docker build --cache-from alephdata/aleph-extract-countries -t alephdata/aleph-extract-countries services/extract-countries
+  - make build
   - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
   - sleep 4
 
