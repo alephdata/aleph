@@ -80,7 +80,7 @@ services:
 
   api:
     image: alephdata/aleph
-    command: python aleph/manage.py runserver -h 0.0.0.0 -p 5000
+    command: python3 aleph/manage.py runserver -h 0.0.0.0 -p 5000
     expose:
       - 5000
     ports:
