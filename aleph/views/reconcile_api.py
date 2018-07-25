@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 def get_freebase_types():
     types = []
     for schema in model:
-        if schema.fuzzy:
+        if schema.matchable:
             types.append({
                 'id': schema.name,
                 'name': schema.label

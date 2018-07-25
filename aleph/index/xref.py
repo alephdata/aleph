@@ -2,22 +2,16 @@ import logging
 from banal import ensure_list
 from followthemoney import model
 
-# from aleph.model import Document
-
 log = logging.getLogger(__name__)
+NO_QUERY = {'match_none': {}}
 
 
 def entity_query(sample, collection_id=None, query=None, broad=False):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
-
-    # Do not attempt to find xrefs for entity types such as land, buildings,
-    # etc.
     schema = model.get(sample.get('schema'))
     if schema is None:
-        return {'match_none': {}}
-    if not broad and not schema.fuzzy:
-        return {'match_none': {}}
+        return NO_QUERY
 
     if query is None:
         query = {
@@ -29,6 +23,28 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
             }
         }
 
+    # Don't match the query entity:
+    if sample.get('id'):
+        sq = {"ids": {"values": [sample.get('id')]}}
+        query['bool']['must_not'].append(sq)
+
+    if not broad:
+        # Attempt to find only matches within the "matchable" set of
+        # entity schemata. For example, a Company and be matched to
+        # another company or a LegalEntity, but not a Person.
+        # Real estate is "unmatchable", i.e. even if two plots of land
+        # have almost the same name and criteria, it does not make
+        # sense to suggest they are the same.
+        matchable = [s.name for s in schema.matchable_schemata]
+        if not len(matchable):
+            return NO_QUERY
+        query['bool']['must'].append({"terms": {"schema": matchable}})
+
+    if collection_id is not None:
+        query['bool']['must'].append({
+            'term': {'collection_id': collection_id}
+        })
+
     required = []
     for fp in ensure_list(sample.get('fingerprints'))[:50]:
         required.append({
@@ -37,7 +53,7 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
                     'query': fp,
                     'fuzziness': 1,
                     'operator': 'and',
-                    'boost': 2.0
+                    'boost': 3.0
                 }
             }
         })
@@ -70,12 +86,7 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
 
     if not len(required):
         # e.g. a document from which no features have been extracted.
-        return {'match_none': {}}
-
-    if collection_id is not None:
-        query['bool']['must'].append({
-            'term': {'collection_id': collection_id}
-        })
+        return NO_QUERY
 
     # make it mandatory to have either a fingerprint or name match
     query['bool']['must'].append({
@@ -86,7 +97,7 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
     })
 
     # boost by "contributing criteria"
-    for field in ['dates', 'countries', 'schemata', 'identifiers']:
+    for field in ['dates', 'countries', 'identifiers']:
         for value in ensure_list(sample.get(field)):
             if value is None or not len(value):
                 continue
@@ -106,14 +117,9 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
             'common': {field: {'query': value}}
         })
 
-    # filter types which cannot be resolved via fuzzy matching.
-    query['bool']['must_not'].extend([
-        {"ids": {"values": [sample.get('id')]}},
-        {"terms": {"schema": [s.name for s in model if not s.fuzzy]}}
-    ])
-    if sample.get('content_hash'):
-        # Do not try to find other copies of the same document
-        query['bool']['must_not'].append({
-            "term": {"schema": sample.get('content_hash')}
-        })
+    # if sample.get('content_hash'):
+    #     # Do not try to find other copies of the same document
+    #     query['bool']['must_not'].append({
+    #         "term": {"schema": sample.get('content_hash')}
+    #     })
     return query

@@ -15,12 +15,15 @@ def _xref_item(item, collection_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
     name = item.get('name') or item.get('title')
     query = entity_query(item, collection_id=collection_id)
-    result = es.search(index=entities_index(),
-                       body={
-                           'query': query,
-                           'size': 10,
-                           '_source': ['collection_id', 'name'],
-                       })
+    if 'match_none' in query:
+        return
+
+    query = {
+        'query': query,
+        'size': 10,
+        '_source': ['collection_id', 'name'],
+    }
+    result = es.search(index=entities_index(), body=query)
     results = result.get('hits').get('hits')
     entity_id, document_id = None, None
     if Document.SCHEMA in item.get('schemata'):

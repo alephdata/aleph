@@ -32,16 +32,16 @@ class CollectionsXrefScreen extends Component {
   }
 
   componentDidMount() {
-    this.fetchData()
+    this.fetchIfNeeded()
   }
 
   componentDidUpdate(prevProps) {
-    this.fetchData();
+    this.fetchIfNeeded();
   }
 
-  fetchData() {
+  fetchIfNeeded() {
     const { collectionId, otherId, index, query } = this.props;
-    const { collection, other } = this.props;
+    const { collection, other, matches } = this.props;
     if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
     }
@@ -51,7 +51,9 @@ class CollectionsXrefScreen extends Component {
     if (index.shouldLoad) {
       this.props.fetchCollectionXrefIndex({id: collectionId});
     }
-    this.props.queryXrefMatches({ query });
+    if (matches.shouldLoad) {
+      this.props.queryXrefMatches({ query });
+    }
   }
 
   onOtherChange({ target }) {
