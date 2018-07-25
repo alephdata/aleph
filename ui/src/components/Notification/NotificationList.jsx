@@ -54,7 +54,7 @@ class NotificationList extends Component {
 
   render() {
     const { result, intl } = this.props;
-    
+
     return (
       <React.Fragment>
         { result.total === 0 &&
