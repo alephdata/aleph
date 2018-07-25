@@ -130,26 +130,13 @@ services:
       - aleph.env
 
   ui:
-    image: alephdata/aleph-ui
-    command: /bin/bash -c "npm run build; tail -f /dev/null"
-    volumes:
-      - assets:/alephui/build
-    environment:
-      REACT_APP_API_ENDPOINT: '/api/2'
-
-  web:
-    image: nginx:alpine
+    image: alephdata/aleph-ui-production
     links:
       - api
-      - ui
     ports:
       - "8080:8080"
-    volumes:
-      - assets:/assets
-      - "./contrib/proxy.conf:/etc/nginx/nginx.conf"
 
 volumes:
-  assets: {}
   archive-data: {}
   postgres-data: {}
   rabbitmq-data: {}

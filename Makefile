@@ -51,6 +51,9 @@ build:
 	docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities:$(TAG) services/extract-entities
 	docker build --cache-from alephdata/aleph-extract-countries -t alephdata/aleph-extract-countries:$(TAG) services/extract-countries
 
+build-full: build
+	docker build -t alephdata/aleph-ui-production:$(TAG) ui/production
+
 docker-pull:
 	docker pull alephdata/aleph
 	docker pull alephdata/aleph-ui
@@ -62,6 +65,7 @@ docker-pull:
 docker-push:
 	docker push alephdata/aleph:$(TAG)
 	docker push alephdata/aleph-ui:$(TAG)
+	docker push alephdata/aleph-ui-production:$(TAG)
 	docker push alephdata/aleph-convert-document:$(TAG)
 	docker push alephdata/aleph-recognize-text:$(TAG)
 	docker push alephdata/aleph-extract-entities:$(TAG)
