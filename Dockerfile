@@ -49,7 +49,6 @@ RUN pip3 install -q -r /tmp/requirements-toolkit.txt && rm -rf /root/.cache
 COPY . /aleph
 WORKDIR /aleph
 ENV PYTHONPATH /aleph
-# RUN cd /usr/local/lib/python2.7/site-packages && python3 /aleph/setup.py develop
 RUN pip install -e /aleph
 
 # Configure some docker defaults:
