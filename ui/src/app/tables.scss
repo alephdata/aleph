@@ -23,6 +23,14 @@ table {
 
   tr td.select {
     width: 1%;
+    white-space: nowrap;
+    overflow: visible;
+    max-width: unset;
+    text-overflow: unset;
+
+    .pt-control {
+      padding-left: 0;
+    }
   }
 
   tr td.file-size {
