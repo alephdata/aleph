@@ -45,10 +45,10 @@ clean:
 build:
 	docker build --cache-from alephdata/aleph -t alephdata/aleph .
 	docker build --cache-from alephdata/ui -t alephdata/ui ui
-	docker build --cache-from alephdata/aleph-convert-document -t alephdata/aleph-convert-document services/convert-document
-	docker build --cache-from alephdata/aleph-recognize-text -t alephdata/aleph-recognize-text services/recognize-text
-	docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities services/extract-entities
-	docker build --cache-from alephdata/aleph-extract-countries -t alephdata/aleph-extract-countries services/extract-countries
+	docker build --compress --cache-from alephdata/aleph-convert-document -t alephdata/aleph-convert-document services/convert-document
+	docker build --compress --cache-from alephdata/aleph-recognize-text -t alephdata/aleph-recognize-text services/recognize-text
+	docker build --compress --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities services/extract-entities
+	docker build --compress --cache-from alephdata/aleph-extract-countries -t alephdata/aleph-extract-countries services/extract-countries
 	$(COMPOSE) build
 
 pull:
@@ -58,6 +58,12 @@ pull:
 	docker pull alephdata/aleph-recognize-text
 	docker pull alephdata/aleph-extract-entities
 	docker pull alephdata/aleph-extract-countries
+
+evil-direct:
+	docker push alephdata/aleph-convert-document
+	docker push alephdata/aleph-recognize-text
+	docker push alephdata/aleph-extract-entities
+	docker push alephdata/aleph-extract-countries
 
 dev: 
 	pip install -q transifex-client bumpversion babel

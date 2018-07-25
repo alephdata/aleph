@@ -5,6 +5,8 @@ ENV DEBIAN_FRONTEND noninteractive
 # RUN echo "deb http://http.us.debian.org/debian stretch non-free" >/etc/apt/sources.list.d/nonfree.list
 RUN apt-get -qq -y update \
     && apt-get -qq -y install build-essential locales ca-certificates \
+        # needed to set up DB for tests:
+        postgresql-client \
         # python deps (mostly to install their dependencies)
         python3-pip python3-dev python3-pil \
         # libraries
