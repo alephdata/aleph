@@ -10,7 +10,6 @@ export function updateMatches(state, { query, result }) {
   return objectLoadComplete(state, key, mergeResults(state[key], result));
 }
 
-
 export default createReducer({
   [queryXrefMatches.START]: (state, { query }) =>
     objectLoadStart(state, query.toKey()),

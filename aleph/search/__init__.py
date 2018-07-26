@@ -121,7 +121,7 @@ class SuggestEntitiesQuery(EntitiesQuery):
         # filter types which cannot be resolved via fuzzy matching.
         query['bool']['must_not'].append({
             "terms": {
-                "schema": [s.name for s in model if not s.fuzzy]
+                "schema": [s.name for s in model if not s.matchable]
             }
         })
         return query

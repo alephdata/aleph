@@ -44,7 +44,7 @@ class XrefTestCase(TestCase):
                          headers=headers,
                          content_type='application/json')
         entity = {
-            'schema': 'Company',
+            'schema': 'LegalEntity',
             'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'properties': {
@@ -102,7 +102,7 @@ class XrefTestCase(TestCase):
                          headers=headers,
                          content_type='application/json')
         entity = {
-            'schema': 'Company',
+            'schema': 'LegalEntity',
             'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'properties': {
@@ -125,7 +125,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
 
         entity = {
-            'schema': 'Company',
+            'schema': 'LegalEntity',
             'name': 'Carlof Danger',
             'collection_id': self.coll_c.id,
             'properties': {

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
-import { Checkbox } from '@blueprintjs/core';
 
 import EntityTableRow from './EntityTableRow';
 import { SortableTH, ErrorSection } from 'src/components/common';
@@ -77,7 +76,6 @@ class EntityTable extends Component {
     const { hideCollection = false, documentMode = false } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
-    const selectAll = selectedRows !== undefined ? selectedRows.length === result.results.length : false;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -104,11 +102,7 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
-            {writable && (
-              <th>
-                <Checkbox checked={selectAll} onChange={this.onSelectAll} />
-              </th>
-            )}
+            {writable && (<th className="select"></th>)}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
               <TH field="collection_id" />
@@ -133,7 +127,7 @@ class EntityTable extends Component {
                             history={history}
                             writable={writable}
                             onSelectRow={this.onSelectRow}
-                            selectedRows={selectedRows}/>
+                            selectedRows={selectedRows} />
           )}
         </tbody>
       </table>

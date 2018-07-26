@@ -1,4 +1,5 @@
-FROM alephdata/ui AS builder
+FROM alephdata/aleph-ui AS builder
+ENV REACT_APP_API_ENDPOINT /api/2/
 RUN npm run build
 
 FROM nginx:alpine
