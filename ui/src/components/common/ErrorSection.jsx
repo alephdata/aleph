@@ -4,6 +4,8 @@ import React, {Component} from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
+import { selectSession, selectMetadata } from 'src/selectors';
+
 import './ErrorSection.css';
 
 
@@ -48,7 +50,10 @@ class ErrorSection extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { metadata: state.metadata, session: state.session };
+  return {
+    metadata: selectMetadata(state),
+    session: selectSession(state)
+  };
 };
 
 ErrorSection = connect(mapStateToProps)(ErrorSection);

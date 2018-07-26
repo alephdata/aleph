@@ -22,7 +22,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
 
   convert-document:
-    build: services/convert-document
+    image: alephdata/aleph-convert-document
     restart: on-failure
     tmpfs:
       - /tmp
@@ -32,21 +32,28 @@ services:
       - 3000
 
   extract-entities:
-    build: services/extract-entities
+    image: alephdata/aleph-extract-entities
     restart: on-failure
     mem_limit: 4g
     expose:
       - 50000
 
   extract-countries:
-    build: services/extract-countries
+    image: alephdata/aleph-extract-countries
+    restart: on-failure
+    mem_limit: 2g
+    expose:
+      - 50000
+  
+  recognize-text:
+    image: alephdata/aleph-recognize-text
     restart: on-failure
     mem_limit: 2g
     expose:
       - 50000
 
   worker:
-    build: .
+    image: alephdata/aleph
     command: celery -A aleph.queues -B -c 4 -l INFO worker
     restart: on-failure
     links:
@@ -56,6 +63,7 @@ services:
       - convert-document
       - extract-entities
       - extract-countries
+      - recognize-text
     tmpfs:
       - /tmp
     volumes:
@@ -65,7 +73,7 @@ services:
       - aleph.env
   
   shell:
-    build: .
+    image: alephdata/aleph
     command: /bin/bash
     links:
       - postgres
@@ -74,6 +82,7 @@ services:
       - convert-document
       - extract-entities
       - extract-countries
+      - recognize-text
       - worker
     tmpfs:
       - /tmp
@@ -85,7 +94,7 @@ services:
       - aleph.env
 
   beat:
-    build: .
+    image: alephdata/aleph
     command: celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db
     links:
       - postgres
@@ -95,6 +104,7 @@ services:
       - convert-document
       - extract-entities
       - extract-countries
+      - recognize-text
     tmpfs:
       - /tmp
     volumes:
@@ -103,7 +113,7 @@ services:
       - aleph.env
 
   api:
-    build: .
+    image: alephdata/aleph
     command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
     expose:
       - 8000
@@ -120,7 +130,7 @@ services:
       - aleph.env
 
   ui:
-    build: ui
+    image: alephdata/aleph-ui
     command: /bin/bash -c "npm run build; tail -f /dev/null"
     volumes:
       - assets:/alephui/build

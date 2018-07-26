@@ -1,13 +1,30 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
+import { Checkbox } from '@blueprintjs/core';
 
 import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
 class EntityTableRow extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onSelect = this.onSelect.bind(this);
+  }
+
+  onSelect() {
+    this.props.onSelectRow(this.props.entity);
+  }
+
   render() {
     const { entity, className, location: loc } = this.props;
-    const { hideCollection, documentMode } = this.props;
+    const { hideCollection, documentMode , writable, selectedRows} = this.props;
     const parsedHash = queryString.parse(loc.hash);
+    let isSelected = false;
+    if(writable) {
+      for(let i = 0; i < selectedRows.length; i++) {
+        if(selectedRows[i].id === entity.id) isSelected = true;
+      }
+    }
     
     let rowClassName = (className) ? `${className} nowrap` : 'nowrap';
 
@@ -21,6 +38,9 @@ class EntityTableRow extends Component {
     
     return (
       <tr className={rowClassName}>
+        {writable && <td className="select">
+          <Checkbox checked={isSelected} onChange={this.onSelect} />
+        </td>}
         <td className="entity">
           <Entity.Link preview={!documentMode}
                        documentMode={documentMode}

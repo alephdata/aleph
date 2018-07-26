@@ -1,12 +1,10 @@
-import React, {Component} from "react";
-import queryString from 'query-string';
+import React, { Component } from "react";
 import { Alert, Intent } from "@blueprintjs/core";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
 
 import { deleteCollection } from "src/actions";
-
 
 const messages = defineMessages({
   button_confirm: {
@@ -31,16 +29,15 @@ class CollectionDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { collection, history } = this.props;
-    this.props.deleteCollection(collection);
+    const {collection, history} = this.props;
+    await this.props.deleteCollection(collection);
     history.push({
-      pathname: '/cases',
-      search: queryString.stringify({'_deleted': collection.id})
+      pathname: '/cases'
     });
   }
 
   render() {
-    const { intl } = this.props;
+    const {intl} = this.props;
     return (
       <Alert isOpen={this.props.isOpen}
              onClose={this.props.toggleDialog}
@@ -51,7 +48,7 @@ class CollectionDeleteDialog extends Component {
              onCancel={this.props.toggleDialog}
              onConfirm={this.onDelete}>
         <FormattedMessage id="collection.delete.question"
-                          defaultMessage="Are you sure you want to delete all contained items?" />
+                          defaultMessage="Are you sure you want to delete all contained items?"/>
       </Alert>
     );
   }
@@ -63,4 +60,4 @@ const mapStateToProps = (state, ownProps) => {
 
 CollectionDeleteDialog = injectIntl(CollectionDeleteDialog);
 CollectionDeleteDialog = withRouter(CollectionDeleteDialog);
-export default connect(mapStateToProps, { deleteCollection })(CollectionDeleteDialog);
+export default connect(mapStateToProps, {deleteCollection})(CollectionDeleteDialog);

@@ -7,6 +7,7 @@ import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/Collectio
 import { Role, Country } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 import { updateCollection } from "src/actions";
+import { selectMetadata } from 'src/selectors';
 
 const messages = defineMessages({
   placeholder_label: {
@@ -219,7 +220,7 @@ class CollectionEditDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    categories: state.metadata.categories
+    categories: selectMetadata(state).categories
   };
 };
 

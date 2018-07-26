@@ -36,22 +36,19 @@ class CollectionsXrefScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { collectionId, otherId } = this.props;
-    if (collectionId !== prevProps.collectionId || otherId !== prevProps.otherId) {
-      this.fetchData();
-    }
+    this.fetchData();
   }
 
   fetchData() {
     const { collectionId, otherId, index, query } = this.props;
     const { collection, other } = this.props;
-    if (collection.id === undefined) {
+    if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
     }
-    if (other.id === undefined) {
+    if (other.shouldLoad) {
       this.props.fetchCollection({ id: otherId });
     }
-    if (index.total === undefined) {
+    if (index.shouldLoad) {
       this.props.fetchCollectionXrefIndex({id: collectionId});
     }
     this.props.queryXrefMatches({ query });

@@ -1,3 +1,3 @@
-from .collection import CollectionFactory  # noqa
-from .entity import EntityFactory  # noqa
-from .role import RoleFactory  # noqa
+from aleph.tests.factories.models.collection import CollectionFactory  # noqa
+from aleph.tests.factories.models.entity import EntityFactory  # noqa
+from aleph.tests.factories.models.role import RoleFactory  # noqa

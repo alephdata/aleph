@@ -2,6 +2,7 @@ import { FormattedMessage } from 'react-intl';
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { selectMetadata } from 'src/selectors';
 
 
 class Category extends Component {
@@ -19,7 +20,7 @@ class Category extends Component {
 }
 
 const mapStateToProps = state => ({
-  categories: state.metadata.categories,
+  categories: selectMetadata(state).categories,
 });
 
 export default connect(mapStateToProps)(Category);

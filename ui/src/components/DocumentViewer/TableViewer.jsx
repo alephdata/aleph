@@ -6,7 +6,7 @@ import { Cell, Column, TruncatedFormat, Table, TableLoadingOption } from "@bluep
 
 import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
-import { selectDocumentRecordsResult } from 'src/selectors';
+import { selectDocumentRecordsResult, selectMetadata } from 'src/selectors';
 
 import './TableViewer.css';
 
@@ -31,28 +31,24 @@ class TableViewer extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { query, result } = this.props;
-    if (!query.sameAs(prevProps.query)) {
-      this.fetchRecords();
-    }
-    if (this.state.requestedRow > result.results.length) {
+    this.fetchRecords();
+  }
+
+  fetchRecords() {
+    const { result, query } = this.props;
+    if (query.path && result.shouldLoad) {
+      this.props.queryDocumentRecords({query})
+    } else if (this.state.requestedRow > result.results.length) {
       if (!result.isLoading && result.next) {
         this.props.queryDocumentRecords({query, next: result.next})
       }
     }
   }
 
-  fetchRecords() {
-    const { queryDocumentRecords, query } = this.props;
-    if (query.path) {
-      queryDocumentRecords({query})
-    }
-  }
-
   onVisibleCellsChange(row) {
+    const { result } = this.props;
     const maxResult = this.state.requestedRow;
-    if (row.rowIndexEnd >= (maxResult - 10)) {
-      const { result } = this.props;
+    if (result.limit !== undefined && row.rowIndexEnd >= (maxResult - 10)) {
       const nextResult = result.offset + (result.limit * 2);
       this.setState({requestedRow: nextResult});
     }
@@ -98,8 +94,7 @@ class TableViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
   const path = document.links ? document.links.records : null;
-  let query = Query.fromLocation(path, location, {}, 'document')
-    .limit(50);
+  let query = Query.fromLocation(path, location, {}, 'document').limit(50);
 
   if (queryText) {
     query = query.setString('q', queryText);
@@ -108,7 +103,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query: query,
     result: selectDocumentRecordsResult(state, query),
-    model: state.metadata.schemata[ownProps.schema]
+    model: selectMetadata(state).schemata[ownProps.schema]
   }
 }
 

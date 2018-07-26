@@ -4,6 +4,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
+import { selectCollectionPermissions } from 'src/selectors';
 import { Role } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 
@@ -71,8 +72,8 @@ class CollectionAccessDialog extends Component {
       this.setState({permissions: []});
       this.fetchPermissions();
     }
-    if (!this.state.permissions.length && permissions) {
-      this.setState({permissions: permissions});
+    if (!this.state.permissions.length && permissions.results) {
+      this.setState({permissions: permissions.results});
     }
   }
 
@@ -203,9 +204,7 @@ class CollectionAccessDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.collection.id;
-  return {
-    permissions: state.collectionPermissions[collectionId]
-  };
+  return { permissions: selectCollectionPermissions(state, collectionId) };
 };
 
 

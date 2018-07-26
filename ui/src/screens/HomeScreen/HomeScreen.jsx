@@ -6,6 +6,7 @@ import numeral from 'numeral';
 import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
 
 import { fetchStatistics } from 'src/actions/index';
+import { selectStatistics, selectMetadata } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 
 import './HomeScreen.css';
@@ -34,7 +35,14 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchStatistics();
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { statistics } = this.props;
+    if (statistics.shouldLoad) {
+      this.props.fetchStatistics();
+    }
   }
 
   onChange({target}) {
@@ -100,8 +108,8 @@ class HomeScreen extends Component {
 }
 
 const mapStateToProps = state => ({
-  statistics: state.statistics,
-  metadata: state.metadata
+  statistics: selectStatistics(state),
+  metadata: selectMetadata(state)
 });
 
 HomeScreen = injectIntl(HomeScreen);

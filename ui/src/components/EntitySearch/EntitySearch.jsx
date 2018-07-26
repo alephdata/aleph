@@ -5,8 +5,8 @@ import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
-import {queryEntities} from 'src/actions';
-import {selectEntitiesResult} from 'src/selectors';
+import { queryEntities } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 
@@ -30,8 +30,13 @@ class EntitySearch extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      selectedRows: []
+    };
+
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.updateSelection = this.updateSelection.bind(this);
   }
 
   componentDidMount() {
@@ -39,16 +44,12 @@ class EntitySearch extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // Check for a change of query, as unconditionally calling fetchIfNeeded
-    // could cause an infinite loop (if fetching fails).
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
-    const {query, result, queryEntities} = this.props;
-    if ((result.pages === undefined || (result.status === 'error'))) {
+    const { query, result, queryEntities } = this.props;
+    if (result.shouldLoad) {
       queryEntities({ query });
     }
   }
@@ -71,9 +72,42 @@ class EntitySearch extends Component {
     });
   }
 
+  updateSelection(entity) {
+    let selectedRows = [];
+    if(entity === null) { //if user clicked select all
+      if(this.props.result.results.length === this.state.selectedRows.length) {
+        this.setState({selectedRows: selectedRows});
+      } else {
+        if(this.props.result.results !== undefined) {
+          this.props.result.results.map(entity => selectedRows.push(entity))
+        }
+
+        this.setState({selectedRows: selectedRows });
+      }
+    } else { //if user clicked on row
+      selectedRows = this.state.selectedRows;
+      let indexOfSelectedRow = -1;
+      for(let i = 0; i < selectedRows.length; i++){
+        if(selectedRows[i].id === entity.id) indexOfSelectedRow = i;
+      }
+      if(indexOfSelectedRow === -1) {
+        selectedRows.push(entity);
+        this.setState({selectedRows: selectedRows});
+      } else {
+        selectedRows.splice(indexOfSelectedRow, 1);
+        this.setState({selectedRows: selectedRows});
+      }
+    }
+
+    this.props.disableOrEnableDelete(selectedRows.length === 0);
+    this.props.setDocuments(selectedRows);
+  }
+
   render() {
-    const {query, result, intl, className} = this.props;
+    const { query, result, intl, className, writable } = this.props;
+    const { selectedRows } = this.state;
     const isEmpty = !query.hasQuery();
+
     return (
       <div className={className}>
         {result.total === 0 && (
@@ -93,7 +127,10 @@ class EntitySearch extends Component {
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
-                     result={result} />
+                     result={result}
+                     writable={writable}
+                     updateSelection={this.updateSelection}
+                     selectedRows={selectedRows}/>
         {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}
@@ -101,7 +138,7 @@ class EntitySearch extends Component {
             scrollableAncestor={window}
           />
         )}
-        {(result.isLoading || result.total === null) && (
+        {result.isLoading && (
           <SectionLoading/>
         )}
       </div>
@@ -119,11 +156,9 @@ const mapStateToProps = (state, ownProps) => {
     ...context,
   };
   const searchQuery = query !== undefined ? query : Query.fromLocation('search', location, contextWithDefaults, prefix);
-  const result = selectEntitiesResult(state, searchQuery);
-
   return {
     query: searchQuery,
-    result,
+    result: selectEntitiesResult(state, searchQuery)
   };
 };
 

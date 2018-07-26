@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import { Callout } from '@blueprintjs/core';
 
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
+import { selectSession, selectMetadata } from 'src/selectors';
+
 import './SignInCallout.css';
 
 
@@ -41,7 +43,10 @@ class SignInCallout extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return {metadata: state.metadata, session: state.session};
+  return {
+    metadata: selectMetadata(state),
+    session: selectSession(state)
+  };
 };
 
 SignInCallout = connect(mapStateToProps)(SignInCallout);

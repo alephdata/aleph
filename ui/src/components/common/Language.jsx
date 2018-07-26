@@ -3,6 +3,7 @@ import {FormattedMessage} from 'react-intl';
 import wordList from 'src/util/wordList';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { selectMetadata } from 'src/selectors';
 
 
 class Name extends Component {
@@ -34,7 +35,7 @@ class List extends Component {
 }
 
 const mapStateToProps = state => ({
-  languages: state.metadata.languages,
+  languages: selectMetadata(state).languages,
 });
 
 class Language extends Component {

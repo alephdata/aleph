@@ -10,7 +10,7 @@ import { EntityInfoTags, EntityInfoReferences } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences, fetchEntityTags } from 'src/actions/index';
-import { selectEntityTags, selectEntityReferences } from 'src/selectors';
+import { selectEntityTags, selectEntityReferences, selectMetadata } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
 
@@ -34,10 +34,10 @@ class EntityInfo extends React.Component {
   fetchIfNeeded() {
     const { entity, references, tags } = this.props;
     if (entity.id !== undefined) {
-      if (references.total === undefined && !references.isLoading && !references.isError) {
+      if (references.shouldLoad) {
         this.props.fetchEntityReferences(entity);
       }
-      if (tags.total === undefined && !tags.isLoading && !tags.isError) {
+      if (tags.shouldLoad) {
         this.props.fetchEntityTags(entity);
       }
     }
@@ -148,7 +148,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),
-    schema: state.metadata.schemata[entity.schema]
+    schema: selectMetadata(state).schemata[entity.schema]
   };
 };
 

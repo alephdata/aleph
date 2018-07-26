@@ -8,10 +8,12 @@ export default createReducer({
   [fetchAlerts.START]: state => ({
     ...state,
     isLoading: true,
+    shouldLoad: false,
     isError: false
   }),
   [fetchAlerts.ERROR]: (state, { error }) => ({
     isLoading: false,
+    shouldLoad: false,
     isError: true,
     error 
   }),

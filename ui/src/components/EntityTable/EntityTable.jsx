@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
+import { Checkbox } from '@blueprintjs/core';
 
 import EntityTableRow from './EntityTableRow';
 import { SortableTH, ErrorSection } from 'src/components/common';
@@ -39,12 +40,15 @@ class EntityTable extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {result: props.result};
+    this.state = {
+      result: props.result
+    };
+    this.onSelectRow = this.onSelectRow.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { result } = nextProps;
-    return (result.total !== undefined || result.isError) ? { result } : null;
+    return (!result.isLoading) ? { result } : null;
   }
 
   sortColumn(field) {
@@ -64,11 +68,16 @@ class EntityTable extends Component {
     updateQuery(newQuery);
   }
 
+  onSelectRow(entity) {
+    this.props.updateSelection(entity);
+  }
+
   render() {
-    const { query, intl, location, history } = this.props;
+    const { query, intl, location, history, writable, selectedRows } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
+    const selectAll = selectedRows !== undefined ? selectedRows.length === result.results.length : false;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -95,6 +104,11 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
+            {writable && (
+              <th>
+                <Checkbox checked={selectAll} onChange={this.onSelectAll} />
+              </th>
+            )}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
               <TH field="collection_id" />
@@ -116,7 +130,10 @@ class EntityTable extends Component {
                             hideCollection={hideCollection}
                             documentMode={documentMode}
                             location={location}
-                            history={history} />
+                            history={history}
+                            writable={writable}
+                            onSelectRow={this.onSelectRow}
+                            selectedRows={selectedRows}/>
           )}
         </tbody>
       </table>

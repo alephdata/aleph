@@ -4,6 +4,8 @@ import { Button, Popover, Position, Menu, MenuItem } from '@blueprintjs/core';
 import {FormattedMessage} from 'react-intl';
 
 import { setLocale } from 'src/actions';
+import { selectSession, selectMetadata } from 'src/selectors';
+
 
 class LanguageMenu extends Component {
   onSetLanguage(locale) {
@@ -40,8 +42,8 @@ class LanguageMenu extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    session: state.session,
-    metadata: state.metadata,
+    session: selectSession(state),
+    metadata: selectMetadata(state),
     config: state.config
   };
 };

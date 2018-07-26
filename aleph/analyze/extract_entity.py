@@ -1,17 +1,18 @@
-import grpc
 import logging
-
-from aleph import settings
-from aleph.analyze.analyzer import EntityAnalyzer, TextIterator
-from aleph.model import DocumentTag, DocumentTagCollector
 from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
 from alephclient.services.entityextract_pb2 import ExtractedEntity
+
+from aleph import settings
+from aleph.services import ServiceClientMixin
+from aleph.analyze.analyzer import EntityAnalyzer, TextIterator
+from aleph.model import DocumentTag, DocumentTagCollector
 
 log = logging.getLogger(__name__)
 TYPE = ExtractedEntity.Type.Value
 
 
-class EntityExtractor(EntityAnalyzer, TextIterator):
+class EntityExtractor(EntityAnalyzer, TextIterator, ServiceClientMixin):
+    SERVICE = settings.ENTITIES_SERVICE
     ORIGIN = 'ner'
     TYPES = {
         ExtractedEntity.PERSON: DocumentTag.TYPE_PERSON,
@@ -20,10 +21,7 @@ class EntityExtractor(EntityAnalyzer, TextIterator):
     }
 
     def __init__(self):
-        service = settings.ENTITIES_SERVICE
-        self.active = service is not None
-        if self.active:
-            self.channel = grpc.insecure_channel(service)
+        self.active = self.has_channel()
 
     def extract(self, collector, document):
         DocumentTagCollector(document, 'polyglot').save()
@@ -38,5 +36,6 @@ class EntityExtractor(EntityAnalyzer, TextIterator):
                     continue
                 collector.emit(entity.label, type_, weight=entity.weight)
             log.info('Extracted %s entities.', len(collector))
-        except grpc.RpcError as exc:
-            log.warning("gRPC Error: %s", exc)
+        except self.Error as exc:
+            log.exception("gRPC Error: %s", self.SERVICE)
+            self.reset_channel()

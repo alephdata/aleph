@@ -1,6 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import { updateResults, updateLoading, flushResults } from 'src/reducers/util';
+import { resultLoadStart, resultLoadError } from 'src/reducers/util';
+import { updateResults, invalidateResults } from 'src/reducers/util';
 
 import {
   queryCollections,
@@ -9,27 +10,51 @@ import {
   queryNotifications,
   createCollection,
   deleteCollection,
+  ingestDocument,
+  deleteDocument
 } from 'src/actions';
 
 const initialState = {};
 
 export default createReducer({
-  [queryCollections.START]: updateLoading(true),
-  [queryCollections.ERROR]: updateLoading(false),
+  
+  [queryCollections.START]: (state, { query }) => 
+    resultLoadStart(state, query),
+
+  [queryCollections.ERROR]: (state, { error, args: { query } }) =>
+    resultLoadError(state, query, error),
+
   [queryCollections.COMPLETE]: updateResults,
-  [queryEntities.START]: updateLoading(true),
-  [queryEntities.ERROR]: updateLoading(false),
+
+  [queryEntities.START]: (state, { query }) => 
+    resultLoadStart(state, query),
+
+  [queryEntities.ERROR]: (state, { error, args: { query } }) =>
+    resultLoadError(state, query, error),
+
   [queryEntities.COMPLETE]: updateResults,
-  [queryDocumentRecords.START]: updateLoading(true),
-  [queryDocumentRecords.ERROR]: updateLoading(false),
+
+  [queryDocumentRecords.START]: (state, { query }) => 
+    resultLoadStart(state, query),
+
+  [queryDocumentRecords.ERROR]: (state, { error, args: { query } }) =>
+    resultLoadError(state, query, error),
+
   [queryDocumentRecords.COMPLETE]: updateResults,
-  [queryNotifications.START]: updateLoading(true),
-  [queryNotifications.ERROR]: updateLoading(false),
+
+  [queryNotifications.START]: (state, { query }) => 
+    resultLoadStart(state, query),
+
+  [queryNotifications.ERROR]: (state, { error, args: { query } }) =>
+    resultLoadError(state, query, error),
+
   [queryNotifications.COMPLETE]: updateResults,
 
   // Clear out the results cache when operations are performed that
   // may affect the content of the results.
-  [createCollection.COMPLETE]: flushResults,
-  [deleteCollection.COMPLETE]: flushResults,
-  // [ingestDocument.COMPLETE]: flushResults
+  [createCollection.COMPLETE]: invalidateResults,
+  [deleteCollection.COMPLETE]: invalidateResults,
+  [ingestDocument.COMPLETE]: invalidateResults,
+  [deleteDocument.COMPLETE]: invalidateResults,
+
 }, initialState);

@@ -14,14 +14,12 @@ class PreviewCollection extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.previewId !== prevProps.previewId) {
-      this.fetchIfNeeded();
-    }
+    this.fetchIfNeeded();
   }
 
   fetchIfNeeded(props) {
     const { collection, previewId } = this.props;
-    if (collection.id === undefined && !collection.isLoading) {
+    if (collection.shouldLoad) {
       this.props.fetchCollection({ id: previewId });
     }
   }

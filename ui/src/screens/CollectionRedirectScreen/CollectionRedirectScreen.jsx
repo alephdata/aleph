@@ -10,13 +10,16 @@ import getCollectionLink from 'src/util/getCollectionLink';
 
 class CollectionRedirectScreen extends Component {
   componentDidMount() {
-    const { collectionId } = this.props;
-    this.props.fetchCollection({ id: collectionId });
+    this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
-    const { collectionId } = this.props;
-    if (collectionId !== prevProps.collectionId) {
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { collectionId, collection } = this.props;
+    if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
     }
   }

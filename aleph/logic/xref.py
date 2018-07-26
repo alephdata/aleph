@@ -56,12 +56,12 @@ def xref_collection(collection_id, other_id=None):
     query = {'term': {'collection_id': collection_id}}
     query = {
         'query': query,
-        '_source': {'excludes': ['text', 'properties.*']}
+        '_source': {'excludes': ['text', 'roles', 'properties.*']}
     }
     scanner = scan(es,
                    index=entities_index(),
                    query=query,
                    scroll='1400m')
-    for idx, res in enumerate(scanner):
+    for res in scanner:
         res = unpack_result(res)
         _xref_item(res, collection_id=other_id)
