@@ -10,6 +10,7 @@ export default createReducer({
     }),
 
     [fetchMetadata.COMPLETE]: (state, { metadata }) => ({
-      ...metadata.statistics
+      ...metadata.statistics,
+      shouldLoad: true
     }),
 }, initialState);
