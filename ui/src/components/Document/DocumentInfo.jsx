@@ -8,7 +8,7 @@ import getPath from 'src/util/getPath';
 import { URL, DualPane, TabCount, Schema, Entity, TextLoading } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
 import { fetchEntityTags } from 'src/actions/index';
-import { Toolbar, CloseButton, DownloadButton, ModeButtons } from 'src/components/Toolbar';
+import { Toolbar, CloseButton, ModeButtons } from 'src/components/Toolbar';
 import { EntityInfoTags } from 'src/components/Entity';
 import { DocumentMetadata } from 'src/components/Document';
 import { CollectionOverview } from 'src/components/Collection';
