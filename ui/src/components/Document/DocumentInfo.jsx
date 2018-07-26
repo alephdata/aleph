@@ -53,7 +53,6 @@ class DocumentInfo extends React.Component {
                 <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
               </Link>
             )}
-            <DownloadButton isPreview={true} document={doc}/>
             <CloseButton/>
           </Toolbar>
         )}
