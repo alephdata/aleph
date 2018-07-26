@@ -10,6 +10,7 @@ from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.roles import update_role
+from aleph.logic.user_activity import record_user_activity
 from aleph.views.util import get_best_next_url, parse_request, jsonify
 from aleph.serializers.roles import LoginSchema
 
@@ -60,6 +61,7 @@ def password_login():
     update_role(role)
     db.session.commit()
     authz = Authz.from_role(role)
+    record_user_activity.delay("USER.LOGIN", {}, authz.id)
     return jsonify({
         'status': 'ok',
         'token': authz.to_token(role=role)
@@ -101,6 +103,7 @@ def oauth_callback():
         next_url = get_best_next_url(state, request.referrer)
         next_url, _ = urldefrag(next_url)
         next_url = '%s#token=%s' % (next_url, token)
+        record_user_activity.delay("USER.LOGIN", {}, authz.id)
         return redirect(next_url)
 
     log.error("No OAuth handler for %r was installed.", oauth.provider.name)

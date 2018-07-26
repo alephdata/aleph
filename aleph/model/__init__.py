@@ -19,6 +19,7 @@ from aleph.model.metadata import Metadata  # noqa
 from aleph.model.event import Event, Events  # noqa
 from aleph.model.notification import Notification  # noqa
 from aleph.model.subscription import Subscription  # noqa
+from aleph.model.user_activity import UserActivity  # noqa
 
 log = logging.getLogger(__name__)
 
