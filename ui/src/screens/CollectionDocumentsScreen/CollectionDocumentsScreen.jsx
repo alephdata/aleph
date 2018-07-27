@@ -11,6 +11,7 @@ import { fetchCollection, deleteDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
 import EntitySearch from "src/components/EntitySearch/EntitySearch";
 import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
+import { RefreshCallout } from 'src/components/common';
 
 class CollectionDocumentsScreen extends Component {
   constructor(props) {
@@ -19,12 +20,14 @@ class CollectionDocumentsScreen extends Component {
     this.state = {
       isDeleteDisabled: true,
       selectedFiles: [],
-      deleteIsOpen: false
+      deleteIsOpen: false,
+      isRefreshCalloutOpen: false
     };
 
     this.disableOrEnableDelete = this.disableOrEnableDelete.bind(this);
     this.setDocuments = this.setDocuments.bind(this);
     this.toggleDeleteCase = this.toggleDeleteCase.bind(this);
+    this.setRefreshCallout = this.setRefreshCallout.bind(this);
   }
 
   componentDidMount() {
@@ -54,9 +57,13 @@ class CollectionDocumentsScreen extends Component {
     this.setState({deleteIsOpen: !this.state.deleteIsOpen});
   }
 
+  setRefreshCallout() {
+    this.setState({isRefreshCalloutOpen: true});
+  }
+
   render() {
     const { collection } = this.props;
-    const { isDeleteDisabled, selectedFiles } = this.state;
+    const { isDeleteDisabled, selectedFiles, isRefreshCalloutOpen } = this.state;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -77,6 +84,7 @@ class CollectionDocumentsScreen extends Component {
               breadcrumbs={<Breadcrumbs collection={collection}/>}
               className='CaseDocumentsScreen'>
         <CaseContext collection={collection} activeTab='Documents'>
+          {isRefreshCalloutOpen && <RefreshCallout/>}
           <Toolbar>
             <div className="pt-button-group">
               <DocumentFolderButton collection={collection} />
@@ -95,7 +103,8 @@ class CollectionDocumentsScreen extends Component {
                         documentMode={true}
                         writable={collection.writeable}
                         disableOrEnableDelete={this.disableOrEnableDelete}
-                        setDocuments={this.setDocuments}/>
+                        setDocuments={this.setDocuments}
+                        setRefreshCallout={this.setRefreshCallout}/>
           <DocumentDeleteDialog documents={selectedFiles}
                                   isOpen={this.state.deleteIsOpen}
                                   toggleDialog={this.toggleDeleteCase} />

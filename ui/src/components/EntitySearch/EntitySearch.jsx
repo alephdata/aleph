@@ -31,12 +31,14 @@ class EntitySearch extends Component {
     super(props);
 
     this.state = {
-      selectedRows: []
+      selectedRows: [],
+      refreshCallout: false
     };
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.updateSelection = this.updateSelection.bind(this);
+    this.checkPendingState = this.checkPendingState.bind(this);
   }
 
   componentDidMount() {
@@ -45,6 +47,20 @@ class EntitySearch extends Component {
 
   componentDidUpdate(prevProps) {
     this.fetchIfNeeded();
+    this.checkPendingState();
+  }
+
+  checkPendingState() {
+    const { result } = this.props;
+
+    let test = result.results.filter(function(data){
+      return data.status === "fail"
+    });
+
+    if(test.length !== 0 && this.state.refreshCallout !== true) {
+      this.setState({refreshCallout: true});
+      this.props.setRefreshCallout();
+    }
   }
 
   fetchIfNeeded() {
