@@ -95,7 +95,7 @@ class CreateCaseDialog extends Component {
   render() {
     const { intl } = this.props;
     const { collection, permissions } = this.state;
-    const exclude = permissions.map((perm) => perm.role.id);
+    const exclude = permissions.map((perm) => parseInt(perm.role.id));
 
     return (
       <Dialog icon="briefcase" className="CreateCaseDialog"
