@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 
-.CollectionListItem {
+.CollectionListItem, .CaseListItem {
     margin-bottom: $aleph-grid-size * 2;
     padding-bottom: $aleph-grid-size * 2;
     border-bottom: 1px solid $table-border-color;

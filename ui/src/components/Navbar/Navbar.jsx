@@ -123,14 +123,10 @@ class Navbar extends React.Component {
               <Link to="/sources" className="pt-minimal pt-button pt-icon-database">
                 <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
               </Link>
-              <div className="pt-navbar-divider"/>
-              {/*
-            <li>
-                <Link to="/cases" className="pt-minimal pt-button pt-icon-briefcase">
+               <div className="pt-navbar-divider"/>
+              {session.loggedIn &&<Link to="/cases" className="pt-minimal pt-button pt-icon-briefcase">
                 <FormattedMessage id="nav.cases" defaultMessage="Case files"/>
-              </Link>
-              </li>
-            */}
+              </Link>}
               <AuthButtons session={session} auth={metadata.auth}/>
               <LanguageMenu/>
             </div>

@@ -7,6 +7,10 @@
     text-transform: uppercase;
     opacity: 0.5;
   }
+
+  &.disabled {
+    color: $aleph-greyed-text;
+  }
 }
 
 .EntityLink {

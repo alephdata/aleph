@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Waypoint from 'react-waypoint';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
@@ -10,7 +10,8 @@ import { queryCollections, updateCollectionPermissions, createCollection } from 
 import { selectCollectionsResult } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import { Breadcrumbs, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
-import { CaseIndexTable } from "src/components/Case";
+import { CaseListItem } from 'src/components/Case';
+import SearchFacets from 'src/components/Facet/SearchFacets';
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
 import './CasesIndexScreen.css';
@@ -27,6 +28,14 @@ const messages = defineMessages({
   not_found: {
     id: 'case.not.found',
     defaultMessage: 'Log in to create your own case files, upload documents and manage your investigations!'
+  },
+  facet_countries: {
+    id: 'search.facets.facet.countries',
+    defaultMessage: 'Countries',
+  },
+  facet_team: {
+    id: 'search.facets.facet.team',
+    defaultMessage: 'Shared with'
   }
 });
 
@@ -34,17 +43,23 @@ const messages = defineMessages({
 class CasesIndexScreen extends Component {
   constructor(props) {
     super(props);
+    const {intl} = props;
     this.state = {
       createIsOpen: false,
       queryPrefix: props.query.getString('prefix'),
-      // facets: [
-      //   {
-      //     field: 'countries',
-      //     label: intl.formatMessage(messages.facet_countries),
-      //     icon: 'globe',
-      //     defaultSize: 300
-      //   },
-      // ]
+      facets: [
+        {
+          field: 'countries',
+          label: intl.formatMessage(messages.facet_countries),
+          icon: 'globe',
+          defaultSize: 300
+        }, {
+          field: 'team.name',
+          label: intl.formatMessage(messages.facet_team),
+          icon: 'social-media',
+          defaultSize: 20
+        }
+      ]
     };
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
@@ -92,8 +107,8 @@ class CasesIndexScreen extends Component {
   }
 
   render() {
-    const { query, result, intl } = this.props;
-    const { queryPrefix } = this.state;
+    const {query, result, intl} = this.props;
+    const {queryPrefix} = this.state;
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
@@ -108,7 +123,7 @@ class CasesIndexScreen extends Component {
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs} requireSession={true}>
         <DualPane className="explainer">
           <DualPane.SidePane>
-            <Icon icon="briefcase" iconSize={100} />
+            <Icon icon="briefcase" iconSize={100}/>
           </DualPane.SidePane>
           <DualPane.ContentPane>
             <h1 className='title-explanation'>
@@ -121,9 +136,9 @@ class CasesIndexScreen extends Component {
             <div className="pt-control-group">
               <div className="pt-input-group">
                 <i className="pt-icon pt-icon-search"/>
-                <input className="pt-input" 
-                      placeholder={intl.formatMessage(messages.filter)}
-                      onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
+                <input className="pt-input"
+                       placeholder={intl.formatMessage(messages.filter)}
+                       onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
               </div>
               <Button onClick={this.toggleCreateCase} icon="plus" className="pt-intent-primary">
                 <FormattedMessage id="case.add" defaultMessage="New casefile"/>
@@ -132,22 +147,28 @@ class CasesIndexScreen extends Component {
           </DualPane.ContentPane>
         </DualPane>
         <DualPane>
-          <DualPane.SidePane/>
+          <DualPane.SidePane>
+            <SearchFacets facets={this.state.facets}
+                          query={query}
+                          result={result}
+                          updateQuery={this.updateQuery}/>
+          </DualPane.SidePane>
           <DualPane.ContentPane>
-            {result.total !== 0 && (
-              <CaseIndexTable query={query}
-                              result={result} />
-            )}
+            <div className="results">
+              {result.results !== undefined && result.results.map(res =>
+                <CaseListItem key={res.id} collection={res}/>
+              )}
+            </div>
             {result.total === 0 && (
               <div className='error-and-add-button'>
                 <ErrorSection visual="search"
-                              title={intl.formatMessage(messages.no_results_title)} />
+                              title={intl.formatMessage(messages.no_results_title)}/>
               </div>
             )}
             {!result.isLoading && result.next && (
-                <Waypoint onEnter={this.getMoreResults}
-                          bottomOffset="-600px"
-                          scrollableAncestor={window} />
+              <Waypoint onEnter={this.getMoreResults}
+                        bottomOffset="-600px"
+                        scrollableAncestor={window}/>
             )}
             {result.isLoading && (
               <SectionLoading/>
@@ -155,7 +176,7 @@ class CasesIndexScreen extends Component {
           </DualPane.ContentPane>
         </DualPane>
         <CreateCaseDialog isOpen={this.state.createIsOpen}
-                          toggleDialog={this.toggleCreateCase} />
+                          toggleDialog={this.toggleCreateCase}/>
       </Screen>
     );
   }
@@ -165,7 +186,7 @@ class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const {location} = ownProps;
   const context = {
-    facet: ['category'],
+    facet: [ 'category' ],
     'filter:kind': 'casefile'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')

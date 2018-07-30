@@ -35,7 +35,7 @@ class CollectionLabel extends Component {
         { collection.casefile && icon && (
           <Icon icon="briefcase" style={{color: getColor(collection.id)}} />
         )}
-        { label && collection.label }
+        <span> { label && collection.label } </span>
       </span>
     );
   }

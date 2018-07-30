@@ -44,6 +44,8 @@ class EntityLabel extends Component {
       text = fileName || text;
     }
 
+    let entityClassName = entity.status === 'pending' ? 'EntityLabel disabled' : 'EntityLabel';
+
     if (!text || !text.length || text.length < 1) {
       return (
         <span className='EntityLabel untitled'>
@@ -55,7 +57,7 @@ class EntityLabel extends Component {
     }
     
     return (
-      <span className='EntityLabel' title={title || entityName}>
+      <span className={entityClassName} title={title || entityName}>
         {icon && <Schema.Icon schema={schema}/>}
         {icon && ' '}
         {text}
@@ -98,7 +100,7 @@ class EntityLink extends Component {
 
   render() {
     const { entity, className } = this.props;
-    if (!entity || !entity.links || !entity.schemata) {
+    if (!entity || !entity.links || !entity.schemata || entity.status === 'pending') {
       return <Entity.Label {...this.props} />;
     }
 

@@ -1,7 +1,7 @@
-import CaseIndexTable from './CaseIndexTable';
 import CaseContext from './CaseContext';
+import CaseListItem from './CaseListItem';
 
 export {
-  CaseIndexTable,
-  CaseContext
+  CaseContext,
+  CaseListItem
 };

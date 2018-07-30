@@ -102,7 +102,7 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
-            {writable && (<th className="select"></th>)}
+            {writable && (<th className="select"/>)}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
               <TH field="collection_id" />

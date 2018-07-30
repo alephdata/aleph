@@ -29,13 +29,13 @@ class DocumentDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const {history, documents} = this.props;
+    const {history, documents, path} = this.props;
     const collection = documents[0].collection;
     for (let i = 0; i < documents.length; i++) {
       await this.props.deleteDocument({document: documents[i]});
     }
     history.push({
-      pathname: '/collections/' + collection.id + '/documents'
+      pathname: path
     });
   }
 
