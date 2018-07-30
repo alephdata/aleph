@@ -11,6 +11,7 @@ from aleph.index.core import entities_index
 from aleph.index.util import unpack_result
 from aleph.logic.util import ui_url
 
+# DC = Namespace('http://purl.org/dc/elements/1.1/format')
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
 FTM = Namespace('https://w3id.org/ftm#')
 ALEPH = Namespace('https://alephdata.github.io/aleph/terms#')
@@ -91,7 +92,7 @@ def export_document_properties(g, uri, document):
         parent_uri = document_uri(document.get('parent', {}).get('id'))
         g.add((uri, DC.isPartOf, parent_uri))
         g.add((parent_uri, DC.hasPart, uri))
-    g.add((uri, ALEPH.mediaType, Literal(document.get('mime_type'))))
+    g.add((uri, DC.format, Literal(document.get('mime_type'))))
     g.add((uri, DCTERMS.modified, date_lit(document.get('updated_at'))))
 
 
