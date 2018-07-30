@@ -8,13 +8,9 @@ import Query from 'src/app/Query';
 import { ErrorSection } from 'src/components/common';
 import { Toolbar, CloseButton, ParentButton, PagingButtons, DocumentSearch, ModeButtons } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
-import TableViewer from './TableViewer';
-import TextViewer from './TextViewer';
-import HtmlViewer from './HtmlViewer';
-import PdfViewer from './PdfViewer';
-import ImageViewer from './ImageViewer';
-import FolderViewer from './FolderViewer';
-import EmailViewer from './EmailViewer';
+import { TableViewer, TextViewer, HtmlViewer, PdfViewer, ImageViewer, FolderViewer, EmailViewer } from './index';
+import { RefreshCallout } from 'src/components/common';
+import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 
 const messages = defineMessages({
   no_viewer: {
@@ -31,15 +27,39 @@ class DocumentViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numberOfPages: null
+      numberOfPages: null,
+      isRefreshCalloutOpen: false,
+      isDeleteDisabled: true,
+      selectedFiles: [],
+      deleteIsOpen: false,
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
+    this.disableOrEnableDelete = this.disableOrEnableDelete.bind(this);
+    this.toggleDeleteCase = this.toggleDeleteCase.bind(this);
+    this.setRefreshCallout = this.setRefreshCallout.bind(this);
+    this.setDocuments = this.setDocuments.bind(this);
   }
   
   onDocumentLoad(documentInfo) {
     this.setState({
       numberOfPages: (documentInfo && documentInfo.numPages) ? documentInfo.numPages : null
     });
+  }
+
+  setDocuments(selectedFiles) {
+    this.setState({selectedFiles: selectedFiles});
+  }
+
+  disableOrEnableDelete(isDisabled) {
+    this.setState({isDeleteDisabled: isDisabled});
+  }
+
+  toggleDeleteCase() {
+    this.setState({deleteIsOpen: !this.state.deleteIsOpen});
+  }
+
+  setRefreshCallout() {
+    this.setState({isRefreshCalloutOpen: !this.state.isRefreshCalloutOpen});
   }
 
   renderContent() {
@@ -58,7 +78,13 @@ class DocumentViewer extends React.Component {
     } else if (doc.links && doc.links.pdf) {
       return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
     } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
-      return <FolderViewer document={doc} queryText={queryText} hasWarning={doc.status === 'fail'} />;
+      return <FolderViewer
+        document={doc}
+        queryText={queryText}
+        hasWarning={doc.status === 'fail'}
+        disableOrEnableDelete={this.disableOrEnableDelete}
+        setDocuments={this.setDocuments}
+        setRefreshCallout={this.setRefreshCallout}/>;
     } else if (doc.schema === 'Document' || doc.schema === 'Audio' || doc.schema === 'Video') {
       return <ErrorSection visual='issue'
                            title={intl.formatMessage(messages.no_viewer)}
@@ -72,17 +98,24 @@ class DocumentViewer extends React.Component {
   
   render() {
     const { document: doc, showToolbar, previewMode } = this.props;
-    const { numberOfPages } = this.state;
+    const { numberOfPages, selectedFiles, isRefreshCalloutOpen, isDeleteDisabled } = this.state;
 
     if (doc.isLoading) {
       return null;
     }
     
     return <React.Fragment>
+      {isRefreshCalloutOpen && <RefreshCallout/>}
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
           <ParentButton isPreview={previewMode} document={doc} />
           <ModeButtons isPreview={previewMode} document={doc} />
+          {doc.collection.writeable && <button
+            type="button"
+            className="pt-button pt-icon-delete"
+            disabled={isDeleteDisabled}
+            onClick={this.toggleDeleteCase}><FormattedMessage id="document.viewer.delete"
+                                                              defaultMessage="Delete" /></button>}
           {previewMode === true && (
             <Link to={getPath(doc.links.ui)} className="pt-button button-link">
               <span className={`pt-icon-share`}/>
@@ -101,6 +134,9 @@ class DocumentViewer extends React.Component {
         </Toolbar>
       )}
       {this.renderContent()}
+      <DocumentDeleteDialog documents={selectedFiles}
+                            isOpen={this.state.deleteIsOpen}
+                            toggleDialog={this.toggleDeleteCase} />
     </React.Fragment>
   }
 }

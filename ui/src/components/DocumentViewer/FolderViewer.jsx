@@ -10,7 +10,7 @@ import './FolderViewer.css';
 
 class FolderViewer extends Component {
   render() {
-    const { document, query, className } = this.props;
+    const { document, query, className, disableOrEnableDelete, setDocuments, setRefreshCallout } = this.props;
 
     return (
       <React.Fragment>
@@ -27,7 +27,15 @@ class FolderViewer extends Component {
               </p>
             </div>
           )}
-          <EntitySearch query={query} hideCollection={true} documentMode={true} />
+          <EntitySearch
+            query={query}
+            hideCollection={true}
+            documentMode={true}
+            writable={document.writeable}
+            disableOrEnableDelete={disableOrEnableDelete}
+            setDocuments={setDocuments}
+            setRefreshCallout={setRefreshCallout}
+            path={'/documents/' + document.id}/>
         </div>
       </React.Fragment>
     );

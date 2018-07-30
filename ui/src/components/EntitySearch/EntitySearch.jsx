@@ -54,7 +54,7 @@ class EntitySearch extends Component {
     const { result } = this.props;
 
     let test = result.results.filter(function(data){
-      return data.status === "fail"
+      return data.status === "pending"
     });
 
     if(test.length !== 0 && this.state.refreshCallout !== true) {
