@@ -55,7 +55,7 @@ def get_entity(entity_id):
 
 def delete_entity(entity_id):
     """Delete an entity from the index."""
-    q = {'ids': {'values': entity_id}}
+    q = {'ids': {'values': str(entity_id)}}
     query_delete(entities_index(), q)
 
 
