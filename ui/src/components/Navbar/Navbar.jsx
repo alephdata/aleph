@@ -4,7 +4,7 @@ import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
 import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
 import queryString from 'query-string';
-import { ControlGroup, InputGroup, Icon } from "@blueprintjs/core";
+import { ControlGroup, InputGroup, Icon, Button } from "@blueprintjs/core";
 
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
@@ -33,6 +33,8 @@ class Navbar extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onOpenMenu = this.onOpenMenu.bind(this);
     this.onToggleSearch = this.onToggleSearch.bind(this);
+    this.onClickSources = this.onClickSources.bind(this);
+    this.onClickCases = this.onClickCases.bind(this);
   }
 
   componentDidMount() {
@@ -71,6 +73,23 @@ class Navbar extends React.Component {
     this.setState({searchOpen: !this.state.searchOpen});
   }
 
+  onClickSources() {
+    const { history } = this.props;
+
+    history.push({
+      pathname: '/sources'
+    });
+
+  }
+
+  onClickCases() {
+    const { history } = this.props;
+
+    history.push({
+      pathname: '/cases'
+    });
+  }
+
   render() {
     const {metadata, session, intl, isHomepage} = this.props;
     const {searchValue, isMenuOpen, searchOpen} = this.state;
@@ -79,7 +98,7 @@ class Navbar extends React.Component {
       <div id="Navbar" className="Navbar">
         <nav className="pt-navbar">
           <div className='navbar-header-search'>
-            <div className={"pt-navbar-group pt-align-left"}>
+            <div className={"pt-navbar-group"}>
               <div className="pt-navbar-heading">
                 <Link to="/">
                   <img src={metadata.app.logo} alt={metadata.app.title}/>
@@ -89,24 +108,25 @@ class Navbar extends React.Component {
                 <Link to="/">{metadata.app.title}</Link>
               </div>
             </div>
-            {!isHomepage && (
+
               <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'hide'}>
                 <button type="button" className="back-button visible-sm-block pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
-                <form onSubmit={this.onSubmit} className='navbar-search-form'>
-                  <ControlGroup fill={true}>
-                    <InputGroup
-                      type="text"
-                      leftIcon="search"
-                      className='pt-large'
-                      onChange={this.onChange} value={searchValue}
-                      placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
-                      rightElement={<SearchAlert queryText={searchValue}/>}
-                    />
-                  </ControlGroup>
-                </form>
+                {!isHomepage && ( <form onSubmit={this.onSubmit} className='navbar-search-form'>
+                    <ControlGroup fill={true}>
+                      <InputGroup
+                        type="text"
+                        leftIcon="search"
+                        className='pt-large'
+                        onChange={this.onChange} value={searchValue}
+                        placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
+                        rightElement={<SearchAlert queryText={searchValue}/>}
+                      />
+                    </ControlGroup>
+                  </form>
+                )}
               </div>
 
-            )}
+
             <div className={`search-and-burger-icons ${isHomepage && 'burger-fixed'}`}>
               {!isHomepage && (<a className={'search-icon icon visible-sm-block'} onClick={this.onToggleSearch}>
                 <Icon icon='search'/>
@@ -117,18 +137,18 @@ class Navbar extends React.Component {
                 <div className="bar3"/>
               </a>
             </div>
-          </div>
-          <div className={`navbar-options pt-navbar-group pt-align-right ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
-            <div className='menu-items'>
-              <Link to="/sources" className="pt-minimal pt-button pt-icon-database">
-                <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
-              </Link>
-               <div className="pt-navbar-divider"/>
-              {session.loggedIn &&<Link to="/cases" className="pt-minimal pt-button pt-icon-briefcase">
-                <FormattedMessage id="nav.cases" defaultMessage="Case files"/>
-              </Link>}
-              <AuthButtons session={session} auth={metadata.auth}/>
-              <LanguageMenu/>
+            <div className={`navbar-options pt-navbar-group ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
+              <div className='menu-items'>
+                <Button icon='database' onClick={this.onClickSources} className='pt-minimal'>
+                  <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
+                </Button>
+                {session.loggedIn && <Button icon='briefcase' className='pt-minimal' onClick={this.onClickCases}>
+                  <FormattedMessage id="nav.cases" defaultMessage="Case files"/>
+                </Button>}
+                <div className="pt-navbar-divider"/>
+                <AuthButtons session={session} auth={metadata.auth}/>
+                <LanguageMenu/>
+              </div>
             </div>
           </div>
         </nav>
