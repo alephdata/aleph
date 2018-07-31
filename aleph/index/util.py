@@ -1,11 +1,12 @@
-import time
 import logging
+from itertools import count
 from banal import ensure_list
 from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
 
 from aleph.core import es
 from aleph.index.core import all_indexes
+from aleph.util import backoff
 
 log = logging.getLogger(__name__)
 
@@ -13,7 +14,6 @@ log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
-RETRY_DELAY = 10
 
 
 def refresh_index(index=None):
@@ -26,7 +26,28 @@ def refresh_index(index=None):
                            ignore_unavailable=True)
     except TransportError as terr:
         log.warning("Index refresh failed: %s", terr)
-        time.sleep(RETRY_DELAY)
+        backoff_cluster()
+
+
+def check_cluster_ready():
+    """Check if the cluster is a in a state where new documents
+    should be written to it."""
+    try:
+        es.cluster.health(wait_for_status='yellow', request_timeout=5)
+        return True
+    except Exception as exc:
+        return False
+
+
+def backoff_cluster(failures=0):
+    """This is intended to halt traffic to the cluster if it is in a
+    recovery state, e.g. after a master failure or severe node failures.
+    """
+    for attempt in count(failures):
+        backoff(failures=attempt)
+        if check_cluster_ready():
+            return
+        log.warning("Cluster is flustered.")
 
 
 def unpack_result(res):
@@ -114,33 +135,37 @@ def bulk_op(iter, chunk_size=500):
 
 def query_delete(index, query):
     "Delete all documents matching the given query inside the index."
-    try:
-        es.delete_by_query(index=index,
-                           body={'query': query},
-                           conflicts='proceed',
-                           timeout=TIMEOUT,
-                           request_timeout=REQUEST_TIMEOUT)
-    except TransportError as terr:
-        log.warning("Query delete failed: %s", terr)
-        time.sleep(RETRY_DELAY)
+    for attempt in count():
+        try:
+            es.delete_by_query(index=index,
+                               body={'query': query},
+                               conflicts='proceed',
+                               timeout=TIMEOUT,
+                               request_timeout=REQUEST_TIMEOUT)
+            return
+        except Exception as exc:
+            log.warning("Query delete failed: %s", exc)
+        backoff_cluster(failures=attempt)
 
 
 def query_update(index, body):
     """Update all documents matching the given query."""
-    try:
-        es.update_by_query(index=index,
-                           body=body,
-                           conflicts='proceed',
-                           timeout=TIMEOUT,
-                           request_timeout=REQUEST_TIMEOUT)
-    except TransportError as terr:
-        log.warning("Query update failed: %s", terr)
-        time.sleep(RETRY_DELAY)
+    for attempt in count():
+        try:
+            es.update_by_query(index=index,
+                               body=body,
+                               conflicts='proceed',
+                               timeout=TIMEOUT,
+                               request_timeout=REQUEST_TIMEOUT)
+            return
+        except Exception as exc:
+            log.warning("Query update failed: %s", exc)
+        backoff_cluster(failures=attempt)
 
 
-def index_doc(index, id, body):
+def index_safe(index, id, body):
     """Index a single document and retry until it has been stored."""
-    while True:
+    for attempt in count():
         try:
             es.index(index=index,
                      doc_type='doc',
@@ -148,9 +173,33 @@ def index_doc(index, id, body):
                      body=body)
             body['id'] = str(id)
             return body
-        except TransportError as terr:
-            log.warning("Index error [%s:%s]: %s", index, id, terr)
-            time.sleep(RETRY_DELAY)
+        except Exception as exc:
+            log.warning("Index error [%s:%s]: %s", index, id, exc)
+        backoff_cluster(failures=attempt)
+
+
+def search_safe(*args, **kwargs):
+    # This is not supposed to be used in every location where search is
+    # run, but only where it's a backend search that we could back off of
+    # without hurting UX.
+    for attempt in count():
+        try:
+            return es.search(*args, **kwargs)
+        except Exception as exc:
+            log.warning("Search error: %s", exc)
+        backoff_cluster(failures=attempt)
+
+
+def mget_safe(*args, **kwargs):
+    # This is not supposed to be used in every location where search is
+    # run, but only where it's a backend search that we could back off of
+    # without hurting UX.
+    for attempt in count():
+        try:
+            return es.mget(*args, **kwargs)
+        except Exception as exc:
+            log.warning("Search error: %s", exc)
+        backoff_cluster(failures=attempt)
 
 
 def index_form(texts):

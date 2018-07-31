@@ -133,14 +133,14 @@ class CasesIndexScreen extends Component {
               <FormattedMessage id="case.description"
                                 defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."/>
             </p>
-            <div className="pt-control-group">
-              <div className="pt-input-group">
-                <i className="pt-icon pt-icon-search"/>
+            <div className="pt-control-group pt-large">
+              <div className="pt-input-group pt-large">
+                <i className="pt-icon pt-icon-search pt-large"/>
                 <input className="pt-input"
                        placeholder={intl.formatMessage(messages.filter)}
                        onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
               </div>
-              <Button onClick={this.toggleCreateCase} icon="plus" className="pt-intent-primary">
+              <Button onClick={this.toggleCreateCase} icon="plus" className="pt-intent-primary pt-large">
                 <FormattedMessage id="case.add" defaultMessage="New casefile"/>
               </Button>
             </div>
@@ -186,7 +186,7 @@ class CasesIndexScreen extends Component {
 const mapStateToProps = (state, ownProps) => {
   const {location} = ownProps;
   const context = {
-    facet: [ 'category' ],
+    facet: ['countries', 'team.name'],
     'filter:kind': 'casefile'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')

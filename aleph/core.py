@@ -11,7 +11,7 @@ from flask_cors import CORS
 from flask_caching import Cache
 from flask.ext.babel import Babel
 from kombu import Queue
-from celery import Celery, Task
+from celery import Celery
 from celery.schedules import crontab
 from followthemoney import set_model_locale
 from raven.contrib.flask import Sentry
@@ -122,10 +122,7 @@ def get_es():
     if not hasattr(settings, '_es_instance'):
         url = settings.ELASTICSEARCH_URL
         timeout = settings.ELASTICSEARCH_TIMEOUT
-        settings._es_instance = Elasticsearch(url,
-                                              sniff_on_start=True,
-                                              sniff_on_connection_fail=True,
-                                              timeout=timeout)
+        settings._es_instance = Elasticsearch(url, timeout=timeout)
     return settings._es_instance
 
 

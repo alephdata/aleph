@@ -1,7 +1,7 @@
-import time
 import logging
 import fingerprints
 from pprint import pprint  # noqa
+from itertools import count
 from banal import clean_dict, ensure_list
 from datetime import datetime
 from followthemoney import model
@@ -10,9 +10,9 @@ from elasticsearch import TransportError
 from normality import latinize_text
 
 from aleph.core import es
-from aleph.index.core import entity_index, entities_index_list
-from aleph.index.util import bulk_op, unpack_result
-from aleph.index.util import index_form, index_doc
+from aleph.index.core import entity_index, entities_index, entities_index_list
+from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
+from aleph.index.util import index_safe, mget_safe, backoff_cluster
 
 log = logging.getLogger(__name__)
 
@@ -55,11 +55,8 @@ def get_entity(entity_id):
 
 def delete_entity(entity_id):
     """Delete an entity from the index."""
-    for index in entities_index_list():
-        es.delete(index=index,
-                  doc_type='doc',
-                  id=entity_id,
-                  ignore=[404])
+    q = {'ids': {'values': str(entity_id)}}
+    query_delete(entities_index(), q)
 
 
 def _index_updates(collection, entities):
@@ -80,10 +77,10 @@ def _index_updates(collection, entities):
     if not len(entities):
         return
 
-    result = es.mget(index=entity_index(),
-                     doc_type='doc',
-                     body={'ids': list(entities.keys())},
-                     _source=['schema', 'properties', 'created_at'])
+    result = mget_safe(index=entity_index(),
+                       doc_type='doc',
+                       body={'ids': list(entities.keys())},
+                       _source=['schema', 'properties', 'created_at'])
     for doc in result.get('docs', []):
         if not doc.get('found', False):
             continue
@@ -110,14 +107,14 @@ def _index_updates(collection, entities):
 
 def index_bulk(collection, entities, chunk_size=200):
     """Index a set of entities."""
-    while True:
+    for attempt in count():
         try:
-            bulk_op(_index_updates(collection, entities),
-                    chunk_size=chunk_size)
-            break
+            entities = _index_updates(collection, entities)
+            bulk_op(entities, chunk_size=chunk_size)
+            return
         except (BulkIndexError, TransportError) as exc:
             log.warning('Indexing error: %s', exc)
-            time.sleep(10)
+        backoff_cluster(failures=attempt)
 
 
 def finalize_index(data, schema, texts):
@@ -164,4 +161,4 @@ def index_single(obj, data, texts):
     data['updated_at'] = obj.updated_at
     data = finalize_index(data, obj.model, texts)
     data = clean_dict(data)
-    return index_doc(entity_index(), obj.id, data)
+    return index_safe(entity_index(), obj.id, data)

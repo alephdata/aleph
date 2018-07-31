@@ -1,22 +1,19 @@
-import time
 import logging
-from elasticsearch.helpers import BulkIndexError
+from itertools import count
 
 from aleph.core import db
 from aleph.model import DocumentRecord
 from aleph.index.core import record_index, records_index
-from aleph.index.util import bulk_op, query_delete, index_form, refresh_index
-from aleph.index.util import RETRY_DELAY
+from aleph.index.util import query_delete, index_form, refresh_index
+from aleph.index.util import bulk_op, backoff_cluster
 
 log = logging.getLogger(__name__)
 
 
-def clear_records(document_id, refresh=True):
+def clear_records(document_id):
     """Delete all records associated with the given document."""
     q = {'term': {'document_id': document_id}}
     query_delete(records_index(), q)
-    if refresh:
-        refresh_index(index=records_index())
 
 
 def generate_records(document):
@@ -43,12 +40,12 @@ def index_records(document):
     if not document.supports_records:
         return
 
-    clear_records(document.id, refresh=False)
-    while True:
+    clear_records(document.id)
+    for attempt in count():
         try:
             bulk_op(generate_records(document))
             refresh_index(index=records_index())
             return
-        except BulkIndexError as exc:
-            log.exception(exc)
-            time.sleep(RETRY_DELAY)
+        except Exception as exc:
+            log.warning('Failed to index records: %s', exc)
+        backoff_cluster(failures=attempt)
