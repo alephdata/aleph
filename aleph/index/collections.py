@@ -7,7 +7,8 @@ from aleph.core import es
 from aleph.model import Entity
 from aleph.index.core import collections_index, entities_index, records_index
 from aleph.index.util import query_delete, query_update, unpack_result
-from aleph.index.util import index_doc, index_form, refresh_index
+from aleph.index.util import index_safe, index_form, refresh_index
+from aleph.index.util import search_safe
 
 log = logging.getLogger(__name__)
 
@@ -69,7 +70,7 @@ def index_collection(collection):
             'languages': {'terms': {'field': 'languages', 'size': 100}},
         }
     }
-    result = es.search(index=entities_index(), body=query)
+    result = search_safe(index=entities_index(), body=query)
     aggregations = result.get('aggregations')
     data['count'] = result['hits']['total']
 
@@ -92,7 +93,7 @@ def index_collection(collection):
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    data = index_doc(collections_index(), collection.id, data)
+    data = index_safe(collections_index(), collection.id, data)
     refresh_index(index=collections_index())
     return data
 
@@ -121,11 +122,8 @@ def update_collection_roles(collection):
 
 def delete_collection(collection_id):
     """Delete all documents from a particular collection."""
-    es.delete(index=collections_index(),
-              doc_type='doc',
-              refresh=True,
-              id=collection_id,
-              ignore=[404])
+    q = {'ids': {'values': collection_id}}
+    query_delete(collections_index(), q)
 
 
 def delete_entities(collection_id):
@@ -139,6 +137,9 @@ def delete_entities(collection_id):
 
 def delete_documents(collection_id):
     """Delete documents from a collection."""
+    records_query = {'term': {'collection_id': collection_id}}
+    query_delete(records_index(), records_query)
+    refresh_index(index=records_index())
     query = {'bool': {
         'must': [
             {'term': {'schemata': 'Document'}},
@@ -146,5 +147,3 @@ def delete_documents(collection_id):
         ]
     }}
     query_delete(entities_index(), query)
-    records_query = {'term': {'collection_id': collection_id}}
-    query_delete(records_index(), records_query)

@@ -1,11 +1,14 @@
 # coding: utf-8
 import os
+import time
 import yaml
+import logging
 from celery import Task
 from banal import ensure_list
 from normality import stringify
 from pkg_resources import iter_entry_points
 
+log = logging.getLogger(__name__)
 EXTENSIONS = {}
 
 
@@ -52,6 +55,12 @@ def dict_list(data, *keys):
         if key in data:
             return ensure_list(data[key])
     return []
+
+
+def backoff(failures=0):
+    sleep = 2 ** (failures + 1)
+    log.debug("Automatic back-off after failure, sleep %s sec.", sleep)
+    time.sleep(sleep)
 
 
 def html_link(text, link):

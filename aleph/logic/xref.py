@@ -6,7 +6,7 @@ from aleph.core import db, es, celery
 from aleph.model import Match, Document
 from aleph.index.core import entities_index
 from aleph.index.xref import entity_query
-from aleph.index.util import unpack_result
+from aleph.index.util import unpack_result, search_safe
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ def _xref_item(item, collection_id=None):
         'size': 10,
         '_source': ['collection_id', 'name'],
     }
-    result = es.search(index=entities_index(), body=query)
+    result = search_safe(index=entities_index(), body=query)
     results = result.get('hits').get('hits')
     entity_id, document_id = None, None
     if Document.SCHEMA in item.get('schemata'):
