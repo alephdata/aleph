@@ -13,7 +13,7 @@ services:
 shell: services    
 	$(DEVDOCKER) /bin/bash
 
-test: build
+test:
 	$(DEVDOCKER) contrib/test.sh
 
 upgrade: build
