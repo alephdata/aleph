@@ -79,10 +79,10 @@ class AuthButtons extends Component {
     if (auth.password_login_uri || auth.oauth_uri) {
       return (
           <span className="AuthButtons">
-          <Menu className='menu-item-width' key='signin'>
-            <MenuItem icon='log-in' onClick={this.toggleAuthentication} text={intl.formatMessage(messages.signin)} />
-            <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
-          </Menu>
+             <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
+            <Button icon='log-in' className='pt-minimal' onClick={this.toggleAuthentication}>
+              <FormattedMessage id="nav.profile" defaultMessage="Sign in / Register"/>
+            </Button>
         </span>
       );
     }
