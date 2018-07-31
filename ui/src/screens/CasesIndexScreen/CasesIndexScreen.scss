@@ -1,6 +1,8 @@
 @import "src/app/variables.scss";
 
+
 .CasesIndexScreen {
+
   .explainer {
     background-color: black;
     background-image: url("../../assets/europe_asia_dark.jpg");
@@ -9,8 +11,8 @@
     background-position: 50% 50%;
 
     .ContentPane, .SidePane {
-      margin-top: 5vh;
-      margin-bottom: 5vh;
+      margin-top: 3vh;
+      margin-bottom: 3vh;
     }
 
     &, h1 {
@@ -24,10 +26,7 @@
     p.description-explanation {
       margin-bottom: $aleph-grid-size * 2;
       line-height: 1.5em;
+      font-size: 1.1em;
     }
-  }
-
-  .results {
-    margin-top: 1em;
   }
 }

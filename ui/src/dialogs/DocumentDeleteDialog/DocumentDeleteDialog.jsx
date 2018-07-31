@@ -8,15 +8,15 @@ import { deleteDocument } from "src/actions";
 
 const messages = defineMessages({
   button_confirm: {
-    id: "collection.delete.confirm",
+    id: "document.delete.confirm",
     defaultMessage: "Delete"
   },
   button_cancel: {
-    id: "collection.delete.cancel",
+    id: "document.delete.cancel",
     defaultMessage: "Cancel"
   },
   delete_error: {
-    id: "collection.delete.error",
+    id: "document.delete.error",
     defaultMessage: "An error occured while attempting to delete this case."
   }
 });
@@ -30,7 +30,6 @@ class DocumentDeleteDialog extends Component {
 
   async onDelete() {
     const {history, documents, path} = this.props;
-    const collection = documents[0].collection;
     for (let i = 0; i < documents.length; i++) {
       await this.props.deleteDocument({document: documents[i]});
     }
@@ -40,7 +39,7 @@ class DocumentDeleteDialog extends Component {
   }
 
   render() {
-    const {intl} = this.props;
+    const { intl } = this.props;
     return (
       <Alert isOpen={this.props.isOpen}
              onClose={this.props.toggleDialog}
@@ -50,8 +49,8 @@ class DocumentDeleteDialog extends Component {
              confirmButtonText={intl.formatMessage(messages.button_confirm)}
              onCancel={this.props.toggleDialog}
              onConfirm={this.onDelete}>
-        <FormattedMessage id="collection.delete.question"
-                          defaultMessage="Are you sure you want to delete all contained items?"/>
+        <FormattedMessage id="document.delete.question"
+                          defaultMessage="Are you sure you want to delete this item?"/>
       </Alert>
     );
   }
@@ -63,4 +62,4 @@ const mapStateToProps = (state, ownProps) => {
 
 DocumentDeleteDialog = injectIntl(DocumentDeleteDialog);
 DocumentDeleteDialog = withRouter(DocumentDeleteDialog);
-export default connect(mapStateToProps, {deleteDocument})(DocumentDeleteDialog);
+export default connect(mapStateToProps, { deleteDocument })(DocumentDeleteDialog);

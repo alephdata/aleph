@@ -30,14 +30,13 @@ class CollectionDeleteDialog extends Component {
 
   async onDelete() {
     const {collection, history} = this.props;
+    const path = collection.casefile ? '/cases' : '/sources';
     await this.props.deleteCollection(collection);
-    history.push({
-      pathname: '/cases'
-    });
+    history.push({ pathname: path });
   }
 
   render() {
-    const {intl} = this.props;
+    const { intl } = this.props;
     return (
       <Alert isOpen={this.props.isOpen}
              onClose={this.props.toggleDialog}
@@ -60,4 +59,4 @@ const mapStateToProps = (state, ownProps) => {
 
 CollectionDeleteDialog = injectIntl(CollectionDeleteDialog);
 CollectionDeleteDialog = withRouter(CollectionDeleteDialog);
-export default connect(mapStateToProps, {deleteCollection})(CollectionDeleteDialog);
+export default connect(mapStateToProps, { deleteCollection })(CollectionDeleteDialog);
