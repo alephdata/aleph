@@ -1,9 +1,12 @@
 import logging
 from urllib.parse import urldefrag
 import hashlib
+import uuid
+
 from flask import Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
+from normality import stringify
 
 from aleph import signals, settings
 from aleph.core import db, url_for
@@ -37,9 +40,12 @@ def _get_credential_authz(credential):
 def _get_session_id(request):
     session_id = request.headers.get('Aleph-Session-ID')
     if not session_id:
-        user_agent = request.user_agent
-        user_ip = request.remote_addr
-        session_id = hashlib.new(user_agent).update(user_ip).hexdigest()
+        user_agent = request.user_agent or ''
+        user_ip = request.remote_addr or ''
+        if user_agent or user_ip:
+            session_id = hashlib.new(user_agent).update(user_ip).hexdigest()
+        else:
+            session_id = uuid.uuid4().hex
     return session_id
 
 
