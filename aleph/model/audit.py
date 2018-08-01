@@ -1,4 +1,6 @@
 from datetime import datetime
+import logging
+
 from normality import stringify
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -6,9 +8,12 @@ from aleph.core import db
 from aleph.model.role import Role
 
 
-class UserActivity(db.Model):
-    """Records a single activity of a user"""
-    __tablename__ = 'user_activity'
+log = logging.getLogger(__name__)
+
+
+class Audit(db.Model):
+    """Records a single activity"""
+    __tablename__ = 'audit'
 
     id = db.Column(db.Integer, primary_key=True)
     activity_type = db.Column(db.Unicode, nullable=True)
@@ -17,6 +22,9 @@ class UserActivity(db.Model):
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     role = db.relationship(Role)
+
+    session_id = db.Column(db.Unicode, nullable=True)
+    count = db.Column(db.Integer, default=1, nullable=True)
 
     @classmethod
     def all(cls):
@@ -38,9 +46,30 @@ class UserActivity(db.Model):
         return q
 
     @classmethod
-    def create(cls, data, role_id):
+    def create_or_update(cls, data, authz):
+        role_id = authz.id
+        session_id = authz.session_id
+        activity_type = stringify(data.pop('activity_type'))
+        q = cls.all().filter_by(
+            role_id=role_id, session_id=session_id, activity_type=activity_type
+        )
+        for key, val in data.items():
+            q.filter(cls.activity_metadata[key] == val)
+        activity = q.first()
+        if activity is None:
+            data['activity_type'] = activity_type
+            return cls.create(data, authz)
+        else:
+            activity.count += 1
+            db.session.add(activity)
+            db.session.flush()
+            return activity
+
+    @classmethod
+    def create(cls, data, authz):
         activity = cls()
-        activity.role_id = role_id
+        activity.role_id = authz.id
+        activity.session_id = authz.session_id
         activity.activity_type = stringify(data.pop('activity_type'))
         activity.activity_metadata = data
         db.session.add(activity)
@@ -48,6 +77,6 @@ class UserActivity(db.Model):
         return activity
 
     def __repr__(self):
-        return '<Activity(%r, %r, %r)>' % (
+        return '<Audit(%r, %r, %r)>' % (
             self.id, self.activity_type, self.role_id
         )

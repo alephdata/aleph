@@ -7,7 +7,7 @@ from aleph.index.util import authz_query, field_filter_query
 from aleph.index.util import cleanup_query, REQUEST_TIMEOUT
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
-from aleph.logic.user_activity import record_user_activity
+from aleph.logic.audit import record_audit
 
 log = logging.getLogger(__name__)
 
@@ -210,10 +210,10 @@ class Query(object):
         for field, values in parser.filters.items():
             if field not in parser.facet_names:
                 filters.append(field_filter_query(field, values))
-        record_user_activity.delay(
+        record_audit.delay(
             "USER.SEARCH",
             {"query_string": parser.text, "filters": filters},
-            request.authz.id
+            request.authz
         )
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result, schema=schema)

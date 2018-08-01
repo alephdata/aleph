@@ -1,5 +1,6 @@
 import logging
 from urllib.parse import urldefrag
+import hashlib
 from flask import Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
@@ -10,7 +11,7 @@ from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.roles import update_role
-from aleph.logic.user_activity import record_user_activity
+from aleph.logic.audit import record_audit
 from aleph.views.util import get_best_next_url, parse_request, jsonify
 from aleph.serializers.roles import LoginSchema
 
@@ -33,6 +34,15 @@ def _get_credential_authz(credential):
         return Authz.from_role(role=role)
 
 
+def _get_session_id(request):
+    session_id = request.headers.get('Aleph-Session-ID')
+    if not session_id:
+        user_agent = request.user_agent
+        user_ip = request.remote_addr
+        session_id = hashlib.new(user_agent).update(user_ip).hexdigest()
+    return session_id
+
+
 @blueprint.before_app_request
 def decode_authz():
     authz = None
@@ -44,7 +54,9 @@ def decode_authz():
     if authz is None and 'api_key' in request.args:
         authz = _get_credential_authz(request.args.get('api_key'))
 
-    request.authz = authz or Authz.from_role(role=None)
+    authz = authz or Authz.from_role(role=None)
+    authz.session_id = _get_session_id(request)
+    request.authz = authz
 
 
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
@@ -61,7 +73,8 @@ def password_login():
     update_role(role)
     db.session.commit()
     authz = Authz.from_role(role)
-    record_user_activity.delay("USER.LOGIN", {}, authz.id)
+    authz.session_id = _get_session_id(request)
+    record_audit.delay("USER.LOGIN", {}, authz)
     return jsonify({
         'status': 'ok',
         'token': authz.to_token(role=role)
@@ -103,7 +116,8 @@ def oauth_callback():
         next_url = get_best_next_url(state, request.referrer)
         next_url, _ = urldefrag(next_url)
         next_url = '%s#token=%s' % (next_url, token)
-        record_user_activity.delay("USER.LOGIN", {}, authz.id)
+        authz.session_id = _get_session_id(request)
+        record_audit.delay("USER.LOGIN", {}, authz)
         return redirect(next_url)
 
     log.error("No OAuth handler for %r was installed.", oauth.provider.name)

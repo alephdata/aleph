@@ -1,6 +1,9 @@
-from aleph.core import db, celery
-from aleph.model import UserActivity
+import logging
 
+from aleph.core import db, celery
+from aleph.model import Audit
+
+log = logging.getLogger(__name__)
 
 ACTIVITY_SCHEMA = {
     "USER.LOGIN": [],
@@ -11,7 +14,7 @@ ACTIVITY_SCHEMA = {
 
 
 @celery.task(priority=1)
-def record_user_activity(activity_type, activity_data, role_id):
+def record_audit(activity_type, activity_data, authz):
     if activity_type not in ACTIVITY_SCHEMA:
         raise ValueError("Unknown activity type: %s" % activity_type)
     data = {"activity_type": activity_type}
@@ -19,5 +22,5 @@ def record_user_activity(activity_type, activity_data, role_id):
         if expected_value not in activity_data:
             raise ValueError("Missing activity data: %s" % expected_value)
     data.update(activity_data)
-    UserActivity.create(data, role_id)
+    Audit.create_or_update(data, authz)
     db.session.commit()
