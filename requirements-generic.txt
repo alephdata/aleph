@@ -14,7 +14,7 @@ alembic==1.0.0
 
 celery==4.2.1
 elasticsearch==6.3.0
-marshmallow==2.15.3
+marshmallow==2.13.5
 psycopg2-binary==2.7.4
 gunicorn==19.9.0
 langid==1.1.6
@@ -25,14 +25,13 @@ PyICU==2.0.3
 chardet==3.0.4
 cchardet==2.1.1
 pyahocorasick==1.1.8
-pycrypto==2.6.1
 cryptography==2.3
 pylru==1.0.9
 pyjwt==1.6.1
 regex>=2017.12.09
 rdflib==4.2.2
 idna==2.7.0
-requests==2.19.1
+requests[security]==2.19.1
 grpcio==1.11.0
 
 # Error reporting

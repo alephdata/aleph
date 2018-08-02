@@ -76,5 +76,3 @@ class TextRecognizerService(OCRService, ServiceClientMixin):
         except Exception as err:
             log.error("Cannot open image, no OCR.")
             return None
-
-        

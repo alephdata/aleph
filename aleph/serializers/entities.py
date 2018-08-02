@@ -101,7 +101,7 @@ class ShallowCombinedSchema(BaseSchema):
             'ui': entity_url(pk)
         }
 
-    @post_dump
+    @post_dump()
     def hypermedia(self, data):
         pk = str(data.get('id'))
         collection = data.get('collection', {})

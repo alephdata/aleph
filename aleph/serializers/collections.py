@@ -49,7 +49,7 @@ class CollectionSchema(BaseSchema):
         public = Role.public_roles()
         data['secret'] = len(public.intersection(roles)) == 0
 
-    @post_dump
+    @post_dump()
     def transient(self, data):
         pk = str(data.get('id'))
         data['links'] = {
