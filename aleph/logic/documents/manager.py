@@ -4,7 +4,7 @@ from ingestors import Manager
 from ingestors.util import decode_path
 
 from aleph.core import db
-from aleph.model import Document, Cache
+from aleph.model import Document
 from aleph.logic.documents.result import DocumentResult
 from aleph.logic.documents.ocr import TextRecognizerService
 
@@ -34,12 +34,6 @@ class DocumentManager(Manager):
 
     def after(self, result):
         result.update()
-
-    def get_cache(self, key):
-        return Cache.get_cache(key)
-
-    def set_cache(self, key, value):
-        Cache.set_cache(key, value)
 
     def handle_child(self, parent, file_path, title=None, mime_type=None,
                      id=None, file_name=None):
