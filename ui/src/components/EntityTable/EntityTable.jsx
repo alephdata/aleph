@@ -72,7 +72,7 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { query, intl, location, history, writable, selectedRows } = this.props;
+    const { query, intl, location, history, writeable, selectedRows } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
@@ -102,7 +102,7 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
-            {writable && (<th className="select"/>)}
+            {writeable && (<th className="select"/>)}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
               <TH field="collection_id" />
@@ -125,7 +125,7 @@ class EntityTable extends Component {
                             documentMode={documentMode}
                             location={location}
                             history={history}
-                            writable={writable}
+                            writeable={writeable}
                             onSelectRow={this.onSelectRow}
                             selectedRows={selectedRows} />
           )}

@@ -17,10 +17,10 @@ class EntityTableRow extends Component {
 
   render() {
     const { entity, className, location: loc } = this.props;
-    const { hideCollection, documentMode , writable, selectedRows} = this.props;
+    const { hideCollection, documentMode , writeable, selectedRows} = this.props;
     const parsedHash = queryString.parse(loc.hash);
     let isSelected = false;
-    if(writable) {
+    if(writeable) {
       for(let i = 0; i < selectedRows.length; i++) {
         if(selectedRows[i].id === entity.id) isSelected = true;
       }
@@ -38,7 +38,7 @@ class EntityTableRow extends Component {
     
     return (
       <tr className={rowClassName}>
-        {writable && <td className="select">
+        {writeable && <td className="select">
           <Checkbox checked={isSelected} onChange={this.onSelect} />
         </td>}
         <td className="entity">

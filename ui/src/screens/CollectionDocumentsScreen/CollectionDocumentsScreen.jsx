@@ -103,7 +103,7 @@ class CollectionDocumentsScreen extends Component {
           <EntitySearch context={context}
                         hideCollection={true}
                         documentMode={true}
-                        writable={collection.writeable}
+                        writeable={collection.writeable}
                         disableOrEnableDelete={this.disableOrEnableDelete}
                         setDocuments={this.setDocuments}
                         setRefreshCallout={this.setRefreshCallout}/>

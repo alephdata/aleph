@@ -120,7 +120,7 @@ class EntitySearch extends Component {
   }
 
   render() {
-    const { query, result, intl, className, writable } = this.props;
+    const { query, result, intl, className, writeable } = this.props;
     const { selectedRows } = this.state;
     const isEmpty = !query.hasQuery();
 
@@ -144,7 +144,7 @@ class EntitySearch extends Component {
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
                      result={result}
-                     writable={writable}
+                     writeable={writeable}
                      updateSelection={this.updateSelection}
                      selectedRows={selectedRows}/>
         {!result.isLoading && result.next && (
