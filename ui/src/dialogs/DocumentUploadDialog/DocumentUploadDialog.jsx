@@ -25,7 +25,7 @@ const messages = defineMessages({
   },
   success: {
     id: 'document.upload.success',
-    defaultMessage: 'Upload completed.'
+    defaultMessage: 'Documents are being processed...'
   },
   error: {
     id: 'document.upload.error',

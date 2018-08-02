@@ -11,7 +11,7 @@ from normality import safe_filename, stringify
 from aleph.model import Document, Events
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
-from aleph.index.core import entities_index
+from aleph.index.core import entity_index
 from aleph.index.util import refresh_index
 from aleph.logic.notifications import publish
 from aleph.logic.documents import ingest_document
@@ -124,7 +124,7 @@ def ingest_upload(id):
     if parent_id is not None:
         index_document_id.apply_async([parent_id], priority=1)
 
-    refresh_index(index=entities_index())
+    refresh_index(index=entity_index())
     return jsonify({
         'status': 'ok',
         'documents': [CombinedSchema().dump(d).data for d in documents]
