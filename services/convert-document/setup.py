@@ -6,7 +6,7 @@ setup(
     install_requires=[
         'aiohttp',
         'celestial',
-        'pyicu',
+        'pyicu==2.0.3',
         'pytest'
     ],
 )
