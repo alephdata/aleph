@@ -1,6 +1,11 @@
+import logging
+
 from banal import as_bool
 from normality import stringify
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
+
+
+log = logging.getLogger(__name__)
 
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_RESULT_WINDOW = 9999
@@ -102,6 +107,19 @@ class QueryParser(object):
     def getbool(self, name, default=False):
         return as_bool(self.get(name), default=default)
 
+    def to_dict(self):
+        parser = {
+            'text': self.text,
+            'prefix': self.prefix,
+            'offset': self.offset,
+            'limit': self.limit,
+            'filters': {key: list(val) for key, val in self.filters.items()},
+            'sorts': self.sorts,
+            'empties': {key: list(val) for key, val in self.empties.items()},
+            'exclude': self.exclude,
+        }
+        return parser
+
 
 class SearchQueryParser(QueryParser):
     """ElasticSearch-specific query parameters."""
@@ -139,3 +157,8 @@ class SearchQueryParser(QueryParser):
         if self.get_facet_size(name) == 0:
             return False
         return self.getbool('facet_values:%s' % name, True)
+
+    def to_dict(self):
+        parser = super(SearchQueryParser, self).to_dict()
+        parser['facet_filters'] = list(self.facet_filters)
+        return parser

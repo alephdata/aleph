@@ -1,12 +1,9 @@
 import logging
 from urllib.parse import urldefrag
-import hashlib
-import uuid
 
 from flask import Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
-from normality import stringify
 
 from aleph import signals, settings
 from aleph.core import db, url_for
@@ -37,18 +34,6 @@ def _get_credential_authz(credential):
         return Authz.from_role(role=role)
 
 
-def _get_session_id(request):
-    session_id = request.headers.get('Aleph-Session-ID')
-    if not session_id:
-        user_agent = request.user_agent or ''
-        user_ip = request.remote_addr or ''
-        if user_agent or user_ip:
-            session_id = hashlib.new(user_agent).update(user_ip).hexdigest()
-        else:
-            session_id = uuid.uuid4().hex
-    return session_id
-
-
 @blueprint.before_app_request
 def decode_authz():
     authz = None
@@ -61,7 +46,6 @@ def decode_authz():
         authz = _get_credential_authz(request.args.get('api_key'))
 
     authz = authz or Authz.from_role(role=None)
-    authz.session_id = _get_session_id(request)
     request.authz = authz
 
 
@@ -79,8 +63,8 @@ def password_login():
     update_role(role)
     db.session.commit()
     authz = Authz.from_role(role)
-    authz.session_id = _get_session_id(request)
-    record_audit.delay("USER.LOGIN", {}, authz)
+    request.authz = authz
+    record_audit("USER.LOGIN", {})
     return jsonify({
         'status': 'ok',
         'token': authz.to_token(role=role)
@@ -122,8 +106,8 @@ def oauth_callback():
         next_url = get_best_next_url(state, request.referrer)
         next_url, _ = urldefrag(next_url)
         next_url = '%s#token=%s' % (next_url, token)
-        authz.session_id = _get_session_id(request)
-        record_audit.delay("USER.LOGIN", {}, authz)
+        request.authz = authz
+        record_audit("USER.LOGIN", {})
         return redirect(next_url)
 
     log.error("No OAuth handler for %r was installed.", oauth.provider.name)

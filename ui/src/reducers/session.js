@@ -16,7 +16,7 @@ const login = (state, token) => {
     ...data,
     token,
     loggedIn: true,
-    sessionID: state.sessionID,
+    sessionID: state.sessionID || generateUUID(),
   };
 };
 

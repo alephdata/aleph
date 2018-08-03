@@ -206,14 +206,9 @@ class Query(object):
     def handle(cls, request, limit=None, schema=None, **kwargs):
         parser = SearchQueryParser(request.args, request.authz, limit=limit)
         # Log the search
-        filters = []
-        for field, values in parser.filters.items():
-            if field not in parser.facet_names:
-                filters.append(field_filter_query(field, values))
-        record_audit.delay(
+        record_audit(
             "USER.SEARCH",
-            {"query_string": parser.text, "filters": filters},
-            request.authz
+            parser.to_dict(),
         )
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result, schema=schema)

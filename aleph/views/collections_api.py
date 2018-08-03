@@ -38,8 +38,8 @@ def create():
 @blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
 def view(id):
     collection = get_index_collection(id)
-    record_audit.delay(
-        "USER.VIEW_COLLECTION", {"collection_id": str(id)}, request.authz
+    record_audit(
+        "USER.VIEW_COLLECTION", {"collection_id": id}
     )
     return serialize_data(collection, CollectionSchema)
 
@@ -47,8 +47,8 @@ def view(id):
 @blueprint.route('/api/2/collections/<int:id>/rdf', methods=['GET'])
 def rdf(id):
     collection = get_db_collection(id, request.authz.READ)
-    record_audit.delay(
-        "USER.VIEW_COLLECTION", {"collection_id": str(id)}, request.authz
+    record_audit(
+        "USER.VIEW_COLLECTION", {"collection_id": id}
     )
     return Response(export_collection(collection), mimetype='text/plain')
 

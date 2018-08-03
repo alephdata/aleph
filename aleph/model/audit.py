@@ -19,6 +19,7 @@ class Audit(db.Model):
     activity_type = db.Column(db.Unicode, nullable=True)
     activity_metadata = db.Column(JSONB, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
+    updated_at = db.Column(db.DateTime, nullable=True)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     role = db.relationship(Role)
@@ -46,32 +47,36 @@ class Audit(db.Model):
         return q
 
     @classmethod
-    def create_or_update(cls, data, authz):
-        role_id = authz.id
-        session_id = authz.session_id
+    def create_or_update(cls, data):
+        role_id = data.pop('role_id')
+        session_id = data.pop('session_id')
         activity_type = stringify(data.pop('activity_type'))
         q = cls.all().filter_by(
             role_id=role_id, session_id=session_id, activity_type=activity_type
         )
         for key, val in data.items():
-            q.filter(cls.activity_metadata[key] == val)
+            q = q.filter(cls.activity_metadata.contains({key: val}))
         activity = q.first()
         if activity is None:
+            data['role_id'] = role_id
+            data['session_id'] = session_id
             data['activity_type'] = activity_type
-            return cls.create(data, authz)
+            return cls.create(data)
         else:
             activity.count += 1
+            activity.updated_at = datetime.utcnow()
             db.session.add(activity)
             db.session.flush()
             return activity
 
     @classmethod
-    def create(cls, data, authz):
+    def create(cls, data):
         activity = cls()
-        activity.role_id = authz.id
-        activity.session_id = authz.session_id
+        activity.role_id = data.pop('role_id')
+        activity.session_id = data.pop('session_id')
         activity.activity_type = stringify(data.pop('activity_type'))
         activity.activity_metadata = data
+        activity.updated_at = datetime.utcnow()
         db.session.add(activity)
         db.session.flush()
         return activity

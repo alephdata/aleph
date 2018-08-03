@@ -52,8 +52,8 @@ def view(document_id):
         data['text'] = document.body_text
     if Document.SCHEMA_IMAGE in document.model.names:
         data['text'] = document.body_text
-    record_audit.delay(
-        "USER.VIEW_DOCUMENT", {"document_id": str(document_id)}, request.authz
+    record_audit(
+        "USER.VIEW_DOCUMENT", {"document_id": document_id}
     )
     return serialize_data(data, CombinedSchema)
 
@@ -102,8 +102,8 @@ def _serve_archive(content_hash, file_name, mime_type):
 @blueprint.route('/api/2/documents/<int:document_id>/file')
 def file(document_id):
     document = get_db_document(document_id)
-    record_audit.delay(
-        "USER.VIEW_DOCUMENT", {"document_id": str(document_id)}, request.authz
+    record_audit(
+        "USER.VIEW_DOCUMENT", {"document_id": document_id}
     )
     resp = _serve_archive(document.content_hash,
                           document.safe_file_name,
@@ -114,8 +114,8 @@ def file(document_id):
 @blueprint.route('/api/2/documents/<int:document_id>/pdf')
 def pdf(document_id):
     document = get_db_document(document_id)
-    record_audit.delay(
-        "USER.VIEW_DOCUMENT", {"document_id": str(document_id)}, request.authz
+    record_audit(
+        "USER.VIEW_DOCUMENT", {"document_id": document_id}
     )
     if not document.supports_pages:
         raise BadRequest("PDF is only available for text documents")
@@ -130,8 +130,8 @@ def pdf(document_id):
 def records(document_id):
     enable_cache()
     document = get_db_document(document_id)
-    record_audit.delay(
-        "USER.VIEW_DOCUMENT", {"document_id": str(document_id)}, request.authz
+    record_audit(
+        "USER.VIEW_DOCUMENT", {"document_id": document_id}
     )
     if not document.supports_records:
         raise BadRequest("This document does not have records.")
@@ -145,8 +145,8 @@ def records(document_id):
 def record(document_id, index):
     enable_cache()
     document = get_db_document(document_id)
-    record_audit.delay(
-        "USER.VIEW_DOCUMENT", {"document_id": str(document_id)}, request.authz
+    record_audit(
+        "USER.VIEW_DOCUMENT", {"document_id": document_id}
     )
     if not document.supports_records:
         raise BadRequest("This document does not have records.")
