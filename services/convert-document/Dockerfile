@@ -15,7 +15,7 @@ RUN apt-get -qq -y update \
 
 RUN pip3 install -q aiohttp \
                     celestial>=0.2.3 \
-                    pyicu==2.0.3
+                    pyicu==2.0.5
 RUN mkdir -p /convert
 COPY setup.py /convert
 COPY convert /convert/convert

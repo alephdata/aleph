@@ -13,7 +13,7 @@ setup(
     include_package_data=True,
     package_data={},
     install_requires=[
-        'pyicu==2.0.3',
+        'pyicu==2.0.5',
         'banal',
         'pillow',
         'grpcio==1.11.0',
