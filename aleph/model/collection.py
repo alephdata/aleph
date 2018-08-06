@@ -2,6 +2,7 @@ import logging
 from banal import as_bool, ensure_list
 from datetime import datetime
 from flask.ext.babel import lazy_gettext
+from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
@@ -92,10 +93,15 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     @property
     def team(self):
-        q = Role.all()
-        q = q.filter(Role.type != Role.SYSTEM)
-        q = q.filter(Role.id == Permission.role_id)
-        q = q.filter(Permission.collection_id == self.id)
+        role = aliased(Role)
+        perm = aliased(Permission)
+        q = db.session.query(role)
+        q = q.filter(role.type != Role.SYSTEM)
+        q = q.filter(role.id == perm.role_id)
+        q = q.filter(perm.collection_id == self.id)
+        q = q.filter(perm.read == True)  # noqa
+        q = q.filter(role.deleted_at == None)  # noqa
+        q = q.filter(perm.deleted_at == None)  # noqa
         return q
 
     @property
