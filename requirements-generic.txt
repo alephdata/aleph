@@ -21,7 +21,7 @@ langid==1.1.6
 blinker==1.4
 Babel==2.5.1
 PyYAML==3.12
-PyICU==2.0.5
+PyICU==2.0.6
 chardet==3.0.4
 cchardet==2.1.1
 pyahocorasick==1.1.8

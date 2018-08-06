@@ -5,7 +5,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'pyahocorasick',
-        'pyicu==2.0.5',
+        'pyicu',
         'normality',
         'grpcio-tools',
         'alephclient==0.6.5'
