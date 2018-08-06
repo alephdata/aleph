@@ -21,6 +21,7 @@ def upgrade():
         sa.Column('activity_metadata', postgresql.JSONB(astext_type=sa.Text()),
                   nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
+        sa.Column('updated_at', sa.DateTime(), nullable=True),
         sa.Column('role_id', sa.Integer(), nullable=True),
         sa.Column('count', sa.Integer(), nullable=True),
         sa.Column('session_id', sa.Unicode(), nullable=True),
