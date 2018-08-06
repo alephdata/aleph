@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
 import { Button, MenuItem, Position, Classes, Alignment } from "@blueprintjs/core";
 import { Select as BlueprintSelect } from "@blueprintjs/select";
 
@@ -36,7 +36,7 @@ class Label extends Component {
       return null;
     }
     return (
-      <span>
+      <React.Fragment>
         { icon && (
           <React.Fragment>
             <i className='fa fa-fw fa-user-circle-o' />
@@ -44,7 +44,7 @@ class Label extends Component {
           </React.Fragment>
         )}
         { long ? role.label : role.name }
-      </span>
+      </React.Fragment>
     );
   }
 }
@@ -52,13 +52,32 @@ class Label extends Component {
 
 class List extends Component {
   render() {
-    const { roles } = this.props;
+    const { roles, truncate = Infinity } = this.props;
     
-    if (!roles) return null;
-    const names = roles.map((role, i) => {
+    if (!roles) {
+      return null;
+    }
+
+    let names = roles.map((role, i) => {
       return <Label key={role.id} role={role} {...this.props} />;
     });
-    return (<span>{ wordList(names, ', ') }</span>);
+
+    // Truncate if too long
+    if (names.length > truncate) {
+      const ellipsis = (
+        <i key="ellipsis">
+          … (
+          <FormattedNumber value={roles.length} />
+          &nbsp;
+          <FormattedMessage id="roles.total" defaultMessage="total" />
+          )
+        </i>
+      );
+      // Cut slightly deeper than requested, as the ellipsis takes space too.
+      const numberToKeep = truncate - 1;
+      names = [...names.slice(0, numberToKeep), ellipsis];
+    }
+    return wordList(names, ', ');
   }
 }
 
