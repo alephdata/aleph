@@ -172,7 +172,7 @@ const mapStateToProps = (state, ownProps) => {
   };
   const query = Query.fromLocation('collections', location, context, 'collections')
     .sortBy('count', true)
-    .limit(30);
+    .limit(40);
   return {
     query: query,
     result: selectCollectionsResult(state, query)
