@@ -74,10 +74,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.languages = ensure_list(data.get('languages', []))
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))
-        self.creator = creator
-        Permission.grant(self, self.creator, True, True)
+        if creator is not None:
+            self.creator = creator
         db.session.add(self)
         db.session.flush()
+        if self.creator is not None:
+            Permission.grant(self, self.creator, True, True)
 
     @property
     def roles(self):
