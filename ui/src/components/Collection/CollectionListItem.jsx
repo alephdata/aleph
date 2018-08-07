@@ -61,14 +61,14 @@ class CollectionListItem extends Component {
           { collection.countries.length > 0 && (
             <span className="details-item">
               <Icon icon="globe" />
-              <Country.List codes={collection.countries} truncate={4} />
+              <Country.List codes={collection.countries} truncate={3} />
             </span>
           )}
 
           { collection.casefile && (
             <span className="details-item">
               <Icon icon="social-media" />
-              <Role.List roles={collection.team} icon={false} truncate={4} />
+              <Role.List roles={collection.team} icon={false} truncate={3} />
             </span>
           )}
           

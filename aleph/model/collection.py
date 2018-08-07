@@ -19,7 +19,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     enforced."""
 
     # Category schema for collections.
-    # TODO: add extra weight info.
     # TODO: should this be configurable?
     CATEGORIES = {
         'news': lazy_gettext('News archives'),
@@ -61,6 +60,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     creator = db.relationship(Role)
 
     def update(self, data, creator=None):
+        self.updated_at = datetime.utcnow()
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
         self.summary = data.get('summary', self.summary)
@@ -75,11 +75,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))
         self.creator = creator
-        self.updated_at = datetime.utcnow()
+        Permission.grant(self, self.creator, True, True)
         db.session.add(self)
         db.session.flush()
-        if creator is not None:
-            Permission.grant(self, creator, True, True)
 
     @property
     def roles(self):

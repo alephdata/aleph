@@ -51,7 +51,7 @@ def index_collection(collection):
             'type': role.type,
             'name': role.name
         })
-        # texts.append(role.name)
+        texts.append(role.name)
 
     # Compute some statistics on the content of a collection.
     query = {
