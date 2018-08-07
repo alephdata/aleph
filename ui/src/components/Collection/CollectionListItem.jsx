@@ -22,7 +22,7 @@ class CollectionListItem extends Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, preview = true } = this.props;
     if (!collection || !collection.id) {
       return null;
     }
@@ -32,7 +32,7 @@ class CollectionListItem extends Component {
           <span className="pt-tag pt-small pt-round pt-intent-primary">
             <FormattedNumber value={collection.count} />
           </span>
-          <Collection.Link preview={true} collection={collection} icon />
+          <Collection.Link preview={preview} collection={collection} icon />
         </h4>
         {collection.summary &&
           <p className="summary">

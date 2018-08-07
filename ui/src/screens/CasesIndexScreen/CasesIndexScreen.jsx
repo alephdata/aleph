@@ -156,7 +156,7 @@ class CasesIndexScreen extends Component {
           <DualPane.ContentPane>
             <ul className="results">
               {result.results !== undefined && result.results.map(res =>
-                <CollectionListItem key={res.id} collection={res}/>
+                <CollectionListItem key={res.id} collection={res} preview={false} />
               )}
             </ul>
             {result.total === 0 && (
