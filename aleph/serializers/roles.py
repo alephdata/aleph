@@ -21,8 +21,8 @@ class RoleSchema(BaseSchema):
     type = String(dump_only=True)
     has_password = Boolean(dump_only=True)
 
-    @post_dump()
-    def transient(self, data):
+    @post_dump
+    def hypermedia(self, data):
         pk = str(data.get('id'))
         data['writeable'] = str(request.authz.id) == pk
         data['links'] = {

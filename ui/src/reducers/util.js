@@ -34,7 +34,7 @@ export function objectLoadError(state, id, error) {
   const object = {
     isLoading: false,
     isError: true,
-    shouldLoad: true,
+    shouldLoad: false,
     error
   };
   return { ...state, [id]: _.assign({}, state[id], object) };

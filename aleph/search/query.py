@@ -175,7 +175,6 @@ class Query(object):
             'post_filter': self.get_post_filters(),
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
-            # 'profile': True,
             '_source': self.get_source()
         })
         # log.info("Query: %s", pformat(body))

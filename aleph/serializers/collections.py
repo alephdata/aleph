@@ -37,11 +37,11 @@ class CollectionSchema(BaseSchema):
     count = Integer(dump_only=True)
     schemata = Dict(dump_only=True, default={})
 
-    @pre_load()
+    @pre_load
     def flatten_collection(self, data):
         flatten_id(data, 'creator_id', 'creator')
 
-    @pre_dump()
+    @pre_dump
     def visibility(self, data):
         if not is_mapping(data):
             return
@@ -49,8 +49,8 @@ class CollectionSchema(BaseSchema):
         public = Role.public_roles()
         data['secret'] = len(public.intersection(roles)) == 0
 
-    @post_dump()
-    def transient(self, data):
+    @post_dump
+    def hypermedia(self, data):
         pk = str(data.get('id'))
         data['links'] = {
             'self': url_for('collections_api.view', id=pk),
