@@ -1,3 +1,4 @@
+import logging
 from flask import request
 from banal import is_mapping
 from marshmallow import post_dump, pre_dump, pre_load
@@ -11,6 +12,8 @@ from aleph.serializers.common import BaseSchema, flatten_id
 from aleph.serializers.common import Category, Country, Language
 from aleph.serializers.roles import RoleReferenceSchema
 from aleph.model import Role, Collection
+
+log = logging.getLogger(__name__)
 
 
 class CollectionSchema(BaseSchema):
@@ -41,20 +44,27 @@ class CollectionSchema(BaseSchema):
     def flatten_collection(self, data):
         flatten_id(data, 'creator_id', 'creator')
 
-    @pre_dump
-    def visibility(self, data):
-        if not is_mapping(data):
-            return
-        roles = data.get('roles', [])
-        public = Role.public_roles()
-        data['secret'] = len(public.intersection(roles)) == 0
+    # @pre_dump
+    # def visibility(self, data):
+    #     log.info("Generating visibility flag...")
+    #     if not is_mapping(data):
+    #         return
+    #     roles = data.get('roles', [])
+    #     public = Role.public_roles()
+    #     data['secret'] = len(public.intersection(roles)) == 0
+
+    @post_dump
+    def other_dumper(self, data):
+        log.info("bla: %r", data)
 
     @post_dump
     def hypermedia(self, data):
+        log.info("Data incoming")
         pk = str(data.get('id'))
         data['links'] = {
             'self': url_for('collections_api.view', id=pk),
             'ui': collection_url(pk)
         }
         data['writeable'] = request.authz.can_write(pk)
+        log.info("Generating hypermedia links...")
         return data
