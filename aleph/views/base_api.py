@@ -67,6 +67,11 @@ def statistics():
     return jsonify(get_instance_stats(request.authz))
 
 
+@blueprint.route('/healthz')
+def healthz():
+    return jsonify({'status': 'ok'})
+
+
 @blueprint.route('/api/1/<path:path>')
 def api_v1_message(path):
     return jsonify({
