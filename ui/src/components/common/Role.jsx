@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Button, MenuItem, Position, Classes, Alignment } from "@blueprintjs/core";
 import { Select as BlueprintSelect } from "@blueprintjs/select";
 
@@ -53,10 +53,7 @@ class Label extends Component {
 class List extends Component {
   render() {
     const { roles, truncate = Infinity } = this.props;
-    
-    if (!roles) {
-      return null;
-    }
+    if (!roles) return null;
 
     let names = roles.map((role, i) => {
       return <Label key={role.id} role={role} {...this.props} />;
@@ -64,18 +61,7 @@ class List extends Component {
 
     // Truncate if too long
     if (names.length > truncate) {
-      const ellipsis = (
-        <i key="ellipsis">
-          … (
-          <FormattedNumber value={roles.length} />
-          &nbsp;
-          <FormattedMessage id="roles.total" defaultMessage="total" />
-          )
-        </i>
-      );
-      // Cut slightly deeper than requested, as the ellipsis takes space too.
-      const numberToKeep = truncate - 1;
-      names = [...names.slice(0, numberToKeep), ellipsis];
+      names = [...names.slice(0, truncate), '…'];
     }
     return wordList(names, ', ');
   }
