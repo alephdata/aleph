@@ -42,7 +42,7 @@ class MatchCollectionsSchema(BaseSchema):
     collection = Nested(CollectionSchema, required=True)
 
     @post_dump
-    def transient(self, data):
+    def hypermedia(self, data):
         data['uri'] = url_for('xref_api.matches',
                               id=data.pop('parent'),
                               other_id=data.get('collection').get('id'))

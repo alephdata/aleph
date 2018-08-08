@@ -44,27 +44,20 @@ class CollectionSchema(BaseSchema):
     def flatten_collection(self, data):
         flatten_id(data, 'creator_id', 'creator')
 
-    # @pre_dump
-    # def visibility(self, data):
-    #     log.info("Generating visibility flag...")
-    #     if not is_mapping(data):
-    #         return
-    #     roles = data.get('roles', [])
-    #     public = Role.public_roles()
-    #     data['secret'] = len(public.intersection(roles)) == 0
-
-    @post_dump
-    def other_dumper(self, data):
-        log.info("bla: %r", data)
+    @pre_dump
+    def visibility(self, data):
+        if not is_mapping(data):
+            return
+        roles = [int(r) for r in data.get('roles', [])]
+        public = Role.public_roles()
+        data['secret'] = len(public.intersection(roles)) == 0
 
     @post_dump
     def hypermedia(self, data):
-        log.info("Data incoming")
         pk = str(data.get('id'))
         data['links'] = {
             'self': url_for('collections_api.view', id=pk),
             'ui': collection_url(pk)
         }
         data['writeable'] = request.authz.can_write(pk)
-        log.info("Generating hypermedia links...")
         return data

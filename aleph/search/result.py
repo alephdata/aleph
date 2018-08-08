@@ -37,7 +37,6 @@ class QueryResult(object):
     def to_dict(self):
         results = list(self.results)
         if self.schema:
-            log.info("Serialising query result")
             results, _ = self.schema().dump(results, many=True)
         return {
             'status': 'ok',
