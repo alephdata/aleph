@@ -6,9 +6,7 @@ import { Tooltip, Position } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import DownloadButton from 'src/components/Toolbar/DownloadButton';
-import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
-import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
+import { DownloadButton, DocumentUploadButton, DocumentFolderButton } from 'src/components/Toolbar';
 
 const messages = defineMessages({
   mode_view: {

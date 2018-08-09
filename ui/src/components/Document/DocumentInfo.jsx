@@ -12,6 +12,7 @@ import { Toolbar, CloseButton, ModeButtons } from 'src/components/Toolbar';
 import { EntityInfoTags } from 'src/components/Entity';
 import { DocumentMetadata } from 'src/components/Document';
 import { CollectionOverview } from 'src/components/Collection';
+import { DownloadButton } from 'src/components/Toolbar';
 
 class DocumentInfo extends React.Component {
   constructor(props) {
@@ -56,6 +57,9 @@ class DocumentInfo extends React.Component {
             <CloseButton/>
           </Toolbar>
         )}
+        {!showToolbar && <Toolbar className='toolbar-preview'>
+        <DownloadButton isPreview={false} document={doc} />
+        </Toolbar>}
         <div className="pane-heading">
           <span>
             <Schema.Label schema={doc.schema} icon={true}/>
