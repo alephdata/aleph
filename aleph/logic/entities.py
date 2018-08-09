@@ -44,6 +44,7 @@ def bulk_load(config):
         data['foreign_id'] = foreign_id
         data['label'] = data.get('label', foreign_id)
         collection = create_collection(data)
+        # FIXME: this does not perform collection metadata validation.
         for query in dict_list(data, 'queries', 'query'):
             bulk_load_query.apply_async([collection.id, query], priority=6)
 
