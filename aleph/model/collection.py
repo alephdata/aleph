@@ -27,14 +27,16 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'gazette': lazy_gettext('Gazettes'),
         'court': lazy_gettext('Court archives'),
         'company': lazy_gettext('Company registries'),
-        'watchlist': lazy_gettext('Watchlists'),
-        'investigation': lazy_gettext('Personal collections'),
         'sanctions': lazy_gettext('Sanctions lists'),
-        'scrape': lazy_gettext('Scrapes'),
         'procurement': lazy_gettext('Procurement'),
         'grey': lazy_gettext('Grey literature'),
+        'library': lazy_gettext('Document libraries'),
         'license': lazy_gettext('Licenses and concessions'),
         'regulatory': lazy_gettext('Regulatory filings'),
+        'poi': lazy_gettext('Persons of interest'),
+        'customs': lazy_gettext('Customs declarations'),
+        'census': lazy_gettext('Population census'),
+        'transport': lazy_gettext('Air and maritime registers'),
         'other': lazy_gettext('Other material')
     }
 
