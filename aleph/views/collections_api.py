@@ -13,7 +13,7 @@ from aleph.logic.entities import bulk_load_query
 from aleph.logic.triples import export_collection
 from aleph.serializers import CollectionSchema
 from aleph.views.util import get_db_collection, get_index_collection
-from aleph.views.util import require, jsonify, parse_request
+from aleph.views.util import require, jsonify, parse_request, serialize_data
 from aleph.util import dict_list
 
 blueprint = Blueprint('collections_api', __name__)
@@ -37,7 +37,7 @@ def create():
 @blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
 def view(id):
     collection = get_index_collection(id)
-    return jsonify(collection, schema=CollectionSchema)
+    return serialize_data(collection, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>/rdf', methods=['GET'])
@@ -53,7 +53,7 @@ def update(id):
     collection.update(data)
     db.session.commit()
     data = update_collection(collection)
-    return jsonify(data, schema=CollectionSchema)
+    return serialize_data(data, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa

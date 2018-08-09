@@ -38,10 +38,17 @@ class QueryResult(object):
         results = list(self.results)
         if self.schema:
             results, errors = self.schema().dump(results, many=True)
+            if len(errors):
+                return {
+                    'status': 'error',
+                    'total': 0,
+                    'results': [],
+                    'errors': errors
+                }
+
         return {
             'status': 'ok',
             'results': results,
-            'errors': errors,
             'total': self.total,
             'page': self.parser.page,
             'limit': self.parser.limit,

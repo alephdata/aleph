@@ -13,7 +13,7 @@ from aleph.notify import notify_role
 from aleph.serializers.roles import RoleSchema, PermissionSchema
 from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.util import require, get_db_collection, jsonify, parse_request
-from aleph.views.util import obj_or_404
+from aleph.views.util import obj_or_404, serialize_data
 
 blueprint = Blueprint('roles_api', __name__)
 log = logging.getLogger(__name__)
@@ -86,14 +86,14 @@ def create():
     db.session.commit()
     # Let the serializer return more info about this user
     request.authz.id = role.id
-    return jsonify(role, RoleSchema, status=201)
+    return serialize_data(role, RoleSchema, status=201)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
     require(check_editable(role, request.authz))
-    return jsonify(role, RoleSchema)
+    return serialize_data(role, RoleSchema)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])

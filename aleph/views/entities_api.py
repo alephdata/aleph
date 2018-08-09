@@ -13,7 +13,7 @@ from aleph.search import EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request
+from aleph.views.util import jsonify, parse_request, serialize_data
 from aleph.views.cache import enable_cache
 from aleph.serializers.entities import CombinedSchema
 from aleph.serializers.entities import EntityCreateSchema, EntityUpdateSchema
@@ -43,13 +43,13 @@ def create():
     db.session.commit()
     data = update_entity(entity)
     update_collection(collection)
-    return jsonify(data, schema=CombinedSchema)
+    return serialize_data(data, CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['GET'])
 def view(id):
     entity = get_index_entity(id, request.authz.READ)
-    return jsonify(entity, schema=CombinedSchema)
+    return serialize_data(entity, CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>/similar', methods=['GET'])
@@ -129,7 +129,7 @@ def update(id):
     db.session.commit()
     data = update_entity(entity)
     update_collection(entity.collection)
-    return jsonify(data, schema=CombinedSchema)
+    return serialize_data(data, CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>/merge/<other_id>', methods=['DELETE'])
@@ -146,7 +146,7 @@ def merge(id, other_id):
     data = update_entity(entity)
     update_entity(other)
     update_collection(entity.collection)
-    return jsonify(data, schema=CombinedSchema)
+    return serialize_data(data, CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['DELETE'])

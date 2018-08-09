@@ -11,6 +11,7 @@ from aleph.logic.util import document_url
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_db_document, get_index_document
 from aleph.views.util import jsonify, parse_request, sanitize_html
+from aleph.views.util import serialize_data
 from aleph.serializers import RecordSchema
 from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
 from aleph.search import DocumentsQuery, RecordsQuery
@@ -50,7 +51,7 @@ def view(document_id):
         data['text'] = document.body_text
     if Document.SCHEMA_IMAGE in document.model.names:
         data['text'] = document.body_text
-    return jsonify(data, schema=CombinedSchema)
+    return serialize_data(data, CombinedSchema)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
@@ -136,4 +137,4 @@ def record(document_id, index):
     record = DocumentRecord.by_index(document.id, index)
     if record is None:
         raise NotFound("No such record: %s" % index)
-    return jsonify(record, schema=RecordSchema)
+    return serialize_data(record, RecordSchema)
