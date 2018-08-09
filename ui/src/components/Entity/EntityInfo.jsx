@@ -107,17 +107,9 @@ class EntityInfo extends React.Component {
                         </li>
                       ))}
                     </ul>
-                  </React.Fragment>
-                }
-              />
-              <Tab id="source" 
-                title={
-                  <React.Fragment>
-                    <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
-                  </React.Fragment>
-                }
-                panel={
-                  <React.Fragment>
+                    <span className="source-header">
+                      <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
+                    </span>
                     <CollectionOverview collection={entity.collection} hasHeader={true}/>
                   </React.Fragment>
                 }

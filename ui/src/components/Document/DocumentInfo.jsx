@@ -72,30 +72,26 @@ class DocumentInfo extends React.Component {
                      <FormattedMessage id="document.info.overview" defaultMessage="Overview"/>
                   </React.Fragment>
                 }
-                panel={<DocumentMetadata document={doc}/>} 
-              />
-              <Tab id="source" 
-                title={
-                  <React.Fragment>
-                    <FormattedMessage id="document.info.source" defaultMessage="Source"/>
-                  </React.Fragment>
-                }
                 panel={
                   <React.Fragment>
-                  <CollectionOverview collection={doc.collection} hasHeader={true}/>
-                  {doc.source_url && (
-                    <ul className='info-sheet'>
-                      <li>
+                    <DocumentMetadata document={doc}/>
+                    <span className="source-header">
+                      <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
+                    </span>
+                    <CollectionOverview collection={doc.collection} hasHeader={true}/>
+                    {doc.source_url && (
+                      <ul className='info-sheet'>
+                        <li>
                         <span className="key">
                           <FormattedMessage id="document.info.source_url"
                                             defaultMessage="Document Source URL"/>
                         </span>
-                        <span className="value">
+                          <span className="value">
                           <URL value={doc.source_url} />
                         </span>
-                      </li>
-                    </ul>
-                  )}
+                        </li>
+                      </ul>
+                    )}
                   </React.Fragment>
                 }
               />
