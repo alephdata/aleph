@@ -56,7 +56,7 @@ endpoint.interceptors.request.use(config => {
   if (locale) {
     config.headers.common['Accept-Language'] = locale;
   }
-  config.headers.common['Aleph-Session-ID'] = session.sessionID;
+  config.headers.common['X-Aleph-Session'] = session.sessionID;
   return config;
 });
 

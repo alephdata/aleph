@@ -1,6 +1,5 @@
 import logging
-import hashlib
-import uuid
+from banal import hash_data
 
 from flask import request
 
@@ -21,14 +20,11 @@ ACTIVITY_SCHEMA = {
 
 
 def _get_session_id(request):
-    session_id = request.headers.get('Aleph-Session-ID')
+    session_id = request.headers.get('X-Aleph-Session')
     if not session_id:
-        user_agent = request.user_agent or ''
-        user_ip = request.remote_addr or ''
-        if user_agent or user_ip:
-            session_id = hashlib.new(user_agent).update(user_ip).hexdigest()
-        else:
-            session_id = uuid.uuid4().hex
+        session_id = hash_data([request.remote_addr,
+                                request.accept_languages,
+                                request.user_agent])
     return session_id
 
 
@@ -36,7 +32,7 @@ def record_audit(activity_type, activity_data):
     if activity_type not in ACTIVITY_SCHEMA:
         raise ValueError("Unknown activity type: %s" % activity_type)
     data = {
-        "activity_type": activity_type,
+        "activity": activity_type,
         "role_id": request.authz.id,
         "session_id": _get_session_id(request)
     }
