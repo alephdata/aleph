@@ -1,5 +1,6 @@
 import logging
 from banal import hash_data
+from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -40,6 +41,23 @@ class Audit(db.Model, DatedModel):
         q = q.filter(cls.role_id == role_id)
         q = q.order_by(cls.created_at.desc())
         q = q.order_by(cls.id.desc())
+        return q
+
+    @classmethod
+    def query_log(cls, role_id=None, session_id=None):
+        text = cls.data['text'].astext.cast(db.Unicode).label('text')
+        created_at = func.min(cls.created_at).label('created_at')
+        updated_at = func.max(cls.updated_at).label('updated_at')
+        count = func.sum(cls.count).label('count')
+        q = db.session.query(text, created_at, updated_at, count)
+        if role_id is not None:
+            q = q.filter(cls.role_id == role_id)
+        else:
+            q = q.filter(cls.session_id == session_id)
+        q = q.filter(cls.activity == cls.ACT_SEARCH)
+        q = q.filter(text != None)  # noqa
+        q = q.group_by(text)
+        q = q.order_by(updated_at.desc())
         return q
 
     @classmethod

@@ -25,6 +25,11 @@ class RecordSchema(BaseSchema):
         return data
 
 
+class QueryLogSchema(BaseSchema):
+    text = String(dump_only=True)
+    count = Integer(dump_only=True)
+
+
 class MatchSchema(BaseSchema):
     EXPAND = [
         ('entity_id', Entity, 'entity', ShallowCombinedSchema, False),
