@@ -9,7 +9,7 @@ from aleph import signals, settings
 from aleph.core import db, url_for
 from aleph.authz import Authz
 from aleph.oauth import oauth
-from aleph.model import Role
+from aleph.model import Role, Audit
 from aleph.logic.roles import update_role
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_best_next_url, parse_request, jsonify
@@ -64,7 +64,7 @@ def password_login():
     db.session.commit()
     authz = Authz.from_role(role)
     request.authz = authz
-    record_audit("USER.LOGIN", {})
+    record_audit(Audit.ACT_LOGIN)
     return jsonify({
         'status': 'ok',
         'token': authz.to_token(role=role)
@@ -99,15 +99,14 @@ def oauth_callback():
         update_role(role)
         db.session.commit()
         log.info("Logged in: %r", role)
-        authz = Authz.from_role(role)
-        token = authz.to_token(role=role)
+        request.authz = Authz.from_role(role)
+        record_audit(Audit.ACT_LOGIN)
+        token = request.authz.to_token(role=role)
         token = token.decode('utf-8')
         state = request.args.get('state')
         next_url = get_best_next_url(state, request.referrer)
         next_url, _ = urldefrag(next_url)
         next_url = '%s#token=%s' % (next_url, token)
-        request.authz = authz
-        record_audit("USER.LOGIN", {})
         return redirect(next_url)
 
     log.error("No OAuth handler for %r was installed.", oauth.provider.name)

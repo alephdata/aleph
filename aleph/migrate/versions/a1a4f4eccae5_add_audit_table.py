@@ -16,7 +16,7 @@ down_revision = '33228b8da578'
 def upgrade():
     op.create_table(
         'audit',
-        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('id', sa.String(40), nullable=False),
         sa.Column('activity', sa.Unicode(), nullable=True),
         sa.Column('data', postgresql.JSONB(astext_type=sa.Text()),
                   nullable=True),

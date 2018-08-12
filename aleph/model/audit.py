@@ -1,12 +1,10 @@
-from datetime import datetime
 import logging
-
-from normality import stringify
+from banal import hash_data
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
 from aleph.model.role import Role
-
 
 log = logging.getLogger(__name__)
 
@@ -15,7 +13,12 @@ class Audit(db.Model):
     """Records a single activity"""
     __tablename__ = 'audit'
 
-    id = db.Column(db.Integer, primary_key=True)
+    ACT_LOGIN = 'LOGIN'
+    ACT_SEARCH = 'SEARCH'
+    ACT_ENTITY = 'VIEW_ENITTY'
+    ACT_COLLECTION = 'VIEW_COLLECTION'
+
+    id = db.Column(db.String(40), primary_key=True)
     activity = db.Column(db.Unicode, nullable=True)
     data = db.Column(JSONB, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
@@ -47,39 +50,21 @@ class Audit(db.Model):
         return q
 
     @classmethod
-    def create_or_update(cls, data):
-        role_id = data.pop('role_id')
-        session_id = data.pop('session_id')
-        activity = stringify(data.pop('activity'))
-        q = cls.all().filter_by(
-            role_id=role_id, session_id=session_id, activity=activity
-        )
-        for key, val in data.items():
-            q = q.filter(cls.data.contains({key: val}))
-        activity = q.first()
-        if activity is None:
-            data['role_id'] = role_id
-            data['session_id'] = session_id
-            data['activity'] = activity
-            return cls.create(data)
+    def save(cls, activity, session_id, role_id, data, keys):
+        keys = [data.get(k) for k in keys]
+        key = hash_data([activity, session_id, role_id, keys])
+        obj = cls.all().filter_by(id=key).first()
+        if obj is None:
+            obj = cls()
+            obj.id = key
+            obj.activity = activity
+            obj.role_id = role_id
+            obj.session_id = session_id
+            obj.data = data
         else:
-            activity.count += 1
-            activity.updated_at = datetime.utcnow()
-            db.session.add(activity)
-            db.session.flush()
-            return activity
-
-    @classmethod
-    def create(cls, data):
-        activity = cls()
-        activity.role_id = data.pop('role_id')
-        activity.session_id = data.pop('session_id')
-        activity.activity = stringify(data.pop('activity'))
-        activity.data = data
-        activity.updated_at = datetime.utcnow()
-        db.session.add(activity)
-        db.session.flush()
-        return activity
+            obj.count += 1
+        obj.updated_at = datetime.utcnow()
+        db.session.add(obj)
 
     def __repr__(self):
         return '<Audit(%r, %r, %r)>' % (self.id, self.activity, self.role_id)

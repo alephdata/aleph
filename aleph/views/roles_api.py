@@ -5,11 +5,12 @@ from flask.ext.babel import gettext
 
 from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.model import Role, Permission
+from aleph.model import Role, Permission, Audit
 from aleph.logic.roles import check_visible, check_editable, update_role
 from aleph.logic.permissions import update_permission
 from aleph.logic.collections import update_collection, update_collection_access
 from aleph.notify import notify_role
+from aleph.logic.audit import record_audit
 from aleph.serializers.roles import RoleSchema, PermissionSchema
 from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.util import require, get_db_collection, jsonify, parse_request
@@ -112,6 +113,7 @@ def update(id):
 @blueprint.route('/api/2/collections/<int:id>/permissions')
 def permissions_index(id):
     collection = get_db_collection(id, request.authz.WRITE)
+    record_audit(Audit.ACT_COLLECTION, id=id)
     roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection.id)
