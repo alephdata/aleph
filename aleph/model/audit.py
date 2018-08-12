@@ -16,8 +16,8 @@ class Audit(db.Model):
     __tablename__ = 'audit'
 
     id = db.Column(db.Integer, primary_key=True)
-    activity_type = db.Column(db.Unicode, nullable=True)
-    activity_metadata = db.Column(JSONB, nullable=True)
+    activity = db.Column(db.Unicode, nullable=True)
+    data = db.Column(JSONB, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
     updated_at = db.Column(db.DateTime, nullable=True)
 
@@ -32,8 +32,8 @@ class Audit(db.Model):
         return db.session.query(cls)
 
     @classmethod
-    def by_type(cls, activity_type, role_id=None):
-        q = cls.all().filter_by(activity_type=activity_type)
+    def by_activity(cls, activity, role_id=None):
+        q = cls.all().filter_by(activity=activity)
         if role_id is not None:
             q = q.filter(cls.role_id == role_id)
         return q
@@ -50,17 +50,17 @@ class Audit(db.Model):
     def create_or_update(cls, data):
         role_id = data.pop('role_id')
         session_id = data.pop('session_id')
-        activity_type = stringify(data.pop('activity_type'))
+        activity = stringify(data.pop('activity'))
         q = cls.all().filter_by(
-            role_id=role_id, session_id=session_id, activity_type=activity_type
+            role_id=role_id, session_id=session_id, activity=activity
         )
         for key, val in data.items():
-            q = q.filter(cls.activity_metadata.contains({key: val}))
+            q = q.filter(cls.data.contains({key: val}))
         activity = q.first()
         if activity is None:
             data['role_id'] = role_id
             data['session_id'] = session_id
-            data['activity_type'] = activity_type
+            data['activity'] = activity
             return cls.create(data)
         else:
             activity.count += 1
@@ -74,14 +74,12 @@ class Audit(db.Model):
         activity = cls()
         activity.role_id = data.pop('role_id')
         activity.session_id = data.pop('session_id')
-        activity.activity_type = stringify(data.pop('activity_type'))
-        activity.activity_metadata = data
+        activity.activity = stringify(data.pop('activity'))
+        activity.data = data
         activity.updated_at = datetime.utcnow()
         db.session.add(activity)
         db.session.flush()
         return activity
 
     def __repr__(self):
-        return '<Audit(%r, %r, %r)>' % (
-            self.id, self.activity_type, self.role_id
-        )
+        return '<Audit(%r, %r, %r)>' % (self.id, self.activity, self.role_id)

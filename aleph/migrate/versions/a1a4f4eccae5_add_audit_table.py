@@ -17,8 +17,8 @@ def upgrade():
     op.create_table(
         'audit',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('activity_type', sa.Unicode(), nullable=True),
-        sa.Column('activity_metadata', postgresql.JSONB(astext_type=sa.Text()),
+        sa.Column('activity', sa.Unicode(), nullable=True),
+        sa.Column('data', postgresql.JSONB(astext_type=sa.Text()),
                   nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('updated_at', sa.DateTime(), nullable=True),
