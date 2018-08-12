@@ -1,15 +1,15 @@
 import logging
 from banal import hash_data
-from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
 from aleph.model.role import Role
+from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
 
 
-class Audit(db.Model):
+class Audit(db.Model, DatedModel):
     """Records a single activity"""
     __tablename__ = 'audit'
 
@@ -21,18 +21,11 @@ class Audit(db.Model):
     id = db.Column(db.String(40), primary_key=True)
     activity = db.Column(db.Unicode, nullable=True)
     data = db.Column(JSONB, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=True)
-    updated_at = db.Column(db.DateTime, nullable=True)
-
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
-    role = db.relationship(Role)
-
     session_id = db.Column(db.Unicode, nullable=True)
     count = db.Column(db.Integer, default=1, nullable=True)
 
-    @classmethod
-    def all(cls):
-        return db.session.query(cls)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
+    role = db.relationship(Role)
 
     @classmethod
     def by_activity(cls, activity, role_id=None):
@@ -50,20 +43,22 @@ class Audit(db.Model):
         return q
 
     @classmethod
-    def save(cls, activity, session_id, role_id, data, keys):
+    def save(cls, activity, session_id, role_id, timestamp, data, keys):
         keys = [data.get(k) for k in keys]
-        key = hash_data([activity, session_id, role_id, keys])
+        key = hash_data([activity, session_id, keys])
         obj = cls.all().filter_by(id=key).first()
         if obj is None:
             obj = cls()
             obj.id = key
             obj.activity = activity
-            obj.role_id = role_id
             obj.session_id = session_id
+            obj.created_at = timestamp
             obj.data = data
-        else:
-            obj.count += 1
-        obj.updated_at = datetime.utcnow()
+            obj.count = 0
+
+        obj.count += 1
+        obj.role_id = role_id
+        obj.updated_at = timestamp
         db.session.add(obj)
 
     def __repr__(self):

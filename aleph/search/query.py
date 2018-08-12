@@ -206,8 +206,9 @@ class Query(object):
     @classmethod
     def handle(cls, request, limit=None, schema=None, **kwargs):
         parser = SearchQueryParser(request.args, request.authz, limit=limit)
+
         # Log the search
-        keys = ['prefix', 'text']
+        keys = ['prefix', 'text', 'filters']
         record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
 
         result = cls(parser, **kwargs).search()
