@@ -4,13 +4,14 @@ from followthemoney import model
 from followthemoney.exc import InvalidMapping
 
 from aleph.core import db
-from aleph.model import Role
+from aleph.model import Role, Audit
 from aleph.search import CollectionsQuery
 from aleph.logic.collections import create_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query
 from aleph.logic.triples import export_collection
+from aleph.logic.audit import record_audit
 from aleph.serializers import CollectionSchema
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, jsonify, parse_request, serialize_data
@@ -37,12 +38,14 @@ def create():
 @blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
 def view(id):
     collection = get_index_collection(id)
+    record_audit(Audit.ACT_COLLECTION, id=id)
     return serialize_data(collection, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>/rdf', methods=['GET'])
 def rdf(id):
     collection = get_db_collection(id, request.authz.READ)
+    record_audit(Audit.ACT_COLLECTION, id=id)
     return Response(export_collection(collection), mimetype='text/plain')
 
 

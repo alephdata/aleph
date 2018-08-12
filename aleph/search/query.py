@@ -3,10 +3,12 @@ from pprint import pprint, pformat  # noqa
 from elasticsearch.helpers import scan
 
 from aleph.core import es
+from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
 from aleph.index.util import cleanup_query, REQUEST_TIMEOUT
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
+from aleph.logic.audit import record_audit
 
 log = logging.getLogger(__name__)
 
@@ -204,6 +206,11 @@ class Query(object):
     @classmethod
     def handle(cls, request, limit=None, schema=None, **kwargs):
         parser = SearchQueryParser(request.args, request.authz, limit=limit)
+
+        # Log the search
+        keys = ['prefix', 'text', 'filters']
+        record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
+
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result, schema=schema)
 

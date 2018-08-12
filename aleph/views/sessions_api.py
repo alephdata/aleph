@@ -1,5 +1,6 @@
 import logging
 from urllib.parse import urldefrag
+
 from flask import Blueprint, redirect, request, abort
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
@@ -8,8 +9,9 @@ from aleph import signals, settings
 from aleph.core import db, url_for
 from aleph.authz import Authz
 from aleph.oauth import oauth
-from aleph.model import Role
+from aleph.model import Role, Audit
 from aleph.logic.roles import update_role
+from aleph.logic.audit import record_audit
 from aleph.views.util import get_best_next_url, parse_request, jsonify
 from aleph.serializers.roles import LoginSchema
 
@@ -43,7 +45,8 @@ def decode_authz():
     if authz is None and 'api_key' in request.args:
         authz = _get_credential_authz(request.args.get('api_key'))
 
-    request.authz = authz or Authz.from_role(role=None)
+    authz = authz or Authz.from_role(role=None)
+    request.authz = authz
 
 
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
@@ -60,6 +63,8 @@ def password_login():
     update_role(role)
     db.session.commit()
     authz = Authz.from_role(role)
+    request.authz = authz
+    record_audit(Audit.ACT_LOGIN)
     return jsonify({
         'status': 'ok',
         'token': authz.to_token(role=role)
@@ -94,8 +99,9 @@ def oauth_callback():
         update_role(role)
         db.session.commit()
         log.info("Logged in: %r", role)
-        authz = Authz.from_role(role)
-        token = authz.to_token(role=role)
+        request.authz = Authz.from_role(role)
+        record_audit(Audit.ACT_LOGIN)
+        token = request.authz.to_token(role=role)
         token = token.decode('utf-8')
         state = request.args.get('state')
         next_url = get_best_next_url(state, request.referrer)
