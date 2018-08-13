@@ -19,6 +19,7 @@ from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
 import storagelayer
+import redis
 
 from aleph import settings
 from aleph.util import SessionTask, get_extensions
@@ -172,3 +173,14 @@ def url_external(path, query):
         return urljoin(api_url, path)
     except RuntimeError:
         return None
+
+
+redis_pool = redis.ConnectionPool(
+    host=settings.REDIS_HOST,
+    port=settings.REDIS_PORT,
+    decode_responses=True
+)
+
+
+def connect_redis():
+    return redis.Redis(connection_pool=redis_pool, decode_responses=True)

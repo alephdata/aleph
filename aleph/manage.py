@@ -24,6 +24,7 @@ from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
+from aleph.logic.graph import load_into_redis
 from aleph.util import load_config_file
 
 
@@ -181,6 +182,15 @@ def publish(foreign_id):
     update_permission(role, collection, True, False, editor_id=editor.id)
     update_collection_access(collection.id)
     update_collection(collection)
+
+
+@manager.command
+def graphload(foreign_id):
+    """Load entities from a collection into Redis"""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    load_into_redis(collection.id)
 
 
 @manager.command

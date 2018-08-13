@@ -9,6 +9,7 @@ from aleph.core import db, url_for
 from aleph.model import Entity
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
+from aleph.logic.graph import export_node
 from aleph.search import EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.logic.entities import entity_references, entity_tags
@@ -156,3 +157,12 @@ def delete(id):
     db.session.commit()
     update_collection(entity.collection)
     return ('', 204)
+
+
+@blueprint.route('/api/2/entities/<id>/graph', methods=['GET'])
+def graph(id):
+    update = request.args.get('update') == 'true'
+    entity = export_node(id, update=update)
+    resp = jsonify(entity)
+    # resp.headers["Access-Control-Allow-Origin"] = "*"
+    return resp
