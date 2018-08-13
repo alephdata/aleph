@@ -13,7 +13,6 @@ class LanguageMenu extends Component {
     return async (event) => {
       event.preventDefault();
       await setLocale({ locale });
-      window.location.reload();
     }
   }
 
