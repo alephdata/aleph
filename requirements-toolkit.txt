@@ -4,7 +4,7 @@ banal==0.3.7
 urlnormalizer==1.2.0
 followthemoney==0.9.8
 fingerprints==0.5.4
-storagelayer==0.4.2
+storagelayer==0.5.0
 exactitude==2.3.3
 ingestors==0.10.9
 normality==0.6.1
