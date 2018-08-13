@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def record_audit(activity, keys=None, **data):
-    keys = keys or data.keys()
+    keys = keys or list(data.keys())
     timestamp = datetime.utcnow().timestamp()
     record_audit_task.delay(activity,
                             request.session_id,
