@@ -1,10 +1,10 @@
 import os
 import json
 # from pprint import pprint
+from alephclient.tasks.util import load_config_file
 
 from aleph.core import db
 from aleph.model import Entity
-from aleph.util import load_config_file
 from aleph.logic.entities import bulk_load
 from aleph.index import index_entity
 from aleph.tests.util import TestCase
