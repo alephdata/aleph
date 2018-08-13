@@ -3,6 +3,7 @@ import os
 import logging
 from normality import slugify
 from ingestors.util import decode_path
+from alephclient.tasks.util import load_config_file
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
@@ -24,8 +25,6 @@ from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
-from aleph.util import load_config_file
-
 
 log = logging.getLogger('aleph')
 flask_script_commands.text_type = str
