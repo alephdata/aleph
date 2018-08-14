@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
-import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import { Toolbar } from 'src/components/Toolbar';
@@ -38,7 +37,7 @@ class DocumentManager extends Component {
     const { hasPending, query, result } = this.props;
     if (!result.isLoading && result.total !== undefined && hasPending) {
       const updateQuery = query.limit(result.results.length);
-      this.props.queryEntities({ query });
+      this.props.queryEntities({ updateQuery });
     }
   }
 
@@ -57,7 +56,7 @@ class DocumentManager extends Component {
   }
 
   render() {
-    const { collection, document, query, className, hasPending } = this.props;
+    const { collection, document, query, hasPending } = this.props;
     const { selection } = this.state;
     const editable = collection.casefile && collection.writeable;
     const updateSelection = editable ? this.updateSelection : undefined;
