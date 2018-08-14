@@ -65,8 +65,7 @@ class DocumentManager extends Component {
                       updateSelection={updateSelection} />
         <DocumentDeleteDialog documents={selection}
                               isOpen={this.state.deleteIsOpen}
-                              toggleDialog={this.toggleDeleteSelection}
-                              path={'/collections/' + collection.id + '/documents'} />
+                              toggleDialog={this.toggleDeleteSelection} />
       </div>
     );
   }

@@ -65,7 +65,7 @@ class DocumentUploadDialog extends Component {
         };
         await this.props.ingestDocument(collection.id, metadata, file, this.onUploadProgress);
       }
-      showSuccessToast(intl.formatMessage(messages.success));
+      // showSuccessToast(intl.formatMessage(messages.success));
       this.props.toggleDialog();
       // history.push({
       //   pathname: history.location.pathname,
