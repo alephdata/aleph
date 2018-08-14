@@ -27,15 +27,14 @@ class FolderViewer extends Component {
               </p>
             </div>
           )}
-          <EntitySearch
-            query={query}
-            hideCollection={true}
-            documentMode={true}
-            writable={document.writeable}
-            disableOrEnableDelete={disableOrEnableDelete}
-            setDocuments={setDocuments}
-            setRefreshCallout={setRefreshCallout}
-            path={'/documents/' + document.id}/>
+          <EntitySearch query={query}
+                        hideCollection={true}
+                        documentMode={true}
+                        writeable={document.writeable}
+                        disableOrEnableDelete={disableOrEnableDelete}
+                        setDocuments={setDocuments}
+                        setRefreshCallout={setRefreshCallout}
+                        path={'/documents/' + document.id} />
         </div>
       </React.Fragment>
     );
