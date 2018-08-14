@@ -75,7 +75,7 @@ def generate_sitemap(collection_id):
                 ]
             }
         },
-        '_source': {'includes': ['schemata', 'roles', 'updated_at']}
+        '_source': {'includes': ['schemata', 'updated_at']}
     }
     scanner = scan(es, index=entities_index(), query=query)
     # strictly, the limit for sitemap.xml is 50,000

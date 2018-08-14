@@ -83,8 +83,8 @@ def create():
     )
     role.set_password(data.get('password'))
     db.session.add(role)
-    update_role(role)
     db.session.commit()
+    update_role(role)
     # Let the serializer return more info about this user
     request.authz.id = role.id
     return serialize_data(role, RoleSchema, status=201)
@@ -105,8 +105,8 @@ def update(id):
     data = parse_request(RoleSchema)
     role.update(data)
     db.session.add(role)
-    update_role(role)
     db.session.commit()
+    update_role(role)
     return view(role.id)
 
 

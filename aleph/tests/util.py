@@ -91,7 +91,7 @@ class TestCase(FlaskTestCase):
 
     def grant_publish(self, collection):
         visitor = Role.by_foreign_id(Role.SYSTEM_GUEST)
-        self.grant(self.col, visitor, True, False)
+        self.grant(collection, visitor, True, False)
 
     def flush_index(self):
         refresh_index()
