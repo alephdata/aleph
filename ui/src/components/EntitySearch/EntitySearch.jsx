@@ -146,7 +146,8 @@ class EntitySearch extends Component {
                      result={result}
                      writeable={writeable}
                      updateSelection={this.updateSelection}
-                     selectedRows={selectedRows}/>
+                     selectedRows={selectedRows} />
+
         {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}

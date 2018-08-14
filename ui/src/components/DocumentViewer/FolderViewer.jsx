@@ -54,14 +54,15 @@ const mapStateToProps = (state, ownProps) => {
     context['filter:ancestors'] = document.id;
   } else {
     context['filter:parent.id'] = document.id;
-    context['sort'] = 'name:asc';
   }
 
   let query = Query.fromLocation('search', location, context, 'document').limit(50);
   if (queryText) {
     query = query.setString('q', queryText);
   }
-
+  if (!query.hasSort()) {
+    query = query.sortBy('name', 'asc');
+  }
   return { query }
 };
 
