@@ -42,19 +42,6 @@ class EntitySearch extends Component {
     this.fetchIfNeeded();
   }
 
-  // checkPendingState() {
-  //   const { result } = this.props;
-
-  //   let test = result.results.filter(function(data){
-  //     return data.status === "pending"
-  //   });
-
-  //   if(test.length !== 0 && this.state.refreshCallout !== true) {
-  //     this.setState({refreshCallout: true});
-  //     this.props.setRefreshCallout();
-  //   }
-  // }
-
   fetchIfNeeded() {
     const { query, result, queryEntities } = this.props;
     if (result.shouldLoad) {
@@ -79,37 +66,6 @@ class EntitySearch extends Component {
       search: newQuery.toLocation(),
     });
   }
-
-  // updateSelection(entity) {
-  //   let selectedRows = [];
-  //   if(entity === null) { //if user clicked select all
-  //     if(this.props.result.results.length === this.state.selectedRows.length) {
-  //       this.setState({selectedRows: selectedRows});
-  //     } else {
-  //       if(this.props.result.results !== undefined) {
-  //         this.props.result.results.map(entity => selectedRows.push(entity))
-  //       }
-
-  //       this.setState({selectedRows: selectedRows });
-  //     }
-  //   } else { //if user clicked on row
-  //     selectedRows = this.state.selectedRows;
-  //     let indexOfSelectedRow = -1;
-  //     for(let i = 0; i < selectedRows.length; i++){
-  //       if(selectedRows[i].id === entity.id) indexOfSelectedRow = i;
-  //     }
-  //     if(indexOfSelectedRow === -1) {
-  //       selectedRows.push(entity);
-  //       this.setState({selectedRows: selectedRows});
-  //     } else {
-  //       selectedRows.splice(indexOfSelectedRow, 1);
-  //       this.setState({selectedRows: selectedRows});
-  //     }
-  //   }
-
-  //   this.props.disableOrEnableDelete(selectedRows.length === 0);
-  //   this.props.setDocuments(selectedRows);
-  // }
 
   render() {
     const { query, result, intl, className } = this.props;

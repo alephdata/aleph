@@ -1,13 +1,14 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { Callout } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
+import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import { Toolbar } from 'src/components/Toolbar';
-import { RefreshCallout } from 'src/components/common';
 import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
@@ -25,6 +26,22 @@ class DocumentManager extends Component {
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
   }
 
+  componentDidMount() {
+    this.interval = setInterval(() => this.refreshPending(), 2000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  refreshPending() {
+    const { hasPending, query, result } = this.props;
+    if (!result.isLoading && result.total !== undefined && hasPending) {
+      const updateQuery = query.limit(result.results.length);
+      this.props.queryEntities({ query });
+    }
+  }
+
   updateSelection(document) {
     const { selection } = this.state;
     this.setState({
@@ -33,11 +50,14 @@ class DocumentManager extends Component {
   }
 
   toggleDeleteSelection() {
+    if (this.state.deleteIsOpen) {
+      this.setState({selection: []});  
+    }
     this.setState({deleteIsOpen: !this.state.deleteIsOpen});
   }
 
   render() {
-    const { collection, document, query, className } = this.props;
+    const { collection, document, query, className, hasPending } = this.props;
     const { selection } = this.state;
     const editable = collection.casefile && collection.writeable;
     const updateSelection = editable ? this.updateSelection : undefined;
@@ -58,6 +78,12 @@ class DocumentManager extends Component {
             </div>
           </Toolbar>
         )}
+        { hasPending && (
+          <Callout className="pt-icon-info-sign pt-intent-warning">
+            <FormattedMessage id="refresh.callout_message"
+                              defaultMessage="Documents are being processed. Please wait..." />
+          </Callout>
+        )}
         <EntitySearch query={query}
                       hideCollection={true}
                       documentMode={true}
@@ -77,9 +103,12 @@ const mapStateToProps = (state, ownProps) => {
   if (!query.hasSort()) {
     query = query.sortBy('name', 'asc');
   }
-  return { query, result: selectEntitiesResult(state, query) };
+  const result = selectEntitiesResult(state, query);
+  const status = _.map(result.results || [], 'status');
+  const hasPending = status.indexOf('pending') !== -1;
+  return { query, result, hasPending };
 };
 
-DocumentManager = connect(mapStateToProps)(DocumentManager);
+DocumentManager = connect(mapStateToProps, {queryEntities})(DocumentManager);
 DocumentManager = withRouter(DocumentManager);
 export default DocumentManager;

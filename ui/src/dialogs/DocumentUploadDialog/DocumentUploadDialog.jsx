@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 
 import { ingestDocument } from "src/actions";
-import { showSuccessToast, showErrorToast } from "src/app/toast";
+import { showErrorToast } from "src/app/toast";
 import wordList from 'src/util/wordList';
 
 import "./DocumentUploadDialog.css";
