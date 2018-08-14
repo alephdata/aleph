@@ -127,6 +127,7 @@ def delete_collection(collection_id):
     """Delete all documents from a particular collection."""
     q = {'ids': {'values': str(collection_id)}}
     query_delete(collections_index(), q)
+    refresh_index(index=collections_index())
 
 
 def delete_entities(collection_id):

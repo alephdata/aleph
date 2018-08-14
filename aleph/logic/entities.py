@@ -4,9 +4,8 @@ from followthemoney.util import merge_data
 
 from aleph.core import es, db, celery
 from aleph.model import Collection, Entity
-from aleph.index import index_entity
+from aleph.index import entities as index
 from aleph.index.core import entities_index
-from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
 from aleph.index.util import authz_query, field_filter_query
 from aleph.util import dict_list
@@ -16,21 +15,18 @@ BULK_PAGE = 500
 
 
 def update_entity(entity):
-    return index_entity(entity)
+    return index.index_entity(entity)
+
+
+def update_entities():
+    q = db.session.query(Entity)
+    for entity in q.all():
+        update_entity(entity)
 
 
 def delete_entity(entity, deleted_at=None):
     entity.delete(deleted_at=deleted_at)
-
-
-@celery.task(priority=1)
-def process_entities(collection_id=None):
-    # re-process entities
-    q = db.session.query(Entity)
-    if collection_id is not None:
-        q = q.filter(Entity.collection_id == collection_id)
-    for entity in q:
-        index_entity(entity)
+    index.delete_entity(entity.id)
 
 
 def bulk_load(config):
@@ -81,11 +77,11 @@ def bulk_load_query(collection_id, query):
                      entities_count)
 
         if len(entities) >= BULK_PAGE:
-            index_bulk(collection, entities, chunk_size=BULK_PAGE)
+            index.index_bulk(collection, entities, chunk_size=BULK_PAGE)
             entities = {}
 
     if len(entities):
-        index_bulk(collection, entities, chunk_size=BULK_PAGE)
+        index.index_bulk(collection, entities, chunk_size=BULK_PAGE)
 
     # Update collection stats
     index_collection(collection)

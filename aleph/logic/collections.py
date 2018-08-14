@@ -6,7 +6,6 @@ from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.logic.notifications import publish
 from aleph.index import collections as index
-from aleph.logic.entities import process_entities
 from aleph.logic.xref import xref_collection
 
 log = logging.getLogger(__name__)
@@ -21,23 +20,23 @@ def create_collection(data, role=None):
                 actor_id=role.id,
                 params={'collection': collection})
     db.session.commit()
-    index.index_collection(collection)
+    index_collection_async.delay(collection.id)
     return collection
 
 
 def update_collection(collection):
     """Create or update a collection."""
-    log.info("Updating: %r", collection)
-    if collection.deleted_at is not None:
-        index.delete_collection(collection.id)
-        return
-
-    # re-process entities
-    process_entities.delay(collection_id=collection.id)
-
-    if collection.casefile:
+    index_collection_async.delay(collection.id)
+    if collection.casefile and collection.deleted_at is None:
         xref_collection.apply_async([collection.id], priority=2)
-    return index.index_collection(collection)
+
+
+@celery.task(priority=7)
+def index_collection_async(collection_id):
+    collection = Collection.by_id(collection_id, deleted=True)
+    if collection is not None:
+        log.info("Index [%s]: %s", collection.id, collection.label)
+        index.index_collection(collection)
 
 
 def update_collections():
@@ -45,15 +44,6 @@ def update_collections():
     cq = cq.order_by(Collection.id.desc())
     for collection in cq.all():
         update_collection(collection)
-
-
-def index_collections():
-    cq = db.session.query(Collection)
-    cq = cq.order_by(Collection.id.desc())
-    for collection in cq.all():
-        log.info("Index [%s]: %s", collection.foreign_id, collection.label)
-        index.delete_collection(collection.id)
-        index.index_collection(collection)
 
 
 @celery.task(priority=8)

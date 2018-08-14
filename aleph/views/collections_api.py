@@ -55,8 +55,8 @@ def update(id):
     data = parse_request(CollectionSchema)
     collection.update(data)
     db.session.commit()
-    data = update_collection(collection)
-    return serialize_data(data, CollectionSchema)
+    update_collection(collection)
+    return serialize_data(collection, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa

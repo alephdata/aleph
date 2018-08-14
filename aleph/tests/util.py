@@ -13,6 +13,7 @@ from aleph.index.core import all_indexes
 from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
 from aleph.logic.collections import update_collection, update_collections
+from aleph.logic.entities import update_entities
 from aleph.core import db, es, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
@@ -96,6 +97,7 @@ class TestCase(FlaskTestCase):
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
         update_collections()
+        update_entities()
         for doc in Document.all():
             process_document(doc)
         self.flush_index()
