@@ -40,13 +40,13 @@ class TestCase(FlaskTestCase):
         settings.TESTING = True
         settings.DEBUG = True
         settings.CACHE = True
+        settings.EAGER = True
         settings.SECRET_KEY = 'batman'
         settings.APP_UI_URL = UI_URL
         settings.ARCHIVE_TYPE = 'file'
         settings.ARCHIVE_PATH = self.temp_dir
         settings.DATABASE_URI = DB_URI
         settings.ALEPH_PASSWORD_LOGIN = True
-        settings.QUEUE = False
         settings.MAIL_SERVER = None
         settings.COUNTRIES_SERVICE = None
         settings.ENTITIES_SERVICE = None

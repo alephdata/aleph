@@ -183,7 +183,7 @@ COLLECTIONS_INDEX = env('COLLECTIONS_INDEX', COLLECTIONS_INDEX)
 
 
 # Disable delayed processing via queue
-EAGER = env_bool('EAGER', False)
+EAGER = env_bool('EAGER', DEBUG)
 QUEUE_PREFIX = env('QUEUE_PREFIX', APP_NAME)
 QUEUE_NAME = '%s_worker' % QUEUE_PREFIX
 QUEUE_ROUTING_KEY = 'worker.process'
