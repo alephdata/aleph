@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-29 08:01+0300\n"
+"POT-Creation-Date: 2018-08-14 10:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.5.3\n"
+"Generated-By: Babel 2.6.0\n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -56,58 +56,70 @@ msgid "Company registries"
 msgstr "Registros empresariales"
 
 #: aleph/model/collection.py:30
-msgid "Watchlists"
-msgstr "Listas de seguimiento"
-
-#: aleph/model/collection.py:31
-msgid "Personal collections"
-msgstr "Colecciones personales"
-
-#: aleph/model/collection.py:32
 msgid "Sanctions lists"
 msgstr "Listas de sanciones"
 
-#: aleph/model/collection.py:33
-msgid "Scrapes"
-msgstr "Extraccciones"
-
-#: aleph/model/collection.py:34
+#: aleph/model/collection.py:31
 msgid "Procurement"
 msgstr "Obtención"
 
-#: aleph/model/collection.py:35
+#: aleph/model/collection.py:32
 msgid "Grey literature"
 msgstr "Literatura Gris"
 
-#: aleph/model/collection.py:36
+#: aleph/model/collection.py:33
+msgid "Document libraries"
+msgstr ""
+
+#: aleph/model/collection.py:34
 msgid "Licenses and concessions"
 msgstr "Licencias y concesiones"
 
-#: aleph/model/collection.py:37
+#: aleph/model/collection.py:35
 msgid "Regulatory filings"
 msgstr "Documentación regulatoria"
 
+#: aleph/model/collection.py:36
+msgid "Persons of interest"
+msgstr ""
+
+#: aleph/model/collection.py:37
+msgid "Customs declarations"
+msgstr ""
+
 #: aleph/model/collection.py:38
+msgid "Population census"
+msgstr ""
+
+#: aleph/model/collection.py:39
+msgid "Air and maritime registers"
+msgstr ""
+
+#: aleph/model/collection.py:40
 msgid "Other material"
 msgstr "Otro material"
 
 #: aleph/model/event.py:40
+msgid "{{actor}} created {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:46
 msgid "{{actor}} changed the settings of {{collection}}."
 msgstr "{{actor}} ha cambiado la configuración de {{collection}}."
 
-#: aleph/model/event.py:46
+#: aleph/model/event.py:52
 msgid "{{actor}} uploaded {{document}} to {{collection}}."
 msgstr "{{actor}} subió {{document}} a {{collection}}."
 
-#: aleph/model/event.py:55
+#: aleph/model/event.py:61
 msgid "{{entity}} matches your alert for {{alert}}."
 msgstr "{{entity}} coincide con tu alerta de {{alert}}."
 
-#: aleph/model/event.py:65
+#: aleph/model/event.py:71
 msgid "{{actor}} gave {{role}} access to {{collection}}."
 msgstr "{{actor}} le otorgó {{role}} acceso a {{collection}}."
 
-#: aleph/model/event.py:80
+#: aleph/model/event.py:86
 msgid "{{actor}} removed access to {{collection}} from {{role}}."
 msgstr "{{actor}} eliminó el acceso a {{collection}} de {{role}}."
 
@@ -151,38 +163,38 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:74
+#: aleph/views/base_api.py:91
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/ api / 1 / está obsoleto, use / api / 2 /."
 
-#: aleph/views/base_api.py:82
+#: aleph/views/base_api.py:99
 msgid "You are not authorized to do this."
 msgstr "Usted no está autorizado para hacer esto."
 
-#: aleph/views/base_api.py:91
+#: aleph/views/base_api.py:108
 msgid "This path does not exist."
 msgstr "Esta ruta no existe."
 
-#: aleph/views/base_api.py:107
+#: aleph/views/base_api.py:124
 msgid "Access token has expired."
 msgstr "El token de acceso ha expirado."
 
-#: aleph/views/roles_api.py:30
+#: aleph/views/roles_api.py:31
 msgid "prefix filter is too short"
 msgstr ""
 
-#: aleph/views/roles_api.py:47
+#: aleph/views/roles_api.py:48
 msgid "Registration"
 msgstr ""
 
-#: aleph/views/roles_api.py:52
+#: aleph/views/roles_api.py:53
 msgid "To proceed, please check your email."
 msgstr ""
 
-#: aleph/views/roles_api.py:67
+#: aleph/views/roles_api.py:68
 msgid "Invalid code"
 msgstr ""
 
-#: aleph/views/roles_api.py:74
+#: aleph/views/roles_api.py:75
 msgid "Email is already registered"
 msgstr ""

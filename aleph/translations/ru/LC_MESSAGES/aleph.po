@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-29 08:01+0300\n"
+"POT-Creation-Date: 2018-08-14 10:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.5.3\n"
+"Generated-By: Babel 2.6.0\n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
@@ -56,59 +56,71 @@ msgid "Company registries"
 msgstr "Реестры компаний"
 
 #: aleph/model/collection.py:30
-msgid "Watchlists"
-msgstr "Контрольные и розыскные списки"
-
-#: aleph/model/collection.py:31
-msgid "Personal collections"
-msgstr "Индивидуальные коллекции"
-
-#: aleph/model/collection.py:32
 msgid "Sanctions lists"
 msgstr "Санкционные списки"
 
-#: aleph/model/collection.py:33
-msgid "Scrapes"
-msgstr "Веб-скрэйпинг"
-
-#: aleph/model/collection.py:34
+#: aleph/model/collection.py:31
 msgid "Procurement"
 msgstr "Закупки"
 
-#: aleph/model/collection.py:35
+#: aleph/model/collection.py:32
 msgid "Grey literature"
 msgstr "Секретные документы"
 
-#: aleph/model/collection.py:36
+#: aleph/model/collection.py:33
+msgid "Document libraries"
+msgstr ""
+
+#: aleph/model/collection.py:34
 msgid "Licenses and concessions"
 msgstr "Лицензии и концессионные соглашения"
 
-#: aleph/model/collection.py:37
+#: aleph/model/collection.py:35
 msgid "Regulatory filings"
 msgstr "Распорядительные документы"
 
+#: aleph/model/collection.py:36
+msgid "Persons of interest"
+msgstr ""
+
+#: aleph/model/collection.py:37
+msgid "Customs declarations"
+msgstr ""
+
 #: aleph/model/collection.py:38
+msgid "Population census"
+msgstr ""
+
+#: aleph/model/collection.py:39
+msgid "Air and maritime registers"
+msgstr ""
+
+#: aleph/model/collection.py:40
 msgid "Other material"
 msgstr "Прочие материалы"
 
 #: aleph/model/event.py:40
+msgid "{{actor}} created {{collection}}."
+msgstr ""
+
+#: aleph/model/event.py:46
 msgid "{{actor}} changed the settings of {{collection}}."
 msgstr "{{actor}} изменил(а) настройки для {{collection}}."
 
-#: aleph/model/event.py:46
+#: aleph/model/event.py:52
 msgid "{{actor}} uploaded {{document}} to {{collection}}."
 msgstr "{{actor}} добавил(а) {{document}} в {{collection}}."
 
-#: aleph/model/event.py:55
+#: aleph/model/event.py:61
 msgid "{{entity}} matches your alert for {{alert}}."
 msgstr "{{entity}} соответствует параметрам вашего оповещения для {{alert}}."
 
-#: aleph/model/event.py:65
+#: aleph/model/event.py:71
 msgid "{{actor}} gave {{role}} access to {{collection}}."
 msgstr ""
 "{{actor}} предоставил(а) вам права {{role}} для доступа к {{collection}}."
 
-#: aleph/model/event.py:80
+#: aleph/model/event.py:86
 msgid "{{actor}} removed access to {{collection}} from {{role}}."
 msgstr "{{actor}} удалил права {{role}} для доступа к {{collection}}."
 
@@ -140,6 +152,8 @@ msgid ""
 "      updates you may be interested in:\n"
 "    "
 msgstr ""
+"\n"
+"У вас %(total_count)s оповещений. Последние:"
 
 #: aleph/templates/email/notifications.html:16
 msgid ""
@@ -147,6 +161,8 @@ msgid ""
 "      Browse and manage all of your notifications here:\n"
 "    "
 msgstr ""
+"\n"
+"Управление оповещениями"
 
 #: aleph/templates/email/registration_code.html:5
 #, python-format
@@ -158,38 +174,38 @@ msgstr ""
 "\n"
 "    Для завершения регистрации, пожалуйста, перейдите на <a href=\"%(url)s\"> страницу регистрации </a>."
 
-#: aleph/views/base_api.py:74
+#: aleph/views/base_api.py:91
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
 
-#: aleph/views/base_api.py:82
+#: aleph/views/base_api.py:99
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:91
+#: aleph/views/base_api.py:108
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:107
+#: aleph/views/base_api.py:124
 msgid "Access token has expired."
 msgstr "Ключ доступа устарел."
 
-#: aleph/views/roles_api.py:30
+#: aleph/views/roles_api.py:31
 msgid "prefix filter is too short"
-msgstr ""
+msgstr "Префикс слишком короткий"
 
-#: aleph/views/roles_api.py:47
+#: aleph/views/roles_api.py:48
 msgid "Registration"
-msgstr ""
+msgstr "Регистрация"
 
-#: aleph/views/roles_api.py:52
+#: aleph/views/roles_api.py:53
 msgid "To proceed, please check your email."
-msgstr ""
+msgstr "Пожалуйста, проверьте почту"
 
-#: aleph/views/roles_api.py:67
+#: aleph/views/roles_api.py:68
 msgid "Invalid code"
-msgstr ""
+msgstr "Неверный код"
 
-#: aleph/views/roles_api.py:74
+#: aleph/views/roles_api.py:75
 msgid "Email is already registered"
-msgstr ""
+msgstr "Этот электронный адрес уже зарегистрирован"
