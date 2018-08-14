@@ -79,6 +79,11 @@ def publish(event, actor_id=None, params=None, channels=None):
     db.session.flush()
 
 
+def flush_notifications(obj, clazz=None):
+    channel_ = channel(obj, clazz=clazz)
+    Notification.delete_by_channel(channel_)
+
+
 def render_notification(notification):
     """ Generate a text version of the notification, suitable for use
     in an email or text message. """

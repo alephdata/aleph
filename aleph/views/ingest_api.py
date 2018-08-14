@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+import logging
 from banal import is_mapping
 from storagelayer import checksum
 from flask import Blueprint, request
@@ -8,16 +9,15 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 
-from aleph.model import Document, Events
+from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
+from aleph.logic.documents import ingest_document
 from aleph.index.core import entity_index
 from aleph.index.util import refresh_index
-from aleph.logic.notifications import publish
-from aleph.logic.documents import ingest_document
-from aleph.views.util import jsonify, validate_data
-from aleph.views.util import get_db_collection
+from aleph.views.util import get_db_collection, jsonify, validate_data
 
+log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
 
 
@@ -90,8 +90,11 @@ def ingest_upload(id):
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
             document.update(meta)
-            document.uploader_id = request.authz.id
-            ingest_document(document, path)
+            document.schema = Document.SCHEMA
+            log.info("Ingest [%s]: %s (%s)", document.id, path, content_hash)
+            ingest_document(document, path,
+                            role_id=request.authz.id,
+                            content_hash=content_hash)
             documents.append(document)
 
         if not len(request.files):
@@ -102,29 +105,21 @@ def ingest_upload(id):
             document = Document.by_keys(collection=collection,
                                         parent_id=parent_id,
                                         foreign_id=foreign_id)
-            document.schema = Document.SCHEMA_FOLDER
             document.update(meta)
-            document.uploader_id = request.authz.id
-            ingest_document(document, None)
+            document.schema = Document.SCHEMA_FOLDER
+            ingest_document(document, None,
+                            role_id=request.authz.id)
             documents.append(document)
     finally:
         shutil.rmtree(upload_dir)
-
-    if collection.casefile:
-        for document in documents:
-            params = {
-                'document': document,
-                'collection': collection
-            }
-            publish(Events.INGEST_DOCUMENT,
-                    actor_id=document.uploader_id,
-                    params=params)
 
     # Update child counts in index.
     if parent_id is not None:
         index_document_id.apply_async([parent_id], priority=1)
 
-    refresh_index(index=entity_index())
+    # Make sure collection counts are always accurate.
+    if collection.casefile:
+        refresh_index(index=entity_index())
     return jsonify({
         'status': 'ok',
         'documents': [CombinedSchema().dump(d).data for d in documents]

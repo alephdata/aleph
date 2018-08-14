@@ -8,6 +8,7 @@ from aleph.index import entities as index
 from aleph.index.core import entities_index
 from aleph.index.collections import index_collection
 from aleph.index.util import authz_query, field_filter_query
+from aleph.logic.notifications import flush_notifications
 from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ def update_entities():
 
 
 def delete_entity(entity, deleted_at=None):
+    flush_notifications(entity)
     entity.delete(deleted_at=deleted_at)
     index.delete_entity(entity.id)
 

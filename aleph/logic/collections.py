@@ -10,7 +10,7 @@ from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
 from aleph.index.core import entities_index
 from aleph.index.util import authz_query
-from aleph.logic.notifications import publish
+from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.xref import xref_collection
 from aleph.logic.util import document_url, entity_url
 
@@ -26,7 +26,7 @@ def create_collection(data, role=None):
                 actor_id=role.id,
                 params={'collection': collection})
     db.session.commit()
-    index_collection_async.delay(collection.id)
+    index.index_collection(collection)
     return collection
 
 
@@ -90,6 +90,7 @@ def generate_sitemap(collection_id):
 
 
 def delete_collection(collection):
+    flush_notifications(collection)
     collection.delete()
     db.session.commit()
     index.delete_collection(collection.id)
