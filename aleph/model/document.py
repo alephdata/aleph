@@ -234,6 +234,7 @@ class Document(db.Model, DatedModel, Metadata):
 
         if content_hash is not None:
             document.content_hash = content_hash
+
         db.session.add(document)
         return document
 

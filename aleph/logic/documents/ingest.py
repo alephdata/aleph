@@ -84,8 +84,10 @@ def ingest(document_id, file_path=None, refresh=False):
                              result=result,
                              work_path=work_path)
 
+        document.status = Document.STATUS_SUCCESS
         log.debug('Ingested [%s:%s]: %s',
                   document.id, document.schema, document.name)
+
         if document.collection.casefile and not refresh:
             params = {
                 'collection': document.collection,
@@ -94,7 +96,7 @@ def ingest(document_id, file_path=None, refresh=False):
             publish(Events.INGEST_DOCUMENT,
                     actor_id=document.uploader_id,
                     params=params)
-        document.status = Document.STATUS_SUCCESS
+
         db.session.commit()
         process_document(document)
     except Exception:

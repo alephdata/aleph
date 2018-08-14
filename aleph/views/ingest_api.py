@@ -91,7 +91,6 @@ def ingest_upload(id):
                                         content_hash=content_hash)
             document.update(meta)
             document.schema = Document.SCHEMA
-            log.info("Ingest [%s]: %s (%s)", document.id, path, content_hash)
             ingest_document(document, path,
                             role_id=request.authz.id,
                             content_hash=content_hash)
