@@ -42,7 +42,6 @@ class EntityTable extends Component {
     this.state = {
       result: props.result
     };
-    this.onSelectRow = this.onSelectRow.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -65,13 +64,10 @@ class EntityTable extends Component {
     }
   }
 
-  onSelectRow(entity) {
-    this.props.updateSelection(entity);
-  }
-
   render() {
-    const { query, intl, location, history, writeable, selectedRows } = this.props;
+    const { query, intl, location } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
+    const { updateSelection, selection } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
 
@@ -100,7 +96,7 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
-            {writeable && (<th className="select"/>)}
+            {updateSelection && (<th className="select"/>)}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
               <TH field="collection_id" />
@@ -119,13 +115,11 @@ class EntityTable extends Component {
           {result.results !== undefined && result.results.map(entity =>
             <EntityTableRow key={entity.id}
                             entity={entity}
+                            location={location}
                             hideCollection={hideCollection}
                             documentMode={documentMode}
-                            location={location}
-                            history={history}
-                            writeable={writeable}
-                            onSelectRow={this.onSelectRow}
-                            selectedRows={selectedRows} />
+                            updateSelection={updateSelection}
+                            selection={selection} />
           )}
         </tbody>
       </table>
