@@ -71,7 +71,7 @@ def generate_sitemap(collection_id):
                 'filter': [
                     {'term': {'collection_id': collection_id}},
                     {'term': {'schemata': Entity.THING}},
-                    # authz_query(Authz.from_role(None))
+                    authz_query(Authz.from_role(None))
                 ]
             }
         },
