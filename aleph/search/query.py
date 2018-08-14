@@ -186,7 +186,7 @@ class Query(object):
         """Execute the query as assmbled."""
         result = es.search(index=self.get_index(),
                            body=self.get_body(),
-                           request_cache=True,
+                           request_cache=False,
                            request_timeout=REQUEST_TIMEOUT)
         log.info("Took: %sms", result.get('took'))
         # log.info("%s", pformat(result))
