@@ -15,12 +15,13 @@ BULK_PAGE = 500
 
 
 def update_entity(entity):
+    log.info("Update [%s]: %s", entity.id, entity.name)
     return index.index_entity(entity)
 
 
 def update_entities():
     q = db.session.query(Entity)
-    for entity in q.all():
+    for entity in q:
         update_entity(entity)
 
 

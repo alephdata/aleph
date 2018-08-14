@@ -1,5 +1,5 @@
 from aleph.core import db
-from aleph.model import Entity, Role
+from aleph.model import Entity
 from aleph.index import index_entity
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
@@ -11,7 +11,6 @@ class XrefApiTestCase(TestCase):
         super(XrefApiTestCase, self).setUp()
         self.creator = self.create_user(foreign_id='creator')
         self.outsider = self.create_user(foreign_id='outsider')
-        self.guest = self.create_user(foreign_id=Role.SYSTEM_GUEST)
 
         # First public collection and entities
         self.residents = self.create_collection(
@@ -19,7 +18,7 @@ class XrefApiTestCase(TestCase):
             foreign_id='test_residents',
             creator=self.creator
         )
-        self.grant(self.residents, self.guest, True, False)
+        self.grant_publish(self.residents)
 
         self.ent = Entity.create({
             'schema': 'Person',
@@ -39,7 +38,7 @@ class XrefApiTestCase(TestCase):
             foreign_id='test_dabo',
             creator=self.creator
         )
-        self.grant(self.dabo, self.guest, True, False)
+        self.grant_publish(self.dabo)
 
         self.ent3 = Entity.create({
             'schema': 'Person',

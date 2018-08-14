@@ -1,12 +1,18 @@
 import logging
+from itertools import islice
 from datetime import datetime
+from elasticsearch.helpers import scan
 
-from aleph.core import db, celery
+from aleph.core import db, es, celery
+from aleph.authz import Authz
 from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
-from aleph.logic.notifications import publish
 from aleph.index import collections as index
+from aleph.index.core import entities_index
+from aleph.index.util import authz_query
+from aleph.logic.notifications import publish
 from aleph.logic.xref import xref_collection
+from aleph.logic.util import document_url, entity_url
 
 log = logging.getLogger(__name__)
 
@@ -49,11 +55,38 @@ def update_collections():
 @celery.task(priority=8)
 def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
-    collection = Collection.by_id(collection_id)
+    collection = Collection.by_id(collection_id, deleted=True)
     if collection is None:
         return
     log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
     index.update_collection_roles(collection)
+
+
+def generate_sitemap(collection_id):
+    """Generate entries for a collection-based sitemap.xml file."""
+    # cf. https://www.sitemaps.org/protocol.html
+    query = {
+        'query': {
+            'bool': {
+                'filter': [
+                    {'term': {'collection_id': collection_id}},
+                    {'term': {'schemata': Entity.THING}},
+                    # authz_query(Authz.from_role(None))
+                ]
+            }
+        },
+        '_source': {'includes': ['schemata', 'roles', 'updated_at']}
+    }
+    scanner = scan(es, index=entities_index(), query=query)
+    # strictly, the limit for sitemap.xml is 50,000
+    for res in islice(scanner, 49500):
+        source = res.get('_source', {})
+        updated_at = source.get('updated_at', '').split('T', 1)[0]
+        if Document.SCHEMA in source.get('schemata', []):
+            url = document_url(res.get('_id'))
+        else:
+            url = entity_url(res.get('_id'))
+        yield (url, updated_at)
 
 
 def delete_collection(collection):
