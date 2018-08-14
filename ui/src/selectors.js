@@ -26,12 +26,13 @@ function selectObject(objects, id) {
   }
   return objects[id];
 }
-export function selectLocale(store) {
+
+export function selectLocale(state) {
   // determine the active locale to be used by the user interface. this is
   // either saved in localStorage or extracted from metadata. The initial
   // request to metadata will be sent with unmodified Accept-Language headers
   // allowing the backend to perform language negotiation.
-  const { config, metadata } = store;
+  const { config, metadata } = state;
   if (config && config.locale) {
     return config.locale;
   }
@@ -39,8 +40,14 @@ export function selectLocale(store) {
     return metadata.app.locale;
   }
 }
+
 export function selectMetadata(state) {
-  return selectObject(state, 'metadata');
+  const metadata = selectObject(state, 'metadata');
+  const locale = selectLocale(state);
+  if (metadata.app && metadata.app.locale !== locale) {
+    return selectObject(state, undefined);
+  }
+  return metadata;
 }
 
 export function selectStatistics(state) {
