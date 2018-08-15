@@ -131,7 +131,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return q
 
     @classmethod
-    def all_authz(cls, ids, deleted=False, authz=None):
+    def all_authz(cls, authz, deleted=False):
         q = super(Collection, cls).all(deleted=deleted)
         return cls._apply_authz(q, authz)
 
