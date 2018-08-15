@@ -10,6 +10,8 @@ log = logging.getLogger(__name__)
 
 
 class OCR(object):
+    MIN_WIDTH = 10
+    MIN_HEIGHT = 10
 
     def __init__(self):
         self.thread = local()
@@ -19,31 +21,34 @@ class OCR(object):
             # api = PyTessBaseAPI(oem=OEM.TESSERACT_LSTM_COMBINED,
             #                     path=PATH,
             #                     lang=languages)
-            api = PyTessBaseAPI(lang=languages)
-            self.thread.api = api
+            self.thread.api = PyTessBaseAPI(lang=languages)
+        elif languages != self.thread.api.GetInitLanguagesAsString():
+            self.thread.api.Init(lang=languages)
         return self.thread.api
 
     def extract_text(self, data, languages=None, mode=PSM.AUTO_OSD):
         """Extract text from a binary string of data."""
         languages = get_languages(languages)
-        log.info("Languages: %s", languages)
         api = self.get_api(languages)
-
-        if languages != api.GetInitLanguagesAsString():
-            api.Init(lang=languages)
-
-        if mode != api.GetPageSegMode():
-            api.SetPageSegMode(mode)
-
         try:
             image = Image.open(BytesIO(data))
             # TODO: play with contrast and sharpening the images.
+            if image.width <= self.MIN_WIDTH:
+                return
+            if image.height <= self.MIN_HEIGHT:
+                return
+
+            if mode != api.GetPageSegMode():
+                api.SetPageSegMode(mode)
+
             api.SetImage(image)
             text = api.GetUTF8Text()
-            log.info("Extracted %s characters", len(text))
+            confidence = api.MeanTextConf()
+            log.info("%s chars (w: %s, h: %s, langs: %s, confidence: %s)",
+                     len(text), image.width, image.height, languages,
+                     confidence)
             return text
         except Exception as ex:
             log.exception("Failed to OCR: %s", languages)
-            return None
         finally:
             api.Clear()
