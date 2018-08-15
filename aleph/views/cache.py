@@ -36,7 +36,7 @@ def setup_caching():
     request._http_etag = None
 
 
-def enable_cache(vary_user=True, vary=None, server_side=False):
+def enable_cache(vary_user=True, vary=None):
     """Enable caching in the context of a view.
 
     If desired, instructions on the cache parameters can be included, such as

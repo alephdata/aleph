@@ -37,7 +37,7 @@ class DocumentManager extends Component {
     const { hasPending, query, result } = this.props;
     if (!result.isLoading && result.total !== undefined && hasPending) {
       const updateQuery = query.limit(result.results.length);
-      this.props.queryEntities({ updateQuery });
+      this.props.queryEntities({ query: updateQuery });
     }
   }
 
@@ -56,9 +56,8 @@ class DocumentManager extends Component {
   }
 
   render() {
-    const { collection, document, query, hasPending } = this.props;
+    const { collection, document, query, hasPending, editable } = this.props;
     const { selection } = this.state;
-    const editable = collection.casefile && collection.writeable;
     const updateSelection = editable ? this.updateSelection : undefined;
     
     return (
@@ -98,14 +97,21 @@ class DocumentManager extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  let { query } = ownProps;
+  let { collection, query } = ownProps;
   if (!query.hasSort()) {
     query = query.sortBy('name', 'asc');
   }
+
+  const editable = collection.casefile && collection.writeable;
+  if (editable) {
+    query = query.set('cache', 'false');
+  }
+
   const result = selectEntitiesResult(state, query);
   const status = _.map(result.results || [], 'status');
   const hasPending = status.indexOf('pending') !== -1;
-  return { query, result, hasPending };
+
+  return { query, result, hasPending, editable };
 };
 
 DocumentManager = connect(mapStateToProps, {queryEntities})(DocumentManager);

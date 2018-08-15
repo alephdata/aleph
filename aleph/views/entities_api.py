@@ -11,6 +11,7 @@ from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
 from aleph.search import EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
+from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
@@ -22,10 +23,15 @@ from aleph.serializers.entities import EntityCreateSchema, EntityUpdateSchema
 blueprint = Blueprint('entities_api', __name__)
 
 
+@blueprint.route('/api/2/search', methods=['GET'])
 @blueprint.route('/api/2/entities', methods=['GET'])
 def index():
-    enable_cache()
-    result = EntitiesQuery.handle(request, schema=CombinedSchema)
+    parser = SearchQueryParser(request.args, request.authz)
+    if parser.cache:
+        enable_cache()
+    result = EntitiesQuery.handle(request,
+                                  parser=parser,
+                                  schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -84,7 +90,7 @@ def references(id):
     results = []
     for prop, total in entity_references(entity, request.authz):
         key = ('filter:properties.%s' % prop.name, id)
-        link = url_for('search_api.search', _query=(key,))
+        link = url_for('entities_api.index', _query=(key,))
         results.append({
             'count': total,
             'property': prop,
@@ -107,7 +113,7 @@ def tags(id):
     for (field, value, total) in entity_tags(entity, request.authz):
         qvalue = quote(value.encode('utf-8'))
         key = ('filter:%s' % field, qvalue)
-        link = url_for('search_api.search', _query=(key,))
+        link = url_for('entities_api.index', _query=(key,))
         results.append({
             'id': query_string([key]),
             'value': value,
