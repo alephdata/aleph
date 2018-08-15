@@ -33,6 +33,8 @@ rdflib==4.2.2
 idna==2.7.0
 requests[security]==2.19.1
 grpcio==1.11.0
+google-cloud-vision
+google-cloud-storage
 
 # Error reporting
 raven[flask]
