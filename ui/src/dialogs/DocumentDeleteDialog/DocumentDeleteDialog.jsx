@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Alert, Intent } from "@blueprintjs/core";
 import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
-import { withRouter } from "react-router";
 import { connect } from "react-redux";
 
 import { deleteDocument } from "src/actions";
@@ -29,13 +28,11 @@ class DocumentDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const {history, documents, path} = this.props;
+    const { documents } = this.props;
     for (let i = 0; i < documents.length; i++) {
       await this.props.deleteDocument({document: documents[i]});
     }
-    history.push({
-      pathname: path
-    });
+    // this.props.toggleDialog();
   }
 
   render() {
@@ -56,10 +53,5 @@ class DocumentDeleteDialog extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {};
-};
-
 DocumentDeleteDialog = injectIntl(DocumentDeleteDialog);
-DocumentDeleteDialog = withRouter(DocumentDeleteDialog);
-export default connect(mapStateToProps, { deleteDocument })(DocumentDeleteDialog);
+export default connect(null, { deleteDocument })(DocumentDeleteDialog);

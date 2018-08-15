@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
@@ -5,27 +6,16 @@ import { Checkbox } from '@blueprintjs/core';
 import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
 class EntityTableRow extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onSelect = this.onSelect.bind(this);
-  }
-
-  onSelect() {
-    this.props.onSelectRow(this.props.entity);
-  }
 
   render() {
-    const { entity, className, location: loc } = this.props;
-    const { hideCollection, documentMode , writeable, selectedRows} = this.props;
-    const parsedHash = queryString.parse(loc.hash);
-    let isSelected = false;
-    if(writeable) {
-      for(let i = 0; i < selectedRows.length; i++) {
-        if(selectedRows[i].id === entity.id) isSelected = true;
-      }
-    }
+    const { entity, className, location } = this.props;
+    const { hideCollection, documentMode} = this.props;
+
+    const { updateSelection, selection } = this.props;
+    const selectedIds = _.map(selection || [], 'id');
+    const isSelected = selectedIds.indexOf(entity.id) > -1;
     
+    const parsedHash = queryString.parse(location.hash);
     let rowClassName = (className) ? `${className} nowrap` : 'nowrap';
 
     // Select the current row if the ID of the entity matches the ID of the
@@ -38,8 +28,8 @@ class EntityTableRow extends Component {
     
     return (
       <tr className={rowClassName}>
-        {writeable && <td className="select">
-          <Checkbox checked={isSelected} onChange={this.onSelect} />
+        {updateSelection && <td className="select">
+          <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
         </td>}
         <td className="entity">
           <Entity.Link preview={!documentMode}

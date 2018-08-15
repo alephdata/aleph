@@ -76,16 +76,8 @@ class EntityDocumentsQuery(DocumentsQuery):
 
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text']
+    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
     SORT_DEFAULT = ['_score']
-
-    def get_query(self):
-        query = super(EntitiesQuery, self).get_query()
-        # TODO do we need to specify "Thing" here???
-        query['bool']['must_not'].append({
-            'term': {'schemata': Document.SCHEMA}
-        })
-        return query
 
     def get_index(self):
         return entities_index()
@@ -125,15 +117,6 @@ class SuggestEntitiesQuery(EntitiesQuery):
             }
         })
         return query
-
-
-class CombinedQuery(AuthzQuery):
-    TEXT_FIELDS = ['name^3', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
-    SORT_DEFAULT = ['_score']
-
-    def get_index(self):
-        return entities_index()
 
 
 class CollectionsQuery(AuthzQuery):

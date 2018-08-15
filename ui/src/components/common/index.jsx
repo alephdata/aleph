@@ -20,7 +20,6 @@ import SortableTH from './SortableTH';
 import TabCount from './TabCount';
 import Tag from './Tag';
 import URL from './URL';
-import RefreshCallout from './RefreshCallout';
 
 export {
   Breadcrumbs,
@@ -45,5 +44,4 @@ export {
   TabCount,
   Tag,
   URL,
-  RefreshCallout
 }
