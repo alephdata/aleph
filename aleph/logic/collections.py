@@ -11,7 +11,6 @@ from aleph.index import collections as index
 from aleph.index.core import entities_index
 from aleph.index.util import authz_query
 from aleph.logic.notifications import publish, flush_notifications
-from aleph.logic.xref import xref_collection
 from aleph.logic.util import document_url, entity_url
 
 log = logging.getLogger(__name__)
@@ -33,8 +32,9 @@ def create_collection(data, role=None):
 def update_collection(collection):
     """Create or update a collection."""
     index_collection_async.delay(collection.id)
-    if collection.casefile and collection.deleted_at is None:
-        xref_collection.apply_async([collection.id], priority=2)
+    # from aleph.logic.xref import xref_collection
+    # if collection.casefile and collection.deleted_at is None:
+    #     xref_collection.apply_async([collection.id], priority=2)
 
 
 @celery.task(priority=7)
