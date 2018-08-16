@@ -1,35 +1,38 @@
 import logging
-from io import BytesIO
 from PIL import Image
-from threading import local
-from tesserocr import PyTessBaseAPI, PSM, OEM  # noqa
-
-from textrecognizer.languages import get_languages
+from io import BytesIO
+from languagecodes import list_to_alpha3 as alpha3
+from tesserocr import PyTessBaseAPI, get_languages, PSM, OEM  # noqa
 
 log = logging.getLogger(__name__)
 
 
 class OCR(object):
+    MAX_MODELS = 5
     MIN_WIDTH = 10
     MIN_HEIGHT = 10
 
     def __init__(self):
-        self.thread = local()
+        self.api = PyTessBaseAPI(lang='eng')
+        # Tesseract language types:
+        _, self.supported = get_languages()
 
-    def get_api(self, languages):
-        if not hasattr(self.thread, 'api'):
-            # api = PyTessBaseAPI(oem=OEM.TESSERACT_LSTM_COMBINED,
-            #                     path=PATH,
-            #                     lang=languages)
-            self.thread.api = PyTessBaseAPI(lang=languages)
-        elif languages != self.thread.api.GetInitLanguagesAsString():
-            self.thread.api.Init(lang=languages)
-        return self.thread.api
+    def language_list(self, languages):
+        models = [c for c in alpha3(languages) if c in self.supported]
+        if len(models) > self.MAX_MODELS:
+            log.warning("Too many models, limiting to %s",
+                        models, self.MAX_MODELS)
+            models = models[:self.MAX_MODELS]
+        models.append('eng')
+        return '+'.join(sorted(set(models)))
 
     def extract_text(self, data, languages=None, mode=PSM.AUTO_OSD):
         """Extract text from a binary string of data."""
-        languages = get_languages(languages)
-        api = self.get_api(languages)
+        languages = self.language_list(languages)
+        if languages != self.api.GetInitLanguagesAsString():
+            self.End()
+            self.api = PyTessBaseAPI(lang=languages)
+
         try:
             image = Image.open(BytesIO(data))
             # TODO: play with contrast and sharpening the images.
@@ -38,12 +41,12 @@ class OCR(object):
             if image.height <= self.MIN_HEIGHT:
                 return
 
-            if mode != api.GetPageSegMode():
-                api.SetPageSegMode(mode)
+            if mode != self.api.GetPageSegMode():
+                self.api.SetPageSegMode(mode)
 
-            api.SetImage(image)
-            text = api.GetUTF8Text()
-            confidence = api.MeanTextConf()
+            self.api.SetImage(image)
+            text = self.api.GetUTF8Text()
+            confidence = self.api.MeanTextConf()
             log.info("%s chars (w: %s, h: %s, langs: %s, confidence: %s)",
                      len(text), image.width, image.height, languages,
                      confidence)
@@ -51,4 +54,4 @@ class OCR(object):
         except Exception as ex:
             log.exception("Failed to OCR: %s", languages)
         finally:
-            api.Clear()
+            self.api.Clear()

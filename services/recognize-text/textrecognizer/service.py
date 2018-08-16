@@ -1,6 +1,7 @@
 import grpc
 import time
 import logging
+from threading import RLock
 from concurrent import futures
 from alephclient.services.ocr_pb2_grpc import (
     add_RecognizeTextServicer_to_server, RecognizeTextServicer
@@ -22,19 +23,21 @@ class OCRServicer(RecognizeTextServicer):
     }
 
     def __init__(self):
-        self.recognizer = OCR()
+        self.lock = RLock()
+        self.ocr = OCR()
 
     def Recognize(self, image, context):
         mode = self.MODES.get(image.mode, PSM.AUTO_OSD)
-        text = self.recognizer.extract_text(image.data,
-                                            languages=image.languages,
-                                            mode=mode)
+        with self.lock:
+            text = self.ocr.extract_text(image.data,
+                                         languages=image.languages,
+                                         mode=mode)
         return Text(text=text)
 
 
 def serve(port):
     options = [('grpc.max_receive_message_length', 10 * 1024 * 1024)]
-    executor = futures.ThreadPoolExecutor(max_workers=20)
+    executor = futures.ThreadPoolExecutor(max_workers=5)
     server = grpc.server(executor, options=options)
     add_RecognizeTextServicer_to_server(OCRServicer(), server)
     server.add_insecure_port(port)
