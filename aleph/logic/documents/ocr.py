@@ -24,26 +24,25 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
         key = sha1(data).hexdigest()
         text = Cache.get_cache(key)
         if text is not None:
-            log.info('OCR: %s chars cached', len(text))
+            log.info('%s chars cached', len(text))
             return text
 
         data = self.ensure_size(data)
         if data is None:
             return
 
-        for attempt in range(10):
+        for attempt in range(1000):
             try:
                 service = RecognizeTextStub(self.channel)
                 languages = ensure_list(languages)
                 image = Image(data=data, languages=languages)
                 response = service.Recognize(image)
-                log.info('OCR: %s chars recognized', len(response.text))
+                log.info('%s chars recognized', len(response.text))
                 if response.text is not None:
                     Cache.set_cache(key, response.text)
                 return response.text
             except self.Error as exc:
-                log.exception("gRPC Error: %s", self.SERVICE)
-                self.reset_channel()
+                log.warning("gRPC Error: %s", exc)
                 backoff(failures=attempt)
 
 

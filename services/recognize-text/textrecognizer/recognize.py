@@ -13,9 +13,9 @@ class OCR(object):
     MIN_HEIGHT = 10
 
     def __init__(self):
-        self.api = PyTessBaseAPI(lang='eng')
         # Tesseract language types:
         _, self.supported = get_languages()
+        self.reset_engine('eng')
 
     def language_list(self, languages):
         models = [c for c in alpha3(languages) if c in self.supported]
@@ -26,12 +26,16 @@ class OCR(object):
         models.append('eng')
         return '+'.join(sorted(set(models)))
 
+    def reset_engine(self, languages):
+        if hasattr(self, 'api'):
+            self.api.End()
+        self.api = PyTessBaseAPI(lang=languages, oem=OEM.LSTM_ONLY)
+
     def extract_text(self, data, languages=None, mode=PSM.AUTO_OSD):
         """Extract text from a binary string of data."""
         languages = self.language_list(languages)
         if languages != self.api.GetInitLanguagesAsString():
-            self.api.End()
-            self.api = PyTessBaseAPI(lang=languages)
+            self.reset_engine(languages)
 
         try:
             image = Image.open(BytesIO(data))

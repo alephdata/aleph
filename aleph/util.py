@@ -1,5 +1,6 @@
 # coding: utf-8
 import time
+import random
 import logging
 from celery import Task
 from banal import ensure_list
@@ -28,8 +29,11 @@ def dict_list(data, *keys):
 
 
 def backoff(failures=0):
-    sleep = 2 ** (failures + 1)
-    log.debug("Automatic back-off after failure, sleep %s sec.", sleep)
+    # sleep = 2 ** (failures + 1)
+    if failures == 0:
+        return
+    sleep = random.random() * failures
+    log.debug("Back-off: %.2f sec.", sleep)
     time.sleep(sleep)
 
 
