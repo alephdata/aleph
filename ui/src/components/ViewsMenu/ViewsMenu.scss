@@ -2,7 +2,7 @@
 
 .ViewsMenu {
   flex: 1;
-  background-color: rgba(92,112,128,0.5);
+  background-color: $views-menu-background-color;
   @media screen and (max-width: $aleph-screen-md-max-width) {
     flex: 2;
   }
@@ -10,7 +10,7 @@
   flex-direction: column;
 
   .pt-button {
-    background-color: rgba(92,112,128,0.5) !important;
+    background-color: $views-menu-background-color !important;
 
     .pt-icon-standard {
       color: white;

@@ -93,7 +93,7 @@ a {
 
 .source-header {
   color: $gray3;
-  font-size: 12px;
+  font-size: $aleph-grid-size * 1.2;
 }
 
 .opener.clickable,
