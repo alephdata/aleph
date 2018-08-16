@@ -7,6 +7,7 @@ import { selectEntity } from 'src/selectors';
 import { DocumentInfo } from 'src/components/Document';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import { SectionLoading, ErrorSection } from 'src/components/common';
+import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
 
 
 class PreviewDocument extends React.Component {
@@ -37,11 +38,17 @@ class PreviewDocument extends React.Component {
       return <SectionLoading/>;
     }
     if (parsedHash['mode'] === 'info') {
-      return <DocumentInfo document={document} showToolbar={true} />;
+      return <React.Fragment>
+        <DocumentViewsMenu document={document} isPreview={true}/>
+        <DocumentInfo document={document} showToolbar={true} />
+      </React.Fragment>;
     }
-    return <DocumentViewer document={document}
+    return <React.Fragment>
+      <DocumentViewsMenu document={document} isPreview={true}/>
+      <DocumentViewer document={document}
                            showToolbar={true}
-                           previewMode={true} />;
+                           previewMode={true} />
+      </React.Fragment>;
   }
 }
 

@@ -6,6 +6,7 @@ import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import { EntityInfo } from 'src/components/Entity';
 import { SectionLoading, ErrorSection } from 'src/components/common';
+import { EntityViewsMenu } from "src/components/ViewsMenu";
 
 class PreviewEntity extends React.Component {
 
@@ -32,7 +33,10 @@ class PreviewEntity extends React.Component {
     if (entity.id === undefined) {
       return <SectionLoading/>;
     }
-    return <EntityInfo entity={entity} showToolbar={true} />;
+    return <React.Fragment>
+      <EntityViewsMenu entity={entity} isPreview={true}/>
+      <EntityInfo entity={entity} showToolbar={true} />
+    </React.Fragment>;
   }
 }
 

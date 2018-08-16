@@ -12,6 +12,10 @@
   }
 }
 
+.InfoPane {
+  flex: 10;
+}
+
 .DualPane .ContentPane {
   display: flex;
   flex-direction: column;

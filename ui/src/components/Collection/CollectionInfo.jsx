@@ -12,14 +12,6 @@ import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/Collectio
 import { Collection, DualPane, TabCount, TextLoading } from 'src/components/common';
 import { CollectionInfoXref, CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
 
-
-const messages = defineMessages({
-  browse_tooltip: {
-    id: 'collection.info.browse_tooltip',
-    defaultMessage: 'Browse as a folder',
-  }
-});
-
 class CollectionInfo extends Component {
   constructor(props) {
     super(props);
@@ -62,7 +54,7 @@ class CollectionInfo extends Component {
   }
 
   render() {
-    const {collection, intl, showToolbar, xrefIndex} = this.props;
+    const {collection, showToolbar, xrefIndex} = this.props;
     const {activeTabId, settingsIsOpen, accessIsOpen} = this.state;
 
     // @TODO Discussion: 'Search Collection' link to update the current query?
@@ -75,14 +67,6 @@ class CollectionInfo extends Component {
                 <span className={`pt-icon-search`}/>
                 <FormattedMessage id="collection.info.search_button" defaultMessage="Search"/>
               </Link>
-              <Tooltip content={intl.formatMessage(messages.browse_tooltip)} position={Position.BOTTOM_RIGHT}>
-                <Link to={`/collections/${collection.id}/documents`} className="pt-button button-link">
-                  <span className={`pt-icon-folder-open`}/>
-                  {/*
-                    <FormattedMessage id="collection.info.browse_button" defaultMessage="Browse"/>
-                  */}
-                </Link>
-              </Tooltip>
             </div>
             {collection.writeable &&
               <div className="pt-button-group">
@@ -131,16 +115,9 @@ class CollectionInfo extends Component {
                  }
                  panel={<React.Fragment>
                    <CollectionOverview collection={collection} hasHeader={false}/>
+                   <CollectionInfoContent collection={collection} schemata={collection.schemata}/>
                  </React.Fragment>
                  }
-            />
-            <Tab id="content"
-                 title={
-                   <React.Fragment>
-                     <FormattedMessage id="collection.info.contents" defaultMessage="Contents"/>
-                   </React.Fragment>
-                 }
-                 panel={<CollectionInfoContent collection={collection} schemata={collection.schemata}/>}
             />
             <Tab id="xref" disabled={xrefIndex.total === 0}
                  title={

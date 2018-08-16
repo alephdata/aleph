@@ -12,6 +12,8 @@ import { TableViewer, TextViewer, HtmlViewer, PdfViewer, ImageViewer, FolderView
 import { RefreshCallout } from 'src/components/common';
 import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 
+import './DocumentViewer.css';
+
 const messages = defineMessages({
   no_viewer: {
     id: 'document.viewer.no_viewer',
@@ -104,7 +106,7 @@ class DocumentViewer extends React.Component {
       return null;
     }
     
-    return <React.Fragment>
+    return <div className='DocumentViewer'>
       {isRefreshCalloutOpen && <RefreshCallout/>}
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
@@ -137,7 +139,7 @@ class DocumentViewer extends React.Component {
       <DocumentDeleteDialog documents={selectedFiles}
                             isOpen={this.state.deleteIsOpen}
                             toggleDialog={this.toggleDeleteCase} />
-    </React.Fragment>
+    </div>
   }
 }
 

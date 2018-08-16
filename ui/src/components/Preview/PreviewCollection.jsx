@@ -6,6 +6,7 @@ import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 import { CollectionInfo } from 'src/components/Collection';
 import { SectionLoading, ErrorSection } from 'src/components/common';
+import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
 
 class PreviewCollection extends React.Component {
 
@@ -32,7 +33,10 @@ class PreviewCollection extends React.Component {
     if (collection.id === undefined) {
       return <SectionLoading/>;
     }
-    return <CollectionInfo collection={collection} showToolbar={true} />;
+    return <React.Fragment>
+      <CollectionViewsMenu collection={collection} showToolbar={true}/>
+      <CollectionInfo collection={collection} showToolbar={true} />
+    </React.Fragment>;
   }
 }
 
