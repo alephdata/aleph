@@ -64,7 +64,7 @@ class CollectionViewsMenu extends React.Component {
     return (
       <div className='ViewsMenu'>
         {showToolbar && (<a onClick={(e) => this.openAsFolder(e)}
-                           className={c('ModeButtons', 'pt-button')}
+                           className={c('ModeButtons', 'pt-button pt-large')}
                             title={intl.formatMessage(messages.open)} >
           <span className={`pt-icon-folder-open`}/>
         </a>)}

@@ -11,6 +11,9 @@
 
   .pt-button {
     background-color: rgba(92,112,128,0.5) !important;
-    color: white !important;
+
+    .pt-icon-standard {
+      color: white;
+    }
   }
 }

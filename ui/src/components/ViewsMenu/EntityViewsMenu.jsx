@@ -102,7 +102,7 @@ class EntityViewsMenu extends React.Component {
           </a>
         ))}
         <a onClick={(e) => this.onClickSimilar(e, 'similar')}
-           className={c('ModeButtons', 'pt-button')} title={intl.formatMessage(messages.similar)} >
+           className={c('ModeButtons', 'pt-button pt-large')} title={intl.formatMessage(messages.similar)} >
           <span className="pt-icon-standard pt-icon-tag"/>
         </a>
         {/*<a onClick={(e) => this.goToTags(e, 'info')}
