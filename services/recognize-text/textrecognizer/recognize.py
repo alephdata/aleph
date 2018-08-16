@@ -30,7 +30,7 @@ class OCR(object):
         """Extract text from a binary string of data."""
         languages = self.language_list(languages)
         if languages != self.api.GetInitLanguagesAsString():
-            self.End()
+            self.api.End()
             self.api = PyTessBaseAPI(lang=languages)
 
         try:
