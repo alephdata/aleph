@@ -36,5 +36,5 @@ class EntityExtractor(EntityAnalyzer, TextIterator, ServiceClientMixin):
                     continue
                 collector.emit(entity.label, type_, weight=entity.weight)
             log.info('Extracted %s entities.', len(collector))
-        except self.Error as exc:
-            log.warning("gRPC Error: %s", exc)
+        except self.Error as e:
+            log.warning("gRPC [%s]: %s", e.code(), e.details())

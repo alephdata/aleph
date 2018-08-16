@@ -21,7 +21,3 @@ class ServiceClientMixin(object):
 
     def has_channel(self):
         return self.SERVICE is not None
-
-    def reset_channel(self):
-        """Reset the service channel if there has been a severe error."""
-        self._channel = None

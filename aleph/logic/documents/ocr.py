@@ -41,8 +41,8 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
                 if response.text is not None:
                     Cache.set_cache(key, response.text)
                 return response.text
-            except self.Error as exc:
-                log.warning("gRPC Error: %s", exc)
+            except self.Error as e:
+                log.warning("gRPC [%s]: %s", e.code(), e.details())
                 backoff(failures=attempt)
 
 
