@@ -15,7 +15,6 @@ log = logging.getLogger('service')
 
 
 class OCRServicer(RecognizeTextServicer):
-    LOCK_TIMEOUT = 0.1
     MODES = {
         Image.PAGE: PSM.AUTO_OSD,
         Image.WORD: PSM.SINGLE_WORD,
@@ -27,7 +26,7 @@ class OCRServicer(RecognizeTextServicer):
         self.ocr = OCR()
 
     def Recognize(self, image, context):
-        acquired = self.lock.acquire(timeout=self.LOCK_TIMEOUT)
+        acquired = self.lock.acquire(blocking=False)
         if acquired is False:
             context.set_code(grpc.StatusCode.RESOURCE_EXHAUSTED)
             context.set_details('Engine is busy.')

@@ -44,6 +44,7 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
             except self.Error as e:
                 log.warning("gRPC [%s]: %s", e.code(), e.details())
                 backoff(failures=attempt)
+                self.reset_channel()
 
 
 class GoogleVisionService(OCRService, OCRUtils):
