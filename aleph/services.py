@@ -1,5 +1,7 @@
 import grpc
 
+from aleph import settings
+
 
 class ServiceClientMixin(object):
     """Helper mixing to manage the connectivity with a gRPC endpoint."""
@@ -12,7 +14,9 @@ class ServiceClientMixin(object):
         if not self.has_channel():
             return
         if not hasattr(self, '_channel') or self._channel is None:
-            self._channel = grpc.insecure_channel(self.SERVICE)
+            options = (('grpc.max_connection_age_ms', settings.GRPC_CONN_AGE),
+                       ('grpc.lb_policy_name', settings.GRPC_LB_POLICY))
+            self._channel = grpc.insecure_channel(self.SERVICE, options)
         return self._channel
 
     def has_channel(self):
