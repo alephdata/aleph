@@ -1,6 +1,7 @@
 import os
 import spacy
 import logging
+import re
 from polyglot.text import Text
 from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
 
@@ -23,6 +24,16 @@ SPACY_TYPES = {
 }
 SPACY_LANGUAGES = ['en', 'de', 'es', 'pt', 'fr', 'it', 'nl']
 SPACY_MODELS = {}
+
+
+REGEX_TYPES = {
+    r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}': ExtractedEntity.EMAIL,
+    r'(\+?[\d\-\(\)\/\s]{5,})': ExtractedEntity.PHONE,
+    r'\b(0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5]))\b'  # noqa
+        : ExtractedEntity.IPADDRESS,
+    r'\b([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})\b'  # noqa
+        : ExtractedEntity.IBAN,
+}
 
 
 def extract_polyglot(text, language):
@@ -55,3 +66,14 @@ def extract_spacy(text, language):
                 yield ent.text, category, ent.start, ent.end
     except Exception:
         log.exception("Cannot extract. Language: %s", language)
+
+
+def extract_regex(text):
+    for pattern in REGEX_TYPES:
+        RE = re.compile(pattern, re.IGNORECASE)
+        for match in RE.finditer(text):
+            match_text = match.group(0)
+            if match_text is not None:
+                category = REGEX_TYPES.get(pattern)
+                start, end = match.span()
+                yield match_text, category, start, end

@@ -1,7 +1,15 @@
-from entityextractor.extract import extract_polyglot, extract_spacy
+import logging
+from collections import Counter, defaultdict
+
+from entityextractor.extract import (
+    extract_polyglot, extract_spacy, extract_regex
+)
 from entityextractor.normalize import clean_label, label_key
 from entityextractor.normalize import select_label
 from entityextractor.util import overlaps
+
+
+log = logging.getLogger(__name__)
 
 
 class EntityGroup(object):
@@ -45,6 +53,8 @@ class EntityAggregator(object):
     def __init__(self):
         self.groups = []
         self.record = 0
+        self.regex_matches_weights = Counter()
+        self.regex_matches_categories = defaultdict(list)
 
     def extract(self, text, languages):
         self.record += 1
@@ -53,6 +63,9 @@ class EntityAggregator(object):
                 self.feed(l, c, (self.record, s, e))
             for (l, c, s, e) in extract_spacy(text, language):
                 self.feed(l, c, (self.record, s, e))
+        for (l, c, s, e) in extract_regex(text):
+            self.regex_matches_weights[l] += 1
+            self.regex_matches_categories[l].append(c)
 
     def feed(self, label, category, span):
         label = clean_label(label)
@@ -77,6 +90,11 @@ class EntityAggregator(object):
                 continue
 
             yield group.label, group.category, group.weight
+        for match in self.regex_matches_weights:
+            category = max(set(self.regex_matches_categories[match]),
+                           key=self.regex_matches_categories[match].count)
+            weight = self.regex_matches_weights[match]
+            yield match, category, weight
 
     def __len__(self):
         return len(self.groups)

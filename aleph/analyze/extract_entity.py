@@ -18,6 +18,10 @@ class EntityExtractor(EntityAnalyzer, TextIterator, ServiceClientMixin):
         ExtractedEntity.PERSON: DocumentTag.TYPE_PERSON,
         ExtractedEntity.ORGANIZATION: DocumentTag.TYPE_ORGANIZATION,
         ExtractedEntity.COMPANY: DocumentTag.TYPE_ORGANIZATION,
+        ExtractedEntity.PHONE: DocumentTag.TYPE_PHONE,
+        ExtractedEntity.EMAIL: DocumentTag.TYPE_EMAIL,
+        ExtractedEntity.IBAN: DocumentTag.TYPE_IBAN,
+        ExtractedEntity.IPADDRESS: DocumentTag.TYPE_IP,
     }
 
     def __init__(self):
@@ -32,6 +36,7 @@ class EntityExtractor(EntityAnalyzer, TextIterator, ServiceClientMixin):
             entities = service.Extract(texts)
             for entity in entities.entities:
                 type_ = self.TYPES.get(entity.type)
+                # log.info('%s: %s', entity.label, type_)
                 if type_ is None:
                     continue
                 collector.emit(entity.label, type_, weight=entity.weight)

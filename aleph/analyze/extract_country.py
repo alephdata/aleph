@@ -29,5 +29,3 @@ class CountryExtractor(Analyzer, TextIterator, ServiceClientMixin):
         except self.Error as exc:
             log.exception("gRPC Error: %s", self.SERVICE)
             self.reset_channel()
-
-        
