@@ -67,7 +67,7 @@ class EntityViewsMenu extends React.Component {
   }
 
   onClickSimilar(event, mode) {
-    const { entity, history, location, hashQuery } = this.props;
+    const { entity, history, hashQuery } = this.props;
     event.preventDefault();
     hashQuery.mode = mode;
     history.replace({
@@ -89,15 +89,16 @@ class EntityViewsMenu extends React.Component {
   }
 
   render() {
-    const { intl, tags, references } = this.props;
+    const { intl, tags, references, isFullPage } = this.props;
+    const className = isFullPage ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
-      <div className='ViewsMenu'>
+      <div className={className}>
         {references.results !== undefined && references.results.map((ref) => (
           <a key={ref.property.qname}
              onClick={(e) => this.onClickRelationships(e, ref)}
              title={ref.property.reverse + ' (' + ref.count + ')'}
-             className={c('ModeButtons', 'pt-button')}>
+             className={c('ModeButtons', 'pt-button pt-large')}>
                 <Schema.Icon schema={ref.schema}/>
           </a>
         ))}

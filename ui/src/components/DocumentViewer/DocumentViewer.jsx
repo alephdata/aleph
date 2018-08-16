@@ -101,6 +101,7 @@ class DocumentViewer extends React.Component {
   render() {
     const { document: doc, showToolbar, previewMode } = this.props;
     const { numberOfPages, selectedFiles, isRefreshCalloutOpen, isDeleteDisabled } = this.state;
+    const isFolder = (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook');
 
     if (doc.isLoading) {
       return null;
@@ -110,9 +111,7 @@ class DocumentViewer extends React.Component {
       {isRefreshCalloutOpen && <RefreshCallout/>}
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
-          <ParentButton isPreview={previewMode} document={doc} />
-          <ModeButtons isPreview={previewMode} document={doc} />
-          {doc.collection.writeable && <button
+          {doc.collection.writeable && isFolder && <button
             type="button"
             className="pt-button pt-icon-delete"
             disabled={isDeleteDisabled}

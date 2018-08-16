@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import { selectEntityTags } from "src/selectors";
 
 import './ViewsMenu.css';
+import getPath from "../../util/getPath";
 
 const messages = defineMessages({
   mode_view: {
@@ -21,6 +22,10 @@ const messages = defineMessages({
   mode_text: {
     id: 'document.mode.text.tooltip',
     defaultMessage: 'Show extracted text',
+  },
+  up: {
+    id: 'document.parent.nav',
+    defaultMessage: 'Up'
   }
 });
 
@@ -46,23 +51,27 @@ class DocumentViewsMenu extends React.Component {
   }
 
   render() {
-    const { document, intl, mode, tags, isPreview } = this.props;
+    const { document, intl, mode, tags, isPreview, isFullPage } = this.props;
     const hasTextMode = ['Pages', 'Image'].indexOf(document.schema) !== -1;
     const hasSearchMode = ['Pages'].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
+    const className = isFullPage ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
-      <div className='ViewsMenu'>
+      <div className={className}>
         { isPreview && (<a onClick={(e) => this.setMode(e, 'info')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'info'})} title={intl.formatMessage(messages.mode_info)} >
+             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'info'})}
+                           title={intl.formatMessage(messages.mode_info)} >
             <span className="pt-icon-standard pt-icon-info-sign"/>
           </a>)}
         { hasModifiers && ( <a onClick={(e) => this.setMode(e, 'view')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'view'})} title={intl.formatMessage(messages.mode_view)}>
+             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'view'})}
+                               title={intl.formatMessage(messages.mode_view)}>
             <span className="pt-icon-standard pt-icon-document"/>
           </a>)}
         { hasTextMode && (<a onClick={(e) => this.setMode(e, 'text')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'text'})} title={intl.formatMessage(messages.mode_text)}>
+             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'text'})}
+                             title={intl.formatMessage(messages.mode_text)}>
             <span className="pt-icon-standard pt-icon-align-justify"/>
           </a>)}
       </div>

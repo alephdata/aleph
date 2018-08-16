@@ -10,6 +10,9 @@ import Fragment from 'src/app/Fragment';
 import { TabCount, Property, SectionLoading, ErrorSection, DualPane, TextLoading } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
 import { EntitySimilarTable } from 'src/components/Entity';
+import EntityViewsMenu from "../ViewsMenu/EntityViewsMenu";
+
+import './EntityContent.css';
 
 const messages = defineMessages({
   no_relationships: {
@@ -43,8 +46,9 @@ class EntityReferences extends React.Component {
     }
 
     return (
-      <DualPane.ContentPane>
-        <Tabs onChange={this.handleTabChange} selectedTabId={activeTab}>
+      <DualPane.ContentPane className='EntityContent'>
+        <EntityViewsMenu entity={entity} isFullPage={true}/>
+        <Tabs onChange={this.handleTabChange} selectedTabId={activeTab} className='entity-content-tabs'>
           { references.total === 0 && (
             <Tab id="default" key="default"
                  title={intl.formatMessage(messages.default_tab)}
