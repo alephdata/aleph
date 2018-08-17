@@ -153,8 +153,8 @@ COUNTRIES_SERVICE = None  # 'extract-countries:50000'
 COUNTRIES_SERVICE = env('COUNTRIES_SERVICE', COUNTRIES_SERVICE)
 
 # general gRPC settings
-GRPC_LB_POLICY = 'round_robin'
-GRPC_CONN_AGE = 3000
+GRPC_LB_POLICY = env('GRPC_LB_POLICY', 'round_robin')
+GRPC_CONN_AGE = int(env('GRPC_CONN_AGE', 500))  # ms
 
 ##############################################################################
 # E-mail settings

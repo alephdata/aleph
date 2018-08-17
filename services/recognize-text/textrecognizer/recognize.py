@@ -20,14 +20,14 @@ class OCR(object):
     def language_list(self, languages):
         models = [c for c in alpha3(languages) if c in self.supported]
         if len(models) > self.MAX_MODELS:
-            log.warning("Too many models, limiting to %s",
-                        models, self.MAX_MODELS)
+            log.warning("Too many models, limit: %s", self.MAX_MODELS)
             models = models[:self.MAX_MODELS]
         models.append('eng')
         return '+'.join(sorted(set(models)))
 
     def reset_engine(self, languages):
         if hasattr(self, 'api'):
+            self.api.Clear()
             self.api.End()
         self.api = PyTessBaseAPI(lang=languages, oem=OEM.LSTM_ONLY)
 
