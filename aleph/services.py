@@ -1,4 +1,5 @@
 import grpc
+from threading import local
 
 from aleph import settings
 
@@ -13,15 +14,18 @@ class ServiceClientMixin(object):
         """Lazily connect to the RPC service."""
         if not self.has_channel():
             return
-        if not hasattr(self, '_channel') or self._channel is None:
-            options = (('grpc.max_connection_age_ms', settings.GRPC_CONN_AGE),
-                       ('grpc.lb_policy_name', settings.GRPC_LB_POLICY))
-            self._channel = grpc.insecure_channel(self.SERVICE, options)
-        return self._channel
+        if not hasattr(self, '_local'):
+            self._local = local()
+        if not hasattr(self._local, 'channel'):
+            options = (
+                # ('grpc.keepalive_time_ms', settings.GRPC_CONN_AGE),
+                ('grpc.keepalive_timeout_ms', settings.GRPC_CONN_AGE),
+                ('grpc.max_connection_age_ms', settings.GRPC_CONN_AGE),
+                ('grpc.max_connection_idle_ms', settings.GRPC_CONN_AGE),
+                ('grpc.lb_policy_name', settings.GRPC_LB_POLICY)
+            )
+            self._local.channel = grpc.insecure_channel(self.SERVICE, options)
+        return self._local.channel
 
     def has_channel(self):
         return self.SERVICE is not None
-
-    def reset_channel(self):
-        """Reset the service channel if there has been a severe error."""
-        self._channel = None
