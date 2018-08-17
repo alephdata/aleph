@@ -70,10 +70,10 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.publisher_url = data.get('publisher_url', self.publisher_url)
         self.info_url = data.get('info_url', self.info_url)
         self.data_url = data.get('data_url', self.data_url)
-        self.category = data.get('category') or self.DEFAULT
-        self.casefile = as_bool(data.get('casefile'), default=False)
-        self.countries = ensure_list(data.get('countries', []))
-        self.languages = ensure_list(data.get('languages', []))
+        self.category = data.get('category', self.category)
+        self.casefile = as_bool(data.get('casefile'), default=self.casefile)
+        self.countries = ensure_list(data.get('countries', self.countries))
+        self.languages = ensure_list(data.get('languages', self.languages))
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))
         if creator is not None:
@@ -85,7 +85,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             Permission.grant(self, self.creator, True, True)
 
     def reset_state(self):
-        self._roles = None
+        if hasattr(self, '_roles'):
+            self._roles = None
 
     @property
     def roles(self):
@@ -148,6 +149,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection = cls()
             collection.created_at = created_at
             collection.foreign_id = foreign_id
+            collection.category = cls.DEFAULT
+            collection.casefile = False
         collection.update(data, creator=role)
         collection.deleted_at = None
         return collection
