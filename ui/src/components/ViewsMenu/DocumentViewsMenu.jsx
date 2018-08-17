@@ -1,14 +1,14 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import c from 'classnames';
 import queryString from "query-string";
+import { Tooltip, Position } from '@blueprintjs/core';
 import { connect } from "react-redux";
 
 import { selectEntityTags } from "src/selectors";
 
 import './ViewsMenu.css';
-import getPath from "../../util/getPath";
 
 const messages = defineMessages({
   mode_view: {
@@ -22,10 +22,6 @@ const messages = defineMessages({
   mode_text: {
     id: 'document.mode.text.tooltip',
     defaultMessage: 'Show extracted text',
-  },
-  up: {
-    id: 'document.parent.nav',
-    defaultMessage: 'Up'
   }
 });
 
@@ -36,7 +32,7 @@ class DocumentViewsMenu extends React.Component {
   }
 
   setMode(event, mode) {
-    const { history, location, hashQuery } = this.props;
+    const {history, location, hashQuery} = this.props;
     event.preventDefault();
     hashQuery.mode = mode;
     history.replace({
@@ -46,47 +42,45 @@ class DocumentViewsMenu extends React.Component {
     })
   }
 
-  onClickConnections(event, connection) {
-
-  }
-
   render() {
-    const { document, intl, mode, tags, isPreview, isFullPage } = this.props;
-    const hasTextMode = ['Pages', 'Image'].indexOf(document.schema) !== -1;
-    const hasSearchMode = ['Pages'].indexOf(document.schema) !== -1;
+    const {document, intl, mode, tags, isPreview, isFullPage} = this.props;
+    const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
+    const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
     const className = isFullPage ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
       <div className={className}>
-        { isPreview && (<a onClick={(e) => this.setMode(e, 'info')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'info'})}
-                           title={intl.formatMessage(messages.mode_info)} >
-            <span className="pt-icon-standard pt-icon-info-sign"/>
-          </a>)}
-        { hasModifiers && ( <a onClick={(e) => this.setMode(e, 'view')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'view'})}
-                               title={intl.formatMessage(messages.mode_view)}>
+        {isPreview && (
+          <Tooltip content={intl.formatMessage(messages.mode_info)} position={Position.BOTTOM_RIGHT}>
+            <a onClick={(e) => this.setMode(e, 'info')}
+               className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'info'})}>
+              <span className="pt-icon-standard pt-icon-info-sign"/>
+            </a></Tooltip>)}
+        {hasModifiers && (<Tooltip content={intl.formatMessage(messages.mode_view)} position={Position.BOTTOM_RIGHT}>
+          <a onClick={(e) => this.setMode(e, 'view')}
+             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'view'})}>
             <span className="pt-icon-standard pt-icon-document"/>
-          </a>)}
-        { hasTextMode && (<a onClick={(e) => this.setMode(e, 'text')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'text'})}
-                             title={intl.formatMessage(messages.mode_text)}>
+          </a></Tooltip>)}
+        {hasTextMode && (<Tooltip content={intl.formatMessage(messages.mode_text)} position={Position.BOTTOM_RIGHT}>
+          <a onClick={(e) => this.setMode(e, 'text')}
+             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'text'})}>
             <span className="pt-icon-standard pt-icon-align-justify"/>
-          </a>)}
+          </a></Tooltip>)}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
+  const {location} = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const mode = hashQuery.mode || 'view';
   return {
     hashQuery,
     mode,
-    tags: selectEntityTags(state, ownProps.document.id)};
+    tags: selectEntityTags(state, ownProps.document.id)
+  };
 };
 
 
