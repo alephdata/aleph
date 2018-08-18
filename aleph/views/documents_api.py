@@ -86,7 +86,7 @@ def _serve_archive(content_hash, file_name, mime_type):
     try:
         local_path = archive.load_file(content_hash, file_name=file_name)
         if local_path is None:
-            raise NotFound("File does not exist.")
+            return ('', 404)
 
         return send_file(local_path,
                          as_attachment=True,
