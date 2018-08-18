@@ -2,7 +2,7 @@
 # jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-08-14T08:30:10.949Z\n"
+"POT-Creation-Date: 2018-08-18T11:27:58.556Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "(подтверждение)"
 #. (missing)
 #: i18n/messages.json
 msgid "(missing)"
-msgstr ""
+msgstr "(отсутствует)"
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
@@ -135,7 +135,7 @@ msgstr "Вы уверены, что хотите удалить всё соде�
 #. Are you sure you want to delete this item?
 #: i18n/messages.json
 msgid "Are you sure you want to delete this item?"
-msgstr ""
+msgstr "Вы уверены, что хотите удалить этот документ?"
 
 #. [email.attachments]
 #. defaultMessage is:
@@ -177,7 +177,7 @@ msgstr "Скрытая копия"
 #. Browse as a folder
 #: i18n/messages.json
 msgid "Browse as a folder"
-msgstr ""
+msgstr "Просмотр в виде папки"
 
 #. [collection.browser.total]
 #. defaultMessage is:
@@ -227,6 +227,9 @@ msgid ""
 " particular story. You can upload documents, such as PDFs, email archives or"
 " spreadsheets, and they will be made easy to search and browse."
 msgstr ""
+"С помощью кейс-файлов вы можете группировать документы и данные, относящиеся"
+" к определённому расследованию. Загруженные PDF-файлы, email-архивы или "
+"таблицы будут проиндексированы и доступны для полнотекстового поиска."
 
 #. [collection.edit.title.case]
 #. defaultMessage is:
@@ -292,7 +295,7 @@ msgstr "Выберите пользователя"
 #. Choose files to upload...
 #: i18n/messages.json
 msgid "Choose files to upload..."
-msgstr ""
+msgstr "Выберите файлы для загрузки"
 
 #. [search.facets.clear_filter]
 #. defaultMessage is:
@@ -384,7 +387,7 @@ msgstr "Страна"
 #. Create
 #: i18n/messages.json
 msgid "Create"
-msgstr ""
+msgstr "Создать"
 
 #. [case.title]
 #. defaultMessage is:
@@ -426,9 +429,6 @@ msgstr "Перекрёстное сравнение"
 msgid "Date"
 msgstr "Дата"
 
-#. [document.viewer.delete]
-#. defaultMessage is:
-#. Delete
 #. [collection.delete.confirm]
 #. defaultMessage is:
 #. Delete
@@ -438,13 +438,16 @@ msgstr "Дата"
 #. [document.delete.confirm]
 #. defaultMessage is:
 #. Delete
-#. [collection.documents.delete]
-#. defaultMessage is:
-#. Delete
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "Удалить"
+
+#. [document.viewer.delete]
+#. defaultMessage is:
+#. Delete selected
+#: i18n/messages.json
+msgid "Delete selected"
+msgstr ""
 
 #. [case.choose.summary]
 #. defaultMessage is:
@@ -467,12 +470,19 @@ msgstr "Ссылка на источник документа"
 msgid "Documents"
 msgstr "Документы"
 
+#. [refresh.callout_message]
+#. defaultMessage is:
+#. Documents are being processed. Please wait...
+#: i18n/messages.json
+msgid "Documents are being processed. Please wait..."
+msgstr ""
+
 #. [document.upload.success]
 #. defaultMessage is:
 #. Documents are being processed...
 #: i18n/messages.json
 msgid "Documents are being processed..."
-msgstr ""
+msgstr "Обрабатываем документы..."
 
 #. [signup.register.question]
 #. defaultMessage is:
@@ -570,7 +580,7 @@ msgstr "Отфильтровать"
 #. Filters
 #: i18n/messages.json
 msgid "Filters"
-msgstr ""
+msgstr "Фильтры"
 
 #. [home.title]
 #. defaultMessage is:
@@ -591,7 +601,7 @@ msgstr "Папка"
 #. Folder title
 #: i18n/messages.json
 msgid "Folder title"
-msgstr ""
+msgstr "Название папки"
 
 #. [email.from]
 #. defaultMessage is:
@@ -735,7 +745,7 @@ msgstr "Оповещения о новых результатах поиска"
 #. Manage your investigations
 #: i18n/messages.json
 msgid "Manage your investigations"
-msgstr ""
+msgstr "Управление расследованиями"
 
 #. [collection.creator]
 #. defaultMessage is:
@@ -793,7 +803,7 @@ msgstr "Имена"
 #. New casefile
 #: i18n/messages.json
 msgid "New casefile"
-msgstr ""
+msgstr "Новый кейс-файл"
 
 #. [document.folder.button]
 #. defaultMessage is:
@@ -803,7 +813,7 @@ msgstr ""
 #. New folder
 #: i18n/messages.json i18n/messages.json
 msgid "New folder"
-msgstr ""
+msgstr "Новая папка"
 
 #. [email.no_attachments]
 #. defaultMessage is:
@@ -894,6 +904,8 @@ msgid ""
 "Once the upload is complete, it will take a few moments for the document to "
 "be processed and become searchable."
 msgstr ""
+"После загрузки документы будут проиндексированы и доступны для "
+"полнотекстового поиска"
 
 #. [sidebar.open]
 #. defaultMessage is:
@@ -964,7 +976,7 @@ msgstr "Номера телефонов"
 #. Profile
 #: i18n/messages.json
 msgid "Profile"
-msgstr ""
+msgstr "Профиль"
 
 #. [notifications.title]
 #. defaultMessage is:
@@ -1074,7 +1086,7 @@ msgstr "Искать кейсы"
 #. Search companies, people and ...
 #: i18n/messages.json
 msgid "Search companies, people and ..."
-msgstr ""
+msgstr "Поиск компаний, людей и..."
 
 #. [navbar.search_placeholder]
 #. defaultMessage is:
@@ -1238,16 +1250,6 @@ msgstr "Совпадения"
 msgid "Size"
 msgstr "Размер"
 
-#. [refresh.callout_message]
-#. defaultMessage is:
-#. Some files are in a pending state. Please refresh the page so you can
-#. access them!
-#: i18n/messages.json
-msgid ""
-"Some files are in a pending state. Please refresh the page so you can access"
-" them!"
-msgstr ""
-
 #. [search.callout_message]
 #. defaultMessage is:
 #. Some sources are hidden from anonymous users. Please sign in to see all
@@ -1379,14 +1381,14 @@ msgstr ""
 #. There are no notifications
 #: i18n/messages.json
 msgid "There are no notifications"
-msgstr ""
+msgstr "Оповещений нет"
 
 #. [document.upload.error]
 #. defaultMessage is:
 #. There was an error while uploading the file.
 #: i18n/messages.json
 msgid "There was an error while uploading the file."
-msgstr ""
+msgstr "При загрузке файла возникла ошибка"
 
 #. [entity.references.no_relationships]
 #. defaultMessage is:
@@ -1414,7 +1416,7 @@ msgstr "Не удалось импортировать всё содержимо
 #. Tracking alerts
 #: i18n/messages.json
 msgid "Tracking alerts"
-msgstr ""
+msgstr "Управление оповещениями"
 
 #. [entity.search.no_results_description]
 #. defaultMessage is:
@@ -1498,22 +1500,22 @@ msgstr "Обновить"
 msgid "Updated {date}"
 msgstr "Обновлено {date}"
 
+#. [document.upload.button]
+#. defaultMessage is:
+#. Upload
 #. [document.upload.save]
 #. defaultMessage is:
 #. Upload
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Upload"
-msgstr ""
+msgstr "Загрузить"
 
-#. [document.upload.button]
-#. defaultMessage is:
-#. Upload documents
 #. [document.upload.title]
 #. defaultMessage is:
 #. Upload documents
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Upload documents"
-msgstr ""
+msgstr "Загрузить документы"
 
 #. [document.uploader]
 #. defaultMessage is:
@@ -1527,7 +1529,7 @@ msgstr "Обновил"
 #. Uploading: {file}...
 #: i18n/messages.json
 msgid "Uploading: {file}..."
-msgstr ""
+msgstr "Загружается: {file}"
 
 #. [settings.password.rules]
 #. defaultMessage is:
@@ -1596,7 +1598,7 @@ msgstr "Вы подписаны на оповещения для этого по
 #. You do not have any case files yet
 #: i18n/messages.json
 msgid "You do not have any case files yet"
-msgstr ""
+msgstr "У вас нет кейс-файлов"
 
 #. [navbar.alert_add]
 #. defaultMessage is:
@@ -1615,6 +1617,8 @@ msgid ""
 "You will receive notifications when a new document or entity matches any of "
 "the alerts you have set up below."
 msgstr ""
+"Укажите искомые слова и, в случае, если они будут найдены в новых "
+"документах, вы увидите оповещение."
 
 #. [password_auth.name]
 #. defaultMessage is:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-08-14 10:26+0200\n"
+"POT-Creation-Date: 2018-08-18 13:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
@@ -108,8 +108,8 @@ msgid "{{actor}} changed the settings of {{collection}}."
 msgstr "{{actor}} ha cambiado la configuración de {{collection}}."
 
 #: aleph/model/event.py:52
-msgid "{{actor}} uploaded {{document}} to {{collection}}."
-msgstr "{{actor}} subió {{document}} a {{collection}}."
+msgid "{{actor}} added {{document}} to {{collection}}."
+msgstr ""
 
 #: aleph/model/event.py:61
 msgid "{{entity}} matches your alert for {{alert}}."

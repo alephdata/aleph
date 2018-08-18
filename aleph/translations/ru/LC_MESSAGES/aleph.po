@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-08-14 10:26+0200\n"
+"POT-Creation-Date: 2018-08-18 13:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -69,7 +69,7 @@ msgstr "Секретные документы"
 
 #: aleph/model/collection.py:33
 msgid "Document libraries"
-msgstr ""
+msgstr "Коллекции документов"
 
 #: aleph/model/collection.py:34
 msgid "Licenses and concessions"
@@ -81,19 +81,19 @@ msgstr "Распорядительные документы"
 
 #: aleph/model/collection.py:36
 msgid "Persons of interest"
-msgstr ""
+msgstr "Подозрительные персонажи"
 
 #: aleph/model/collection.py:37
 msgid "Customs declarations"
-msgstr ""
+msgstr "Таможенные декларации"
 
 #: aleph/model/collection.py:38
 msgid "Population census"
-msgstr ""
+msgstr "Регистры населения"
 
 #: aleph/model/collection.py:39
 msgid "Air and maritime registers"
-msgstr ""
+msgstr "Регистр воздушных и морских судов"
 
 #: aleph/model/collection.py:40
 msgid "Other material"
@@ -101,15 +101,15 @@ msgstr "Прочие материалы"
 
 #: aleph/model/event.py:40
 msgid "{{actor}} created {{collection}}."
-msgstr ""
+msgstr "{{actor}} создал(а) {{collection}}"
 
 #: aleph/model/event.py:46
 msgid "{{actor}} changed the settings of {{collection}}."
 msgstr "{{actor}} изменил(а) настройки для {{collection}}."
 
 #: aleph/model/event.py:52
-msgid "{{actor}} uploaded {{document}} to {{collection}}."
-msgstr "{{actor}} добавил(а) {{document}} в {{collection}}."
+msgid "{{actor}} added {{document}} to {{collection}}."
+msgstr ""
 
 #: aleph/model/event.py:61
 msgid "{{entity}} matches your alert for {{alert}}."

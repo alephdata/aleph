@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-08-14T08:30:10.949Z\n"
+"POT-Creation-Date: 2018-08-18T11:27:58.556Z\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -424,9 +424,6 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#. [document.viewer.delete]
-#. defaultMessage is:
-#. Delete
 #. [collection.delete.confirm]
 #. defaultMessage is:
 #. Delete
@@ -436,12 +433,15 @@ msgstr ""
 #. [document.delete.confirm]
 #. defaultMessage is:
 #. Delete
-#. [collection.documents.delete]
-#. defaultMessage is:
-#. Delete
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Delete"
+msgstr ""
+
+#. [document.viewer.delete]
+#. defaultMessage is:
+#. Delete selected
+#: i18n/messages.json
+msgid "Delete selected"
 msgstr ""
 
 #. [case.choose.summary]
@@ -463,6 +463,13 @@ msgstr ""
 #. Documents
 #: i18n/messages.json
 msgid "Documents"
+msgstr ""
+
+#. [refresh.callout_message]
+#. defaultMessage is:
+#. Documents are being processed. Please wait...
+#: i18n/messages.json
+msgid "Documents are being processed. Please wait..."
 msgstr ""
 
 #. [document.upload.success]
@@ -1234,16 +1241,6 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#. [refresh.callout_message]
-#. defaultMessage is:
-#. Some files are in a pending state. Please refresh the page so you can
-#. access them!
-#: i18n/messages.json
-msgid ""
-"Some files are in a pending state. Please refresh the page so you can access"
-" them!"
-msgstr ""
-
 #. [search.callout_message]
 #. defaultMessage is:
 #. Some sources are hidden from anonymous users. Please sign in to see all
@@ -1490,20 +1487,20 @@ msgstr ""
 msgid "Updated {date}"
 msgstr ""
 
+#. [document.upload.button]
+#. defaultMessage is:
+#. Upload
 #. [document.upload.save]
 #. defaultMessage is:
 #. Upload
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Upload"
 msgstr ""
 
-#. [document.upload.button]
-#. defaultMessage is:
-#. Upload documents
 #. [document.upload.title]
 #. defaultMessage is:
 #. Upload documents
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Upload documents"
 msgstr ""
 
