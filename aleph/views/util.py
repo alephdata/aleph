@@ -199,6 +199,15 @@ def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
                     mimetype='application/json')
 
 
+def stream_ijson(iterable, encoder=JSONEncoder):
+    """Stream JSON line-based data."""
+    def _generate_stream():
+        for row in iterable:
+            yield encoder().encode(row)
+            yield '\n'
+    return Response(_generate_stream(), mimetype='application/json+stream')
+
+
 def render_xml(template, **kwargs):
     data = render_template(template, **kwargs)
     return Response(data, mimetype='text/xml')

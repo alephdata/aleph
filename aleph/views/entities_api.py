@@ -1,3 +1,4 @@
+import logging
 from banal import as_bool
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
@@ -20,6 +21,7 @@ from aleph.views.cache import enable_cache
 from aleph.serializers.entities import CombinedSchema
 from aleph.serializers.entities import EntityCreateSchema, EntityUpdateSchema
 
+log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
 
 

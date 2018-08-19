@@ -1,11 +1,12 @@
 import logging
 from itertools import count
+from elasticsearch.helpers import scan
 
-from aleph.core import db
+from aleph.core import db, es
 from aleph.model import DocumentRecord
 from aleph.index.core import record_index, records_index
 from aleph.index.util import query_delete, index_form, refresh_index
-from aleph.index.util import bulk_op, backoff_cluster
+from aleph.index.util import bulk_op, backoff_cluster, unpack_result
 
 log = logging.getLogger(__name__)
 
@@ -49,3 +50,18 @@ def index_records(document):
         except Exception as exc:
             log.warning('Failed to index records: %s', exc)
         backoff_cluster(failures=attempt)
+
+
+def iter_records(document_id=None, collection_id=None):
+    """Scan all records matching the given criteria."""
+    filters = []
+    if document_id is not None:
+        filters.append({'term': {'document_id': document_id}})
+    if collection_id is not None:
+        filters.append({'term': {'collection_id': collection_id}})
+    query = {
+        'query': {'bool': {'filter': filters}},
+        'sort': ['_doc']
+    }
+    for res in scan(es, index=records_index(), query=query, scroll='1410m'):
+        yield unpack_result(res)

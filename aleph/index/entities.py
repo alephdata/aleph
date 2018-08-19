@@ -71,15 +71,12 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
     if excludes is not None:
         source['excludes'] = excludes
     query = {
-        'query': {
-            'bool': {'filter': filters}
-        },
+        'query': {'bool': {'filter': filters}},
+        'sort': ['_doc'],
         '_source': source
     }
-    for res in scan(es, index=entities_index(), query=query, scroll='1200m'):
-        entity = unpack_result(res)
-        if entity is not None:
-            yield entity
+    for res in scan(es, index=entities_index(), query=query, scroll='1410m'):
+        yield unpack_result(res)
 
 
 def delete_entity(entity_id):
