@@ -22,9 +22,12 @@ class RoleSchema(BaseSchema):
     has_password = Boolean(dump_only=True)
 
     @post_dump
-    def transient(self, data):
+    def hypermedia(self, data):
         pk = str(data.get('id'))
         data['writeable'] = str(request.authz.id) == pk
+        data['links'] = {
+            'self': url_for('roles_api.view', id=pk)
+        }
         if not data['writeable']:
             data.pop('has_password', None)
             data.pop('api_key', None)
@@ -33,9 +36,6 @@ class RoleSchema(BaseSchema):
             data.pop('api_key', None)
             data.pop('email', None)
         data.pop('password', None)
-        data['links'] = {
-            'self': url_for('roles_api.view', id=pk)
-        }
         return data
 
 

@@ -32,4 +32,10 @@
             margin-right: $aleph-grid-size / 2;
         }
     }
+
+    .delete-item {
+        float: right;
+        margin-right: 0.3em;
+        margin-top: 0.5em;
+    }
 }

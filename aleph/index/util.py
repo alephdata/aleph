@@ -59,7 +59,7 @@ def unpack_result(res):
         return
     data = res.get('_source', {})
     data['id'] = str(res.get('_id'))
-    if '_score' in res:
+    if res.get('_score') is not None:
         data['score'] = res.get('_score')
     if 'highlight' in res:
         data['highlight'] = []

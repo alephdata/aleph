@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 
 import { ingestDocument } from "src/actions";
-import { showSuccessToast, showErrorToast } from "src/app/toast";
+import { showErrorToast } from "src/app/toast";
 import wordList from 'src/util/wordList';
 
 import "./DocumentUploadDialog.css";
@@ -65,7 +65,7 @@ class DocumentUploadDialog extends Component {
         };
         await this.props.ingestDocument(collection.id, metadata, file, this.onUploadProgress);
       }
-      showSuccessToast(intl.formatMessage(messages.success));
+      // showSuccessToast(intl.formatMessage(messages.success));
       this.props.toggleDialog();
       // history.push({
       //   pathname: history.location.pathname,

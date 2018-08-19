@@ -2,6 +2,7 @@ import logging
 from banal import as_bool, ensure_list
 from datetime import datetime
 from flask.ext.babel import lazy_gettext
+from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
@@ -18,7 +19,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     enforced."""
 
     # Category schema for collections.
-    # TODO: add extra weight info.
     # TODO: should this be configurable?
     CATEGORIES = {
         'news': lazy_gettext('News archives'),
@@ -27,14 +27,16 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'gazette': lazy_gettext('Gazettes'),
         'court': lazy_gettext('Court archives'),
         'company': lazy_gettext('Company registries'),
-        'watchlist': lazy_gettext('Watchlists'),
-        'investigation': lazy_gettext('Personal collections'),
         'sanctions': lazy_gettext('Sanctions lists'),
-        'scrape': lazy_gettext('Scrapes'),
         'procurement': lazy_gettext('Procurement'),
         'grey': lazy_gettext('Grey literature'),
+        'library': lazy_gettext('Document libraries'),
         'license': lazy_gettext('Licenses and concessions'),
         'regulatory': lazy_gettext('Regulatory filings'),
+        'poi': lazy_gettext('Persons of interest'),
+        'customs': lazy_gettext('Customs declarations'),
+        'census': lazy_gettext('Population census'),
+        'transport': lazy_gettext('Air and maritime registers'),
         'other': lazy_gettext('Other material')
     }
 
@@ -60,6 +62,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     creator = db.relationship(Role)
 
     def update(self, data, creator=None):
+        self.updated_at = datetime.utcnow()
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
         self.summary = data.get('summary', self.summary)
@@ -67,22 +70,27 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.publisher_url = data.get('publisher_url', self.publisher_url)
         self.info_url = data.get('info_url', self.info_url)
         self.data_url = data.get('data_url', self.data_url)
-        self.category = data.get('category') or self.DEFAULT
-        self.casefile = as_bool(data.get('casefile'), default=False)
-        self.countries = ensure_list(data.get('countries', []))
-        self.languages = ensure_list(data.get('languages', []))
+        self.category = data.get('category', self.category)
+        self.casefile = as_bool(data.get('casefile'), default=self.casefile)
+        self.countries = ensure_list(data.get('countries', self.countries))
+        self.languages = ensure_list(data.get('languages', self.languages))
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))
-        self.creator = creator
-        self.updated_at = datetime.utcnow()
+        if creator is not None:
+            self.creator = creator
         db.session.add(self)
         db.session.flush()
-        if creator is not None:
-            Permission.grant(self, creator, True, True)
+        self.reset_state()
+        if self.creator is not None:
+            Permission.grant(self, self.creator, True, True)
+
+    def reset_state(self):
+        if hasattr(self, '_roles'):
+            self._roles = None
 
     @property
     def roles(self):
-        if not hasattr(self, '_roles'):
+        if not hasattr(self, '_roles') or self._roles is None:
             q = db.session.query(Permission.role_id)
             q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.collection_id == self.id)  # noqa
@@ -92,10 +100,15 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
 
     @property
     def team(self):
-        q = Role.all()
-        q = q.filter(Role.type != Role.SYSTEM)
-        q = q.filter(Role.id == Permission.role_id)
-        q = q.filter(Permission.collection_id == self.id)
+        role = aliased(Role)
+        perm = aliased(Permission)
+        q = db.session.query(role)
+        q = q.filter(role.type != Role.SYSTEM)
+        q = q.filter(role.id == perm.role_id)
+        q = q.filter(perm.collection_id == self.id)
+        q = q.filter(perm.read == True)  # noqa
+        q = q.filter(role.deleted_at == None)  # noqa
+        q = q.filter(perm.deleted_at == None)  # noqa
         return q
 
     @property
@@ -110,14 +123,23 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return q.filter(cls.foreign_id == foreign_id).first()
 
     @classmethod
-    def all_by_ids(cls, ids, deleted=False, authz=None):
-        q = super(Collection, cls).all_by_ids(ids, deleted=deleted)
+    def _apply_authz(cls, q, authz):
         if authz is not None and not authz.is_admin:
             q = q.join(Permission, cls.id == Permission.collection_id)
             q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.read == True)  # noqa
             q = q.filter(Permission.role_id.in_(authz.roles))
         return q
+
+    @classmethod
+    def all_authz(cls, authz, deleted=False):
+        q = super(Collection, cls).all(deleted=deleted)
+        return cls._apply_authz(q, authz)
+
+    @classmethod
+    def all_by_ids(cls, ids, deleted=False, authz=None):
+        q = super(Collection, cls).all_by_ids(ids, deleted=deleted)
+        return cls._apply_authz(q, authz)
 
     @classmethod
     def create(cls, data, role=None, created_at=None):
@@ -127,6 +149,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection = cls()
             collection.created_at = created_at
             collection.foreign_id = foreign_id
+            collection.category = cls.DEFAULT
+            collection.casefile = False
         collection.update(data, creator=role)
         collection.deleted_at = None
         return collection

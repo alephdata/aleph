@@ -42,7 +42,6 @@ class EntityTable extends Component {
     this.state = {
       result: props.result
     };
-    this.onSelectRow = this.onSelectRow.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -50,30 +49,25 @@ class EntityTable extends Component {
     return (!result.isLoading) ? { result } : null;
   }
 
-  sortColumn(field) {
+  sortColumn(newField) {
     const { query, updateQuery } = this.props;
-    const { field: sortedField, desc } = query.getSort();
+    const { field: currentField, direction } = query.getSort();
     // Toggle through sorting states: ascending, descending, or unsorted.
-    let newQuery;
-    if (sortedField !== field) {
-      newQuery = query.sortBy(field, false);
+    if (currentField !== newField) {
+      return updateQuery(query.sortBy(newField, 'asc'));
     } else {
-      if (!desc) {
-        newQuery = query.sortBy(field, true);
+      if (direction === 'asc') {
+        updateQuery(query.sortBy(currentField, 'desc'));
       } else {
-        newQuery = query.sortBy(null);
+        updateQuery(query.sortBy(currentField, undefined));
       }
     }
-    updateQuery(newQuery);
-  }
-
-  onSelectRow(entity) {
-    this.props.updateSelection(entity);
   }
 
   render() {
-    const { query, intl, location, history, writeable, selectedRows } = this.props;
+    const { query, intl, location } = this.props;
     const { hideCollection = false, documentMode = false } = this.props;
+    const { updateSelection, selection } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
 
@@ -86,11 +80,11 @@ class EntityTable extends Component {
     }
 
     const TH = ({ sortable, field, className, ...otherProps }) => {
-      const { field: sortedField, desc } = query.getSort();
+      const { field: sortedField, direction } = query.getSort();
       return (
         <SortableTH sortable={sortable}
                     className={className}
-                    sorted={sortedField === field && (desc ? 'desc' : 'asc')}
+                    sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
                     onClick={() => this.sortColumn(field)}
                     {...otherProps}>
           {intl.formatMessage(messages[`column_${field}`])}
@@ -102,7 +96,7 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
-            {writeable && (<th className="select"/>)}
+            {updateSelection && (<th className="select"/>)}
             <TH field="name" className="wide" sortable={true} />
             {!hideCollection && 
               <TH field="collection_id" />
@@ -121,13 +115,11 @@ class EntityTable extends Component {
           {result.results !== undefined && result.results.map(entity =>
             <EntityTableRow key={entity.id}
                             entity={entity}
+                            location={location}
                             hideCollection={hideCollection}
                             documentMode={documentMode}
-                            location={location}
-                            history={history}
-                            writeable={writeable}
-                            onSelectRow={this.onSelectRow}
-                            selectedRows={selectedRows} />
+                            updateSelection={updateSelection}
+                            selection={selection} />
           )}
         </tbody>
       </table>

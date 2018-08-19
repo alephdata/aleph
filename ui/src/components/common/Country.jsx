@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { MenuItem, Classes, Position } from '@blueprintjs/core';
 import { MultiSelect as BlueprintMultiSelect } from "@blueprintjs/select";
 
@@ -47,18 +47,8 @@ class List extends Component {
 
     // Truncate if too long
     if (names.length > truncate) {
-      const ellipsis = (
-        <i key="ellipsis">
-          … (
-          <FormattedNumber value={codes.length} />
-          &nbsp;
-          <FormattedMessage id="country.total" defaultMessage="total" />
-          )
-        </i>
-      );
       // Cut slightly deeper than requested, as the ellipsis takes space too.
-      const numberToKeep = truncate - 1;
-      names = [...names.slice(0, numberToKeep), ellipsis];
+      names = [...names.slice(0, truncate), '…'];
     }
     return wordList(names, ', ');
   }

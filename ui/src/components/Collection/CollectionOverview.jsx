@@ -57,7 +57,7 @@ class CollectionOverview extends Component {
                 <FormattedMessage id="collection.countries" defaultMessage="Country"/>
               </span>
               <span className="value">
-                <Country.List codes={collection.countries} truncate={10} />
+                <Country.List codes={collection.countries} />
               </span>
             </li>
           )}

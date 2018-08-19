@@ -54,7 +54,7 @@ class NotificationsScreen extends React.Component {
           <DualPane.ContentPane>
             <Toolbar>
               <h1>
-                <FormattedMessage id="notifications.title" defaultMessage="Your notifications"/>
+                <FormattedMessage id="notifications.heading" defaultMessage="Your notifications"/>
               </h1>
               <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
                 <FormattedMessage id="notifications.mark_read"

@@ -36,7 +36,7 @@ class Label extends Component {
       return null;
     }
     return (
-      <span>
+      <React.Fragment>
         { icon && (
           <React.Fragment>
             <i className='fa fa-fw fa-user-circle-o' />
@@ -44,7 +44,7 @@ class Label extends Component {
           </React.Fragment>
         )}
         { long ? role.label : role.name }
-      </span>
+      </React.Fragment>
     );
   }
 }
@@ -52,13 +52,18 @@ class Label extends Component {
 
 class List extends Component {
   render() {
-    const { roles } = this.props;
-    
+    const { roles, truncate = Infinity } = this.props;
     if (!roles) return null;
-    const names = roles.map((role, i) => {
+
+    let names = roles.map((role, i) => {
       return <Label key={role.id} role={role} {...this.props} />;
     });
-    return (<span>{ wordList(names, ', ') }</span>);
+
+    // Truncate if too long
+    if (names.length > truncate) {
+      names = [...names.slice(0, truncate), '…'];
+    }
+    return wordList(names, ', ');
   }
 }
 

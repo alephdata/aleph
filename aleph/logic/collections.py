@@ -1,13 +1,15 @@
 import logging
+from itertools import islice
 from datetime import datetime
 
 from aleph.core import db, celery
+from aleph.authz import Authz
 from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
-from aleph.logic.notifications import publish
 from aleph.index import collections as index
-from aleph.logic.entities import process_entities
-from aleph.logic.xref import xref_collection
+from aleph.index.entities import iter_entities
+from aleph.logic.notifications import publish, flush_notifications
+from aleph.logic.util import document_url, entity_url
 
 log = logging.getLogger(__name__)
 
@@ -27,17 +29,18 @@ def create_collection(data, role=None):
 
 def update_collection(collection):
     """Create or update a collection."""
-    log.info("Updating: %r", collection)
-    if collection.deleted_at is not None:
-        index.delete_collection(collection.id)
-        return
+    index_collection_async.delay(collection.id)
+    # from aleph.logic.xref import xref_collection
+    # if collection.casefile and collection.deleted_at is None:
+    #     xref_collection.apply_async([collection.id], priority=2)
 
-    # re-process entities
-    process_entities.delay(collection_id=collection.id)
 
-    if collection.casefile:
-        xref_collection.apply_async([collection.id], priority=2)
-    return index.index_collection(collection)
+@celery.task(priority=7)
+def index_collection_async(collection_id):
+    collection = Collection.by_id(collection_id, deleted=True)
+    if collection is not None:
+        log.info("Index [%s]: %s", collection.id, collection.label)
+        index.index_collection(collection)
 
 
 def update_collections():
@@ -47,26 +50,35 @@ def update_collections():
         update_collection(collection)
 
 
-def index_collections():
-    cq = db.session.query(Collection)
-    cq = cq.order_by(Collection.id.desc())
-    for collection in cq.all():
-        log.info("Index [%s]: %s", collection.foreign_id, collection.label)
-        index.delete_collection(collection.id)
-        index.index_collection(collection)
-
-
 @celery.task(priority=8)
 def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
-    collection = Collection.by_id(collection_id)
+    collection = Collection.by_id(collection_id, deleted=True)
     if collection is None:
         return
     log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
     index.update_collection_roles(collection)
 
 
+def generate_sitemap(collection_id):
+    """Generate entries for a collection-based sitemap.xml file."""
+    # cf. https://www.sitemaps.org/protocol.html
+    entities = iter_entities(authz=Authz.from_role(None),
+                             collection_id=collection_id,
+                             schemata=[Entity.THING],
+                             includes=['schemata', 'updated_at'])
+    # strictly, the limit for sitemap.xml is 50,000
+    for entity in islice(entities, 49500):
+        updated_at = entity.get('updated_at', '').split('T', 1)[0]
+        if Document.SCHEMA in entity.get('schemata', []):
+            url = document_url(entity.get('id'))
+        else:
+            url = entity_url(entity.get('id'))
+        yield (url, updated_at)
+
+
 def delete_collection(collection):
+    flush_notifications(collection)
     collection.delete()
     db.session.commit()
     index.delete_collection(collection.id)

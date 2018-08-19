@@ -4,7 +4,7 @@ from pprint import pprint  # noqa
 from normality import normalize
 
 from aleph.core import es
-from aleph.model import Entity
+from aleph.model import Entity, Collection
 from aleph.index.core import collections_index, entities_index, records_index
 from aleph.index.util import query_delete, query_update, unpack_result
 from aleph.index.util import index_safe, index_form, refresh_index
@@ -25,7 +25,7 @@ def index_collection(collection):
         'label': collection.label,
         'kind': collection.kind,
         'summary': collection.summary,
-        'category': collection.category,
+        'category': Collection.DEFAULT,
         'publisher': collection.publisher,
         'publisher_url': collection.publisher_url,
         'info_url': collection.info_url,
@@ -36,6 +36,9 @@ def index_collection(collection):
         'team': []
     }
     texts = [v for v in data.values() if isinstance(v, str)]
+
+    if collection.category in Collection.CATEGORIES:
+        data['category'] = collection.category
 
     if collection.creator is not None:
         data['creator'] = {
@@ -51,7 +54,7 @@ def index_collection(collection):
             'type': role.type,
             'name': role.name
         })
-        # texts.append(role.name)
+        texts.append(role.name)
 
     # Compute some statistics on the content of a collection.
     query = {
@@ -124,6 +127,7 @@ def delete_collection(collection_id):
     """Delete all documents from a particular collection."""
     q = {'ids': {'values': str(collection_id)}}
     query_delete(collections_index(), q)
+    refresh_index(index=collections_index())
 
 
 def delete_entities(collection_id):

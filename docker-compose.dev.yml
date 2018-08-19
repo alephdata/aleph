@@ -78,9 +78,7 @@ services:
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
-      ALEPH_CACHE: 'false'
       ALEPH_OAUTH: 'false'
-      ALEPH_EAGER: 'true'
       ALEPH_ARCHIVE_TYPE: 'file'
     env_file:
       - aleph.env
@@ -110,8 +108,6 @@ services:
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
-      ALEPH_CACHE: 'false'
-      ALEPH_EAGER: 'true'
       ALEPH_ARCHIVE_TYPE: 'file'
     env_file:
       - aleph.env

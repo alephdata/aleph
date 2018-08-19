@@ -4,40 +4,33 @@ import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
-import EntitySearch from 'src/components/EntitySearch/EntitySearch';
+import DocumentManager from 'src/components/Document/DocumentManager';
 
 import './FolderViewer.css';
 
 class FolderViewer extends Component {
-  render() {
-    const { document, query, className, disableOrEnableDelete, setDocuments, setRefreshCallout } = this.props;
 
+  render() {
+    const { document, query, className } = this.props;
+    
     return (
-      <React.Fragment>
-        <div id="children" className={`FolderViewer ${className}`}>
-          {document.status === 'fail' && (
-            <div className='warning-folder'>
-              <strong>
-                <FormattedMessage id="search.warning" defaultMessage="Warning:" />
-              </strong>
-              &nbsp;
-              <p>
-                <FormattedMessage id="search.not_properly_imported"
-                                  defaultMessage="This folder is not fully imported." />
-              </p>
-            </div>
-          )}
-          <EntitySearch
-            query={query}
-            hideCollection={true}
-            documentMode={true}
-            writable={document.writeable}
-            disableOrEnableDelete={disableOrEnableDelete}
-            setDocuments={setDocuments}
-            setRefreshCallout={setRefreshCallout}
-            path={'/documents/' + document.id}/>
-        </div>
-      </React.Fragment>
+      <div className={`FolderViewer ${className}`}>
+        {document.status === 'fail' && (
+          <div className='warning-folder'>
+            <strong>
+              <FormattedMessage id="search.warning" defaultMessage="Warning:" />
+            </strong>
+            &nbsp;
+            <p>
+              <FormattedMessage id="search.not_properly_imported"
+                                defaultMessage="This folder is not fully imported." />
+            </p>
+          </div>
+        )}
+        <DocumentManager query={query}
+                         collection={document.collection}
+                         document={document} />
+      </div>
     );
   }
 }
@@ -55,15 +48,13 @@ const mapStateToProps = (state, ownProps) => {
     context['filter:ancestors'] = document.id;
   } else {
     context['filter:parent.id'] = document.id;
-    context['sort'] = 'name:asc';
   }
 
   let query = Query.fromLocation('search', location, context, 'document').limit(50);
   if (queryText) {
     query = query.setString('q', queryText);
   }
-
-  return { query }
+  return { query };
 };
 
 FolderViewer = connect(mapStateToProps)(FolderViewer);

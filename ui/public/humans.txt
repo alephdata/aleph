@@ -1,0 +1,6 @@
+Aleph is an open source software project, meant to provide good 
+data capabilities to investigative reporters and others.
+
+To see who worked on it, check: 
+
+https://github.com/alephdata/aleph/graphs/contributors

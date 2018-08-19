@@ -8,8 +8,8 @@ from aleph.model import Document, Events
 from aleph.logic.notifications import publish
 from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
+from aleph.logic.collections import index_collection_async
 from aleph.index.documents import index_document, index_records
-from aleph.index.collections import index_collection
 from aleph.analyze import analyze_document
 
 log = logging.getLogger(__name__)
@@ -29,10 +29,10 @@ def process_document(document):
     index_document(document)
     index_records(document)
     if document.collection.casefile:
-        index_collection(document.collection)
+        index_collection_async.delay(document.collection_id)
 
 
-def ingest_document(document, file_path, role_id=None):
+def ingest_document(document, file_path, role_id=None, content_hash=None):
     """Given a stub document and file path, extract information.
     This does not attempt to infer metadata such as a file name."""
     document.status = Document.STATUS_PENDING
@@ -40,16 +40,20 @@ def ingest_document(document, file_path, role_id=None):
         document.uploader_id = role_id
 
     if file_path is not None:
-        # Directories cannot be archived first and then processed
-        # later. So they are effectively sent into a short-cut here
         if os.path.isdir(file_path):
+            # Directories cannot be archived first and then processed
+            # later. So they are effectively sent into a short-cut here
             db.session.commit()
             return ingest(document.id, file_path=file_path)
-        document.content_hash = archive.archive_file(file_path)
+        ch = archive.archive_file(file_path, content_hash=content_hash)
+        document.content_hash = ch
 
     db.session.commit()
-    index_document(document)
-    priority = 5 if document.collection.casefile else 3
+    priority = 3
+    if document.collection.casefile:
+        priority = 6
+        index_document(document)
+
     ingest.apply_async(args=[document.id], priority=priority)
 
 
@@ -80,8 +84,10 @@ def ingest(document_id, file_path=None, refresh=False):
                              result=result,
                              work_path=work_path)
 
+        document.status = Document.STATUS_SUCCESS
         log.debug('Ingested [%s:%s]: %s',
                   document.id, document.schema, document.name)
+
         if document.collection.casefile and not refresh:
             params = {
                 'collection': document.collection,
@@ -90,12 +96,16 @@ def ingest(document_id, file_path=None, refresh=False):
             publish(Events.INGEST_DOCUMENT,
                     actor_id=document.uploader_id,
                     params=params)
+
         db.session.commit()
         process_document(document)
     except Exception:
         db.session.rollback()
         document = Document.by_id(document_id)
         log.exception("Ingest failed [%s]: %s", document.id, document.name)
+        document.status = Document.STATUS_FAIL
+        db.session.commit()
+        process_document(document)
     finally:
         # Removing the temp_path given to storagelayer makes it redundant
         # to also call cleanup on the archive.

@@ -14,26 +14,28 @@ alembic==1.0.0
 
 celery==4.2.1
 elasticsearch==6.3.0
-marshmallow==2.13.5
+marshmallow==2.15.4
 psycopg2-binary==2.7.4
 gunicorn==19.9.0
 langid==1.1.6
 blinker==1.4
 Babel==2.5.1
 PyYAML==3.12
-PyICU==2.0.3
+PyICU==2.0.6
 chardet==3.0.4
 cchardet==2.1.1
 pyahocorasick==1.1.8
-cryptography==2.3
+cryptography==2.3.1
 pylru==1.0.9
 pyjwt==1.6.1
 regex>=2017.12.09
 rdflib==4.2.2
 idna==2.7.0
 requests[security]==2.19.1
-grpcio==1.11.0
 redis==2.10.6
+grpcio==1.14.0
+google-cloud-vision
+google-cloud-storage
 
 # Error reporting
 raven[flask]

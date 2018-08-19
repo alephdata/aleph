@@ -1,6 +1,7 @@
 import logging
 
 from aleph.core import db
+from aleph.model import Document
 from aleph.util import get_extensions
 
 log = logging.getLogger(__name__)
@@ -21,6 +22,8 @@ def get_analyzers():
 
 def analyze_document(document):
     """Run analyzers (such as NER) on a given document."""
+    if document.status != Document.STATUS_SUCCESS:
+        return
     log.info("Analyze document [%s]: %s", document.id, document.name)
 
     for analyzer in get_analyzers():

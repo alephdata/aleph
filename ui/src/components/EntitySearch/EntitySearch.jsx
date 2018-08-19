@@ -30,15 +30,8 @@ class EntitySearch extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      selectedRows: [],
-      refreshCallout: false
-    };
-
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
-    this.updateSelection = this.updateSelection.bind(this);
-    this.checkPendingState = this.checkPendingState.bind(this);
   }
 
   componentDidMount() {
@@ -47,20 +40,6 @@ class EntitySearch extends Component {
 
   componentDidUpdate(prevProps) {
     this.fetchIfNeeded();
-    this.checkPendingState();
-  }
-
-  checkPendingState() {
-    const { result } = this.props;
-
-    let test = result.results.filter(function(data){
-      return data.status === "pending"
-    });
-
-    if(test.length !== 0 && this.state.refreshCallout !== true) {
-      this.setState({refreshCallout: true});
-      this.props.setRefreshCallout();
-    }
   }
 
   fetchIfNeeded() {
@@ -88,40 +67,8 @@ class EntitySearch extends Component {
     });
   }
 
-  updateSelection(entity) {
-    let selectedRows = [];
-    if(entity === null) { //if user clicked select all
-      if(this.props.result.results.length === this.state.selectedRows.length) {
-        this.setState({selectedRows: selectedRows});
-      } else {
-        if(this.props.result.results !== undefined) {
-          this.props.result.results.map(entity => selectedRows.push(entity))
-        }
-
-        this.setState({selectedRows: selectedRows });
-      }
-    } else { //if user clicked on row
-      selectedRows = this.state.selectedRows;
-      let indexOfSelectedRow = -1;
-      for(let i = 0; i < selectedRows.length; i++){
-        if(selectedRows[i].id === entity.id) indexOfSelectedRow = i;
-      }
-      if(indexOfSelectedRow === -1) {
-        selectedRows.push(entity);
-        this.setState({selectedRows: selectedRows});
-      } else {
-        selectedRows.splice(indexOfSelectedRow, 1);
-        this.setState({selectedRows: selectedRows});
-      }
-    }
-
-    this.props.disableOrEnableDelete(selectedRows.length === 0);
-    this.props.setDocuments(selectedRows);
-  }
-
   render() {
-    const { query, result, intl, className, writeable } = this.props;
-    const { selectedRows } = this.state;
+    const { query, result, intl, className } = this.props;
     const isEmpty = !query.hasQuery();
 
     return (
@@ -140,13 +87,13 @@ class EntitySearch extends Component {
           </section>
         )}
         <EntityTable query={query}
+                     result={result}
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
                      updateQuery={this.updateQuery}
-                     result={result}
-                     writeable={writeable}
-                     updateSelection={this.updateSelection}
-                     selectedRows={selectedRows}/>
+                     updateSelection={this.props.updateSelection}
+                     selection={this.props.selection} />
+
         {!result.isLoading && result.next && (
           <Waypoint
             onEnter={this.getMoreResults}

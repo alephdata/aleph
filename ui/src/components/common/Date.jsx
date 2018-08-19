@@ -25,7 +25,12 @@ class Date extends Component {
     const { value } = this.props;
     if (!value) return null;
 
-    let date = value.split('T')[0];
+    let date = value;
+    try {
+	date = value.split('T')[0];
+    }catch(ex) {
+        // Not a complete date, just show what we got
+    }
     return (<span className='Date' title={value}>{date}</span>);
   }
 }

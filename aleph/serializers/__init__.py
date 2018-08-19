@@ -25,6 +25,11 @@ class RecordSchema(BaseSchema):
         return data
 
 
+class QueryLogSchema(BaseSchema):
+    text = String(dump_only=True)
+    count = Integer(dump_only=True)
+
+
 class MatchSchema(BaseSchema):
     EXPAND = [
         ('entity_id', Entity, 'entity', ShallowCombinedSchema, False),
@@ -42,7 +47,7 @@ class MatchCollectionsSchema(BaseSchema):
     collection = Nested(CollectionSchema, required=True)
 
     @post_dump
-    def transient(self, data):
+    def hypermedia(self, data):
         data['uri'] = url_for('xref_api.matches',
                               id=data.pop('parent'),
                               other_id=data.get('collection').get('id'))

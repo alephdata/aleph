@@ -4,7 +4,8 @@ from aleph.core import db
 from aleph.model import Alert
 from aleph.search import DatabaseQueryResult
 from aleph.serializers.alerts import AlertSchema
-from aleph.views.util import require, obj_or_404, jsonify, parse_request
+from aleph.views.util import require, obj_or_404, jsonify
+from aleph.views.util import parse_request, serialize_data
 
 blueprint = Blueprint('alerts_api', __name__)
 
@@ -30,7 +31,7 @@ def create():
 def view(id):
     require(request.authz.logged_in)
     alert = obj_or_404(Alert.by_id(id, role_id=request.authz.id))
-    return jsonify(alert, schema=AlertSchema)
+    return serialize_data(alert, AlertSchema)
 
 
 @blueprint.route('/api/2/alerts/<int:id>', methods=['DELETE'])

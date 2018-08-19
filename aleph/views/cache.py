@@ -24,12 +24,19 @@ def setup_caching():
     By default, caching will be disabled."""
     locale = get_locale()
     request._app_locale = str(locale)
+
+    request.session_id = request.headers.get('X-Aleph-Session')
+    if request.session_id is None:
+        request.session_id = hash_data([request.remote_addr,
+                                        request.accept_languages,
+                                        request.user_agent])
+
     request._http_cache = False
     request._http_private = False
     request._http_etag = None
 
 
-def enable_cache(vary_user=True, vary=None, server_side=False):
+def enable_cache(vary_user=True, vary=None):
     """Enable caching in the context of a view.
 
     If desired, instructions on the cache parameters can be included, such as
@@ -57,6 +64,7 @@ def enable_cache(vary_user=True, vary=None, server_side=False):
 @blueprint.after_app_request
 def cache_response(resp):
     """Post-request processing to set cache parameters."""
+    resp.headers['X-Aleph-Session'] = request.session_id
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'

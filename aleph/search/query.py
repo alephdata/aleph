@@ -3,10 +3,12 @@ from pprint import pprint, pformat  # noqa
 from elasticsearch.helpers import scan
 
 from aleph.core import es
+from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
 from aleph.index.util import cleanup_query, REQUEST_TIMEOUT
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
+from aleph.logic.audit import record_audit
 
 log = logging.getLogger(__name__)
 
@@ -175,7 +177,6 @@ class Query(object):
             'post_filter': self.get_post_filters(),
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
-            # 'profile': True,
             '_source': self.get_source()
         })
         # log.info("Query: %s", pformat(body))
@@ -185,7 +186,7 @@ class Query(object):
         """Execute the query as assmbled."""
         result = es.search(index=self.get_index(),
                            body=self.get_body(),
-                           request_cache=True,
+                           request_cache=self.parser.cache,
                            request_timeout=REQUEST_TIMEOUT)
         log.info("Took: %sms", result.get('took'))
         # log.info("%s", pformat(result))
@@ -203,8 +204,16 @@ class Query(object):
                     query=body)
 
     @classmethod
-    def handle(cls, request, limit=None, schema=None, **kwargs):
-        parser = SearchQueryParser(request.args, request.authz, limit=limit)
+    def handle(cls, request, limit=None, schema=None, parser=None, **kwargs):
+        if parser is None:
+            parser = SearchQueryParser(request.args,
+                                       request.authz,
+                                       limit=limit)
+
+        # Log the search
+        keys = ['prefix', 'text', 'filters']
+        record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
+
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result, schema=schema)
 

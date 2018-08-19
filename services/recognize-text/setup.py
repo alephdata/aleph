@@ -13,7 +13,7 @@ setup(
     include_package_data=True,
     package_data={},
     install_requires=[
-        'pyicu',
+        'pyicu>=2.0.6',
         'banal',
         'pillow',
         'grpcio==1.11.0',
@@ -21,7 +21,7 @@ setup(
         'normality',
         'tesserocr',
         'languagecodes>=1.0.4',
-        'alephclient==0.6.7'
+        'alephclient==0.6.9'
     ],
     zip_safe=False
 )

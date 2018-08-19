@@ -10,7 +10,7 @@ import { queryCollections, updateCollectionPermissions, createCollection } from 
 import { selectCollectionsResult } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import { Breadcrumbs, ErrorSection, DualPane, SectionLoading } from 'src/components/common';
-import { CaseListItem } from 'src/components/Case';
+import { CollectionListItem } from 'src/components/Collection';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
@@ -154,11 +154,11 @@ class CasesIndexScreen extends Component {
                           updateQuery={this.updateQuery}/>
           </DualPane.SidePane>
           <DualPane.ContentPane>
-            <div className="results">
+            <ul className="results">
               {result.results !== undefined && result.results.map(res =>
-                <CaseListItem key={res.id} collection={res}/>
+                <CollectionListItem key={res.id} collection={res} preview={false} />
               )}
-            </div>
+            </ul>
             {result.total === 0 && (
               <div className='error-and-add-button'>
                 <ErrorSection visual="search"
@@ -190,7 +190,7 @@ const mapStateToProps = (state, ownProps) => {
     'filter:kind': 'casefile'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', true)
+    .sortBy('updated_at', 'desc')
     .limit(30);
 
   return {

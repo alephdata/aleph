@@ -13,7 +13,7 @@ from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.logic.statistics import get_instance_stats
 from aleph.views.cache import enable_cache
-from aleph.views.util import jsonify
+from aleph.views.util import jsonify, render_xml
 
 blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
@@ -65,6 +65,23 @@ def metadata():
 def statistics():
     enable_cache(vary_user=True)
     return jsonify(get_instance_stats(request.authz))
+
+
+@blueprint.route('/api/2/sitemap.xml')
+def sitemap_index():
+    enable_cache(vary_user=False)
+    collections = []
+    for collection in Collection.all_authz(Authz.from_role(None)):
+        collections.append({
+            'url': url_for('collections_api.sitemap', id=collection.id),
+            'updated_at': collection.updated_at.date().isoformat()
+        })
+    return render_xml('sitemap_index.xml', collections=collections)
+
+
+@blueprint.route('/healthz')
+def healthz():
+    return jsonify({'status': 'ok'})
 
 
 @blueprint.route('/api/1/<path:path>')

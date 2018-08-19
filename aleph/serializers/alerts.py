@@ -14,7 +14,9 @@ class AlertSchema(BaseSchema):
     notified_at = DateTime(dump_only=True)
 
     @post_dump
-    def transient(self, data):
-        data['uri'] = url_for('alerts_api.view', id=data.get('id'))
+    def hypermedia(self, data):
+        data['links'] = {
+            'self': url_for('alerts_api.view', id=data.get('id'))
+        }
         data['writeable'] = True
         return data

@@ -1,6 +1,6 @@
 import logging
 
-from aleph.model import db
+from aleph.core import db, celery
 from aleph.model import Role, Subscription, Notification
 from aleph.logic.notifications import channel
 
@@ -9,8 +9,14 @@ log = logging.getLogger(__name__)
 
 def update_role(role):
     """Synchronize denormalised role configuration."""
-    db.session.flush()
-    log.info("Updating: %r", role)
+    update_subscriptions.delay(role.id)
+
+
+@celery.task(priority=3)
+def update_subscriptions(role_id):
+    role = Role.by_id(role_id, deleted=True)
+    if role is None:
+        return
     Subscription.unsubscribe(role=role, channel=channel(role))
     for group in Role.all_groups():
         Subscription.unsubscribe(role=role, channel=channel(group))
@@ -20,7 +26,6 @@ def update_role(role):
         Subscription.subscribe(role, Notification.GLOBAL)
         for group in role.roles:
             Subscription.subscribe(role, channel(group))
-
     db.session.commit()
 
 

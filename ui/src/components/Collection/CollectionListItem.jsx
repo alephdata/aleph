@@ -3,13 +3,26 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { Icon } from "@blueprintjs/core";
 import Truncate from 'react-truncate';
 
-import { Date, Category, Country, Collection } from 'src/components/common';
+import { Date, Role, Category, Country, Collection } from 'src/components/common';
+import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 
 import './CollectionListItem.css';
 
 class CollectionListItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deleteIsOpen: false
+    };
+    this.toggleDelete = this.toggleDelete.bind(this);
+  }
+
+  toggleDelete() {
+    this.setState({deleteIsOpen: !this.state.deleteIsOpen});
+  }
+
   render() {
-    const { collection } = this.props;
+    const { collection, preview = true } = this.props;
     if (!collection || !collection.id) {
       return null;
     }
@@ -19,7 +32,7 @@ class CollectionListItem extends Component {
           <span className="pt-tag pt-small pt-round pt-intent-primary">
             <FormattedNumber value={collection.count} />
           </span>
-          <Collection.Link preview={true} collection={collection} icon />
+          <Collection.Link preview={preview} collection={collection} icon />
         </h4>
         {collection.summary &&
           <p className="summary">
@@ -29,10 +42,12 @@ class CollectionListItem extends Component {
           </p>
         }
         <p className="details">
-          <span className="details-item">
-            <Icon icon="list" />
-            <Category collection={collection} />
-          </span>
+          { !collection.casefile && (
+            <span className="details-item">
+              <Icon icon="list" />
+              <Category collection={collection} />
+            </span>
+          )}
 
           <span className="details-item">
             <Icon icon="time" />
@@ -46,9 +61,28 @@ class CollectionListItem extends Component {
           { collection.countries.length > 0 && (
             <span className="details-item">
               <Icon icon="globe" />
-              <Country.List codes={collection.countries} truncate={4} />
+              <Country.List codes={collection.countries} truncate={3} />
             </span>
           )}
+
+          { collection.casefile && (
+            <span className="details-item">
+              <Icon icon="social-media" />
+              <Role.List roles={collection.team} icon={false} truncate={3} />
+            </span>
+          )}
+          
+          { collection.casefile && (
+            <span className="delete-item">
+              <a onClick={this.toggleDelete}>
+                <Icon icon="trash" />
+              </a>
+              <CollectionDeleteDialog collection={collection}
+                                      isOpen={this.state.deleteIsOpen}
+                                      toggleDialog={this.toggleDelete} />
+            </span>
+          )}
+
         </p>
       </li>
     );
