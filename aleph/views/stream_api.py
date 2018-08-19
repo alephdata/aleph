@@ -28,13 +28,13 @@ def entities(collection_id=None):
 
 
 @blueprint.route('/api/2/records/_stream')
-@blueprint.route('/api/2/collections/<int:collection_id>/_stream_records')
+@blueprint.route('/api/2/collections/<int:collection_id>/_records')
 @blueprint.route('/api/2/documents/<int:document_id>/records/_stream')
 def records(document_id=None, collection_id=None):
     require(request.authz.can_export())
     if collection_id is not None:
-        get_db_collection(id, request.authz.READ)
-        record_audit(Audit.ACT_COLLECTION, id=id)
+        get_db_collection(collection_id, request.authz.READ)
+        record_audit(Audit.ACT_COLLECTION, id=collection_id)
     elif document_id is not None:
         get_db_document(document_id)
         record_audit(Audit.ACT_ENTITY, id=document_id)
@@ -49,6 +49,6 @@ def records(document_id=None, collection_id=None):
 @blueprint.route('/api/2/collections/<int:collection_id>/_rdf')
 def triples(collection_id):
     require(request.authz.can_export())
-    collection = get_db_collection(id, request.authz.READ)
-    record_audit(Audit.ACT_COLLECTION, id=id)
+    collection = get_db_collection(collection_id, request.authz.READ)
+    record_audit(Audit.ACT_COLLECTION, id=collection_id)
     return Response(export_collection(collection), mimetype='text/plain')

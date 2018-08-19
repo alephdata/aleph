@@ -54,14 +54,6 @@ class CollectionsApiTestCase(TestCase):
         data = res.data.decode('utf-8')
         assert self.ent.id in data, data
 
-    def test_rdf(self):
-        url = '/api/2/collections/%s/rdf' % self.col.id
-        res = self.client.get(url)
-        assert res.status_code == 403, res
-        self.grant_publish(self.col)
-        res = self.client.get(url)
-        assert res.status_code == 200, res
-
     def test_update_valid(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/collections/%s' % self.col.id
