@@ -30,9 +30,7 @@ def dict_list(data, *keys):
 
 def backoff(failures=0):
     # sleep = 2 ** (failures + 1)
-    if failures == 0:
-        return
-    sleep = random.random() * failures
+    sleep = random.random() * (failures + 1)
     log.debug("Back-off: %.2f sec.", sleep)
     time.sleep(sleep)
 

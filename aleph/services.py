@@ -8,6 +8,7 @@ class ServiceClientMixin(object):
     """Helper mixing to manage the connectivity with a gRPC endpoint."""
     SERVICE = None
     Error = grpc.RpcError
+    Status = grpc.StatusCode
 
     @property
     def channel(self):
@@ -29,3 +30,6 @@ class ServiceClientMixin(object):
 
     def has_channel(self):
         return self.SERVICE is not None
+
+    def reset_channel(self):
+        self._local.channel = None

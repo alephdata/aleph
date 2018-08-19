@@ -24,7 +24,7 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
         key = sha1(data).hexdigest()
         text = Cache.get_cache(key)
         if text is not None:
-            log.info('%s chars cached', len(text))
+            # log.info('%s chars cached', len(text))
             return text
 
         data = self.ensure_size(data)
@@ -37,13 +37,16 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
                 languages = ensure_list(languages)
                 image = Image(data=data, languages=languages)
                 response = service.Recognize(image)
-                log.info('%s chars recognized', len(response.text))
+                log.info('OCR: %s chars', len(response.text))
                 if response.text is not None:
                     Cache.set_cache(key, response.text)
                 return response.text
             except self.Error as e:
+                if e.code() == self.Status.RESOURCE_EXHAUSTED:
+                    continue
                 log.warning("gRPC [%s]: %s", e.code(), e.details())
                 backoff(failures=attempt)
+                self.reset_channel()
 
 
 class GoogleVisionService(OCRService, OCRUtils):
