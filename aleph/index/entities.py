@@ -5,7 +5,7 @@ from itertools import count
 from banal import clean_dict, ensure_list
 from datetime import datetime
 from followthemoney import model
-from elasticsearch.helpers import BulkIndexError
+from elasticsearch.helpers import scan, BulkIndexError
 from elasticsearch import TransportError
 from normality import latinize_text
 
@@ -13,7 +13,7 @@ from aleph.core import es
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
 from aleph.index.util import index_safe, mget_safe, backoff_cluster
-from aleph.index.util import refresh_index
+from aleph.index.util import refresh_index, authz_query
 
 log = logging.getLogger(__name__)
 
@@ -52,6 +52,34 @@ def get_entity(entity_id):
         result = unpack_result(result)
         if result is not None:
             return result
+
+
+def iter_entities(authz=None, collection_id=None, schemata=None,
+                  includes=None, excludes=None):
+    """Scan all entities matching the given criteria."""
+    filters = []
+    if authz is not None:
+        filters.append(authz_query(authz))
+    if collection_id is not None:
+        filters.append({'term': {'collection_id': collection_id}})
+    schemata = ensure_list(schemata)
+    if len(schemata):
+        filters.append({'terms': {'schemata': schemata}})
+    source = {}
+    if includes is not None:
+        source['includes'] = includes
+    if excludes is not None:
+        source['excludes'] = excludes
+    query = {
+        'query': {
+            'bool': {'filter': filters}
+        },
+        '_source': source
+    }
+    for res in scan(es, index=entities_index(), query=query, scroll='1200m'):
+        entity = unpack_result(res)
+        if entity is not None:
+            yield entity
 
 
 def delete_entity(entity_id):

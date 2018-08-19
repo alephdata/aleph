@@ -1,15 +1,13 @@
 import logging
 from itertools import islice
 from datetime import datetime
-from elasticsearch.helpers import scan
 
-from aleph.core import db, es, celery
+from aleph.core import db, celery
 from aleph.authz import Authz
 from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
-from aleph.index.core import entities_index
-from aleph.index.util import authz_query
+from aleph.index.entities import iter_entities
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.util import document_url, entity_url
 
@@ -65,27 +63,17 @@ def update_collection_access(collection_id):
 def generate_sitemap(collection_id):
     """Generate entries for a collection-based sitemap.xml file."""
     # cf. https://www.sitemaps.org/protocol.html
-    query = {
-        'query': {
-            'bool': {
-                'filter': [
-                    {'term': {'collection_id': collection_id}},
-                    {'term': {'schemata': Entity.THING}},
-                    authz_query(Authz.from_role(None))
-                ]
-            }
-        },
-        '_source': {'includes': ['schemata', 'updated_at']}
-    }
-    scanner = scan(es, index=entities_index(), query=query)
+    entities = iter_entities(authz=Authz.from_role(None),
+                             collection_id=collection_id,
+                             schemata=[Entity.THING],
+                             includes=['schemata', 'updated_at'])
     # strictly, the limit for sitemap.xml is 50,000
-    for res in islice(scanner, 49500):
-        source = res.get('_source', {})
-        updated_at = source.get('updated_at', '').split('T', 1)[0]
-        if Document.SCHEMA in source.get('schemata', []):
-            url = document_url(res.get('_id'))
+    for entity in islice(entities, 49500):
+        updated_at = entity.get('updated_at', '').split('T', 1)[0]
+        if Document.SCHEMA in entity.get('schemata', []):
+            url = document_url(entity.get('id'))
         else:
-            url = entity_url(res.get('_id'))
+            url = entity_url(entity.get('id'))
         yield (url, updated_at)
 
 
