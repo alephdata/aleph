@@ -1,4 +1,5 @@
 import logging
+from banal import ensure_list
 from flask.wrappers import Response
 from flask import Blueprint, request
 
@@ -18,12 +19,18 @@ blueprint = Blueprint('bulk_api', __name__)
 @blueprint.route('/api/2/collections/<int:collection_id>/_stream')
 def entities(collection_id=None):
     require(request.authz.can_export())
+    schemata = ensure_list(request.args.getlist('schema'))
+    excludes = ['text', 'roles', 'fingerprints']
+    includes = ensure_list(request.args.getlist('include'))
+    includes = [f for f in includes if f not in excludes]
     if collection_id is not None:
         get_db_collection(id, request.authz.READ)
         record_audit(Audit.ACT_COLLECTION, id=id)
     entities = iter_entities(authz=request.authz,
                              collection_id=collection_id,
-                             excludes=['text', 'roles'])
+                             schemata=schemata,
+                             excludes=excludes,
+                             includes=includes)
     return stream_ijson(entities)
 
 

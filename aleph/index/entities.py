@@ -62,14 +62,13 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         filters.append(authz_query(authz))
     if collection_id is not None:
         filters.append({'term': {'collection_id': collection_id}})
-    schemata = ensure_list(schemata)
-    if len(schemata):
-        filters.append({'terms': {'schemata': schemata}})
+    if ensure_list(schemata):
+        filters.append({'terms': {'schemata': ensure_list(schemata)}})
     source = {}
-    if includes is not None:
-        source['includes'] = includes
-    if excludes is not None:
-        source['excludes'] = excludes
+    if ensure_list(includes):
+        source['includes'] = ensure_list(includes)
+    if ensure_list(excludes):
+        source['excludes'] = ensure_list(excludes)
     query = {
         'query': {'bool': {'filter': filters}},
         'sort': ['_doc'],
