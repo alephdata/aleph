@@ -1,4 +1,5 @@
 import logging
+from flask.wrappers import Response
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
 from celestial.types import PDF
@@ -86,7 +87,7 @@ def _serve_archive(content_hash, file_name, mime_type):
     try:
         local_path = archive.load_file(content_hash, file_name=file_name)
         if local_path is None:
-            return ('', 404)
+            return Response(status=404)
 
         return send_file(local_path,
                          as_attachment=True,
