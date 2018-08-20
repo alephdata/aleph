@@ -79,7 +79,7 @@ class EntityAggregator(object):
             self.regex_matches_categories[l].append(c)
 
     def feed(self, label, category, span):
-        label = clean_label(label)
+        label = clean_label(label, category)
         if label is None:
             return
         key = label_key(label)

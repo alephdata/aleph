@@ -23,7 +23,15 @@ def prepare_geonames():
                     name = normalize(name)
                     if name is None:
                         continue
-                    db[name] = country
+                    countries = db.get(name)
+                    if countries:
+                        countries.append(country)
+                        db[name] = countries
+                    else:
+                        db[name] = [country]
+            for name in db:
+                countries = db[name]
+                db[name] = max(set(countries), key=countries.count)
 
 
 if __name__ == "__main__":

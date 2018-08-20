@@ -12,7 +12,7 @@ def test_polyglot():
     assert 'Syria' in entities
 
 
-def test_sapcy():
+def test_spacy():
     text = """This is a document about the United States. But also about
     Syria and Germany.
     """

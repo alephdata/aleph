@@ -78,5 +78,5 @@ def extract_regex(text):
             if match_text is not None:
                 category = REGEX_TYPES.get(pattern)
                 start, end = match.span()
-                log.info("%s: %s", match_text, category)
+                # log.info("%s: %s", match_text, category)
                 yield match_text, category, start, end

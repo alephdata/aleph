@@ -2,6 +2,8 @@ import re
 from Levenshtein import setmedian
 from normality import normalize, collapse_spaces
 
+from alephclient.services.entityextract_pb2 import ExtractedEntity
+
 MAX_LENGTH = 100
 MIN_LENGTH = 4
 
@@ -9,7 +11,7 @@ CLEANUP = r'^\W*((mr|ms|miss|the|of|de)\.?\s+)*(?P<term>.*?)([\'’]s)?\W*$'
 CLEANUP = re.compile(CLEANUP, re.I | re.U)
 
 
-def clean_label(text):
+def clean_label(text, category=None):
     if text is None or len(text) > MAX_LENGTH:
         return
     match = CLEANUP.match(text)
@@ -18,7 +20,7 @@ def clean_label(text):
     text = collapse_spaces(text)
     if not len(text) or len(text) < MIN_LENGTH:
         return
-    if ' ' not in text:
+    if category in (None, ExtractedEntity.PERSON) and ' ' not in text:
         return
     return text
 

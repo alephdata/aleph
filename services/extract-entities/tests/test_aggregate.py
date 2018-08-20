@@ -59,5 +59,5 @@ class TestAggregate(object):
         entities = [l for l, c, w in agg.entities]
         assert 'us' in entities
         # fails
-        # assert 'de' in entities
-        # assert 'sy' in entities
+        assert 'de' in entities
+        assert 'sy' in entities
