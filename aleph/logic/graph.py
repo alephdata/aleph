@@ -1,24 +1,15 @@
-from pprint import pprint  # noqa
 import hashlib
 import logging
-
-from elasticsearch.helpers import scan
+from pprint import pprint  # noqa
 from followthemoney import model
 
-from aleph.core import es, connect_redis
-from aleph.index.core import entities_index
-from aleph.index.util import unpack_result
-from aleph import settings
+from aleph.core import settings, kv
+from aleph.index.entities import iter_entities
 
 log = logging.getLogger(__name__)
 
 
 def load_into_redis(collection_id):
-    q = {'term': {'collection_id': collection_id}}
-    q = {
-        'query': q,
-        '_source': {'exclude': ['text']}
-    }
     ftm_properties = {}
     for prop in model.properties:
         ftm_properties[prop.name] = {
@@ -28,10 +19,9 @@ def load_into_redis(collection_id):
         }
     count = 0
     queue_len = 0
-    conn = connect_redis()
-    pipe = conn.pipeline()
-    for row in scan(es, index=entities_index(), query=q):
-        entity = unpack_result(row)
+    pipe = kv.pipeline()
+    for entity in iter_entities(collection_id=collection_id,
+                                excludes=['text']):
         entity_id = entity['id']
         schema = entity['schema']
         properties = entity['properties']
@@ -53,13 +43,12 @@ def load_into_redis(collection_id):
             pipe.execute()
             log.info("Stored %s entities so far." % count)
             queue_len = 0
-            pipe = conn.pipeline()
+            pipe = kv.pipeline()
     log.info("Stored %s entities." % count)
     pipe.execute()
 
 
 def export_node(entity_id, update=False):
-    conn = connect_redis()
     relation_schema_map = {}
     for schema in model.schemata.values():
         for prop in schema.properties.values():
@@ -84,11 +73,11 @@ def export_node(entity_id, update=False):
         if not update:
             graph["nodes"].append({
                 "id": entity_id,
-                "labels": [conn.get("schema:" + entity_id)] or ["Thing"],
+                "labels": [kv.get("schema:" + entity_id)] or ["Thing"],
                 "properties": {},
             })
             added_nodes = {entity_id, }
-        links = conn.hgetall(entity_id)
+        links = kv.hgetall(entity_id)
         for link in links:
             rel, obj = link.split(":", 1)
             if obj not in added_nodes:
@@ -109,7 +98,7 @@ def export_node(entity_id, update=False):
                 "properties": {},
             })
         for rel in relation_schema_map:
-            for obj in conn.hkeys(rel + ":" + entity_id):
+            for obj in kv.hkeys(rel + ":" + entity_id):
                 if obj not in added_nodes:
                     graph["nodes"].append({
                         "id": obj,
