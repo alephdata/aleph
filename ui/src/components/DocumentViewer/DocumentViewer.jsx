@@ -74,7 +74,6 @@ class DocumentViewer extends React.Component {
   
   render() {
     const { document: doc, showToolbar, previewMode } = this.props;
-    const isFolder = (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook');
     const { numberOfPages } = this.state;
 
     if (doc.isLoading) {

@@ -8,10 +8,8 @@ import { fetchCollectionXrefIndex } from "src/actions";
 import { selectCollectionXrefIndex } from "src/selectors";
 import { selectCollection } from "../../selectors";
 
-class CollectionInfoXref extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+
+class CollectionXrefTable extends React.Component {
 
   componentDidMount() {
     this.fetchIfNeeded();
@@ -29,7 +27,7 @@ class CollectionInfoXref extends React.Component {
   }
 
   render() {
-    const { xrefIndex, collection } = this.props;
+    const { collection, xrefIndex } = this.props;
     if (xrefIndex.results === undefined) {
       return null;
     }
@@ -37,20 +35,18 @@ class CollectionInfoXref extends React.Component {
     const linkPath = getPath(collection.links.ui) + '/xref/';
 
     return (
-      <section className="CollectionInfoXref">
+      <section className="CollectionXrefTable">
         <table className="data-table">
           <thead>
           <tr>
             <th className='entity'>
               <span className="value">
-                 <FormattedMessage id="xref.collection"
-                                   defaultMessage="Collection" />
+                 <FormattedMessage id="xref.collection" defaultMessage="Collection" />
               </span>
             </th>
             <th>
               <span className="value">
-                <FormattedMessage id="xref.cross.matches"
-                                  defaultMessage="Cross-matches" />
+                <FormattedMessage id="xref.matches" defaultMessage="Matches" />
               </span>
             </th>
           </tr>
@@ -76,12 +72,11 @@ class CollectionInfoXref extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.match.params;
-  const collection =  selectCollection(state, collectionId);
-  const xrefIndex = selectCollectionXrefIndex(state, collectionId);
-  return { xrefIndex, collection };
+  const { collection } = ownProps;
+  const xrefIndex = selectCollectionXrefIndex(state, collection.id);
+  return { xrefIndex };
 };
 
-CollectionInfoXref = connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionInfoXref);
-CollectionInfoXref = withRouter(CollectionInfoXref);
-export default CollectionInfoXref;
+CollectionXrefTable = connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionXrefTable);
+CollectionXrefTable = withRouter(CollectionXrefTable);
+export default CollectionXrefTable;

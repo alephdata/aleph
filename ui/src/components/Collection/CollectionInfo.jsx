@@ -10,7 +10,7 @@ import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import { Collection, DualPane, TabCount, TextLoading } from 'src/components/common';
-import { CollectionInfoXref, CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
+import { CollectionOverview, CollectionInfoContent } from 'src/components/Collection';
 
 class CollectionInfo extends Component {
   constructor(props) {
@@ -106,29 +106,8 @@ class CollectionInfo extends Component {
           </h1>
         </div>
         <div className="pane-content">
-          <Tabs id="CollectionInfoTabs" onChange={this.handleTabChange} selectedTabId={activeTabId}>
-            <Tab id="overview"
-                 title={
-                   <React.Fragment>
-                     <FormattedMessage id="collection.info.overview" defaultMessage="Overview"/>
-                   </React.Fragment>
-                 }
-                 panel={<React.Fragment>
-                   <CollectionOverview collection={collection} hasHeader={false}/>
-                   <CollectionInfoContent collection={collection} schemata={collection.schemata}/>
-                 </React.Fragment>
-                 }
-            />
-            <Tab id="xref" disabled={xrefIndex.total === 0}
-                 title={
-                   <TextLoading loading={xrefIndex.total === undefined}>
-                     <FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>
-                     <TabCount count={xrefIndex.total} />
-                  </TextLoading>
-                 }
-                 panel={<CollectionInfoXref xrefIndex={xrefIndex} collection={collection} />}
-            />
-          </Tabs>
+          <CollectionOverview collection={collection} hasHeader={false}/>
+          <CollectionInfoContent collection={collection} schemata={collection.schemata}/>
         </div>
       </DualPane.InfoPane>
     );

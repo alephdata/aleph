@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import { Breadcrumbs } from 'src/components/common';
-import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
-import DocumentManager from 'src/components/Document/DocumentManager';
 import Screen from 'src/components/Screen/Screen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import CaseContext from "src/components/Case/CaseContext";
-import { fetchCollection } from "src/actions";
-import { selectCollection } from "src/selectors";
+import CollectionXrefTable from 'src/components/Collection/CollectionXrefTable';
+import CaseContext from 'src/components/Case/CaseContext';
+import { fetchCollection } from 'src/actions';
+import { selectCollection } from 'src/selectors';
 
 
 class CollectionXrefIndexScreen extends Component {
@@ -45,7 +44,7 @@ class CollectionXrefIndexScreen extends Component {
               breadcrumbs={<Breadcrumbs collection={collection}/>}
               className='CollectionXrefIndexScreen'>
         <CaseContext collection={collection} activeTab='Xref'>
-          {' todo table of xrefs here '}
+          <CollectionXrefTable collection={collection} />
         </CaseContext>
       </Screen>
     );
