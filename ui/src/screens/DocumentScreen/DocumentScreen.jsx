@@ -8,8 +8,7 @@ import { Entity, Breadcrumbs, DualPane } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import CaseContext from "src/components/Case/CaseContext";
-import { DocumentContent, DocumentInfo } from '../../components/Document';
+import { DocumentContent, DocumentInfo } from 'src/components/Document';
 
 
 class DocumentScreen extends Component {
@@ -49,12 +48,10 @@ class DocumentScreen extends Component {
 
     return (
       <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
-        <CaseContext collection={document.collection} activeTab="Documents">
-          <DualPane>
-            <DocumentContent document={document} />
-            <DocumentInfo document={document} />
-          </DualPane>
-        </CaseContext>
+        <DualPane>
+          <DocumentContent document={document} />
+          <DocumentInfo document={document} />
+        </DualPane>
       </Screen>
     );
   }

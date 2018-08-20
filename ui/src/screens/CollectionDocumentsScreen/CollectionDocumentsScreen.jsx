@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import { Breadcrumbs } from 'src/components/common';
 import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
 import DocumentManager from 'src/components/Document/DocumentManager';
+import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import Screen from 'src/components/Screen/Screen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import CaseContext from "src/components/Case/CaseContext";
 import Query from 'src/app/Query';
 import { fetchCollection, deleteDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
@@ -42,16 +42,12 @@ class CollectionDocumentsScreen extends Component {
     }
 
     return (
-      <Screen title={collection.label}
-              breadcrumbs={<Breadcrumbs collection={collection}/>}
-              className='CaseDocumentsScreen'>
-        <CaseContext collection={collection} activeTab='Documents'>
-          <Toolbar>
-            <CollectionSearch collection={collection} />
-          </Toolbar>
-          <DocumentManager query={query} collection={collection} />
-        </CaseContext>
-      </Screen>
+      <CollectionScreenContext collection={collection}>
+        <Toolbar>
+          <CollectionSearch collection={collection} />
+        </Toolbar>
+        <DocumentManager query={query} collection={collection} />
+      </CollectionScreenContext>
     );
   }
 }
