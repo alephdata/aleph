@@ -14,7 +14,8 @@ import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
 import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
-import CollectionsXrefScreen from 'src/screens/CollectionsXrefScreen/CollectionsXrefScreen';
+import CollectionXrefIndexScreen from 'src/screens/CollectionXrefIndexScreen/CollectionXrefIndexScreen';
+import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
@@ -59,10 +60,10 @@ class Router extends Component {
         <Route path="/cases/:collectionId" exact component={CaseScreen}/>
         <Route path="/collections/:collectionId/documents" exact component={CollectionDocumentsScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionRedirectScreen}/>
-        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionsXrefScreen}/>
+        <Route path="/collections/:collectionId/xref" exact component={CollectionXrefIndexScreen}/>
+        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/notifications" exact component={NotificationsScreen}/>
-        <Route path="/collections/:collectionId/xref" exact component={CollectionInfoXref}/>
         <Route path="/" exact component={HomeScreen}/>
         <Route component={NotFoundScreen}/>
       </Switch>

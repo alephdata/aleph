@@ -14,7 +14,7 @@ import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
-import './CollectionsXrefScreen.css';
+import './CollectionXrefMatchesScreen.css';
 
 const messages = defineMessages({
   title: {
@@ -24,7 +24,7 @@ const messages = defineMessages({
 });
 
 
-class CollectionsXrefScreen extends Component {
+class CollectionXrefMatchesScreen extends Component {
   constructor() {
     super();
     this.onOtherChange = this.onOtherChange.bind(this)
@@ -94,7 +94,7 @@ class CollectionsXrefScreen extends Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} breadcrumbs={breadcrumbs}>
         <CaseContext collection={collection} activeTab='Xref'>
-          <table className="CollectionXrefScreen data-table">
+          <table className="CollectionXrefMatchesScreen data-table">
             <thead>
               <tr>
                 <th></th>
@@ -219,12 +219,12 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-CollectionsXrefScreen = withRouter(CollectionsXrefScreen);
-CollectionsXrefScreen = injectIntl(CollectionsXrefScreen);
-CollectionsXrefScreen = connect(mapStateToProps, {
+CollectionXrefMatchesScreen = withRouter(CollectionXrefMatchesScreen);
+CollectionXrefMatchesScreen = injectIntl(CollectionXrefMatchesScreen);
+CollectionXrefMatchesScreen = connect(mapStateToProps, {
   fetchCollection,
   fetchCollectionXrefIndex,
   queryXrefMatches
-})(CollectionsXrefScreen);
+})(CollectionXrefMatchesScreen);
 
-export default CollectionsXrefScreen;
+export default CollectionXrefMatchesScreen;

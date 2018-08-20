@@ -63,7 +63,7 @@ class CollectionViewsMenu extends React.Component {
       }
     }
     content.sort(this.sortByNumber);
-    const linkPath = getPath(collection.links.ui) + '/xref/';
+    const linkPath = getPath(collection.links.ui) + '/xref';
 
     return (
       <div className='ViewsMenu'>
@@ -73,17 +73,11 @@ class CollectionViewsMenu extends React.Component {
             <i className="fa fa-fw fal fa-folder-open"/>
           </a></Tooltip>)}
         <Tooltip content={intl.formatMessage(messages.xref)} position={Position.BOTTOM_RIGHT}>
-          <a href={`${linkPath}${collection.id}`}
+          <a href={linkPath}
              className={c('ModeButtons', 'pt-button pt-large')}>
             <i className="fa fa-fw fal fa-folder-open"/>
-          </a></Tooltip>
-        {/*{ xrefIndex.results !== undefined && xrefIndex.results.map((idx) => (
-          <a key={idx.collection.id}
-             href={`${linkPath}${idx.collection.id}`}
-             title={idx.collection.label + ' (' + idx.matches + ')'}>
-            <span className="pt-icon-standard pt-icon-tag"/>
           </a>
-        ))}*/}
+        </Tooltip>
       </div>
     );
   }
