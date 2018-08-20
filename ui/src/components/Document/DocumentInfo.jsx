@@ -8,7 +8,7 @@ import getPath from 'src/util/getPath';
 import { URL, DualPane, TabCount, Schema, Entity, TextLoading } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
 import { fetchEntityTags } from 'src/actions/index';
-import { Toolbar, CloseButton, ModeButtons } from 'src/components/Toolbar';
+import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { EntityInfoTags } from 'src/components/Entity';
 import { DocumentMetadata } from 'src/components/Document';
 import { CollectionOverview } from 'src/components/Collection';
@@ -47,7 +47,6 @@ class DocumentInfo extends React.Component {
       <DualPane.InfoPane className="DocumentInfo with-heading">
         {showToolbar && (
           <Toolbar className='toolbar-preview'>
-            <ModeButtons document={doc} isPreview={true} />
             {doc.links && doc.links.ui && (
               <Link to={getPath(doc.links.ui)} className="pt-button button-link">
                 <span className={`pt-icon-share`}/>
