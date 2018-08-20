@@ -1,7 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 
-import { DownloadButton, DocumentUploadButton, DocumentFolderButton } from 'src/components/Toolbar';
+import DownloadButton from 'src/components/Toolbar/DownloadButton';
+
 
 class ModeButtons extends React.Component {
   render() {
@@ -9,8 +10,6 @@ class ModeButtons extends React.Component {
 
     return (
       <div className="pt-button-group">
-        <DocumentFolderButton collection={document.collection} parent={document} />
-        <DocumentUploadButton collection={document.collection} parent={document} />
         <DownloadButton document={document} />
       </div>
     );

@@ -37,7 +37,15 @@ class QueryResult(object):
     def to_dict(self):
         results = list(self.results)
         if self.schema:
-            results, _ = self.schema().dump(results, many=True)
+            results, errors = self.schema().dump(results, many=True)
+            if len(errors):
+                return {
+                    'status': 'error',
+                    'total': 0,
+                    'results': [],
+                    'errors': errors
+                }
+
         return {
             'status': 'ok',
             'results': results,

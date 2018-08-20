@@ -171,7 +171,7 @@ const mapStateToProps = (state, ownProps) => {
     'filter:kind': 'source'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', true)
+    .sortBy('count', 'desc')
     .limit(40);
   return {
     query: query,

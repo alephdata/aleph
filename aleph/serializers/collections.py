@@ -38,7 +38,7 @@ class CollectionSchema(BaseSchema):
     creator = Nested(RoleReferenceSchema(), dump_only=True)
     team = List(Nested(RoleReferenceSchema()), dump_only=True)
     count = Integer(dump_only=True)
-    schemata = Dict(dump_only=True, default={})
+    schemata = Dict(dump_only=True)
 
     @pre_load
     def flatten_collection(self, data):

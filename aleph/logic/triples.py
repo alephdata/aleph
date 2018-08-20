@@ -1,14 +1,11 @@
 import logging
 from banal import ensure_list
 from followthemoney import model
-from elasticsearch.helpers import scan
 from rdflib import Namespace, Graph, URIRef, Literal
 from rdflib.namespace import DC, DCTERMS, RDF, RDFS, SKOS, XSD
 
-from aleph.core import es
 from aleph.model import Document
-from aleph.index.core import entities_index
-from aleph.index.util import unpack_result
+from aleph.index.entities import iter_entities
 from aleph.logic.util import ui_url
 
 # DC = Namespace('http://purl.org/dc/elements/1.1/format')
@@ -146,12 +143,8 @@ def export_collection(collection):
     for line in itergraph(g):
         yield line
 
-    q = {'term': {'collection_id': collection.id}}
-    q = {
-        'query': q,
-        '_source': {'exclude': ['text']}
-    }
-    for row in scan(es, index=entities_index(), query=q):
-        g = export_entity(unpack_result(row), uri)
+    entities = iter_entities(collection_id=collection.id, excludes=['text'])
+    for entity in entities:
+        g = export_entity(entity, uri)
         for line in itergraph(g):
             yield line

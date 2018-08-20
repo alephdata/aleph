@@ -43,3 +43,27 @@ class QueryParserTestCase(TestCase):
         self.assertEqual(args.getbool('mybadbool'), False)
         self.assertEqual(args.getbool('notakey'), False)
         self.assertEqual(args.getbool('notakey', True), True)
+
+    def test_to_dict(self):
+        parser_dict = args.to_dict()
+        self.assertEqual(set(parser_dict.keys()), set([
+            'text', 'prefix', 'offset', 'limit', 'filters',
+            'sorts', 'empties', 'exclude'
+        ]))
+        self.assertEqual(parser_dict['text'], None)
+        self.assertEqual(parser_dict['prefix'], None)
+        self.assertEqual(parser_dict['offset'], 5)
+        self.assertEqual(parser_dict['limit'], 20)
+        self.assertEqual(
+            list(parser_dict['filters'].keys()),
+            ['key1', 'key2', 'key3']
+        )
+        self.assertEqual(
+            set(parser_dict['filters']['key1']), set(['foo1', 'foo2'])
+        )
+        self.assertEqual(
+            set(parser_dict['filters']['key2']), set(['foo3', 'foo5'])
+        )
+        self.assertEqual(
+            set(parser_dict['filters']['key3']), set(['foo4'])
+        )

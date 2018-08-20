@@ -5,7 +5,7 @@ from itertools import count
 from banal import clean_dict, ensure_list
 from datetime import datetime
 from followthemoney import model
-from elasticsearch.helpers import BulkIndexError
+from elasticsearch.helpers import scan, BulkIndexError
 from elasticsearch import TransportError
 from normality import latinize_text
 
@@ -13,6 +13,7 @@ from aleph.core import es
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
 from aleph.index.util import index_safe, mget_safe, backoff_cluster
+from aleph.index.util import refresh_index, authz_query
 
 log = logging.getLogger(__name__)
 
@@ -53,10 +54,35 @@ def get_entity(entity_id):
             return result
 
 
+def iter_entities(authz=None, collection_id=None, schemata=None,
+                  includes=None, excludes=None):
+    """Scan all entities matching the given criteria."""
+    filters = []
+    if authz is not None:
+        filters.append(authz_query(authz))
+    if collection_id is not None:
+        filters.append({'term': {'collection_id': collection_id}})
+    if ensure_list(schemata):
+        filters.append({'terms': {'schemata': ensure_list(schemata)}})
+    source = {}
+    if ensure_list(includes):
+        source['includes'] = ensure_list(includes)
+    if ensure_list(excludes):
+        source['excludes'] = ensure_list(excludes)
+    query = {
+        'query': {'bool': {'filter': filters}},
+        'sort': ['_doc'],
+        '_source': source
+    }
+    for res in scan(es, index=entities_index(), query=query, scroll='1410m'):
+        yield unpack_result(res)
+
+
 def delete_entity(entity_id):
     """Delete an entity from the index."""
     q = {'ids': {'values': str(entity_id)}}
     query_delete(entities_index(), q)
+    refresh_index(index=entities_index())
 
 
 def _index_updates(collection, entities):

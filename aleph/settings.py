@@ -120,6 +120,14 @@ DEFAULT_LANGUAGE = env('DEFAULT_LANGUAGE', 'en')
 OCR_DEFAULTS = ['eng']
 OCR_DEFAULTS = env_list('OCR_DEFAULTS', OCR_DEFAULTS)
 
+# Whether to use Google Vision API or not
+OCR_VISION_API = env_bool('OCR_VISION_API', False)
+
+# Microservice for tesseract
+OCR_SERVICE = 'recognize-text:50000'
+OCR_SERVICE = env('OCR_SERVICE', OCR_SERVICE)
+
+
 # Language whitelist
 LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
              'el', 'lt', 'uk', 'zh', 'be', 'bg', 'bs', 'ja', 'cs', 'lv', 'pt',
@@ -143,9 +151,10 @@ ANALYZE_IBAN = env_bool('ANAYZE_IBAN', True)
 ENTITIES_SERVICE = env('ENTITIES_SERVICE', 'extract-entities:50000')
 COUNTRIES_SERVICE = None  # 'extract-countries:50000'
 COUNTRIES_SERVICE = env('COUNTRIES_SERVICE', COUNTRIES_SERVICE)
-OCR_SERVICE = 'recognize-text:50000'
-OCR_SERVICE = env('OCR_SERVICE', OCR_SERVICE)
 
+# general gRPC settings
+GRPC_LB_POLICY = env('GRPC_LB_POLICY', 'round_robin')
+GRPC_CONN_AGE = int(env('GRPC_CONN_AGE', 500))  # ms
 
 ##############################################################################
 # E-mail settings
@@ -183,7 +192,7 @@ COLLECTIONS_INDEX = env('COLLECTIONS_INDEX', COLLECTIONS_INDEX)
 
 
 # Disable delayed processing via queue
-EAGER = env_bool('EAGER', False)
+EAGER = env_bool('EAGER', DEBUG)
 QUEUE_PREFIX = env('QUEUE_PREFIX', APP_NAME)
 QUEUE_NAME = '%s_worker' % QUEUE_PREFIX
 QUEUE_ROUTING_KEY = 'worker.process'

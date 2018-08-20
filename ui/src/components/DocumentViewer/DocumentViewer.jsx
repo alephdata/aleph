@@ -9,8 +9,6 @@ import { ErrorSection } from 'src/components/common';
 import { Toolbar, CloseButton, ParentButton, PagingButtons, DocumentSearch, ModeButtons } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import { TableViewer, TextViewer, HtmlViewer, PdfViewer, ImageViewer, FolderViewer, EmailViewer } from './index';
-import { RefreshCallout } from 'src/components/common';
-import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 
 import './DocumentViewer.css';
 
@@ -29,39 +27,15 @@ class DocumentViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numberOfPages: null,
-      isRefreshCalloutOpen: false,
-      isDeleteDisabled: true,
-      selectedFiles: [],
-      deleteIsOpen: false,
+      numberOfPages: null
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
-    this.disableOrEnableDelete = this.disableOrEnableDelete.bind(this);
-    this.toggleDeleteCase = this.toggleDeleteCase.bind(this);
-    this.setRefreshCallout = this.setRefreshCallout.bind(this);
-    this.setDocuments = this.setDocuments.bind(this);
   }
   
   onDocumentLoad(documentInfo) {
     this.setState({
       numberOfPages: (documentInfo && documentInfo.numPages) ? documentInfo.numPages : null
     });
-  }
-
-  setDocuments(selectedFiles) {
-    this.setState({selectedFiles: selectedFiles});
-  }
-
-  disableOrEnableDelete(isDisabled) {
-    this.setState({isDeleteDisabled: isDisabled});
-  }
-
-  toggleDeleteCase() {
-    this.setState({deleteIsOpen: !this.state.deleteIsOpen});
-  }
-
-  setRefreshCallout() {
-    this.setState({isRefreshCalloutOpen: !this.state.isRefreshCalloutOpen});
   }
 
   renderContent() {
@@ -100,23 +74,18 @@ class DocumentViewer extends React.Component {
   
   render() {
     const { document: doc, showToolbar, previewMode } = this.props;
-    const { numberOfPages, selectedFiles, isRefreshCalloutOpen, isDeleteDisabled } = this.state;
     const isFolder = (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook');
+    const { numberOfPages } = this.state;
 
     if (doc.isLoading) {
       return null;
     }
     
     return <div className='DocumentViewer'>
-      {isRefreshCalloutOpen && <RefreshCallout/>}
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
-          {doc.collection.writeable && isFolder && <button
-            type="button"
-            className="pt-button pt-icon-delete"
-            disabled={isDeleteDisabled}
-            onClick={this.toggleDeleteCase}><FormattedMessage id="document.viewer.delete"
-                                                              defaultMessage="Delete" /></button>}
+          <ParentButton isPreview={previewMode} document={doc} />
+          <ModeButtons isPreview={previewMode} document={doc} />
           {previewMode === true && (
             <Link to={getPath(doc.links.ui)} className="pt-button button-link">
               <span className={`pt-icon-share`}/>
@@ -135,9 +104,6 @@ class DocumentViewer extends React.Component {
         </Toolbar>
       )}
       {this.renderContent()}
-      <DocumentDeleteDialog documents={selectedFiles}
-                            isOpen={this.state.deleteIsOpen}
-                            toggleDialog={this.toggleDeleteCase} />
     </div>
   }
 }

@@ -27,14 +27,17 @@ class CollectionLabel extends Component {
       return null;
     }
 
+    let iconName = "database", style = {};
+    if (collection.casefile) {
+      iconName = "briefcase";
+      style = {color: getColor(collection.id)};
+    } else if (collection.secret) {
+      iconName = "lock";
+    }
+
     return (
       <span className="CollectionLabel" title={collection.label}>
-        { collection.secret && !collection.casefile && icon && (
-          <Icon icon="lock" />
-        )}
-        { collection.casefile && icon && (
-          <Icon icon="briefcase" style={{color: getColor(collection.id)}} />
-        )}
+        { icon && (<Icon icon={iconName} style={style} />)}
         <span> { label && collection.label } </span>
       </span>
     );

@@ -1,6 +1,6 @@
 {
   "name": "aleph-ui",
-  "version": "0.1.0",
+  "version": "2.1.5",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^2.3.1",
@@ -11,6 +11,7 @@
     "classnames": "^2.2.5",
     "dotenv": "^5.0.0",
     "filesize": "^3.5.11",
+    "uuid": "^3.3.2",
     "font-awesome": "^4.7.0",
     "google-palette": "^1.1.0",
     "jwt-decode": "latest",

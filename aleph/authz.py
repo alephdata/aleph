@@ -106,6 +106,9 @@ class Authz(object):
         """Check if a given collection can be read."""
         return self.can(collection, self.READ)
 
+    def can_export(self):
+        return self.is_admin
+
     def match(self, roles):
         """See if there's overlap in roles."""
         roles = ensure_list(roles)

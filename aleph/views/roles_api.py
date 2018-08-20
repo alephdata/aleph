@@ -5,15 +5,16 @@ from flask.ext.babel import gettext
 
 from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.model import Role, Permission
+from aleph.model import Role, Permission, Audit
 from aleph.logic.roles import check_visible, check_editable, update_role
 from aleph.logic.permissions import update_permission
 from aleph.logic.collections import update_collection, update_collection_access
 from aleph.notify import notify_role
+from aleph.logic.audit import record_audit
 from aleph.serializers.roles import RoleSchema, PermissionSchema
 from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.util import require, get_db_collection, jsonify, parse_request
-from aleph.views.util import obj_or_404
+from aleph.views.util import obj_or_404, serialize_data
 
 blueprint = Blueprint('roles_api', __name__)
 log = logging.getLogger(__name__)
@@ -82,18 +83,18 @@ def create():
     )
     role.set_password(data.get('password'))
     db.session.add(role)
-    update_role(role)
     db.session.commit()
+    update_role(role)
     # Let the serializer return more info about this user
     request.authz.id = role.id
-    return jsonify(role, RoleSchema, status=201)
+    return serialize_data(role, RoleSchema, status=201)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
     require(check_editable(role, request.authz))
-    return jsonify(role, RoleSchema)
+    return serialize_data(role, RoleSchema)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
@@ -104,14 +105,15 @@ def update(id):
     data = parse_request(RoleSchema)
     role.update(data)
     db.session.add(role)
-    update_role(role)
     db.session.commit()
+    update_role(role)
     return view(role.id)
 
 
 @blueprint.route('/api/2/collections/<int:id>/permissions')
 def permissions_index(id):
     collection = get_db_collection(id, request.authz.WRITE)
+    record_audit(Audit.ACT_COLLECTION, id=id)
     roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection.id)

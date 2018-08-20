@@ -225,11 +225,17 @@ class Document(db.Model, DatedModel, Metadata):
             document.schema = cls.SCHEMA
             document.collection_id = collection.id
             document.collection = collection
+
+        if parent_id is not None:
             document.parent_id = parent_id
+
+        if foreign_id is not None:
             document.foreign_id = foreign_id
+
+        if content_hash is not None:
             document.content_hash = content_hash
-            document.status = document.STATUS_PENDING
-            db.session.add(document)
+
+        db.session.add(document)
         return document
 
     @classmethod

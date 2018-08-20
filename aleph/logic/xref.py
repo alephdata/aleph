@@ -1,12 +1,13 @@
 import logging
 from pprint import pprint  # noqa
-from elasticsearch.helpers import scan
+from followthemoney import model
 
-from aleph.core import db, es, celery
+from aleph.core import db, celery
 from aleph.model import Match, Document
 from aleph.index.core import entities_index
 from aleph.index.xref import entity_query
-from aleph.index.util import unpack_result, search_safe
+from aleph.index.entities import iter_entities
+from aleph.index.util import search_safe
 
 log = logging.getLogger(__name__)
 
@@ -56,15 +57,9 @@ def _xref_item(item, collection_id=None):
 @celery.task()
 def xref_collection(collection_id, other_id=None):
     """Cross-reference all the entities and documents in a collection."""
-    query = {'term': {'collection_id': collection_id}}
-    query = {
-        'query': query,
-        '_source': {'excludes': ['text', 'roles', 'properties.*']}
-    }
-    scanner = scan(es,
-                   index=entities_index(),
-                   query=query,
-                   scroll='1400m')
-    for res in scanner:
-        res = unpack_result(res)
-        _xref_item(res, collection_id=other_id)
+    matchable = [s.name for s in model if s.matchable]
+    entities = iter_entities(collection_id=collection_id,
+                             schemata=matchable,
+                             excludes=['text', 'roles', 'properties.*'])
+    for entity in entities:
+        _xref_item(entity, collection_id=other_id)

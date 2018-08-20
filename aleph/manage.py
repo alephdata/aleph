@@ -3,6 +3,7 @@ import os
 import logging
 from normality import slugify
 from ingestors.util import decode_path
+from alephclient.tasks.util import load_config_file
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
@@ -21,11 +22,9 @@ from aleph.logic.documents import ingest_document
 from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
-from aleph.logic.entities import bulk_load
+from aleph.logic.entities import bulk_load, update_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
-from aleph.util import load_config_file
-
 
 log = logging.getLogger('aleph')
 flask_script_commands.text_type = str
@@ -146,8 +145,9 @@ def resetindex():
 @manager.command
 def repair():
     """Re-index all the collections and entities."""
-    update_roles()
     update_collections()
+    update_entities()
+    update_roles()
 
 
 @manager.command
@@ -165,8 +165,8 @@ def createuser(foreign_id, password=None, name=None, email=None,
     if password is not None:
         role.set_password(password)
     db.session.add(role)
-    update_role(role)
     db.session.commit()
+    update_role(role)
     return role.api_key
 
 

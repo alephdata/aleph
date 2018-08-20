@@ -49,7 +49,7 @@ class Events(object, metaclass=EventsRegistry):
 
     # UPLOAD DOCUMENT (document)
     INGEST_DOCUMENT = Event(
-        template=lazy_gettext('{{actor}} uploaded {{document}} to {{collection}}.'),  # noqa
+        template=lazy_gettext('{{actor}} added {{document}} to {{collection}}.'),  # noqa
         params={
             'document': Document,
             'collection': Collection

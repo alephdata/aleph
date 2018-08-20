@@ -16,8 +16,9 @@ POLYGLOT_TYPES = {
 # https://spacy.io/api/annotation#named-entities
 SPACY_TYPES = {
     'PERSON': ExtractedEntity.PERSON,
-    'NORP': ExtractedEntity.ORGANIZATION,
+    # 'NORP': ExtractedEntity.ORGANIZATION,
     'ORG': ExtractedEntity.ORGANIZATION,
+    'LOC': ExtractedEntity.LOCATION,
     'GPE': ExtractedEntity.LOCATION
 }
 SPACY_LANGUAGES = ['en', 'de', 'es', 'pt', 'fr', 'it', 'nl']

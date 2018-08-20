@@ -4,6 +4,7 @@ from aleph.core import settings, celery
 from aleph.model import Document
 from aleph.index import documents as index
 from aleph.index.documents import index_document_id
+from aleph.logic.notifications import flush_notifications
 from aleph.logic.documents.ingest import ingest, ingest_document  # noqa
 from aleph.logic.documents.ingest import process_document  # noqa
 
@@ -21,6 +22,7 @@ def delete_document(document, deleted_at=None):
         # TODO: are we likely to hit recursion limits?
         delete_document(child, deleted_at=deleted_at)
     index.delete_document(document.id)
+    flush_notifications(document)
     document.delete(deleted_at=deleted_at)
 
 

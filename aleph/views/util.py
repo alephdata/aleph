@@ -1,8 +1,6 @@
 import json
-import types
-from hashlib import sha1
 from datetime import datetime, date
-from flask import Response, request
+from flask import Response, request, render_template
 from flask_babel.speaklater import LazyString
 from normality import stringify
 from urllib.parse import urlparse, urljoin
@@ -33,22 +31,26 @@ def obj_or_404(obj):
     return obj
 
 
-def validate_data(data, schema, many=None):
-    """Validate the data inside a request against a schema."""
-    # from pprint import pprint
-    # pprint(data)
-    data, errors = schema().load(data, many=many)
-    if not len(errors):
-        return data
+def serialize_validation_error(errors):
     message = None
     for field, errors in errors.items():
         for error in errors:
             message = error
-    raise BadRequest(response=jsonify({
+    return {
         'status': 'error',
         'errors': errors,
         'message': message
-    }, status=400))
+    }
+
+
+def validate_data(data, schema, many=None):
+    """Validate the data inside a request against a schema."""
+    data, errors = schema().load(data, many=many)
+    if len(errors):
+        resp = serialize_validation_error(errors)
+        resp = jsonify(resp, status=400)
+        raise BadRequest(response=resp)
+    return data
 
 
 def parse_request(schema, many=None):
@@ -58,6 +60,15 @@ def parse_request(schema, many=None):
     else:
         data = request.form.to_dict(flat=True)
     return validate_data(data, schema, many=many)
+
+
+def serialize_data(data, schema, **kwargs):
+    """Serialise a single-object response using the schema."""
+    data, errors = schema().dump(data)
+    if len(errors):
+        resp = serialize_validation_error(errors)
+        return jsonify(resp, status=500)
+    return jsonify(data, **kwargs)
 
 
 def get_db_entity(entity_id, action=Authz.READ):
@@ -159,28 +170,6 @@ def normalize_href(href, base_url):
         return None
 
 
-def cache_hash(*a, **kw):
-    """ Try to hash an arbitrary object for caching. """
-
-    def cache_str(o):
-        if isinstance(o, (types.FunctionType, types.BuiltinFunctionType,
-                          types.MethodType, types.BuiltinMethodType)):
-            return getattr(o, 'func_name', 'func')
-        if isinstance(o, dict):
-            o = [k + ':' + cache_str(v) for k, v in o.items()]
-        if isinstance(o, (list, tuple, set)):
-            o = sorted(map(cache_str, o))
-            o = '|'.join(o)
-        if isinstance(o, str):
-            return o
-        if hasattr(o, 'updated_at'):
-            return cache_str((repr(o), o.updated_at))
-        return repr(o)
-
-    hash = cache_str((a, kw)).encode('utf-8')
-    return sha1(hash).hexdigest()
-
-
 class JSONEncoder(json.JSONEncoder):
     """ This encoder will serialize all entities that have a to_dict
     method by calling that method and serializing the result. """
@@ -199,10 +188,8 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def jsonify(obj, schema=None, status=200, headers=None, encoder=JSONEncoder):
+def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
     """Serialize to JSON and also dump from the given schema."""
-    if schema is not None:
-        obj, _ = schema().dump(obj)
     data = encoder().encode(obj)
     if 'callback' in request.args:
         cb = request.args.get('callback')
@@ -210,3 +197,17 @@ def jsonify(obj, schema=None, status=200, headers=None, encoder=JSONEncoder):
     return Response(data, headers=headers,
                     status=status,
                     mimetype='application/json')
+
+
+def stream_ijson(iterable, encoder=JSONEncoder):
+    """Stream JSON line-based data."""
+    def _generate_stream():
+        for row in iterable:
+            yield encoder().encode(row)
+            yield '\n'
+    return Response(_generate_stream(), mimetype='application/json+stream')
+
+
+def render_xml(template, **kwargs):
+    data = render_template(template, **kwargs)
+    return Response(data, mimetype='text/xml')
