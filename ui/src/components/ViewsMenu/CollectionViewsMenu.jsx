@@ -25,8 +25,6 @@ const messages = defineMessages({
 class CollectionViewsMenu extends React.Component {
   constructor(props) {
     super(props);
-
-    this.openAsFolder = this.openAsFolder.bind(this);
   }
 
   componentDidMount() {
@@ -44,36 +42,20 @@ class CollectionViewsMenu extends React.Component {
     }
   }
 
-  openAsFolder(event) {
-    const {collection, history} = this.props;
-    event.preventDefault();
-
-    history.replace({
-      pathname: `/collections/${collection.id}/documents`
-    })
-  }
-
   render() {
     const {intl, showToolbar, collection, xrefIndex} = this.props;
-    let content = [];
-
-    for (let key in collection.schemata) {
-      if (collection.schemata.hasOwnProperty(key)) {
-        content.push({name: key, number: collection.schemata[ key ]});
-      }
-    }
-    content.sort(this.sortByNumber);
-    const linkPath = getPath(collection.links.ui) + '/xref';
-
     return (
       <div className='ViewsMenu'>
-        {showToolbar && (<Tooltip content={intl.formatMessage(messages.open)} position={Position.BOTTOM_RIGHT}>
-          <a onClick={(e) => this.openAsFolder(e)}
-             className={c('ModeButtons', 'pt-button pt-large')}>
-            <i className="fa fa-fw fal fa-folder-open"/>
-          </a></Tooltip>)}
+        {showToolbar && (
+          <Tooltip content={intl.formatMessage(messages.open)} position={Position.BOTTOM_RIGHT}>
+            <a href={`/collections/${collection.id}/documents`}
+               className={c('ModeButtons', 'pt-button pt-large')}>
+              <i className="fa fa-fw fal fa-folder-open"/>
+            </a>
+          </Tooltip>
+        )}
         <Tooltip content={intl.formatMessage(messages.xref)} position={Position.BOTTOM_RIGHT}>
-          <a href={linkPath}
+          <a href={`/collections/${collection.id}/xref`}
              className={c('ModeButtons', 'pt-button pt-large')}>
             <i className="fa fa-fw fal fa-folder-open"/>
           </a>

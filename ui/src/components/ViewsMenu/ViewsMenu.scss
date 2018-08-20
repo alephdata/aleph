@@ -5,6 +5,7 @@
   background-color: $views-menu-background-color;
   display: flex;
   flex-direction: column;
+  min-height: 100%;
 
   .pt-button {
     background-color: $views-menu-background-color !important;
