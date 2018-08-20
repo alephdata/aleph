@@ -1,23 +1,43 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Icon } from '@blueprintjs/core';
 import { withRouter } from "react-router";
-import { FormattedMessage } from 'react-intl';
-import c from 'classnames';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionInfo from 'src/components/Collection/CollectionInfo';
-import { Collection, DualPane } from 'src/components/common';
-import { fetchCollectionXrefIndex } from 'src/actions';
-import { selectCollectionXrefIndex } from 'src/selectors';
-import { getColor } from "src/util/colorScheme";
+import LoadingScreen from 'src/components/Screen/LoadingScreen';
+import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import { DualPane } from 'src/components/common';
+import { fetchCollection } from 'src/actions';
 
 
 class CollectionScreenContext extends Component {
 
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate(prevProps) {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const {collection} = this.props;
+    if (collection.shouldLoad) {
+      this.props.fetchCollection({id: collection.id});
+    }
+  }
+
   render() {
     const { collection } = this.props;
+
+    if (collection.isError) {
+      return <ErrorScreen error={collection.error} />;
+    }
+
+    if (collection.shouldLoad || collection.isLoading) {
+      return <LoadingScreen />;
+    }
+
     return (
       <Screen title={collection.label}>
         <DualPane>
@@ -32,4 +52,5 @@ class CollectionScreenContext extends Component {
 }
 
 CollectionScreenContext = withRouter(CollectionScreenContext);
+CollectionScreenContext = connect(null, { fetchCollection })(CollectionScreenContext);
 export default (CollectionScreenContext);

@@ -6,7 +6,6 @@ import { FormattedNumber, FormattedMessage } from 'react-intl';
 import getPath from 'src/util/getPath';
 import { fetchCollectionXrefIndex } from "src/actions";
 import { selectCollectionXrefIndex } from "src/selectors";
-import { selectCollection } from "../../selectors";
 
 
 class CollectionXrefTable extends React.Component {
