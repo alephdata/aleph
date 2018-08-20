@@ -47,7 +47,6 @@ class TestCase(FlaskTestCase):
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.QUEUE = False
         settings.MAIL_SERVER = None
-        settings.COUNTRIES_SERVICE = None
         settings.ENTITIES_SERVICE = None
         settings.ENTITIES_INDEX = '%s_entity' % APP_NAME
         settings.ENTITIES_INDEX_SET = [settings.ENTITIES_INDEX]

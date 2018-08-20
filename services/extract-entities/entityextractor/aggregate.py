@@ -1,15 +1,25 @@
 import logging
 from collections import Counter, defaultdict
+import shelve
+import os
+
+import phonenumbers
+from phonenumbers import geocoder
+from normality import normalize
+import countrynames
+from alephclient.services.entityextract_pb2 import ExtractedEntity
 
 from entityextractor.extract import (
     extract_polyglot, extract_spacy, extract_regex
 )
 from entityextractor.normalize import clean_label, label_key
 from entityextractor.normalize import select_label
-from entityextractor.util import overlaps
+from entityextractor.util import overlaps, _parse_phonenumber
 
 
 log = logging.getLogger(__name__)
+
+GEONAMES_DB_PATH = os.environ['GEONAMES_DB_PATH']
 
 
 class EntityGroup(object):
@@ -49,6 +59,7 @@ class EntityGroup(object):
 
 
 class EntityAggregator(object):
+    MAX_COUNTRIES = 3
 
     def __init__(self):
         self.groups = []
@@ -82,19 +93,57 @@ class EntityAggregator(object):
         self.groups.append(group)
 
     @property
-    def entities(self):
+    def _ner_entities(self):
         for group in self.groups:
             # When we have many results, don't return entities which
             # were only found a single time.
             if len(self) > 100 and group.weight == 1:
                 continue
-
+            # log.info('%s: %s: %s', group.label, group.category, group.weight)
             yield group.label, group.category, group.weight
+
+    @property
+    def _regex_entities(self):
         for match in self.regex_matches_weights:
             category = max(set(self.regex_matches_categories[match]),
                            key=self.regex_matches_categories[match].count)
             weight = self.regex_matches_weights[match]
             yield match, category, weight
+
+    def _get_countries(self, locations, phones):
+        countries = Counter()
+        with shelve.open(GEONAMES_DB_PATH) as db:
+            for loc, weight in locations.items():
+                country = db.get(normalize(loc), None)
+                if country:
+                    countries[country] += weight
+        for (phone, weight) in phones:
+            country = geocoder.country_name_for_number(phone, 'en')
+            country_code = normalize(countrynames.to_code(country))
+            countries[country_code] += weight
+        for country, weight in countries.most_common(self.MAX_COUNTRIES):
+            yield country, ExtractedEntity.COUNTRY, weight
+
+    @property
+    def entities(self):
+        locations = {}
+        phones = []
+        for label, category, weight in self._ner_entities:
+            if category == ExtractedEntity.LOCATION:
+                locations[label] = weight
+            yield label, category, weight
+        for label, category, weight in self._regex_entities:
+            if category == ExtractedEntity.PHONE:
+                phone = _parse_phonenumber(label)
+                if phone is None:
+                    continue
+                phones.append((phone, weight))
+                label = phonenumbers.format_number(
+                    phone, phonenumbers.PhoneNumberFormat.E164
+                )
+            yield label, category, weight
+        for label, category, weight in self._get_countries(locations, phones):
+            yield label, category, weight
 
     def __len__(self):
         return len(self.groups)

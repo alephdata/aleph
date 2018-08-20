@@ -27,7 +27,6 @@ setup(
             'lang = aleph.analyze.language:LanguageAnalyzer',
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'ner = aleph.analyze.extract_entity:EntityExtractor',
-            'country = aleph.analyze.extract_country:CountryExtractor',
         ],
         'console_scripts': [
             'aleph = aleph.manage:main',

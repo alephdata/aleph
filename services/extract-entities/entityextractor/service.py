@@ -1,7 +1,8 @@
 import time
-import grpc
 import logging
 from concurrent import futures
+
+import grpc
 from alephclient.services.entityextract_pb2_grpc import add_EntityExtractServicer_to_server  # noqa
 from alephclient.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
 from alephclient.services.entityextract_pb2 import ExtractedEntity, ExtractedEntitySet  # noqa

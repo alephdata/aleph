@@ -13,7 +13,9 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 
 ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
-    LC_ALL='en_US.UTF-8'
+    LC_ALL='en_US.UTF-8' \
+    CORPUS_PATH='/tmp/allCountries.filtered.txt' \
+    GEONAMES_DB_PATH='/tmp/geonamesdb'
 
 RUN pip3 install -U six pip \
                     regex==2017.4.5 \
@@ -39,6 +41,9 @@ RUN python3 -m spacy download it
 RUN python3 -m spacy download nl
 RUN python3 -m spacy download xx
 
+RUN curl -s -o /tmp/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
+    && zgrep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" /tmp/allCountries.zip >${CORPUS_PATH} \
+    && rm /tmp/allCountries.zip
 
 RUN mkdir -p /service
 WORKDIR /service
@@ -46,6 +51,8 @@ ADD requirements.txt /service/
 RUN pip3 install -q -r /service/requirements.txt
 COPY . /service/
 RUN pip3 install -e /service
+
+RUN python3 /service/entityextractor/prepare_geonames.py
 
 HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
     CMD curl --fail http://localhost:50000 || exit 1

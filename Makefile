@@ -8,13 +8,14 @@ services:
 	$(COMPOSE) up -d --remove-orphans \
 		rabbitmq postgres elasticsearch \
 		convert-document extract-entities \
-		extract-countries recognize-text
+		recognize-text
 
 shell: services    
 	$(DEVDOCKER) /bin/bash
 
 test:
 	$(DEVDOCKER) contrib/test.sh
+	$(COMPOSE) run --rm extract-entities pytest
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
@@ -49,7 +50,6 @@ build:
 	docker build --cache-from alephdata/aleph-convert-document -t alephdata/aleph-convert-document:$(TAG) services/convert-document
 	docker build --cache-from alephdata/aleph-recognize-text -t alephdata/aleph-recognize-text:$(TAG) services/recognize-text
 	docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities:$(TAG) services/extract-entities
-	docker build --cache-from alephdata/aleph-extract-countries -t alephdata/aleph-extract-countries:$(TAG) services/extract-countries
 
 build-full: build
 	docker build -t alephdata/aleph-ui-production:$(TAG) ui/production
@@ -60,7 +60,6 @@ docker-pull:
 	docker pull alephdata/aleph-convert-document
 	docker pull alephdata/aleph-recognize-text
 	docker pull alephdata/aleph-extract-entities
-	docker pull alephdata/aleph-extract-countries
 
 docker-push:
 	docker push alephdata/aleph:$(TAG)
@@ -69,7 +68,6 @@ docker-push:
 	docker push alephdata/aleph-convert-document:$(TAG)
 	docker push alephdata/aleph-recognize-text:$(TAG)
 	docker push alephdata/aleph-extract-entities:$(TAG)
-	docker push alephdata/aleph-extract-countries:$(TAG)
 
 dev: 
 	pip install -q transifex-client bumpversion babel

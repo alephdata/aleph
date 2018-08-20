@@ -1,9 +1,12 @@
 import os
 import spacy
 import logging
-import re
 from polyglot.text import Text
 from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
+
+from entityextractor.regex_patterns import (
+    EMAIL_REGEX, PHONE_REGEX, IPV4_REGEX, IPV6_REGEX, IBAN_REGEX
+)
 
 log = logging.getLogger(__name__)
 
@@ -25,14 +28,12 @@ SPACY_TYPES = {
 SPACY_LANGUAGES = ['en', 'de', 'es', 'pt', 'fr', 'it', 'nl']
 SPACY_MODELS = {}
 
-
 REGEX_TYPES = {
-    r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}': ExtractedEntity.EMAIL,
-    r'(\+?[\d\-\(\)\/\s]{5,})': ExtractedEntity.PHONE,
-    r'\b(0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])\.0*([1-9]?\d|1\d\d|2[0-4]\d|25[0-5]))\b'  # noqa
-        : ExtractedEntity.IPADDRESS,
-    r'\b([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})\b'  # noqa
-        : ExtractedEntity.IBAN,
+    EMAIL_REGEX: ExtractedEntity.EMAIL,
+    PHONE_REGEX: ExtractedEntity.PHONE,
+    IPV4_REGEX: ExtractedEntity.IPADDRESS,
+    IPV6_REGEX: ExtractedEntity.IPADDRESS,
+    IBAN_REGEX: ExtractedEntity.IBAN,
 }
 
 
@@ -43,6 +44,7 @@ def extract_polyglot(text, language):
         parsed = Text(text, hint_language_code=language)
         for entity in parsed.entities:
             label = ' '.join(entity)
+            # log.info('%s: %s', label, entity.tag)
             category = POLYGLOT_TYPES.get(entity.tag)
             if category is not None:
                 # TODO: do we need start, end offsets?
@@ -61,6 +63,7 @@ def extract_spacy(text, language):
     try:
         doc = nlp(text)
         for ent in doc.ents:
+            # log.info('%s: %s', ent.text, ent.label_)
             category = SPACY_TYPES.get(ent.label_)
             if category is not None:
                 yield ent.text, category, ent.start, ent.end
@@ -70,10 +73,10 @@ def extract_spacy(text, language):
 
 def extract_regex(text):
     for pattern in REGEX_TYPES:
-        RE = re.compile(pattern, re.IGNORECASE)
-        for match in RE.finditer(text):
+        for match in pattern.finditer(text):
             match_text = match.group(0)
             if match_text is not None:
                 category = REGEX_TYPES.get(pattern)
                 start, end = match.span()
+                log.info("%s: %s", match_text, category)
                 yield match_text, category, start, end

@@ -41,3 +41,23 @@ class TestAggregate(object):
     # def test_select_label(self):
     #     labels = ['Mr Blue', 'Mr BLUE', 'Mr Blu', 'Mr. Blue']
     #     assert select_label(labels) == 'Mr Blue'
+
+    def test_phonenumber(self):
+        agg = EntityAggregator()
+        text = "Mr. Flubby Flubber called the number tel:+919988111222 twice"
+        agg.extract(text, ['en'])
+        entities = [l for l, c, w in agg.entities]
+        assert '+919988111222' in entities
+        assert 'in' in entities
+
+    def test_country(self):
+        agg = EntityAggregator()
+        text = """This is a document about the United States. But also about
+        Syria and Germany.
+        """
+        agg.extract(text, ['en'])
+        entities = [l for l, c, w in agg.entities]
+        assert 'us' in entities
+        # fails
+        # assert 'de' in entities
+        # assert 'sy' in entities

@@ -1,7 +1,9 @@
 grpcio
 regex==2017.4.5
-alephclient==0.6.9
+alephclient==0.6.10
 python-levenshtein
+phonenumbers
+countrynames
 
 grpcio-tools
 pytest
