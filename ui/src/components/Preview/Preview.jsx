@@ -11,9 +11,7 @@ import './Preview.css';
 class Preview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      previewTop: 0
-    };
+    this.state = {previewTop: 0};
     this.handleScroll = this.handleScroll.bind(this);
   }
 

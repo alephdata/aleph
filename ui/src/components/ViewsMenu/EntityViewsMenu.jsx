@@ -25,9 +25,6 @@ const messages = defineMessages({
 });
 
 class EntityViewsMenu extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.fetchIfNeeded();

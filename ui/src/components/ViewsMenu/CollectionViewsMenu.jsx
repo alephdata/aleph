@@ -7,7 +7,6 @@ import { Tooltip, Position } from '@blueprintjs/core';
 
 import { fetchCollectionXrefIndex } from "src/actions";
 import { selectCollectionXrefIndex } from "src/selectors";
-import getPath from "src/util/getPath";
 
 import './ViewsMenu.css';
 
@@ -23,9 +22,6 @@ const messages = defineMessages({
 });
 
 class CollectionViewsMenu extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.fetchIfNeeded();
@@ -67,7 +63,7 @@ class CollectionViewsMenu extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const xrefIndex = selectCollectionXrefIndex(state, ownProps.collection.id);
-  return {xrefIndex};
+  return { xrefIndex };
 };
 
 CollectionViewsMenu = connect(mapStateToProps, {fetchCollectionXrefIndex})(CollectionViewsMenu);
