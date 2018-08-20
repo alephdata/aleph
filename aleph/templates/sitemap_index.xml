@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for collection in collections %}
+        <sitemap>
+            <loc>{{ collection.url | safe }}</loc>
+            <lastmod>{{ collection.updated_at }}</lastmod>
+        </sitemap>
+   {% endfor %}
+</sitemapindex>

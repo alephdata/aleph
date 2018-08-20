@@ -19,7 +19,7 @@ def record_audit(activity, keys=None, **data):
                             keys)
 
 
-@celery.task(priority=2)
+@celery.task(priority=4)
 def record_audit_task(activity, session_id, role_id, timestamp, data, keys):
     log.debug("Audit record [%s]: %s (%s)", session_id, activity, role_id)
     timestamp = datetime.fromtimestamp(timestamp)

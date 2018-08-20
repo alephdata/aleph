@@ -27,7 +27,7 @@ web: services
 	$(COMPOSE) up api ui
 
 worker: services
-	$(COMPOSE) run --rm -e ALEPH_EAGER=false app celery -A aleph.queues -B -c 4 -l INFO worker --pidfile /tmp/celery.pid -s /tmp/celerybeat-schedule.db
+	$(COMPOSE) run --rm -e ALEPH_EAGER=false app celery -A aleph.queues -B -c 4 -l INFO worker
 
 purge:
 	$(DEVDOCKER) celery purge -f -A aleph.queues

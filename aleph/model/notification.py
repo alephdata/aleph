@@ -91,3 +91,9 @@ class Notification(db.Model, IdModel, DatedModel):
         q = q.order_by(cls.created_at.desc())
         q = q.order_by(cls.id.desc())
         return q
+
+    @classmethod
+    def delete_by_channel(cls, channel):
+        q = cls.all()
+        q = q.filter(cls.channels.any(channel))
+        q.delete(synchronize_session=False)

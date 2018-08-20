@@ -9,6 +9,8 @@ from aleph.logic.scheduled import hourly, daily  # noqa
 from aleph.logic.xref import xref_collection # noqa
 from aleph.logic.alerts import check_alerts  # noqa
 from aleph.logic.audit import record_audit_task  # noqa
+from aleph.logic.roles import update_subscriptions  # noqa
+
 
 flask_app = create_app()
 flask_app.app_context().push()

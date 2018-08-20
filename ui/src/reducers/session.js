@@ -10,7 +10,7 @@ const initialState = {
   sessionID: uuidv4(),
 };
 
-const login = (state, token) => {
+const handleLogin = (state, token) => {
   const data = jwtDecode(token);
   return {
     ...data,
@@ -20,15 +20,21 @@ const login = (state, token) => {
   };
 };
 
+const handleLogout = (state) => {
+  return {
+    loggedIn: false,
+    sessionID: state.sessionID || uuidv4(),
+  }
+};
+
 const storeRole = (state, { role }) => ({
   ...state,
   role: role
 })
 
 export default createReducer({
-  [loginWithToken]: (state, token) => login(state, token),
-  [logout]: state => ({ loggedIn: false, sessionID: uuidv4(), }),
-
+  [loginWithToken]: handleLogin,
+  [logout]: handleLogout,
   [fetchRole.COMPLETE]: storeRole,
   [updateRole.COMPLETE]: storeRole,
 }, initialState);

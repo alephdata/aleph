@@ -27,6 +27,7 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
         if not permission.read:
             permission.deleted_at = datetime.utcnow()
         db.session.flush()
+        collection.reset_state()
         return permission
 
     @classmethod

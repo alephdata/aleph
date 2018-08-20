@@ -165,8 +165,8 @@ def createuser(foreign_id, password=None, name=None, email=None,
     if password is not None:
         role.set_password(password)
     db.session.add(role)
-    update_role(role)
     db.session.commit()
+    update_role(role)
     return role.api_key
 
 

@@ -9,6 +9,7 @@ from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
+from aleph.index.collections import update_collection_roles
 from aleph.index.core import all_indexes
 from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
@@ -39,13 +40,13 @@ class TestCase(FlaskTestCase):
         settings.TESTING = True
         settings.DEBUG = True
         settings.CACHE = True
+        settings.EAGER = True
         settings.SECRET_KEY = 'batman'
         settings.APP_UI_URL = UI_URL
         settings.ARCHIVE_TYPE = 'file'
         settings.ARCHIVE_PATH = self.temp_dir
         settings.DATABASE_URI = DB_URI
         settings.ALEPH_PASSWORD_LOGIN = True
-        settings.QUEUE = False
         settings.MAIL_SERVER = None
         settings.ENTITIES_SERVICE = None
         settings.ENTITIES_INDEX = '%s_entity' % APP_NAME
@@ -84,6 +85,12 @@ class TestCase(FlaskTestCase):
         Permission.grant(collection, role, read, write)
         db.session.commit()
         update_collection(collection)
+        update_collection_roles(collection)
+        self.flush_index()
+
+    def grant_publish(self, collection):
+        visitor = Role.by_foreign_id(Role.SYSTEM_GUEST)
+        self.grant(collection, visitor, True, False)
 
     def flush_index(self):
         refresh_index()
@@ -91,15 +98,18 @@ class TestCase(FlaskTestCase):
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
+    def update_index(self):
+        update_collections()
+        update_entities()
+        self.flush_index()
+
     def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
-        update_collections()
-        update_entities()
         for doc in Document.all():
             process_document(doc)
-        self.flush_index()
+        self.update_index()
 
     def setUp(self):
         if not hasattr(settings, '_global_test_state'):
@@ -109,7 +119,7 @@ class TestCase(FlaskTestCase):
             delete_index()
             upgrade_search()
 
-        self.flush_index()
+        # self.flush_index()
         es.delete_by_query(index=all_indexes(),
                            body={'query': {'match_all': {}}},
                            refresh=True,

@@ -186,7 +186,7 @@ class Query(object):
         """Execute the query as assmbled."""
         result = es.search(index=self.get_index(),
                            body=self.get_body(),
-                           request_cache=True,
+                           request_cache=self.parser.cache,
                            request_timeout=REQUEST_TIMEOUT)
         log.info("Took: %sms", result.get('took'))
         # log.info("%s", pformat(result))
@@ -204,8 +204,11 @@ class Query(object):
                     query=body)
 
     @classmethod
-    def handle(cls, request, limit=None, schema=None, **kwargs):
-        parser = SearchQueryParser(request.args, request.authz, limit=limit)
+    def handle(cls, request, limit=None, schema=None, parser=None, **kwargs):
+        if parser is None:
+            parser = SearchQueryParser(request.args,
+                                       request.authz,
+                                       limit=limit)
 
         # Log the search
         keys = ['prefix', 'text', 'filters']

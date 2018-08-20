@@ -70,22 +70,27 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.publisher_url = data.get('publisher_url', self.publisher_url)
         self.info_url = data.get('info_url', self.info_url)
         self.data_url = data.get('data_url', self.data_url)
-        self.category = data.get('category') or self.DEFAULT
-        self.casefile = as_bool(data.get('casefile'), default=False)
-        self.countries = ensure_list(data.get('countries', []))
-        self.languages = ensure_list(data.get('languages', []))
+        self.category = data.get('category', self.category)
+        self.casefile = as_bool(data.get('casefile'), default=self.casefile)
+        self.countries = ensure_list(data.get('countries', self.countries))
+        self.languages = ensure_list(data.get('languages', self.languages))
         if creator is None:
             creator = Role.by_id(data.get('creator_id'))
         if creator is not None:
             self.creator = creator
         db.session.add(self)
         db.session.flush()
+        self.reset_state()
         if self.creator is not None:
             Permission.grant(self, self.creator, True, True)
 
+    def reset_state(self):
+        if hasattr(self, '_roles'):
+            self._roles = None
+
     @property
     def roles(self):
-        if not hasattr(self, '_roles'):
+        if not hasattr(self, '_roles') or self._roles is None:
             q = db.session.query(Permission.role_id)
             q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.collection_id == self.id)  # noqa
@@ -118,14 +123,23 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return q.filter(cls.foreign_id == foreign_id).first()
 
     @classmethod
-    def all_by_ids(cls, ids, deleted=False, authz=None):
-        q = super(Collection, cls).all_by_ids(ids, deleted=deleted)
+    def _apply_authz(cls, q, authz):
         if authz is not None and not authz.is_admin:
             q = q.join(Permission, cls.id == Permission.collection_id)
             q = q.filter(Permission.deleted_at == None)  # noqa
             q = q.filter(Permission.read == True)  # noqa
             q = q.filter(Permission.role_id.in_(authz.roles))
         return q
+
+    @classmethod
+    def all_authz(cls, authz, deleted=False):
+        q = super(Collection, cls).all(deleted=deleted)
+        return cls._apply_authz(q, authz)
+
+    @classmethod
+    def all_by_ids(cls, ids, deleted=False, authz=None):
+        q = super(Collection, cls).all_by_ids(ids, deleted=deleted)
+        return cls._apply_authz(q, authz)
 
     @classmethod
     def create(cls, data, role=None, created_at=None):
@@ -135,6 +149,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection = cls()
             collection.created_at = created_at
             collection.foreign_id = foreign_id
+            collection.category = cls.DEFAULT
+            collection.casefile = False
         collection.update(data, creator=role)
         collection.deleted_at = None
         return collection

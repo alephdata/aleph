@@ -1,0 +1,3 @@
+User-Agent: *
+Allow: /
+Sitemap: /api/2/sitemap.xml

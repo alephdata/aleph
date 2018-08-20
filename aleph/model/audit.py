@@ -1,6 +1,8 @@
+import time
 import logging
 from banal import hash_data
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -64,20 +66,28 @@ class Audit(db.Model, DatedModel):
     def save(cls, activity, session_id, role_id, timestamp, data, keys):
         keys = [data.get(k) for k in keys]
         key = hash_data([activity, session_id, keys])
-        obj = cls.all().filter_by(id=key).first()
-        if obj is None:
-            obj = cls()
-            obj.id = key
-            obj.activity = activity
-            obj.session_id = session_id
-            obj.created_at = timestamp
-            obj.data = data
-            obj.count = 0
+        db.session.begin_nested()
+        for attempt in range(10):
+            try:
+                obj = cls.all().filter_by(id=key).first()
+                if obj is None:
+                    obj = cls()
+                    obj.id = key
+                    obj.activity = activity
+                    obj.session_id = session_id
+                    obj.created_at = timestamp
+                    obj.data = data
+                    obj.count = 0
 
-        obj.count += 1
-        obj.role_id = role_id
-        obj.updated_at = timestamp
-        db.session.add(obj)
+                obj.count += 1
+                obj.role_id = role_id
+                obj.updated_at = timestamp
+                db.session.add(obj)
+                db.session.commit()
+                return
+            except IntegrityError:
+                db.session.rollback()
+                time.sleep(0.001)
 
     def __repr__(self):
         return '<Audit(%r, %r, %r)>' % (self.id, self.activity, self.role_id)

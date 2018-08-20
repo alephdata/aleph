@@ -144,6 +144,9 @@ class SearchQueryParser(QueryParser):
         # Number of snippets per document, 0 = return full document text.
         self.highlight_count = self.getint('highlight_count', 5)
 
+        # Disable or enable query caching
+        self.cache = self.getbool('cache', True)
+
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""
         return self.getint('facet_size:%s' % name, 50)

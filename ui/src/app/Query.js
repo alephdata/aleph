@@ -140,16 +140,20 @@ class Query {
   getSort() {
     if (!this.has('sort')) return {};
     // Currently only supporting sorting by a single field.
-    const valueString = this.getList('sort')[0];
-    const [field, ascOrDescOrUndefined] = valueString.split(':');
-    return { field, desc: ascOrDescOrUndefined === 'desc' };
+    const valueString = this.getString('sort');
+    const [field, direction] = valueString.split(':');
+    return { field, direction };
   }
 
-  sortBy(name, desc=false) {
-    if (!name) {
+  hasSort() {
+    return this.has('sort');
+  }
+
+  sortBy(name, direction) {
+    if (!name || !direction) {
       return this.clear('sort');
     }
-    return this.set('sort', `${name}:${desc ? 'desc' : 'asc'}`)
+    return this.set('sort', `${name}:${direction}`)
   }
 
   limit(count) {

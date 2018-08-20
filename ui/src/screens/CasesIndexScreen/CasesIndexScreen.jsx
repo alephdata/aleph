@@ -190,7 +190,7 @@ const mapStateToProps = (state, ownProps) => {
     'filter:kind': 'casefile'
   };
   const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', true)
+    .sortBy('updated_at', 'desc')
     .limit(30);
 
   return {

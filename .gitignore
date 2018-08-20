@@ -7,12 +7,7 @@ __pycache__
 .env
 .vscode/*
 
-aleph/static/.webassets-cache/*
-aleph/static/assets/*
-aleph/static/style/_custom.scss
 build*
-docs/_build
-site*
 
 ui/node_modules
 ui/build

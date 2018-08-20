@@ -1,12 +1,15 @@
 import logging
+from itertools import islice
 from datetime import datetime
 
 from aleph.core import db, celery
+from aleph.authz import Authz
 from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
-from aleph.logic.notifications import publish
 from aleph.index import collections as index
-from aleph.logic.xref import xref_collection
+from aleph.index.entities import iter_entities
+from aleph.logic.notifications import publish, flush_notifications
+from aleph.logic.util import document_url, entity_url
 
 log = logging.getLogger(__name__)
 
@@ -20,15 +23,16 @@ def create_collection(data, role=None):
                 actor_id=role.id,
                 params={'collection': collection})
     db.session.commit()
-    index_collection_async.delay(collection.id)
+    index.index_collection(collection)
     return collection
 
 
 def update_collection(collection):
     """Create or update a collection."""
     index_collection_async.delay(collection.id)
-    if collection.casefile and collection.deleted_at is None:
-        xref_collection.apply_async([collection.id], priority=2)
+    # from aleph.logic.xref import xref_collection
+    # if collection.casefile and collection.deleted_at is None:
+    #     xref_collection.apply_async([collection.id], priority=2)
 
 
 @celery.task(priority=7)
@@ -49,14 +53,32 @@ def update_collections():
 @celery.task(priority=8)
 def update_collection_access(collection_id):
     """Re-write all etities in this collection to reflect updated roles."""
-    collection = Collection.by_id(collection_id)
+    collection = Collection.by_id(collection_id, deleted=True)
     if collection is None:
         return
     log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
     index.update_collection_roles(collection)
 
 
+def generate_sitemap(collection_id):
+    """Generate entries for a collection-based sitemap.xml file."""
+    # cf. https://www.sitemaps.org/protocol.html
+    entities = iter_entities(authz=Authz.from_role(None),
+                             collection_id=collection_id,
+                             schemata=[Entity.THING],
+                             includes=['schemata', 'updated_at'])
+    # strictly, the limit for sitemap.xml is 50,000
+    for entity in islice(entities, 49500):
+        updated_at = entity.get('updated_at', '').split('T', 1)[0]
+        if Document.SCHEMA in entity.get('schemata', []):
+            url = document_url(entity.get('id'))
+        else:
+            url = entity_url(entity.get('id'))
+        yield (url, updated_at)
+
+
 def delete_collection(collection):
+    flush_notifications(collection)
     collection.delete()
     db.session.commit()
     index.delete_collection(collection.id)

@@ -60,8 +60,8 @@ def password_login():
     if not role.check_password(data.get('password')):
         return Unauthorized("Authentication has failed.")
 
-    update_role(role)
     db.session.commit()
+    update_role(role)
     authz = Authz.from_role(role)
     request.authz = authz
     record_audit(Audit.ACT_LOGIN)
@@ -96,8 +96,8 @@ def oauth_callback():
     for (_, role) in response:
         if role is None:
             continue
-        update_role(role)
         db.session.commit()
+        update_role(role)
         log.info("Logged in: %r", role)
         request.authz = Authz.from_role(role)
         record_audit(Audit.ACT_LOGIN)

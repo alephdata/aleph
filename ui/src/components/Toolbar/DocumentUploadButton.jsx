@@ -29,7 +29,7 @@ class DocumentUploadButton extends React.Component {
       <React.Fragment>
         <a onClick={this.toggleUpload} className="pt-button">
           <span className="pt-icon-standard pt-icon-upload"/>
-          <FormattedMessage id="document.upload.button" defaultMessage="Upload documents"/>
+          <FormattedMessage id="document.upload.button" defaultMessage="Upload"/>
         </a>
         <DocumentUploadDialog collection={collection}
                               parent={parent}

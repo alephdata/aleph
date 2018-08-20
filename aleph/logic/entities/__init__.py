@@ -1,90 +1,33 @@
 import logging
 from followthemoney import model
-from followthemoney.util import merge_data
 
-from aleph.core import es, db, celery
-from aleph.model import Collection, Entity
+from aleph.core import es, db
+from aleph.model import Entity
 from aleph.index import entities as index
 from aleph.index.core import entities_index
-from aleph.index.collections import index_collection
 from aleph.index.util import authz_query, field_filter_query
-from aleph.util import dict_list
+from aleph.logic.notifications import flush_notifications
+from aleph.logic.entities.bulk import bulk_load, bulk_load_query  # noqa
 
 log = logging.getLogger(__name__)
 BULK_PAGE = 500
 
 
 def update_entity(entity):
+    log.info("Update [%s]: %s", entity.id, entity.name)
     return index.index_entity(entity)
 
 
 def update_entities():
     q = db.session.query(Entity)
-    for entity in q.all():
+    for entity in q:
         update_entity(entity)
 
 
 def delete_entity(entity, deleted_at=None):
+    flush_notifications(entity)
     entity.delete(deleted_at=deleted_at)
     index.delete_entity(entity.id)
-
-
-def bulk_load(config):
-    """Bulk load entities from a CSV file or SQL database.
-
-    This is done by mapping the rows in the source data to entities and links
-    which can be understood by the entity index.
-    """
-    from aleph.logic.collections import create_collection
-    for foreign_id, data in config.items():
-        data['foreign_id'] = foreign_id
-        data['label'] = data.get('label', foreign_id)
-        collection = create_collection(data)
-        # FIXME: this does not perform collection metadata validation.
-        for query in dict_list(data, 'queries', 'query'):
-            bulk_load_query.apply_async([collection.id, query], priority=6)
-
-
-@celery.task()
-def bulk_load_query(collection_id, query):
-    collection = Collection.by_id(collection_id)
-    if collection is None:
-        log.warning("Collection does not exist: %s", collection_id)
-        return
-
-    mapping = model.make_mapping(query, key_prefix=collection.foreign_id)
-    records_total = len(mapping.source) or 'streaming'
-    entities = {}
-    entities_count = 0
-    for records_index, record in enumerate(mapping.source.records, 1):
-        for entity in mapping.map(record).values():
-            entity_id = entity.get('id')
-            if entity_id is None:
-                continue
-            # When loading from a tabular data source, we will often
-            # encounter mappings where the same entity is emitted
-            # multiple times in short sequence, e.g. when the data
-            # describes all the directors of a single company.
-            base = entities.get(entity_id, {})
-            entities[entity_id] = merge_data(entity, base)
-            entities_count += 1
-
-        if records_index > 0 and records_index % 1000 == 0:
-            log.info("[%s] Loaded %s records (%s), %s entities...",
-                     collection.foreign_id,
-                     records_index,
-                     records_total,
-                     entities_count)
-
-        if len(entities) >= BULK_PAGE:
-            index.index_bulk(collection, entities, chunk_size=BULK_PAGE)
-            entities = {}
-
-    if len(entities):
-        index.index_bulk(collection, entities, chunk_size=BULK_PAGE)
-
-    # Update collection stats
-    index_collection(collection)
 
 
 def entity_references(entity, authz):
