@@ -15,6 +15,10 @@ const messages = defineMessages({
   open: {
     id: 'document.mode.text.open',
     defaultMessage: 'Browse as a folder',
+  },
+  xref: {
+    id: 'document.mode.text.xref',
+    defaultMessage: 'Cross-reference',
   }
 });
 
@@ -66,8 +70,13 @@ class CollectionViewsMenu extends React.Component {
         {showToolbar && (<Tooltip content={intl.formatMessage(messages.open)} position={Position.BOTTOM_RIGHT}>
           <a onClick={(e) => this.openAsFolder(e)}
              className={c('ModeButtons', 'pt-button pt-large')}>
-            <span className={`pt-icon-folder-open`}/>
+            <i className="fa fa-fw fal fa-folder-open"/>
           </a></Tooltip>)}
+        <Tooltip content={intl.formatMessage(messages.xref)} position={Position.BOTTOM_RIGHT}>
+          <a href={`${linkPath}${collection.id}`}
+             className={c('ModeButtons', 'pt-button pt-large')}>
+            <i className="fa fa-fw fal fa-folder-open"/>
+          </a></Tooltip>
         {/*{ xrefIndex.results !== undefined && xrefIndex.results.map((idx) => (
           <a key={idx.collection.id}
              href={`${linkPath}${idx.collection.id}`}

@@ -1,12 +1,10 @@
 import React from 'react';
 import queryString from 'query-string';
-import { Link } from 'react-router-dom';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 import { Tag } from 'src/components/common';
 
 import './EntityInfoTags.css';
-
 
 class EntityInfoTags extends React.Component {
 
@@ -14,13 +12,13 @@ class EntityInfoTags extends React.Component {
     // const { entity } = this.props;
     const key = `filter:${tag.field}`;
     // const params = {exclude: entity.id, [key]: tag.value};
-    const params = {[key]: tag.value};
+    const params = {[ key ]: tag.value};
     const query = queryString.stringify(params);
     return `/search?${query}`;
   }
 
   render() {
-    const { tags, entity } = this.props;
+    const {tags, entity} = this.props;
 
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (
@@ -29,7 +27,7 @@ class EntityInfoTags extends React.Component {
           <FormattedMessage id='entity.info.tags' defaultMessage='Tags'/>
                           </span>
           <p className="pt-text-muted">
-            <FormattedMessage 
+            <FormattedMessage
               id="entity.info.tags.empty_description"
               defaultMessage="No tags found."/>
           </p>
@@ -38,26 +36,41 @@ class EntityInfoTags extends React.Component {
     }
 
     return (
-      <div className="tags">
-        <span className="tags">
-          <FormattedMessage id='entity.info.tags' defaultMessage='Tags'/>
-                          </span>
-        <ul className="info-rank">
-          { tags.results.map((tag) => (
-            <li key={tag.id}>
-              <span className="key">
-                <Tag.Icon field={tag.field} />
-                <Link to={this.getLink(tag)}>
-                  {tag.value}
-                </Link>
-              </span>
+      <section className="EntityInfoTags">
+        <table className="data-table">
+          <thead>
+          <tr>
+            <th className='entity'>
               <span className="value">
-                <FormattedNumber value={tag.count} />
+                 <FormattedMessage id="tags.selector"
+                                   defaultMessage="Selector" />
               </span>
-            </li>
+            </th>
+            <th>
+              <span className="value">
+                <FormattedMessage id="tags.results"
+                                  defaultMessage="Results" />
+              </span>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          {tags.results.map((tag) => (
+            <tr key={entity.id}>
+              <td key={tag.id} className='entity'>
+                <a href={this.getLink(tag)}>
+                  <Tag.Icon field={tag.field}/>
+                  {tag.value}
+                </a>
+              </td>
+              <td key={tag.id}>
+                <FormattedNumber value={tag.count}/>
+              </td>
+            </tr>
           ))}
-        </ul>
-      </div>
+          </tbody>
+        </table>
+      </section>
     );
   }
 }

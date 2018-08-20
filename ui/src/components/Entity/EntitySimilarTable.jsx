@@ -7,6 +7,7 @@ import { queryEntities } from 'src/actions/index';
 import { SectionLoading } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 
+import './EntitySimilarTable.css';
 
 class EntitySimilarTable extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class EntitySimilarTable extends Component {
     if (result.total === undefined) {
       return null;
     }
-    return (<React.Fragment>
+    return (<section className='EntitySimilarTable'>
       <EntityTable query={query} result={result} />
       { !result.isLoading && result.next && (
         <Waypoint
@@ -54,7 +55,7 @@ class EntitySimilarTable extends Component {
       { result.isLoading && (
         <SectionLoading />
       )}
-    </React.Fragment>);
+    </section>);
   }
 }
 

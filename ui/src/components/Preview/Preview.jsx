@@ -5,7 +5,6 @@ import queryString from 'query-string';
 import classnames from 'classnames';
 
 import { PreviewEntity, PreviewCollection, PreviewDocument } from 'src/components/Preview/';
-import { ViewsMenu } from 'src/components/ViewsMenu';
 
 import './Preview.css';
 

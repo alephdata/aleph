@@ -1,27 +1,24 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { Tab, Tabs } from "@blueprintjs/core";
+import { injectIntl, defineMessages } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { selectEntityReferences, selectEntitiesResult } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
-import { TabCount, Property, SectionLoading, ErrorSection, DualPane, TextLoading } from 'src/components/common';
+import { SectionLoading, DualPane, ErrorSection } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
 import { EntitySimilarTable } from 'src/components/Entity';
 import EntityViewsMenu from "../ViewsMenu/EntityViewsMenu";
 
 import './EntityContent.css';
+import EntityInfoTags from "./EntityInfoTags";
+import { selectEntityTags } from "../../selectors";
 
 const messages = defineMessages({
   no_relationships: {
     id: 'entity.references.no_relationships',
     defaultMessage: 'This entity does not have any relationships.',
-  },
-  default_tab: {
-    id: 'entity.references.default_tab',
-    defaultMessage: 'Relationships',
   }
 });
 
@@ -38,7 +35,7 @@ class EntityReferences extends React.Component {
   }
   
   render() {
-    const { entity, references, intl, activeTab } = this.props;
+    const { entity, references, intl, activeTab, tags } = this.props;
     const { similarResult, similarQuery } = this.props;
 
     if (references.total === undefined) {
@@ -47,37 +44,24 @@ class EntityReferences extends React.Component {
 
     return (
       <DualPane.ContentPane className='EntityContent'>
-        <EntityViewsMenu entity={entity} isFullPage={true}/>
-        <Tabs onChange={this.handleTabChange} selectedTabId={activeTab} className='entity-content-tabs'>
-          { references.total === 0 && (
-            <Tab id="default" key="default"
-                 title={intl.formatMessage(messages.default_tab)}
-                 panel={<ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />}
-            />
-          )}
-          { references.results.map((ref, i) => (
-            <Tab id={`references-${ref.property.qname}`} key={i}
-                 title={<React.Fragment>
-                          <Property.Reverse model={ref.property} />
-                          <TabCount count={ref.count} />
-                        </React.Fragment>}
-                 panel={
-                  <EntityReferencesTable
-                    entity={entity}
-                    schema={ref.schema}
-                    property={ref.property}
-                  />} />
-          ))}
-          <Tab id="similar" key="similar" disabled={similarResult.total === 0}
-               title={<TextLoading loading={similarResult.total === undefined}>
-                  <FormattedMessage id="entity.content.similar_tab" defaultMessage="Similar" />
-                  <TabCount count={similarResult.total} />
-                </TextLoading>}
-               panel={<EntitySimilarTable entity={entity}
-                                          query={similarQuery}
-                                          result={similarResult} />} 
+        <EntityViewsMenu entity={entity} isPreview={false}/>
+        { references.total === 0 && (
+          <ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />
+        )}
+        {references.results.map((ref, i) => (
+          <EntityReferencesTable
+            entity={entity}
+            schema={ref.schema}
+            property={ref.property}
+            activeTab={activeTab}
           />
-        </Tabs>
+        ))}
+        {activeTab === 'similar' && <EntitySimilarTable entity={entity}
+                            query={similarQuery}
+                            result={similarResult}
+                            activeTab={activeTab}/>}
+        {activeTab === 'tags' && <EntityInfoTags entity={entity}
+                                                        tags={tags}/>}
       </DualPane.ContentPane>
     );
   }
@@ -96,7 +80,8 @@ const mapStateToProps = (state, ownProps) => {
 
   return { fragment, references, activeTab,
     similarResult: selectEntitiesResult(state, similarQuery),
-    similarQuery: similarQuery
+    similarQuery: similarQuery,
+    tags: selectEntityTags(state, id),
   };
 };
 

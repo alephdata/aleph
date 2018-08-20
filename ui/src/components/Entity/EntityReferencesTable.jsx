@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Waypoint from 'react-waypoint';
+import { FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
@@ -62,7 +63,7 @@ class EntityReferencesTable extends Component {
   }
 
   render() {
-    const { model, result, property } = this.props;
+    const { model, result, property, activeTab } = this.props;
     const results = ensureArray(result.results);
     const columns = _.map(model.featured, (name) => {
       return model.properties[name];
@@ -70,11 +71,13 @@ class EntityReferencesTable extends Component {
       return prop.name !== property.name && !prop.caption;
     });
 
+    if(activeTab !== 'references-' + property.qname) return null;
+
     return (
-      <section className="EntityReferencesTable">
-        <table className="data-table references-data-table">
+      <section key={property.qname} className="EntityReferencesTable">
+        <table key={property.qname} className="data-table references-data-table">
           <thead>
-            <tr>
+            <tr key={property.qname}>
               {columns.map(prop => (
                 <th key={prop.name} className={prop.type}>
                   <Property.Name model={prop} />
@@ -93,7 +96,10 @@ class EntityReferencesTable extends Component {
                 ))}
                 <td key="details" className="narrow">
                   <a onClick={this.onShowDetails(entity)}>
-                    <span>Details</span>
+                    <span>
+                      <FormattedMessage id="references.details"
+                                        defaultMessage="Details" />
+                    </span>
                   </a>
                 </td>
               </tr>

@@ -12,7 +12,7 @@ class DocumentContent extends React.Component {
     const { document } = this.props;
     return (
       <DualPane.ContentPane className="DocumentContent">
-        <DocumentViewsMenu document={document} showToolbar={true} isFullPage={true}/>
+        <DocumentViewsMenu document={document} showToolbar={true} isPreview={false}/>
         <DocumentViewer document={document} showToolbar={true} />
         {/*
           <EntitySimilarTable entity={document} />

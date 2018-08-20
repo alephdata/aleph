@@ -114,20 +114,6 @@ class EntityInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="connections" disabled={connectionsTotal === 0}
-                title={
-                  <TextLoading loading={connectionsTotal === undefined}>
-                    <FormattedMessage id="entity.info.connections" defaultMessage="Connections"/>
-                    <TabCount count={connectionsTotal} />
-                  </TextLoading>
-                }
-                panel={
-                  <React.Fragment>
-                    <EntityInfoReferences references={references} entity={entity}/>
-                    <EntityInfoTags tags={tags} entity={entity}/>
-                  </React.Fragment>
-                }
-              />
           </Tabs>
         </div>
       </DualPane.InfoPane>

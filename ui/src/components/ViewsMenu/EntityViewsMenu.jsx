@@ -27,10 +27,6 @@ const messages = defineMessages({
 class EntityViewsMenu extends React.Component {
   constructor(props) {
     super(props);
-
-    this.onClickRelationships = this.onClickRelationships.bind(this);
-    this.goToTags = this.goToTags.bind(this);
-    this.onClickSimilar = this.onClickSimilar.bind(this);
   }
 
   componentDidMount() {
@@ -53,32 +49,14 @@ class EntityViewsMenu extends React.Component {
     }
   }
 
-  goToTags(event, mode) {
-    const {history, location, hashQuery} = this.props;
-    event.preventDefault();
-    hashQuery.mode = mode;
-    history.replace({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(hashQuery),
-    })
-  }
-
-  onClickSimilar(event, mode) {
-    const {entity, history, hashQuery} = this.props;
-    event.preventDefault();
-    hashQuery.mode = mode;
-    history.replace({
-      pathname: '/entities/' + entity.id,
-      hash: queryString.stringify(hashQuery),
-    })
-  }
-
-  onClickRelationships(event, reference) {
+  onClick(event, mode) {
     const {entity, history} = this.props;
     event.preventDefault();
     const path = getPath(entity.links.ui);
-    const tabName = 'references-' + reference.property.qname;
+    let tabName = mode;
+    if(mode !== 'similar' && mode !== 'tags') {
+      tabName = 'references-' + mode;
+    }
     const query = queryString.stringify({'mode': tabName});
     history.replace({
       pathname: path,
@@ -87,8 +65,8 @@ class EntityViewsMenu extends React.Component {
   }
 
   render() {
-    const {intl, tags, references, isFullPage} = this.props;
-    const className = isFullPage ? 'ViewsMenu FullPage' : 'ViewsMenu';
+    const {intl, tags, references, isPreview, mode} = this.props;
+    const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
       <div className={className}>
@@ -96,15 +74,20 @@ class EntityViewsMenu extends React.Component {
           <Tooltip key={ref.property.qname} content={ref.property.reverse + ' (' + ref.count + ')'}
                    position={Position.BOTTOM_RIGHT}>
             <a key={ref.property.qname}
-               onClick={(e) => this.onClickRelationships(e, ref)}
-               className={c('ModeButtons', 'pt-button pt-large')}>
+               onClick={(e) => this.onClick(e, ref.property.qname)}
+               className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'references-' + ref.property.qname})}>
               <Schema.Icon schema={ref.schema}/>
             </a></Tooltip>
         ))}
         <Tooltip content={intl.formatMessage(messages.similar)} position={Position.BOTTOM_RIGHT}><a
-          onClick={(e) => this.onClickSimilar(e, 'similar')}
-          className={c('ModeButtons', 'pt-button pt-large')}>
-          <i className="fa fa-fw fa-tags"/> {/* change icon for similar, we don't have it right now */}
+          onClick={(e) => this.onClick(e, 'similar')}
+          className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'similar'})}>
+          <i className="fa fa-fw far fa-repeat"/> {/* change icon for similar, we don't have it right now */}
+        </a></Tooltip>
+        <Tooltip content={intl.formatMessage(messages.tags)} position={Position.BOTTOM_RIGHT}><a
+          onClick={(e) => this.onClick(e, 'tags')}
+          className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'tags'})}>
+          <i className="fa fa-fw fa-tags"/>
         </a></Tooltip>
         {/*<a onClick={(e) => this.goToTags(e, 'info')}
            className={c('ModeButtons', 'pt-button')} title={intl.formatMessage(messages.tags)} >
