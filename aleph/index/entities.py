@@ -133,7 +133,7 @@ def _index_updates(collection, entities):
 
 def index_bulk(collection, entities, chunk_size=200):
     """Index a set of entities."""
-    for attempt in count():
+    for attempt in count(1):
         try:
             entities = _index_updates(collection, entities)
             bulk_op(entities, chunk_size=chunk_size)
