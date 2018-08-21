@@ -17,6 +17,7 @@ import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScree
 import CollectionXrefIndexScreen from 'src/screens/CollectionXrefIndexScreen/CollectionXrefIndexScreen';
 import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
+import DocumentSimilarScreen from 'src/screens/DocumentSimilarScreen/DocumentSimilarScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
 import CollectionDocumentsScreen from 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen';
@@ -53,6 +54,7 @@ class Router extends Component {
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
+        <Route path="/documents/:documentId/similar" exact component={DocumentSimilarScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/sources" exact component={SourcesIndexScreen}/>
