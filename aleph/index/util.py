@@ -23,31 +23,35 @@ def refresh_index(index=None):
     try:
         es.indices.refresh(index=all_indexes(),
                            ignore=[404, 400],
-                           ignore_unavailable=True)
+                           ignore_unavailable=True,
+                           request_timeout=REQUEST_TIMEOUT,
+                           timeout=TIMEOUT)
     except TransportError as terr:
         log.warning("Index refresh failed: %s", terr)
         backoff_cluster()
 
 
-def check_cluster_ready():
-    """Check if the cluster is a in a state where new documents
-    should be written to it."""
-    try:
-        es.cluster.health(wait_for_status='yellow', request_timeout=5)
-        return True
-    except Exception as exc:
-        return False
+# def check_cluster_ready():
+#     """Check if the cluster is a in a state where new documents
+#     should be written to it."""
+#     try:
+#         es.cluster.health(wait_for_status='yellow',
+#                           request_timeout=REQUEST_TIMEOUT)
+#         return True
+#     except Exception as exc:
+#         return False
 
 
 def backoff_cluster(failures=0):
     """This is intended to halt traffic to the cluster if it is in a
     recovery state, e.g. after a master failure or severe node failures.
     """
-    for attempt in count(failures):
-        backoff(failures=attempt)
-        if check_cluster_ready():
-            return
-        log.warning("Cluster is flustered.")
+    return backoff(failures=failures)
+    # for attempt in count(failures):
+    #     backoff(failures=attempt)
+    #     if check_cluster_ready():
+    #         return
+    #     log.warning("Cluster is flustered.")
 
 
 def unpack_result(res):
