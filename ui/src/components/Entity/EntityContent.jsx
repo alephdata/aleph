@@ -8,7 +8,6 @@ import { selectEntityReferences, selectEntitiesResult } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
 import { SectionLoading, DualPane, ErrorSection } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
-import { EntitySimilarTable } from 'src/components/Entity';
 import EntityViewsMenu from "../ViewsMenu/EntityViewsMenu";
 
 import './EntityContent.css';
@@ -56,10 +55,6 @@ class EntityReferences extends React.Component {
             activeTab={activeTab}
           />
         ))}
-        {activeTab === 'similar' && <EntitySimilarTable entity={entity}
-                            query={similarQuery}
-                            result={similarResult}
-                            activeTab={activeTab}/>}
         {activeTab === 'tags' && <EntityInfoTags entity={entity}
                                                         tags={tags}/>}
       </DualPane.ContentPane>

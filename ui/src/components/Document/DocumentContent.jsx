@@ -2,7 +2,6 @@ import React from 'react';
 
 import { DualPane } from 'src/components/common';
 import { DocumentViewer } from 'src/components/DocumentViewer/index';
-// import EntitySimilarTable from 'src/components/Entity/EntitySimilarTable';
 
 import './DocumentContent.css';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
@@ -14,9 +13,6 @@ class DocumentContent extends React.Component {
       <DualPane.ContentPane className="DocumentContent">
         <DocumentViewsMenu document={document} showToolbar={true} isPreview={false}/>
         <DocumentViewer document={document} showToolbar={true} />
-        {/*
-          <EntitySimilarTable entity={document} />
-        */}
       </DualPane.ContentPane>
     );
   }

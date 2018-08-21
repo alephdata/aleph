@@ -6,7 +6,6 @@ import { Spinner } from '@blueprintjs/core';
 import { fetchMetadata } from 'src/actions';
 import { selectSession, selectMetadata } from 'src/selectors';
 import NotFoundScreen from 'src/screens/NotFoundScreen/NotFoundScreen';
-import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
 import OAuthScreen from "src/screens/OAuthScreen/OAuthScreen";
 import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
 import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
@@ -16,6 +15,8 @@ import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsSc
 import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
 import CollectionXrefIndexScreen from 'src/screens/CollectionXrefIndexScreen/CollectionXrefIndexScreen';
 import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
+import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
+import EntitySimilarScreen from 'src/screens/EntitySimilarScreen/EntitySimilarScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
 import DocumentSimilarScreen from 'src/screens/DocumentSimilarScreen/DocumentSimilarScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
@@ -53,6 +54,7 @@ class Router extends Component {
         <Route path="/logout" exact component={LogoutScreen}/>
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
+        <Route path="/entities/:entityId/similar" exact component={EntitySimilarScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
         <Route path="/documents/:documentId/similar" exact component={DocumentSimilarScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
