@@ -13,8 +13,8 @@ from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.index.documents import index_document_id
 from aleph.logic.documents import ingest_document
-from aleph.index.core import entity_index
 from aleph.index.util import refresh_index
+from aleph.index.core import entities_index
 from aleph.views.util import get_db_collection, jsonify, validate_data
 
 log = logging.getLogger(__name__)
@@ -118,7 +118,7 @@ def ingest_upload(id):
 
     # Make sure collection counts are always accurate.
     if collection.casefile:
-        refresh_index(index=entity_index())
+        refresh_index(entities_index())
     return jsonify({
         'status': 'ok',
         'documents': [CombinedSchema().dump(d).data for d in documents]

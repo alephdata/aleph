@@ -5,7 +5,6 @@ from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
 
 from aleph.core import es
-from aleph.index.core import all_indexes
 from aleph.util import backoff
 
 log = logging.getLogger(__name__)
@@ -16,12 +15,10 @@ REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 
 
-def refresh_index(index=None):
+def refresh_index(index):
     """Run a refresh to apply all indexing changes."""
-    if index is None:
-        index = all_indexes()
     try:
-        es.indices.refresh(index=all_indexes(),
+        es.indices.refresh(index=index,
                            ignore=[404, 400],
                            ignore_unavailable=True)
     except TransportError as terr:

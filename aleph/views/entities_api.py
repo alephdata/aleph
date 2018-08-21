@@ -8,13 +8,15 @@ from urlnormalizer import query_string
 
 from aleph.core import db, url_for
 from aleph.model import Entity, Audit
-from aleph.logic.entities import update_entity, delete_entity
-from aleph.logic.collections import update_collection
 from aleph.search import EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
+from aleph.logic.entities import update_entity, delete_entity
+from aleph.logic.collections import update_collection
 from aleph.logic.audit import record_audit
+from aleph.index.util import refresh_index
+from aleph.index.core import entities_index
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, serialize_data
 from aleph.views.cache import enable_cache
@@ -52,6 +54,7 @@ def create():
     db.session.commit()
     data = update_entity(entity)
     update_collection(collection)
+    refresh_index(entities_index())
     return serialize_data(data, CombinedSchema)
 
 
@@ -169,4 +172,5 @@ def delete(id):
     delete_entity(entity)
     db.session.commit()
     update_collection(entity.collection)
+    refresh_index(entities_index())
     return ('', 204)
