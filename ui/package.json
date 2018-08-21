@@ -54,6 +54,11 @@
       "target": "http://api:5000"
     }
   },
+  "browserslist": [
+    "chrome > 40",
+    "ie > 10",
+    "defaults"
+  ],
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/ --importer=node_modules/node-sass-package-importer/dist/cli.js",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive --importer=node_modules/node-sass-package-importer/dist/cli.js",
