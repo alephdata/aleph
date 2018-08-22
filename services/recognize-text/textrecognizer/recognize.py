@@ -11,8 +11,6 @@ log = logging.getLogger(__name__)
 
 class OCR(object):
     MAX_MODELS = 5
-    MIN_WIDTH = 10
-    MIN_HEIGHT = 10
     DEFAULT_MODE = PSM.AUTO_OSD
     # DEFAULT_MODE = PSM.AUTO
 
@@ -48,11 +46,6 @@ class OCR(object):
         try:
             image = Image.open(BytesIO(data))
             # TODO: play with contrast and sharpening the images.
-            if image.width <= self.MIN_WIDTH:
-                return
-            if image.height <= self.MIN_HEIGHT:
-                return
-
             api.SetImage(image)
             text = api.GetUTF8Text()
             confidence = api.MeanTextConf()
