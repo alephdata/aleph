@@ -23,5 +23,5 @@ RUN pip3 install -q -e .
 HEALTHCHECK --interval=10s --timeout=302s --start-period=4s --retries=3 \
     CMD curl --fail http://localhost:3000 || exit 1
 
-USER nobody:nogroup
+# USER nobody:nogroup
 CMD ["python3", "convert/server.py"]

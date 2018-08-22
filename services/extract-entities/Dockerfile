@@ -51,6 +51,6 @@ COPY . /service/
 RUN pip3 install -e /service
 
 RUN python3 /service/entityextractor/prepare_geonames.py
-USER nobody:nogroup
+# USER nobody:nogroup
 EXPOSE 50000
 CMD ["python3", "/service/entityextractor/service.py"]
