@@ -22,15 +22,18 @@ class EntityAggregator(object):
     def extract(self, text, languages):
         self.record += 1
         for language in languages:
-            for result in extract_polyglot(self, text, language, self.record):
+            for result in extract_polyglot(self, text, language):
                 self.add(result)
-            for result in extract_spacy(self, text, language, self.record):
+            for result in extract_spacy(self, text, language):
                 self.add(result)
-        for result in extract_patterns(self, text, self.record):
+        for result in extract_patterns(self, text):
             self.add(result)
 
     def add(self, result):
-        self._countries.update(ensure_list(result.countries))
+        countries = [c.lower() for c in ensure_list(result.countries)]
+        self._countries.update(countries)
+        if not result.valid:
+            return
         # TODO: make a hash?
         for cluster in self.clusters:
             if cluster.match(result):
@@ -39,7 +42,8 @@ class EntityAggregator(object):
 
     @property
     def countries(self):
-        return [c for (c, n) in Counter.most_common(n=self.MAX_COUNTRIES)]
+        cs = self._countries.most_common(n=self.MAX_COUNTRIES)
+        return [c for (c, n) in cs]
 
     @property
     def entities(self):

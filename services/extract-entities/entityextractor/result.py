@@ -1,5 +1,6 @@
 import re
 import phonenumbers
+from phonenumbers import geocoder
 from schwifty import IBAN
 from ipaddress import ip_address
 from normality import normalize, collapse_spaces
@@ -52,7 +53,7 @@ class NamedResult(Result):
 
     def __init__(self, ctx, label, start, end):
         label = self.clean_name(label)
-        super(NamedResult).__init__(self, ctx, label, start, end)
+        super(NamedResult, self).__init__(ctx, label, start, end)
         self.key = self.label_key(self.label)
         self.valid = self.key is not None
 
@@ -65,18 +66,17 @@ class PersonResult(NamedResult):
     category = ExtractedEntity.PERSON
 
     def __init__(self, ctx, label, start, end):
-        super(PersonResult).__init__(self, ctx, label, start, end)
+        super(PersonResult, self).__init__(ctx, label, start, end)
         if self.valid and ' ' not in self.label:
             self.valid = False
 
 
-class LocationResult(Result):
-    strict = False
+class LocationResult(NamedResult):
     resolver = LocationResolver()
     category = ExtractedEntity.LOCATION
 
     def __init__(self, ctx, label, start, end):
-        super(LocationResult).__init__(self, ctx, label, start, end)
+        super(LocationResult, self).__init__(ctx, label, start, end)
         self.countries = self.resolver.get_countries(label)
         self.valid = len(self.countries) > 0
 
@@ -85,7 +85,7 @@ class IPAddressResult(Result):
     category = ExtractedEntity.IPADDRESS
 
     def __init__(self, ctx, label, start, end):
-        super(IPAddressResult).__init__(self, ctx, label, start, end)
+        super(IPAddressResult, self).__init__(ctx, label, start, end)
         try:
             ip = ip_address(label)
             self.key = self.label = str(ip)
@@ -97,7 +97,7 @@ class EmailResult(Result):
     category = ExtractedEntity.EMAIL
 
     def __init__(self, ctx, label, start, end):
-        super(EmailResult).__init__(self, ctx, label, start, end)
+        super(EmailResult, self).__init__(ctx, label, start, end)
         self.key = self.label_key(self.label)
         self.valid = self.key is not None
         # TODO: do we want to do TLD -> country?
@@ -108,15 +108,14 @@ class PhoneResult(Result):
     category = ExtractedEntity.PHONE
 
     def __init__(self, ctx, label, start, end):
-        super(PhoneResult).__init__(self, ctx, label, start, end)
+        super(PhoneResult, self).__init__(ctx, label, start, end)
         number = self._parse(label)
         for country in ctx.countries:
             if number is None:
                 number = self._parse(label, country)
         self.valid = number is not None
         if number is not None:
-            country = phonenumbers.geocoder.region_code_for_number(number)
-            self.countries = [country]
+            self.countries = [geocoder.region_code_for_number(number)]
             self.label = phonenumbers.format_number(number, self.FORMAT)
             self.key = self.label
 
@@ -134,7 +133,7 @@ class IBANResult(Result):
     category = ExtractedEntity.IBAN
 
     def __init__(self, ctx, label, start, end):
-        super(IBANResult).__init__(self, ctx, label, start, end)
+        super(IBANResult, self).__init__(ctx, label, start, end)
         try:
             iban = IBAN(label)
             self.key = self.label = iban.compact

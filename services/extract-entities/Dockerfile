@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 AS polyglot
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
@@ -15,21 +15,23 @@ ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
     LC_ALL='en_US.UTF-8'
 
-RUN pip3 install -U six pip \
-                    regex==2017.4.5 \
-                    pycld2==0.31 \
-                    normality \
-                    polyglot==16.7.4 \
-                    Morfessor==2.0.4 \
-                    numpy==1.14.3 \
-                    spacy \
-    && rm -rf /root/.cache
+RUN pip3 install -U six pip
+RUN pip3 install -U regex==2017.4.5 pycld2==0.31 \
+                    polyglot==16.7.4 Morfessor==2.0.4 \
+                    numpy==1.14.3
 
 RUN mkdir -p /data/polyglot
 ENV POLYGLOT_DATA_PATH=/data/polyglot
 RUN polyglot download TASK:ner2
 RUN polyglot download TASK:embeddings2
 
+ENV GEONAMES_RAW_PATH='/data/allCountries.filtered.txt' \
+    GEONAMES_DB_PATH='/data/geonamesdb'
+RUN curl -s -o /tmp/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
+    && zgrep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" /tmp/allCountries.zip >${GEONAMES_RAW_PATH} \
+    && rm /tmp/allCountries.zip
+
+RUN pip3 install spacy
 RUN python3 -m spacy download en
 RUN python3 -m spacy download de
 RUN python3 -m spacy download es
@@ -38,12 +40,6 @@ RUN python3 -m spacy download fr
 RUN python3 -m spacy download it
 RUN python3 -m spacy download nl
 RUN python3 -m spacy download xx
-
-ENV GEONAMES_RAW_PATH='/data/allCountries.filtered.txt' \
-    GEONAMES_DB_PATH='/data/geonamesdb'
-RUN curl -s -o /data/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
-    && zgrep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" /data/allCountries.zip >${CORPUS_PATH} \
-    && rm /data/allCountries.zip
 
 RUN mkdir -p /service
 WORKDIR /service
@@ -54,8 +50,8 @@ RUN pip3 install -e /service
 
 RUN python3 /service/entityextractor/prepare_geonames.py
 
-HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
-    CMD curl --fail http://localhost:50000 || exit 1
+# HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
+#     CMD curl --fail http://localhost:50000 || exit 1
 
 EXPOSE 50000
 CMD ["python3", "/service/entityextractor/service.py"]

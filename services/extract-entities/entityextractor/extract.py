@@ -9,7 +9,8 @@ from entityextractor.result import OrganizationResult
 
 log = logging.getLogger(__name__)
 
-POLYGLOT_LANGUAGES = os.listdir('/data/polyglot_data/ner2')
+# POLYGLOT_LANGUAGES = os.listdir('/data/polyglot/polyglot_data/ner2')
+POLYGLOT_LANGUAGES = []
 POLYGLOT_TYPES = {
     'I-PER': PersonResult,
     'I-ORG': OrganizationResult,
@@ -35,7 +36,6 @@ def extract_polyglot(ctx, text, language):
         parsed = Text(text, hint_language_code=language)
         for entity in parsed.entities:
             label = ' '.join(entity)
-            # log.info('%s: %s', label, entity.tag)
             clazz = POLYGLOT_TYPES.get(entity.tag)
             if clazz is not None:
                 yield clazz(ctx, label, entity.start, entity.end)
@@ -53,7 +53,6 @@ def extract_spacy(ctx, text, language):
     try:
         doc = nlp(text)
         for ent in doc.ents:
-            # log.info('%s: %s', ent.text, ent.label_)
             clazz = SPACY_TYPES.get(ent.label_)
             if clazz is not None:
                 yield clazz(ctx, ent.text, ent.start, ent.end)
