@@ -1,4 +1,4 @@
-import phonenumbers
+from Levenshtein import setmedian
 
 
 def overlaps(a, b):
@@ -11,11 +11,5 @@ def overlaps(a, b):
     return (min_end - max_start) > 0
 
 
-def _parse_phonenumber(number):
-    try:
-        num = phonenumbers.parse(number, None)
-        if phonenumbers.is_possible_number(num):
-            if phonenumbers.is_valid_number(num):
-                return num
-    except phonenumbers.NumberParseException:
-        pass
+def select_label(labels):
+    return setmedian(labels)

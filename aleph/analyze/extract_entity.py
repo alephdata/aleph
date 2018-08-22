@@ -23,6 +23,7 @@ class EntityExtractor(EntityAnalyzer, TextIterator, ServiceClientMixin):
         ExtractedEntity.IBAN: DocumentTag.TYPE_IBAN,
         ExtractedEntity.IPADDRESS: DocumentTag.TYPE_IP,
         ExtractedEntity.LOCATION: DocumentTag.TYPE_LOCATION,
+        # ExtractedEntity.COUNTRY: DocumentTag.TYPE_LOCATION,
     }
 
     def __init__(self):

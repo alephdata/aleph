@@ -5,6 +5,7 @@ alephclient==0.6.10
 python-levenshtein
 phonenumbers
 countrynames
+schwifty
 
 grpcio-tools
 pytest

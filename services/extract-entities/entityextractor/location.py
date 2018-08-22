@@ -1,5 +1,6 @@
 import os
 import shelve
+from banal import ensure_list
 from normality import normalize
 
 
@@ -12,6 +13,6 @@ class LocationResolver(object):
     def normalize(self, location):
         return normalize(location)
 
-    def get_country(self, location):
+    def get_countries(self, location):
         location = self.normalize(location)
-        return self.db.get(location, None)
+        return ensure_list(self.db.get(location, None))

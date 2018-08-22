@@ -1,5 +1,7 @@
 import re
-from alephclient.services.entityextract_pb2 import ExtractedEntity
+
+from entityextractor.result import EmailResult, PhoneResult
+from entityextractor.result import IPAddressResult, IBANResult
 
 EMAIL_REGEX = re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}', re.IGNORECASE)  # noqa
 PHONE_REGEX = re.compile(r'(\+?[\d\-\(\)\/\s]{5,})', re.IGNORECASE)  # noqa
@@ -8,19 +10,19 @@ IPV6_REGEX = re.compile(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]
 IBAN_REGEX = re.compile(r'\b([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})\b', re.IGNORECASE)  # noqa
 
 REGEX_TYPES = {
-    EMAIL_REGEX: ExtractedEntity.EMAIL,
-    PHONE_REGEX: ExtractedEntity.PHONE,
-    IPV4_REGEX: ExtractedEntity.IPADDRESS,
-    IPV6_REGEX: ExtractedEntity.IPADDRESS,
-    IBAN_REGEX: ExtractedEntity.IBAN,
+    EMAIL_REGEX: EmailResult,
+    PHONE_REGEX: PhoneResult,
+    IPV4_REGEX: IPAddressResult,
+    IPV6_REGEX: IPAddressResult,
+    IBAN_REGEX: IBANResult,
 }
 
 
-def extract_patterns(text):
-    for pattern, category in REGEX_TYPES.items():
+def extract_patterns(ctx, text):
+    for pattern, clazz in REGEX_TYPES.items():
         for match in pattern.finditer(text):
             match_text = match.group(0)
             if match_text is not None:
                 start, end = match.span()
                 # log.info("%s: %s", match_text, category)
-                yield match_text, category, start, end
+                yield clazz(ctx, match_text, start, end)
