@@ -51,8 +51,10 @@ build:
 	docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities:$(TAG) services/extract-entities
 	docker build --cache-from alephdata/aleph-extract-countries -t alephdata/aleph-extract-countries:$(TAG) services/extract-countries
 
-build-full: build
-	docker build -t alephdata/aleph-ui-production:$(TAG) ui/production
+build-ui:
+	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
+
+build-full: build build-ui
 
 docker-pull:
 	docker pull alephdata/aleph

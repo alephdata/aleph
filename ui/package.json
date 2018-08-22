@@ -20,7 +20,7 @@
     "node-sass-package-importer": "^5.2.0",
     "normalizr": "^3.2.4",
     "numeral": "^2.0.6",
-    "query-string": "^6.1.0",
+    "query-string": "^4.3.4",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-file-drop": "^0.2.6",
