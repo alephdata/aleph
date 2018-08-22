@@ -39,7 +39,7 @@ def extract_polyglot(ctx, text, language):
             if clazz is not None:
                 yield clazz(ctx, label, entity.start, entity.end)
     except Exception:
-        log.exception("Cannot extract. Language: %s", language)
+        log.warning("polyglot failed. Language: %s", language)
 
 
 def extract_spacy(ctx, text, language):
@@ -56,4 +56,4 @@ def extract_spacy(ctx, text, language):
             if clazz is not None:
                 yield clazz(ctx, ent.text, ent.start, ent.end)
     except Exception:
-        log.exception("Cannot extract. Language: %s", language)
+        log.warning("spaCy failed. Language: %s", language)

@@ -16,6 +16,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 RUN pip3 install -U six pip regex==2017.4.5 pycld2==0.31 polyglot==16.7.4 Morfessor==2.0.4
 RUN mkdir -p /data/polyglot
 ENV POLYGLOT_DATA_PATH=/data/polyglot
+# cf. http://polyglot.cs.stonybrook.edu/~polyglot/index.json
 # Skipped languages (because their overall support in aleph is not given):
 # ner2.hi embeddings2.hi ner2.vi embeddings2.vi
 # ner2.ja embeddings2.ja ner2.ko embeddings2.ko ner2.zh embeddings2.zh
@@ -50,5 +51,6 @@ COPY . /service/
 RUN pip3 install -e /service
 
 RUN python3 /service/entityextractor/prepare_geonames.py
+USER nobody:nogroup
 EXPOSE 50000
 CMD ["python3", "/service/entityextractor/service.py"]
