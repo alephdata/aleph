@@ -9,8 +9,7 @@ from entityextractor.result import OrganizationResult
 
 log = logging.getLogger(__name__)
 
-# POLYGLOT_LANGUAGES = os.listdir('/data/polyglot/polyglot_data/ner2')
-POLYGLOT_LANGUAGES = []
+POLYGLOT_LANGUAGES = os.listdir('/data/polyglot/polyglot_data/ner2')
 POLYGLOT_TYPES = {
     'I-PER': PersonResult,
     'I-ORG': OrganizationResult,

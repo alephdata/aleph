@@ -21,6 +21,6 @@ def test_spacy():
     """
     entities = extract_spacy(ctx, text, 'en')
     entities = [str(r) for r in entities]
-    assert 'the United States' in entities
+    assert 'United States' in entities
     assert 'Germany' in entities
     assert 'Syria' in entities
