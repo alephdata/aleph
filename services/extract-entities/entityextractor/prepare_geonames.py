@@ -6,11 +6,11 @@ import os
 from normality import normalize
 
 GEONAMES_DB_PATH = os.environ['GEONAMES_DB_PATH']
-CORPUS_PATH = os.environ['CORPUS_PATH']
+GEONAMES_RAW_PATH = os.environ['GEONAMES_RAW_PATH']
 
 
 def prepare_geonames():
-    with io.open(CORPUS_PATH, 'r', encoding='utf-8') as fh:
+    with io.open(GEONAMES_RAW_PATH, 'r', encoding='utf-8') as fh:
         with shelve.open(GEONAMES_DB_PATH) as db:
             for row in csv.reader(fh, delimiter='\t'):
                 country = normalize(row[8])

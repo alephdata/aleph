@@ -31,3 +31,13 @@ def label_key(label):
 
 def select_label(labels):
     return setmedian(labels)
+
+
+class Result(object):
+
+    def __init__(self, label, category, start, end):
+        self.label = label
+        self.key = label
+        self.category = category
+        self.start = start
+        self.end = end

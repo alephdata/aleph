@@ -1,25 +1,21 @@
 import logging
 from collections import Counter, defaultdict
-import shelve
-import os
-
 import phonenumbers
 from phonenumbers import geocoder
 from normality import normalize
 import countrynames
 from alephclient.services.entityextract_pb2 import ExtractedEntity
 
-from entityextractor.extract import (
-    extract_polyglot, extract_spacy, extract_regex
-)
+from entityextractor.extract import extract_polyglot, extract_spacy
+from entityextractor.patterns import extract_patterns
 from entityextractor.normalize import clean_label, label_key
 from entityextractor.normalize import select_label
+from entityextractor.location import LocationResolver
 from entityextractor.util import overlaps, _parse_phonenumber
 
 
 log = logging.getLogger(__name__)
-
-GEONAMES_DB_PATH = os.environ['GEONAMES_DB_PATH']
+location_resolver = LocationResolver()
 
 
 class EntityGroup(object):
@@ -74,7 +70,7 @@ class EntityAggregator(object):
                 self.feed(l, c, (self.record, s, e))
             for (l, c, s, e) in extract_spacy(text, language):
                 self.feed(l, c, (self.record, s, e))
-        for (l, c, s, e) in extract_regex(text):
+        for (l, c, s, e) in extract_patterns(text):
             self.regex_matches_weights[l] += 1
             self.regex_matches_categories[l].append(c)
 
@@ -112,11 +108,10 @@ class EntityAggregator(object):
 
     def _get_countries(self, locations, phones):
         countries = Counter()
-        with shelve.open(GEONAMES_DB_PATH) as db:
-            for loc, weight in locations.items():
-                country = db.get(normalize(loc), None)
-                if country:
-                    countries[country] += weight
+        for loc, weight in locations.items():
+            country = location_resolver.get_country(loc)
+            if country:
+                countries[country] += weight
         for (phone, weight) in phones:
             country = geocoder.country_name_for_number(phone, 'en')
             country_code = normalize(countrynames.to_code(country))

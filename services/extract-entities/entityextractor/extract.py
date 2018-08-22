@@ -4,10 +4,6 @@ import logging
 from polyglot.text import Text
 from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
 
-from entityextractor.regex_patterns import (
-    EMAIL_REGEX, PHONE_REGEX, IPV4_REGEX, IPV6_REGEX, IBAN_REGEX
-)
-
 log = logging.getLogger(__name__)
 
 POLYGLOT_LANGUAGES = os.listdir('/data/polyglot_data/ner2')
@@ -27,14 +23,6 @@ SPACY_TYPES = {
 }
 SPACY_LANGUAGES = ['en', 'de', 'es', 'pt', 'fr', 'it', 'nl']
 SPACY_MODELS = {}
-
-REGEX_TYPES = {
-    EMAIL_REGEX: ExtractedEntity.EMAIL,
-    PHONE_REGEX: ExtractedEntity.PHONE,
-    IPV4_REGEX: ExtractedEntity.IPADDRESS,
-    IPV6_REGEX: ExtractedEntity.IPADDRESS,
-    IBAN_REGEX: ExtractedEntity.IBAN,
-}
 
 
 def extract_polyglot(text, language):
@@ -69,14 +57,3 @@ def extract_spacy(text, language):
                 yield ent.text, category, ent.start, ent.end
     except Exception:
         log.exception("Cannot extract. Language: %s", language)
-
-
-def extract_regex(text):
-    for pattern in REGEX_TYPES:
-        for match in pattern.finditer(text):
-            match_text = match.group(0)
-            if match_text is not None:
-                category = REGEX_TYPES.get(pattern)
-                start, end = match.span()
-                # log.info("%s: %s", match_text, category)
-                yield match_text, category, start, end

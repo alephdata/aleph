@@ -13,9 +13,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 
 ENV LANG='en_US.UTF-8' \
     LANGUAGE='en_US:en' \
-    LC_ALL='en_US.UTF-8' \
-    CORPUS_PATH='/tmp/allCountries.filtered.txt' \
-    GEONAMES_DB_PATH='/tmp/geonamesdb'
+    LC_ALL='en_US.UTF-8'
 
 RUN pip3 install -U six pip \
                     regex==2017.4.5 \
@@ -27,8 +25,8 @@ RUN pip3 install -U six pip \
                     spacy \
     && rm -rf /root/.cache
 
-RUN mkdir /data
-ENV POLYGLOT_DATA_PATH=/data
+RUN mkdir -p /data/polyglot
+ENV POLYGLOT_DATA_PATH=/data/polyglot
 RUN polyglot download TASK:ner2
 RUN polyglot download TASK:embeddings2
 
@@ -41,9 +39,11 @@ RUN python3 -m spacy download it
 RUN python3 -m spacy download nl
 RUN python3 -m spacy download xx
 
-RUN curl -s -o /tmp/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
-    && zgrep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" /tmp/allCountries.zip >${CORPUS_PATH} \
-    && rm /tmp/allCountries.zip
+ENV GEONAMES_RAW_PATH='/data/allCountries.filtered.txt' \
+    GEONAMES_DB_PATH='/data/geonamesdb'
+RUN curl -s -o /data/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
+    && zgrep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" /data/allCountries.zip >${CORPUS_PATH} \
+    && rm /data/allCountries.zip
 
 RUN mkdir -p /service
 WORKDIR /service

@@ -1,7 +1,7 @@
 import pytest
-from entityextractor.regex_patterns import (
-    EMAIL_REGEX, IPV4_REGEX, IPV6_REGEX, PHONE_REGEX, IBAN_REGEX
-)
+from entityextractor.patterns import EMAIL_REGEX, IPV4_REGEX
+from entityextractor.patterns import IPV6_REGEX, PHONE_REGEX
+from entityextractor.patterns import IBAN_REGEX
 
 PHONE_NUMBERS = [
     '754-3010',
