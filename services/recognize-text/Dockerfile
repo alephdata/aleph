@@ -20,6 +20,7 @@ WORKDIR /service
 ADD setup.py /service/
 RUN pip3 install -q -e /service
 COPY . /service/
+ENV OMP_THREAD_LIMIT=1
 
 HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
     CMD curl --fail http://localhost:50000 || exit 1

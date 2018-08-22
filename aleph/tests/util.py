@@ -93,7 +93,7 @@ class TestCase(FlaskTestCase):
         self.grant(collection, visitor, True, False)
 
     def flush_index(self):
-        refresh_index()
+        refresh_index(all_indexes())
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))

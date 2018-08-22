@@ -13,7 +13,7 @@ from aleph.core import es
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
 from aleph.index.util import index_safe, mget_safe, backoff_cluster
-from aleph.index.util import refresh_index, authz_query
+from aleph.index.util import authz_query
 
 log = logging.getLogger(__name__)
 
@@ -82,7 +82,6 @@ def delete_entity(entity_id):
     """Delete an entity from the index."""
     q = {'ids': {'values': str(entity_id)}}
     query_delete(entities_index(), q)
-    refresh_index(index=entities_index())
 
 
 def _index_updates(collection, entities):
@@ -133,7 +132,7 @@ def _index_updates(collection, entities):
 
 def index_bulk(collection, entities, chunk_size=200):
     """Index a set of entities."""
-    for attempt in count():
+    for attempt in count(1):
         try:
             entities = _index_updates(collection, entities)
             bulk_op(entities, chunk_size=chunk_size)

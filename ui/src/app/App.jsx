@@ -6,6 +6,8 @@ import { inRange } from 'lodash';
 import Router from './Router';
 import Translator from './Translator';
 
+import 'babel-polyfill';
+
 // TODO Initialise store here instead of in store.js (which should just export
 // createStore).
 import store from './store';

@@ -12,6 +12,8 @@ from aleph.logic.collections import generate_sitemap
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query
 from aleph.logic.audit import record_audit
+from aleph.index.util import refresh_index
+from aleph.index.core import collections_index
 from aleph.serializers import CollectionSchema
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, jsonify, parse_request, serialize_data
@@ -33,6 +35,7 @@ def create():
     data = parse_request(CollectionSchema)
     role = Role.by_id(request.authz.id)
     collection = create_collection(data, role=role)
+    refresh_index(collections_index())
     return view(collection.id)
 
 
@@ -88,4 +91,5 @@ def mapping_process(id):
 def delete(id):
     collection = get_db_collection(id, request.authz.WRITE)
     delete_collection(collection)
+    refresh_index(collections_index())
     return ('', 204)
