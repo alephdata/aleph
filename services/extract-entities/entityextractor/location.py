@@ -15,4 +15,6 @@ class LocationResolver(object):
 
     def get_countries(self, location):
         location = self.normalize(location)
+        if location is None:
+            return []
         return ensure_list(self.db.get(location))

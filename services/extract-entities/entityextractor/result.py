@@ -62,6 +62,11 @@ class NamedResult(Result):
 class OrganizationResult(NamedResult):
     category = ExtractedEntity.ORGANIZATION
 
+    def __init__(self, ctx, label, start, end):
+        super(OrganizationResult, self).__init__(ctx, label, start, end)
+        if self.valid and ' ' not in self.label:
+            self.valid = False
+
 
 class PersonResult(NamedResult):
     category = ExtractedEntity.PERSON

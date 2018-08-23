@@ -24,7 +24,6 @@ setup(
     entry_points={
         'aleph.init': [],
         'aleph.analyzers': [
-            'lang = aleph.analyze.language:LanguageAnalyzer',
             'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
             'ner = aleph.analyze.extract_entity:EntityExtractor',
         ],

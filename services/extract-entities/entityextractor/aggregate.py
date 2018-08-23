@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 
 class EntityAggregator(object):
     MAX_COUNTRIES = 3
+    CUTOFF = 0.01
 
     def __init__(self):
         self.clusters = []
@@ -46,7 +47,17 @@ class EntityAggregator(object):
 
     @property
     def entities(self):
+        total_weight = sum([c.weight for c in self.clusters if c.strict])
         for cluster in self.clusters:
+            # only using locations for country detection at the moment:
+            if cluster.category == ExtractedEntity.LOCATION:
+                continue
+
+            # skip entities that do not meet a threshold of relevance:
+            if not cluster.strict:
+                if (cluster.weight / total_weight) < self.CUTOFF:
+                    continue
+
             # log.info('%s: %s: %s', group.label, group.category, group.weight)
             yield cluster.label, cluster.category, cluster.weight
 
