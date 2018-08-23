@@ -17,7 +17,6 @@ elasticsearch==6.3.0
 marshmallow==2.15.4
 psycopg2-binary==2.7.4
 gunicorn==19.9.0
-langid==1.1.6
 blinker==1.4
 Babel==2.5.1
 PyYAML==3.12

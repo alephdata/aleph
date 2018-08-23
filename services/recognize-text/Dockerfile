@@ -15,15 +15,16 @@ RUN apt-get -qq -y update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+ENV OMP_THREAD_LIMIT=1
 RUN mkdir -p /service
 WORKDIR /service
 ADD setup.py /service/
 RUN pip3 install -q -e /service
 COPY . /service/
-ENV OMP_THREAD_LIMIT=1
 
 HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
     CMD curl --fail http://localhost:50000 || exit 1
 
+# USER nobody:nogroup
 EXPOSE 50000
 CMD ["python3", "/service/textrecognizer/service.py"]

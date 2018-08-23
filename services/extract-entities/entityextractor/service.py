@@ -1,7 +1,9 @@
 import time
-import grpc
 import logging
+import multiprocessing
 from concurrent import futures
+
+import grpc
 from alephclient.services.entityextract_pb2_grpc import add_EntityExtractServicer_to_server  # noqa
 from alephclient.services.entityextract_pb2_grpc import EntityExtractServicer  # noqa
 from alephclient.services.entityextract_pb2 import ExtractedEntity, ExtractedEntitySet  # noqa
@@ -22,13 +24,14 @@ class EntityExtractorServicer(EntityExtractServicer):
         for (label, category, weight) in aggregator.entities:
             entity = entities.entities.add()
             entity.label = label
-            entity.weight = weight
             entity.type = category
+            entity.weight = weight
         return entities
 
 
 def serve(port):
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=20))
+    workers = multiprocessing.cpu_count()
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=workers))
     add_EntityExtractServicer_to_server(EntityExtractorServicer(), server)
     server.add_insecure_port(port)
     server.start()

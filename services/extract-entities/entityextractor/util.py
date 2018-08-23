@@ -1,3 +1,4 @@
+from Levenshtein import setmedian
 
 
 def overlaps(a, b):
@@ -8,3 +9,7 @@ def overlaps(a, b):
     max_start = max(start_a, start_b)
     min_end = min(end_a, end_b)
     return (min_end - max_start) > 0
+
+
+def select_label(labels):
+    return setmedian(labels)

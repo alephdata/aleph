@@ -1,6 +1,5 @@
 import time
 import logging
-import threading
 from PIL import Image
 from io import BytesIO
 from languagecodes import list_to_alpha3 as alpha3
@@ -11,15 +10,12 @@ log = logging.getLogger(__name__)
 
 class OCR(object):
     MAX_MODELS = 5
-    MIN_WIDTH = 10
-    MIN_HEIGHT = 10
     DEFAULT_MODE = PSM.AUTO_OSD
     # DEFAULT_MODE = PSM.AUTO
 
     def __init__(self):
         # Tesseract language types:
         _, self.supported = get_languages()
-        self.t = threading.local()
 
     def language_list(self, languages):
         models = [c for c in alpha3(languages) if c in self.supported]
@@ -30,29 +26,24 @@ class OCR(object):
         return '+'.join(sorted(set(models)))
 
     def configure_engine(self, languages, mode):
-        log.info("Configuring OCR engine (%s)", languages)
-        if not hasattr(self.t, 'api'):
-            self.t.api = PyTessBaseAPI(lang=languages, oem=OEM.LSTM_ONLY)
-        if languages != self.t.api.GetInitLanguagesAsString():
-            self.t.api.Init(lang=languages, oem=OEM.LSTM_ONLY)
-        if mode != self.t.api.GetPageSegMode():
-            self.t.api.SetPageSegMode(mode)
-        return self.t.api
+        # log.info("Configuring OCR engine (%s)", languages)
+        if not hasattr(self, 'api'):
+            self.api = PyTessBaseAPI(lang=languages, oem=OEM.LSTM_ONLY)
+        if languages != self.api.GetInitLanguagesAsString():
+            self.api.Init(lang=languages, oem=OEM.LSTM_ONLY)
+        if mode != self.api.GetPageSegMode():
+            self.api.SetPageSegMode(mode)
+        return self.api
 
     def extract_text(self, data, languages=None, mode=DEFAULT_MODE):
         """Extract text from a binary string of data."""
-        start_time = time.time()
         languages = self.language_list(languages)
         api = self.configure_engine(languages, mode)
 
         try:
             image = Image.open(BytesIO(data))
             # TODO: play with contrast and sharpening the images.
-            if image.width <= self.MIN_WIDTH:
-                return
-            if image.height <= self.MIN_HEIGHT:
-                return
-
+            start_time = time.time()
             api.SetImage(image)
             text = api.GetUTF8Text()
             confidence = api.MeanTextConf()
