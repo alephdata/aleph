@@ -47,7 +47,8 @@ class EntityAggregator(object):
 
     @property
     def entities(self):
-        total_weight = sum([c.weight for c in self.clusters if c.strict])
+        total_weight = sum([c.weight for c in self.clusters if not c.strict])
+        total_weight = float(max(1, total_weight))
         for cluster in self.clusters:
             # only using locations for country detection at the moment:
             if cluster.category == ExtractedEntity.LOCATION:
