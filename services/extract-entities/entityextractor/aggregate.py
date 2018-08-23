@@ -21,11 +21,10 @@ class EntityAggregator(object):
 
     def extract(self, text, languages):
         self.record += 1
-        for language in languages:
-            for result in extract_polyglot(self, text, language):
-                self.add(result)
-            for result in extract_spacy(self, text, language):
-                self.add(result)
+        for result in extract_polyglot(self, text, languages):
+            self.add(result)
+        for result in extract_spacy(self, text, languages):
+            self.add(result)
         for result in extract_patterns(self, text):
             self.add(result)
 

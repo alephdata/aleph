@@ -49,6 +49,7 @@ class Result(object):
 
 
 class NamedResult(Result):
+    """Any entity extracted that has a human-style name."""
     strict = False
 
     def __init__(self, ctx, label, start, end):
@@ -72,16 +73,25 @@ class PersonResult(NamedResult):
 
 
 class LocationResult(NamedResult):
+    """Locations are being mapped to countries."""
     resolver = LocationResolver()
     category = ExtractedEntity.LOCATION
 
     def __init__(self, ctx, label, start, end):
         super(LocationResult, self).__init__(ctx, label, start, end)
         self.countries = self.resolver.get_countries(label)
-        self.valid = len(self.countries) > 0
+
+
+class LanguageResult(Result):
+    category = ExtractedEntity.LANGUAGE
+
+    def __init__(self, ctx, label, start, end):
+        label = label.strip().lower()
+        super(LanguageResult, self).__init__(ctx, label, start, end)
 
 
 class IPAddressResult(Result):
+    """Pull IPv4, IPv6 - and validate using on-board Python tools."""
     category = ExtractedEntity.IPADDRESS
 
     def __init__(self, ctx, label, start, end):

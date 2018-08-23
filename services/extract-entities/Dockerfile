@@ -37,18 +37,18 @@ RUN curl -s -o /tmp/allCountries.zip http://download.geonames.org/export/dump/al
     && rm /tmp/allCountries.zip
 
 RUN pip3 install spacy
-RUN python3 -m spacy download en && python3 -m spacy download de
-RUN python3 -m spacy download es && python3 -m spacy download pt
-RUN python3 -m spacy download fr && python3 -m spacy download it
-RUN python3 -m spacy download nl
-# && python3 -m spacy download xx
+# RUN python3 -m spacy download en && python3 -m spacy download de
+# RUN python3 -m spacy download es && python3 -m spacy download pt
+# RUN python3 -m spacy download fr && python3 -m spacy download it
+# RUN python3 -m spacy download nl
+RUN python3 -m spacy download xx
 
 RUN mkdir -p /service
 WORKDIR /service
 ADD requirements.txt /service/
 RUN pip3 install -q -r /service/requirements.txt
 COPY . /service/
-RUN pip3 install -e /service
+RUN pip3 install -q -e /service
 
 RUN python3 /service/entityextractor/prepare_geonames.py
 # USER nobody:nogroup

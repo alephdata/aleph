@@ -1,15 +1,13 @@
-import os
 import spacy
 import logging
 from polyglot.text import Text
 from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
 
 from entityextractor.result import PersonResult, LocationResult
-from entityextractor.result import OrganizationResult
+from entityextractor.result import OrganizationResult, LanguageResult
 
 log = logging.getLogger(__name__)
 
-POLYGLOT_LANGUAGES = os.listdir('/data/polyglot/polyglot_data/ner2')
 POLYGLOT_TYPES = {
     'I-PER': PersonResult,
     'I-ORG': OrganizationResult,
@@ -18,42 +16,35 @@ POLYGLOT_TYPES = {
 
 # https://spacy.io/api/annotation#named-entities
 SPACY_TYPES = {
+    'PER': PersonResult,
     'PERSON': PersonResult,
-    # 'NORP': OrganizationResult,
     'ORG': OrganizationResult,
     'LOC': LocationResult,
     'GPE': LocationResult
 }
-SPACY_LANGUAGES = ['en', 'de', 'es', 'pt', 'fr', 'it', 'nl']
-SPACY_MODELS = {}
+SPACY = spacy.load('xx')
 
 
-def extract_polyglot(ctx, text, language):
-    if language not in POLYGLOT_LANGUAGES:
-        return
+def extract_polyglot(ctx, text, languages):
     try:
-        parsed = Text(text, hint_language_code=language)
+        parsed = Text(text)
+        if parsed.language.confidence > 90:
+            yield LanguageResult(ctx, parsed.language.code, 0, len(text))
         for entity in parsed.entities:
             label = ' '.join(entity)
             clazz = POLYGLOT_TYPES.get(entity.tag)
             if clazz is not None:
                 yield clazz(ctx, label, entity.start, entity.end)
     except Exception:
-        log.warning("polyglot failed. Language: %s", language)
+        log.exception("polyglot failed")
 
 
-def extract_spacy(ctx, text, language):
-    if language not in SPACY_LANGUAGES:
-        return
-    if language not in SPACY_MODELS:
-        log.info("Loading spaCy model: %s", language)
-        SPACY_MODELS[language] = spacy.load(language)
-    nlp = SPACY_MODELS.get(language)
+def extract_spacy(ctx, text, languages):
     try:
-        doc = nlp(text)
+        doc = SPACY(text)
         for ent in doc.ents:
             clazz = SPACY_TYPES.get(ent.label_)
             if clazz is not None:
                 yield clazz(ctx, ent.text, ent.start, ent.end)
     except Exception:
-        log.warning("spaCy failed. Language: %s", language)
+        log.exception("spaCy failed")
