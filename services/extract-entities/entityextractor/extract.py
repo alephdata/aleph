@@ -9,6 +9,8 @@ from entityextractor.result import OrganizationResult, LanguageResult
 
 log = logging.getLogger(__name__)
 
+MAX_LENGTH = 100000
+
 POLYGLOT_LANGUAGES = os.listdir('/data/polyglot/polyglot_data/ner2')
 POLYGLOT_TYPES = {
     'I-PER': PersonResult,
@@ -46,6 +48,7 @@ def extract_polyglot(ctx, text, languages):
 
 def extract_spacy(ctx, text, languages):
     try:
+        text = text[:MAX_LENGTH]
         doc = SPACY(text)
         for ent in doc.ents:
             clazz = SPACY_TYPES.get(ent.label_)
