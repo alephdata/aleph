@@ -1,7 +1,6 @@
 import logging
-import exactitude
 from normality import stringify
-from followthemoney.types import TYPES
+from followthemoney.types import registry
 
 from aleph.core import db
 from aleph.model.common import IdModel
@@ -22,13 +21,13 @@ class DocumentTag(db.Model, IdModel):
     TYPE_IBAN = 'iban'
 
     TYPES = {
-        TYPE_PERSON: exactitude.names,
-        TYPE_ORGANIZATION: exactitude.names,
-        TYPE_EMAIL: exactitude.emails,
-        TYPE_PHONE: exactitude.phones,
-        TYPE_LOCATION: exactitude.addresses,
-        TYPE_IP: exactitude.ips,
-        TYPE_IBAN: exactitude.ibans,
+        TYPE_PERSON: registry.name,
+        TYPE_ORGANIZATION: registry.name,
+        TYPE_EMAIL: registry.email,
+        TYPE_PHONE: registry.phone,
+        TYPE_LOCATION: registry.address,
+        TYPE_IP: registry.ip,
+        TYPE_IBAN: registry.iban,
     }
 
     id = db.Column(db.BigInteger, primary_key=True)
@@ -42,10 +41,9 @@ class DocumentTag(db.Model, IdModel):
 
     @property
     def field(self):
-        type_ = self.TYPES[self.type]
-        for (candidate, invert) in TYPES.values():
-            if candidate == type_:
-                return invert
+        type_ = registry.get(self.type)
+        if type_ is not None and type_.group is not None:
+            return type_.group
 
     @classmethod
     def delete_by(cls, document_id=None, origin=None, type=None):

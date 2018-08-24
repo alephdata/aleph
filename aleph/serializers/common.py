@@ -1,7 +1,7 @@
 from banal import is_mapping
 from normality import stringify
 from followthemoney import model
-from exactitude import countries, languages, dates
+from followthemoney.types import countries, languages, dates
 from marshmallow.fields import String, Raw, Float
 from marshmallow.exceptions import ValidationError
 
