@@ -1,5 +1,4 @@
 import logging
-from normality import stringify
 from followthemoney.types import registry
 
 from aleph.core import db
@@ -20,14 +19,14 @@ class DocumentTag(db.Model, IdModel):
     TYPE_IP = 'ip'
     TYPE_IBAN = 'iban'
 
-    TYPES = {
-        TYPE_PERSON: registry.name,
-        TYPE_ORGANIZATION: registry.name,
-        TYPE_EMAIL: registry.email,
-        TYPE_PHONE: registry.phone,
-        TYPE_LOCATION: registry.address,
-        TYPE_IP: registry.ip,
-        TYPE_IBAN: registry.iban,
+    MAPPING = {
+        TYPE_PERSON: 'namesMentioned',
+        TYPE_ORGANIZATION: 'namesMentioned',
+        TYPE_EMAIL: 'emailMentioned',
+        TYPE_PHONE: 'phoneMentioned',
+        TYPE_LOCATION: 'locationMentioned',
+        TYPE_IP: 'ipMentioned',
+        TYPE_IBAN: 'ibanMentioned',
     }
 
     id = db.Column(db.BigInteger, primary_key=True)
@@ -75,11 +74,9 @@ class DocumentTagCollector(object):
 
     def emit(self, text, type, key=None, weight=1):
         "Create a tag, this can be called multiple times with the same text."
-        cleaner = DocumentTag.TYPES[type]
-
-        text = stringify(text)
-        text = cleaner.clean(text, countries=self.document.countries)
-
+        prop = DocumentTag.MAPPING[type]
+        prop = self.document.model.get(prop)
+        text = prop.type.clean(text, countries=self.document.countries)
         if text is None:
             return
 
