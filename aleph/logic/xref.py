@@ -7,7 +7,7 @@ from aleph.model import Match, Document
 from aleph.index.core import entities_index
 from aleph.index.xref import entity_query
 from aleph.index.entities import iter_entities
-from aleph.index.util import search_safe
+from aleph.index.util import search_safe, unpack_result
 
 log = logging.getLogger(__name__)
 
@@ -54,6 +54,30 @@ def _xref_item(item, collection_id=None):
     db.session.commit()
 
 
+def compare(left, right):
+    return 0
+
+
+def match(item, collection_id=None):
+    """Cross-reference an entity or document, given as an indexed document."""
+    # name = item.get('name') or item.get('title')
+    query = entity_query(item, collection_id=collection_id)
+    if 'match_none' in query:
+        return
+
+    query = {
+        'query': query,
+        'size': 10,
+        '_source': ['collection_id', 'name'],
+    }
+    result = search_safe(index=entities_index(), body=query)
+    results = result.get('hits').get('hits')
+    for result in results:
+        candidate = unpack_result(result)
+        score = compare(item, candidate)
+        print(item['name'], candidate['name'], score)
+
+
 @celery.task()
 def xref_collection(collection_id, other_id=None):
     """Cross-reference all the entities and documents in a collection."""
@@ -62,4 +86,5 @@ def xref_collection(collection_id, other_id=None):
                              schemata=matchable,
                              excludes=['text', 'roles', 'properties.*'])
     for entity in entities:
-        _xref_item(entity, collection_id=other_id)
+        # _xref_item(entity, collection_id=other_id)
+        match(entity)
