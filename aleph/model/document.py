@@ -1,4 +1,6 @@
 import logging
+from collections import defaultdict
+from banal import ensure_list, is_mapping
 from followthemoney import model
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
@@ -16,6 +18,8 @@ log = logging.getLogger(__name__)
 
 
 class Document(db.Model, DatedModel, Metadata):
+    MAX_TAGS = 10000
+
     SCHEMA = 'Document'
     SCHEMA_FOLDER = 'Folder'
     SCHEMA_PACKAGE = 'Package'
@@ -32,6 +36,27 @@ class Document(db.Model, DatedModel, Metadata):
     STATUS_PENDING = 'pending'
     STATUS_SUCCESS = 'success'
     STATUS_FAIL = 'fail'
+
+    SCHEMA_MAPPING = {
+        'contentHash': 'content_hash',
+        'title': 'title',
+        'author': 'author',
+        'generator': 'generator',
+        'crawler': 'crawler',
+        'fileSize': 'file_size',
+        'fileName': 'file_name',
+        'extension': 'extension',
+        'encoding': 'encoding',
+        'mimeType': 'mime_type',
+        'language': 'languages',
+        'country': 'countries',
+        'date': 'date',
+        'authoredAt': 'authored_at',
+        'modifiedAt': 'modified_at',
+        'publishedAt': 'published_at',
+        'retrievedAt': 'retrieved_at',
+        'parent': 'parent_id'
+    }
 
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
@@ -164,7 +189,7 @@ class Document(db.Model, DatedModel, Metadata):
         yield self.source_url
         yield self.summary
         yield self.author
-        yield self.generator
+        # yield self.generator
         if self.status != self.STATUS_SUCCESS:
             return
 
@@ -263,6 +288,80 @@ class Document(db.Model, DatedModel, Metadata):
             q = q.filter(cls.status != cls.STATUS_SUCCESS)
         q = q.order_by(cls.id.asc())
         return q
+
+    @classmethod
+    def _merge_prop(cls, data, name, raw):
+        """Merge a given named property into an existing schema entity."""
+        countries = data.get('countries', [])
+        properties = data.get('properties', {})
+        values = set(ensure_list(properties.get(name)))
+        prop = model.get(data['schema']).get(name)
+        for value in ensure_list(raw):
+            value = prop.type.normalize(value,
+                                        cleaned=True,
+                                        countries=countries)
+            values.update(value)
+        if len(values):
+            properties[name] = list(values)
+        else:
+            properties.pop(name, None)
+        data['properties'] = properties
+
+    @classmethod
+    def doc_data_to_schema(cls, data):
+        """Convert an existing dict with document information (e.g. from the search
+        index) to it's followthemoney form."""
+        out = {
+            'schema': data.get('schema'),
+            'countries': data.get('countries', [])
+        }
+        for prop, field in cls.SCHEMA_MAPPING.items():
+            cls._merge_prop(out, prop, data.get(field))
+        cls._merge_prop(out, 'namesMentioned', data.get('names'))
+        cls._merge_prop(out, 'ibanMentioned', data.get('ibans'))
+        cls._merge_prop(out, 'ipMentioned', data.get('ips'))
+        cls._merge_prop(out, 'locationMentioned', data.get('locations'))
+        cls._merge_prop(out, 'phoneMentioned', data.get('phones'))
+        cls._merge_prop(out, 'emailMentioned', data.get('email'))
+        parent = data.get('parent')
+        if is_mapping(parent):
+            cls._merge_prop(out, 'parent', parent.get('id'))
+        return out
+
+    def to_schema_entity(self):
+        properties = {}
+        for prop, field in self.SCHEMA_MAPPING.items():
+            prop = self.model.get(prop)
+            values = getattr(self, field)
+            values = prop.type.normalize_set(values,
+                                             cleaned=True,
+                                             countries=self.countries)
+            if len(values):
+                properties[prop.name] = values
+
+        q = db.session.query(DocumentTag)
+        q = q.filter(DocumentTag.document_id == self.id)
+        q = q.filter(DocumentTag.type.in_(DocumentTag.MAPPING.keys()))
+        q = q.order_by(DocumentTag.weight.desc())
+        q = q.limit(Document.MAX_TAGS)
+        types = defaultdict(set)
+        for tag in q.all():
+            types[tag.type].add(tag.text)
+
+        for type_, values in types.items():
+            prop = DocumentTag.MAPPING.get(type_)
+            prop = self.model.get(prop)
+            values = prop.type.normalize_set(values,
+                                             cleaned=True,
+                                             countries=self.countries)
+            if len(values):
+                properties[prop.name] = values
+
+        return {
+            'schema': self.schema,
+            'properties': properties,
+            'id': self.id
+        }
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)

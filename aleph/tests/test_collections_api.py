@@ -22,6 +22,7 @@ class CollectionsApiTestCase(TestCase):
         }, self.col)
         db.session.add(self.ent)
         db.session.commit()
+        self.flush_index()
 
     def test_index(self):
         res = self.client.get('/api/2/collections')
@@ -96,9 +97,7 @@ class CollectionsApiTestCase(TestCase):
         url = '/api/2/collections/%s' % self.col.id
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
-        res = self.client.delete(url,
-                                 headers=headers)
+        res = self.client.delete(url, headers=headers)
         assert res.status_code == 204, res
-        res = self.client.get(url,
-                              headers=headers)
+        res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res

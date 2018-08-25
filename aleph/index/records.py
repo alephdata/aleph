@@ -45,7 +45,7 @@ def index_records(document):
     for attempt in count():
         try:
             bulk_op(generate_records(document))
-            refresh_index(index=records_index())
+            refresh_index(records_index())
             return
         except Exception as exc:
             log.warning('Failed to index records: %s', exc)

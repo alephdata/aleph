@@ -48,7 +48,6 @@ class TestCase(FlaskTestCase):
         settings.DATABASE_URI = DB_URI
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.MAIL_SERVER = None
-        settings.COUNTRIES_SERVICE = None
         settings.ENTITIES_SERVICE = None
         settings.ENTITIES_INDEX = '%s_entity' % APP_NAME
         settings.ENTITIES_INDEX_SET = [settings.ENTITIES_INDEX]
@@ -94,7 +93,7 @@ class TestCase(FlaskTestCase):
         self.grant(collection, visitor, True, False)
 
     def flush_index(self):
-        refresh_index()
+        refresh_index(all_indexes())
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
@@ -124,6 +123,7 @@ class TestCase(FlaskTestCase):
         es.delete_by_query(index=all_indexes(),
                            body={'query': {'match_all': {}}},
                            refresh=True,
+                           ignore=[404, 400],
                            conflicts='proceed')
 
         for table in reversed(db.metadata.sorted_tables):

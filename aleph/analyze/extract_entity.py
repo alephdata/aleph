@@ -18,6 +18,11 @@ class EntityExtractor(EntityAnalyzer, TextIterator, ServiceClientMixin):
         ExtractedEntity.PERSON: DocumentTag.TYPE_PERSON,
         ExtractedEntity.ORGANIZATION: DocumentTag.TYPE_ORGANIZATION,
         ExtractedEntity.COMPANY: DocumentTag.TYPE_ORGANIZATION,
+        ExtractedEntity.PHONE: DocumentTag.TYPE_PHONE,
+        ExtractedEntity.EMAIL: DocumentTag.TYPE_EMAIL,
+        ExtractedEntity.IBAN: DocumentTag.TYPE_IBAN,
+        ExtractedEntity.IPADDRESS: DocumentTag.TYPE_IP,
+        ExtractedEntity.LOCATION: DocumentTag.TYPE_LOCATION
     }
 
     def __init__(self):
@@ -31,10 +36,14 @@ class EntityExtractor(EntityAnalyzer, TextIterator, ServiceClientMixin):
             texts = self.text_iterator(document)
             entities = service.Extract(texts)
             for entity in entities.entities:
+                if entity.type == ExtractedEntity.COUNTRY:
+                    document.add_country(entity.label)
+                if entity.type == ExtractedEntity.LANGUAGE:
+                    document.add_language(entity.label)
                 type_ = self.TYPES.get(entity.type)
-                if type_ is None:
-                    continue
-                collector.emit(entity.label, type_, weight=entity.weight)
+                # log.info('%s: %s', entity.label, type_)
+                if type_ is not None:
+                    collector.emit(entity.label, type_, weight=entity.weight)
             log.info('Extracted %s entities.', len(collector))
         except self.Error as e:
             log.warning("gRPC [%s]: %s", e.code(), e.details())

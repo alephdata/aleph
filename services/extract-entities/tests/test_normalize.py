@@ -1,17 +1,17 @@
-from entityextractor.normalize import clean_label, label_key
+from entityextractor.result import Result
 
 
 class TestNormalize(object):
 
-    def test_clean_label(self):
-        assert clean_label('  ') is None
-        assert clean_label(None) is None
-        assert clean_label('xx') is None  # too short
-        assert clean_label('Mr. Clean and Proper') == 'Clean and Proper'
-        assert clean_label('The Thing') is None  # single token
-        assert clean_label('The Thing Bling') == 'Thing Bling'
-        assert clean_label('of The Thing Bling') == 'Thing Bling'
+    def test_clean_name(self):
+        assert Result.clean_name('  ') is None
+        assert Result.clean_name(None) is None
+        assert Result.clean_name('xx') is None  # too short
+        assert Result.clean_name('Mr. Clean and Proper') == 'Clean and Proper'
+        assert Result.clean_name('The') is None  # single token
+        assert Result.clean_name('The Thing Bling') == 'Thing Bling'
+        assert Result.clean_name('of The Thing Bling') == 'Thing Bling'
 
     def test_label_key(self):
-        assert label_key('') is None
-        assert label_key('BANANA') == 'banana'
+        assert Result.label_key('') is None
+        assert Result.label_key('BANANA') == 'banana'

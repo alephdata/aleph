@@ -1,82 +1,69 @@
+import logging
+from banal import ensure_list
+from collections import Counter
+from alephclient.services.entityextract_pb2 import ExtractedEntity
+
 from entityextractor.extract import extract_polyglot, extract_spacy
-from entityextractor.normalize import clean_label, label_key
-from entityextractor.normalize import select_label
-from entityextractor.util import overlaps
+from entityextractor.patterns import extract_patterns
+from entityextractor.cluster import Cluster
 
 
-class EntityGroup(object):
-
-    def __init__(self, label, key, category, span):
-        self.labels = [label]
-        self.categories = [category]
-        self.keys = set([key])
-        self.spans = set([span])
-
-    def match(self, key, span):
-        if key in self.keys:
-            return True
-        for crit in self.spans:
-            if overlaps(span, crit):
-                return True
-        # TODO: could also do some token-based magic here??
-        return False
-
-    def add(self, label, key, category, span):
-        self.labels.append(label)
-        self.categories.append(category)
-        self.keys.add(key)
-        self.spans.add(span)
-
-    @property
-    def label(self):
-        return select_label(self.labels)
-
-    @property
-    def category(self):
-        return max(set(self.categories), key=self.categories.count)
-
-    @property
-    def weight(self):
-        return len(self.labels)
+log = logging.getLogger(__name__)
 
 
 class EntityAggregator(object):
+    MAX_COUNTRIES = 3
+    CUTOFF = 0.01
 
     def __init__(self):
-        self.groups = []
+        self.clusters = []
+        self._countries = Counter()
         self.record = 0
 
     def extract(self, text, languages):
         self.record += 1
-        for language in languages:
-            for (l, c, s, e) in extract_polyglot(text, language):
-                self.feed(l, c, (self.record, s, e))
-            for (l, c, s, e) in extract_spacy(text, language):
-                self.feed(l, c, (self.record, s, e))
+        for result in extract_polyglot(self, text, languages):
+            self.add(result)
+        for result in extract_spacy(self, text, languages):
+            self.add(result)
+        for result in extract_patterns(self, text):
+            self.add(result)
 
-    def feed(self, label, category, span):
-        label = clean_label(label)
-        if label is None:
+    def add(self, result):
+        countries = [c.lower() for c in ensure_list(result.countries)]
+        self._countries.update(countries)
+        if not result.valid:
             return
-        key = label_key(label)
-        if key is None:
-            return
-        for group in self.groups:
-            if group.match(key, span):
-                group.add(label, key, category, span)
-                return
-        group = EntityGroup(label, key, category, span)
-        self.groups.append(group)
+        # TODO: make a hash?
+        for cluster in self.clusters:
+            if cluster.match(result):
+                return cluster.add(result)
+        self.clusters.append(Cluster(result))
+
+    @property
+    def countries(self):
+        cs = self._countries.most_common(n=self.MAX_COUNTRIES)
+        return [c for (c, n) in cs]
 
     @property
     def entities(self):
-        for group in self.groups:
-            # When we have many results, don't return entities which
-            # were only found a single time.
-            if len(self) > 100 and group.weight == 1:
+        total_weight = sum([c.weight for c in self.clusters if not c.strict])
+        total_weight = float(max(1, total_weight))
+        for cluster in self.clusters:
+            # only using locations for country detection at the moment:
+            if cluster.category == ExtractedEntity.LOCATION:
                 continue
 
-            yield group.label, group.category, group.weight
+            # skip entities that do not meet a threshold of relevance:
+            if not cluster.strict:
+                if (cluster.weight / total_weight) < self.CUTOFF:
+                    continue
+
+            # log.info('%s: %s: %s', group.label, group.category, group.weight)
+            yield cluster.label, cluster.category, cluster.weight
+
+        for (country, weight) in self._countries.items():
+            yield country, ExtractedEntity.COUNTRY, weight
 
     def __len__(self):
-        return len(self.groups)
+        return len(self.clusters)

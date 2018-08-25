@@ -32,7 +32,6 @@ def upgrade_search():
         es.indices.create(index, body=body, ignore=[404, 400])
         # es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
         es.indices.open(index=index, ignore=[400, 404])
-        es.indices.refresh(index=index, ignore=[400, 404])
         es.indices.clear_cache(index=index, ignore=[400, 404])
 
 
@@ -42,4 +41,4 @@ def delete_index():
 
 def clear_index():
     q = {'query': {'match_all': {}}}
-    es.delete_by_query(index=all_indexes(), body=q, refresh=True)
+    es.delete_by_query(index=all_indexes(), body=q)

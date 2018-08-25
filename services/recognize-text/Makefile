@@ -12,4 +12,4 @@ shell: build
 	docker run -v $(PWD):/service -ti alephdata/aleph-recognize-text bash
 
 run: build
-	docker run -ti alephdata/aleph-recognize-text
+	docker run -ti -p 50000:50000 alephdata/aleph-recognize-text
