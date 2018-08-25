@@ -1,11 +1,12 @@
 import logging
-from banal import is_mapping
+from banal import ensure_list, is_mapping
 from pprint import pprint  # noqa
 from followthemoney import model
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es
+from aleph.model import Document
 from aleph.index.entities import get_entity
 from aleph.index.core import entities_index
 
@@ -60,6 +61,28 @@ def expand_group(type_, value):
             values = type_.normalize_set(values, cleaned=True)
             if value in values:
                 yield (entity_id, prop, value)
+
+
+def expand_entity(entity):
+    """Transform an entity into a set of statements. This can
+    accept either an entity object or an entity ID."""
+    if not is_mapping(entity):
+        entity = get_entity(entity)
+    if entity is None:
+        return
+    if 'properties' not in entity:
+        entity.update(Document.doc_data_to_schema(entity))
+
+    schema = model.get(entity.get('schema'))
+    if schema is None:
+        return
+
+    properties = entity.get('properties', {})
+    for prop in schema.properties.values():
+        if prop.name not in properties:
+            continue
+        for value in ensure_list(properties.get(prop.name)):
+            yield (entity.get('id'), prop, value)
 
 
 def traverse(type_, value, steam=2):
