@@ -1,6 +1,5 @@
-from flask.ext.babel import get_locale
 from followthemoney import model
-from exactitude import countries, languages
+from followthemoney.types import countries, languages
 
 from aleph.model import Collection
 
@@ -75,15 +74,13 @@ class SchemaFacet(Facet):
 class CountryFacet(Facet):
 
     def update(self, result, key):
-        label = countries.names.get(key, key)
-        result['label'] = get_locale().territories.get(key.upper(), label)
+        result['label'] = countries.names.get(key, key)
 
 
 class LanguageFacet(Facet):
 
     def update(self, result, key):
-        label = languages.names.get(key, key)
-        result['label'] = get_locale().languages.get(key.upper(), label)
+        result['label'] = languages.names.get(key, key)
 
 
 class CategoryFacet(Facet):

@@ -11,17 +11,17 @@ service = EntityExtractStub(channel)
 
 
 def generate():
-    with open('tests/fixtures/taggable.txt', 'r', encoding='utf-8') as fh:
+    with open('tests/fixtures/pace.txt', 'r', encoding='utf-8') as fh:
         for line in fh:
             yield Text(text=line, languages=['en'])
 
 
 times = []
-for i in range(10):
+for i in range(1):
     start = time.time()
     entities = service.Extract(generate())
     for entity in entities.entities:
-        # print(entity)
+        print((entity.label, entity.weight, entity.type))
         pass
     end = time.time()
     times.append(end - start)

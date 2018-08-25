@@ -2,9 +2,9 @@ import logging
 from flask import Blueprint, request
 from flask.ext.babel import gettext, get_locale
 from elasticsearch import TransportError
-from exactitude import countries, languages
 from followthemoney import model
 from followthemoney.exc import InvalidData
+from followthemoney.types import countries, languages
 from jwt import ExpiredSignatureError
 
 from aleph import __version__
@@ -31,14 +31,6 @@ def metadata():
     if settings.OAUTH:
         auth['oauth_uri'] = url_for('sessions_api.oauth_init')
 
-    country_names = {}
-    for code, label in countries.names.items():
-        country_names[code] = locale.territories.get(code.upper(), label)
-
-    language_names = {}
-    for code, label in languages.names.items():
-        language_names[code] = locale.languages.get(code, label)
-
     return jsonify({
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
@@ -54,8 +46,8 @@ def metadata():
         },
         'categories': Collection.CATEGORIES,
         'statistics': get_instance_stats(Authz.from_role(None)),
-        'countries': country_names,
-        'languages': language_names,
+        'countries': countries.names,
+        'languages': languages.names,
         'schemata': model,
         'auth': auth
     })

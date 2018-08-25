@@ -1,14 +1,12 @@
 import logging
 from pprint import pprint  # noqa
-from collections import defaultdict
 
-from aleph.core import celery, db
-from aleph.model import Document, DocumentTag
+from aleph.core import celery
+from aleph.model import Document
 from aleph.index.records import index_records, clear_records
 from aleph.index.entities import delete_entity, index_single
 
 log = logging.getLogger(__name__)
-MAX_TAGS_PER_DOCUMENT = 1000
 
 
 @celery.task()
@@ -21,31 +19,11 @@ def index_document_id(document_id):
     index_records(document)
 
 
-def generate_tags(document):
-    """Transform document tag objects into normalized tag snippets."""
-    if document.status == Document.STATUS_PENDING:
-        return []
-    tags = defaultdict(set)
-    q = db.session.query(DocumentTag)
-    q = q.filter(DocumentTag.document_id == document.id)
-    q = q.order_by(DocumentTag.weight.desc())
-    q = q.limit(MAX_TAGS_PER_DOCUMENT)
-    for tag in q.all():
-        type_ = DocumentTag.TYPES[tag.type]
-        values = type_.normalize(tag.text,
-                                 cleaned=True,
-                                 countries=document.countries)
-        if tag.field is not None:
-            tags[tag.field].update(values)
-
-    # pprint(dict(tags))
-    return tags.items()
-
-
 def index_document(document):
     name = document.name
     log.info("Index document [%s]: %s", document.id, name)
-    data = {
+    data = document.to_schema_entity()
+    data.update({
         'status': document.status,
         'content_hash': document.content_hash,
         'foreign_id': document.foreign_id,
@@ -75,7 +53,7 @@ def index_document(document):
         'columns': document.columns,
         'ancestors': document.ancestors,
         'children': document.children.count()
-    }
+    })
 
     texts = list(document.texts)
     texts.extend(document.columns)
@@ -87,13 +65,6 @@ def index_document(document):
             'schema': document.parent.schema,
             'title': document.parent.title,
         }
-
-    for (field, values) in generate_tags(document):
-        if field not in data:
-            data[field] = list(values)
-        else:
-            data[field].extend(values)
-        texts.extend(values)
 
     return index_single(document, data, texts)
 

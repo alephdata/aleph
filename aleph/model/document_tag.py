@@ -1,7 +1,5 @@
 import logging
-import exactitude
-from normality import stringify
-from followthemoney.types import TYPES
+from followthemoney.types import registry
 
 from aleph.core import db
 from aleph.model.common import IdModel
@@ -21,14 +19,14 @@ class DocumentTag(db.Model, IdModel):
     TYPE_IP = 'ip'
     TYPE_IBAN = 'iban'
 
-    TYPES = {
-        TYPE_PERSON: exactitude.names,
-        TYPE_ORGANIZATION: exactitude.names,
-        TYPE_EMAIL: exactitude.emails,
-        TYPE_PHONE: exactitude.phones,
-        TYPE_LOCATION: exactitude.addresses,
-        TYPE_IP: exactitude.ips,
-        TYPE_IBAN: exactitude.ibans,
+    MAPPING = {
+        TYPE_PERSON: 'namesMentioned',
+        TYPE_ORGANIZATION: 'namesMentioned',
+        TYPE_EMAIL: 'emailMentioned',
+        TYPE_PHONE: 'phoneMentioned',
+        TYPE_LOCATION: 'locationMentioned',
+        TYPE_IP: 'ipMentioned',
+        TYPE_IBAN: 'ibanMentioned',
     }
 
     id = db.Column(db.BigInteger, primary_key=True)
@@ -42,10 +40,9 @@ class DocumentTag(db.Model, IdModel):
 
     @property
     def field(self):
-        type_ = self.TYPES[self.type]
-        for (candidate, invert) in TYPES.values():
-            if candidate == type_:
-                return invert
+        type_ = registry.get(self.type)
+        if type_ is not None and type_.group is not None:
+            return type_.group
 
     @classmethod
     def delete_by(cls, document_id=None, origin=None, type=None):
@@ -77,11 +74,9 @@ class DocumentTagCollector(object):
 
     def emit(self, text, type, key=None, weight=1):
         "Create a tag, this can be called multiple times with the same text."
-        cleaner = DocumentTag.TYPES[type]
-
-        text = stringify(text)
-        text = cleaner.clean(text, countries=self.document.countries)
-
+        prop = DocumentTag.MAPPING[type]
+        prop = self.document.model.get(prop)
+        text = prop.type.clean(text, countries=self.document.countries)
         if text is None:
             return
 

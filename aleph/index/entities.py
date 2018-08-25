@@ -186,4 +186,5 @@ def index_single(obj, data, texts):
     data['updated_at'] = obj.updated_at
     data = finalize_index(data, obj.model, texts)
     data = clean_dict(data)
+    # pprint(data)
     return index_safe(entity_index(), obj.id, data)
