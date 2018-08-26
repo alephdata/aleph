@@ -194,6 +194,13 @@ def graphload(foreign_id):
 
 
 @manager.command
+def test(entity_id):
+    from aleph.index import graph
+    for link in graph.traverse_entity(entity_id):
+        print((link.subject, link.prop.qname, link.value))
+
+
+@manager.command
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()
