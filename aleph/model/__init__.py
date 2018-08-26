@@ -11,7 +11,6 @@ from aleph.model.permission import Permission  # noqa
 from aleph.model.entity import Entity  # noqa
 from aleph.model.match import Match  # noqa
 from aleph.model.collection import Collection  # noqa
-from aleph.model.cache import Cache  # noqa
 from aleph.model.document import Document  # noqa
 from aleph.model.document_record import DocumentRecord  # noqa
 from aleph.model.document_tag import DocumentTag, DocumentTagCollector  # noqa
