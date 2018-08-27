@@ -140,6 +140,8 @@ def get_archive():
 
 
 def get_redis():
+    if hasattr(settings, '_redis'):
+        return settings._redis
     if not hasattr(settings, '_redis_pool'):
         settings._redis_pool = ConnectionPool.from_url(
             settings.REDIS_URL,

@@ -41,6 +41,7 @@ raven[flask]
 
 # Testing dependencies
 factory-boy==2.10.0
+fakeredis>=0.13.0.1
 Faker==0.8.13
 nose
 flexmock==0.10.2
