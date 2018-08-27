@@ -6,8 +6,9 @@ from aleph.core import db, celery
 from aleph.model import Match, Document
 from aleph.index.core import entities_index
 from aleph.index.xref import entity_query
-from aleph.index.entities import iter_entities
+from aleph.index.entities import iter_entities, get_entity
 from aleph.index.util import search_safe, unpack_result
+import json
 
 log = logging.getLogger(__name__)
 
@@ -65,26 +66,42 @@ def match(item, collection_id=None):
     if 'match_none' in query:
         return
 
+    # print(item)
     query = {
         'query': query,
         'size': 10,
-        '_source': ['collection_id', 'name'],
+        #'_source': ['collection_id', 'name', 'addresses', 'names'],
     }
     result = search_safe(index=entities_index(), body=query)
     results = result.get('hits').get('hits')
     for result in results:
         candidate = unpack_result(result)
         score = compare(item, candidate)
-        print(item['name'], candidate['name'], score)
+        pretty_item = json.dumps(item, indent=4, sort_keys=True)
+        pretty_candidate = json.dumps(candidate, indent=4, sort_keys=True)
+
+        original_item = get_entity(item["id"])
+        pretty_original_item = json.dumps(original_item, indent=4, sort_keys=True)
+
+        pretty_query = json.dumps(query, indent=4, sort_keys=True)
+
+        print("\n----------START QUERY----------\n" + pretty_query + "\n----------STOP QUERY----------\n")
+        print("\n----------ITEM----------\n" + pretty_item
+             + "\n----------ORIGINAL_ITEM----------\n" + pretty_original_item
+             + "\n-----------Candidate--------\n" + pretty_candidate)
 
 
 @celery.task()
 def xref_collection(collection_id, other_id=None):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
+    #print(matchable)
+    matchable = ['Organization', 'Company', 'PublicBody', 'LegalEntity']
     entities = iter_entities(collection_id=collection_id,
                              schemata=matchable,
-                             excludes=['text', 'roles', 'properties.*'])
-    for entity in entities:
+                             excludes=['text', 'roles', 'properties.*']
+                             )
+    # match(get_entity('b35aa64c9c3a97c3b335b65689a72b5c5d9a9a94'))
+    for i, entity in enumerate(entities):
         # _xref_item(entity, collection_id=other_id)
         match(entity)
