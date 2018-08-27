@@ -9,56 +9,24 @@ from aleph.core import es
 from aleph.model import Document
 from aleph.index.entities import get_entity
 from aleph.index.core import entities_index
+from aleph.logic.graph.link import Link
+from aleph.logic.graph.cache import load_links, store_links, has_links
+from aleph.util import make_key
 
 log = logging.getLogger(__name__)
 
 
-class Link(object):
-
-    def __init__(self, ref, prop, value, weight=1.0, inverted=False):
-        self.ref = ref
-        self.prop = prop
-        self.value = value
-        self.weight = weight
-        self.inverted = inverted
-
-    @property
-    def subject(self):
-        return registry.deref(self.ref)[1]
-
-    @property
-    def value_ref(self):
-        return self.prop.type.ref(self.value)
-
-    def pack(self):
-        qualifier = '*' if self.inverted else ''
-        if self.weight < 1.0:
-            qualifier += self.weight
-        return f'{self.prop.qname}>{qualifier}>{self.value}'
-
-    @classmethod
-    def unpack(cls, ref, packed):
-        qname, qualifier, value = packed.split('>', 2)
-        prop = model.get_qname(qname)
-        # TODO: parse qualifier
-        return cls(ref, prop, value)
-
-    def invert(self):
-        cls = type(self)
-        return cls(self.value_ref, self.prop, self.subject,
-                   weight=self.weight,
-                   inverted=not self.inverted)
-
-
-def expand_group(type_, value):
+def _expand_group(type_, value):
     if type_.group is None:
         return
+    ref = type_.ref(value)
     query = {
         'query': {'term': {type_.group: value}},
         '_source': {'includes': ['schema', 'properties']}
     }
     for res in scan(es, index=entities_index(), query=query):
-        ref = registry.entity.ref(res.get('_id'))
+        entity_id = res.get('_id')
+        # ref = registry.entity.ref(res.get('_id'))
         source = res.get('_source')
         properties = source.get('properties')
         schema = model.get(source.get('schema'))
@@ -68,10 +36,20 @@ def expand_group(type_, value):
             values = properties.get(prop.name)
             values = type_.normalize_set(values, cleaned=True)
             if value in values:
-                yield Link(ref, prop, value)
+                yield Link(ref, prop, entity_id, inverted=True)
 
 
-def expand_entity(entity):
+def expand_group(type_, value):
+    ref = type_.ref(value)
+    key = make_key('cache', ref)
+    if has_links(key):
+        yield from load_links(ref)
+    else:
+        links = _expand_group(type_, value)
+        yield from store_links(key, links)
+
+
+def _expand_entity(entity):
     """Transform an entity into a set of statements. This can
     accept either an entity object or an entity ID."""
     if not is_mapping(entity):
@@ -94,6 +72,19 @@ def expand_entity(entity):
             yield Link(ref, prop, value)
 
 
+def expand_entity(entity):
+    entity_id = entity
+    if is_mapping(entity):
+        entity_id = entity.get('id')
+    key = make_key('cache', entity_id)
+    if has_links(key):
+        ref = registry.entity.ref(entity_id)
+        yield from load_links(ref)
+    else:
+        links = _expand_entity(entity)
+        yield from store_links(key, links)
+
+
 def traverse(type_, value, steam=2, path=None):
     if path is None:
         path = set()
@@ -107,14 +98,11 @@ def traverse(type_, value, steam=2, path=None):
             if link.prop.type.prefix:
                 next_hops.add((link.prop.type, link.value, link.weight))
             yield link
-            # if not link.inverted:
-            #     yield link
 
     for link in expand_group(type_, value):
+        link = link.invert()
         next_hops.add((registry.entity, link.subject, link.weight))
         yield link
-        # if not link.inverted:
-        #     yield link
 
     for (type_, value, weight) in next_hops:
         next_steam = steam * type_.specificity(value) * weight
@@ -125,5 +113,5 @@ def traverse(type_, value, steam=2, path=None):
                                 path=path)
 
 
-def traverse_entity(entity, steam=10):
+def traverse_entity(entity, steam=1):
     return traverse(registry.entity, entity, steam=steam)

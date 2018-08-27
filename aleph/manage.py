@@ -195,9 +195,10 @@ def graphload(foreign_id):
 
 @manager.command
 def test(entity_id):
-    from aleph.index import graph
-    for link in graph.traverse_entity(entity_id):
-        print((link.subject, link.prop.qname, link.value))
+    from aleph.logic.graph import traversal
+    for i in range(100):
+        for link in traversal.traverse_entity(entity_id):
+            print((link.subject, link.prop.qname, link.value))
 
 
 @manager.command
