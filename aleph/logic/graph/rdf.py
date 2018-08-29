@@ -28,9 +28,11 @@ def export_entity(entity, collection_uri):
     uri = registry.entity.rdf(entity.get('id'))
     g.add((uri, DCTERMS.isPartOf, collection_uri))
     g.add((collection_uri, DCTERMS.hasPart, uri))
-
     if 'properties' not in entity:
         entity.update(Document.doc_data_to_schema(entity))
+    if entity.get('name'):
+        g.add((uri, SKOS.prefLabel, Literal(entity.get('name'))))
+
     schema = model.get(entity.get('schema'))
     for schema_ in schema.schemata:
         g.add((uri, RDF.type, schema_.uri))
@@ -40,9 +42,6 @@ def export_entity(entity, collection_uri):
         for value in ensure_list(properties.get(name)):
             obj = prop.type.rdf(value)
             g.add((uri, prop.uri, obj))
-
-    if entity.get('name'):
-        g.add((uri, SKOS.prefLabel, Literal(entity.get('name'))))    
     return g
 
 

@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
 import { Country, Date, URL } from 'src/components/common';
+import { selectMetadata } from 'src/selectors';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
 
@@ -44,16 +46,13 @@ class Name extends Component {
 
 class Reverse extends Component {
   render() {
-    const { model } = this.props;
-    return model.reverse
-      ? (<span>{model.reverse}</span>)
-      : (
-        <FormattedMessage
-          id="property.inverse"
-          defaultMessage="'{name}' of …"
-          values={model}
-        />
-      );
+    const { model, schemata } = this.props;
+    if (!model.schema || !model.reverse) {
+      return <FormattedMessage id="property.inverse" defaultMessage="'{name}' of …" values={model} />
+    }
+    const range = schemata[model.schema],
+          prop = range.properties[model.reverse];
+    return <span>{prop.plural || prop.name}</span>;
   }
 }
 
@@ -70,9 +69,13 @@ class Values extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  schemata: selectMetadata(state).schemata,
+});
+
 class Property extends Component {
     static Name = Name;
-    static Reverse = Reverse;
+    static Reverse = connect(mapStateToProps)(Reverse);
     static Value = Value;
     static Values = Values;
 }

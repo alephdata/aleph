@@ -26,7 +26,6 @@ def _expand_group(type_, value):
     }
     for res in scan(es, index=entities_index(), query=query):
         entity_id = res.get('_id')
-        # ref = registry.entity.ref(res.get('_id'))
         source = res.get('_source')
         properties = source.get('properties')
         schema = model.get(source.get('schema'))
