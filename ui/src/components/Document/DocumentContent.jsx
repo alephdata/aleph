@@ -10,7 +10,7 @@ class DocumentContent extends React.Component {
   render() {
     const { document } = this.props;
     return (
-      <DualPane.ContentPane className="DocumentContent">
+      <DualPane.ContentPane className="view-menu-flex-direction">
         <DocumentViewsMenu document={document} showToolbar={true} isPreview={false}/>
         <DocumentViewer document={document} showToolbar={true} />
       </DualPane.ContentPane>

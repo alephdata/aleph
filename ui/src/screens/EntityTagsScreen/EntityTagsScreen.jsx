@@ -13,8 +13,6 @@ import EntityInfoTags from "src/components/Entity/EntityInfoTags";
 import { EntityInfo } from 'src/components/Entity/';
 import { EntityViewsMenu } from "src/components/ViewsMenu";
 
-import './EntityTagsScreen.css';
-
 class EntityTagsScreen extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
@@ -51,7 +49,7 @@ class EntityTagsScreen extends Component {
     return (
       <Screen breadcrumbs={breadcrumbs} title={entity.name}>
         <DualPane>
-          <DualPane.ContentPane className='EntityTagsScreen'>
+          <DualPane.ContentPane className='view-menu-flex-direction'>
             <EntityViewsMenu isActive='tags' entity={entity} isPreview={false}/>
             <EntityInfoTags entity={entity} query={query} />
           </DualPane.ContentPane>

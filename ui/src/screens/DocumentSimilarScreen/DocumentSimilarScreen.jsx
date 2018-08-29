@@ -13,8 +13,6 @@ import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import { DocumentInfo } from 'src/components/Document';
 import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 
-import './DocumentSimilarScreen.css'
-
 class DocumentSimilarScreen extends Component {
   componentDidMount() {
     const { documentId } = this.props;
@@ -53,7 +51,7 @@ class DocumentSimilarScreen extends Component {
     return (
       <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
         <DualPane>
-          <DualPane.ContentPane className='DocumentSimilarScreen'>
+          <DualPane.ContentPane className='view-menu-flex-direction'>
             <DocumentViewsMenu document={document} isPreview={false} isActive='similar'/>
             <EntitySimilarMode entity={document}
                                query={query} />

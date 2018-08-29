@@ -1,8 +1,6 @@
 @import "src/app/variables.scss";
 
 .DocumentContent {
-  flex-direction: row !important;
-
   .outer {
     flex: 2;
     padding: $aleph-grid-size*4;

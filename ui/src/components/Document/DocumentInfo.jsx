@@ -5,11 +5,10 @@ import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import getPath from 'src/util/getPath';
-import { URL, DualPane, TabCount, Schema, Entity, TextLoading } from 'src/components/common';
+import { URL, DualPane, Schema, Entity } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
 import { fetchEntityTags } from 'src/actions/index';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
-import { EntityInfoTags } from 'src/components/Entity';
 import { DocumentMetadata } from 'src/components/Document';
 import { CollectionOverview } from 'src/components/Collection';
 import { DownloadButton } from 'src/components/Toolbar';

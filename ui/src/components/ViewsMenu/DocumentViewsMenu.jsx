@@ -90,13 +90,13 @@ class DocumentViewsMenu extends React.Component {
           isActive={isActive === 'connections'}
           isPreview={false}
           icon={<span className={`pt-icon-standard pt-icon-tag`}/>}/>}
-        {tags.total !== 0 && <ViewItem
+        <ViewItem
           key={4}
           message={intl.formatMessage(messages.similar)}
           href={'/documents/' + document.id + '/similar'}
           isActive={isActive === 'similar'}
           isPreview={false}
-          icon={<span className={`pt-icon-standard pt-icon-tag`}/>}/>}
+          icon={<span className={`pt-icon-standard pt-icon-tag`}/>}/>
       </div>
     );
   }

@@ -42,7 +42,7 @@ class EntityReferences extends React.Component {
     }
 
     return (
-      <DualPane.ContentPane className='EntityContent'>
+      <DualPane.ContentPane className='view-menu-flex-direction'>
         <EntityViewsMenu entity={entity} isPreview={false}/>
         { references.total === 0 && (
           <ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />

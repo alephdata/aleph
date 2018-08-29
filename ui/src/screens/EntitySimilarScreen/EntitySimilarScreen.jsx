@@ -13,8 +13,6 @@ import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import { EntityInfo } from 'src/components/Entity/';
 import { EntityViewsMenu } from "src/components/ViewsMenu";
 
-import './EntitySimilarScreen.css';
-
 class EntitySimilarScreen extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
@@ -51,7 +49,7 @@ class EntitySimilarScreen extends Component {
       return (
         <Screen breadcrumbs={breadcrumbs} title={entity.name}>
           <DualPane>
-            <DualPane.ContentPane className='EntitySimilarScreen'>
+            <DualPane.ContentPane className='view-menu-flex-direction'>
               <EntityViewsMenu isActive='similar' entity={entity} isPreview={false}/>
               <EntitySimilarMode entity={entity} query={query} />
             </DualPane.ContentPane>

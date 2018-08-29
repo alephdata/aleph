@@ -12,8 +12,6 @@ import { DocumentInfo } from 'src/components/Document/';
 import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 import { fetchDocument } from "src/actions";
 
-import './DocumentConnectionsScreen.css';
-
 class DocumentConnectionsScreen extends Component {
   componentDidMount() {
     const { documentId } = this.props;
@@ -52,7 +50,7 @@ class DocumentConnectionsScreen extends Component {
     return (
       <Screen breadcrumbs={breadcrumbs} title={doc.title || doc.file_name}>
         <DualPane>
-          <DualPane.ContentPane className='DocumentConnectionsScreen'>
+          <DualPane.ContentPane className='view-menu-flex-direction'>
             <DocumentViewsMenu document={doc} isPreview={false} isActive='connections'/>
             <EntityInfoTags entity={doc} />
           </DualPane.ContentPane>
