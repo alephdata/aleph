@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router";
 
 import Screen from 'src/components/Screen/Screen';
-import CollectionInfo from 'src/components/Collection/CollectionInfo';
-import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
+import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
+import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
+import CollectionViewsMenu from 'src/components/ViewsMenu/CollectionViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane } from 'src/components/common';
@@ -50,7 +51,10 @@ class CollectionScreenContext extends Component {
               {this.props.children}
             </div>
           </DualPane.ContentPane>
-          <CollectionInfo collection={collection} />
+          <DualPane.InfoPane className="with-heading">
+            <CollectionToolbar collection={collection} />
+            <CollectionInfoMode collection={collection} />
+          </DualPane.InfoPane>
         </DualPane>
       </Screen>
     );

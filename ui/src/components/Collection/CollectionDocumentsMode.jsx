@@ -1,7 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
-import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 
 class CollectionDocumentsMode extends React.Component {

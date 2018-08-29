@@ -1,15 +1,15 @@
 import React from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
-import queryString from 'query-string';
 import classnames from 'classnames';
 
 import './Preview.css';
 
+
 class Preview extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {previewTop: 0};
+    this.state = {
+      previewTop: 0
+    };
     this.handleScroll = this.handleScroll.bind(this);
   }
 
@@ -57,7 +57,7 @@ class Preview extends React.Component {
   }
   
   render() {
-    const { previewId, previewType, parsedHash, maximised, hidden } = this.props;
+    const { maximised, hidden } = this.props;
     const { previewTop } = this.state;
     let className = 'Preview';
 

@@ -23,9 +23,9 @@ class ViewItem extends React.Component {
   render() {
     const {message, mode, activeMode, icon, href, isPreview} = this.props;
     const isActive = (mode === activeMode);
-    const className = c('ModeButtons', 'pt-button pt-large', {'pt-active': isActive});
+    const className = c('ViewItem', 'pt-button pt-large', {'pt-active': isActive});
     return (
-        <Tooltip key={mode} content={message} position={Position.BOTTOM_RIGHT}>
+        <Tooltip key={mode} content={message} position={Position.RIGHT}>
           <React.Fragment>
             {!isPreview && (
               <Link to={href} className={className}>

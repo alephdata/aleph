@@ -2,10 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
-import classnames from 'classnames';
 
 import Preview from 'src/components/Preview/Preview';
 import { PreviewEntity, PreviewCollection, PreviewDocument } from 'src/components/Preview/';
+
 
 class PreviewManager extends React.Component {
   render() {
@@ -23,6 +23,7 @@ class PreviewManager extends React.Component {
     if (previewType === 'document') {
       return <PreviewDocument previewId={previewId} previewMode={previewMode} parsedHash={parsedHash} />;
     }
+    return <Preview hidden={true} />;
   }
 }
 

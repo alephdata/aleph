@@ -4,10 +4,11 @@ import { withRouter } from 'react-router';
 
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
-import CollectionInfo from 'src/components/Collection/CollectionInfo';
+import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
+import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import Preview from 'src/components/Preview/Preview';
 import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
 
@@ -40,14 +41,18 @@ class PreviewCollection extends React.Component {
     } else if (previewMode === 'documents') {
       mode = <CollectionDocumentsMode collection={collection} />;
     } else {
-      mode = <CollectionInfo collection={collection} isPreview={true} />;
+      mode = <CollectionInfoMode collection={collection} />;
     }
     return (
       <Preview maximised={true}>
         <CollectionViewsMenu collection={collection}
                              activeMode={previewMode}
                              isPreview={true} />
-        {mode}
+        <DualPane.InfoPane className="with-heading">
+          <CollectionToolbar collection={collection}
+                             isPreview={true} />
+          {mode}
+        </DualPane.InfoPane>
       </Preview>
     );
   }

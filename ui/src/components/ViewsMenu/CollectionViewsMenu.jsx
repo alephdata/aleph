@@ -1,17 +1,18 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { connect } from "react-redux";
 import { injectIntl, defineMessages } from 'react-intl';
 
-import { fetchCollectionXrefIndex } from "src/actions";
-import { selectCollectionXrefIndex } from "src/selectors";
 import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
 
 const messages = defineMessages({
-  open: {
-    id: 'document.mode.text.open',
+  info: {
+    id: 'document.mode.text.info',
+    defaultMessage: 'Overview',
+  },
+  documents: {
+    id: 'document.mode.text.documents',
     defaultMessage: 'Browse as a folder',
   },
   xref: {
@@ -20,28 +21,19 @@ const messages = defineMessages({
   }
 });
 
+
 class CollectionViewsMenu extends React.Component {
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const {collection, xrefIndex} = this.props;
-    if (collection.id !== undefined && xrefIndex.shouldLoad) {
-      this.props.fetchCollectionXrefIndex(collection);
-    }
-  }
-
   render() {
-    const {intl, isPreview, collection, activeMode, xrefIndex} = this.props;
+    const { intl, isPreview, collection, activeMode } = this.props;
     return (
       <div className='ViewsMenu'>
+        {isPreview && (
+          <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
+                  message={intl.formatMessage(messages.info)}
+                  icon='fa-info' />
+        )}
         <ViewItem mode='documents' activeMode={activeMode} isPreview={isPreview}
-                  message={intl.formatMessage(messages.open)}
+                  message={intl.formatMessage(messages.documents)}
                   href={`/collections/${collection.id}/documents`}
                   icon='fa-folder-open' />
         <ViewItem mode='xref' activeMode={activeMode} isPreview={isPreview}
@@ -53,12 +45,6 @@ class CollectionViewsMenu extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const xrefIndex = selectCollectionXrefIndex(state, ownProps.collection.id);
-  return { xrefIndex };
-};
-
-CollectionViewsMenu = connect(mapStateToProps, {fetchCollectionXrefIndex})(CollectionViewsMenu);
 CollectionViewsMenu = injectIntl(CollectionViewsMenu);
 CollectionViewsMenu = withRouter(CollectionViewsMenu);
 export default CollectionViewsMenu;
