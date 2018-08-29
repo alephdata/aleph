@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { withRouter } from 'react-router';
 import { injectIntl, defineMessages } from 'react-intl';
@@ -23,6 +24,20 @@ const messages = defineMessages({
 
 
 class CollectionViewsMenu extends React.Component {
+  
+  hasDocuments() {
+    // FIXME: give better metadata from API.
+    const docTypes = ['Document', 'Pages', 'Folder', 'Package', 'Email', 'HyperText', 'Workbook', 'Table', 'PlainText', 'Image', 'Video', 'Audio'];
+    const { collection } = this.props;
+    const { schemata } = collection;
+    for (let key in schemata) {
+      if (docTypes.indexOf(key) !== -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   render() {
     const { intl, isPreview, collection, activeMode } = this.props;
     return (
@@ -33,6 +48,7 @@ class CollectionViewsMenu extends React.Component {
                   icon='fa-info' />
         )}
         <ViewItem mode='documents' activeMode={activeMode} isPreview={isPreview}
+                  disabled={!this.hasDocuments()}
                   message={intl.formatMessage(messages.documents)}
                   href={`/collections/${collection.id}/documents`}
                   icon='fa-folder-open' />
