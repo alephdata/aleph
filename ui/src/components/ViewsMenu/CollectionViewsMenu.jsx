@@ -31,7 +31,7 @@ class CollectionViewsMenu extends React.Component {
 
   fetchIfNeeded() {
     const {collection, xrefIndex} = this.props;
-    if (collection.id !== undefined && xrefIndex.results === undefined && !xrefIndex.isLoading) {
+    if (collection.id !== undefined && xrefIndex.shouldLoad) {
       this.props.fetchCollectionXrefIndex(collection);
     }
   }
@@ -40,13 +40,11 @@ class CollectionViewsMenu extends React.Component {
     const {intl, isPreview, collection, activeMode, xrefIndex} = this.props;
     return (
       <div className='ViewsMenu'>
-        <ViewItem mode='documents' activeMode={activeMode}
-                  isPreview={isPreview}
+        <ViewItem mode='documents' activeMode={activeMode} isPreview={isPreview}
                   message={intl.formatMessage(messages.open)}
                   href={`/collections/${collection.id}/documents`}
                   icon='fa-folder-open' />
-        <ViewItem mode='xref' activeMode={activeMode}
-                  isPreview={isPreview}
+        <ViewItem mode='xref' activeMode={activeMode} isPreview={isPreview}
                   message={intl.formatMessage(messages.xref)}
                   href={`/collections/${collection.id}/xref`}
                   icon='fa-folder-open' />

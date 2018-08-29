@@ -8,7 +8,7 @@ import { fetchCollectionXrefIndex } from "src/actions";
 import { selectCollectionXrefIndex } from "src/selectors";
 
 
-class CollectionXrefTable extends React.Component {
+class CollectionXrefIndexMode extends React.Component {
 
   componentDidMount() {
     this.fetchIfNeeded();
@@ -76,6 +76,6 @@ const mapStateToProps = (state, ownProps) => {
   return { xrefIndex };
 };
 
-CollectionXrefTable = connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionXrefTable);
-CollectionXrefTable = withRouter(CollectionXrefTable);
-export default CollectionXrefTable;
+CollectionXrefIndexMode = connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionXrefIndexMode);
+CollectionXrefIndexMode = withRouter(CollectionXrefIndexMode);
+export default CollectionXrefIndexMode  ;
