@@ -4,9 +4,8 @@ import { injectIntl, defineMessages } from 'react-intl';
 import queryString from "query-string";
 import { connect } from "react-redux";
 
-import { Schema } from 'src/components/common';
 import { fetchEntityReferences, fetchEntityTags } from "src/actions";
-import { selectEntityReferences, selectEntityTags } from "src/selectors";
+import { selectEntityReferences, selectEntityTags, selectMetadata } from "src/selectors";
 import getPath from "src/util/getPath";
 import ViewItem from "src/components/ViewsMenu/ViewItem";
 
@@ -64,6 +63,8 @@ class EntityViewsMenu extends React.Component {
 
   render() {
     const {intl, references, isPreview, mode, entity, isActive} = this.props;
+    const { metadata } = this.props;
+    const { schemata } = metadata;
     const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
@@ -76,7 +77,7 @@ class EntityViewsMenu extends React.Component {
             mode={ref.property.qname}
             onClick={this.onClickReference}
             isActive={mode === 'references-' + ref.property.qname}
-            icon={<Schema.Icon schema={ref.schema}/>}
+            icon={schemata[ref.schema].icon}
             />
         ))}
         <ViewItem
@@ -85,16 +86,14 @@ class EntityViewsMenu extends React.Component {
           mode='similar'
           href={'/entities/' + entity.id + '/similar'}
           isActive={isActive === 'similar'}
-          icon={<i className="fa fa-fw far fa-repeat"/>}
-        />
+          icon='fa-repeat' />
         <ViewItem
           message={intl.formatMessage(messages.tags)}
           isPreview={false}
           mode='tags'
           href={'/entities/' + entity.id + '/tags'}
           isActive={isActive === 'tags'}
-          icon={<i className="fa fa-fw fa-tags"/>}
-        />
+          icon='fa-tags' />
       </div>
     );
   }
@@ -107,7 +106,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     hashQuery,
     mode,
-    references: selectEntityReferences(state, ownProps.entity.id)
+    references: selectEntityReferences(state, ownProps.entity.id),
+    metadata: selectMetadata(state)
   };
 };
 

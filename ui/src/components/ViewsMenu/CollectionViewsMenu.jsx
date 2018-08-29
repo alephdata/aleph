@@ -21,7 +21,6 @@ const messages = defineMessages({
 });
 
 class CollectionViewsMenu extends React.Component {
-
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -38,19 +37,19 @@ class CollectionViewsMenu extends React.Component {
   }
 
   render() {
-    const {intl, showToolbar, collection, xrefIndex} = this.props;
+    const {intl, isPreview, collection, activeMode, xrefIndex} = this.props;
     return (
       <div className='ViewsMenu'>
-        {showToolbar && (
-          <ViewItem
-            message={intl.formatMessage(messages.open)}
-            href={`/collections/${collection.id}/documents`}
-            icon={<i className={`fa fa-fw fal fa-folder-open`}/>}/>
-        )}
-        <ViewItem
-          message={intl.formatMessage(messages.xref)}
-          href={`/collections/${collection.id}/xref`}
-          icon={<i className={`fa fa-fw fal fa-folder-open`}/>}/>
+        <ViewItem mode='documents' activeMode={activeMode}
+                  isPreview={isPreview}
+                  message={intl.formatMessage(messages.open)}
+                  href={`/collections/${collection.id}/documents`}
+                  icon='fa-folder-open' />
+        <ViewItem mode='xref' activeMode={activeMode}
+                  isPreview={isPreview}
+                  message={intl.formatMessage(messages.xref)}
+                  href={`/collections/${collection.id}/xref`}
+                  icon='fa-folder-open' />
       </div>
     );
   }

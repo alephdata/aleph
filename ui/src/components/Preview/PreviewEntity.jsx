@@ -4,12 +4,12 @@ import { withRouter } from 'react-router';
 
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
+import Preview from 'src/components/Preview/Preview';
 import { EntityInfo } from 'src/components/Entity';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 import { EntityViewsMenu } from "src/components/ViewsMenu";
 
 class PreviewEntity extends React.Component {
-
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -33,10 +33,12 @@ class PreviewEntity extends React.Component {
     if (entity.id === undefined) {
       return <SectionLoading/>;
     }
-    return <React.Fragment>
-      <EntityViewsMenu entity={entity} isPreview={true}/>
-      <EntityInfo entity={entity} showToolbar={true} />
-    </React.Fragment>;
+    return (
+      <Preview>
+        <EntityViewsMenu entity={entity} isPreview={true}/>
+        <EntityInfo entity={entity} showToolbar={true} />
+      </Preview>
+    );
   }
 }
 

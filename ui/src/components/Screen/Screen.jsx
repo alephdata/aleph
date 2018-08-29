@@ -5,8 +5,8 @@ import { Helmet } from 'react-helmet';
 import c from 'classnames';
 
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
+import PreviewManager from 'src/components/Preview/PreviewManager';
 import Navbar from 'src/components/Navbar/Navbar';
-import Preview from 'src/components/Preview/Preview';
 import Footer from 'src/components/Footer/Footer';
 import { selectSession, selectMetadata } from 'src/selectors';
 
@@ -54,7 +54,7 @@ class Screen extends React.Component {
             <main className={mainClass}>
               {this.props.children}
             </main>
-            <Preview/>
+            <PreviewManager />
           </React.Fragment>
         )}
         {forceAuth && (

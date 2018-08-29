@@ -16,17 +16,21 @@ class ViewItem extends React.Component {
 
   render() {
     const {message, mode, icon, href, isPreview = false, isActive, key} = this.props;
-
+    const className = c('ModeButtons', 'pt-button pt-large', {'pt-active': isActive});
     return (
-        <Tooltip key={key === undefined ? 0 : key} content={message} position={Position.BOTTOM_RIGHT}>
-          {!isPreview && <Link to={href}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': isActive})}>
-            {icon}
-          </Link>}
-          {isPreview && <a onClick={(e) => this.onClick(e, mode)}
-                           className={c('ModeButtons', 'pt-button pt-large', {'pt-active': isActive})}>
-            {icon}
-          </a>}
+        <Tooltip key={mode} content={message} position={Position.BOTTOM_RIGHT}>
+          <React.Fragment>
+            {!isPreview && (
+              <Link to={href} className={className}>
+                <i className={c('fa', 'fa-fw', icon)} />
+              </Link>
+            )}
+            {isPreview && (
+              <a onClick={(e) => this.onClick(e, mode)} className={className}>
+                <i className={c('fa', 'fa-fw', icon)} />
+              </a>
+            )}
+          </React.Fragment>
         </Tooltip>
     );
   }

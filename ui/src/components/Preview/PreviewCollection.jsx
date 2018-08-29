@@ -4,8 +4,10 @@ import { withRouter } from 'react-router';
 
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
-import { CollectionInfo } from 'src/components/Collection';
+import CollectionInfo from 'src/components/Collection/CollectionInfo';
+import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import { SectionLoading, ErrorSection } from 'src/components/common';
+import Preview from 'src/components/Preview/Preview';
 import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
 
 class PreviewCollection extends React.Component {
@@ -26,17 +28,25 @@ class PreviewCollection extends React.Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, previewMode } = this.props;
+    let mode = null;
     if (collection.isError) {
-      return <ErrorSection error={collection.error} />
+      mode = <ErrorSection error={collection.error} />
+    } else if (collection.id === undefined) {
+      mode = <SectionLoading/>;
+    } else if (previewMode === 'xrefIndex') {
+      mode = <CollectionXrefIndexMode collection={collection} />;
+    } else {
+      mode = <CollectionInfo collection={collection} isPreview={true} />;
     }
-    if (collection.id === undefined) {
-      return <SectionLoading/>;
-    }
-    return <React.Fragment>
-      <CollectionViewsMenu collection={collection} showToolbar={true}/>
-      <CollectionInfo collection={collection} showToolbar={true} />
-    </React.Fragment>;
+    return (
+      <Preview maximised={true}>
+        <CollectionViewsMenu collection={collection}
+                              activeMode={previewMode}
+                             isPreview={true} />
+        {mode}
+      </Preview>
+    );
   }
 }
 

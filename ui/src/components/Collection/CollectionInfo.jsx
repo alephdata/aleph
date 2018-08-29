@@ -54,13 +54,13 @@ class CollectionInfo extends Component {
   }
 
   render() {
-    const {collection, showToolbar, xrefIndex} = this.props;
+    const {collection, isPreview, xrefIndex} = this.props;
     const {activeTabId, settingsIsOpen, accessIsOpen} = this.state;
 
     // @TODO Discussion: 'Search Collection' link to update the current query?
     return (
       <DualPane.InfoPane className="CollectionInfo with-heading">
-        {showToolbar && (
+        {isPreview && (
           <Toolbar className="toolbar-preview">
             <div className="pt-button-group">
               <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link">

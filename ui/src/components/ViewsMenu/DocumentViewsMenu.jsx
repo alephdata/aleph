@@ -60,43 +60,45 @@ class DocumentViewsMenu extends React.Component {
       <div className={className}>
         {isPreview && (
           <ViewItem
-            key={0}
             message={intl.formatMessage(messages.mode_info)}
             mode='info'
             isActive={mode === 'info' && isActive !== 'connections'}
             isPreview={true}
             onClick={this.setMode}
-            icon={<span className={`pt-icon-standard pt-icon-info-sign`}/>}/>)}
-        {hasModifiers && (<ViewItem
-          key={1}
-          message={intl.formatMessage(messages.mode_view)}
-          mode='view'
-          isActive={mode === 'view' && isActive !== 'connections'}
-          isPreview={true}
-          onClick={this.setMode}
-          icon={<span className={`pt-icon-standard pt-icon-document`}/>}/>)}
-        {hasTextMode && (<ViewItem
-          key={2}
-          message={intl.formatMessage(messages.mode_text)}
-          mode='text'
-          isActive={mode === 'text' && isActive !== 'connections'}
-          isPreview={true}
-          onClick={this.setMode}
-          icon={<span className={`pt-icon-standard pt-icon-align-justify`}/>}/>)}
-        {tags.total !== 0 && <ViewItem
-          key={3}
-          message={intl.formatMessage(messages.connections)}
-          href={'/documents/' + document.id + '/connections'}
-          isActive={isActive === 'connections'}
-          isPreview={false}
-          icon={<span className={`pt-icon-standard pt-icon-tag`}/>}/>}
+            icon='pt-icon-info-sign' />
+        )}
+        {hasModifiers && (
+          <ViewItem
+            message={intl.formatMessage(messages.mode_view)}
+            mode='view'
+            isActive={mode === 'view' && isActive !== 'connections'}
+            isPreview={true}
+            onClick={this.setMode}
+            icon='pt-icon-document' />
+        )}
+        {hasTextMode && (
+          <ViewItem
+            message={intl.formatMessage(messages.mode_text)}
+            mode='text'
+            isActive={mode === 'text' && isActive !== 'connections'}
+            isPreview={true}
+            onClick={this.setMode}
+            icon='pt-icon-align-justify' />
+        )}
+        {tags.total !== 0 && (
+          <ViewItem
+            message={intl.formatMessage(messages.connections)}
+            href={'/documents/' + document.id + '/connections'}
+            isActive={isActive === 'connections'}
+            isPreview={false}
+            icon='pt-icon-tag' />
+        )}
         <ViewItem
-          key={4}
           message={intl.formatMessage(messages.similar)}
           href={'/documents/' + document.id + '/similar'}
           isActive={isActive === 'similar'}
           isPreview={false}
-          icon={<span className={`pt-icon-standard pt-icon-tag`}/>}/>
+          icon='pt-icon-tag' />
       </div>
     );
   }

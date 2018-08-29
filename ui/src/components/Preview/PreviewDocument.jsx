@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
+import Preview from 'src/components/Preview/Preview';
 import { DocumentInfo } from 'src/components/Document';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import { SectionLoading, ErrorSection } from 'src/components/common';
@@ -38,17 +39,17 @@ class PreviewDocument extends React.Component {
       return <SectionLoading/>;
     }
     if (parsedHash['mode'] === 'info') {
-      return <React.Fragment>
+      return <Preview maximised={false}>
         <DocumentViewsMenu document={document} isPreview={true}/>
         <DocumentInfo document={document} showToolbar={true} />
-      </React.Fragment>;
+      </Preview>;
     }
-    return <React.Fragment>
+    return <Preview maximised={true}>
       <DocumentViewsMenu document={document} isPreview={true}/>
       <DocumentViewer document={document}
                            showToolbar={true}
                            previewMode={true} />
-      </React.Fragment>;
+      </Preview>;
   }
 }
 

@@ -14,7 +14,7 @@ class CaseScreen extends Component {
     const { collection, collectionId, notificationsQuery } = this.props;
     collection.id = collectionId;
     return (
-      <CollectionScreenContext collection={collection}>
+      <CollectionScreenContext collection={collection} activeMode="home">
         <Toolbar>
           <CollectionSearch collection={collection} />
         </Toolbar>

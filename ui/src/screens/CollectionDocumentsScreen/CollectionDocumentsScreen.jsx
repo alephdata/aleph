@@ -14,7 +14,7 @@ class CollectionDocumentsScreen extends Component {
     const { collection, collectionId, query } = this.props;
     collection.id = collectionId;
     return (
-      <CollectionScreenContext collection={collection}>
+      <CollectionScreenContext collection={collection} activeMode="documents">
         <Toolbar>
           <CollectionSearch collection={collection} />
         </Toolbar>
