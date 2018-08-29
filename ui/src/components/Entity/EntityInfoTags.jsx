@@ -1,12 +1,30 @@
 import React from 'react';
 import queryString from 'query-string';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
+import { connect } from "react-redux";
 
 import { Tag } from 'src/components/common';
+import { fetchEntityTags } from "src/actions";
+import { selectEntityTags } from "src/selectors";
 
 import './EntityInfoTags.css';
 
 class EntityInfoTags extends React.Component {
+
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { entity, tags } = this.props;
+    if (entity.id !== undefined && tags.total === undefined && !tags.isLoading) {
+      this.props.fetchEntityTags(entity);
+    }
+  }
 
   getLink(tag) {
     // const { entity } = this.props;
@@ -36,7 +54,7 @@ class EntityInfoTags extends React.Component {
     }
 
     return (
-      <section className="EntityInfoTags">
+      <React.Fragment>
         <table className="data-table">
           <thead>
           <tr>
@@ -55,24 +73,29 @@ class EntityInfoTags extends React.Component {
           </tr>
           </thead>
           <tbody>
-          {tags.results.map((tag) => (
-            <tr key={entity.id}>
-              <td key={tag.id} className='entity'>
+          {tags.results.map((tag, index) => (
+            <tr key={index}>
+              <td key={index + 1} className='entity'>
                 <a href={this.getLink(tag)}>
                   <Tag.Icon field={tag.field}/>
                   {tag.value}
                 </a>
               </td>
-              <td key={tag.id}>
+              <td key={index + 2}>
                 <FormattedNumber value={tag.count}/>
               </td>
             </tr>
           ))}
           </tbody>
         </table>
-      </section>
+      </React.Fragment>
     );
   }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+  tags: selectEntityTags(state, ownProps.entity.id)
+});
+
+EntityInfoTags =  connect(mapStateToProps, { fetchEntityTags })(EntityInfoTags);
 export default EntityInfoTags;

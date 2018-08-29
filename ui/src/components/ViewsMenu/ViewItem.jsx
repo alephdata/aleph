@@ -1,25 +1,33 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { connect } from "react-redux";
-import { injectIntl, defineMessages } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import c from 'classnames';
 import { Tooltip, Position } from '@blueprintjs/core';
-
-import './ViewsItem.css';
-
+import { Link } from 'react-router-dom';
 
 class ViewItem extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  onClick(event, mode) {
+    this.props.onClick(event, mode)
+  }
+
   render() {
-    const {message, mode, iconName, href, isPreview = false} = this.props;
+    const {message, mode, icon, href, isPreview = false, isActive, key} = this.props;
+
     return (
-      <div className='ViewsMenu'>
-        <Tooltip content={intl.formatMessage(messages.xref)} position={Position.BOTTOM_RIGHT}>
-          <a href={`/collections/${collection.id}/xref`}
-             className={c('ModeButtons', 'pt-button pt-large')}>
-            <i className="fa fa-fw fal fa-folder-open"/>
-          </a>
+        <Tooltip key={key === undefined ? 0 : key} content={message} position={Position.BOTTOM_RIGHT}>
+          {!isPreview && <Link to={href}
+             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': isActive})}>
+            {icon}
+          </Link>}
+          {isPreview && <a onClick={(e) => this.onClick(e, mode)}
+                           className={c('ModeButtons', 'pt-button pt-large', {'pt-active': isActive})}>
+            {icon}
+          </a>}
         </Tooltip>
-      </div>
     );
   }
 }

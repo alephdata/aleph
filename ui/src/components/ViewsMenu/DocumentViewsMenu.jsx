@@ -1,12 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { injectIntl, defineMessages } from 'react-intl';
-import c from 'classnames';
 import queryString from "query-string";
-import { Tooltip, Position } from '@blueprintjs/core';
 import { connect } from "react-redux";
 
 import { selectEntityTags } from "src/selectors";
+import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
 
@@ -22,6 +21,14 @@ const messages = defineMessages({
   mode_text: {
     id: 'document.mode.text.tooltip',
     defaultMessage: 'Show extracted text',
+  },
+  connections: {
+    id: 'document.connections',
+    defaultMessage: 'Show connections'
+  },
+  similar: {
+    id: 'document.similar',
+    defaultMessage: 'Show similar documents'
   }
 });
 
@@ -36,14 +43,14 @@ class DocumentViewsMenu extends React.Component {
     event.preventDefault();
     hashQuery.mode = mode;
     history.replace({
-      pathname: location.pathname,
+      pathname: location.pathname.replace('/connections',''),
       search: location.search,
       hash: queryString.stringify(hashQuery),
     })
   }
 
   render() {
-    const {document, intl, mode, tags, isPreview} = this.props;
+    const {document, intl, mode, tags, isPreview, isActive} = this.props;
     const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
     const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
@@ -52,21 +59,44 @@ class DocumentViewsMenu extends React.Component {
     return (
       <div className={className}>
         {isPreview && (
-          <Tooltip content={intl.formatMessage(messages.mode_info)} position={Position.BOTTOM_RIGHT}>
-            <a onClick={(e) => this.setMode(e, 'info')}
-               className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'info'})}>
-              <span className="pt-icon-standard pt-icon-info-sign"/>
-            </a></Tooltip>)}
-        {hasModifiers && (<Tooltip content={intl.formatMessage(messages.mode_view)} position={Position.BOTTOM_RIGHT}>
-          <a onClick={(e) => this.setMode(e, 'view')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'view'})}>
-            <span className="pt-icon-standard pt-icon-document"/>
-          </a></Tooltip>)}
-        {hasTextMode && (<Tooltip content={intl.formatMessage(messages.mode_text)} position={Position.BOTTOM_RIGHT}>
-          <a onClick={(e) => this.setMode(e, 'text')}
-             className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'text'})}>
-            <span className="pt-icon-standard pt-icon-align-justify"/>
-          </a></Tooltip>)}
+          <ViewItem
+            key={0}
+            message={intl.formatMessage(messages.mode_info)}
+            mode='info'
+            isActive={mode === 'info' && isActive !== 'connections'}
+            isPreview={true}
+            onClick={this.setMode}
+            icon={<span className={`pt-icon-standard pt-icon-info-sign`}/>}/>)}
+        {hasModifiers && (<ViewItem
+          key={1}
+          message={intl.formatMessage(messages.mode_view)}
+          mode='view'
+          isActive={mode === 'view' && isActive !== 'connections'}
+          isPreview={true}
+          onClick={this.setMode}
+          icon={<span className={`pt-icon-standard pt-icon-document`}/>}/>)}
+        {hasTextMode && (<ViewItem
+          key={2}
+          message={intl.formatMessage(messages.mode_text)}
+          mode='text'
+          isActive={mode === 'text' && isActive !== 'connections'}
+          isPreview={true}
+          onClick={this.setMode}
+          icon={<span className={`pt-icon-standard pt-icon-align-justify`}/>}/>)}
+        {tags.total !== 0 && <ViewItem
+          key={3}
+          message={intl.formatMessage(messages.connections)}
+          href={'/documents/' + document.id + '/connections'}
+          isActive={isActive === 'connections'}
+          isPreview={false}
+          icon={<span className={`pt-icon-standard pt-icon-tag`}/>}/>}
+        {tags.total !== 0 && <ViewItem
+          key={4}
+          message={intl.formatMessage(messages.similar)}
+          href={'/documents/' + document.id + '/similar'}
+          isActive={isActive === 'similar'}
+          isPreview={false}
+          icon={<span className={`pt-icon-standard pt-icon-tag`}/>}/>}
       </div>
     );
   }

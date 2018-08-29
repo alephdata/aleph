@@ -24,6 +24,8 @@ import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
 import CollectionDocumentsScreen from 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen';
 import CollectionRedirectScreen from 'src/screens/CollectionRedirectScreen/CollectionRedirectScreen';
 import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
+import EntityTagsScreen from "src/screens/EntityTagsScreen/EntityTagsScreen";
+import DocumentConnectionsScreen from "src/screens/DocumentConnectionsScreen/DocumentConnectionsScreen";
 
 import './Router.css';
 
@@ -55,8 +57,10 @@ class Router extends Component {
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
         <Route path="/entities/:entityId/similar" exact component={EntitySimilarScreen}/>
+        <Route path="/entities/:entityId/tags" exact component={EntityTagsScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
         <Route path="/documents/:documentId/similar" exact component={DocumentSimilarScreen}/>
+        <Route path="/documents/:documentId/connections" exact component={DocumentConnectionsScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/sources" exact component={SourcesIndexScreen}/>

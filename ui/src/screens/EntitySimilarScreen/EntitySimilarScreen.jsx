@@ -10,8 +10,10 @@ import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
-import { EntityContent, EntityInfo } from 'src/components/Entity/';
+import { EntityInfo } from 'src/components/Entity/';
+import { EntityViewsMenu } from "src/components/ViewsMenu";
 
+import './EntitySimilarScreen.css';
 
 class EntitySimilarScreen extends Component {
   componentDidMount() {
@@ -49,7 +51,8 @@ class EntitySimilarScreen extends Component {
       return (
         <Screen breadcrumbs={breadcrumbs} title={entity.name}>
           <DualPane>
-            <DualPane.ContentPane>
+            <DualPane.ContentPane className='EntitySimilarScreen'>
+              <EntityViewsMenu isActive='similar' entity={entity} isPreview={false}/>
               <EntitySimilarMode entity={entity} query={query} />
             </DualPane.ContentPane>
             <EntityInfo entity={entity} />

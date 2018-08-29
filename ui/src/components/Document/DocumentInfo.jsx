@@ -98,15 +98,6 @@ class DocumentInfo extends React.Component {
                   </React.Fragment>
                 }
               />
-              <Tab id="tags" disabled={tags.total === 0}
-                title={
-                  <TextLoading loading={tags.total === undefined}>
-                    <FormattedMessage id="document.info.tags" defaultMessage="Connections"/>
-                    <TabCount count={tags.total} />
-                  </TextLoading>
-                }
-                panel={<EntityInfoTags tags={tags} entity={doc} />}
-              />
               <Tabs.Expander />
           </Tabs>
         </div>

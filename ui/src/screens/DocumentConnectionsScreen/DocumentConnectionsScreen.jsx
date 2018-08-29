@@ -1,21 +1,20 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 
-import Query from 'src/app/Query';
-import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
-import { Entity, Breadcrumbs, DualPane } from 'src/components/common';
+import { Breadcrumbs, DualPane, Entity } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
-import { DocumentInfo } from 'src/components/Document';
+import EntityInfoTags from "src/components/Entity/EntityInfoTags";
+import { DocumentInfo } from 'src/components/Document/';
 import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
+import { fetchDocument } from "src/actions";
 
-import './DocumentSimilarScreen.css'
+import './DocumentConnectionsScreen.css';
 
-class DocumentSimilarScreen extends Component {
+class DocumentConnectionsScreen extends Component {
   componentDidMount() {
     const { documentId } = this.props;
     this.props.fetchDocument({ id: documentId });
@@ -29,11 +28,11 @@ class DocumentSimilarScreen extends Component {
   }
 
   render() {
-    const { document, query } = this.props;
-    if (document.isError) {
-      return <ErrorScreen error={document.error} />;
+    const { document: doc } = this.props;
+    if (doc.isError) {
+      return <ErrorScreen error={doc.error}/>;
     }
-    if (document === undefined || document.id === undefined) {
+    if (doc === undefined || doc.id === undefined) {
       return <LoadingScreen />;
     }
 
@@ -51,14 +50,13 @@ class DocumentSimilarScreen extends Component {
     );
 
     return (
-      <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
+      <Screen breadcrumbs={breadcrumbs} title={doc.title || doc.file_name}>
         <DualPane>
-          <DualPane.ContentPane className='DocumentSimilarScreen'>
-            <DocumentViewsMenu document={document} isPreview={false} isActive='similar'/>
-            <EntitySimilarMode entity={document}
-                               query={query} />
+          <DualPane.ContentPane className='DocumentConnectionsScreen'>
+            <DocumentViewsMenu document={doc} isPreview={false} isActive='connections'/>
+            <EntityInfoTags entity={doc} />
           </DualPane.ContentPane>
-          <DocumentInfo document={document} />
+          <DocumentInfo document={doc} />
         </DualPane>
       </Screen>
     );
@@ -67,16 +65,12 @@ class DocumentSimilarScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps.match.params;
-  const path = documentId ? `entities/${documentId}/similar` : undefined;
-  const query = Query.fromLocation(path, {}, {}, 'similar').limit(75);
-
   return {
     documentId,
     document: selectEntity(state, documentId),
-    query: query
   };
 };
 
-DocumentSimilarScreen = connect(mapStateToProps, { fetchDocument }, null, { pure: false })(DocumentSimilarScreen);
-DocumentSimilarScreen = injectIntl(DocumentSimilarScreen);
-export default DocumentSimilarScreen
+DocumentConnectionsScreen = connect(mapStateToProps, { fetchDocument }, null, { pure: false })(DocumentConnectionsScreen);
+DocumentConnectionsScreen = injectIntl(DocumentConnectionsScreen);
+export default DocumentConnectionsScreen;

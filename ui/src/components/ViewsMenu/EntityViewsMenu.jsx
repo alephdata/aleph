@@ -2,14 +2,13 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { injectIntl, defineMessages } from 'react-intl';
 import queryString from "query-string";
-import { Tooltip, Position } from '@blueprintjs/core';
-import c from 'classnames';
 import { connect } from "react-redux";
 
 import { Schema } from 'src/components/common';
 import { fetchEntityReferences, fetchEntityTags } from "src/actions";
 import { selectEntityReferences, selectEntityTags } from "src/selectors";
 import getPath from "src/util/getPath";
+import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
 
@@ -25,6 +24,11 @@ const messages = defineMessages({
 });
 
 class EntityViewsMenu extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onClickReference = this.onClickReference.bind(this);
+  }
 
   componentDidMount() {
     this.fetchIfNeeded();
@@ -35,18 +39,15 @@ class EntityViewsMenu extends React.Component {
   }
 
   fetchIfNeeded() {
-    const {entity, references, tags} = this.props;
+    const {entity, references} = this.props;
     if (entity.id !== undefined) {
       if (references.shouldLoad) {
         this.props.fetchEntityReferences(entity);
       }
-      if (tags.shouldLoad) {
-        this.props.fetchEntityTags(entity);
-      }
     }
   }
 
-  onClick(event, mode) {
+  onClickReference(event, mode) {
     const {entity, history} = this.props;
     event.preventDefault();
     const path = getPath(entity.links.ui);
@@ -62,34 +63,38 @@ class EntityViewsMenu extends React.Component {
   }
 
   render() {
-    const {intl, tags, references, isPreview, mode} = this.props;
+    const {intl, references, isPreview, mode, entity, isActive} = this.props;
     const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
       <div className={className}>
         {references.results !== undefined && references.results.map((ref) => (
-          <Tooltip key={ref.property.qname} content={ref.property.reverse + ' (' + ref.count + ')'}
-                   position={Position.BOTTOM_RIGHT}>
-            <a key={ref.property.qname}
-               onClick={(e) => this.onClick(e, ref.property.qname)}
-               className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'references-' + ref.property.qname})}>
-              <Schema.Icon schema={ref.schema}/>
-            </a></Tooltip>
+          <ViewItem
+            message={ref.property.reverse + ' (' + ref.count + ')'}
+            key={ref.property.qname}
+            isPreview={true}
+            mode={ref.property.qname}
+            onClick={this.onClickReference}
+            isActive={mode === 'references-' + ref.property.qname}
+            icon={<Schema.Icon schema={ref.schema}/>}
+            />
         ))}
-        <Tooltip content={intl.formatMessage(messages.similar)} position={Position.BOTTOM_RIGHT}><a
-          onClick={(e) => this.onClick(e, 'similar')}
-          className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'similar'})}>
-          <i className="fa fa-fw far fa-repeat"/> {/* change icon for similar, we don't have it right now */}
-        </a></Tooltip>
-        <Tooltip content={intl.formatMessage(messages.tags)} position={Position.BOTTOM_RIGHT}><a
-          onClick={(e) => this.onClick(e, 'tags')}
-          className={c('ModeButtons', 'pt-button pt-large', {'pt-active': mode === 'tags'})}>
-          <i className="fa fa-fw fa-tags"/>
-        </a></Tooltip>
-        {/*<a onClick={(e) => this.goToTags(e, 'info')}
-           className={c('ModeButtons', 'pt-button')} title={intl.formatMessage(messages.tags)} >
-          <span className="pt-icon-standard pt-icon-tag"/>
-        </a>*/}
+        <ViewItem
+          message={intl.formatMessage(messages.similar)}
+          isPreview={false}
+          mode='similar'
+          href={'/entities/' + entity.id + '/similar'}
+          isActive={isActive === 'similar'}
+          icon={<i className="fa fa-fw far fa-repeat"/>}
+        />
+        <ViewItem
+          message={intl.formatMessage(messages.tags)}
+          isPreview={false}
+          mode='tags'
+          href={'/entities/' + entity.id + '/tags'}
+          isActive={isActive === 'tags'}
+          icon={<i className="fa fa-fw fa-tags"/>}
+        />
       </div>
     );
   }
@@ -102,15 +107,14 @@ const mapStateToProps = (state, ownProps) => {
   return {
     hashQuery,
     mode,
-    references: selectEntityReferences(state, ownProps.entity.id),
-    tags: selectEntityTags(state, ownProps.entity.id)
+    references: selectEntityReferences(state, ownProps.entity.id)
   };
 };
 
 EntityViewsMenu = connect(mapStateToProps, {
   fetchEntityReferences,
   fetchEntityTags
-}, null, {pure: false})(EntityViewsMenu);
+})(EntityViewsMenu);
 EntityViewsMenu = injectIntl(EntityViewsMenu);
 EntityViewsMenu = withRouter(EntityViewsMenu);
 export default EntityViewsMenu;

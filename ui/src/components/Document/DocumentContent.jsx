@@ -2,9 +2,9 @@ import React from 'react';
 
 import { DualPane } from 'src/components/common';
 import { DocumentViewer } from 'src/components/DocumentViewer/index';
+import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 
 import './DocumentContent.css';
-import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
 
 class DocumentContent extends React.Component {
   render() {

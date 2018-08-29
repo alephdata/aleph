@@ -2,11 +2,10 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from "react-redux";
 import { injectIntl, defineMessages } from 'react-intl';
-import c from 'classnames';
-import { Tooltip, Position } from '@blueprintjs/core';
 
 import { fetchCollectionXrefIndex } from "src/actions";
 import { selectCollectionXrefIndex } from "src/selectors";
+import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
 
@@ -43,19 +42,15 @@ class CollectionViewsMenu extends React.Component {
     return (
       <div className='ViewsMenu'>
         {showToolbar && (
-          <Tooltip content={intl.formatMessage(messages.open)} position={Position.BOTTOM_RIGHT}>
-            <a href={`/collections/${collection.id}/documents`}
-               className={c('ModeButtons', 'pt-button pt-large')}>
-              <i className="fa fa-fw fal fa-folder-open"/>
-            </a>
-          </Tooltip>
+          <ViewItem
+            message={intl.formatMessage(messages.open)}
+            href={`/collections/${collection.id}/documents`}
+            icon={<i className={`fa fa-fw fal fa-folder-open`}/>}/>
         )}
-        <Tooltip content={intl.formatMessage(messages.xref)} position={Position.BOTTOM_RIGHT}>
-          <a href={`/collections/${collection.id}/xref`}
-             className={c('ModeButtons', 'pt-button pt-large')}>
-            <i className="fa fa-fw fal fa-folder-open"/>
-          </a>
-        </Tooltip>
+        <ViewItem
+          message={intl.formatMessage(messages.xref)}
+          href={`/collections/${collection.id}/xref`}
+          icon={<i className={`fa fa-fw fal fa-folder-open`}/>}/>
       </div>
     );
   }
