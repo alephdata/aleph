@@ -179,10 +179,10 @@ def delete(id):
     return ('', 204)
 
 
-@blueprint.route('/api/2/entities/<id>/graph', methods=['GET'])
-def graph(id):
-    update = request.args.get('update') == 'true'
-    entity = export_node(id, update=update)
-    resp = jsonify(entity)
-    # resp.headers["Access-Control-Allow-Origin"] = "*"
-    return resp
+# @blueprint.route('/api/2/entities/<id>/graph', methods=['GET'])
+# def graph(id):
+#     update = request.args.get('update') == 'true'
+#     entity = export_node(id, update=update)
+#     resp = jsonify(entity)
+#     # resp.headers["Access-Control-Allow-Origin"] = "*"
+#     return resp

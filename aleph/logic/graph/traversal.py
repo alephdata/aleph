@@ -1,7 +1,8 @@
 import logging
-from banal import ensure_list, is_mapping
+from banal import is_mapping
 from pprint import pprint  # noqa
 from followthemoney import model
+from followthemoney.link import Link
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
@@ -9,7 +10,6 @@ from aleph.core import es
 from aleph.model import Document
 from aleph.index.entities import get_entity
 from aleph.index.core import entities_index
-from aleph.logic.graph.link import Link
 from aleph.logic.graph.cache import load_links, store_links, has_links
 from aleph.util import make_key
 
@@ -57,18 +57,8 @@ def _expand_entity(entity):
         return
     if 'properties' not in entity:
         entity.update(Document.doc_data_to_schema(entity))
-
-    schema = model.get(entity.get('schema'))
-    if schema is None:
-        return
-
-    ref = registry.entity.ref(entity.get('id'))
-    properties = entity.get('properties', {})
-    for prop in schema.properties.values():
-        if prop.name not in properties:
-            continue
-        for value in ensure_list(properties.get(prop.name)):
-            yield Link(ref, prop, value)
+    for link in model.entity_links(entity):
+        yield link
 
 
 def expand_entity(entity):

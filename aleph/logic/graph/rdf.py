@@ -1,5 +1,4 @@
 import logging
-from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from rdflib import Namespace, Graph, URIRef, Literal
@@ -32,16 +31,8 @@ def export_entity(entity, collection_uri):
         entity.update(Document.doc_data_to_schema(entity))
     if entity.get('name'):
         g.add((uri, SKOS.prefLabel, Literal(entity.get('name'))))
-
-    schema = model.get(entity.get('schema'))
-    for schema_ in schema.schemata:
-        g.add((uri, RDF.type, schema_.uri))
-
-    properties = entity.get('properties', {})
-    for name, prop in schema.properties.items():
-        for value in ensure_list(properties.get(name)):
-            obj = prop.type.rdf(value)
-            g.add((uri, prop.uri, obj))
+    for triple in model.entity_rdf(entity):
+        g.add(triple)
     return g
 
 
