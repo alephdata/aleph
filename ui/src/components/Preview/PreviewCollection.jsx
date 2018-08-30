@@ -28,8 +28,6 @@ class PreviewCollection extends React.Component {
       this.props.fetchCollection({ id: previewId });
     }
 
-    // we're loading this here so it's available both to the xrefindex screen
-    // and to the view selection menu.
     const { xrefIndex } = this.props;
     if (xrefIndex.shouldLoad) {
       this.props.fetchCollectionXrefIndex({id: previewId});

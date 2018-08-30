@@ -2,8 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { fetchEntity } from 'src/actions';
-import { selectEntity } from 'src/selectors';
+import { queryEntitySimilar } from 'src/queries';
+import { fetchEntity, fetchEntityTags, queryEntities } from 'src/actions';
+import { selectEntity, selectEntityTags, selectEntitiesResult } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
@@ -25,6 +26,16 @@ class PreviewEntity extends React.Component {
     const { entity, previewId } = this.props;
     if (entity.shouldLoad) {
       this.props.fetchEntity({ id: previewId });
+    }
+
+    const { tagsResult } = this.props;
+    if (tagsResult.shouldLoad) {
+      this.props.fetchEntityTags({ id: previewId });
+    }
+
+    const { similarQuery, similarResult } = this.props;
+    if (similarResult.shouldLoad) {
+      this.props.queryEntities({query: similarQuery});
     }
   }
 
@@ -61,9 +72,16 @@ class PreviewEntity extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { entity: selectEntity(state, ownProps.previewId) };
+  const { previewId, location } = ownProps;
+  const similarQuery = queryEntitySimilar(location, previewId);
+  return {
+    entity: selectEntity(state, previewId),
+    tagsResult: selectEntityTags(state, previewId),
+    similarQuery: similarQuery,
+    similarResult: selectEntitiesResult(state, similarQuery)
+  };
 };
 
-PreviewEntity = connect(mapStateToProps, { fetchEntity })(PreviewEntity);
+PreviewEntity = connect(mapStateToProps, { fetchEntity, fetchEntityTags, queryEntities })(PreviewEntity);
 PreviewEntity = withRouter(PreviewEntity);
 export default PreviewEntity;

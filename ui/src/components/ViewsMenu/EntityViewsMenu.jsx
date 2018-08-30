@@ -4,8 +4,9 @@ import { injectIntl, defineMessages } from 'react-intl';
 import queryString from "query-string";
 import { connect } from "react-redux";
 
-import { fetchEntityReferences, fetchEntityTags } from "src/actions";
-import { selectEntityReferences, selectEntityTags, selectMetadata } from "src/selectors";
+import { queryEntitySimilar } from 'src/queries';
+import { fetchEntityReferences } from "src/actions";
+import { selectEntityReferences, selectEntityTags, selectMetadata, selectEntitiesResult } from "src/selectors";
 import getPath from "src/util/getPath";
 import ViewItem from "src/components/ViewsMenu/ViewItem";
 
@@ -61,7 +62,8 @@ class EntityViewsMenu extends React.Component {
   }
 
   render() {
-    const {intl, references, isPreview, activeMode, entity} = this.props;
+    const {intl, isPreview, activeMode, entity} = this.props;
+    const { references, tags, similar } = this.props;
     const { metadata } = this.props;
     const { schemata } = metadata;
     const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
@@ -76,10 +78,12 @@ class EntityViewsMenu extends React.Component {
             icon={schemata[ref.schema].icon} />
         ))}
         <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
+          disabled={similar.total === 0}
           message={intl.formatMessage(messages.similar)}
           href={'/entities/' + entity.id + '/similar'}
           icon='fa-repeat' />
         <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
+          disabled={tags.total === 0}
           message={intl.formatMessage(messages.tags)}
           href={'/entities/' + entity.id + '/tags'}
           icon='fa-tags' />
@@ -89,21 +93,16 @@ class EntityViewsMenu extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location} = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  const mode = hashQuery.mode || 'view';
+  const { entity, location } = ownProps;
   return {
-    hashQuery,
-    mode,
-    references: selectEntityReferences(state, ownProps.entity.id),
-    metadata: selectMetadata(state)
+    references: selectEntityReferences(state, entity.id),
+    metadata: selectMetadata(state),
+    tags: selectEntityTags(state, entity.id),
+    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id))
   };
 };
 
-EntityViewsMenu = connect(mapStateToProps, {
-  fetchEntityReferences,
-  fetchEntityTags
-})(EntityViewsMenu);
+EntityViewsMenu = connect(mapStateToProps, { fetchEntityReferences })(EntityViewsMenu);
 EntityViewsMenu = injectIntl(EntityViewsMenu);
 EntityViewsMenu = withRouter(EntityViewsMenu);
 export default EntityViewsMenu;

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { queryEntitySimilar } from 'src/queries';
-import { fetchDocument } from 'src/actions';
+import { fetchDocument, fetchEntityTags, queryEntities } from 'src/actions';
 import { selectEntity, selectEntityTags, selectEntitiesResult } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
@@ -48,9 +48,9 @@ class PreviewDocument extends React.Component {
     const { document, previewMode = 'view' } = this.props;
     let mode = null, maximised = false;
     if (document.isError) {
-      return <ErrorSection error={document.error} />
+      mode = <ErrorSection error={document.error} />
     } else if (document.id === undefined) {
-      return <SectionLoading/>;
+      mode = <SectionLoading/>;
     } else if (previewMode === 'info') {
       mode = <DocumentInfoMode document={document} />;
     } else if (previewMode === 'tags') {
@@ -89,6 +89,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-PreviewDocument = connect(mapStateToProps, { fetchDocument })(PreviewDocument);
+PreviewDocument = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities })(PreviewDocument);
 PreviewDocument = withRouter(PreviewDocument);
 export default PreviewDocument;
