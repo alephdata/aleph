@@ -14,7 +14,7 @@ import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
 
 class PreviewEntity extends React.Component {
   render() {
-    const { entity, entityId, previewMode = 'view' } = this.props;
+    const { entity, previewId, previewMode = 'view' } = this.props;
     let mode = null, maximised = false;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
@@ -32,7 +32,7 @@ class PreviewEntity extends React.Component {
       maximised = true;
     }
     return (
-      <EntityContextLoader entityId={entityId}>
+      <EntityContextLoader entityId={previewId}>
         <Preview maximised={maximised}>
           <EntityViewsMenu entity={entity}
                            activeMode={previewMode}
