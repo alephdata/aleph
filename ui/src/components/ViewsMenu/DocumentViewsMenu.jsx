@@ -1,8 +1,10 @@
 import React from 'react';
-import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { injectIntl, defineMessages } from 'react-intl';
 
-import { selectEntityTags } from "src/selectors";
+import { queryEntitySimilar } from 'src/queries';
+import { selectEntityTags, selectEntitiesResult } from "src/selectors";
 import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
@@ -33,7 +35,8 @@ const messages = defineMessages({
 class DocumentViewsMenu extends React.Component {
 
   render() {
-    const { intl, document, tags, isPreview, activeMode } = this.props;
+    const { intl, document, isPreview, activeMode } = this.props;
+    const { tags, similar } = this.props;
     const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
     const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
@@ -64,6 +67,7 @@ class DocumentViewsMenu extends React.Component {
                   href={`/documents/${document.id}/tags`}
                   icon='pt-icon-tag' />
         <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
+                  disabled={similar.total === 0}
                   message={intl.formatMessage(messages.similar)}
                   href={`/documents/${document.id}/similar`}
                   icon='pt-icon-tag' />
@@ -73,13 +77,15 @@ class DocumentViewsMenu extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document } = ownProps;
+  const { document, location } = ownProps;
   return {
-    tags: selectEntityTags(state, document.id)
+    tags: selectEntityTags(state, document.id),
+    similar: selectEntitiesResult(state, queryEntitySimilar(location, document.id))
   };
 };
 
 
 DocumentViewsMenu = connect(mapStateToProps, {})(DocumentViewsMenu);
+DocumentViewsMenu = withRouter(DocumentViewsMenu);
 DocumentViewsMenu = injectIntl(DocumentViewsMenu);
 export default DocumentViewsMenu;
