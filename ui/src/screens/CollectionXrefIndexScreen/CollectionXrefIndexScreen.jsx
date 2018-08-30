@@ -12,7 +12,7 @@ class CollectionXrefIndexScreen extends Component {
     collection.id = collectionId;
 
     return (
-      <CollectionScreenContext collection={collection} activeMode="xref">
+      <CollectionScreenContext collectionId={collectionId} activeMode="xref">
         <CollectionXrefIndexMode collection={collection} />
       </CollectionScreenContext>
     );

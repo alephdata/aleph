@@ -12,9 +12,8 @@ import { selectCollection } from "src/selectors";
 class CaseScreen extends Component {
   render() {
     const { collection, collectionId, notificationsQuery } = this.props;
-    collection.id = collectionId;
     return (
-      <CollectionScreenContext collection={collection} activeMode="home">
+      <CollectionScreenContext collectionId={collectionId} activeMode="home">
         <Toolbar>
           <CollectionSearch collection={collection} />
         </Toolbar>

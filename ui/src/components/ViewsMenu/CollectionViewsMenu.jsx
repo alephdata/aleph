@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { injectIntl, defineMessages } from 'react-intl';
 
 import ViewItem from "src/components/ViewsMenu/ViewItem";
+import { selectCollectionXrefIndex } from 'src/selectors';
 
 import './ViewsMenu.css';
 
@@ -38,8 +39,15 @@ class CollectionViewsMenu extends React.Component {
     return false;
   }
 
+  hasXrefIndex() {
+    const { xrefIndex } = this.props;
+    // return xrefIndex.total === undefined || xrefIndex.total > 0;
+    return false;
+  }
+
   render() {
     const { intl, isPreview, collection, activeMode } = this.props;
+    // TODO: add case home page / timeline....
     return (
       <div className='ViewsMenu'>
         {isPreview && (
@@ -53,6 +61,7 @@ class CollectionViewsMenu extends React.Component {
                   href={`/collections/${collection.id}/documents`}
                   icon='fa-folder-open' />
         <ViewItem mode='xref' activeMode={activeMode} isPreview={isPreview}
+                  disabled={!this.hasXrefIndex()}
                   message={intl.formatMessage(messages.xref)}
                   href={`/collections/${collection.id}/xref`}
                   icon='fa-folder-open' />
@@ -60,6 +69,14 @@ class CollectionViewsMenu extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { collection } = ownProps;
+  return {
+    xrefIndex: selectCollectionXrefIndex(state, collection.id)
+  };
+};
+
 
 CollectionViewsMenu = injectIntl(CollectionViewsMenu);
 CollectionViewsMenu = withRouter(CollectionViewsMenu);

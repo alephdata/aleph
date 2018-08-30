@@ -23,9 +23,9 @@ class CollectionScreenContext extends Component {
   }
 
   fetchIfNeeded() {
-    const {collection} = this.props;
+    const { collectionId } = this.props;
     if (collection.shouldLoad) {
-      this.props.fetchCollection({id: collection.id});
+      this.props.fetchCollection({id: collectionId});
     }
   }
 
@@ -61,6 +61,14 @@ class CollectionScreenContext extends Component {
   }
 }
 
+
+const mapStateToProps = (state, ownProps) => {
+  const { collectionId } = ownProps;
+  return {
+    collection: selectCollection(state, collectionId),
+  };
+};
+
 CollectionScreenContext = withRouter(CollectionScreenContext);
-CollectionScreenContext = connect(null, { fetchCollection })(CollectionScreenContext);
+CollectionScreenContext = connect(mapStateToProps, { fetchCollection })(CollectionScreenContext);
 export default (CollectionScreenContext);

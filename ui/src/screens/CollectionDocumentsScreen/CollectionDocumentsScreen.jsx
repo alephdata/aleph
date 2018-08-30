@@ -2,44 +2,32 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 
 import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
-import DocumentManager from 'src/components/Document/DocumentManager';
+import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
-import Query from 'src/app/Query';
-import { fetchCollection, deleteDocument } from "src/actions";
 import { selectCollection } from "src/selectors";
 
 
 class CollectionDocumentsScreen extends Component {
   render() {
-    const { collection, collectionId, query } = this.props;
-    collection.id = collectionId;
+    const { collection, collectionId } = this.props;
     return (
-      <CollectionScreenContext collection={collection} activeMode="documents">
+      <CollectionScreenContext collectionId={collectionId} activeMode="documents">
         <Toolbar>
           <CollectionSearch collection={collection} />
         </Toolbar>
-        <DocumentManager query={query} collection={collection} />
+        <CollectionDocumentsMode collection={collection} />
       </CollectionScreenContext>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, match } = ownProps;
-  const { collectionId } = match.params;
-  const context = {
-    'filter:collection_id': collectionId,
-    'filter:schemata': 'Document',
-    'empty:parent': true
-  };
-  const query = Query.fromLocation('search', location, context, 'document').limit(50);
-
+  const { collectionId } = ownProps.match.params;
   return {
     collectionId,
-    collection: selectCollection(state, collectionId),
-    query: query
+    collection: selectCollection(state, collectionId)
   };
 };
 
-CollectionDocumentsScreen = connect(mapStateToProps, {fetchCollection, deleteDocument})(CollectionDocumentsScreen);
+CollectionDocumentsScreen = connect(mapStateToProps, {})(CollectionDocumentsScreen);
 export default CollectionDocumentsScreen;
