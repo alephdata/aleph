@@ -5,15 +5,13 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
 import { Property, Entity, DualPane, Schema } from 'src/components/common';
-import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { selectMetadata } from 'src/selectors';
-import getPath from 'src/util/getPath';
 
 
-class EntityInfo extends React.Component {
+class EntityInfoMode extends React.Component {
   render() {
-    const { entity, schema, showToolbar } = this.props;
+    const { entity, schema } = this.props;
     const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
 
     if (schema === undefined) {  // entity hasn't loaded.
@@ -25,18 +23,7 @@ class EntityInfo extends React.Component {
     });
     
     return (
-      <DualPane.InfoPane className="EntityInfo with-heading">
-        {showToolbar && (
-          <Toolbar className="toolbar-preview">
-            {isThing && (
-              <Link to={getPath(entity.links.ui)} className="pt-button button-link">
-                <span className={`pt-icon-share`}/>
-                <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-              </Link>
-            )}
-            <CloseButton/>
-          </Toolbar>
-        )}
+      <React.Fragment>
         <div className="pane-heading">
           <span>
             <Schema.Label schema={entity.schema} icon={true} />
@@ -65,7 +52,7 @@ class EntityInfo extends React.Component {
           </span>
           <CollectionOverview collection={entity.collection} hasHeader={true}/>   
         </div>
-      </DualPane.InfoPane>
+      </React.Fragment>
     );
   }
 }
@@ -77,5 +64,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-EntityInfo = connect(mapStateToProps, {})(EntityInfo);
-export default EntityInfo;
+EntityInfoMode = connect(mapStateToProps, {})(EntityInfoMode);
+export default EntityInfoMode;

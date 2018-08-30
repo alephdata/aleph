@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
-import { EntityInfo } from 'src/components/Entity';
+import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 import { EntityViewsMenu } from "src/components/ViewsMenu";
 
@@ -36,7 +36,7 @@ class PreviewEntity extends React.Component {
     return (
       <Preview>
         <EntityViewsMenu entity={entity} isPreview={true}/>
-        <EntityInfo entity={entity} showToolbar={true} />
+        <EntityInfoMode entity={entity} showToolbar={true} />
       </Preview>
     );
   }
