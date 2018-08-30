@@ -8,7 +8,7 @@ import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewsMenu from 'src/components/ViewsMenu/DocumentViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane } from 'src/components/common';
+import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { fetchDocument, fetchEntityTags } from 'src/actions';
 import { selectEntity, selectEntityTags } from "src/selectors";
 
@@ -54,6 +54,19 @@ class DocumentScreenContext extends Component {
       return <LoadingScreen />;
     }
 
+    const breadcrumbs = (
+      <Breadcrumbs collection={document.collection}>
+        { document.parent && (
+          <li>
+            <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
+          </li>
+        )}
+        <li>
+          <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
+        </li>
+      </Breadcrumbs>
+    );
+
     return (
       <Screen title={document.name}>
         <DualPane>
@@ -62,6 +75,7 @@ class DocumentScreenContext extends Component {
                                activeMode={activeMode}
                                isPreview={false}/>
             <div>
+              {breadcrumbs}
               {this.props.children}
             </div>
           </DualPane.ContentPane>

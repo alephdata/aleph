@@ -20,26 +20,6 @@ class EntityInfo extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
   }
 
-  componentDidMount(prevProps) {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate(prevProps) {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { entity, references, tags } = this.props;
-    if (entity.id !== undefined) {
-      if (references.shouldLoad) {
-        this.props.fetchEntityReferences(entity);
-      }
-      if (tags.shouldLoad) {
-        this.props.fetchEntityTags(entity);
-      }
-    }
-  }
-
   handleTabChange(activeTabId) {
     this.setState({ activeTabId });
   }
