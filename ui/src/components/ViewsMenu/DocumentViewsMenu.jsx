@@ -1,7 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router';
 import { injectIntl, defineMessages } from 'react-intl';
-import queryString from "query-string";
 import { connect } from "react-redux";
 
 import { selectEntityTags } from "src/selectors";
@@ -33,24 +31,9 @@ const messages = defineMessages({
 });
 
 class DocumentViewsMenu extends React.Component {
-  constructor(props) {
-    super(props);
-    this.setMode = this.setMode.bind(this);
-  }
-
-  setMode(event, mode) {
-    const {history, location, hashQuery} = this.props;
-    event.preventDefault();
-    hashQuery.mode = mode;
-    history.replace({
-      pathname: location.pathname.replace('/connections',''),
-      search: location.search,
-      hash: queryString.stringify(hashQuery),
-    })
-  }
 
   render() {
-    const {document, intl, mode, tags, isPreview, isActive} = this.props;
+    const {document, intl, mode, tags, isPreview, activeMode} = this.props;
     const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
     const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
@@ -59,45 +42,31 @@ class DocumentViewsMenu extends React.Component {
     return (
       <div className={className}>
         {isPreview && (
-          <ViewItem
+          <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
             message={intl.formatMessage(messages.mode_info)}
-            mode='info'
-            isActive={mode === 'info' && isActive !== 'connections'}
-            isPreview={true}
-            onClick={this.setMode}
             icon='pt-icon-info-sign' />
         )}
         {hasModifiers && (
-          <ViewItem
+          <ViewItem mode='view' activeMode={activeMode} isPreview={isPreview}
             message={intl.formatMessage(messages.mode_view)}
-            mode='view'
-            isActive={mode === 'view' && isActive !== 'connections'}
-            isPreview={true}
-            onClick={this.setMode}
+            href={`/documents/${document.id}?mode=view`}
             icon='pt-icon-document' />
         )}
         {hasTextMode && (
-          <ViewItem
+          <ViewItem mode='text' activeMode={activeMode} isPreview={isPreview}
             message={intl.formatMessage(messages.mode_text)}
-            mode='text'
-            isActive={mode === 'text' && isActive !== 'connections'}
-            isPreview={true}
-            onClick={this.setMode}
+            href={`/documents/${document.id}?mode=text`}
             icon='pt-icon-align-justify' />
         )}
         {tags.total !== 0 && (
-          <ViewItem
+          <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
             message={intl.formatMessage(messages.connections)}
-            href={'/documents/' + document.id + '/connections'}
-            isActive={isActive === 'connections'}
-            isPreview={false}
+            href={`/documents/${document.id}/tags`}
             icon='pt-icon-tag' />
         )}
-        <ViewItem
+        <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
           message={intl.formatMessage(messages.similar)}
-          href={'/documents/' + document.id + '/similar'}
-          isActive={isActive === 'similar'}
-          isPreview={false}
+          href={`/documents/${document.id}/similar`}
           icon='pt-icon-tag' />
       </div>
     );
@@ -105,18 +74,13 @@ class DocumentViewsMenu extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const {location} = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  const mode = hashQuery.mode || 'view';
+  const { document } = ownProps;
   return {
-    hashQuery,
-    mode,
-    tags: selectEntityTags(state, ownProps.document.id)
+    tags: selectEntityTags(state, document.id)
   };
 };
 
 
 DocumentViewsMenu = connect(mapStateToProps, {})(DocumentViewsMenu);
 DocumentViewsMenu = injectIntl(DocumentViewsMenu);
-DocumentViewsMenu = withRouter(DocumentViewsMenu);
 export default DocumentViewsMenu;

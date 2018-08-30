@@ -37,21 +37,23 @@ class PreviewCollection extends React.Component {
   }
 
   render() {
-    const { collection, previewMode } = this.props;
-    let mode = null;
+    const { collection, previewMode = 'info' } = this.props;
+    let mode = null, maximised = false;
     if (collection.isError) {
       mode = <ErrorSection error={collection.error} />
     } else if (collection.id === undefined) {
       mode = <SectionLoading/>;
     } else if (previewMode === 'xref') {
       mode = <CollectionXrefIndexMode collection={collection} />;
+      maximised = true;
     } else if (previewMode === 'documents') {
       mode = <CollectionDocumentsMode collection={collection} />;
+      maximised = true;
     } else {
       mode = <CollectionInfoMode collection={collection} />;
     }
     return (
-      <Preview maximised={true}>
+      <Preview maximised={maximised}>
         <CollectionViewsMenu collection={collection}
                              activeMode={previewMode}
                              isPreview={true} />

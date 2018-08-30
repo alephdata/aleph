@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+import queryString from 'query-string';
 
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
@@ -8,60 +10,33 @@ import { Entity, Breadcrumbs, DualPane } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import { DocumentContent, DocumentInfo } from 'src/components/Document';
+import DocumentViewer from 'src/components/DocumentViewer/DocumentViewer';
+import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
 
 class DocumentScreen extends Component {
-  componentDidMount() {
-    const { documentId } = this.props;
-    this.props.fetchDocument({ id: documentId });
-  }
-
-  componentDidUpdate(prevProps) {
-    const { documentId } = this.props;
-    if (documentId !== prevProps.documentId) {
-      this.props.fetchDocument({ id: documentId });
-    }
-  }
-
   render() {
-    const { document } = this.props;
-    if (document.isError) {
-      return <ErrorScreen error={document.error} />;
-    }
-    if (document === undefined || document.id === undefined) {
-      return <LoadingScreen />;
-    }
-
-    const breadcrumbs = (
-      <Breadcrumbs collection={document.collection}>
-        { document.parent && (
-          <li>
-            <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
-          </li>
-        )}
-        <li>
-          <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
-        </li>
-      </Breadcrumbs>
-    );
-
+    const { documentId, document, mode } = this.props;
     return (
-      <Screen breadcrumbs={breadcrumbs} title={document.title || document.file_name}>
-        <DualPane>
-          <DocumentContent document={document} />
-          <DocumentInfo document={document} />
-        </DualPane>
-      </Screen>
+      <DocumentScreenContext documentId={documentId} activeMode={mode}>
+        <DocumentViewer document={document} />
+      </DocumentScreenContext>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps.match.params;
-  return { documentId, document: selectEntity(state, documentId) };
+  const { location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);  
+  return {
+    documentId,
+    document: selectEntity(state, documentId),
+    mode: hashQuery.mode || 'view'
+  };
 };
 
-DocumentScreen = connect(mapStateToProps, { fetchDocument }, null, { pure: false })(DocumentScreen);
+DocumentScreen = connect(mapStateToProps, { fetchDocument })(DocumentScreen);
+DocumentScreen = withRouter(DocumentScreen);
 DocumentScreen = injectIntl(DocumentScreen);
 export default DocumentScreen
