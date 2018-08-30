@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
-import { Property, Entity, DualPane, Schema } from 'src/components/common';
+import { Property, Entity, Schema } from 'src/components/common';
 import { CollectionOverview } from 'src/components/Collection';
 import { selectMetadata } from 'src/selectors';
 

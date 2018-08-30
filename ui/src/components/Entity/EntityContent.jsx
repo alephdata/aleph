@@ -7,7 +7,6 @@ import { selectEntityReferences } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
 import { SectionLoading, DualPane, ErrorSection } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
-import EntityViewsMenu from "../ViewsMenu/EntityViewsMenu";
 
 import './EntityContent.css';
 

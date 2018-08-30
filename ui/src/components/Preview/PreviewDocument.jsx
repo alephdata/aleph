@@ -9,6 +9,7 @@ import Preview from 'src/components/Preview/Preview';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
+import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
@@ -54,6 +55,9 @@ class PreviewDocument extends React.Component {
       mode = <DocumentInfoMode document={document} />;
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={document} />;
+      maximised = true;
+    } else if (previewMode === 'similar') {
+      mode = <EntitySimilarMode entity={document} />;
       maximised = true;
     } else {
       mode = <DocumentViewer document={document} showToolbar={true} previewMode={true} />;

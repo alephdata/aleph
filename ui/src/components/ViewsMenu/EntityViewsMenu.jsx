@@ -25,7 +25,6 @@ const messages = defineMessages({
 class EntityViewsMenu extends React.Component {
   constructor(props) {
     super(props);
-
     this.onClickReference = this.onClickReference.bind(this);
   }
 
@@ -62,7 +61,7 @@ class EntityViewsMenu extends React.Component {
   }
 
   render() {
-    const {intl, references, isPreview, mode, entity, isActive} = this.props;
+    const {intl, references, isPreview, activeMode, entity} = this.props;
     const { metadata } = this.props;
     const { schemata } = metadata;
     const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
@@ -70,29 +69,19 @@ class EntityViewsMenu extends React.Component {
     return (
       <div className={className}>
         {references.results !== undefined && references.results.map((ref) => (
-          <ViewItem
+          <ViewItem mode={ref.property.qname} activeMode={activeMode} isPreview={isPreview}
             message={ref.property.reverse + ' (' + ref.count + ')'}
             key={ref.property.qname}
-            isPreview={true}
-            mode={ref.property.qname}
             onClick={this.onClickReference}
-            isActive={mode === 'references-' + ref.property.qname}
-            icon={schemata[ref.schema].icon}
-            />
+            icon={schemata[ref.schema].icon} />
         ))}
-        <ViewItem
+        <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
           message={intl.formatMessage(messages.similar)}
-          isPreview={false}
-          mode='similar'
           href={'/entities/' + entity.id + '/similar'}
-          isActive={isActive === 'similar'}
           icon='fa-repeat' />
-        <ViewItem
+        <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
           message={intl.formatMessage(messages.tags)}
-          isPreview={false}
-          mode='tags'
           href={'/entities/' + entity.id + '/tags'}
-          isActive={isActive === 'tags'}
           icon='fa-tags' />
       </div>
     );
