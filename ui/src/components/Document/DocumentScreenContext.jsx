@@ -8,13 +8,14 @@ import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewsMenu from 'src/components/ViewsMenu/DocumentViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
+
 import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
-import { fetchDocument, fetchEntityTags } from 'src/actions';
-import { selectEntity, selectEntityTags } from "src/selectors";
+import { queryEntitySimilar } from 'src/queries';
+import { fetchDocument, fetchEntityTags, queryEntities } from 'src/actions';
+import { selectEntity, selectEntityTags, selectEntitiesResult } from 'src/selectors';
 
 
 class DocumentScreenContext extends Component {
-
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -23,26 +24,22 @@ class DocumentScreenContext extends Component {
     this.fetchIfNeeded();
   }
 
-  // componentDidMount() {
-  //   const { documentId } = this.props;
-  //   this.props.fetchDocument({ id: documentId });
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   const { documentId } = this.props;
-  //   if (documentId !== prevProps.documentId) {
-  //     this.props.fetchDocument({ id: documentId });
-  //   }
-  // }
-
   fetchIfNeeded() {
-    const { documentId, document, tags } = this.props;
+    const { documentId, document } = this.props;
     if (document.shouldLoad) {
-      this.props.fetchDocument({id: documentId});
+      this.props.fetchDocument({ id: documentId });
     }
-    if (document.id !== undefined && tags.shouldLoad) {
-      this.props.fetchEntityTags(document);
+
+    const { tagsResult } = this.props;
+    if (tagsResult.shouldLoad) {
+      this.props.fetchEntityTags({ id: documentId });
     }
+
+    const { similarQuery, similarResult } = this.props;
+    // console.log(similarResult);
+    // if (similarResult.shouldLoad) {
+    //   this.props.queryEntities(similarQuery);
+    // }
   }
 
   render() {
@@ -91,13 +88,16 @@ class DocumentScreenContext extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { documentId } = ownProps;
+  const { documentId, location } = ownProps;
+  const similarQuery = queryEntitySimilar(location, documentId);
   return {
     document: selectEntity(state, documentId),
-    tags: selectEntityTags(state, documentId)
+    tagsResult: selectEntityTags(state, documentId),
+    similarQuery: similarQuery,
+    similarResult: selectEntitiesResult(state, similarQuery)
   };
 };
 
+DocumentScreenContext = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities })(DocumentScreenContext);
 DocumentScreenContext = withRouter(DocumentScreenContext);
-DocumentScreenContext = connect(mapStateToProps, { fetchDocument, fetchEntityTags })(DocumentScreenContext);
 export default (DocumentScreenContext);

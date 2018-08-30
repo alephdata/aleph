@@ -30,6 +30,7 @@ class PreviewDocument extends React.Component {
     if (!document.isLoading) {
       this.props.fetchDocument({ id: this.props.previewId });
     }
+    
   }
 
   render() {

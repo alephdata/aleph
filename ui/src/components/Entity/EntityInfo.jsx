@@ -26,9 +26,6 @@ class EntityInfo extends React.Component {
 
   render() {
     const { entity, schema, showToolbar } = this.props;
-    // const tagsTotal = tags.total === undefined ? undefined: tags.total;
-    // const referencesTotal = references.results === undefined ? undefined: references.results.length;
-    // const connectionsTotal = referencesTotal === undefined || tagsTotal === undefined ? undefined : tagsTotal + referencesTotal;
     const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
 
     if (schema === undefined) {  // entity hasn't loaded.
