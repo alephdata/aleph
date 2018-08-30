@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { selectEntity } from 'src/selectors';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
+import { selectEntity } from 'src/selectors';
 
 
 class DocumentTagsScreen extends Component {
@@ -25,5 +25,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-DocumentTagsScreen = connect(mapStateToProps, {}, null, { pure: false })(DocumentTagsScreen);
+DocumentTagsScreen = connect(mapStateToProps, {})(DocumentTagsScreen);
 export default DocumentTagsScreen;

@@ -4,27 +4,11 @@ import { FormattedNumber, FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
 
 import { Tag } from 'src/components/common';
-import { fetchEntityTags } from "src/actions";
 import { selectEntityTags } from "src/selectors";
 
 import './EntityTagsMode.css';
 
 class EntityTagsMode extends React.Component {
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { entity, tags } = this.props;
-    if (entity.id !== undefined && tags.shouldLoad) {
-      this.props.fetchEntityTags(entity);
-    }
-  }
 
   getLink(tag) {
     // const { entity } = this.props;
@@ -97,5 +81,5 @@ const mapStateToProps = (state, ownProps) => ({
   tags: selectEntityTags(state, ownProps.entity.id)
 });
 
-EntityTagsMode =  connect(mapStateToProps, { fetchEntityTags })(EntityTagsMode);
+EntityTagsMode =  connect(mapStateToProps, {})(EntityTagsMode);
 export default EntityTagsMode;
