@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Property, Entity, Schema } from 'src/components/common';
 import { CollectionOverview } from 'src/components/Collection';
-import { selectMetadata } from 'src/selectors';
+import { selectSchemata } from 'src/selectors';
 
 
 class EntityInfoMode extends React.Component {
@@ -59,7 +59,7 @@ class EntityInfoMode extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { entity } = ownProps;
   return {
-    schema: selectMetadata(state).schemata[entity.schema]
+    schema: selectSchemata(state)[entity.schema]
   };
 };
 

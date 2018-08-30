@@ -50,6 +50,11 @@ export function selectMetadata(state) {
   return metadata;
 }
 
+export function selectSchemata(state) {
+  const metadata = selectMetadata(state);
+  return metadata.schemata || {};
+}
+
 export function selectStatistics(state) {
   return selectObject(state, 'statistics');
 }

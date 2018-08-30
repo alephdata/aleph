@@ -8,7 +8,7 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
 import { queryEntities } from 'src/actions/index';
-import { selectEntityReferences, selectEntitiesResult, selectMetadata } from "src/selectors";
+import { selectEntityReferences, selectEntitiesResult, selectSchemata } from "src/selectors";
 import { SectionLoading, ErrorSection, Property } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 
@@ -148,7 +148,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     reference, query,
     result: selectEntitiesResult(state, query),
-    model: selectMetadata(state).schemata[reference.schema]
+    schemata: selectSchemata(state)[reference.schema]
   };
 };
 

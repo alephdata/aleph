@@ -28,17 +28,15 @@ const messages = defineMessages({
 class EntityViewsMenu extends React.Component {
   render() {
     const {intl, isPreview, activeMode, entity} = this.props;
-    const { references, tags, similar } = this.props;
-    const { metadata } = this.props;
-    const { schemata } = metadata;
+    const { references, tags, similar, schemata } = this.props;
     const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
       <div className={className}>
         {isPreview && (
           <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.info)}
-            icon='pt-icon-info-sign' />
+                    message={intl.formatMessage(messages.info)}
+                    icon='pt-icon-info-sign' />
         )}
         {references.results !== undefined && references.results.map((ref) => (
           <ViewItem key={ref.property.qname} 
@@ -50,15 +48,15 @@ class EntityViewsMenu extends React.Component {
                     icon={schemata[ref.schema].icon} />
         ))}
         <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
-          disabled={similar.total === 0}
-          message={intl.formatMessage(messages.similar)}
-          href={'/entities/' + entity.id + '/similar'}
-          icon='fa-repeat' />
+                  disabled={similar.total === 0}
+                  message={intl.formatMessage(messages.similar)}
+                  href={'/entities/' + entity.id + '/similar'}
+                  icon='fa-repeat' />
         <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
-          disabled={tags.total === 0}
-          message={intl.formatMessage(messages.tags)}
-          href={'/entities/' + entity.id + '/tags'}
-          icon='fa-tags' />
+                  disabled={tags.total === 0}
+                  message={intl.formatMessage(messages.tags)}
+                  href={'/entities/' + entity.id + '/tags'}
+                  icon='fa-tags' />
       </div>
     );
   }
@@ -68,7 +66,7 @@ const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
   return {
     references: selectEntityReferences(state, entity.id),
-    metadata: selectMetadata(state),
+    schemata: selectSchemata(state),
     tags: selectEntityTags(state, entity.id),
     similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id))
   };
