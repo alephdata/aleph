@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 
-import { selectEntity } from 'src/selectors';
+import { selectEntity, selectEntityView } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 
@@ -11,9 +11,8 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 class EntityScreen extends Component {
   render() {
       const { entity, entityId, mode } = this.props;
-      console.log(entity);
       return (
-        <EntityScreenContext entityId={entityId}>
+        <EntityScreenContext entityId={entityId} activeMode={mode}>
           <EntityReferencesMode entity={entity} mode={mode} />
         </EntityScreenContext>
       );
@@ -27,7 +26,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     entityId,
     entity: selectEntity(state, entityId),
-    mode: hashQuery.mode
+    mode: selectEntityView(state, entityId, hashQuery.mode, false)
   };
 };
 

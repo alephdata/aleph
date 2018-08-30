@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectEntity } from 'src/selectors';
+import { selectEntity, selectEntityView } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
@@ -15,7 +15,7 @@ import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
 
 class PreviewEntity extends React.Component {
   render() {
-    const { entity, previewId, previewMode = 'view' } = this.props;
+    const { entity, previewId, previewMode } = this.props;
     let mode = null, maximised = false;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
@@ -25,7 +25,7 @@ class PreviewEntity extends React.Component {
       mode = <EntityInfoMode entity={entity} />;
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={entity} />;
-      maximised = true;
+      // maximised = true;
     } else if (previewMode === 'similar') {
       mode = <EntitySimilarMode entity={entity} />;
       maximised = true;
@@ -50,9 +50,10 @@ class PreviewEntity extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { previewId } = ownProps;
+  const { previewId, previewMode } = ownProps;
   return {
-    entity: selectEntity(state, previewId)
+    entity: selectEntity(state, previewId),
+    previewMode: selectEntityView(state, previewId, previewMode, true)
   };
 };
 

@@ -8,7 +8,7 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
 import { queryEntities } from 'src/actions/index';
-import { selectEntityReferences, selectEntitiesResult, selectSchemata } from "src/selectors";
+import { selectEntityReference, selectEntitiesResult, selectSchemata } from "src/selectors";
 import { SectionLoading, ErrorSection, Property } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 
@@ -129,15 +129,7 @@ class EntityReferencesMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, mode, location } = ownProps;
-  const references = selectEntityReferences(state, entity.id);
-  let reference = undefined;
-  if (references.total) {
-    for (let ref of references.results) {
-      if (reference === undefined || ref.property.qname === mode) {
-        reference = ref;
-      }
-    }
-  }
+  const reference = selectEntityReference(state, entity.id, mode);
   if (!reference) {
     return {};
   }
@@ -148,7 +140,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     reference, query,
     result: selectEntitiesResult(state, query),
-    schemata: selectSchemata(state)[reference.schema]
+    model: selectSchemata(state)[reference.schema]
   };
 };
 

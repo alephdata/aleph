@@ -111,6 +111,32 @@ export function selectEntityReferences(state, entityId) {
   return selectObject(state.entityReferences, entityId);
 }
 
+export function selectEntityReference(state, entityId, qname) {
+  const references = selectEntityReferences(state, entityId);
+  if (!references.total) {
+    return undefined;
+  }
+  for (let ref of references.results) {
+    if (ref.property.qname === qname) {
+      return ref;
+    }
+  }
+  return references.results[0];
+}
+
+export function selectEntityView(state, entityId, mode, isPreview) {
+  if (mode) {
+    return mode;
+  }
+  if (isPreview) {
+    return 'info';
+  }
+  const references = selectEntityReferences(state, entityId);
+  if (references.total) {
+    return references.results[0].property.qname;
+  }
+}
+
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state.collectionPermissions, collectionId);
 }
