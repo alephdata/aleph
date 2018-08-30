@@ -35,10 +35,9 @@ class DocumentScreenContext extends Component {
     }
 
     const { similarQuery, similarResult } = this.props;
-    // console.log(similarResult);
-    // if (similarResult.shouldLoad) {
-    //   this.props.queryEntities(similarQuery);
-    // }
+    if (similarResult.shouldLoad) {
+      this.props.queryEntities({query: similarQuery});
+    }
   }
 
   render() {
@@ -46,7 +45,7 @@ class DocumentScreenContext extends Component {
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
-    if (document === undefined || document.id === undefined) {
+    if (document.shouldLoad || document.isLoading) {
       return <LoadingScreen />;
     }
 
