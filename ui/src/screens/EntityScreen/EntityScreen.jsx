@@ -1,17 +1,20 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
 
 import { selectEntity } from 'src/selectors';
-import { EntityContent } from 'src/components/Entity/';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
+import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 
 
 class EntityScreen extends Component {
   render() {
-      const { entity, entityId } = this.props;
+      const { entity, entityId, mode } = this.props;
+      console.log(entity);
       return (
         <EntityScreenContext entityId={entityId}>
-          <EntityContent entity={entity} />
+          <EntityReferencesMode entity={entity} mode={mode} />
         </EntityScreenContext>
       );
   }
@@ -19,10 +22,17 @@ class EntityScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId } = ownProps.match.params;
-  return { entityId, entity: selectEntity(state, entityId) };
+  const { location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);  
+  return {
+    entityId,
+    entity: selectEntity(state, entityId),
+    mode: hashQuery.mode
+  };
 };
 
 EntityScreen = connect(mapStateToProps, {})(EntityScreen);
+EntityScreen = withRouter(EntityScreen);
 export default EntityScreen;
 
 

@@ -39,13 +39,9 @@ class CollectionViewsMenu extends React.Component {
     return false;
   }
 
-  hasXrefIndex() {
-    const { xrefIndex } = this.props;
-    return xrefIndex.total === undefined || xrefIndex.total > 0;
-  }
-
   render() {
     const { intl, isPreview, collection, activeMode } = this.props;
+    const { xrefIndex } = this.props;
     // TODO: add case home page / timeline....
     return (
       <div className='ViewsMenu'>
@@ -60,7 +56,7 @@ class CollectionViewsMenu extends React.Component {
                   href={`/collections/${collection.id}/documents`}
                   icon='fa-folder-open' />
         <ViewItem mode='xref' activeMode={activeMode} isPreview={isPreview}
-                  disabled={!this.hasXrefIndex()}
+                  disabled={xrefIndex.total === 0}
                   message={intl.formatMessage(messages.xref)}
                   href={`/collections/${collection.id}/xref`}
                   icon='fa-folder-open' />

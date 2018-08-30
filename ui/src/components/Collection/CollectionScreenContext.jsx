@@ -21,7 +21,11 @@ class CollectionScreenContext extends Component {
     }
 
     if (collection.shouldLoad || collection.isLoading) {
-      return <LoadingScreen />;
+      return (
+        <CollectionContextLoader collectionId={collectionId}>
+          <LoadingScreen />
+        </CollectionContextLoader>
+      );
     }
 
     return (

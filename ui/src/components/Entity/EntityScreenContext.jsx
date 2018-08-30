@@ -19,7 +19,11 @@ class EntityScreenContext extends Component {
       return <ErrorScreen error={entity.error} />;
     }
     if (entity.shouldLoad || entity.isLoading) {
-      return <LoadingScreen />;
+      return (
+        <EntityContextLoader entityId={entityId}>
+          <LoadingScreen />
+        </EntityContextLoader>
+      ); 
     }
     return (
       <EntityContextLoader entityId={entityId}>

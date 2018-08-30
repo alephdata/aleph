@@ -7,6 +7,7 @@ import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
+import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
@@ -24,11 +25,12 @@ class PreviewEntity extends React.Component {
       mode = <EntityInfoMode entity={entity} />;
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={entity} />;
+      maximised = true;
     } else if (previewMode === 'similar') {
       mode = <EntitySimilarMode entity={entity} />;
       maximised = true;
     } else {
-      mode = <EntityInfoMode entity={entity} />;
+      mode = <EntityReferencesMode entity={entity} mode={previewMode} />;
       maximised = true;
     }
     return (

@@ -11,6 +11,7 @@ import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import Preview from 'src/components/Preview/Preview';
 import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
 
+
 class PreviewCollection extends React.Component {
   render() {
     const { collection, previewId, previewMode = 'info' } = this.props;

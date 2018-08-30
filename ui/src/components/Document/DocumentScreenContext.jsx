@@ -19,7 +19,11 @@ class DocumentScreenContext extends Component {
       return <ErrorScreen error={document.error} />;
     }
     if (document.shouldLoad || document.isLoading) {
-      return <LoadingScreen />;
+      return (
+        <DocumentContextLoader documentId={documentId}>
+          <LoadingScreen />
+        </DocumentContextLoader>
+      ); 
     }
 
     return (
