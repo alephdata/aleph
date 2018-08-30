@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import React from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, defineMessages } from 'react-intl';
 
@@ -41,8 +41,7 @@ class CollectionViewsMenu extends React.Component {
 
   hasXrefIndex() {
     const { xrefIndex } = this.props;
-    // return xrefIndex.total === undefined || xrefIndex.total > 0;
-    return false;
+    return xrefIndex.total === undefined || xrefIndex.total > 0;
   }
 
   render() {
@@ -70,6 +69,7 @@ class CollectionViewsMenu extends React.Component {
   }
 }
 
+
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
   return {
@@ -77,7 +77,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
+CollectionViewsMenu = connect(mapStateToProps, {})(CollectionViewsMenu);
 CollectionViewsMenu = injectIntl(CollectionViewsMenu);
 CollectionViewsMenu = withRouter(CollectionViewsMenu);
 export default CollectionViewsMenu;

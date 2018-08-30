@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { fetchCollection } from 'src/actions';
-import { selectCollection } from 'src/selectors';
+import { fetchCollection, fetchCollectionXrefIndex } from 'src/actions';
+import { selectCollection, selectCollectionXrefIndex } from 'src/selectors';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
@@ -26,6 +26,13 @@ class PreviewCollection extends React.Component {
     const { collection, previewId } = this.props;
     if (collection.shouldLoad) {
       this.props.fetchCollection({ id: previewId });
+    }
+
+    // we're loading this here so it's available both to the xrefindex screen
+    // and to the view selection menu.
+    const { xrefIndex } = this.props;
+    if (xrefIndex.shouldLoad) {
+      this.props.fetchCollectionXrefIndex({id: previewId});
     }
   }
 
@@ -59,9 +66,12 @@ class PreviewCollection extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { collection: selectCollection(state, ownProps.previewId) };
+  return {
+    collection: selectCollection(state, ownProps.previewId),
+    xrefIndex: selectCollectionXrefIndex(state, ownProps.previewId)
+  };
 };
 
-PreviewCollection = connect(mapStateToProps, { fetchCollection })(PreviewCollection);
+PreviewCollection = connect(mapStateToProps, { fetchCollection, fetchCollectionXrefIndex })(PreviewCollection);
 PreviewCollection = withRouter(PreviewCollection);
 export default PreviewCollection;

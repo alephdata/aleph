@@ -4,27 +4,10 @@ import { connect } from 'react-redux';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 import getPath from 'src/util/getPath';
-import { fetchCollectionXrefIndex } from "src/actions";
 import { selectCollectionXrefIndex } from "src/selectors";
 
 
 class CollectionXrefIndexMode extends React.Component {
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { collection, xrefIndex } = this.props;
-    if (collection.id !== undefined && xrefIndex.results === undefined && !xrefIndex.isLoading) {
-      this.props.fetchCollectionXrefIndex(collection);
-    }
-  }
-
   render() {
     const { collection, xrefIndex } = this.props;
     if (xrefIndex.results === undefined) {
@@ -72,10 +55,11 @@ class CollectionXrefIndexMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
-  const xrefIndex = selectCollectionXrefIndex(state, collection.id);
-  return { xrefIndex };
+  return { 
+    xrefIndex: selectCollectionXrefIndex(state, collection.id)
+  };
 };
 
-CollectionXrefIndexMode = connect(mapStateToProps, { fetchCollectionXrefIndex })(CollectionXrefIndexMode);
+CollectionXrefIndexMode = connect(mapStateToProps, {})(CollectionXrefIndexMode);
 CollectionXrefIndexMode = withRouter(CollectionXrefIndexMode);
 export default CollectionXrefIndexMode  ;

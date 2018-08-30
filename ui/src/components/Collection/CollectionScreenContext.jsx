@@ -9,7 +9,8 @@ import CollectionViewsMenu from 'src/components/ViewsMenu/CollectionViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane } from 'src/components/common';
-import { fetchCollection } from 'src/actions';
+import { fetchCollection, fetchCollectionXrefIndex } from 'src/actions';
+import { selectCollection, selectCollectionXrefIndex } from "src/selectors";
 
 
 class CollectionScreenContext extends Component {
@@ -23,9 +24,16 @@ class CollectionScreenContext extends Component {
   }
 
   fetchIfNeeded() {
-    const { collectionId } = this.props;
+    const { collectionId, collection } = this.props;
     if (collection.shouldLoad) {
       this.props.fetchCollection({id: collectionId});
+    }
+
+    // we're loading this here so it's available both to the xrefindex screen
+    // and to the view selection menu.
+    const { xrefIndex } = this.props;
+    if (xrefIndex.shouldLoad) {
+      this.props.fetchCollectionXrefIndex({id: collectionId});
     }
   }
 
@@ -66,9 +74,10 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps;
   return {
     collection: selectCollection(state, collectionId),
+    xrefIndex: selectCollectionXrefIndex(state, collectionId)
   };
 };
 
 CollectionScreenContext = withRouter(CollectionScreenContext);
-CollectionScreenContext = connect(mapStateToProps, { fetchCollection })(CollectionScreenContext);
+CollectionScreenContext = connect(mapStateToProps, { fetchCollection, fetchCollectionXrefIndex })(CollectionScreenContext);
 export default (CollectionScreenContext);
