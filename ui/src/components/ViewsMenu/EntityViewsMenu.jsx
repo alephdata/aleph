@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { queryEntitySimilar } from 'src/queries';
 import { fetchEntityReferences } from "src/actions";
-import { selectEntityReferences, selectEntityTags, selectMetadata, selectEntitiesResult } from "src/selectors";
+import { selectEntityReferences, selectEntityTags, selectSchemata, selectEntitiesResult } from "src/selectors";
 import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
