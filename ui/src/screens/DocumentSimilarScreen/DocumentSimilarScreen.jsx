@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { selectEntity } from 'src/selectors';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
-import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
 

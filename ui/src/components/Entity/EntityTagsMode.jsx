@@ -36,7 +36,7 @@ class EntityTagsMode extends React.Component {
   }
 
   render() {
-    const {tags, entity} = this.props;
+    const { entity, tags } = this.props;
 
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (

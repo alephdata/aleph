@@ -3,8 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages } from 'react-intl';
 
-import Query from 'src/app/Query';
-import { selectEntityReferences, selectEntitiesResult } from 'src/selectors';
+import { selectEntityReferences } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
 import { SectionLoading, DualPane, ErrorSection } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
@@ -32,8 +31,7 @@ class EntityReferences extends React.Component {
   }
   
   render() {
-    const { entity, references, intl, activeTab, tags } = this.props;
-    const { similarResult, similarQuery } = this.props;
+    const { entity, references, intl, activeTab } = this.props;
 
     if (references.total === undefined) {
       return <SectionLoading />;
@@ -61,18 +59,15 @@ class EntityReferences extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.entity;
   const fragment = new Fragment(ownProps.history);
-  const references = selectEntityReferences(state, ownProps.entity.id);
+  const references = selectEntityReferences(state, id);
   const reference = (!references.isLoading && references.results !== undefined && references.results.length) ? references.results[0] : undefined;
   const defaultTab = reference ? 'references-' + reference.property.qname : 'default';
   const activeTab = fragment.get('mode') || defaultTab;
   
-  const similarPath = id ? `entities/${id}/similar` : undefined;
-  const similarQuery = Query.fromLocation(similarPath, {}, {}, 'similar').limit(75);
+  // const similarPath = id ? `entities/${id}/similar` : undefined;
+  // const similarQuery = Query.fromLocation(similarPath, {}, {}, 'similar').limit(75);
 
-  return { fragment, references, activeTab,
-    similarResult: selectEntitiesResult(state, similarQuery),
-    similarQuery: similarQuery,
-  };
+  return { fragment, references, activeTab };
 };
 
 EntityReferences = connect(mapStateToProps, {}, null, { pure: false })(EntityReferences);

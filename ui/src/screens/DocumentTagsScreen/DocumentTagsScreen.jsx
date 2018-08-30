@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
 
-import Query from 'src/app/Query';
 import { selectEntity } from 'src/selectors';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
 
 class DocumentTagsScreen extends Component {
   render() {
-    const { documentId, document, query } = this.props;
+    const { documentId, document } = this.props;
     return (
       <DocumentScreenContext documentId={documentId} activeMode='tags'>
         <EntityTagsMode entity={document} />

@@ -1,21 +1,13 @@
 import React, {Component} from 'react';
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
-import { Schema, Country, Language, Role, Date, FileSize, URL } from 'src/components/common';
+import { Country, Language, Role, Date, FileSize, URL } from 'src/components/common';
 
 class DocumentMetadata extends Component {
   render() {
     const {document} = this.props;
     return (
       <ul className='info-sheet'>
-        {/* <li>
-          <span className="key">
-            <FormattedMessage id="document.type" defaultMessage="Type"/>
-          </span>
-          <span className="value">
-            <Schema.Label schema={document.schema} icon={true}/>
-          </span>
-        </li> */}
         {document.file_name && (
           <li>
             <span className="key">

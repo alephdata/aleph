@@ -4,12 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
-import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
-import { Entity, Breadcrumbs, DualPane } from 'src/components/common';
-import Screen from 'src/components/Screen/Screen';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import DocumentViewer from 'src/components/DocumentViewer/DocumentViewer';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
@@ -36,7 +31,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-DocumentScreen = connect(mapStateToProps, { fetchDocument })(DocumentScreen);
+DocumentScreen = connect(mapStateToProps, {})(DocumentScreen);
 DocumentScreen = withRouter(DocumentScreen);
 DocumentScreen = injectIntl(DocumentScreen);
 export default DocumentScreen

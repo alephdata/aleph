@@ -3,14 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { Tab, Tabs } from "@blueprintjs/core";
 
-import { Property, Entity, DualPane, TabCount, Schema, TextLoading } from 'src/components/common';
-import { EntityInfoReferences } from 'src/components/Entity';
+import { Property, Entity, DualPane, Schema } from 'src/components/common';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
-import { fetchEntityReferences, fetchEntityTags } from 'src/actions/index';
-import { selectEntityTags, selectEntityReferences, selectMetadata } from 'src/selectors';
+import { selectMetadata } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
 
@@ -48,10 +45,10 @@ class EntityInfo extends React.Component {
   }
 
   render() {
-    const { references, entity, schema, tags, showToolbar } = this.props;
-    const tagsTotal = tags.total === undefined ? undefined: tags.total;
-    const referencesTotal = references.results === undefined ? undefined: references.results.length;
-    const connectionsTotal = referencesTotal === undefined || tagsTotal === undefined ? undefined : tagsTotal + referencesTotal;
+    const { entity, schema, showToolbar } = this.props;
+    // const tagsTotal = tags.total === undefined ? undefined: tags.total;
+    // const referencesTotal = references.results === undefined ? undefined: references.results.length;
+    // const connectionsTotal = referencesTotal === undefined || tagsTotal === undefined ? undefined : tagsTotal + referencesTotal;
     const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
 
     if (schema === undefined) {  // entity hasn't loaded.
@@ -86,35 +83,22 @@ class EntityInfo extends React.Component {
           </h1>
         </div>
         <div className="pane-content">
-          <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={this.state.activeTabId}>
-              <Tab id="overview" 
-                title={
-                  <React.Fragment>
-                    <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
-                  </React.Fragment>
-                }
-                panel={
-                  <React.Fragment>
-                    <ul className="info-sheet">
-                      { entityProperties.map((prop) => (
-                        <li key={prop.name}>
-                          <span className="key">
-                            <Property.Name model={prop} />
-                          </span>
-                          <span className="value">
-                            <Property.Values model={prop} values={entity.properties[prop.name]} />
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    <span className="source-header">
-                      <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
-                    </span>
-                    <CollectionOverview collection={entity.collection} hasHeader={true}/>
-                  </React.Fragment>
-                }
-              />
-          </Tabs>
+          <ul className="info-sheet">
+            { entityProperties.map((prop) => (
+              <li key={prop.name}>
+                <span className="key">
+                  <Property.Name model={prop} />
+                </span>
+                <span className="value">
+                  <Property.Values model={prop} values={entity.properties[prop.name]} />
+                </span>
+              </li>
+            ))}
+          </ul>
+          <span className="source-header">
+            <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
+          </span>
+          <CollectionOverview collection={entity.collection} hasHeader={true}/>   
         </div>
       </DualPane.InfoPane>
     );
@@ -124,11 +108,9 @@ class EntityInfo extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { entity } = ownProps;
   return {
-    references: selectEntityReferences(state, entity.id),
-    tags: selectEntityTags(state, entity.id),
     schema: selectMetadata(state).schemata[entity.schema]
   };
 };
 
-EntityInfo = connect(mapStateToProps, { fetchEntityReferences, fetchEntityTags }, null, { pure: false })(EntityInfo);
+EntityInfo = connect(mapStateToProps, {})(EntityInfo);
 export default EntityInfo;
