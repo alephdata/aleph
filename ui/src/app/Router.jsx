@@ -13,21 +13,22 @@ import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
 import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
-import CollectionXrefIndexScreen from 'src/screens/CollectionXrefIndexScreen/CollectionXrefIndexScreen';
-import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
-import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
-import EntitySimilarScreen from 'src/screens/EntitySimilarScreen/EntitySimilarScreen';
-import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
-import DocumentSimilarScreen from 'src/screens/DocumentSimilarScreen/DocumentSimilarScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
 import CollectionDocumentsScreen from 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen';
 import CollectionRedirectScreen from 'src/screens/CollectionRedirectScreen/CollectionRedirectScreen';
-import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
+import CollectionXrefIndexScreen from 'src/screens/CollectionXrefIndexScreen/CollectionXrefIndexScreen';
+import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
+import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
 import EntityTagsScreen from "src/screens/EntityTagsScreen/EntityTagsScreen";
-import DocumentConnectionsScreen from "src/screens/DocumentConnectionsScreen/DocumentConnectionsScreen";
+import EntitySimilarScreen from 'src/screens/EntitySimilarScreen/EntitySimilarScreen';
+import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
+import DocumentTagsScreen from 'src/screens/DocumentTagsScreen/DocumentTagsScreen';
+import DocumentSimilarScreen from 'src/screens/DocumentSimilarScreen/DocumentSimilarScreen';
+import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
 
 import './Router.css';
+
 
 class Router extends Component {
 
@@ -56,11 +57,11 @@ class Router extends Component {
         <Route path="/logout" exact component={LogoutScreen}/>
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
-        <Route path="/entities/:entityId/similar" exact component={EntitySimilarScreen}/>
         <Route path="/entities/:entityId/tags" exact component={EntityTagsScreen}/>
+        <Route path="/entities/:entityId/similar" exact component={EntitySimilarScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
+        <Route path="/documents/:documentId/tags" exact component={DocumentTagsScreen}/>
         <Route path="/documents/:documentId/similar" exact component={DocumentSimilarScreen}/>
-        <Route path="/documents/:documentId/connections" exact component={DocumentConnectionsScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/sources" exact component={SourcesIndexScreen}/>

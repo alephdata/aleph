@@ -11,8 +11,6 @@ import { EntityReferencesTable } from 'src/components/Entity';
 import EntityViewsMenu from "../ViewsMenu/EntityViewsMenu";
 
 import './EntityContent.css';
-import EntityInfoTags from "./EntityInfoTags";
-import { selectEntityTags } from "../../selectors";
 
 const messages = defineMessages({
   no_relationships: {
@@ -55,8 +53,6 @@ class EntityReferences extends React.Component {
             activeTab={activeTab}
           />
         ))}
-        {activeTab === 'tags' && <EntityInfoTags entity={entity}
-                                                        tags={tags}/>}
       </DualPane.ContentPane>
     );
   }
@@ -76,7 +72,6 @@ const mapStateToProps = (state, ownProps) => {
   return { fragment, references, activeTab,
     similarResult: selectEntitiesResult(state, similarQuery),
     similarQuery: similarQuery,
-    tags: selectEntityTags(state, id),
   };
 };
 

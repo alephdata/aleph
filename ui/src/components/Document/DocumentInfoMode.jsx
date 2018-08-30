@@ -12,7 +12,7 @@ class DocumentInfoMode extends React.Component {
     const { document } = this.props;
 
     return (
-      <DualPane.InfoPane className="DocumentInfo with-heading">
+      <React.Fragment>
         <div className="pane-heading">
           <span>
             <Schema.Label schema={document.schema} icon={true}/>
@@ -28,7 +28,7 @@ class DocumentInfoMode extends React.Component {
           </span>
           <CollectionOverview collection={document.collection} hasHeader={true}/>
         </div>
-      </DualPane.InfoPane>
+      </React.Fragment>
     );
   }
 }

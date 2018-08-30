@@ -7,6 +7,7 @@ import { selectEntity } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
+import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
@@ -40,8 +41,12 @@ class PreviewDocument extends React.Component {
       return <SectionLoading/>;
     } else if (previewMode === 'info') {
       mode = <DocumentInfoMode document={document} />;
+    } else if (previewMode === 'tags') {
+      mode = <EntityTagsMode entity={document} />;
+      maximised = true;
     } else {
-      mode = <DocumentViewer document={document} showToolbar={true} previewMode={true} />
+      mode = <DocumentViewer document={document} showToolbar={true} previewMode={true} />;
+      maximised = true;
     }
     return (
       <Preview maximised={maximised}>

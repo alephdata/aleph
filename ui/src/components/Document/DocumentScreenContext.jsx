@@ -9,8 +9,8 @@ import DocumentViewsMenu from 'src/components/ViewsMenu/DocumentViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane } from 'src/components/common';
-import { fetchDocument } from 'src/actions';
-import { selectEntity } from "src/selectors";
+import { fetchDocument, fetchEntityTags } from 'src/actions';
+import { selectEntity, selectEntityTags } from "src/selectors";
 
 
 class DocumentScreenContext extends Component {
@@ -36,9 +36,12 @@ class DocumentScreenContext extends Component {
   // }
 
   fetchIfNeeded() {
-    const { documentId, document } = this.props;
+    const { documentId, document, tags } = this.props;
     if (document.shouldLoad) {
       this.props.fetchDocument({id: documentId});
+    }
+    if (document.id !== undefined && tags.shouldLoad) {
+      this.props.fetchEntityTags(document);
     }
   }
 
@@ -76,10 +79,11 @@ class DocumentScreenContext extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps;
   return {
-    document: selectEntity(state, documentId)
+    document: selectEntity(state, documentId),
+    tags: selectEntityTags(state, documentId)
   };
 };
 
 DocumentScreenContext = withRouter(DocumentScreenContext);
-DocumentScreenContext = connect(mapStateToProps, { fetchDocument })(DocumentScreenContext);
+DocumentScreenContext = connect(mapStateToProps, { fetchDocument, fetchEntityTags })(DocumentScreenContext);
 export default (DocumentScreenContext);

@@ -20,8 +20,8 @@ const messages = defineMessages({
     id: 'document.mode.text.tooltip',
     defaultMessage: 'Show extracted text',
   },
-  connections: {
-    id: 'document.connections',
+  tags: {
+    id: 'document.tags',
     defaultMessage: 'Show connections'
   },
   similar: {
@@ -33,7 +33,7 @@ const messages = defineMessages({
 class DocumentViewsMenu extends React.Component {
 
   render() {
-    const {document, intl, mode, tags, isPreview, activeMode} = this.props;
+    const { intl, document, tags, isPreview, activeMode } = this.props;
     const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
     const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
@@ -58,16 +58,15 @@ class DocumentViewsMenu extends React.Component {
             href={`/documents/${document.id}?mode=text`}
             icon='pt-icon-align-justify' />
         )}
-        {tags.total !== 0 && (
-          <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.connections)}
-            href={`/documents/${document.id}/tags`}
-            icon='pt-icon-tag' />
-        )}
+        <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
+                  disabled={tags.total === 0}
+                  message={intl.formatMessage(messages.tags)}
+                  href={`/documents/${document.id}/tags`}
+                  icon='pt-icon-tag' />
         <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
-          message={intl.formatMessage(messages.similar)}
-          href={`/documents/${document.id}/similar`}
-          icon='pt-icon-tag' />
+                  message={intl.formatMessage(messages.similar)}
+                  href={`/documents/${document.id}/similar`}
+                  icon='pt-icon-tag' />
       </div>
     );
   }

@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import { Property, Entity, DualPane, TabCount, Schema, TextLoading } from 'src/components/common';
-import { EntityInfoTags, EntityInfoReferences } from 'src/components/Entity';
+import { EntityInfoReferences } from 'src/components/Entity';
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import { CollectionOverview } from 'src/components/Collection';
 import { fetchEntityReferences, fetchEntityTags } from 'src/actions/index';

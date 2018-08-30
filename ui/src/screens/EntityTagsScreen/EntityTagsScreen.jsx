@@ -9,9 +9,10 @@ import { Breadcrumbs, DualPane, Entity } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import EntityInfoTags from "src/components/Entity/EntityInfoTags";
+import EntityTagsMode from "src/components/Entity/EntityTagsMode";
 import { EntityInfo } from 'src/components/Entity/';
 import { EntityViewsMenu } from "src/components/ViewsMenu";
+
 
 class EntityTagsScreen extends Component {
   componentDidMount() {
@@ -51,7 +52,7 @@ class EntityTagsScreen extends Component {
         <DualPane>
           <DualPane.ContentPane className='view-menu-flex-direction'>
             <EntityViewsMenu isActive='tags' entity={entity} isPreview={false}/>
-            <EntityInfoTags entity={entity} query={query} />
+            <EntityTagsMode entity={entity} query={query} />
           </DualPane.ContentPane>
           <EntityInfo entity={entity} />
         </DualPane>

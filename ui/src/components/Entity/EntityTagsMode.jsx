@@ -7,9 +7,9 @@ import { Tag } from 'src/components/common';
 import { fetchEntityTags } from "src/actions";
 import { selectEntityTags } from "src/selectors";
 
-import './EntityInfoTags.css';
+import './EntityTagsMode.css';
 
-class EntityInfoTags extends React.Component {
+class EntityTagsMode extends React.Component {
 
   componentDidMount() {
     this.fetchIfNeeded();
@@ -21,7 +21,7 @@ class EntityInfoTags extends React.Component {
 
   fetchIfNeeded() {
     const { entity, tags } = this.props;
-    if (entity.id !== undefined && tags.total === undefined && !tags.isLoading) {
+    if (entity.id !== undefined && tags.shouldLoad) {
       this.props.fetchEntityTags(entity);
     }
   }
@@ -97,5 +97,5 @@ const mapStateToProps = (state, ownProps) => ({
   tags: selectEntityTags(state, ownProps.entity.id)
 });
 
-EntityInfoTags =  connect(mapStateToProps, { fetchEntityTags })(EntityInfoTags);
-export default EntityInfoTags;
+EntityTagsMode =  connect(mapStateToProps, { fetchEntityTags })(EntityTagsMode);
+export default EntityTagsMode;
