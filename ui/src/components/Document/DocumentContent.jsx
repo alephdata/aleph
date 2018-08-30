@@ -6,12 +6,13 @@ import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 
 import './DocumentContent.css';
 
+
 class DocumentContent extends React.Component {
   render() {
     const { document } = this.props;
     return (
       <DualPane.ContentPane className="view-menu-flex-direction">
-        <DocumentViewsMenu document={document} showToolbar={true} isPreview={false}/>
+        <DocumentViewsMenu document={document} isPreview={false}/>
         <DocumentViewer document={document} showToolbar={true} />
       </DualPane.ContentPane>
     );

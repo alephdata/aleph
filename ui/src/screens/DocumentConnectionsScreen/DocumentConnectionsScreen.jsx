@@ -8,7 +8,7 @@ import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import EntityInfoTags from "src/components/Entity/EntityInfoTags";
-import { DocumentInfo } from 'src/components/Document/';
+import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 import { fetchDocument } from "src/actions";
 
@@ -54,7 +54,7 @@ class DocumentConnectionsScreen extends Component {
             <DocumentViewsMenu document={doc} isPreview={false} isActive='connections'/>
             <EntityInfoTags entity={doc} />
           </DualPane.ContentPane>
-          <DocumentInfo document={doc} />
+          <DocumentInfoMode document={doc} />
         </DualPane>
       </Screen>
     );

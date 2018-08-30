@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import { Schema, Country, Language, Role, Date, FileSize, Entity } from 'src/components/common';
+import { Schema, Country, Language, Role, Date, FileSize, URL } from 'src/components/common';
 
 class DocumentMetadata extends Component {
   render() {
@@ -34,13 +34,13 @@ class DocumentMetadata extends Component {
             </span>
           </li>
         )}
-        {document.parent && (
+        {document.source_url && (
           <li>
             <span className="key">
-              <FormattedMessage id="document.parent" defaultMessage="Folder"/>
+              <FormattedMessage id="document.source_url" defaultMessage="Source URL"/>
             </span>
             <span className="value">
-              <Entity.Link icon entity={document.parent} />
+              <URL value={document.source_url} />
             </span>
           </li>
         )}

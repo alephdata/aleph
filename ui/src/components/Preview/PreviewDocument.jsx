@@ -5,9 +5,10 @@ import { withRouter } from 'react-router';
 import { fetchDocument } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
-import { DocumentInfo } from 'src/components/Document';
+import DocumentToolbar from 'src/components/Document/DocumentToolbar';
+import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import { DocumentViewer } from 'src/components/DocumentViewer';
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
 
 
@@ -31,25 +32,29 @@ class PreviewDocument extends React.Component {
   }
 
   render() {
-    const { document, parsedHash } = this.props;
+    const { document, previewMode = 'view' } = this.props;
+    let mode = null, maximised = false;
     if (document.isError) {
       return <ErrorSection error={document.error} />
-    }
-    if (document.id === undefined) {
+    } else if (document.id === undefined) {
       return <SectionLoading/>;
+    } else if (previewMode === 'info') {
+      mode = <DocumentInfoMode document={document} />;
+    } else {
+      mode = <DocumentViewer document={document} showToolbar={true} previewMode={true} />
     }
-    if (parsedHash['mode'] === 'info') {
-      return <Preview maximised={false}>
-        <DocumentViewsMenu document={document} isPreview={true}/>
-        <DocumentInfo document={document} showToolbar={true} />
-      </Preview>;
-    }
-    return <Preview maximised={true}>
-      <DocumentViewsMenu document={document} isPreview={true}/>
-      <DocumentViewer document={document}
-                           showToolbar={true}
-                           previewMode={true} />
-      </Preview>;
+    return (
+      <Preview maximised={maximised}>
+        <DocumentViewsMenu document={document}
+                           activeMode={previewMode}
+                           isPreview={true} />
+        <DualPane.InfoPane className="with-heading">
+          <DocumentToolbar document={document}
+                             isPreview={true} />
+          {mode}
+        </DualPane.InfoPane>
+      </Preview>
+    );
   }
 }
 

@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router";
 
 import Screen from 'src/components/Screen/Screen';
-import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
-import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
-import DocumentInfo from 'src/components/Document/DocumentInfo';
+import DocumentToolbar from 'src/components/Document/DocumentToolbar';
+import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewsMenu from 'src/components/ViewsMenu/DocumentViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -45,11 +44,9 @@ class DocumentScreenContext extends Component {
 
   render() {
     const { document, activeMode } = this.props;
-
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
-
     if (document === undefined || document.id === undefined) {
       return <LoadingScreen />;
     }
@@ -66,7 +63,8 @@ class DocumentScreenContext extends Component {
             </div>
           </DualPane.ContentPane>
           <DualPane.InfoPane className="with-heading">
-            <DocumentInfo document={document} isPreview={false} />
+            <DocumentToolbar document={document} isPreview={false} />
+            <DocumentInfoMode document={document} isPreview={false} />
           </DualPane.InfoPane>
         </DualPane>
       </Screen>
