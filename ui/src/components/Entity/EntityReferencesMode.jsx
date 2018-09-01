@@ -56,10 +56,12 @@ class EntityReferencesMode extends React.Component {
       if(fragment.state['preview:id'] === entity.id && fragment.state['preview:type'] === 'entity') {
         fragment.update({
           'preview:id': undefined,
-          'preview:type': undefined
+          'preview:type': undefined,
+          'preview:mode': undefined,
         });
       } else {
         fragment.update({
+          'preview:mode': 'info',
           'preview:type': 'entity',
           'preview:id': entity.id
         });

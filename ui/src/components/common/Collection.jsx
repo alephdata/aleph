@@ -60,7 +60,8 @@ class CollectionLink extends Component {
       const parsedHash = queryString.parse(location.hash);
       if (parsedHash['preview:id'] === collection.id && parsedHash['preview:type'] === previewType) {
         parsedHash['preview:id'] = undefined;
-        parsedHash['preview:type'] = undefined;  
+        parsedHash['preview:type'] = undefined;
+        parsedHash['preview:mode'] = undefined;
       } else {
         parsedHash['preview:id'] = collection.id;
         parsedHash['preview:type'] = previewType;

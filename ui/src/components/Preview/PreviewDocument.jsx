@@ -16,7 +16,16 @@ import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
 
 class PreviewDocument extends React.Component {
   render() {
-    const { document, previewId, previewMode = 'view' } = this.props;
+    const { previewId } = this.props;
+    return (
+      <DocumentContextLoader documentId={previewId}>
+        {this.renderContext()}
+      </DocumentContextLoader>
+    );
+  }
+
+  renderContext() {
+    const { document, previewMode = 'view' } = this.props;
     let mode = null, maximised = false;
     if (document.isError) {
       mode = <ErrorSection error={document.error} />
@@ -35,21 +44,20 @@ class PreviewDocument extends React.Component {
       maximised = true;
     }
     return (
-      <DocumentContextLoader documentId={previewId}>
-        <Preview maximised={maximised}>
-          <DocumentViewsMenu document={document}
-                            activeMode={previewMode}
+      <Preview maximised={maximised}>
+        <DocumentViewsMenu document={document}
+                          activeMode={previewMode}
+                          isPreview={true} />
+        <DualPane.InfoPane className="with-heading">
+          <DocumentToolbar document={document}
                             isPreview={true} />
-          <DualPane.InfoPane className="with-heading">
-            <DocumentToolbar document={document}
-                              isPreview={true} />
-            {mode}
-          </DualPane.InfoPane>
-        </Preview>
-      </DocumentContextLoader>
+          {mode}
+        </DualPane.InfoPane>
+      </Preview>
     );
   }
 }
+
 
 const mapStateToProps = (state, ownProps) => {
   const { previewId } = ownProps;

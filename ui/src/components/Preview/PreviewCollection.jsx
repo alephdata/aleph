@@ -14,7 +14,16 @@ import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
 
 class PreviewCollection extends React.Component {
   render() {
-    const { collection, previewId, previewMode = 'info' } = this.props;
+    const { previewId } = this.props;
+    return (
+      <CollectionContextLoader collectionId={previewId}>
+        {this.renderContext()}
+      </CollectionContextLoader>
+    );
+  }
+
+  renderContext() {
+    const { collection, previewMode = 'info' } = this.props;
     let mode = null, maximised = false;
     if (collection.isError) {
       mode = <ErrorSection error={collection.error} />
@@ -30,21 +39,20 @@ class PreviewCollection extends React.Component {
       mode = <CollectionInfoMode collection={collection} />;
     }
     return (
-      <CollectionContextLoader collectionId={previewId}>
-        <Preview maximised={maximised}>
-          <CollectionViewsMenu collection={collection}
-                              activeMode={previewMode}
-                              isPreview={true} />
-          <DualPane.InfoPane className="with-heading">
-            <CollectionToolbar collection={collection}
-                              isPreview={true} />
-            {mode}
-          </DualPane.InfoPane>
-        </Preview>
-      </CollectionContextLoader>
+      <Preview maximised={maximised}>
+        <CollectionViewsMenu collection={collection}
+                            activeMode={previewMode}
+                            isPreview={true} />
+        <DualPane.InfoPane className="with-heading">
+          <CollectionToolbar collection={collection}
+                            isPreview={true} />
+          {mode}
+        </DualPane.InfoPane>
+      </Preview>
     );
   }
 }
+
 
 const mapStateToProps = (state, ownProps) => {
   return {
