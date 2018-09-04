@@ -7,7 +7,6 @@ import { selectEntityReferences } from 'src/selectors';
 import Fragment from 'src/app/Fragment';
 import { SectionLoading, DualPane, ErrorSection } from 'src/components/common';
 import { EntityReferencesTable } from 'src/components/Entity';
-import EntityViewsMenu from "../ViewsMenu/EntityViewsMenu";
 
 import './EntityContent.css';
 
@@ -39,7 +38,6 @@ class EntityReferences extends React.Component {
 
     return (
       <DualPane.ContentPane className='view-menu-flex-direction'>
-        <EntityViewsMenu entity={entity} isPreview={false}/>
         { references.total === 0 && (
           <ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />
         )}
