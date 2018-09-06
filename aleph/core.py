@@ -17,6 +17,7 @@ from followthemoney import set_model_locale
 from raven.contrib.flask import Sentry
 from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
+from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
 import storagelayer
 
@@ -138,7 +139,20 @@ def get_archive():
     return settings._aleph_archive
 
 
+def get_redis():
+    if hasattr(settings, '_redis'):
+        return settings._redis
+    if not hasattr(settings, '_redis_pool'):
+        settings._redis_pool = ConnectionPool.from_url(
+            settings.REDIS_URL,
+            decode_responses=True
+        )
+    return Redis(connection_pool=settings._redis_pool,
+                 decode_responses=True)
+
+
 es = LocalProxy(get_es)
+kv = LocalProxy(get_redis)
 archive = LocalProxy(get_archive)
 
 

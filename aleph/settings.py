@@ -197,3 +197,6 @@ QUEUE_ROUTING_KEY = 'worker.process'
 
 BROKER_URI = 'amqp://guest:guest@localhost:5672//'
 BROKER_URI = env('BROKER_URI', BROKER_URI)
+
+REDIS_URL = env('REDIS_URL', 'redis://redis:6379/0')
+REDIS_BATCH_SIZE = int(env('REDIS_BATCH_SIZE', 10000))
