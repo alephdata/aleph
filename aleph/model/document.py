@@ -55,7 +55,9 @@ class Document(db.Model, DatedModel, Metadata):
         'modifiedAt': 'modified_at',
         'publishedAt': 'published_at',
         'retrievedAt': 'retrieved_at',
-        'parent': 'parent_id'
+        'parent': 'parent_id',
+        'messageId': 'message_id',
+        'inReplyTo': 'in_reply_to',
     }
 
     id = db.Column(db.BigInteger, primary_key=True)
@@ -127,7 +129,7 @@ class Document(db.Model, DatedModel, Metadata):
         props = ('title', 'summary', 'author', 'crawler', 'source_url',
                  'file_name', 'mime_type', 'headers', 'date', 'authored_at',
                  'modified_at', 'published_at', 'retrieved_at', 'languages',
-                 'countries', 'keywords')
+                 'countries', 'keywords', 'message_id', 'in_reply_to')
         for prop in props:
             value = data.get(prop, self.meta.get(prop))
             setattr(self, prop, value)
@@ -332,6 +334,8 @@ class Document(db.Model, DatedModel, Metadata):
         properties = {}
         for prop, field in self.SCHEMA_MAPPING.items():
             prop = self.model.get(prop)
+            if prop is None:
+                continue
             values = getattr(self, field)
             values = prop.type.normalize_set(values,
                                              cleaned=True,

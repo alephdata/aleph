@@ -37,7 +37,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         if self.model is None:
             return names
         for name, prop in self.model.properties.items():
-            if prop.type_name not in ['name']:
+            if prop.type not in ['name']:
                 continue
             names.update(ensure_list(self.data.get(name)))
         return names

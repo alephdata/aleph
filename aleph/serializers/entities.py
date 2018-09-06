@@ -144,7 +144,7 @@ class CombinedSchema(ShallowCombinedSchema):
             related = {r.get('id'): r for r in related}
             properties = obj.get('properties')
             for name, prop in schema.properties.items():
-                if name not in properties or prop.type_name != 'entity':
+                if name not in properties or prop.type != 'entity':
                     continue
                 values = ensure_list(properties.get(name))
                 values = [related.get(v) for v in values if v in related]
