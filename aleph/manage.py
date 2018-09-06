@@ -25,7 +25,6 @@ from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load, update_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.permissions import update_permission
-from aleph.logic.graph import load_into_redis
 
 log = logging.getLogger('aleph')
 flask_script_commands.text_type = str
@@ -185,20 +184,16 @@ def publish(foreign_id):
 
 
 @manager.command
-def graphload(foreign_id):
-    """Load entities from a collection into Redis"""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
-    load_into_redis(collection.id)
-
-
-@manager.command
-def test(entity_id):
-    from aleph.logic.graph import traversal
-    for i in range(100):
-        for link in traversal.traverse_entity(entity_id):
-            print((link.subject, link.prop.qname, link.value))
+def graph(entity_id):
+    """Generate a graph around the given entity."""
+    from aleph.logic.graph import export_node
+    # for i in range(1000):
+    graph = export_node(entity_id, steam=10)
+    # print(len(graph))
+    print(str(graph, 'utf-8'))
+    # from aleph.logic.graph import traversal
+    # for (steam, link) in traversal.traverse_entity(entity_id, steam=5):
+    #     print((link.subject, link.prop.qname, link.value, steam))
 
 
 @manager.command

@@ -1,8 +1,11 @@
+from followthemoney import model
+from followthemoney.link import Link
+
 from aleph.core import kv
-from aleph.logic.graph.link import Link
 
 
-def store_links(key, links, expire=None):
+def store_links(key, links, expire=84600):
+    # print("STORE", key)
     pipe = kv.pipeline()
     count = 0
     for link in links:
@@ -10,6 +13,8 @@ def store_links(key, links, expire=None):
         # hash, which is memory-efficient but does not account for
         # multi-valued properties
         pipe.sadd(link.ref, link.pack())
+        inverted = link.invert()
+        pipe.sadd(inverted.ref, inverted.pack())
         count += 1
         yield link
     pipe.set(key, count, ex=expire)
@@ -17,13 +22,15 @@ def store_links(key, links, expire=None):
 
 
 def load_links(ref):
-    for packed in kv.get(ref):
-        link = Link.unpack(ref, packed)
+    # print("LOAD", ref)
+    for packed in kv.sscan_iter(ref):
+        link = Link.unpack(model, ref, packed)
+        if link is None:
+            continue
         if link.inverted:
             link = link.invert()
         yield link
 
 
 def has_links(key):
-    return False
-    return kv.get(kv) is not None
+    return kv.get(key) is not None

@@ -17,15 +17,15 @@ log = logging.getLogger(__name__)
 
 
 def _expand_group(type_, value):
-    if type_.group is None:
+    if type_.group is None or value is None:
         return
-    ref = type_.ref(value)
     query = {
         'query': {'term': {type_.group: value}},
         '_source': {'includes': ['schema', 'properties']}
     }
     for res in scan(es, index=entities_index(), query=query):
         entity_id = res.get('_id')
+        entity_ref = registry.entity.ref(entity_id)
         source = res.get('_source')
         properties = source.get('properties')
         schema = model.get(source.get('schema'))
@@ -35,7 +35,9 @@ def _expand_group(type_, value):
             values = properties.get(prop.name)
             values = type_.normalize_set(values, cleaned=True)
             if value in values:
-                yield Link(ref, prop, entity_id, inverted=True)
+                link = Link(entity_ref, prop, value)
+                yield link
+                yield link.invert()
 
 
 def expand_group(type_, value):
@@ -57,8 +59,7 @@ def _expand_entity(entity):
         return
     if 'properties' not in entity:
         entity.update(Document.doc_data_to_schema(entity))
-    for link in model.entity_links(entity):
-        yield link
+    yield from model.entity_links(entity)
 
 
 def expand_entity(entity):
@@ -83,24 +84,21 @@ def traverse(type_, value, steam=2, path=None):
 
     next_hops = set()
     if type_ == registry.entity:
-        for link in expand_entity(value):
+        for link in _expand_entity(value):
             if link.prop.type.prefix:
                 next_hops.add((link.prop.type, link.value, link.weight))
-            yield link
+            yield (steam, link)
 
     for link in expand_group(type_, value):
         link = link.invert()
         next_hops.add((registry.entity, link.subject, link.weight))
-        yield link
+        yield (steam, link)
 
     for (type_, value, weight) in next_hops:
         next_steam = steam * type_.specificity(value) * weight
-        # print(type_, value, steam, next_steam)
         if next_steam > 0:
-            yield from traverse(type_, value,
-                                steam=next_steam,
-                                path=path)
+            yield from traverse(type_, value, steam=next_steam, path=path)
 
 
-def traverse_entity(entity, steam=1):
+def traverse_entity(entity, steam=2):
     return traverse(registry.entity, entity, steam=steam)

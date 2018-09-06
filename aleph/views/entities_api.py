@@ -10,13 +10,10 @@ from aleph.core import db, url_for
 from aleph.model import Entity, Audit
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
-from aleph.logic.graph import export_node
 from aleph.search import EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
-from aleph.logic.entities import update_entity, delete_entity
-from aleph.logic.collections import update_collection
 from aleph.logic.audit import record_audit
 from aleph.index.util import refresh_index
 from aleph.index.core import entities_index
