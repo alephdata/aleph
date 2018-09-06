@@ -27,7 +27,8 @@ export function objectLoadStart(state, id) {
 }
 
 export function resultLoadStart(state, query) {
-  return objectLoadStart(state, query.toKey());
+  const key = query ? query.toKey() : undefined;
+  return objectLoadStart(state, key);
 }
 
 export function objectLoadError(state, id, error) {
@@ -41,7 +42,8 @@ export function objectLoadError(state, id, error) {
 }
 
 export function resultLoadError(state, query, error) {
-  return objectLoadError(state, query.toKey(), error);
+  const key = query ? query.toKey() : undefined;
+  return objectLoadError(state, key, error);
 }
 
 export function objectLoadComplete(state, id, data) {

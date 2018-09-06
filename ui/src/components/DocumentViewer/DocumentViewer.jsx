@@ -6,9 +6,11 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { ErrorSection } from 'src/components/common';
-import { Toolbar, CloseButton, ParentButton, PagingButtons, DocumentSearch, ModeButtons } from 'src/components/Toolbar';
+import { Toolbar, CloseButton, ParentButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import { TableViewer, TextViewer, HtmlViewer, PdfViewer, ImageViewer, FolderViewer, EmailViewer } from './index';
+
+import './DocumentViewer.css';
 
 const messages = defineMessages({
   no_viewer: {
@@ -78,11 +80,10 @@ class DocumentViewer extends React.Component {
       return null;
     }
     
-    return <React.Fragment>
+    return <div className='DocumentViewer'>
       {showToolbar && (
         <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
           <ParentButton isPreview={previewMode} document={doc} />
-          <ModeButtons isPreview={previewMode} document={doc} />
           {previewMode === true && (
             <Link to={getPath(doc.links.ui)} className="pt-button button-link">
               <span className={`pt-icon-share`}/>
@@ -101,7 +102,7 @@ class DocumentViewer extends React.Component {
         </Toolbar>
       )}
       {this.renderContent()}
-    </React.Fragment>
+    </div>
   }
 }
 

@@ -1,44 +1,50 @@
 import _ from 'lodash';
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Waypoint from 'react-waypoint';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
 import Fragment from 'src/app/Fragment';
 import { queryEntities } from 'src/actions/index';
-import { selectEntitiesResult, selectMetadata } from 'src/selectors';
-import { SectionLoading, Property } from 'src/components/common';
+import { selectEntityReference, selectEntitiesResult, selectSchemata } from "src/selectors";
+import { SectionLoading, ErrorSection, Property } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 
-import './EntityReferencesTable.css';
+const messages = defineMessages({
+  no_relationships: {
+    id: 'entity.references.no_relationships',
+    defaultMessage: 'This entity does not have any relationships.',
+  }
+});
 
-class EntityReferencesTable extends Component {
+
+class EntityReferencesMode extends React.Component {
   constructor(props) {
     super(props);
-    this.fetchData = this.fetchData.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchIfNeeded();
   }
 
   componentDidUpdate(prevProps) {
-    this.fetchData();
+    this.fetchIfNeeded();
   }
 
-  fetchData() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
+  fetchIfNeeded() {
+    const { reference, query, result } = this.props;
+    if (reference && result.shouldLoad) {
       this.props.queryEntities({ query });
     }
   }
 
   getMoreResults() {
-    const { query, result, queryEntities } = this.props;
+    const { query, result } = this.props;
     if (result && !result.isLoading && result.next) {
-      queryEntities({ query, next: result.next });
+      this.props.queryEntities({ query, next: result.next });
     }
   }
 
@@ -50,10 +56,12 @@ class EntityReferencesTable extends Component {
       if(fragment.state['preview:id'] === entity.id && fragment.state['preview:type'] === 'entity') {
         fragment.update({
           'preview:id': undefined,
-          'preview:type': undefined
+          'preview:type': undefined,
+          'preview:mode': undefined,
         });
       } else {
         fragment.update({
+          'preview:mode': 'info',
           'preview:type': 'entity',
           'preview:id': entity.id
         });
@@ -62,7 +70,11 @@ class EntityReferencesTable extends Component {
   }
 
   render() {
-    const { model, result, property } = this.props;
+    const { intl, reference, result, model } = this.props;
+    if (!reference) {
+      return <ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />;
+    }
+    const { property } = reference;
     const results = ensureArray(result.results);
     const columns = _.map(model.featured, (name) => {
       return model.properties[name];
@@ -71,10 +83,10 @@ class EntityReferencesTable extends Component {
     });
 
     return (
-      <section className="EntityReferencesTable">
-        <table className="data-table references-data-table">
+      <section key={property.qname} className="EntityReferencesTable">
+        <table key={property.qname} className="data-table references-data-table">
           <thead>
-            <tr>
+            <tr key={property.qname}>
               {columns.map(prop => (
                 <th key={prop.name} className={prop.type}>
                   <Property.Name model={prop} />
@@ -93,7 +105,9 @@ class EntityReferencesTable extends Component {
                 ))}
                 <td key="details" className="narrow">
                   <a onClick={this.onShowDetails(entity)}>
-                    <span>Details</span>
+                    <span>
+                      <FormattedMessage id="references.details" defaultMessage="Details" />
+                    </span>
                   </a>
                 </td>
               </tr>
@@ -116,19 +130,23 @@ class EntityReferencesTable extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entity, property } = ownProps;
-  const context = {
-    [`filter:properties.${property.name}`]: entity.id
-  };
-  const query = Query.fromLocation('search', {}, context, property.name);
-
-  return {
-    query: query,
-    result: selectEntitiesResult(state, query),
-    model: selectMetadata(state).schemata[ownProps.schema]
+  const { entity, mode, location } = ownProps;
+  const reference = selectEntityReference(state, entity.id, mode);
+  if (!reference) {
+    return {};
   }
+  const context = {
+    [`filter:properties.${reference.property.name}`]: entity.id
+  };
+  const query = Query.fromLocation('search', location, context, reference.property.name);
+  return {
+    reference, query,
+    result: selectEntitiesResult(state, query),
+    model: selectSchemata(state)[reference.schema]
+  };
 };
 
-EntityReferencesTable = connect(mapStateToProps, { queryEntities })(EntityReferencesTable);
-EntityReferencesTable = withRouter(EntityReferencesTable);
-export default EntityReferencesTable;
+EntityReferencesMode = connect(mapStateToProps, { queryEntities })(EntityReferencesMode);
+EntityReferencesMode = withRouter(EntityReferencesMode);
+EntityReferencesMode = injectIntl(EntityReferencesMode);
+export default EntityReferencesMode;
