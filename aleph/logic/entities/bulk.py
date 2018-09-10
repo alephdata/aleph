@@ -9,7 +9,7 @@ from aleph.index.collections import index_collection
 from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
-BULK_PAGE = 500
+BULK_PAGE = 1000
 
 
 def bulk_load(config):

@@ -12,7 +12,7 @@ from normality import latinize_text
 from aleph.core import es
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
-from aleph.index.util import index_safe, mget_safe, backoff_cluster
+from aleph.index.util import index_safe, search_safe, backoff_cluster
 from aleph.index.util import authz_query
 
 log = logging.getLogger(__name__)
@@ -102,13 +102,13 @@ def _index_updates(collection, entities):
     if not len(entities):
         return
 
-    result = mget_safe(index=entity_index(),
-                       doc_type='doc',
-                       body={'ids': list(entities.keys())},
-                       _source=['schema', 'properties', 'created_at'])
-    for doc in result.get('docs', []):
-        if not doc.get('found', False):
-            continue
+    query = {
+        'query': {'ids': {'values': list(entities.keys())}},
+        '_source': ['schema', 'properties', 'created_at']
+    }
+    result = search_safe(index=entity_index(),
+                         body=query)
+    for doc in result.get('hits').get('hits', []):
         entity_id = doc['_id']
         entity = entities.get(entity_id)
         existing = doc.get('_source')
@@ -186,4 +186,5 @@ def index_single(obj, data, texts):
     data['updated_at'] = obj.updated_at
     data = finalize_index(data, obj.model, texts)
     data = clean_dict(data)
+    # pprint(data)
     return index_safe(entity_index(), obj.id, data)

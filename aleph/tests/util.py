@@ -123,6 +123,7 @@ class TestCase(FlaskTestCase):
         es.delete_by_query(index=all_indexes(),
                            body={'query': {'match_all': {}}},
                            refresh=True,
+                           ignore=[404, 400],
                            conflicts='proceed')
 
         for table in reversed(db.metadata.sorted_tables):

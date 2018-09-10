@@ -35,8 +35,10 @@ script:
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   # push tag as well
-  - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
+  - if [[ $TRAVIS_BRANCH = "master" ]]; then
       make TAG=latest build-full docker-push ;
+    fi
+  - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
       make TAG=$TRAVIS_TAG build-full docker-push ;
     fi
   - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then

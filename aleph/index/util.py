@@ -167,19 +167,8 @@ def search_safe(*args, **kwargs):
     # without hurting UX.
     for attempt in count():
         try:
+            kwargs['doc_type'] = 'doc'
             return es.search(*args, **kwargs)
-        except Exception as exc:
-            log.warning("Search error: %s", exc)
-        backoff_cluster(failures=attempt)
-
-
-def mget_safe(*args, **kwargs):
-    # This is not supposed to be used in every location where search is
-    # run, but only where it's a backend search that we could back off of
-    # without hurting UX.
-    for attempt in count():
-        try:
-            return es.mget(*args, **kwargs)
         except Exception as exc:
             log.warning("Search error: %s", exc)
         backoff_cluster(failures=attempt)

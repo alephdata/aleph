@@ -58,7 +58,8 @@ services:
     tmpfs: /tmp
     volumes:
       - archive-data:/data
-      - "./:/aleph"
+      - "./aleph:/aleph/aleph"
+      - "./contrib:/aleph/contrib"
       - "./mappings:/aleph/mappings"
       - "/:/host"
     environment:

@@ -50,7 +50,7 @@ COPY . /aleph
 WORKDIR /aleph
 ENV PYTHONPATH /aleph
 RUN pip install -e /aleph
-RUN cd /usr/local/lib/python3.6/dist-packages && python3 /aleph/setup.py develop
+# RUN cd /usr/local/lib/python3.6/dist-packages && python3 /aleph/setup.py develop
 
 # Configure some docker defaults:
 ENV C_FORCE_ROOT=true \
