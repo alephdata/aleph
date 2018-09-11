@@ -23,7 +23,7 @@ def compare_entities(left, right):
         result = 1
     return result
 
-def compare_names(left, right):
+def compare_names(left, right):    
     result = jellyfish.jaro_distance(left['name'], right['name'])
     return result
 
@@ -33,17 +33,17 @@ def compare_fingerprints(left, right):
 
 def compare_identifiers(left, right):
     result = 0
-   
-    try:        
-        if left['identifiers'] and right['identifiers']:
-            left_list = extract_ids(left['identifiers'])
-            right_list = extract_ids(right['identifiers'])
-            if left_list and right_list:
-                comp = set.intersection(left_list, right_list)
-                result = len(comp)
-    except KeyError:        
-        pass
     
+    left_list = ensure_list(left.get('identifiers'))
+    right_list = ensure_list(right.get('identifiers'))
+
+    left_list = extract_ids(left_list)
+    right_list = extract_ids(right_list)
+
+    if left_list and right_list:
+        comp = set.intersection(left_list, right_list)
+        result = len(comp)
+
     return result
 
 def extract_ids(id_strings):
@@ -51,6 +51,7 @@ def extract_ids(id_strings):
     return set(filter(None, [extract_id(i) for i in id_strings]))
     
 def extract_id(id_string):
+    """Get one word from string with most numbers and longer than 3 characters"""
     best_id_candidate = None
     numbers_in_id = 0
     id_list = [i for i in id_string.split() if len(i) > 3]
