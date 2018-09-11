@@ -1,18 +1,15 @@
-import re
 import phonenumbers
 from phonenumbers import geocoder
 from schwifty import IBAN
 from ipaddress import ip_address
 from normality import normalize, collapse_spaces
+from fingerprints import clean_entity_name
 from alephclient.services.entityextract_pb2 import ExtractedEntity
 
 from entityextractor.location import LocationResolver
 
 MAX_LENGTH = 100
 MIN_LENGTH = 4
-
-CLEANUP = r'^\W*((mr|ms|miss|the|of|de)\.?\s+)*(?P<term>.*?)([\'’]s)?\W*$'
-CLEANUP = re.compile(CLEANUP, re.I | re.U)
 
 
 class Result(object):
@@ -32,9 +29,7 @@ class Result(object):
     def clean_name(cls, text):
         if text is None or len(text) > MAX_LENGTH:
             return
-        match = CLEANUP.match(text)
-        if match is not None:
-            text = match.group('term')
+        text = clean_entity_name(text)
         text = collapse_spaces(text)
         if not len(text) or len(text) < MIN_LENGTH:
             return
