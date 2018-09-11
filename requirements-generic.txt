@@ -59,3 +59,6 @@ odfpy==1.3.6
 olefile==0.45.1
 flanker==0.9.0
 ply==3.10
+
+# Compare function
+jellyfish
