@@ -1,5 +1,6 @@
 import React from 'react';
 import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
 
@@ -42,13 +43,13 @@ class EntityTagsMode extends React.Component {
         <table className="data-table">
           <thead>
           <tr>
-            <th className='entity'>
+            <th className="entity">
               <span className="value">
-                 <FormattedMessage id="tags.selector"
-                                   defaultMessage="Selector" />
+                 <FormattedMessage id="tags.title"
+                                   defaultMessage="Tag" />
               </span>
             </th>
-            <th>
+            <th className="numeric">
               <span className="value">
                 <FormattedMessage id="tags.results"
                                   defaultMessage="Results" />
@@ -59,13 +60,13 @@ class EntityTagsMode extends React.Component {
           <tbody>
           {tags.results.map((tag, index) => (
             <tr key={index}>
-              <td key={index + 1} className='entity'>
-                <a href={this.getLink(tag)}>
+              <td key={index + 1} className="entity">
+                <Link to={this.getLink(tag)}>
                   <Tag.Icon field={tag.field}/>
                   {tag.value}
-                </a>
+                </Link>
               </td>
-              <td key={index + 2}>
+              <td key={index + 2} className="numeric">
                 <FormattedNumber value={tag.count}/>
               </td>
             </tr>

@@ -50,6 +50,11 @@ export function selectMetadata(state) {
   return metadata;
 }
 
+export function selectSchemata(state) {
+  const metadata = selectMetadata(state);
+  return metadata.schemata || {};
+}
+
 export function selectStatistics(state) {
   return selectObject(state, 'statistics');
 }
@@ -104,6 +109,32 @@ export function selectEntityTags(state, entityId) {
 
 export function selectEntityReferences(state, entityId) {
   return selectObject(state.entityReferences, entityId);
+}
+
+export function selectEntityReference(state, entityId, qname) {
+  const references = selectEntityReferences(state, entityId);
+  if (!references.total) {
+    return undefined;
+  }
+  for (let ref of references.results) {
+    if (ref.property.qname === qname) {
+      return ref;
+    }
+  }
+  return references.results[0];
+}
+
+export function selectEntityView(state, entityId, mode, isPreview) {
+  if (mode) {
+    return mode;
+  }
+  if (isPreview) {
+    return 'info';
+  }
+  const references = selectEntityReferences(state, entityId);
+  if (references.total) {
+    return references.results[0].property.qname;
+  }
 }
 
 export function selectCollectionPermissions(state, collectionId) {

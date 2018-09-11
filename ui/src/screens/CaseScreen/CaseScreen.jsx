@@ -24,8 +24,8 @@ class CaseScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const { collectionId } = ownProps.match.params;
+  const { location, match } = ownProps;
+  const { collectionId } = match.params;
   const path = `collections/${collectionId}/notifications`;
   const query = Query.fromLocation(path, location, {}, 'notifications').limit(40);
   return {

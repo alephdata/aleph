@@ -10,15 +10,15 @@ import ViewItem from "src/components/ViewsMenu/ViewItem";
 import './ViewsMenu.css';
 
 const messages = defineMessages({
-  mode_view: {
+  view: {
     id: 'document.mode.view.tooltip',
     defaultMessage: 'Show the document',
   },
-  mode_info: {
+  info: {
     id: 'document.mode.info.tooltip',
     defaultMessage: 'Show properties and details',
   },
-  mode_text: {
+  text: {
     id: 'document.mode.text.tooltip',
     defaultMessage: 'Show extracted text',
   },
@@ -46,18 +46,18 @@ class DocumentViewsMenu extends React.Component {
       <div className={className}>
         {isPreview && (
           <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.mode_info)}
+            message={intl.formatMessage(messages.info)}
             icon='pt-icon-info-sign' />
         )}
         {hasModifiers && (
           <ViewItem mode='view' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.mode_view)}
+            message={intl.formatMessage(messages.view)}
             href={`/documents/${document.id}?mode=view`}
             icon='pt-icon-document' />
         )}
         {hasTextMode && (
           <ViewItem mode='text' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.mode_text)}
+            message={intl.formatMessage(messages.text)}
             href={`/documents/${document.id}?mode=text`}
             icon='pt-icon-align-justify' />
         )}
