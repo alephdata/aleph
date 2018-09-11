@@ -32,14 +32,14 @@ class ViewItem extends React.Component {
               <React.Fragment>
                 {!isPreview && (
                   <Link to={href} className={className}>
-                    <Icon d='M150 0 L75 200 L225 200 Z' />
-                    {/*<i className={c('fa', 'fa-fw', icon)} />*/}
+                    {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
+                    <i className={c('fa', 'fa-fw', icon)} />
                   </Link>
                 )}
                 {isPreview && (
                   <button onClick={(e) => this.onClick(e, mode)} className={className}>
-                    <Icon d='M150 0 L75 200 L225 200 Z' />
-                    {/*<i className={c('fa', 'fa-fw', icon)} />*/}
+                    {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
+                    <i className={c('fa', 'fa-fw', icon)} />
                   </button>
                 )}
               </React.Fragment>

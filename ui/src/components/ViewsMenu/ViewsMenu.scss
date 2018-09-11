@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
 .ViewsMenu {
-  flex: 1;
+  width: 40px;
   background-color: $views-menu-background-color;
   display: flex;
   flex-direction: column;

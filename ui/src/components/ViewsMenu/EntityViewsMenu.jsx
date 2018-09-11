@@ -66,11 +66,14 @@ class EntityViewsMenu extends React.Component {
     const { schemata } = metadata;
     const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
+    console.log(activeMode)
+
     return (
       <div className={className}>
         {references.results !== undefined && references.results.map((ref) => (
-          <ViewItem mode={ref.property.qname} activeMode={activeMode} isPreview={isPreview}
+          <ViewItem mode={ref.property.qname} activeMode={activeMode !== 'similar' && activeMode !== 'tags'} isPreview={isPreview}
             message={ref.property.reverse + ' (' + ref.count + ')'}
+            href={'/entities/' + entity.id}
             key={ref.property.qname}
             onClick={this.onClickReference}
             icon={schemata[ref.schema].icon} />

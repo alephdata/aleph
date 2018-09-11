@@ -7,24 +7,7 @@ import { Property, Entity, Schema } from 'src/components/common';
 import { CollectionOverview } from 'src/components/Collection';
 import { selectMetadata } from 'src/selectors';
 
-
-<<<<<<< HEAD:ui/src/components/Entity/EntityInfo.jsx
-class EntityInfo extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTabId: 'overview'
-    };
-    this.handleTabChange = this.handleTabChange.bind(this);
-  }
-
-  handleTabChange(activeTabId) {
-    this.setState({ activeTabId });
-  }
-
-=======
 class EntityInfoMode extends React.Component {
->>>>>>> a910523f0203ce4ee4d50d28425e1cad58ad1598:ui/src/components/Entity/EntityInfoMode.jsx
   render() {
     const { entity, schema } = this.props;
     const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
