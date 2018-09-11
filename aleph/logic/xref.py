@@ -64,16 +64,12 @@ def match(item, collection_id=None):
     query = {
         'query': query,
         'size': 10,
-        '_source': ['collection_id', 'name', 'fingerprints', 'schema', 'identifiers'],
+        #'_source': ['collection_id', 'name', 'fingerprints', 'schema', 'identifiers'],
     }
     result = search_safe(index=entities_index(), body=query)
     results = result.get('hits').get('hits')
     for result in results:
         candidate = unpack_result(result)
-        print("------------ITEM------------")
-        print(item)
-        print("------------CANDIDATE-----------")
-        print(candidate)
         score = compare(item, candidate)
         print(item['name'], candidate['name'], score)
 

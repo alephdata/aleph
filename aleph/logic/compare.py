@@ -1,5 +1,6 @@
 from followthemoney import model
 import jellyfish
+from banal import ensure_list
 
 def compare(left, right):
     """Compare two entities and return number between 0 and 1
