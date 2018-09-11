@@ -1,5 +1,6 @@
 from followthemoney import model
 import jellyfish
+import itertools
 from banal import ensure_list
 
 def compare(left, right):
@@ -23,12 +24,28 @@ def compare_entities(left, right):
         result = 1
     return result
 
-def compare_names(left, right):    
-    result = jellyfish.jaro_distance(left['name'], right['name'])
-    return result
-
 def compare_fingerprints(left, right):
-    result = jellyfish.jaro_distance(left['fingerprints'][0], right['fingerprints'][0])
+
+    result = 0
+    results = []
+
+    left_list = ensure_list(left.get('fingerprints'))
+    right_list = ensure_list(right.get('fingerprints'))
+
+    if left_list and right_list:
+        input = [left_list, right_list]
+        pairs = list(itertools.product(*input))
+
+        for pair in pairs:
+            results.append(jellyfish.jaro_distance(pair[0], pair[1]))
+
+        result = max(results)
+
+        for res in results:
+            if res == 1:
+                result += 0.2
+            elif res > 0.8:
+                result += 0.1
     return result
 
 def compare_identifiers(left, right):
