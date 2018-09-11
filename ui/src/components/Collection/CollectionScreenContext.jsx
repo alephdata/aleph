@@ -8,10 +8,9 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViewsMenu from 'src/components/ViewsMenu/CollectionViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane } from 'src/components/common';
+import { DualPane, Breadcrumbs } from 'src/components/common';
 import { fetchCollection, fetchCollectionXrefIndex } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex } from "src/selectors";
-
 
 class CollectionScreenContext extends Component {
 
@@ -48,6 +47,12 @@ class CollectionScreenContext extends Component {
       return <LoadingScreen />;
     }
 
+    const breadcrumbs = <Breadcrumbs collection={collection}>
+      <li>
+        <span className='pt-breadcrumb'>Documents and Files</span>
+      </li>
+    </Breadcrumbs>;
+
     return (
       <Screen title={collection.label}>
         <DualPane>
@@ -56,6 +61,7 @@ class CollectionScreenContext extends Component {
                                  activeMode={activeMode}
                                  isPreview={false} />
             <div>
+              {breadcrumbs}
               {this.props.children}
             </div>
           </DualPane.ContentPane>

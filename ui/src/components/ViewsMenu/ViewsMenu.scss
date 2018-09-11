@@ -29,10 +29,10 @@
     text-shadow: 0px 1px 0px #2b665e;
   }
 
-  .view-item-button:hover {
+  .view-item-button:hover:enabled {
     background-color: #5c7080;
   }
-  .view-item-button.active {
+  .view-item-button.active:enabled {
     background-color: #5c7080;
   }
 }

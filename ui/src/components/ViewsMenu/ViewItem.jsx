@@ -45,7 +45,7 @@ class ViewItem extends React.Component {
               </React.Fragment>
             )}
             {disabled && (              
-              <button className={className}>
+              <button className={className} disabled={disabled}>
                 <i className={c('fa', 'fa-fw', icon)} />
               </button>
             )}

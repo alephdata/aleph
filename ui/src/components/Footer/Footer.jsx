@@ -37,7 +37,7 @@ class Footer extends React.Component {
             </a>
           </span>
         </div>
-        {breadcrumbs}
+        {/*{breadcrumbs}*/}
       </footer>
     );
   }

@@ -54,7 +54,7 @@ class CollectionViewsMenu extends React.Component {
                   message={intl.formatMessage(messages.info)}
                   icon='fa-info' />
         )}
-        <ViewItem mode='documents' activeMode={activeMode} isPreview={isPreview}
+        <ViewItem mode='documents' activeMode={activeMode} isPreview={false}
                   disabled={!this.hasDocuments()}
                   message={intl.formatMessage(messages.documents)}
                   href={`/collections/${collection.id}/documents`}

@@ -32,16 +32,6 @@ class PreviewDocument extends React.Component {
     if (!document.isLoading) {
       this.props.fetchDocument({ id: previewId });
     }
-    
-    const { tagsResult } = this.props;
-    if (tagsResult.shouldLoad) {
-      this.props.fetchEntityTags({ id: previewId });
-    }
-
-    const { similarQuery, similarResult } = this.props;
-    if (similarResult.shouldLoad) {
-      this.props.queryEntities({query: similarQuery});
-    }
   }
 
   render() {

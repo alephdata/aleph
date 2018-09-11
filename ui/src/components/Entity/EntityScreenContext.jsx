@@ -8,11 +8,10 @@ import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViewsMenu from 'src/components/ViewsMenu/EntityViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane } from 'src/components/common';
+import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { queryEntitySimilar } from 'src/queries';
 import { fetchEntity, fetchEntityTags, queryEntities } from 'src/actions';
 import { selectEntity, selectEntityTags, selectEntitiesResult } from 'src/selectors';
-
 
 class EntityScreenContext extends Component {
   componentDidMount() {
@@ -40,6 +39,14 @@ class EntityScreenContext extends Component {
     }
   }
 
+  getActiveMode() {
+    const { activeMode } = this.props;
+
+    if(activeMode !== undefined) return activeMode.charAt(0).toUpperCase() + activeMode.slice(1);
+
+    return 'Contracts awarded'
+  }
+
   render() {
     const { entity, activeMode } = this.props;
     if (entity.isError) {
@@ -49,6 +56,19 @@ class EntityScreenContext extends Component {
       return <LoadingScreen />;
     }
 
+    console.log(activeMode)
+
+    const breadcrumbs = (
+      <Breadcrumbs collection={entity.collection}>
+        <li>
+          <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
+        </li>
+        <li>
+          <span className='pt-breadcrumb'>{this.getActiveMode()}</span>
+        </li>
+      </Breadcrumbs>
+    );
+
     return (
       <Screen title={entity.name}>
         <DualPane>
@@ -57,6 +77,7 @@ class EntityScreenContext extends Component {
                              activeMode={activeMode}
                              isPreview={false}/>
             <div>
+              {breadcrumbs}
               {this.props.children}
             </div>
           </DualPane.ContentPane>
