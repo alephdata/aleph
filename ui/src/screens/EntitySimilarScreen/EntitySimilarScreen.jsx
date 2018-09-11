@@ -10,7 +10,7 @@ class EntitySimilarScreen extends Component {
   render() {
     const { entityId, entity } = this.props;
     return (
-      <EntityScreenContext entityId={entityId} activeMode='similar'>
+      <EntityScreenContext entityId={entityId} activeMode='similar' subtitle='Similar'>
         <EntitySimilarMode entity={entity} />
       </EntityScreenContext>
     );

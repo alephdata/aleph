@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
@@ -29,7 +30,10 @@ class CollectionScreenContext extends Component {
 
     const breadcrumbs = <Breadcrumbs collection={collection}>
       <li>
-        <span className='pt-breadcrumb'>Documents and Files</span>
+        <span className='pt-breadcrumb'>
+           <FormattedMessage id="breadcrumbs.documents"
+                             defaultMessage="Documents and Files" />
+        </span>
       </li>
     </Breadcrumbs>;
 

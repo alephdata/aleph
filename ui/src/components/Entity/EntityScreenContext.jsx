@@ -13,14 +13,8 @@ import { selectEntity } from 'src/selectors';
 
 class EntityScreenContext extends Component {
 
-  getBreadcrumbName(activeMode) {
-    return activeMode !== 'similar' && activeMode !== 'tags' ?
-      <Schema.Label schema={activeMode.split(':')[0]} icon={false} /> :
-      activeMode.charAt(0).toUpperCase() + activeMode.slice(1);
-  }
-
   render() {
-    const { entity, entityId, activeMode } = this.props;
+    const { entity, entityId, activeMode, subtitle } = this.props;
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
     }
@@ -39,7 +33,7 @@ class EntityScreenContext extends Component {
       </li>
       <li>
         <span className='pt-breadcrumb'>
-          {this.getBreadcrumbName(activeMode)}
+          {subtitle}
         </span>
       </li>
     </Breadcrumbs>

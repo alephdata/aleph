@@ -10,7 +10,7 @@ class EntityTagsScreen extends Component {
   render() {
     const { entityId, entity } = this.props;
     return (
-      <EntityScreenContext entityId={entityId} activeMode='tags'>
+      <EntityScreenContext entityId={entityId} activeMode='tags' subtitle='Tags'>
         <EntityTagsMode entity={entity} />
       </EntityScreenContext>
     );
