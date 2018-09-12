@@ -40,18 +40,12 @@ def compare_fingerprints(left, right):
 
 
 def compare_identifiers(left, right):
-    result = 0
     left_list = ensure_list(left.get('identifiers'))
     right_list = ensure_list(right.get('identifiers'))
-
     left_list = extract_ids(left_list)
     right_list = extract_ids(right_list)
-
-    if left_list and right_list:
-        comp = set.intersection(left_list, right_list)
-        result = len(comp)
-
-    return result
+    comp = set.intersection(left_list, right_list)
+    return len(comp)
 
 
 def extract_ids(id_strings):
