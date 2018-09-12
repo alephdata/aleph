@@ -1,31 +1,25 @@
-from followthemoney import model
 import jellyfish
 import itertools
 from banal import ensure_list
+from followthemoney import model
+
 
 def compare(left, right):
-    """Compare two entities and return number between 0 and 1
-    
-    Returned number indicates probability that two entities are the same.    
+    """Compare two entities and return number between 0 and 1.
+    Returned number indicates probability that two entities are the same.
     """
-    result = 0
+    left_schema = model.get(left.get('schema'))
+    right_schema = model.get(right.get('schema'))
+    if right_schema not in list(left_schema.matchable_schemata):
+        return 0
 
-    matchable = [s.name for s in model if s.matchable]
-    
-    if left['schema'] in matchable and right['schema'] in matchable:   
-        result = compare_entities(left, right) 
-    return result
-
-def compare_entities(left, right):
     name_result = compare_fingerprints(left, right)
     identifiers_result = compare_identifiers(left, right)
     result = (name_result + identifiers_result)/2
-    if result > 1:
-        result = 1
-    return result
+    return max(0.0, min(1.0, result))
+
 
 def compare_fingerprints(left, right):
-
     result = 0
     results = []
 
@@ -33,14 +27,10 @@ def compare_fingerprints(left, right):
     right_list = ensure_list(right.get('fingerprints'))
 
     if left_list and right_list:
-        input = [left_list, right_list]
-        pairs = list(itertools.product(*input))
-
-        for pair in pairs:
-            results.append(jellyfish.jaro_distance(pair[0], pair[1]))
+        for (left, right) in itertools.product(left_list, right_list):
+            results.append(jellyfish.jaro_distance(left, right))
 
         result = max(results)
-
         for res in results:
             if res == 1:
                 result += 0.2
@@ -48,9 +38,9 @@ def compare_fingerprints(left, right):
                 result += 0.1
     return result
 
+
 def compare_identifiers(left, right):
     result = 0
-    
     left_list = ensure_list(left.get('identifiers'))
     right_list = ensure_list(right.get('identifiers'))
 
@@ -63,12 +53,15 @@ def compare_identifiers(left, right):
 
     return result
 
+
 def extract_ids(id_strings):
     """For now extracts only numbers, TODO: add other specific identifiers"""
     return set(filter(None, [extract_id(i) for i in id_strings]))
-    
+
+
 def extract_id(id_string):
-    """Get one word from string with most numbers and longer than 3 characters"""
+    """Get one word from string with most numbers and longer than
+    3 characters"""
     best_id_candidate = None
     numbers_in_id = 0
     id_list = [i for i in id_string.split() if len(i) > 3]
