@@ -81,7 +81,7 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
-    cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+    cache.init_app(app, config=settings.CACHE_CONFIG)
     CORS(app, origins=settings.CORS_ORIGINS)
 
     # Enable raven to submit issues to sentry if a DSN is defined. This will
