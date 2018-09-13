@@ -24,7 +24,7 @@ def upgrade_search():
         settings = deepcopy(INDEX_SETTINGS)
         if index == record_index():
             # optimise records for bulk write
-            settings['index']['refresh_interval'] = '-1'
+            settings['index']['refresh_interval'] = '15s'
         body = {
             'settings': settings,
             'mappings': {'doc': mapping}
