@@ -18,6 +18,8 @@ class DocumentTag(db.Model, IdModel):
     TYPE_LOCATION = 'location'
     TYPE_IP = 'ip'
     TYPE_IBAN = 'iban'
+    TYPE_COUNTRY = 'country'
+    TYPE_LANGUAGE = 'language'
 
     MAPPING = {
         TYPE_PERSON: 'namesMentioned',
@@ -27,6 +29,8 @@ class DocumentTag(db.Model, IdModel):
         TYPE_LOCATION: 'locationMentioned',
         TYPE_IP: 'ipMentioned',
         TYPE_IBAN: 'ibanMentioned',
+        TYPE_COUNTRY: 'country',
+        TYPE_LANGUAGE: 'language'
     }
 
     id = db.Column(db.BigInteger, primary_key=True)

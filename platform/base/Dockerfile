@@ -50,8 +50,6 @@ ENV LANG='en_US.UTF-8' \
 ##########################################################################################################
 # Polyglot NER model data
 #
-ENV POLYGLOT_DATA_PATH=/opt/datapolyglot
-
 # cf. http://polyglot.cs.stonybrook.edu/~polyglot/index.json
 # Skipped languages (because their overall support in aleph is not given):
 # ner2.hi embeddings2.hi ner2.vi embeddings2.vi ner2.ja embeddings2.ja
@@ -71,6 +69,7 @@ ENV POLYGLOT_DATA_PATH=/opt/datapolyglot
 # Data cache URLs:
 # http://archive.pudo.org/aleph/polyglot/polyglot-data-201809.tar 
 # https://cdn.occrp.org/projects/aleph/polyglot-data-201809.tar (slow!)
+ENV POLYGLOT_DATA_PATH=/opt/data/polyglot
 RUN curl -s -o /tmp/polyglot.tar http://archive.pudo.org/aleph/polyglot/polyglot-data-201809.tar \
     && cd /opt/data \
     && tar xvf /tmp/polyglot.tar \
@@ -80,8 +79,9 @@ RUN curl -s -o /tmp/polyglot.tar http://archive.pudo.org/aleph/polyglot/polyglot
 ##########################################################################################################
 # Geonames locations parser
 #
+ENV ALEPH_GEONAMES_DATA=/opt/data/geonames.txt
 RUN curl -s -o /tmp/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
-    && unzip -p /tmp/allCountries.zip | grep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" >/opt/data/geonames.txt \
+    && unzip -p /tmp/allCountries.zip | grep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" >${ALEPH_GEONAMES_DATA} \
     && rm /tmp/allCountries.zip
 
 

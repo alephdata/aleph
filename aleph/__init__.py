@@ -31,6 +31,8 @@ logging.getLogger('neo4j').setLevel(logging.WARNING)
 logging.getLogger('pdfminer').setLevel(logging.WARNING)
 logging.getLogger('httpstream').setLevel(logging.WARNING)
 logging.getLogger('factory').setLevel(logging.WARNING)
+logging.getLogger('polyglot').setLevel(logging.WARNING)
+# logging.getLogger('sqlalchemy').setLevel(logging.INFO)
 
 # Log all SQL statements:
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
