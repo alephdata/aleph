@@ -1,15 +1,17 @@
-import phonenumbers
-from phonenumbers import geocoder
-from schwifty import IBAN
-from ipaddress import ip_address
+import io
+import csv
+import logging
+from banal import ensure_list
+from ahocorasick import Automaton
+from collections import defaultdict
 from normality import normalize, collapse_spaces
 from fingerprints import clean_entity_name
+from followthemoney.types import registry
 
+from aleph import settings
 from aleph.model import DocumentTag
-from aleph.logic.extractors.location import LocationResolver
 
-MAX_LENGTH = 100
-MIN_LENGTH = 4
+log = logging.getLogger(__name__)
 
 
 class Result(object):
@@ -18,135 +20,124 @@ class Result(object):
     def __init__(self, ctx, label, start, end):
         self.ctx = ctx
         self.label = label
-        self.key = label
+        self.key = self.normalize(label)
         self.start = start
         self.end = end
         self.span = (ctx.record, start, end)
         self.countries = []
-        self.valid = True
 
-    @classmethod
-    def clean_name(cls, text):
-        if text is None or len(text) > MAX_LENGTH:
-            return
-        text = clean_entity_name(text)
-        text = collapse_spaces(text)
-        if not len(text) or len(text) < MIN_LENGTH:
-            return
-        return text
-
-    @classmethod
-    def label_key(cls, label):
-        return normalize(label, ascii=True)
-
-    def __str__(self):
-        return self.label
+    def normalize(self, location):
+        return normalize(location, lowercase=True, ascii=True)
 
 
 class NamedResult(Result):
     """Any entity extracted that has a human-style name."""
     strict = False
+    MAX_LENGTH = 100
+    MIN_LENGTH = 4
 
     def __init__(self, ctx, label, start, end):
         label = self.clean_name(label)
         super(NamedResult, self).__init__(ctx, label, start, end)
-        self.key = self.label_key(self.label)
-        self.valid = self.key is not None
+        if self.label is not None and ' ' not in self.label:
+            self.key = None
+
+    @classmethod
+    def clean_name(self, text):
+        if text is None or len(text) > self.MAX_LENGTH:
+            return
+        text = clean_entity_name(text)
+        text = collapse_spaces(text)
+        if not len(text) or len(text) < self.MIN_LENGTH:
+            return
+        return text
 
 
 class OrganizationResult(NamedResult):
     category = DocumentTag.TYPE_ORGANIZATION
 
-    def __init__(self, ctx, label, start, end):
-        super(OrganizationResult, self).__init__(ctx, label, start, end)
-        if self.valid and ' ' not in self.label:
-            self.valid = False
-
 
 class PersonResult(NamedResult):
     category = DocumentTag.TYPE_PERSON
 
-    def __init__(self, ctx, label, start, end):
-        super(PersonResult, self).__init__(ctx, label, start, end)
-        if self.valid and ' ' not in self.label:
-            self.valid = False
 
-
-class LocationResult(NamedResult):
+class LocationResult(Result):
     """Locations are being mapped to countries."""
-    resolver = LocationResolver()
     category = DocumentTag.TYPE_LOCATION
 
     def __init__(self, ctx, label, start, end):
         super(LocationResult, self).__init__(ctx, label, start, end)
-        self.countries = self.resolver.get_countries(label)
+        if self.key is not None:
+            try:
+                self.countries = self.automaton.get(self.key)
+            except KeyError:
+                pass
+
+    def load_places(self):
+        places = defaultdict(set)
+        with io.open(settings.GEONAMES_DATA, 'r', encoding='utf-8') as fh:
+            for row in csv.reader(fh, delimiter='\t'):
+                country = normalize(row[8])
+                if country is None:
+                    continue
+                names = set(row[3].split(','))
+                names.add(row[1])
+                names.add(row[2])
+                for name in names:
+                    name = self.normalize(name)
+                    if name is not None:
+                        places[name].add(country)
+        return places
+
+    @property
+    def automaton(self):
+        if not hasattr(settings, '_geonames'):
+            log.debug("Loading geonames data...")
+            geonames = Automaton()
+            places = self.load_places()
+            for (name, countries) in places.items():
+                geonames.add_word(name, countries)
+            geonames.make_automaton()
+            settings._geonames = geonames
+            log.debug("Loaded %s geonames.", len(places))
+        return settings._geonames
 
 
-class LanguageResult(Result):
+class TypedResult(Result):
+    type = None
+
+    def __init__(self, ctx, label, start, end):
+        args = dict(countries=ctx.countries)
+        label = self.type.clean(label, **args)
+        super(TypedResult, self).__init__(ctx, label, start, end)
+        self.countries = ensure_list(self.type.country_hint(label))
+
+
+class LanguageResult(TypedResult):
     category = DocumentTag.TYPE_LANGUAGE
-
-    def __init__(self, ctx, label, start, end):
-        label = label.strip().lower()
-        super(LanguageResult, self).__init__(ctx, label, start, end)
+    type = registry.language
 
 
-class IPAddressResult(Result):
-    """Pull IPv4, IPv6 - and validate using on-board Python tools."""
+class CountryResult(TypedResult):
+    category = DocumentTag.TYPE_COUNTRY
+    type = registry.country
+
+
+class IPAddressResult(TypedResult):
     category = DocumentTag.TYPE_IP
-
-    def __init__(self, ctx, label, start, end):
-        super(IPAddressResult, self).__init__(ctx, label, start, end)
-        try:
-            ip = ip_address(label)
-            self.key = self.label = str(ip)
-        except ValueError:
-            self.valid = False
+    type = registry.ip
 
 
-class EmailResult(Result):
+class EmailResult(TypedResult):
     category = DocumentTag.TYPE_EMAIL
-
-    def __init__(self, ctx, label, start, end):
-        super(EmailResult, self).__init__(ctx, label, start, end)
-        self.key = self.label_key(self.label)
-        self.valid = self.key is not None
-        # TODO: do we want to do TLD -> country?
+    type = registry.email
 
 
-class PhoneResult(Result):
-    FORMAT = phonenumbers.PhoneNumberFormat.E164
+class PhoneResult(TypedResult):
     category = DocumentTag.TYPE_PHONE
-
-    def __init__(self, ctx, label, start, end):
-        super(PhoneResult, self).__init__(ctx, label, start, end)
-        number = self._parse(label)
-        for country in ctx.countries:
-            if number is None:
-                number = self._parse(label, country)
-        self.valid = number is not None
-        if number is not None:
-            self.countries = [geocoder.region_code_for_number(number)]
-            self.label = phonenumbers.format_number(number, self.FORMAT)
-            self.key = self.label
-
-    def _parse(self, number, region=None):
-        try:
-            num = phonenumbers.parse(number, region)
-            if phonenumbers.is_possible_number(num):
-                if phonenumbers.is_valid_number(num):
-                    return num
-        except phonenumbers.NumberParseException:
-            pass
+    type = registry.phone
 
 
-class IBANResult(Result):
+class IBANResult(TypedResult):
     category = DocumentTag.TYPE_IBAN
-
-    def __init__(self, ctx, label, start, end):
-        super(IBANResult, self).__init__(ctx, label, start, end)
-        try:
-            iban = IBAN(label)
-            self.key = self.label = iban.compact
-            self.countries = [iban.country_code]
-        except ValueError:
-            self.valid = False
+    type = registry.iban

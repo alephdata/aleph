@@ -21,7 +21,10 @@ class EntityAggregator(object):
         self.record = 0
 
     def extract(self, text, languages):
+        if text is None:
+            return
         self.record += 1
+        log.debug("Feed [%s]: %s chars", self.record, len(text))
         for result in extract_polyglot(self, text, languages):
             self.add(result)
         for result in extract_spacy(self, text, languages):
@@ -30,15 +33,18 @@ class EntityAggregator(object):
             self.add(result)
 
     def add(self, result):
-        log.info('Extract: [%s] (%r)', result.label, result.countries)
-        countries = [c.lower() for c in ensure_list(result.countries)]
-        self._countries.update(countries)
-        if not result.valid:
+        if result.key is None:
             return
         # TODO: make a hash?
         for cluster in self.clusters:
             if cluster.match(result):
                 return cluster.add(result)
+        log.debug('Extract [%s] (%s, %r)',
+                  result.label,
+                  result.category,
+                  result.countries)
+        countries = [c.lower() for c in ensure_list(result.countries)]
+        self._countries.update(countries)
         self.clusters.append(Cluster(result))
 
     @property

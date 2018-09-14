@@ -24,6 +24,7 @@ PyICU==2.0.6
 chardet==3.0.4
 cchardet==2.1.1
 regex==2017.4.5
+# regex>=2017.12.09
 pycld2==0.31
 polyglot==16.7.4
 Morfessor==2.0.4
@@ -32,7 +33,6 @@ pyahocorasick==1.1.8
 cryptography==2.3.1
 pylru==1.0.9
 pyjwt==1.6.1
-# regex>=2017.12.09
 rdflib==4.2.2
 idna==2.7.0
 requests[security]==2.19.1

@@ -17,7 +17,6 @@ class Cluster(object):
                 return True
             if overlaps(result.span, member.span):
                 return True
-        # TODO: could also do some token-based magic here??
         return False
 
     def add(self, result):
