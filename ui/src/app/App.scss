@@ -91,6 +91,11 @@ a {
   cursor: pointer;
 }
 
+.source-header {
+  color: $gray3;
+  font-size: $aleph-grid-size * 1.2;
+}
+
 .opener.clickable,
 li.clickable,
 th.clickable {
@@ -127,4 +132,8 @@ th.clickable {
   .visible-md-none {
     display: none !important;
   }
+}
+
+.view-menu-flex-direction {
+  flex-direction: row !important;
 }

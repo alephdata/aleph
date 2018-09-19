@@ -2,8 +2,8 @@
 # Dependencies maintained by OCCRP
 banal==0.3.7
 urlnormalizer==1.2.0
-followthemoney==1.0.1
-fingerprints==0.5.4
+followthemoney==1.1.2
+fingerprints==0.6.1
 storagelayer==0.5.2
 ingestors==0.10.11
 normality==0.6.1

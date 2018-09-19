@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 
 import { Category, Language, Country, Role, Date, Collection } from 'src/components/common';
 
+import './CollectionOverview.css';
+
 class CollectionOverview extends Component {
   render() {
     const { collection, hasHeader = false } = this.props;
@@ -13,7 +15,7 @@ class CollectionOverview extends Component {
       return null;
 
     return (
-      <React.Fragment>
+      <div className='CollectionOverview'>
         {hasHeader && (
           <h4>
             <Collection.Link collection={collection} />
@@ -70,7 +72,7 @@ class CollectionOverview extends Component {
             </span>
           </li>
         </ul>
-      </React.Fragment>
+      </div>
     );
   }
 }

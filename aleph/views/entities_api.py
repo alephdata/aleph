@@ -8,12 +8,12 @@ from urlnormalizer import query_string
 
 from aleph.core import db, url_for
 from aleph.model import Entity, Audit
+from aleph.logic.entities import update_entity, delete_entity
+from aleph.logic.collections import update_collection
 from aleph.search import EntitiesQuery, EntityDocumentsQuery
 from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
-from aleph.logic.entities import update_entity, delete_entity
-from aleph.logic.collections import update_collection
 from aleph.logic.audit import record_audit
 from aleph.index.util import refresh_index
 from aleph.index.core import entities_index
@@ -174,3 +174,12 @@ def delete(id):
     update_collection(entity.collection)
     refresh_index(entities_index())
     return ('', 204)
+
+
+# @blueprint.route('/api/2/entities/<id>/graph', methods=['GET'])
+# def graph(id):
+#     update = request.args.get('update') == 'true'
+#     entity = export_node(id, update=update)
+#     resp = jsonify(entity)
+#     # resp.headers["Access-Control-Allow-Origin"] = "*"
+#     return resp

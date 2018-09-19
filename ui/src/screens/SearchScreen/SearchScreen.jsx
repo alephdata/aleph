@@ -217,7 +217,7 @@ class SearchScreen extends React.Component {
                             facets={this.state.facets}/>
             </div>
           </DualPane.SidePane>
-          <DualPane.ContentPane>
+          <DualPane.ContentPane className="padded">
             <SignInCallout/>
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <EntityTable query={query}

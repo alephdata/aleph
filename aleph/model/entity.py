@@ -2,6 +2,7 @@ import logging
 from banal import is_mapping, ensure_list
 from datetime import datetime
 from followthemoney import model
+from followthemoney.types import registry
 from followthemoney.util import merge_data
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
@@ -37,7 +38,7 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         if self.model is None:
             return names
         for name, prop in self.model.properties.items():
-            if prop.type not in ['name']:
+            if prop.type != registry.name:
                 continue
             names.update(ensure_list(self.data.get(name)))
         return names

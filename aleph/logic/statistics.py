@@ -10,10 +10,7 @@ def get_instance_stats(authz):
         'size': 0,
         'query': {
             'bool': {
-                'filter': [
-                    authz_query(authz),
-                    # {'term': {'schemata': Entity.THING}}
-                ]
+                'filter': [authz_query(authz)]
             }
         }
     }

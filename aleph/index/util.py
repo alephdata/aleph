@@ -107,11 +107,12 @@ def cleanup_query(body):
     return body
 
 
-def bulk_op(iter, chunk_size=500):
+def bulk_op(iter, chunk_size=500, max_retries=10):
     """Standard parameters for bulk operations."""
     bulk(es, iter,
-         stats_only=True,
          chunk_size=chunk_size,
+         max_retries=10,
+         initial_backoff=2,
          request_timeout=REQUEST_TIMEOUT,
          timeout=TIMEOUT)
 

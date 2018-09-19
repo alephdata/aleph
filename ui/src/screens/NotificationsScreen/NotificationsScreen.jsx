@@ -51,7 +51,7 @@ class NotificationsScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession={true}>
         <DualPane className="NotificationsScreen">
-          <DualPane.ContentPane>
+          <DualPane.ContentPane className="padded">
             <Toolbar>
               <h1>
                 <FormattedMessage id="notifications.heading" defaultMessage="Your notifications"/>

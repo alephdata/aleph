@@ -35,6 +35,13 @@ def backoff(failures=0):
     time.sleep(sleep)
 
 
+def make_key(*criteria):
+    """Make a string key out of many criteria."""
+    criteria = [c or '' for c in criteria]
+    criteria = [str(c) for c in criteria]
+    return ':'.join(criteria)
+
+
 def html_link(text, link):
     text = text or '[untitled]'
     if link is None:
