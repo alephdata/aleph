@@ -1,7 +1,9 @@
-from entityextractor.result import Result
+from aleph.tests.util import TestCase
+
+from aleph.logic.extractors.result import Result
 
 
-class TestNormalize(object):
+class TestNormalize(TestCase):
 
     def test_clean_name(self):
         assert Result.clean_name('  ') is None

@@ -1,4 +1,4 @@
-from entityextractor.util import overlaps, select_label
+from aleph.logic.extractors.util import overlaps, select_label
 
 
 class Cluster(object):
@@ -17,7 +17,6 @@ class Cluster(object):
                 return True
             if overlaps(result.span, member.span):
                 return True
-        # TODO: could also do some token-based magic here??
         return False
 
     def add(self, result):
