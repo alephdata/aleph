@@ -8,7 +8,7 @@ RUN mkdir -p /opt/data
 # Enable non-free archive for `unrar`.
 # RUN echo "deb http://http.us.debian.org/debian stretch non-free" >/etc/apt/sources.list.d/nonfree.list
 RUN apt-get -qq -y update \
-    && apt-get -qq -y install build-essential locales ca-certificates \
+    && apt-get -qq -y install build-essential git locales ca-certificates \
         # needed to set up DB for tests:
         postgresql-client \
         # python deps (mostly to install their dependencies)
