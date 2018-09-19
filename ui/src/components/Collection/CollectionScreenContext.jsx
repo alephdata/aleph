@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
@@ -8,9 +9,8 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViewsMenu from 'src/components/ViewsMenu/CollectionViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane } from 'src/components/common';
+import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection } from "src/selectors";
-
 
 class CollectionScreenContext extends Component {
   render() {
@@ -28,6 +28,15 @@ class CollectionScreenContext extends Component {
       );
     }
 
+    const breadcrumbs = <Breadcrumbs collection={collection}>
+      <li>
+        <span className='pt-breadcrumb'>
+           <FormattedMessage id="breadcrumbs.documents"
+                             defaultMessage="Documents and Files" />
+        </span>
+      </li>
+    </Breadcrumbs>;
+
     return (
       <CollectionContextLoader collectionId={collectionId}>
         <Screen title={collection.label}>
@@ -37,6 +46,7 @@ class CollectionScreenContext extends Component {
                                    activeMode={activeMode}
                                    isPreview={false} />
               <div>
+                {breadcrumbs}
                 {this.props.children}
               </div>
             </DualPane.ContentPane>

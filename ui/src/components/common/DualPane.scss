@@ -12,6 +12,11 @@
   }
 }
 
+.breadcrumb-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .InfoPane {
   flex: 10;
 }

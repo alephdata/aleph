@@ -1,10 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Tooltip, Position } from '@blueprintjs/core';
+import { Tooltip, Position, Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import c from 'classnames';
-
 
 class ViewItem extends React.Component {
 
@@ -23,9 +22,9 @@ class ViewItem extends React.Component {
   render() {
     const {message, mode, activeMode, disabled, icon, href, isPreview} = this.props;
     const isActive = (mode === activeMode);
-    const className = c('ViewItem', 'pt-button pt-large',
-                        {'pt-active': isActive},
-                        {'pt-disabled': disabled});
+    const className = c('ViewItem', 'view-item-button',
+                        {'active': isActive},
+                        {'disabled': disabled});
     return (
         <Tooltip key={mode} content={message} position={Position.RIGHT}>
           <React.Fragment>
@@ -33,20 +32,22 @@ class ViewItem extends React.Component {
               <React.Fragment>
                 {!isPreview && (
                   <Link to={href} className={className}>
+                    {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
                     <i className={c('fa', 'fa-fw', icon)} />
                   </Link>
                 )}
                 {isPreview && (
-                  <a onClick={(e) => this.onClick(e, mode)} className={className}>
+                  <button onClick={(e) => this.onClick(e, mode)} className={className}>
+                    {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
                     <i className={c('fa', 'fa-fw', icon)} />
-                  </a>
+                  </button>
                 )}
               </React.Fragment>
             )}
             {disabled && (              
-              <a className={className}>
+              <button className={className} disabled={disabled}>
                 <i className={c('fa', 'fa-fw', icon)} />
-              </a>
+              </button>
             )}
           </React.Fragment>
         </Tooltip>

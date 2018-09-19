@@ -10,6 +10,7 @@ import { selectCollection } from "src/selectors";
 class CollectionDocumentsScreen extends Component {
   render() {
     const { collection, collectionId } = this.props;
+
     return (
       <CollectionScreenContext collectionId={collectionId} activeMode="documents">
         <Toolbar>

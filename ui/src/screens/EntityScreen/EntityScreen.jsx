@@ -6,13 +6,13 @@ import queryString from 'query-string';
 import { selectEntity, selectEntityView } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
-
+import { selectEntityReference } from "../../selectors";
 
 class EntityScreen extends Component {
   render() {
-      const { entity, entityId, mode } = this.props;
+      const { entity, entityId, mode, reference } = this.props;
       return (
-        <EntityScreenContext entityId={entityId} activeMode={mode}>
+        <EntityScreenContext entityId={entityId} activeMode={mode} subtitle={reference !== undefined ? reference.property.reverse : ''}>
           <EntityReferencesMode entity={entity} mode={mode} />
         </EntityScreenContext>
       );
@@ -20,11 +20,13 @@ class EntityScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entityId } = ownProps.match.params;
+  const { entityId, mode } = ownProps.match.params;
   const { location } = ownProps;
+  const reference = selectEntityReference(state, entityId, mode);
   const hashQuery = queryString.parse(location.hash);  
   return {
     entityId,
+    reference,
     entity: selectEntity(state, entityId),
     mode: selectEntityView(state, entityId, hashQuery.mode, false)
   };

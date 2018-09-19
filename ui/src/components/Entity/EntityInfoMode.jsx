@@ -7,7 +7,6 @@ import { Property, Entity, Schema } from 'src/components/common';
 import { CollectionOverview } from 'src/components/Collection';
 import { selectSchemata } from 'src/selectors';
 
-
 class EntityInfoMode extends React.Component {
   render() {
     const { entity, schema } = this.props;
