@@ -2,9 +2,9 @@ FROM alephdata/aleph-base:3
 
 # Install Python dependencies
 COPY requirements-generic.txt /tmp/
-RUN pip3 install -q -r /tmp/requirements-generic.txt && rm -rf /root/.cache
+RUN pip3 install -r /tmp/requirements-generic.txt && rm -rf /root/.cache
 COPY requirements-toolkit.txt /tmp/
-RUN pip3 install -q -r /tmp/requirements-toolkit.txt && rm -rf /root/.cache
+RUN pip3 install -r /tmp/requirements-toolkit.txt && rm -rf /root/.cache
 
 # Install aleph
 COPY . /aleph
