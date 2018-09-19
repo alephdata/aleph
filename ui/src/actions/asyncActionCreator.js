@@ -32,8 +32,13 @@ export default function asyncActionCreator(actionCreator, {
       });
       throw error;
     }
+  };
+
+  if(Object.getOwnPropertyDescriptor(newActionCreator, 'name').configurable){
+    Object.defineProperty(newActionCreator, 'name', { value: name });
+  }else{
+    Object.assign(newActionCreator, { toString: () => name })
   }
-  Object.defineProperty(newActionCreator, 'name', { value: name });
   newActionCreator.innerFunc = actionCreator;
 
   newActionCreator.START = START;
