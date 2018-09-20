@@ -56,18 +56,21 @@ class DocumentViewsMenu extends React.Component {
             icon='pt-icon-document' />
         )}
         {hasTextMode && (
-          <ViewItem mode='text' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.text)}
-            href={`/documents/${document.id}?mode=text`}
-            icon='pt-icon-align-justify' />
+          <ViewItem mode='text'
+                    activeMode={activeMode}
+                    isPreview={isPreview}
+                    message={intl.formatMessage(messages.text)}
+                    href={`/documents/${document.id}?mode=text`}
+                    icon='pt-icon-align-justify' />
         )}
         <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
-                  disabled={tags.total === 0}
+                  count={tags.total}
                   message={intl.formatMessage(messages.tags)}
                   href={`/documents/${document.id}/tags`}
                   icon='pt-icon-tag' />
-        <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
-                  disabled={similar.total === 0}
+        <ViewItem mode='similar' activeMode={activeMode}
+                  isPreview={isPreview}
+                  count={similar.total}
                   message={intl.formatMessage(messages.similar)}
                   href={`/documents/${document.id}/similar`}
                   icon='pt-icon-tag' />
