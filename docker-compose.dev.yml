@@ -39,12 +39,6 @@ services:
     expose:
       - 3000
 
-  extract-entities:
-    image: alephdata/aleph-extract-entities
-    restart: on-failure
-    expose:
-      - 50000
-
   recognize-text:
     image: alephdata/aleph-recognize-text
     restart: on-failure
@@ -60,7 +54,6 @@ services:
       - rabbitmq
       - redis
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs: /tmp
     volumes:
@@ -91,7 +84,6 @@ services:
       - rabbitmq
       - redis
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs: /tmp
     volumes:

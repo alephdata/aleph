@@ -23,10 +23,6 @@ setup(
     test_suite='nose.collector',
     entry_points={
         'aleph.init': [],
-        'aleph.analyzers': [
-            'corasick = aleph.analyze.corasick_entity:AhoCorasickEntityAnalyzer',  # noqa
-            'ner = aleph.analyze.extract_entity:EntityExtractor',
-        ],
         'console_scripts': [
             'aleph = aleph.manage:main',
         ]

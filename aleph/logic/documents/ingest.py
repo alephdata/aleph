@@ -8,9 +8,9 @@ from aleph.model import Document, Events
 from aleph.logic.notifications import publish
 from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
+from aleph.logic.extractors import extract_document_tags
 from aleph.logic.collections import index_collection_async
 from aleph.index.documents import index_document, index_records
-from aleph.analyze import analyze_document
 
 log = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ def get_manager():
 
 def process_document(document):
     """Perform post-ingest tasks like analysis and indexing."""
-    analyze_document(document)
+    extract_document_tags(document)
     index_document(document)
     index_records(document)
     if document.collection.casefile:
