@@ -1,7 +1,7 @@
 import logging
 
 from aleph.core import db, settings
-from aleph.model import Document, DocumentTagCollector
+from aleph.model import Document, DocumentTag, DocumentTagCollector
 from aleph.logic.extractors.aggregate import EntityAggregator
 
 log = logging.getLogger(__name__)
@@ -26,6 +26,8 @@ def extract_document_tags(document):
     # DocumentTagCollector(document, 'spacy').save()
     collector = DocumentTagCollector(document, 'ner')
     for (label, category, weight) in aggregator.entities:
+        if category == DocumentTag.TYPE_LOCATION:
+            continue
         collector.emit(label, category, weight=weight)
     collector.save()
     db.session.add(document)

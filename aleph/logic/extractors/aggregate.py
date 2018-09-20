@@ -24,7 +24,8 @@ class EntityAggregator(object):
         if text is None:
             return
         self.record += 1
-        log.debug("Feed [%s]: %s chars", self.record, len(text))
+        if self.record % 1000 == 0:
+            log.debug("NER: %s text parts...", self.record)
         for result in extract_polyglot(self, text, languages):
             self.add(result)
         for result in extract_spacy(self, text, languages):

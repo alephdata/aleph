@@ -42,10 +42,6 @@ class TestAggregate(TestCase):
         entities = [l for l, c, w in agg.entities]
         assert 'Foo Blubb' in entities, entities
 
-    # def test_select_label(self):
-    #     labels = ['Mr Blue', 'Mr BLUE', 'Mr Blu', 'Mr. Blue']
-    #     assert select_label(labels) == 'Mr Blue'
-
     def test_phonenumber(self):
         agg = EntityAggregator()
         text = "Mr. Flubby Flubber called the number tel:+919988111222 twice"

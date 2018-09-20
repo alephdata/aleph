@@ -1,4 +1,5 @@
-from aleph.logic.extractors.util import overlaps, select_label
+from Levenshtein import setmedian
+from aleph.logic.extractors.util import overlaps
 
 
 class Cluster(object):
@@ -27,7 +28,7 @@ class Cluster(object):
         if self.strict:
             return self.result.label
         labels = [r.label for r in self.results]
-        return select_label(labels)
+        return setmedian(labels)
 
     @property
     def category(self):

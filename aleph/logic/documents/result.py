@@ -1,4 +1,5 @@
 import logging
+from banal import ensure_list
 from collections import OrderedDict
 from normality import stringify
 from followthemoney import model
@@ -54,6 +55,8 @@ class DocumentResult(Result):
                       published_at=document.meta.get('published_at'),
                       encoding=document.meta.get('encoding'),
                       languages=document.meta.get('languages', []),
+                      message_id=document.meta.get('message_id'),
+                      in_reply_to=document.meta.get('in_reply_to', []),
                       ocr_languages=ocr_languages,
                       size=document.file_size)
 
@@ -112,7 +115,9 @@ class DocumentResult(Result):
         doc.modified_at = self.modified_at or doc.meta.get('modified_at')
         doc.published_at = self.published_at or doc.meta.get('published_at')
         doc.headers = self.headers or doc.meta.get('headers')
-        doc.columns = list(self.columns.keys())
+        doc.message_id = self.message_id or doc.meta.get('message_id')
+        doc.in_reply_to = ensure_list(self.in_reply_to)
+        doc.columns = ensure_list(self.columns.keys())
         doc.body_raw = self.body_html
         doc.body_text = self.body_text
 
