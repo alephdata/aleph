@@ -117,7 +117,7 @@ class DocumentResult(Result):
         doc.headers = self.headers or doc.meta.get('headers')
         doc.message_id = self.message_id or doc.meta.get('message_id')
         doc.in_reply_to = ensure_list(self.in_reply_to)
-        doc.columns = ensure_list(self.columns.keys())
+        doc.columns = list(self.columns.keys())
         doc.body_raw = self.body_html
         doc.body_text = self.body_text
 
