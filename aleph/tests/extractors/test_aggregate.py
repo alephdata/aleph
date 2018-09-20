@@ -27,7 +27,9 @@ class TestAggregate(TestCase):
 
     def test_merkel(self):
         agg = EntityAggregator()
-        agg.extract('Das ist der Pudel von Angela Merkel', ['de', 'en'])
+        text = 'Das ist der Pudel von Angela Merkel. '
+        text = text + text + text + text + text
+        agg.extract(text, ['de', 'en'])
         entities = [l for l, c, w in agg.entities]
         assert 'Angela Merkel' in entities, entities
 

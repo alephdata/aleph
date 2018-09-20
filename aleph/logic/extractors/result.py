@@ -29,6 +29,9 @@ class Result(object):
     def normalize(self, location):
         return normalize(location, lowercase=True, ascii=True)
 
+    def __str__(self):
+        return self.label
+
 
 class NamedResult(Result):
     """Any entity extracted that has a human-style name."""
