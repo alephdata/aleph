@@ -100,4 +100,3 @@ RUN python3 -m spacy download xx
 # RUN python3 -m spacy download es && python3 -m spacy download pt
 # RUN python3 -m spacy download fr && python3 -m spacy download it
 # RUN python3 -m spacy download nl
-
