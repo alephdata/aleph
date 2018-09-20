@@ -129,7 +129,7 @@ class Document(db.Model, DatedModel, Metadata):
         props = ('title', 'summary', 'author', 'crawler', 'source_url',
                  'file_name', 'mime_type', 'headers', 'date', 'authored_at',
                  'modified_at', 'published_at', 'retrieved_at', 'languages',
-                 'countries', 'keywords', 'message_id', 'in_reply_to')
+                 'countries', 'keywords')
         for prop in props:
             value = data.get(prop, self.meta.get(prop))
             setattr(self, prop, value)
