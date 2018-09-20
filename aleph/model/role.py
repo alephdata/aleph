@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from flask import current_app
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -135,22 +134,15 @@ class Role(db.Model, IdModel, SoftDeleteModel):
                                   type=cls.USER)
 
     @classmethod
-    def load_id(cls, foreign_id, type=None, name=None):
-        """Load a role and return the ID.
-
-        If type is given and no role is found, a new role will be created.
-        """
-        if not hasattr(current_app, '_authz_roles'):
-            current_app._authz_roles = {}
-        if foreign_id not in current_app._authz_roles:
-            role = cls.by_foreign_id(foreign_id)
-            if role is None:
-                if type is None:
-                    return
-                name = name or foreign_id
-                role = cls.load_or_create(foreign_id, type, name)
-            current_app._authz_roles[foreign_id] = role.id
-        return current_app._authz_roles[foreign_id]
+    def load_id(cls, foreign_id):
+        """Load a role and return the ID."""
+        if not hasattr(settings, '_role_cache'):
+            settings._role_cache = {}
+        if foreign_id not in settings._role_cache:
+            role_id, = cls.all_ids().filter_by(foreign_id=foreign_id).first()
+            if role_id is not None:
+                settings._role_cache[foreign_id] = role_id
+        return settings._role_cache.get(foreign_id)
 
     @classmethod
     def public_roles(cls):

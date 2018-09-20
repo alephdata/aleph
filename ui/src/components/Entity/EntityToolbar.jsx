@@ -1,0 +1,30 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+
+import { Toolbar, CloseButton } from 'src/components/Toolbar';
+import getPath from 'src/util/getPath';
+
+
+class EntityToolbar extends React.Component {
+  render() {
+    const { entity, isPreview } = this.props;
+    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
+
+    return (      
+      <Toolbar className="toolbar-preview">
+        { isThing && isPreview && (
+          <Link to={getPath(entity.links.ui)} className="pt-button button-link">
+            <span className={`pt-icon-share`}/>
+            <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+          </Link>
+        )}
+        { isPreview && (
+          <CloseButton/>
+        )}
+      </Toolbar>
+    );
+  }
+}
+
+export default EntityToolbar;

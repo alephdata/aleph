@@ -136,7 +136,7 @@ class SourcesIndexScreen extends Component {
                           result={result}
                           updateQuery={this.updateQuery}/>
           </DualPane.SidePane>
-          <DualPane.ContentPane>
+          <DualPane.ContentPane className="padded">
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <ul className="results">

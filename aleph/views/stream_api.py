@@ -7,7 +7,7 @@ from aleph.model import Audit
 from aleph.logic.audit import record_audit
 from aleph.index.entities import iter_entities
 from aleph.index.records import iter_records
-from aleph.logic.triples import export_collection
+from aleph.logic.graph.rdf import export_collection
 from aleph.views.util import get_db_document, get_db_collection
 from aleph.views.util import require, stream_ijson
 

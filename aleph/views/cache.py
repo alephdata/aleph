@@ -1,6 +1,6 @@
 import logging
 from banal import hash_data
-from flask.ext.babel import get_locale
+from flask_babel import get_locale
 from flask import request, Response, Blueprint
 
 from aleph.core import settings

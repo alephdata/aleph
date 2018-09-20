@@ -33,8 +33,8 @@ $aleph-visited-link-color: darken($aleph-link-color, 10%);
 
 $alpeh-preview-pane-width: 1024px;
 $aleph-single-pane-width: 1024px;
-$aleph-sidebar-width: $aleph-grid-size * 40;
-$aleph-infopane-md-width: $aleph-grid-size * 300;
+$aleph-sidebar-width: $aleph-grid-size * 44;
+$aleph-infopane-md-width: $aleph-grid-size * 30;
 $aleph-sidebar-sm-width: $aleph-grid-size * 20;
 $aleph-sidepane-md-width: $aleph-grid-size * 25;
 
@@ -45,3 +45,4 @@ $warning-background-color: #fcf8e3;
 $warning-text-color: #8a6d3b;
 
 $button-color-hover: #137cbd;
+$views-menu-background-color: rgba(92,112,128,0.5);

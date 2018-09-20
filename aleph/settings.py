@@ -5,7 +5,7 @@
 # defaults.
 from os import environ, path
 from banal.bools import as_bool
-from flask.ext.babel import lazy_gettext
+from flask_babel import lazy_gettext
 
 
 def env(name, default=None):
@@ -127,6 +127,9 @@ OCR_VISION_API = env_bool('OCR_VISION_API', False)
 OCR_SERVICE = 'recognize-text:50000'
 OCR_SERVICE = env('OCR_SERVICE', OCR_SERVICE)
 
+# general gRPC settings
+GRPC_LB_POLICY = env('GRPC_LB_POLICY', 'round_robin')
+GRPC_CONN_AGE = int(env('GRPC_CONN_AGE', 500))  # ms
 
 # Language whitelist
 LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
@@ -139,20 +142,8 @@ LANGUAGES = [l.lower().strip() for l in LANGUAGES]
 # User interface
 UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
 
-# Analyzers to be used for tag extraction:
-ANALYZE_LANGUAGE = env_bool('ANAYZE_LANGUAGE', True)
-ANALYZE_CORASICK = env_bool('ANAYZE_CORASICK', True)
-ANALYZE_PHONES = env_bool('ANAYZE_PHONES', True)
-ANALYZE_EMAILS = env_bool('ANAYZE_EMAILS', True)
-ANALYZE_IP = env_bool('ANAYZE_IP', True)
-ANALYZE_IBAN = env_bool('ANAYZE_IBAN', True)
-
-# gRPC extractor services
-ENTITIES_SERVICE = env('ENTITIES_SERVICE', 'extract-entities:50000')
-
-# general gRPC settings
-GRPC_LB_POLICY = env('GRPC_LB_POLICY', 'round_robin')
-GRPC_CONN_AGE = int(env('GRPC_CONN_AGE', 500))  # ms
+# Geonames data file
+GEONAMES_DATA = env('GEONAMES_DATA')
 
 ##############################################################################
 # E-mail settings
@@ -197,3 +188,12 @@ QUEUE_ROUTING_KEY = 'worker.process'
 
 BROKER_URI = 'amqp://guest:guest@localhost:5672//'
 BROKER_URI = env('BROKER_URI', BROKER_URI)
+
+REDIS_URL = env('REDIS_URL', 'redis://redis:6379/0')
+REDIS_BATCH_SIZE = int(env('REDIS_BATCH_SIZE', 10000))
+
+CACHE_CONFIG = {
+    'CACHE_TYPE': 'redis',
+    'CACHE_KEY_PREFIX': 'app',
+    'CACHE_REDIS_URL': REDIS_URL
+}

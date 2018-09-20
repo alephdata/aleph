@@ -21,6 +21,12 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
+  redis:
+    image: redis:alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
   convert-document:
     image: alephdata/aleph-convert-document
     restart: on-failure
@@ -30,13 +36,6 @@ services:
     mem_limit: 2g
     expose:
       - 3000
-
-  extract-entities:
-    image: alephdata/aleph-extract-entities
-    restart: on-failure
-    mem_limit: 4g
-    expose:
-      - 50000
 
   recognize-text:
     image: alephdata/aleph-recognize-text
@@ -53,8 +52,8 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
+      - redis
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs:
       - /tmp
@@ -71,8 +70,8 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
+      - redis
       - convert-document
-      - extract-entities
       - recognize-text
       - worker
     tmpfs:
@@ -91,9 +90,9 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
+      - redis
       - worker
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs:
       - /tmp
@@ -111,7 +110,10 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
+      - redis
       - worker
+      - convert-document
+      - recognize-text
     tmpfs:
       - /tmp
     volumes:
@@ -130,4 +132,5 @@ volumes:
   archive-data: {}
   postgres-data: {}
   rabbitmq-data: {}
+  redis-data: {}
   elasticsearch-data: {}
