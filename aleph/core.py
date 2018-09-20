@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
 from flask_caching import Cache
-from flask.ext.babel import Babel
+from flask_babel import Babel
 from kombu import Queue
 from celery import Celery
 from celery.schedules import crontab

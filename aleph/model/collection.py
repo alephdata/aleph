@@ -1,7 +1,7 @@
 import logging
 from banal import as_bool, ensure_list
 from datetime import datetime
-from flask.ext.babel import lazy_gettext
+from flask_babel import lazy_gettext
 from sqlalchemy.orm import aliased
 from sqlalchemy.dialects.postgresql import ARRAY
 

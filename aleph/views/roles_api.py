@@ -1,7 +1,7 @@
 import logging
+from flask_babel import gettext
 from flask import Blueprint, request
 from itsdangerous import BadSignature
-from flask.ext.babel import gettext
 
 from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
