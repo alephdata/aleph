@@ -1,4 +1,5 @@
 import logging
+from banal import ensure_list
 from collections import OrderedDict
 from normality import stringify
 from followthemoney import model
@@ -115,8 +116,8 @@ class DocumentResult(Result):
         doc.published_at = self.published_at or doc.meta.get('published_at')
         doc.headers = self.headers or doc.meta.get('headers')
         doc.message_id = self.message_id or doc.meta.get('message_id')
-        doc.in_reply_to = self.in_reply_to or doc.meta.get('in_reply_to')
-        doc.columns = list(self.columns.keys())
+        doc.in_reply_to = ensure_list(self.in_reply_to)
+        doc.columns = ensure_list(self.columns.keys())
         doc.body_raw = self.body_html
         doc.body_text = self.body_text
 
