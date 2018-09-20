@@ -45,8 +45,8 @@ class DocumentScreenContext extends Component {
           <DualPane>
             <DualPane.ContentPane className='view-menu-flex-direction'>
               <DocumentViewsMenu document={document}
-                                activeMode={activeMode}
-                                isPreview={false}/>
+                                 activeMode={activeMode}
+                                 isPreview={false}/>
               <div>
                 {breadcrumbs}
                 {this.props.children}

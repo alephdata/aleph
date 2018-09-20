@@ -6,7 +6,7 @@ import './Footer.css';
 class Footer extends React.Component {
 
   render() {
-    const {metadata, breadcrumbs} = this.props;
+    const {metadata} = this.props;
 
     return (
       <footer id="Footer" className="Footer">
@@ -37,7 +37,6 @@ class Footer extends React.Component {
             </a>
           </span>
         </div>
-        {/*{breadcrumbs}*/}
       </footer>
     );
   }
