@@ -8,7 +8,7 @@ import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViewsMenu from 'src/components/ViewsMenu/EntityViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs, Entity, Schema } from 'src/components/common';
+import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
 
 class EntityScreenContext extends Component {
@@ -45,7 +45,7 @@ class EntityScreenContext extends Component {
           <DualPane>
             <DualPane.ContentPane className='view-menu-flex-direction'>
               <EntityViewsMenu entity={entity} activeMode={activeMode} isPreview={false}/>
-              <div>
+              <div className='content-children'>
                 {breadcrumbs}
                 {this.props.children}
               </div>

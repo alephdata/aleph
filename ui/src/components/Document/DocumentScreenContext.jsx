@@ -47,7 +47,7 @@ class DocumentScreenContext extends Component {
               <DocumentViewsMenu document={document}
                                 activeMode={activeMode}
                                 isPreview={false}/>
-              <div>
+              <div className='content-children'>
                 {breadcrumbs}
                 {this.props.children}
               </div>
