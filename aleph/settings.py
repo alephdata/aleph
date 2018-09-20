@@ -5,7 +5,7 @@
 # defaults.
 from os import environ, path
 from banal.bools import as_bool
-from flask.ext.babel import lazy_gettext
+from flask_babel import lazy_gettext
 
 
 def env(name, default=None):

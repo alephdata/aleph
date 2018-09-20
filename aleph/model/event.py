@@ -1,4 +1,4 @@
-from flask.ext.babel import lazy_gettext
+from flask_babel import lazy_gettext
 
 from aleph.model.role import Role
 from aleph.model.alert import Alert

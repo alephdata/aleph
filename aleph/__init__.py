@@ -1,7 +1,6 @@
 import logging
 import warnings
 from pkg_resources import get_distribution
-from flask.exthook import ExtDeprecationWarning
 from sqlalchemy.exc import SAWarning
 
 __version__ = get_distribution('aleph').version
@@ -9,7 +8,6 @@ __version__ = get_distribution('aleph').version
 # shut up useless SA warning:
 warnings.filterwarnings('ignore', 'Unicode type received non-unicode bind param value.')  # noqa
 warnings.filterwarnings('ignore', category=SAWarning)
-warnings.filterwarnings('ignore', category=ExtDeprecationWarning)
 
 # loggers.
 logging.basicConfig(level=logging.DEBUG)
