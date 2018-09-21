@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 class EntityAggregator(object):
     CUTOFFS = {
-        DocumentTag.TYPE_COUNTRY: .3,
+        DocumentTag.TYPE_COUNTRY: .2,
         DocumentTag.TYPE_LANGUAGE: .3,
         DocumentTag.TYPE_ORGANIZATION: .003,
         DocumentTag.TYPE_PERSON: .003,
@@ -41,15 +41,12 @@ class EntityAggregator(object):
         if result.key is None:
             return
         # TODO: make a hash?
+        if not isinstance(result, CountryResult):
+            for country in ensure_list(result.countries):
+                self.add(CountryResult(self, country, 0, 1))
         for cluster in self.clusters:
             if cluster.match(result):
                 return cluster.add(result)
-        # log.debug('Extract [%s] (%s, %r)',
-        #           result.label,
-        #           result.category,
-        #           result.countries)
-        for country in ensure_list(result.countries):
-            self.add(CountryResult(self, country, 0, 1))
         self.clusters.append(Cluster(result))
 
     def category_cutoff(self, category):
@@ -85,7 +82,7 @@ class EntityAggregator(object):
             if cluster.weight < cutoff:
                 continue
 
-            # log.info('%s: %s: %s', group.label, group.category, group.weight)
+            log.debug('%s (%s): %s', cluster.label, cluster.category, cluster.weight)  # noqa
             yield cluster.label, cluster.category, cluster.weight
 
     def __len__(self):
