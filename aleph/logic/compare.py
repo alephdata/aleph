@@ -9,7 +9,7 @@ from followthemoney.util import dampen
 # on as many of these matches as we can, then build a regression
 # model which properly weights the value of a matching property
 # based upon it's type.
-FP_WEIGHT = 0.5
+FP_WEIGHT = 0.6
 MATCH_WEIGHTS = {
     registry.text: 0,
     registry.name: 0,  # because we already compare fingerprints
@@ -55,6 +55,6 @@ def compare_fingerprints(left, right):
     right_list = ensure_list(right.get('fingerprints'))
     for (left, right) in itertools.product(left_list, right_list):
         similarity = jaro(left, right)
-        score = similarity * dampen(3, 20, max(left, right, key=len))
+        score = similarity * dampen(3, 20, min(left, right, key=len))
         result = max(result, score)
     return result * FP_WEIGHT

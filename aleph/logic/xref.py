@@ -44,8 +44,6 @@ def xref_item(item, collection_id=None):
     for result in results:
         result = unpack_result(result)
         score = compare(item, result)
-        if score < 0.1:
-            continue
         log.info("Xref [%.1f]: %s <=> %s", score, name, result.get('name'))
         obj = Match()
         obj.entity_id = entity_id
