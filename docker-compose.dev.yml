@@ -62,6 +62,8 @@ services:
       - "./contrib:/aleph/contrib"
       - "./mappings:/aleph/mappings"
       - "/:/host"
+    cap_add:
+      - SYS_PTRACE
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
