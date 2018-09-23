@@ -64,7 +64,7 @@ class EntityAggregator(object):
     def countries(self):
         cutoff = self.category_cutoff(DocumentTag.TYPE_COUNTRY)
         for cluster in self.clusters:
-            if not cluster.strict:
+            if not cluster.result.strict:
                 continue
             if cluster.category != DocumentTag.TYPE_COUNTRY:
                 continue
