@@ -1,5 +1,4 @@
 import logging
-from banal import ensure_list
 
 from aleph.model import DocumentTag
 from aleph.logic.extractors.extract import extract_polyglot, extract_spacy
@@ -40,10 +39,15 @@ class EntityAggregator(object):
     def add(self, result):
         if result.key is None:
             return
-        # TODO: make a hash?
+
         if not isinstance(result, CountryResult):
-            for country in ensure_list(result.countries):
-                self.add(CountryResult(self, country, 0, 1))
+            for country in result.countries:
+                self.add(CountryResult(self, country, None, None))
+
+        # only using locations for country detection at the moment:
+        if result.category == DocumentTag.TYPE_LOCATION:
+            return
+
         for cluster in self.clusters:
             if cluster.match(result):
                 return cluster.add(result)
@@ -70,19 +74,13 @@ class EntityAggregator(object):
 
     @property
     def entities(self):
-        total_weight = sum([c.weight for c in self.clusters if not c.strict])
-        total_weight = float(max(1, total_weight))
         for cluster in self.clusters:
-            # only using locations for country detection at the moment:
-            if cluster.category == DocumentTag.TYPE_LOCATION:
-                continue
-
             # skip entities that do not meet a threshold of relevance:
             cutoff = self.category_cutoff(cluster.category)
             if cluster.weight < cutoff:
                 continue
 
-            log.debug('%s (%s): %s', cluster.label, cluster.category, cluster.weight)  # noqa
+            # log.debug('%s (%s): %s', cluster.label, cluster.category, cluster.weight)  # noqa
             yield cluster.label, cluster.category, cluster.weight
 
     def __len__(self):

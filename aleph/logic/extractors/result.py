@@ -23,6 +23,9 @@ class Result(object):
     def __str__(self):
         return self.label
 
+    def __repr__(self):
+        return '<Result(%s,%s)>' % (self.label, self.category)
+
 
 class NamedResult(Result):
     """Any entity extracted that has a human-style name."""
@@ -63,8 +66,8 @@ class LocationResult(Result):
         super(LocationResult, self).__init__(ctx, label, start, end)
         if self.key is not None:
             try:
-                automaton = places_automaton()
-                self.countries = automaton.get(self.key)
+                places = places_automaton()
+                self.countries = ensure_list(places.get(self.key))
             except KeyError:
                 pass
 

@@ -18,12 +18,10 @@ def extract_document_tags(document):
 
     aggregator = EntityAggregator()
     for text in document.texts:
-        if text is None:
-            continue
         aggregator.extract(text, languages)
 
-    # DocumentTagCollector(document, 'polyglot').save()
-    # DocumentTagCollector(document, 'spacy').save()
+    DocumentTagCollector(document, 'polyglot').save()
+    DocumentTagCollector(document, 'spacy').save()
     collector = DocumentTagCollector(document, 'ner')
     for (label, category, weight) in aggregator.entities:
         collector.emit(label, category, weight=weight)

@@ -38,7 +38,7 @@ def extract_polyglot(ctx, text, languages):
         parsed = Text(text)
         lang = parsed.language
         if lang.confidence > 90:
-            yield LanguageResult(ctx, lang.code, 0, len(text))
+            yield LanguageResult(ctx, lang.code, None, None)
         if lang.code not in POLYGLOT_LANGUAGES:
             return
         for entity in parsed.entities:
