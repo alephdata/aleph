@@ -1,10 +1,12 @@
 import logging
 from flask import Blueprint, request
+from flask.wrappers import Response
 
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Audit
 from aleph.views.util import jsonify
 from aleph.serializers import QueryLogSchema
+from aleph.core import db
 
 blueprint = Blueprint('history_api', __name__)
 log = logging.getLogger(__name__)
@@ -19,3 +21,20 @@ def index():
                                  parser=parser,
                                  schema=QueryLogSchema)
     return jsonify(result)
+
+
+@blueprint.route('/api/2/querylog', methods=['DELETE'])
+def delete():
+    """Delete the query logs for a particular search term"""
+    text = Audit.data['text'].astext.cast(db.Unicode).label('text')
+    query = request.args.get('query')
+    if query:
+        audit_logs = Audit.query.filter(
+            text == query, Audit.role_id == request.authz.id
+        )
+        if audit_logs.count():
+            for audit in audit_logs:
+                audit.delete()
+            db.session.commit()
+            return ('', 204)
+    return Response(status=404)
