@@ -1,5 +1,6 @@
 import os
 import shutil
+import fakeredis
 from tempfile import mkdtemp
 from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
@@ -48,13 +49,13 @@ class TestCase(FlaskTestCase):
         settings.DATABASE_URI = DB_URI
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.MAIL_SERVER = None
-        settings.COUNTRIES_SERVICE = None
         settings.ENTITIES_SERVICE = None
         settings.ENTITIES_INDEX = '%s_entity' % APP_NAME
         settings.ENTITIES_INDEX_SET = [settings.ENTITIES_INDEX]
         settings.RECORDS_INDEX = '%s_records' % APP_NAME
         settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
         settings.COLLECTIONS_INDEX = '%s_collection' % APP_NAME
+        settings._redis = fakeredis.FakeRedis(decode_responses=True)
         app = create_app({})
         mount_app_blueprints(app)
         return app
@@ -94,7 +95,7 @@ class TestCase(FlaskTestCase):
         self.grant(collection, visitor, True, False)
 
     def flush_index(self):
-        refresh_index()
+        refresh_index(all_indexes())
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
@@ -124,6 +125,7 @@ class TestCase(FlaskTestCase):
         es.delete_by_query(index=all_indexes(),
                            body={'query': {'match_all': {}}},
                            refresh=True,
+                           ignore=[404, 400],
                            conflicts='proceed')
 
         for table in reversed(db.metadata.sorted_tables):

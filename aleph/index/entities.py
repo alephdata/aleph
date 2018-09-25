@@ -12,8 +12,8 @@ from normality import latinize_text
 from aleph.core import es
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
-from aleph.index.util import index_safe, mget_safe, backoff_cluster
-from aleph.index.util import refresh_index, authz_query
+from aleph.index.util import index_safe, search_safe, backoff_cluster
+from aleph.index.util import authz_query
 
 log = logging.getLogger(__name__)
 
@@ -82,7 +82,6 @@ def delete_entity(entity_id):
     """Delete an entity from the index."""
     q = {'ids': {'values': str(entity_id)}}
     query_delete(entities_index(), q)
-    refresh_index(index=entities_index())
 
 
 def _index_updates(collection, entities):
@@ -103,13 +102,13 @@ def _index_updates(collection, entities):
     if not len(entities):
         return
 
-    result = mget_safe(index=entity_index(),
-                       doc_type='doc',
-                       body={'ids': list(entities.keys())},
-                       _source=['schema', 'properties', 'created_at'])
-    for doc in result.get('docs', []):
-        if not doc.get('found', False):
-            continue
+    query = {
+        'query': {'ids': {'values': list(entities.keys())}},
+        '_source': ['schema', 'properties', 'created_at']
+    }
+    result = search_safe(index=entity_index(),
+                         body=query)
+    for doc in result.get('hits').get('hits', []):
         entity_id = doc['_id']
         entity = entities.get(entity_id)
         existing = doc.get('_source')
@@ -133,7 +132,7 @@ def _index_updates(collection, entities):
 
 def index_bulk(collection, entities, chunk_size=200):
     """Index a set of entities."""
-    for attempt in count():
+    for attempt in count(1):
         try:
             entities = _index_updates(collection, entities)
             bulk_op(entities, chunk_size=chunk_size)
@@ -153,7 +152,7 @@ def finalize_index(data, schema, texts):
     for name, prop in schema.properties.items():
         if name not in properties:
             continue
-        if prop.type_name in ['entity', 'date', 'url', 'uri', 'country']:
+        if prop.type.name in ['entity', 'date', 'url', 'country']:
             continue
         for value in ensure_list(properties[name]):
             if name == 'name':
@@ -187,4 +186,5 @@ def index_single(obj, data, texts):
     data['updated_at'] = obj.updated_at
     data = finalize_index(data, obj.model, texts)
     data = clean_dict(data)
+    # pprint(data)
     return index_safe(entity_index(), obj.id, data)

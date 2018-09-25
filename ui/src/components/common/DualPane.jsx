@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import c from 'classnames';
 
 import './DualPane.css';
-import ViewsMenu from "../ViewsMenu/ViewsMenu";
+
 
 class InfoPane extends Component {
   render() {

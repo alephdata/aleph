@@ -52,7 +52,7 @@ class DocumentViewsMenu extends React.Component {
         {hasModifiers && (
           <ViewItem mode='view' activeMode={activeMode} isPreview={isPreview}
             message={intl.formatMessage(messages.view)}
-            href={`/documents/${document.id}?mode=view`}
+            href={`/documents/${document.id}#mode=view`}
             icon='pt-icon-document' />
         )}
         {hasTextMode && (
@@ -60,7 +60,7 @@ class DocumentViewsMenu extends React.Component {
                     activeMode={activeMode}
                     isPreview={isPreview}
                     message={intl.formatMessage(messages.text)}
-                    href={`/documents/${document.id}?mode=text`}
+                    href={`/documents/${document.id}#mode=text`}
                     icon='pt-icon-align-justify' />
         )}
         <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}

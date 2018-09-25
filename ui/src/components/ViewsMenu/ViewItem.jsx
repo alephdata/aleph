@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Tooltip, Position } from '@blueprintjs/core';
+import { Tooltip, Position, AnchorButton } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import c from 'classnames';
@@ -36,6 +36,7 @@ class ViewItem extends React.Component {
                     {count && <NotificationBadge count={count}
                                                  className='badge-item'/>}
                     {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
+                    {/*<img src='./icons/Airplane.svg'/>*/}
                     <i className={c('fa', 'fa-fw', icon)} />
                   </Link>
                 )}
@@ -44,15 +45,17 @@ class ViewItem extends React.Component {
                     {count && <NotificationBadge count={count}
                                                  className='badge-item'/>}
                     {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
+                    {/*<img src='./icons/Airplane.svg'/>*/}
                     <i className={c('fa', 'fa-fw', icon)} />
                   </button>
                 )}
               </React.Fragment>
             )}
             {(count === 0) && (
-              <button className={className} disabled={count === 0}>
+              <AnchorButton className={className} disabled={true}>
+                {/*<img src='./icons/Airplane.svg'/>*/}
                 <i className={c('fa', 'fa-fw', icon)} />
-              </button>
+              </AnchorButton>
             )}
           </React.Fragment>
         </Tooltip>

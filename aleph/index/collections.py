@@ -1,14 +1,13 @@
 import logging
-import exactitude
 from pprint import pprint  # noqa
 from normality import normalize
+from followthemoney import types
 
 from aleph.core import es
 from aleph.model import Entity, Collection
 from aleph.index.core import collections_index, entities_index, records_index
 from aleph.index.util import query_delete, query_update, unpack_result
-from aleph.index.util import index_safe, index_form, refresh_index
-from aleph.index.util import search_safe
+from aleph.index.util import index_safe, index_form, search_safe
 
 log = logging.getLogger(__name__)
 
@@ -86,19 +85,17 @@ def index_collection(collection):
     if countries is None or not len(countries):
         countries = aggregations['countries']['buckets']
         countries = [c['key'] for c in countries]
-    data['countries'] = exactitude.countries.normalize_set(countries)
+    data['countries'] = types.countries.normalize_set(countries)
 
     languages = collection.languages
     if languages is None or not len(languages):
         languages = aggregations['languages']['buckets']
         languages = [c['key'] for c in languages]
-    data['languages'] = exactitude.languages.normalize_set(languages)
+    data['languages'] = types.languages.normalize_set(languages)
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    data = index_safe(collections_index(), collection.id, data)
-    refresh_index(index=collections_index())
-    return data
+    return index_safe(collections_index(), collection.id, data)
 
 
 def get_collection(collection_id):
@@ -127,7 +124,6 @@ def delete_collection(collection_id):
     """Delete all documents from a particular collection."""
     q = {'ids': {'values': str(collection_id)}}
     query_delete(collections_index(), q)
-    refresh_index(index=collections_index())
 
 
 def delete_entities(collection_id):
@@ -143,7 +139,6 @@ def delete_documents(collection_id):
     """Delete documents from a collection."""
     records_query = {'term': {'collection_id': collection_id}}
     query_delete(records_index(), records_query)
-    refresh_index(index=records_index())
     query = {'bool': {
         'must': [
             {'term': {'schemata': 'Document'}},

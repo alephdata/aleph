@@ -12,7 +12,7 @@ class DocumentToolbar extends React.Component {
 
     return (
       <Toolbar className='toolbar-preview'>
-        {isPreview && (
+        {isPreview && document.links && (
           <Link to={getPath(document.links.ui)} className="pt-button button-link">
             <span className={`pt-icon-share`}/>
             <FormattedMessage id="sidebar.open" defaultMessage="Open"/>

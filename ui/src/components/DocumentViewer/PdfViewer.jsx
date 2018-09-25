@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
@@ -9,6 +8,7 @@ import classNames from 'classnames';
 
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
+import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
 import { queryDocumentRecords, fetchDocumentPage } from 'src/actions';
 import { selectDocumentRecordsResult, selectDocumentPage } from 'src/selectors';
@@ -20,7 +20,11 @@ class PdfViewer extends Component {
     super(props);
     this.state = {
       width: null,
-      numPages: 0
+      numPages: 0,
+      components:{
+        Document: SectionLoading,
+        Page: SectionLoading
+      }
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onResize = this.onResize.bind(this);
@@ -53,6 +57,7 @@ class PdfViewer extends Component {
     this.fetchRecords();
     this.fetchPage();
     this.onResize();
+    this.fetchComponents();
     window.addEventListener("resize", throttle(this.onResize, 500))
   }
 
@@ -78,6 +83,11 @@ class PdfViewer extends Component {
     if (document.id !== prevProps.document.id || page !== prevProps.page) {
       this.fetchPage();
     }
+  }
+
+  fetchComponents() {
+    import(/* webpackChunkName:'pdf-lib'*/'react-pdf/dist/entry.webpack')
+      .then(components => this.setState({ components }));
   }
 
   fetchRecords() {
@@ -120,10 +130,35 @@ class PdfViewer extends Component {
       hash: `page=${res.index}&mode=view`
     });
   }
-  
+
+  renderPDFView (){
+    const { document, page } = this.props;
+    const { width, numPages, components:{
+      Document,
+      Page
+    } } = this.state;
+
+
+    return (<div ref={(ref) => this.pdfElement = ref}>
+      <Document renderAnnotations={true}
+                file={document.links.pdf}
+                loading={<SectionLoading />}
+                onLoadSuccess={this.onDocumentLoad}>
+          {/*
+                  Only render Page when width has been set and numPages has been figured out.
+                  This limits flashing / visible resizing when displaying page for the first time.
+              */}
+        {width !== null && numPages > 0 && (
+            <Page pageNumber={page}
+                  className="page"
+                  width={width} />
+        )}
+      </Document>
+  </div>)
+  }
+
   render() {
-    const { document, mode, page, pageResult, result, isSearch } = this.props;
-    const { width, numPages } = this.state;
+    const { document, mode, page, pageResult, result, isSearch, numberOfPages } = this.props;
 
     if (document.id === undefined) {
       return null;
@@ -135,6 +170,9 @@ class PdfViewer extends Component {
 
     return (
       <div className="PdfViewer">
+        {numberOfPages !== null && numberOfPages > 0 && (
+          <PagingButtons document={document} numberOfPages={numberOfPages}/>
+        )}
         <div className="outer">
           <div id="PdfViewer" className="inner">
             { mode === 'text' && (
@@ -155,28 +193,11 @@ class PdfViewer extends Component {
                                       defaultMessage="No page within this document matches your search." />
                   </div>
                 )}
-                {(!isSearch || result.total === 0) && (
-                  <div ref={(ref) => this.pdfElement = ref}>
-                    <Document renderAnnotations={true}
-                              file={document.links.pdf}
-                              loading={<SectionLoading />}
-                              onLoadSuccess={this.onDocumentLoad}>
-                    {/* 
-                        Only render Page when width has been set and numPages has been figured out.
-                        This limits flashing / visible resizing when displaying page for the first time.
-                    */}
-                    {width !== null && numPages > 0 && (
-                      <Page pageNumber={page}
-                            className="page"
-                            width={width} />
-                    )}
-                    </Document>
-                  </div>
-                )}
+                {(!isSearch || result.total === 0) && this.renderPDFView()}
                 {isSearch && (
                   <div className="pages">
                     <ul>
-                      {result.results.map((res, index) => (
+                      {result.results.map((res) => (
                         <li key={`page-${res.id}`}>
                           <p>
                             <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: page === res.index})}>
@@ -219,7 +240,7 @@ const mapStateToProps = (state, ownProps) => {
     query = query.setString('q', queryText);
   }
 
-  const mode = hashQuery.mode || 'view';
+  const mode = hashQuery['preview:mode'] || 'view';
   return {
     result: selectDocumentRecordsResult(state, query),
     pageResult: selectDocumentPage(state, document.id, page),

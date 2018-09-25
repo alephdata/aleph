@@ -5,7 +5,6 @@ from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
 
 from aleph.core import es
-from aleph.index.core import all_indexes
 from aleph.util import backoff
 
 log = logging.getLogger(__name__)
@@ -16,12 +15,10 @@ REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 
 
-def refresh_index(index=None):
+def refresh_index(index):
     """Run a refresh to apply all indexing changes."""
-    if index is None:
-        index = all_indexes()
     try:
-        es.indices.refresh(index=all_indexes(),
+        es.indices.refresh(index=index,
                            ignore=[404, 400],
                            ignore_unavailable=True)
     except TransportError as terr:
@@ -29,25 +26,11 @@ def refresh_index(index=None):
         backoff_cluster()
 
 
-def check_cluster_ready():
-    """Check if the cluster is a in a state where new documents
-    should be written to it."""
-    try:
-        es.cluster.health(wait_for_status='yellow', request_timeout=5)
-        return True
-    except Exception as exc:
-        return False
-
-
 def backoff_cluster(failures=0):
     """This is intended to halt traffic to the cluster if it is in a
     recovery state, e.g. after a master failure or severe node failures.
     """
-    for attempt in count(failures):
-        backoff(failures=attempt)
-        if check_cluster_ready():
-            return
-        log.warning("Cluster is flustered.")
+    backoff(failures=failures)
 
 
 def unpack_result(res):
@@ -124,11 +107,12 @@ def cleanup_query(body):
     return body
 
 
-def bulk_op(iter, chunk_size=500):
+def bulk_op(iter, chunk_size=500, max_retries=10):
     """Standard parameters for bulk operations."""
     bulk(es, iter,
-         stats_only=True,
          chunk_size=chunk_size,
+         max_retries=10,
+         initial_backoff=2,
          request_timeout=REQUEST_TIMEOUT,
          timeout=TIMEOUT)
 
@@ -184,19 +168,8 @@ def search_safe(*args, **kwargs):
     # without hurting UX.
     for attempt in count():
         try:
+            kwargs['doc_type'] = 'doc'
             return es.search(*args, **kwargs)
-        except Exception as exc:
-            log.warning("Search error: %s", exc)
-        backoff_cluster(failures=attempt)
-
-
-def mget_safe(*args, **kwargs):
-    # This is not supposed to be used in every location where search is
-    # run, but only where it's a backend search that we could back off of
-    # without hurting UX.
-    for attempt in count():
-        try:
-            return es.mget(*args, **kwargs)
         except Exception as exc:
             log.warning("Search error: %s", exc)
         backoff_cluster(failures=attempt)

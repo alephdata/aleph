@@ -29,12 +29,13 @@ class OCRServicer(RecognizeTextServicer):
         acquired = self.lock.acquire(blocking=False)
         if acquired is False:
             context.set_code(grpc.StatusCode.RESOURCE_EXHAUSTED)
-            context.set_details('Engine is busy.')
+            context.set_details('OCR engine is busy.')
             return Text()
 
         try:
             mode = self.MODES.get(image.mode, PSM.AUTO_OSD)
-            text = self.ocr.extract_text(image.data, mode=mode,
+            text = self.ocr.extract_text(image.data,
+                                         mode=mode,
                                          languages=image.languages)
             return Text(text=text)
         finally:
@@ -43,7 +44,7 @@ class OCRServicer(RecognizeTextServicer):
 
 def serve(port):
     options = [('grpc.max_receive_message_length', 10 * 1024 * 1024)]
-    executor = futures.ThreadPoolExecutor(max_workers=5)
+    executor = futures.ThreadPoolExecutor(max_workers=3)
     server = grpc.server(executor, options=options)
     add_RecognizeTextServicer_to_server(OCRServicer(), server)
     server.add_insecure_port(port)

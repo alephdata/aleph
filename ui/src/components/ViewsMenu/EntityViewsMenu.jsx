@@ -67,9 +67,7 @@ const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
   return {
     references: selectEntityReferences(state, entity.id),
-    schemata: selectSchemata(state),
-    tags: selectEntityTags(state, entity.id),
-    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id))
+    schemata: selectSchemata(state)
   };
 };
 

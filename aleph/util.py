@@ -29,9 +29,17 @@ def dict_list(data, *keys):
 
 
 def backoff(failures=0):
+    failures = min(7, failures)
     sleep = 2 ** (failures + random.random())
     log.debug("Back-off: %.2fs", sleep)
     time.sleep(sleep)
+
+
+def make_key(*criteria):
+    """Make a string key out of many criteria."""
+    criteria = [c or '' for c in criteria]
+    criteria = [str(c) for c in criteria]
+    return ':'.join(criteria)
 
 
 def html_link(text, link):

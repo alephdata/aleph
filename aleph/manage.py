@@ -184,6 +184,19 @@ def publish(foreign_id):
 
 
 @manager.command
+def graph(entity_id):
+    """Generate a graph around the given entity."""
+    from aleph.logic.graph import export_node
+    # for i in range(1000):
+    graph = export_node(entity_id, steam=10)
+    # print(len(graph))
+    print(str(graph, 'utf-8'))
+    # from aleph.logic.graph import traversal
+    # for (steam, link) in traversal.traverse_entity(entity_id, steam=5):
+    #     print((link.subject, link.prop.qname, link.value, steam))
+
+
+@manager.command
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_db()

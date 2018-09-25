@@ -1,5 +1,6 @@
 import logging
 from followthemoney import model
+from followthemoney.types import registry
 
 from aleph.core import es, db
 from aleph.model import Entity
@@ -39,7 +40,7 @@ def entity_references(entity, authz):
     properties = []
     queries = []
     for prop in model.properties:
-        if not prop.is_entity:
+        if prop.type != registry.entity:
             continue
         if not schema.is_a(prop.range):
             continue

@@ -10,9 +10,9 @@ from google.cloud.vision import ImageAnnotatorClient
 from google.cloud.vision import types
 
 from aleph import settings
-from aleph.model import Cache
+from aleph.core import kv
 from aleph.services import ServiceClientMixin
-from aleph.util import backoff
+from aleph.util import backoff, make_key
 
 log = logging.getLogger(__name__)
 
@@ -21,8 +21,8 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
     SERVICE = settings.OCR_SERVICE
 
     def extract_text(self, data, languages=None):
-        key = sha1(data).hexdigest()
-        text = Cache.get_cache(key)
+        key = make_key('ocr', sha1(data).hexdigest())
+        text = kv.get(key)
         if text is not None:
             # log.info('%s chars cached', len(text))
             return text
@@ -37,10 +37,10 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
                 languages = ensure_list(languages)
                 image = Image(data=data, languages=languages)
                 response = service.Recognize(image)
-                log.info('OCR: %s chars', len(response.text))
-                if response.text is not None:
-                    Cache.set_cache(key, response.text)
-                return response.text
+                text = response.text or ''
+                log.info('OCR: %s chars', len(text))
+                kv.set(key, text)
+                return text
             except self.Error as e:
                 if e.code() == self.Status.RESOURCE_EXHAUSTED:
                     continue
@@ -57,8 +57,8 @@ class GoogleVisionService(OCRService, OCRUtils):
         log.info("Using Google Vision API. Charges apply.")
 
     def extract_text(self, data, languages=None):
-        key = sha1(data).hexdigest()
-        text = Cache.get_cache(key)
+        key = make_key('ocr', sha1(data).hexdigest())
+        text = kv.get(key)
         if text is not None:
             log.info('Vision API: %s chars cached', len(text))
             return text
@@ -69,5 +69,5 @@ class GoogleVisionService(OCRService, OCRUtils):
             res = self.client.document_text_detection(image)
             ann = res.full_text_annotation
             log.info('Vision API: %s chars recognized', len(ann.text))
-            Cache.set_cache(key, ann.text)
+            kv.set(key, ann.text)
             return ann.text

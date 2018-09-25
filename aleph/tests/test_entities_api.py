@@ -263,7 +263,7 @@ class EntitiesApiTestCase(TestCase):
                               headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)
         data = res.json
-        assert len(data['results']) == 1, data
+        assert len(data['results']) == 2, data
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
 

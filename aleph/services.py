@@ -17,7 +17,7 @@ class ServiceClientMixin(object):
             return
         if not hasattr(self, '_local'):
             self._local = local()
-        if not hasattr(self._local, 'channel'):
+        if not hasattr(self._local, 'channel') or self._local.channel is None:
             options = (
                 # ('grpc.keepalive_time_ms', settings.GRPC_CONN_AGE),
                 ('grpc.keepalive_timeout_ms', settings.GRPC_CONN_AGE),

@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { ErrorSection } from 'src/components/common';
-import { Toolbar, CloseButton, ParentButton, PagingButtons, DocumentSearch } from 'src/components/Toolbar';
+import { Toolbar, CloseButton, ParentButton, DocumentSearch } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 import { TableViewer, TextViewer, HtmlViewer, PdfViewer, ImageViewer, FolderViewer, EmailViewer } from './index';
 
@@ -40,6 +40,7 @@ class DocumentViewer extends React.Component {
 
   renderContent() {
     const { document: doc, intl, queryText, previewMode } = this.props;
+    const { numberOfPages } = this.state;
     
     if (doc.schema === 'Email') {
       return <EmailViewer document={doc} queryText={queryText} />;
@@ -52,13 +53,12 @@ class DocumentViewer extends React.Component {
     } else if (doc.html) {
       return <HtmlViewer document={doc} queryText={queryText} />;
     } else if (doc.links && doc.links.pdf) {
-      return <PdfViewer document={doc} queryText={queryText} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
+      return <PdfViewer document={doc} queryText={queryText} numberOfPages={numberOfPages} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
     } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
       return <FolderViewer
         document={doc}
         queryText={queryText}
         hasWarning={doc.status === 'fail'}
-        disableOrEnableDelete={this.disableOrEnableDelete}
         setDocuments={this.setDocuments}
         setRefreshCallout={this.setRefreshCallout}/>;
     } else if (doc.schema === 'Document' || doc.schema === 'Audio' || doc.schema === 'Video') {
@@ -73,34 +73,13 @@ class DocumentViewer extends React.Component {
   }
   
   render() {
-    const { document: doc, showToolbar, previewMode } = this.props;
-    const { numberOfPages } = this.state;
+    const { document: doc } = this.props;
 
     if (doc.isLoading) {
       return null;
     }
     
     return <div className='DocumentViewer'>
-      {showToolbar && (
-        <Toolbar className={(previewMode === true) ? 'toolbar-preview' : null}>
-          <ParentButton isPreview={previewMode} document={doc} />
-          {previewMode === true && (
-            <Link to={getPath(doc.links.ui)} className="pt-button button-link">
-              <span className={`pt-icon-share`}/>
-              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
-            </Link>
-          )}
-          {numberOfPages !== null && numberOfPages > 0 && (
-            <PagingButtons document={doc} numberOfPages={numberOfPages}/>
-          )}
-          {previewMode === true && (
-            <CloseButton />
-          )}
-          {previewMode !== true && (
-            <DocumentSearch document={doc} />
-          )}
-        </Toolbar>
-      )}
       {this.renderContent()}
     </div>
   }
@@ -110,7 +89,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('search', location, {});
   return { queryText: query.getString('q') }
-}
+};
 
 DocumentViewer = connect(mapStateToProps)(DocumentViewer);
 DocumentViewer = injectIntl(DocumentViewer);

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import { Icon } from '@blueprintjs/core';
 import { withRouter } from 'react-router';
+import truncateText from 'truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
@@ -12,7 +13,6 @@ import getCollectionLink from 'src/util/getCollectionLink';
 import { getColor } from 'src/util/colorScheme';
 
 import './Collection.css';
-
 
 class CollectionLabel extends Component {
   shouldComponentUpdate(nextProps) {
@@ -35,10 +35,12 @@ class CollectionLabel extends Component {
       iconName = "lock";
     }
 
+    let text = truncateText(collection.label, 20);
+
     return (
       <span className="CollectionLabel" title={collection.label}>
         { icon && (<Icon icon={iconName} style={style} />)}
-        <span> { label && collection.label } </span>
+        <span> { label && text } </span>
       </span>
     );
   }

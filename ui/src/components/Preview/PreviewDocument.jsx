@@ -35,7 +35,7 @@ class PreviewDocument extends React.Component {
       mode = <DocumentInfoMode document={document} />;
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={document} />;
-      // maximised = true;
+      maximised = true;
     } else if (previewMode === 'similar') {
       mode = <EntitySimilarMode entity={document} />;
       maximised = true;
