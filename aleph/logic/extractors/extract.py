@@ -2,16 +2,18 @@ import os
 import spacy
 import logging
 from polyglot.text import Text
-from alephclient.services.entityextract_pb2 import ExtractedEntity  # noqa
 
-from entityextractor.result import PersonResult, LocationResult
-from entityextractor.result import OrganizationResult, LanguageResult
+from aleph.logic.extractors.result import PersonResult, LocationResult
+from aleph.logic.extractors.result import OrganizationResult, LanguageResult
 
 log = logging.getLogger(__name__)
 
+MIN_LENGTH = 60
 MAX_LENGTH = 100000
 
-POLYGLOT_LANGUAGES = os.listdir('/data/polyglot/polyglot_data/ner2')
+POLYGLOT_PATH = os.environ.get('POLYGLOT_DATA_PATH')
+POLYGLOT_NER_PATH = os.path.join(POLYGLOT_PATH, 'polyglot_data/ner2')
+POLYGLOT_LANGUAGES = os.listdir(POLYGLOT_NER_PATH)
 POLYGLOT_TYPES = {
     'I-PER': PersonResult,
     'I-ORG': OrganizationResult,
@@ -30,11 +32,13 @@ SPACY = spacy.load('xx')
 
 
 def extract_polyglot(ctx, text, languages):
+    if len(text) < MIN_LENGTH:
+        return
     try:
         parsed = Text(text)
         lang = parsed.language
         if lang.confidence > 90:
-            yield LanguageResult(ctx, lang.code, 0, len(text))
+            yield LanguageResult(ctx, lang.code, None, None)
         if lang.code not in POLYGLOT_LANGUAGES:
             return
         for entity in parsed.entities:
@@ -47,6 +51,8 @@ def extract_polyglot(ctx, text, languages):
 
 
 def extract_spacy(ctx, text, languages):
+    if len(text) < MIN_LENGTH:
+        return
     try:
         text = text[:MAX_LENGTH]
         doc = SPACY(text)

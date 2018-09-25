@@ -39,12 +39,6 @@ services:
     expose:
       - 3000
 
-  extract-entities:
-    image: alephdata/aleph-extract-entities
-    restart: on-failure
-    expose:
-      - 50000
-
   recognize-text:
     image: alephdata/aleph-recognize-text
     restart: on-failure
@@ -60,7 +54,6 @@ services:
       - rabbitmq
       - redis
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs: /tmp
     volumes:
@@ -69,6 +62,8 @@ services:
       - "./contrib:/aleph/contrib"
       - "./mappings:/aleph/mappings"
       - "/:/host"
+    cap_add:
+      - SYS_PTRACE
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
@@ -91,7 +86,6 @@ services:
       - rabbitmq
       - redis
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs: /tmp
     volumes:

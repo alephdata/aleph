@@ -152,6 +152,8 @@ def finalize_index(data, schema, texts):
     for name, prop in schema.properties.items():
         if name not in properties:
             continue
+        if prop.type.name in ['entity', 'date', 'url', 'country']:
+            continue
         for value in ensure_list(properties[name]):
             if name == 'name':
                 data['name'] = value

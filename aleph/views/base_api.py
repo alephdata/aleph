@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, request
-from flask.ext.babel import gettext, get_locale
+from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
 from followthemoney import model
 from followthemoney.exc import InvalidData

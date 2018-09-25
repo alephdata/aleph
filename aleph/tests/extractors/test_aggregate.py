@@ -1,8 +1,10 @@
-from entityextractor.aggregate import EntityAggregator
-from entityextractor.result import PersonResult
+from aleph.tests.util import TestCase
+
+from aleph.logic.extractors.aggregate import EntityAggregator
+from aleph.logic.extractors.result import PersonResult
 
 
-class TestAggregate(object):
+class TestAggregate(TestCase):
 
     def test_aggregator(self):
         agg = EntityAggregator()
@@ -25,7 +27,9 @@ class TestAggregate(object):
 
     def test_merkel(self):
         agg = EntityAggregator()
-        agg.extract('Das ist der Pudel von Angela Merkel', ['de', 'en'])
+        text = 'Das ist der Pudel von Angela Merkel. '
+        text = text + text + text + text + text
+        agg.extract(text, ['de', 'en'])
         entities = [l for l, c, w in agg.entities]
         assert 'Angela Merkel' in entities, entities
 
@@ -37,10 +41,6 @@ class TestAggregate(object):
         agg.extract(text, ['en'])
         entities = [l for l, c, w in agg.entities]
         assert 'Foo Blubb' in entities, entities
-
-    # def test_select_label(self):
-    #     labels = ['Mr Blue', 'Mr BLUE', 'Mr Blu', 'Mr. Blue']
-    #     assert select_label(labels) == 'Mr Blue'
 
     def test_phonenumber(self):
         agg = EntityAggregator()
@@ -56,7 +56,6 @@ class TestAggregate(object):
         Syria and Germany.
         """
         agg.extract(text, ['en'])
-        assert 'us' in agg.countries
-        # fails
-        assert 'de' in agg.countries
-        assert 'sy' in agg.countries
+        assert 'us' in agg.countries, agg.countries
+        assert 'de' in agg.countries, agg.countries
+        assert 'sy' in agg.countries, agg.countries

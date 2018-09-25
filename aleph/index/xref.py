@@ -64,7 +64,7 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
                 'names.text': {
                     'query': name,
                     'operator': 'and',
-                    'minimum_should_match': '67%',
+                    'minimum_should_match': '5%',
                     # 'cutoff_frequency': 0.0001,
                     # 'boost': 0.5
                 }

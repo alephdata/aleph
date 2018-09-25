@@ -8,11 +8,11 @@ import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViewsMenu from 'src/components/ViewsMenu/EntityViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs, Entity, Schema } from 'src/components/common';
+import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
 
-class EntityScreenContext extends Component {
 
+class EntityScreenContext extends Component {
   render() {
     const { entity, entityId, activeMode, subtitle } = this.props;
     if (entity.isError) {
@@ -26,18 +26,18 @@ class EntityScreenContext extends Component {
       ); 
     }
 
-  const breadcrumbs = (
-    <Breadcrumbs collection={entity.collection}>
-      <li>
-        <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
-      </li>
-      <li>
-        <span className='pt-breadcrumb'>
-          {subtitle}
-        </span>
-      </li>
-    </Breadcrumbs>
-  );
+    const breadcrumbs = (
+      <Breadcrumbs collection={entity.collection}>
+        <li>
+          <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
+        </li>
+        <li>
+          <span className='pt-breadcrumb'>
+            {subtitle}
+          </span>
+        </li>
+      </Breadcrumbs>
+    );
 
     return (
       <EntityContextLoader entityId={entityId}>
