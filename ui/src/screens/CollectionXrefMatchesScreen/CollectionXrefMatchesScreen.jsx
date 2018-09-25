@@ -146,7 +146,7 @@ class CollectionXrefMatchesScreen extends Component {
             { matches.total !== undefined && matches.results.map((match) => (
               <tr key={match.id}>
                 <td className="numeric narrow">
-                  <FormattedNumber value={parseInt(match.score, 10)} />
+                  <FormattedNumber value={parseInt(parseFloat(match.score) * 100, 10)} />
                 </td>
                 {match.entity && (
                   <React.Fragment>

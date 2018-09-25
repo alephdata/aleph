@@ -1,15 +1,11 @@
-import io
-import csv
 import logging
 from banal import ensure_list
-from ahocorasick import Automaton
-from collections import defaultdict
-from normality import normalize, collapse_spaces
+from normality import collapse_spaces
 from fingerprints import clean_entity_name
 from followthemoney.types import registry
 
-from aleph import settings
 from aleph.model import DocumentTag
+from aleph.logic.extractors.util import normalize_label, places_automaton
 
 log = logging.getLogger(__name__)
 
@@ -20,17 +16,15 @@ class Result(object):
     def __init__(self, ctx, label, start, end):
         self.ctx = ctx
         self.label = label
-        self.key = self.normalize(label)
-        self.start = start
-        self.end = end
+        self.key = normalize_label(label)
         self.span = (ctx.record, start, end)
         self.countries = []
 
-    def normalize(self, location):
-        return normalize(location, lowercase=True, ascii=True)
-
     def __str__(self):
         return self.label
+
+    def __repr__(self):
+        return '<Result(%s,%s)>' % (self.label, self.category)
 
 
 class NamedResult(Result):
@@ -51,7 +45,7 @@ class NamedResult(Result):
             return
         text = clean_entity_name(text)
         text = collapse_spaces(text)
-        if not len(text) or len(text) < self.MIN_LENGTH:
+        if len(text) < self.MIN_LENGTH:
             return
         return text
 
@@ -72,38 +66,10 @@ class LocationResult(Result):
         super(LocationResult, self).__init__(ctx, label, start, end)
         if self.key is not None:
             try:
-                self.countries = self.automaton.get(self.key)
+                places = places_automaton()
+                self.countries = ensure_list(places.get(self.key))
             except KeyError:
                 pass
-
-    def load_places(self):
-        places = defaultdict(set)
-        with io.open(settings.GEONAMES_DATA, 'r', encoding='utf-8') as fh:
-            for row in csv.reader(fh, delimiter='\t'):
-                country = normalize(row[8])
-                if country is None:
-                    continue
-                names = set(row[3].split(','))
-                names.add(row[1])
-                names.add(row[2])
-                for name in names:
-                    name = self.normalize(name)
-                    if name is not None:
-                        places[name].add(country)
-        return places
-
-    @property
-    def automaton(self):
-        if not hasattr(settings, '_geonames'):
-            log.debug("Loading geonames data...")
-            geonames = Automaton()
-            places = self.load_places()
-            for (name, countries) in places.items():
-                geonames.add_word(name, countries)
-            geonames.make_automaton()
-            settings._geonames = geonames
-            log.debug("Loaded %s geonames.", len(places))
-        return settings._geonames
 
 
 class TypedResult(Result):
