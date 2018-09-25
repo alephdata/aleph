@@ -48,9 +48,7 @@
     }
 
     .pt-popover-target {
-      input {
-        width: $aleph-grid-size * 3 !important;
-      }
+
     }
 
     a {
@@ -64,6 +62,18 @@
 
     form {
       width: 100%;
+
+      .navbar-search-input {
+        width:100%;
+
+        .pt-input{
+          width:100%;
+        }
+      }
+
+      .search-popover {
+        margin-top: $aleph-grid-size / 2 ;
+      }
 
       .pt-control-group {
         width: 100%;

@@ -3,11 +3,12 @@ import {connect} from 'react-redux';
 import queryString from 'query-string';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import numeral from 'numeral';
-import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
+import { ControlGroup, Button, Intent } from "@blueprintjs/core";
 
 import { fetchStatistics } from 'src/actions/index';
 import { selectStatistics, selectMetadata } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
+import SearchBox from 'src/components/Navbar/SearchBox';
 
 import './HomeScreen.css';
 
@@ -30,8 +31,6 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = { value: '' };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -45,20 +44,21 @@ class HomeScreen extends Component {
     }
   }
 
-  onChange({target}) {
-    this.setState({value: target.value})
-  }
+  updateSearchValue = value => this.setState({value});
 
-  onSubmit(event) {
-    event.preventDefault();
+  onSubmit = event => event.preventDefault();
+
+  handleSearchBtn = () => this.doSearch();
+
+  doSearch = (searchValue = this.state.value) => {
     const { history } = this.props;
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: this.state.value
+        q: searchValue
       })
     });
-  }
+  };
 
   render() {
     const { intl, metadata, statistics } = this.props;
@@ -79,18 +79,16 @@ class HomeScreen extends Component {
               </div>
               <form onSubmit={this.onSubmit} className="search-form">
                 <ControlGroup fill={true}>
-                  <InputGroup
-                    type="text"
-                    leftIcon="search"
-                    className="pt-large"
-                    autoFocus={true}
-                    onChange={this.onChange} value={this.state.value}
+                  <SearchBox
+                    doSearch={this.doSearch}
+                    updateSearchValue={this.updateSearchValue}
+                    searchValue={this.state.value}
                     placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
                   />
                   <Button
                     className="pt-large pt-fixed"
                     intent={Intent.PRIMARY}
-                    onClick={this.onSubmit}
+                    onClick={this.handleSearchBtn}
                     text={
                       <React.Fragment>
                         {intl.formatMessage(messages.home_search)}

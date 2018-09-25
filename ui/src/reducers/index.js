@@ -15,6 +15,7 @@ import collectionXrefMatches from './collectionXrefMatches';
 import results from './results';
 import alerts from './alerts';
 import notifications from './notifications';
+import queryLogs from './queryLogs';
 
 const rootReducer = combineReducers({
   metadata,
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
   collectionPermissions,
   collectionXrefIndex,
   collectionXrefMatches,
-  results
+  results,
+  queryLogs
 });
 
 export default rootReducer;

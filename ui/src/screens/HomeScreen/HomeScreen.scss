@@ -72,6 +72,10 @@
     max-width: 50em;
     margin: 0 auto;
     padding-bottom: 2em;
+
+    .pt-transition-container{
+      width: 100%;
+    }
   }
 
   .calls-to-action {
@@ -80,5 +84,9 @@
       margin-right: $aleph-grid-size;
     }
   }
-
+  .search-popover {
+    margin-top:4px;
+    width: 100%;
+    max-width: 50em;
+  }
 }

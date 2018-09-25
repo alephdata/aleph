@@ -32,7 +32,7 @@ export default function asyncActionCreator(actionCreator, {
       });
       throw error;
     }
-  }
+  };
   Object.defineProperty(newActionCreator, 'name', { value: name });
   newActionCreator.innerFunc = actionCreator;
 

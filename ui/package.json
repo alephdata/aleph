@@ -7,12 +7,11 @@
     "@blueprintjs/select": "^2.0.1",
     "@blueprintjs/table": "^2.1.1",
     "axios": "^0.18.0",
-    "bourbon": "^5.1.0",
     "babel-polyfill": "^6.26.0",
+    "bourbon": "^5.1.0",
     "classnames": "^2.2.6",
     "dotenv": "^6.0.0",
     "filesize": "^3.6.1",
-    "uuid": "^3.3.2",
     "font-awesome": "^4.7.0",
     "google-palette": "^1.1.0",
     "jwt-decode": "latest",
@@ -38,7 +37,8 @@
     "redux-act": "^1.7.4",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "truncate": "^2.0.1"
+    "truncate": "^2.0.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "faker": "^4.1.0",

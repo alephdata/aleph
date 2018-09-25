@@ -148,3 +148,9 @@ export function selectCollectionXrefIndex(state, collectionId) {
 export function selectCollectionXrefMatches(state, query) {
   return selectObject(state.collectionXrefMatches, query.toKey());
 }
+
+export function selectQueryLog(state){
+  return Array.from(
+    state.queryLogs.results.values()
+  ).slice(-9).reverse();
+}

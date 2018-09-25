@@ -2,13 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
-import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
+import {defineMessages, injectIntl, FormattedMessage,} from 'react-intl';
 import queryString from 'query-string';
-import { ControlGroup, InputGroup, Icon, Button } from "@blueprintjs/core";
+import { Icon, Button } from "@blueprintjs/core";
 
-import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
+import SearchBox from 'src/components/Navbar/SearchBox';
+
 import { selectSession } from 'src/selectors';
 
 import './Navbar.css';
@@ -29,8 +30,7 @@ class Navbar extends React.Component {
     super(props);
     this.state = {searchValue: '', isMenuOpen: false, searchOpen: false};
 
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.doSearch = this.doSearch.bind(this);
     this.onOpenMenu = this.onOpenMenu.bind(this);
     this.onToggleSearch = this.onToggleSearch.bind(this);
     this.onClickSources = this.onClickSources.bind(this);
@@ -44,20 +44,19 @@ class Navbar extends React.Component {
     }
   }
 
-  onChange({target}) {
-    this.setState({searchValue: target.value});
-  }
+  onSubmit = event => event.preventDefault();
 
-  onSubmit(event) {
+  updateSearchValue = searchValue => this.setState({ searchValue });
+
+  doSearch(searchValue = this.state.searchValue) {
     const { query, updateQuery, history } = this.props;
-    event.preventDefault();
     if (updateQuery !== undefined) {
-      updateQuery(query.set('q', this.state.searchValue));
+      updateQuery(query.set('q', searchValue));
     } else {
       history.push({
         pathname: '/search',
         search: queryString.stringify({
-          q: this.state.searchValue
+          q: searchValue
         })
       })
     }
@@ -92,7 +91,7 @@ class Navbar extends React.Component {
 
   render() {
     const {metadata, session, intl, isHomepage} = this.props;
-    const {searchValue, isMenuOpen, searchOpen} = this.state;
+    const { isMenuOpen, searchOpen} = this.state;
 
     return (
       <div id="Navbar" className="Navbar">
@@ -112,16 +111,12 @@ class Navbar extends React.Component {
               <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'hide'}>
                 <button type="button" className="back-button visible-sm-block pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
                 {!isHomepage && ( <form onSubmit={this.onSubmit} className='navbar-search-form'>
-                    <ControlGroup fill={true}>
-                      <InputGroup
-                        type="text"
-                        leftIcon="search"
-                        className='pt-large'
-                        onChange={this.onChange} value={searchValue}
-                        placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
-                        rightElement={<SearchAlert queryText={searchValue}/>}
-                      />
-                    </ControlGroup>
+                    <SearchBox
+                      doSearch={this.doSearch}
+                      placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
+                      updateSearchValue={this.updateSearchValue}
+                      searchValue={this.state.searchValue}
+                    />
                   </form>
                 )}
               </div>
