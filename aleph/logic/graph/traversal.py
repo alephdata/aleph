@@ -1,3 +1,4 @@
+import time
 import logging
 from pprint import pprint  # noqa
 from followthemoney.types import registry
@@ -17,27 +18,17 @@ class Node(object):
         self.seed = seed
         self.weight = seed or 0
         self.decay = type_.specificity(value)
+        self.origins = set()
 
-    @property
-    def origins(self):
-        for node in self.graph.paths:
-            if node.target == self:
-                yield node.origin
-
-    def compute_weight(self, path=None):
-        if path is None:
-            path = set()
-        if self in path:
-            return 0
-        path.add(self)
+    def compute_weight(self):
         weight = 0 if self.seed is None else self.seed
         if self.type.prefix is None:
             return weight
         if self.decay == 0:
             return weight
         for node in self.origins:
-            weight += node.compute_weight(path)
-        return weight * self.decay
+            weight += node.weight
+        return weight * self.decay * 0.9
 
     def __hash__(self):
         return hash(self.id)
@@ -72,7 +63,7 @@ class Graph(object):
         self.nodes = {}
         self.paths = set()
         self.seen = set()
-        self.links = set()
+        self.links = []
 
     def add_node(self, type_, value, seed=None):
         node = self.nodes.get((type_, value))
@@ -87,9 +78,11 @@ class Graph(object):
     def next_node(self):
         nodes = []
         for node in self.nodes.values():
-            if node in self.seen:
+            if node.type.prefix is None:
                 continue
             if node.weight == 0:
+                continue
+            if node in self.seen:
                 continue
             nodes.append(node)
         if not len(nodes):
@@ -99,16 +92,14 @@ class Graph(object):
     def expand_node(self, node):
         self.seen.add(node)
         print("Expand: %r (%s)" % (node, node.weight))
-        node_ref = node.type.ref(node.value)
+        # node_ref = node.type.ref(node.value)
         for link in expand_node(node.type, node.value):
-            if link.value is None:
-                continue
-            if link.ref != node_ref:
-                link = link.invert()
-            self.links.add(link)
+            self.links.append(link)
             target = self.add_node(link.prop.type, link.value)
+            target.origins.add(node)
             self.paths.add(Path(self, node, target))
             target.weight = target.compute_weight()
+        # print("Stats: %s nodes, %s paths" % (len(self.nodes), len(self.paths)))
 
     def build(self, steps):
         for i in range(steps):
@@ -142,7 +133,11 @@ class Graph(object):
 
 
 def traverse_entity(entity, steam=2):
+    start = time.time()
     graph = Graph()
     graph.seed(registry.entity, entity)
     graph.build(steps=steam)
-    return [(0, l) for l in graph.links]
+    end = time.time()
+    duration = end - start
+    print("Duration: %s" % duration)
+    return graph.links

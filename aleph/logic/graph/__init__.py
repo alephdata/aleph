@@ -31,7 +31,7 @@ def links_to_graph(links):
 
 def export_node(entity_id, steam=2):
     links = traverse_entity(entity_id, steam=steam)
-    graph = links_to_graph((l for (s, l) in links))
+    graph = links_to_graph(links)
     buffer = io.BytesIO()
     write_gexf(graph, buffer)
     text = buffer.getvalue()

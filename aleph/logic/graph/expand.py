@@ -18,16 +18,16 @@ log = logging.getLogger(__name__)
 
 
 def expand_group(type_, value):
-    if type_.group is None or value is None:
+    if type_.prefix is None or value is None:
         return
     value = str(value)
+    ref = type_.ref(value)
     query = {
         'query': {'term': {type_.group: value}},
         '_source': {'includes': ['schema', 'properties']}
     }
     for res in scan(es, index=entities_index(), query=query):
         entity_id = res.get('_id')
-        entity_ref = registry.entity.ref(entity_id)
         source = res.get('_source')
         properties = source.get('properties')
         schema = model.get(source.get('schema'))
@@ -36,8 +36,12 @@ def expand_group(type_, value):
                 continue
             values = properties.get(prop.name)
             values = type_.normalize_set(values)
-            if value in values:
-                yield Link(entity_ref, prop, value)
+            if value not in values:
+                continue
+            if prop.reverse:
+                yield Link(ref, prop.reverse, entity_id)
+            else:
+                yield Link(ref, prop, entity_id, inverted=True)
 
 
 def expand_entity(entity):
@@ -71,21 +75,19 @@ def expand_entity(entity):
 
 
 def expand_node(type_, value):
-    links = set()
     try:
-        links.update(load_links(type_, value))
+        yield from load_links(type_, value)
     except CacheMiss:
         log.debug("Cache miss [%s]: %s", type_, value)
+        links = set()
         links.update(expand_group(type_, value))
         if type_ == registry.entity:
             links.update(expand_entity(value))
         store_links(type_, value, links)
-    yield from links
+        yield from links
 
 
 def expand_node_raw(type_, value):
-    links = set()
-    links.update(expand_group(type_, value))
+    yield from expand_group(type_, value)
     if type_ == registry.entity:
-        links.update(expand_entity(value))
-    yield from links
+        yield from expand_entity(value)
