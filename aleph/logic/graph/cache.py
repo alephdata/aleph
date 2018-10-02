@@ -13,7 +13,7 @@ class CacheMiss(Exception):
 
 
 def typed_key(type_, value, *extra):
-    return make_key('graph-r4', type_.name, value, *extra)
+    return make_key('graph-r6', type_.name, value, *extra)
 
 
 def store_links(type_, value, links, expire=84600):

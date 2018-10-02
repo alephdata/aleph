@@ -187,7 +187,7 @@ def publish(foreign_id):
 def graph(entity_id):
     """Generate a graph around the given entity."""
     from aleph.logic.graph import export_node
-    graph = export_node(entity_id, steam=10)
+    graph = export_node(entity_id, steam=1000)
     with open('%s.gexf' % entity_id, 'w', encoding='utf-8') as fh:
         fh.write(graph)
     # print(graph)
