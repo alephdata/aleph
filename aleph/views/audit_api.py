@@ -7,6 +7,7 @@ from aleph.model import Audit
 from aleph.views.util import jsonify
 from aleph.serializers import QueryLogSchema
 from aleph.core import db
+from aleph.views.util import require
 
 blueprint = Blueprint('history_api', __name__)
 log = logging.getLogger(__name__)
@@ -26,12 +27,10 @@ def index():
 @blueprint.route('/api/2/querylog', methods=['DELETE'])
 def delete():
     """Delete the query logs for a particular search term"""
-    text = Audit.data['text'].astext.cast(db.Unicode).label('text')
+    require(request.authz.logged_in)
     query = request.args.get('query')
     if query:
-        audit_logs = Audit.query.filter(
-            text == query, Audit.role_id == request.authz.id
-        )
+        audit_logs = Audit.by_query_text(query, role_id=request.authz.id)
         if audit_logs.count():
             for audit in audit_logs:
                 audit.delete()
