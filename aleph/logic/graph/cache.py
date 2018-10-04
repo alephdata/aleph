@@ -1,3 +1,4 @@
+import msgpack
 import logging
 from followthemoney import model
 from followthemoney.link import Link
@@ -13,7 +14,7 @@ class CacheMiss(Exception):
 
 
 def typed_key(type_, value, *extra):
-    return make_key('r7', type_.name, value, *extra)
+    return make_key('1', type_.name, value, *extra)
 
 
 def store_links(type_, value, links, expire=84600):
@@ -24,12 +25,13 @@ def store_links(type_, value, links, expire=84600):
         # TODO: experiment with storage mechanisms here. @sunu did a
         # hash, which is memory-efficient but does not account for
         # multi-valued properties
-        _, packed = link.pack()
-        values.append(packed)
+        value = msgpack.packb(link.to_tuple(), use_bin_type=True)
+        values.append(link.pack())
     degree_key = typed_key(type_, value, 'deg')
     kv.set(degree_key, len(values), ex=expire)
     if len(values):
         kv.rpush(key, *values)
+        kv.expire(expire)
 
 
 def load_links(type_, value):
@@ -41,8 +43,8 @@ def load_links(type_, value):
     # log.debug("LOAD: %s", key)
     ref = type_.ref(value)
     for packed in kv.lrange(key, 0, -1):
-        # print("LOADED", key, packed)
-        link = Link.unpack(model, ref, packed)
+        data = msgpack.unpackb(packed, raw=False)
+        link = Link.from_tuple(model, ref, data)
         if link is None:
             continue
         yield link
