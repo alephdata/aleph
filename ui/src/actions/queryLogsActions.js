@@ -1,8 +1,7 @@
 import asyncActionCreator from "./asyncActionCreator";
-import {endpoint} from "../app/api";
+import {queryEndpoint} from "./util";
 
 
-export const fetchQueryLogs = asyncActionCreator(() => async () => {
-  const response = await endpoint.get('querylog');
-  return { queryLogs: response.data };
+export const fetchQueryLogs = asyncActionCreator(query => async () => {
+  return queryEndpoint(query);
 }, { name: 'FETCH_QUERY-LOGS' });

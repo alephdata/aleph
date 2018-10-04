@@ -17,6 +17,10 @@ const messages = defineMessages({
     id: 'nav.settings',
     defaultMessage: 'Settings',
   },
+  activity_log: {
+    id: 'nav.activity_log',
+    defaultMessage: 'Activity log'
+  },
   signout: {
     id: 'nav.signout',
     defaultMessage: 'Sign out',
@@ -59,6 +63,12 @@ class AuthButtons extends Component {
                 <Icon icon="notifications" /> {' '}
                 <div className="pt-text-overflow-ellipsis pt-fill">
                   {intl.formatMessage(messages.view_notifications)}
+                </div>
+              </Link>
+              <Link to="/activity" className="pt-menu-item">
+                <Icon icon="history" /> {' '}
+                <div className="pt-text-overflow-ellipsis pt-fill">
+                  {intl.formatMessage(messages.activity_log)}
                 </div>
               </Link>
               <MenuItem icon="cog" onClick={this.toggleSettings} text={intl.formatMessage(messages.settings)+'…'} />

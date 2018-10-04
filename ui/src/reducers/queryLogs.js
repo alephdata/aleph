@@ -2,8 +2,12 @@ import { createReducer } from 'redux-act';
 
 import {fetchQueryLogs} from "src/actions/queryLogsActions";
 import {queryEntities} from "src/actions/entityActions";
+import {mergeResults} from "./util";
 
 const initialState = {
+  isLoading: false,
+  shouldLoad: true,
+  isError: false,
   results: new Map()
 };
 
@@ -16,7 +20,7 @@ export default createReducer({
       results: Map.from(state.results.set(queryText, queryEntry ? {
         ...queryEntry,
         count: 1 + queryEntry.count
-      } : { count : 1, text: queryText }))
+      } : { count : 1, text: queryText, created_at:Reflect.construct(Date, []).toISOString() }))
     })
   },
   [fetchQueryLogs.START]: state => ({
@@ -29,16 +33,23 @@ export default createReducer({
     isLoading: false,
     shouldLoad: false,
     isError: true,
+    results :new Map(),
     error
   }),
-  [fetchQueryLogs.COMPLETE]: (state, { queryLogs }) => {
+  [fetchQueryLogs.COMPLETE]: (state, { query, result: queryLogs }) => {
     const {results : metaResults } = queryLogs;
-    const results = metaResults
-      .reverse()
+    let results = metaResults
+      // .reverse()
       .reduce((queryLogsObject, query) => queryLogsObject.set(query.text, query), new Map());
-    return ({
-      ...queryLogs,
-      results
-    })
+
+    const newState = mergeResults({
+      ...state,
+        results: [...state.results].reverse()
+    }, {...queryLogs, results});
+    console.log(newState);
+    return {
+      ...newState,
+    results: new Map([...newState.results].reverse())
+    }
   }
 }, initialState);

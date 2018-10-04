@@ -27,7 +27,7 @@ class Date extends Component {
 
     let date = value;
     try {
-	date = value.split('T')[0];
+	    date = value.split('T')[0];
     }catch(ex) {
         // Not a complete date, just show what we got
     }

@@ -5,8 +5,9 @@ import {withRouter} from 'react-router';
 import { Suggest } from '@blueprintjs/select';
 import { MenuItem } from "@blueprintjs/core/lib/esm/components/menu/menuItem";
 import SearchAlert from 'src/components/SearchAlert/SearchAlert'
-import {selectQueryLog, selectSession} from 'src/selectors';
+import {selectQueryLogsLimited, selectSession} from 'src/selectors';
 import {fetchQueryLogs} from 'src/actions/queryLogsActions';
+import Query from "../../app/Query";
 
 
 
@@ -20,8 +21,9 @@ class SearchBox extends PureComponent {
   };
 
   componentWillMount(){
-    if(this.props.session.loggedIn){
-      this.props.fetchQueryLogs()
+    const  {queryLogs, session, fetchQueryLogs, query} = this.props;
+    if(session.loggedIn && !queryLogs.isLoading && queryLogs.shouldLoad){
+      fetchQueryLogs({query, next: queryLogs.next})
     }
   }
 
@@ -46,7 +48,7 @@ class SearchBox extends PureComponent {
   };
 
   get queryLogItems(){
-    return this.props.searchValue ? [{text:this.props.searchValue, isVirtual: true}] : this.props.queryLogs
+    return this.props.searchValue ? [{text:this.props.searchValue, isVirtual: true}] : this.props.queryLogs.result
   }
 
   render() {
@@ -90,9 +92,10 @@ class SearchBox extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: selectSession(state),
-  queryLogs: selectQueryLog(state)
+  queryLogs: selectQueryLogsLimited(state),
+  query:  Query.fromLocation('querylog', window.location, {}, 'activity').limit(40)
 });
 const mapDispatchToProps = ({
   fetchQueryLogs

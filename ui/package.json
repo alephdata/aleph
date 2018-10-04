@@ -22,6 +22,7 @@
     "query-string": "^4.3.4",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-event-timeline": "^1.5.4",
     "react-file-drop": "^0.2.6",
     "react-helmet": "^5.2.0",
     "react-intl": "^2.4.0",

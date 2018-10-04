@@ -150,7 +150,18 @@ export function selectCollectionXrefMatches(state, query) {
 }
 
 export function selectQueryLog(state){
-  return Array.from(
-    state.queryLogs.results.values()
-  ).slice(-9).reverse();
+  return selectObject(state, 'queryLogs');
+}
+
+export function selectQueryLogsLimited(state, limit = 9){
+  const queryLogs = selectQueryLog(state);
+  let result = Array.from(
+    queryLogs.results.values()
+  ).slice(-limit).reverse();
+
+  return {
+    result,
+    ...queryLogs
+  };
+
 }

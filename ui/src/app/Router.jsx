@@ -26,6 +26,7 @@ import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
 import DocumentTagsScreen from 'src/screens/DocumentTagsScreen/DocumentTagsScreen';
 import DocumentSimilarScreen from 'src/screens/DocumentSimilarScreen/DocumentSimilarScreen';
 import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
+import ActivityScreen from 'src/screens/ActivityScreen/ActivityScreen';
 
 import './Router.css';
 
@@ -73,6 +74,7 @@ class Router extends Component {
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen}/>
         <Route path="/search" exact component={SearchScreen}/>
         <Route path="/notifications" exact component={NotificationsScreen}/>
+        <Route path="/activity" exact component={ActivityScreen}/>
         <Route path="/" exact component={HomeScreen}/>
         <Route component={NotFoundScreen}/>
       </Switch>

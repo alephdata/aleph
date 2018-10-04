@@ -1,0 +1,23 @@
+.NotificationsScreen {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+  align-items: stretch;
+  
+  .dummy-pane {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .mark-read {
+    float: right;
+    margin-right: 0;
+  }
+
+  ul.notifications-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+}
