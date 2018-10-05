@@ -36,6 +36,11 @@ class DocumentScreenContext extends Component {
         <li>
           <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
         </li>
+        {screenTitle && (
+          <li>
+            <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
+          </li>
+        )}
       </Breadcrumbs>
     );
 

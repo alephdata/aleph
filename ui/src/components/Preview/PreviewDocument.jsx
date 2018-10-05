@@ -8,7 +8,6 @@ import DocumentContextLoader from 'src/components/Document/DocumentContextLoader
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";

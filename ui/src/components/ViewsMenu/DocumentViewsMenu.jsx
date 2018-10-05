@@ -1,10 +1,8 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import { injectIntl, defineMessages } from 'react-intl';
 
-import { queryEntitySimilar } from 'src/queries';
-import { selectEntityTags, selectEntitiesResult } from "src/selectors";
+import { selectEntityTags } from "src/selectors";
 import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
@@ -36,7 +34,7 @@ class DocumentViewsMenu extends React.Component {
 
   render() {
     const { intl, document, isPreview, activeMode } = this.props;
-    const { tags, similar } = this.props;
+    const { tags } = this.props;
     const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
     const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
@@ -74,15 +72,13 @@ class DocumentViewsMenu extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location } = ownProps;
+  const { document } = ownProps;
   return {
-    tags: selectEntityTags(state, document.id),
-    similar: selectEntitiesResult(state, queryEntitySimilar(location, document.id))
+    tags: selectEntityTags(state, document.id)
   };
 };
 
 
 DocumentViewsMenu = connect(mapStateToProps, {})(DocumentViewsMenu);
-DocumentViewsMenu = withRouter(DocumentViewsMenu);
 DocumentViewsMenu = injectIntl(DocumentViewsMenu);
 export default DocumentViewsMenu;

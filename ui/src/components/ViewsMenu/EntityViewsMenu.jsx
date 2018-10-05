@@ -4,9 +4,9 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { connect } from "react-redux";
 
 import { queryEntitySimilar } from 'src/queries';
-import { fetchEntityReferences } from "src/actions";
 import { selectEntityReferences, selectEntityTags, selectSchemata, selectEntitiesResult } from "src/selectors";
 import ViewItem from "src/components/ViewsMenu/ViewItem";
+import reverseLabel from 'src/util/reverseLabel';
 
 import './ViewsMenu.css';
 
@@ -28,7 +28,7 @@ const messages = defineMessages({
 
 class EntityViewsMenu extends React.Component {
   render() {
-    const {intl, isPreview, activeMode, entity} = this.props;
+    const { intl, isPreview, activeMode, entity } = this.props;
     const { references, tags, similar, schemata } = this.props;
     const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
@@ -44,7 +44,7 @@ class EntityViewsMenu extends React.Component {
                     mode={ref.property.qname}
                     activeMode={activeMode}
                     isPreview={isPreview}
-                    message={ref.property.reverse}
+                    message={reverseLabel(schemata, ref)}
                     href={'/entities/' + entity.id + '#mode=' + ref.property.qname}
                     icon={schemata[ref.schema].icon}
                     count={ref.count}/>
@@ -68,11 +68,13 @@ const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
   return {
     references: selectEntityReferences(state, entity.id),
+    tags: selectEntityTags(state, entity.id),
+    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
     schemata: selectSchemata(state)
   };
 };
 
-EntityViewsMenu = connect(mapStateToProps, { fetchEntityReferences })(EntityViewsMenu);
+EntityViewsMenu = connect(mapStateToProps)(EntityViewsMenu);
 EntityViewsMenu = injectIntl(EntityViewsMenu);
 EntityViewsMenu = withRouter(EntityViewsMenu);
 export default EntityViewsMenu;

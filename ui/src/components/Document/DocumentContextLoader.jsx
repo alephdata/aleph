@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router";
 
-import { queryEntitySimilar } from 'src/queries';
 import { fetchDocument, fetchEntityTags, queryEntities } from 'src/actions';
-import { selectEntity, selectEntityTags, selectEntitiesResult } from 'src/selectors';
+import { selectEntity, selectEntityTags } from 'src/selectors';
 
 
 class DocumentContextLoader extends Component {
@@ -26,11 +24,6 @@ class DocumentContextLoader extends Component {
     if (tagsResult.shouldLoad) {
       this.props.fetchEntityTags({ id: documentId });
     }
-
-    const { similarQuery, similarResult } = this.props;
-    if (similarResult.shouldLoad) {
-      this.props.queryEntities({query: similarQuery});
-    }
   }
 
   render() {
@@ -40,16 +33,12 @@ class DocumentContextLoader extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { documentId, location } = ownProps;
-  const similarQuery = queryEntitySimilar(location, documentId);
+  const { documentId } = ownProps;
   return {
     document: selectEntity(state, documentId),
-    tagsResult: selectEntityTags(state, documentId),
-    similarQuery: similarQuery,
-    similarResult: selectEntitiesResult(state, similarQuery)
+    tagsResult: selectEntityTags(state, documentId)
   };
 };
 
 DocumentContextLoader = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities })(DocumentContextLoader);
-DocumentContextLoader = withRouter(DocumentContextLoader);
 export default DocumentContextLoader;

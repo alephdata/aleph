@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 
-import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import { selectCollection } from "src/selectors";
