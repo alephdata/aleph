@@ -25,7 +25,7 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
         text = kv.get(key)
         if text is not None:
             # log.info('%s chars cached', len(text))
-            return text
+            return text.decode('utf-8')
 
         data = self.ensure_size(data)
         if data is None:
@@ -39,7 +39,7 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
                 response = service.Recognize(image)
                 text = response.text or ''
                 log.info('OCR: %s chars', len(text))
-                kv.set(key, text)
+                kv.set(key, text.encode('utf-8'))
                 return text
             except self.Error as e:
                 if e.code() == self.Status.RESOURCE_EXHAUSTED:
