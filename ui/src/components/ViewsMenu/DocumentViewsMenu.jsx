@@ -68,12 +68,6 @@ class DocumentViewsMenu extends React.Component {
                   message={intl.formatMessage(messages.tags)}
                   href={`/documents/${document.id}/tags`}
                   icon='pt-icon-tag' />
-        <ViewItem mode='similar' activeMode={activeMode}
-                  isPreview={isPreview}
-                  count={similar.total}
-                  message={intl.formatMessage(messages.similar)}
-                  href={`/documents/${document.id}/similar`}
-                  icon='pt-icon-tag' />
       </div>
     );
   }

@@ -36,11 +36,8 @@ class PreviewDocument extends React.Component {
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={document} />;
       maximised = true;
-    } else if (previewMode === 'similar') {
-      mode = <EntitySimilarMode entity={document} />;
-      maximised = true;
     } else {
-      mode = <DocumentViewer document={document} showToolbar={true} previewMode={true} />;
+      mode = <DocumentViewer document={document} previewMode={true} />;
       maximised = true;
     }
     return (

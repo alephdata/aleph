@@ -25,6 +25,7 @@ const messages = defineMessages({
   }
 });
 
+
 class EntityViewsMenu extends React.Component {
   render() {
     const {intl, isPreview, activeMode, entity} = this.props;
