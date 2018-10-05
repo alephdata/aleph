@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/Screen/Screen';
-import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
+import { CollectionSearch } from 'src/components/Toolbar';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
@@ -30,9 +29,11 @@ class CollectionScreenContext extends Component {
     }
 
     const breadcrumbs = (<Breadcrumbs collection={collection}>
-      <li>
-        <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
-      </li>
+      {screenTitle && (
+        <li>
+          <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
+        </li>
+      )}
     </Breadcrumbs>);
 
     return (

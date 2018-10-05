@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { injectIntl, defineMessages } from 'react-intl';
 
 import { selectEntity } from 'src/selectors';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
 
+const messages = defineMessages({
+  screen_title: {
+    id: 'entity.similar.title',
+    defaultMessage: 'Similar',
+  }
+});
+
 
 class EntitySimilarScreen extends Component {
   render() {
-    const { entityId, entity } = this.props;
+    const { intl, entityId, entity } = this.props;
     return (
-      <EntityScreenContext entityId={entityId} activeMode='similar' subtitle='Similar'>
+      <EntityScreenContext entityId={entityId}
+                           activeMode='similar'
+                           screenTitle={intl.formatMessage(messages.screen_title)}>
         <EntitySimilarMode entity={entity} />
       </EntityScreenContext>
     );
@@ -25,5 +35,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+EntitySimilarScreen = injectIntl(EntitySimilarScreen);
 EntitySimilarScreen = connect(mapStateToProps, {})(EntitySimilarScreen);
 export default EntitySimilarScreen;

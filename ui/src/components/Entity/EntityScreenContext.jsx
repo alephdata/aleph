@@ -34,9 +34,11 @@ class EntityScreenContext extends Component {
         <li>
           <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
         </li>
-        <li>
-          <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
-        </li>
+        {screenTitle && (
+          <li>
+            <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
+          </li>
+        )}
       </Breadcrumbs>
     );
 

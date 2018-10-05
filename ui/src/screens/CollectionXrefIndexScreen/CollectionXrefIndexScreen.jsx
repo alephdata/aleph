@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import { selectCollection } from 'src/selectors';
-
 
 const messages = defineMessages({
   screen_title: {

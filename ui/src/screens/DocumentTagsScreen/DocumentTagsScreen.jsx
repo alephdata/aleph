@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { injectIntl, defineMessages } from 'react-intl';
 
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 import { selectEntity } from 'src/selectors';
 
+const messages = defineMessages({
+  screen_title: {
+    id: 'document.similar.title',
+    defaultMessage: 'Similar',
+  }
+});
+
 
 class DocumentTagsScreen extends Component {
   render() {
-    const { documentId, document } = this.props;
+    const { intl, documentId, document } = this.props;
     return (
-      <DocumentScreenContext documentId={documentId} activeMode='tags'>
+      <DocumentScreenContext documentId={documentId}
+                             activeMode='tags'
+                             screenTitle={intl.formatMessage(messages.screen_title)}>
         <EntityTagsMode entity={document} />
       </DocumentScreenContext>
     );
@@ -25,5 +35,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+DocumentTagsScreen = injectIntl(DocumentTagsScreen);
 DocumentTagsScreen = connect(mapStateToProps, {})(DocumentTagsScreen);
 export default DocumentTagsScreen;
