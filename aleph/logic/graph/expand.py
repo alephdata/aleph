@@ -64,7 +64,8 @@ def expand_entity(entity):
         sameAs = thing.get("sameAs")
         ref = registry.entity.ref(entity.get('id'))
         for (score, other) in xref_item(entity):
-            yield Link(ref, sameAs, other.get('id'), weight=score)
+            yield Link(ref, sameAs, other.get('id'),
+                       weight=score, inferred=True)
 
     properties = entity.get('properties', {})
     for prop in schema.properties.values():

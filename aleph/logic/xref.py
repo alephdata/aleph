@@ -1,6 +1,7 @@
 import logging
 from pprint import pprint  # noqa
 from followthemoney import model
+from followthemoney.compare import compare
 
 from aleph.core import db, celery
 from aleph.model import Match, Document
@@ -8,7 +9,6 @@ from aleph.index.core import entities_index
 from aleph.index.xref import entity_query
 from aleph.index.entities import iter_entities
 from aleph.index.util import search_safe, unpack_result
-from aleph.logic.compare import compare
 
 log = logging.getLogger(__name__)
 EXCLUDES = ['text', 'roles']
