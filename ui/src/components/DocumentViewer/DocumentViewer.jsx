@@ -1,13 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { ErrorSection } from 'src/components/common';
-import { Toolbar, CloseButton, ParentButton, DocumentSearch } from 'src/components/Toolbar';
-import getPath from 'src/util/getPath';
+// import { DocumentSearch } from 'src/components/Toolbar';
 import { TableViewer, TextViewer, HtmlViewer, PdfViewer, ImageViewer, FolderViewer, EmailViewer } from './index';
 
 import './DocumentViewer.css';
@@ -22,6 +20,7 @@ const messages = defineMessages({
     defaultMessage: 'The system does not work with these types of files. Please download it so you’ll be able to see it.',
   }
 });
+
 
 class DocumentViewer extends React.Component {
   constructor(props) {
@@ -53,14 +52,13 @@ class DocumentViewer extends React.Component {
     } else if (doc.html) {
       return <HtmlViewer document={doc} queryText={queryText} />;
     } else if (doc.links && doc.links.pdf) {
-      return <PdfViewer document={doc} queryText={queryText} numberOfPages={numberOfPages} previewMode={previewMode} onDocumentLoad={this.onDocumentLoad} />
+      return <PdfViewer document={doc}
+                        queryText={queryText}
+                        numberOfPages={numberOfPages}
+                        previewMode={previewMode}
+                        onDocumentLoad={this.onDocumentLoad} />
     } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
-      return <FolderViewer
-        document={doc}
-        queryText={queryText}
-        hasWarning={doc.status === 'fail'}
-        setDocuments={this.setDocuments}
-        setRefreshCallout={this.setRefreshCallout}/>;
+      return <FolderViewer document={doc} queryText={queryText} />;
     } else if (doc.schema === 'Document' || doc.schema === 'Audio' || doc.schema === 'Video') {
       return <ErrorSection visual='issue'
                            title={intl.formatMessage(messages.no_viewer)}
@@ -73,12 +71,12 @@ class DocumentViewer extends React.Component {
   }
   
   render() {
-    const { document: doc } = this.props;
+    const { document } = this.props;
 
-    if (doc.isLoading) {
+    if (document.isLoading) {
       return null;
     }
-    
+
     return <div className='DocumentViewer'>
       {this.renderContent()}
     </div>

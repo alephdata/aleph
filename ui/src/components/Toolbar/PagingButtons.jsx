@@ -6,12 +6,13 @@ import { ButtonGroup, Button, AnchorButton } from "@blueprintjs/core";
 
 import './PagingButtons.css';
 
+
 class PagingButtons extends React.Component {
   render() {
-    const { document: doc, location: loc, numberOfPages } = this.props;
+    const { document: doc, location, numberOfPages } = this.props;
 
     // Preserve exsting hash value while updating any existing value for 'page'
-    const parsedHash = queryString.parse(loc.hash);
+    const parsedHash = queryString.parse(location.hash);
     const currentPage = (parsedHash.page && parseInt(parsedHash.page, 10) <= numberOfPages) ? parseInt(parsedHash.page, 10) : 1;
 
     parsedHash.page = currentPage - 1;
@@ -26,9 +27,9 @@ class PagingButtons extends React.Component {
       currentPage && currentPage > 0 &&
       numberOfPages && numberOfPages > 0) {
       return (
-        <ButtonGroup className="PagingButtons" minimal={false} style={{float: 'left'}}>
+        <ButtonGroup className="PagingButtons" fill={true}>
           <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={currentPage <= 1}/>
-          <Button disabled className="PagingText">
+          <Button disabled className="paging-text">
             <FormattedMessage
                 id="document.paging"
                 defaultMessage="Page {currentPage} of {numberOfPages}"
@@ -48,4 +49,4 @@ class PagingButtons extends React.Component {
 }
 
 PagingButtons = withRouter(PagingButtons);
-export default PagingButtons
+export default PagingButtons;
