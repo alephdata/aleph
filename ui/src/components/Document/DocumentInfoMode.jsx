@@ -22,10 +22,12 @@ class DocumentInfoMode extends React.Component {
         </div>
         <div className="pane-content">
           <DocumentMetadata document={document}/>
+          {/*
           <span className="source-header">
             <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
           </span>
           <CollectionOverview collection={document.collection} hasHeader={true}/>
+          */}
         </div>
       </React.Fragment>
     );

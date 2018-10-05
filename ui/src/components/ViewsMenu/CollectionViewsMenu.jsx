@@ -37,7 +37,6 @@ class CollectionViewsMenu extends React.Component {
         totalCount += schemata[key];
       }
     }
-
     return totalCount;
   }
 
@@ -48,11 +47,15 @@ class CollectionViewsMenu extends React.Component {
     return (
       <div className='ViewsMenu'>
         {isPreview && (
-          <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
-                  message={intl.formatMessage(messages.info)}
-                  icon='fa-info' />
+          <ViewItem mode='info'
+                    activeMode={activeMode}
+                    isPreview={isPreview}
+                    message={intl.formatMessage(messages.info)}
+                    icon='fa-info' />
         )}
-        <ViewItem mode='documents' activeMode={activeMode} isPreview={false}
+        <ViewItem mode='documents'
+                  activeMode={activeMode}
+                  isPreview={isPreview}
                   count={this.countDocuments()}
                   message={intl.formatMessage(messages.documents)}
                   href={`/collections/${collection.id}/documents`}

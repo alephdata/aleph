@@ -45,10 +45,12 @@ class EntityInfoMode extends React.Component {
               </li>
             ))}
           </ul>
+          {/*
           <span className="source-header">
             <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
           </span>
           <CollectionOverview collection={entity.collection} hasHeader={true}/>   
+          */}
         </div>
       </React.Fragment>
     );
