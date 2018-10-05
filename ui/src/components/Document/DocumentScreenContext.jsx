@@ -46,7 +46,7 @@ class DocumentScreenContext extends Component {
 
     return (
       <DocumentContextLoader documentId={documentId}>
-        <Screen title={document.name}>
+        <Screen title={`${screenTitle}: ${document.name}`}>
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
               <DocumentViewsMenu document={document}

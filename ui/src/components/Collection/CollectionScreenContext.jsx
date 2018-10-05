@@ -11,6 +11,8 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection } from "src/selectors";
+import wordList from 'src/util/wordList';
+
 
 class CollectionScreenContext extends Component {
   render() {
@@ -38,7 +40,7 @@ class CollectionScreenContext extends Component {
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={collection.label}>
+        <Screen title={`${screenTitle}: ${collection.label}`}>
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
               <CollectionViewsMenu collection={collection}

@@ -8,8 +8,8 @@ import { selectEntity } from 'src/selectors';
 
 const messages = defineMessages({
   screen_title: {
-    id: 'document.similar.title',
-    defaultMessage: 'Similar',
+    id: 'document.tags.title',
+    defaultMessage: 'Connections',
   }
 });
 
