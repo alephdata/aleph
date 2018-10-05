@@ -13,21 +13,24 @@ const initialState = {
 export default createReducer({
   [queryEntities.START]: (state, { query }) => {
     const queryText = query.state.q;
-    const itemIndex = state.results.findIndex(({ text }) => queryText === text);
-    const results = [...state.results];
-    let item = { count : 1, text: queryText, created_at:Reflect.construct(Date, []).toISOString() };
-    if(~itemIndex) {
-      item = results.splice(itemIndex, 1)[0];
-      item =  {
-        ...item,
-        count: 1 + item.count
+    if(queryText){
+      const itemIndex = state.results.findIndex(({ text }) => queryText === text);
+      const results = [...state.results];
+      let item = { count : 1, text: queryText, created_at:Reflect.construct(Date, []).toISOString() };
+      if(~itemIndex) {
+        item = results.splice(itemIndex, 1)[0];
+        item =  {
+          ...item,
+          count: 1 + item.count
+        }
       }
-    }
-    results.unshift(item);
-    return {
-      ...state,
-      results
-    }
+      results.unshift(item);
+      return {
+        ...state,
+        results
+      }
+    }else { return state }
+
   },
   [fetchQueryLogs.START]: state => ({
     ...state,
