@@ -38,12 +38,12 @@ class CollectionXrefIndexMode extends React.Component {
           <tbody>
           {xrefIndex.results.map((xref) => (
             <tr key={xref.collection.id}>
-              <td key={xref.collection.id} className='entity'>
+              <td className="entity">
                 <Link to={`${linkPath}${xref.collection.id}`}>
                   <Collection.Label collection={xref.collection} />
                 </Link>
               </td>
-              <td key={xref.collection.id} className="numeric">
+              <td className="numeric">
                 <FormattedNumber value={xref.matches} />
               </td>
             </tr>
