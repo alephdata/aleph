@@ -6,10 +6,6 @@ const messages = defineMessages({
   mode_download: {
     id: 'document.download.tooltip',
     defaultMessage: 'Download the original document',
-  },
-  mode_download_missing: {
-    id: 'document.download.missing',
-    defaultMessage: 'Cannot download this document',
   }
 });
 
@@ -36,7 +32,7 @@ class DownloadButton extends React.Component {
     } else {
       // Render disabled control
       return (
-        <Tooltip content={intl.formatMessage(messages.mode_download_missing)} position={Position.BOTTOM_RIGHT}>
+        <Tooltip content={intl.formatMessage(messages.mode_download)} position={Position.BOTTOM_RIGHT}>
           <button type="button" className="DownloadButton pt-button" disabled>
             {content}
           </button>

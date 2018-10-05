@@ -29,10 +29,6 @@ body {
   flex-flow: column nowrap;
 }
 
-h1, h2, h3, h4, h5 {
-  // font-weight: 300;
-}
-
 h1 {
   font-size: $aleph-font-size * 1.7;
 }
@@ -107,10 +103,6 @@ th.clickable {
 /* This causes toasts to appear *below* the navbar instead of on top of it */
 .aleph-toaster {
   margin-top: $aleph-grid-size * 5;
-}
-
-.content-children {
-  width: 100%;
 }
 
 //small screen

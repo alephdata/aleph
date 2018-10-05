@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/Screen/Screen';
+import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
@@ -14,7 +15,7 @@ import { selectCollection } from "src/selectors";
 
 class CollectionScreenContext extends Component {
   render() {
-    const { collection, collectionId, activeMode } = this.props;
+    const { collection, collectionId, activeMode, screenTitle } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -28,25 +29,25 @@ class CollectionScreenContext extends Component {
       );
     }
 
-    const breadcrumbs = <Breadcrumbs collection={collection}>
+    const breadcrumbs = (<Breadcrumbs collection={collection}>
       <li>
-        <span className='pt-breadcrumb'>
-           <FormattedMessage id="breadcrumbs.documents"
-                             defaultMessage="Documents and Files" />
-        </span>
+        <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
       </li>
-    </Breadcrumbs>;
+    </Breadcrumbs>);
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
         <Screen title={collection.label}>
           <DualPane>
-            <DualPane.ContentPane className='view-menu-flex-direction'>
+            <DualPane.ContentPane className="view-menu-flex-direction">
               <CollectionViewsMenu collection={collection}
                                    activeMode={activeMode}
                                    isPreview={false} />
-              <div className='content-children'>
+              <div className="screen-children">
                 {breadcrumbs}
+                {/*
+                  <CollectionSearch collection={collection} />
+                */}
                 {this.props.children}
               </div>
             </DualPane.ContentPane>

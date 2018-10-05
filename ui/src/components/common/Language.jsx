@@ -1,8 +1,8 @@
+import React, { Component } from 'react';
 import {FormattedMessage} from 'react-intl';
+import { connect } from 'react-redux';
 
 import wordList from 'src/util/wordList';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { selectMetadata } from 'src/selectors';
 
 

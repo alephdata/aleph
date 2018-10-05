@@ -14,7 +14,7 @@ import { selectEntity } from 'src/selectors';
 
 class DocumentScreenContext extends Component {
   render() {
-    const { document, documentId, activeMode } = this.props;
+    const { document, documentId, activeMode, screenTitle } = this.props;
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
@@ -28,7 +28,7 @@ class DocumentScreenContext extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs collection={document.collection}>
-        { document.parent && (
+        {document.parent && (
           <li>
             <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
           </li>
@@ -43,11 +43,11 @@ class DocumentScreenContext extends Component {
       <DocumentContextLoader documentId={documentId}>
         <Screen title={document.name}>
           <DualPane>
-            <DualPane.ContentPane className='view-menu-flex-direction'>
+            <DualPane.ContentPane className="view-menu-flex-direction">
               <DocumentViewsMenu document={document}
                                 activeMode={activeMode}
                                 isPreview={false}/>
-              <div className='content-children'>
+              <div className="screen-children">
                 {breadcrumbs}
                 {this.props.children}
               </div>

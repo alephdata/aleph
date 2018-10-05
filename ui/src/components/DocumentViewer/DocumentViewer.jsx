@@ -92,4 +92,4 @@ const mapStateToProps = (state, ownProps) => {
 DocumentViewer = connect(mapStateToProps)(DocumentViewer);
 DocumentViewer = injectIntl(DocumentViewer);
 DocumentViewer = withRouter(DocumentViewer);
-export default DocumentViewer
+export default DocumentViewer;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
@@ -7,15 +8,21 @@ import CollectionScreenContext from 'src/components/Collection/CollectionScreenC
 import { selectCollection } from "src/selectors";
 
 
+const messages = defineMessages({
+  screen_title: {
+    id: 'collection.documents.title',
+    defaultMessage: 'Browse',
+  }
+});
+
 class CollectionDocumentsScreen extends Component {
   render() {
-    const { collection, collectionId } = this.props;
+    const { intl, collection, collectionId } = this.props;
 
     return (
-      <CollectionScreenContext collectionId={collectionId} activeMode="documents">
-        <Toolbar>
-          <CollectionSearch collection={collection} />
-        </Toolbar>
+      <CollectionScreenContext collectionId={collectionId}
+                               activeMode="documents"
+                               screenTitle={intl.formatMessage(messages.screen_title)}>
         <CollectionDocumentsMode collection={collection} />
       </CollectionScreenContext>
     );
@@ -30,5 +37,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+CollectionDocumentsScreen = injectIntl(CollectionDocumentsScreen);
 CollectionDocumentsScreen = connect(mapStateToProps, {})(CollectionDocumentsScreen);
 export default CollectionDocumentsScreen;

@@ -9,7 +9,11 @@ import './PagingButtons.css';
 
 class PagingButtons extends React.Component {
   render() {
-    const { document: doc, location, numberOfPages } = this.props;
+    const { document, location, numberOfPages } = this.props;
+
+    if (document.isLoading || !document.links) {
+      return null;
+    }
 
     // Preserve exsting hash value while updating any existing value for 'page'
     const parsedHash = queryString.parse(location.hash);
@@ -23,9 +27,8 @@ class PagingButtons extends React.Component {
 
     // Only displays paging buttons on PDF docs
     // Having the logic here makes it easier to use this component.
-    if (doc && doc.links && doc.links.pdf &&
-      currentPage && currentPage > 0 &&
-      numberOfPages && numberOfPages > 0) {
+    if (currentPage && currentPage > 0 &&
+        numberOfPages && numberOfPages > 0) {
       return (
         <ButtonGroup className="PagingButtons" fill={true}>
           <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={currentPage <= 1}/>
@@ -43,7 +46,7 @@ class PagingButtons extends React.Component {
         </ButtonGroup>
       );
     } else {
-      return null
+      return null;
     }
   }
 }
