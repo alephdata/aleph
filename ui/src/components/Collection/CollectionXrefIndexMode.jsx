@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
+import { Collection } from 'src/components/common';
 import getPath from 'src/util/getPath';
 import { selectCollectionXrefIndex } from "src/selectors";
 
@@ -35,15 +36,15 @@ class CollectionXrefIndexMode extends React.Component {
           </tr>
           </thead>
           <tbody>
-          {xrefIndex.results.map((idx) => (
-            <tr key={idx.collection.id}>
-              <td key={idx.collection.id} className='entity'>
-                <Link to={`${linkPath}${idx.collection.id}`}>
-                  {idx.collection.label}
+          {xrefIndex.results.map((xref) => (
+            <tr key={xref.collection.id}>
+              <td key={xref.collection.id} className='entity'>
+                <Link to={`${linkPath}${xref.collection.id}`}>
+                  <Collection.Label collection={xref.collection} />
                 </Link>
               </td>
-              <td key={idx.collection.id} className="numeric">
-                <FormattedNumber value={idx.matches} />
+              <td key={xref.collection.id} className="numeric">
+                <FormattedNumber value={xref.matches} />
               </td>
             </tr>
           ))}
