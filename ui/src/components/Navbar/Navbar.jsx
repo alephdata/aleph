@@ -2,9 +2,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
-import {defineMessages, injectIntl, FormattedMessage,} from 'react-intl';
+import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
 import queryString from 'query-string';
-import { Icon, Button } from "@blueprintjs/core";
+import {Icon, Button} from "@blueprintjs/core";
 
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
@@ -154,7 +154,7 @@ class Navbar extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return { session: selectSession(state) };
 };
 

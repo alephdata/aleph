@@ -155,13 +155,11 @@ export function selectQueryLog(state){
 
 export function selectQueryLogsLimited(state, limit = 9){
   const queryLogs = selectQueryLog(state);
-  let result = Array.from(
-    queryLogs.results.values()
-  ).slice(-limit).reverse();
+  let result = queryLogs.results.slice(-limit);
 
   return {
+    ...queryLogs,
     result,
-    ...queryLogs
   };
 
 }

@@ -2,18 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Button } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
-import { deleteNotifications } from 'src/actions';
-import {  DualPane } from 'src/components/common';
+import DualPane from 'src/components/common/DualPane';
 import Toolbar from 'src/components/Toolbar/Toolbar';
-import NotificationList from 'src/components/Notification/NotificationList';
-import ActivityTimeline from "../../components/Activity/ActivityTimeline";
+import ActivityTimeline from "src/components/Activity/ActivityTimeline";
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 
-import { selectNotificationsResult } from "src/selectors";
+import {selectQueryLog} from "src/selectors";
 
 import './ActivityScreen.css';
 /* *
@@ -28,16 +25,17 @@ import './ActivityScreen.css';
 * TODO-DONE: Make sure route is hidden for non-auto users
 * TODO-DONE: Implement translations
 * TODO-DONE: term as an alert
-* TODO: Implement item removal functionality
+* TODO-DONE: Implement item removal functionality
+* TODO-DONE: Improve optimization for alert requests
 * * * * * * * Visual stage
-* * * TODO: Make it beautiful
+* * * TODO-DONE: Make it beautiful
 * * * * * * * Optimization & clean-Up
-* TODO: Clean up component
-* TODO: Optimize object constructions
-* TODO: Check imports
+* TODO-DONE: Clean up component
+* TODO-DONE: Optimize object constructions
+* TODO-DONE: Check imports
+* TODO-DONE: Optimize re-rendering
 * * TODO: Remove redux logging
-* TODO: Optimize re-rendering
-* TODO: Clear console.log's and debuggers
+* TODO-DONE: Clear console.log's and debuggers
 * TODO: Fix ESLint and SonarLint issues
 * */
 
@@ -50,22 +48,10 @@ const messages = defineMessages({
 
 
 class ActivityScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {isMarkedRead: false};
-    this.onMarkRead = this.onMarkRead.bind(this);
-  }
-
-  async onMarkRead(event) {
-    event.preventDefault();
-    this.setState({isMarkedRead: true});
-    await this.props.deleteNotifications();
-  }
+  state = {isMarkedRead: false};
 
   render() {
     const { query, result, intl } = this.props;
-    const { isMarkedRead } = this.state;
-    const canMarkRead = !isMarkedRead && result.total !== undefined && result.total > 0;
 
     if (result.isError) {
       return <ErrorScreen error={result.error} />
@@ -73,7 +59,7 @@ class ActivityScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession={true}>
-        <DualPane className="NotificationsScreen">
+        <DualPane className="ActivityScreen">
           <DualPane.ContentPane className="padded">
             <Toolbar>
               <h1>
@@ -92,10 +78,10 @@ class ActivityScreen extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('queryLog', location, {}, 'queryLog').limit(40);
-  const result = selectNotificationsResult(state, query);
+  const result = selectQueryLog(state, query);
   return { query, result };
 };
 
-ActivityScreen = connect(mapStateToProps, { deleteNotifications })(ActivityScreen);
+ActivityScreen = connect(mapStateToProps)(ActivityScreen);
 ActivityScreen = withRouter(ActivityScreen);
 export default injectIntl(ActivityScreen);

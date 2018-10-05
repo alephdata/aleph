@@ -1,6 +1,5 @@
 import { createReducer } from 'redux-act';
-
-import {fetchQueryLogs} from "src/actions/queryLogsActions";
+import {deleteQueryLog, fetchQueryLogs} from "src/actions/queryLogsActions";
 import {queryEntities} from "src/actions/entityActions";
 import {mergeResults} from "./util";
 
@@ -8,20 +7,27 @@ const initialState = {
   isLoading: false,
   shouldLoad: true,
   isError: false,
-  results: new Map()
+  results: []
 };
 
 export default createReducer({
   [queryEntities.START]: (state, { query }) => {
     const queryText = query.state.q;
-    const queryEntry = state.results.get(queryText);
-    state.results.delete(queryText);
-    return Object.assign({}, state, {
-      results: Map.from(state.results.set(queryText, queryEntry ? {
-        ...queryEntry,
-        count: 1 + queryEntry.count
-      } : { count : 1, text: queryText, created_at:Reflect.construct(Date, []).toISOString() }))
-    })
+    const itemIndex = state.results.findIndex(({ text }) => queryText === text);
+    const results = [...state.results];
+    let item = { count : 1, text: queryText, created_at:Reflect.construct(Date, []).toISOString() };
+    if(~itemIndex) {
+      item = results.splice(itemIndex, 1)[0];
+      item =  {
+        ...item,
+        count: 1 + item.count
+      }
+    }
+    results.unshift(item);
+    return {
+      ...state,
+      results
+    }
   },
   [fetchQueryLogs.START]: state => ({
     ...state,
@@ -36,20 +42,11 @@ export default createReducer({
     results :new Map(),
     error
   }),
-  [fetchQueryLogs.COMPLETE]: (state, { query, result: queryLogs }) => {
-    const {results : metaResults } = queryLogs;
-    let results = metaResults
-      // .reverse()
-      .reduce((queryLogsObject, query) => queryLogsObject.set(query.text, query), new Map());
-
-    const newState = mergeResults({
-      ...state,
-        results: [...state.results].reverse()
-    }, {...queryLogs, results});
-    console.log(newState);
+  [fetchQueryLogs.COMPLETE]: (state, { query, result: queryLogs }) => mergeResults(state, queryLogs),
+  [deleteQueryLog.START]: (state, {text: query}) => {
     return {
-      ...newState,
-    results: new Map([...newState.results].reverse())
-    }
+      ...state,
+      results: state.results.filter(({text})=> text !== query)
+    };
   }
 }, initialState);

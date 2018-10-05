@@ -1,15 +1,12 @@
 import React, {PureComponent} from 'react';
-import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
+import {connect} from 'react-redux';
+import {defineMessages, injectIntl} from 'react-intl';
 import Waypoint from 'react-waypoint';
-import { Timeline } from 'react-event-timeline'
-
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import Timeline from 'react-event-timeline/dist/Timeline'
+import {SectionLoading, ErrorSection} from 'src/components/common';
 import ActivityItem  from './ActivityItem';
-import { queryNotifications } from "src/actions";
-import {selectNotificationsResult, selectQueryLog} from "src/selectors";
+import {selectQueryLog} from "src/selectors";
 import {fetchQueryLogs} from "src/actions/queryLogsActions";
-import ErrorScreen from "../Screen/ErrorScreen";
 
 
 const messages = defineMessages({
@@ -21,11 +18,6 @@ const messages = defineMessages({
 
 
 class ActivityTimeline extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -37,28 +29,32 @@ class ActivityTimeline extends PureComponent {
     }
   }
 
-  getMoreResults() {
-    console.log('getting mroe results');
+  getMoreResults = () => {
     const { query, result } = this.props;
     if (!result.isLoading && result.next) {
       this.props.fetchQueryLogs({ query, next: result.next });
     }
-
-  }
+  };
 
   render() {
     const { result, intl } = this.props;
 
+    if(result.isError){
+      return <ErrorSection visual="Unexpected error"/>
+    }
+
     return (
       <React.Fragment>
-        { result.isError ? <ErrorScreen visual="error"/> :
-          ( result.total === 0 ?
-        <ErrorSection visual="activity log"
-                      title={intl.formatMessage(messages.no_activity)} />
-          : <Timeline className="ActivityTimeline">
-            {[...result.results.values()].reverse().map((activity) =>
+        {result.total === 0
+        && <ErrorSection
+          visual="activity log"
+          title={intl.formatMessage(messages.no_activity)}
+        />}
+        {result.total !== 0
+        && <Timeline className="ActivityTimeline">
+            {result.results.map((activity) =>
               <ActivityItem
-                key={activity.id}
+                key={activity.text/*TODO: Find something unique as a key after other type arrive*/}
                 activity={activity}
                 type={
                   "search"
@@ -66,7 +62,7 @@ class ActivityTimeline extends PureComponent {
                 }
               />
             )}
-          </Timeline>)
+          </Timeline>
         }
         { !result.isLoading && result.next && (
           <Waypoint onEnter={this.getMoreResults}

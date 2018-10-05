@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import ActivitySearch from "./ActivityItems/ActivitySearch";
 
-
 class ActivityItem extends Component {
-
   TYPE_TO_COMPONENT = {
     search: ActivitySearch
   };
