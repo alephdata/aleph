@@ -5,6 +5,7 @@ from itertools import count
 from banal import clean_dict, ensure_list
 from datetime import datetime
 from followthemoney import model
+from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, BulkIndexError
 from elasticsearch import TransportError
 from normality import latinize_text
@@ -145,24 +146,21 @@ def index_bulk(collection, entities, chunk_size=200):
 def finalize_index(data, schema, texts):
     """Apply final denormalisations to the index."""
     data['schema'] = schema.name
-    # Get implied schemata (i.e. parents of the actual schema)
-    data['schemata'] = schema.names
+    proxy = model.get_proxy(data)
 
-    properties = data.get('properties', {})
-    for name, prop in schema.properties.items():
-        if name not in properties:
-            continue
+    for prop in proxy.iterprops():
         if prop.type.name in ['entity', 'date', 'url', 'country']:
             continue
-        for value in ensure_list(properties[name]):
-            if name == 'name':
+        for value in proxy.get(prop):
+            if prop.name == 'name':
                 data['name'] = value
             texts.append(value)
 
-    data = schema.invert(data)
+    data = merge_data(data, proxy.get_type_inverted())
+    data['schemata'] = schema.names
     data['text'] = index_form(texts)
 
-    names = data.get('names', [])
+    names = proxy.names
     fps = [fingerprints.generate(name) for name in names]
     fps = [fp for fp in fps if fp is not None]
     data['fingerprints'] = list(set(fps))
@@ -179,12 +177,12 @@ def finalize_index(data, schema, texts):
 
 def index_single(obj, data, texts):
     """Indexing aspects common to entities and documents."""
+    data = finalize_index(data, obj.model, texts)
     data['bulk'] = False
     data['roles'] = obj.collection.roles
     data['collection_id'] = obj.collection.id
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
-    data = finalize_index(data, obj.model, texts)
     data = clean_dict(data)
     # pprint(data)
     return index_safe(entity_index(), obj.id, data)
