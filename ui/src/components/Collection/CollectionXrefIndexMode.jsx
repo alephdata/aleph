@@ -25,12 +25,14 @@ class CollectionXrefIndexMode extends React.Component {
           <tr>
             <th className='entity'>
               <span className="value">
-                 <FormattedMessage id="xref.collection" defaultMessage="Collection" />
+                 <FormattedMessage id="xref.collection"
+                                   defaultMessage="Cross-referenced collection" />
               </span>
             </th>
             <th className="numeric">
               <span className="value">
-                <FormattedMessage id="xref.matches" defaultMessage="Matches" />
+                <FormattedMessage id="xref.matches"
+                                  defaultMessage="Matches" />
               </span>
             </th>
           </tr>
