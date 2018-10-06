@@ -66,7 +66,7 @@ class PdfViewer extends Component {
     if (this.state.width === null) {
       this.onResize();
     }
-    if (this.props.mode !== prevProps.mode) {
+    if (this.props.activeMode !== prevProps.activeMode) {
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {
         this.onResize();
@@ -128,11 +128,10 @@ class PdfViewer extends Component {
 
   renderPDFView (){
     const { document, page } = this.props;
-    const { width, numPages, components:{
+    const { width, numPages, components: {
       Document,
       Page
     } } = this.state;
-
 
     return (<div ref={(ref) => this.pdfElement = ref}>
       <Document renderAnnotations={true}
