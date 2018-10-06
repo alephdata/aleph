@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
-import { selectEntity } from 'src/selectors';
+import { selectEntity, selectDocumentView } from 'src/selectors';
 import DocumentViewer from 'src/components/DocumentViewer/DocumentViewer';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
@@ -14,7 +14,7 @@ class DocumentScreen extends Component {
     const { documentId, document, mode } = this.props;
     return (
       <DocumentScreenContext documentId={documentId} activeMode={mode}>
-        <DocumentViewer document={document} />
+        <DocumentViewer document={document} activeMode={mode} />
       </DocumentScreenContext>
     );
   }
@@ -27,7 +27,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     documentId,
     document: selectEntity(state, documentId),
-    mode: hashQuery.mode || 'view'
+    mode: selectDocumentView(state, documentId, hashQuery.mode)
   };
 };
 

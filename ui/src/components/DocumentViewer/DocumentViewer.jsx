@@ -38,35 +38,35 @@ class DocumentViewer extends React.Component {
   }
 
   renderContent() {
-    const { document: doc, intl, queryText, previewMode } = this.props;
+    const { document, intl, queryText, activeMode } = this.props;
     const { numberOfPages } = this.state;
     
-    if (doc.schema === 'Email') {
-      return <EmailViewer document={doc} queryText={queryText} />;
-    } else if (doc.schema === 'Table') {
-      return <TableViewer document={doc} queryText={queryText} />;
-    } else if (doc.schema === 'Image') {
-      return <ImageViewer document={doc} queryText={queryText} />;
-    } else if (doc.text && !doc.html) {
-      return <TextViewer document={doc} queryText={queryText} />;
-    } else if (doc.html) {
-      return <HtmlViewer document={doc} queryText={queryText} />;
-    } else if (doc.links && doc.links.pdf) {
-      return <PdfViewer document={doc}
+    if (document.schema === 'Email') {
+      return <EmailViewer document={document} queryText={queryText} />;
+    } else if (document.schema === 'Table') {
+      return <TableViewer document={document} queryText={queryText} />;
+    } else if (document.schema === 'Image') {
+      return <ImageViewer document={document} queryText={queryText} />;
+    } else if (document.text && !document.html) {
+      return <TextViewer document={document} queryText={queryText} />;
+    } else if (document.html) {
+      return <HtmlViewer document={document} queryText={queryText} />;
+    } else if (document.links && document.links.pdf) {
+      return <PdfViewer document={document}
                         queryText={queryText}
                         numberOfPages={numberOfPages}
-                        previewMode={previewMode}
+                        activeMode={activeMode}
                         onDocumentLoad={this.onDocumentLoad} />
-    } else if (doc.schema === 'Folder' || doc.schema === 'Package' || doc.schema === 'Workbook') {
-      return <FolderViewer document={doc} queryText={queryText} />;
-    } else if (doc.schema === 'Document' || doc.schema === 'Audio' || doc.schema === 'Video') {
+    } else if (document.schema === 'Folder' || document.schema === 'Package' || document.schema === 'Workbook') {
+      return <FolderViewer document={document} queryText={queryText} />;
+    } else if (document.schema === 'Document' || document.schema === 'Audio' || document.schema === 'Video') {
       return <ErrorSection visual='issue'
                            title={intl.formatMessage(messages.no_viewer)}
                            description={intl.formatMessage(messages.ignored_file)} />
-    } else if (doc.status === 'fail') {
+    } else if (document.status === 'fail') {
       return <ErrorSection visual='issue'
                            title={intl.formatMessage(messages.no_viewer)}
-                           description={doc.error_message} />
+                           description={document.error_message} />
     }
   }
   

@@ -137,6 +137,13 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   }
 }
 
+export function selectDocumentView(state, documentId, mode) {
+  if (mode) {
+    return mode;
+  }
+  return 'view';
+}
+
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state.collectionPermissions, collectionId);
 }

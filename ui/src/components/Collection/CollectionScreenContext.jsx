@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Screen from 'src/components/Screen/Screen';
-import { CollectionSearch } from 'src/components/Toolbar';
+// import { CollectionSearch } from 'src/components/Toolbar';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
@@ -11,7 +11,6 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection } from "src/selectors";
-import wordList from 'src/util/wordList';
 
 
 class CollectionScreenContext extends Component {

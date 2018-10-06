@@ -158,7 +158,7 @@ class PdfViewer extends Component {
   }
 
   render() {
-    const { document, mode, page, pageResult, result, isSearch, numberOfPages } = this.props;
+    const { document, activeMode, page, pageResult, result, isSearch, numberOfPages } = this.props;
 
     if (document.id === undefined) {
       return null;
@@ -175,7 +175,7 @@ class PdfViewer extends Component {
         )}
         <div className="outer">
           <div id="PdfViewer" className="inner">
-            { mode === 'text' && (
+            { activeMode === 'text' && (
               <div className="document">
                 {pageResult.id !== undefined && (
                   <pre>{pageResult.text}</pre>
@@ -185,7 +185,7 @@ class PdfViewer extends Component {
                 )}
               </div>
             )}
-            { mode === 'view' && (
+            { activeMode === 'view' && (
               <div className="document">
                 {result.total === 0 && (
                   <div className="pt-callout pt-intent-warning pt-icon-search">
@@ -224,7 +224,7 @@ class PdfViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText, previewMode } = ownProps;
+  const { document, location, queryText } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
 
@@ -240,13 +240,12 @@ const mapStateToProps = (state, ownProps) => {
     query = query.setString('q', queryText);
   }
 
-  const mode = hashQuery['preview:mode'] || 'view';
   return {
     result: selectDocumentRecordsResult(state, query),
     pageResult: selectDocumentPage(state, document.id, page),
-    isSearch: (previewMode && query.hasQuery() && mode === 'view') || (mode === 'search'),
+    // isSearch: (activeMode && query.hasQuery() && mode === 'view') || (mode === 'search'),
+    isSearch: false,
     page: page,
-    mode: mode === 'search' ? 'view' : mode,
     query: query
   }
 }
