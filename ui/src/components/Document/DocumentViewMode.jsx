@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -19,21 +20,15 @@ import './DocumentViewMode.css';
 class DocumentViewMode extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      numberOfPages: null
-    };
-    this.onDocumentLoad = this.onDocumentLoad.bind(this);
   }
-  
-  onDocumentLoad(documentInfo) {
-    this.setState({
-      numberOfPages: (documentInfo && documentInfo.numPages) ? documentInfo.numPages : null
-    });
+
+  hasSchemata(schemata) {
+    const { document } = this.props;
+    return _.intersection(document.schemata, schemata).length > 0;
   }
 
   renderContent() {
     const { document, queryText, activeMode } = this.props;
-    const { numberOfPages } = this.state;
     
     if (document.schema === 'Email') {
       return <EmailViewer document={document}
@@ -55,9 +50,7 @@ class DocumentViewMode extends React.Component {
     } else if (document.links && document.links.pdf) {
       return <PdfViewer document={document}
                         queryText={queryText}
-                        numberOfPages={numberOfPages}
-                        activeMode={activeMode}
-                        onDocumentLoad={this.onDocumentLoad} />;
+                        activeMode={activeMode} />;
     } else if (document.schema === 'Folder' || document.schema === 'Package' || document.schema === 'Workbook') {
       return <FolderViewer document={document}
                            queryText={queryText} />;

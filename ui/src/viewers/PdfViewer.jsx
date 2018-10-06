@@ -33,11 +33,6 @@ class PdfViewer extends Component {
 
   onDocumentLoad(pdfInfo) {
     this.setState({ numPages: pdfInfo.numPages });
-
-    if (this.props.onDocumentLoad) {
-      this.props.onDocumentLoad(pdfInfo);
-    }
-
     // Handle a resize event (to check document width) after loading
     // Note: onDocumentLoad actualy happens *before* rendering, but the
     // rendering calls happen a bit too often as we don't have sophisticated
@@ -158,7 +153,8 @@ class PdfViewer extends Component {
   }
 
   render() {
-    const { document, activeMode, page, pageResult, result, isSearch, numberOfPages } = this.props;
+    const { document, activeMode, page, pageResult, result, isSearch } = this.props;
+    const { numPages } = this.state;
 
     if (document.id === undefined) {
       return null;
@@ -170,8 +166,8 @@ class PdfViewer extends Component {
 
     return (
       <div className="PdfViewer">
-        {numberOfPages !== null && numberOfPages > 0 && (
-          <PagingButtons document={document} numberOfPages={numberOfPages}/>
+        {numPages !== null && numPages > 0 && (
+          <PagingButtons document={document} numberOfPages={numPages}/>
         )}
         <div className="outer">
           <div id="PdfViewer" className="inner">
@@ -243,8 +239,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     result: selectDocumentRecordsResult(state, query),
     pageResult: selectDocumentPage(state, document.id, page),
-    // isSearch: (activeMode && query.hasQuery() && mode === 'view') || (mode === 'search'),
-    isSearch: false,
     page: page,
     query: query
   }
