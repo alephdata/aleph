@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import queryString from 'query-string';
 
 import SectionLoading from 'src/components/common/SectionLoading';
+import { selectDocumentContent } from 'src/selectors';
 
 import './ImageViewer.css';
 
 
 class ImageViewer extends Component {
   render() {
-    const { document, mode } = this.props;
+    const { document, content, activeMode } = this.props;
     if (!document.links || !document.links.file) {
       return <SectionLoading />;
     }
 
-    return (<div className="outer">
+    return (
+      <div className="outer">
         <div className="inner ImageViewer">
-          { mode === 'text' && (
-            <pre>{document.text}</pre>
+          { activeMode === 'text' && (
+            <pre>{content.text}</pre>
           )}
-          { mode !== 'text' && (
+          { activeMode !== 'text' && (
             <img src={document.links.file} alt={document.file_name} />
           )}
         </div>
@@ -30,10 +31,10 @@ class ImageViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  const mode = hashQuery.mode || 'view';
-  return { mode };
+  const { document } = ownProps;
+  return {
+    content: selectDocumentContent(state, document.id)
+  };
 }
 
 ImageViewer = connect(mapStateToProps)(ImageViewer);

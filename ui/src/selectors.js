@@ -87,6 +87,10 @@ export function selectDocumentPage(state, documentId, page) {
   return selectObject(state.documentRecords, key);
 }
 
+export function selectDocumentContent(state, documentId, page) {
+  return selectObject(state.documentContent, documentId);
+}
+
 export function selectCollectionsResult(state, query) {
   return selectResult(state, query, selectCollection);
 }
@@ -141,6 +145,11 @@ export function selectDocumentView(state, documentId, mode) {
   if (mode) {
     return mode;
   }
+  // const document = selectEntity(state, documentId);
+  // const schemata = 
+  // if (document.isLoading) {
+  //   return 'info';
+  // }
   return 'view';
 }
 

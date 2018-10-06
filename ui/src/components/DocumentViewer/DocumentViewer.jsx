@@ -42,31 +42,39 @@ class DocumentViewer extends React.Component {
     const { numberOfPages } = this.state;
     
     if (document.schema === 'Email') {
-      return <EmailViewer document={document} queryText={queryText} />;
+      return <EmailViewer document={document}
+                          queryText={queryText}
+                          activeMode={activeMode} />;
     } else if (document.schema === 'Table') {
-      return <TableViewer document={document} queryText={queryText} />;
+      return <TableViewer document={document}
+                          queryText={queryText} />;
     } else if (document.schema === 'Image') {
-      return <ImageViewer document={document} queryText={queryText} />;
+      return <ImageViewer document={document}
+                          queryText={queryText}
+                          activeMode={activeMode} />;
     } else if (document.text && !document.html) {
-      return <TextViewer document={document} queryText={queryText} />;
+      return <TextViewer document={document}
+                         queryText={queryText} />;
     } else if (document.html) {
-      return <HtmlViewer document={document} queryText={queryText} />;
+      return <HtmlViewer document={document}
+                         queryText={queryText} />;
     } else if (document.links && document.links.pdf) {
       return <PdfViewer document={document}
                         queryText={queryText}
                         numberOfPages={numberOfPages}
                         activeMode={activeMode}
-                        onDocumentLoad={this.onDocumentLoad} />
+                        onDocumentLoad={this.onDocumentLoad} />;
     } else if (document.schema === 'Folder' || document.schema === 'Package' || document.schema === 'Workbook') {
-      return <FolderViewer document={document} queryText={queryText} />;
+      return <FolderViewer document={document}
+                           queryText={queryText} />;
     } else if (document.schema === 'Document' || document.schema === 'Audio' || document.schema === 'Video') {
       return <ErrorSection visual='issue'
                            title={intl.formatMessage(messages.no_viewer)}
-                           description={intl.formatMessage(messages.ignored_file)} />
+                           description={intl.formatMessage(messages.ignored_file)} />;
     } else if (document.status === 'fail') {
       return <ErrorSection visual='issue'
                            title={intl.formatMessage(messages.no_viewer)}
-                           description={document.error_message} />
+                           description={document.error_message} />;
     }
   }
   

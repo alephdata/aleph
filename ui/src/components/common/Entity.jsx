@@ -86,6 +86,7 @@ class EntityLink extends Component {
       } else {
         parsedHash['preview:id'] = entity.id;
         parsedHash['preview:type'] = previewType;
+        parsedHash['preview:mode'] = undefined;
       }
       history.replace({
         pathname: location.pathname,

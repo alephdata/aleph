@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchDocument, fetchEntityTags, queryEntities } from 'src/actions';
-import { selectEntity, selectEntityTags } from 'src/selectors';
+import { fetchDocument, fetchDocumentContent, fetchEntityTags, queryEntities } from 'src/actions';
+import { selectEntity, selectEntityTags, selectDocumentContent } from 'src/selectors';
 
 
 class DocumentContextLoader extends Component {
@@ -20,8 +20,13 @@ class DocumentContextLoader extends Component {
       this.props.fetchDocument({ id: documentId });
     }
 
-    const { tagsResult } = this.props;
-    if (tagsResult.shouldLoad) {
+    const { content } = this.props;
+    if (content.shouldLoad) {
+      // this.props.fetchDocumentContent({ documentId });
+    }
+
+    const { tags } = this.props;
+    if (tags.shouldLoad) {
       this.props.fetchEntityTags({ id: documentId });
     }
   }
@@ -36,9 +41,10 @@ const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps;
   return {
     document: selectEntity(state, documentId),
-    tagsResult: selectEntityTags(state, documentId)
+    content: selectDocumentContent(state, documentId),
+    tags: selectEntityTags(state, documentId)
   };
 };
 
-DocumentContextLoader = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities })(DocumentContextLoader);
+DocumentContextLoader = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities, fetchDocumentContent })(DocumentContextLoader);
 export default DocumentContextLoader;

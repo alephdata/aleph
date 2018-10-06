@@ -6,6 +6,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 
 import Query from 'src/app/Query';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
+import { selectDocumentContent } from 'src/selectors';
 
 import './EmailViewer.css';
 
@@ -111,8 +112,8 @@ class EmailViewer extends React.Component {
                panel={
                  document.children && <div className="email-attachments">
                      <EntitySearch query={query}
-                                  hideCollection={true}
-                                  documentMode={true}/>
+                                   hideCollection={true}
+                                   documentMode={true}/>
                   </div>
                 } 
               />
@@ -132,7 +133,8 @@ const mapStateToProps = (state, ownProps) => {
         context = {[field]: document.id};
   const query = Query.fromLocation('search', location, context, 'document').limit(50);
   return {
-    query: query
+    query: query,
+    content: selectDocumentContent(state, document.id)
   }
 }
 
