@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
 import { selectEntity, selectDocumentView } from 'src/selectors';
-import DocumentViewer from 'src/components/DocumentViewer/DocumentViewer';
+import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
 
@@ -14,7 +14,7 @@ class DocumentScreen extends Component {
     const { documentId, document, mode } = this.props;
     return (
       <DocumentScreenContext documentId={documentId} activeMode={mode}>
-        <DocumentViewer document={document} activeMode={mode} />
+        <DocumentViewMode document={document} activeMode={mode} />
       </DocumentScreenContext>
     );
   }

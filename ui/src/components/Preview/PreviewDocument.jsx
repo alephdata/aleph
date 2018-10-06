@@ -7,8 +7,8 @@ import Preview from 'src/components/Preview/Preview';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
+import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import { DocumentViewer } from 'src/components/DocumentViewer';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
 
@@ -36,8 +36,8 @@ class PreviewDocument extends React.Component {
       mode = <EntityTagsMode entity={document} />;
       maximised = true;
     } else {
-      mode = <DocumentViewer document={document}
-                             activeMode={previewMode} />;
+      mode = <DocumentViewMode document={document}
+                               activeMode={previewMode} />;
       maximised = true;
     }
     return (

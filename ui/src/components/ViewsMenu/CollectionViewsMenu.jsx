@@ -45,7 +45,7 @@ class CollectionViewsMenu extends React.Component {
     const { xrefIndex } = this.props;
     // TODO: add case home page / timeline....
     return (
-      <div className='ViewsMenu'>
+      <div className="ViewsMenu">
         {isPreview && (
           <ViewItem mode='info'
                     activeMode={activeMode}

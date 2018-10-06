@@ -70,6 +70,7 @@ class CollectionLink extends Component {
       } else {
         parsedHash['preview:id'] = collection.id;
         parsedHash['preview:type'] = previewType;
+        parsedHash['preview:mode'] = undefined;
       }
       history.replace({
         pathname: location.pathname,

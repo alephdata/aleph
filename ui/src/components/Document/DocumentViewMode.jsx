@@ -1,28 +1,22 @@
 import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
 
 import Query from 'src/app/Query';
-import { ErrorSection } from 'src/components/common';
 // import { DocumentSearch } from 'src/components/Toolbar';
-import { TableViewer, TextViewer, HtmlViewer, PdfViewer, ImageViewer, FolderViewer, EmailViewer } from './index';
+import DefaultViewer from 'src/viewers/DefaultViewer';
+import TableViewer from 'src/viewers/TableViewer';
+import TextViewer from 'src/viewers/TextViewer';
+import HtmlViewer from 'src/viewers/HtmlViewer';
+import PdfViewer from 'src/viewers/PdfViewer';
+import ImageViewer from 'src/viewers/ImageViewer';
+import FolderViewer from 'src/viewers/FolderViewer';
+import EmailViewer from 'src/viewers/EmailViewer';
 
-import './DocumentViewer.css';
-
-const messages = defineMessages({
-  no_viewer: {
-    id: 'document.viewer.no_viewer',
-    defaultMessage: 'No preview is available for this document',
-  },
-  ignored_file: {
-    id: 'document.viewer.ignored_file',
-    defaultMessage: 'The system does not work with these types of files. Please download it so you’ll be able to see it.',
-  }
-});
+import './DocumentViewMode.css';
 
 
-class DocumentViewer extends React.Component {
+class DocumentViewMode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,7 +32,7 @@ class DocumentViewer extends React.Component {
   }
 
   renderContent() {
-    const { document, intl, queryText, activeMode } = this.props;
+    const { document, queryText, activeMode } = this.props;
     const { numberOfPages } = this.state;
     
     if (document.schema === 'Email') {
@@ -67,25 +61,17 @@ class DocumentViewer extends React.Component {
     } else if (document.schema === 'Folder' || document.schema === 'Package' || document.schema === 'Workbook') {
       return <FolderViewer document={document}
                            queryText={queryText} />;
-    } else if (document.schema === 'Document' || document.schema === 'Audio' || document.schema === 'Video') {
-      return <ErrorSection visual='issue'
-                           title={intl.formatMessage(messages.no_viewer)}
-                           description={intl.formatMessage(messages.ignored_file)} />;
-    } else if (document.status === 'fail') {
-      return <ErrorSection visual='issue'
-                           title={intl.formatMessage(messages.no_viewer)}
-                           description={document.error_message} />;
     }
+    return <DefaultViewer document={document} queryText={queryText} />;
   }
   
   render() {
     const { document } = this.props;
-
-    if (document.isLoading) {
+    if (document.isLoading || document.shouldLoad) {
       return null;
     }
 
-    return <div className='DocumentViewer'>
+    return <div className='DocumentViewMode'>
       {this.renderContent()}
     </div>
   }
@@ -97,7 +83,6 @@ const mapStateToProps = (state, ownProps) => {
   return { queryText: query.getString('q') }
 };
 
-DocumentViewer = connect(mapStateToProps)(DocumentViewer);
-DocumentViewer = injectIntl(DocumentViewer);
-DocumentViewer = withRouter(DocumentViewer);
-export default DocumentViewer;
+DocumentViewMode = connect(mapStateToProps)(DocumentViewMode);
+DocumentViewMode = withRouter(DocumentViewMode);
+export default DocumentViewMode;

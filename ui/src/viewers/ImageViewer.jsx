@@ -11,10 +11,9 @@ import './ImageViewer.css';
 class ImageViewer extends Component {
   render() {
     const { document, content, activeMode } = this.props;
-    if (!document.links || !document.links.file) {
+    if (content.shouldLoad || content.isLoading) {
       return <SectionLoading />;
     }
-
     return (
       <div className="outer">
         <div className="inner ImageViewer">

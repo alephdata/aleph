@@ -30,18 +30,19 @@ const messages = defineMessages({
   }
 });
 
+
 class DocumentViewsMenu extends React.Component {
 
   render() {
     const { intl, document, isPreview, activeMode } = this.props;
     const { tags } = this.props;
+
     const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
     const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
-    const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
-      <div className={className}>
+      <div className="ViewsMenu">
         {isPreview && (
           <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
             message={intl.formatMessage(messages.info)}

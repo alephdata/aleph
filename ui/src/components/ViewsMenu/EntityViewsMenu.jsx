@@ -30,10 +30,9 @@ class EntityViewsMenu extends React.Component {
   render() {
     const { intl, isPreview, activeMode, entity } = this.props;
     const { references, tags, similar, schemata } = this.props;
-    const className = !isPreview ? 'ViewsMenu FullPage' : 'ViewsMenu';
 
     return (
-      <div className={className}>
+      <div className="ViewsMenu">
         {isPreview && (
           <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
                     message={intl.formatMessage(messages.info)}

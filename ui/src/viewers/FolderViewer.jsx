@@ -9,10 +9,8 @@ import DocumentManager from 'src/components/Document/DocumentManager';
 import './FolderViewer.css';
 
 class FolderViewer extends Component {
-
   render() {
     const { document, query, className } = this.props;
-    
     return (
       <div className={`FolderViewer ${className}`}>
         {document.status === 'fail' && (
