@@ -145,11 +145,17 @@ export function selectDocumentView(state, documentId, mode) {
   if (mode) {
     return mode;
   }
-  // const document = selectEntity(state, documentId);
-  // const schemata = 
-  // if (document.isLoading) {
-  //   return 'info';
-  // }
+  const document = selectEntity(state, documentId);
+  const has = (s) => _.intersection(document.schemata, s).length > 0;
+  if (has(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
+    return 'view';
+  }
+  if (has(['Folder'])) {
+    return 'browse';
+  }
+  if (has(['PlainText'])) {
+    return 'text';
+  }
   return 'view';
 }
 

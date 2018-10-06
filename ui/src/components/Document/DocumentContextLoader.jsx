@@ -22,7 +22,7 @@ class DocumentContextLoader extends Component {
 
     const { content } = this.props;
     if (content.shouldLoad) {
-      // this.props.fetchDocumentContent({ documentId });
+      this.props.fetchDocumentContent({ id: documentId });
     }
 
     const { tags } = this.props;

@@ -17,9 +17,9 @@ export const fetchDocumentPage = asyncActionCreator(({ documentId, page }) => as
   return { documentId, page, data: response.data };
 }, { name: 'FETCH_DOCUMENT_PAGE' });
 
-export const fetchDocumentContent = asyncActionCreator(({ documentId }) => async dispatch => {
-  const response = await endpoint.get(`documents/${documentId}/content`);
-  return { documentId, data: response.data };
+export const fetchDocumentContent = asyncActionCreator(({ id }) => async dispatch => {
+  const response = await endpoint.get(`documents/${id}/content`);
+  return { id, data: response.data };
 }, { name: 'FETCH_DOCUMENT_CONTENT' });
 
 export const ingestDocument = asyncActionCreator((collectionId, metadata, file, onUploadProgress) => async dispatch => {

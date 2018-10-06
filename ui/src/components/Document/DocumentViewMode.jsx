@@ -18,10 +18,6 @@ import './DocumentViewMode.css';
 
 
 class DocumentViewMode extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   hasSchemata(schemata) {
     const { document } = this.props;
     return _.intersection(document.schemata, schemata).length > 0;
@@ -30,28 +26,42 @@ class DocumentViewMode extends React.Component {
   renderContent() {
     const { document, queryText, activeMode } = this.props;
     
-    if (document.schema === 'Email') {
+    if (this.hasSchemata(['Email'])) {
+      if (activeMode === 'browse') {
+        return <FolderViewer document={document}
+                             queryText={queryText} />;
+      }
       return <EmailViewer document={document}
                           queryText={queryText}
                           activeMode={activeMode} />;
-    } else if (document.schema === 'Table') {
-      return <TableViewer document={document}
-                          queryText={queryText} />;
-    } else if (document.schema === 'Image') {
+    }
+    if (this.hasSchemata(['Image'])) {
+      if (activeMode === 'text') {
+        return <TextViewer document={document}
+                           queryText={queryText} />;
+      }
       return <ImageViewer document={document}
                           queryText={queryText}
                           activeMode={activeMode} />;
-    } else if (document.text && !document.html) {
+    }
+    if (this.hasSchemata(['Table'])) {
+      return <TableViewer document={document}
+                          queryText={queryText} />;
+    }
+    if (this.hasSchemata(['PlainText'])) {
       return <TextViewer document={document}
                          queryText={queryText} />;
-    } else if (document.html) {
+    }
+    if (this.hasSchemata(['HyperText'])) {
       return <HtmlViewer document={document}
                          queryText={queryText} />;
-    } else if (document.links && document.links.pdf) {
+    }
+    if (this.hasSchemata(['Pages'])) {
       return <PdfViewer document={document}
                         queryText={queryText}
                         activeMode={activeMode} />;
-    } else if (document.schema === 'Folder' || document.schema === 'Package' || document.schema === 'Workbook') {
+    }
+    if (this.hasSchemata(['Folder'])) {
       return <FolderViewer document={document}
                            queryText={queryText} />;
     }
