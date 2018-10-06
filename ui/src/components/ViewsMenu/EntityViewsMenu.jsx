@@ -36,7 +36,7 @@ class EntityViewsMenu extends React.Component {
         {isPreview && (
           <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
                     message={intl.formatMessage(messages.info)}
-                    icon='pt-icon-info-sign' />
+                    icon='fa-info' />
         )}
         {references.results !== undefined && references.results.map((ref) => (
           <ViewItem key={ref.property.qname} 
@@ -46,7 +46,7 @@ class EntityViewsMenu extends React.Component {
                     message={reverseLabel(schemata, ref)}
                     href={'/entities/' + entity.id + '#mode=' + ref.property.qname}
                     icon={schemata[ref.schema].icon}
-                    count={ref.count}/>
+                    count={ref.count} />
         ))}
         <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
                   message={intl.formatMessage(messages.similar)}

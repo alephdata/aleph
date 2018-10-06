@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from "react-redux";
 import { injectIntl, defineMessages } from 'react-intl';
@@ -8,17 +9,21 @@ import ViewItem from "src/components/ViewsMenu/ViewItem";
 import './ViewsMenu.css';
 
 const messages = defineMessages({
-  view: {
-    id: 'document.mode.view.tooltip',
-    defaultMessage: 'Show the document',
-  },
   info: {
     id: 'document.mode.info.tooltip',
     defaultMessage: 'Show properties and details',
   },
+  view: {
+    id: 'document.mode.view.tooltip',
+    defaultMessage: 'Show the document',
+  },
+  browse: {
+    id: 'document.mode.browse.tooltip',
+    defaultMessage: 'Browse documents',
+  },
   text: {
     id: 'document.mode.text.tooltip',
-    defaultMessage: 'Show extracted text',
+    defaultMessage: 'Show text',
   },
   tags: {
     id: 'document.tags',
@@ -32,27 +37,44 @@ const messages = defineMessages({
 
 
 class DocumentViewsMenu extends React.Component {
+  
+  hasSchemata(schemata) {
+    const { document } = this.props;
+    return _.intersection(document.schemata, schemata).length > 0;
+  }
 
   render() {
     const { intl, document, isPreview, activeMode } = this.props;
     const { tags } = this.props;
 
-    const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
-    const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
-    const hasModifiers = hasSearchMode || hasTextMode || isPreview;
+    const hasTextMode = this.hasSchemata(['Pages', 'Image', 'PlainText']);
+    const hasBrowseMode = this.hasSchemata(['Folder']);
+    const hasViewer = this.hasSchemata(['Pages', 'Email', 'Image', 'HyperText', 'Table']);
+    const hasViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
 
     return (
       <div className="ViewsMenu">
         {isPreview && (
           <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
             message={intl.formatMessage(messages.info)}
-            icon='pt-icon-info-sign' />
+            icon='fa-info' />
         )}
-        {hasModifiers && (
-          <ViewItem mode='view' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.view)}
-            href={`/documents/${document.id}#mode=view`}
-            icon='pt-icon-document' />
+        {hasViewMode && (
+          <ViewItem mode='view'
+                    activeMode={activeMode}
+                    isPreview={isPreview}
+                    message={intl.formatMessage(messages.view)}
+                    href={`/documents/${document.id}#mode=view`}
+                    icon='fa-file-o' />
+        )}
+        {hasBrowseMode && (
+          <ViewItem mode='browse'
+                    activeMode={activeMode}
+                    isPreview={isPreview}
+                    message={intl.formatMessage(messages.browse)}
+                    href={`/documents/${document.id}#mode=browse`}
+                    icon='fa-folder-open'
+                    count={document.children} />
         )}
         {hasTextMode && (
           <ViewItem mode='text'
@@ -60,13 +82,13 @@ class DocumentViewsMenu extends React.Component {
                     isPreview={isPreview}
                     message={intl.formatMessage(messages.text)}
                     href={`/documents/${document.id}#mode=text`}
-                    icon='pt-icon-align-justify' />
+                    icon='fa-align-justify' />
         )}
         <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
                   count={tags.total}
                   message={intl.formatMessage(messages.tags)}
                   href={`/documents/${document.id}/tags`}
-                  icon='pt-icon-tag' />
+                  icon='fa-tags' />
       </div>
     );
   }
