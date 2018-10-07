@@ -6,13 +6,13 @@ import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumen
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import { selectCollection } from "src/selectors";
 
-
 const messages = defineMessages({
   screen_title: {
     id: 'collection.documents.title',
     defaultMessage: 'Browse',
   }
 });
+
 
 class CollectionDocumentsScreen extends Component {
   render() {

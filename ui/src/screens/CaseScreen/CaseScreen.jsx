@@ -1,22 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router';
+import { injectIntl, defineMessages } from 'react-intl';
 
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
-import { Toolbar, CollectionSearch } from 'src/components/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
 import Query from 'src/app/Query';
 import { selectCollection } from "src/selectors";
 
+const messages = defineMessages({
+  screen_title: {
+    id: 'collection.screen.title',
+    defaultMessage: 'Casefile',
+  }
+});
+
 
 class CaseScreen extends Component {
   render() {
-    const { collection, collectionId, notificationsQuery } = this.props;
+    const { intl, collection, collectionId, notificationsQuery } = this.props;
     return (
-      <CollectionScreenContext collectionId={collectionId} activeMode="home">
-        <Toolbar>
-          <CollectionSearch collection={collection} />
-        </Toolbar>
+      <CollectionScreenContext collectionId={collectionId}
+                               activeMode="home"
+                               screenTitle={intl.formatMessage(messages.screen_title)}>
         <NotificationList query={notificationsQuery} />
       </CollectionScreenContext>
     );
@@ -35,6 +41,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+CaseScreen = injectIntl(CaseScreen);
 CaseScreen = connect(mapStateToProps, {})(CaseScreen);
 CaseScreen = withRouter(CaseScreen);
 export default CaseScreen;
