@@ -87,6 +87,10 @@ export function selectDocumentPage(state, documentId, page) {
   return selectObject(state.documentRecords, key);
 }
 
+export function selectDocumentContent(state, documentId, page) {
+  return selectObject(state.documentContent, documentId);
+}
+
 export function selectCollectionsResult(state, query) {
   return selectResult(state, query, selectCollection);
 }
@@ -135,6 +139,21 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   if (references.total) {
     return references.results[0].property.qname;
   }
+}
+
+export function selectDocumentView(state, documentId, mode) {
+  if (mode) {
+    return mode;
+  }
+  const document = selectEntity(state, documentId);
+  const has = (s) => _.intersection(document.schemata, s).length > 0;
+  if (has(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
+    return 'view';
+  }
+  if (has(['Folder'])) {
+    return 'browse';
+  }
+  return 'view';
 }
 
 export function selectCollectionPermissions(state, collectionId) {

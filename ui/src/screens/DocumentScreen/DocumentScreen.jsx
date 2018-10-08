@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 import queryString from 'query-string';
 
-import { selectEntity } from 'src/selectors';
-import DocumentViewer from 'src/components/DocumentViewer/DocumentViewer';
+import { selectEntity, selectDocumentView } from 'src/selectors';
+import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
+
+const messages = defineMessages({
+  screen_title: {
+    id: 'documents.title',
+    defaultMessage: 'Document',
+  }
+});
 
 
 class DocumentScreen extends Component {
   render() {
-    const { documentId, document, mode } = this.props;
+    const { intl, documentId, document, mode } = this.props;
     return (
-      <DocumentScreenContext documentId={documentId} activeMode={mode}>
-        <DocumentViewer document={document} />
+      <DocumentScreenContext documentId={documentId}
+                             activeMode={mode}
+                             screenTitle={intl.formatMessage(messages.screen_title)}>
+        <DocumentViewMode document={document} activeMode={mode} />
       </DocumentScreenContext>
     );
   }
@@ -27,7 +36,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     documentId,
     document: selectEntity(state, documentId),
-    mode: hashQuery.mode || 'view'
+    mode: selectDocumentView(state, documentId, hashQuery.mode)
   };
 };
 

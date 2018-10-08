@@ -4,6 +4,8 @@ $pagesWidth: 150px;
 
 .PdfViewer {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   
   .outer {
     position: relative;
@@ -94,12 +96,7 @@ $pagesWidth: 150px;
         font-size: 1.2em;
         width: 100%;
       }
-
-      .spinner {
-        margin: 100px 0;
-      }
     }
-
   }
 }
 

@@ -39,26 +39,26 @@ class CollectionToolbar extends Component {
             <span className={`pt-icon-search`}/>
             <FormattedMessage id="collection.info.search_button" defaultMessage="Search"/>
           </Link>
+          {collection.writeable &&
+            <React.Fragment>
+              <Button icon="cog" onClick={this.toggleSettings}>
+                <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
+              </Button>
+              <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
+                <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
+              </Button>
+            </React.Fragment>
+          }
         </div>
-        {collection.writeable &&
-          <div className="pt-button-group">
-            <Button icon="cog" onClick={this.toggleSettings}>
-              <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
-            </Button>
-            <CollectionEditDialog collection={collection}
-                                  isOpen={settingsIsOpen}
-                                  toggleDialog={this.toggleSettings} />
-            <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
-              <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
-            </Button>
-            <CollectionAccessDialog collection={collection}
-                                    isOpen={accessIsOpen}
-                                    toggleDialog={this.toggleAccess} />
-          </div>
-        }
         {isPreview && (
           <CloseButton/>
         )}
+        <CollectionEditDialog collection={collection}
+                              isOpen={settingsIsOpen}
+                              toggleDialog={this.toggleSettings} />
+        <CollectionAccessDialog collection={collection}
+                                isOpen={accessIsOpen}
+                                toggleDialog={this.toggleAccess} />
       </Toolbar>
     );
   }

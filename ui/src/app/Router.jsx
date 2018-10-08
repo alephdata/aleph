@@ -24,7 +24,6 @@ import EntityTagsScreen from "src/screens/EntityTagsScreen/EntityTagsScreen";
 import EntitySimilarScreen from 'src/screens/EntitySimilarScreen/EntitySimilarScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
 import DocumentTagsScreen from 'src/screens/DocumentTagsScreen/DocumentTagsScreen';
-import DocumentSimilarScreen from 'src/screens/DocumentSimilarScreen/DocumentSimilarScreen';
 import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
 
 import './Router.css';
@@ -61,7 +60,6 @@ class Router extends Component {
         <Route path="/entities/:entityId/similar" exact component={EntitySimilarScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
         <Route path="/documents/:documentId/tags" exact component={DocumentTagsScreen}/>
-        <Route path="/documents/:documentId/similar" exact component={DocumentSimilarScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/sources" exact component={SourcesIndexScreen}/>

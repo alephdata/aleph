@@ -1,13 +1,22 @@
 import React from 'react';
 import queryString from 'query-string';
 import { Link } from 'react-router-dom';
-import { FormattedNumber, FormattedMessage } from 'react-intl';
+import { injectIntl, defineMessages, FormattedNumber, FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
 
 import { Tag } from 'src/components/common';
+import { ErrorSection } from 'src/components/common';
 import { selectEntityTags } from "src/selectors";
 
 import './EntityTagsMode.css';
+
+const messages = defineMessages({
+  no_tags: {
+    id: 'entity.tags.no_tags',
+    defaultMessage: 'No connections.',
+  }
+});
+
 
 class EntityTagsMode extends React.Component {
 
@@ -21,21 +30,11 @@ class EntityTagsMode extends React.Component {
   }
 
   render() {
-    const { entity, tags } = this.props;
+    const { intl, entity, tags } = this.props;
 
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
-      return (
-        <React.Fragment>
-          <span className="tags">
-          <FormattedMessage id='entity.info.tags' defaultMessage='Tags'/>
-                          </span>
-          <p className="pt-text-muted">
-            <FormattedMessage
-              id="entity.info.tags.empty_description"
-              defaultMessage="No tags found."/>
-          </p>
-        </React.Fragment>
-      );
+      return <ErrorSection visual='tag'
+                           title={intl.formatMessage(messages.no_tags)} />
     }
 
     return (
@@ -82,5 +81,6 @@ const mapStateToProps = (state, ownProps) => ({
   tags: selectEntityTags(state, ownProps.entity.id)
 });
 
+EntityTagsMode = injectIntl(EntityTagsMode);
 EntityTagsMode =  connect(mapStateToProps, {})(EntityTagsMode);
 export default EntityTagsMode;

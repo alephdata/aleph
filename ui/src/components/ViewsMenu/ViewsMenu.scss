@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
 .ViewsMenu {
-  width: 40px;
+  width: 45px;
   background-color: $views-menu-background-color;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@
     cursor: pointer;
     color: #ffffff;
     font-size: 15px;
-    padding: 9px 10px;
+    padding: 10px 13px;
     text-decoration: none;
     text-shadow: 0px 1px 0px #2b665e;
   }
@@ -32,11 +32,23 @@
   .view-item-button:hover:enabled {
     background-color: #5c7080;
   }
+
+  .view-item-button:hover:disabled {
+    cursor: not-allowed;
+  }
+
   .view-item-button.active:enabled {
     background-color: #5c7080;
   }
-}
 
-.ViewsMenu.FullPage {
-  flex: 0;
+  .badge-item {
+    transition: none !important;
+    transform: none !important;
+    top: -10px !important;
+    right: -13px !important;
+    font-size: 9px !important;
+    margin-top: 2px;
+    margin-right: 2px;
+    padding: 3px 4px !important;
+  }
 }
