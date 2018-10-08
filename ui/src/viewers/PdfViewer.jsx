@@ -165,13 +165,13 @@ class PdfViewer extends Component {
 
     return (
       <div className="PdfViewer">
-        {numPages !== null && numPages > 0 && (
-          <PagingButtons document={document} numberOfPages={numPages}/>
-        )}
         <div className="outer">
           <div id="PdfViewer" className="inner">
             { activeMode === 'text' && (
               <div className="document">
+                {numPages !== null && numPages > 0 && (
+                  <PagingButtons document={document} numberOfPages={numPages}/>
+                )}
                 {pageResult.id !== undefined && (
                   <pre>{pageResult.text}</pre>
                 )}
@@ -182,6 +182,9 @@ class PdfViewer extends Component {
             )}
             { activeMode === 'view' && (
               <div className="document">
+                {numPages !== null && numPages > 0 && (
+                  <PagingButtons document={document} numberOfPages={numPages}/>
+                )}
                 {result.total === 0 && (
                   <div className="pt-callout pt-intent-warning pt-icon-search">
                     <FormattedMessage id="document.search.no_match"

@@ -153,7 +153,7 @@ class CasesIndexScreen extends Component {
                           result={result}
                           updateQuery={this.updateQuery}/>
           </DualPane.SidePane>
-          <DualPane.ContentPane>
+          <DualPane.ContentPane className='table-padded'>
             <ul className="results">
               {result.results !== undefined && result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res} preview={false} />

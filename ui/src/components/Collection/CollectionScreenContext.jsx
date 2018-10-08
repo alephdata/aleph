@@ -39,13 +39,13 @@ class CollectionScreenContext extends Component {
     return (
       <CollectionContextLoader collectionId={collectionId}>
         <Screen title={`${screenTitle}: ${collection.label}`}>
+          {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
               <CollectionViewsMenu collection={collection}
                                    activeMode={activeMode}
                                    isPreview={false} />
               <div className="screen-children">
-                {breadcrumbs}
                 {this.props.children}
               </div>
             </DualPane.ContentPane>

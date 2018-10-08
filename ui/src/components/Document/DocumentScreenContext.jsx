@@ -47,13 +47,13 @@ class DocumentScreenContext extends Component {
     return (
       <DocumentContextLoader documentId={documentId}>
         <Screen title={`${screenTitle}: ${document.name}`}>
+          {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
               <DocumentViewsMenu document={document}
                                 activeMode={activeMode}
                                 isPreview={false}/>
               <div className="screen-children">
-                {breadcrumbs}
                 {this.props.children}
               </div>
             </DualPane.ContentPane>
