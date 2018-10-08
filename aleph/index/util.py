@@ -191,6 +191,8 @@ def index_form(texts):
                 break
 
         if isinstance(text, str):
-            total_len += len(text)
-            results.append(text)
+            text = text.strip()
+            if len(text):
+                total_len += len(text)
+                results.append(text)
     return results
