@@ -46,8 +46,8 @@ def extract_polyglot(ctx, text, languages):
             clazz = POLYGLOT_TYPES.get(entity.tag)
             if clazz is not None:
                 yield clazz(ctx, label, entity.start, entity.end)
-    except Exception:
-        log.exception("polyglot failed")
+    except Exception as ex:
+        log.warning("Polyglot failed: %s" % ex)
 
 
 def extract_spacy(ctx, text, languages):
