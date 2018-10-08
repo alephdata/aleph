@@ -11,8 +11,8 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
-import { selectEntitiesResult, selectEntityTags } from "../../selectors";
-import { queryEntitySimilar } from "../../queries";
+import { selectEntitiesResult, selectEntityTags } from "src/selectors";
+import { queryEntitySimilar } from "src/queries";
 import { withRouter } from "react-router";
 
 

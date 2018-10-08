@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import { selectEntity, selectEntityView, selectSchemata } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
-import { selectEntityReference } from "../../selectors";
+import { selectEntityReference } from "src/selectors";
 import reverseLabel from 'src/util/reverseLabel';
 
 class EntityScreen extends Component {

@@ -6,7 +6,6 @@ import { ButtonGroup } from "@blueprintjs/core";
 import { Toolbar, CloseButton, DownloadButton } from 'src/components/Toolbar';
 import getPath from 'src/util/getPath';
 
-
 class DocumentToolbar extends React.Component {
   render() {
     const { document, isPreview } = this.props;

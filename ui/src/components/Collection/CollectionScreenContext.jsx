@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Screen from 'src/components/Screen/Screen';
-// import { CollectionSearch } from 'src/components/Toolbar';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
@@ -47,9 +46,6 @@ class CollectionScreenContext extends Component {
                                    isPreview={false} />
               <div className="screen-children">
                 {breadcrumbs}
-                {/*
-                  <CollectionSearch collection={collection} />
-                */}
                 {this.props.children}
               </div>
             </DualPane.ContentPane>

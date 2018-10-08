@@ -10,8 +10,8 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
-import { queryEntitySimilar } from "../../queries";
-import { selectEntitiesResult, selectEntityTags } from "../../selectors";
+import { queryEntitySimilar } from "src/queries";
+import { selectEntitiesResult, selectEntityTags } from "src/selectors";
 import { withRouter } from "react-router";
 
 
