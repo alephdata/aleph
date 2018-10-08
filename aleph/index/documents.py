@@ -58,12 +58,13 @@ def index_document(document):
     texts = list(document.texts)
     texts.extend(document.columns)
 
-    if document.parent_id is not None:
-        texts.append(document.parent.title)
+    parent = document.parent
+    if parent is not None:
+        texts.append(parent.title)
         data['parent'] = {
-            'id': document.parent_id,
-            'schema': document.parent.schema,
-            'title': document.parent.title,
+            'id': parent.id,
+            'schema': parent.schema,
+            'title': parent.title,
         }
 
     return index_single(document, data, texts)

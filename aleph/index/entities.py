@@ -36,7 +36,6 @@ def index_entity(entity):
         values = ensure_list(values)
         if len(values):
             data['properties'][prop] = values
-
     return index_single(entity, data, [])
 
 
@@ -149,18 +148,16 @@ def finalize_index(data, schema, texts):
     proxy = model.get_proxy(data)
 
     for prop in proxy.iterprops():
-        if prop.type.name in ['entity', 'date', 'url', 'country']:
+        if prop.type.name in ['entity', 'date', 'url', 'country', 'language']:
             continue
-        for value in proxy.get(prop):
-            if prop.name == 'name':
-                data['name'] = value
-            texts.append(value)
+        texts.extend(proxy.get(prop))
 
     data = merge_data(data, proxy.get_type_inverted())
+    data['name'] = proxy.caption
     data['schemata'] = schema.names
     data['text'] = index_form(texts)
 
-    names = proxy.names
+    names = list(proxy.names)
     fps = [fingerprints.generate(name) for name in names]
     fps = [fp for fp in fps if fp is not None]
     data['fingerprints'] = list(set(fps))
@@ -184,5 +181,5 @@ def index_single(obj, data, texts):
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
     data = clean_dict(data)
-    # pprint(data)
+    pprint(data)
     return index_safe(entity_index(), obj.id, data)

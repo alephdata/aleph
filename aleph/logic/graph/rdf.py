@@ -19,20 +19,23 @@ def itergraph(graph):
     for line in nt.splitlines():
         if len(line):
             yield line
-            yield '\n'
+            yield b'\n'
 
 
 def export_entity(entity, collection_uri):
+    proxy = model.get_proxy(entity)
     g = Graph()
-    uri = registry.entity.rdf(entity.get('id'))
+    uri = registry.entity.rdf(proxy.id)
     g.add((uri, DCTERMS.isPartOf, collection_uri))
     g.add((collection_uri, DCTERMS.hasPart, uri))
     if 'properties' not in entity:
         entity.update(Document.doc_data_to_schema(entity))
-    if entity.get('name'):
-        g.add((uri, SKOS.prefLabel, Literal(entity.get('name'))))
-    for triple in model.entity_rdf(entity):
-        g.add(triple)
+    if proxy.caption:
+        g.add((uri, SKOS.prefLabel, Literal(proxy.caption)))
+    for link in proxy.links:
+        triple = link.rdf()
+        if triple is not None:
+            g.add(triple)
     return g
 
 
@@ -43,12 +46,9 @@ def export_collection(collection):
     g.add((uri, RDFS.label, Literal(collection.label)))
     g.add((uri, DCMI.identifier, Literal(collection.foreign_id)))
     g.add((uri, ALEPH.category, ALEPH[collection.category]))
-
-    for line in itergraph(g):
-        yield line
+    yield from itergraph(g)
 
     entities = iter_entities(collection_id=collection.id, excludes=['text'])
     for entity in entities:
         g = export_entity(entity, uri)
-        for line in itergraph(g):
-            yield line
+        yield from itergraph(g)

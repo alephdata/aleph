@@ -1,5 +1,5 @@
 import logging
-from banal import is_mapping, ensure_list
+from banal import is_mapping
 from pprint import pprint  # noqa
 from followthemoney import model
 from followthemoney.link import Link
@@ -54,25 +54,18 @@ def expand_entity(entity):
     if 'properties' not in entity:
         entity.update(Document.doc_data_to_schema(entity))
 
-    schema = model.get(entity.get('schema'))
-    if schema is None:
-        return
+    proxy = model.get_proxy(entity)
+    for link in proxy.links:
+        yield link
 
     # TODO: factor out inference
     thing = model.get(Entity.THING)
-    if schema.is_a(thing):
+    if proxy.schema.is_a(thing):
         sameAs = thing.get("sameAs")
-        ref = registry.entity.ref(entity.get('id'))
+        ref = registry.entity.ref(proxy.id)
         for (score, other) in xref_item(entity):
             yield Link(ref, sameAs, other.get('id'),
                        weight=score, inferred=True)
-
-    properties = entity.get('properties', {})
-    for prop in schema.properties.values():
-        for value in ensure_list(properties.get(prop.name)):
-            if value is None:
-                continue
-            yield Link(ref, prop, str(value))
 
 
 def expand_node(type_, value):
