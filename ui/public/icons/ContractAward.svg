@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>ContractAward</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="ContractAward" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval-2" stroke="#106ba3" fill-rule="nonzero" cx="14" cy="16" r="4"></circle>
+        <polyline id="Path-6" stroke="#106ba3" fill-rule="nonzero" points="10.5 18 8.5 22.5 11.5 23.5 13.5 20.0507812 14.5 20.0507812 16.5 23.5 19.5 22.5 17.5 18"></polyline>
+        <path d="M7,3.5 L16.982666,3.5" id="Path-5" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M7,6.5 L16.982666,6.5" id="Path-8" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M7,9.5 L16.982666,9.5" id="Path-9" stroke="#106ba3" fill-rule="nonzero"></path>
+        <polyline id="Path-7" stroke="#106ba3" fill-rule="nonzero" points="9.5 20.5 4.5 20.5 4.5 0.5 19.5 0.5 19.5 20.5"></polyline>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>License</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="License" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-Copy-4" stroke="#106ba3" fill-rule="nonzero" x="0.5" y="4.5" width="23" height="15"></rect>
+        <path d="M2.5,19.5 L11.5,19.5 L11.5,17 C11.5,15.0670034 9.93299662,13.5 8,13.5 L6,13.5 C4.06700338,13.5 2.5,15.0670034 2.5,17 L2.5,19.5 Z" id="Rectangle-6-Copy" stroke="#106ba3" fill-rule="nonzero"></path>
+        <circle id="Oval-3-Copy" stroke="#106ba3" fill-rule="nonzero" cx="7" cy="10" r="2.5"></circle>
+        <path d="M13.5,7.5 L20.5,7.5" id="Line-9" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M13.5,10.5 L20.5,10.5" id="Line-9-Copy" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M13.5,13.5 L20.5,13.5" id="Line-9-Copy-2" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M13.5,16.5 L20.5,16.5" id="Line-9-Copy-3" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+    </g>
+</svg>

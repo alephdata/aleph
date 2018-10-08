@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Vessel</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Vessel" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M0.5,19.5 L23.5,19.5" id="Line-18" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.5,21.5 L21.5,21.5" id="Line-18-Copy" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M4.5,23.5 L19.5,23.5" id="Line-18-Copy-2" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.65596043,12.3252272 L5.34650023,19.5 L18.6534998,19.5 L21.3440396,12.3252272 L12,9.52201533 L2.65596043,12.3252272 Z" id="Rectangle-15" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M12,10 L12,19.5" id="Line" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M5.5,11.5 L5.5,5.5 C5.5,4.94771525 5.94771525,4.5 6.5,4.5 L17.5,4.5 C18.0522847,4.5 18.5,4.94771525 18.5,5.5 L18.5,11.5" id="Path-29" stroke="#106ba3" fill-rule="nonzero"></path>
+        <rect id="Rectangle-Copy-25" stroke="#106ba3" fill-rule="nonzero" x="7.5" y="6.5" width="1" height="1"></rect>
+        <rect id="Rectangle-Copy-26" stroke="#106ba3" fill-rule="nonzero" x="11.5" y="6.5" width="1" height="1"></rect>
+        <rect id="Rectangle-Copy-27" stroke="#106ba3" fill-rule="nonzero" x="15.5" y="6.5" width="1" height="1"></rect>
+        <path d="M10.5,4.5 L10.5,1.5" id="Line-19" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M13.5,4.5 L13.5,1.5" id="Line-2" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M8.5,0.5 L15.5,0.5" id="Line-20" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+    </g>
+</svg>

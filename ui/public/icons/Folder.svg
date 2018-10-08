@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Folder</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Folder" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M0.693712943,19.5 L19.6396204,19.5 L23.0869158,9.15811388 C23.1039102,9.10713065 23.1125741,9.05374105 23.1125741,9 C23.1125741,8.72385763 22.8887165,8.5 22.6125741,8.5 L4.72075922,8.5 C4.50554402,8.5 4.31447459,8.63771505 4.24641757,8.84188612 L0.693712943,19.5 Z" id="Rectangle-Copy-10" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M0.5,19.5 L0.5,5.5 C0.5,4.94771525 0.94771525,4.5 1.5,4.5 L7.10995636,4.5 C7.37517285,4.5 7.62952676,4.60535684 7.81706314,4.79289322 L9.2312767,6.20710678 C9.41881308,6.39464316 9.67316699,6.5 9.93838348,6.5 L18.5,6.5 C19.0522847,6.5 19.5,6.94771525 19.5,7.5 L19.5,8.5" id="Line-22" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+    </g>
+</svg>

@@ -26,17 +26,19 @@ const messages = defineMessages({
 
 class CollectionViewsMenu extends React.Component {
   
-  hasDocuments() {
+  countDocuments() {
     // FIXME: give better metadata from API.
     const docTypes = ['Document', 'Pages', 'Folder', 'Package', 'Email', 'HyperText', 'Workbook', 'Table', 'PlainText', 'Image', 'Video', 'Audio'];
     const { collection } = this.props;
     const { schemata } = collection;
+    let totalCount = 0;
     for (let key in schemata) {
       if (docTypes.indexOf(key) !== -1) {
-        return true;
+        totalCount += schemata[key];
       }
     }
-    return false;
+
+    return totalCount;
   }
 
   render() {
@@ -51,12 +53,13 @@ class CollectionViewsMenu extends React.Component {
                   icon='fa-info' />
         )}
         <ViewItem mode='documents' activeMode={activeMode} isPreview={false}
-                  disabled={!this.hasDocuments()}
+                  count={this.countDocuments()}
                   message={intl.formatMessage(messages.documents)}
                   href={`/collections/${collection.id}/documents`}
                   icon='fa-folder-open' />
-        <ViewItem mode='xref' activeMode={activeMode} isPreview={isPreview}
-                  disabled={xrefIndex.total === 0}
+        <ViewItem mode='xref' activeMode={activeMode}
+                  isPreview={isPreview}
+                  count={xrefIndex.total}
                   message={intl.formatMessage(messages.xref)}
                   href={`/collections/${collection.id}/xref`}
                   icon='fa-folder-open' />

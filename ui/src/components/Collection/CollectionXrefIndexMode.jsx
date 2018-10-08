@@ -26,7 +26,7 @@ class CollectionXrefIndexMode extends React.Component {
                  <FormattedMessage id="xref.collection" defaultMessage="Collection" />
               </span>
             </th>
-            <th>
+            <th className="numeric">
               <span className="value">
                 <FormattedMessage id="xref.matches" defaultMessage="Matches" />
               </span>
@@ -41,7 +41,7 @@ class CollectionXrefIndexMode extends React.Component {
                   {idx.collection.label}
                 </a>
               </td>
-              <td key={idx.collection.id}>
+              <td key={idx.collection.id} className="numeric">
                 <FormattedNumber value={idx.matches} />
               </td>
             </tr>

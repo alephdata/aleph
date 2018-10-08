@@ -10,7 +10,7 @@ class DocumentSimilarScreen extends Component {
   render() {
     const { documentId, document } = this.props;
     return (
-      <DocumentScreenContext documentId={documentId} activeMode='similar'>
+      <DocumentScreenContext documentId={documentId} activeMode='similar' subtitle='Similar'>
         <EntitySimilarMode entity={document} />
       </DocumentScreenContext>
     );

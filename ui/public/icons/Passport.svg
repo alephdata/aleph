@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Passport</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Passport" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval-8" stroke="#106ba3" fill-rule="nonzero" cx="11.5" cy="8.5" r="6"></circle>
+        <ellipse id="Oval-8-Copy" stroke="#106ba3" fill-rule="nonzero" cx="11.5" cy="8.5" rx="3" ry="6"></ellipse>
+        <path d="M11.5,2.54166667 L11.5,14.4583333" id="Line-12" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M6,8.5 L17,8.5" id="Line-13" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <rect id="Rectangle-11" stroke="#106ba3" fill-rule="nonzero" x="3.5" y="0.5" width="16" height="23"></rect>
+        <polyline id="Path-21" stroke="#106ba3" fill-rule="nonzero" points="5.5 22 5.5 17.5 6.5 17.5 7.5 18.5 6.5 19.75 5.5 19.75"></polyline>
+        <polyline id="Path-23" stroke="#106ba3" fill-rule="nonzero" points="8.5 22 8.5 18.5 9.5 17.5 10.5 18.5 10.5 22"></polyline>
+        <polyline id="Path-24" stroke="#106ba3" fill-rule="nonzero" points="14.5 17.5 13.5 17.5 12.5 18.5 14.5 20.5 13.5 21.5 12.5 21.5"></polyline>
+        <polyline id="Path-24-Copy" stroke="#106ba3" fill-rule="nonzero" points="17.5 17.5 16.5 17.5 15.5 18.5 17.5 20.5 16.5 21.5 15.5 21.5"></polyline>
+        <path d="M8.5,20.5 L10.5,20.5" id="Line" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+    </g>
+</svg>

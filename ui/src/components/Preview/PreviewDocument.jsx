@@ -12,6 +12,8 @@ import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import { DocumentViewer } from 'src/components/DocumentViewer';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
+import { selectEntitiesResult, selectEntityTags } from "../../selectors";
+import { queryEntitySimilar } from "../../queries";
 
 
 class PreviewDocument extends React.Component {
@@ -25,7 +27,7 @@ class PreviewDocument extends React.Component {
   }
 
   renderContext() {
-    const { document, previewMode = 'view' } = this.props;
+    const { document, previewMode = 'view', similar, tags } = this.props;
     let mode = null, maximised = false;
     if (document.isError) {
       mode = <ErrorSection error={document.error} />
@@ -35,7 +37,7 @@ class PreviewDocument extends React.Component {
       mode = <DocumentInfoMode document={document} />;
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={document} />;
-      // maximised = true;
+      maximised = true;
     } else if (previewMode === 'similar') {
       mode = <EntitySimilarMode entity={document} />;
       maximised = true;
@@ -47,7 +49,8 @@ class PreviewDocument extends React.Component {
       <Preview maximised={maximised}>
         <DocumentViewsMenu document={document}
                           activeMode={previewMode}
-                          isPreview={true} />
+                          isPreview={true}
+                          similar={similar} tags={tags}/>
         <DualPane.InfoPane className="with-heading">
           <DocumentToolbar document={document}
                             isPreview={true} />
@@ -60,9 +63,11 @@ class PreviewDocument extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { previewId } = ownProps;
+  const { previewId, location } = ownProps;
   return {
-    document: selectEntity(state, previewId)
+    document: selectEntity(state, previewId),
+    tags: selectEntityTags(state, previewId),
+    similar: selectEntitiesResult(state, queryEntitySimilar(location, previewId))
   };
 };
 

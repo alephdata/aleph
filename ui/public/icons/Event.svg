@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Event</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Event" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M0.5,2.5 L0.5,23.5 L23.5,23.5 L23.5,2.5 L20.5,2.5 L20.5,4.5 L17.5,4.5 L17.5,2.5 L6.5,2.5 L6.5,4.5 L3.5,4.5 L3.5,2.5 L0.5,2.5 Z" id="Rectangle-8-Copy-5" stroke="#106ba3" fill-rule="nonzero"></path>
+        <rect id="Rectangle-8-Copy-6" stroke="#106ba3" fill-rule="nonzero" x="3.5" y="0.5" width="3" height="4"></rect>
+        <rect id="Rectangle-8-Copy-7" stroke="#106ba3" fill-rule="nonzero" x="17.5" y="0.5" width="3" height="4"></rect>
+        <path d="M0.5,6.5 L22.5,6.5" id="Line-5" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <rect id="Rectangle-9-Copy-9" stroke="#106ba3" fill-rule="nonzero" x="8.5" y="8.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-14" stroke="#106ba3" fill-rule="nonzero" x="8.5" y="11.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-23" stroke="#106ba3" fill-rule="nonzero" x="8.5" y="14.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-30" stroke="#106ba3" fill-rule="nonzero" x="8.5" y="17.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-37" stroke="#106ba3" fill-rule="nonzero" x="8.5" y="20.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-15" stroke="#106ba3" fill-rule="nonzero" x="5.5" y="11.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-22" stroke="#106ba3" fill-rule="nonzero" x="5.5" y="14.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-29" stroke="#106ba3" fill-rule="nonzero" x="5.5" y="17.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-36" stroke="#106ba3" fill-rule="nonzero" x="5.5" y="20.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-38" stroke="#106ba3" fill-rule="nonzero" x="5.5" y="23.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-16" stroke="#106ba3" fill-rule="nonzero" x="2.5" y="11.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-21" stroke="#106ba3" fill-rule="nonzero" x="2.5" y="14.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-28" stroke="#106ba3" fill-rule="nonzero" x="2.5" y="17.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-35" stroke="#106ba3" fill-rule="nonzero" x="2.5" y="20.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-10" stroke="#106ba3" fill-rule="nonzero" x="11.5" y="8.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-17" stroke="#106ba3" fill-rule="nonzero" x="11.5" y="11.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-24" stroke="#106ba3" fill-rule="nonzero" x="11.5" y="14.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-31" stroke="#106ba3" fill-rule="nonzero" x="11.5" y="17.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-39" stroke="#106ba3" fill-rule="nonzero" x="11.5" y="20.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-11" stroke="#106ba3" fill-rule="nonzero" x="14.5" y="8.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-18" stroke="#106ba3" fill-rule="nonzero" x="14.5" y="11.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-12" stroke="#106ba3" fill-rule="nonzero" x="17.5" y="8.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-19" stroke="#106ba3" fill-rule="nonzero" x="17.5" y="11.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-13" stroke="#106ba3" fill-rule="nonzero" x="20.5" y="8.5" width="1" height="1"></rect>
+        <rect id="Rectangle-9-Copy-20" stroke="#106ba3" fill-rule="nonzero" x="20.5" y="11.5" width="1" height="1"></rect>
+        <circle id="Oval-5" stroke="#106ba3" fill-rule="nonzero" cx="18" cy="18" r="3.5"></circle>
+        <polyline id="Path-19" stroke="#106ba3" fill-rule="nonzero" points="16 18 17.5 19.5 21 16"></polyline>
+    </g>
+</svg>

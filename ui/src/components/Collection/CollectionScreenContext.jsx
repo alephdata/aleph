@@ -45,7 +45,7 @@ class CollectionScreenContext extends Component {
               <CollectionViewsMenu collection={collection}
                                    activeMode={activeMode}
                                    isPreview={false} />
-              <div>
+              <div className='content-children'>
                 {breadcrumbs}
                 {this.props.children}
               </div>

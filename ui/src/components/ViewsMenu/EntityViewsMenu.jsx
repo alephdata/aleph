@@ -45,17 +45,18 @@ class EntityViewsMenu extends React.Component {
                     isPreview={isPreview}
                     message={ref.property.reverse}
                     href={'/entities/' + entity.id + '#mode=' + ref.property.qname}
-                    icon={schemata[ref.schema].icon} />
+                    icon={schemata[ref.schema].icon}
+                    count={ref.count}/>
         ))}
         <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
-                  disabled={similar.total === 0}
                   message={intl.formatMessage(messages.similar)}
                   href={'/entities/' + entity.id + '/similar'}
-                  icon='fa-repeat' />
+                  icon='fa-repeat'
+                  count={similar.total} />
         <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
-                  disabled={tags.total === 0}
                   message={intl.formatMessage(messages.tags)}
                   href={'/entities/' + entity.id + '/tags'}
+                  count={tags.total}
                   icon='fa-tags' />
       </div>
     );
@@ -63,12 +64,10 @@ class EntityViewsMenu extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entity, location } = ownProps;
+  const { entity } = ownProps;
   return {
     references: selectEntityReferences(state, entity.id),
-    schemata: selectSchemata(state),
-    tags: selectEntityTags(state, entity.id),
-    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id))
+    schemata: selectSchemata(state)
   };
 };
 

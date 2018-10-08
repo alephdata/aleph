@@ -12,7 +12,7 @@ class Breadcrumbs extends Component {
     if (collection) {
       collectionCrumbs.push((
         <li key='collection'>
-          <Collection.Link collection={collection} className="pt-breadcrumb" icon />
+          <Collection.Link collection={collection} className="pt-breadcrumb" icon truncate={30} />
         </li>
       ));
     }

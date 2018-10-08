@@ -10,7 +10,7 @@ class DocumentTagsScreen extends Component {
   render() {
     const { documentId, document } = this.props;
     return (
-      <DocumentScreenContext documentId={documentId} activeMode='tags'>
+      <DocumentScreenContext documentId={documentId} activeMode='tags' subtitle='Tags'>
         <EntityTagsMode entity={document} />
       </DocumentScreenContext>
     );

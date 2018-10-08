@@ -12,7 +12,7 @@ class EntityScreen extends Component {
   render() {
       const { entity, entityId, mode, reference } = this.props;
       return (
-        <EntityScreenContext entityId={entityId} activeMode={mode} subtitle={reference !== undefined ? reference.property.reverse : ''}>
+        <EntityScreenContext entityId={entityId} activeMode={mode} subtitle={reference !== undefined ? reference.property.reverse + ' (' + reference.count + ')' : ''}>
           <EntityReferencesMode entity={entity} mode={mode} />
         </EntityScreenContext>
       );

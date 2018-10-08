@@ -18,8 +18,10 @@ class SchemaIcon extends Component {
       return null;
     }
 
+    let src = '/icons/' + schema + '.svg';
+
     return (
-      <i className={`fa fa-fw ${model.icon}`}/>
+      <img className='entity-icon' src={src}/>
     );
   }
 }
@@ -55,9 +57,12 @@ class SchemaLink extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  schemata: selectSchemata(state),
-});
+const mapStateToProps = (state) => {
+  return {
+    schemata: selectSchemata(state),
+  };
+};
+
 
 class Schema extends Component {
   static Label = connect(mapStateToProps)(SchemaLabel);

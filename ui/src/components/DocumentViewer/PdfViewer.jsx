@@ -8,6 +8,7 @@ import classNames from 'classnames';
 
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
+import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
 import { queryDocumentRecords, fetchDocumentPage } from 'src/actions';
 import { selectDocumentRecordsResult, selectDocumentPage } from 'src/selectors';
@@ -157,7 +158,7 @@ class PdfViewer extends Component {
   }
 
   render() {
-    const { document, mode, page, pageResult, result, isSearch } = this.props;
+    const { document, mode, page, pageResult, result, isSearch, numberOfPages } = this.props;
 
     if (document.id === undefined) {
       return null;
@@ -169,6 +170,9 @@ class PdfViewer extends Component {
 
     return (
       <div className="PdfViewer">
+        {numberOfPages !== null && numberOfPages > 0 && (
+          <PagingButtons document={document} numberOfPages={numberOfPages}/>
+        )}
         <div className="outer">
           <div id="PdfViewer" className="inner">
             { mode === 'text' && (
@@ -236,7 +240,7 @@ const mapStateToProps = (state, ownProps) => {
     query = query.setString('q', queryText);
   }
 
-  const mode = hashQuery.mode || 'view';
+  const mode = hashQuery['preview:mode'] || 'view';
   return {
     result: selectDocumentRecordsResult(state, query),
     pageResult: selectDocumentPage(state, document.id, page),

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Contract</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Contract" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M2.5,2.5 L0.5,2.5 L0.5,23.5 L15.5,23.5 L15.5,21.5 L2.5,21.5 L2.5,2.5 Z" id="Combined-Shape" stroke="#106ba3" fill-rule="nonzero"></path>
+        <rect id="Rectangle-Copy-2" stroke="#106ba3" fill-rule="nonzero" x="2.5" y="0.5" width="15" height="21"></rect>
+        <path d="M5.41666667,3.5 L14.5833333,3.5" id="Line" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M5.41666667,6.5 L14.5833333,6.5" id="Line-2" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M5.41666667,9.5 L14.5833333,9.5" id="Line-3" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M5.08691406,18.0478516 C6.01269531,15.9921875 7.1875,12.8494873 7.77783203,14.5822754 C8.36816406,16.3150635 7.99194336,17.6535645 9.23046875,17.6535645 C10.4689941,17.6535645 12.909668,18.5369692 13.6271973,17.6535645" id="Path-4" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M16.863961,3.86396103 L16.863961,17.4939358 L17.363961,18.3621044 L17.863961,17.4939358 L17.863961,3.86396103 L16.863961,3.86396103 Z" id="Rectangle-3" stroke="#106ba3" fill="#D8D8D8" fill-rule="nonzero" transform="translate(17.363961, 11.363961) rotate(-315.000000) translate(-17.363961, -11.363961) "></path>
+    </g>
+</svg>
