@@ -11,6 +11,9 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
+import { selectEntitiesResult, selectEntityTags } from "src/selectors";
+import { queryEntitySimilar } from "src/queries";
+import { withRouter } from "react-router";
 
 
 class PreviewEntity extends React.Component {
@@ -24,7 +27,7 @@ class PreviewEntity extends React.Component {
   }
 
   renderContext() {
-    const { entity, references, previewMode } = this.props;
+    const { entity, references, previewMode, similar, tags } = this.props;
     let mode = null, maximised = false;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
@@ -34,7 +37,7 @@ class PreviewEntity extends React.Component {
       mode = <EntityInfoMode entity={entity} />;
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={entity} />;
-      // maximised = true;
+      maximised = true;
     } else if (previewMode === 'similar') {
       mode = <EntitySimilarMode entity={entity} />;
       maximised = true;
@@ -46,7 +49,9 @@ class PreviewEntity extends React.Component {
       <Preview maximised={maximised}>
         <EntityViewsMenu entity={entity}
                           activeMode={previewMode}
-                          isPreview={true} />
+                          isPreview={true}
+                          similar={similar}
+                          tags={tags}/>
         <DualPane.InfoPane className="with-heading">
           <EntityToolbar entity={entity} isPreview={true} />
           {mode}
@@ -58,13 +63,16 @@ class PreviewEntity extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { previewId, previewMode } = ownProps;
+  const { previewId, previewMode, location } = ownProps;
+  const entity = selectEntity(state, previewId);
   return {
-    entity: selectEntity(state, previewId),
+    entity,
     references: selectEntityReferences(state, previewId),
-    previewMode: selectEntityView(state, previewId, previewMode, true)
+    previewMode: selectEntityView(state, previewId, previewMode, true),
+    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
+    tags: selectEntityTags(state, entity.id)}
   };
-};
 
 PreviewEntity = connect(mapStateToProps, {})(PreviewEntity);
+PreviewEntity = withRouter(PreviewEntity);
 export default PreviewEntity;

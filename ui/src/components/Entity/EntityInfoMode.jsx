@@ -1,11 +1,10 @@
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
 
 import { Property, Entity, Schema } from 'src/components/common';
-import { CollectionOverview } from 'src/components/Collection';
 import { selectSchemata } from 'src/selectors';
+
 
 class EntityInfoMode extends React.Component {
   render() {
@@ -45,10 +44,6 @@ class EntityInfoMode extends React.Component {
               </li>
             ))}
           </ul>
-          <span className="source-header">
-            <FormattedMessage id="entity.info.source" defaultMessage="Source"/>
-          </span>
-          <CollectionOverview collection={entity.collection} hasHeader={true}/>   
         </div>
       </React.Fragment>
     );

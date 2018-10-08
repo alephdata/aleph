@@ -17,9 +17,7 @@
   overflow-x: hidden; // just in case.
   transition: width 0.3s ease-in-out;
   display: flex;
-  @media screen and (max-width: $aleph-screen-sm-max-width) {
-    left: 0;
-  }
+
   
   > * {
    //min-width: $aleph-sidebar-sm-width;
@@ -67,7 +65,7 @@
 
   /* Removing padding and shadow when displaying document previews in sidebar */
   /* This allows us to display more of the document in a limited space. */
-  .DocumentContent {
+  .DocumentViewMode {
     .outer {
       padding: 0;
       .inner {

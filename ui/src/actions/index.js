@@ -8,6 +8,7 @@ import {
   fetchDocument,
   queryDocumentRecords,
   fetchDocumentPage,
+  fetchDocumentContent,
   ingestDocument,
   deleteDocument
 } from './documentActions';
@@ -43,6 +44,7 @@ export {
   fetchDocument,
   queryDocumentRecords,
   fetchDocumentPage,
+  fetchDocumentContent,
   queryCollections,
   fetchCollection,
   updateCollection,

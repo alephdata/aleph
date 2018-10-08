@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from "react-router";
 
-import { queryEntitySimilar } from 'src/queries';
-import { fetchDocument, fetchEntityTags, queryEntities } from 'src/actions';
-import { selectEntity, selectEntityTags, selectEntitiesResult } from 'src/selectors';
+import { fetchDocument, fetchDocumentContent, fetchEntityTags, queryEntities } from 'src/actions';
+import { selectEntity, selectEntityTags, selectDocumentContent } from 'src/selectors';
 
 
 class DocumentContextLoader extends Component {
@@ -22,14 +20,14 @@ class DocumentContextLoader extends Component {
       this.props.fetchDocument({ id: documentId });
     }
 
-    const { tagsResult } = this.props;
-    if (tagsResult.shouldLoad) {
-      this.props.fetchEntityTags({ id: documentId });
+    const { content } = this.props;
+    if (content.shouldLoad) {
+      this.props.fetchDocumentContent({ id: documentId });
     }
 
-    const { similarQuery, similarResult } = this.props;
-    if (similarResult.shouldLoad) {
-      this.props.queryEntities({query: similarQuery});
+    const { tags } = this.props;
+    if (tags.shouldLoad) {
+      this.props.fetchEntityTags({ id: documentId });
     }
   }
 
@@ -40,16 +38,13 @@ class DocumentContextLoader extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { documentId, location } = ownProps;
-  const similarQuery = queryEntitySimilar(location, documentId);
+  const { documentId } = ownProps;
   return {
     document: selectEntity(state, documentId),
-    tagsResult: selectEntityTags(state, documentId),
-    similarQuery: similarQuery,
-    similarResult: selectEntitiesResult(state, similarQuery)
+    content: selectDocumentContent(state, documentId),
+    tags: selectEntityTags(state, documentId)
   };
 };
 
-DocumentContextLoader = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities })(DocumentContextLoader);
-DocumentContextLoader = withRouter(DocumentContextLoader);
+DocumentContextLoader = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities, fetchDocumentContent })(DocumentContextLoader);
 export default DocumentContextLoader;

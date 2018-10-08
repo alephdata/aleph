@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
+import { Collection } from 'src/components/common';
 import getPath from 'src/util/getPath';
 import { selectCollectionXrefIndex } from "src/selectors";
 
@@ -23,26 +25,28 @@ class CollectionXrefIndexMode extends React.Component {
           <tr>
             <th className='entity'>
               <span className="value">
-                 <FormattedMessage id="xref.collection" defaultMessage="Collection" />
+                 <FormattedMessage id="xref.collection"
+                                   defaultMessage="Cross-referenced collection" />
               </span>
             </th>
-            <th>
+            <th className="numeric">
               <span className="value">
-                <FormattedMessage id="xref.matches" defaultMessage="Matches" />
+                <FormattedMessage id="xref.matches"
+                                  defaultMessage="Matches" />
               </span>
             </th>
           </tr>
           </thead>
           <tbody>
-          {xrefIndex.results.map((idx) => (
-            <tr key={idx.collection.id}>
-              <td key={idx.collection.id} className='entity'>
-                <a href={`${linkPath}${idx.collection.id}`}>
-                  {idx.collection.label}
-                </a>
+          {xrefIndex.results.map((xref) => (
+            <tr key={xref.collection.id}>
+              <td className="entity">
+                <Link to={`${linkPath}${xref.collection.id}`}>
+                  <Collection.Label collection={xref.collection} />
+                </Link>
               </td>
-              <td key={idx.collection.id}>
-                <FormattedNumber value={idx.matches} />
+              <td className="numeric">
+                <FormattedNumber value={xref.matches} />
               </td>
             </tr>
           ))}

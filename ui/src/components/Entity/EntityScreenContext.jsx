@@ -10,11 +10,14 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
+import { queryEntitySimilar } from "src/queries";
+import { selectEntitiesResult, selectEntityTags } from "src/selectors";
+import { withRouter } from "react-router";
 
 
 class EntityScreenContext extends Component {
   render() {
-    const { entity, entityId, activeMode, subtitle } = this.props;
+    const { entity, entityId, activeMode, screenTitle, similar, tags } = this.props;
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
     }
@@ -31,21 +34,21 @@ class EntityScreenContext extends Component {
         <li>
           <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
         </li>
-        <li>
-          <span className='pt-breadcrumb'>
-            {subtitle}
-          </span>
-        </li>
+        {screenTitle && (
+          <li>
+            <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
+          </li>
+        )}
       </Breadcrumbs>
     );
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={entity.name}>
+        <Screen title={`${screenTitle}: ${entity.name}`}>
           <DualPane>
-            <DualPane.ContentPane className='view-menu-flex-direction'>
-              <EntityViewsMenu entity={entity} activeMode={activeMode} isPreview={false}/>
-              <div>
+            <DualPane.ContentPane className="view-menu-flex-direction">
+              <EntityViewsMenu tags={tags} similar={similar} entity={entity} activeMode={activeMode} isPreview={false}/>
+              <div className="screen-children">
                 {breadcrumbs}
                 {this.props.children}
               </div>
@@ -63,9 +66,13 @@ class EntityScreenContext extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { entityId } = ownProps;
-  return { entity: selectEntity(state, entityId) };
+  const { entityId, location } = ownProps;
+  const entity = selectEntity(state, entityId);
+  return { entity,
+    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
+    tags: selectEntityTags(state, entity.id)}
 };
 
 EntityScreenContext = connect(mapStateToProps, {})(EntityScreenContext);
+EntityScreenContext = withRouter(EntityScreenContext);
 export default (EntityScreenContext);

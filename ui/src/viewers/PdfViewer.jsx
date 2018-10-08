@@ -8,6 +8,7 @@ import classNames from 'classnames';
 
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
+import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
 import { queryDocumentRecords, fetchDocumentPage } from 'src/actions';
 import { selectDocumentRecordsResult, selectDocumentPage } from 'src/selectors';
@@ -32,11 +33,6 @@ class PdfViewer extends Component {
 
   onDocumentLoad(pdfInfo) {
     this.setState({ numPages: pdfInfo.numPages });
-
-    if (this.props.onDocumentLoad) {
-      this.props.onDocumentLoad(pdfInfo);
-    }
-
     // Handle a resize event (to check document width) after loading
     // Note: onDocumentLoad actualy happens *before* rendering, but the
     // rendering calls happen a bit too often as we don't have sophisticated
@@ -70,7 +66,7 @@ class PdfViewer extends Component {
     if (this.state.width === null) {
       this.onResize();
     }
-    if (this.props.mode !== prevProps.mode) {
+    if (this.props.activeMode !== prevProps.activeMode) {
       clearTimeout(this.resizeTimeout);
       this.resizeTimeout = setTimeout(() => {
         this.onResize();
@@ -132,11 +128,10 @@ class PdfViewer extends Component {
 
   renderPDFView (){
     const { document, page } = this.props;
-    const { width, numPages, components:{
+    const { width, numPages, components: {
       Document,
       Page
     } } = this.state;
-
 
     return (<div ref={(ref) => this.pdfElement = ref}>
       <Document renderAnnotations={true}
@@ -157,7 +152,8 @@ class PdfViewer extends Component {
   }
 
   render() {
-    const { document, mode, page, pageResult, result, isSearch } = this.props;
+    const { document, activeMode, page, pageResult, result, isSearch } = this.props;
+    const { numPages } = this.state;
 
     if (document.id === undefined) {
       return null;
@@ -169,9 +165,12 @@ class PdfViewer extends Component {
 
     return (
       <div className="PdfViewer">
+        {numPages !== null && numPages > 0 && (
+          <PagingButtons document={document} numberOfPages={numPages}/>
+        )}
         <div className="outer">
           <div id="PdfViewer" className="inner">
-            { mode === 'text' && (
+            { activeMode === 'text' && (
               <div className="document">
                 {pageResult.id !== undefined && (
                   <pre>{pageResult.text}</pre>
@@ -181,7 +180,7 @@ class PdfViewer extends Component {
                 )}
               </div>
             )}
-            { mode === 'view' && (
+            { activeMode === 'view' && (
               <div className="document">
                 {result.total === 0 && (
                   <div className="pt-callout pt-intent-warning pt-icon-search">
@@ -220,7 +219,7 @@ class PdfViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText, previewMode } = ownProps;
+  const { document, location, queryText } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
 
@@ -236,13 +235,10 @@ const mapStateToProps = (state, ownProps) => {
     query = query.setString('q', queryText);
   }
 
-  const mode = hashQuery.mode || 'view';
   return {
     result: selectDocumentRecordsResult(state, query),
     pageResult: selectDocumentPage(state, document.id, page),
-    isSearch: (previewMode && query.hasQuery() && mode === 'view') || (mode === 'search'),
     page: page,
-    mode: mode === 'search' ? 'view' : mode,
     query: query
   }
 }
