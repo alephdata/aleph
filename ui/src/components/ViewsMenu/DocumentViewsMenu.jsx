@@ -47,9 +47,9 @@ class DocumentViewsMenu extends React.Component {
     const { intl, document, isPreview, activeMode } = this.props;
     const { tags } = this.props;
 
-    const hasTextMode = this.hasSchemata(['Pages', 'Image', 'PlainText']);
+    const hasTextMode = this.hasSchemata(['Pages', 'Image']);
     const hasBrowseMode = this.hasSchemata(['Folder']);
-    const hasViewer = this.hasSchemata(['Pages', 'Email', 'Image', 'HyperText', 'Table']);
+    const hasViewer = this.hasSchemata(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
 
     return (
@@ -67,6 +67,14 @@ class DocumentViewsMenu extends React.Component {
                     href={`/documents/${document.id}#mode=view`}
                     icon='fa-file-o' />
         )}
+        {hasTextMode && (
+          <ViewItem mode='text'
+                    activeMode={activeMode}
+                    isPreview={isPreview}
+                    message={intl.formatMessage(messages.text)}
+                    href={`/documents/${document.id}#mode=text`}
+                    icon='fa-align-justify' />
+        )}
         {hasBrowseMode && (
           <ViewItem mode='browse'
                     activeMode={activeMode}
@@ -75,14 +83,6 @@ class DocumentViewsMenu extends React.Component {
                     href={`/documents/${document.id}#mode=browse`}
                     icon='fa-folder-open'
                     count={document.children} />
-        )}
-        {hasTextMode && (
-          <ViewItem mode='text'
-                    activeMode={activeMode}
-                    isPreview={isPreview}
-                    message={intl.formatMessage(messages.text)}
-                    href={`/documents/${document.id}#mode=text`}
-                    icon='fa-align-justify' />
         )}
         <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
                   count={tags.total}

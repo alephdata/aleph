@@ -153,9 +153,6 @@ export function selectDocumentView(state, documentId, mode) {
   if (has(['Folder'])) {
     return 'browse';
   }
-  if (has(['PlainText'])) {
-    return 'text';
-  }
   return 'view';
 }
 
