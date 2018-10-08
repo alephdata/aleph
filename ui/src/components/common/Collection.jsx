@@ -22,7 +22,7 @@ class CollectionLabel extends Component {
   }
 
   render() {
-    const { collection, icon = true, label = true } = this.props;
+    const { collection, icon = true, label = true, truncate } = this.props;
     if (collection === undefined || collection.id === undefined) {
       return null;
     }
@@ -35,7 +35,10 @@ class CollectionLabel extends Component {
       iconName = "lock";
     }
 
-    let text = truncateText(collection.label, 20);
+    let text = collection.label;
+    if (truncate) {
+      text = truncateText(collection.label, truncate);
+    }
 
     return (
       <span className="CollectionLabel" title={collection.label}>

@@ -19,21 +19,20 @@ def links_to_graph(links):
         graph.add_node(link.ref, label=link.subject)
         if link.prop == model.get('Thing').get('name'):
             graph.nodes[link.ref]['label'] = link.value
-        weight = link.weight * link.prop.type.specificity(link.value)
-        if weight > -1:
-            graph.add_node(link.value_ref)
-            edge = {
-                'weight': weight,
-                'label': link.prop.label,
-                'type': link.prop.qname
-            }
-            graph.add_edge(link.ref, link.value_ref, **edge)
+        graph.add_node(link.value_ref)
+        edge = {
+            'weight': link.weight,
+            'label': link.prop.label,
+            'prop': link.prop.qname
+        }
+        graph.add_edge(link.ref, link.value_ref, **edge)
     return graph
 
 
 def export_node(entity_id, steam=2):
     links = traverse_entity(entity_id, steam=steam)
-    graph = links_to_graph((l for (s, l) in links))
+    graph = links_to_graph(links)
     buffer = io.BytesIO()
     write_gexf(graph, buffer)
-    return buffer.getvalue()
+    text = buffer.getvalue()
+    return str(text, 'utf-8')

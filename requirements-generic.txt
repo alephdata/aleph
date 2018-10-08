@@ -40,6 +40,7 @@ grpcio==1.14.0
 google-cloud-vision
 google-cloud-storage
 networkx==2.1
+msgpack==0.5.6
 
 # Error reporting
 raven[flask]

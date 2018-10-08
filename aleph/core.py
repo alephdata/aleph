@@ -143,12 +143,8 @@ def get_redis():
     if hasattr(settings, '_redis'):
         return settings._redis
     if not hasattr(settings, '_redis_pool'):
-        settings._redis_pool = ConnectionPool.from_url(
-            settings.REDIS_URL,
-            decode_responses=True
-        )
-    return Redis(connection_pool=settings._redis_pool,
-                 decode_responses=True)
+        settings._redis_pool = ConnectionPool.from_url(settings.REDIS_URL)
+    return Redis(connection_pool=settings._redis_pool)
 
 
 es = LocalProxy(get_es)

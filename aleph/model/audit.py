@@ -46,6 +46,14 @@ class Audit(db.Model, DatedModel):
         return q
 
     @classmethod
+    def by_query_text(cls, query, role_id=None):
+        text = cls.data['text'].astext.cast(db.Unicode).label('text')
+        q = cls.all().filter(text == query)
+        if role_id is not None:
+            q = q.filter(cls.role_id == role_id)
+        return q
+
+    @classmethod
     def query_log(cls, role_id=None, session_id=None):
         text = cls.data['text'].astext.cast(db.Unicode).label('text')
         created_at = func.min(cls.created_at).label('created_at')
