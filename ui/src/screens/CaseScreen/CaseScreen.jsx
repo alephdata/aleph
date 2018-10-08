@@ -18,7 +18,7 @@ const messages = defineMessages({
 
 class CaseScreen extends Component {
   render() {
-    const { intl, collection, collectionId, notificationsQuery } = this.props;
+    const { intl, collectionId, notificationsQuery } = this.props;
     return (
       <CollectionScreenContext collectionId={collectionId}
                                activeMode="home"
