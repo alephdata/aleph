@@ -76,6 +76,10 @@ a {
   vertical-align: middle;
 }
 
+.entity-icon {
+  width: 14px;
+}
+
 // Used to render failed imports, missing connections.
 .PartialError {
   .pt-non-ideal-state {

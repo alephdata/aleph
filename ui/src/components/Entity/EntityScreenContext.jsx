@@ -49,7 +49,12 @@ class EntityScreenContext extends Component {
         <Screen title={entity.name}>
           <DualPane>
             <DualPane.ContentPane className='view-menu-flex-direction'>
-              <EntityViewsMenu tags={tags} similar={similar} entity={entity} activeMode={activeMode} isPreview={false}/>
+              <EntityViewsMenu
+                tags={tags}
+                similar={similar}
+                entity={entity}
+                activeMode={activeMode}
+                isPreview={false}/>
               <div className='content-children'>
                 {breadcrumbs}
                 {this.props.children}

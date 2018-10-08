@@ -64,7 +64,7 @@ class EntityViewsMenu extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entity, location } = ownProps;
+  const { entity } = ownProps;
   return {
     references: selectEntityReferences(state, entity.id),
     schemata: selectSchemata(state)

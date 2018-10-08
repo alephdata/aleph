@@ -35,8 +35,7 @@ const messages = defineMessages({
 class DocumentViewsMenu extends React.Component {
 
   render() {
-    const { intl, document, isPreview, activeMode } = this.props;
-    const { tags, similar } = this.props;
+    const { intl, document, isPreview, activeMode, similar, tags } = this.props;
     const hasTextMode = [ 'Pages', 'Image' ].indexOf(document.schema) !== -1;
     const hasSearchMode = [ 'Pages' ].indexOf(document.schema) !== -1;
     const hasModifiers = hasSearchMode || hasTextMode || isPreview;
@@ -80,11 +79,7 @@ class DocumentViewsMenu extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location } = ownProps;
-  return {
-    tags: selectEntityTags(state, document.id),
-    similar: selectEntitiesResult(state, queryEntitySimilar(location, document.id))
-  };
+  return {};
 };
 
 

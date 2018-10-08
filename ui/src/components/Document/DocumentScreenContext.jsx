@@ -10,11 +10,13 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
-
+import { selectEntitiesResult, selectEntityTags } from "../../selectors";
+import { queryEntitySimilar } from "../../queries";
+import { withRouter } from "react-router";
 
 class DocumentScreenContext extends Component {
   render() {
-    const { document, documentId, activeMode } = this.props;
+    const { document, documentId, activeMode, subtitle, similar, tags } = this.props;
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
@@ -26,6 +28,8 @@ class DocumentScreenContext extends Component {
       ); 
     }
 
+    const count = activeMode === 'similar' ? '(' + similar.total + ')' : activeMode === 'tags' ? '(' + tags.total + ')'  : '';
+
     const breadcrumbs = (
       <Breadcrumbs collection={document.collection}>
         { document.parent && (
@@ -35,6 +39,11 @@ class DocumentScreenContext extends Component {
         )}
         <li>
           <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
+        </li>
+        <li>
+          <span className='pt-breadcrumb'>
+            {activeMode === 'view' ? 'Document' : activeMode === 'text' ? 'Extracted text' : subtitle + count}
+          </span>
         </li>
       </Breadcrumbs>
     );
@@ -46,7 +55,7 @@ class DocumentScreenContext extends Component {
             <DualPane.ContentPane className='view-menu-flex-direction'>
               <DocumentViewsMenu document={document}
                                 activeMode={activeMode}
-                                isPreview={false}/>
+                                isPreview={false} similar={similar} tags={tags}/>
               <div className='content-children'>
                 {breadcrumbs}
                 {this.props.children}
@@ -65,11 +74,14 @@ class DocumentScreenContext extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { documentId } = ownProps;
+  const { documentId, location } = ownProps;
   return {
-    document: selectEntity(state, documentId)
+    document: selectEntity(state, documentId),
+    tags: selectEntityTags(state, documentId),
+    similar: selectEntitiesResult(state, queryEntitySimilar(location, documentId))
   };
 };
 
 DocumentScreenContext = connect(mapStateToProps, {})(DocumentScreenContext);
+DocumentScreenContext = withRouter(DocumentScreenContext);
 export default (DocumentScreenContext);

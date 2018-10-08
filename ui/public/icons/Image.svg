@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Image</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Image" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-Copy-6" stroke="#106ba3" fill-rule="nonzero" x="0.5" y="3.5" width="23" height="17"></rect>
+        <polygon id="Path-30" stroke="#106ba3" fill-rule="nonzero" points="2.5 18.5 21.5 18.5 21.5 17.5 17.5 13.5 14.5 16.5 8.5 10.5 2.5 16.5"></polygon>
+        <circle id="Oval-13" stroke="#106ba3" fill-rule="nonzero" cx="15.5" cy="8.5" r="2"></circle>
+    </g>
+</svg>

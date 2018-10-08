@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Land</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M0,12 L24,12 L24,24 L0,24 L0,12 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="24" height="12" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+    </defs>
+    <g id="Land" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <use id="Rectangle-9" stroke="#106ba3" mask="url(#mask-2)" stroke-width="2" stroke-dasharray="2,1" fill-rule="nonzero" xlink:href="#path-1"></use>
+        <path d="M9.5,17.5 L9.5,2.5" id="Line-6" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M9.5,2.5 L11.7928932,2.5 C12.2456461,2.5 12.6798554,2.67985538 13,3 L13,3 C13.3201446,3.32014462 13.7543539,3.5 14.2071068,3.5 L15.7928932,3.5 C16.2456461,3.5 16.6798554,3.32014462 17,3 L17,3 C17.3201446,2.67985538 17.7543539,2.5 18.2071068,2.5 L19.5,2.5 L19.5,8.5 L18.2071068,8.5 C17.7543539,8.5 17.3201446,8.67985538 17,9 L17,9 C16.6798554,9.32014462 16.2456461,9.5 15.7928932,9.5 L14.2071068,9.5 C13.7543539,9.5 13.3201446,9.32014462 13,9 L13,9 C12.6798554,8.67985538 12.2456461,8.5 11.7928932,8.5 L9.5,8.5 L9.5,2.5 Z" id="Path-20" stroke="#106ba3" fill-rule="nonzero"></path>
+    </g>
+</svg>

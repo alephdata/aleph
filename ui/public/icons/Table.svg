@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Table</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Table" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-Copy-6" stroke="#106ba3" fill-rule="nonzero" x="0.5" y="0.5" width="23" height="23"></rect>
+        <path d="M0.5,5.5 L23.5,5.5" id="Line-Copy-4" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M8.5,23.5 L8.5,0.5" id="Line-Copy-7" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M15.5,23.5 L15.5,0.5" id="Line-Copy-8" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.5,8.5 L6.5,8.5" id="Line-Copy-5" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M10.5,8.5 L13.5,8.5" id="Line-Copy-12" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M17.5,8.5 L21.5,8.5" id="Line-Copy-17" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.5,11.5 L6.5,11.5" id="Line-Copy-6" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M10.5,11.5 L13.5,11.5" id="Line-Copy-13" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M17.5,11.5 L21.5,11.5" id="Line-Copy-18" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.5,14.5 L6.5,14.5" id="Line-Copy-9" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M10.5,14.5 L13.5,14.5" id="Line-Copy-14" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M17.5,14.5 L21.5,14.5" id="Line-Copy-19" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.5,17.5 L6.5,17.5" id="Line-Copy-10" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M10.5,17.5 L13.5,17.5" id="Line-Copy-15" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M17.5,17.5 L21.5,17.5" id="Line-Copy-20" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.5,20.5 L6.5,20.5" id="Line-Copy-11" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M10.5,20.5 L13.5,20.5" id="Line-Copy-16" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M17.5,20.5 L21.5,20.5" id="Line-Copy-21" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+    </g>
+</svg>

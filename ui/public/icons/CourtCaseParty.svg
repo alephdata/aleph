@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>CourtCaseParty</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="CourtCaseParty" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M11.5500091,23.5 L21.4499909,23.5 C21.2183558,22.3588798 20.209479,21.5 19,21.5 L14,21.5 C12.790521,21.5 11.7816442,22.3588798 11.5500091,23.5 Z" id="Rectangle-4" stroke="#106ba3" fill-rule="nonzero"></path>
+        <rect id="Rectangle-5" stroke="#106ba3" fill-rule="nonzero" x="12.5" y="6.5" width="8" height="2" rx="1"></rect>
+        <rect id="Rectangle-5-Copy" stroke="#106ba3" fill-rule="nonzero" x="12.5" y="16.5" width="8" height="2" rx="1"></rect>
+        <rect id="Rectangle-5-Copy-2" stroke="#106ba3" fill-rule="nonzero" x="13.5" y="8.5" width="6" height="8" rx="1.5"></rect>
+        <rect id="Rectangle-5-Copy-3" stroke="#106ba3" fill-rule="nonzero" x="19.5" y="11.5" width="6" height="2"></rect>
+        <path d="M0.5,19.5 L10.5,19.5 L10.5,13 C10.5,11.0670034 8.93299662,9.5 7,9.5 L4,9.5 C2.06700338,9.5 0.5,11.0670034 0.5,13 L0.5,19.5 Z" id="Rectangle-6" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M2.5,13.5 L2.5,19.5" id="Line-4" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M8.5,13.5 L8.5,19.5" id="Line" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <circle id="Oval-3" stroke="#106ba3" fill-rule="nonzero" cx="5.5" cy="5.5" r="3.5"></circle>
+        <rect id="Rectangle-7" stroke="#106ba3" fill-rule="nonzero" x="0.5" y="19.5" width="11" height="4"></rect>
+    </g>
+</svg>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Audio</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Audio" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M4.5,14.5 L4.5,9.5 L2,9.5 C1.17157288,9.5 0.5,10.1715729 0.5,11 L0.5,13 C0.5,13.8284271 1.17157288,14.5 2,14.5 L4.5,14.5 Z" id="Rectangle-Copy-7" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M14.1168021,7.55999295 L22.7048965,16.1480874 C22.8509854,15.1345685 22.7906833,14.0989572 22.5242654,13.1042823 C21.5191798,9.35178094 17.8689055,7.01410399 14.1168021,7.55999295 Z" id="Rectangle-Copy-8" stroke="#106ba3" fill-rule="nonzero" transform="translate(18.195231, 12.069430) rotate(-315.000000) translate(-18.195231, -12.069430) "></path>
+        <path d="M11.6013065,9.12370018 L17.7031934,15.225587 C17.7778785,14.5836965 17.7391735,13.9312873 17.586452,13.2985838 C16.9261356,10.5629876 14.3279311,8.8027643 11.6013065,9.12370018 Z" id="Rectangle-Copy-9" stroke="#106ba3" fill-rule="nonzero" transform="translate(14.412281, 12.412281) rotate(-315.000000) translate(-14.412281, -12.412281) "></path>
+        <path d="M4.5,8.34650023 L4.5,15.6534998 L11.5,18.2784998 L11.5,5.72150023 L4.5,8.34650023 Z" id="Rectangle-Copy-7" stroke="#106ba3" fill-rule="nonzero"></path>
+    </g>
+</svg>

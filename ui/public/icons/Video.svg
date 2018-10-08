@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Video</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Video" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-Copy-7" stroke="#106ba3" fill-rule="nonzero" x="0.5" y="3.5" width="23" height="17" rx="3"></rect>
+        <path d="M9.5,8.82134527 L9.5,14.1786547 L14.6814854,11.5 L9.5,8.82134527 Z" id="Line-24" stroke="#106ba3" fill-rule="nonzero"></path>
+        <path d="M3.5,17.5 L20.5,17.5" id="Line-25" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <rect id="Rectangle-17" stroke="#106ba3" fill-rule="nonzero" x="5.5" y="16.5" width="1" height="2"></rect>
+    </g>
+</svg>

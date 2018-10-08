@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Organization</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Organization" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval-3-Copy-9" stroke="#106ba3" fill-rule="nonzero" cx="12.5" cy="2.5" r="2"></circle>
+        <circle id="Oval-3-Copy-10" stroke="#106ba3" fill-rule="nonzero" cx="12.5" cy="11.5" r="2"></circle>
+        <circle id="Oval-3-Copy-13" stroke="#106ba3" fill-rule="nonzero" cx="21.5" cy="11.5" r="2"></circle>
+        <circle id="Oval-3-Copy-12" stroke="#106ba3" fill-rule="nonzero" cx="2.5" cy="11.5" r="2"></circle>
+        <circle id="Oval-3-Copy-11" stroke="#106ba3" fill-rule="nonzero" cx="2.5" cy="21.5" r="2"></circle>
+        <circle id="Oval-3-Copy-14" stroke="#106ba3" fill-rule="nonzero" cx="8.5" cy="21.5" r="2"></circle>
+        <circle id="Oval-3-Copy-15" stroke="#106ba3" fill-rule="nonzero" cx="15.5" cy="21.5" r="2"></circle>
+        <circle id="Oval-3-Copy-16" stroke="#106ba3" fill-rule="nonzero" cx="21.5" cy="21.5" r="2"></circle>
+        <path d="M12.5,5.5 L12.5,8.5" id="Line-10" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M9.5,11.5 L5.5,11.5" id="Line-10-Copy-2" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M2.5,13.5 L2.5,18.5" id="Line-10-Copy-3" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M8.5,17.5 L8.5,18.5" id="Line-10-Copy-4" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M8.5,16.5 L15.5,16.5" id="Line-10-Copy-5" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M15.5,17.5 L15.5,18.5" id="Line-11" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M21.5,14.5 L21.5,18.5" id="Line" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M15.5,2.5 L21.5,2.5" id="Line-2" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M21.5,3.5 L21.5,8.5" id="Line-3" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M12.5,14.5 L12.5,15.5" id="Line-4" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+    </g>
+</svg>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>DocumentUnknown</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="DocumentUnknown" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-Copy-5" stroke="#106ba3" fill-rule="nonzero" x="3.5" y="0.5" width="17" height="23"></rect>
+        <path d="M6.5,3.5 L17.5,3.5" id="Line-Copy-3" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M6.5,6.5 L17.5,6.5" id="Line-2-Copy-3" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M6.5,9.5 L17.5,9.5" id="Line-3-Copy-5" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M6.5,12.5 L17.5,12.5" id="Line-3-Copy-6" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M6.5,17.5 L7,17 C7.27614237,16.7238576 7.72385763,16.7238576 8,17 L8.20710678,17.2071068 C8.39464316,17.3946432 8.5,17.6489971 8.5,17.9142136 L8.5,18.0857864 C8.5,18.3510029 8.39464316,18.6053568 8.20710678,18.7928932 L7.5,19.5" id="Line-4-Copy" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M10.5,17.5 L11,17 C11.2761424,16.7238576 11.7238576,16.7238576 12,17 L12.2071068,17.2071068 C12.3946432,17.3946432 12.5,17.6489971 12.5,17.9142136 L12.5,18.0857864 C12.5,18.3510029 12.3946432,18.6053568 12.2071068,18.7928932 L11.5,19.5" id="Line-4-Copy-2" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <path d="M14.5,17.5 L15,17 C15.2761424,16.7238576 15.7238576,16.7238576 16,17 L16.2071068,17.2071068 C16.3946432,17.3946432 16.5,17.6489971 16.5,17.9142136 L16.5,18.0857864 C16.5,18.3510029 16.3946432,18.6053568 16.2071068,18.7928932 L15.5,19.5" id="Line-4-Copy-3" stroke="#106ba3" stroke-linecap="square" fill-rule="nonzero"></path>
+        <rect id="Rectangle-16" stroke="#106ba3" fill="#D8D8D8" fill-rule="nonzero" x="7.5" y="21.5" width="1" height="1"></rect>
+        <rect id="Rectangle-16-Copy" stroke="#106ba3" fill="#D8D8D8" fill-rule="nonzero" x="11.5" y="21.5" width="1" height="1"></rect>
+        <rect id="Rectangle-16-Copy-2" stroke="#106ba3" fill="#D8D8D8" fill-rule="nonzero" x="15.5" y="21.5" width="1" height="1"></rect>
+    </g>
+</svg>
