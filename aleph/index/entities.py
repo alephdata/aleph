@@ -181,5 +181,5 @@ def index_single(obj, data, texts):
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
     data = clean_dict(data)
-    pprint(data)
+    # pprint(data)
     return index_safe(entity_index(), obj.id, data)
