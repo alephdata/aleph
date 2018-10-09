@@ -18,7 +18,9 @@ class CollectionsApiTestCase(TestCase):
         )
         self.ent = Entity.create({
             'schema': 'Person',
-            'name': 'Winnie the Pooh',
+            'properties': {
+                'name': 'Winnie the Pooh',
+            }
         }, self.col)
         db.session.add(self.ent)
         db.session.commit()

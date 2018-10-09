@@ -105,7 +105,6 @@ def _index_updates(collection, entities):
         context = dict(common)
         context['created_at'] = timestamps.get(entity.id)
         entity = finalize_index(entity, context, [])
-        entity.pop('id', None)
         # pprint(entity)
         actions.append({
             '_id': entity_id,
@@ -147,6 +146,7 @@ def finalize_index(proxy, context, texts):
 
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
+    data.pop('id', None)
     return clean_dict(data)
 
 

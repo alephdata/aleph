@@ -30,14 +30,14 @@
       schema: Company
       collection_id: 1000
       data:
-        aliases:
+        alias:
           - kwazulu
     - id: 250e77f12a5ab6972a0895d290c4792f
       name: BaNana
       schema: Person
       collection_id: 2000
       data:
-        aliases:
+        alias:
           - banana
 
 - model: aleph.model.document.Document
