@@ -22,13 +22,17 @@ class XrefApiTestCase(TestCase):
 
         self.ent = Entity.create({
             'schema': 'Person',
-            'name': 'Elim Garak',
+            'properties': {
+                'name': 'Elim Garak',
+            }
         }, self.residents)
         db.session.add(self.ent)
 
         self.ent2 = Entity.create({
             'schema': 'Person',
-            'name': 'Leeta',
+            'properties': {
+                'name': 'Leeta',
+            }
         }, self.residents)
         db.session.add(self.ent2)
 
@@ -42,19 +46,25 @@ class XrefApiTestCase(TestCase):
 
         self.ent3 = Entity.create({
             'schema': 'Person',
-            'name': 'MPella',
+            'properties': {
+                'name': 'MPella',
+            }
         }, self.dabo)
         db.session.add(self.ent3)
 
         self.ent4 = Entity.create({
             'schema': 'Person',
-            'name': 'Leeta',
+            'properties': {
+                'name': 'Leeta',
+            }
         }, self.dabo)
         db.session.add(self.ent4)
 
         self.ent5 = Entity.create({
             'schema': 'Person',
-            'name': 'Mardah',
+            'properties': {
+                'name': 'Mardah',
+            }
         }, self.dabo)
         db.session.add(self.ent5)
 
@@ -67,13 +77,17 @@ class XrefApiTestCase(TestCase):
 
         self.ent6 = Entity.create({
             'schema': 'Person',
-            'name': 'Elim Garack',
+            'properties': {
+                'name': 'Elim Garack',
+            }
         }, self.obsidian)
         db.session.add(self.ent6)
 
         self.ent7 = Entity.create({
             'schema': 'Person',
-            'name': 'Enabran Tain',
+            'properties': {
+                'name': 'Enabran Tain',
+            }
         }, self.obsidian)
         db.session.add(self.ent7)
 

@@ -100,17 +100,15 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
 
     def update(self, entity):
         proxy = model.get_proxy(entity)
+        proxy.schema.validate(entity)
         self.apply_proxy(proxy)
-        # TODO: should this be mutable?
-        # self.foreign_id = entity.get('foreign_id')
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
     def apply_proxy(self, proxy):
         self.schema = proxy.schema.name
-        self.data = proxy.properties
         self.name = proxy.caption
-        self.data.pop('name', None)
+        self.data = proxy.properties
 
     def to_proxy(self):
         proxy = model.get_proxy({

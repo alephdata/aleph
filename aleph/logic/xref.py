@@ -51,7 +51,7 @@ def xref_collection(collection_id, other_id=None):
         dq = db.session.query(Match)
         dq = dq.filter(Match.entity_id == entity_id)
         dq = dq.filter(Match.document_id == document_id)
-        if collection_id is not None:
+        if other_id is not None:
             dq = dq.filter(Match.match_collection_id == other_id)
         dq.delete()
         for (score, other) in xref_item(entity, collection_id=other_id):
