@@ -1,9 +1,10 @@
 import 'font-awesome/css/font-awesome.min.css';
 
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { selectSchemata } from 'src/selectors';
+import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
+import {selectSchemata} from 'src/selectors';
+import {Icon} from 'src/components/common/Icon';
 
 class SchemaIcon extends Component {
   shouldComponentUpdate(nextProps) {
@@ -18,10 +19,12 @@ class SchemaIcon extends Component {
       return null;
     }
 
-    let src = '/icons/' + schema + '.svg';
-
     return (
-      <img className='entity-icon' src={src}/>
+      <Icon
+        className='entity-icon'
+        iconSize={'14px'}
+        name={schema.toLowerCase()}
+      />
     );
   }
 }

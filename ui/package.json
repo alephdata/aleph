@@ -32,6 +32,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-svg": "^6.0.17",
     "react-transition-group": "^2.4.0",
     "react-truncate": "^2.4.0",
     "react-waypoint": "^8.0.3",

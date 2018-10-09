@@ -77,7 +77,8 @@ a {
 }
 
 .entity-icon {
-  width: 14px;
+  line-height: 14px;
+  margin-right: $aleph-grid-size / 2;
 }
 
 // Used to render failed imports, missing connections.

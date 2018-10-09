@@ -1,10 +1,7 @@
 import React from 'react';
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
-import { injectIntl, defineMessages } from 'react-intl';
-
-import { queryEntitySimilar } from 'src/queries';
-import { selectEntityTags, selectEntitiesResult } from "src/selectors";
+import {connect} from "react-redux";
+import {withRouter} from "react-router";
+import {defineMessages, injectIntl} from 'react-intl';
 import ViewItem from "src/components/ViewsMenu/ViewItem";
 
 import './ViewsMenu.css';
@@ -45,14 +42,14 @@ class DocumentViewsMenu extends React.Component {
       <div className={className}>
         {isPreview && (
           <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.info)}
-            icon='pt-icon-info-sign' />
+                    message={intl.formatMessage(messages.info)}
+                    icon='info'/>
         )}
         {hasModifiers && (
           <ViewItem mode='view' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.view)}
-            href={`/documents/${document.id}#mode=view`}
-            icon='pt-icon-document' />
+                    message={intl.formatMessage(messages.view)}
+                    href={`/documents/${document.id}#mode=view`}
+                    icon='show-documents'/>
         )}
         {hasTextMode && (
           <ViewItem mode='text'
@@ -66,13 +63,13 @@ class DocumentViewsMenu extends React.Component {
                   count={tags.total}
                   message={intl.formatMessage(messages.tags)}
                   href={`/documents/${document.id}/tags`}
-                  icon='pt-icon-tag' />
+                  icon='connections'/>
         <ViewItem mode='similar' activeMode={activeMode}
                   isPreview={isPreview}
                   count={similar.total}
                   message={intl.formatMessage(messages.similar)}
                   href={`/documents/${document.id}/similar`}
-                  icon='pt-icon-tag' />
+                  icon='similar'/>
       </div>
     );
   }
