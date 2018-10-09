@@ -1,15 +1,14 @@
 import logging
 from followthemoney import model
-from followthemoney.util import merge_data
 
 from aleph.core import celery
 from aleph.model import Collection
 from aleph.index import entities as index
 from aleph.index.collections import index_collection
+from aleph.index.util import BULK_PAGE
 from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
-BULK_PAGE = 1000
 
 
 def bulk_load(config):
@@ -41,16 +40,15 @@ def bulk_load_query(collection_id, query):
     entities_count = 0
     for records_index, record in enumerate(mapping.source.records, 1):
         for entity in mapping.map(record).values():
-            entity_id = entity.get('id')
-            if entity_id is None:
-                continue
             # When loading from a tabular data source, we will often
             # encounter mappings where the same entity is emitted
             # multiple times in short sequence, e.g. when the data
             # describes all the directors of a single company.
-            base = entities.get(entity_id, {})
-            entities[entity_id] = merge_data(entity, base)
-            entities_count += 1
+            if entity.id in entities:
+                entities[entity.id].merge(entity)
+            else:
+                entities[entity.id] = entity
+                entities_count += 1
 
         if records_index > 0 and records_index % 1000 == 0:
             log.info("[%s] Loaded %s records (%s), %s entities...",
@@ -60,11 +58,9 @@ def bulk_load_query(collection_id, query):
                      entities_count)
 
         if len(entities) >= BULK_PAGE:
-            index.index_bulk(collection, entities, chunk_size=BULK_PAGE)
+            index.index_bulk(collection, entities)
             entities = {}
 
-    if len(entities):
-        index.index_bulk(collection, entities, chunk_size=BULK_PAGE)
-
+    index.index_bulk(collection, entities)
     # Update collection stats
     index_collection(collection)

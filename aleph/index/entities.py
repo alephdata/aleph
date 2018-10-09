@@ -1,20 +1,16 @@
 import logging
 import fingerprints
 from pprint import pprint  # noqa
-from itertools import count
 from banal import clean_dict, ensure_list
 from datetime import datetime
 from followthemoney import model
 from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, BulkIndexError
-from elasticsearch import TransportError
-from normality import latinize_text
 
 from aleph.core import es
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
-from aleph.index.util import index_safe, search_safe, backoff_cluster
-from aleph.index.util import authz_query
+from aleph.index.util import index_safe, search_safe, authz_query
 
 log = logging.getLogger(__name__)
 
@@ -24,19 +20,8 @@ def index_entity(entity):
     if entity.deleted_at is not None:
         return delete_entity(entity.id)
 
-    data = {
-        'name': entity.name,
-        'foreign_id': entity.foreign_id,
-        'properties': {
-            'name': [entity.name]
-        }
-    }
-
-    for prop, values in entity.data.items():
-        values = ensure_list(values)
-        if len(values):
-            data['properties'][prop] = values
-    return index_single(entity, data, [])
+    context = {'foreign_id': entity.foreign_id}
+    return index_single(entity, entity.to_proxy(), context, [])
 
 
 def get_entity(entity_id):
@@ -99,87 +84,79 @@ def _index_updates(collection, entities):
         'roles': collection.roles,
         'updated_at': datetime.utcnow()
     }
+    timestamps = {}
     if not len(entities):
         return
 
     query = {
         'query': {'ids': {'values': list(entities.keys())}},
-        '_source': ['schema', 'properties', 'created_at']
+        '_source': {'includes': ['schema', 'properties', 'created_at']},
+        'size': len(entities) * 2
     }
-    result = search_safe(index=entity_index(),
-                         body=query)
+    result = search_safe(index=entity_index(), body=query)
     for doc in result.get('hits').get('hits', []):
-        entity_id = doc['_id']
-        entity = entities.get(entity_id)
-        existing = doc.get('_source')
-        combined = model.merge(existing, entity)
-        combined['created_at'] = existing.get('created_at')
-        entities[entity_id] = combined
+        result = unpack_result(doc)
+        existing = model.get_proxy(result)
+        entities[existing.id].merge(existing)
+        timestamps[existing.id] = result.get('created_at')
 
-    for doc_id, entity in entities.items():
+    actions = []
+    for entity_id, entity in entities.items():
+        context = dict(common)
+        context['created_at'] = timestamps.get(entity.id)
+        entity = finalize_index(entity, context, [])
         entity.pop('id', None)
-        entity.update(common)
-        schema = model.get(entity.get('schema'))
-        entity = finalize_index(entity, schema, [])
         # pprint(entity)
-        yield {
-            '_id': doc_id,
+        actions.append({
+            '_id': entity_id,
             '_index': entity_index(),
             '_type': 'doc',
             '_source': entity
-        }
+        })
+    return actions
 
 
-def index_bulk(collection, entities, chunk_size=200):
+def index_bulk(collection, entities):
     """Index a set of entities."""
-    for attempt in count(1):
-        try:
-            entities = _index_updates(collection, entities)
-            bulk_op(entities, chunk_size=chunk_size)
-            return
-        except (BulkIndexError, TransportError) as exc:
-            log.warning('Indexing error: %s', exc)
-        backoff_cluster(failures=attempt)
+    chunk_size = len(entities) + 1
+    actions = _index_updates(collection, entities)
+    if not len(actions):
+        return
+    try:
+        bulk_op(actions, chunk_size=chunk_size)
+    except BulkIndexError as exc:
+        log.warning('Indexing error: %s', exc)
 
 
-def finalize_index(data, schema, texts):
+def finalize_index(proxy, context, texts):
     """Apply final denormalisations to the index."""
-    data['schema'] = schema.name
-    proxy = model.get_proxy(data)
-
-    for prop in proxy.iterprops():
+    for prop, value in proxy.itervalues():
         if prop.type.name in ['entity', 'date', 'url', 'country', 'language']:
             continue
-        texts.extend(proxy.get(prop))
+        texts.append(value)
 
-    data = merge_data(data, proxy.get_type_inverted())
+    entity = proxy.to_full_dict()
+    data = merge_data(context, entity)
     data['name'] = proxy.caption
-    data['schemata'] = schema.names
     data['text'] = index_form(texts)
 
-    names = list(proxy.names)
+    names = data.get('names', [])
     fps = [fingerprints.generate(name) for name in names]
     fps = [fp for fp in fps if fp is not None]
     data['fingerprints'] = list(set(fps))
 
-    # Add latinised names
-    for name in list(names):
-        names.append(latinize_text(name))
-    data['names'] = list(set(names))
-
-    if 'created_at' not in data:
+    if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
-    return data
+    return clean_dict(data)
 
 
-def index_single(obj, data, texts):
+def index_single(obj, proxy, data, texts):
     """Indexing aspects common to entities and documents."""
-    data = finalize_index(data, obj.model, texts)
+    data = finalize_index(proxy, data, texts)
     data['bulk'] = False
     data['roles'] = obj.collection.roles
     data['collection_id'] = obj.collection.id
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
-    data = clean_dict(data)
     # pprint(data)
     return index_safe(entity_index(), obj.id, data)

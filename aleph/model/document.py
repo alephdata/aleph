@@ -308,7 +308,7 @@ class Document(db.Model, DatedModel, Metadata):
             proxy.add('parent', parent.get('id'))
         return proxy.to_dict()
 
-    def to_schema_entity(self):
+    def to_proxy(self):
         proxy = model.make_entity(self.model)
         proxy.id = self.id
         for prop, field in self.SCHEMA_MAPPING.items():
@@ -326,7 +326,7 @@ class Document(db.Model, DatedModel, Metadata):
             prop = DocumentTag.MAPPING.get(tag.type)
             if prop is not None:
                 proxy.add(prop, tag.text)
-        return proxy.to_dict()
+        return proxy
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)
