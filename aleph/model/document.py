@@ -12,6 +12,7 @@ from aleph.model.match import Match
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
 from aleph.model.document_tag import DocumentTag
+from aleph.util import filter_texts
 
 log = logging.getLogger(__name__)
 
@@ -183,14 +184,13 @@ class Document(db.Model, DatedModel, Metadata):
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)
 
-    @property
     def raw_texts(self):
         yield self.title
         yield self.file_name
         yield self.source_url
         yield self.summary
         yield self.author
-        # yield self.generator
+
         if self.status != self.STATUS_SUCCESS:
             return
 
@@ -201,24 +201,11 @@ class Document(db.Model, DatedModel, Metadata):
             pq = pq.filter(DocumentRecord.document_id == self.id)
             pq = pq.order_by(DocumentRecord.index.asc())
             for record in pq.yield_per(10000):
-                for text in record.texts:
-                    yield text
+                yield from record.raw_texts()
 
     @property
     def texts(self):
-        for text in self.raw_texts:
-            if not isinstance(text, str):
-                continue
-            if not len(text.strip()):
-                continue
-            try:
-                # try to exclude numeric data from
-                # spreadsheets
-                float(text)
-                continue
-            except Exception:
-                pass
-            yield text
+        yield from filter_texts(self.raw_texts())
 
     @classmethod
     def pending_count(cls, collection_id=None):
