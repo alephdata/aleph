@@ -66,6 +66,23 @@ def anonymize_email(name, email):
     return '%s <%s>' % (name, email)
 
 
+def filter_texts(texts):
+    """Remove text strings not worth indexing for full-text search."""
+    for text in texts:
+        if not isinstance(text, str):
+            continue
+        if not len(text.strip()):
+            continue
+        try:
+            # try to exclude numeric data from
+            # spreadsheets
+            float(text)
+            continue
+        except Exception:
+            pass
+        yield text
+
+
 class SessionTask(Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
