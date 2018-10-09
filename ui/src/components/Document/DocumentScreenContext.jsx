@@ -11,7 +11,6 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
 
-
 class DocumentScreenContext extends Component {
   render() {
     const { document, documentId, activeMode, screenTitle } = this.props;
@@ -27,7 +26,7 @@ class DocumentScreenContext extends Component {
     }
 
     const breadcrumbs = (
-      <Breadcrumbs collection={document.collection}>
+      <Breadcrumbs collection={document.collection} document={document}>
         {document.parent && (
           <li>
             <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 
 import { Collection } from 'src/components/common';
+import DocumentSearch from 'src/components/Document/DocumentSearch';
+import CollectionSearch from "src/components/Collection/CollectionSearch";
 
 import './Breadcrumbs.css';
 
 class Breadcrumbs extends Component {
   render() {
-    const { collection, children } = this.props;
+    const { collection, children, document } = this.props;
 
     let collectionCrumbs = [];
     if (collection) {
@@ -23,6 +25,8 @@ class Breadcrumbs extends Component {
           {collectionCrumbs}
           {children}
         </ul>
+        {document !== undefined && <DocumentSearch document={document} placeholder='Search'/>}
+        {document === undefined && <CollectionSearch collection={collection}/>}
       </nav>
     );
   }
