@@ -23,9 +23,9 @@ class XrefTestCase(TestCase):
 
         entity = {
             'schema': 'Person',
-            'name': 'Carlos Danger',
             'collection_id': self.coll_a.id,
             'properties': {
+                'name': 'Carlos Danger',
                 'nationality': 'US'
             }
         }
@@ -34,9 +34,9 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'properties': {
+                'name': 'Carlos Danger',
                 'nationality': 'US'
             }
         }
@@ -45,10 +45,10 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'LegalEntity',
-            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'properties': {
-                'nationality': 'GB'
+                'name': 'Carlos Danger',
+                'country': 'GB'
             }
         }
         self.client.post(url, data=json.dumps(entity),
@@ -56,9 +56,9 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'name': 'Pure Risk',
             'collection_id': self.coll_b.id,
             'properties': {
+                'name': 'Pure Risk',
                 'nationality': 'US'
             }
         }
@@ -81,10 +81,10 @@ class XrefTestCase(TestCase):
 
         entity = {
             'schema': 'Person',
-            'name': 'Carlos Danger',
             'collection_id': self.coll_a.id,
             'properties': {
-                'nationality': 'US'
+                'name': 'Carlos Danger',
+                'country': 'US'
             }
         }
         self.client.post(url, data=json.dumps(entity),
@@ -92,10 +92,10 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'properties': {
-                'nationality': 'US'
+                'name': 'Carlos Danger',
+                'country': 'US'
             }
         }
         self.client.post(url, data=json.dumps(entity),
@@ -103,10 +103,10 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'LegalEntity',
-            'name': 'Carlos Danger',
             'collection_id': self.coll_b.id,
             'properties': {
-                'nationality': 'GB'
+                'name': 'Carlos Danger',
+                'country': 'GB'
             }
         }
         self.client.post(url, data=json.dumps(entity),
@@ -114,10 +114,10 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'name': 'Pure Risk',
             'collection_id': self.coll_b.id,
             'properties': {
-                'nationality': 'US'
+                'name': 'Pure Risk',
+                'country': 'US'
             }
         }
         self.client.post(url, data=json.dumps(entity),
@@ -126,10 +126,10 @@ class XrefTestCase(TestCase):
 
         entity = {
             'schema': 'LegalEntity',
-            'name': 'Carlof Danger',
             'collection_id': self.coll_c.id,
             'properties': {
-                'nationality': 'FR'
+                'name': 'Carlof Danger',
+                'country': 'FR'
             }
         }
         self.client.post(url, data=json.dumps(entity),
@@ -137,10 +137,10 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'name': 'Dorian Gray',
             'collection_id': self.coll_c.id,
             'properties': {
-                'nationality': 'GB'
+                'name': 'Dorian Gray',
+                'country': 'GB'
             }
         }
         self.client.post(url, data=json.dumps(entity),
@@ -155,5 +155,3 @@ class XrefTestCase(TestCase):
 
         q = db.session.query(Match)
         assert 1 == q.count(), q.count()
-
-        # TODO: check match is only from collC not collB

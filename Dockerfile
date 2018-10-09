@@ -1,4 +1,4 @@
-FROM alephdata/aleph-base:3
+FROM alephdata/aleph-base:4
 
 # Install Python dependencies
 COPY requirements-generic.txt /tmp/

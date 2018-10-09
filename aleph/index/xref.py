@@ -96,27 +96,6 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
         }
     })
 
-    # boost by "contributing criteria"
-    # for field in ['dates', 'countries', 'identifiers']:
-    #     for value in ensure_list(sample.get(field)):
-    #         if value is None or not len(value):
-    #             continue
-    #         query['bool']['should'].append({
-    #             'term': {
-    #                 field: {
-    #                     'value': value,
-    #                     'boost': 0.5
-    #                 }
-    #             }
-    #         })
-
-    # for value in ensure_list(sample.get('addresses')):
-    #     if value is None or not len(value):
-    #             continue
-    #     query['bool']['should'].append({
-    #         'common': {field: {'query': value}}
-    #     })
-
     # if sample.get('content_hash'):
     #     # Do not try to find other copies of the same document
     #     query['bool']['must_not'].append({

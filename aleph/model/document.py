@@ -1,6 +1,5 @@
 import logging
-from collections import defaultdict
-from banal import ensure_list, is_mapping
+from banal import is_mapping
 from followthemoney import model
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
@@ -13,6 +12,7 @@ from aleph.model.match import Match
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
 from aleph.model.document_tag import DocumentTag
+from aleph.util import filter_texts
 
 log = logging.getLogger(__name__)
 
@@ -184,14 +184,13 @@ class Document(db.Model, DatedModel, Metadata):
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)
 
-    @property
     def raw_texts(self):
         yield self.title
         yield self.file_name
         yield self.source_url
         yield self.summary
         yield self.author
-        # yield self.generator
+
         if self.status != self.STATUS_SUCCESS:
             return
 
@@ -202,24 +201,11 @@ class Document(db.Model, DatedModel, Metadata):
             pq = pq.filter(DocumentRecord.document_id == self.id)
             pq = pq.order_by(DocumentRecord.index.asc())
             for record in pq.yield_per(10000):
-                for text in record.texts:
-                    yield text
+                yield from record.raw_texts()
 
     @property
     def texts(self):
-        for text in self.raw_texts:
-            if not isinstance(text, str):
-                continue
-            if not len(text):
-                continue
-            try:
-                # try to exclude numeric data from
-                # spreadsheets
-                float(text)
-                continue
-            except Exception:
-                pass
-            yield text
+        yield from filter_texts(self.raw_texts())
 
     @classmethod
     def pending_count(cls, collection_id=None):
@@ -292,80 +278,42 @@ class Document(db.Model, DatedModel, Metadata):
         return q
 
     @classmethod
-    def _merge_prop(cls, data, name, raw):
-        """Merge a given named property into an existing schema entity."""
-        countries = data.get('countries', [])
-        properties = data.get('properties', {})
-        values = set(ensure_list(properties.get(name)))
-        prop = model.get(data['schema']).get(name)
-        for value in ensure_list(raw):
-            value = prop.type.normalize(value,
-                                        cleaned=True,
-                                        countries=countries)
-            values.update(value)
-        if len(values):
-            properties[name] = list(values)
-        else:
-            properties.pop(name, None)
-        data['properties'] = properties
-
-    @classmethod
     def doc_data_to_schema(cls, data):
         """Convert an existing dict with document information (e.g. from the search
         index) to it's followthemoney form."""
-        out = {
-            'schema': data.get('schema'),
-            'countries': data.get('countries', [])
-        }
+        proxy = model.get_proxy(data)
         for prop, field in cls.SCHEMA_MAPPING.items():
-            cls._merge_prop(out, prop, data.get(field))
-        cls._merge_prop(out, 'namesMentioned', data.get('names'))
-        cls._merge_prop(out, 'ibanMentioned', data.get('ibans'))
-        cls._merge_prop(out, 'ipMentioned', data.get('ips'))
-        cls._merge_prop(out, 'locationMentioned', data.get('locations'))
-        cls._merge_prop(out, 'phoneMentioned', data.get('phones'))
-        cls._merge_prop(out, 'emailMentioned', data.get('email'))
+            proxy.add(prop, data.get(field))
+        proxy.add('namesMentioned', data.get('names'))
+        proxy.add('ibanMentioned', data.get('ibans'))
+        proxy.add('ipMentioned', data.get('ips'))
+        proxy.add('locationMentioned', data.get('locations'))
+        proxy.add('phoneMentioned', data.get('phones'))
+        proxy.add('emailMentioned', data.get('email'))
         parent = data.get('parent')
         if is_mapping(parent):
-            cls._merge_prop(out, 'parent', parent.get('id'))
-        return out
+            proxy.add('parent', parent.get('id'))
+        return proxy.to_dict()
 
-    def to_schema_entity(self):
-        properties = {}
+    def to_proxy(self):
+        proxy = model.make_entity(self.model)
+        proxy.id = self.id
         for prop, field in self.SCHEMA_MAPPING.items():
-            prop = self.model.get(prop)
-            if prop is None:
-                continue
-            values = getattr(self, field)
-            values = prop.type.normalize_set(values,
-                                             cleaned=True,
-                                             countries=self.countries)
-            if len(values):
-                properties[prop.name] = values
+            prop = proxy.schema.get(prop)
+            if prop is not None:
+                values = getattr(self, field)
+                proxy.add(prop, values)
 
         q = db.session.query(DocumentTag)
         q = q.filter(DocumentTag.document_id == self.id)
         q = q.filter(DocumentTag.type.in_(DocumentTag.MAPPING.keys()))
         q = q.order_by(DocumentTag.weight.desc())
         q = q.limit(Document.MAX_TAGS)
-        types = defaultdict(set)
         for tag in q.all():
-            types[tag.type].add(tag.text)
-
-        for type_, values in types.items():
-            prop = DocumentTag.MAPPING.get(type_)
-            prop = self.model.get(prop)
-            values = prop.type.normalize_set(values,
-                                             cleaned=True,
-                                             countries=self.countries)
-            if len(values):
-                properties[prop.name] = values
-
-        return {
-            'schema': self.schema,
-            'properties': properties,
-            'id': self.id
-        }
+            prop = DocumentTag.MAPPING.get(tag.type)
+            if prop is not None:
+                proxy.add(prop, tag.text)
+        return proxy
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)

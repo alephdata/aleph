@@ -2,6 +2,7 @@ import logging
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
+from aleph.util import filter_texts
 
 log = logging.getLogger(__name__)
 
@@ -18,13 +19,16 @@ class DocumentRecord(db.Model):
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship("Document", backref=db.backref('records', cascade='all, delete-orphan'))  # noqa
 
-    @property
-    def texts(self):
+    def raw_texts(self):
         """Utility method to get all text snippets in a record."""
         if self.data is not None:
             for value in self.data.values():
                 yield value
         yield self.text
+
+    @property
+    def texts(self):
+        yield from filter_texts(self.raw_texts())
 
     @classmethod
     def find_records(cls, ids):
