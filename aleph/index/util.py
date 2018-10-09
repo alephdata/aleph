@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
+BULK_PAGE = 500
 
 
 def refresh_index(index):
@@ -107,14 +108,15 @@ def cleanup_query(body):
     return body
 
 
-def bulk_op(iter, chunk_size=500, max_retries=10):
+def bulk_op(actions, chunk_size=BULK_PAGE, max_retries=10):
     """Standard parameters for bulk operations."""
-    bulk(es, iter,
-         chunk_size=chunk_size,
-         max_retries=10,
-         initial_backoff=2,
-         request_timeout=REQUEST_TIMEOUT,
-         timeout=TIMEOUT)
+    return bulk(es, actions,
+                chunk_size=chunk_size,
+                max_retries=10,
+                initial_backoff=2,
+                request_timeout=REQUEST_TIMEOUT,
+                timeout=TIMEOUT,
+                refresh=True)
 
 
 def query_delete(index, query):
