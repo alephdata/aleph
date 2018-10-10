@@ -29,7 +29,7 @@ def xref_item(item, collection_id=None):
     results = result.get('hits').get('hits')
     for result in results:
         result = unpack_result(result)
-        score = compare(item, result)
+        score = compare(model, item, result)
         yield score, result
 
 
