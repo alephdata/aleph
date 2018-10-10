@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
-BULK_PAGE = 500
+BULK_PAGE = 1000
 
 
 def refresh_index(index):
@@ -108,15 +108,15 @@ def cleanup_query(body):
     return body
 
 
-def bulk_op(actions, chunk_size=BULK_PAGE, max_retries=10):
+def bulk_op(actions, chunk_size=BULK_PAGE, max_retries=10, refresh=True):
     """Standard parameters for bulk operations."""
     return bulk(es, actions,
                 chunk_size=chunk_size,
-                max_retries=10,
+                max_retries=max_retries,
                 initial_backoff=2,
                 request_timeout=REQUEST_TIMEOUT,
                 timeout=TIMEOUT,
-                refresh=True)
+                refresh=refresh)
 
 
 def query_delete(index, query):
@@ -131,21 +131,6 @@ def query_delete(index, query):
             return
         except Exception as exc:
             log.warning("Query delete failed: %s", exc)
-        backoff_cluster(failures=attempt)
-
-
-def query_update(index, body):
-    """Update all documents matching the given query."""
-    for attempt in count():
-        try:
-            es.update_by_query(index=index,
-                               body=body,
-                               conflicts='proceed',
-                               timeout=TIMEOUT,
-                               request_timeout=REQUEST_TIMEOUT)
-            return
-        except Exception as exc:
-            log.warning("Query update failed: %s", exc)
         backoff_cluster(failures=attempt)
 
 

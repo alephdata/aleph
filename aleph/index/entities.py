@@ -117,12 +117,12 @@ def _index_updates(collection, entities):
 
 def index_bulk(collection, entities):
     """Index a set of entities."""
-    chunk_size = len(entities) + 1
     actions = _index_updates(collection, entities)
-    if not len(actions):
-        return
+    chunk_size = len(actions) + 1
     try:
-        bulk_op(actions, chunk_size=chunk_size)
+        bulk_op(actions,
+                chunk_size=chunk_size,
+                refresh='wait_for')
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
 
