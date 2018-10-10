@@ -28,7 +28,7 @@ class CollectionScreenContext extends Component {
       );
     }
 
-    const breadcrumbs = (<Breadcrumbs collection={collection}>
+    const breadcrumbs = (<Breadcrumbs collection={collection} hasSearchBar={false}>
       {screenTitle && (
         <li>
           <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>

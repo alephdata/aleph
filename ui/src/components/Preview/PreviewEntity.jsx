@@ -28,7 +28,7 @@ class PreviewEntity extends React.Component {
 
   renderContext() {
     const { entity, references, previewMode, similar, tags } = this.props;
-    let mode = null, maximised = false;
+    let mode = null, maximised = true;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
     } else if (entity.id === undefined || references.isLoading) {

@@ -8,7 +8,8 @@ import './Breadcrumbs.css';
 
 class Breadcrumbs extends Component {
   render() {
-    const { collection, children, document } = this.props;
+    const { collection, children, document, hasSearchBar, sourceSearch, placeholder, queryPrefix } = this.props;
+    console.log(hasSearchBar)
 
     let collectionCrumbs = [];
     if (collection) {
@@ -25,8 +26,14 @@ class Breadcrumbs extends Component {
           {collectionCrumbs}
           {children}
         </ul>
-        {document !== undefined && <DocumentSearch document={document} placeholder='Search'/>}
-        {document === undefined && <CollectionSearch collection={collection}/>}
+        {document !== undefined && hasSearchBar && <DocumentSearch document={document} placeholder='Search'/>}
+        {document === undefined && hasSearchBar && sourceSearch === undefined && <CollectionSearch collection={collection}/>}
+        {sourceSearch && <div className="pt-input-group">
+          <i className="pt-icon pt-icon-search"/>
+          <input className="pt-input" type="search"
+                 placeholder={placeholder}
+                 onChange={this.props.onChangeQueryPrefix} value={queryPrefix}/>
+        </div>}
       </nav>
     );
   }

@@ -10,10 +10,12 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
+import { selectEntityTags } from "../../selectors";
 
 class DocumentScreenContext extends Component {
   render() {
-    const { document, documentId, activeMode, screenTitle } = this.props;
+    const { document, documentId, activeMode, screenTitle, tags } = this.props;
+
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
@@ -25,8 +27,10 @@ class DocumentScreenContext extends Component {
       ); 
     }
 
+    const subtitle = activeMode === 'tags' ? screenTitle + ' (' + tags.total + ')' : screenTitle;
+
     const breadcrumbs = (
-      <Breadcrumbs collection={document.collection} document={document}>
+      <Breadcrumbs collection={document.collection} document={document} hasSearchBar={true}>
         {document.parent && (
           <li>
             <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
@@ -37,7 +41,7 @@ class DocumentScreenContext extends Component {
         </li>
         {screenTitle && (
           <li>
-            <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
+            <span className="pt-breadcrumb pt-breadcrumb-current">{subtitle}</span>
           </li>
         )}
       </Breadcrumbs>
@@ -51,7 +55,8 @@ class DocumentScreenContext extends Component {
             <DualPane.ContentPane className="view-menu-flex-direction">
               <DocumentViewsMenu document={document}
                                 activeMode={activeMode}
-                                isPreview={false}/>
+                                isPreview={false}
+                                tags={tags}/>
               <div className="screen-children">
                 {this.props.children}
               </div>
@@ -70,8 +75,10 @@ class DocumentScreenContext extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps;
+  const document = selectEntity(state, documentId);
   return {
-    document: selectEntity(state, documentId)
+    document,
+    tags: selectEntityTags(state, document.id)
   };
 };
 

@@ -103,34 +103,28 @@ class SourcesIndexScreen extends Component {
     const { result, query, intl } = this.props;
     const { queryPrefix } = this.state;
 
-    const breadcrumbs = (<Breadcrumbs>
+    const breadcrumbs = (<Breadcrumbs
+      sourceSearch={true}
+      placeholder={intl.formatMessage(messages.filter)}
+      queryPrefix={queryPrefix}
+      onChangeQueryPrefix={this.onChangeQueryPrefix}>
       <li>
-        <a className="pt-breadcrumb">
-          <FormattedMessage id="collection.browser.breadcrumb"
-                            defaultMessage="Sources overview"/>
-        </a>
+        <span className="pt-breadcrumb pt-breadcrumb-current">
+          <FormattedMessage id="collection.browser.total"
+                            defaultMessage="Browsing {total} sources."
+                            values={{
+                              total: <FormattedNumber value={result.total || 0}/>
+                            }}/>
+        </span>
       </li>
     </Breadcrumbs>);
 
     return (
       <Screen className="SourcesIndexScreen"
-              breadcrumbs={breadcrumbs}
               title={intl.formatMessage(messages.title)}>
+        {breadcrumbs}
         <DualPane>
-          <DualPane.SidePane>
-            <div className="pt-input-group pt-fill">
-              <i className="pt-icon pt-icon-search"/>
-              <input className="pt-input" type="search"
-                     placeholder={intl.formatMessage(messages.filter)}
-                     onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
-            </div>
-            <p className="note">
-              <FormattedMessage id="collection.browser.total"
-                                defaultMessage="Browsing {total} sources."
-                                values={{
-                                  total: <FormattedNumber value={result.total || 0}/>
-                                }}/>
-            </p>
+          <DualPane.SidePane className='side-pane-padding'>
             <SearchFacets facets={this.state.facets}
                           query={query}
                           result={result}

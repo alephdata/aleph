@@ -24,7 +24,7 @@ class PreviewCollection extends React.Component {
 
   renderContext() {
     const { collection, previewMode = 'info' } = this.props;
-    let mode = null, maximised = false;
+    let mode = null, maximised = true;
     if (collection.isError) {
       mode = <ErrorSection error={collection.error} />
     } else if (collection.id === undefined) {
