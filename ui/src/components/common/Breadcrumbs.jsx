@@ -9,7 +9,6 @@ import './Breadcrumbs.css';
 class Breadcrumbs extends Component {
   render() {
     const { collection, children, document, hasSearchBar, sourceSearch, placeholder, queryPrefix } = this.props;
-    console.log(hasSearchBar)
 
     let collectionCrumbs = [];
     if (collection) {

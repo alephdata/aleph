@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 import Waypoint from 'react-waypoint';
 
@@ -74,6 +75,7 @@ class CollectionXrefMatchesScreen extends Component {
   render() {
     const { collection, other, index, matches, intl } = this.props;
     const error = collection.error || other.error || index.error || matches.error;
+    let xrefPath = collection.links !== undefined ? getPath(collection.links.ui) + '/xref/' : '';
     if (error !== undefined) {
       return <ErrorScreen error={error} />
     }
@@ -81,17 +83,27 @@ class CollectionXrefMatchesScreen extends Component {
       return <LoadingScreen />;
     }
 
-    const breadcrumbs = (<Breadcrumbs collection={collection}>
+    const breadcrumbs = (<Breadcrumbs hasSearchBar={false}>
       <li>
-        <a className="pt-breadcrumb">
-          <FormattedMessage id="collection.xref.crumb"
-                            defaultMessage="Cross-referencing"/>
-        </a>
+        <span className="pt-breadcrumb">
+          {collection.label}
+        </span>
       </li>
-    </Breadcrumbs>)
+      <li>
+        <Link className="pt-breadcrumb" to={xrefPath}>
+          <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
+        </Link>
+      </li>
+      <li>
+        <span className="pt-breadcrumb pt-breadcrumb-current">
+          {other.label}
+        </span>
+      </li>
+    </Breadcrumbs>);
     
     return (
-      <Screen title={intl.formatMessage(messages.title)} breadcrumbs={breadcrumbs}>
+      <Screen title={intl.formatMessage(messages.title)}>
+        {breadcrumbs}
         <table className="CollectionXrefMatchesScreen data-table">
           <thead>
             <tr>
