@@ -108,7 +108,7 @@ def get_collection(collection_id):
     return unpack_result(result)
 
 
-def update_collection_roles(collection, rate_limit=250):
+def update_collection_roles(collection, rate_limit=250, wait=False):
     """Update the role visibility of objects which are part of collections."""
     roles = ', '.join([str(r) for r in collection.roles])
     query = {'term': {'collection_id': collection.id}}
@@ -129,7 +129,7 @@ def update_collection_roles(collection, rate_limit=250):
                        body=body,
                        conflicts='proceed',
                        requests_per_second=rate_limit,
-                       wait_for_completion=False,
+                       wait_for_completion=wait,
                        timeout='%ss' % timeout)
 
 
