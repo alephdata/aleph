@@ -3,8 +3,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
 import { Collection, Entity } from 'src/components/common';
-import DocumentSearch from 'src/components/Document/DocumentSearch';
-import CollectionSearch from "src/components/Collection/CollectionSearch";
 
 import './Breadcrumbs.css';
 
