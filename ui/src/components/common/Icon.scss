@@ -1,0 +1,24 @@
+@import 'src/app/variables.scss';
+.al-icon {
+  display: inline-block;;
+  vertical-align: middle;
+  & > div:first-child {
+    display: inline-block;
+  }
+  &--svg {
+    width: 1.28571429em;
+    fill: currentColor;
+    stroke: currentColor;
+    text-align: center;
+    [stroke], [fill] {
+      stroke: none;
+      fill: none;
+    }
+    [stroke] {
+      stroke: inherit;
+    }
+    [fill] {
+      fill: inherit;
+    }
+  }
+}

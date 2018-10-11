@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Land</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Land" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M9.5,18 L9.5,18 C9.22385763,18 9,17.7761424 9,17.5 L9,3 C9,2.44771525 9.44771525,2 10,2 L10,17.5 C10,17.7761424 9.77614237,18 9.5,18 Z"
+              id="Line-6" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M10,3 L10,8 L11.6534156,8 C12.9207236,8 14.1832484,8.15542391 15.4127178,8.46279125 L15.8298178,8.56706625 C16.9799666,8.85460344 18.1610382,9 19.3465844,9 L20,9 L20,4 L19.3465844,4 C18.0792764,4 16.8167516,3.84457609 15.5872822,3.53720875 L15.1701822,3.43293375 C14.0200334,3.14539656 12.8389618,3 11.6534156,3 L10,3 Z M11.6534156,2 C12.9207236,2 14.1832484,2.15542391 15.4127178,2.46279125 L15.8298178,2.56706625 C16.9799666,2.85460344 18.1610382,3 19.3465844,3 L20,3 C20.5522847,3 21,3.44771525 21,4 L21,9 C21,9.55228475 20.5522847,10 20,10 L19.3465844,10 C18.0792764,10 16.8167516,9.84457609 15.5872822,9.53720875 L15.1701822,9.43293375 C14.0200334,9.14539656 12.8389618,9 11.6534156,9 L10,9 C9.44771525,9 9,8.55228475 9,8 L9,3 C9,2.44771525 9.44771525,2 10,2 L11.6534156,2 Z"
+              id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M1,13 L1,15 L0,15 L0,13 C-6.76353751e-17,12.4477153 0.44771525,12 1,12 L2,12 L2,13 L1,13 Z"
+              id="Line-65" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M1.5,22.5 L1.5,24.5 L0.5,24.5 L0.5,22.5 C0.5,21.9477153 0.94771525,21.5 1.5,21.5 L2.5,21.5 L2.5,22.5 L1.5,22.5 Z"
+              id="Line-65-Copy-3" fill="#000000" fill-rule="nonzero"
+              transform="translate(1.500000, 23.000000) rotate(-90.000000) translate(-1.500000, -23.000000) "></path>
+        <path d="M23,13 L23,14 L22,14 L22,13 C22,12.4477153 22.4477153,12 23,12 L24,12 L24,13 L23,13 Z"
+              id="Line-65-Copy" fill="#000000" fill-rule="nonzero"
+              transform="translate(23.000000, 13.000000) rotate(-270.000000) translate(-23.000000, -13.000000) "></path>
+        <path d="M23,22 L23,24 L22,24 L22,22 C22,21.4477153 22.4477153,21 23,21 L24,21 L24,22 L23,22 Z"
+              id="Line-65-Copy-2" fill="#000000" fill-rule="nonzero"
+              transform="translate(23.000000, 22.500000) rotate(-180.000000) translate(-23.000000, -22.500000) "></path>
+        <polygon id="Line-66-Copy-5" fill="#000000" fill-rule="nonzero"
+                 transform="translate(23.500000, 16.000000) rotate(-90.000000) translate(-23.500000, -16.000000) "
+                 points="22.5 16.5 22.5 15.5 24.5 15.5 24.5 16.5"></polygon>
+        <polygon id="Line-66-Copy-11" fill="#000000" fill-rule="nonzero"
+                 transform="translate(23.500000, 19.000000) rotate(-90.000000) translate(-23.500000, -19.000000) "
+                 points="22.5 19.5 22.5 18.5 24.5 18.5 24.5 19.5"></polygon>
+        <polygon id="Line-66-Copy-18" fill="#000000" fill-rule="nonzero"
+                 transform="translate(0.500000, 20.000000) rotate(-90.000000) translate(-0.500000, -20.000000) "
+                 points="-0.5 20.5 -0.5 19.5 1.5 19.5 1.5 20.5"></polygon>
+        <polygon id="Line-66-Copy-19" fill="#000000" fill-rule="nonzero"
+                 transform="translate(0.500000, 17.000000) rotate(-90.000000) translate(-0.500000, -17.000000) "
+                 points="-0.5 17.5 -0.5 16.5 1.5 16.5 1.5 17.5"></polygon>
+        <polygon id="Line-66-Copy-4" fill="#000000" fill-rule="nonzero" points="3 13 3 12 5 12 5 13"></polygon>
+        <polygon id="Line-66-Copy-6" fill="#000000" fill-rule="nonzero" points="6 13 6 12 8 12 8 13"></polygon>
+        <polygon id="Line-66-Copy-7" fill="#000000" fill-rule="nonzero" points="19 13 19 12 21 12 21 13"></polygon>
+        <polygon id="Line-66-Copy-12" fill="#000000" fill-rule="nonzero" points="19 24 19 23 21 23 21 24"></polygon>
+        <polygon id="Line-66-Copy-8" fill="#000000" fill-rule="nonzero" points="16 13 16 12 18 12 18 13"></polygon>
+        <polygon id="Line-66-Copy-13" fill="#000000" fill-rule="nonzero" points="16 24 16 23 18 23 18 24"></polygon>
+        <polygon id="Line-66-Copy-9" fill="#000000" fill-rule="nonzero" points="13 13 13 12 15 12 15 13"></polygon>
+        <polygon id="Line-66-Copy-15" fill="#000000" fill-rule="nonzero" points="10 24 10 23 12 23 12 24"></polygon>
+        <polygon id="Line-66-Copy-14" fill="#000000" fill-rule="nonzero" points="13 24 13 23 15 23 15 24"></polygon>
+        <polygon id="Line-66-Copy-16" fill="#000000" fill-rule="nonzero" points="7 24 7 23 9 23 9 24"></polygon>
+        <polygon id="Line-66-Copy-17" fill="#000000" fill-rule="nonzero" points="4 24 4 23 6 23 6 24"></polygon>
+        <polygon id="Line-66-Copy-10" fill="#000000" fill-rule="nonzero" points="11 13 11 12 12 12 12 13"></polygon>
+    </g>
+</svg>
