@@ -6,8 +6,8 @@ from followthemoney import types
 from aleph.core import es
 from aleph.model import Entity, Collection
 from aleph.index.core import collections_index, entities_index, records_index
-from aleph.index.util import query_delete, query_update, unpack_result
-from aleph.index.util import index_safe, index_form, search_safe
+from aleph.index.util import query_delete, unpack_result, index_safe
+from aleph.index.util import index_form, search_safe
 
 log = logging.getLogger(__name__)
 
@@ -108,16 +108,29 @@ def get_collection(collection_id):
     return unpack_result(result)
 
 
-def update_collection_roles(collection):
+def update_collection_roles(collection, rate_limit=250, wait=False):
     """Update the role visibility of objects which are part of collections."""
     roles = ', '.join([str(r) for r in collection.roles])
+    query = {'term': {'collection_id': collection.id}}
+    body = {'query': query, 'size': 0}
+    res = es.search(index=entities_index(), body=body)
+    total = res.get('hits', {}).get('total')
+    timeout = int((total / rate_limit) * 2)
+    log.info("[%s] roles update: %s entities, timeout: %s",
+             collection.foreign_id, total, timeout)
     body = {
-        'query': {'term': {'collection_id': collection.id}},
+        'query': query,
         'script': {
             'inline': 'ctx._source.roles = [%s]' % roles
         }
     }
-    query_update(entities_index(), body)
+    es.update_by_query(index=entities_index(),
+                       doc_type='doc',
+                       body=body,
+                       conflicts='proceed',
+                       requests_per_second=rate_limit,
+                       wait_for_completion=wait,
+                       timeout='%ss' % timeout)
 
 
 def delete_collection(collection_id):

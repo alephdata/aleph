@@ -88,7 +88,7 @@ class TestCase(FlaskTestCase):
         Permission.grant(collection, role, read, write)
         db.session.commit()
         update_collection(collection)
-        update_collection_roles(collection)
+        update_collection_roles(collection, wait=True)
         self.flush_index()
 
     def grant_publish(self, collection):

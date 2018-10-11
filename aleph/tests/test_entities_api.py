@@ -18,8 +18,8 @@ class EntitiesApiTestCase(TestCase):
         self.col = self.create_collection()
         self.ent = Entity.create({
             'schema': 'LegalEntity',
-            'name': 'Winnie the Pooh',
             'properties': {
+                'name': 'Winnie the Pooh',
                 'country': 'pa',
             }
         }, self.col)
@@ -67,7 +67,7 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res
 
         data = res.json
-        data['name'] = 'Winne the little Shit'
+        data['properties']['name'] = ['Winne the little Shit']
         res = self.client.post(url,
                                data=json.dumps(data),
                                headers=headers,
@@ -75,7 +75,7 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res.json
         assert 'little' in res.json['name'], res.json
 
-        data['name'] = ''
+        data['properties'].pop('name', None)
         res = self.client.post(url,
                                data=json.dumps(data),
                                headers=headers,
@@ -87,9 +87,9 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Asset',
-            'name': "Our house",
             'collection_id': self.col.id,
             'properties': {
+                'name': "Our house",
                 'summary': "In the middle of our street"
             }
         }
@@ -105,12 +105,12 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Asset',
-            'name': "Our house",
             'collection': {
                 'id': self.col.id,
                 'label': 'blaaa'
             },
             'properties': {
+                'name': "Our house",
                 'summary': "In the middle of our street"
             }
         }
@@ -126,9 +126,9 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'name': "Osama bin Laden",
             'collection_id': self.col.id,
             'properties': {
+                'name': "Osama bin Laden",
                 'alias': ["Usama bin Laden", "Osama bin Ladin"],
                 'address': 'Home, Netherlands'
             }
@@ -145,9 +145,9 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'name': "Osama bin Laden",
             'collection_id': self.col.id,
             'properties': {
+                'name': "Osama bin Laden",
                 'alias': ["Usama bin Laden", "Osama bin Ladin"],
                 'address': 'Home, Netherlands'
             }
@@ -172,9 +172,9 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'name': "Osama bin Laden",
             'collection_id': self.col.id,
             'properties': {
+                'name': "Osama bin Laden",
                 'alias': ["Usama bin Laden", "Osama bin Ladin"]
             }
         }
@@ -199,8 +199,9 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'name': "Osama bin Laden",
-            'properties': {},
+            'properties': {
+                'name': "Osama bin Laden",
+            },
             'collection_id': self.col.id
         }
         res = self.client.post(url,
@@ -220,8 +221,9 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'name': "Osama bin Laden",
-            'properties': {},
+            'properties': {
+                'name': "Osama bin Laden",
+            },
             'collection_id': self.col.id
         }
         res = self.client.post(url,
@@ -242,8 +244,10 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'name': "Osama bin Laden",
-            'collection_id': self.col.id
+            'collection_id': self.col.id,
+            'properties': {
+                'name': "Osama bin Laden",
+            }
         }
         res = self.client.post(url,
                                data=json.dumps(data),
@@ -251,8 +255,10 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         data = {
             'schema': 'Person',
-            'name': "Osama bin Ladyn",
-            'collection_id': self.col.id
+            'collection_id': self.col.id,
+            'properties': {
+                'name': "Osama bin Ladyn",
+            }
         }
         res = self.client.post(url,
                                data=json.dumps(data),
@@ -292,11 +298,11 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'name': "Blaaaa blubb",
+            'collection_id': self.col.id,
             'properties': {
+                'name': "Blaaaa blubb",
                 'phone': '+491769817271'
-            },
-            'collection_id': self.col.id
+            }
         }
         resa = self.client.post(url,
                                 data=json.dumps(data),
@@ -304,11 +310,11 @@ class EntitiesApiTestCase(TestCase):
                                 content_type='application/json')
         data = {
             'schema': 'Person',
-            'name': "Nobody Man",
+            'collection_id': self.col.id,
             'properties': {
+                'name': "Nobody Man",
                 'phone': '+491769817271'
-            },
-            'collection_id': self.col.id
+            }
         }
         resa = self.client.post(url,
                                 data=json.dumps(data),

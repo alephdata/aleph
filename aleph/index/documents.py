@@ -22,8 +22,8 @@ def index_document_id(document_id):
 def index_document(document):
     name = document.name
     log.info("Index document [%s]: %s", document.id, name)
-    data = document.to_schema_entity()
-    data.update({
+    proxy = document.to_proxy()
+    context = {
         'status': document.status,
         'content_hash': document.content_hash,
         'foreign_id': document.foreign_id,
@@ -53,20 +53,21 @@ def index_document(document):
         'columns': document.columns,
         'ancestors': document.ancestors,
         'children': document.children.count()
-    })
+    }
 
     texts = list(document.texts)
     texts.extend(document.columns)
 
-    if document.parent_id is not None:
-        texts.append(document.parent.title)
-        data['parent'] = {
-            'id': document.parent_id,
-            'schema': document.parent.schema,
-            'title': document.parent.title,
+    parent = document.parent
+    if parent is not None:
+        texts.append(parent.title)
+        context['parent'] = {
+            'id': parent.id,
+            'schema': parent.schema,
+            'title': parent.title,
         }
 
-    return index_single(document, data, texts)
+    return index_single(document, proxy, context, texts)
 
 
 def delete_document(document_id):

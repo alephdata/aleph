@@ -3,6 +3,7 @@ import spacy
 import logging
 from polyglot.text import Text
 
+from aleph import settings
 from aleph.logic.extractors.result import PersonResult, LocationResult
 from aleph.logic.extractors.result import OrganizationResult, LanguageResult
 
@@ -28,7 +29,6 @@ SPACY_TYPES = {
     'LOC': LocationResult,
     'GPE': LocationResult
 }
-SPACY = spacy.load('xx')
 
 
 def extract_polyglot(ctx, text, languages):
@@ -46,8 +46,8 @@ def extract_polyglot(ctx, text, languages):
             clazz = POLYGLOT_TYPES.get(entity.tag)
             if clazz is not None:
                 yield clazz(ctx, label, entity.start, entity.end)
-    except Exception:
-        log.exception("polyglot failed")
+    except Exception as ex:
+        log.warning("Polyglot failed: %s" % ex)
 
 
 def extract_spacy(ctx, text, languages):
@@ -55,7 +55,10 @@ def extract_spacy(ctx, text, languages):
         return
     try:
         text = text[:MAX_LENGTH]
-        doc = SPACY(text)
+        if not hasattr(settings, '_spacy_model'):
+            log.debug("Loading spaCy NER model...")
+            settings._spacy_model = spacy.load('xx')
+        doc = settings._spacy_model(text)
         for ent in doc.ents:
             clazz = SPACY_TYPES.get(ent.label_)
             if clazz is not None:
