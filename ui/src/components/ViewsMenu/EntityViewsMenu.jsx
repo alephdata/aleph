@@ -1,38 +1,21 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
 import c from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
+import queryString from "query-string";
 
 import { queryEntitySimilar } from 'src/queries';
 import { selectEntityReferences, selectEntityTags, selectSchemata, selectEntitiesResult } from "src/selectors";
-import ViewItem from "src/components/ViewsMenu/ViewItem";
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
-import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import reverseLabel from 'src/util/reverseLabel';
+import EntityMetadata from "src/components/Entity/EntityMetadata";
+import TextLoading from "src/components/common/TextLoading";
 
 import './ViewsMenu.css';
-import queryString from "query-string";
-import EntityMetadata from "../Entity/EntityMetadata";
-
-const messages = defineMessages({
-  info: {
-    id: 'entity.mode.info',
-    defaultMessage: 'Base information',
-  },
-  tags: {
-    id: 'entity.mode.tags',
-    defaultMessage: 'Tags',
-  },
-  similar: {
-    id: 'entity.mode.similar',
-    defaultMessage: 'Similar',
-  }
-});
-
 
 class EntityViewsMenu extends React.Component {
   constructor(props) {
@@ -68,6 +51,7 @@ class EntityViewsMenu extends React.Component {
   render() {
     const { intl, isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
     const { mode } = this.state;
+    console.log(tags)
 
     return (
       <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
@@ -85,11 +69,12 @@ class EntityViewsMenu extends React.Component {
         <Tab id="tags"
              disabled={tags.total < 1}
                                title={
-                                 <React.Fragment>
+                                 <TextLoading children={<React.Fragment>
                                    <i className='fa fa-fw fa-tags'/>
                                    <FormattedMessage id="entity.info.source" defaultMessage="Tags"/>
                                    <span> ({tags.total !== undefined ? tags.total : 0})</span>
-                                 </React.Fragment>
+                                 </React.Fragment>} loading={tags.isLoading}/>
+
                                }
                                panel={
                                  <EntityTagsMode entity={entity} />
@@ -98,11 +83,11 @@ class EntityViewsMenu extends React.Component {
         <Tab id="similar"
              disabled={similar.total < 1}
                               title={
-                                <React.Fragment>
+                                <TextLoading children={<React.Fragment>
                                   <i className='fa fa-fw fa-repeat'/>
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Similar"/>
                                   <span> ({similar.total !== undefined ? similar.total : 0})</span>
-                                </React.Fragment>
+                                </React.Fragment>} loading={similar.isLoading}/>
                               }
                               panel={
                                 <EntitySimilarMode entity={entity} />
@@ -127,36 +112,6 @@ class EntityViewsMenu extends React.Component {
       </Tabs>
     );
 
-
-    /*return (
-      <div className="ViewsMenu">
-        {isPreview && (
-          <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
-                    message={intl.formatMessage(messages.info)}
-                    icon='fa-info' />
-        )}
-        {references.results !== undefined && references.results.map((ref) => (
-          <ViewItem key={ref.property.qname}
-                    mode={ref.property.qname}
-                    activeMode={activeMode}
-                    isPreview={isPreview}
-                    message={reverseLabel(schemata, ref)}
-                    href={'/entities/' + entity.id + '#mode=' + ref.property.qname}
-                    icon={schemata[ref.schema].icon}
-                    count={ref.count} />
-        ))}
-        <ViewItem mode='similar' activeMode={activeMode} isPreview={isPreview}
-                  message={intl.formatMessage(messages.similar)}
-                  href={'/entities/' + entity.id + '/similar'}
-                  icon='fa-repeat'
-                  count={similar.total} />
-        <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
-                  message={intl.formatMessage(messages.tags)}
-                  href={'/entities/' + entity.id + '/tags'}
-                  count={tags.total}
-                  icon='fa-tags' />
-      </div>
-    );*/
   }
 }
 

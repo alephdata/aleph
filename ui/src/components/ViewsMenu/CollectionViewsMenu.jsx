@@ -2,33 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-
-import ViewItem from "src/components/ViewsMenu/ViewItem";
-import { selectCollectionXrefIndex } from 'src/selectors';
 import { Tabs, Tab } from '@blueprintjs/core';
+import queryString from "query-string";
 
+import { selectCollectionXrefIndex } from 'src/selectors';
 import CollectionMetadata from "src/components/Collection/CollectionMetadata";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
+import TextLoading from "src/components/common/TextLoading";
 
 import './ViewsMenu.css';
-import queryString from "query-string";
-
-const messages = defineMessages({
-  info: {
-    id: 'document.mode.text.info',
-    defaultMessage: 'Overview',
-  },
-  documents: {
-    id: 'document.mode.text.documents',
-    defaultMessage: 'Browse as a folder',
-  },
-  xref: {
-    id: 'document.mode.text.xref',
-    defaultMessage: 'Cross-reference',
-  }
-});
-
 
 class CollectionViewsMenu extends React.Component {
 
@@ -74,7 +57,7 @@ class CollectionViewsMenu extends React.Component {
   }
 
   render() {
-    const { intl, isPreview, collection, activeMode } = this.props;
+    const { isPreview, collection } = this.props;
     const { xrefIndex } = this.props;
     const { mode } = this.state;
     const numOfDocs = this.countDocuments();
@@ -109,11 +92,12 @@ class CollectionViewsMenu extends React.Component {
         <Tab id="xref"
              disabled={xrefIndex.total < 1}
                               title={
-                                <React.Fragment>
+                                <TextLoading children={<React.Fragment>
                                   <i className="fa fa-fw fa-folder-open" />
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Cross-reference"/>
                                   <span> ({xrefIndex.total !== undefined ? xrefIndex.total : 0})</span>
-                                </React.Fragment>
+                                </React.Fragment>} loading={xrefIndex.isLoading}/>
+
                               }
                               panel={
                                 <CollectionXrefIndexMode collection={collection} />
@@ -121,31 +105,6 @@ class CollectionViewsMenu extends React.Component {
         />
       </Tabs>
     );
-
-    /*return (
-      <div className="ViewsMenu">
-        {isPreview && (
-          <ViewItem mode='info'
-                    activeMode={activeMode}
-                    isPreview={isPreview}
-                    message={intl.formatMessage(messages.info)}
-                    icon='fa-info' />
-        )}
-        <ViewItem mode='documents'
-                  activeMode={activeMode}
-                  isPreview={isPreview}
-                  count={this.countDocuments()}
-                  message={intl.formatMessage(messages.documents)}
-                  href={`/collections/${collection.id}/documents`}
-                  icon='fa-folder-open' />
-        <ViewItem mode='xref' activeMode={activeMode}
-                  isPreview={isPreview}
-                  count={xrefIndex.total}
-                  message={intl.formatMessage(messages.xref)}
-                  href={`/collections/${collection.id}/xref`}
-                  icon='fa-folder-open' />
-      </div>
-    );*/
   }
 }
 

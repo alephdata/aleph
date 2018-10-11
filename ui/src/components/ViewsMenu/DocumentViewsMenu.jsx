@@ -3,42 +3,15 @@ import React from 'react';
 import { connect } from "react-redux";
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
+import queryString from "query-string";
+import { withRouter } from "react-router";
 
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import { DocumentMetadata } from 'src/components/Document';
+import TextLoading from "src/components/common/TextLoading";
 
 import './ViewsMenu.css';
-import queryString from "query-string";
-import { withRouter } from "react-router";
-
-const messages = defineMessages({
-  info: {
-    id: 'document.mode.info.tooltip',
-    defaultMessage: 'Show properties and details',
-  },
-  view: {
-    id: 'document.mode.view.tooltip',
-    defaultMessage: 'Show the document',
-  },
-  browse: {
-    id: 'document.mode.browse.tooltip',
-    defaultMessage: 'Browse documents',
-  },
-  text: {
-    id: 'document.mode.text.tooltip',
-    defaultMessage: 'Show text',
-  },
-  tags: {
-    id: 'document.tags',
-    defaultMessage: 'Show connections'
-  },
-  similar: {
-    id: 'document.similar',
-    defaultMessage: 'Show similar documents'
-  }
-});
-
 
 class DocumentViewsMenu extends React.Component {
   constructor(props) {
@@ -74,7 +47,7 @@ class DocumentViewsMenu extends React.Component {
   }
 
   render() {
-    const { intl, document, isPreview, activeMode, tags } = this.props;
+    const { document, isPreview, activeMode, tags } = this.props;
     const { mode } = this.state;
 
     const hasTextMode = this.hasSchemata(['Pages', 'Image']);
@@ -120,11 +93,11 @@ class DocumentViewsMenu extends React.Component {
         {hasBrowseMode && (<Tab id="browse"
                                 disabled={document.children < 1}
                               title={
-                                <React.Fragment>
+                                <TextLoading loading={document.isLoading} children={<React.Fragment>
                                   <i className="fa-folder-open" />
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Browse documents"/>
                                   <span> ({document.children !== undefined ? document.children : 0})</span>
-                                </React.Fragment>
+                                </React.Fragment>}/>
                               }
                               panel={
                                 <DocumentViewMode document={document} activeMode={activeMode}/>
@@ -133,11 +106,11 @@ class DocumentViewsMenu extends React.Component {
         <Tab id="tags"
              disabled={tags !== undefined && tags.total !== undefined ? tags.total < 1 : true}
              title={
-               <React.Fragment>
+               <TextLoading loading={tags.isLoading} children={<React.Fragment>
                  <i className="fa fa-fw fa-tags"  />
                  <FormattedMessage id="entity.info.overview" defaultMessage="Show tags"/>
                  <span> ({tags.total !== undefined ? tags.total : 0})</span>
-               </React.Fragment>
+               </React.Fragment>}/>
              }
              panel={
                <EntityTagsMode entity={document} />
