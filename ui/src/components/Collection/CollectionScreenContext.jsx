@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -14,6 +14,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection } from "src/selectors";
+import {Link} from "react-router-dom";
 
 const messages = defineMessages({
   placeholder: {
@@ -61,6 +62,9 @@ class CollectionScreenContext extends Component {
     const breadcrumbs = (
       <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
         <Breadcrumbs.Collection key="collection" collection={collection} />
+        {activeMode === 'xref' && <li>
+            <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
+        </li>}
         {extraBreadcrumbs}
       </Breadcrumbs>
     );

@@ -197,18 +197,20 @@ class CollectionXrefMatchesScreen extends Component {
     if (collection.id === undefined || other.id === undefined || index.total === undefined) {
       return <LoadingScreen />;
     }
-    const indexPath = getPath(collection.links.ui) + '/xref/';
-    const extraBreadcrumbs = (
-      <React.Fragment>
-        <li>
-          <Link className="pt-breadcrumb" to={indexPath}>
-            <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
-          </Link>
-        </li>
-      </React.Fragment>
-    );
+    const indexPath = getPath(collection.links.ui) + '#mode=xref';
+    const breadcrumbs = (<Breadcrumbs collection={collection}>
+      <li>
+        <Link className="pt-breadcrumb" to={indexPath}>
+          <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
+        </Link>
+      </li>
+      <li>
+        <span>{other.label}</span>
+      </li>
+    </Breadcrumbs>);
 
-    return ( <Screen title={intl.formatMessage(messages.screen_title)} breadcrumbs={extraBreadcrumbs}>
+    return ( <Screen title={intl.formatMessage(messages.screen_title)}>
+      {breadcrumbs}
       {this.renderXrefTable()}
     </Screen>)
     // return (
