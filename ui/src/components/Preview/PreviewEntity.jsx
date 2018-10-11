@@ -9,7 +9,7 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
-import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
+import { DualPane, SectionLoading, ErrorSection, Schema, Entity } from 'src/components/common';
 import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
 import { selectEntitiesResult, selectEntityTags } from "src/selectors";
 import { queryEntitySimilar } from "src/queries";
@@ -28,7 +28,8 @@ class PreviewEntity extends React.Component {
 
   renderContext() {
     const { entity, references, previewMode, similar, tags } = this.props;
-    let mode = null, maximised = false;
+    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
+    let mode = null, maximised = true;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
     } else if (entity.id === undefined || references.isLoading) {
@@ -47,14 +48,19 @@ class PreviewEntity extends React.Component {
     }
     return (
       <Preview maximised={maximised}>
-        <EntityViewsMenu entity={entity}
+        {/*<EntityViewsMenu entity={entity}
                           activeMode={previewMode}
                           isPreview={true}
                           similar={similar}
-                          tags={tags}/>
+                          tags={tags}/>*/}
         <DualPane.InfoPane className="with-heading">
           <EntityToolbar entity={entity} isPreview={true} />
-          {mode}
+          <EntityInfoMode entity={entity} isPreview={true} />
+          <EntityViewsMenu entity={entity}
+                           activeMode={previewMode}
+                           isPreview={true}
+                           similar={similar}
+                           tags={tags}/>
         </DualPane.InfoPane>
       </Preview>
     );

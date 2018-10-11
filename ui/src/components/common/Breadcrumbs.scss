@@ -11,4 +11,8 @@
   overflow-x: hidden;
   display: flex;
   justify-content: space-between;
+
+  .pt-breadcrumbs {
+    padding-left: $aleph-grid-size * 2;
+  }
 }

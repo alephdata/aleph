@@ -10,10 +10,12 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, Entity } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
+import { selectEntityTags } from "../../selectors";
 
 class DocumentScreenContext extends Component {
   render() {
-    const { document, documentId, activeMode, screenTitle } = this.props;
+    const { document, documentId, activeMode, screenTitle, tags } = this.props;
+
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
@@ -25,36 +27,28 @@ class DocumentScreenContext extends Component {
       ); 
     }
 
+    const subtitle = activeMode === 'tags' ? screenTitle + ' (' + tags.total + ')' : screenTitle;
+
     const breadcrumbs = (
-      <Breadcrumbs collection={document.collection} document={document}>
+      <Breadcrumbs collection={document.collection} document={document} hasSearchBar={true}>
         {document.parent && (
-          <li>
-            <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
-          </li>
+          <Breadcrumbs.Entity entity={document.parent} />
         )}
-        <li>
-          <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
-        </li>
-        {screenTitle && (
-          <li>
-            <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
-          </li>
-        )}
+        <Breadcrumbs.Entity entity={document} />
+        <Breadcrumbs.Text text={subtitle} />
       </Breadcrumbs>
     );
 
     return (
       <DocumentContextLoader documentId={documentId}>
-        <Screen title={`${screenTitle}: ${document.name}`}>
+        <Screen title={screenTitle !== null ? `${screenTitle}: ${document.name}` : document.name}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
               <DocumentViewsMenu document={document}
                                 activeMode={activeMode}
-                                isPreview={false}/>
-              <div className="screen-children">
-                {this.props.children}
-              </div>
+                                isPreview={false}
+                                tags={tags}/>
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <DocumentToolbar document={document} isPreview={false} />
@@ -70,8 +64,10 @@ class DocumentScreenContext extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { documentId } = ownProps;
+  const document = selectEntity(state, documentId);
   return {
-    document: selectEntity(state, documentId)
+    document,
+    tags: selectEntityTags(state, document.id)
   };
 };
 

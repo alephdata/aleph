@@ -30,28 +30,22 @@ class EntityScreenContext extends Component {
     }
 
     const breadcrumbs = (
-      <Breadcrumbs collection={entity.collection}>
-        <li>
-          <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
-        </li>
-        {screenTitle && (
-          <li>
-            <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
-          </li>
-        )}
+      <Breadcrumbs collection={entity.collection} hasSearchBar={true}>
+        <Breadcrumbs.Entity entity={entity} />
+        <Breadcrumbs.Text text={screenTitle} />
       </Breadcrumbs>
     );
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={`${screenTitle}: ${entity.name}`}>
+        <Screen title={screenTitle !== null ? `${screenTitle}: ${entity.name}` : entity.name}>
           {breadcrumbs}
-          <DualPane>
+          <DualPane>`
             <DualPane.ContentPane className="view-menu-flex-direction">
               <EntityViewsMenu tags={tags} similar={similar} entity={entity} activeMode={activeMode} isPreview={false}/>
-              <div className="screen-children">
+              {/*<div className="screen-children">
                 {this.props.children}
-              </div>
+              </div>*/}
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <EntityToolbar entity={entity} isPreview={false} />

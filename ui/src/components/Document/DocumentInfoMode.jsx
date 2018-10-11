@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Schema, Entity } from 'src/components/common';
-import { DocumentMetadata } from 'src/components/Document';
 
 
 class DocumentInfoMode extends React.Component {
@@ -17,9 +16,6 @@ class DocumentInfoMode extends React.Component {
           <h1>
             <Entity.Label entity={document} addClass={true}/>
           </h1>
-        </div>
-        <div className="pane-content">
-          <DocumentMetadata document={document}/>
         </div>
       </React.Fragment>
     );

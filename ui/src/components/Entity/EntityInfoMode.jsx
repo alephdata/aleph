@@ -14,11 +14,6 @@ class EntityInfoMode extends React.Component {
     if (schema === undefined) {  // entity hasn't loaded.
       return null;
     }
-    
-    const entityProperties = _.values(schema.properties).filter((prop) => {
-      return !prop.caption && (schema.featured.indexOf(prop.name) !== -1 || entity.properties[prop.name]);
-    });
-    
     return (
       <React.Fragment>
         <div className="pane-heading">
@@ -30,20 +25,6 @@ class EntityInfoMode extends React.Component {
               <Entity.Label entity={entity} addClass={true}/>
             )}
           </h1>
-        </div>
-        <div className="pane-content">
-          <ul className="info-sheet">
-            { entityProperties.map((prop) => (
-              <li key={prop.name}>
-                <span className="key">
-                  <Property.Name model={prop} />
-                </span>
-                <span className="value">
-                  <Property.Values model={prop} values={entity.properties[prop.name]} />
-                </span>
-              </li>
-            ))}
-          </ul>
         </div>
       </React.Fragment>
     );

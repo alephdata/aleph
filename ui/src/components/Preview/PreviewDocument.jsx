@@ -11,6 +11,8 @@ import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
+import { DocumentMetadata } from 'src/components/Document';
+import { selectEntityTags } from "../../selectors";
 
 
 class PreviewDocument extends React.Component {
@@ -24,14 +26,17 @@ class PreviewDocument extends React.Component {
   }
 
   renderContext() {
-    const { document, previewMode } = this.props;
-    let mode = null, maximised = false;
+    const { document, previewMode, tags } = this.props;
+    let mode = null, maximised = true;
     if (document.isError) {
       mode = <ErrorSection error={document.error} />
     } else if (document.id === undefined) {
       mode = <SectionLoading/>;
     } else if (previewMode === 'info') {
-      mode = <DocumentInfoMode document={document} />;
+      mode =
+        <div className="pane-content">
+          <DocumentMetadata document={document}/>
+        </div>;
     } else if (previewMode === 'tags') {
       mode = <EntityTagsMode entity={document} />;
       maximised = true;
@@ -42,13 +47,14 @@ class PreviewDocument extends React.Component {
     }
     return (
       <Preview maximised={maximised}>
-        <DocumentViewsMenu document={document}
-                          activeMode={previewMode}
-                          isPreview={true} />
         <DualPane.InfoPane className="with-heading">
           <DocumentToolbar document={document}
-                            isPreview={true} />
-          {mode}
+                           isPreview={true} />
+          <DocumentInfoMode document={document} />
+          <DocumentViewsMenu document={document}
+                             activeMode={previewMode}
+                             isPreview={true}
+                             tags={tags}/>
         </DualPane.InfoPane>
       </Preview>
     );
@@ -60,7 +66,8 @@ const mapStateToProps = (state, ownProps) => {
   const { previewId, previewMode } = ownProps;
   return {
     document: selectEntity(state, previewId),
-    previewMode: selectDocumentView(state, previewId, previewMode)
+    previewMode: selectDocumentView(state, previewId, previewMode),
+    tags: selectEntityTags(state, document.id)
   };
 };
 

@@ -17,12 +17,12 @@ import './SourcesIndexScreen.css';
 
 const messages = defineMessages({
   title: {
-    id: 'collections.index.title',
+    id: 'sources.index.title',
     defaultMessage: 'Sources'
   },
-  filter: {
-    id: 'collectionbrowser.filter',
-    defaultMessage: 'Filter sources',
+  placeholder: {
+    id: 'sources.index.filter',
+    defaultMessage: 'Filter the sources…',
   },
   facet_category: {
     id: 'search.facets.facet.category',
@@ -78,10 +78,10 @@ class SourcesIndexScreen extends Component {
     }
   }
 
-  onChangeQueryPrefix({target}) {
-    this.setState({queryPrefix: target.value});
-    const query = this.props.query.set('prefix', target.value);
+  onChangeQueryPrefix(queryPrefix) {
+    const query = this.props.query.set('prefix', queryPrefix);
     this.updateQuery(query);
+    this.setState({ queryPrefix });
   }
 
   updateQuery(newQuery) {
@@ -103,34 +103,26 @@ class SourcesIndexScreen extends Component {
     const { result, query, intl } = this.props;
     const { queryPrefix } = this.state;
 
-    const breadcrumbs = (<Breadcrumbs>
-      <li>
-        <a className="pt-breadcrumb">
-          <FormattedMessage id="collection.browser.breadcrumb"
-                            defaultMessage="Sources overview"/>
-        </a>
-      </li>
+    const total = <FormattedNumber value={result.total || 0} />;
+    const breadcrumbs = (
+      <Breadcrumbs onSearch={this.onChangeQueryPrefix}
+                   searchPlaceholder={intl.formatMessage(messages.placeholder)}
+                   searchText={queryPrefix}>
+      { result.total && (
+        <Breadcrumbs.Text text={
+          <FormattedMessage id="sources.index.total"
+                            defaultMessage="{total} sources of documents and data"
+                            values={{ total }} />
+        } />
+      )}
     </Breadcrumbs>);
 
     return (
       <Screen className="SourcesIndexScreen"
-              breadcrumbs={breadcrumbs}
               title={intl.formatMessage(messages.title)}>
+        {breadcrumbs}
         <DualPane>
-          <DualPane.SidePane>
-            <div className="pt-input-group pt-fill">
-              <i className="pt-icon pt-icon-search"/>
-              <input className="pt-input" type="search"
-                     placeholder={intl.formatMessage(messages.filter)}
-                     onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
-            </div>
-            <p className="note">
-              <FormattedMessage id="collection.browser.total"
-                                defaultMessage="Browsing {total} sources."
-                                values={{
-                                  total: <FormattedNumber value={result.total || 0}/>
-                                }}/>
-            </p>
+          <DualPane.SidePane className='side-pane-padding'>
             <SearchFacets facets={this.state.facets}
                           query={query}
                           result={result}

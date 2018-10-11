@@ -9,7 +9,7 @@ import { Icon } from '@blueprintjs/core';
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { DualPane, SectionLoading, SignInCallout, ErrorSection } from 'src/components/common';
+import { DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
@@ -183,27 +183,30 @@ class SearchScreen extends React.Component {
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
 
+    const breadcrumbs = (<Breadcrumbs hasSearchBar={false}>
+      <li>
+        <span className="pt-breadcrumb pt-breadcrumb-current">
+          {!(result.isLoading || result.total === undefined) && (
+            <React.Fragment>
+              <FormattedNumber value={result.total}/>&nbsp;
+              <FormattedMessage id="search.screen.results" defaultMessage="results"/>
+            </React.Fragment>
+          )}
+          { result.isLoading && (
+            <FormattedMessage id="search.screen.searching" defaultMessage="Searching..."/>
+          )}
+          { result.isError && (
+            <FormattedMessage id="search.screen.error" defaultMessage="Error"/>
+          )}
+        </span>
+      </li>
+    </Breadcrumbs>);
+
     return (
       <Screen query={query} updateQuery={this.updateQuery} title={title}>
+        {breadcrumbs}
         <DualPane className="SearchScreen">
-          <DualPane.SidePane>
-            <div className='total-count pt-text-muted'>
-              <span className='total-count-span'>
-                <span className="total-icon pt-icon-standard pt-icon-search"/>
-                { !(result.isLoading || result.total === undefined) && (
-                  <React.Fragment>
-                    <FormattedNumber value={result.total}/>&nbsp;
-                    <FormattedMessage id="search.screen.results" defaultMessage="results"/>
-                  </React.Fragment>
-                )}
-                { result.isLoading && (
-                  <FormattedMessage id="search.screen.searching" defaultMessage="Searching..."/>
-                )}
-                { result.isError && (
-                  <FormattedMessage id="search.screen.error" defaultMessage="Error"/>
-                )}
-              </span>
-            </div>
+          <DualPane.SidePane className='side-pane-padding'>
             <div onClick={this.toggleFacets} className='visible-sm-flex facets total-count pt-text-muted'>
               <Icon icon={plusMinusIcon} />
               <span className='total-count-span'>

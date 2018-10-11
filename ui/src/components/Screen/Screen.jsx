@@ -33,7 +33,7 @@ class Screen extends React.Component {
   }
 
   render() {
-    const { isHomepage, requireSession, title, className, breadcrumbs } = this.props;
+    const { isHomepage, requireSession, title, className } = this.props;
     const { session, metadata, query, updateQuery } = this.props;
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
@@ -63,8 +63,7 @@ class Screen extends React.Component {
                                 toggleDialog={this.toggleAuthentication} />
         )}
         <Footer isHomepage={isHomepage}
-                metadata={metadata}
-                breadcrumbs={breadcrumbs} />
+                metadata={metadata}/>
       </div>
     )
   }

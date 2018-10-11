@@ -6,6 +6,7 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "./variables.scss";
 @import "./tables.scss";
 @import "./blueprint-overrides.scss";
+//@import "~react-md/src/scss/_react-md.scss";
 
 html {
   height: 100%;
@@ -81,6 +82,10 @@ a {
 
 .text-muted {
   color: $aleph-greyed-text;
+}
+
+.side-pane-padding {
+  padding-top: $aleph-grid-size !important;
 }
 
 .clickable {
