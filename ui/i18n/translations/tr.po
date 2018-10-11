@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-08-18T11:27:58.556Z\n"
+"POT-Creation-Date: 2018-10-11T09:56:24.738Z\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,13 +59,10 @@ msgstr ""
 msgid "Access"
 msgstr ""
 
-#. [case.context.access]
-#. defaultMessage is:
-#. Access control
 #. [collection.edit.title]
 #. defaultMessage is:
 #. Access control
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Access control"
 msgstr ""
 
@@ -135,13 +132,6 @@ msgstr ""
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#. [email.attachments]
-#. defaultMessage is:
-#. Attachments
-#: i18n/messages.json
-msgid "Attachments"
-msgstr ""
-
 #. [document.author]
 #. defaultMessage is:
 #. Author
@@ -170,11 +160,32 @@ msgstr ""
 msgid "BCC"
 msgstr ""
 
-#. [collection.info.browse_tooltip]
+#. [entity.mode.info]
+#. defaultMessage is:
+#. Base information
+#: i18n/messages.json
+msgid "Base information"
+msgstr ""
+
+#. [collection.documents.title]
+#. defaultMessage is:
+#. Browse
+#: i18n/messages.json
+msgid "Browse"
+msgstr ""
+
+#. [document.mode.text.documents]
 #. defaultMessage is:
 #. Browse as a folder
 #: i18n/messages.json
 msgid "Browse as a folder"
+msgstr ""
+
+#. [document.mode.browse.tooltip]
+#. defaultMessage is:
+#. Browse documents
+#: i18n/messages.json
+msgid "Browse documents"
 msgstr ""
 
 #. [collection.browser.total]
@@ -207,13 +218,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#. [document.download.missing]
-#. defaultMessage is:
-#. Cannot download this document
-#: i18n/messages.json
-msgid "Cannot download this document"
-msgstr ""
-
 #. [case.description]
 #. defaultMessage is:
 #. Case files help you group and share the documents and data which belong to
@@ -236,8 +240,18 @@ msgstr ""
 #. [collection.info.case]
 #. defaultMessage is:
 #. Casefile
-#: i18n/messages.json
+#. [collection.screen.title]
+#. defaultMessage is:
+#. Casefile
+#: i18n/messages.json i18n/messages.json
 msgid "Casefile"
+msgstr ""
+
+#. [nav.cases]
+#. defaultMessage is:
+#. Cases
+#: i18n/messages.json
+msgid "Cases"
 msgstr ""
 
 #. [cases.browser.breadcrumb]
@@ -320,10 +334,10 @@ msgstr ""
 msgid "Confirm password"
 msgstr ""
 
-#. [document.info.tags]
+#. [document.tags.title]
 #. defaultMessage is:
 #. Connections
-#. [entity.info.connections]
+#. [entity.tags.title]
 #. defaultMessage is:
 #. Connections
 #: i18n/messages.json i18n/messages.json
@@ -335,13 +349,6 @@ msgstr ""
 #. Contact
 #: i18n/messages.json
 msgid "Contact"
-msgstr ""
-
-#. [collection.info.contents]
-#. defaultMessage is:
-#. Contents
-#: i18n/messages.json
-msgid "Contents"
 msgstr ""
 
 #. [document.countries]
@@ -391,33 +398,40 @@ msgstr ""
 msgid "Create a new casefile"
 msgstr ""
 
-#. [collection.info.xref]
+#. [document.mode.text.xref]
 #. defaultMessage is:
 #. Cross-reference
-#: i18n/messages.json
+#. [collection.xref.index.title]
+#. defaultMessage is:
+#. Cross-reference
+#: i18n/messages.json i18n/messages.json
 msgid "Cross-reference"
 msgstr ""
 
-#. [case.context.crossref]
+#. [xref.collection]
 #. defaultMessage is:
-#. Cross-referencing
+#. Cross-referenced collection
+#: i18n/messages.json
+msgid "Cross-referenced collection"
+msgstr ""
+
 #. [collection.xref.crumb]
 #. defaultMessage is:
 #. Cross-referencing
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cross-referencing"
 msgstr ""
 
 #. [document.date]
 #. defaultMessage is:
 #. Date
-#. [email.date]
-#. defaultMessage is:
-#. Date
 #. [entity.column.dates]
 #. defaultMessage is:
 #. Date
 #. [xref.date]
+#. defaultMessage is:
+#. Date
+#. [email.date]
 #. defaultMessage is:
 #. Date
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -451,18 +465,18 @@ msgstr ""
 msgid "Describe it briefly:"
 msgstr ""
 
-#. [document.info.source_url]
+#. [references.details]
 #. defaultMessage is:
-#. Document Source URL
+#. Details
 #: i18n/messages.json
-msgid "Document Source URL"
+msgid "Details"
 msgstr ""
 
-#. [case.context.documents]
+#. [documents.title]
 #. defaultMessage is:
-#. Documents
+#. Document
 #: i18n/messages.json
-msgid "Documents"
+msgid "Document"
 msgstr ""
 
 #. [refresh.callout_message]
@@ -584,13 +598,6 @@ msgstr ""
 msgid "Find public records and leaks"
 msgstr ""
 
-#. [document.parent]
-#. defaultMessage is:
-#. Folder
-#: i18n/messages.json
-msgid "Folder"
-msgstr ""
-
 #. [document.folder.untitled]
 #. defaultMessage is:
 #. Folder title
@@ -638,13 +645,6 @@ msgstr ""
 #. Imported
 #: i18n/messages.json
 msgid "Imported"
-msgstr ""
-
-#. [document.mode.info]
-#. defaultMessage is:
-#. Info
-#: i18n/messages.json
-msgid "Info"
 msgstr ""
 
 #. [alerts.add_placeholder]
@@ -754,11 +754,11 @@ msgstr ""
 msgid "Mark as seen"
 msgstr ""
 
-#. [email.body]
+#. [xref.matches]
 #. defaultMessage is:
-#. Message
+#. Matches
 #: i18n/messages.json
-msgid "Message"
+msgid "Matches"
 msgstr ""
 
 #. [document.modified_at]
@@ -808,11 +808,11 @@ msgstr ""
 msgid "New folder"
 msgstr ""
 
-#. [email.no_attachments]
+#. [entity.tags.no_tags]
 #. defaultMessage is:
-#. No Attachments
+#. No connections.
 #: i18n/messages.json
-msgid "No Attachments"
+msgid "No connections."
 msgstr ""
 
 #. [role.no.results]
@@ -867,13 +867,6 @@ msgstr ""
 msgid "No search results"
 msgstr ""
 
-#. [entity.info.tags.empty_description]
-#. defaultMessage is:
-#. No tags found.
-#: i18n/messages.json
-msgid "No tags found."
-msgstr ""
-
 #. [auth.unauthorized]
 #. defaultMessage is:
 #. Not authorized
@@ -904,10 +897,7 @@ msgstr ""
 #. [sidebar.open]
 #. defaultMessage is:
 #. Open
-#. [sidebar.open]
-#. defaultMessage is:
-#. Open
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Open"
 msgstr ""
 
@@ -918,16 +908,10 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#. [collection.info.overview]
+#. [document.mode.text.info]
 #. defaultMessage is:
 #. Overview
-#. [document.info.overview]
-#. defaultMessage is:
-#. Overview
-#. [entity.info.overview]
-#. defaultMessage is:
-#. Overview
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Overview"
 msgstr ""
 
@@ -990,21 +974,18 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#. [entity.references.default_tab]
-#. defaultMessage is:
-#. Relationships
-#. [entity.info.relationships]
-#. defaultMessage is:
-#. Relationships
-#: i18n/messages.json i18n/messages.json
-msgid "Relationships"
-msgstr ""
-
 #. [case.remove]
 #. defaultMessage is:
 #. Remove
 #: i18n/messages.json
 msgid "Remove"
+msgstr ""
+
+#. [tags.results]
+#. defaultMessage is:
+#. Results
+#: i18n/messages.json
+msgid "Results"
 msgstr ""
 
 #. [document.retrieved_at]
@@ -1134,16 +1115,13 @@ msgstr ""
 #. [nav.settings]
 #. defaultMessage is:
 #. Settings
-#. [case.context.settings]
-#. defaultMessage is:
-#. Settings
 #. [collection.info.edit_button]
 #. defaultMessage is:
 #. Settings
 #. [settings.title]
 #. defaultMessage is:
 #. Settings
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Settings"
 msgstr ""
 
@@ -1161,11 +1139,11 @@ msgstr ""
 msgid "Shared with"
 msgstr ""
 
-#. [document.mode.text.tooltip]
+#. [document.tags]
 #. defaultMessage is:
-#. Show extracted text
+#. Show connections
 #: i18n/messages.json
-msgid "Show extracted text"
+msgid "Show connections"
 msgstr ""
 
 #. [search.facets.showMore]
@@ -1180,6 +1158,20 @@ msgstr ""
 #. Show properties and details
 #: i18n/messages.json
 msgid "Show properties and details"
+msgstr ""
+
+#. [document.similar]
+#. defaultMessage is:
+#. Show similar documents
+#: i18n/messages.json
+msgid "Show similar documents"
+msgstr ""
+
+#. [document.mode.text.tooltip]
+#. defaultMessage is:
+#. Show text
+#: i18n/messages.json
+msgid "Show text"
 msgstr ""
 
 #. [document.mode.view.tooltip]
@@ -1227,10 +1219,13 @@ msgstr ""
 msgid "Sign up"
 msgstr ""
 
-#. [entity.content.similar_tab]
+#. [entity.mode.similar]
 #. defaultMessage is:
 #. Similar
-#: i18n/messages.json
+#. [entity.similar.title]
+#. defaultMessage is:
+#. Similar
+#: i18n/messages.json i18n/messages.json
 msgid "Similar"
 msgstr ""
 
@@ -1254,17 +1249,18 @@ msgstr ""
 #. [collection.info.source]
 #. defaultMessage is:
 #. Source
-#. [document.info.source]
-#. defaultMessage is:
-#. Source
-#. [entity.info.source]
-#. defaultMessage is:
-#. Source
 #. [entity.column.collection_id]
 #. defaultMessage is:
 #. Source
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Source"
+msgstr ""
+
+#. [document.source_url]
+#. defaultMessage is:
+#. Source URL
+#: i18n/messages.json
+msgid "Source URL"
 msgstr ""
 
 #. [collection.edit.title.source]
@@ -1325,18 +1321,18 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#. [entity.info.tags]
+#. [tags.title]
+#. defaultMessage is:
+#. Tag
+#: i18n/messages.json
+msgid "Tag"
+msgstr ""
+
+#. [entity.mode.tags]
 #. defaultMessage is:
 #. Tags
 #: i18n/messages.json
 msgid "Tags"
-msgstr ""
-
-#. [document.mode.text]
-#. defaultMessage is:
-#. Text
-#: i18n/messages.json
-msgid "Text"
 msgstr ""
 
 #. [auth.bad_request]
@@ -1422,13 +1418,10 @@ msgstr ""
 msgid "Try searching: {samples}"
 msgstr ""
 
-#. [document.type]
-#. defaultMessage is:
-#. Type
 #. [entity.column.schema]
 #. defaultMessage is:
 #. Type
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Type"
 msgstr ""
 
@@ -1461,13 +1454,6 @@ msgstr ""
 #. Untitled case file
 #: i18n/messages.json
 msgid "Untitled case file"
-msgstr ""
-
-#. [document.parent.nav]
-#. defaultMessage is:
-#. Up
-#: i18n/messages.json
-msgid "Up"
 msgstr ""
 
 #. [alerts.save]
@@ -1539,13 +1525,10 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#. [document.mode.view]
-#. defaultMessage is:
-#. View
 #. [collection.edit.permissionstable.view]
 #. defaultMessage is:
 #. View
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "View"
 msgstr ""
 

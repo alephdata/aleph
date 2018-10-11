@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-08-18 13:28+0200\n"
+"POT-Creation-Date: 2018-10-11 15:27+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,19 +164,19 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:91
+#: aleph/views/base_api.py:83
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:99
+#: aleph/views/base_api.py:91
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:108
+#: aleph/views/base_api.py:100
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:124
+#: aleph/views/base_api.py:116
 msgid "Access token has expired."
 msgstr ""
 
