@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Screen from 'src/components/Screen/Screen';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
+import DocumentHeading from 'src/components/Document/DocumentHeading';
 import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewsMenu from 'src/components/ViewsMenu/DocumentViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
@@ -52,7 +53,10 @@ class DocumentScreenContext extends Component {
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <DocumentToolbar document={document} isPreview={false} />
-              <DocumentInfoMode document={document} isPreview={false} />
+              <DocumentHeading document={document} isPreview={false} />
+              <div className="pane-content">
+                <DocumentInfoMode document={document} isPreview={false} />
+              </div>
             </DualPane.InfoPane>
           </DualPane>
         </Screen>

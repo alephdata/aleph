@@ -6,12 +6,11 @@ import { selectEntity, selectDocumentView } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
-import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
+import DocumentHeading from 'src/components/Document/DocumentHeading';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
-import { DocumentMetadata } from 'src/components/Document';
 import { selectEntityTags } from "../../selectors";
 
 
@@ -42,7 +41,7 @@ class PreviewDocument extends React.Component {
       <React.Fragment>
         <DocumentToolbar document={document}
                          isPreview={true} />
-        <DocumentInfoMode document={document} />
+        <DocumentHeading document={document} />
         <DocumentViewsMenu document={document}
                            activeMode={previewMode}
                            isPreview={true}

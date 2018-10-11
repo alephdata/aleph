@@ -7,9 +7,10 @@ import queryString from "query-string";
 import { withRouter } from "react-router";
 
 import { Count } from 'src/components/common';
+import { selectEntityTags } from "src/selectors";
+import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import { DocumentMetadata } from 'src/components/Document';
 import TextLoading from "src/components/common/TextLoading";
 
 import './ViewsMenu.css';
@@ -67,7 +68,7 @@ class DocumentViewsMenu extends React.Component {
                   </React.Fragment>
                }
                panel={
-                  <DocumentMetadata document={document}/>
+                  <DocumentInfoMode document={document}/>
                } />
         )}
         {hasViewMode && (
@@ -100,8 +101,8 @@ class DocumentViewsMenu extends React.Component {
                title={
                   <TextLoading loading={document.isLoading} children={<React.Fragment>
                     <i className="fa-folder-open" />
-                    <FormattedMessage id="entity.info.overview" defaultMessage="Documents"/>
-                    <span> ({document.children !== undefined ? document.children : 0})</span>
+                    <FormattedMessage id="entity.info.browse" defaultMessage="Documents"/>
+                    <Count count={document.children} />
                   </React.Fragment>}/>
                }
                panel={
@@ -113,8 +114,8 @@ class DocumentViewsMenu extends React.Component {
              title={
                <TextLoading loading={tags.isLoading} children={<React.Fragment>
                  <i className="fa fa-fw fa-tags"  />
-                 <FormattedMessage id="entity.info.overview" defaultMessage="Show tags"/>
-                 <span> ({tags.total !== undefined ? tags.total : 0})</span>
+                 <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
+                 <Count count={tags.total} />
                </React.Fragment>}/>
              }
              panel={
@@ -129,7 +130,7 @@ class DocumentViewsMenu extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { document } = ownProps;
   return {
-    //tags: selectEntityTags(state, document.id)
+    tags: selectEntityTags(state, document.id)
   };
 };
 
