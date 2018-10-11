@@ -56,7 +56,7 @@ class CollectionScreenContext extends Component {
       );
     }
 
-    const placeholder = intl.formatMessage(messages.placeholder);
+    const placeholder = intl.formatMessage(messages.placeholder, {label: collection.label});
     const breadcrumbs = (
       <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
         <Breadcrumbs.Collection collection={collection} />
