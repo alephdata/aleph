@@ -208,15 +208,18 @@ class CollectionXrefMatchesScreen extends Component {
       </React.Fragment>
     );
 
-    return (
-      <CollectionScreenContext collectionId={collectionId}
-                               activeMode="xref"
-                               screenTitle={other.label}
-                               extraBreadcrumbs={extraBreadcrumbs}
-                               showInfoPane={false}>
-        {this.renderXrefTable()}
-      </CollectionScreenContext>
-    );
+    return ( <Screen title={intl.formatMessage(messages.screen_title)} breadcrumbs={extraBreadcrumbs}>
+      {this.renderXrefTable()}
+    </Screen>)
+    // return (
+    //   <CollectionScreenContext collectionId={collectionId}
+    //                            activeMode="xref"
+    //                            screenTitle={other.label}
+    //                            extraBreadcrumbs={extraBreadcrumbs}
+    //                            showInfoPane={false}>
+    //     {this.renderXrefTable()}
+    //   </CollectionScreenContext>
+    // );
   }
 }
 

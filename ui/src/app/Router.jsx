@@ -14,7 +14,7 @@ import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
 import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
-import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
+// import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
 import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
 import CollectionDocumentsScreen from 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen';
 import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
@@ -57,7 +57,7 @@ class Router extends Component {
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/sources" exact component={SourcesIndexScreen}/>
         <Route path="/cases" exact component={CasesIndexScreen}/>
-        <Route path="/cases/:collectionId" exact component={CaseScreen}/>
+        {/*<Route path="/cases/:collectionId" exact component={CaseScreen}/>*/}
         <Route path="/collections/:collectionId/documents" exact component={CollectionDocumentsScreen}/>
         <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
         <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen}/>
