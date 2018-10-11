@@ -6,6 +6,7 @@ import c from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
+import { Count } from 'src/components/common';
 import { queryEntitySimilar } from 'src/queries';
 import { selectEntityReferences, selectEntityTags, selectSchemata, selectEntitiesResult } from "src/selectors";
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
@@ -45,7 +46,6 @@ class EntityViewsMenu extends React.Component {
     });
 
     this.setState({mode: mode});
-
   }
 
   render() {
@@ -59,7 +59,7 @@ class EntityViewsMenu extends React.Component {
                             title={
                               <React.Fragment>
                                 <i className='fa fa-fw fa-info'/>
-                                <FormattedMessage id="entity.info.overview" defaultMessage="Base information"/>
+                                <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
                               </React.Fragment>
                             }
                             panel={
@@ -71,7 +71,7 @@ class EntityViewsMenu extends React.Component {
                                title={
                                  <TextLoading children={<React.Fragment>
                                    <i className='fa fa-fw fa-tags'/>
-                                   <FormattedMessage id="entity.info.source" defaultMessage="Tags"/>
+                                   <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
                                    <span> ({tags.total !== undefined ? tags.total : 0})</span>
                                  </React.Fragment>} loading={tags.isLoading}/>
 
@@ -85,7 +85,7 @@ class EntityViewsMenu extends React.Component {
                               title={
                                 <TextLoading children={<React.Fragment>
                                   <i className='fa fa-fw fa-repeat'/>
-                                  <FormattedMessage id="entity.info.overview" defaultMessage="Similar"/>
+                                  <FormattedMessage id="entity.info.similar" defaultMessage="Similar"/>
                                   <span> ({similar.total !== undefined ? similar.total : 0})</span>
                                 </React.Fragment>} loading={similar.isLoading}/>
                               }

@@ -6,6 +6,7 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 import { withRouter } from "react-router";
 
+import { Count } from 'src/components/common';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import { DocumentMetadata } from 'src/components/Document';
@@ -57,52 +58,56 @@ class DocumentViewsMenu extends React.Component {
 
     return (
       <Tabs id="DocumentInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
-        {isPreview && (<Tab id="info"
-             title={
-               <React.Fragment>
-                 <i className="fa fa-fw fa-info" />
-                 <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
-               </React.Fragment>
-             }
-             panel={
-               <DocumentMetadata document={document}/>
-             }
-        />)}
-        {hasViewMode && ( <Tab id="view"
+        {isPreview && (
+          <Tab id="info"
+               title={
+                  <React.Fragment>
+                    <i className="fa fa-fw fa-info" />
+                    <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
+                  </React.Fragment>
+               }
+               panel={
+                  <DocumentMetadata document={document}/>
+               } />
+        )}
+        {hasViewMode && (
+          <Tab id="view"
              title={
                <React.Fragment>
                  <i className="fa fa-fw fa-file-o"  />
-                 <FormattedMessage id="entity.info.source" defaultMessage="Show the document"/>
+                 <FormattedMessage id="entity.info.view" defaultMessage="View"/>
                </React.Fragment>
              }
              panel={
                <DocumentViewMode document={document} activeMode={activeMode}/>
              }
         />)}
-        {hasTextMode && (<Tab id="text"
-             title={
-               <React.Fragment>
-                 <i className="fa fa-fw fa-align-justify" />
-                 <FormattedMessage id="entity.info.overview" defaultMessage="Show text"/>
-               </React.Fragment>
-             }
-             panel={
-               <DocumentViewMode document={document} activeMode={activeMode}/>
-             }
-        />)}
-        {hasBrowseMode && (<Tab id="browse"
-                                disabled={document.children < 1}
-                              title={
-                                <TextLoading loading={document.isLoading} children={<React.Fragment>
-                                  <i className="fa-folder-open" />
-                                  <FormattedMessage id="entity.info.overview" defaultMessage="Browse documents"/>
-                                  <span> ({document.children !== undefined ? document.children : 0})</span>
-                                </React.Fragment>}/>
-                              }
-                              panel={
-                                <DocumentViewMode document={document} activeMode={activeMode}/>
-                              }
-        />)}
+        {hasTextMode && (
+          <Tab id="text"
+               title={
+                  <React.Fragment>
+                    <i className="fa fa-fw fa-align-justify" />
+                    <FormattedMessage id="entity.info.text" defaultMessage="Text"/>
+                  </React.Fragment>
+               }
+               panel={
+                  <DocumentViewMode document={document} activeMode={activeMode}/>
+               } />
+        )}
+        {hasBrowseMode && (
+          <Tab id="browse"
+               disabled={document.children < 1}
+               title={
+                  <TextLoading loading={document.isLoading} children={<React.Fragment>
+                    <i className="fa-folder-open" />
+                    <FormattedMessage id="entity.info.overview" defaultMessage="Documents"/>
+                    <span> ({document.children !== undefined ? document.children : 0})</span>
+                  </React.Fragment>}/>
+               }
+               panel={
+                  <DocumentViewMode document={document} activeMode={activeMode}/>
+               } />
+        )}
         <Tab id="tags"
              disabled={tags !== undefined && tags.total !== undefined ? tags.total < 1 : true}
              title={

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { FormattedNumber } from 'react-intl';
 
-class TabCount extends Component {
+
+class Count extends Component {
   render() {
     const { count } = this.props;
 
@@ -17,4 +18,4 @@ class TabCount extends Component {
   }
 }
 
-export default TabCount;
+export default Count;

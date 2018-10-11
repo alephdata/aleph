@@ -5,6 +5,7 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
+import { Count } from 'src/components/common';
 import { selectCollectionXrefIndex } from 'src/selectors';
 import CollectionMetadata from "src/components/Collection/CollectionMetadata";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
@@ -47,7 +48,6 @@ class CollectionViewsMenu extends React.Component {
     } else {
       parsedHash['mode'] = mode;
     }
-
     history.replace({
       pathname: location.pathname,
       search: location.search,
@@ -65,43 +65,44 @@ class CollectionViewsMenu extends React.Component {
 
     return (
       <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
-        {isPreview && (<Tab id="info"
-                            title={
-                              <React.Fragment>
-                                <i className="fa fa-fw fa-info" />
-                                <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
-                              </React.Fragment>
-                            }
-                            panel={
-                              <CollectionMetadata collection={collection} />
-                            }
+        {isPreview && (
+          <Tab id="info"
+               title={
+                  <React.Fragment>
+                    <i className="fa fa-fw fa-info" />
+                    <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
+                  </React.Fragment>
+                }
+                panel={
+                  <CollectionMetadata collection={collection} />
+                }
         />)}
         <Tab id="documents"
              disabled={numOfDocs === 0}
-                               title={
-                                 <React.Fragment>
-                                   <i className="fa fa-fw fa-folder-open" />
-                                   <FormattedMessage id="entity.info.source" defaultMessage="Browse as a folder"/>
-                                   <span> ({numOfDocs !== 0 ? numOfDocs : 0})</span>
-                                 </React.Fragment>
-                               }
-                               panel={
-                                 <CollectionDocumentsMode collection={collection} />
-                               }
+             title={
+                <React.Fragment>
+                  <i className="fa fa-fw fa-folder-open" />
+                  <FormattedMessage id="entity.info.source" defaultMessage="Documents"/>
+                  <Count count={numOfDocs} />
+                </React.Fragment>
+              }
+              panel={
+                <CollectionDocumentsMode collection={collection} />
+              }
         />
         <Tab id="xref"
              disabled={xrefIndex.total < 1}
-                              title={
-                                <TextLoading children={<React.Fragment>
-                                  <i className="fa fa-fw fa-folder-open" />
-                                  <FormattedMessage id="entity.info.overview" defaultMessage="Cross-reference"/>
-                                  <span> ({xrefIndex.total !== undefined ? xrefIndex.total : 0})</span>
-                                </React.Fragment>} loading={xrefIndex.isLoading}/>
+             title={
+                <TextLoading children={<React.Fragment>
+                  <i className="fa fa-fw fa-folder-open" />
+                  <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference"/>
+                  <Count count={xrefIndex.total} />
+                </React.Fragment>} loading={xrefIndex.isLoading}/>
 
-                              }
-                              panel={
-                                <CollectionXrefIndexMode collection={collection} />
-                              }
+              }
+              panel={
+                <CollectionXrefIndexMode collection={collection} />
+              }
         />
       </Tabs>
     );

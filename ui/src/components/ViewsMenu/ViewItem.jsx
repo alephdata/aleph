@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import c from 'classnames';
 import NotificationBadge from 'react-notification-badge';
-import { Badge } from 'react-md';
+// import { Badge } from 'react-md';
 
 class ViewItem extends React.Component {
 
