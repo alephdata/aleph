@@ -2,6 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
+import c from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
 
 import { queryEntitySimilar } from 'src/queries';
@@ -73,6 +74,7 @@ class EntityViewsMenu extends React.Component {
         {isPreview && (<Tab id="info"
                             title={
                               <React.Fragment>
+                                <i className='fa fa-fw fa-info'/>
                                 <FormattedMessage id="entity.info.overview" defaultMessage="Base information"/>
                               </React.Fragment>
                             }
@@ -84,6 +86,7 @@ class EntityViewsMenu extends React.Component {
              disabled={tags.total < 1}
                                title={
                                  <React.Fragment>
+                                   <i className='fa fa-fw fa-tags'/>
                                    <FormattedMessage id="entity.info.source" defaultMessage="Tags"/>
                                    <span> ({tags.total !== undefined ? tags.total : 0})</span>
                                  </React.Fragment>
@@ -96,6 +99,7 @@ class EntityViewsMenu extends React.Component {
              disabled={similar.total < 1}
                               title={
                                 <React.Fragment>
+                                  <i className='fa fa-fw fa-repeat'/>
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Similar"/>
                                   <span> ({similar.total !== undefined ? similar.total : 0})</span>
                                 </React.Fragment>
@@ -110,6 +114,7 @@ class EntityViewsMenu extends React.Component {
                disabled={ref.count < 1}
                title={
                  <React.Fragment>
+                   <i className={c('fa', 'fa-fw', schemata[ref.schema].icon)} />
                    <FormattedMessage id="entity.info.overview" defaultMessage={reverseLabel(schemata, ref)}/>
                    <span> ({ref.count !== 0 ? ref.count : 0})</span>
                  </React.Fragment>

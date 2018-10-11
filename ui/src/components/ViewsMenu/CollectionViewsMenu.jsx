@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 
-import ViewItem from "src/components/ViewsMenu/ViewItem";
 import { selectCollectionXrefIndex } from 'src/selectors';
 import { Tabs, Tab } from '@blueprintjs/core';
 
@@ -85,6 +84,7 @@ class CollectionViewsMenu extends React.Component {
         {isPreview && (<Tab id="info"
                             title={
                               <React.Fragment>
+                                <i className="fa fa-fw fa-info" />
                                 <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
                               </React.Fragment>
                             }
@@ -96,6 +96,7 @@ class CollectionViewsMenu extends React.Component {
              disabled={numOfDocs === 0}
                                title={
                                  <React.Fragment>
+                                   <i className="fa fa-fw fa-folder-open" />
                                    <FormattedMessage id="entity.info.source" defaultMessage="Browse as a folder"/>
                                    <span> ({numOfDocs !== 0 ? numOfDocs : 0})</span>
                                  </React.Fragment>
@@ -107,6 +108,7 @@ class CollectionViewsMenu extends React.Component {
         <Tab id="xref"
                               title={
                                 <React.Fragment>
+                                  <i className="fa fa-fw fa-folder-open" />
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Cross-reference"/>
                                 </React.Fragment>
                               }
@@ -116,31 +118,6 @@ class CollectionViewsMenu extends React.Component {
         />
       </Tabs>
     );
-
-    /*return (
-      <div className="ViewsMenu">
-        {isPreview && (
-          <ViewItem mode='info'
-                    activeMode={activeMode}
-                    isPreview={isPreview}
-                    message={intl.formatMessage(messages.info)}
-                    icon='fa-info' />
-        )}
-        <ViewItem mode='documents'
-                  activeMode={activeMode}
-                  isPreview={isPreview}
-                  count={this.countDocuments()}
-                  message={intl.formatMessage(messages.documents)}
-                  href={`/collections/${collection.id}/documents`}
-                  icon='fa-folder-open' />
-        <ViewItem mode='xref' activeMode={activeMode}
-                  isPreview={isPreview}
-                  count={xrefIndex.total}
-                  message={intl.formatMessage(messages.xref)}
-                  href={`/collections/${collection.id}/xref`}
-                  icon='fa-folder-open' />
-      </div>
-    );*/
   }
 }
 

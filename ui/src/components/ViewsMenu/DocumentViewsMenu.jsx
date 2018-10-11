@@ -4,9 +4,7 @@ import { connect } from "react-redux";
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 
-import { selectEntityTags } from "src/selectors";
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
-import ViewItem from "src/components/ViewsMenu/ViewItem";
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import { DocumentMetadata } from 'src/components/Document';
 
@@ -85,11 +83,12 @@ class DocumentViewsMenu extends React.Component {
     const hasViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
 
     return (
-      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
+      <Tabs id="DocumentInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
         {isPreview && (<Tab id="info"
              title={
                <React.Fragment>
-                 <FormattedMessage id="entity.info.overview" defaultMessage="Show properties and details"/>
+                 <i className="fa fa-fw fa-info" />
+                 <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
                </React.Fragment>
              }
              panel={
@@ -99,6 +98,7 @@ class DocumentViewsMenu extends React.Component {
         {hasViewMode && ( <Tab id="view"
              title={
                <React.Fragment>
+                 <i className="fa fa-fw fa-file-o"  />
                  <FormattedMessage id="entity.info.source" defaultMessage="Show the document"/>
                </React.Fragment>
              }
@@ -109,6 +109,7 @@ class DocumentViewsMenu extends React.Component {
         {hasTextMode && (<Tab id="text"
              title={
                <React.Fragment>
+                 <i className="fa fa-fw fa-align-justify" />
                  <FormattedMessage id="entity.info.overview" defaultMessage="Show text"/>
                </React.Fragment>
              }
@@ -120,6 +121,7 @@ class DocumentViewsMenu extends React.Component {
                                 disabled={document.children < 1}
                               title={
                                 <React.Fragment>
+                                  <i className="fa-folder-open" />
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Browse documents"/>
                                   <span> ({document.children !== undefined ? document.children : 0})</span>
                                 </React.Fragment>
@@ -132,6 +134,7 @@ class DocumentViewsMenu extends React.Component {
              disabled={tags !== undefined && tags.total !== undefined ? tags.total < 1 : true}
              title={
                <React.Fragment>
+                 <i className="fa fa-fw fa-tags"  />
                  <FormattedMessage id="entity.info.overview" defaultMessage="Show tags"/>
                  <span> ({tags.total !== undefined ? tags.total : 0})</span>
                </React.Fragment>
@@ -142,46 +145,6 @@ class DocumentViewsMenu extends React.Component {
         />
       </Tabs>
     );
-
-    /*return (
-      <div className="ViewsMenu">
-        {isPreview && (
-          <ViewItem mode='info' activeMode={activeMode} isPreview={isPreview}
-            message={intl.formatMessage(messages.info)}
-            icon='fa-info' />
-        )}
-        {hasViewMode && (
-          <ViewItem mode='view'
-                    activeMode={activeMode}
-                    isPreview={isPreview}
-                    message={intl.formatMessage(messages.view)}
-                    href={`/documents/${document.id}#mode=view`}
-                    icon='fa-file-o' />
-        )}
-        {hasTextMode && (
-          <ViewItem mode='text'
-                    activeMode={activeMode}
-                    isPreview={isPreview}
-                    message={intl.formatMessage(messages.text)}
-                    href={`/documents/${document.id}#mode=text`}
-                    icon='fa-align-justify' />
-        )}
-        {hasBrowseMode && (
-          <ViewItem mode='browse'
-                    activeMode={activeMode}
-                    isPreview={isPreview}
-                    message={intl.formatMessage(messages.browse)}
-                    href={`/documents/${document.id}#mode=browse`}
-                    icon='fa-folder-open'
-                    count={document.children} />
-        )}
-        <ViewItem mode='tags' activeMode={activeMode} isPreview={isPreview}
-                  count={tags !== undefined ? tags.total : 0}
-                  message={intl.formatMessage(messages.tags)}
-                  href={`/documents/${document.id}/tags`}
-                  icon='fa-tags' />
-      </div>
-    );*/
   }
 }
 

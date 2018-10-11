@@ -56,5 +56,8 @@
 .info-tabs-padding {
   padding: $aleph-grid-size;
   width: 100%;
+  i {
+    margin-right: $aleph-grid-size * 0.5;
+  }
 }
 
