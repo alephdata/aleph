@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages } from 'react-intl';
 import queryString from 'query-string';
 
 import { selectEntity, selectDocumentView } from 'src/selectors';
@@ -11,7 +10,7 @@ import DocumentScreenContext from 'src/components/Document/DocumentScreenContext
 
 class DocumentScreen extends Component {
   render() {
-    const { intl, documentId, document, mode } = this.props;
+    const { documentId, document, mode } = this.props;
     return (
       <DocumentScreenContext documentId={documentId}
                              activeMode={mode}>
@@ -34,5 +33,4 @@ const mapStateToProps = (state, ownProps) => {
 
 DocumentScreen = connect(mapStateToProps, {})(DocumentScreen);
 DocumentScreen = withRouter(DocumentScreen);
-DocumentScreen = injectIntl(DocumentScreen);
 export default DocumentScreen

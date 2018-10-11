@@ -5,9 +5,9 @@ import { selectCollection } from 'src/selectors';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
+import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import Preview from 'src/components/Preview/Preview';
-import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
 
 
 class PreviewCollection extends React.Component {

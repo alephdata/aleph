@@ -75,9 +75,6 @@ class CollectionScreenContext extends Component {
               <CollectionViewsMenu collection={collection}
                                    activeMode={activeMode}
                                    isPreview={false} />
-              <div className="screen-children">
-                {this.props.children}
-              </div>
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <CollectionToolbar collection={collection} />

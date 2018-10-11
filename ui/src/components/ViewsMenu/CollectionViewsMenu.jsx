@@ -67,7 +67,7 @@ class CollectionViewsMenu extends React.Component {
                   <CollectionInfoMode collection={collection} />
                 }
         />)}
-        <Tab id="documents"
+        <Tab id="browse"
              disabled={numOfDocs === 0}
              title={
                 <React.Fragment>
