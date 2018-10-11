@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import React, {Component} from 'react';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
-import { Collection, Schema } from 'src/components/common';
-import { CollectionOverview } from 'src/components/Collection';
+import { Collection } from 'src/components/common';
 
 
 class CollectionInfoMode extends Component {
@@ -33,23 +32,6 @@ class CollectionInfoMode extends Component {
           <h1>
             {collection.label}
           </h1>
-        </div>
-        <div className="pane-content">
-          <CollectionOverview collection={collection} hasHeader={false}/>
-          <ul className="info-rank">
-            { content.map((item, index) => (
-              <li key={index}>
-                <span className="key">
-                  <Schema.Link schema={item.name}
-                               plural={true}
-                               url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}/>
-                </span>
-                <span className="value">
-                  <FormattedNumber value={item.number} />
-                </span>
-              </li>
-            ))}
-          </ul>
         </div>
       </React.Fragment>
     );

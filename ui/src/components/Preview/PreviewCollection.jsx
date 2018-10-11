@@ -40,13 +40,16 @@ class PreviewCollection extends React.Component {
     }
     return (
       <Preview maximised={maximised}>
-        <CollectionViewsMenu collection={collection}
+        {/*<CollectionViewsMenu collection={collection}
                             activeMode={previewMode}
-                            isPreview={true} />
+                            isPreview={true} />*/}
         <DualPane.InfoPane className="with-heading">
           <CollectionToolbar collection={collection}
                             isPreview={true} />
-          {mode}
+          <CollectionInfoMode collection={collection}/>
+          <CollectionViewsMenu collection={collection}
+                               activeMode={previewMode}
+                               isPreview={true} />
         </DualPane.InfoPane>
       </Preview>
     );

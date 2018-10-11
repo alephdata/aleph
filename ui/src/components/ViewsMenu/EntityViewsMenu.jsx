@@ -85,7 +85,7 @@ class EntityViewsMenu extends React.Component {
                                title={
                                  <React.Fragment>
                                    <FormattedMessage id="entity.info.source" defaultMessage="Tags"/>
-                                   <span> ({tags.total})</span>
+                                   <span> ({tags.total !== undefined ? tags.total : 0})</span>
                                  </React.Fragment>
                                }
                                panel={
@@ -97,7 +97,7 @@ class EntityViewsMenu extends React.Component {
                               title={
                                 <React.Fragment>
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Similar"/>
-                                  <span> ({similar.total})</span>
+                                  <span> ({similar.total !== undefined ? similar.total : 0})</span>
                                 </React.Fragment>
                               }
                               panel={
@@ -111,7 +111,7 @@ class EntityViewsMenu extends React.Component {
                title={
                  <React.Fragment>
                    <FormattedMessage id="entity.info.overview" defaultMessage={reverseLabel(schemata, ref)}/>
-                   <span> ({ref.count})</span>
+                   <span> ({ref.count !== 0 ? ref.count : 0})</span>
                  </React.Fragment>
                }
                panel={

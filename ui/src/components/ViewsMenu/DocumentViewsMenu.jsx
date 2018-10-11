@@ -121,7 +121,7 @@ class DocumentViewsMenu extends React.Component {
                               title={
                                 <React.Fragment>
                                   <FormattedMessage id="entity.info.overview" defaultMessage="Browse documents"/>
-                                  <span> ({document.children})</span>
+                                  <span> ({document.children !== undefined ? document.children : 0})</span>
                                 </React.Fragment>
                               }
                               panel={
@@ -133,7 +133,7 @@ class DocumentViewsMenu extends React.Component {
              title={
                <React.Fragment>
                  <FormattedMessage id="entity.info.overview" defaultMessage="Show tags"/>
-                 <span> ({tags.total})</span>
+                 <span> ({tags.total !== undefined ? tags.total : 0})</span>
                </React.Fragment>
              }
              panel={
