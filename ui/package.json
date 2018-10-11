@@ -35,6 +35,7 @@
     "react-transition-group": "^2.4.0",
     "react-truncate": "^2.4.0",
     "react-waypoint": "^8.0.3",
+    "react-svg": "^6.0.17",
     "redux": "^4.0.0",
     "redux-act": "^1.7.4",
     "redux-logger": "^3.0.6",
