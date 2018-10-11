@@ -57,9 +57,9 @@ class DocumentScreenContext extends Component {
                                 activeMode={activeMode}
                                 isPreview={false}
                                 tags={tags}/>
-              <div className="screen-children">
+              {/*<div className="screen-children">
                 {this.props.children}
-              </div>
+              </div>*/}
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <DocumentToolbar document={document} isPreview={false} />

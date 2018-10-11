@@ -46,12 +46,12 @@ class EntityScreenContext extends Component {
       <EntityContextLoader entityId={entityId}>
         <Screen title={screenTitle !== null ? `${screenTitle}: ${entity.name}` : entity.name}>
           {breadcrumbs}
-          <DualPane>
+          <DualPane>`
             <DualPane.ContentPane className="view-menu-flex-direction">
               <EntityViewsMenu tags={tags} similar={similar} entity={entity} activeMode={activeMode} isPreview={false}/>
-              <div className="screen-children">
+              {/*<div className="screen-children">
                 {this.props.children}
-              </div>
+              </div>*/}
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <EntityToolbar entity={entity} isPreview={false} />

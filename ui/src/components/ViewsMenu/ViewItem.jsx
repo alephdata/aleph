@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import c from 'classnames';
 import NotificationBadge from 'react-notification-badge';
+import { Badge } from 'react-md';
 
 class ViewItem extends React.Component {
 
@@ -35,8 +36,6 @@ class ViewItem extends React.Component {
                   <Link to={href} className={className}>
                     {count && <NotificationBadge count={count}
                                                  className='badge-item'/>}
-                    {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
-                    {/*<img src='./icons/Airplane.svg'/>*/}
                     <i className={c('fa', 'fa-fw', icon)} />
                   </Link>
                 )}
@@ -44,8 +43,6 @@ class ViewItem extends React.Component {
                   <button onClick={(e) => this.onClick(e, mode)} className={className}>
                     {count && <NotificationBadge count={count}
                                                  className='badge-item'/>}
-                    {/*<Icon d='M150 0 L75 200 L225 200 Z' />*/}
-                    {/*<img src='./icons/Airplane.svg'/>*/}
                     <i className={c('fa', 'fa-fw', icon)} />
                   </button>
                 )}
@@ -53,7 +50,6 @@ class ViewItem extends React.Component {
             )}
             {(count === 0) && (
               <AnchorButton className={className} disabled={true}>
-                {/*<img src='./icons/Airplane.svg'/>*/}
                 <i className={c('fa', 'fa-fw', icon)} />
               </AnchorButton>
             )}

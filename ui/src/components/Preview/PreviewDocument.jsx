@@ -47,18 +47,17 @@ class PreviewDocument extends React.Component {
     }
     return (
       <Preview maximised={maximised}>
-        <DocumentViewsMenu document={document}
+        {/*<DocumentViewsMenu document={document}
                           activeMode={previewMode}
-                          isPreview={true} />
+                          isPreview={true} />*/}
         <DualPane.InfoPane className="with-heading">
           <DocumentToolbar document={document}
                             isPreview={true} />
           <DocumentInfoMode document={document} />
-          {/*<DocumentViewsMenu document={document}
+          <DocumentViewsMenu document={document}
                              activeMode={previewMode}
-                             isPreview={false}
-                             tags={tags}/>*/}
-          {mode}
+                             isPreview={true}
+                             tags={tags}/>
         </DualPane.InfoPane>
       </Preview>
     );
