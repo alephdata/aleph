@@ -20,10 +20,7 @@ import CollectionRedirectScreen from 'src/screens/CollectionRedirectScreen/Colle
 import CollectionXrefIndexScreen from 'src/screens/CollectionXrefIndexScreen/CollectionXrefIndexScreen';
 import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
-import EntityTagsScreen from "src/screens/EntityTagsScreen/EntityTagsScreen";
-import EntitySimilarScreen from 'src/screens/EntitySimilarScreen/EntitySimilarScreen';
 import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
-import DocumentTagsScreen from 'src/screens/DocumentTagsScreen/DocumentTagsScreen';
 import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
 
 import './Router.css';
@@ -56,10 +53,7 @@ class Router extends Component {
         <Route path="/logout" exact component={LogoutScreen}/>
         <Route path="/activate/:code" exact component={ActivateScreen}/>
         <Route path="/entities/:entityId" exact component={EntityScreen}/>
-        <Route path="/entities/:entityId/tags" exact component={EntityTagsScreen}/>
-        <Route path="/entities/:entityId/similar" exact component={EntitySimilarScreen}/>
         <Route path="/documents/:documentId" exact component={DocumentScreen}/>
-        <Route path="/documents/:documentId/tags" exact component={DocumentTagsScreen}/>
         <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
         <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
         <Route path="/sources" exact component={SourcesIndexScreen}/>

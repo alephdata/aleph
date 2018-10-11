@@ -7,7 +7,7 @@ import queryString from "query-string";
 
 import { Count } from 'src/components/common';
 import { selectCollectionXrefIndex } from 'src/selectors';
-import CollectionMetadata from "src/components/Collection/CollectionMetadata";
+import CollectionInfoMode from "src/components/Collection/CollectionInfoMode";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import TextLoading from "src/components/common/TextLoading";
@@ -74,7 +74,7 @@ class CollectionViewsMenu extends React.Component {
                   </React.Fragment>
                 }
                 panel={
-                  <CollectionMetadata collection={collection} />
+                  <CollectionInfoMode collection={collection} />
                 }
         />)}
         <Tab id="documents"

@@ -6,7 +6,7 @@ import c from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
-import { Count } from 'src/components/common';
+import { Count, SectionLoading } from 'src/components/common';
 import { queryEntitySimilar } from 'src/queries';
 import { selectEntityReferences, selectEntityTags, selectSchemata, selectEntitiesResult } from "src/selectors";
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
@@ -48,6 +48,10 @@ class EntityViewsMenu extends React.Component {
   render() {
     const { intl, isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
     const { mode } = this.state;
+
+    if (references.shouldLoad || references.isLoading) {
+      return <SectionLoading />;
+    }
 
     return (
       <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>

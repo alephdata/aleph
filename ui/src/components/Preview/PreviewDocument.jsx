@@ -20,43 +20,34 @@ class PreviewDocument extends React.Component {
     const { previewId } = this.props;
     return (
       <DocumentContextLoader documentId={previewId}>
-        {this.renderContext()}
+        <Preview maximised={true}>
+          <DualPane.InfoPane className="with-heading">
+            {this.renderContext()}
+          </DualPane.InfoPane>
+        </Preview>
       </DocumentContextLoader>
     );
   }
 
   renderContext() {
     const { document, previewMode, tags } = this.props;
-    let mode = null, maximised = true;
+    let mode = null;
     if (document.isError) {
-      mode = <ErrorSection error={document.error} />
+      return <ErrorSection error={document.error} />
     } else if (document.id === undefined) {
-      mode = <SectionLoading/>;
-    } else if (previewMode === 'info') {
-      mode =
-        <div className="pane-content">
-          <DocumentMetadata document={document}/>
-        </div>;
-    } else if (previewMode === 'tags') {
-      mode = <EntityTagsMode entity={document} />;
-      maximised = true;
-    } else {
-      mode = <DocumentViewMode document={document}
-                               activeMode={previewMode} />;
-      maximised = true;
+      return <SectionLoading/>;
     }
+
     return (
-      <Preview maximised={maximised}>
-        <DualPane.InfoPane className="with-heading">
-          <DocumentToolbar document={document}
-                           isPreview={true} />
-          <DocumentInfoMode document={document} />
-          <DocumentViewsMenu document={document}
-                             activeMode={previewMode}
-                             isPreview={true}
-                             tags={tags}/>
-        </DualPane.InfoPane>
-      </Preview>
+      <React.Fragment>
+        <DocumentToolbar document={document}
+                         isPreview={true} />
+        <DocumentInfoMode document={document} />
+        <DocumentViewsMenu document={document}
+                           activeMode={previewMode}
+                           isPreview={true}
+                           tags={tags} />
+      </React.Fragment>
     );
   }
 }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { selectCollection } from 'src/selectors';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
-import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
+import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
@@ -24,29 +24,19 @@ class PreviewCollection extends React.Component {
 
   renderContext() {
     const { collection, previewMode = 'info' } = this.props;
-    let mode = null, maximised = true;
+    let mode = null;
     if (collection.isError) {
-      mode = <ErrorSection error={collection.error} />
-    } else if (collection.id === undefined) {
-      mode = <SectionLoading/>;
-    } else if (previewMode === 'xref') {
-      mode = <CollectionXrefIndexMode collection={collection} />;
-      maximised = true;
-    } else if (previewMode === 'documents') {
-      mode = <CollectionDocumentsMode collection={collection} />;
-      maximised = true;
-    } else {
-      mode = <CollectionInfoMode collection={collection} />;
+      return <ErrorSection error={collection.error} />
+    }
+    if (collection.shouldLoad || collection.isLoading) {
+      return <SectionLoading/>;
     }
     return (
-      <Preview maximised={maximised}>
-        {/*<CollectionViewsMenu collection={collection}
-                            activeMode={previewMode}
-                            isPreview={true} />*/}
+      <Preview maximised={true}>
         <DualPane.InfoPane className="with-heading">
           <CollectionToolbar collection={collection}
-                            isPreview={true} />
-          <CollectionInfoMode collection={collection}/>
+                             isPreview={true} />
+          <CollectionHeading collection={collection}/>
           <CollectionViewsMenu collection={collection}
                                activeMode={previewMode}
                                isPreview={true} />

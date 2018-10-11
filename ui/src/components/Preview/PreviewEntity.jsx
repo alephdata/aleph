@@ -21,7 +21,11 @@ class PreviewEntity extends React.Component {
     const { previewId } = this.props;
     return (
       <EntityContextLoader entityId={previewId}>
-        {this.renderContext()}
+        <Preview maximised={true}>
+          <DualPane.InfoPane className="with-heading">
+            {this.renderContext()}
+          </DualPane.InfoPane>
+        </Preview>
       </EntityContextLoader>
     );
   }
@@ -32,21 +36,20 @@ class PreviewEntity extends React.Component {
     let mode = null, maximised = true;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
-    } else if (entity.id === undefined || references.isLoading) {
+    }
+    if (entity.shouldLoad || entity.isLoading || references.shouldLoad || references.isLoading) {
       return <SectionLoading/>;
     }
     return (
-      <Preview maximised={true}>
-        <DualPane.InfoPane className="with-heading">
-          <EntityToolbar entity={entity} isPreview={true} />
-          <EntityHeading entity={entity} isPreview={true} />
-          <EntityViewsMenu entity={entity}
-                           activeMode={previewMode}
-                           isPreview={true}
-                           similar={similar}
-                           tags={tags}/>
-        </DualPane.InfoPane>
-      </Preview>
+      <React.Fragment>
+        <EntityToolbar entity={entity} isPreview={true} />
+        <EntityHeading entity={entity} isPreview={true} />
+        <EntityViewsMenu entity={entity}
+                         activeMode={previewMode}
+                         isPreview={true}
+                         similar={similar}
+                         tags={tags} />
+      </React.Fragment>
     );
   }
 }
