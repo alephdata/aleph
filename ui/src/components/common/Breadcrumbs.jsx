@@ -53,6 +53,7 @@ class BreadcrumbSearch extends Component {
         queryText: nextProps.searchText
       };
     }
+    return {};
   }
 
   onSearchChange(e) {

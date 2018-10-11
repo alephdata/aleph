@@ -87,14 +87,14 @@ class PdfViewer extends Component {
 
   fetchRecords() {
     const { query, result, isSearch } = this.props;
-    if (result.total === undefined && !result.isLoading && isSearch) {
+    if (isSearch && result.shouldLoad) {
       this.props.queryDocumentRecords({query})
     }
   }
 
   fetchPage() {
     const { document, page, pageResult } = this.props;
-    if (pageResult.id === undefined && !pageResult.isLoading) {
+    if (pageResult.shouldLoad) {
       this.props.fetchDocumentPage({documentId: document.id, page});
     }
   }
@@ -117,11 +117,11 @@ class PdfViewer extends Component {
   }
 
   onSearchResultClick(e, res) {
-    const { document, history, query } = this.props;
+    const { document, history } = this.props;
     e.preventDefault();
     history.push({
       pathname: getPath(document.links.ui),
-      search: queryString.stringify({documentq: query.getString('q')}),
+      search: queryString.stringify({documentq: undefined}),
       hash: `page=${res.index}&mode=view`
     });
   }
@@ -225,15 +225,12 @@ const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
-
-  const path = document.links ? document.links.records : null;
   const context = { 
     highlight: true,
     highlight_count: 10,
     highlight_length: 120
   };
-  let query = Query.fromLocation(path, location, context, 'document').limit(50);
-
+  let query = Query.fromLocation(document.links.records, location, context, 'document').limit(50);
   if (queryText.length > 0) {
     query = query.setString('q', queryText);
   }
@@ -241,6 +238,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     result: selectDocumentRecordsResult(state, query),
     pageResult: selectDocumentPage(state, document.id, page),
+    isSearch: !!query.getString('q'),
     page: page,
     query: query
   }

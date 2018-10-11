@@ -128,5 +128,5 @@ const mapStateToProps = (state, ownProps) => {
 
 DocumentViewsMenu = withRouter(DocumentViewsMenu);
 DocumentViewsMenu = injectIntl(DocumentViewsMenu);
-DocumentViewsMenu = connect(mapStateToProps, {})(DocumentViewsMenu);
+DocumentViewsMenu = connect(mapStateToProps, {}, null, {pure: false})(DocumentViewsMenu);
 export default DocumentViewsMenu;

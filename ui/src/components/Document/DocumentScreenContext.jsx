@@ -36,6 +36,7 @@ class DocumentScreenContext extends Component {
     const newQuery = query.setString('q', queryText);
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
+    parsedHash['preview:mode'] = undefined;
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -56,9 +57,12 @@ class DocumentScreenContext extends Component {
       ); 
     }
 
-    const placeholder = intl.formatMessage(messages.placeholder, {label: document.name});
+    const title = document.title || document.file_name || document.name;
+    const hasSearch = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'].indexOf(document.schema) !== -1;
+    const onSearch = hasSearch ? this.onSearch : undefined;
+    const placeholder = intl.formatMessage(messages.placeholder, {label: title});
     const breadcrumbs = (
-      <Breadcrumbs onSearch={this.onSearch}
+      <Breadcrumbs onSearch={onSearch}
                    searchPlaceholder={placeholder}
                    searchText={query.getString('q')} >
         <Breadcrumbs.Collection collection={document.collection} />
@@ -71,7 +75,7 @@ class DocumentScreenContext extends Component {
 
     return (
       <DocumentContextLoader documentId={documentId}>
-        <Screen title={document.name}>
+        <Screen title={title}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
