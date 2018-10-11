@@ -2,16 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { selectEntity, selectDocumentView } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentHeading from 'src/components/Document/DocumentHeading';
-import DocumentViewMode from 'src/components/Document/DocumentViewMode';
-import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
-import { selectEntityTags } from "../../selectors";
+import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
+import { selectEntity, selectEntityTags, selectDocumentView } from 'src/selectors';
 
 
 class PreviewDocument extends React.Component {
@@ -30,7 +27,6 @@ class PreviewDocument extends React.Component {
 
   renderContext() {
     const { document, previewMode, tags } = this.props;
-    let mode = null;
     if (document.isError) {
       return <ErrorSection error={document.error} />
     } else if (document.id === undefined) {

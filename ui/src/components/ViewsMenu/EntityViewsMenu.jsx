@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
 import c from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
@@ -46,7 +46,7 @@ class EntityViewsMenu extends React.Component {
   }
 
   render() {
-    const { intl, isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
+    const { isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
     const { mode } = this.state;
 
     if (references.shouldLoad || references.isLoading) {
@@ -122,6 +122,5 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 EntityViewsMenu = connect(mapStateToProps)(EntityViewsMenu);
-EntityViewsMenu = injectIntl(EntityViewsMenu);
 EntityViewsMenu = withRouter(EntityViewsMenu);
 export default EntityViewsMenu;

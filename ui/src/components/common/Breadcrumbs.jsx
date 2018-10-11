@@ -16,7 +16,7 @@ const messages = defineMessages({
 
 class Breadcrumbs extends Component {
   render() {
-    const { collection, children, document, hasSearchBar, sourceSearch, placeholder, queryPrefix } = this.props;
+    const { collection, children } = this.props;
 
     let collectionCrumbs = [];
     if (collection) {

@@ -5,11 +5,8 @@ import { selectEntity, selectEntityView, selectEntityReferences } from 'src/sele
 import Preview from 'src/components/Preview/Preview';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityHeading from 'src/components/Entity/EntityHeading';
-import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
-import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
-import { DualPane, SectionLoading, ErrorSection, Schema, Entity } from 'src/components/common';
+import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
 import { selectEntitiesResult, selectEntityTags } from "src/selectors";
 import { queryEntitySimilar } from "src/queries";
@@ -32,8 +29,6 @@ class PreviewEntity extends React.Component {
 
   renderContext() {
     const { entity, references, previewMode, similar, tags } = this.props;
-    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
-    let mode = null, maximised = true;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
     }

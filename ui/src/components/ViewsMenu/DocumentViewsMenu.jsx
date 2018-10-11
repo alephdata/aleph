@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import { connect } from "react-redux";
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 import { withRouter } from "react-router";

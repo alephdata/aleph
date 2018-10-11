@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Property, Entity, Schema } from 'src/components/common';
+import { Entity, Schema } from 'src/components/common';
 import { selectSchemata } from 'src/selectors';
 
 
