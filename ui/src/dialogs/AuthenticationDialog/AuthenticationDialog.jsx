@@ -51,7 +51,6 @@ class AuthenticationDialog extends Component {
       const location = window.location;
       const nextPathEnc = encodeURIComponent(nextPath || '/');
       const targetUrl = `${location.protocol}//${location.host}/oauth?path=${nextPathEnc}`;
-      console.log('target', targetUrl, nextPath);
       const loginUrlQueryString = `?next=${encodeURIComponent(targetUrl)}`;
       window.location.replace(`/api/2/sessions/oauth${loginUrlQueryString}`);
     }

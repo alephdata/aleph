@@ -139,6 +139,28 @@ class Metadata(object):
         self._meta_text('source_url', source_url)
 
     @property
+    def message_id(self):
+        return registry.identifier.clean(self.meta.get('message_id'))
+
+    @message_id.setter
+    def message_id(self, message_id):
+        self._meta_text('message_id', message_id)
+
+    @property
+    def in_reply_to(self):
+        in_reply_to = self.meta.get('in_reply_to')
+        return registry.identifier.normalize_set(in_reply_to)
+
+    @in_reply_to.setter
+    def in_reply_to(self, in_reply_to):
+        self.meta.pop('in_reply_to', None)
+        for message_id in ensure_list(in_reply_to):
+            self.add_in_reply_to(message_id)
+
+    def add_in_reply_to(self, message_id):
+        self._meta_add('in_reply_to', message_id)
+
+    @property
     def languages(self):
         languages = self.meta.get('languages')
         return registry.language.normalize_set(languages)

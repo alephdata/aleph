@@ -190,6 +190,7 @@ class Query {
 
   toString() {
     // Return the full query string for this query, including implicit context.
+    if (!this.path) { return undefined; }
     const query = queryString.stringify(this.toParams());
     return `${this.path}?${query}`;
   }

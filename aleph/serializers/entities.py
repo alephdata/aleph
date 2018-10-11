@@ -1,6 +1,7 @@
 from flask import request
 from banal import ensure_list
 from followthemoney import model
+from followthemoney.types import registry
 from marshmallow import Schema, post_dump, pre_load
 from marshmallow.fields import Nested, Integer, String, List
 from marshmallow.fields import Dict, Boolean
@@ -73,6 +74,7 @@ class ShallowCombinedSchema(BaseSchema):
     def document_links(self, data, pk, schemata):
         links = {
             'self': url_for('documents_api.view', document_id=pk),
+            'content': url_for('documents_api.content', document_id=pk),
             'tags': url_for('entities_api.tags', id=pk),
             'ui': document_url(pk)
         }
@@ -94,8 +96,6 @@ class ShallowCombinedSchema(BaseSchema):
     def entity_links(self, data, pk, schemata):
         return {
             'self': url_for('entities_api.view', id=pk),
-            # 'similar': url_for('entities_api.similar', id=pk),
-            # 'documents': url_for('entities_api.documents', id=pk),
             'references': url_for('entities_api.references', id=pk),
             'tags': url_for('entities_api.tags', id=pk),
             'ui': entity_url(pk)
@@ -144,7 +144,7 @@ class CombinedSchema(ShallowCombinedSchema):
             related = {r.get('id'): r for r in related}
             properties = obj.get('properties')
             for name, prop in schema.properties.items():
-                if name not in properties or prop.type_name != 'entity':
+                if name not in properties or prop.type != registry.entity:
                     continue
                 values = ensure_list(properties.get(name))
                 values = [related.get(v) for v in values if v in related]

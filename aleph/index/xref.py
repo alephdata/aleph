@@ -64,14 +64,14 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
                 'names.text': {
                     'query': name,
                     'operator': 'and',
-                    'minimum_should_match': '67%',
+                    'minimum_should_match': '60%',
                     # 'cutoff_frequency': 0.0001,
                     # 'boost': 0.5
                 }
             }
         })
 
-    for index in ['emails', 'phones']:
+    for index in ['emails', 'phones', 'ibans']:
         for value in ensure_list(sample.get(index)):
             if value is None or not len(value):
                 continue
@@ -95,27 +95,6 @@ def entity_query(sample, collection_id=None, query=None, broad=False):
             "minimum_should_match": 1
         }
     })
-
-    # boost by "contributing criteria"
-    for field in ['dates', 'countries', 'identifiers']:
-        for value in ensure_list(sample.get(field)):
-            if value is None or not len(value):
-                continue
-            query['bool']['should'].append({
-                'term': {
-                    field: {
-                        'value': value,
-                        'boost': 0.5
-                    }
-                }
-            })
-
-    for value in ensure_list(sample.get('addresses')):
-        if value is None or not len(value):
-                continue
-        query['bool']['should'].append({
-            'common': {field: {'query': value}}
-        })
 
     # if sample.get('content_hash'):
     #     # Do not try to find other copies of the same document

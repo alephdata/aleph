@@ -23,8 +23,8 @@ class EntitiesTestCase(TestCase):
         db.session.flush()
         self.ent = Entity.create({
             'schema': 'LegalEntity',
-            'name': 'Winnie the Pooh',
             'properties': {
+                'name': 'Winnie the Pooh',
                 'country': 'pa',
                 'summary': 'a fictional teddy bear created by A. A. Milne',
                 'alias': ['Puh der Bär', 'Pooh Bear']
@@ -32,8 +32,8 @@ class EntitiesTestCase(TestCase):
         }, self.col)
         self.other = Entity.create({
             'schema': 'LegalEntity',
-            'name': 'Pu der Bär',
             'properties': {
+                'name': 'Pu der Bär',
                 'country': 'de',
                 'description': 'he is a bear',
                 'alias': ['Puh der Bär']

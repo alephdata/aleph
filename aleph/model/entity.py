@@ -1,8 +1,6 @@
 import logging
-from banal import is_mapping, ensure_list
 from datetime import datetime
 from followthemoney import model
-from followthemoney.util import merge_data
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -30,17 +28,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     @property
     def model(self):
         return model.get(self.schema)
-
-    @property
-    def names(self):
-        names = set([self.name])
-        if self.model is None:
-            return names
-        for name, prop in self.model.properties.items():
-            if prop.type_name not in ['name']:
-                continue
-            names.update(ensure_list(self.data.get(name)))
-        return names
 
     def delete_matches(self):
         pq = db.session.query(Match)
@@ -91,14 +78,14 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         if self.collection_id != other.collection_id:
             raise ValueError("Cannot merge entities from different collections.")  # noqa
 
-        self.schema = model.precise_schema(self.schema, other.schema)
+        proxy = self.to_proxy()
+        other_proxy = other.to_proxy()
+        proxy.merge(other_proxy)
+        if proxy.caption != other_proxy.caption:
+            proxy.add('alias', other_proxy.caption)
+        self.apply_proxy(proxy)
         self.created_at = min((self.created_at, other.created_at))
         self.updated_at = datetime.utcnow()
-
-        data = merge_data(self.data, other.data)
-        if self.name != other.name:
-            data = merge_data(data, {'alias': [other.name]})
-        self.data = data
 
         # update alerts
         from aleph.model.alert import Alert
@@ -112,22 +99,25 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         db.session.refresh(other)
 
     def update(self, entity):
-        self.schema = entity.get('schema')
-
-        data = entity.get('properties')
-        if is_mapping(data):
-            data['name'] = [entity.get('name')]
-            self.data = self.model.validate(data)
-        elif self.data is None:
-            self.data = {}
-
-        self.data.pop('name', None)
-        self.name = entity.get('name')
-
-        # TODO: should this be mutable?
-        # self.foreign_id = entity.get('foreign_id')
+        proxy = model.get_proxy(entity)
+        proxy.schema.validate(entity)
+        self.apply_proxy(proxy)
         self.updated_at = datetime.utcnow()
         db.session.add(self)
+
+    def apply_proxy(self, proxy):
+        self.schema = proxy.schema.name
+        self.name = proxy.caption
+        self.data = proxy.properties
+
+    def to_proxy(self):
+        proxy = model.get_proxy({
+            'id': self.id,
+            'schema': self.schema,
+            'properties': self.data
+        })
+        proxy.add('name', self.name)
+        return proxy
 
     @classmethod
     def create(cls, data, collection):

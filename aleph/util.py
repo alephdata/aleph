@@ -35,6 +35,13 @@ def backoff(failures=0):
     time.sleep(sleep)
 
 
+def make_key(*criteria):
+    """Make a string key out of many criteria."""
+    criteria = [c or '' for c in criteria]
+    criteria = [str(c) for c in criteria]
+    return ':'.join(criteria)
+
+
 def html_link(text, link):
     text = text or '[untitled]'
     if link is None:
@@ -57,6 +64,23 @@ def anonymize_email(name, email):
     if name is None:
         return email
     return '%s <%s>' % (name, email)
+
+
+def filter_texts(texts):
+    """Remove text strings not worth indexing for full-text search."""
+    for text in texts:
+        if not isinstance(text, str):
+            continue
+        if not len(text.strip()):
+            continue
+        try:
+            # try to exclude numeric data from
+            # spreadsheets
+            float(text)
+            continue
+        except Exception:
+            pass
+        yield text
 
 
 class SessionTask(Task):

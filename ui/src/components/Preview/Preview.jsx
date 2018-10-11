@@ -1,12 +1,8 @@
 import React from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
-import queryString from 'query-string';
 import classnames from 'classnames';
 
-import { PreviewEntity, PreviewCollection, PreviewDocument } from 'src/components/Preview/';
-
 import './Preview.css';
+
 
 class Preview extends React.Component {
   constructor(props) {
@@ -61,46 +57,25 @@ class Preview extends React.Component {
   }
   
   render() {
-    const { previewId, previewType, parsedHash } = this.props;
+    const { maximised, hidden } = this.props;
     const { previewTop } = this.state;
     let className = 'Preview';
 
-    if (previewId === undefined || previewId === null) {
-      return (
-        <div id="Preview" className={classnames('hidden', className)} style={{ top: previewTop }} />
-      )
+    if (hidden) {
+      className = classnames('hidden', className);
     }
 
     // Only allow Preview to have be maximised for document previews
-    if (previewType === 'document' && parsedHash['mode'] !== 'info') {
+    if (maximised) {
       className = classnames('maximised', className);
     }
 
     return (
       <div id="Preview" className={className} style={{ top: previewTop }}>
-        {previewType === 'entity' && (
-          <PreviewEntity previewId={previewId} />
-        )}
-        {previewType === 'collection' && (
-          <PreviewCollection previewId={previewId} />
-        )}
-        {previewType === 'document' && (
-          <PreviewDocument previewId={previewId} parsedHash={parsedHash} />
-        )}
+        {this.props.children}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const parsedHash = queryString.parse(ownProps.location.hash);
-  return {
-    previewId: parsedHash['preview:id'],
-    previewType: parsedHash['preview:type'],
-    parsedHash: parsedHash
-  };
-};
-
-Preview = connect(mapStateToProps, {}, null, { pure: false })(Preview);
-Preview = withRouter(Preview);
 export default Preview;

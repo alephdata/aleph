@@ -37,7 +37,9 @@ class StreamApiTestCase(TestCase):
         )
         ent = Entity.create({
             'schema': 'Person',
-            'name': 'Winnie the Pooh',
+            'properties': {
+                'name': 'Winnie the Pooh',
+            }
         }, coll)
         db.session.add(ent)
         db.session.commit()

@@ -125,7 +125,7 @@ class CasesIndexScreen extends Component {
           <DualPane.SidePane>
             <Icon icon="briefcase" iconSize={100}/>
           </DualPane.SidePane>
-          <DualPane.ContentPane>
+          <DualPane.ContentPane className="padded">
             <h1 className='title-explanation'>
               <FormattedMessage id="case.question" defaultMessage="Manage your investigations"/>
             </h1>
@@ -153,7 +153,7 @@ class CasesIndexScreen extends Component {
                           result={result}
                           updateQuery={this.updateQuery}/>
           </DualPane.SidePane>
-          <DualPane.ContentPane>
+          <DualPane.ContentPane className='table-padded'>
             <ul className="results">
               {result.results !== undefined && result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res} preview={false} />

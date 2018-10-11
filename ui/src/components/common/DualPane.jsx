@@ -3,6 +3,7 @@ import c from 'classnames';
 
 import './DualPane.css';
 
+
 class InfoPane extends Component {
   render() {
     const { children, className } = this.props;

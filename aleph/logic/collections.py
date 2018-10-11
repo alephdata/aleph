@@ -110,6 +110,7 @@ def delete_collection_content(collection_id):
     db.session.commit()
 
 
+@celery.task()
 def delete_entities(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting entities...")
@@ -119,6 +120,7 @@ def delete_entities(collection_id, deleted_at=None):
     Match.delete_by_collection(collection_id, deleted_at=deleted_at)
 
 
+@celery.task()
 def delete_documents(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting documents...")

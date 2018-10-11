@@ -35,4 +35,8 @@
     padding: 0;
     margin: 0;
   }
+
+  .table-padded {
+    padding: $aleph-grid-size * 3;
+  }
 }

@@ -91,10 +91,6 @@ def get_db_document(document_id, action=Authz.READ):
     return document
 
 
-def get_index_document(document_id, action=Authz.READ):
-    return get_index_entity(document_id, action=action)
-
-
 def get_db_collection(collection_id, action=Authz.READ):
     collection = obj_or_404(Collection.by_id(collection_id))
     require(request.authz.can(collection.id, action))
@@ -138,7 +134,7 @@ CLEANER = Cleaner(
 def sanitize_html(html_text, base_url):
     """Remove anything from the given HTML that must not show up in the UI."""
     # TODO: circumvent encoding declarations?
-    if html_text is None:
+    if html_text is None or not len(html_text.strip()):
         return
     cleaned = CLEANER.clean_html(html_text)
     html = document_fromstring(cleaned)

@@ -1,67 +1,43 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import queryString from 'query-string';
 
-import { fetchEntity } from 'src/actions';
-import { selectEntity } from 'src/selectors';
-import { Breadcrumbs, DualPane, Entity } from 'src/components/common';
-import Screen from 'src/components/Screen/Screen';
-import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import { EntityContent, EntityInfo } from 'src/components/Entity/';
-
+import { selectEntity, selectEntityView, selectSchemata } from 'src/selectors';
+import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
+import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
+import { selectEntityReference } from "src/selectors";
+import reverseLabel from 'src/util/reverseLabel';
 
 class EntityScreen extends Component {
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate(prevProps) {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { entityId, entity } = this.props;
-    if (entity.shouldLoad) {
-      this.props.fetchEntity({ id: entityId });
-    }
-  }
-
   render() {
-      const { entity } = this.props;
-      if (entity.isError) {
-        return <ErrorScreen error={entity.error}/>;
-      }
-      if (entity === undefined || entity.id === undefined) {
-        return <LoadingScreen />;
-      }
-
-      const breadcrumbs = (
-        <Breadcrumbs collection={entity.collection}>
-          <li>
-            <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
-          </li>
-        </Breadcrumbs>
-      );
-
+      const { entity, entityId, mode, reference, schemata } = this.props;
       return (
-        <Screen breadcrumbs={breadcrumbs} title={entity.name}>
-          <DualPane>
-            <EntityContent entity={entity} />
-            <EntityInfo entity={entity} />
-          </DualPane>
-        </Screen>
+        <EntityScreenContext entityId={entityId}
+                             activeMode={mode}
+                             screenTitle={reverseLabel(schemata, reference)}>
+          <EntityReferencesMode entity={entity} mode={mode} />
+        </EntityScreenContext>
       );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entityId } = ownProps.match.params;
-  return { entityId, entity: selectEntity(state, entityId) };
+  const { entityId, mode } = ownProps.match.params;
+  const { location } = ownProps;
+  const reference = selectEntityReference(state, entityId, mode);
+  const hashQuery = queryString.parse(location.hash);  
+  return {
+    entityId,
+    reference,
+    entity: selectEntity(state, entityId),
+    mode: selectEntityView(state, entityId, hashQuery.mode, false),
+    schemata: selectSchemata(state)
+  };
 };
 
-EntityScreen = connect(mapStateToProps, { fetchEntity }, null, { pure: false })(EntityScreen);
-EntityScreen = injectIntl(EntityScreen);
+EntityScreen = connect(mapStateToProps, {})(EntityScreen);
+EntityScreen = withRouter(EntityScreen);
 export default EntityScreen;
 
 

@@ -1,0 +1,32 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+import { ButtonGroup } from "@blueprintjs/core";
+
+import { Toolbar, CloseButton, DownloadButton } from 'src/components/Toolbar';
+import getPath from 'src/util/getPath';
+
+class DocumentToolbar extends React.Component {
+  render() {
+    const { document, isPreview } = this.props;
+
+    return (
+      <Toolbar className='toolbar-preview'>
+        <ButtonGroup>
+          {isPreview && document.links && (
+            <Link to={getPath(document.links.ui)} className="pt-button button-link">
+              <span className={`pt-icon-share`}/>
+              <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
+            </Link>
+          )}
+          <DownloadButton document={document} />
+        </ButtonGroup>
+        {isPreview && (
+          <CloseButton />
+        )}
+      </Toolbar>
+    );
+  }
+}
+
+export default DocumentToolbar;

@@ -1,9 +1,9 @@
 import 'font-awesome/css/font-awesome.min.css';
 
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { selectMetadata } from 'src/selectors';
+import { selectSchemata } from 'src/selectors';
 
 class SchemaIcon extends Component {
   shouldComponentUpdate(nextProps) {
@@ -56,7 +56,7 @@ class SchemaLink extends Component {
 }
 
 const mapStateToProps = state => ({
-  schemata: selectMetadata(state).schemata,
+  schemata: selectSchemata(state),
 });
 
 class Schema extends Component {

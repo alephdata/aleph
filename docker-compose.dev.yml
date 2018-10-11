@@ -13,7 +13,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/platform-elasticsearch:2.1.4
+    image: alephdata/aleph-elasticsearch:4
     restart: on-failure
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
@@ -24,6 +24,12 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
 
+  redis:
+      image: redis:alpine
+      command: ["redis-server", "--appendonly", "yes"]
+      volumes:
+        - redis-data:/data
+
   convert-document:
     image: alephdata/aleph-convert-document
     restart: on-failure
@@ -32,12 +38,6 @@ services:
       - /root/.config
     expose:
       - 3000
-
-  extract-entities:
-    image: alephdata/aleph-extract-entities
-    restart: on-failure
-    expose:
-      - 50000
 
   recognize-text:
     image: alephdata/aleph-recognize-text
@@ -52,8 +52,8 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
+      - redis
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs: /tmp
     volumes:
@@ -62,6 +62,8 @@ services:
       - "./contrib:/aleph/contrib"
       - "./mappings:/aleph/mappings"
       - "/:/host"
+    cap_add:
+      - SYS_PTRACE
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
@@ -82,8 +84,8 @@ services:
       - postgres
       - elasticsearch
       - rabbitmq
+      - redis
       - convert-document
-      - extract-entities
       - recognize-text
     tmpfs: /tmp
     volumes:
@@ -119,3 +121,4 @@ volumes:
   elasticsearch-data: {}
   postgres-data: {}
   rabbitmq-data: {}
+  redis-data: {}

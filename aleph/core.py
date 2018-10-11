@@ -9,7 +9,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
 from flask_caching import Cache
-from flask.ext.babel import Babel
+from flask_babel import Babel
 from kombu import Queue
 from celery import Celery
 from celery.schedules import crontab
@@ -17,6 +17,7 @@ from followthemoney import set_model_locale
 from raven.contrib.flask import Sentry
 from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
+from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
 import storagelayer
 
@@ -80,7 +81,7 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
-    cache.init_app(app, config={'CACHE_TYPE': 'simple'})
+    cache.init_app(app, config=settings.CACHE_CONFIG)
     CORS(app, origins=settings.CORS_ORIGINS)
 
     # Enable raven to submit issues to sentry if a DSN is defined. This will
@@ -138,7 +139,16 @@ def get_archive():
     return settings._aleph_archive
 
 
+def get_redis():
+    if hasattr(settings, '_redis'):
+        return settings._redis
+    if not hasattr(settings, '_redis_pool'):
+        settings._redis_pool = ConnectionPool.from_url(settings.REDIS_URL)
+    return Redis(connection_pool=settings._redis_pool)
+
+
 es = LocalProxy(get_es)
+kv = LocalProxy(get_redis)
 archive = LocalProxy(get_archive)
 
 

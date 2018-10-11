@@ -50,6 +50,11 @@ export function selectMetadata(state) {
   return metadata;
 }
 
+export function selectSchemata(state) {
+  const metadata = selectMetadata(state);
+  return metadata.schemata || {};
+}
+
 export function selectStatistics(state) {
   return selectObject(state, 'statistics');
 }
@@ -82,6 +87,10 @@ export function selectDocumentPage(state, documentId, page) {
   return selectObject(state.documentRecords, key);
 }
 
+export function selectDocumentContent(state, documentId, page) {
+  return selectObject(state.documentContent, documentId);
+}
+
 export function selectCollectionsResult(state, query) {
   return selectResult(state, query, selectCollection);
 }
@@ -104,6 +113,47 @@ export function selectEntityTags(state, entityId) {
 
 export function selectEntityReferences(state, entityId) {
   return selectObject(state.entityReferences, entityId);
+}
+
+export function selectEntityReference(state, entityId, qname) {
+  const references = selectEntityReferences(state, entityId);
+  if (!references.total) {
+    return undefined;
+  }
+  for (let ref of references.results) {
+    if (ref.property.qname === qname) {
+      return ref;
+    }
+  }
+  return references.results[0];
+}
+
+export function selectEntityView(state, entityId, mode, isPreview) {
+  if (mode) {
+    return mode;
+  }
+  if (isPreview) {
+    return 'info';
+  }
+  const references = selectEntityReferences(state, entityId);
+  if (references.total) {
+    return references.results[0].property.qname;
+  }
+}
+
+export function selectDocumentView(state, documentId, mode) {
+  if (mode) {
+    return mode;
+  }
+  const document = selectEntity(state, documentId);
+  const has = (s) => _.intersection(document.schemata, s).length > 0;
+  if (has(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
+    return 'view';
+  }
+  if (has(['Folder'])) {
+    return 'browse';
+  }
+  return 'view';
 }
 
 export function selectCollectionPermissions(state, collectionId) {

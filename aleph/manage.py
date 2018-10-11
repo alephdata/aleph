@@ -24,6 +24,7 @@ from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load, update_entities
 from aleph.logic.xref import xref_collection
+from aleph.logic.graph.rdf import export_collection
 from aleph.logic.permissions import update_permission
 
 log = logging.getLogger('aleph')
@@ -181,6 +182,27 @@ def publish(foreign_id):
     update_permission(role, collection, True, False, editor_id=editor.id)
     update_collection_access(collection.id)
     update_collection(collection)
+
+
+@manager.command
+def graph(entity_id):
+    """Generate a graph around the given entity."""
+    from aleph.logic.graph import export_node
+    graph = export_node(entity_id, steam=1000)
+    with open('%s.gexf' % entity_id, 'w', encoding='utf-8') as fh:
+        fh.write(graph)
+
+
+@manager.command
+def rdf(foreign_id):
+    """Generate a RDF triples for the given collection."""
+    collection = Collection.by_foreign_id(foreign_id)
+    if collection is None:
+        raise ValueError("No such collection: %r" % foreign_id)
+    for line in export_collection(collection):
+        line = line.strip().decode('utf-8')
+        if len(line):
+            print(line)
 
 
 @manager.command
