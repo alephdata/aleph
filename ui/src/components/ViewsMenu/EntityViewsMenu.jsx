@@ -12,8 +12,8 @@ import { selectEntityReferences, selectEntityTags, selectSchemata, selectEntitie
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
+import EntityInfoMode from "src/components/Entity/EntityInfoMode";
 import reverseLabel from 'src/util/reverseLabel';
-import EntityMetadata from "src/components/Entity/EntityMetadata";
 import TextLoading from "src/components/common/TextLoading";
 
 import './ViewsMenu.css';
@@ -31,27 +31,23 @@ class EntityViewsMenu extends React.Component {
 
   handleTabChange(mode) {
     const { history, location, isPreview } = this.props;
-
     const parsedHash = queryString.parse(location.hash);
     if(isPreview) {
       parsedHash['preview:mode'] = mode;
     } else {
       parsedHash['mode'] = mode;
     }
-
     history.push({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),
     });
-
     this.setState({mode: mode});
   }
 
   render() {
     const { intl, isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
     const { mode } = this.state;
-    console.log(tags)
 
     return (
       <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
@@ -63,45 +59,17 @@ class EntityViewsMenu extends React.Component {
                               </React.Fragment>
                             }
                             panel={
-                              <EntityMetadata entity={entity}/>
+                              <EntityInfoMode entity={entity} />
                             }
         />)}
-        <Tab id="tags"
-             disabled={tags.total < 1}
-                               title={
-                                 <TextLoading children={<React.Fragment>
-                                   <i className='fa fa-fw fa-tags'/>
-                                   <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
-                                   <span> ({tags.total !== undefined ? tags.total : 0})</span>
-                                 </React.Fragment>} loading={tags.isLoading}/>
-
-                               }
-                               panel={
-                                 <EntityTagsMode entity={entity} />
-                               }
-        />
-        <Tab id="similar"
-             disabled={similar.total < 1}
-                              title={
-                                <TextLoading children={<React.Fragment>
-                                  <i className='fa fa-fw fa-repeat'/>
-                                  <FormattedMessage id="entity.info.similar" defaultMessage="Similar"/>
-                                  <span> ({similar.total !== undefined ? similar.total : 0})</span>
-                                </React.Fragment>} loading={similar.isLoading}/>
-                              }
-                              panel={
-                                <EntitySimilarMode entity={entity} />
-                              }
-        />
         {references.results !== undefined && references.results.map((ref) => (
           <Tab id={ref.property.qname}
                key={ref.property.qname}
-               disabled={ref.count < 1}
                title={
                  <React.Fragment>
                    <i className={c('fa', 'fa-fw', schemata[ref.schema].icon)} />
                    <FormattedMessage id="entity.info.overview" defaultMessage={reverseLabel(schemata, ref)}/>
-                   <span> ({ref.count !== 0 ? ref.count : 0})</span>
+                   <Count count={ref.count} />
                  </React.Fragment>
                }
                panel={
@@ -109,6 +77,30 @@ class EntityViewsMenu extends React.Component {
                }
           />
         ))}
+        <Tab id="tags"
+             disabled={tags.total < 1}
+             title={
+                <TextLoading children={<React.Fragment>
+                  <i className='fa fa-fw fa-tags'/>
+                  <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
+                  <Count count={tags.total} />
+                </React.Fragment>} loading={tags.isLoading}/>
+             }
+             panel={
+                <EntityTagsMode entity={entity} />
+             } />
+        <Tab id="similar"
+             disabled={similar.total < 1}
+             title={
+                <TextLoading children={<React.Fragment>
+                  <i className='fa fa-fw fa-repeat'/>
+                  <FormattedMessage id="entity.info.similar" defaultMessage="Similar"/>
+                  <Count count={similar.total} />
+                </React.Fragment>} loading={similar.isLoading}/>
+             }
+             panel={
+                <EntitySimilarMode entity={entity} />
+             } />
       </Tabs>
     );
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
+import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViewsMenu from 'src/components/ViewsMenu/EntityViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
@@ -49,7 +50,10 @@ class EntityScreenContext extends Component {
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <EntityToolbar entity={entity} isPreview={false} />
-              <EntityInfoMode entity={entity} isPreview={false} />
+              <EntityHeading entity={entity} isPreview={false} />
+              <div className="pane-content">
+                <EntityInfoMode entity={entity} isPreview={false} />
+              </div>
             </DualPane.InfoPane>
           </DualPane>
         </Screen>

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { selectEntity, selectEntityView, selectEntityReferences } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
-import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
+import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
@@ -34,28 +34,12 @@ class PreviewEntity extends React.Component {
       return <ErrorSection error={entity.error} />
     } else if (entity.id === undefined || references.isLoading) {
       return <SectionLoading/>;
-    } else if (previewMode === 'info') {
-      mode = <EntityInfoMode entity={entity} />;
-    } else if (previewMode === 'tags') {
-      mode = <EntityTagsMode entity={entity} />;
-      maximised = true;
-    } else if (previewMode === 'similar') {
-      mode = <EntitySimilarMode entity={entity} />;
-      maximised = true;
-    } else {
-      mode = <EntityReferencesMode entity={entity} mode={previewMode} />;
-      maximised = true;
     }
     return (
-      <Preview maximised={maximised}>
-        {/*<EntityViewsMenu entity={entity}
-                          activeMode={previewMode}
-                          isPreview={true}
-                          similar={similar}
-                          tags={tags}/>*/}
+      <Preview maximised={true}>
         <DualPane.InfoPane className="with-heading">
           <EntityToolbar entity={entity} isPreview={true} />
-          <EntityInfoMode entity={entity} isPreview={true} />
+          <EntityHeading entity={entity} isPreview={true} />
           <EntityViewsMenu entity={entity}
                            activeMode={previewMode}
                            isPreview={true}
