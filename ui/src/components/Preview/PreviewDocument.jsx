@@ -6,9 +6,9 @@ import Preview from 'src/components/Preview/Preview';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentHeading from 'src/components/Document/DocumentHeading';
-import DocumentViewsMenu from "../ViewsMenu/DocumentViewsMenu";
+import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
-import { selectEntity, selectEntityTags, selectDocumentView } from 'src/selectors';
+import { selectEntity, selectDocumentView } from 'src/selectors';
 
 
 class PreviewDocument extends React.Component {
@@ -26,10 +26,11 @@ class PreviewDocument extends React.Component {
   }
 
   renderContext() {
-    const { document, previewMode, tags } = this.props;
+    const { document, previewMode } = this.props;
     if (document.isError) {
       return <ErrorSection error={document.error} />
-    } else if (document.id === undefined) {
+    }
+    if (document.shouldLoad || document.isLoading) {
       return <SectionLoading/>;
     }
 
@@ -40,8 +41,7 @@ class PreviewDocument extends React.Component {
         <DocumentHeading document={document} />
         <DocumentViewsMenu document={document}
                            activeMode={previewMode}
-                           isPreview={true}
-                           tags={tags} />
+                           isPreview={true} />
       </React.Fragment>
     );
   }
@@ -52,8 +52,7 @@ const mapStateToProps = (state, ownProps) => {
   const { previewId, previewMode } = ownProps;
   return {
     document: selectEntity(state, previewId),
-    previewMode: selectDocumentView(state, previewId, previewMode),
-    tags: selectEntityTags(state, document.id)
+    previewMode: selectDocumentView(state, previewId, previewMode)
   };
 };
 

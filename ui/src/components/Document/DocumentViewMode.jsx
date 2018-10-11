@@ -25,7 +25,6 @@ class DocumentViewMode extends React.Component {
 
   renderContent() {
     const { document, queryText, activeMode } = this.props;
-    
     if (this.hasSchemata(['Email'])) {
       if (activeMode === 'browse') {
         return <FolderViewer document={document}
@@ -82,8 +81,10 @@ class DocumentViewMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('search', location, {});
-  return { queryText: query.getString('q') }
+  const query = Query.fromLocation('search', location, {}, '');
+  return {
+    queryText: query.getString('q')
+  }
 };
 
 DocumentViewMode = connect(mapStateToProps)(DocumentViewMode);

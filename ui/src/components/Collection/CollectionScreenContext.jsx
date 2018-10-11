@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {defineMessages, injectIntl} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -42,7 +42,7 @@ class CollectionScreenContext extends Component {
   }
 
   render() {
-    const { intl, collection, collectionId, activeMode, screenTitle } = this.props;
+    const { intl, collection, collectionId, activeMode } = this.props;
     const { extraBreadcrumbs } = this.props;
 
     if (collection.isError) {
@@ -62,13 +62,12 @@ class CollectionScreenContext extends Component {
       <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
         <Breadcrumbs.Collection key="collection" collection={collection} />
         {extraBreadcrumbs}
-        <Breadcrumbs.Text key="title" text={screenTitle} />
       </Breadcrumbs>
     );
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={screenTitle !== null ? `${screenTitle}: ${collection.label}` : collection.label}>
+        <Screen title={collection.label}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">

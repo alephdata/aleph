@@ -41,9 +41,18 @@ class Breadcrumbs extends Component {
 class BreadcrumbSearch extends Component {
   constructor(props) {
     super(props);
-    this.state = {queryText: ''};
+    this.state = {};
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.searchText !== prevState.searchText) {
+      return { 
+        searchText: nextProps.searchText,
+        queryText: nextProps.searchText
+      };
+    }
   }
 
   onSearchChange(e) {
