@@ -49,7 +49,7 @@ class DocumentScreenContext extends Component {
 
     return (
       <DocumentContextLoader documentId={documentId}>
-        <Screen title={`${screenTitle}: ${document.name}`}>
+        <Screen title={screenTitle !== null ? `${screenTitle}: ${document.name}` : document.name}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">

@@ -38,7 +38,7 @@ class CollectionScreenContext extends Component {
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={`${screenTitle}: ${collection.label}`}>
+        <Screen title={screenTitle !== null ? `${screenTitle}: ${collection.label}` : collection.label}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">

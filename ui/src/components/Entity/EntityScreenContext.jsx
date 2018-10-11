@@ -44,7 +44,7 @@ class EntityScreenContext extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={`${screenTitle}: ${entity.name}`}>
+        <Screen title={screenTitle !== null ? `${screenTitle}: ${entity.name}` : entity.name}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
