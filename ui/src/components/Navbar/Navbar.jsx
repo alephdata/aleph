@@ -143,7 +143,7 @@ class Navbar extends React.Component {
                   <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
                 </Button>
                 {session.loggedIn && <Button icon='briefcase' className='pt-minimal' onClick={this.onClickCases}>
-                  <FormattedMessage id="nav.cases" defaultMessage="Case files"/>
+                  <FormattedMessage id="nav.cases" defaultMessage="Cases"/>
                 </Button>}
                 <div className="pt-navbar-divider"/>
                 <AuthButtons session={session} auth={metadata.auth}/>
