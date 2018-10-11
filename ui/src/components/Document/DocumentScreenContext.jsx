@@ -32,18 +32,10 @@ class DocumentScreenContext extends Component {
     const breadcrumbs = (
       <Breadcrumbs collection={document.collection} document={document} hasSearchBar={true}>
         {document.parent && (
-          <li>
-            <Entity.Link entity={document.parent} className="pt-breadcrumb" icon truncate={30} />
-          </li>
+          <Breadcrumbs.Entity entity={document.parent} />
         )}
-        <li>
-          <Entity.Link entity={document} className="pt-breadcrumb" icon truncate={30} />
-        </li>
-        {screenTitle && (
-          <li>
-            <span className="pt-breadcrumb pt-breadcrumb-current">{subtitle}</span>
-          </li>
-        )}
+        <Breadcrumbs.Entity entity={document} />
+        <Breadcrumbs.Text text={subtitle} />
       </Breadcrumbs>
     );
 

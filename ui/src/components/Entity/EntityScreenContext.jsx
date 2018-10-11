@@ -31,14 +31,8 @@ class EntityScreenContext extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs collection={entity.collection} hasSearchBar={true}>
-        <li>
-          <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30}/>
-        </li>
-        {screenTitle && (
-          <li>
-            <span className="pt-breadcrumb pt-breadcrumb-current">{screenTitle}</span>
-          </li>
-        )}
+        <Breadcrumbs.Entity entity={entity} />
+        <Breadcrumbs.Text text={screenTitle} />
       </Breadcrumbs>
     );
 

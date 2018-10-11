@@ -52,7 +52,7 @@ class PreviewDocument extends React.Component {
                           isPreview={true} />
         <DualPane.InfoPane className="with-heading">
           <DocumentToolbar document={document}
-                            isPreview={true} />
+                           isPreview={true} />
           <DocumentInfoMode document={document} />
           {/*<DocumentViewsMenu document={document}
                              activeMode={previewMode}

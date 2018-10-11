@@ -84,21 +84,13 @@ class CollectionXrefMatchesScreen extends Component {
     }
 
     const breadcrumbs = (<Breadcrumbs hasSearchBar={false}>
-      <li>
-        <span className="pt-breadcrumb">
-          {collection.label}
-        </span>
-      </li>
+      <Breadcrumbs.Collection collection={collection} />
       <li>
         <Link className="pt-breadcrumb" to={xrefPath}>
           <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
         </Link>
       </li>
-      <li>
-        <span className="pt-breadcrumb pt-breadcrumb-current">
-          {other.label}
-        </span>
-      </li>
+      <Breadcrumbs.Text text={other.label} />
     </Breadcrumbs>);
     
     return (
