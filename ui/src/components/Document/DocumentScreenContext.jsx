@@ -37,6 +37,7 @@ class DocumentScreenContext extends Component {
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
+    parsedHash['page'] = undefined;
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
