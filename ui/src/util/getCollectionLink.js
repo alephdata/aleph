@@ -3,7 +3,7 @@ import queryString from 'query-string';
 export default function getCollectionLink(collection) {
   if (collection.casefile) {
     return {
-      pathname: '/collections/' + collection.id + '/documents'
+      pathname: '/collections/' + collection.id + '#mode=browse'
     };
   } else {
     return {

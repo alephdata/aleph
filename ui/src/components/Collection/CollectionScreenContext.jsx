@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {defineMessages, injectIntl} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
+import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViewsMenu from 'src/components/ViewsMenu/CollectionViewsMenu';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
@@ -41,8 +42,8 @@ class CollectionScreenContext extends Component {
   }
 
   render() {
-    const { intl, collection, collectionId, activeMode, screenTitle } = this.props;
-    const { extraBreadcrumbs, showInfoPane = false} = this.props;
+    const { intl, collection, collectionId, activeMode } = this.props;
+    const { extraBreadcrumbs } = this.props;
 
     if (collection.isError) {
       return <ErrorScreen error={collection.error} />;
@@ -59,31 +60,28 @@ class CollectionScreenContext extends Component {
     const placeholder = intl.formatMessage(messages.placeholder, {label: collection.label});
     const breadcrumbs = (
       <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
-        <Breadcrumbs.Collection collection={collection} />
+        <Breadcrumbs.Collection key="collection" collection={collection} />
         {extraBreadcrumbs}
-        <Breadcrumbs.Text text={screenTitle} />
       </Breadcrumbs>
     );
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={screenTitle !== null ? `${screenTitle}: ${collection.label}` : collection.label}>
+        <Screen title={collection.label}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
               <CollectionViewsMenu collection={collection}
                                    activeMode={activeMode}
                                    isPreview={false} />
-              <div className="screen-children">
-                {this.props.children}
-              </div>
             </DualPane.ContentPane>
-            {showInfoPane && (
-              <DualPane.InfoPane className="with-heading">
-                <CollectionToolbar collection={collection} />
+            <DualPane.InfoPane className="with-heading">
+              <CollectionToolbar collection={collection} />
+              <CollectionHeading collection={collection} />
+              <div className="pane-content">
                 <CollectionInfoMode collection={collection} />
-              </DualPane.InfoPane>
-            )}
+              </div>
+            </DualPane.InfoPane>
           </DualPane>
         </Screen>
       </CollectionContextLoader>

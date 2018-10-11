@@ -1,14 +1,14 @@
-import _ from 'lodash';
 import React, {Component} from 'react';
-import { FormattedMessage } from 'react-intl';
+import _ from "lodash";
+import { FormattedNumber } from 'react-intl';
 
-import { Collection } from 'src/components/common';
+import { CollectionOverview } from 'src/components/Collection';
+import { Schema } from 'src/components/common';
 
 
 class CollectionInfoMode extends Component {
   render() {
     const { collection } = this.props;
-
     let content = [];
     for (let key in collection.schemata) {
       if (collection.schemata.hasOwnProperty(key)) {
@@ -18,22 +18,23 @@ class CollectionInfoMode extends Component {
     content = _.reverse(_.sortBy(content, ['number']));
 
     return (
-      <React.Fragment>
-        <div className="pane-heading">
-          <span>
-            <Collection.Label collection={collection} label={false} />
-            { collection.casefile && (
-              <FormattedMessage id="collection.info.case" defaultMessage="Casefile"/>
-            )}
-            { !collection.casefile && (
-              <FormattedMessage id="collection.info.source" defaultMessage="Source"/>
-            )}
-          </span>
-          <h1>
-            {collection.label}
-          </h1>
-        </div>
-      </React.Fragment>
+      <div className="CollectionInfoMode">
+        <CollectionOverview collection={collection} hasHeader={false}/>
+        <ul className="info-rank">
+          { content.map((item, index) => (
+            <li key={index}>
+                <span className="key">
+                  <Schema.Link schema={item.name}
+                               plural={true}
+                               url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}/>
+                </span>
+              <span className="value">
+                  <FormattedNumber value={item.number} />
+                </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 }

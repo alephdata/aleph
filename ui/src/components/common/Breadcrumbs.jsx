@@ -3,8 +3,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
 import { Collection, Entity } from 'src/components/common';
-import DocumentSearch from 'src/components/Document/DocumentSearch';
-import CollectionSearch from "src/components/Collection/CollectionSearch";
 
 import './Breadcrumbs.css';
 
@@ -18,7 +16,7 @@ const messages = defineMessages({
 
 class Breadcrumbs extends Component {
   render() {
-    const { collection, children, document, hasSearchBar, sourceSearch, placeholder, queryPrefix } = this.props;
+    const { collection, children } = this.props;
 
     let collectionCrumbs = [];
     if (collection) {
@@ -43,9 +41,18 @@ class Breadcrumbs extends Component {
 class BreadcrumbSearch extends Component {
   constructor(props) {
     super(props);
-    this.state = {queryText: ''};
+    this.state = {};
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSubmitSearch = this.onSubmitSearch.bind(this);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.searchText !== prevState.searchText) {
+      return { 
+        searchText: nextProps.searchText,
+        queryText: nextProps.searchText
+      };
+    }
   }
 
   onSearchChange(e) {

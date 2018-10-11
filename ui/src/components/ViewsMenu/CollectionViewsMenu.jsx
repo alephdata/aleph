@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
+import { Count } from 'src/components/common';
 import { selectCollectionXrefIndex } from 'src/selectors';
-import CollectionMetadata from "src/components/Collection/CollectionMetadata";
+import CollectionInfoMode from "src/components/Collection/CollectionInfoMode";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import TextLoading from "src/components/common/TextLoading";
@@ -17,11 +18,6 @@ class CollectionViewsMenu extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      mode: props.activeMode
-    };
-
     this.handleTabChange = this.handleTabChange.bind(this);
   }
   
@@ -47,61 +43,56 @@ class CollectionViewsMenu extends React.Component {
     } else {
       parsedHash['mode'] = mode;
     }
-
     history.replace({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),
     });
-    this.setState({mode: mode});
   }
 
   render() {
-    const { isPreview, collection } = this.props;
-    const { xrefIndex } = this.props;
-    const { mode } = this.state;
+    const { isPreview, collection, activeMode, xrefIndex } = this.props;
     const numOfDocs = this.countDocuments();
-    // TODO: add case home page / timeline....
-
     return (
-      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
-        {isPreview && (<Tab id="info"
-                            title={
-                              <React.Fragment>
-                                <i className="fa fa-fw fa-info" />
-                                <FormattedMessage id="entity.info.overview" defaultMessage="Overview"/>
-                              </React.Fragment>
-                            }
-                            panel={
-                              <CollectionMetadata collection={collection} />
-                            }
+      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
+        {isPreview && (
+          <Tab id="info"
+               title={
+                  <React.Fragment>
+                    <i className="fa fa-fw fa-info" />
+                    <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
+                  </React.Fragment>
+                }
+                panel={
+                  <CollectionInfoMode collection={collection} />
+                }
         />)}
-        <Tab id="documents"
+        <Tab id="browse"
              disabled={numOfDocs === 0}
-                               title={
-                                 <React.Fragment>
-                                   <i className="fa fa-fw fa-folder-open" />
-                                   <FormattedMessage id="entity.info.source" defaultMessage="Browse as a folder"/>
-                                   <span> ({numOfDocs !== 0 ? numOfDocs : 0})</span>
-                                 </React.Fragment>
-                               }
-                               panel={
-                                 <CollectionDocumentsMode collection={collection} />
-                               }
+             title={
+                <React.Fragment>
+                  <i className="fa fa-fw fa-folder-open" />
+                  <FormattedMessage id="entity.info.source" defaultMessage="Documents"/>
+                  <Count count={numOfDocs} />
+                </React.Fragment>
+              }
+              panel={
+                <CollectionDocumentsMode collection={collection} />
+              }
         />
         <Tab id="xref"
              disabled={xrefIndex.total < 1}
-                              title={
-                                <TextLoading children={<React.Fragment>
-                                  <i className="fa fa-fw fa-folder-open" />
-                                  <FormattedMessage id="entity.info.overview" defaultMessage="Cross-reference"/>
-                                  <span> ({xrefIndex.total !== undefined ? xrefIndex.total : 0})</span>
-                                </React.Fragment>} loading={xrefIndex.isLoading}/>
+             title={
+                <TextLoading children={<React.Fragment>
+                  <i className="fa fa-fw fa-folder-open" />
+                  <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference"/>
+                  <Count count={xrefIndex.total} />
+                </React.Fragment>} loading={xrefIndex.isLoading}/>
 
-                              }
-                              panel={
-                                <CollectionXrefIndexMode collection={collection} />
-                              }
+              }
+              panel={
+                <CollectionXrefIndexMode collection={collection} />
+              }
         />
       </Tabs>
     );

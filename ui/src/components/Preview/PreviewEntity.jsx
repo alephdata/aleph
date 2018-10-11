@@ -4,12 +4,9 @@ import { connect } from 'react-redux';
 import { selectEntity, selectEntityView, selectEntityReferences } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
-import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
-import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
-import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
+import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
-import { DualPane, SectionLoading, ErrorSection, Schema, Entity } from 'src/components/common';
+import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
 import { selectEntitiesResult, selectEntityTags } from "src/selectors";
 import { queryEntitySimilar } from "src/queries";
@@ -21,48 +18,33 @@ class PreviewEntity extends React.Component {
     const { previewId } = this.props;
     return (
       <EntityContextLoader entityId={previewId}>
-        {this.renderContext()}
+        <Preview maximised={true}>
+          <DualPane.InfoPane className="with-heading">
+            {this.renderContext()}
+          </DualPane.InfoPane>
+        </Preview>
       </EntityContextLoader>
     );
   }
 
   renderContext() {
     const { entity, references, previewMode, similar, tags } = this.props;
-    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
-    let mode = null, maximised = true;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
-    } else if (entity.id === undefined || references.isLoading) {
+    }
+    if (entity.shouldLoad || entity.isLoading || references.shouldLoad || references.isLoading) {
       return <SectionLoading/>;
-    } else if (previewMode === 'info') {
-      mode = <EntityInfoMode entity={entity} />;
-    } else if (previewMode === 'tags') {
-      mode = <EntityTagsMode entity={entity} />;
-      maximised = true;
-    } else if (previewMode === 'similar') {
-      mode = <EntitySimilarMode entity={entity} />;
-      maximised = true;
-    } else {
-      mode = <EntityReferencesMode entity={entity} mode={previewMode} />;
-      maximised = true;
     }
     return (
-      <Preview maximised={maximised}>
-        {/*<EntityViewsMenu entity={entity}
-                          activeMode={previewMode}
-                          isPreview={true}
-                          similar={similar}
-                          tags={tags}/>*/}
-        <DualPane.InfoPane className="with-heading">
-          <EntityToolbar entity={entity} isPreview={true} />
-          <EntityInfoMode entity={entity} isPreview={true} />
-          <EntityViewsMenu entity={entity}
-                           activeMode={previewMode}
-                           isPreview={true}
-                           similar={similar}
-                           tags={tags}/>
-        </DualPane.InfoPane>
-      </Preview>
+      <React.Fragment>
+        <EntityToolbar entity={entity} isPreview={true} />
+        <EntityHeading entity={entity} isPreview={true} />
+        <EntityViewsMenu entity={entity}
+                         activeMode={previewMode}
+                         isPreview={true}
+                         similar={similar}
+                         tags={tags} />
+      </React.Fragment>
     );
   }
 }

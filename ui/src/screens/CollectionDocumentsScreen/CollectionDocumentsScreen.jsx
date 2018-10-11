@@ -1,41 +1,12 @@
 import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { injectIntl, defineMessages } from 'react-intl';
-
-import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
-import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
-import { selectCollection } from "src/selectors";
-
-const messages = defineMessages({
-  screen_title: {
-    id: 'collection.documents.title',
-    defaultMessage: 'Browse',
-  }
-});
+import { Redirect } from 'react-router';
 
 
 class CollectionDocumentsScreen extends Component {
   render() {
-    const { intl, collection, collectionId } = this.props;
-
-    return (
-      <CollectionScreenContext collectionId={collectionId}
-                               activeMode="documents"
-                               screenTitle={intl.formatMessage(messages.screen_title)}>
-        <CollectionDocumentsMode collection={collection} />
-      </CollectionScreenContext>
-    );
+    const { collectionId } = this.props.match.params;
+    return <Redirect to={`/collections/${collectionId}#mode=browse`} />;
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.match.params;
-  return {
-    collectionId,
-    collection: selectCollection(state, collectionId)
-  };
-};
-
-CollectionDocumentsScreen = injectIntl(CollectionDocumentsScreen);
-CollectionDocumentsScreen = connect(mapStateToProps, {})(CollectionDocumentsScreen);
 export default CollectionDocumentsScreen;
