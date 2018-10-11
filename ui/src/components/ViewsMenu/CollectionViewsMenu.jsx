@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
@@ -18,11 +18,6 @@ class CollectionViewsMenu extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      mode: props.activeMode
-    };
-
     this.handleTabChange = this.handleTabChange.bind(this);
   }
   
@@ -53,18 +48,13 @@ class CollectionViewsMenu extends React.Component {
       search: location.search,
       hash: queryString.stringify(parsedHash),
     });
-    this.setState({mode: mode});
   }
 
   render() {
-    const { isPreview, collection } = this.props;
-    const { xrefIndex } = this.props;
-    const { mode } = this.state;
+    const { isPreview, collection, activeMode, xrefIndex } = this.props;
     const numOfDocs = this.countDocuments();
-    // TODO: add case home page / timeline....
-
     return (
-      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
+      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
         {isPreview && (
           <Tab id="info"
                title={

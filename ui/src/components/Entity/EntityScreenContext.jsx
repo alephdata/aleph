@@ -31,7 +31,8 @@ class EntityScreenContext extends Component {
     }
 
     const breadcrumbs = (
-      <Breadcrumbs collection={entity.collection} hasSearchBar={true}>
+      <Breadcrumbs>
+        <Breadcrumbs.Collection collection={entity.collection} />
         <Breadcrumbs.Entity entity={entity} />
         <Breadcrumbs.Text text={screenTitle} />
       </Breadcrumbs>

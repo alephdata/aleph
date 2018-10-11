@@ -8,21 +8,13 @@ import { selectEntity, selectDocumentView } from 'src/selectors';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
-const messages = defineMessages({
-  screen_title: {
-    id: 'documents.title',
-    defaultMessage: 'Document',
-  }
-});
-
 
 class DocumentScreen extends Component {
   render() {
     const { intl, documentId, document, mode } = this.props;
     return (
       <DocumentScreenContext documentId={documentId}
-                             activeMode={mode}
-                             screenTitle={intl.formatMessage(messages.screen_title)}>
+                             activeMode={mode}>
         <DocumentViewMode document={document} activeMode={mode} />
       </DocumentScreenContext>
     );

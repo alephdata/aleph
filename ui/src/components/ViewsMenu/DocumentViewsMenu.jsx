@@ -18,11 +18,6 @@ import './ViewsMenu.css';
 class DocumentViewsMenu extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      mode: props.activeMode
-    };
-
     this.handleTabChange = this.handleTabChange.bind(this);
   }
   
@@ -45,20 +40,17 @@ class DocumentViewsMenu extends React.Component {
       search: location.search,
       hash: queryString.stringify(parsedHash),
     });
-    this.setState({mode: mode});
   }
 
   render() {
     const { document, isPreview, activeMode, tags } = this.props;
-    const { mode } = this.state;
-
     const hasTextMode = this.hasSchemata(['Pages', 'Image']);
     const hasBrowseMode = this.hasSchemata(['Folder']);
     const hasViewer = this.hasSchemata(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
 
     return (
-      <Tabs id="DocumentInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
+      <Tabs id="DocumentInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
         {isPreview && (
           <Tab id="info"
                title={
@@ -100,7 +92,7 @@ class DocumentViewsMenu extends React.Component {
                disabled={document.children < 1}
                title={
                   <TextLoading loading={document.isLoading} children={<React.Fragment>
-                    <i className="fa-folder-open" />
+                    <i className="fa fa-fw fa-folder-open" />
                     <FormattedMessage id="entity.info.browse" defaultMessage="Documents"/>
                     <Count count={document.children} />
                   </React.Fragment>}/>
@@ -110,7 +102,7 @@ class DocumentViewsMenu extends React.Component {
                } />
         )}
         <Tab id="tags"
-             disabled={tags !== undefined && tags.total !== undefined ? tags.total < 1 : true}
+             disabled={tags.total < 1}
              title={
                <TextLoading loading={tags.isLoading} children={<React.Fragment>
                  <i className="fa fa-fw fa-tags"  />

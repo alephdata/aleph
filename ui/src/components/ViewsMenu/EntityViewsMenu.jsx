@@ -21,11 +21,6 @@ import './ViewsMenu.css';
 class EntityViewsMenu extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      mode: props.activeMode
-    };
-
     this.handleTabChange = this.handleTabChange.bind(this);
   }
 
@@ -42,19 +37,16 @@ class EntityViewsMenu extends React.Component {
       search: location.search,
       hash: queryString.stringify(parsedHash),
     });
-    this.setState({mode: mode});
   }
 
   render() {
     const { isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
-    const { mode } = this.state;
-
     if (references.shouldLoad || references.isLoading) {
       return <SectionLoading />;
     }
 
     return (
-      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={mode} className='info-tabs-padding'>
+      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
         {isPreview && (<Tab id="info"
                             title={
                               <React.Fragment>

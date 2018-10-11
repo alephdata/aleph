@@ -28,15 +28,14 @@ class DocumentScreenContext extends Component {
       ); 
     }
 
-    const subtitle = activeMode === 'tags' ? screenTitle + ' (' + tags.total + ')' : screenTitle;
-
     const breadcrumbs = (
-      <Breadcrumbs collection={document.collection} document={document} hasSearchBar={true}>
+      <Breadcrumbs>
+        <Breadcrumbs.Collection collection={document.collection} />
         {document.parent && (
           <Breadcrumbs.Entity entity={document.parent} />
         )}
         <Breadcrumbs.Entity entity={document} />
-        <Breadcrumbs.Text text={subtitle} />
+        <Breadcrumbs.Text text={screenTitle} />
       </Breadcrumbs>
     );
 
