@@ -10,7 +10,6 @@ class Count extends Component {
     if (count === undefined || count === 0) {
       return null;
     }
-    console.log(count, 'the count');
     return (
       <span className="pt-tag pt-round pt-intent-primary">
         {numeral(count).format('0a')}
