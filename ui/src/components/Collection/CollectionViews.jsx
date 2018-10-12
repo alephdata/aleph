@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -5,11 +6,13 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
-import { Count, TextLoading } from 'src/components/common';
+import { Count, TextLoading, Schema } from 'src/components/common';
 import CollectionInfoMode from "src/components/Collection/CollectionInfoMode";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
+import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import { selectCollectionXrefIndex } from 'src/selectors';
+import isDocumentSchema from 'src/util/isDocumentSchema';
 
 
 class CollectionViews extends React.Component {
@@ -19,17 +22,28 @@ class CollectionViews extends React.Component {
   }
   
   countDocuments() {
-    // FIXME: give better metadata from API.
-    const docTypes = ['Document', 'Pages', 'Folder', 'Package', 'Email', 'HyperText', 'Workbook', 'Table', 'PlainText', 'Image', 'Video', 'Audio'];
-    const { collection } = this.props;
-    const { schemata } = collection;
+    const { schemata } = this.props.collection;
     let totalCount = 0;
     for (let key in schemata) {
-      if (docTypes.indexOf(key) !== -1) {
+      if (isDocumentSchema(key)) {
         totalCount += schemata[key];
       }
     }
     return totalCount;
+  }
+
+  getEntitySchmata() {
+    const { schemata } = this.props.collection;
+    const matching = [];
+    for (let key in schemata) {
+      if (!isDocumentSchema(key)) {
+        matching.push({
+          schema: key,
+          count: schemata[key]
+        });
+      }
+    }
+    return _.reverse(_.sortBy(matching, ['count']));
   }
 
   handleTabChange(mode) {
@@ -50,6 +64,8 @@ class CollectionViews extends React.Component {
   render() {
     const { isPreview, collection, activeMode, xrefIndex } = this.props;
     const numOfDocs = this.countDocuments();
+    const entitySchemata = this.getEntitySchmata();
+
     return (
       <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
         {isPreview && (
@@ -62,21 +78,35 @@ class CollectionViews extends React.Component {
                 }
                 panel={
                   <CollectionInfoMode collection={collection} />
+                } />
+        )}
+        {numOfDocs > 0 && (
+          <Tab id="browse"
+               disabled={numOfDocs === 0}
+               title={
+                  <React.Fragment>
+                    <i className="fa fa-fw fa-folder-open" />
+                    <FormattedMessage id="entity.info.source" defaultMessage="Documents"/>
+                    <Count count={numOfDocs} />
+                  </React.Fragment>
+               }
+               panel={
+                  <CollectionDocumentsMode collection={collection} />
+               } />
+        )}
+        {entitySchemata.map((ref) => (
+          <Tab id={ref.schema}
+               key={ref.schema}
+               title={
+                  <React.Fragment>
+                    <Schema.Label schema={ref.schema} plural={true} icon={true} />
+                    <Count count={ref.count} />
+                  </React.Fragment>
                 }
-        />)}
-        <Tab id="browse"
-             disabled={numOfDocs === 0}
-             title={
-                <React.Fragment>
-                  <i className="fa fa-fw fa-folder-open" />
-                  <FormattedMessage id="entity.info.source" defaultMessage="Documents"/>
-                  <Count count={numOfDocs} />
-                </React.Fragment>
-              }
-              panel={
-                <CollectionDocumentsMode collection={collection} />
-              }
-        />
+                panel={
+                  <CollectionEntitiesMode collection={collection} activeMode={activeMode} />
+                } />
+        ))}
         <Tab id="xref"
              disabled={xrefIndex.total < 1}
              title={

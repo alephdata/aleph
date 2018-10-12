@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
 import _ from "lodash";
+import React, {Component} from 'react';
 import { FormattedNumber } from 'react-intl';
 
 import { CollectionOverview } from 'src/components/Collection';
