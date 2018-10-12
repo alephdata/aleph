@@ -122,11 +122,12 @@ class TestCase(FlaskTestCase):
             delete_index()
             upgrade_search()
 
-        # self.flush_index()
+        self.flush_index()
         es.delete_by_query(index=all_indexes(),
                            body={'query': {'match_all': {}}},
                            refresh=True,
                            ignore=[404, 400],
+                           wait_for_completion=True,
                            conflicts='proceed')
 
         for table in reversed(db.metadata.sorted_tables):

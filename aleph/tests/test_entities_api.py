@@ -257,19 +257,22 @@ class EntitiesApiTestCase(TestCase):
             'schema': 'Person',
             'collection_id': self.col.id,
             'properties': {
-                'name': "Osama bin Ladyn",
+                'name': "Osama bin Laden",
             }
         }
-        res = self.client.post(url,
+        obj = self.client.post(url,
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
         self.flush_index()
-        res = self.client.get('/api/2/entities/%s/similar' % res.json['id'],
-                              headers=headers)
-        assert res.status_code == 200, (res.status_code, res.json)
-        data = res.json
-        assert len(data['results']) == 2, data
+        url = '/api/2/entities/%s/similar' % obj.json['id']
+        similar = self.client.get(url, headers=headers)
+        assert similar.status_code == 200, (similar.status_code, similar.json)
+        text = similar.data.decode('utf-8')
+        assert obj.json['id'] not in text, obj.id
+        assert obj.json['id'] not in text, obj.id
+        data = similar.json
+        assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
 
