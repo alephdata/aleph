@@ -79,7 +79,7 @@ class BreadcrumbSearch extends Component {
     }
     return (
       <form onSubmit={this.onSubmitSearch} className="BreadcrumbSearch search-box">
-        <div className={c("pt-input-group", {"pt-disabled": disabled})}>
+        <div className={c("pt-input-group")}>
           <span className="pt-icon pt-icon-search"/>
           <input className="pt-input"
                  type="search"

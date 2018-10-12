@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { documentRecordKey } from 'src/reducers/documentRecords';
-
+import isDocumentSchema from 'src/util/isDocumentSchema';
 
 function selectResult(state, query, expand) {
   const key = query.toKey();
@@ -163,8 +163,18 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
   if (isPreview) {
     return 'info';
   }
-  // const collection = selectEntity(state, collectionId);
-  return 'browse';
+  const collection = selectEntity(state, collectionId);
+  let largestSchema = 'Document', largestCount = 0;
+  const schemata = {};
+  for (let key in collection.schemata) {
+    let norm = isDocumentSchema(key) ? 'Document' : key;
+    schemata[norm] = (schemata[norm] || 0) + collection.schemata[key];
+    if (schemata[norm] > largestCount) {
+      largestCount = schemata[norm];
+      largestSchema = norm;
+    }
+  }
+  return largestSchema;  // yay.
 }
 
 export function selectCollectionPermissions(state, collectionId) {

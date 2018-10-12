@@ -85,6 +85,7 @@ class DocumentManager extends Component {
         <EntitySearch query={query}
                       hideCollection={true}
                       documentMode={true}
+                      showPreview={false}
                       selection={selection}
                       updateSelection={updateSelection} />
         <DocumentDeleteDialog documents={selection}

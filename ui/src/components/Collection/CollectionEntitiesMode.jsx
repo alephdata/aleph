@@ -9,7 +9,9 @@ import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 class CollectionEntitiesMode extends React.Component {
   render() {
     const { query } = this.props;
-    return <EntitySearch query={query} hideCollection={true} />;
+    return <EntitySearch query={query}
+                         hideCollection={true}
+                         showPreview={false} />;
   }
 }
 

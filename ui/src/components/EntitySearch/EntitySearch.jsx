@@ -29,7 +29,6 @@ const messages = defineMessages({
 class EntitySearch extends Component {
   constructor(props) {
     super(props);
-
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
   }
@@ -90,6 +89,7 @@ class EntitySearch extends Component {
                      result={result}
                      documentMode={this.props.documentMode}
                      hideCollection={this.props.hideCollection}
+                     showPreview={this.props.showPreview}
                      updateQuery={this.updateQuery}
                      updateSelection={this.props.updateSelection}
                      selection={this.props.selection} />
