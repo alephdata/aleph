@@ -50,17 +50,18 @@ class EntityViews extends React.Component {
             selectedTabId={activeMode}
             renderActiveTabPanelOnly={true}
             className='info-tabs-padding'>
-        {isPreview && (<Tab id="info"
-                            title={
-                              <React.Fragment>
-                                <i className='fa fa-fw fa-info'/>
-                                <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
-                              </React.Fragment>
-                            }
-                            panel={
-                              <EntityInfoMode entity={entity} />
-                            }
-        />)}
+        {isPreview && (
+          <Tab id="info"
+               title={
+                  <React.Fragment>
+                    <i className='fa fa-fw fa-info'/>
+                    <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
+                  </React.Fragment>
+               }
+               panel={
+                  <EntityInfoMode entity={entity} />
+               } />
+        )}
         {references.results !== undefined && references.results.map((ref) => (
           <Tab id={ref.property.qname}
                key={ref.property.qname}
@@ -73,8 +74,7 @@ class EntityViews extends React.Component {
                }
                panel={
                  <EntityReferencesMode entity={entity} mode={activeMode} />
-               }
-          />
+               } />
         ))}
         <Tab id="tags"
              disabled={tags.total < 1}

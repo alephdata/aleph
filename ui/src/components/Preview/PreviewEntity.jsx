@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from "react-router";
 import { connect } from 'react-redux';
 
 import Preview from 'src/components/Preview/Preview';
@@ -9,7 +8,6 @@ import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityViews from 'src/components/Entity/EntityViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectEntityView, selectEntityReferences } from 'src/selectors';
-import { queryEntitySimilar } from "src/queries";
 
 
 class PreviewEntity extends React.Component {
@@ -27,7 +25,7 @@ class PreviewEntity extends React.Component {
   }
 
   renderContext() {
-    const { entity, references, previewMode, similar, tags } = this.props;
+    const { entity, references, previewMode } = this.props;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />
     }
@@ -38,9 +36,7 @@ class PreviewEntity extends React.Component {
       <React.Fragment>
         <EntityToolbar entity={entity} isPreview={true} />
         <EntityHeading entity={entity} isPreview={true} />
-        <EntityViews entity={entity}
-                     activeMode={previewMode}
-                     isPreview={true} />
+        <EntityViews entity={entity} activeMode={previewMode} isPreview={true} />
       </React.Fragment>
     );
   }
@@ -48,7 +44,7 @@ class PreviewEntity extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { previewId, previewMode, location } = ownProps;
+  const { previewId, previewMode } = ownProps;
   const entity = selectEntity(state, previewId);
   return {
     entity,
@@ -58,5 +54,4 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 PreviewEntity = connect(mapStateToProps, {})(PreviewEntity);
-PreviewEntity = withRouter(PreviewEntity);
 export default PreviewEntity;

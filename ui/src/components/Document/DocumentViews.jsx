@@ -54,7 +54,7 @@ class DocumentViews extends React.Component {
           <Tab id="info"
                title={
                   <React.Fragment>
-                    <i className="fa fa-fw fa-info" />
+                    <i className="fa fa-fw fa-info-circle" />
                     <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
                   </React.Fragment>
                }

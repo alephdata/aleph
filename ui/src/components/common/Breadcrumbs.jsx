@@ -74,15 +74,16 @@ class BreadcrumbSearch extends Component {
     const { intl, searchPlaceholder } = this.props;
     const { queryText } = this.state;
     const placeholder = searchPlaceholder || intl.formatMessage(messages.search_placeholder);
-    const disabled = !this.props.onSearch;
+    if (!this.props.onSearch) {
+      return null;
+    }
     return (
       <form onSubmit={this.onSubmitSearch} className="BreadcrumbSearch search-box">
-        <div className={c("pt-input-group", {"pt-disabled": disabled})}>
+        <div className={c("pt-input-group")}>
           <span className="pt-icon pt-icon-search"/>
           <input className="pt-input"
                  type="search"
                  dir="auto"
-                 disabled={disabled}
                  placeholder={placeholder}
                  onChange={this.onSearchChange}
                  value={queryText || ''} />

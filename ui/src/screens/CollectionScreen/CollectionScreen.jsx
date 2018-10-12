@@ -20,9 +20,10 @@ import { selectCollection, selectCollectionView } from "src/selectors";
 //   };
 // };
 
+
 class CollectionScreen extends Component {
   render() {
-    const { collectionId, collection, mode } = this.props;
+    const { collectionId, mode } = this.props;
     return (
       <CollectionScreenContext collectionId={collectionId}
                                activeMode={mode} />

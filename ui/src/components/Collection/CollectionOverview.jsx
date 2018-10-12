@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
-import { Category, Language, Country, Role, Date, Collection } from 'src/components/common';
+import { Category, Country, Role, Date, Collection } from 'src/components/common';
 
 import './CollectionOverview.css';
 
@@ -43,18 +43,6 @@ class CollectionOverview extends Component {
               </span>
             </li>
           )}
-          {/*
-          { collection.languages && !!collection.languages.length && (
-            <li>
-              <span className="key">
-                <FormattedMessage id="collection.languages" defaultMessage="Language"/>
-              </span>
-              <span className="value">
-                <Language.List codes={collection.languages} />
-              </span>
-            </li>
-          )}
-          */}
           { collection.countries && !!collection.countries.length && (
             <li>
               <span className="key">

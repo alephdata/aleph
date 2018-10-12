@@ -66,7 +66,7 @@ class EntityTable extends Component {
 
   render() {
     const { query, intl, location } = this.props;
-    const { hideCollection = false, documentMode = false } = this.props;
+    const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
@@ -117,6 +117,7 @@ class EntityTable extends Component {
                             entity={entity}
                             location={location}
                             hideCollection={hideCollection}
+                            showPreview={showPreview}
                             documentMode={documentMode}
                             updateSelection={updateSelection}
                             selection={selection} />

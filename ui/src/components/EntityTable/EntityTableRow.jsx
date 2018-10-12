@@ -9,7 +9,7 @@ class EntityTableRow extends Component {
 
   render() {
     const { entity, className, location } = this.props;
-    const { hideCollection, documentMode} = this.props;
+    const { hideCollection, documentMode, showPreview } = this.props;
 
     const { updateSelection, selection } = this.props;
     const selectedIds = _.map(selection || [], 'id');
@@ -32,7 +32,7 @@ class EntityTableRow extends Component {
           <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
         </td>}
         <td className="entity">
-          <Entity.Link preview={!documentMode}
+          <Entity.Link preview={showPreview}
                        documentMode={documentMode}
                        entity={entity} icon />
         </td>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
 
@@ -7,7 +7,6 @@ import { selectCollection, selectCollectionXrefIndex } from "src/selectors";
 
 
 class CollectionContextLoader extends Component {
-
   componentDidMount() {
     this.fetchIfNeeded();
   }

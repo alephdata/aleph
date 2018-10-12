@@ -10,7 +10,7 @@ import reverseLabel from 'src/util/reverseLabel';
 
 class EntityScreen extends Component {
   render() {
-      const { entity, entityId, mode, reference, schemata } = this.props;
+      const { entityId, mode, reference, schemata } = this.props;
       return (
         <EntityScreenContext entityId={entityId}
                              activeMode={mode}

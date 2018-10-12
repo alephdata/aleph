@@ -4,17 +4,13 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 
 import { selectEntity, selectDocumentView } from 'src/selectors';
-import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import DocumentScreenContext from 'src/components/Document/DocumentScreenContext';
 
 
 class DocumentScreen extends Component {
   render() {
-    const { documentId, document, mode } = this.props;
-    return (
-      <DocumentScreenContext documentId={documentId}
-                             activeMode={mode} />
-    );
+    const { documentId, mode } = this.props;
+    return <DocumentScreenContext documentId={documentId} activeMode={mode} />;
   }
 }
 

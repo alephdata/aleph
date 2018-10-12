@@ -65,14 +65,14 @@ class CollectionViews extends React.Component {
     const { isPreview, collection, activeMode, xrefIndex } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchmata();
-
+    const hasBrowse = (numOfDocs > 0 || collection.casefile);
     return (
       <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
         {isPreview && (
           <Tab id="info"
                title={
                   <React.Fragment>
-                    <i className="fa fa-fw fa-info" />
+                    <i className="fa fa-fw fa-info-circle" />
                     <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
                   </React.Fragment>
                 }
@@ -80,8 +80,8 @@ class CollectionViews extends React.Component {
                   <CollectionInfoMode collection={collection} />
                 } />
         )}
-        {numOfDocs > 0 && (
-          <Tab id="browse"
+        {hasBrowse && (
+          <Tab id="Document"
                disabled={numOfDocs === 0}
                title={
                   <React.Fragment>
