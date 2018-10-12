@@ -16,6 +16,10 @@
 
   .pt-breadcrumbs {
     padding-left: $aleph-grid-size * 2;
+    .pt-breadcrumb {
+      font-size: $aleph-font-size;
+    }
+
     a {
       color: $light-gray2;
     }
