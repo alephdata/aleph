@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { FormattedNumber } from 'react-intl';
+import numeral from 'numeral';
+
 
 
 class Count extends Component {
@@ -9,10 +10,10 @@ class Count extends Component {
     if (count === undefined || count === 0) {
       return null;
     }
-
+    console.log(count, 'the count');
     return (
       <span className="pt-tag pt-round pt-intent-primary">
-        <FormattedNumber value={count} />
+        {numeral(count).format('0a')}
       </span>
     );
   }
