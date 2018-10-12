@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
