@@ -43,7 +43,7 @@ class EntityReferencesMode extends React.Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (result && !result.isLoading && result.next) {
+    if (result && !result.isLoading && result.next && !result.isError) {
       this.props.queryEntities({ query, next: result.next });
     }
   }

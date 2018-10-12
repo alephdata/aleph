@@ -60,7 +60,7 @@ class SourcesIndexScreen extends Component {
 
     this.updateQuery = debounce(this.updateQuery.bind(this), 200);
     this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
-    this.bottomReachedHandler = this.bottomReachedHandler.bind(this);
+    this.getMoreResults = this.getMoreResults.bind(this);
   }
 
   componentDidMount() {
@@ -92,9 +92,9 @@ class SourcesIndexScreen extends Component {
     });
   }
 
-  bottomReachedHandler() {
-    const {query, result} = this.props;
-    if (!result.isLoading && result.next) {
+  getMoreResults() {
+    const { query, result } = this.props;
+    if (result && !result.isLoading && result.next && !result.isError) {
       this.props.queryCollections({query, result, next: result.next});
     }
   }
@@ -131,17 +131,17 @@ class SourcesIndexScreen extends Component {
           <DualPane.ContentPane className="padded">
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery}/>
+            {result.isError && (
+              <ErrorSection error={result.error} />
+            )}
             <ul className="results">
               {result.results !== undefined && result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res}/>
               )}
             </ul>
-            <Waypoint onEnter={this.bottomReachedHandler}
+            <Waypoint onEnter={this.getMoreResults}
                       bottomOffset="-300px"
                       scrollableAncestor={window} />
-            {result.isError && (
-              <ErrorSection error={result.error} />
-            )}
             {result.isLoading && (
               <SectionLoading />
             )}

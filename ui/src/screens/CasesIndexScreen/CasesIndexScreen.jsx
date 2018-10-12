@@ -101,7 +101,7 @@ class CasesIndexScreen extends Component {
 
   getMoreResults() {
     const {query, result, queryCollections} = this.props;
-    if (!result.isLoading && result.next && !result.isLoading) {
+    if (result && result.next && !result.isLoading && !result.isError) {
       queryCollections({query, next: result.next});
     }
   }

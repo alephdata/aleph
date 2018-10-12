@@ -47,7 +47,7 @@ class NotificationList extends Component {
 
   getMoreResults() {
     const { query, result } = this.props;
-    if (!result.isLoading && result.next) {
+    if (result && !result.isLoading && result.next && !result.isError) {
       this.props.queryNotifications({ query, next: result.next });
     }
   }

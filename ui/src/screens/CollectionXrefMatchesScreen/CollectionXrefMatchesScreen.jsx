@@ -28,7 +28,7 @@ class CollectionXrefMatchesScreen extends Component {
   constructor() {
     super();
     this.onOtherChange = this.onOtherChange.bind(this)
-    this.onLoadMore = this.onLoadMore.bind(this)
+    this.getMoreResults = this.getMoreResults.bind(this)
   }
 
   componentDidMount() {
@@ -65,9 +65,9 @@ class CollectionXrefMatchesScreen extends Component {
     }
   }
 
-  onLoadMore() {
+  getMoreResults() {
     const { query, matches } = this.props;
-    if (!matches.isLoading && matches.next) {
+    if (matches && !matches.isLoading && matches.next && !matches.isError) {
       this.props.queryXrefMatches({query, next: matches.next});
     }
   }
@@ -173,7 +173,7 @@ class CollectionXrefMatchesScreen extends Component {
             ))}
           </tbody>
         </table>
-        <Waypoint onEnter={this.onLoadMore}
+        <Waypoint onEnter={this.getMoreResults}
                   bottomOffset="-600px"
                   scrollableAncestor={window} />
         { matches.isLoading && (
