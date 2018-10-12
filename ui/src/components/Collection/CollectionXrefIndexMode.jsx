@@ -17,7 +17,6 @@ class CollectionXrefIndexMode extends React.Component {
     }
 
     const linkPath = getPath(collection.links.ui) + '/xref/';
-
     return (
       <section className="CollectionXrefTable">
         <table className="data-table">

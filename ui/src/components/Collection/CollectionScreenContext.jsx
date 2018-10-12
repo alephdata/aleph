@@ -17,8 +17,12 @@ import { selectCollection } from "src/selectors";
 
 const messages = defineMessages({
   placeholder: {
-    id: 'sources.index.filter',
+    id: 'collections.index.filter',
     defaultMessage: 'Search in {label}',
+  },
+  xref_title: {
+    id: 'collections.xref.title',
+    defaultMessage: 'Cross-reference',
   }
 });
 
@@ -61,9 +65,9 @@ class CollectionScreenContext extends Component {
     const breadcrumbs = (
       <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
         <Breadcrumbs.Collection key="collection" collection={collection} />
-        {activeMode === 'xref' && <li>
-          <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
-        </li>}
+        {activeMode === 'xref' && (
+          <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />
+        )}
         {extraBreadcrumbs}
       </Breadcrumbs>
     );
