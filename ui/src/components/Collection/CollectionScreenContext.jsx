@@ -62,7 +62,7 @@ class CollectionScreenContext extends Component {
       <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
         <Breadcrumbs.Collection key="collection" collection={collection} />
         {activeMode === 'xref' && <li>
-            <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
+          <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
         </li>}
         {extraBreadcrumbs}
       </Breadcrumbs>
