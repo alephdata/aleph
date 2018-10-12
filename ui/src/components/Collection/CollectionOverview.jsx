@@ -43,6 +43,7 @@ class CollectionOverview extends Component {
               </span>
             </li>
           )}
+          {/*
           { collection.languages && !!collection.languages.length && (
             <li>
               <span className="key">
@@ -53,6 +54,7 @@ class CollectionOverview extends Component {
               </span>
             </li>
           )}
+          */}
           { collection.countries && !!collection.countries.length && (
             <li>
               <span className="key">

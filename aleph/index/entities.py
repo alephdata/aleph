@@ -86,7 +86,7 @@ def _index_updates(collection, entities):
     }
     timestamps = {}
     if not len(entities):
-        return
+        return [] 
 
     query = {
         'query': {'ids': {'values': list(entities.keys())}},

@@ -39,7 +39,7 @@ class EntityScreenContext extends Component {
   }
 
   render() {
-    return <React.Fragment>{this.props.children}</React.Fragment>;
+    return this.props.children;
   }
 }
 

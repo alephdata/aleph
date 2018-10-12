@@ -3,7 +3,22 @@ from banal import ensure_list
 from followthemoney import model
 
 log = logging.getLogger(__name__)
-NO_QUERY = {'match_none': {}}
+QUERY_TEMPLATE = {
+    'bool': {
+        'should': [],
+        'filter': [],
+        'must': [],
+        'must_not': []
+    }
+}
+NO_QUERY = {
+    'bool': {
+        'should': [],
+        'filter': [],
+        'must': [{'match_none': {}}],
+        'must_not': []
+    }
+}
 
 
 def entity_query(sample, collection_id=None, query=None, broad=False):

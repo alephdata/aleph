@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
-import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
 import { Toolbar } from 'src/components/Toolbar';
 import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
+import { queryEntities } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
 
 
 class DocumentManager extends Component {

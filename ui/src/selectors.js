@@ -156,6 +156,17 @@ export function selectDocumentView(state, documentId, mode) {
   return 'view';
 }
 
+export function selectCollectionView(state, collectionId, mode, isPreview) {
+  if (mode) {
+    return mode;
+  }
+  if (isPreview) {
+    return 'info';
+  }
+  // const collection = selectEntity(state, collectionId);
+  return 'browse';
+}
+
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state.collectionPermissions, collectionId);
 }

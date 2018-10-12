@@ -6,7 +6,7 @@ from followthemoney.compare import compare
 from aleph.core import db, celery
 from aleph.model import Match, Document
 from aleph.index.core import entities_index
-from aleph.index.xref import entity_query
+from aleph.index.xref import entity_query, NO_QUERY
 from aleph.index.entities import iter_entities
 from aleph.index.util import search_safe, unpack_result
 
@@ -17,7 +17,7 @@ EXCLUDES = ['text', 'roles']
 def xref_item(item, collection_id=None):
     """Cross-reference an entity or document, given as an indexed document."""
     query = entity_query(item, collection_id=collection_id)
-    if 'match_none' in query:
+    if query == NO_QUERY:
         return
 
     query = {

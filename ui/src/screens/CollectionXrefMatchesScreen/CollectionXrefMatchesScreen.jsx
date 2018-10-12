@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 import Waypoint from 'react-waypoint';
 
@@ -16,7 +17,7 @@ import getPath from 'src/util/getPath';
 import './CollectionXrefMatchesScreen.css';
 
 const messages = defineMessages({
-  title: {
+  screen_title: {
     id: 'collections.xref.title',
     defaultMessage: 'Compare entities between collections'
   }
@@ -71,33 +72,17 @@ class CollectionXrefMatchesScreen extends Component {
     }
   }
 
-  render() {
-    const { collection, other, index, matches, intl } = this.props;
-    const error = collection.error || other.error || index.error || matches.error;
-    if (error !== undefined) {
-      return <ErrorScreen error={error} />
-    }
-    if (collection.id === undefined || other.id === undefined || index.total === undefined) {
-      return <LoadingScreen />;
-    }
-
-    const breadcrumbs = (<Breadcrumbs collection={collection}>
-      <li>
-        <a className="pt-breadcrumb">
-          <FormattedMessage id="collection.xref.crumb"
-                            defaultMessage="Cross-referencing"/>
-        </a>
-      </li>
-    </Breadcrumbs>)
-    
+  renderXrefTable() {
+    const { other, index, matches } = this.props;
     return (
-      <Screen title={intl.formatMessage(messages.title)} breadcrumbs={breadcrumbs}>
+      <React.Fragment>
         <table className="CollectionXrefMatchesScreen data-table">
           <thead>
             <tr>
               <th></th>
               <th colSpan="3" width="45%">
-                {collection.label}
+                <FormattedMessage id="matches.screen.title"
+                                  defaultMessage="Compare entities between collections"/>
               </th>
               <th colSpan="3" width="45%">
                 <div className="pt-select pt-fill">
@@ -197,8 +182,35 @@ class CollectionXrefMatchesScreen extends Component {
         { matches.isLoading && (
           <SectionLoading />
         )}
+      </React.Fragment>
+    );
+  }
+
+  render() {
+    const { collection, other, index, matches, intl } = this.props;
+    const error = collection.error || other.error || index.error || matches.error;
+    
+    if (error !== undefined) {
+      return <ErrorScreen error={error} />
+    }
+    if (collection.id === undefined || other.id === undefined || index.total === undefined) {
+      return <LoadingScreen />;
+    }
+    const indexPath = getPath(collection.links.ui) + '#mode=xref';
+    return (
+      <Screen title={intl.formatMessage(messages.screen_title)}>
+        <Breadcrumbs>
+          <Breadcrumbs.Collection collection={collection} />
+          <li>
+            <Link className="pt-breadcrumb" to={indexPath}>
+              <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
+            </Link>
+          </li>
+          <Breadcrumbs.Text text={other.label} />
+        </Breadcrumbs>
+        {this.renderXrefTable()}
       </Screen>
-    )
+    );
   }
 }
 

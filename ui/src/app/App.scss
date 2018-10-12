@@ -6,6 +6,7 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "./variables.scss";
 @import "./tables.scss";
 @import "./blueprint-overrides.scss";
+//@import "~react-md/src/scss/_react-md.scss";
 
 html {
   height: 100%;
@@ -83,6 +84,10 @@ a {
   color: $aleph-greyed-text;
 }
 
+.side-pane-padding {
+  padding-top: $aleph-grid-size !important;
+}
+
 .clickable {
   cursor: pointer;
 }
@@ -97,6 +102,14 @@ li.clickable,
 th.clickable {
   &:hover {
     background-color: $aleph-hover-background;
+  }
+}
+
+.info-tabs-padding {
+  padding: $aleph-grid-size;
+  width: 100%;
+  i {
+    margin-right: $aleph-grid-size * 0.5;
   }
 }
 

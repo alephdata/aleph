@@ -1,15 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectCollection } from 'src/selectors';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
-import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
-import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
-import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
+import CollectionHeading from 'src/components/Collection/CollectionHeading';
+import CollectionViews from 'src/components/Collection/CollectionViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import Preview from 'src/components/Preview/Preview';
-import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
+import { selectCollection } from 'src/selectors';
 
 
 class PreviewCollection extends React.Component {
@@ -17,38 +15,32 @@ class PreviewCollection extends React.Component {
     const { previewId } = this.props;
     return (
       <CollectionContextLoader collectionId={previewId}>
-        {this.renderContext()}
+        <Preview maximised={true}>
+          <DualPane.InfoPane className="with-heading">
+            {this.renderContext()}
+          </DualPane.InfoPane>
+        </Preview>
       </CollectionContextLoader>
     );
   }
 
   renderContext() {
     const { collection, previewMode = 'info' } = this.props;
-    let mode = null, maximised = false;
     if (collection.isError) {
-      mode = <ErrorSection error={collection.error} />
-    } else if (collection.id === undefined) {
-      mode = <SectionLoading/>;
-    } else if (previewMode === 'xref') {
-      mode = <CollectionXrefIndexMode collection={collection} />;
-      maximised = true;
-    } else if (previewMode === 'documents') {
-      mode = <CollectionDocumentsMode collection={collection} />;
-      maximised = true;
-    } else {
-      mode = <CollectionInfoMode collection={collection} />;
+      return <ErrorSection error={collection.error} />
+    }
+    if (collection.shouldLoad || collection.isLoading) {
+      return <SectionLoading/>;
     }
     return (
-      <Preview maximised={maximised}>
-        <CollectionViewsMenu collection={collection}
-                            activeMode={previewMode}
-                            isPreview={true} />
-        <DualPane.InfoPane className="with-heading">
-          <CollectionToolbar collection={collection}
-                            isPreview={true} />
-          {mode}
-        </DualPane.InfoPane>
-      </Preview>
+      <React.Fragment>
+        <CollectionToolbar collection={collection}
+                           isPreview={true} />
+        <CollectionHeading collection={collection}/>
+        <CollectionViews collection={collection}
+                         activeMode={previewMode}
+                         isPreview={true} />
+      </React.Fragment>
     );
   }
 }

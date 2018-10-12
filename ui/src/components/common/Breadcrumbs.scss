@@ -5,10 +5,19 @@
 
   padding-left: $aleph-grid-size;
   padding-right: $aleph-grid-size;
-  padding-top: $aleph-grid-size / 3;
-  padding-bottom: $aleph-grid-size / 3;
+  padding-top: $aleph-grid-size / 2;
+  padding-bottom: $aleph-grid-size / 2;
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2);
   overflow-x: hidden;
   display: flex;
   justify-content: space-between;
+  background-color: $aleph-sidebar-background;
+  color: white;
+
+  .pt-breadcrumbs {
+    padding-left: $aleph-grid-size * 2;
+    a {
+      color: $light-gray2;
+    }
+  }
 }

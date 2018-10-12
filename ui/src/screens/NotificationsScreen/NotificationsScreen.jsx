@@ -6,7 +6,7 @@ import { Button } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import { deleteNotifications } from 'src/actions';
-import {  DualPane } from 'src/components/common';
+import { DualPane, Breadcrumbs } from 'src/components/common';
 import Toolbar from 'src/components/Toolbar/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
 import AlertsManager from 'src/components/AlertsManager/AlertsManager';
@@ -50,6 +50,9 @@ class NotificationsScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession={true}>
+        <Breadcrumbs>
+          <Breadcrumbs.Text text={intl.formatMessage(messages.title)} />
+        </Breadcrumbs>
         <DualPane className="NotificationsScreen">
           <DualPane.ContentPane className="padded">
             <Toolbar>
