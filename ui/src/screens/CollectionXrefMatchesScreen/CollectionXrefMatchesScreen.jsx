@@ -9,7 +9,6 @@ import { Entity, Date, Country, SectionLoading, Breadcrumbs } from 'src/componen
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
-import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import Query from 'src/app/Query';
 import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
@@ -74,7 +73,7 @@ class CollectionXrefMatchesScreen extends Component {
   }
 
   renderXrefTable() {
-    const { collection, other, index, matches, intl } = this.props;
+    const { other, index, matches } = this.props;
     return (
       <React.Fragment>
         <table className="CollectionXrefMatchesScreen data-table">
@@ -188,7 +187,7 @@ class CollectionXrefMatchesScreen extends Component {
   }
 
   render() {
-    const { collectionId, collection, other, index, matches, intl } = this.props;
+    const { collection, other, index, matches, intl } = this.props;
     const error = collection.error || other.error || index.error || matches.error;
     
     if (error !== undefined) {
@@ -198,30 +197,20 @@ class CollectionXrefMatchesScreen extends Component {
       return <LoadingScreen />;
     }
     const indexPath = getPath(collection.links.ui) + '#mode=xref';
-    const breadcrumbs = (<Breadcrumbs collection={collection}>
-      <li>
-        <Link className="pt-breadcrumb" to={indexPath}>
-          <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
-        </Link>
-      </li>
-      <li>
-        <span>{other.label}</span>
-      </li>
-    </Breadcrumbs>);
-
-    return ( <Screen title={intl.formatMessage(messages.screen_title)}>
-      {breadcrumbs}
-      {this.renderXrefTable()}
-    </Screen>)
-    // return (
-    //   <CollectionScreenContext collectionId={collectionId}
-    //                            activeMode="xref"
-    //                            screenTitle={other.label}
-    //                            extraBreadcrumbs={extraBreadcrumbs}
-    //                            showInfoPane={false}>
-    //     {this.renderXrefTable()}
-    //   </CollectionScreenContext>
-    // );
+    return (
+      <Screen title={intl.formatMessage(messages.screen_title)}>
+        <Breadcrumbs>
+          <Breadcrumbs.Collection collection={collection} />
+          <li>
+            <Link className="pt-breadcrumb" to={indexPath}>
+              <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
+            </Link>
+          </li>
+          <Breadcrumbs.Text text={other.label} />
+        </Breadcrumbs>
+        {this.renderXrefTable()}
+      </Screen>
+    );
   }
 }
 
