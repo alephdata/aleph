@@ -83,11 +83,11 @@ class CollectionViewsMenu extends React.Component {
         <Tab id="xref"
              disabled={xrefIndex.total < 1}
              title={
-                <TextLoading children={<React.Fragment>
+                <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
                   <i className="fa fa-fw fa-folder-open" />
                   <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference"/>
                   <Count count={xrefIndex.total} />
-                </React.Fragment>} loading={xrefIndex.isLoading}/>
+                </TextLoading>
 
               }
               panel={

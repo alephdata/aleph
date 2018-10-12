@@ -104,11 +104,11 @@ class DocumentViewsMenu extends React.Component {
         <Tab id="tags"
              disabled={tags.total < 1}
              title={
-               <TextLoading loading={tags.isLoading} children={<React.Fragment>
+               <TextLoading loading={tags.shouldLoad || tags.isLoading}>
                  <i className="fa fa-fw fa-tags"  />
                  <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
                  <Count count={tags.total} />
-               </React.Fragment>}/>
+               </TextLoading>
              }
              panel={
                <EntityTagsMode entity={document} />

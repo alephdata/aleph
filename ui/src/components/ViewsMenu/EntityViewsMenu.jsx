@@ -46,7 +46,11 @@ class EntityViewsMenu extends React.Component {
     }
 
     return (
-      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
+      <Tabs id="EntityInfoTabs"
+            onChange={this.handleTabChange}
+            selectedTabId={activeMode}
+            renderActiveTabPanelOnly={true}
+            className='info-tabs-padding'>
         {isPreview && (<Tab id="info"
                             title={
                               <React.Fragment>
@@ -76,11 +80,11 @@ class EntityViewsMenu extends React.Component {
         <Tab id="tags"
              disabled={tags.total < 1}
              title={
-                <TextLoading children={<React.Fragment>
+                <TextLoading loading={tags.shouldLoad || tags.isLoading}>
                   <i className='fa fa-fw fa-tags'/>
                   <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
                   <Count count={tags.total} />
-                </React.Fragment>} loading={tags.isLoading}/>
+                </TextLoading>
              }
              panel={
                 <EntityTagsMode entity={entity} />
@@ -88,11 +92,11 @@ class EntityViewsMenu extends React.Component {
         <Tab id="similar"
              disabled={similar.total < 1}
              title={
-                <TextLoading children={<React.Fragment>
+                <TextLoading loading={similar.shouldLoad || similar.isLoading}>
                   <i className='fa fa-fw fa-repeat'/>
                   <FormattedMessage id="entity.info.similar" defaultMessage="Similar"/>
                   <Count count={similar.total} />
-                </React.Fragment>} loading={similar.isLoading}/>
+                </TextLoading>
              }
              panel={
                 <EntitySimilarMode entity={entity} />
