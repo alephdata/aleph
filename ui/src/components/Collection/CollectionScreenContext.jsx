@@ -9,7 +9,7 @@ import CollectionContextLoader from 'src/components/Collection/CollectionContext
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
-import CollectionViewsMenu from 'src/components/ViewsMenu/CollectionViewsMenu';
+import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
@@ -74,9 +74,9 @@ class CollectionScreenContext extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
-              <CollectionViewsMenu collection={collection}
-                                   activeMode={activeMode}
-                                   isPreview={false} />
+              <CollectionViews collection={collection}
+                               activeMode={activeMode}
+                               isPreview={false} />
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <CollectionToolbar collection={collection} />

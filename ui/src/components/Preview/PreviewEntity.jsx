@@ -1,16 +1,15 @@
 import React from 'react';
+import { withRouter } from "react-router";
 import { connect } from 'react-redux';
 
-import { selectEntity, selectEntityView, selectEntityReferences } from 'src/selectors';
 import Preview from 'src/components/Preview/Preview';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
+import EntityViews from 'src/components/Entity/EntityViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
-import EntityViewsMenu from "src/components/ViewsMenu/EntityViewsMenu";
-import { selectEntitiesResult, selectEntityTags } from "src/selectors";
+import { selectEntity, selectEntityView, selectEntityReferences } from 'src/selectors';
 import { queryEntitySimilar } from "src/queries";
-import { withRouter } from "react-router";
 
 
 class PreviewEntity extends React.Component {
@@ -39,11 +38,9 @@ class PreviewEntity extends React.Component {
       <React.Fragment>
         <EntityToolbar entity={entity} isPreview={true} />
         <EntityHeading entity={entity} isPreview={true} />
-        <EntityViewsMenu entity={entity}
-                         activeMode={previewMode}
-                         isPreview={true}
-                         similar={similar}
-                         tags={tags} />
+        <EntityViews entity={entity}
+                     activeMode={previewMode}
+                     isPreview={true} />
       </React.Fragment>
     );
   }
@@ -56,10 +53,9 @@ const mapStateToProps = (state, ownProps) => {
   return {
     entity,
     references: selectEntityReferences(state, previewId),
-    previewMode: selectEntityView(state, previewId, previewMode, true),
-    similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
-    tags: selectEntityTags(state, entity.id)}
+    previewMode: selectEntityView(state, previewId, previewMode, true)
   };
+};
 
 PreviewEntity = connect(mapStateToProps, {})(PreviewEntity);
 PreviewEntity = withRouter(PreviewEntity);

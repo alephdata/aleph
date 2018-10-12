@@ -13,9 +13,7 @@ class DocumentScreen extends Component {
     const { documentId, document, mode } = this.props;
     return (
       <DocumentScreenContext documentId={documentId}
-                             activeMode={mode}>
-        <DocumentViewMode document={document} activeMode={mode} />
-      </DocumentScreenContext>
+                             activeMode={mode} />
     );
   }
 }

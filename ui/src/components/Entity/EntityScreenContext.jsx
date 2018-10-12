@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router";
 import { connect } from 'react-redux';
 
 import Screen from 'src/components/Screen/Screen';
@@ -6,12 +7,11 @@ import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import EntityViewsMenu from 'src/components/ViewsMenu/EntityViewsMenu';
+import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectEntity } from 'src/selectors';
-import { withRouter } from "react-router";
 
 
 class EntityScreenContext extends Component {
@@ -41,10 +41,9 @@ class EntityScreenContext extends Component {
           {breadcrumbs}
           <DualPane>`
             <DualPane.ContentPane className="view-menu-flex-direction">
-              <EntityViewsMenu entity={entity}
-                               activeMode={activeMode}
-                               isPreview={false}/>
-      
+              <EntityViews entity={entity}
+                           activeMode={activeMode}
+                           isPreview={false} />
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <EntityToolbar entity={entity} isPreview={false} />

@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectCollection } from 'src/selectors';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
-import CollectionViewsMenu from "../ViewsMenu/CollectionViewsMenu";
+import CollectionViews from 'src/components/Collection/CollectionViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import Preview from 'src/components/Preview/Preview';
+import { selectCollection } from 'src/selectors';
 
 
 class PreviewCollection extends React.Component {
@@ -37,9 +37,9 @@ class PreviewCollection extends React.Component {
         <CollectionToolbar collection={collection}
                            isPreview={true} />
         <CollectionHeading collection={collection}/>
-        <CollectionViewsMenu collection={collection}
-                             activeMode={previewMode}
-                             isPreview={true} />
+        <CollectionViews collection={collection}
+                         activeMode={previewMode}
+                         isPreview={true} />
       </React.Fragment>
     );
   }

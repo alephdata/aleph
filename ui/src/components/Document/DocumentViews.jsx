@@ -13,9 +13,8 @@ import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import TextLoading from "src/components/common/TextLoading";
 
-import './ViewsMenu.css';
 
-class DocumentViewsMenu extends React.Component {
+class DocumentViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -126,7 +125,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-DocumentViewsMenu = withRouter(DocumentViewsMenu);
-DocumentViewsMenu = injectIntl(DocumentViewsMenu);
-DocumentViewsMenu = connect(mapStateToProps, {}, null, {pure: false})(DocumentViewsMenu);
-export default DocumentViewsMenu;
+DocumentViews = withRouter(DocumentViews);
+DocumentViews = injectIntl(DocumentViews);
+DocumentViews = connect(mapStateToProps, {}, null, {pure: false})(DocumentViews);
+export default DocumentViews;

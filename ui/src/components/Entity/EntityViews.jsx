@@ -16,9 +16,8 @@ import EntityInfoMode from "src/components/Entity/EntityInfoMode";
 import reverseLabel from 'src/util/reverseLabel';
 import TextLoading from "src/components/common/TextLoading";
 
-import './ViewsMenu.css';
 
-class EntityViewsMenu extends React.Component {
+class EntityViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -117,6 +116,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-EntityViewsMenu = connect(mapStateToProps)(EntityViewsMenu);
-EntityViewsMenu = withRouter(EntityViewsMenu);
-export default EntityViewsMenu;
+EntityViews = connect(mapStateToProps)(EntityViews);
+EntityViews = withRouter(EntityViews);
+export default EntityViews;

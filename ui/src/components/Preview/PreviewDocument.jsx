@@ -6,7 +6,7 @@ import Preview from 'src/components/Preview/Preview';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentHeading from 'src/components/Document/DocumentHeading';
-import DocumentViewsMenu from "src/components/ViewsMenu/DocumentViewsMenu";
+import DocumentViews from "src/components/Document/DocumentViews";
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectDocumentView } from 'src/selectors';
 
@@ -39,9 +39,9 @@ class PreviewDocument extends React.Component {
         <DocumentToolbar document={document}
                          isPreview={true} />
         <DocumentHeading document={document} />
-        <DocumentViewsMenu document={document}
-                           activeMode={previewMode}
-                           isPreview={true} />
+        <DocumentViews document={document}
+                       activeMode={previewMode}
+                       isPreview={true} />
       </React.Fragment>
     );
   }

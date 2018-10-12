@@ -10,7 +10,7 @@ import DocumentContextLoader from 'src/components/Document/DocumentContextLoader
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentHeading from 'src/components/Document/DocumentHeading';
 import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
-import DocumentViewsMenu from 'src/components/ViewsMenu/DocumentViewsMenu';
+import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
@@ -80,9 +80,9 @@ class DocumentScreenContext extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
-              <DocumentViewsMenu document={document}
-                                 activeMode={activeMode}
-                                 isPreview={false} />
+              <DocumentViews document={document}
+                             activeMode={activeMode}
+                             isPreview={false} />
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <DocumentToolbar document={document} isPreview={false} />

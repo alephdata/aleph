@@ -5,17 +5,14 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
-import { Count } from 'src/components/common';
-import { selectCollectionXrefIndex } from 'src/selectors';
+import { Count, TextLoading } from 'src/components/common';
 import CollectionInfoMode from "src/components/Collection/CollectionInfoMode";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
-import TextLoading from "src/components/common/TextLoading";
+import { selectCollectionXrefIndex } from 'src/selectors';
 
-import './ViewsMenu.css';
 
-class CollectionViewsMenu extends React.Component {
-
+class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
@@ -107,7 +104,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-CollectionViewsMenu = connect(mapStateToProps, {})(CollectionViewsMenu);
-CollectionViewsMenu = injectIntl(CollectionViewsMenu);
-CollectionViewsMenu = withRouter(CollectionViewsMenu);
-export default CollectionViewsMenu;
+CollectionViews = connect(mapStateToProps, {})(CollectionViews);
+CollectionViews = injectIntl(CollectionViews);
+CollectionViews = withRouter(CollectionViews);
+export default CollectionViews;

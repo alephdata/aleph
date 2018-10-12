@@ -5,7 +5,6 @@ import queryString from 'query-string';
 
 import { selectEntity, selectEntityView, selectSchemata } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
-import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import { selectEntityReference } from "src/selectors";
 import reverseLabel from 'src/util/reverseLabel';
 
@@ -15,9 +14,7 @@ class EntityScreen extends Component {
       return (
         <EntityScreenContext entityId={entityId}
                              activeMode={mode}
-                             screenTitle={reverseLabel(schemata, reference)}>
-          <EntityReferencesMode entity={entity} mode={mode} />
-        </EntityScreenContext>
+                             screenTitle={reverseLabel(schemata, reference)} />
       );
   }
 }

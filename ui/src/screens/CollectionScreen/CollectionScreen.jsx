@@ -4,7 +4,6 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
-import CollectionViewsMenu from "src/components/ViewsMenu/CollectionViewsMenu";
 import { selectCollection, selectCollectionView } from "src/selectors";
 
 // import NotificationList from 'src/components/Notification/NotificationList';
@@ -26,10 +25,7 @@ class CollectionScreen extends Component {
     const { collectionId, collection, mode } = this.props;
     return (
       <CollectionScreenContext collectionId={collectionId}
-                               activeMode={mode}>
-        <CollectionViewsMenu collection={collection}
-                             activeMode={mode} />
-      </CollectionScreenContext>
+                               activeMode={mode} />
     );
   }
 }
