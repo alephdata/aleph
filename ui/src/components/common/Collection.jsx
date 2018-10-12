@@ -10,7 +10,7 @@ import c from 'classnames';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
-import { getColor } from 'src/util/colorScheme';
+// import { getColor } from 'src/util/colorScheme';
 
 import './Collection.css';
 
@@ -30,7 +30,7 @@ class CollectionLabel extends Component {
     let iconName = "database", style = {};
     if (collection.casefile) {
       iconName = "briefcase";
-      style = {color: getColor(collection.id)};
+      // style = {color: getColor(collection.id)};
     } else if (collection.secret) {
       iconName = "lock";
     }
