@@ -33,7 +33,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-EntityScreen = connect(mapStateToProps, {})(EntityScreen);
+EntityScreen = connect(mapStateToProps)(EntityScreen);
 EntityScreen = withRouter(EntityScreen);
 export default EntityScreen;
 

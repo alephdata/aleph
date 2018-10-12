@@ -25,6 +25,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-DocumentScreen = connect(mapStateToProps, {})(DocumentScreen);
+DocumentScreen = connect(mapStateToProps)(DocumentScreen);
 DocumentScreen = withRouter(DocumentScreen);
 export default DocumentScreen

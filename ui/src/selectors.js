@@ -163,7 +163,7 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
   if (isPreview) {
     return 'info';
   }
-  const collection = selectEntity(state, collectionId);
+  const collection = selectCollection(state, collectionId);
   let largestSchema = 'Document', largestCount = 0;
   const schemata = {};
   for (let key in collection.schemata) {
