@@ -50,7 +50,7 @@ class EntitySearch extends Component {
 
   getMoreResults() {
     const {query, result, queryEntities} = this.props;
-    if (result && result.next) {
+    if (result && result.next && !result.isLoading) {
       queryEntities({query, next: result.next});
     }
   }
@@ -93,14 +93,9 @@ class EntitySearch extends Component {
                      updateQuery={this.updateQuery}
                      updateSelection={this.props.updateSelection}
                      selection={this.props.selection} />
-
-        {!result.isLoading && result.next && (
-          <Waypoint
-            onEnter={this.getMoreResults}
-            bottomOffset="-600px"
-            scrollableAncestor={window}
-          />
-        )}
+        <Waypoint onEnter={this.getMoreResults}
+                  bottomOffset="-300px"
+                  scrollableAncestor={window} />
         {result.isLoading && (
           <SectionLoading/>
         )}

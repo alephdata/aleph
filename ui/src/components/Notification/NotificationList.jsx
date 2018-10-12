@@ -68,11 +68,9 @@ class NotificationList extends Component {
             )}
           </ul>
         }
-        { !result.isLoading && result.next && (
-          <Waypoint onEnter={this.getMoreResults}
-                    bottomOffset="-600px"
-                    scrollableAncestor={window} />
-        )}
+        <Waypoint onEnter={this.getMoreResults}
+                  bottomOffset="-300px"
+                  scrollableAncestor={window} />
         { result.isLoading && (
           <SectionLoading />
         )}

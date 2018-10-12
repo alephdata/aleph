@@ -2,13 +2,14 @@ import _ from 'lodash';
 
 
 export function mergeResults(previous, current) {
-  if (previous === undefined || previous.limit === undefined) {
+  if (previous === undefined || previous.results === undefined) {
     return current;
   }
-  if (current.offset === (previous.limit + previous.offset)) {
+  const expectedOffset = (previous.limit + previous.offset);
+  if (current.offset === expectedOffset) {
     return { ...current, results: [...previous.results, ...current.results] };
   }
-  return current;
+  return previous;
 }
 
 export function updateResults(state, { query, result }) {

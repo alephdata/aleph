@@ -136,12 +136,9 @@ class SourcesIndexScreen extends Component {
                 <CollectionListItem key={res.id} collection={res}/>
               )}
             </ul>
-            {!result.isLoading && result.next && (
-              <Waypoint
-                onEnter={this.bottomReachedHandler}
-                scrollableAncestor={window}
-              />
-            )}
+            <Waypoint onEnter={this.bottomReachedHandler}
+                      bottomOffset="-300px"
+                      scrollableAncestor={window} />
             {result.isError && (
               <ErrorSection error={result.error} />
             )}

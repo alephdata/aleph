@@ -173,12 +173,9 @@ class CollectionXrefMatchesScreen extends Component {
             ))}
           </tbody>
         </table>
-        { !matches.isExpanding && matches.next && (
-          <Waypoint onEnter={this.onLoadMore}
-                    bottomOffset="-600px"
-                    scrollableAncestor={window}
-          />
-        )}
+        <Waypoint onEnter={this.onLoadMore}
+                  bottomOffset="-600px"
+                  scrollableAncestor={window} />
         { matches.isLoading && (
           <SectionLoading />
         )}

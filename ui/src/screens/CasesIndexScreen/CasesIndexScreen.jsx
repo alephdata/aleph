@@ -101,7 +101,7 @@ class CasesIndexScreen extends Component {
 
   getMoreResults() {
     const {query, result, queryCollections} = this.props;
-    if (!result.isLoading && result.next) {
+    if (!result.isLoading && result.next && !result.isLoading) {
       queryCollections({query, next: result.next});
     }
   }
@@ -165,11 +165,9 @@ class CasesIndexScreen extends Component {
                               title={intl.formatMessage(messages.no_results_title)}/>
               </div>
             )}
-            {!result.isLoading && result.next && (
-              <Waypoint onEnter={this.getMoreResults}
-                        bottomOffset="-600px"
-                        scrollableAncestor={window}/>
-            )}
+            <Waypoint onEnter={this.getMoreResults}
+                      bottomOffset="-300px"
+                      scrollableAncestor={window} />
             {result.isLoading && (
               <SectionLoading/>
             )}

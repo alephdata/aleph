@@ -114,13 +114,9 @@ class EntityReferencesMode extends React.Component {
             ))}
           </tbody>
         </table>
-        { !result.isLoading && result.next && (
-          <Waypoint
-            onEnter={this.getMoreResults}
-            bottomOffset="-600px"
-            scrollableAncestor={window}
-          />
-        )}
+        <Waypoint onEnter={this.getMoreResults}
+                  bottomOffset="-300px"
+                  scrollableAncestor={window} />
         { result.isLoading && (
           <SectionLoading />
         )}
