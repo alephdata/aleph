@@ -67,7 +67,7 @@ docker-push:
 	docker push alephdata/aleph-recognize-text:$(TAG)
 
 dev: 
-	pip install -q transifex-client bumpversion babel
+	pip install -q transifex-client bumpversion babel jinja2
 
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev
