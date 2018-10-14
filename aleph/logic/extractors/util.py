@@ -1,13 +1,13 @@
 import io
 import csv
 import logging
-from ahocorasick import Automaton
-from collections import defaultdict
 from normality import normalize
 
-from aleph import settings
+from aleph.core import settings, kv
+from aleph.util import make_key
 
 log = logging.getLogger(__name__)
+PLACE_KEY = 'ner*gns'
 
 
 def overlaps(a, b):
@@ -27,7 +27,11 @@ def normalize_label(label):
 
 
 def load_places():
-    places = defaultdict(set)
+    if kv.get(PLACE_KEY):
+        return
+    total = 0
+    pipe = kv.pipeline(transaction=False)
+    log.debug("Loading geonames...")
     with io.open(settings.GEONAMES_DATA, 'r', encoding='utf-8') as fh:
         for row in csv.reader(fh, delimiter='\t'):
             country = row[8].lower().strip()
@@ -39,18 +43,12 @@ def load_places():
             for name in names:
                 name = normalize_label(name)
                 if name is not None:
-                    places[name].add(country)
-    return places
+                    total += 1
+                    pipe.lpush(place_key(name), country)
+    pipe.set(PLACE_KEY, total)
+    pipe.execute()
+    log.debug("Loaded %s geonames.", total)
 
 
-def places_automaton():
-    if not hasattr(settings, '_geonames'):
-        log.debug("Loading geonames...")
-        geonames = Automaton()
-        places = load_places()
-        for (name, countries) in places.items():
-            geonames.add_word(name, countries)
-        geonames.make_automaton()
-        settings._geonames = geonames
-        log.debug("Loaded %s geonames.", len(places))
-    return settings._geonames
+def place_key(name):
+    return make_key(PLACE_KEY, name)

@@ -4,8 +4,9 @@ from normality import collapse_spaces
 from fingerprints import clean_entity_name
 from followthemoney.types import registry
 
+from aleph.core import kv
 from aleph.model import DocumentTag
-from aleph.logic.extractors.util import normalize_label, places_automaton
+from aleph.logic.extractors.util import normalize_label, place_key
 
 log = logging.getLogger(__name__)
 
@@ -66,8 +67,8 @@ class LocationResult(Result):
         super(LocationResult, self).__init__(ctx, label, start, end)
         if self.key is not None:
             try:
-                places = places_automaton()
-                self.countries = ensure_list(places.get(self.key))
+                value = kv.lrange(place_key(self.key), 0, -1)
+                self.countries = ensure_list(value)
             except KeyError:
                 pass
 

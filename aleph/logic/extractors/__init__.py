@@ -3,6 +3,7 @@ import logging
 from aleph.core import db, settings
 from aleph.model import Document, DocumentTagCollector
 from aleph.logic.extractors.aggregate import EntityAggregator
+from aleph.logic.extractors.util import load_places
 
 log = logging.getLogger(__name__)
 
@@ -10,6 +11,7 @@ log = logging.getLogger(__name__)
 def extract_document_tags(document):
     if document.status != Document.STATUS_SUCCESS:
         return
+    load_places()
     log.info("Tagging [%s]: %s", document.id, document.name)
 
     languages = list(document.languages)
