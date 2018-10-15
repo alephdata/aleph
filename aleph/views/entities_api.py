@@ -51,6 +51,7 @@ def create():
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['GET'])
+@blueprint.route('/api/2/documents/<id>', methods=['GET'])
 def view(id):
     enable_cache()
     entity = get_index_entity(id, request.authz.READ)

@@ -1,5 +1,4 @@
 import logging
-from followthemoney import model
 
 from aleph.model import Document, DocumentRecord
 from aleph.index.xref import entity_query

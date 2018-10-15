@@ -10,7 +10,7 @@ from followthemoney import model
 from aleph.core import settings
 from aleph.model import Entity, Role
 from aleph.search import SearchQueryParser
-from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
+from aleph.search import EntitiesQuery, SimilarEntitiesQuery
 from aleph.views.util import jsonify
 from aleph.logic.util import entity_url
 
@@ -158,7 +158,7 @@ def suggest_entity():
     matches = []
     parser = SearchQueryParser(args, request.authz)
     if parser.prefix is not None:
-        query = SuggestEntitiesQuery(parser)
+        query = EntitiesQuery(parser)
         for doc in query.search().get('hits').get('hits'):
             source = doc.get('_source')
             match = {
