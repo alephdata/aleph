@@ -7,6 +7,8 @@ from aleph.core import kv
 from aleph.util import make_key
 
 log = logging.getLogger(__name__)
+EXPIRATION = 84600 * 7
+DEGREE = 'degree'
 
 
 class CacheMiss(Exception):
@@ -14,37 +16,33 @@ class CacheMiss(Exception):
 
 
 def typed_key(type_, value, *extra):
-    return make_key('1', type_.name, value, *extra)
+    return make_key('graph', type_.name, value, *extra)
 
 
-def store_links(type_, value, links, expire=84600):
-    key = typed_key(type_, value)
-    # log.debug("STORE: %s", key)
+def store_links(type_, value, links, expire=EXPIRATION):
+    pipe = kv.pipeline()
+    degree_key = typed_key(type_, value, DEGREE)
     values = []
     for link in links:
-        # TODO: experiment with storage mechanisms here. @sunu did a
-        # hash, which is memory-efficient but does not account for
-        # multi-valued properties
         value = msgpack.packb(link.to_tuple(), use_bin_type=True)
-        values.append(link.pack())
-    degree_key = typed_key(type_, value, 'deg')
-    kv.set(degree_key, len(values), ex=expire)
+        values.append(value)
+    key = typed_key(type_, value)
+    pipe.delete(key)    
     if len(values):
-        kv.rpush(key, *values)
-        kv.expire(expire)
+        pipe.rpush(key, *values)
+    pipe.set(degree_key, len(values), ex=expire)
+    pipe.execute()
 
 
 def load_links(type_, value):
     # raise CacheMiss()
-    degree_key = typed_key(type_, value, 'deg')
+    degree_key = typed_key(type_, value, DEGREE)
     if kv.get(degree_key) is None:
         raise CacheMiss()
     key = typed_key(type_, value)
-    # log.debug("LOAD: %s", key)
     ref = type_.ref(value)
     for packed in kv.lrange(key, 0, -1):
         data = msgpack.unpackb(packed, raw=False)
         link = Link.from_tuple(model, ref, data)
-        if link is None:
-            continue
-        yield link
+        if link is not None:
+            yield link

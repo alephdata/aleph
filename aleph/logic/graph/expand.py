@@ -21,7 +21,9 @@ def expand_group(type_, value):
     if type_.prefix is None or value is None:
         return
     value = str(value)
-    ref = type_.ref(value)
+    # value = type_.clean(value)
+    # if value is None:
+    #     return
     query = {
         'query': {'term': {type_.group: value}},
         '_source': {'includes': ['schema', 'properties']}
@@ -38,10 +40,12 @@ def expand_group(type_, value):
             values = type_.normalize_set(values)
             if value not in values:
                 continue
-            if prop.reverse:
-                yield Link(ref, prop.reverse, entity_id)
-            else:
-                yield Link(ref, prop, entity_id, inverted=True)
+            for item in values:
+                ref = type_.ref(item)
+                if prop.reverse:
+                    yield Link(ref, prop.reverse, entity_id)
+                else:
+                    yield Link(ref, prop, entity_id, inverted=True)
 
 
 def expand_entity(entity):
@@ -73,15 +77,8 @@ def expand_node(type_, value):
         yield from load_links(type_, value)
     except CacheMiss:
         log.debug("Cache miss [%s]: %s", type_, value)
-        links = set()
-        links.update(expand_group(type_, value))
+        links = list(expand_group(type_, value))
         if type_ == registry.entity:
-            links.update(expand_entity(value))
+            links.extend(expand_entity(value))
         store_links(type_, value, links)
         yield from links
-
-
-def expand_node_raw(type_, value):
-    yield from expand_group(type_, value)
-    if type_ == registry.entity:
-        yield from expand_entity(value)

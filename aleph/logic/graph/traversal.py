@@ -12,7 +12,7 @@ class Node(object):
 
     def __init__(self, graph, type_, value, seed=None):
         self.graph = graph
-        self.id = (type_, value)
+        self.ref = type_.ref(value)
         self.type = type_
         self.value = value
         self.seed = seed
@@ -31,10 +31,10 @@ class Node(object):
         return weight * self.decay * 0.9
 
     def __hash__(self):
-        return hash(self.id)
+        return hash(self.ref)
 
     def __eq__(self, other):
-        return other.id == self.id
+        return other.ref == self.ref
 
     def __repr__(self):
         return '<Node(%s, %r)>' % (self.type.name, self.value)
@@ -91,15 +91,15 @@ class Graph(object):
 
     def expand_node(self, node):
         self.seen.add(node)
-        print("Expand: %r (%s)" % (node, node.weight))
-        # node_ref = node.type.ref(node.value)
+        log.debug("Expand: %r (%s)", node, node.weight)
         for link in expand_node(node.type, node.value):
             self.links.append(link)
-            target = self.add_node(link.prop.type, link.value)
+            type_ = registry.entity if link.inverted else link.prop.type
+            target = self.add_node(type_, link.value)
             target.origins.add(node)
             self.paths.add(Path(self, node, target))
-            target.weight = target.compute_weight()
-        # print("Stats: %s nodes, %s paths" % (len(self.nodes), len(self.paths)))
+            if target.weight == 0:
+                target.weight = target.compute_weight()
 
     def build(self, steps):
         for i in range(steps):
@@ -109,29 +109,6 @@ class Graph(object):
             self.expand_node(node)
 
 
-# def traverse(type_, value, steam=2, path=None):
-#     if path is None:
-#         path = set()
-#     if (type_, value) in path:
-#         return
-#     path.add((type_, value))
-#     log.info("Traverse: %s (%s), %s", value, type_, steam)
-#     ref = type_.ref(value)
-#     for link in expand_node(type_, value):
-#         if link.ref != ref:
-#             link = link.invert()
-#         yield (steam, link)
-#         specificity = link.prop.type.specificity(link.value)
-#         if specificity == 0:
-#             continue
-#         next_steam = steam * specificity * link.weight
-#         log.info("Link: %s -> %s", link, next_steam)
-#         if next_steam > 0:
-#             yield from traverse(link.prop.type, link.value,
-#                                 steam=next_steam,
-#                                 path=path)
-
-
 def traverse_entity(entity, steam=2):
     start = time.time()
     graph = Graph()
@@ -139,5 +116,5 @@ def traverse_entity(entity, steam=2):
     graph.build(steps=steam)
     end = time.time()
     duration = end - start
-    print("Duration: %s" % duration)
+    log.info("Traversal time: %s" % duration)
     return graph.links
