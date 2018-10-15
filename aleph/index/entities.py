@@ -8,6 +8,7 @@ from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, BulkIndexError
 
 from aleph.core import es
+from aleph.model import Document
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
 from aleph.index.util import index_safe, search_safe, authz_query
@@ -61,6 +62,18 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
     }
     for res in scan(es, index=entities_index(), query=query, scroll='1410m'):
         yield unpack_result(res)
+
+
+def iter_proxies(**kw):
+    document = model.get(Document.SCHEMA)
+    includes = ['schema', 'properties']
+    for data in iter_entities(includes=includes, **kw):
+        schema = model.get(data.get('schema'))
+        if schema is None:
+            continue
+        if 'properties' not in data and schema.is_a(document):
+            data.update(Document.doc_data_to_schema(data))
+        yield model.get_proxy(data)
 
 
 def delete_entity(entity_id):

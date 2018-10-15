@@ -7,11 +7,10 @@ from aleph.core import db, celery
 from aleph.model import Match, Document
 from aleph.index.core import entities_index
 from aleph.index.match import match_query
-from aleph.index.entities import iter_entities
+from aleph.index.entities import iter_proxies
 from aleph.index.util import search_safe, unpack_result, none_query
 
 log = logging.getLogger(__name__)
-EXCLUDES = ['text', 'roles']
 
 
 def xref_item(proxy):
@@ -23,7 +22,7 @@ def xref_item(proxy):
     query = {
         'query': query,
         'size': 100,
-        '_source': {'excludes': EXCLUDES}
+        '_source': {'includes': ['schema', 'properties']}
     }
     result = search_safe(index=entities_index(), body=query)
     results = result.get('hits').get('hits')
@@ -38,9 +37,7 @@ def xref_item(proxy):
 def xref_collection(collection_id):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
-    entities = iter_entities(collection_id=collection_id,
-                             schemata=matchable,
-                             excludes=EXCLUDES)
+    entities = iter_proxies(collection_id=collection_id, schemata=matchable)
     for entity in entities:
         proxy = model.get_proxy(entity)
         entity_id, document_id = None, None
