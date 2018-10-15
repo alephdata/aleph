@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Aleph - Document sifting web frontend
+name: aleph
+version: 2.1.5

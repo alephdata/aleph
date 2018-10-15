@@ -1,0 +1,106 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: search-worker
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: search-worker
+  minReplicas: {{ .Values.worker.minReplicas }}
+  maxReplicas: {{ .Values.worker.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: {{ .Values.worker.targetAverageCPUUtilization }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-worker
+  labels:
+    app: search-worker
+spec:
+  selector:
+    matchLabels:
+      app: search-worker
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.worker.maxSurge }}
+      maxUnavailable: {{ .Values.worker.maxUnavailable }}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: search-worker
+    spec:
+      nodeSelector:
+        tier: application
+        # lifespan: transient
+      restartPolicy: Always
+      containers:
+        - name: search-worker
+          image: {{ .Values.worker.image }}
+          imagePullPolicy: Always
+          command:
+            - celery
+            - -A
+            - aleph.queues
+            - -c
+            - '4'
+            - -l
+            - INFO
+            - worker
+          resources:
+            requests:
+              memory: {{ .Values.worker.resources.requests.memory }}
+            limits:
+              memory: {{ .Values.worker.resources.limits.memory }}
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/service-account.json
+            - name: ALEPH_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_DATABASE_URI
+            - name: ALEPH_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_OAUTH_SECRET
+            - name: ALEPH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_SECRET_KEY
+            - name: DATAVAULT_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: DATAVAULT_SIDECAR_URI
+          envFrom:
+            - configMapRef:
+                name: search-config
+          volumeMounts:
+            - mountPath: /var/secrets/google
+              name: service-account-app
+        - name: search-db-sidecar
+          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
+          imagePullPolicy: Always
+          command:
+            - /cloud_sql_proxy
+            - -dir=/cloudsql
+            - -instances={{ .Values.global.dbInstance }}
+            - -credential_file=/credentials/service-account.json
+          volumeMounts:
+            - mountPath: /credentials
+              name: service-account-db
+      volumes:
+        - name: service-account-app
+          secret:
+            secretName: service-account-app
+        - name: service-account-db
+          secret:
+            secretName: service-account-db

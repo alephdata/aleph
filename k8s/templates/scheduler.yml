@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: search-scheduler
+  labels:
+    app: search-scheduler
+spec:
+  selector:
+    matchLabels:
+      app: search-scheduler
+  serviceName: "search-scheduler"
+  replicas: {{ .Values.scheduler.replicas }}
+  template:
+    metadata:
+      labels:
+        app: search-scheduler
+    spec:
+      nodeSelector:
+        tier: application
+      restartPolicy: Always
+      containers:
+        - name: search-scheduler
+          image: {{ .Values.scheduler.image }}
+          imagePullPolicy: Always
+          command:
+            - celery
+            - -A
+            - aleph.queues
+            - beat
+            - -s
+            - /var/lib/celerybeat-schedule.db
+          resources:
+            requests:
+              memory: {{ .Values.scheduler.resources.requests.memory }}
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/service-account.json
+            - name: ALEPH_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_DATABASE_URI
+            - name: ALEPH_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_OAUTH_SECRET
+            - name: ALEPH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_SECRET_KEY
+            - name: DATAVAULT_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: DATAVAULT_SIDECAR_URI
+          envFrom:
+            - configMapRef:
+                name: search-config
+          volumeMounts:
+            - mountPath: /var/secrets/google
+              name: service-account-app
+        - name: search-db-sidecar
+          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
+          imagePullPolicy: Always
+          command:
+            - /cloud_sql_proxy
+            - -dir=/cloudsql
+            - -instances=occrp-data:us-east1:core-postgres=tcp:5432
+            - -credential_file=/credentials/service-account.json
+          volumeMounts:
+            - mountPath: /credentials
+              name: service-account-db
+      volumes:
+        - name: service-account-app
+          secret:
+            secretName: service-account-app
+        - name: service-account-db
+          secret:
+            secretName: service-account-db

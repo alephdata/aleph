@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-recognize-text
+  labels:
+    app: search-recognize-text
+spec:
+  selector:
+    app: search-recognize-text
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 50000
+      protocol: "TCP"
+      name: api
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: search-recognize-text
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: search-recognize-text
+  minReplicas: {{ .Values.recognize-text.minReplicas }}
+  maxReplicas: {{ .Values.recognize-text.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: {{ .Values.recognize-text.targetAverageCPUUtilization }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: search-recognize-text-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: search-recognize-text
+  policyTypes:
+    - Egress
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-recognize-text
+  labels:
+    app: search-recognize-text
+spec:
+  selector:
+    matchLabels:
+      app: search-recognize-text
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.recognize-text.maxSurge }}
+      maxUnavailable: {{ .Values.recognize-text.maxUnavailable }}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: search-recognize-text
+    spec:
+      nodeSelector:
+        tier: application
+        lifespan: transient
+      restartPolicy: Always
+      containers:
+        - name: search-recognize-text
+          image: {{ .Values.recognize-text.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 50000
+              name: http
+          resources:
+            requests:
+              memory: {{ .Values.recognize-text.resources.requests.memory }}
+              cpu: {{ .Values.recognize-text.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.recognize-text.resources.limits.memory }}
+              cpu: {{ .Values.recognize-text.resources.limits.cpu }}

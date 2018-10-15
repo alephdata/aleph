@@ -1,0 +1,174 @@
+global:
+  dbInstance: clustername:region:core-postgres=tcp:5432
+
+
+api:
+  image: alephdata/aleph:latest
+  minReplicas: 1
+  maxReplicas: 2
+  targetAverageCPUUtilization: 80
+  maxSurge: 2
+  maxUnavailable: 25%
+  resources:
+    requests:
+      memory: 500Mi
+    limits:
+      memory: 1Gi
+
+
+config:
+  C_FORCE_ROOT: 'true'
+  GRPC_VERBOSITY: 'ERROR'
+  ALEPH_DEBUG: 'false'
+  ALEPH_CACHE: 'true'
+  ALEPH_EAGER: 'false'
+  ALEPH_URL_SCHEME: https
+  ALEPH_APP_TITLE: 'OCCRP Data'
+  ALEPH_APP_NAME: aleph
+  ALEPH_OCR_VISION_API: 'false'
+  ALEPH_CORS_ORIGINS: '*'
+  ALEPH_ARCHIVE_TYPE: gs
+  ALEPH_ARCHIVE_BUCKET: 'bucket-name'
+  ALEPH_PASSWORD_LOGIN: 'false'
+  ALEPH_ADMINS: 'admin@example.com'
+  ALEPH_MAIL_FROM: notifications@example.com
+  ALEPH_MAIL_HOST: core-mail.default.svc.cluster.local
+  ALEPH_MAIL_USERNAME: ''
+  ALEPH_MAIL_PASSWORD: ''
+  ALEPH_MAIL_PORT: '25'
+  ALEPH_MAIL_TLS: 'false'
+  ALEPH_MAIL_SSL: 'false'
+  ALEPH_UI_URL: https://data.occrp.org
+  ALEPH_FAVICON: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
+  ALEPH_LOGO: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
+  ALEPH_ELASTICSEARCH_URI: http://search-index.default.svc.cluster.local:9200/
+  ALEPH_ELASTICSEARCH_SHARDS: '2'
+  ALEPH_ENTITIES_INDEX: aleph-entity-v1
+  ALEPH_ENTITIES_INDEX_SET: aleph-entity-v1
+  ALEPH_RECORDS_INDEX: aleph-record-v1
+  ALEPH_RECORDS_INDEX_SET: aleph-record-v1
+  ALEPH_COLLECTIONS_INDEX: aleph-collection-v1
+  ALEPH_BROKER_URI: amqp://guest:guest@search-queue.default.svc.cluster.local:5672
+  ALEPH_ENTITIES_SERVICE: search-extract-entities.default.svc.cluster.local:50000
+  ALEPH_OCR_SERVICE: search-recognize-text.default.svc.cluster.local:50000
+  UNOSERVICE_URL: http://search-convert-document.default.svc.cluster.local:3000/convert
+  ALEPH_OAUTH: 'true'
+  ALEPH_OAUTH_KEY: key-name
+  ALEPH_OAUTH_NAME: provider-name
+  ALEPH_OAUTH_SCOPE: read
+  ALEPH_OAUTH_BASE_URL: ''
+  ALEPH_OAUTH_TOKEN_URL: ''
+  ALEPH_OAUTH_AUTHORIZE_URL: ''
+
+
+convert-document:
+  image: alephdata/aleph-convert-document:latest
+  minReplicas: 2
+  maxReplicas: 20
+  targetAverageCPUUtilization: 80
+  maxSurge: 2
+  maxUnavailable: 50%
+  resources:
+    requests:
+      memory: 500Mi
+
+
+index-admin:
+  image: lmenezes/cerebro
+  replicas: 1
+  maxSurge: 1
+  maxUnavailable: 100%
+  resources:
+    limits:
+      memory: 2Gi
+
+
+index:
+  image: alephdata/platform-elasticsearch:2.1.4
+  replicas: 6
+  resources:
+    requests:
+      memory: 22Gi
+      cpu: 3000m
+      storage: 1000Gi
+  unicastHost: search-index.default.svc.cluster.local
+  minMasterNodes: "3"
+  ES_JAVA_OPTS: -Djava.net.preferIPv4Stack=true -Xms20g -Xmx20g
+
+
+queue:
+  image: rabbitmq:management-alpine
+  replicas: 1
+  resources:
+    requests:
+      memory: 6Gi
+      storage: 100Gi
+
+
+recognize-text:
+  image: alephdata/aleph-recognize-text:latest
+  minReplicas: 2
+  maxReplicas: 20
+  targetAverageCPUUtilization: 90
+  maxSurge: 2
+  maxUnavailable: 50%
+  resources:
+    requests:
+      memory: 800Mi
+      cpu: 1000m
+    limits:
+      memory: 1400Mi
+      cpu: 1500m
+
+
+scheduler:
+  image: alephdata/aleph:latest
+  replicas: 1
+  resources:
+    requests:
+      memory: 200Mi
+
+
+upgrade:
+  image: alephdata/aleph:latest
+  resources:
+    requests:
+      memory: 500Mi
+
+
+web:
+  image: alephdata/aleph-ui-production:latest
+  workerProcesses: 4
+  workerConnections: 1024
+  clientMaxBodySize: 20000g
+  clientMaxBodyTimeout: 84600s
+  proxyConnectTimeout: 10s
+  proxyReadTimeout: 600s
+  proxySendTimeout: 84600s
+  sendTimeout: 84600s
+  proxyCache: off
+  proxyBuffering: off
+  proxyRequestBuffering: off
+  keepliveTimeout: 650
+  keepaliveRequests: 10000
+  alephServerName: data.occrp.org
+  replicas: 2
+  maxSurge: 2
+  maxUnavailable: 50%
+  resources:
+    requests:
+      memory: 51Mi
+
+worker:
+  image: alephdata/aleph:latest
+  maxReplicas: 20
+  targetAverageCPUUtilization: 80
+  maxSurge: 2
+  maxUnavailable: 75%
+  resources:
+    requests:
+      memory: 500Mi
+    limits:
+      memory: 5Gi
+
+
