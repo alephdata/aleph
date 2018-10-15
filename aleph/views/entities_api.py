@@ -10,8 +10,7 @@ from aleph.core import db, url_for
 from aleph.model import Entity, Audit
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
-from aleph.search import EntitiesQuery, EntityDocumentsQuery
-from aleph.search import SuggestEntitiesQuery, SimilarEntitiesQuery
+from aleph.search import EntitiesQuery, SimilarEntitiesQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.audit import record_audit
@@ -36,13 +35,6 @@ def index():
     result = EntitiesQuery.handle(request,
                                   parser=parser,
                                   schema=CombinedSchema)
-    return jsonify(result)
-
-
-@blueprint.route('/api/2/entities/_suggest', methods=['GET'])
-def suggest():
-    enable_cache()
-    result = SuggestEntitiesQuery.handle(request, schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -72,17 +64,6 @@ def similar(id):
     entity = get_index_entity(id, request.authz.READ)
     record_audit(Audit.ACT_ENTITY, id=id)
     result = SimilarEntitiesQuery.handle(request,
-                                         entity=entity,
-                                         schema=CombinedSchema)
-    return jsonify(result)
-
-
-@blueprint.route('/api/2/entities/<id>/documents', methods=['GET'])
-def documents(id):
-    enable_cache()
-    entity = get_index_entity(id, request.authz.READ)
-    record_audit(Audit.ACT_ENTITY, id=id)
-    result = EntityDocumentsQuery.handle(request,
                                          entity=entity,
                                          schema=CombinedSchema)
     return jsonify(result)

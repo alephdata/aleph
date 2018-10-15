@@ -216,29 +216,6 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res.status_code
 
-    def test_suggest_entity(self):
-        _, headers = self.login(is_admin=True)
-        url = '/api/2/entities'
-        data = {
-            'schema': 'Person',
-            'properties': {
-                'name': "Osama bin Laden",
-            },
-            'collection_id': self.col.id
-        }
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 200, res
-        self.flush_index()
-        res = self.client.get('/api/2/entities/_suggest?prefix=osa',
-                              headers=headers)
-        assert res.status_code == 200, (res.status_code, res.json)
-        data = res.json
-        assert len(data['results']) == 1, data
-        assert 'Laden' in data['results'][0]['name'], data
-
     def test_similar_entity(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
