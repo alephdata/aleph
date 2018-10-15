@@ -22,7 +22,7 @@ def xref_item(proxy):
     query = {
         'query': query,
         'size': 100,
-        '_source': {'includes': ['schema', 'properties']}
+        '_source': {'includes': ['schema', 'properties', 'collection_id']}
     }
     result = search_safe(index=entities_index(), body=query)
     results = result.get('hits').get('hits')
