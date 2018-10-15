@@ -16,9 +16,10 @@ class CollectionEntitiesMode extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, activeMode } = ownProps;
+  const { location, collection, activeMode } = ownProps;
   const context = {
-    'filter:schema': activeMode
+    'filter:schema': activeMode,
+    'filter:collection_id': collection.id
   };
   const query = Query.fromLocation('search', location, context, 'entities').limit(50);
   return { query };
