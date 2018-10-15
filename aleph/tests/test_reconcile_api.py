@@ -1,4 +1,6 @@
 import json
+from followthemoney import model
+
 from aleph.tests.util import TestCase
 
 
@@ -48,10 +50,10 @@ class ReconcileApiTestCase(TestCase):
         res = self.client.get('/api/freebase/property')
         assert res.status_code == 200, res
         assert 'result' in res.json, res.json
-        assert 5 == len(res.json['result']), res.json
+        assert len(model.properties) == len(res.json['result']), res.json
 
         res = self.client.get('/api/freebase/property?prefix=email')
-        assert 1 == len(res.json['result']), res.json
+        assert 2 == len(res.json['result']), res.json
 
         res = self.client.get('/api/freebase/property?prefix=banana')
         assert 0 == len(res.json['result']), res.json

@@ -1,18 +1,19 @@
 import json
+import math
 import logging
-import fingerprints
 from pprint import pprint  # noqa
-from banal import ensure_list
-from flask import Blueprint, request, url_for
+from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
+from followthemoney.compare import compare
 
-from aleph.core import settings
-from aleph.model import Entity, Role
+from aleph.core import settings, url_for
+from aleph.model import Entity
 from aleph.search import SearchQueryParser
-from aleph.search import EntitiesQuery, SimilarEntitiesQuery
+from aleph.search import EntitiesQuery, MatchQuery
 from aleph.views.util import jsonify
 from aleph.logic.util import entity_url
+from aleph.index.util import unpack_result
 
 # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
 
@@ -40,30 +41,25 @@ def reconcile_op(query):
 
     name = query.get('query', '')
     schema = query.get('type') or Entity.THING
-    entity = {
-        'id': 'fake',
-        'names': [name],
-        'fingerprints': [fingerprints.generate(name)],
-        'schemata': ensure_list(schema),
-        'schema': schema
-    }
-
+    proxy = model.make_entity(schema)
+    proxy.add('name', query.get('query', ''))
     for p in query.get('properties', []):
-        entity[p.get('pid')] = ensure_list(p.get('v'))
+        proxy.add(p.get('pid'), p.get('v'), quiet=True)
 
-    query = SimilarEntitiesQuery(parser, entity=entity)
+    query = MatchQuery(parser, entity=proxy)
     matches = []
     for doc in query.search().get('hits').get('hits'):
-        source = doc.get('_source')
+        entity = model.get_proxy(unpack_result(doc))
+        score = math.ceil(compare(model, proxy, entity) * 100)
         match = {
-            'id': doc.get('_id'),
-            'name': source.get('name'),
-            'score': min(100, doc.get('_score') * 10),
-            'uri': entity_url(doc.get('_id')),
-            'match': source.get('name') == name
+            'id': entity.id,
+            'name': entity.caption,
+            'score': score,
+            'uri': entity_url(entity.id),
+            'match': False
         }
         for type_ in get_freebase_types():
-            if source['schema'] == type_['id']:
+            if entity.schema.name == type_['id']:
                 match['type'] = [type_]
         matches.append(match)
 
@@ -76,10 +72,6 @@ def reconcile_op(query):
 
 def reconcile_index():
     domain = settings.APP_UI_URL.strip('/')
-    api_key = None
-    if request.authz.logged_in:
-        role = Role.by_id(request.authz.id)
-        api_key = role.api_key
     meta = {
         'name': settings.APP_TITLE,
         'identifierSpace': 'http://rdf.freebase.com/ns/type.object.id',
@@ -88,7 +80,7 @@ def reconcile_index():
             'url': entity_url('{{id}}')
         },
         'preview': {
-            'url': entity_url('{{id}}') + '?api_key=%s' % api_key,
+            'url': entity_url('{{id}}'),
             'width': 800,
             'height': 400
         },
@@ -96,7 +88,7 @@ def reconcile_index():
             'entity': {
                 'service_url': domain,
                 'service_path': url_for('reconcile_api.suggest_entity',
-                                        api_key=api_key)
+                                        _authorize=True)
             },
             'type': {
                 'service_url': domain,
@@ -108,8 +100,8 @@ def reconcile_index():
             }
         },
         'defaultTypes': [{
-            'id': 'Entity',
-            'name': 'Persons and Companies'
+            'id': Entity.THING,
+            'name': model.get(Entity.THING).label
         }]
     }
     return jsonify(meta)
@@ -184,40 +176,23 @@ def suggest_entity():
 @blueprint.route('/api/freebase/property', methods=['GET', 'POST'])
 def suggest_property():
     prefix = request.args.get('prefix', '').lower().strip()
-    properties = [{
-        'id': 'countries',
-        'name': 'Countries',
-        'match': 'Jurisdiction, Country, Nationality'
-    }, {
-        'id': 'identifiers',
-        'name': 'External Identifiers',
-        'match': 'Data identifier code company id'
-    }, {
-        'id': 'phones',
-        'name': 'Phones',
-        'match': 'Phone number'
-    }, {
-        'id': 'emails',
-        'name': 'EMails',
-        'match': 'E-Mail addresses, Email'
-    }, {
-        'id': 'addresses',
-        'name': 'Addresses',
-        'match': 'Geographic addresses'
-    }]
     matches = []
-    for prop in properties:
-        name = prop.pop('match', prop.get('name')).lower()
-        if not len(prefix) or prefix in name:
-            prop.update({
-                'quid': prop['id'],
+    for prop in model.properties:
+        match = not len(prefix)
+        if not match:
+            match = prefix in prop.name.lower()
+            match = match or prefix in prop.label.lower()
+        if match:
+            matches.append({
+                'id': prop.name,
+                'quid': prop.name,
+                'name': prop.label,
                 'r:score': 100,
                 'n:type': {
                     'id': '/properties/property',
                     'name': 'Property'
                 }
             })
-            matches.append(prop)
     return jsonify({
         "code": "/api/status/ok",
         "status": "200 OK",

@@ -1,9 +1,9 @@
 import logging
 
 from aleph.model import Document, DocumentRecord
-from aleph.index.xref import entity_query
 from aleph.index.core import entities_index, records_index
 from aleph.index.core import collections_index
+from aleph.index.match import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -37,16 +37,16 @@ class EntitiesQuery(AuthzQuery):
         return entities_index()
 
 
-class SimilarEntitiesQuery(EntitiesQuery):
+class MatchQuery(EntitiesQuery):
     """Given an entity, find the most similar other entities."""
 
     def __init__(self, parser, entity=None):
         self.entity = entity
-        super(SimilarEntitiesQuery, self).__init__(parser)
+        super(MatchQuery, self).__init__(parser)
 
     def get_query(self):
-        query = super(SimilarEntitiesQuery, self).get_query()
-        return entity_query(self.entity, query=query, broad=True)
+        query = super(MatchQuery, self).get_query()
+        return match_query(self.entity, query=query, broad=True)
 
 
 class CollectionsQuery(AuthzQuery):

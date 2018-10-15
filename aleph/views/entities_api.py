@@ -2,6 +2,7 @@ import logging
 from banal import as_bool
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
+from followthemoney import model
 from followthemoney.util import merge_data
 from urllib.parse import quote
 from urlnormalizer import query_string
@@ -10,7 +11,7 @@ from aleph.core import db, url_for
 from aleph.model import Entity, Audit
 from aleph.logic.entities import update_entity, delete_entity
 from aleph.logic.collections import update_collection
-from aleph.search import EntitiesQuery, SimilarEntitiesQuery
+from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.audit import record_audit
@@ -35,6 +36,15 @@ def index():
     result = EntitiesQuery.handle(request,
                                   parser=parser,
                                   schema=CombinedSchema)
+    return jsonify(result)
+
+
+@blueprint.route('/api/2/match', methods=['POST'])
+def match():
+    enable_cache()
+    entity = parse_request(EntityUpdateSchema)
+    entity = model.get_proxy(entity)
+    result = MatchQuery.handle(request, entity=entity, schema=CombinedSchema)
     return jsonify(result)
 
 
@@ -63,10 +73,9 @@ def view(id):
 def similar(id):
     enable_cache()
     entity = get_index_entity(id, request.authz.READ)
+    entity = model.get_proxy(entity)
     record_audit(Audit.ACT_ENTITY, id=id)
-    result = SimilarEntitiesQuery.handle(request,
-                                         entity=entity,
-                                         schema=CombinedSchema)
+    result = MatchQuery.handle(request, entity=entity, schema=CombinedSchema)
     return jsonify(result)
 
 

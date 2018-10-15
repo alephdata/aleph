@@ -60,6 +60,24 @@ def authz_query(authz):
     return field_filter_query('roles', authz.roles)
 
 
+def bool_query():
+    return {
+        'bool': {
+            'should': [],
+            'filter': [],
+            'must': [],
+            'must_not': []
+        }
+    }
+
+
+def none_query(query=None):
+    if query is None:
+        query = bool_query()
+    query['bool']['must'] = {'match_none': {}}
+    return query
+
+
 def field_filter_query(field, values):
     """Need to define work-around for full-text fields."""
     values = ensure_list(values)

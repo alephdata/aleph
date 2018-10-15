@@ -253,6 +253,36 @@ class EntitiesApiTestCase(TestCase):
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
 
+    def test_match(self):
+        _, headers = self.login(is_admin=True)
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col.id,
+            'properties': {
+                'name': "Osama bin Laden",
+            }
+        }
+        res = self.client.post('/api/2/entities',
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        self.flush_index()
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Osama bin Laden",
+            }
+        }
+        matches = self.client.post('/api/2/match',
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+        assert matches.status_code == 200, (matches.status_code, matches.json)
+        data = matches.json
+        assert len(data['results']) == 1, data
+        assert 'Laden' in data['results'][0]['name'], data
+        assert b'Pooh' not in res.data, res.data
+
     def test_entity_references(self):
         db_uri = 'file://' + self.get_fixture_path('experts.csv')
         os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
