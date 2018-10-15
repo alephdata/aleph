@@ -1,0 +1,69 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: search-queue
+  labels:
+    app: search-queue
+spec:
+  selector:
+    app: search-queue
+  ports:
+    - name: epmd
+      port: 4369
+    - name: queue-port
+      port: 5672
+    - name: management-console
+      port: 15672
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: search-queue
+spec:
+  selector:
+    matchLabels:
+      app: search-queue
+  serviceName: "search-queue"
+  replicas: {{ .Values.queue.replicas }}
+  template:
+    metadata:
+      labels:
+        app: search-queue
+    spec:
+      nodeSelector:
+        tier: backend
+      # serviceAccountName: rabbitmq
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: search-queue
+          image: {{ .Values.queue.image }}
+          ports:
+            - name: epmd-port
+              containerPort: 4369
+            - name: queue-port
+              containerPort: 5672
+            - name: management-port
+              containerPort: 15672
+          resources:
+            requests:
+              memory: {{ .Values.queue.requests.memory }}
+          env: 
+            - name: RABBITMQ_NODENAME
+              value: "rabbit@search-queue"
+          #   - name: POD_IP
+          #     valueFrom:
+          #       fieldRef:
+          #         fieldPath: status.podIP
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: ssd
+        resources:
+          requests:
+            storage: {{ .Values.queue.requests.storage }}

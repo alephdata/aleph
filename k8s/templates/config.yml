@@ -1,0 +1,47 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: search-config
+data:
+  C_FORCE_ROOT: {{ .Values.config.C_FORCE_ROOT }}
+  GRPC_VERBOSITY: {{ .Values.config.GRPC_VERBOSITY }}
+  ALEPH_DEBUG: {{ .Values.config.ALEPH_DEBUG }}
+  ALEPH_CACHE: {{ .Values.config.ALEPH_CACHE }}
+  ALEPH_EAGER: {{ .Values.config.ALEPH_EAGER }}
+  ALEPH_URL_SCHEME: {{ .Values.config.ALEPH_URL_SCHEME }}
+  ALEPH_APP_TITLE: {{ .Values.config.ALEPH_APP_TITLE }}
+  ALEPH_APP_NAME: {{ .Values.config.ALEPH_APP_NAME }}
+  ALEPH_OCR_VISION_API: {{ .Values.config.ALEPH_OCR_VISION_API }}
+  ALEPH_CORS_ORIGINS: {{ .Values.config.ALEPH_CORS_ORIGINS }}
+  ALEPH_ARCHIVE_TYPE: {{ .Values.config.ALEPH_ARCHIVE_TYPE }}
+  ALEPH_ARCHIVE_BUCKET: {{ .Values.config.ALEPH_ARCHIVE_BUCKET }}
+  ALEPH_PASSWORD_LOGIN: {{ .Values.config.ALEPH_PASSWORD_LOGIN }}
+  ALEPH_ADMINS: {{ .Values.config.ALEPH_ADMINS }}
+  ALEPH_MAIL_FROM: {{ .Values.config.ALEPH_MAIL_FROM }}
+  ALEPH_MAIL_HOST: {{ .Values.config.ALEPH_MAIL_HOST }}
+  ALEPH_MAIL_USERNAME: {{ .Values.config.ALEPH_MAIL_USERNAME }}
+  ALEPH_MAIL_PASSWORD: {{ .Values.config.ALEPH_MAIL_PASSWORD }}
+  ALEPH_MAIL_PORT: {{ .Values.config.ALEPH_MAIL_PORT }}
+  ALEPH_MAIL_TLS: {{ .Values.config.ALEPH_MAIL_TLS }}
+  ALEPH_MAIL_SSL: {{ .Values.config.ALEPH_MAIL_SSL }}
+  ALEPH_UI_URL: {{ .Values.config.ALEPH_UI_URL }}
+  ALEPH_FAVICON: {{ .Values.config.ALEPH_FAVICON }}
+  ALEPH_LOGO: {{ .Values.config.ALEPH_LOGO }}
+  ALEPH_ELASTICSEARCH_URI: {{ .Values.config.ALEPH_ELASTICSEARCH_URI }}
+  ALEPH_ELASTICSEARCH_SHARDS: {{ .Values.config.ALEPH_ELASTICSEARCH_SHARDS }}
+  ALEPH_ENTITIES_INDEX: {{ .Values.config.ALEPH_ENTITIES_INDEX }}
+  ALEPH_ENTITIES_INDEX_SET: {{ .Values.config.ALEPH_ENTITIES_INDEX_SET }}
+  ALEPH_RECORDS_INDEX: {{ .Values.config.ALEPH_RECORDS_INDEX }}
+  ALEPH_RECORDS_INDEX_SET: {{ .Values.config.ALEPH_RECORDS_INDEX_SET }}
+  ALEPH_COLLECTIONS_INDEX: {{ .Values.config.ALEPH_COLLECTIONS_INDEX }}
+  ALEPH_BROKER_URI: {{ .Values.config.ALEPH_BROKER_URI }}
+  ALEPH_ENTITIES_SERVICE: {{ .Values.config.ALEPH_ENTITIES_SERVICE }}
+  ALEPH_OCR_SERVICE: {{ .Values.config.ALEPH_OCR_SERVICE }}
+  UNOSERVICE_URL: {{ .Values.config.UNOSERVICE_URL }}
+  ALEPH_OAUTH: {{ .Values.config.ALEPH_OAUTH }}
+  ALEPH_OAUTH_KEY: {{ .Values.config.ALEPH_OAUTH_KEY }}
+  ALEPH_OAUTH_NAME: {{ .Values.config.ALEPH_OAUTH_NAME }}
+  ALEPH_OAUTH_SCOPE: {{ .Values.config.ALEPH_OAUTH_SCOPE }}
+  ALEPH_OAUTH_BASE_URL: {{ .Values.config.ALEPH_OAUTH_BASE_URL }}
+  ALEPH_OAUTH_TOKEN_URL: {{ .Values.config.ALEPH_OAUTH_TOKEN_URL }}
+  ALEPH_OAUTH_AUTHORIZE_URL: {{ .Values.config.ALEPH_OAUTH_AUTHORIZE_URL }}

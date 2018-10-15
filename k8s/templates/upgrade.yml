@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: search-upgrade
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      restartPolicy: Never
+      volumes:
+        - name: service-account-app
+          secret:
+            secretName: service-account-app
+        - name: service-account-db
+          secret:
+            secretName: service-account-db
+      containers:
+        - name: search-upgrade
+          image: {{ .Values.upgrade.image }}
+          imagePullPolicy: Always
+          command: ["aleph", "upgrade"]
+          resources:
+            requests:
+              memory: {{ .Values.upgrade.resources.requests.memory }}
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/service-account.json
+            - name: ALEPH_DATABASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_DATABASE_URI
+            - name: ALEPH_OAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_OAUTH_SECRET
+            - name: ALEPH_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: common-secrets
+                  key: ALEPH_SECRET_KEY
+          envFrom:
+            - configMapRef:
+                name: search-config
+          volumeMounts:
+            - mountPath: /var/secrets/google
+              name: service-account-app
+        - name: search-db-sidecar
+          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
+          imagePullPolicy: Always
+          command:
+            - /cloud_sql_proxy
+            - -dir=/cloudsql
+            - -instances={{ .Values.global.dbInstance }}
+            - -credential_file=/credentials/service-account.json
+          volumeMounts:
+            - mountPath: /credentials
+              name: service-account-db
