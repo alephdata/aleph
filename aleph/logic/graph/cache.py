@@ -27,7 +27,7 @@ def store_links(type_, value, links, expire=EXPIRATION):
         value = msgpack.packb(link.to_tuple(), use_bin_type=True)
         values.append(value)
     key = typed_key(type_, value)
-    pipe.delete(key)    
+    pipe.delete(key)
     if len(values):
         pipe.rpush(key, *values)
     pipe.set(degree_key, len(values), ex=expire)
