@@ -56,7 +56,7 @@ class TestCase(FlaskTestCase):
         settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
         settings.COLLECTIONS_INDEX = '%s_collection' % APP_NAME
         settings.CACHE_CONFIG = {'CACHE_TYPE': 'simple'}
-        settings._redis = fakeredis.FakeRedis(decode_responses=True)
+        settings._redis = fakeredis.FakeRedis()
         app = create_app({})
         mount_app_blueprints(app)
         return app
