@@ -1,5 +1,5 @@
 import logging
-# import fingerprints
+import fingerprints
 from followthemoney.types import registry
 
 from aleph.index.util import bool_query, none_query
@@ -45,22 +45,20 @@ def match_query(proxy, collection_id=None, query=None, broad=False):
                     'query': name,
                     'operator': 'and',
                     'minimum_should_match': '60%',
-                    # 'cutoff_frequency': 0.0001,
-                    # 'boost': 0.5
                 }
             }
         })
-        # fp = fingerprints.generate(name)
-        # required.append({
-        #     'match': {
-        #         'fingerprints': {
-        #             'query': fp,
-        #             'fuzziness': 1,
-        #             'operator': 'and',
-        #             'boost': 3.0
-        #         }
-        #     }
-        # })
+        fp = fingerprints.generate(name)
+        required.append({
+            'match': {
+                'fingerprints': {
+                    'query': fp,
+                    'fuzziness': 1,
+                    'operator': 'and',
+                    'boost': 3.0
+                }
+            }
+        })
 
     for type_ in registry.names.values():
         if not type_.strong or type_.group is None:
@@ -70,7 +68,7 @@ def match_query(proxy, collection_id=None, query=None, broad=False):
                 'term': {
                     type_.group: {
                         'value': value,
-                        'boost': 5.0
+                        'boost': 3.0
                     }
                 }
             })

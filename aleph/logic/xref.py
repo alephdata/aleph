@@ -14,9 +14,9 @@ log = logging.getLogger(__name__)
 EXCLUDES = ['text', 'roles']
 
 
-def xref_item(item, collection_id=None):
+def xref_item(proxy):
     """Cross-reference an entity or document, given as an indexed document."""
-    query = match_query(item, collection_id=collection_id)
+    query = match_query(proxy)
     if query == none_query():
         return
 
@@ -29,14 +29,13 @@ def xref_item(item, collection_id=None):
     results = result.get('hits').get('hits')
     for result in results:
         result = unpack_result(result)
-        collection_id = result.get('collection_id')
-        result = model.get_proxy(result)
-        score = compare(model, item, result)
-        yield score, collection_id, result
+        other = model.get_proxy(result)
+        score = compare(model, proxy, other)
+        yield score, result.get('collection_id'), other
 
 
 @celery.task()
-def xref_collection(collection_id, other_id=None):
+def xref_collection(collection_id):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
     entities = iter_entities(collection_id=collection_id,
@@ -53,10 +52,8 @@ def xref_collection(collection_id, other_id=None):
         dq = db.session.query(Match)
         dq = dq.filter(Match.entity_id == entity_id)
         dq = dq.filter(Match.document_id == document_id)
-        if other_id is not None:
-            dq = dq.filter(Match.match_collection_id == other_id)
         dq.delete()
-        matches = xref_item(entity, collection_id=other_id)
+        matches = xref_item(proxy)
         for (score, other_id, other) in matches:
             log.info("Xref [%.1f]: %s <=> %s", score, proxy, other)
             obj = Match()
