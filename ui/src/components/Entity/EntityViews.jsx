@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import { connect } from "react-redux";
-import c from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
@@ -14,8 +13,7 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from "src/components/Entity/EntityInfoMode";
 import reverseLabel from 'src/util/reverseLabel';
-import TextLoading from "src/components/common/TextLoading";
-
+import { Icon, TextLoading } from 'src/components/common';
 
 class EntityViews extends React.Component {
   constructor(props) {
@@ -54,8 +52,10 @@ class EntityViews extends React.Component {
           <Tab id="info"
                title={
                   <React.Fragment>
-                    <i className='fa fa-fw fa-info-circle'/>
-                    <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
+                    <Icon name='info' iconSize='14px' className='entity-icon'/>
+                    <span className='tab-padding'>
+                      <FormattedMessage id="entity.info.info" defaultMessage="Info" className='test'/>
+                    </span>
                   </React.Fragment>
                }
                panel={
@@ -67,8 +67,10 @@ class EntityViews extends React.Component {
                key={ref.property.qname}
                title={
                  <React.Fragment>
-                   <i className={c('fa', 'fa-fw', schemata[ref.schema].icon)} />
+                   <Icon name={ref.schema.toLowerCase()} iconSize='14px' className='entity-icon'/>
+                   <span className='tab-padding'>
                    <FormattedMessage id="entity.info.overview" defaultMessage={reverseLabel(schemata, ref)}/>
+                   </span>
                    <Count count={ref.count} />
                  </React.Fragment>
                }
@@ -80,8 +82,10 @@ class EntityViews extends React.Component {
              disabled={tags.total < 1}
              title={
                 <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-                  <i className='fa fa-fw fa-tags'/>
+                  <Icon name='tags' iconSize='14px' className='entity-icon'/>
+                  <span className='tab-padding'>
                   <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
+                  </span>
                   <Count count={tags.total} />
                 </TextLoading>
              }
@@ -92,8 +96,10 @@ class EntityViews extends React.Component {
              disabled={similar.total < 1}
              title={
                 <TextLoading loading={similar.shouldLoad || similar.isLoading}>
-                  <i className='fa fa-fw fa-repeat'/>
+                  <Icon name='similar' iconSize='14px' className='entity-icon'/>
+                  <span className='tab-padding'>
                   <FormattedMessage id="entity.info.similar" defaultMessage="Similar"/>
+                  </span>
                   <Count count={similar.total} />
                 </TextLoading>
              }

@@ -1,7 +1,10 @@
 @import 'src/app/variables.scss';
+
 .al-icon {
   display: inline-block;;
   vertical-align: middle;
+  height: $aleph-grid-size * 2.7;
+  padding-right: 0.3em;
   & > div:first-child {
     display: inline-block;
   }
