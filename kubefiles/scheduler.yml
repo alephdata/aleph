@@ -52,7 +52,7 @@ spec:
               memory: REPLACEME:MEMORY_LIMIT_SCHEDULER
               cpu: REPLACEME:CPU_LIMIT_SCHEDULER
 #          env:
-#            - name: DATAVAULT_DATABASE_URI (Brukes om data skal bulk-importeres fra en DB, ikke i bruk)
+#            - name: DATAVAULT_DATABASE_URI
 #              valueFrom:
 #                secretKeyRef:
 #                  name: common-secrets
