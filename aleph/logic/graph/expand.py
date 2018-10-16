@@ -67,8 +67,8 @@ def expand_entity(entity):
     if proxy.schema.is_a(thing):
         sameAs = thing.get("sameAs")
         ref = registry.entity.ref(proxy.id)
-        for (score, other) in xref_item(entity):
-            yield Link(ref, sameAs, other.get('id'),
+        for (score, _, other) in xref_item(entity):
+            yield Link(ref, sameAs, other.id,
                        weight=score, inferred=True)
 
 

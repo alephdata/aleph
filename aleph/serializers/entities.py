@@ -73,7 +73,7 @@ class ShallowCombinedSchema(BaseSchema):
 
     def document_links(self, data, pk, schemata):
         links = {
-            'self': url_for('documents_api.view', document_id=pk),
+            'self': url_for('entities_api.view', id=pk),
             'content': url_for('documents_api.content', document_id=pk),
             'tags': url_for('entities_api.tags', id=pk),
             'ui': document_url(pk)

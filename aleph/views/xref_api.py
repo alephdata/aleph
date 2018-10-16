@@ -36,16 +36,7 @@ def matches(id, other_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/xref',
                  methods=['POST'])
-def generate_summary(collection_id):
+def generate(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     xref_collection.apply_async([collection.id], priority=5)
-    return jsonify({'status': 'accepted'}, status=202)
-
-
-@blueprint.route('/api/2/collections/<int:collection_id>/xref/<int:other_id>',
-                 methods=['POST'])
-def generate_matches(collection_id, other_id):
-    collection = get_db_collection(collection_id, request.authz.WRITE)
-    other = get_db_collection(other_id)
-    xref_collection.apply_async([collection.id, other.id], priority=6)
     return jsonify({'status': 'accepted'}, status=202)

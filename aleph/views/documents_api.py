@@ -13,7 +13,8 @@ from aleph.logic.audit import record_audit
 from aleph.index.util import refresh_index
 from aleph.index.core import entities_index
 from aleph.views.cache import enable_cache
-from aleph.views.util import get_db_document, get_index_entity
+from aleph.views.entities_api import view
+from aleph.views.util import get_db_document
 from aleph.views.util import jsonify, parse_request, sanitize_html
 from aleph.views.util import serialize_data
 from aleph.serializers import RecordSchema
@@ -38,14 +39,6 @@ def index():
     enable_cache()
     result = DocumentsQuery.handle(request, schema=CombinedSchema)
     return jsonify(result)
-
-
-@blueprint.route('/api/2/documents/<int:document_id>')
-def view(document_id):
-    enable_cache()
-    data = get_index_entity(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    return serialize_data(data, CombinedSchema)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/content')
