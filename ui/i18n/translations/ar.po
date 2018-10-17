@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-10-11T09:56:24.738Z\n"
+"POT-Creation-Date: 2018-10-17T07:11:31.504Z\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,41 +160,6 @@ msgstr ""
 msgid "BCC"
 msgstr ""
 
-#. [entity.mode.info]
-#. defaultMessage is:
-#. Base information
-#: i18n/messages.json
-msgid "Base information"
-msgstr ""
-
-#. [collection.documents.title]
-#. defaultMessage is:
-#. Browse
-#: i18n/messages.json
-msgid "Browse"
-msgstr ""
-
-#. [document.mode.text.documents]
-#. defaultMessage is:
-#. Browse as a folder
-#: i18n/messages.json
-msgid "Browse as a folder"
-msgstr ""
-
-#. [document.mode.browse.tooltip]
-#. defaultMessage is:
-#. Browse documents
-#: i18n/messages.json
-msgid "Browse documents"
-msgstr ""
-
-#. [collection.browser.total]
-#. defaultMessage is:
-#. Browsing {total} sources.
-#: i18n/messages.json
-msgid "Browsing {total} sources."
-msgstr ""
-
 #. [email.cc]
 #. defaultMessage is:
 #. CC
@@ -240,10 +205,7 @@ msgstr ""
 #. [collection.info.case]
 #. defaultMessage is:
 #. Casefile
-#. [collection.screen.title]
-#. defaultMessage is:
-#. Casefile
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Casefile"
 msgstr ""
 
@@ -323,7 +285,10 @@ msgstr ""
 #. [collections.xref.title]
 #. defaultMessage is:
 #. Compare entities between collections
-#: i18n/messages.json
+#. [matches.screen.title]
+#. defaultMessage is:
+#. Compare entities between collections
+#: i18n/messages.json i18n/messages.json
 msgid "Compare entities between collections"
 msgstr ""
 
@@ -332,16 +297,6 @@ msgstr ""
 #. Confirm password
 #: i18n/messages.json
 msgid "Confirm password"
-msgstr ""
-
-#. [document.tags.title]
-#. defaultMessage is:
-#. Connections
-#. [entity.tags.title]
-#. defaultMessage is:
-#. Connections
-#: i18n/messages.json i18n/messages.json
-msgid "Connections"
 msgstr ""
 
 #. [collection.edit.info.contact]
@@ -398,13 +353,16 @@ msgstr ""
 msgid "Create a new casefile"
 msgstr ""
 
-#. [document.mode.text.xref]
+#. [collections.xref.title]
 #. defaultMessage is:
 #. Cross-reference
-#. [collection.xref.index.title]
+#. [entity.info.xref]
 #. defaultMessage is:
 #. Cross-reference
-#: i18n/messages.json i18n/messages.json
+#. [matches.screen.xref]
+#. defaultMessage is:
+#. Cross-reference
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cross-reference"
 msgstr ""
 
@@ -413,13 +371,6 @@ msgstr ""
 #. Cross-referenced collection
 #: i18n/messages.json
 msgid "Cross-referenced collection"
-msgstr ""
-
-#. [collection.xref.crumb]
-#. defaultMessage is:
-#. Cross-referencing
-#: i18n/messages.json
-msgid "Cross-referencing"
 msgstr ""
 
 #. [document.date]
@@ -472,11 +423,14 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#. [documents.title]
+#. [entity.info.source]
 #. defaultMessage is:
-#. Document
-#: i18n/messages.json
-msgid "Document"
+#. Documents
+#. [entity.info.browse]
+#. defaultMessage is:
+#. Documents
+#: i18n/messages.json i18n/messages.json
+msgid "Documents"
 msgstr ""
 
 #. [refresh.callout_message]
@@ -577,11 +531,11 @@ msgstr ""
 msgid "File types"
 msgstr ""
 
-#. [collectionbrowser.filter]
+#. [sources.index.filter]
 #. defaultMessage is:
-#. Filter sources
+#. Filter the sources…
 #: i18n/messages.json
-msgid "Filter sources"
+msgid "Filter the sources…"
 msgstr ""
 
 #. [search.screen.filters]
@@ -647,6 +601,19 @@ msgstr ""
 msgid "Imported"
 msgstr ""
 
+#. [entity.info.info]
+#. defaultMessage is:
+#. Info
+#. [entity.info.info]
+#. defaultMessage is:
+#. Info
+#. [entity.info.info]
+#. defaultMessage is:
+#. Info
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Info"
+msgstr ""
+
 #. [alerts.add_placeholder]
 #. defaultMessage is:
 #. Keep track of searches...
@@ -659,13 +626,6 @@ msgstr ""
 #. Label
 #: i18n/messages.json
 msgid "Label"
-msgstr ""
-
-#. [collection.languages]
-#. defaultMessage is:
-#. Language
-#: i18n/messages.json
-msgid "Language"
 msgstr ""
 
 #. [document.languages]
@@ -908,13 +868,6 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#. [document.mode.text.info]
-#. defaultMessage is:
-#. Overview
-#: i18n/messages.json
-msgid "Overview"
-msgstr ""
-
 #. [document.paging]
 #. defaultMessage is:
 #. Page {currentPage} of {numberOfPages}
@@ -1074,6 +1027,16 @@ msgstr ""
 msgid "Search for {label}"
 msgstr ""
 
+#. [collections.index.filter]
+#. defaultMessage is:
+#. Search in {label}
+#. [documents.screen.filter]
+#. defaultMessage is:
+#. Search in {label}
+#: i18n/messages.json i18n/messages.json
+msgid "Search in {label}"
+msgstr ""
+
 #. [case.users]
 #. defaultMessage is:
 #. Search users
@@ -1139,46 +1102,11 @@ msgstr ""
 msgid "Shared with"
 msgstr ""
 
-#. [document.tags]
-#. defaultMessage is:
-#. Show connections
-#: i18n/messages.json
-msgid "Show connections"
-msgstr ""
-
 #. [search.facets.showMore]
 #. defaultMessage is:
 #. Show more…
 #: i18n/messages.json
 msgid "Show more…"
-msgstr ""
-
-#. [document.mode.info.tooltip]
-#. defaultMessage is:
-#. Show properties and details
-#: i18n/messages.json
-msgid "Show properties and details"
-msgstr ""
-
-#. [document.similar]
-#. defaultMessage is:
-#. Show similar documents
-#: i18n/messages.json
-msgid "Show similar documents"
-msgstr ""
-
-#. [document.mode.text.tooltip]
-#. defaultMessage is:
-#. Show text
-#: i18n/messages.json
-msgid "Show text"
-msgstr ""
-
-#. [document.mode.view.tooltip]
-#. defaultMessage is:
-#. Show the document
-#: i18n/messages.json
-msgid "Show the document"
 msgstr ""
 
 #. [password_auth.signin]
@@ -1219,13 +1147,10 @@ msgstr ""
 msgid "Sign up"
 msgstr ""
 
-#. [entity.mode.similar]
+#. [entity.info.similar]
 #. defaultMessage is:
 #. Similar
-#. [entity.similar.title]
-#. defaultMessage is:
-#. Similar
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Similar"
 msgstr ""
 
@@ -1276,18 +1201,11 @@ msgstr ""
 #. [search.facets.facet.collection_id]
 #. defaultMessage is:
 #. Sources
-#. [collections.index.title]
+#. [sources.index.title]
 #. defaultMessage is:
 #. Sources
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sources"
-msgstr ""
-
-#. [collection.browser.breadcrumb]
-#. defaultMessage is:
-#. Sources overview
-#: i18n/messages.json
-msgid "Sources overview"
 msgstr ""
 
 #. [alerts.alert.delete]
@@ -1328,11 +1246,21 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#. [entity.mode.tags]
+#. [entity.info.tags]
 #. defaultMessage is:
 #. Tags
-#: i18n/messages.json
+#. [entity.info.tags]
+#. defaultMessage is:
+#. Tags
+#: i18n/messages.json i18n/messages.json
 msgid "Tags"
+msgstr ""
+
+#. [entity.info.text]
+#. defaultMessage is:
+#. Text
+#: i18n/messages.json
+msgid "Text"
 msgstr ""
 
 #. [auth.bad_request]
@@ -1525,10 +1453,13 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
+#. [entity.info.view]
+#. defaultMessage is:
+#. View
 #. [collection.edit.permissionstable.view]
 #. defaultMessage is:
 #. View
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "View"
 msgstr ""
 
@@ -1658,4 +1589,11 @@ msgstr ""
 #. {count} selected
 #: i18n/messages.json
 msgid "{count} selected"
+msgstr ""
+
+#. [sources.index.total]
+#. defaultMessage is:
+#. {total} sources of documents and data
+#: i18n/messages.json
+msgid "{total} sources of documents and data"
 msgstr ""

@@ -68,7 +68,7 @@ class EntityViews extends React.Component {
                title={
                  <React.Fragment>
                    <i className={c('fa', 'fa-fw', schemata[ref.schema].icon)} />
-                   <FormattedMessage id="entity.info.overview" defaultMessage={reverseLabel(schemata, ref)}/>
+                   {reverseLabel(schemata, ref)}
                    <Count count={ref.count} />
                  </React.Fragment>
                }
