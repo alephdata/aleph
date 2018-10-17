@@ -8,18 +8,18 @@ class TestAggregate(TestCase):
 
     def test_aggregator(self):
         agg = EntityAggregator()
-        agg.add(PersonResult(agg, 'Banana', 0, 12))
+        agg.add(PersonResult.create(agg, 'Banana', 0, 12))
         assert len(agg) == 0, agg
-        agg.add(PersonResult(agg, 'Mr. Max Banana', 0, 12))
+        agg.add(PersonResult.create(agg, 'Mr. Max Banana', 0, 12))
         assert len(agg) == 1, agg
-        agg.add(PersonResult(agg, 'Max Banana', 0, 12))
+        agg.add(PersonResult.create(agg, 'Max Banana', 0, 12))
         assert len(agg) == 1, agg
 
     def test_entities(self):
         agg = EntityAggregator()
-        agg.add(PersonResult(agg, 'Mr. Max Banana', 0, 12))
-        agg.add(PersonResult(agg, 'Mr. Max Banana', 0, 12))
-        agg.add(PersonResult(agg, 'max Banana', 0, 12))
+        agg.add(PersonResult.create(agg, 'Mr. Max Banana', 0, 12))
+        agg.add(PersonResult.create(agg, 'Mr. Max Banana', 0, 12))
+        agg.add(PersonResult.create(agg, 'max Banana', 0, 12))
         for label, category, weight in agg.entities:
             assert label == 'Max Banana', label
             # assert category == 'baa', label
