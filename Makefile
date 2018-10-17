@@ -68,7 +68,7 @@ docker-push:
 	docker push alephdata/aleph-ui-production:$(TAG)
 	docker push alephdata/aleph-convert-document:$(TAG)
 	docker push alephdata/aleph-recognize-text:$(TAG)
-	docker pull alephdata/aleph-extract-entities:$(TAG)
+	docker push alephdata/aleph-extract-entities:$(TAG)
 
 dev: 
 	pip install -q transifex-client bumpversion babel jinja2
