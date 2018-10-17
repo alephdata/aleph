@@ -32,6 +32,8 @@ SPACY_TYPES = {
 
 
 def extract_polyglot(agg, text, languages):
+    if not settings.ENABLE_POLYGLOT:
+        return
     if len(text) < MIN_LENGTH:
         return
     try:
@@ -51,6 +53,8 @@ def extract_polyglot(agg, text, languages):
 
 
 def extract_spacy(agg, text, languages):
+    if not settings.ENABLE_SPACY:
+        return
     if len(text) < MIN_LENGTH:
         return
     try:

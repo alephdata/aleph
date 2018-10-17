@@ -127,6 +127,11 @@ OCR_VISION_API = env_bool('OCR_VISION_API', False)
 OCR_SERVICE = 'recognize-text:50000'
 OCR_SERVICE = env('OCR_SERVICE', OCR_SERVICE)
 
+# Entity extraction options
+ENABLE_NER = env_bool('ENABLE_NER', True)
+ENABLE_SPACY = env_bool('ENABLE_SPACY', True)
+ENABLE_POLYGLOT = env_bool('ENABLE_POLYGLOT', True)
+
 # general gRPC settings
 GRPC_LB_POLICY = env('GRPC_LB_POLICY', 'round_robin')
 GRPC_CONN_AGE = int(env('GRPC_CONN_AGE', 500))  # ms
