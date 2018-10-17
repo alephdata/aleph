@@ -84,4 +84,4 @@ HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
 
 # USER nobody:nogroup
 EXPOSE 50000
-CMD ["python3", "/service/textrecognizer/service.py"]
+CMD ["python3", "/service/entityextractor/service.py"]

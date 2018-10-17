@@ -5,7 +5,7 @@ import spacy
 import logging
 from polyglot.text import Text
 from concurrent import futures
-from alephclient.services.ocr_pb2_grpc import (
+from alephclient.services.entityextract_pb2_grpc import (
     add_EntityExtractServicer_to_server, EntityExtractServicer
 )
 from alephclient.services.entityextract_pb2 import ExtractedEntity
@@ -34,6 +34,7 @@ SPACY_TYPES = {
 class EntityServicer(EntityExtractServicer):
 
     def __init__(self):
+        log.info("Loading spaCy model xx...")
         self.spacy = spacy.load('xx')
 
     def extract_polyglot(self, text):
