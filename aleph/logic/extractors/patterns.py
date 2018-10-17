@@ -25,4 +25,4 @@ def extract_patterns(ctx, text):
             if match_text is not None:
                 start, end = match.span()
                 # log.info("%s: %s", match_text, category)
-                yield clazz(ctx, match_text, start, end)
+                yield clazz.create(ctx, match_text, start, end)

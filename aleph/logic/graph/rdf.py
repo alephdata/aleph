@@ -1,11 +1,9 @@
 import logging
-from followthemoney import model
 from followthemoney.types import registry
 from rdflib import Namespace, Graph, URIRef, Literal
 from rdflib.namespace import DCTERMS, RDF, RDFS, SKOS
 
-from aleph.model import Document
-from aleph.index.entities import iter_entities
+from aleph.index.entities import iter_proxies
 from aleph.logic.util import ui_url
 
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
@@ -23,16 +21,13 @@ def itergraph(graph):
 
 
 def export_entity(entity, collection_uri):
-    proxy = model.get_proxy(entity)
     g = Graph()
-    uri = registry.entity.rdf(proxy.id)
+    uri = registry.entity.rdf(entity.id)
     g.add((uri, DCTERMS.isPartOf, collection_uri))
     g.add((collection_uri, DCTERMS.hasPart, uri))
-    if 'properties' not in entity:
-        entity.update(Document.doc_data_to_schema(entity))
-    if proxy.caption:
-        g.add((uri, SKOS.prefLabel, Literal(proxy.caption)))
-    for link in proxy.links:
+    if entity.caption:
+        g.add((uri, SKOS.prefLabel, Literal(entity.caption)))
+    for link in entity.links:
         triple = link.rdf()
         if triple is not None:
             g.add(triple)
@@ -47,8 +42,5 @@ def export_collection(collection):
     g.add((uri, DCMI.identifier, Literal(collection.foreign_id)))
     g.add((uri, ALEPH.category, ALEPH[collection.category]))
     yield from itergraph(g)
-
-    entities = iter_entities(collection_id=collection.id, excludes=['text'])
-    for entity in entities:
-        g = export_entity(entity, uri)
-        yield from itergraph(g)
+    for entity in iter_proxies(collection_id=collection.id):
+        yield from itergraph(export_entity(entity, uri))

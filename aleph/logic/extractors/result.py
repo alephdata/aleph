@@ -12,13 +12,13 @@ log = logging.getLogger(__name__)
 
 
 class Result(object):
+    __slots__ = ['label', 'key', 'span', 'countries']
     strict = True
 
-    def __init__(self, ctx, label, start, end):
-        self.ctx = ctx
+    def __init__(self, label, span, countries):
         self.label = label
         self.key = normalize_label(label)
-        self.span = (ctx.record, start, end)
+        self.span = span
         self.countries = []
 
     def __str__(self):
@@ -27,6 +27,11 @@ class Result(object):
     def __repr__(self):
         return '<Result(%s,%s)>' % (self.label, self.category)
 
+    @classmethod
+    def create(cls, aggregator, label, start, end):
+        span = (aggregator.record, start, end)
+        return cls(label, span, aggregator.countries)
+
 
 class NamedResult(Result):
     """Any entity extracted that has a human-style name."""
@@ -34,9 +39,9 @@ class NamedResult(Result):
     MAX_LENGTH = 100
     MIN_LENGTH = 4
 
-    def __init__(self, ctx, label, start, end):
+    def __init__(self, label, span, countries):
         label = self.clean_name(label)
-        super(NamedResult, self).__init__(ctx, label, start, end)
+        super(NamedResult, self).__init__(label, span, countries)
         if self.label is not None and ' ' not in self.label:
             self.key = None
 
@@ -63,8 +68,8 @@ class LocationResult(Result):
     """Locations are being mapped to countries."""
     category = DocumentTag.TYPE_LOCATION
 
-    def __init__(self, ctx, label, start, end):
-        super(LocationResult, self).__init__(ctx, label, start, end)
+    def __init__(self, label, span, countries):
+        super(LocationResult, self).__init__(label, span, countries)
         if self.key is not None:
             try:
                 value = kv.lrange(place_key(self.key), 0, -1)
@@ -76,10 +81,10 @@ class LocationResult(Result):
 class TypedResult(Result):
     type = None
 
-    def __init__(self, ctx, label, start, end):
-        args = dict(countries=ctx.countries)
+    def __init__(self, label, span, countries):
+        args = dict(countries=countries)
         label = self.type.clean(label, **args)
-        super(TypedResult, self).__init__(ctx, label, start, end)
+        super(TypedResult, self).__init__(label, span, countries)
         self.countries = ensure_list(self.type.country_hint(label))
 
 

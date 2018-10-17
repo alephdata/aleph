@@ -216,29 +216,6 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res.status_code
 
-    def test_suggest_entity(self):
-        _, headers = self.login(is_admin=True)
-        url = '/api/2/entities'
-        data = {
-            'schema': 'Person',
-            'properties': {
-                'name': "Osama bin Laden",
-            },
-            'collection_id': self.col.id
-        }
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 200, res
-        self.flush_index()
-        res = self.client.get('/api/2/entities/_suggest?prefix=osa',
-                              headers=headers)
-        assert res.status_code == 200, (res.status_code, res.json)
-        data = res.json
-        assert len(data['results']) == 1, data
-        assert 'Laden' in data['results'][0]['name'], data
-
     def test_similar_entity(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
@@ -272,6 +249,36 @@ class EntitiesApiTestCase(TestCase):
         assert obj.json['id'] not in text, obj.id
         assert obj.json['id'] not in text, obj.id
         data = similar.json
+        assert len(data['results']) == 1, data
+        assert 'Laden' in data['results'][0]['name'], data
+        assert b'Pooh' not in res.data, res.data
+
+    def test_match(self):
+        _, headers = self.login(is_admin=True)
+        data = {
+            'schema': 'Person',
+            'collection_id': self.col.id,
+            'properties': {
+                'name': "Osama bin Laden",
+            }
+        }
+        res = self.client.post('/api/2/entities',
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        self.flush_index()
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Osama bin Laden",
+            }
+        }
+        matches = self.client.post('/api/2/match',
+                                   data=json.dumps(data),
+                                   headers=headers,
+                                   content_type='application/json')
+        assert matches.status_code == 200, (matches.status_code, matches.json)
+        data = matches.json
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
