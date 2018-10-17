@@ -43,6 +43,13 @@ services:
     mem_limit: 2g
     expose:
       - 50000
+  
+  extract-entities:
+    image: alephdata/aleph-extract-entities
+    restart: on-failure
+    mem_limit: 4g
+    expose:
+      - 50000
 
   worker:
     image: alephdata/aleph
@@ -55,6 +62,7 @@ services:
       - redis
       - convert-document
       - recognize-text
+      - extract-entities
     tmpfs:
       - /tmp
     volumes:
@@ -73,6 +81,7 @@ services:
       - redis
       - convert-document
       - recognize-text
+      - extract-entities
       - worker
     tmpfs:
       - /tmp
@@ -94,6 +103,7 @@ services:
       - worker
       - convert-document
       - recognize-text
+      - extract-entities
     tmpfs:
       - /tmp
     volumes:
@@ -114,6 +124,7 @@ services:
       - worker
       - convert-document
       - recognize-text
+      - extract-entities
     tmpfs:
       - /tmp
     volumes:
