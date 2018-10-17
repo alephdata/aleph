@@ -9,7 +9,7 @@ RUN mkdir -p /opt/data
 # RUN echo "deb http://http.us.debian.org/debian stretch non-free" >/etc/apt/sources.list.d/nonfree.list
 RUN apt-get -qq -y update \
     && apt-get -qq -y install build-essential locales ca-certificates \
-                              python3-pip python3-dev libicu-dev \
+                              python3-pip python3-dev libicu-dev curl \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -65,7 +65,7 @@ RUN pip3 install -q --upgrade pip setuptools six
 ##########################################################################################################
 # spaCy NER
 #
-RUN pip3 install spacy
+RUN pip3 install spacy==2.0.16
 RUN python3 -m spacy download xx
 # RUN python3 -m spacy download en && python3 -m spacy download de
 # RUN python3 -m spacy download es && python3 -m spacy download pt
@@ -76,7 +76,7 @@ ENV OMP_THREAD_LIMIT=1
 RUN mkdir -p /service
 WORKDIR /service
 ADD setup.py /service/
-RUN pip3 install -q -e /service
+RUN pip3 install -e /service
 COPY . /service/
 
 HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \

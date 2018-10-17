@@ -1,71 +1,48 @@
-import os
-import spacy
 import logging
-from polyglot.text import Text
+from alephclient.services.entityextract_pb2 import Text, ExtractedEntity
+from alephclient.services.entityextract_pb2_grpc import ExtractEntityStub
 
 from aleph import settings
+from aleph.services import ServiceClientMixin
 from aleph.logic.extractors.result import PersonResult, LocationResult
 from aleph.logic.extractors.result import OrganizationResult, LanguageResult
+from aleph.util import backoff
 
 log = logging.getLogger(__name__)
 
-MIN_LENGTH = 60
-MAX_LENGTH = 100000
 
-POLYGLOT_PATH = os.environ.get('POLYGLOT_DATA_PATH')
-POLYGLOT_NER_PATH = os.path.join(POLYGLOT_PATH, 'polyglot_data/ner2')
-POLYGLOT_LANGUAGES = os.listdir(POLYGLOT_NER_PATH)
-POLYGLOT_TYPES = {
-    'I-PER': PersonResult,
-    'I-ORG': OrganizationResult,
-    'I-LOC': LocationResult
-}
+class NERService(ServiceClientMixin):
+    SERVICE = settings.NER_SERVICE
+    MIN_LENGTH = 60
+    MAX_LENGTH = 100000
+    TYPES = {
+        ExtractedEntity.ORGANIZATION: OrganizationResult,
+        ExtractedEntity.PERSON: PersonResult,
+        ExtractedEntity.LOCATION: LocationResult,
+        ExtractedEntity.LANGUAGE: LanguageResult
+    }
 
-# https://spacy.io/api/annotation#named-entities
-SPACY_TYPES = {
-    'PER': PersonResult,
-    'PERSON': PersonResult,
-    'ORG': OrganizationResult,
-    'LOC': LocationResult,
-    'GPE': LocationResult
-}
-
-
-def extract_polyglot(agg, text, languages):
-    if not settings.ENABLE_POLYGLOT:
-        return
-    if len(text) < MIN_LENGTH:
-        return
-    try:
-        parsed = Text(text)
-        lang = parsed.language
-        if lang.confidence > 90:
-            yield LanguageResult.create(agg, lang.code, None, None)
-        if lang.code not in POLYGLOT_LANGUAGES:
+    def extract(self, text):
+        if text is None or len(text) < self.MIN_LENGTH:
             return
-        for entity in parsed.entities:
-            label = ' '.join(entity)
-            clazz = POLYGLOT_TYPES.get(entity.tag)
-            if clazz is not None:
-                yield clazz.create(agg, label, entity.start, entity.end)
-    except Exception as ex:
-        log.warning("Polyglot failed: %s" % ex)
+        text = text[:self.MAX_LENGTH]
+        for attempt in range(10):
+            try:
+                service = ExtractEntityStub(self.channel)
+                text = Text(data=text)
+                for res in service.Extract(text):
+                    clazz = self.TYPES.get(res.type)
+                    yield (res.text, clazz, res.start, res.end)
+            except self.Error as e:
+                if e.code() == self.Status.RESOURCE_EXHAUSTED:
+                    continue
+                log.warning("gRPC [%s]: %s", e.code(), e.details())
+                backoff(failures=attempt)
+                self.reset_channel()
 
 
-def extract_spacy(agg, text, languages):
-    if not settings.ENABLE_SPACY:
-        return
-    if len(text) < MIN_LENGTH:
-        return
-    try:
-        text = text[:MAX_LENGTH]
-        if not hasattr(settings, '_spacy_model'):
-            log.debug("Loading spaCy NER model...")
-            settings._spacy_model = spacy.load('xx')
-        doc = settings._spacy_model(text)
-        for ent in doc.ents:
-            clazz = SPACY_TYPES.get(ent.label_)
-            if clazz is not None:
-                yield clazz.create(agg, ent.text, ent.start, ent.end)
-    except Exception:
-        log.exception("spaCy failed")
+def extract_entities(ctx, text):
+    if not hasattr(settings, '_ner_service'):
+        settings._ner_service = NERService()
+    for (text, clazz, start, end) in settings._ner_service.extract(text):
+        yield clazz.create(ctx, text, start, end)

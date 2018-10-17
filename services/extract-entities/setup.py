@@ -18,7 +18,7 @@ setup(
         'pycld2==0.31',
         'polyglot==16.7.4',
         'Morfessor==2.0.4',
-        'spacy==2.0.11',
+        # 'spacy', - explicit in Dockerfile
         'grpcio==1.11.0',
         'alephclient==0.7.2'
     ],
