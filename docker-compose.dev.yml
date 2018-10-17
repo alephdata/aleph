@@ -44,6 +44,13 @@ services:
     restart: on-failure
     expose:
       - 50000
+  
+  extract-entities:
+    image: alephdata/aleph-extract-entities
+    restart: on-failure
+    mem_limit: 4g
+    expose:
+      - 50000
 
   app:
     image: alephdata/aleph
@@ -55,6 +62,7 @@ services:
       - redis
       - convert-document
       - recognize-text
+      - extract-entities
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -87,6 +95,7 @@ services:
       - redis
       - convert-document
       - recognize-text
+      - extract-entities
     tmpfs: /tmp
     volumes:
       - archive-data:/data

@@ -7,7 +7,8 @@ all: build upgrade web
 services:
 	$(COMPOSE) up -d --remove-orphans \
 		rabbitmq postgres elasticsearch \
-		convert-document recognize-text
+		convert-document recognize-text \
+		extract-entities
 
 shell: services    
 	$(DEVDOCKER) /bin/bash
@@ -47,6 +48,7 @@ build:
 	docker build --cache-from alephdata/aleph-ui -t alephdata/aleph-ui:$(TAG) ui
 	docker build --cache-from alephdata/aleph-convert-document -t alephdata/aleph-convert-document:$(TAG) services/convert-document
 	docker build --cache-from alephdata/aleph-recognize-text -t alephdata/aleph-recognize-text:$(TAG) services/recognize-text
+	docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities:$(TAG) services/extract-entities
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
@@ -58,6 +60,7 @@ docker-pull:
 	docker pull alephdata/aleph-ui
 	docker pull alephdata/aleph-convert-document
 	docker pull alephdata/aleph-recognize-text
+	docker pull alephdata/aleph-extract-entities
 
 docker-push:
 	docker push alephdata/aleph:$(TAG)
@@ -65,6 +68,7 @@ docker-push:
 	docker push alephdata/aleph-ui-production:$(TAG)
 	docker push alephdata/aleph-convert-document:$(TAG)
 	docker push alephdata/aleph-recognize-text:$(TAG)
+	docker pull alephdata/aleph-extract-entities:$(TAG)
 
 dev: 
 	pip install -q transifex-client bumpversion babel jinja2
