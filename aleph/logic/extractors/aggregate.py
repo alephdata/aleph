@@ -42,7 +42,7 @@ class EntityAggregator(object):
 
         if not isinstance(result, CountryResult):
             for country in result.countries:
-                self.add(CountryResult(self, country, None, None))
+                self.add(CountryResult.create(self, country, None, None))
 
         # only using locations for country detection at the moment:
         if result.category == DocumentTag.TYPE_LOCATION:

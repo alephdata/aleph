@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-08-18 13:24+0200\n"
+"POT-Creation-Date: 2018-10-17 09:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
@@ -69,7 +69,7 @@ msgstr "Tajni dokumenti"
 
 #: aleph/model/collection.py:33
 msgid "Document libraries"
-msgstr ""
+msgstr "Biblioteke dokumenata"
 
 #: aleph/model/collection.py:34
 msgid "Licenses and concessions"
@@ -81,19 +81,19 @@ msgstr "Regulatorni zapisi"
 
 #: aleph/model/collection.py:36
 msgid "Persons of interest"
-msgstr ""
+msgstr "Osobe od interesa"
 
 #: aleph/model/collection.py:37
 msgid "Customs declarations"
-msgstr ""
+msgstr "Carinske deklaracije"
 
 #: aleph/model/collection.py:38
 msgid "Population census"
-msgstr ""
+msgstr "Popis stanovništva"
 
 #: aleph/model/collection.py:39
 msgid "Air and maritime registers"
-msgstr ""
+msgstr "Vazdušni i pomorski registri"
 
 #: aleph/model/collection.py:40
 msgid "Other material"
@@ -101,7 +101,7 @@ msgstr "Ostali materijal"
 
 #: aleph/model/event.py:40
 msgid "{{actor}} created {{collection}}."
-msgstr ""
+msgstr "{{actor}} je kreirao {{collection}}."
 
 #: aleph/model/event.py:46
 msgid "{{actor}} changed the settings of {{collection}}."
@@ -109,7 +109,7 @@ msgstr "{{actor}} je promijenio podešavanja od {{collection}}."
 
 #: aleph/model/event.py:52
 msgid "{{actor}} added {{document}} to {{collection}}."
-msgstr ""
+msgstr "{{actor}} je dodao {{document}} u {{collection}}."
 
 #: aleph/model/event.py:61
 msgid "{{entity}} matches your alert for {{alert}}."
@@ -151,6 +151,8 @@ msgid ""
 "      updates you may be interested in:\n"
 "    "
 msgstr ""
+"\n"
+"     Imate %(total_count)snotifikaciju. Ovu su najnovija ažuriranja koja vas mogu zanimati:"
 
 #: aleph/templates/email/notifications.html:16
 msgid ""
@@ -158,6 +160,8 @@ msgid ""
 "      Browse and manage all of your notifications here:\n"
 "    "
 msgstr ""
+"\n"
+"Pretražujte i upravljajte vašim notifikacijama ovdje:"
 
 #: aleph/templates/email/registration_code.html:5
 #, python-format
@@ -169,38 +173,38 @@ msgstr ""
 "\n"
 "     Da završite registraciju, molimo posjetite <a href=\"%(url)s\">našu registracijsku stranicu</a>."
 
-#: aleph/views/base_api.py:91
+#: aleph/views/base_api.py:83
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ se ne koristi, molimo vas da koristite /api/2"
 
-#: aleph/views/base_api.py:99
+#: aleph/views/base_api.py:91
 msgid "You are not authorized to do this."
 msgstr "Niste ovlašteni da ovo uradite."
 
-#: aleph/views/base_api.py:108
+#: aleph/views/base_api.py:100
 msgid "This path does not exist."
 msgstr "Ova putanja ne postoji."
 
-#: aleph/views/base_api.py:124
+#: aleph/views/base_api.py:116
 msgid "Access token has expired."
 msgstr "Pristupni token je istekao."
 
 #: aleph/views/roles_api.py:31
 msgid "prefix filter is too short"
-msgstr ""
+msgstr "prefix filter je previše kratak"
 
 #: aleph/views/roles_api.py:48
 msgid "Registration"
-msgstr ""
+msgstr "Registracija"
 
 #: aleph/views/roles_api.py:53
 msgid "To proceed, please check your email."
-msgstr ""
+msgstr "Da biste nastavili, molimo vas provjerite svoj email."
 
 #: aleph/views/roles_api.py:68
 msgid "Invalid code"
-msgstr ""
+msgstr "Nevažeći kod"
 
 #: aleph/views/roles_api.py:75
 msgid "Email is already registered"
-msgstr ""
+msgstr "Email je već registrovan"

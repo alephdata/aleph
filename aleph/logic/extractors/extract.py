@@ -31,26 +31,30 @@ SPACY_TYPES = {
 }
 
 
-def extract_polyglot(ctx, text, languages):
+def extract_polyglot(agg, text, languages):
+    if not settings.ENABLE_POLYGLOT:
+        return
     if len(text) < MIN_LENGTH:
         return
     try:
         parsed = Text(text)
         lang = parsed.language
         if lang.confidence > 90:
-            yield LanguageResult(ctx, lang.code, None, None)
+            yield LanguageResult.create(agg, lang.code, None, None)
         if lang.code not in POLYGLOT_LANGUAGES:
             return
         for entity in parsed.entities:
             label = ' '.join(entity)
             clazz = POLYGLOT_TYPES.get(entity.tag)
             if clazz is not None:
-                yield clazz(ctx, label, entity.start, entity.end)
+                yield clazz.create(agg, label, entity.start, entity.end)
     except Exception as ex:
         log.warning("Polyglot failed: %s" % ex)
 
 
-def extract_spacy(ctx, text, languages):
+def extract_spacy(agg, text, languages):
+    if not settings.ENABLE_SPACY:
+        return
     if len(text) < MIN_LENGTH:
         return
     try:
@@ -62,6 +66,6 @@ def extract_spacy(ctx, text, languages):
         for ent in doc.ents:
             clazz = SPACY_TYPES.get(ent.label_)
             if clazz is not None:
-                yield clazz(ctx, ent.text, ent.start, ent.end)
+                yield clazz.create(agg, ent.text, ent.start, ent.end)
     except Exception:
         log.exception("spaCy failed")

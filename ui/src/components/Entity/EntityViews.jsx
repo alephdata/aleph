@@ -68,9 +68,7 @@ class EntityViews extends React.Component {
                title={
                  <React.Fragment>
                    <Icon name={ref.schema.toLowerCase()} iconSize='14px' className='entity-icon'/>
-                   <span className='tab-padding'>
-                   <FormattedMessage id="entity.info.overview" defaultMessage={reverseLabel(schemata, ref)}/>
-                   </span>
+                   {reverseLabel(schemata, ref)}
                    <Count count={ref.count} />
                  </React.Fragment>
                }
@@ -83,9 +81,7 @@ class EntityViews extends React.Component {
              title={
                 <TextLoading loading={tags.shouldLoad || tags.isLoading}>
                   <Icon name='tags' iconSize='14px' className='entity-icon'/>
-                  <span className='tab-padding'>
                   <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
-                  </span>
                   <Count count={tags.total} />
                 </TextLoading>
              }
@@ -97,9 +93,7 @@ class EntityViews extends React.Component {
              title={
                 <TextLoading loading={similar.shouldLoad || similar.isLoading}>
                   <Icon name='similar' iconSize='14px' className='entity-icon'/>
-                  <span className='tab-padding'>
                   <FormattedMessage id="entity.info.similar" defaultMessage="Similar"/>
-                  </span>
                   <Count count={similar.total} />
                 </TextLoading>
              }
