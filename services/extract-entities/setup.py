@@ -13,6 +13,12 @@ setup(
     include_package_data=True,
     package_data={},
     install_requires=[
+        'PyICU==2.0.6',
+        'regex==2017.4.5',
+        'pycld2==0.31',
+        'polyglot==16.7.4',
+        'Morfessor==2.0.4',
+        'spacy==2.0.11',
         'grpcio==1.11.0',
         'alephclient==0.7.2'
     ],
