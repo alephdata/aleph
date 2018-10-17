@@ -21,7 +21,6 @@ RUN apt-get -qq -y update \
 #
 # Set up the locale and make sure the system uses unicode for the file system.
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    sed -i -e 's/# en_GB.ISO-8859-15 ISO-8859-15/en_GB.ISO-8859-15 ISO-8859-15/' /etc/locale.gen && \
     locale-gen
 
 ENV LANG='en_US.UTF-8' \
