@@ -1,4 +1,6 @@
 import logging
+import textwrap
+
 from alephclient.services.common_pb2 import Text
 from alephclient.services.entityextract_pb2 import ExtractedEntity
 from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
@@ -26,21 +28,22 @@ class NERService(ServiceClientMixin):
     def extract(self, text, languages):
         if text is None or len(text) < self.MIN_LENGTH:
             return
-        text = text[:self.MAX_LENGTH]
-        for attempt in range(10):
-            try:
-                service = EntityExtractStub(self.channel)
-                req = Text(text=text, languages=languages)
-                for res in service.Extract(req):
-                    clazz = self.TYPES.get(res.type)
-                    yield (res.text, clazz, res.start, res.end)
-                return
-            except self.Error as e:
-                if e.code() == self.Status.RESOURCE_EXHAUSTED:
-                    continue
-                log.warning("gRPC [%s]: %s", e.code(), e.details())
-                backoff(failures=attempt)
-                self.reset_channel()
+        texts = textwrap.wrap(text, self.MAX_LENGTH)
+        for text in texts:
+            for attempt in range(10):
+                try:
+                    service = EntityExtractStub(self.channel)
+                    req = Text(text=text, languages=languages)
+                    for res in service.Extract(req):
+                        clazz = self.TYPES.get(res.type)
+                        yield (res.text, clazz, res.start, res.end)
+                    break
+                except self.Error as e:
+                    if e.code() == self.Status.RESOURCE_EXHAUSTED:
+                        continue
+                    log.warning("gRPC [%s]: %s", e.code(), e.details())
+                    backoff(failures=attempt)
+                    self.reset_channel()
 
 
 def extract_entities(ctx, text, languages):
