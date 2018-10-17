@@ -1,7 +1,7 @@
 import logging
 
 from aleph.model import DocumentTag
-from aleph.logic.extractors.extract import extract_polyglot, extract_spacy
+from aleph.logic.extractors.extract import extract_entities
 from aleph.logic.extractors.patterns import extract_patterns
 from aleph.logic.extractors.result import CountryResult
 from aleph.logic.extractors.cluster import Cluster
@@ -29,9 +29,7 @@ class EntityAggregator(object):
         self.record += 1
         if self.record % 1000 == 0:
             log.debug("%s text parts...", self.record)
-        for result in extract_polyglot(self, text, languages):
-            self.add(result)
-        for result in extract_spacy(self, text, languages):
+        for result in extract_entities(self, text, languages):
             self.add(result)
         for result in extract_patterns(self, text):
             self.add(result)

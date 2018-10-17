@@ -1,6 +1,7 @@
 import logging
-from alephclient.services.entityextract_pb2 import Text, ExtractedEntity
-from alephclient.services.entityextract_pb2_grpc import ExtractEntityStub
+from alephclient.services.common_pb2 import Text
+from alephclient.services.entityextract_pb2 import ExtractedEntity
+from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
 
 from aleph import settings
 from aleph.services import ServiceClientMixin
@@ -22,17 +23,18 @@ class NERService(ServiceClientMixin):
         ExtractedEntity.LANGUAGE: LanguageResult
     }
 
-    def extract(self, text):
+    def extract(self, text, languages):
         if text is None or len(text) < self.MIN_LENGTH:
             return
         text = text[:self.MAX_LENGTH]
         for attempt in range(10):
             try:
-                service = ExtractEntityStub(self.channel)
-                text = Text(data=text)
-                for res in service.Extract(text):
+                service = EntityExtractStub(self.channel)
+                req = Text(text=text, languages=languages)
+                for res in service.Extract(req):
                     clazz = self.TYPES.get(res.type)
                     yield (res.text, clazz, res.start, res.end)
+                return
             except self.Error as e:
                 if e.code() == self.Status.RESOURCE_EXHAUSTED:
                     continue
@@ -41,8 +43,9 @@ class NERService(ServiceClientMixin):
                 self.reset_channel()
 
 
-def extract_entities(ctx, text):
+def extract_entities(ctx, text, languages):
     if not hasattr(settings, '_ner_service'):
         settings._ner_service = NERService()
-    for (text, clazz, start, end) in settings._ner_service.extract(text):
+    entities = settings._ner_service.extract(text, languages=languages)
+    for (text, clazz, start, end) in entities:
         yield clazz.create(ctx, text, start, end)

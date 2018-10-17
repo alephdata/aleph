@@ -55,7 +55,7 @@ class EntityServicer(EntityExtractServicer):
                                            entity.start,
                                            entity.end)
         except Exception as ex:
-            log.warning("Polyglot failed: %s" % ex)
+            log.exception("Polyglot failed")
 
     def extract_spacy(self, text):
         try:
@@ -68,6 +68,9 @@ class EntityServicer(EntityExtractServicer):
             log.exception("spaCy failed")
 
     def make_entity(self, text, type_, start, end):
+        text = text.strip()
+        if not len(text):
+            return
         entity = ExtractedEntity()
         entity.text = text
         entity.type = type_
@@ -75,9 +78,15 @@ class EntityServicer(EntityExtractServicer):
         entity.end = end
         return entity
 
+    def extract_all(self, text):
+        yield from self.extract_polyglot(text)
+        yield from self.extract_spacy(text)
+
     def Extract(self, request, context):
-        yield from self.extract_polyglot(request.text)
-        yield from self.extract_spacy(request.text)
+        for result in self.extract_all(request.text):
+            if result is None:
+                continue
+            yield result
 
 
 def serve(port):

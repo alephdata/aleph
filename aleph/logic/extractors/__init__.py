@@ -9,8 +9,6 @@ log = logging.getLogger(__name__)
 
 
 def extract_document_tags(document):
-    if not settings.ENABLE_NER:
-        return
     if document.status != Document.STATUS_SUCCESS:
         return
     load_places()
