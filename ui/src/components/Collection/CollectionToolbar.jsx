@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button } from "@blueprintjs/core";
 
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
@@ -110,5 +110,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 CollectionToolbar = connect(mapStateToProps, { xrefMatches })(CollectionToolbar);
+CollectionToolbar = injectIntl(CollectionToolbar);
 CollectionToolbar = withRouter(CollectionToolbar);
 export default CollectionToolbar;
