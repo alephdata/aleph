@@ -91,7 +91,7 @@ def _iter_match_batch(batch, authz):
 
     collections = Collection.all_by_ids(collections, authz=authz)
     collections = {c.id: c.label for c in collections}
-    entities = iter_entities_by_ids(entities, authz=authz)
+    entities = iter_entities_by_ids(list(entities), authz=authz)
     entities = {e.get('id'): e for e in entities}
     for obj in batch:
         entity = entities.get(str(obj.entity_id))

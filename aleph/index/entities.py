@@ -25,6 +25,12 @@ def index_entity(entity):
     return index_single(entity, entity.to_proxy(), context, [])
 
 
+def delete_entity(entity_id):
+    """Delete an entity from the index."""
+    q = {'ids': {'values': str(entity_id)}}
+    query_delete(entities_index(), q)
+
+
 def get_entity(entity_id):
     """Fetch an entity from the index."""
     if entity_id is None:
@@ -76,16 +82,9 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def delete_entity(entity_id):
-    """Delete an entity from the index."""
-    q = {'ids': {'values': str(entity_id)}}
-    query_delete(entities_index(), q)
-
-
 def iter_entities_by_ids(ids, authz=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
-    ids = ensure_list(ids)
     if not len(ids):
         return
     query = bool_query()
@@ -121,7 +120,7 @@ def _index_updates(collection, entities):
     if not len(entities):
         return []
 
-    for result in iter_entities_by_ids(entities.keys()):
+    for result in iter_entities_by_ids(list(entities.keys())):
         existing = model.get_proxy(result)
         entities[existing.id].merge(existing)
         timestamps[existing.id] = result.get('created_at')
