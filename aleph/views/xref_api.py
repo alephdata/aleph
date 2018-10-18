@@ -1,6 +1,5 @@
 from flask import Blueprint, request, stream_with_context
 
-from aleph.core import url_for
 from aleph.model import Match, Audit
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_db_collection, jsonify, stream_csv
@@ -21,9 +20,6 @@ def index(id):
     result = DatabaseQueryResult(request, q,
                                  parser=parser,
                                  schema=MatchCollectionsSchema)
-    result = result.to_dict()
-    csv_url = url_for('xref_api.csv_export', collection_id=id, _authorize=True)
-    result['links'] = {'csv': csv_url}
     return jsonify(result)
 
 
@@ -42,17 +38,16 @@ def matches(id, other_id):
     return jsonify(result)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/xref',
-                 methods=['POST'])
-def generate(collection_id):
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+@blueprint.route('/api/2/collections/<int:id>/xref', methods=['POST'])
+def generate(id):
+    collection = get_db_collection(id, request.authz.WRITE)
     xref_collection.apply_async([collection.id], priority=5)
     return jsonify({'status': 'accepted'}, status=202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/xref.csv')
-def csv_export(collection_id):
-    collection = get_db_collection(collection_id, request.authz.READ)
-    record_audit(Audit.ACT_COLLECTION, id=collection_id)
+@blueprint.route('/api/2/collections/<int:id>/xref.csv')
+def csv_export(id):
+    collection = get_db_collection(id, request.authz.READ)
+    record_audit(Audit.ACT_COLLECTION, id=id)
     matches = export_matches_csv(collection.id, request.authz)
     return stream_csv(stream_with_context(matches))
