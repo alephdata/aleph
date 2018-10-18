@@ -101,13 +101,21 @@ class EntityLink extends Component {
   }
 
   render() {
-    const { entity, className } = this.props;
+    const { entity, className, preview } = this.props;
     if (!entity || !entity.links || !entity.schemata || entity.status === 'pending') {
       return <Entity.Label {...this.props} />;
     }
 
+    if(preview === true) {
+      return (
+        <a onClick={this.onClick} className={c('EntityLink', className)}>
+          <Entity.Label {...this.props} />
+        </a>
+      );
+    }
+
     return (
-      <a onClick={this.onClick} className={c('EntityLink', className)}>
+      <a href={getPath(entity.links.ui)} className={c('EntityLink', className)}>
         <Entity.Label {...this.props} />
       </a>
     );

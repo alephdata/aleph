@@ -33,8 +33,6 @@ class Navbar extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.onOpenMenu = this.onOpenMenu.bind(this);
     this.onToggleSearch = this.onToggleSearch.bind(this);
-    this.onClickSources = this.onClickSources.bind(this);
-    this.onClickCases = this.onClickCases.bind(this);
   }
 
   componentDidMount() {
@@ -71,23 +69,6 @@ class Navbar extends React.Component {
   onToggleSearch(event) {
     event.preventDefault();
     this.setState({searchOpen: !this.state.searchOpen});
-  }
-
-  onClickSources() {
-    const { history } = this.props;
-
-    history.push({
-      pathname: '/sources'
-    });
-
-  }
-
-  onClickCases() {
-    const { history } = this.props;
-
-    history.push({
-      pathname: '/cases'
-    });
   }
 
   render() {
@@ -139,12 +120,17 @@ class Navbar extends React.Component {
             </div>
             <div className={`navbar-options pt-navbar-group ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
               <div className='menu-items'>
-                <Button icon='database' onClick={this.onClickSources} className='pt-minimal'>
-                  <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
-                </Button>
-                {session.loggedIn && <Button icon='briefcase' className='pt-minimal' onClick={this.onClickCases}>
-                  <FormattedMessage id="nav.cases" defaultMessage="Cases"/>
-                </Button>}
+                <Link to='/sources'>
+                  <Button icon='database' className='pt-minimal'>
+                    <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
+                  </Button>
+                </Link>
+                {session.loggedIn &&
+                <Link to='/cases'>
+                  <Button icon='briefcase' className='pt-minimal'>
+                    <FormattedMessage id="nav.cases" defaultMessage="Cases"/>
+                  </Button>
+                </Link>}
                 <div className="pt-navbar-divider"/>
                 <AuthButtons session={session} auth={metadata.auth}/>
                 <LanguageMenu/>
