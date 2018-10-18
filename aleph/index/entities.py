@@ -11,7 +11,7 @@ from aleph.core import es
 from aleph.model import Document
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
-from aleph.index.util import index_safe, search_safe, authz_query
+from aleph.index.util import index_safe, search_safe, authz_query, bool_query
 
 log = logging.getLogger(__name__)
 
@@ -23,6 +23,12 @@ def index_entity(entity):
 
     context = {'foreign_id': entity.foreign_id}
     return index_single(entity, entity.to_proxy(), context, [])
+
+
+def delete_entity(entity_id):
+    """Delete an entity from the index."""
+    q = {'ids': {'values': str(entity_id)}}
+    query_delete(entities_index(), q)
 
 
 def get_entity(entity_id):
@@ -76,10 +82,23 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def delete_entity(entity_id):
-    """Delete an entity from the index."""
-    q = {'ids': {'values': str(entity_id)}}
-    query_delete(entities_index(), q)
+def iter_entities_by_ids(ids, authz=None):
+    """Iterate over unpacked entities based on a search for the given
+    entity IDs."""
+    if not len(ids):
+        return
+    query = bool_query()
+    query['bool']['filter'].append({'ids': {'values': ids}})
+    if authz is not None:
+        query['bool']['filter'].append(authz_query(authz))
+    query = {
+        'query': query,
+        '_source': {'includes': ['schema', 'properties', 'created_at']},
+        'size': len(ids) * 2
+    }
+    result = search_safe(index=entity_index(), body=query)
+    for doc in result.get('hits').get('hits', []):
+        yield unpack_result(doc)
 
 
 def _index_updates(collection, entities):
@@ -99,16 +118,9 @@ def _index_updates(collection, entities):
     }
     timestamps = {}
     if not len(entities):
-        return [] 
+        return []
 
-    query = {
-        'query': {'ids': {'values': list(entities.keys())}},
-        '_source': {'includes': ['schema', 'properties', 'created_at']},
-        'size': len(entities) * 2
-    }
-    result = search_safe(index=entity_index(), body=query)
-    for doc in result.get('hits').get('hits', []):
-        result = unpack_result(doc)
+    for result in iter_entities_by_ids(list(entities.keys())):
         existing = model.get_proxy(result)
         entities[existing.id].merge(existing)
         timestamps[existing.id] = result.get('created_at')

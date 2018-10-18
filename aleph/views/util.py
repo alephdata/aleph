@@ -1,3 +1,5 @@
+import io
+import csv
 import json
 from datetime import datetime, date
 from flask import Response, request, render_template
@@ -202,6 +204,20 @@ def stream_ijson(iterable, encoder=JSONEncoder):
             yield encoder().encode(row)
             yield '\n'
     return Response(_generate_stream(), mimetype='application/json+stream')
+
+
+def stream_csv(iterable):
+    """Stream JSON line-based data."""
+    def _generate_stream():
+        for row in iterable:
+            values = []
+            for value in row:
+                values.append(stringify(value) or '')
+            buffer = io.StringIO()
+            writer = csv.writer(buffer, dialect='excel', delimiter=',')
+            writer.writerow(values)
+            yield buffer.getvalue()
+    return Response(_generate_stream(), mimetype='text_csv')
 
 
 def render_xml(template, **kwargs):
