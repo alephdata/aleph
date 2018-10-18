@@ -46,7 +46,7 @@ def handle_azure_oauth(sender, provider=None, oauth=None):
 
     # Load cert from MS - can be cached for upwards of 24hrs, not done now
     cert_loc = 'https://login.microsoftonline.com/common/discovery/keys'
-    cert_data= json.loads(urlopen(cert_loc).read())
+    cert_data = json.loads(urlopen(cert_loc).read())
     pemstart = "-----BEGIN CERTIFICATE-----\n"
     pemend = "\n-----END CERTIFICATE-----\n"
     # Find correct cert based on header
@@ -59,12 +59,14 @@ def handle_azure_oauth(sender, provider=None, oauth=None):
     public_key = cert_obj.public_key()
 
     # Decode incoming token and verify against the MS cert
-    token_data = jwt.decode(id_token, public_key, verify=True, audience=settings.OAUTH_KEY)
+    token_data = jwt.decode(id_token, public_key, verify=True,
+                            audience=settings.OAUTH_KEY)
 
     # All Ok, move on
     user_id = 'azure:%s' % token_data['upn']
     return Role.load_or_create(user_id, Role.USER, token_data['name'],
                                email=token_data['upn'])
+
 
 @signals.handle_oauth_session.connect
 def handle_google_oauth(sender, provider=None, oauth=None):
@@ -105,23 +107,20 @@ def handle_keycloak_oauth(sender, provider=None, oauth=None):
     clients = token_data.get('resource_access', {})
     client = clients.get(provider.consumer_key, {})
     roles = set(client.get('roles', []))
+    is_admin = superuser_role in roles
 
     user_id = 'kc:%s' % token_data.get('email')
     if token_data.get('idashboard'):
         user_id = 'idashboard:user:%s' % token_data.get('idashboard')
-
     role = Role.load_or_create(user_id, Role.USER,
                                token_data.get('name'),
                                email=token_data.get('email'),
-                               is_admin=superuser_role in roles)
+                               is_admin=is_admin)
     role.clear_roles()
     for role_name in roles:
-        if role_name == superuser_role:
-            continue
         group_role = Role.load_or_create('kc:%s' % role_name,
                                          Role.GROUP,
                                          role_name)
         role.add_role(group_role)
         log.debug("User %r is member of %r", role, group_role)
-
     return role
