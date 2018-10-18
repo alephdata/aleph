@@ -8,7 +8,7 @@ from aleph.util import make_key
 
 log = logging.getLogger(__name__)
 EXPIRATION = 84600 * 7
-DEGREE = 'degree'
+DEGREE = '&deg'
 
 
 class CacheMiss(Exception):
@@ -16,21 +16,18 @@ class CacheMiss(Exception):
 
 
 def typed_key(type_, value, *extra):
-    return make_key('graph', type_.name, value, *extra)
+    return make_key('graph7', type_.name, value, *extra)
 
 
 def store_links(type_, value, links, expire=EXPIRATION):
-    pipe = kv.pipeline()
+    key = typed_key(type_, value)
     degree_key = typed_key(type_, value, DEGREE)
-    values = []
+    pipe = kv.pipeline()
+    pipe.set(degree_key, len(links), ex=expire)
+    pipe.delete(key)
     for link in links:
         value = msgpack.packb(link.to_tuple(), use_bin_type=True)
-        values.append(value)
-    key = typed_key(type_, value)
-    pipe.delete(key)
-    if len(values):
-        pipe.rpush(key, *values)
-    pipe.set(degree_key, len(values), ex=expire)
+        pipe.lpush(key, value)
     pipe.execute()
 
 

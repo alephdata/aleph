@@ -48,3 +48,8 @@ export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async dis
 export const queryXrefMatches = asyncActionCreator((query) => async dispatch => {
   return queryEndpoint(query);
 }, { name: 'QUERY_XREF_MATCHES' });
+
+export const tiggerXrefMatches = asyncActionCreator((id) => async dispatch => {
+  const response = await endpoint.post(`collections/${id}/xref`);
+  return { data: response.data };
+}, {name: 'TRIGGER_XREF_MATCHES'});

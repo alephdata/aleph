@@ -57,6 +57,8 @@ class CollectionSchema(BaseSchema):
         pk = str(data.get('id'))
         data['links'] = {
             'self': url_for('collections_api.view', id=pk),
+            'xref': url_for('xref_api.index', id=pk),
+            'xref_csv': url_for('xref_api.csv_export', id=pk, _authorize=True),
             'ui': collection_url(pk)
         }
         data['writeable'] = request.authz.can_write(pk)
