@@ -22,7 +22,7 @@ import {
   queryXrefMatches,
   createCollection,
   deleteCollection,
-  xrefMatches
+  tiggerXrefMatches
 } from './collectionActions';
 import {
   queryEntities,
@@ -59,7 +59,7 @@ export {
   deleteNotifications,
   ingestDocument,
   deleteDocument,
-  xrefMatches
+  tiggerXrefMatches
 };
 
 export const fetchMetadata = asyncActionCreator(() => async dispatch => {

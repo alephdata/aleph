@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { queryXrefMatches, xrefMatches } from 'src/actions';
+import { queryXrefMatches } from 'src/actions';
 import { objectLoadStart, objectLoadError, objectLoadComplete, mergeResults } from 'src/reducers/util';
 
 const initialState = {};
@@ -18,26 +18,5 @@ export default createReducer({
     objectLoadError(state, query.toKey(), error),
 
   [queryXrefMatches.COMPLETE]: updateMatches,
-
-  [xrefMatches.START]: state => ({
-    ...state,
-    isLoading: true,
-    shouldLoad: false,
-    isError: false
-  }),
-
-  [xrefMatches.COMPLETE]:  state => ({
-    ...state,
-    isLoading: false,
-    shouldLoad: false,
-    isError: false
-  }),
-
-  [xrefMatches.ERROR]:  state => ({
-    ...state,
-    isLoading: false,
-    shouldLoad: false,
-    isError: true
-  })
 
 }, initialState);

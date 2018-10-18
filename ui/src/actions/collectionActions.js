@@ -49,7 +49,7 @@ export const queryXrefMatches = asyncActionCreator((query) => async dispatch => 
   return queryEndpoint(query);
 }, { name: 'QUERY_XREF_MATCHES' });
 
-export const xrefMatches = asyncActionCreator((id) => async dispatch => {
+export const tiggerXrefMatches = asyncActionCreator((id) => async dispatch => {
   const response = await endpoint.post(`collections/${id}/xref`);
-  return { data: response.data}
-}, {name: 'XREF_MATCHES'});
+  return { data: response.data };
+}, {name: 'TRIGGER_XREF_MATCHES'});
