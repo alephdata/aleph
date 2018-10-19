@@ -49,16 +49,17 @@ def match_query(proxy, collection_id=None, query=None, broad=False):
             }
         })
         fp = fingerprints.generate(name)
-        required.append({
-            'match': {
-                'fingerprints': {
-                    'query': fp,
-                    'fuzziness': 1,
-                    'operator': 'and',
-                    'boost': 3.0
+        if fp is not None:
+            required.append({
+                'match': {
+                    'fingerprints': {
+                        'query': fp,
+                        'fuzziness': 1,
+                        'operator': 'and',
+                        'boost': 3.0
+                    }
                 }
-            }
-        })
+            })
 
     for type_ in registry.names.values():
         if not type_.strong or type_.group is None:

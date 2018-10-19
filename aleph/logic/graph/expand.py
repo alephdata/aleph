@@ -59,8 +59,7 @@ def expand_entity(entity):
         entity.update(Document.doc_data_to_schema(entity))
 
     proxy = model.get_proxy(entity)
-    for link in proxy.links:
-        yield link
+    yield from proxy.links
 
     # TODO: factor out inference
     thing = model.get(Entity.THING)
