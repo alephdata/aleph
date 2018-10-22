@@ -12,6 +12,7 @@ from aleph.model import Document
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
+from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -85,20 +86,22 @@ def iter_proxies(**kw):
 def iter_entities_by_ids(ids, authz=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
-    if not len(ids) or len(ids) > 9500:
-        return
-    query = bool_query()
-    query['bool']['filter'].append({'ids': {'values': ids}})
-    if authz is not None:
-        query['bool']['filter'].append(authz_query(authz))
-    query = {
-        'query': query,
-        '_source': {'includes': ['schema', 'properties', 'created_at']},
-        'size': min(10000, len(ids) * 2)
-    }
-    result = search_safe(index=entity_index(), body=query)
-    for doc in result.get('hits').get('hits', []):
-        yield unpack_result(doc)
+    for i in range(0, len(ids), MAX_PAGE):
+        chunk = ids[i:i + MAX_PAGE]
+        if not len(chunk):
+            return
+        query = bool_query()
+        query['bool']['filter'].append({'ids': {'values': chunk}})
+        if authz is not None:
+            query['bool']['filter'].append(authz_query(authz))
+        query = {
+            'query': query,
+            '_source': {'includes': ['schema', 'properties', 'created_at']},
+            'size': min(MAX_PAGE, len(chunk) * 2)
+        }
+        result = search_safe(index=entity_index(), body=query)
+        for doc in result.get('hits').get('hits', []):
+            yield unpack_result(doc)
 
 
 def _index_updates(collection, entities):

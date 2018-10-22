@@ -14,6 +14,8 @@ INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 BULK_PAGE = 1000
+# cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
+MAX_PAGE = 9999
 
 
 def refresh_index(index):

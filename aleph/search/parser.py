@@ -1,14 +1,11 @@
 import logging
-
 from banal import as_bool
 from normality import stringify
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
+from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
-
-# cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
-MAX_RESULT_WINDOW = 9999
 
 
 class QueryParser(object):
@@ -25,7 +22,7 @@ class QueryParser(object):
         self.authz = authz
         self.offset = max(0, self.getint('offset', 0))
         if limit is None:
-            limit = min(MAX_RESULT_WINDOW, max(0, self.getint('limit', 20)))
+            limit = min(MAX_PAGE, max(0, self.getint('limit', 20)))
         self.limit = limit
         self.text = stringify(self.get('q'))
         self.prefix = stringify(self.get('prefix'))
@@ -126,9 +123,9 @@ class SearchQueryParser(QueryParser):
 
     def __init__(self, args, authz, limit=None):
         super(SearchQueryParser, self).__init__(args, authz, limit=limit)
-        self.offset = min(MAX_RESULT_WINDOW, self.offset)
-        if (self.limit + self.offset) > MAX_RESULT_WINDOW:
-            self.limit = max(0, MAX_RESULT_WINDOW - self.offset)
+        self.offset = min(MAX_PAGE, self.offset)
+        if (self.limit + self.offset) > MAX_PAGE:
+            self.limit = max(0, MAX_PAGE - self.offset)
 
         # Set of field names to facet by (i.e. include the count of distinct
         # values in the result set). These must match 'keyword' fields in the
