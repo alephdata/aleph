@@ -81,7 +81,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: search-extract-countries
-          image: alephdata/aleph-extract-countries:occrp
+          image: alephdata/aleph-extract-countries:2.2.1
           imagePullPolicy: Always
           ports:
             - containerPort: 50000

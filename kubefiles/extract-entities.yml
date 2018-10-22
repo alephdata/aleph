@@ -57,7 +57,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: search-extract-entities
-          image: alephdata/aleph-extract-entities:occrp
+          image: alephdata/aleph-extract-entities:2.2.1
           imagePullPolicy: Always
           ports:
             - containerPort: 50000

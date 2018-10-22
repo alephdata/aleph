@@ -139,7 +139,7 @@ spec:
             name: search-web-config
       containers:
         - name: search-web
-          image: alephdata/aleph-ui-production:occrp
+          image: alephdata/aleph-ui-production:2.2.1
           imagePullPolicy: Always
           resources:
             requests:

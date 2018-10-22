@@ -80,7 +80,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: search-convert-document
-          image: alephdata/aleph-convert-document:occrp
+          image: alephdata/aleph-convert-document:2.2.1
           imagePullPolicy: Always
           ports:
             - containerPort: 3000

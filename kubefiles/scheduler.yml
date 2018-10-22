@@ -35,7 +35,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: search-scheduler
-          image: alephdata/aleph:occrp
+          image: alephdata/aleph:2.2.1
           imagePullPolicy: Always
           command:
             - celery

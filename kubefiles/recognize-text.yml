@@ -80,7 +80,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: search-recognize-text
-          image: alephdata/aleph-recognize-text:occrp
+          image: alephdata/aleph-recognize-text:2.2.1
           imagePullPolicy: Always
           ports:
             - containerPort: 50000
