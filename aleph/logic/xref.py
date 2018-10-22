@@ -134,10 +134,9 @@ def export_matches_csv(collection_id, authz):
         lazy_gettext('MatchLink'),
     ]
     batch = []
-    batch_size = int(BULK_PAGE / 2)
-    for match in dq.yield_per(batch_size):
+    for match in dq.yield_per(BULK_PAGE):
         batch.append(match)
-        if len(batch) >= batch_size:
+        if len(batch) >= BULK_PAGE:
             yield from _iter_match_batch(batch, authz)
             batch = []
     if len(batch):

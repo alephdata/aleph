@@ -85,7 +85,7 @@ def iter_proxies(**kw):
 def iter_entities_by_ids(ids, authz=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
-    if not len(ids):
+    if not len(ids) or len(ids) > 9500:
         return
     query = bool_query()
     query['bool']['filter'].append({'ids': {'values': ids}})
@@ -94,7 +94,7 @@ def iter_entities_by_ids(ids, authz=None):
     query = {
         'query': query,
         '_source': {'includes': ['schema', 'properties', 'created_at']},
-        'size': len(ids) * 2
+        'size': min(10000, len(ids) * 2)
     }
     result = search_safe(index=entity_index(), body=query)
     for doc in result.get('hits').get('hits', []):
