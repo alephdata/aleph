@@ -54,7 +54,7 @@ class EntityViews extends React.Component {
                   <React.Fragment>
                     <Icon name='info' iconSize='14px' className='entity-icon'/>
                     <span className='tab-padding'>
-                      <FormattedMessage id="entity.info.info" defaultMessage="Info" className='test'/>
+                      <FormattedMessage id="entity.info.info" defaultMessage="Info" />
                     </span>
                   </React.Fragment>
                }
