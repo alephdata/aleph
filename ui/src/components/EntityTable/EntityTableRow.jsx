@@ -27,33 +27,33 @@ class EntityTableRow extends Component {
     }
     
     return (
-      <tr className={rowClassName}>
-        {updateSelection && <td className="select">
+      <tr className={rowClassName} key={entity.id}>
+        {updateSelection && <td className="select" key={entity.id +1}>
           <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
         </td>}
-        <td className="entity">
+        <td className="entity" key={entity.id +2}>
           <Entity.Link preview={showPreview}
                        documentMode={documentMode}
                        entity={entity} icon />
         </td>
         {!hideCollection && 
-          <td className="collection">
+          <td className="collection" key={entity.id +3}>
             <Collection.Link preview={true} collection={entity.collection} icon />
           </td>
         }
-        <td className="schema">
+        <td className="schema" key={entity.id +4}>
           <Schema.Label schema={entity.schema} />
         </td>
         {!documentMode && (
-          <td className="country">
+          <td className="country" key={entity.id +5}>
             <Country.List codes={entity.countries} />
           </td>
         )}
-        <td className="date">
+        <td className="date" key={entity.id +6}>
           <Date.Earliest values={entity.dates} />
         </td>
         {documentMode && (
-          <td className="file-size">
+          <td className="file-size" key={entity.id +7}>
             <FileSize value={entity.file_size}/>
           </td>
         )}

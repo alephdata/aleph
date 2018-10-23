@@ -131,7 +131,11 @@ class SearchScreen extends React.Component {
         icon: 'person'
       }
     ];
-    this.state = {facets: facets, hideFacets: false};
+
+    this.state = {
+      facets: facets,
+      hideFacets: false
+    };
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);

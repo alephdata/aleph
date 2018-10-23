@@ -92,6 +92,8 @@ class EntityTable extends Component {
       );
     };
 
+    console.log(result.results)
+
     return (
       <table className="EntityTable data-table">
         <thead>
@@ -113,14 +115,25 @@ class EntityTable extends Component {
         </thead>
         <tbody className={c({'updating': isLoading})}>
           {result.results !== undefined && result.results.map(entity =>
-            <EntityTableRow key={entity.id}
-                            entity={entity}
-                            location={location}
-                            hideCollection={hideCollection}
-                            showPreview={showPreview}
-                            documentMode={documentMode}
-                            updateSelection={updateSelection}
-                            selection={selection} />
+            <React.Fragment>
+              <EntityTableRow key={entity.id}
+                              entity={entity}
+                              location={location}
+                              hideCollection={hideCollection}
+                              showPreview={showPreview}
+                              documentMode={documentMode}
+                              updateSelection={updateSelection}
+                              selection={selection} />
+              {entity.highlight !== undefined && entity.highlight.map(sentence =>
+              entity.name !== sentence && <tr>
+                <td colSpan="5" className='highlighted-words'>
+                    <React.Fragment>
+                      <span dangerouslySetInnerHTML={{__html: sentence}} />...
+                    </React.Fragment>
+                </td>
+              </tr>
+              )}
+            </React.Fragment>
           )}
         </tbody>
       </table>
