@@ -55,7 +55,7 @@ class CollectionToolbar extends Component {
                 <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
               </Button>
               <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
-                <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
+                <FormattedMessage id="collection.info.share" defaultMessage="Share"/>
               </Button>
               <Button icon="search-around" onClick={this.toggleXref} className='button-hover'>
                 <FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>
