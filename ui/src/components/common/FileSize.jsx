@@ -1,12 +1,8 @@
-import { Component } from 'react';
+import { PureComponent } from 'react';
 import filesize from 'filesize';
 
 
-class FileSize extends Component {
-  shouldComponentUpdate(nextProps) {
-    return this.props.value !== nextProps.value;
-  }
-
+class FileSize extends PureComponent {
   render() {
     const { value } = this.props;
     if (!value) {

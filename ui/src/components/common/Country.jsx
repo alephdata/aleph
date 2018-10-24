@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { MenuItem, Classes, Position } from '@blueprintjs/core';
@@ -21,11 +21,7 @@ const messages = defineMessages({
 });
 
 
-class Name extends Component {
-  shouldComponentUpdate(nextProps) {
-    return this.props.code !== nextProps.code;
-  }
-
+class Name extends PureComponent {
   render() {
     const { code, countries, short = false } = this.props,
           codeLabel = code ? code.toUpperCase() : <FormattedMessage id="country.unknown" defaultMessage="Unknown"/>,

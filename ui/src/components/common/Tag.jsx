@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
 
-class TagIcon extends Component {
+class TagIcon extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,10 +14,6 @@ class TagIcon extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
-    return this.props.field !== nextProps.field;
-  }
-
   render() {
     const { field } = this.props,
           icon = this.state.icons[field] || 'fa-link';
@@ -28,7 +24,7 @@ class TagIcon extends Component {
   }
 }
 
-class Tag extends Component {
+class Tag extends PureComponent {
   static Icon = TagIcon;
 }
 

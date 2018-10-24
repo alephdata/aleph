@@ -1,6 +1,6 @@
+import React, { PureComponent } from 'react';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
-import React, {Component} from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
@@ -9,7 +9,7 @@ import { selectSession, selectMetadata } from 'src/selectors';
 import './ErrorSection.css';
 
 
-class ErrorSection extends Component {
+class ErrorSection extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {isOpen: false};
