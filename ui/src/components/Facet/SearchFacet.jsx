@@ -92,7 +92,7 @@ class SearchFacet extends Component {
         <div className={c('opener clickable', { active: !isUpdating && isFiltered })} onClick={this.onToggleOpen} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
-            <span className={`FacetIcon pt-icon pt-icon-${icon}`}/>  
+            <span className={`FacetIcon pt-icon pt-icon-${icon}`}/>
             {label} 
           </span>
             

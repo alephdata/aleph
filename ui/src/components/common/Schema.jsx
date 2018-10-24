@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectSchemata } from 'src/selectors';
+import Icon from "./Icon";
 
 class SchemaIcon extends Component {
   shouldComponentUpdate(nextProps) {
@@ -18,9 +19,10 @@ class SchemaIcon extends Component {
       return null;
     }
 
-    return (
-      <i className={`fa fa-fw ${model.icon}`}/>
-    );
+    return (<Icon
+      className='entity-icon'
+      iconSize={'14px'}
+      name={schema.toLowerCase()}/>);
   }
 }
 
