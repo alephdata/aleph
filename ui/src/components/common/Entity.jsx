@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
@@ -74,9 +75,8 @@ class EntityLink extends Component {
 
   onClick(event) {
     const { entity, history, location, preview } = this.props;
-    event.preventDefault();
-
     if (preview === true) {
+      event.preventDefault();
       const parsedHash = queryString.parse(location.hash);
       const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
       if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
@@ -93,31 +93,20 @@ class EntityLink extends Component {
         search: location.search,
         hash: queryString.stringify(parsedHash),
       });
-    } else { 
-      history.push({
-        pathname: getPath(entity.links.ui)
-      });
     }
   }
 
   render() {
-    const { entity, className, preview } = this.props;
+    const { entity, className } = this.props;
     if (!entity || !entity.links || !entity.schemata || entity.status === 'pending') {
       return <Entity.Label {...this.props} />;
     }
 
-    if(preview === true) {
-      return (
-        <a onClick={this.onClick} className={c('EntityLink', className)}>
-          <Entity.Label {...this.props} />
-        </a>
-      );
-    }
-
+    const link = getPath(entity.links.ui);
     return (
-      <a href={getPath(entity.links.ui)} className={c('EntityLink', className)}>
+      <Link to={link} onClick={this.onClick} className={c('EntityLink', className)}>
         <Entity.Label {...this.props} />
-      </a>
+      </Link>
     );
   }
 }
