@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import { Icon } from '@blueprintjs/core';
+import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
 import { connect } from 'react-redux';
@@ -58,11 +59,10 @@ class CollectionLink extends Component {
 
   onClick(event) {
     const { collection, history, location, preview } = this.props;
-    const previewType = 'collection';
-    event.preventDefault();
-
     if (preview === true) {
+      event.preventDefault();
       const parsedHash = queryString.parse(location.hash);
+      const previewType = 'collection';
       if (parsedHash['preview:id'] === collection.id && parsedHash['preview:type'] === previewType) {
         parsedHash['preview:id'] = undefined;
         parsedHash['preview:type'] = undefined;
@@ -77,8 +77,6 @@ class CollectionLink extends Component {
         search: location.search,
         hash: queryString.stringify(parsedHash),
       });
-    } else {
-      history.push(getCollectionLink(collection));
     }
   }
 
@@ -87,9 +85,12 @@ class CollectionLink extends Component {
     if (collection === undefined || collection.links === undefined) {
       return <Collection.Label collection={collection} icon={icon} />;
     }
-    return (<a className={c('CollectionLink', className)} onClick={this.onClick}>
-      <Collection.Label collection={collection} icon={icon} />
-    </a>);
+    const link = getCollectionLink(collection);
+    return (
+      <Link to={link} className={c('CollectionLink', className)} onClick={this.onClick}>
+        <Collection.Label collection={collection} icon={icon} />
+      </Link>
+    );
   }
 }
 

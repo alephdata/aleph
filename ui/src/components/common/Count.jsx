@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 
 
 
-class Count extends Component {
+class Count extends PureComponent {
   render() {
     const { count } = this.props;
 
