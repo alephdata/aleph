@@ -106,7 +106,7 @@ metadata:
   labels:
     app: search-web
 spec:
-  replicas: REPLACEME:REPLICAS_WEB
+  replicas: {{ .Values.web.replicas }}
   selector:
     matchLabels:
       app: search-web
@@ -139,15 +139,15 @@ spec:
             name: search-web-config
       containers:
         - name: search-web
-          image: alephdata/aleph-ui-production:occrp
+          image: alephdata/aleph-ui-production:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           resources:
             requests:
-              memory: REPLACEME:MEMORY_LIMIT_WEB
-              cpu: REPLACEME:CPU_LIMIT_WEB
+              memory: {{ .Values.web.resources.requests.memory }}
+              cpu: {{ .Values.web.resources.requests.cpu }}
             limits:
-              memory: REPLACEME:MEMORY_LIMIT_WEB
-              cpu: REPLACEME:CPU_LIMIT_WEB
+              memory: {{ .Values.web.resources.limits.memory }}
+              cpu: {{ .Values.web.resources.limits.cpu }}
           ports:
             - containerPort: 80
               name: http

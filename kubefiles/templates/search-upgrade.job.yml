@@ -14,7 +14,7 @@ spec:
             secretName: secrets-mounted
       containers:
         - name: search-upgrade
-          image: alephdata/aleph:2.1.5
+          image: alephdata/aleph:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           command: ["aleph", "upgrade"]
           resources:
@@ -34,7 +34,7 @@ spec:
           command:
             - /cloud_sql_proxy
             - -dir=/cloudsql
-            - -instances=REPLACEME:SQL_CONNECTION_STRING
+            - -instances={{ .Values.global.dbInstance }}
             - -credential_file=/secrets/service-account.json
           livenessProbe:
             exec:

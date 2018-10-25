@@ -1,24 +1,41 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: search-worker
+  namespace: aleph
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: search-worker
+  minReplicas: {{ .Values.worker.minReplicas }}
+  maxReplicas: {{ .Values.worker.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-scheduler
+  name: search-worker
   namespace: aleph
   labels:
-    app: search-scheduler
+    app: search-worker
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: search-scheduler
+      app: search-worker
   strategy:
     rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 100%
+      maxSurge: 2
+      maxUnavailable: 75%
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: search-scheduler
+        app: search-worker
     spec:
       affinity: # Ask k8s to preferr that pods are placed across zones if available
         podAntiAffinity:
@@ -34,23 +51,25 @@ spec:
               topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       containers:
-        - name: search-scheduler
+        - name: search-worker
           image: alephdata/aleph:occrp
           imagePullPolicy: Always
           command:
             - celery
             - -A
             - aleph.queues
-            - beat
-            - -s
-            - /var/lib/celerybeat-schedule.db
+            - -c
+            - '4'
+            - -l
+            - INFO
+            - worker
           resources:
             requests:
-              memory: REPLACEME:MEMORY_LIMIT_SCHEDULER
-              cpu: REPLACEME:CPU_LIMIT_SCHEDULER
+              memory: {{ .Values.worker.resources.requests.memory }}
+              cpu: {{ .Values.worker.resources.requests.cpu }}
             limits:
-              memory: REPLACEME:MEMORY_LIMIT_SCHEDULER
-              cpu: REPLACEME:CPU_LIMIT_SCHEDULER
+              memory: {{ .Values.worker.resources.limits.memory }}
+              cpu: {{ .Values.worker.resources.limits.cpu }}
 #          env:
 #            - name: DATAVAULT_DATABASE_URI
 #              valueFrom:
@@ -68,11 +87,32 @@ spec:
         - name: search-db-sidecar
           image: b.gcr.io/cloudsql-docker/gce-proxy:latest
           imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: "0.1"
+            limits:
+              memory: 64Mi
+              cpu: "0.1"
           command:
             - /cloud_sql_proxy
             - -dir=/cloudsql
             - -instances=REPLACEME:SQL_CONNECTION_STRING
             - -credential_file=/secrets/service-account.json
+          livenessProbe:
+            exec:
+              command:
+                - nc
+                - -z
+                - 127.0.0.1
+                - "5432"
+          readinessProbe:
+            exec:
+              command:
+                - nc
+                - -z
+                - 127.0.0.1
+                - "5432"
           volumeMounts:
             - mountPath: /secrets
               name: secrets-mounted

@@ -24,8 +24,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: search-extract-entities
-  minReplicas: REPLACEME:REPLICAS_EXTRACT_ENTITIES_MIN
-  maxReplicas: REPLACEME:REPLICAS_EXTRACT_ENTITIES_MAX
+  minReplicas: {{ .Values.extract-entities.minReplicas }}
+  maxReplicas: {{ .Values.extract-entities.maxReplicas }}
   metrics:
   - type: Resource
     resource:
@@ -57,15 +57,15 @@ spec:
       restartPolicy: Always
       containers:
         - name: search-extract-entities
-          image: alephdata/aleph-extract-entities:occrp
+          image: alephdata/aleph-extract-entities:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           ports:
             - containerPort: 50000
               name: grpc-api
           resources:
             requests:
-              cpu: REPLACEME:CPU_LIMIT_EXTRACT_ENTITIES
-              memory: REPLACEME:MEMORY_LIMIT_EXTRACT_ENTITIES
+              cpu: {{ .Values.extract-entities.resources.requests.cpu }}
+              memory: {{ .Values.extract-entities.resources.requests.memory }}
             limits:
-              cpu: REPLACEME:CPU_LIMIT_EXTRACT_ENTITIES
-              memory: REPLACEME:MEMORY_LIMIT_EXTRACT_ENTITIES
+              cpu: {{ .Values.extract-entities.resources.limits.memory }}
+              memory: {{ .Values.extract-entities.resources.limits.memory }}

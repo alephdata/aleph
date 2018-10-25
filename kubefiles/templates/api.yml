@@ -1,41 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-api
+  namespace: aleph
+  labels:
+    app: search-api
+spec:
+  selector:
+    app: search-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: "TCP"
+      name: api
+---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: search-worker
+  name: search-api
   namespace: aleph
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: search-worker
-  minReplicas: 1
-  maxReplicas: 3
+    name: search-api
+  minReplicas: {{ .Values.api.minReplicas }}
+  maxReplicas: {{ .Values.api.maxReplicas }}
   metrics:
   - type: Resource
     resource:
       name: cpu
-      targetAverageUtilization: 80
+      targetAverageUtilization: 70
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-worker
+  name: search-api
   namespace: aleph
   labels:
-    app: search-worker
+    app: search-api
 spec:
   selector:
     matchLabels:
-      app: search-worker
+      app: search-api
   strategy:
     rollingUpdate:
-      maxSurge: 2
-      maxUnavailable: 75%
+      maxSurge: 1
+      maxUnavailable: 50%
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: search-worker
+        app: search-api
     spec:
       affinity: # Ask k8s to preferr that pods are placed across zones if available
         podAntiAffinity:
@@ -51,31 +67,31 @@ spec:
               topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       containers:
-        - name: search-worker
-          image: alephdata/aleph:occrp
+        - name: search-api
+          image: alephdata/aleph:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           command:
-            - celery
-            - -A
-            - aleph.queues
-            - -c
-            - '4'
-            - -l
-            - INFO
-            - worker
+            - gunicorn 
+            - -t
+            - '84600'
+            - -w
+            - '8'
+            - -b
+            - 0.0.0.0:8000
+            - --max-requests
+            - '1000'
+            - --log-level
+            - debug
+            - --log-file
+            - '-'
+            - aleph.manage:app
           resources:
             requests:
-              memory: REPLACEME:MEMORY_LIMIT_WORKER
-              cpu: REPLACEME:CPU_LIMIT_WORKER
+              memory: {{ .Values.api.resources.requests.memory }}
+              cpu: {{ .Values.api.resources.requests.cpu }}
             limits:
-              memory: REPLACEME:MEMORY_LIMIT_WORKER
-              cpu: REPLACEME:CPU_LIMIT_WORKER
-#          env:
-#            - name: DATAVAULT_DATABASE_URI
-#              valueFrom:
-#                secretKeyRef:
-#                  name: common-secrets
-#                  key: DATAVAULT_SIDECAR_URI
+              memory: {{ .Values.api.resources.limits.memory }}
+              cpu: {{ .Values.api.resources.limits.cpu }}
           envFrom:
             - configMapRef:
                 name: search-config
@@ -84,9 +100,21 @@ spec:
           volumeMounts:
             - mountPath: /secrets
               name: secrets-mounted
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 15
+            timeoutSeconds: 4
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 15
+            timeoutSeconds: 4
+            periodSeconds: 5 
         - name: search-db-sidecar
-          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
-          imagePullPolicy: Always
           resources:
             requests:
               memory: 64Mi
@@ -94,10 +122,12 @@ spec:
             limits:
               memory: 64Mi
               cpu: "0.1"
+          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
+          imagePullPolicy: Always
           command:
             - /cloud_sql_proxy
             - -dir=/cloudsql
-            - -instances=REPLACEME:SQL_CONNECTION_STRING
+            - -instances={{ .Values.global.dbInstance }}
             - -credential_file=/secrets/service-account.json
           livenessProbe:
             exec:

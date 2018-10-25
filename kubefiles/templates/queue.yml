@@ -57,11 +57,11 @@ spec:
               containerPort: 15672
           resources:
             requests:
-              cpu: REPLACEME:CPU_LIMIT_QUEUE
-              memory: REPLACEME:MEMORY_LIMIT_QUEUE
+              cpu: {{ .Values.queue.requests.cpu }}
+              memory: {{ .Values.queue.requests.memory }}
             limits:
-              cpu: REPLACEME:CPU_LIMIT_QUEUE
-              memory: REPLACEME:MEMORY_LIMIT_QUEUE
+              cpu: {{ .Values.queue.limits.cpu }}
+              memory: {{ .Values.queue.requests.memory }}
           env: 
             - name: RABBITMQ_NODENAME
               value: "rabbit@search-queue"
@@ -81,4 +81,4 @@ spec:
         storageClassName: ssd
         resources:
           requests:
-            storage: 100Gi
+            storage: {{ .Values.queue.requests.storage }}

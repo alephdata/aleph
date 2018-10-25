@@ -31,7 +31,7 @@ metadata:
     app: search-index
 spec:
   serviceName: search-index
-  replicas: REPLACEME:REPLICAS_INDEX
+  replicas: {{ .Values.index.replicas }}
   selector:
     matchLabels:
       app: search-index
@@ -106,7 +106,7 @@ spec:
           #     add:
           #       - IPC_LOCK
           #       - SYS_RESOURCE
-          image: alephdata/platform-elasticsearch:2.1.4
+          image: alephdata/platform-elasticsearch:{{ .Values.global.imagetag }}
           ports:
             - containerPort: 9200
               name: http
@@ -115,11 +115,11 @@ spec:
           # NOTE: you can increase this resources
           resources:
             requests:
-              memory: REPLACEME:MEMORY_LIMIT_INDEX
-              cpu: REPLACEME:CPU_LIMIT_INDEX
+              memory: {{ .Values.index.resources.requests.memory }}
+              cpu: {{ .Values.index.resources.requests.cpu }}
             limits:
-              memory: REPLACEME:MEMORY_LIMIT_INDEX
-              cpu: REPLACEME:CPU_LIMIT_INDEX
+              memory: {{ .Values.index.resources.limits.memory }}
+              cpu: {{ .Values.index.resources.limits.cpu }}
           env:
             - name: cluster.name
               value: search-index
@@ -130,11 +130,11 @@ spec:
             - name: discovery.zen.ping.unicast.hosts
               value: search-index.aleph.svc.cluster.local
             - name: discovery.zen.minimum_master_nodes
-              value: "2"
+              value: {{ .Values.index.minMasterNodes }}
             # - name: bootstrap.memory_lock
             #   value: "true"
             - name: ES_JAVA_OPTS
-              value: -Djava.net.preferIPv4Stack=true REPLACEME:INDEX_JAVA_OPTS_MEMORY_LIMIT_MUST_BE_LESS_THAN_TOTAL_LIMIT
+              value: -Djava.net.preferIPv4Stack=true {{ .Values.index.ES_JAVA_OPTS_MEMORY_LIMIT }}
           volumeMounts:
             - name: data
               mountPath: /usr/share/elasticsearch/data
@@ -147,4 +147,4 @@ spec:
         storageClassName: ssd
         resources:
           requests:
-            storage: 1000Gi
+            storage: {{ .Values.index.resources.requests.storage }}
