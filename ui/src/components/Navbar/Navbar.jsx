@@ -116,6 +116,7 @@ class Navbar extends React.Component {
                       <InputGroup
                         type="text"
                         leftIcon="search"
+                        id="search-box"
                         className='pt-large'
                         onChange={this.onChange} value={searchValue}
                         placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}

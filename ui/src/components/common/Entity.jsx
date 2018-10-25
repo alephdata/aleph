@@ -67,38 +67,20 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
-  constructor() {
-    super();
-    this.onClick = this.onClick.bind(this);
-  }
+  onClick = (event) => {
+    const { entity, history,preview } = this.props;
 
-  onClick(event) {
-    const { entity, history, location, preview } = this.props;
     event.preventDefault();
 
-    if (preview === true) {
-      const parsedHash = queryString.parse(location.hash);
-      const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
-      if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
-        parsedHash['preview:id'] = undefined;
-        parsedHash['preview:type'] = undefined;
-        parsedHash['preview:mode'] = undefined;
-      } else {
-        parsedHash['preview:id'] = entity.id;
-        parsedHash['preview:type'] = previewType;
-        parsedHash['preview:mode'] = undefined;
-      }
-      history.replace({
-        pathname: location.pathname,
-        search: location.search,
-        hash: queryString.stringify(parsedHash),
-      });
-    } else { 
+    if (preview) {
+      preview(entity);
+    } else {
       history.push({
         pathname: getPath(entity.links.ui)
       });
     }
-  }
+  };
+
 
   render() {
     const { entity, className } = this.props;

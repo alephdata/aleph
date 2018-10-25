@@ -171,6 +171,54 @@ class SearchScreen extends React.Component {
       hash: queryString.stringify(parsedHash),
     });
   }
+  getCurrentPreviewIndex = () => {
+    const { location } = this.props;
+
+    const parsedHash = queryString.parse(location.hash);
+    return this.props.result.results.findIndex(
+      entity => entity.id === parsedHash['preview:id']
+    )
+  };
+
+  showNextPreview = () => {
+    const currentSelectionIndex = this.getCurrentPreviewIndex();
+    const nextEntity = this.props.result.results[1 + currentSelectionIndex];
+    if(nextEntity){
+      this.showPreview(nextEntity)
+    }
+  };
+
+  showPreviousPreview = () => {
+    const currentSelectionIndex = this.getCurrentPreviewIndex();
+    const nextEntity = this.props.result.results[currentSelectionIndex - 1];
+    if(nextEntity){
+      this.showPreview(nextEntity)
+    }
+  };
+
+  showPreview = (entity)  => {
+    const { history, location } = this.props;
+
+    const parsedHash = queryString.parse(location.hash);
+    const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
+
+    if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
+      parsedHash['preview:id'] = undefined;
+      parsedHash['preview:type'] = undefined;
+      parsedHash['preview:mode'] = undefined;
+    } else {
+      parsedHash['preview:id'] = entity.id;
+      parsedHash['preview:type'] = previewType;
+      parsedHash['preview:mode'] = undefined;
+    }
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
+
+  };
+
 
   toggleFacets() {
     this.setState({hideFacets: !this.state.hideFacets});
@@ -203,7 +251,16 @@ class SearchScreen extends React.Component {
     </Breadcrumbs>);
 
     return (
-      <Screen query={query} updateQuery={this.updateQuery} title={title}>
+      <Screen
+        query={query}
+        updateQuery={this.updateQuery}
+        title={title}
+        hotKeys={[
+          {combo:'j', global:true, label:"Preview next search entity", onKeyDown:this.showNextPreview },
+          {combo:'k', global:true, label:"Preview previous search entity" ,onKeyDown:this.showPreviousPreview }
+        ]}
+      >
+
         {breadcrumbs}
         <DualPane className="SearchScreen">
           <DualPane.SidePane className='side-pane-padding'>
@@ -224,6 +281,7 @@ class SearchScreen extends React.Component {
             <SignInCallout/>
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <EntityTable query={query}
+                         showPreview={this.showPreview}
                          updateQuery={this.updateQuery}
                          result={result} />
             {result.total === 0 && (
