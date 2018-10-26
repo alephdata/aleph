@@ -10,7 +10,6 @@ from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
-from aleph.index.collections import update_collection_roles
 from aleph.index.core import all_indexes
 from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
@@ -88,7 +87,6 @@ class TestCase(FlaskTestCase):
         Permission.grant(collection, role, read, write)
         db.session.commit()
         update_collection(collection)
-        update_collection_roles(collection, wait=True)
         self.flush_index()
 
     def grant_publish(self, collection):

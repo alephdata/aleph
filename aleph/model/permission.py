@@ -39,6 +39,17 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
         return permission
 
     @classmethod
+    def readable_by_roles(cls, roles):
+        if not len(roles):
+            return []
+        q = db.session.query(cls.collection_id)
+        q = q.filter(cls.deleted_at == None)  # noqa
+        q = q.filter(cls.read == True)  # noqa
+        q = q.filter(Permission.role_id.in_(roles))
+        print(q)
+        return [c for (c,) in q.all()]
+
+    @classmethod
     def delete_by_collection(cls, collection_id, deleted_at=None):
         if deleted_at is None:
             deleted_at = datetime.utcnow()

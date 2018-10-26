@@ -50,16 +50,6 @@ def update_collections():
         update_collection(collection)
 
 
-@celery.task(priority=8)
-def update_collection_access(collection_id):
-    """Re-write all etities in this collection to reflect updated roles."""
-    collection = Collection.by_id(collection_id, deleted=True)
-    if collection is None:
-        return
-    log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
-    index.update_collection_roles(collection)
-
-
 def generate_sitemap(collection_id):
     """Generate entries for a collection-based sitemap.xml file."""
     # cf. https://www.sitemaps.org/protocol.html

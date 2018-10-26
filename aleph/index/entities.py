@@ -115,9 +115,8 @@ def _index_updates(collection, entities):
     """
     common = {
         'collection_id': collection.id,
-        'bulk': True,
-        'roles': collection.roles,
-        'updated_at': datetime.utcnow()
+        'updated_at': datetime.utcnow(),
+        'bulk': True
     }
     timestamps = {}
     if not len(entities):
@@ -182,7 +181,6 @@ def index_single(obj, proxy, data, texts):
     """Indexing aspects common to entities and documents."""
     data = finalize_index(proxy, data, texts)
     data['bulk'] = False
-    data['roles'] = obj.collection.roles
     data['collection_id'] = obj.collection.id
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
