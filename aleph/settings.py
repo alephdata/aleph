@@ -39,7 +39,7 @@ CACHE = env_bool('CACHE', not DEBUG)
 # Puts the system into read-only mode and displays a warning.
 MAINTENANCE = env_bool('MAINTENANCE', False)
 # Unit test context.
-TESING = False
+TESTING = False
 
 
 ###############################################################################
