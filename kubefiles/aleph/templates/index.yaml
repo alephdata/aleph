@@ -50,7 +50,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - {{env "REPONAME"}}
+                  - {{ .Values.global.reponame }}
               topologyKey: failure-domain.beta.kubernetes.io/zone
       terminationGracePeriodSeconds: 300
       initContainers:
@@ -130,7 +130,7 @@ spec:
             - name: discovery.zen.ping.unicast.hosts
               value: search-index.aleph.svc.cluster.local
             - name: discovery.zen.minimum_master_nodes
-              value: {{ .Values.index.minMasterNodes }}
+              value: {{ .Values.index.minMasterNodes | quote }}
             # - name: bootstrap.memory_lock
             #   value: "true"
             - name: ES_JAVA_OPTS

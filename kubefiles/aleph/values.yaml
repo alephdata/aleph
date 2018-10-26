@@ -1,5 +1,6 @@
 global:
-  dbInstance: clustername:region:core-postgres=tcp:5432
+  reponame: aleph
+  dbInstance: "clustername:region:core-postgres=tcp:5432"
   imagetag: latest
 
 
@@ -16,35 +17,35 @@ api:
 
 
 config:
-  ALEPH_URL_SCHEME: https
-  ALEPH_APP_TITLE: 'OCCRP Data (Staging)'
-  ALEPH_OCR_VISION_API: 'false'
-  ALEPH_CORS_ORIGINS: '*'
+  ALEPH_URL_SCHEME: http
+  ALEPH_APP_TITLE: "OCCRP Data (Staging)"
+  ALEPH_OCR_VISION_API: "false"
+  ALEPH_CORS_ORIGINS: "*"
   ALEPH_ARCHIVE_TYPE: gs
-  ALEPH_ARCHIVE_BUCKET: 'bucket-name'
-  ALEPH_PASSWORD_LOGIN: 'true'
-  ALEPH_ADMINS: 'admin@example.com'
+  ALEPH_ARCHIVE_BUCKET: "bucket-name"
+  ALEPH_PASSWORD_LOGIN: "true"
+  ALEPH_ADMINS: "admin@example.com"
   ALEPH_MAIL_FROM: notifications@example.com
   ALEPH_MAIL_HOST: core-mail.default.svc.cluster.local
-  ALEPH_MAIL_USERNAME: ''
-  ALEPH_MAIL_PASSWORD: ''
-  ALEPH_MAIL_PORT: '25'
-  ALEPH_MAIL_TLS: 'false'
-  ALEPH_MAIL_SSL: 'false'
+  ALEPH_MAIL_USERNAME: ""
+  ALEPH_MAIL_PASSWORD: ""
+  ALEPH_MAIL_PORT: "25"
+  ALEPH_MAIL_TLS: "false"
+  ALEPH_MAIL_SSL: "false"
   ALEPH_UI_URL: https://staging.data.occrp.org
   ALEPH_FAVICON: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
   ALEPH_LOGO: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
-  ALEPH_ELASTICSEARCH_SHARDS: '5'
-  ALEPH_OAUTH: 'false'
+  ALEPH_ELASTICSEARCH_SHARDS: "5"
+  ALEPH_OAUTH: "false"
   ALEPH_OAUTH_KEY: key-name
   ALEPH_OAUTH_NAME: provider-name
   ALEPH_OAUTH_SCOPE: read
-  ALEPH_OAUTH_BASE_URL: ''
-  ALEPH_OAUTH_TOKEN_URL: ''
-  ALEPH_OAUTH_AUTHORIZE_URL: ''
+  ALEPH_OAUTH_BASE_URL: ""
+  ALEPH_OAUTH_TOKEN_URL: ""
+  ALEPH_OAUTH_AUTHORIZE_URL: ""
 
 
-convert-document:
+convertdocument:
   minReplicas: 2
   maxReplicas: 5
   resources:
@@ -56,7 +57,7 @@ convert-document:
       cpu: 1000m
 
 
-extract-entities:
+extractentities:
   minReplicas: 2
   maxReplicas: 5
   resources:
@@ -68,18 +69,8 @@ extract-entities:
       cpu: 1000m
 
 
-index-admin:
-  image: lmenezes/cerebro
-  replicas: 1
-  maxSurge: 1
-  maxUnavailable: 100%
-  resources:
-    limits:
-      memory: 2Gi
-
-
 index:
-  replicas: 4
+  replicas: 3
   resources:
     requests:
       memory: 2Gi
@@ -105,7 +96,7 @@ queue:
       cpu: 400m
 
 
-recognize-text:
+recognizetext:
   minReplicas: 2
   maxReplicas: 5
   resources:
@@ -115,6 +106,17 @@ recognize-text:
     limits:
       memory: 1400Mi
       cpu: 1500m
+
+
+redis:
+  maxMemory: 2g
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 300m
+    limits:
+      memory: 2Gi
+      cpu: 600m
 
 
 scheduler:

@@ -1,31 +1,31 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: search-convert-document
+  name: search-recognize-text
   namespace: aleph
   labels:
-    app: search-convert-document
+    app: search-recognize-text
 spec:
   selector:
-    app: search-convert-document
+    app: search-recognize-text
   type: ClusterIP
   ports:
-    - port: 3000
+    - port: 50000
       protocol: "TCP"
       name: api
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: search-convert-document
+  name: search-recognize-text
   namespace: aleph
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: search-convert-document
-  minReplicas: {{ .Values.covert-document.minReplicas }}
-  maxReplicas: {{ .Values.covert-document.maxReplicas }}
+    name: search-recognize-text
+  minReplicas: {{ .Values.recognizetext.minReplicas }}
+  maxReplicas: {{ .Values.recognizetext.maxReplicas }}
   metrics:
   - type: Resource
     resource:
@@ -35,26 +35,26 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: search-convert-document-policy
+  name: search-recognize-text-policy
   namespace: aleph
 spec:
   podSelector:
     matchLabels:
-      app: search-convert-document
+      app: search-recognize-text
   policyTypes:
     - Egress
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-convert-document
+  name: search-recognize-text
   namespace: aleph
   labels:
-    app: search-convert-document
+    app: search-recognize-text
 spec:
   selector:
     matchLabels:
-      app: search-convert-document
+      app: search-recognize-text
   strategy:
     rollingUpdate:
       maxSurge: 2
@@ -63,7 +63,7 @@ spec:
   template:
     metadata:
       labels:
-        app: search-convert-document
+        app: search-recognize-text
     spec:
       affinity: # Ask k8s to preferr that pods are placed across zones if available
         podAntiAffinity:
@@ -75,34 +75,20 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - {{env "REPONAME"}}
+                  - {{ .Values.global.reponame }}
               topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       containers:
-        - name: search-convert-document
-          image: alephdata/aleph-convert-document:{{ .Values.global.imagetag }}
+        - name: search-recognize-text
+          image: alephdata/aleph-recognize-text:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 50000
               name: http
           resources:
             requests:
-              cpu: {{ .Values.covert-document.resources.requests.cpu }}
-              memory: {{ .Value.covert-document.resources.requests.memory }}
+              memory: {{ .Values.recognizetext.resources.requests.memory }}
+              cpu: {{ .Values.recognizetext.resources.requests.cpu }}
             limits:
-              cpu: {{ .Values.covert-document.resources.limits.memory }}
-              memory: {{ .Values.covert-document.resources.limits.memory }}
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 15
-            timeoutSeconds: 301
-            periodSeconds: 302
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 15
-            timeoutSeconds: 301
-            periodSeconds: 302
+              memory: {{ .Values.recognizetext.resources.limits.memory }}
+              cpu: {{ .Values.recognizetext.resources.limits.cpu }}

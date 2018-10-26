@@ -43,7 +43,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - {{env "REPONAME"}}
+                  - {{ .Values.global.reponame }}
               topologyKey: failure-domain.beta.kubernetes.io/zone
       containers:
         - name: search-queue
@@ -57,11 +57,11 @@ spec:
               containerPort: 15672
           resources:
             requests:
-              cpu: {{ .Values.queue.requests.cpu }}
-              memory: {{ .Values.queue.requests.memory }}
+              cpu: {{ .Values.queue.resources.requests.cpu }}
+              memory: {{ .Values.queue.resources.requests.memory }}
             limits:
-              cpu: {{ .Values.queue.limits.cpu }}
-              memory: {{ .Values.queue.requests.memory }}
+              cpu: {{ .Values.queue.resources.limits.cpu }}
+              memory: {{ .Values.queue.resources.requests.memory }}
           env: 
             - name: RABBITMQ_NODENAME
               value: "rabbit@search-queue"
@@ -81,4 +81,4 @@ spec:
         storageClassName: ssd
         resources:
           requests:
-            storage: {{ .Values.queue.requests.storage }}
+            storage: {{ .Values.queue.resources.requests.storage }}

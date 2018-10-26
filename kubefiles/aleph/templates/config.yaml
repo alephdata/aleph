@@ -7,7 +7,7 @@ data:
   GOOGLE_APPLICATION_CREDENTIALS: /secrets/service-account.json
   C_FORCE_ROOT: 'true'
   ALEPH_ELASTICSEARCH_URI: http://search-index.aleph.svc.cluster.local:9200/
-  ALEPH_ELASTICSEARCH_SHARDS: {{ .Values.config.ALEPH_ELASTICSEARCH_SHARDS }}
+  ALEPH_ELASTICSEARCH_SHARDS: {{ .Values.config.ALEPH_ELASTICSEARCH_SHARDS | quote }}
   ALEPH_ENTITIES_INDEX: aleph-entity-v1
   ALEPH_ENTITIES_INDEX_SET: aleph-entity-v1
   ALEPH_RECORDS_INDEX: aleph-record-v1
@@ -29,14 +29,14 @@ data:
   ALEPH_CORS_ORIGINS: '*'
   ALEPH_ARCHIVE_TYPE: {{ .Values.config.ALEPH_ARCHIVE_TYPE }}
   ALEPH_ARCHIVE_BUCKET: {{ .Values.config.ALEPH_ARCHIVE_BUCKET }}
-  ALEPH_PASSWORD_LOGIN: {{ .Values.config.ALEPH_PASSWORD_LOGIN }}
+  ALEPH_PASSWORD_LOGIN: {{ .Values.config.ALEPH_PASSWORD_LOGIN | quote }}
   ALEPH_ADMINS: {{ .Values.config.ALEPH_ADMINS }}
   ALEPH_MAIL_FROM: {{ .Values.config.ALEPH_MAIL_FROM }}
   ALEPH_MAIL_HOST: {{ .Values.config.ALEPH_MAIL_HOST }}
   ALEPH_MAIL_USERNAME: {{ .Values.config.ALEPH_MAIL_USERNAME }}
-  ALEPH_MAIL_PORT: '587'
+  ALEPH_MAIL_PORT: "587"
   ALEPH_MAIL_TLS: 'true'
-  ALEPH_OAUTH: {{ .Values.config.ALEPH_OAUTH }}
+  ALEPH_OAUTH: {{ .Values.config.ALEPH_OAUTH | quote }}
   ALEPH_OAUTH_KEY: {{ .Values.config.ALEPH_OAUTH_KEY }}
   ALEPH_OAUTH_NAME: {{ .Values.config.ALEPH_OAUTH_NAME }}
   ALEPH_OAUTH_BASE_URL: {{ .Values.config.ALEPH_OAUTH_BASE_URL }}
@@ -44,4 +44,4 @@ data:
   ALEPH_OAUTH_TOKEN_URL: {{ .Values.config.ALEPH_OAUTH_TOKEN_URL }}
   ALEPH_OAUTH_SCOPE: {{ .Values.config.ALEPH_OAUTH_SCOPE }}
   ALEPH_OAUTH_TOKEN_METHOD: {{ .Values.config.ALEPH_OAUTH_TOKEN_METHOD }}
-  ALEPH_OCR_VISION_API: {{ .Values.config.ALEPH_OCR_VISION_API }}
+  ALEPH_OCR_VISION_API: {{ .Values.config.ALEPH_OCR_VISION_API | quote }}

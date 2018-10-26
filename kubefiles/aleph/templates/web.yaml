@@ -130,7 +130,7 @@ spec:
                 - key: app
                   operator: In
                   values:
-                  - {{env "REPONAME"}}
+                  - {{ .Values.global.reponame }}
               topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       volumes:

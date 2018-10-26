@@ -24,8 +24,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: search-extract-entities
-  minReplicas: {{ .Values.extract-entities.minReplicas }}
-  maxReplicas: {{ .Values.extract-entities.maxReplicas }}
+  minReplicas: {{ .Values.extractentities.minReplicas }}
+  maxReplicas: {{ .Values.extractentities.maxReplicas }}
   metrics:
   - type: Resource
     resource:
@@ -64,8 +64,8 @@ spec:
               name: grpc-api
           resources:
             requests:
-              cpu: {{ .Values.extract-entities.resources.requests.cpu }}
-              memory: {{ .Values.extract-entities.resources.requests.memory }}
+              cpu: {{ .Values.extractentities.resources.requests.cpu }}
+              memory: {{ .Values.extractentities.resources.requests.memory }}
             limits:
-              cpu: {{ .Values.extract-entities.resources.limits.memory }}
-              memory: {{ .Values.extract-entities.resources.limits.memory }}
+              cpu: {{ .Values.extractentities.resources.limits.memory }}
+              memory: {{ .Values.extractentities.resources.limits.memory }}
