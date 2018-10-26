@@ -46,8 +46,8 @@ config:
 
 
 convertdocument:
-  minReplicas: 2
-  maxReplicas: 5
+  minReplicas: 1
+  maxReplicas: 3
   resources:
     requests:
       memory: 500Mi
@@ -58,8 +58,8 @@ convertdocument:
 
 
 extractentities:
-  minReplicas: 2
-  maxReplicas: 5
+  minReplicas: 1
+  maxReplicas: 3
   resources:
     requests:
       memory: 500Mi
@@ -73,14 +73,14 @@ index:
   replicas: 3
   resources:
     requests:
-      memory: 2Gi
+      memory: 2.2Gi
       cpu: 300m
       storage: 100Gi
     limits:
-      memory: 3Gi
+      memory: 2.5Gi
       cpu: 1000m
   minMasterNodes: "2"
-  ES_JAVA_OPTS_MEMORY_LIMIT: -Xms2g -Xmx3g
+  ES_JAVA_OPTS_MEMORY_LIMIT: -Xms2g -Xmx2g
 
 
 queue:
@@ -88,7 +88,7 @@ queue:
   replicas: 1
   resources:
     requests:
-      memory: 1Gi
+      memory: 500Mi
       cpu: 200m
       storage: 10Gi
     limits:
@@ -97,8 +97,8 @@ queue:
 
 
 recognizetext:
-  minReplicas: 2
-  maxReplicas: 5
+  minReplicas: 1
+  maxReplicas: 3
   resources:
     requests:
       memory: 800Mi
