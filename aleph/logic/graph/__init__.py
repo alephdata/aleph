@@ -14,8 +14,6 @@ log = logging.getLogger(__name__)
 def links_to_graph(links):
     graph = nx.DiGraph()
     for link in links:
-        if link.value is None:
-            continue
         graph.add_node(link.ref, label=link.subject)
         if link.prop == model.get('Thing').get('name'):
             graph.nodes[link.ref]['label'] = link.value

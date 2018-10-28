@@ -15,7 +15,7 @@ class CacheMiss(Exception):
 
 
 def typed_key(type_, value, *extra):
-    return cache.key('graph7', type_.name, value, *extra)
+    return cache.key('graph', type_.name, value, *extra)
 
 
 def store_links(type_, value, links, expire=EXPIRATION):
@@ -33,12 +33,11 @@ def store_links(type_, value, links, expire=EXPIRATION):
 def load_links(type_, value):
     # raise CacheMiss()
     degree_key = typed_key(type_, value, DEGREE)
-    if cache.get(degree_key) is None:
+    if cache.kv.get(degree_key) is None:
         raise CacheMiss()
     key = typed_key(type_, value)
-    ref = type_.ref(value)
     for packed in cache.kv.lrange(key, 0, -1):
         data = msgpack.unpackb(packed, raw=False)
-        link = Link.from_tuple(model, ref, data)
+        link = Link.from_tuple(model, data)
         if link is not None:
             yield link
