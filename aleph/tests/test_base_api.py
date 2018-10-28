@@ -1,4 +1,4 @@
-from aleph.core import cache
+from aleph.core import kv
 from aleph.tests.util import TestCase
 
 
@@ -26,7 +26,7 @@ class BaseApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'entities' in res.json, res.json
         assert res.json['entities'] == 0, res.json
-        cache.flush('stats')
+        kv.flushall()
         self.load_fixtures('docs.yaml')
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res

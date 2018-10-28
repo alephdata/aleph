@@ -1,6 +1,5 @@
 import os
 import shutil
-import fakeredis
 from tempfile import mkdtemp
 from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
@@ -54,7 +53,7 @@ class TestCase(FlaskTestCase):
         settings.RECORDS_INDEX = '%s_records' % APP_NAME
         settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
         settings.COLLECTIONS_INDEX = '%s_collection' % APP_NAME
-        settings._redis = fakeredis.FakeRedis()
+        settings.REDIS_URL = None
         app = create_app({})
         mount_app_blueprints(app)
         return app
@@ -131,8 +130,6 @@ class TestCase(FlaskTestCase):
             q = 'TRUNCATE %s RESTART IDENTITY CASCADE;' % table.name
             db.engine.execute(q)
         create_system_roles()
-        settings._redis = fakeredis.FakeRedis()
-        settings._cache = None
 
     def tearDown(self):
         db.session.rollback()

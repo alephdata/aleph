@@ -18,6 +18,7 @@ from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
 from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
+from fakeredis import FakeRedis
 import storagelayer
 
 from aleph import settings
@@ -138,8 +139,8 @@ def get_archive():
 
 
 def get_redis():
-    if hasattr(settings, '_redis'):  # allow overriding redis in tests
-        return settings._redis
+    if settings.REDIS_URL is None:
+        return FakeRedis()
     if not hasattr(settings, '_redis_pool'):
         settings._redis_pool = ConnectionPool.from_url(settings.REDIS_URL)
     return Redis(connection_pool=settings._redis_pool)

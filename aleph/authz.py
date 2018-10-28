@@ -46,8 +46,9 @@ class Authz(object):
         return jwt.encode(payload, settings.SECRET_KEY)
 
     def collections(self, action):
+        prefix_key = cache.key(self.PREFIX)
         key = cache.key(self.PREFIX, action, self.id)
-        if cache.kv.sismember(cache.key(self.PREFIX), key):
+        if cache.kv.sismember(prefix_key, key):
             collections = cache.kv.lrange(key, 0, -1)
             collections = [int(c) for c in collections]
             # log.debug("[C] Authz: %s (%s): %s", self, action, collections)
@@ -62,7 +63,7 @@ class Authz(object):
         q = q.distinct()
         collections = [c for (c,) in q.all()]
         # log.debug("Authz: %s (%s): %s", self, action, collections)
-        cache.kv.sadd(cache.key(self.PREFIX), key)
+        cache.kv.sadd(prefix_key, key)
         if len(collections):
             cache.kv.rpush(key, *collections)
         return collections
@@ -123,7 +124,9 @@ class Authz(object):
 
     @classmethod
     def flush(cls):
+        pipe = cache.kv.pipeline()
         prefix_key = cache.key(cls.PREFIX)
         for key in cache.kv.sscan_iter(prefix_key):
-            cache.kv.delete(key)
-        cache.kv.delete(prefix_key)
+            pipe.delete(key)
+        pipe.delete(prefix_key)
+        pipe.execute()
