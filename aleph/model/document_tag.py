@@ -1,5 +1,4 @@
 import logging
-from followthemoney.types import registry
 
 from aleph.core import db
 from aleph.model.common import IdModel
@@ -42,69 +41,5 @@ class DocumentTag(db.Model, IdModel):
     document_id = db.Column(db.Integer(), db.ForeignKey('document.id'), index=True)  # noqa
     document = db.relationship("Document", backref=db.backref('tags', cascade='all, delete-orphan'))  # noqa
 
-    @property
-    def field(self):
-        type_ = registry.get(self.type)
-        if type_ is not None and type_.group is not None:
-            return type_.group
-
-    @classmethod
-    def delete_by(cls, document_id=None, origin=None, type=None):
-        pq = db.session.query(cls)
-        assert document_id or origin or type
-        if document_id is not None:
-            pq = pq.filter(cls.document_id == document_id)
-        if origin is not None:
-            pq = pq.filter(cls.origin == origin)
-        if type is not None:
-            pq = pq.filter(cls.type == type)
-        pq.delete()
-        db.session.flush()
-
     def __repr__(self):
         return '<DocumentTag(%r,%r)>' % (self.document_id, self.text)
-
-
-class DocumentTagCollector(object):
-    """Utility class to collect and aggregate tags from a particular process.
-
-    This is useful when many tags about the same documented are emitted by a
-    particular source."""
-
-    def __init__(self, document, origin):
-        self.document = document
-        self.origin = origin
-        self.keyed = {}
-
-    def emit(self, text, type, key=None, weight=1):
-        "Create a tag, this can be called multiple times with the same text."
-        prop = DocumentTag.MAPPING[type]
-        prop = self.document.model.get(prop)
-        text = prop.type.clean(text, countries=self.document.countries)
-        if text is None:
-            return
-
-        if len(text) > (DocumentTag.TEXT_LENGTH - 50):
-            return
-
-        if (text, type) not in self.keyed:
-            self.keyed[(text, type)] = dict(text=text, weight=weight)
-        else:
-            self.keyed[(text, type)]['weight'] += weight
-
-    def save(self):
-        """Flush all existing tags from this origin and store new ones."""
-        DocumentTag.delete_by(document_id=self.document.id,
-                              origin=self.origin)
-        for (text, type), tag in self.keyed.items():
-            obj = DocumentTag()
-            obj.document_id = self.document.id
-            obj.origin = self.origin
-            obj.type = type
-            obj.text = text
-            obj.weight = tag['weight']
-            db.session.add(obj)
-        db.session.flush()
-
-    def __len__(self):
-        return len(self.keyed)

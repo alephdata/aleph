@@ -1,29 +1,29 @@
 from aleph.tests.util import TestCase
 
 from aleph.logic.extractors.aggregate import EntityAggregator
-from aleph.logic.extractors.result import PersonResult
+from aleph.logic.extractors.result import NameResult
 
 
 class TestAggregate(TestCase):
 
     def test_aggregator(self):
         agg = EntityAggregator()
-        agg.add(PersonResult.create(agg, 'Banana', 0, 12))
+        agg.add(NameResult.create(agg, 'Banana', 0, 12))
         assert len(agg) == 0, agg
-        agg.add(PersonResult.create(agg, 'Mr. Max Banana', 0, 12))
+        agg.add(NameResult.create(agg, 'Mr. Max Banana', 0, 12))
         assert len(agg) == 1, agg
-        agg.add(PersonResult.create(agg, 'Max Banana', 0, 12))
+        agg.add(NameResult.create(agg, 'Max Banana', 0, 12))
         assert len(agg) == 1, agg
 
     def test_entities(self):
         agg = EntityAggregator()
-        agg.add(PersonResult.create(agg, 'Mr. Max Banana', 0, 12))
-        agg.add(PersonResult.create(agg, 'Mr. Max Banana', 0, 12))
-        agg.add(PersonResult.create(agg, 'max Banana', 0, 12))
+        agg.add(NameResult.create(agg, 'Mr. Max Banana', 0, 12))
+        agg.add(NameResult.create(agg, 'Mr. Max Banana', 0, 12))
+        agg.add(NameResult.create(agg, 'max Banana', 0, 12))
         for label, category, weight in agg.entities:
             assert label == 'Max Banana', label
             # assert category == 'baa', label
-            assert weight == 3, weight
+            assert weight == 1.0, weight
 
     def test_merkel(self):
         agg = EntityAggregator()

@@ -2,10 +2,9 @@ import logging
 from banal import ensure_list
 from normality import collapse_spaces
 from fingerprints import clean_entity_name
-from followthemoney.types import registry
+from followthemoney import model
 
 from aleph.core import kv
-from aleph.model import DocumentTag
 from aleph.logic.extractors.util import normalize_label, place_key
 
 log = logging.getLogger(__name__)
@@ -14,12 +13,15 @@ log = logging.getLogger(__name__)
 class Result(object):
     __slots__ = ['label', 'key', 'span', 'countries']
     strict = True
+    prop = None
 
     def __init__(self, label, span, countries):
-        self.label = label
-        self.key = normalize_label(label)
+        args = dict(countries=countries)
+        self.label = self.prop.type.clean(label, **args)
+        self.key = normalize_label(self.label)
         self.span = span
-        self.countries = []
+        countries = self.prop.type.country_hint(self.label)
+        self.countries = ensure_list(countries)
 
     def __str__(self):
         return self.label
@@ -33,15 +35,16 @@ class Result(object):
         return cls(label, span, aggregator.countries)
 
 
-class NamedResult(Result):
+class NameResult(Result):
     """Any entity extracted that has a human-style name."""
     strict = False
+    prop = model.get_qname('Document:namesMentioned')
     MAX_LENGTH = 100
     MIN_LENGTH = 4
 
     def __init__(self, label, span, countries):
         label = self.clean_name(label)
-        super(NamedResult, self).__init__(label, span, countries)
+        super(NameResult, self).__init__(label, span, countries)
         if self.label is not None and ' ' not in self.label:
             self.key = None
 
@@ -56,17 +59,9 @@ class NamedResult(Result):
         return text
 
 
-class OrganizationResult(NamedResult):
-    category = DocumentTag.TYPE_ORGANIZATION
-
-
-class PersonResult(NamedResult):
-    category = DocumentTag.TYPE_PERSON
-
-
 class LocationResult(Result):
     """Locations are being mapped to countries."""
-    category = DocumentTag.TYPE_LOCATION
+    prop = model.get_qname('Document:locationMentioned')
 
     def __init__(self, label, span, countries):
         super(LocationResult, self).__init__(label, span, countries)
@@ -78,41 +73,25 @@ class LocationResult(Result):
                 pass
 
 
-class TypedResult(Result):
-    type = None
-
-    def __init__(self, label, span, countries):
-        args = dict(countries=countries)
-        label = self.type.clean(label, **args)
-        super(TypedResult, self).__init__(label, span, countries)
-        self.countries = ensure_list(self.type.country_hint(label))
+class LanguageResult(Result):
+    prop = model.get_qname('Document:language')
 
 
-class LanguageResult(TypedResult):
-    category = DocumentTag.TYPE_LANGUAGE
-    type = registry.language
+class CountryResult(Result):
+    prop = model.get_qname('Thing:country')
 
 
-class CountryResult(TypedResult):
-    category = DocumentTag.TYPE_COUNTRY
-    type = registry.country
+class IPAddressResult(Result):
+    prop = model.get_qname('Document:ipMentioned')
 
 
-class IPAddressResult(TypedResult):
-    category = DocumentTag.TYPE_IP
-    type = registry.ip
+class EmailResult(Result):
+    prop = model.get_qname('Document:emailMentioned')
 
 
-class EmailResult(TypedResult):
-    category = DocumentTag.TYPE_EMAIL
-    type = registry.email
+class PhoneResult(Result):
+    prop = model.get_qname('Document:phoneMentioned')
 
 
-class PhoneResult(TypedResult):
-    category = DocumentTag.TYPE_PHONE
-    type = registry.phone
-
-
-class IBANResult(TypedResult):
-    category = DocumentTag.TYPE_IBAN
-    type = registry.iban
+class IBANResult(Result):
+    prop = model.get_qname('Document:ibanMentioned')

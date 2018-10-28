@@ -8,13 +8,14 @@ from ingestors.util import safe_string
 
 from aleph.core import db, archive, settings
 from aleph.model import Document, DocumentRecord
-from aleph.model import DocumentTag, DocumentTagCollector
+from aleph.model import EntityTag
 
 log = logging.getLogger(__name__)
 
 
 class DocumentResult(Result):
     """Wrapper to link a Document to an ingestor result object."""
+    ORIGIN = 'ingestors'
 
     SCHEMATA = (
         (Result.FLAG_DIRECTORY, Document.SCHEMA_FOLDER),
@@ -128,9 +129,12 @@ class DocumentResult(Result):
 
         db.session.flush()
 
-        collector = DocumentTagCollector(doc, 'ingestors')
-        for entity in self.entities:
-            collector.emit(entity, DocumentTag.TYPE_PERSON)
-        for email in self.emails:
-            collector.emit(email, DocumentTag.TYPE_EMAIL)
-        collector.save()
+        schema = model.get(Document.SCHEMA)
+        prop = schema.get('namesMentioned')
+        for entity in set(self.entities):
+            EntityTag.create(self.ORIGIN, doc.id, prop, entity)
+
+        prop = schema.get('emailsMentioned')
+        for email in set(self.emails):
+            EntityTag.create(self.ORIGIN, doc.id, prop, email)
+        db.session.flush()

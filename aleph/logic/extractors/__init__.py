@@ -1,11 +1,12 @@
 import logging
 
 from aleph.core import db, settings
-from aleph.model import Document, DocumentTagCollector
+from aleph.model import Document, EntityTag
 from aleph.logic.extractors.aggregate import EntityAggregator
 from aleph.logic.extractors.util import load_places
 
 log = logging.getLogger(__name__)
+ORIGIN = 'ner'
 
 
 def extract_document_tags(document):
@@ -22,12 +23,9 @@ def extract_document_tags(document):
     for text in document.texts:
         aggregator.extract(text, languages)
 
-    DocumentTagCollector(document, 'polyglot').save()
-    DocumentTagCollector(document, 'spacy').save()
-    collector = DocumentTagCollector(document, 'ner')
-    for (label, category, weight) in aggregator.entities:
-        collector.emit(label, category, weight=weight)
-    log.info("Extracted tags: %s", len(collector))
-    collector.save()
-    db.session.add(document)
+    count = 0
+    for (label, prop, score) in aggregator.entities:
+        count += 1
+        EntityTag.create(ORIGIN, document.id, prop, label, score)
+    log.info("Extracted tags: %s", count)
     db.session.commit()

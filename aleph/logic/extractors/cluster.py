@@ -4,20 +4,20 @@ from aleph.logic.extractors.util import overlaps
 
 
 class Cluster(object):
-    __slots__ = ['strict', 'keys', 'spans', 'labels', 'categories', 'count']
+    __slots__ = ['strict', 'keys', 'spans', 'labels', 'properties', 'count']
 
     def __init__(self, result):
         self.strict = result.strict
         self.keys = set([result.key])
         self.spans = set([result.span])
         self.labels = [result.label]
-        self.categories = [result.category]
+        self.properties = [result.prop]
         self.count = 1
 
     def match(self, result):
         if self.strict or result.strict:
             return result.key in self.keys and \
-                   result.category in self.categories
+                   result.prop in self.properties
         if result.key in self.keys:
             return True
         for span in self.spans:
@@ -31,7 +31,7 @@ class Cluster(object):
             self.keys.add(result.key)
             self.spans.add(result.span)
             self.labels.append(result.label)
-            self.categories.append(result.category)
+            self.properties.append(result.prop)
 
     @property
     def label(self):
@@ -40,12 +40,12 @@ class Cluster(object):
         return self.labels[0]
 
     @property
-    def category(self):
+    def prop(self):
         if not self.strict:
-            categories = set(self.categories)
-            if len(categories) > 1:
-                return max(categories, key=self.categories.count)
-        return self.categories[0]
+            properties = set(self.properties)
+            if len(properties) > 1:
+                return max(properties, key=self.properties.count)
+        return self.properties[0]
 
     @property
     def weight(self):

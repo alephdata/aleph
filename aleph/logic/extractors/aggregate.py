@@ -1,6 +1,6 @@
 import logging
+from followthemoney.types import registry
 
-from aleph.model import DocumentTag
 from aleph.logic.extractors.extract import extract_entities
 from aleph.logic.extractors.patterns import extract_patterns
 from aleph.logic.extractors.result import CountryResult
@@ -12,11 +12,10 @@ log = logging.getLogger(__name__)
 
 class EntityAggregator(object):
     CUTOFFS = {
-        DocumentTag.TYPE_COUNTRY: .2,
-        DocumentTag.TYPE_LANGUAGE: .3,
-        DocumentTag.TYPE_ORGANIZATION: .003,
-        DocumentTag.TYPE_PERSON: .003,
-        DocumentTag.TYPE_PHONE: .05,
+        registry.country: .2,
+        registry.language: .3,
+        registry.name: .003,
+        registry.phone: .05,
     }
 
     def __init__(self):
@@ -43,7 +42,7 @@ class EntityAggregator(object):
                 self.add(CountryResult.create(self, country, None, None))
 
         # only using locations for country detection at the moment:
-        if result.category == DocumentTag.TYPE_LOCATION:
+        if result.prop.type == registry.address:
             return
 
         for cluster in self.clusters:
@@ -51,20 +50,24 @@ class EntityAggregator(object):
                 return cluster.add(result)
         self.clusters.append(Cluster(result))
 
-    def category_cutoff(self, category):
-        freq = self.CUTOFFS.get(category)
+    def prop_weight(self, prop):
+        weights = [c.weight for c in self.clusters if c.prop == prop]
+        return sum(weights)
+
+    def prop_cutoff(self, prop):
+        freq = self.CUTOFFS.get(prop.type)
         if freq is None:
             return 0
-        weights = [c.weight for c in self.clusters if c.category == category]
+        weights = [c.weight for c in self.clusters if c.prop == prop]
         return sum(weights) * freq
 
     @property
     def countries(self):
-        cutoff = self.category_cutoff(DocumentTag.TYPE_COUNTRY)
+        cutoff = self.prop_cutoff(registry.country)
         for cluster in self.clusters:
             if not cluster.result.strict:
                 continue
-            if cluster.category != DocumentTag.TYPE_COUNTRY:
+            if cluster.prop.type != registry.country:
                 continue
             if cluster.weight < cutoff:
                 continue
@@ -72,14 +75,24 @@ class EntityAggregator(object):
 
     @property
     def entities(self):
+        weights = {}
         for cluster in self.clusters:
             # skip entities that do not meet a threshold of relevance:
-            cutoff = self.category_cutoff(cluster.category)
+            prop = cluster.prop
+            freq = self.CUTOFFS.get(prop.type)
+            if freq is None:
+                yield cluster.label, prop, 1.0
+                continue
+
+            if prop not in weights:
+                weights[prop] = self.prop_weight(prop)
+            cutoff = weights[prop] * freq
             if cluster.weight < cutoff:
                 continue
 
             # log.debug('%s (%s): %s', cluster.label, cluster.category, cluster.weight)  # noqa
-            yield cluster.label, cluster.category, cluster.weight
+            score = (cluster.weight / weights[prop])
+            yield cluster.label, cluster.prop, score
 
     def __len__(self):
         return len(self.clusters)

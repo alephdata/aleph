@@ -7,8 +7,8 @@ from alephclient.services.entityextract_pb2_grpc import EntityExtractStub
 
 from aleph import settings
 from aleph.services import ServiceClientMixin
-from aleph.logic.extractors.result import PersonResult, LocationResult
-from aleph.logic.extractors.result import OrganizationResult, LanguageResult
+from aleph.logic.extractors.result import NameResult, LocationResult
+from aleph.logic.extractors.result import LanguageResult
 from aleph.util import backoff
 
 log = logging.getLogger(__name__)
@@ -19,8 +19,8 @@ class NERService(ServiceClientMixin):
     MIN_LENGTH = 60
     MAX_LENGTH = 100000
     TYPES = {
-        ExtractedEntity.ORGANIZATION: OrganizationResult,
-        ExtractedEntity.PERSON: PersonResult,
+        ExtractedEntity.ORGANIZATION: NameResult,
+        ExtractedEntity.PERSON: NameResult,
         ExtractedEntity.LOCATION: LocationResult,
         ExtractedEntity.LANGUAGE: LanguageResult
     }
