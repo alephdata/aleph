@@ -31,14 +31,6 @@ class DocumentRecord(db.Model):
         yield from filter_texts(self.raw_texts())
 
     @classmethod
-    def find_records(cls, ids):
-        if not len(ids):
-            return []
-        q = db.session.query(cls)
-        q = q.filter(cls.id.in_(ids))
-        return q
-
-    @classmethod
     def insert_records(cls, document_id, iterable, chunk_size=1000):
         chunk = []
         table = cls.__table__

@@ -1,7 +1,6 @@
 import logging
 from banal import is_mapping
 from followthemoney import model
-from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -208,14 +207,6 @@ class Document(db.Model, DatedModel, Metadata):
         yield from filter_texts(self.raw_texts())
 
     @classmethod
-    def pending_count(cls, collection_id=None):
-        q = db.session.query(func.count(cls.id))
-        q = q.filter(cls.status == cls.STATUS_PENDING)
-        if collection_id is not None:
-            q = q.filter(cls.collection_id == collection_id)
-        return q.scalar()
-
-    @classmethod
     def by_keys(cls, parent_id=None, collection=None, foreign_id=None,
                 content_hash=None):
         """Try and find a document by various criteria."""
@@ -250,12 +241,6 @@ class Document(db.Model, DatedModel, Metadata):
 
         db.session.add(document)
         return document
-
-    @classmethod
-    def by_parent(cls, parent):
-        q = cls.all()
-        q = q.filter(Document.parent_id == parent.id)
-        return q
 
     @classmethod
     def by_id(cls, id, collection_id=None):

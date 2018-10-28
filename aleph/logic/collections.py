@@ -74,6 +74,7 @@ def delete_collection(collection):
     db.session.commit()
     index.delete_collection(collection.id)
     delete_collection_content.apply_async([collection.id], priority=7)
+    Authz.flush()
 
 
 @celery.task()
