@@ -50,6 +50,14 @@ class DocumentRecord(db.Model):
             db.session.execute(q)
 
     @classmethod
+    def find_records(cls, ids):
+        if not len(ids):
+            return []
+        q = db.session.query(cls)
+        q = q.filter(cls.id.in_(ids))
+        return q
+
+    @classmethod
     def by_index(cls, document_id, index):
         q = db.session.query(cls)
         q = db.session.query(DocumentRecord)
