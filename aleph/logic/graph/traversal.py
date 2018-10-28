@@ -22,7 +22,7 @@ class Node(object):
 
     def compute_weight(self):
         weight = 0 if self.seed is None else self.seed
-        if self.type.prefix is None:
+        if self.type.group is None:
             return weight
         if self.decay == 0:
             return weight

@@ -41,11 +41,10 @@ def expand_group(type_, value):
             if value not in values:
                 continue
             for item in values:
-                ref = type_.ref(item)
                 if prop.reverse:
-                    yield Link(ref, prop.reverse, entity_id)
+                    yield Link(item, type_, prop.reverse, entity_id)
                 else:
-                    yield Link(ref, prop, entity_id, inverted=True)
+                    yield Link(item, type_, prop, entity_id, inverted=True)
 
 
 def expand_entity(entity):
@@ -65,9 +64,8 @@ def expand_entity(entity):
     thing = model.get(Entity.THING)
     if proxy.schema.is_a(thing):
         sameAs = thing.get("sameAs")
-        ref = registry.entity.ref(proxy.id)
         for (score, _, other) in xref_item(proxy):
-            yield Link(ref, sameAs, other.id,
+            yield Link(proxy.id, registry.entity, sameAs, other.id,
                        weight=score, inferred=True)
 
 
