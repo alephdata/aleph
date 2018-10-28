@@ -24,7 +24,7 @@ COLLECTION_MAPPING = {
                 }
             }
         },
-        "roles": {"type": "keyword"},
+        "collection_id": {"type": "keyword"},
         "foreign_id": {"type": "keyword"},
         "languages": {"type": "keyword"},
         "countries": {"type": "keyword"},
@@ -99,7 +99,6 @@ ENTITY_MAPPING = {
         "foreign_id": {"type": "keyword"},
         "file_name": {"type": "keyword"},
         "collection_id": {"type": "keyword"},
-        "roles": {"type": "keyword"},
         "uploader_id": {"type": "long"},
         "children": {"type": "keyword"},
         "source_url": {"type": "keyword"},

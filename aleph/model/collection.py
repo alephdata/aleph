@@ -80,23 +80,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             self.creator = creator
         db.session.add(self)
         db.session.flush()
-        self.reset_state()
         if self.creator is not None:
             Permission.grant(self, self.creator, True, True)
-
-    def reset_state(self):
-        if hasattr(self, '_roles'):
-            self._roles = None
-
-    @property
-    def roles(self):
-        if not hasattr(self, '_roles') or self._roles is None:
-            q = db.session.query(Permission.role_id)
-            q = q.filter(Permission.deleted_at == None)  # noqa
-            q = q.filter(Permission.collection_id == self.id)  # noqa
-            q = q.filter(Permission.read == True)  # noqa
-            self._roles = [e.role_id for e in q.all()]
-        return self._roles
 
     @property
     def team(self):
@@ -156,5 +141,5 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return collection
 
     def __repr__(self):
-        return '<Collection(%r, %r, %r)>' % \
-            (self.id, self.foreign_id, self.label)
+        fmt = '<Collection(%r, %r, %r)>'
+        return fmt % (self.id, self.foreign_id, self.label)

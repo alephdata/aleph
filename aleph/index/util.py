@@ -6,6 +6,7 @@ from elasticsearch import TransportError
 
 from aleph.core import es
 from aleph.util import backoff
+from aleph.model import Permission
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +60,10 @@ def authz_query(authz):
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
         return {'match_all': {}}
-    return field_filter_query('roles', authz.roles)
+    collections = authz.collections(authz.READ)
+    if not len(collections):
+        return {'match_none': {}}
+    return field_filter_query('collection_id', collections)
 
 
 def bool_query():

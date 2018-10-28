@@ -54,10 +54,8 @@ def index_document(document):
         'ancestors': document.ancestors,
         'children': document.children.count()
     }
-
     texts = list(document.texts)
     texts.extend(document.columns)
-
     parent = document.parent
     if parent is not None:
         texts.append(parent.title)
@@ -66,7 +64,6 @@ def index_document(document):
             'schema': parent.schema,
             'title': parent.title,
         }
-
     return index_single(document, proxy, context, texts)
 
 

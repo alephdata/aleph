@@ -30,6 +30,7 @@ def create_collection(data, role=None):
 def update_collection(collection):
     """Create or update a collection."""
     index_collection_async.delay(collection.id)
+    Authz.flush()
     # from aleph.logic.xref import xref_collection
     # if collection.casefile and collection.deleted_at is None:
     #     xref_collection.apply_async([collection.id], priority=2)
@@ -48,16 +49,6 @@ def update_collections():
     cq = cq.order_by(Collection.id.desc())
     for collection in cq.all():
         update_collection(collection)
-
-
-@celery.task(priority=8)
-def update_collection_access(collection_id):
-    """Re-write all etities in this collection to reflect updated roles."""
-    collection = Collection.by_id(collection_id, deleted=True)
-    if collection is None:
-        return
-    log.info("Update roles [%s]: %s", collection.foreign_id, collection.label)
-    index.update_collection_roles(collection)
 
 
 def generate_sitemap(collection_id):
@@ -83,6 +74,7 @@ def delete_collection(collection):
     db.session.commit()
     index.delete_collection(collection.id)
     delete_collection_content.apply_async([collection.id], priority=7)
+    Authz.flush()
 
 
 @celery.task()
