@@ -4,7 +4,7 @@ from banal import ensure_list
 from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
 
-from aleph.core import es, cache
+from aleph.core import es
 from aleph.util import backoff
 from aleph.model import Permission
 
@@ -55,13 +55,12 @@ def unpack_result(res):
     return data
 
 
-@cache.memoize(120)
 def authz_query(authz):
     """Generate a search query from an authz object."""
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
         return {'match_all': {}}
-    collections = Permission.readable_by_roles(authz.roles)
+    collections = authz.collections(authz.READ)
     if not len(collections):
         return {'match_none': {}}
     return field_filter_query('collection_id', collections)
