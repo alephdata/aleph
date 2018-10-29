@@ -12,7 +12,7 @@ from aleph.model import Document
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
-from aleph.index.util import MAX_PAGE
+from aleph.index.util import refresh_index, MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -94,12 +94,15 @@ def iter_entities_by_ids(ids, authz=None):
         query['bool']['filter'].append({'ids': {'values': chunk}})
         if authz is not None:
             query['bool']['filter'].append(authz_query(authz))
+        includes = ['schema', 'properties', 'collection_id', 'created_at']
         query = {
             'query': query,
-            '_source': {'includes': ['schema', 'properties', 'created_at']},
+            '_source': {'includes': includes},
             'size': min(MAX_PAGE, len(chunk) * 2)
         }
-        result = search_safe(index=entity_index(), body=query)
+        result = search_safe(index=entity_index(),
+                             body=query,
+                             request_cache=False)
         for doc in result.get('hits').get('hits', []):
             yield unpack_result(doc)
 
@@ -122,7 +125,10 @@ def _index_updates(collection, entities):
     if not len(entities):
         return []
 
+    refresh_index(entity_index())
     for result in iter_entities_by_ids(list(entities.keys())):
+        if int(result.get('collection_id')) != collection.id:
+            raise RuntimeError("Key collision between collections.")
         existing = model.get_proxy(result)
         entities[existing.id].merge(existing)
         timestamps[existing.id] = result.get('created_at')
@@ -147,9 +153,7 @@ def index_bulk(collection, entities):
     actions = _index_updates(collection, entities)
     chunk_size = len(actions) + 1
     try:
-        bulk_op(actions,
-                chunk_size=chunk_size,
-                refresh='wait_for')
+        bulk_op(actions, chunk_size=chunk_size, refresh=False)
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
 

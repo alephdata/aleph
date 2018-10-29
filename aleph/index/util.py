@@ -6,7 +6,6 @@ from elasticsearch import TransportError
 
 from aleph.core import es
 from aleph.util import backoff
-from aleph.model import Permission
 
 log = logging.getLogger(__name__)
 

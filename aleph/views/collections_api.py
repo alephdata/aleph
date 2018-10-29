@@ -1,3 +1,4 @@
+from banal import ensure_list
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
@@ -10,7 +11,7 @@ from aleph.logic.collections import create_collection, generate_sitemap
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.collections import delete_entities, delete_documents
 from aleph.logic.documents import process_documents
-from aleph.logic.entities import bulk_load_query
+from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
 from aleph.index.util import refresh_index
 from aleph.index.core import collections_index
@@ -84,6 +85,14 @@ def mapping_process(id):
             bulk_load_query.apply_async([collection.id, query], priority=6)
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
+    return ('', 204)
+
+
+@blueprint.route('/api/2/collections/<int:id>/_bulk', methods=['POST'])
+def bulk(id):
+    collection = get_db_collection(id, request.authz.WRITE)
+    entities = ensure_list(request.get_json(force=True))
+    bulk_write(collection, entities)
     return ('', 204)
 
 
