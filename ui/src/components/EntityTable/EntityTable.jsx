@@ -42,6 +42,8 @@ class EntityTable extends Component {
     this.state = {
       result: props.result
     };
+
+    this.getHighlight = this.getHighlight.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -64,12 +66,29 @@ class EntityTable extends Component {
     }
   }
 
+  splitHighlight(split, array) {
+    let highlightArray = array.split(split);
+    let highlights = '';
+    for(let i = 0; i < highlightArray.length; i++) {
+      highlights += highlightArray[i];
+    }
+
+    return highlights;
+  }
+
+  getHighlight(highlight) {
+    let highlightArray = this.splitHighlight('<em>', highlight);
+
+    return this.splitHighlight('</em>', highlightArray);
+  }
+
   render() {
     const { query, intl, location } = this.props;
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
     const isLoading = this.props.result.total === undefined;
     const { result } = this.state;
+    const getHighlight = this.getHighlight;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -91,8 +110,6 @@ class EntityTable extends Component {
         </SortableTH>
       );
     };
-
-    console.log(result.results)
 
     return (
       <table className="EntityTable data-table">
@@ -124,15 +141,15 @@ class EntityTable extends Component {
                               documentMode={documentMode}
                               updateSelection={updateSelection}
                               selection={selection} />
-              {entity.highlight !== undefined && entity.highlight.map(sentence =>
-              entity.name !== sentence && <tr>
-                <td colSpan="5" className='highlighted-words'>
-                    <React.Fragment>
-                      <span dangerouslySetInnerHTML={{__html: sentence}} />...
-                    </React.Fragment>
+              {entity.highlight !== undefined && entity.highlight.map(function(sentence, index){
+                return entity.name !== getHighlight(sentence) && <tr>
+                <td key={entity.id} colSpan="5" className={index !== entity.highlight.length - 1 ? 'highlighted-words' : ''}>
+                <React.Fragment>
+                <span dangerouslySetInnerHTML={{__html: sentence}} />...
+                </React.Fragment>
                 </td>
-              </tr>
-              )}
+                </tr>
+              })}
             </React.Fragment>
           )}
         </tbody>

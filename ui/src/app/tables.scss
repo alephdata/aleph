@@ -92,11 +92,11 @@ table.data-table {
   width: 100%;
   
   td {
-    //border-bottom: 1px solid $aleph-table-border-color;
+    border-bottom: 1px solid $aleph-table-border-color;
   }
 
   tbody tr td:last-child {
-    border-bottom: 1px solid $aleph-table-border-color;
+   // border-bottom: 1px solid $aleph-table-border-color;
   }
   
   th,
