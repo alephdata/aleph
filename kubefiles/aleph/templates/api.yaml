@@ -116,7 +116,7 @@ spec:
               port: 8000
             initialDelaySeconds: 15
             timeoutSeconds: 4
-            periodSeconds: 5 
+            periodSeconds: 5
         - name: search-db-sidecar
           resources:
             requests:

@@ -3,6 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: search-upgrade
+  namespace: aleph
 spec:
   backoffLimit: 4
   template:
@@ -16,6 +17,10 @@ spec:
           resources:
             requests:
               memory: 500Mi
+              cpu: 200m
+            limits:
+              memory: 1000Mi
+              cpu: 600m
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /credentials/service-account.json

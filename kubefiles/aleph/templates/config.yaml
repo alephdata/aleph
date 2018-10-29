@@ -14,6 +14,7 @@ data:
   ALEPH_RECORDS_INDEX_SET: aleph-record-v1
   ALEPH_COLLECTIONS_INDEX: aleph-collection-v1
   ALEPH_BROKER_URI: amqp://guest:guest@search-queue.aleph.svc.cluster.local:5672
+  ALEPH_REDIS_URL: redis://search-redis.aleph.svc.cluster.local:6379/0
   ALEPH_ENTITIES_SERVICE: search-extract-entities.aleph.svc.cluster.local:50000
   ALEPH_OCR_SERVICE: search-recognize-text.aleph.svc.cluster.local:50000
   UNOSERVICE_URL: http://search-convert-document.aleph.svc.cluster.local:3000/convert

@@ -1,6 +1,6 @@
 global:
   reponame: aleph
-  dbInstance: "clustername:region:core-postgres=tcp:5432"
+  dbInstance: "occrp-data:us-east1:aleph-staging=tcp:5432"
   imagetag: latest
 
 
@@ -9,11 +9,11 @@ api:
   maxReplicas: 2
   resources:
     requests:
-      memory: 500Mi
-      cpu: 200m
+      memory: 2Gi
+      cpu: 500m
     limits:
-      memory: 1Gi
-      cpu: 600m
+      memory: 3Gi
+      cpu: 1000m
 
 
 config:
@@ -22,7 +22,7 @@ config:
   ALEPH_OCR_VISION_API: "false"
   ALEPH_CORS_ORIGINS: "*"
   ALEPH_ARCHIVE_TYPE: gs
-  ALEPH_ARCHIVE_BUCKET: "bucket-name"
+  ALEPH_ARCHIVE_BUCKET: "staging-data-archive"
   ALEPH_PASSWORD_LOGIN: "true"
   ALEPH_ADMINS: "admin@example.com"
   ALEPH_MAIL_FROM: notifications@example.com
