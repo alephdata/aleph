@@ -1,5 +1,6 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
+import { Icon } from '@blueprintjs/core';
 
 import './Footer.css';
 
@@ -20,7 +21,9 @@ class Footer extends React.Component {
                             }} />
           <span className="bp3-text-muted"> • </span>
           <span>
-            <a href="https://github.com/alephdata/aleph/wiki/User-manual"><i className="fa fa-fw fa-book"/></a>
+            <a href="https://github.com/alephdata/aleph/wiki/User-manual">
+              <Icon className="footer-icon" icon="book"/>
+            </a>
             {' '}
             <a href="https://github.com/alephdata/aleph/wiki/User-manual">
                 <FormattedMessage id='footer.help'
@@ -29,7 +32,9 @@ class Footer extends React.Component {
           </span>
           <span className="bp3-text-muted"> • </span>
           <span>
-            <a href="https://github.com/alephdata/aleph"><i className="fa fa-fw fa-github"/></a>
+            <a href="https://github.com/alephdata/aleph">
+              <Icon className="footer-icon" icon="git-repo"/>
+            </a>
             {' '}
             <a href="https://github.com/alephdata/aleph">
               <FormattedMessage id='footer.code'

@@ -20,7 +20,8 @@ function Icon(props) {
   }
   if (iconSize) {
     Object.assign(svgStyles, {
-      width: iconSize
+      width: iconSize,
+      height: iconSize
     })
   }
   return (<ReactSVG
