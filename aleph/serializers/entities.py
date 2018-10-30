@@ -116,7 +116,8 @@ class ShallowCombinedSchema(BaseSchema):
         if data.get('bulk'):
             data['writeable'] = False
         else:
-            data['writeable'] = request.authz.can_write(collection_id)
+            authz = request.authz
+            data['writeable'] = authz.can(collection_id, authz.WRITE)
         return data
 
 

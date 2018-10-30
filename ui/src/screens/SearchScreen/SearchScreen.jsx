@@ -217,7 +217,7 @@ class SearchScreen extends React.Component {
 
     const breadcrumbs = (<Breadcrumbs hasSearchBar={false}>
       <li>
-        <span className="pt-breadcrumb pt-breadcrumb-current">
+        <span className="bp3-breadcrumb bp3-breadcrumb-current">
           {!(result.isLoading || result.total === undefined) && (
             <React.Fragment>
               <FormattedNumber value={result.total}/>&nbsp;
@@ -248,7 +248,7 @@ class SearchScreen extends React.Component {
         {breadcrumbs}
         <DualPane className="SearchScreen">
           <DualPane.SidePane className='side-pane-padding'>
-            <div onClick={this.toggleFacets} className='visible-sm-flex facets total-count pt-text-muted'>
+            <div onClick={this.toggleFacets} className='visible-sm-flex facets total-count bp3-text-muted'>
               <Icon icon={plusMinusIcon} />
               <span className='total-count-span'>
                 <FormattedMessage id="search.screen.filters" defaultMessage="Filters"/>

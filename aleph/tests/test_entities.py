@@ -2,7 +2,7 @@
 from pprint import pprint  # noqa
 
 from aleph.core import db
-from aleph.model import Collection, Entity, Alert
+from aleph.model import Collection, Entity
 from aleph.index import index_entity
 from aleph.tests.util import TestCase
 
@@ -39,9 +39,6 @@ class EntitiesTestCase(TestCase):
                 'alias': ['Puh der Bär']
             }
         }, self.col)
-        self.alert = Alert()
-        self.alert.entity = self.other
-        db.session.add(self.alert)
         db.session.commit()
         index_entity(self.ent)
         index_entity(self.other)
@@ -52,8 +49,6 @@ class EntitiesTestCase(TestCase):
         data = dict(self.ent.data)
         assert 'bear' in data['description'][0], data
         assert 'pa' in data['country'], data
-        db.session.refresh(self.alert)
-        assert self.alert.label == self.ent.name
         assert self.other.deleted_at is not None, self.other
 
     def test_api_merge(self):

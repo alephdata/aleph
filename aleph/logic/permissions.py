@@ -1,6 +1,7 @@
 import logging
 
 from aleph.core import db
+from aleph.authz import Authz
 from aleph.model import Permission, Events
 from aleph.model import Subscription, Notification
 from aleph.logic.notifications import publish, channel
@@ -32,4 +33,5 @@ def update_permission(role, collection, read, write, editor_id=None):
         Subscription.unsubscribe(role=role, channel=cchannel)
 
     db.session.commit()
+    Authz.flush()
     return post

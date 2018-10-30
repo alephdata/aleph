@@ -11,8 +11,8 @@ class SortableTH extends Component {
         <th>{children}</th>
       );
     } else {
-      const iconClass = c('caret', 'pt-icon-large',
-        `pt-icon-caret-${sorted === 'desc' ? 'up' : 'down'}`,
+      const iconClass = c('caret', 'bp3-icon-large',
+        `bp3-icon-caret-${sorted === 'desc' ? 'up' : 'down'}`,
         { 'hidden': !sorted },
       );
       return (

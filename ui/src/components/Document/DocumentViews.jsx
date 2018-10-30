@@ -12,6 +12,7 @@ import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import TextLoading from "src/components/common/TextLoading";
+import Icon from "src/components/common/Icon";
 
 
 class DocumentViews extends React.Component {
@@ -54,7 +55,7 @@ class DocumentViews extends React.Component {
           <Tab id="info"
                title={
                   <React.Fragment>
-                    <i className="fa fa-fw fa-info-circle" />
+                    <Icon name="info" />
                     <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
                   </React.Fragment>
                }
@@ -66,7 +67,7 @@ class DocumentViews extends React.Component {
           <Tab id="view"
              title={
                <React.Fragment>
-                 <i className="fa fa-fw fa-file-o"  />
+                 <Icon name="showdocuments" />
                  <FormattedMessage id="entity.info.view" defaultMessage="View"/>
                </React.Fragment>
              }
@@ -78,7 +79,7 @@ class DocumentViews extends React.Component {
           <Tab id="text"
                title={
                   <React.Fragment>
-                    <i className="fa fa-fw fa-align-justify" />
+                    <Icon name="documenttxt" />
                     <FormattedMessage id="entity.info.text" defaultMessage="Text"/>
                   </React.Fragment>
                }
@@ -91,7 +92,7 @@ class DocumentViews extends React.Component {
                disabled={document.children < 1}
                title={
                   <TextLoading loading={document.isLoading} children={<React.Fragment>
-                    <i className="fa fa-fw fa-folder-open" />
+                    <Icon name="folder" />
                     <FormattedMessage id="entity.info.browse" defaultMessage="Documents"/>
                     <Count count={document.children} />
                   </React.Fragment>}/>
@@ -104,7 +105,7 @@ class DocumentViews extends React.Component {
              disabled={tags.total < 1}
              title={
                <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-                 <i className="fa fa-fw fa-tags"  />
+                 <Icon name="tags" />
                  <FormattedMessage id="entity.info.tags" defaultMessage="Tags"/>
                  <Count count={tags.total} />
                </TextLoading>

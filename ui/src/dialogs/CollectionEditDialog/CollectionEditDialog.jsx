@@ -115,14 +115,14 @@ class CollectionEditDialog extends Component {
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
         title={title}>
-        <div className="pt-dialog-body">
-          <div className="pt-form-group">
-              <label className="pt-label">
+        <div className="bp3-dialog-body">
+          <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.label" defaultMessage="Label"/>
               </label>
-            <div className="pt-form-content">
+            <div className="bp3-form-content">
               <input id="label"
-                     className="pt-input pt-large pt-fill"
+                     className="bp3-input bp3-large bp3-fill"
                      type="text"
                      placeholder={intl.formatMessage(messages.placeholder_label)}
                      dir="auto"
@@ -131,11 +131,11 @@ class CollectionEditDialog extends Component {
             </div>
           </div>
           { !collection.casefile && (
-            <div className="pt-form-group">
-              <label className="pt-label">
+            <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.category" defaultMessage="Category"/>
               </label>
-              <div className="pt-select pt-fill">
+              <div className="bp3-select bp3-fill">
                 <select id="category" onChange={this.onFieldChange} value={collection.category}>
                   {!collection.category && <option key='--' value='' selected>--</option>}
                   { Object.keys(categories).map((key) => (
@@ -147,13 +147,13 @@ class CollectionEditDialog extends Component {
               </div>
             </div>
           )}
-          <div className="pt-form-group">
-              <label className="pt-label">
+          <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.summary" defaultMessage="Summary"/>
               </label>
-            <div className="pt-form-content">
+            <div className="bp3-form-content">
               <textarea id="summary"
-                        className="pt-input pt-fill"
+                        className="bp3-input bp3-fill"
                         placeholder={intl.formatMessage(messages.placeholder_summary)}
                         dir="auto"
                         rows={5}
@@ -161,17 +161,17 @@ class CollectionEditDialog extends Component {
                         value={collection.summary || ''}/>
             </div>
           </div>
-          <div className="pt-form-group">
-              <label className="pt-label">
+          <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.contact" defaultMessage="Contact"/>
               </label>
-            <div className="pt-form-content">
+            <div className="bp3-form-content">
               <Role.Select role={collection.creator}
                            onSelect={this.onSelectCreator} />
             </div>
           </div>
-          <div className="pt-form-group">
-              <label className="pt-label">
+          <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.countries" defaultMessage="Countries"/>
               </label>
             <Country.MultiSelect
@@ -179,12 +179,12 @@ class CollectionEditDialog extends Component {
               codes={collection.countries} />
           </div>
           { !collection.casefile && (
-            <div className="pt-form-group">
-              <label className="pt-label">
+            <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.import.id" defaultMessage="Import ID"/>
               </label>
-              <div className="pt-form-content">
-                <input className="pt-input pt-fill"
+              <div className="bp3-form-content">
+                <input className="bp3-input bp3-fill"
                       type="text"
                       dir="auto"
                       disabled
@@ -195,8 +195,8 @@ class CollectionEditDialog extends Component {
           )}
           
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
             <Button
               intent={Intent.DANGER}
               onClick={this.toggleDeleteCollection}

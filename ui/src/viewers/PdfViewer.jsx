@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 import classNames from 'classnames';
+import { Pre } from'@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
@@ -173,7 +174,7 @@ class PdfViewer extends Component {
                   <PagingButtons document={document} numberOfPages={numPages}/>
                 )}
                 {pageResult.id !== undefined && (
-                  <pre>{pageResult.text}</pre>
+                  <Pre>{pageResult.text}</Pre>
                 )}
                 {pageResult.id === undefined && (
                   <SectionLoading />
@@ -186,7 +187,7 @@ class PdfViewer extends Component {
                   <PagingButtons document={document} numberOfPages={numPages}/>
                 )}
                 {result.total === 0 && (
-                  <div className="pt-callout pt-intent-warning pt-icon-search">
+                  <div className="bp3-callout bp3-intent-warning bp3-icon-search">
                     <FormattedMessage id="document.search.no_match"
                                       defaultMessage="No page within this document matches your search." />
                   </div>
@@ -199,7 +200,7 @@ class PdfViewer extends Component {
                         <li key={`page-${res.id}`}>
                           <p>
                             <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: page === res.index})}>
-                              <span className={`pt-icon-document`}/> Page {res.index}
+                              <span className={`bp3-icon-document`}/> Page {res.index}
                             </a>
                           </p>
                           <p>

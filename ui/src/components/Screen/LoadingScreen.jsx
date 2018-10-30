@@ -9,7 +9,7 @@ const LoadingScreen = () => (
   <Screen>
     <div className="LoadingScreen">
       <div className="spinner">
-        <Spinner className="pt-large"/>
+        <Spinner className="bp3-large"/>
       </div>
     </div>
   </Screen>

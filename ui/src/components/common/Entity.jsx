@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
@@ -85,22 +86,15 @@ class EntityLink extends Component {
       search: location.search,
       hash: queryString.stringify(parsedHash),
     });
-
   }
+
   onClick = (event) => {
-    const { entity, history, preview } = this.props;
-
-    event.preventDefault();
-
+    const { preview } = this.props;
     if (preview) {
+      event.preventDefault();
       Entity.constructor.openPreview(this.props)
-    } else {
-      history.push({
-        pathname: getPath(entity.links.ui)
-      });
     }
   };
-
 
   render() {
     const { entity, className } = this.props;
@@ -108,10 +102,11 @@ class EntityLink extends Component {
       return <Entity.Label {...this.props} />;
     }
 
+    const link = getPath(entity.links.ui);
     return (
-      <a onClick={this.onClick} className={c('EntityLink', className)}>
+      <Link to={link} onClick={this.onClick} className={c('EntityLink', className)}>
         <Entity.Label {...this.props} />
-      </a>
+      </Link>
     );
   }
 }

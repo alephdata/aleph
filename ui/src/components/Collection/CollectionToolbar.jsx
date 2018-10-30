@@ -44,9 +44,9 @@ class CollectionToolbar extends Component {
 
     return (
       <Toolbar className="toolbar-preview">
-        <div className="pt-button-group">
-          <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link">
-            <span className={`pt-icon-search`}/>
+        <div className="bp3-button-group">
+          <Link to={`/search?filter:collection_id=${collection.id}`} className="bp3-button button-link">
+            <span className={`bp3-icon-search`}/>
             <FormattedMessage id="collection.info.search_button" defaultMessage="Search"/>
           </Link>
           {collection.writeable &&
@@ -55,7 +55,7 @@ class CollectionToolbar extends Component {
                 <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
               </Button>
               <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
-                <FormattedMessage id="collection.info.access" defaultMessage="Access"/>
+                <FormattedMessage id="collection.info.share" defaultMessage="Share"/>
               </Button>
               <Button icon="search-around" onClick={this.toggleXref} className='button-hover'>
                 <FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>

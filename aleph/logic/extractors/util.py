@@ -27,7 +27,7 @@ def normalize_label(label):
 
 
 def load_places():
-    if kv.get(PLACE_KEY):
+    if kv.get(PLACE_KEY) or settings.TESTING:
         return
     total = 0
     pipe = kv.pipeline(transaction=False)

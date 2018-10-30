@@ -3,8 +3,11 @@ from aleph.index.util import authz_query
 from aleph.index.core import entities_index, collections_index
 
 
-@cache.memoize(3600 * 2)
 def get_instance_stats(authz):
+    key = cache.key('stats', authz.id)
+    stats = cache.get_complex(key)
+    if stats is not None:
+        return stats
     # Compute entity stats:
     query = {
         'size': 0,
@@ -26,7 +29,9 @@ def get_instance_stats(authz):
         }
     }
     collections = es.search(index=collections_index(), body=query)
-    return {
+    stats = {
         'entities': entities.get('hits').get('total'),
         'collections': collections.get('hits').get('total')
     }
+    cache.set_complex(key, stats, expire=600)
+    return stats

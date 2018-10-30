@@ -127,7 +127,7 @@ class AuthenticationDialog extends Component {
           {auth.oauth_uri && (
             <React.Fragment>
               <MenuDivider className='menu-divider'/>
-              <Button icon="log-in" className="pt-large pt-fill" onClick={this.onOAuthLogin}>
+              <Button icon="log-in" className="bp3-large bp3-fill" onClick={this.onOAuthLogin}>
                 <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth"/>
               </Button>
             </React.Fragment>

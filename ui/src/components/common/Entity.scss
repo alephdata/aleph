@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
 .EntityLabel {
-  /* @TODO Refactor Entity to use .pt-text-muted instead of .untitled class */
+  /* @TODO Refactor Entity to use .bp3-text-muted instead of .untitled class */
   /* Using opacity change (instead of fixed color) is an interim measure */
   &.untitled {
     text-transform: uppercase;

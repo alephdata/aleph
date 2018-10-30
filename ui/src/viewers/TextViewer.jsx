@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Pre } from '@blueprintjs/core';
 
 import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
@@ -16,7 +17,7 @@ class TextViewer extends React.Component {
       <React.Fragment>
         <div className="outer">
           <div className="inner TextViewer">
-            <pre>{content.text}</pre>
+            <Pre>{content.text}</Pre>
           </div>
         </div>
       </React.Fragment>

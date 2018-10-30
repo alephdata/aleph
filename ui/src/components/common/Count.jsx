@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 
 
 
-class Count extends Component {
+class Count extends PureComponent {
   render() {
     const { count } = this.props;
 
@@ -11,7 +11,7 @@ class Count extends Component {
       return null;
     }
     return (
-      <span className="pt-tag pt-round pt-intent-primary">
+      <span className="bp3-tag bp3-round bp3-intent-primary">
         {numeral(count).format('0a')}
       </span>
     );

@@ -8,7 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
-from flask_caching import Cache
 from flask_babel import Babel
 from kombu import Queue
 from celery import Celery
@@ -19,10 +18,12 @@ from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
 from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
+from fakeredis import FakeRedis
 import storagelayer
 
 from aleph import settings
 from aleph.util import SessionTask, get_extensions
+from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
 log = logging.getLogger(__name__)
@@ -33,7 +34,6 @@ mail = Mail()
 celery = Celery('aleph', task_cls=SessionTask)
 sentry = Sentry()
 babel = Babel()
-cache = Cache()
 
 
 def create_app(config={}):
@@ -81,7 +81,6 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
-    cache.init_app(app, config=settings.CACHE_CONFIG)
     CORS(app, origins=settings.CORS_ORIGINS)
 
     # Enable raven to submit issues to sentry if a DSN is defined. This will
@@ -140,15 +139,24 @@ def get_archive():
 
 
 def get_redis():
-    if hasattr(settings, '_redis'):
-        return settings._redis
+    if settings.REDIS_URL is None:
+        return FakeRedis()
     if not hasattr(settings, '_redis_pool'):
         settings._redis_pool = ConnectionPool.from_url(settings.REDIS_URL)
     return Redis(connection_pool=settings._redis_pool)
 
 
+def get_cache():
+    if not hasattr(settings, '_cache') or settings._cache is None:
+        settings._cache = Cache(get_redis(),
+                                expire=settings.REDIS_EXPIRE,
+                                prefix=settings.APP_NAME)
+    return settings._cache
+
+
 es = LocalProxy(get_es)
 kv = LocalProxy(get_redis)
+cache = LocalProxy(get_cache)
 archive = LocalProxy(get_archive)
 
 

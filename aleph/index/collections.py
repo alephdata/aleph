@@ -30,7 +30,7 @@ def index_collection(collection):
         'info_url': collection.info_url,
         'data_url': collection.data_url,
         'casefile': collection.casefile,
-        'roles': collection.roles,
+        'collection_id': collection.id,
         'schemata': {},
         'team': []
     }
@@ -106,31 +106,6 @@ def get_collection(collection_id):
                     ignore=[404],
                     _source_exclude=['text'])
     return unpack_result(result)
-
-
-def update_collection_roles(collection, rate_limit=250, wait=False):
-    """Update the role visibility of objects which are part of collections."""
-    roles = ', '.join([str(r) for r in collection.roles])
-    query = {'term': {'collection_id': collection.id}}
-    body = {'query': query, 'size': 0}
-    res = es.search(index=entities_index(), body=body)
-    total = res.get('hits', {}).get('total')
-    timeout = int((total / rate_limit) * 2)
-    log.info("[%s] roles update: %s entities, timeout: %s",
-             collection.foreign_id, total, timeout)
-    body = {
-        'query': query,
-        'script': {
-            'inline': 'ctx._source.roles = [%s]' % roles
-        }
-    }
-    es.update_by_query(index=entities_index(),
-                       doc_type='doc',
-                       body=body,
-                       conflicts='proceed',
-                       requests_per_second=rate_limit,
-                       wait_for_completion=wait,
-                       timeout='%ss' % timeout)
 
 
 def delete_collection(collection_id):

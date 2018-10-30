@@ -1,15 +1,10 @@
-import 'font-awesome/css/font-awesome.min.css';
-
-import React, {Component} from 'react';
+import React, { PureComponent, Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectSchemata } from 'src/selectors';
+import Icon from "./Icon";
 
-class SchemaIcon extends Component {
-  shouldComponentUpdate(nextProps) {
-    return this.props.schema !== nextProps.schema;
-  }
-
+class SchemaIcon extends PureComponent {
   render() {
     const {schema, schemata} = this.props,
           model = schemata[schema] || {};
@@ -18,9 +13,10 @@ class SchemaIcon extends Component {
       return null;
     }
 
-    return (
-      <i className={`fa fa-fw ${model.icon}`}/>
-    );
+    return (<Icon
+      className='entity-icon'
+      iconSize={'14px'}
+      name={schema.toLowerCase()}/>);
   }
 }
 
@@ -46,10 +42,10 @@ class SchemaLink extends Component {
     const { schema, plural, url } = this.props;
     return (
         <React.Fragment>
-            <Schema.Icon schema={schema}/>
-            <Link to={url}>
-                <Schema.Label schema={schema} icon={false} plural={plural}/>
-            </Link>
+          <Schema.Icon schema={schema}/>
+          <Link to={url}>
+            <Schema.Label schema={schema} icon={false} plural={plural}/>
+          </Link>
         </React.Fragment>
     );
   }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip, H4 } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -92,24 +92,24 @@ class AlertsDialog extends Component {
 
     return (
       <DualPane.SidePane className="AlertsManager">
-        <div className="pt-callout pt-intent-primary">
-          <h4 className="pt-callout-title">
+        <div className="bp3-callout bp3-intent-primary">
+          <H4 className="bp3-callout-title">
             <FormattedMessage id="alert.manager.title" defaultMessage="Tracking alerts" />
-          </h4>
+          </H4>
           <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity matches any of the alerts you have set up below." />
         </div>
         <form onSubmit={this.onAddAlert} className="add-form">
-          <div className="pt-control-group pt-fill">
-            <div className="pt-input-group pt-fill">
+          <div className="bp3-control-group bp3-fill">
+            <div className="bp3-input-group bp3-fill">
               <input type="text"
                 autoFocus={true}
-                className="pt-input"
+                className="bp3-input"
                 autoComplete="off"
                 placeholder={intl.formatMessage(messages.add_placeholder)}
                 onChange={this.onChangeAddingInput}
                 value={newAlert} />
             </div>
-            <button className="pt-button pt-fixed"
+            <button className="bp3-button bp3-fixed"
                     disabled={newAlert.length === 0}
                     onClick={this.onAddAlert}>
               <FormattedMessage id="alerts.add" defaultMessage="Add alert"/>

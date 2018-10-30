@@ -1,34 +1,30 @@
-import React, {Component} from 'react';
+import React, { PureComponent } from 'react';
+import { Icon as IconBlueprint } from "@blueprintjs/core/lib/esm/components/icon/icon";
+import { Icon } from "./Icon";
 
-class TagIcon extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      icons: {
-        names: 'fa-tags',
-        identifiers: 'fa-id-card',
-        emails: 'fa-envelope',
-        phones: 'fa-phone',
-        addresses: 'fa-home'
-      }
-    }
-  }
+import './Tag.css';
 
-  shouldComponentUpdate(nextProps) {
-    return this.props.field !== nextProps.field;
-  }
+class TagIcon extends PureComponent {
+  className="tag-icon";
+  icons = {
+    /* *
+    * TODO: Fix this implementation once phones, addresses ann link icons will be available
+    * */
+    names: <Icon name="tags" className={this.className}/>,
+    identifiers: <Icon name="license" className={this.className}/>,
+    emails: <Icon name="email" className={this.className}/>,
+    phones: <IconBlueprint icon="phone" className={this.className}/>,
+    addresses: <IconBlueprint icon="home" className={this.className}/>,
+    link:<IconBlueprint icon="link" className={this.className}/>
+  };
 
   render() {
-    const { field } = this.props,
-          icon = this.state.icons[field] || 'fa-link';
-
-    return (
-      <i className={`fa fa-fw ${icon}`} title={field} />
-    );
+    const { field } = this.props;
+    return this.icons[field] || this.icons.link;
   }
 }
 
-class Tag extends Component {
+class Tag {
   static Icon = TagIcon;
 }
 
