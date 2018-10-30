@@ -127,7 +127,7 @@ class Select extends Component {
               resetOnClose={true}
               resetOnSelect={true}>
       <Button text={label}
-              className="pt-fill"
+              className="bp3-fill"
               alignText={Alignment.LEFT}
               rightIcon="search" />
     </BlueprintSelect>;

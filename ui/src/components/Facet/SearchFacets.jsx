@@ -8,7 +8,7 @@ class SearchFacets extends Component {
   render() {
     const { facets, query, result, updateQuery } = this.props;
     return (
-      <ul className="SearchFacets pt-large">
+      <ul className="SearchFacets bp3-large">
         {facets.map((facet) => (
           <li className="facet" key={facet.field}>
             <SearchFacet

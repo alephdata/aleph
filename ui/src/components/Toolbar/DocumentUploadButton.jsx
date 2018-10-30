@@ -27,8 +27,8 @@ class DocumentUploadButton extends React.Component {
 
     return (
       <React.Fragment>
-        <a onClick={this.toggleUpload} className="pt-button">
-          <span className="pt-icon-standard pt-icon-upload"/>
+        <a onClick={this.toggleUpload} className="bp3-button">
+          <span className="bp3-icon-standard bp3-icon-upload"/>
           <FormattedMessage id="document.upload.button" defaultMessage="Upload"/>
         </a>
         <DocumentUploadDialog collection={collection}

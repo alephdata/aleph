@@ -18,7 +18,7 @@ class Footer extends React.Component {
                             values={{
                                 version: metadata.app.version
                             }} />
-          <span className="pt-text-muted"> • </span>
+          <span className="bp3-text-muted"> • </span>
           <span>
             <a href="https://github.com/alephdata/aleph/wiki/User-manual"><i className="fa fa-fw fa-book"/></a>
             {' '}
@@ -27,7 +27,7 @@ class Footer extends React.Component {
                                   defaultMessage="Help"/>
             </a>
           </span>
-          <span className="pt-text-muted"> • </span>
+          <span className="bp3-text-muted"> • </span>
           <span>
             <a href="https://github.com/alephdata/aleph"><i className="fa fa-fw fa-github"/></a>
             {' '}

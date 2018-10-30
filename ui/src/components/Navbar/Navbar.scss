@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
 .Navbar {
-  .pt-navbar {
+  .bp3-navbar {
     display: flex;
     justify-content: space-between;
     @media screen and (max-width: $aleph-screen-md-max-width) {
@@ -15,9 +15,9 @@
 
     .navbar-option-title {
       span {
-        display: none;
+        display: flex;
         @media screen and (max-width: $aleph-screen-md-max-width) {
-          display: flex;
+          display: none;
         }
       }
     }
@@ -30,7 +30,7 @@
       height: 32px;
     }
 
-    .pt-navbar-heading {
+    .bp3-navbar-heading {
       font-weight: bold;
       margin-right: 0 !important;
       margin-left: $aleph-grid-size * 1.5;
@@ -47,7 +47,7 @@
       }
     }
 
-    .pt-popover-target {
+    .bp3-popover-target {
       input {
         width: $aleph-grid-size * 3 !important;
       }
@@ -65,7 +65,7 @@
     form {
       width: 100%;
 
-      .pt-control-group {
+      .bp3-control-group {
         width: 100%;
       }
 
@@ -100,7 +100,7 @@
       display: none;
     }
 
-    .pt-navbar-divider {
+    .bp3-navbar-divider {
       margin: 5px 0 0 10px;
       @media screen and (max-width: $aleph-screen-md-max-width) {
         display: none;
@@ -130,14 +130,14 @@
     align-items: center;
 
     .alert-toggle {
-      .pt-button {
+      .bp3-button {
         height: $aleph-grid-size * 4;
-        .pt-icon-notifications {
+        .bp3-icon-notifications {
           margin-left: $aleph-grid-size / 2;
         }
       }
 
-      .pt-switch {
+      .bp3-switch {
         margin-top: 0;
         margin-bottom: 0;
         margin-right: 0;
@@ -173,7 +173,7 @@
 //medium screen
 @media screen and (max-width: $aleph-screen-md-max-width) {
   .Navbar {
-    .pt-navbar {
+    .bp3-navbar {
       .transform {
         .bar1 {
           -webkit-transform: rotate(-45deg) translate(0, 6px);
@@ -208,7 +208,7 @@
           position: relative;
         }
 
-        .pt-popover-wrapper {
+        .bp3-popover-wrapper {
           span {
             display: block;
           }
@@ -228,7 +228,7 @@
           width: 100%;
         }
 
-        .pt-button {
+        .bp3-button {
           align-items: left;
           justify-content: left;
           background-color: white;

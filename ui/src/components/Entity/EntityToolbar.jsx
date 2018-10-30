@@ -14,8 +14,8 @@ class EntityToolbar extends React.Component {
     return (      
       <Toolbar className="toolbar-preview">
         { isThing && isPreview && (
-          <Link to={getPath(entity.links.ui)} className="pt-button button-link">
-            <span className={`pt-icon-share`}/>
+          <Link to={getPath(entity.links.ui)} className="bp3-button button-link">
+            <span className={`bp3-icon-share`}/>
             <FormattedMessage id="sidebar.open" defaultMessage="Open"/>
           </Link>
         )}

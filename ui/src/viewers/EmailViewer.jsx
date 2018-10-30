@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
+import { Pre } from '@blueprintjs/core';
 
 import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
@@ -14,10 +15,10 @@ class EmailViewer extends React.Component {
       return <span className="email-body" dangerouslySetInnerHTML={{__html: content.html}}/>
     }
     if (content.text && content.text.length > 0) {
-      return <pre className="email-body">{content.text}</pre>
+      return <Pre className="email-body">{content.text}</Pre>
     }
     return (
-      <p className="email-no-body pt-text-muted">
+      <p className="email-no-body bp3-text-muted">
         <FormattedMessage id="email.body.empty" defaultMessage="No message body."/>
       </p>
     );
@@ -35,7 +36,7 @@ class EmailViewer extends React.Component {
         <div className="outer">
           <div className="inner EmailViewer">
             <div className="email-header">
-              <table className="pt-html-table">
+              <table className="bp3-html-table">
                 <tbody>
                   {headers.date && (
                     <tr>

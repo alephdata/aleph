@@ -28,7 +28,7 @@ table {
     max-width: unset;
     text-overflow: unset;
 
-    .pt-control {
+    .bp3-control {
       padding-left: 0;
     }
   }
@@ -88,7 +88,7 @@ table {
 
 // Tables as normally used in ContentPane
 table.data-table {
-  @extend .pt-html-table;
+  @extend .bp3-html-table;
   width: 100%;
   
   td {

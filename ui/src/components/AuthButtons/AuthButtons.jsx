@@ -55,9 +55,9 @@ class AuthButtons extends Component {
         <span className="AuthButtons">
           <Popover content={
             <Menu>
-              <Link to="/notifications" className="pt-menu-item">
+              <Link to="/notifications" className="bp3-menu-item">
                 <Icon icon="notifications" /> {' '}
-                <div className="pt-text-overflow-ellipsis pt-fill">
+                <div className="bp3-text-overflow-ellipsis bp3-fill">
                   {intl.formatMessage(messages.view_notifications)}
                 </div>
               </Link>
@@ -66,7 +66,7 @@ class AuthButtons extends Component {
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
             </Menu>
           } position={Position.BOTTOM_LEFT}>
-            <Button icon="user" className="pt-minimal navbar-option-title">
+            <Button icon="user" className="bp3-minimal navbar-option-title">
               <FormattedMessage id="nav.profile" defaultMessage="Profile"/>
             </Button>
           </Popover>
@@ -79,7 +79,7 @@ class AuthButtons extends Component {
       return (
           <span className="AuthButtons">
             <AuthenticationDialog auth={auth} isOpen={this.state.isSignupOpen} toggleDialog={this.toggleAuthentication} />
-            <Button icon='log-in' className='pt-minimal' onClick={this.toggleAuthentication}>
+            <Button icon='log-in' className='bp3-minimal' onClick={this.toggleAuthentication}>
               <FormattedMessage id="nav.signin" defaultMessage="Sign in / Register"/>
             </Button>
         </span>

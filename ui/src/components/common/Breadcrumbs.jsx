@@ -27,7 +27,7 @@ class Breadcrumbs extends Component {
 
     return (
       <nav className="Breadcrumbs">
-        <ul className="pt-breadcrumbs">
+        <ul className="bp3-breadcrumbs">
           {collectionCrumbs}
           {children}
         </ul>
@@ -79,9 +79,9 @@ class BreadcrumbSearch extends Component {
     }
     return (
       <form onSubmit={this.onSubmitSearch} className="BreadcrumbSearch search-box">
-        <div className={c("pt-input-group")}>
-          <span className="pt-icon pt-icon-search"/>
-          <input className="pt-input"
+        <div className={c("bp3-input-group")}>
+          <span className="bp3-icon bp3-icon-search"/>
+          <input className="bp3-input"
                  type="search"
                  dir="auto"
                  placeholder={placeholder}
@@ -101,7 +101,7 @@ class CollectionBreadcrumb extends PureComponent {
     const { collection } = this.props;
     return (
       <li key={collection.id}>
-        <Collection.Link collection={collection} className="pt-breadcrumb" icon truncate={30} />
+        <Collection.Link collection={collection} className="bp3-breadcrumb" icon truncate={30} />
       </li>
     );
   }
@@ -113,7 +113,7 @@ class EntityBreadcrumb extends PureComponent {
     const { entity } = this.props;
     return (
       <li key={entity.id}>
-        <Entity.Link entity={entity} className="pt-breadcrumb" icon truncate={30} />
+        <Entity.Link entity={entity} className="bp3-breadcrumb" icon truncate={30} />
       </li>
     );
   }
@@ -128,7 +128,7 @@ class TextBreadcrumb extends PureComponent {
     }
     return (
       <li key="text">
-        <span className="pt-breadcrumb pt-breadcrumb-current">{text}</span>
+        <span className="bp3-breadcrumb bp3-breadcrumb-current">{text}</span>
       </li>
     );
   }

@@ -92,99 +92,99 @@ class SettingsDialog extends Component {
           isOpen={this.props.isOpen}
           onClose={this.props.toggleDialog}
           title={intl.formatMessage(messages.title)}>
-        <div className="pt-dialog-body">
-          <div className="pt-form-group">
-            <label className="pt-label" htmlFor="name">
+        <div className="bp3-dialog-body">
+          <div className="bp3-form-group">
+            <label className="bp3-label" htmlFor="name">
               <FormattedMessage id="settings.name"
                                 defaultMessage="Name" />
             </label>
-            <div className="pt-form-content">
+            <div className="bp3-form-content">
               <input id="name"
-                     className={c('pt-input pt-fill pt-large', {'pt-intent-danger': !this.validName()})}
+                     className={c('bp3-input bp3-fill bp3-large', {'bp3-intent-danger': !this.validName()})}
                      type="text" dir="auto"
                      value={role.name}
                      onChange={this.onChangeInput} />
             </div>
           </div>
-          <div className={c("pt-form-group", {'pt-intent-danger': !this.validPassword()})}>
-            <label className="pt-label" htmlFor="password">
+          <div className={c("bp3-form-group", {'bp3-intent-danger': !this.validPassword()})}>
+            <label className="bp3-label" htmlFor="password">
               <FormattedMessage id="settings.password"
                                 defaultMessage="Password" />
             </label>
-            <div className="pt-form-content">
+            <div className="bp3-form-content">
               <input id="password"
-                     className={c('pt-input pt-fill', {'pt-intent-danger': !this.validPassword()})}
+                     className={c('bp3-input bp3-fill', {'bp3-intent-danger': !this.validPassword()})}
                      type="password" dir="auto"
                      value={role.password || ''}
                      onChange={this.onChangeInput} />
-              <div className="pt-form-helper-text">
+              <div className="bp3-form-helper-text">
                 <FormattedMessage id="settings.password.rules"
                                   defaultMessage="Use at least six characters" />
               </div>
             </div>
           </div>
-          <div className={c("pt-form-group", {'pt-intent-danger': !this.validPasswordConfirm()})}>
-            <label className="pt-label" htmlFor="passwordConfirm">
+          <div className={c("bp3-form-group", {'bp3-intent-danger': !this.validPasswordConfirm()})}>
+            <label className="bp3-label" htmlFor="passwordConfirm">
               <FormattedMessage id="settings.password"
                                 defaultMessage="Password" />
               {' '}
-              <span className="pt-text-muted">
+              <span className="bp3-text-muted">
                 <FormattedMessage id="settings.password_confirm"
                                   defaultMessage="(confirm)" />
               </span>
             </label>
-            <div className="pt-form-content">
+            <div className="bp3-form-content">
               <input id="passwordConfirm"
-                     className={c('pt-input pt-fill', {'pt-intent-danger': !this.validPasswordConfirm()})}
+                     className={c('bp3-input bp3-fill', {'bp3-intent-danger': !this.validPasswordConfirm()})}
                      type="password" dir="auto"
                      value={role.passwordConfirm || ''}
                      onChange={this.onChangeInput} />
               { !this.validPasswordConfirm() && (
-                <div className="pt-form-helper-text">
+                <div className="bp3-form-helper-text">
                   <FormattedMessage id="settings.password.missmatch"
                                     defaultMessage="Passwords do not match" />
                 </div>
               )}
             </div>
           </div>
-          <div className="pt-form-group">
-            <label className="pt-label" htmlFor="email">
+          <div className="bp3-form-group">
+            <label className="bp3-label" htmlFor="email">
               <FormattedMessage id="settings.email"
                                 defaultMessage="E-mail Address" />
             </label>
-            <div className="pt-form-content">
-              <input id="email" className="pt-input pt-fill"
+            <div className="bp3-form-content">
+              <input id="email" className="bp3-input bp3-fill"
                      type="text" dir="auto"
                      value={role.email}
                      readOnly />
-              <div className="pt-form-helper-text">
+              <div className="bp3-form-helper-text">
                 <FormattedMessage id="settings.email.no_change"
                                   defaultMessage="Your e-mail address cannot be changed" />
               </div>
             </div>
           </div>
-          <div className="pt-form-group">
-            <label className="pt-label" htmlFor="api_key">
+          <div className="bp3-form-group">
+            <label className="bp3-label" htmlFor="api_key">
               <FormattedMessage id="settings.api_key"
                                 defaultMessage="API Secret Access Key" />
             </label>
-            <div className="pt-form-content">
-              <div className="pt-input-group pt-fill">
-                <span className="pt-icon pt-icon-key"/>
-                <input className="pt-input" id="api_key"
+            <div className="bp3-form-content">
+              <div className="bp3-input-group bp3-fill">
+                <span className="bp3-icon bp3-icon-key"/>
+                <input className="bp3-input" id="api_key"
                        readOnly={true}
                        type="text" dir="auto"
                        value={role.api_key}/>
               </div>
-              <div className="pt-form-helper-text">
+              <div className="bp3-form-helper-text">
                 <FormattedMessage id="profileinfo.api_desc"
                                   defaultMessage="Use the API key to read and write data via remote applications." />
               </div>
             </div>
           </div>
         </div>
-        <div className="pt-dialog-footer">
-            <div className="pt-dialog-footer-actions">
+        <div className="bp3-dialog-footer">
+            <div className="bp3-dialog-footer-actions">
                 <Button
                     intent={Intent.PRIMARY}
                     onClick={this.onSave}

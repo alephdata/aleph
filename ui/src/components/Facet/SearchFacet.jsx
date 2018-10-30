@@ -92,20 +92,20 @@ class SearchFacet extends Component {
         <div className={c('opener clickable', { active: !isUpdating && isFiltered })} onClick={this.onToggleOpen} style={{position: 'relative'}}>
           <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
           <span className="FacetName">
-            <span className={`FacetIcon pt-icon pt-icon-${icon}`}/>
+            <span className={`FacetIcon bp3-icon bp3-icon-${icon}`}/>
             {label} 
           </span>
             
           {isFiltered && (
             <React.Fragment>
-              <span className="FilterCount pt-text-muted">
+              <span className="FilterCount bp3-text-muted">
                 <FormattedMessage id="search.facets.filtersSelected"
                   defaultMessage="{count} selected"
                   values={{ count: intl.formatNumber(count) }}
                   />
               </span>
               <Button onClick={this.onClear}
-                className="ClearButton pt-minimal pt-small"
+                className="ClearButton bp3-minimal bp3-small"
                 title={intl.formatMessage(messages.clear_filter)} icon="cross"/>
             </React.Fragment>
           )}
@@ -113,11 +113,11 @@ class SearchFacet extends Component {
           {isOpen && !isFiltered && (
             <React.Fragment>
               {facet.total === 0 && (
-                <span className="pt-tag pt-small pt-round pt-minimal">0</span>
+                <span className="bp3-tag bp3-small bp3-round bp3-minimal">0</span>
               )}
               
               {facet.total > 0 && (
-                <span className="pt-tag pt-small pt-round pt-intent-primary">
+                <span className="bp3-tag bp3-small bp3-round bp3-intent-primary">
                   <FormattedNumber value={facet.total} />
                 </span>
               )}
@@ -139,7 +139,7 @@ class SearchFacet extends Component {
             </CheckboxList>
           )}
           {(isExpanding && isOpen) && (
-            <Spinner className="pt-small spinner" />
+            <Spinner className="bp3-small spinner" />
           )}
         </Collapse>
       </div>

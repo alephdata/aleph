@@ -11,7 +11,7 @@ class Count extends PureComponent {
       return null;
     }
     return (
-      <span className="pt-tag pt-round pt-intent-primary">
+      <span className="bp3-tag bp3-round bp3-intent-primary">
         {numeral(count).format('0a')}
       </span>
     );

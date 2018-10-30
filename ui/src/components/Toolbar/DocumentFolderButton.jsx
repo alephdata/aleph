@@ -27,8 +27,8 @@ class DocumentFolderButton extends React.Component {
 
     return (
       <React.Fragment>
-        <a onClick={this.toggleFolder} className="pt-button">
-          <span className="pt-icon-standard pt-icon-folder-new"/>
+        <a onClick={this.toggleFolder} className="bp3-button">
+          <span className="bp3-icon-standard bp3-icon-folder-new"/>
           <FormattedMessage id="document.folder.button" defaultMessage="New folder"/>
         </a>
         <DocumentFolderDialog collection={collection}
