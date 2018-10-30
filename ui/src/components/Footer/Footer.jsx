@@ -22,7 +22,7 @@ class Footer extends React.Component {
           <span className="bp3-text-muted"> • </span>
           <span>
             <a href="https://github.com/alephdata/aleph/wiki/User-manual">
-              <Icon className="footer-icon" icon="book"/>
+              <Icon icon="help" iconSize={14} />
             </a>
             {' '}
             <a href="https://github.com/alephdata/aleph/wiki/User-manual">
@@ -33,7 +33,7 @@ class Footer extends React.Component {
           <span className="bp3-text-muted"> • </span>
           <span>
             <a href="https://github.com/alephdata/aleph">
-              <Icon className="footer-icon" icon="git-repo"/>
+              <Icon icon="git-repo" iconSize={14} />
             </a>
             {' '}
             <a href="https://github.com/alephdata/aleph">
