@@ -3,13 +3,14 @@
 .al-icon {
   display: inline-block;;
   vertical-align: middle;
-  height: $aleph-grid-size * 2.7;
-  padding-right: 0.3em;
+  line-height: 1;
+  width: 1.28571429em;
   & > div:first-child {
     display: inline-block;
   }
   &--svg {
-    width: 1.28571429em;
+    height: 1em;
+    width:initial;
     fill: currentColor;
     stroke: currentColor;
     text-align: center;

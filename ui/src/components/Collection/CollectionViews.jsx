@@ -6,7 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from "query-string";
 
-import { Count, TextLoading, Schema } from 'src/components/common';
+import { Count, TextLoading, Schema, Icon } from 'src/components/common';
 import CollectionInfoMode from "src/components/Collection/CollectionInfoMode";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
@@ -72,7 +72,7 @@ class CollectionViews extends React.Component {
           <Tab id="info"
                title={
                   <React.Fragment>
-                    <i className="fa fa-fw fa-info-circle" />
+                    <Icon name="info"/>
                     <FormattedMessage id="entity.info.info" defaultMessage="Info"/>
                   </React.Fragment>
                 }
@@ -85,7 +85,7 @@ class CollectionViews extends React.Component {
                disabled={numOfDocs === 0}
                title={
                   <React.Fragment>
-                    <i className="fa fa-fw fa-folder-open" />
+                    <Icon name="folder" />
                     <FormattedMessage id="entity.info.source" defaultMessage="Documents"/>
                     <Count count={numOfDocs} />
                   </React.Fragment>
@@ -111,7 +111,7 @@ class CollectionViews extends React.Component {
              disabled={xrefIndex.total < 1}
              title={
                 <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
-                  <i className="fa fa-fw fa-folder-open" />
+                  <Icon name="relationship"/>
                   <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference"/>
                   <Count count={xrefIndex.total} />
                 </TextLoading>

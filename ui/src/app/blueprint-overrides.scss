@@ -1,20 +1,16 @@
-/*
-* Copyright 2017 Palantir Technologies, Inc. All rights reserved.
-*/
+
 /* Taming Blueprint icons and tags/badges when displayed inside tabs */
 .bp3-tabs .bp3-tab .bp3-tag {
-  padding: 0px 10px;
+  // padding: 0px 10px;
   margin-left: 5px;
+  line-height: 1em;
 }
 
-.bp3-tabs .bp3-large .bp3-tab {
-  /* If no icon min-width then the default tabs border is rendered badly */
-  /* Tags (badges) in tabs have way too much padding by default and look huge */
-}
 .bp3-tabs .bp3-large .bp3-tab .bp3-icon-standard {
   min-width: 20px;
   margin-right: 10px;
 }
+
 .bp3-tabs .bp3-large .bp3-tab .bp3-tag {
   padding: 0 10px;
   margin-left: 10px;
