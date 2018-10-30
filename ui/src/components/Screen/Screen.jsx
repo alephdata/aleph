@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import c from 'classnames';
+import { HotkeysTarget, Hotkeys, Hotkey } from '@blueprintjs/core';
 
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import PreviewManager from 'src/components/Preview/PreviewManager';
@@ -30,6 +31,13 @@ class Screen extends React.Component {
 
   toggleAuthentication(event) {
     event.preventDefault()
+  }
+
+  focusSearchBox(){
+    const searchBox = document.querySelector('#search-box');
+    if(searchBox){
+      searchBox.focus();
+    }
   }
 
   render() {
@@ -67,6 +75,16 @@ class Screen extends React.Component {
       </div>
     )
   }
+  renderHotkeys(){
+    const { hotKeys = [] } = this.props;
+    return <Hotkeys>
+      <Hotkey combo="/" label="Search" global onKeyUp={this.focusSearchBox}/>
+      {hotKeys.map(hotKey => <Hotkey
+        key={hotKey.combo + hotKey.group}
+        {...hotKey}
+      />)}
+    </Hotkeys>
+  }
 }
 
 const mapStateToProps = (state) => {
@@ -75,7 +93,7 @@ const mapStateToProps = (state) => {
     session: selectSession(state)
   };
 };
-
+Screen = HotkeysTarget(Screen);
 Screen = connect(mapStateToProps)(Screen);
 Screen = withRouter(Screen);
 export default Screen;

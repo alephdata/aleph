@@ -68,33 +68,33 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
-  constructor() {
-    super();
-    this.onClick = this.onClick.bind(this);
+   static openPreview({ history, location, entity}){
+    const parsedHash = queryString.parse(location.hash);
+    const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
+
+    if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
+      parsedHash['preview:id'] = undefined;
+      parsedHash['preview:type'] = undefined;
+      parsedHash['preview:mode'] = undefined;
+    } else {
+      parsedHash['preview:id'] = entity.id;
+      parsedHash['preview:type'] = previewType;
+      parsedHash['preview:mode'] = undefined;
+    }
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
   }
 
-  onClick(event) {
-    const { entity, history, location, preview } = this.props;
-    if (preview === true) {
+  onClick = (event) => {
+    const { preview } = this.props;
+    if (preview) {
       event.preventDefault();
-      const parsedHash = queryString.parse(location.hash);
-      const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
-      if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
-        parsedHash['preview:id'] = undefined;
-        parsedHash['preview:type'] = undefined;
-        parsedHash['preview:mode'] = undefined;
-      } else {
-        parsedHash['preview:id'] = entity.id;
-        parsedHash['preview:type'] = previewType;
-        parsedHash['preview:mode'] = undefined;
-      }
-      history.replace({
-        pathname: location.pathname,
-        search: location.search,
-        hash: queryString.stringify(parsedHash),
-      });
+      Entity.constructor.openPreview(this.props)
     }
-  }
+  };
 
   render() {
     const { entity, className } = this.props;

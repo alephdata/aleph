@@ -82,6 +82,7 @@ class HomeScreen extends Component {
                   <InputGroup
                     type="text"
                     leftIcon="search"
+                    id="search-box"
                     className="bp3-large"
                     autoFocus={true}
                     onChange={this.onChange} value={this.state.value}
