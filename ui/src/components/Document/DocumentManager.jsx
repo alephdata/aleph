@@ -64,11 +64,11 @@ class DocumentManager extends Component {
       <div className="DocumentManager">
         { editable && (
           <Toolbar>
-            <div className="pt-button-group">
+            <div className="bp3-button-group">
               <DocumentUploadButton collection={collection} parent={document} />
               <DocumentFolderButton collection={collection} parent={document} />
               <button type="button"
-                      className="pt-button pt-icon-delete"
+                      className="bp3-button bp3-icon-delete"
                       disabled={!selection.length}
                       onClick={this.toggleDeleteSelection}>
                 <FormattedMessage id="document.viewer.delete" defaultMessage="Delete selected" />
@@ -77,7 +77,7 @@ class DocumentManager extends Component {
           </Toolbar>
         )}
         { hasPending && (
-          <Callout className="pt-icon-info-sign pt-intent-warning">
+          <Callout className="bp3-icon-info-sign bp3-intent-warning">
             <FormattedMessage id="refresh.callout_message"
                               defaultMessage="Documents are being processed. Please wait..." />
           </Callout>

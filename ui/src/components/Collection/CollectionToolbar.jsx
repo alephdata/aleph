@@ -44,9 +44,9 @@ class CollectionToolbar extends Component {
 
     return (
       <Toolbar className="toolbar-preview">
-        <div className="pt-button-group">
-          <Link to={`/search?filter:collection_id=${collection.id}`} className="pt-button button-link">
-            <span className={`pt-icon-search`}/>
+        <div className="bp3-button-group">
+          <Link to={`/search?filter:collection_id=${collection.id}`} className="bp3-button button-link">
+            <span className={`bp3-icon-search`}/>
             <FormattedMessage id="collection.info.search_button" defaultMessage="Search"/>
           </Link>
           {collection.writeable &&

@@ -31,7 +31,7 @@ class SignInCallout extends React.Component {
     return (
       <React.Fragment>
         <AuthenticationDialog auth={metadata.auth} isOpen={isOpen} toggleDialog={this.onSignIn}/>
-        <Callout onClick={this.onSignIn} className="SignInCallout clickable pt-icon-info-sign pt-intent-warning">
+        <Callout onClick={this.onSignIn} className="SignInCallout clickable bp3-icon-info-sign bp3-intent-warning">
           <FormattedMessage
             id="search.callout_message"
             defaultMessage="Some sources are hidden from anonymous users. Please sign in to see all results you’re authorised to access!"

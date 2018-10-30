@@ -77,27 +77,27 @@ class Navbar extends React.Component {
 
     return (
       <div id="Navbar" className="Navbar">
-        <nav className="pt-navbar">
+        <nav className="bp3-navbar">
           <div className='navbar-header-search'>
-            <div className={"pt-navbar-group"}>
-              <div className="pt-navbar-heading">
+            <div className={"bp3-navbar-group"}>
+              <div className="bp3-navbar-heading">
                 <Link to="/">
                   <img src={metadata.app.logo} alt={metadata.app.title}/>
                 </Link>
               </div>
-              <div className="pt-navbar-heading heading-title">
+              <div className="bp3-navbar-heading heading-title">
                 <Link to="/">{metadata.app.title}</Link>
               </div>
             </div>
 
               <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'hide'}>
-                <button type="button" className="back-button visible-sm-block pt-button pt-large pt-minimal pt-icon-arrow-left" onClick={this.onToggleSearch}/>
+                <button type="button" className="back-button visible-sm-block bp3-button bp3-large bp3-minimal bp3-icon-arrow-left" onClick={this.onToggleSearch}/>
                 {!isHomepage && ( <form onSubmit={this.onSubmit} className='navbar-search-form'>
                     <ControlGroup fill={true}>
                       <InputGroup
                         type="text"
                         leftIcon="search"
-                        className='pt-large'
+                        className='bp3-large'
                         onChange={this.onChange} value={searchValue}
                         placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
                         rightElement={<SearchAlert queryText={searchValue}/>}
@@ -118,20 +118,20 @@ class Navbar extends React.Component {
                 <div className="bar3"/>
               </a>
             </div>
-            <div className={`navbar-options pt-navbar-group ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
+            <div className={`navbar-options bp3-navbar-group ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
               <div className='menu-items'>
                 <Link to='/sources'>
-                  <Button icon='database' className='pt-minimal'>
+                  <Button icon='database' className='bp3-minimal'>
                     <FormattedMessage id="nav.sources" defaultMessage="Sources"/>
                   </Button>
                 </Link>
                 {session.loggedIn &&
                 <Link to='/cases'>
-                  <Button icon='briefcase' className='pt-minimal'>
+                  <Button icon='briefcase' className='bp3-minimal'>
                     <FormattedMessage id="nav.cases" defaultMessage="Cases"/>
                   </Button>
                 </Link>}
-                <div className="pt-navbar-divider"/>
+                <div className="bp3-navbar-divider"/>
                 <AuthButtons session={session} auth={metadata.auth}/>
                 <LanguageMenu/>
               </div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Icon } from "@blueprintjs/core";
+import { Icon, H4 } from "@blueprintjs/core";
 import Truncate from 'react-truncate';
 
 import { Date, Role, Category, Country, Collection } from 'src/components/common';
@@ -28,12 +28,12 @@ class CollectionListItem extends Component {
     }
     return (
       <li className="CollectionListItem" key={collection.id}>
-        <h4>
-          <span className="pt-tag pt-small pt-round pt-intent-primary">
+        <H4>
+          <span className="bp3-tag bp3-small bp3-round bp3-intent-primary">
             <FormattedNumber value={collection.count} />
           </span>
           <Collection.Link preview={preview} collection={collection} icon />
-        </h4>
+        </H4>
         {collection.summary &&
           <p className="summary">
             <Truncate lines={2} title={collection.summary}>

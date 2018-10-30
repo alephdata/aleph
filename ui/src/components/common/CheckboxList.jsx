@@ -17,7 +17,7 @@ const CheckboxList = ({ items, selectedItems, onItemClick, children }) => (
         onClick={() => onItemClick(item.id)}
         key={item.id}>
         
-        <span className={c('pt-icon-standard', 'Tick')} />
+        <span className={c('bp3-icon-standard', 'Tick')} />
         <span className="label" title={item.label}>{item.label}</span>
         {item.count !== undefined && (
           <span className="count">

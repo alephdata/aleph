@@ -85,7 +85,7 @@ class CollectionXrefMatchesScreen extends Component {
                                   defaultMessage="Compare entities between collections"/>
               </th>
               <th colSpan="3" width="45%">
-                <div className="pt-select pt-fill">
+                <div className="bp3-select bp3-fill">
                   <select id="other" onChange={this.onOtherChange} value={other.id}>
                     { index.results.map((res) => (
                       <option key={res.collection.id} value={res.collection.id}>
@@ -199,7 +199,7 @@ class CollectionXrefMatchesScreen extends Component {
         <Breadcrumbs>
           <Breadcrumbs.Collection collection={collection} />
           <li>
-            <Link className="pt-breadcrumb" to={indexPath}>
+            <Link className="bp3-breadcrumb" to={indexPath}>
               <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference"/>
             </Link>
           </li>

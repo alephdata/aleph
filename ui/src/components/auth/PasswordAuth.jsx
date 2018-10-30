@@ -31,33 +31,33 @@ const PasswordAuth = ({onSubmit, buttonClassName, showEmail, showName, showPassw
 
   return (
     <form onSubmit={submit} className={className}>
-      {showEmail && <label className="pt-label">
+      {showEmail && <label className="bp3-label">
           <FormattedMessage id="password_auth.email" defaultMessage="Email address"/>
-          <input className="pt-input pt-fill" type="email" name="email" required
+          <input className="bp3-input bp3-fill" type="email" name="email" required
                  ref={(el) => emailElement = el}/>
         </label>}
       {showName &&
-        <label className="pt-label">
+        <label className="bp3-label">
           <FormattedMessage id="password_auth.name" defaultMessage="Your Name"/>
-          <input className="pt-input pt-fill" type="text" name="name" required
+          <input className="bp3-input bp3-fill" type="text" name="name" required
                  ref={(el) => nameElement = el}/>
         </label>}
       {showPassword &&
-        <label className="pt-label">
+        <label className="bp3-label">
           <FormattedMessage id="password_auth.password" defaultMessage="Password"/>
-          <input id="pass" className="pt-input pt-fill" type="password" name="password" required
+          <input id="pass" className="bp3-input bp3-fill" type="password" name="password" required
                  ref={(el) => passwordElement = el}/>
         </label>}
       {showConfirmPass &&
-      <label className="pt-label">
+      <label className="bp3-label">
         <FormattedMessage id="password_auth.confirm" defaultMessage="Confirm password"/>
-        <input id="confirm-pass" className="pt-input pt-fill" type="password" name="confirm" required
+        <input id="confirm-pass" className="bp3-input bp3-fill" type="password" name="confirm" required
                ref={(el) => confirmElement = el}/>
       </label>}
 
       <div className="flex-row">
         <span>
-          <Button className={`pt-large ${buttonClassName}`} intent={Intent.PRIMARY} type="submit">
+          <Button className={`bp3-large ${buttonClassName}`} intent={Intent.PRIMARY} type="submit">
             {buttonText}
           </Button>
         </span>

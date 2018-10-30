@@ -41,7 +41,7 @@ class Router extends Component {
     if (!isLoaded) {
       return (
         <div className="RouterLoading">
-          <div className="spinner"><Spinner className="pt-large"/></div>
+          <div className="spinner"><Spinner className="bp3-large"/></div>
         </div>
       )
     }
