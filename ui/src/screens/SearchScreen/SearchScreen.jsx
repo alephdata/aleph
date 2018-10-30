@@ -11,6 +11,7 @@ import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import { DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
+import Entity from 'src/components/common/Entity';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
@@ -196,28 +197,11 @@ class SearchScreen extends React.Component {
     }
   };
 
-  showPreview = (entity)  => {
-    const { history, location } = this.props;
-
-    const parsedHash = queryString.parse(location.hash);
-    const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
-
-    if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
-      parsedHash['preview:id'] = undefined;
-      parsedHash['preview:type'] = undefined;
-      parsedHash['preview:mode'] = undefined;
-    } else {
-      parsedHash['preview:id'] = entity.id;
-      parsedHash['preview:type'] = previewType;
-      parsedHash['preview:mode'] = undefined;
-    }
-    history.replace({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
-    });
-
-  };
+  showPreview = (entity)  => Entity.Link.openPreview({
+    location: this.props.location,
+    history:this.props.history,
+    entity,
+  });
 
 
   toggleFacets() {
@@ -281,7 +265,6 @@ class SearchScreen extends React.Component {
             <SignInCallout/>
             <QueryTags query={query} updateQuery={this.updateQuery}/>
             <EntityTable query={query}
-                         showPreview={this.showPreview}
                          updateQuery={this.updateQuery}
                          result={result} />
             {result.total === 0 && (
