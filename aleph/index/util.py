@@ -79,7 +79,7 @@ def bool_query():
 def none_query(query=None):
     if query is None:
         query = bool_query()
-    query['bool']['must'] = {'match_none': {}}
+    query['bool']['must'].append({'match_none': {}})
     return query
 
 
