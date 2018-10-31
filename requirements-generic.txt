@@ -29,7 +29,7 @@ pylru==1.0.9
 pyjwt==1.6.1
 rdflib==4.2.2
 idna==2.7.0
-requests[security]==2.19.1
+requests[security]==2.20.0
 redis==2.10.6
 grpcio==1.14.0
 google-cloud-vision

@@ -46,7 +46,7 @@ class MatchQuery(EntitiesQuery):
 
     def get_query(self):
         query = super(MatchQuery, self).get_query()
-        return match_query(self.entity, query=query, broad=True)
+        return match_query(self.entity, query=query)
 
 
 class CollectionsQuery(AuthzQuery):
