@@ -68,6 +68,7 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
+
    static openPreview({ history, location, entity}){
     const parsedHash = queryString.parse(location.hash);
     const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
@@ -92,7 +93,7 @@ class EntityLink extends Component {
     const { preview } = this.props;
     if (preview) {
       event.preventDefault();
-      Entity.constructor.openPreview(this.props)
+      EntityLink.openPreview(this.props)
     }
   };
 

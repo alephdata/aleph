@@ -24,7 +24,7 @@ class Value extends Component {
     if (model.type === 'country') {
       return <Country.Name code={value} />;
     }
-    if (model.type === 'url' || model.type === 'uri') {
+    if (model.type === 'url') {
       return <URL value={value} />;
     }
     if (model.type === 'entity') {
