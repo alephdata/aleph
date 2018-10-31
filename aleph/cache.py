@@ -31,3 +31,6 @@ class Cache(object):
         value = self.get(key)
         if value is not None:
             return json.loads(value)
+
+    def lock(self, key, timeout=60):
+        return self.kv.lock(key, timeout=timeout)

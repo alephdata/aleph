@@ -7,12 +7,12 @@ from followthemoney import model
 from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, BulkIndexError
 
-from aleph.core import es
+from aleph.core import es, cache
 from aleph.model import Document
 from aleph.index.core import entity_index, entities_index, entities_index_list
 from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
-from aleph.index.util import refresh_index, MAX_PAGE
+from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -125,7 +125,6 @@ def _index_updates(collection, entities):
     if not len(entities):
         return []
 
-    refresh_index(entity_index())
     for result in iter_entities_by_ids(list(entities.keys())):
         if int(result.get('collection_id')) != collection.id:
             raise RuntimeError("Key collision between collections.")
@@ -150,12 +149,16 @@ def _index_updates(collection, entities):
 
 def index_bulk(collection, entities):
     """Index a set of entities."""
-    actions = _index_updates(collection, entities)
-    chunk_size = len(actions) + 1
+    lock = cache.lock(cache.key('index_bulk'))
+    lock.acquire(blocking=True)
     try:
+        actions = _index_updates(collection, entities)
+        chunk_size = len(actions) + 1
         bulk_op(actions, chunk_size=chunk_size, refresh=False)
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
+    finally:
+        lock.release()
 
 
 def finalize_index(proxy, context, texts):
