@@ -2,7 +2,7 @@
 # John Ospina <jmospina@gmail.com>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-10-17T07:11:31.504Z\n"
+"POT-Creation-Date: 2018-10-31T08:34:01.847Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -53,13 +53,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "API Secret Access Key"
 msgstr "Clave de Acceso Secreto a la API"
-
-#. [collection.info.access]
-#. defaultMessage is:
-#. Access
-#: i18n/messages.json
-msgid "Access"
-msgstr "Acceso"
 
 #. [collection.edit.title]
 #. defaultMessage is:
@@ -169,6 +162,9 @@ msgstr "CCO"
 msgid "CC"
 msgstr "CC"
 
+#. [collection.xref.cancel]
+#. defaultMessage is:
+#. Cancel
 #. [collection.edit.cancel_button]
 #. defaultMessage is:
 #. Cancel
@@ -182,6 +178,7 @@ msgstr "CC"
 #. defaultMessage is:
 #. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel"
 msgstr ""
 
@@ -358,13 +355,16 @@ msgstr ""
 #. [collections.xref.title]
 #. defaultMessage is:
 #. Cross-reference
+#. [collection.info.xref]
+#. defaultMessage is:
+#. Cross-reference
 #. [entity.info.xref]
 #. defaultMessage is:
 #. Cross-reference
 #. [matches.screen.xref]
 #. defaultMessage is:
 #. Cross-reference
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cross-reference"
 msgstr "Referencia cruzada"
 
@@ -373,6 +373,23 @@ msgstr "Referencia cruzada"
 #. Cross-referenced collection
 #: i18n/messages.json
 msgid "Cross-referenced collection"
+msgstr ""
+
+#. [collection.xref.alert.text]
+#. defaultMessage is:
+#. Cross-referencing against all other data may take a lot of time. Only start
+#. this process once and allow several hours for it to complete.
+#: i18n/messages.json
+msgid ""
+"Cross-referencing against all other data may take a lot of time. Only start "
+"this process once and allow several hours for it to complete."
+msgstr ""
+
+#. [collection.xref.processing]
+#. defaultMessage is:
+#. Cross-referencing started.
+#: i18n/messages.json
+msgid "Cross-referencing started."
 msgstr ""
 
 #. [document.date]
@@ -462,6 +479,13 @@ msgstr "¿No posees una cuenta? ¡Regístrate!"
 #: i18n/messages.json
 msgid "Download"
 msgstr "Descargar"
+
+#. [xref.download]
+#. defaultMessage is:
+#. Download matches as CSV
+#: i18n/messages.json
+msgid "Download matches as CSV"
+msgstr ""
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -1091,6 +1115,13 @@ msgstr "Error del servidor"
 msgid "Settings"
 msgstr "Configuraciones"
 
+#. [collection.info.share]
+#. defaultMessage is:
+#. Share
+#: i18n/messages.json
+msgid "Share"
+msgstr ""
+
 #. [case.share.with]
 #. defaultMessage is:
 #. Share with
@@ -1210,6 +1241,13 @@ msgstr "Configuración de fuente"
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sources"
 msgstr "Fuentes"
+
+#. [collection.xref.confirm]
+#. defaultMessage is:
+#. Start cross-referencing
+#: i18n/messages.json
+msgid "Start cross-referencing"
+msgstr ""
 
 #. [alerts.alert.delete]
 #. defaultMessage is:

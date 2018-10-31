@@ -2,7 +2,7 @@
 # jen occrp <jen@occrp.org>, 2018
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-10-17T07:11:31.504Z\n"
+"POT-Creation-Date: 2018-10-31T08:34:01.847Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -53,13 +53,6 @@ msgstr "Название"
 #: i18n/messages.json
 msgid "API Secret Access Key"
 msgstr "API-ключ"
-
-#. [collection.info.access]
-#. defaultMessage is:
-#. Access
-#: i18n/messages.json
-msgid "Access"
-msgstr "Права доступа"
 
 #. [collection.edit.title]
 #. defaultMessage is:
@@ -169,6 +162,9 @@ msgstr "Скрытая копия"
 msgid "CC"
 msgstr "Копия"
 
+#. [collection.xref.cancel]
+#. defaultMessage is:
+#. Cancel
 #. [collection.edit.cancel_button]
 #. defaultMessage is:
 #. Cancel
@@ -182,6 +178,7 @@ msgstr "Копия"
 #. defaultMessage is:
 #. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -219,7 +216,7 @@ msgstr "Кейс-файл"
 #. Cases
 #: i18n/messages.json
 msgid "Cases"
-msgstr ""
+msgstr "Кейсы"
 
 #. [cases.browser.breadcrumb]
 #. defaultMessage is:
@@ -361,13 +358,16 @@ msgstr "Создать новый кейс-файл"
 #. [collections.xref.title]
 #. defaultMessage is:
 #. Cross-reference
+#. [collection.info.xref]
+#. defaultMessage is:
+#. Cross-reference
 #. [entity.info.xref]
 #. defaultMessage is:
 #. Cross-reference
 #. [matches.screen.xref]
 #. defaultMessage is:
 #. Cross-reference
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cross-reference"
 msgstr "Перекрёстное сравнение"
 
@@ -376,6 +376,23 @@ msgstr "Перекрёстное сравнение"
 #. Cross-referenced collection
 #: i18n/messages.json
 msgid "Cross-referenced collection"
+msgstr "Сравниваемые коллекции"
+
+#. [collection.xref.alert.text]
+#. defaultMessage is:
+#. Cross-referencing against all other data may take a lot of time. Only start
+#. this process once and allow several hours for it to complete.
+#: i18n/messages.json
+msgid ""
+"Cross-referencing against all other data may take a lot of time. Only start "
+"this process once and allow several hours for it to complete."
+msgstr ""
+
+#. [collection.xref.processing]
+#. defaultMessage is:
+#. Cross-referencing started.
+#: i18n/messages.json
+msgid "Cross-referencing started."
 msgstr ""
 
 #. [document.date]
@@ -426,7 +443,7 @@ msgstr "Краткое описание:"
 #. Details
 #: i18n/messages.json
 msgid "Details"
-msgstr ""
+msgstr "Подробнее"
 
 #. [entity.info.source]
 #. defaultMessage is:
@@ -436,7 +453,7 @@ msgstr ""
 #. Documents
 #: i18n/messages.json i18n/messages.json
 msgid "Documents"
-msgstr ""
+msgstr "Документы"
 
 #. [refresh.callout_message]
 #. defaultMessage is:
@@ -465,6 +482,13 @@ msgstr "У вас нет аккакунта? Зарегистрируйтесь!
 #: i18n/messages.json
 msgid "Download"
 msgstr "Скачать"
+
+#. [xref.download]
+#. defaultMessage is:
+#. Download matches as CSV
+#: i18n/messages.json
+msgid "Download matches as CSV"
+msgstr ""
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -541,7 +565,7 @@ msgstr "Типы файлов"
 #. Filter the sources…
 #: i18n/messages.json
 msgid "Filter the sources…"
-msgstr ""
+msgstr "Отфильтровать источники"
 
 #. [search.screen.filters]
 #. defaultMessage is:
@@ -617,7 +641,7 @@ msgstr "Импортировано"
 #. Info
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Info"
-msgstr ""
+msgstr "Информация"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
@@ -726,7 +750,7 @@ msgstr "Отметить как просмотренное"
 #. Matches
 #: i18n/messages.json
 msgid "Matches"
-msgstr ""
+msgstr "Совпадения"
 
 #. [document.modified_at]
 #. defaultMessage is:
@@ -780,7 +804,7 @@ msgstr "Новая папка"
 #. No connections.
 #: i18n/messages.json
 msgid "No connections."
-msgstr ""
+msgstr "Связи отсутствуют."
 
 #. [role.no.results]
 #. defaultMessage is:
@@ -948,7 +972,7 @@ msgstr "Удалить"
 #. Results
 #: i18n/messages.json
 msgid "Results"
-msgstr ""
+msgstr "Результаты"
 
 #. [document.retrieved_at]
 #. defaultMessage is:
@@ -1044,7 +1068,7 @@ msgstr "Искать {label}"
 #. Search in {label}
 #: i18n/messages.json i18n/messages.json
 msgid "Search in {label}"
-msgstr ""
+msgstr "Поиск в {label}"
 
 #. [case.users]
 #. defaultMessage is:
@@ -1096,6 +1120,13 @@ msgstr "Ошибка сервера"
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Settings"
 msgstr "Настройки"
+
+#. [collection.info.share]
+#. defaultMessage is:
+#. Share
+#: i18n/messages.json
+msgid "Share"
+msgstr ""
 
 #. [case.share.with]
 #. defaultMessage is:
@@ -1197,7 +1228,7 @@ msgstr "Источник"
 #. Source URL
 #: i18n/messages.json
 msgid "Source URL"
-msgstr ""
+msgstr "Ссылка на источник"
 
 #. [collection.edit.title.source]
 #. defaultMessage is:
@@ -1218,6 +1249,13 @@ msgstr "Настройки"
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sources"
 msgstr "Источники данных"
+
+#. [collection.xref.confirm]
+#. defaultMessage is:
+#. Start cross-referencing
+#: i18n/messages.json
+msgid "Start cross-referencing"
+msgstr ""
 
 #. [alerts.alert.delete]
 #. defaultMessage is:
@@ -1255,7 +1293,7 @@ msgstr "Краткое описание"
 #. Tag
 #: i18n/messages.json
 msgid "Tag"
-msgstr ""
+msgstr "Тег"
 
 #. [entity.info.tags]
 #. defaultMessage is:
@@ -1272,7 +1310,7 @@ msgstr "Теги"
 #. Text
 #: i18n/messages.json
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 #. [auth.bad_request]
 #. defaultMessage is:
@@ -1612,4 +1650,4 @@ msgstr "{count} выбрано"
 #. {total} sources of documents and data
 #: i18n/messages.json
 msgid "{total} sources of documents and data"
-msgstr ""
+msgstr "{total} источников документов и данных"
