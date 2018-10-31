@@ -1,11 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: google-ingress
+  name: ingress-nginx
   namespace: aleph
   annotations:
-    kubernetes.io/ingress.class: "gce"
-    kubernetes.io/ingress.global-static-ip-name: "external-ip-gclb-staging"
+    kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
     certmanager.k8s.io/acme-challenge-type: "http01"
     certmanager.k8s.io/cluster-issuer: "letsencrypt-prod"
@@ -13,6 +12,13 @@ metadata:
 spec:
   tls:
     - secretName: tls-staging.data.occrp.org
-  backend:
-    serviceName: search-web
-    servicePort: 80
+      hosts:
+        - staging.data.occrp.org
+  rules:
+    - host: staging.data.occrp.org
+      http:
+        paths:
+          - backend:
+              serviceName: search-web
+              servicePort: 80
+---
