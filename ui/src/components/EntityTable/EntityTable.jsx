@@ -6,7 +6,7 @@ import c from 'classnames';
 import EntityTableRow from './EntityTableRow';
 import { SortableTH, ErrorSection } from 'src/components/common';
 
-import './EntityTable.css';
+import './EntityTable.scss';
 
 const messages = defineMessages({
   column_name: {

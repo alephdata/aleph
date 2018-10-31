@@ -16,7 +16,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
 
-import './SearchScreen.css';
+import './SearchScreen.scss';
 
 const messages = defineMessages({
   facet_schema: {

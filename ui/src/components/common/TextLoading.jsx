@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import './TextLoading.css';
+import './TextLoading.scss';
 
 
 export default class TextLoading extends React.Component {

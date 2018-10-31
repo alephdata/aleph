@@ -9,7 +9,7 @@ import { Collection } from 'src/components/common';
 import getPath from 'src/util/getPath';
 import { selectCollectionXrefIndex } from "src/selectors";
 
-import './CollectionXrefIndexMode.css';
+import './CollectionXrefIndexMode.scss';
 
 
 class CollectionXrefIndexMode extends React.Component {

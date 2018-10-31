@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
 
-import './HtmlViewer.css';
+import './HtmlViewer.scss';
 
 class HtmlViewer extends Component {
   render() {

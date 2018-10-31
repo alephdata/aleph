@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Category, Country, Role, Date, Collection } from 'src/components/common';
 
-import './CollectionOverview.css';
+import './CollectionOverview.scss';
 
 class CollectionOverview extends Component {
   render() {

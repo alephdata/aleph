@@ -6,7 +6,7 @@ import Truncate from 'react-truncate';
 import { Date, Role, Category, Country, Collection } from 'src/components/common';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 
-import './CollectionListItem.css';
+import './CollectionListItem.scss';
 
 class CollectionListItem extends Component {
   constructor(props) {

@@ -9,7 +9,7 @@ import { selectMetadata } from 'src/selectors';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
 
-import './Property.css';
+import './Property.scss';
 
 class Value extends Component {
   shouldComponentUpdate(nextProps) {

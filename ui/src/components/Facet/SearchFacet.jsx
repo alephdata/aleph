@@ -7,7 +7,7 @@ import c from 'classnames';
 
 import { CheckboxList } from 'src/components/common';
 
-import './SearchFacet.css';
+import './SearchFacet.scss';
 
 const messages = defineMessages({
   clear_filter: {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import c from 'classnames';
 
-import './SinglePane.css';
+import './SinglePane.scss';
 
 
 class SinglePane extends Component {

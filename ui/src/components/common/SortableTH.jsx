@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import c from 'classnames';
 
-import './SortableTH.css';
+import './SortableTH.scss';
 
 class SortableTH extends Component {
   render() {

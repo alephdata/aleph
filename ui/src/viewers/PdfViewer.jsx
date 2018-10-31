@@ -14,7 +14,7 @@ import { SectionLoading } from 'src/components/common';
 import { queryDocumentRecords, fetchDocumentPage } from 'src/actions';
 import { selectDocumentRecordsResult, selectDocumentPage } from 'src/selectors';
 
-import './PdfViewer.css';
+import './PdfViewer.scss';
 
 class PdfViewer extends Component {
   constructor(props) {

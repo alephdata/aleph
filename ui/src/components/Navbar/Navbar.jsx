@@ -11,7 +11,7 @@ import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 import { selectSession } from 'src/selectors';
 
-import './Navbar.css';
+import './Navbar.scss';
 
 const messages = defineMessages({
   search_placeholder: {

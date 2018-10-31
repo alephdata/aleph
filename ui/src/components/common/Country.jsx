@@ -7,7 +7,7 @@ import { MultiSelect as BlueprintMultiSelect } from "@blueprintjs/select";
 import wordList from 'src/util/wordList';
 import { selectMetadata } from 'src/selectors';
 
-import './Country.css';
+import './Country.scss';
 
 const messages = defineMessages({
   select: {

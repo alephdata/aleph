@@ -9,7 +9,7 @@ import { showWarningToast } from "src/app/toast";
 import { Role } from "src/components/common";
 import getCollectionLink from 'src/util/getCollectionLink';
 
-import "./CreateCaseDialog.css";
+import "./CreateCaseDialog.scss";
 
 const messages = defineMessages({
   untitled_label: {

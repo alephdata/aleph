@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import './Preview.css';
+import './Preview.scss';
 
 
 class Preview extends React.Component {

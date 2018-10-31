@@ -4,7 +4,7 @@ import { Tag as TagWidget } from '@blueprintjs/core';
 
 import { Schema, Tag, Country, Language, Category, Collection, Entity } from 'src/components/common';
 
-import './QueryFilterTag.css';
+import './QueryFilterTag.scss';
 
 
 class QueryFilterTag extends PureComponent {

@@ -6,7 +6,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import { selectSession, selectMetadata } from 'src/selectors';
 
-import './ErrorSection.css';
+import './ErrorSection.scss';
 
 
 class ErrorSection extends PureComponent {

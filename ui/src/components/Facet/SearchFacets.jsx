@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import SearchFacet from './SearchFacet';
 
-import './SearchFacets.css';
+import './SearchFacets.scss';
 
 class SearchFacets extends Component {
   render() {

@@ -3,7 +3,7 @@ import { Spinner } from '@blueprintjs/core';
 
 import Screen from 'src/components/Screen/Screen';
 
-import './LoadingScreen.css';
+import './LoadingScreen.scss';
 
 const LoadingScreen = () => (
   <Screen>

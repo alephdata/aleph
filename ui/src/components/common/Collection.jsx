@@ -13,7 +13,7 @@ import { selectCollection } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
 // import { getColor } from 'src/util/colorScheme';
 
-import './Collection.css';
+import './Collection.scss';
 
 class CollectionLabel extends Component {
   shouldComponentUpdate(nextProps) {
