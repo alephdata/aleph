@@ -8,22 +8,22 @@ import { selectSession, selectMetadata } from 'src/selectors';
 import './Router.scss';
 
 
-const  NotFoundScreen = lazy(()=> import('src/screens/NotFoundScreen/NotFoundScreen'));
-const OAuthScreen = lazy(()=> import("src/screens/OAuthScreen/OAuthScreen"));
-const LogoutScreen  = lazy(()=> import('src/screens/LogoutScreen/LogoutScreen'));
-const ActivateScreen = lazy(() => import('src/screens/ActivateScreen/ActivateScreen'));
-const HomeScreen = lazy(()=> import('src/screens/HomeScreen/HomeScreen'));
-const SearchScreen = lazy(()=> import('src/screens/SearchScreen/SearchScreen'));
-const NotificationsScreen  = lazy(()=> import('src/screens/NotificationsScreen/NotificationsScreen'));
-const SourcesIndexScreen  = lazy(()=> import('src/screens/SourcesIndexScreen/SourcesIndexScreen'));
-const CasesIndexScreen  = lazy(()=> import('src/screens/CasesIndexScreen/CasesIndexScreen'));
+const  NotFoundScreen = lazy(()=> import(/* webpackChunkName: 'NotFoundScreen' */ 'src/screens/NotFoundScreen/NotFoundScreen'));
+const OAuthScreen = lazy(()=> import(/* webpackChunkName: 'OAuthScreen' */ "src/screens/OAuthScreen/OAuthScreen"));
+const LogoutScreen  = lazy(()=> import(/* webpackChunkName: 'LogoutScreen' */ 'src/screens/LogoutScreen/LogoutScreen'));
+const ActivateScreen = lazy(() => import(/* webpackChunkName: 'ActivateScreen' */ 'src/screens/ActivateScreen/ActivateScreen'));
+const HomeScreen = lazy(()=> import(/* webpackChunkName: 'HomeScreen' */ 'src/screens/HomeScreen/HomeScreen'));
+const SearchScreen = lazy(()=> import(/* webpackChunkName: 'SearchScreen' */ 'src/screens/SearchScreen/SearchScreen'));
+const NotificationsScreen  = lazy(()=> import(/* webpackChunkName: 'NotificationsScreen' */ 'src/screens/NotificationsScreen/NotificationsScreen'));
+const SourcesIndexScreen  = lazy(()=> import(/* webpackChunkName: 'SourcesIndexScreen' */ 'src/screens/SourcesIndexScreen/SourcesIndexScreen'));
+const CasesIndexScreen  = lazy(()=> import(/* webpackChunkName: 'CasesIndexScreen' */ 'src/screens/CasesIndexScreen/CasesIndexScreen'));
 // import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
-const CollectionScreen  = lazy(()=> import('src/screens/CollectionScreen/CollectionScreen'));
-const CollectionDocumentsScreen  = lazy(()=> import('src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen'));
-const CollectionXrefMatchesScreen  = lazy(()=> import('src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
-const EntityScreen  = lazy(()=> import('src/screens/EntityScreen/EntityScreen'));
-const DocumentScreen  = lazy(()=> import('src/screens/DocumentScreen/DocumentScreen'));
-const  DocumentRedirectScreen  = lazy(()=> import('src/screens/DocumentRedirectScreen/DocumentRedirectScreen'));
+const CollectionScreen  = lazy(()=> import(/* webpackChunkName: 'CollectionScreen' */ 'src/screens/CollectionScreen/CollectionScreen'));
+const CollectionDocumentsScreen  = lazy(()=> import(/* webpackChunkName: 'CollectionDocumentsScreen' */ 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen'));
+const CollectionXrefMatchesScreen  = lazy(()=> import(/* webpackChunkName: 'CollectionXrefMatchesScreen' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
+const EntityScreen  = lazy(()=> import(/* webpackChunkName: 'EntityScreen' */ 'src/screens/EntityScreen/EntityScreen'));
+const DocumentScreen  = lazy(()=> import(/* webpackChunkName: 'DocumentScreen' */ 'src/screens/DocumentScreen/DocumentScreen'));
+const  DocumentRedirectScreen  = lazy(()=> import(/* webpackChunkName: 'DocumentRedirectScreen' */ 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen'));
 
 
 
