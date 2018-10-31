@@ -51,6 +51,17 @@ class RoleCreateSchema(Schema):
 
 class RoleReferenceSchema(Schema):
     id = String(required=True)
+    name = String(dump_only=True)
+    label = String(dump_only=True)
+
+    @post_dump
+    def hypermedia(self, data):
+        pk = str(data.get('id'))
+        data['writeable'] = str(request.authz.id) == pk
+        data['links'] = {
+            'self': url_for('roles_api.view', id=pk)
+        }
+        return data
 
 
 class LoginSchema(Schema):
