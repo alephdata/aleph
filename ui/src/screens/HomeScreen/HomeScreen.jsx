@@ -82,13 +82,14 @@ class HomeScreen extends Component {
                   <InputGroup
                     type="text"
                     leftIcon="search"
-                    className="pt-large"
+                    id="search-box"
+                    className="bp3-large"
                     autoFocus={true}
                     onChange={this.onChange} value={this.state.value}
                     placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
                   />
                   <Button
-                    className="pt-large pt-fixed"
+                    className="bp3-large bp3-fixed"
                     intent={Intent.PRIMARY}
                     onClick={this.onSubmit}
                     text={

@@ -131,7 +131,7 @@ class CollectionAccessDialog extends Component {
               isOpen={this.props.isOpen}
               onClose={this.props.toggleDialog}
               title={intl.formatMessage(messages.title)}>
-        <div className="pt-dialog-body">
+        <div className="bp3-dialog-body">
           <div className="CollectionPermissions">
             <table className="settings-table">
               <thead>
@@ -185,8 +185,8 @@ class CollectionAccessDialog extends Component {
             </table>
           </div>
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp3-dialog-footer">
+          <div className="bp3-dialog-footer-actions">
             <Button
               onClick={this.props.toggleDialog}
               text={intl.formatMessage(messages.cancel_button)} />

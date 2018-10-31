@@ -1,6 +1,5 @@
 import os
 import shutil
-import fakeredis
 from tempfile import mkdtemp
 from flask_testing import TestCase as FlaskTestCase
 from flask_fixtures import loaders, load_fixtures
@@ -10,7 +9,6 @@ from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
-from aleph.index.collections import update_collection_roles
 from aleph.index.core import all_indexes
 from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
@@ -55,8 +53,7 @@ class TestCase(FlaskTestCase):
         settings.RECORDS_INDEX = '%s_records' % APP_NAME
         settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
         settings.COLLECTIONS_INDEX = '%s_collection' % APP_NAME
-        settings.CACHE_CONFIG = {'CACHE_TYPE': 'simple'}
-        settings._redis = fakeredis.FakeRedis()
+        settings.REDIS_URL = None
         app = create_app({})
         mount_app_blueprints(app)
         return app
@@ -88,7 +85,6 @@ class TestCase(FlaskTestCase):
         Permission.grant(collection, role, read, write)
         db.session.commit()
         update_collection(collection)
-        update_collection_roles(collection, wait=True)
         self.flush_index()
 
     def grant_publish(self, collection):

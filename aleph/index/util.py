@@ -59,7 +59,10 @@ def authz_query(authz):
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
         return {'match_all': {}}
-    return field_filter_query('roles', authz.roles)
+    collections = authz.collections(authz.READ)
+    if not len(collections):
+        return {'match_none': {}}
+    return field_filter_query('collection_id', collections)
 
 
 def bool_query():
@@ -76,7 +79,7 @@ def bool_query():
 def none_query(query=None):
     if query is None:
         query = bool_query()
-    query['bool']['must'] = {'match_none': {}}
+    query['bool']['must'].append({'match_none': {}})
     return query
 
 

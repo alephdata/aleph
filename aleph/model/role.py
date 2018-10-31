@@ -4,7 +4,7 @@ from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from aleph.core import db, settings
+from aleph.core import db, settings, cache
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 from aleph.util import anonymize_email
 
@@ -136,13 +136,14 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def load_id(cls, foreign_id):
         """Load a role and return the ID."""
-        if not hasattr(settings, '_role_cache'):
-            settings._role_cache = {}
-        if foreign_id not in settings._role_cache:
-            role_id, = cls.all_ids().filter_by(foreign_id=foreign_id).first()
-            if role_id is not None:
-                settings._role_cache[foreign_id] = role_id
-        return settings._role_cache.get(foreign_id)
+        key = cache.key('role_id', foreign_id)
+        role_id = cache.get(key)
+        if role_id is not None:
+            return int(role_id)
+        role_id, = cls.all_ids().filter_by(foreign_id=foreign_id).first()
+        if role_id is not None:
+            cache.set(foreign_id, role_id)
+            return role_id
 
     @classmethod
     def public_roles(cls):

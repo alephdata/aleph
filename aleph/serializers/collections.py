@@ -61,5 +61,5 @@ class CollectionSchema(BaseSchema):
             'xref_csv': url_for('xref_api.csv_export', id=pk, _authorize=True),
             'ui': collection_url(pk)
         }
-        data['writeable'] = request.authz.can_write(pk)
+        data['writeable'] = request.authz.can(pk, request.authz.WRITE)
         return data

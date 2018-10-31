@@ -1,28 +1,25 @@
-/*
-* Copyright 2017 Palantir Technologies, Inc. All rights reserved.
-*/
+
 /* Taming Blueprint icons and tags/badges when displayed inside tabs */
-.pt-tabs .pt-tab .pt-tag {
+.bp3-tabs .bp3-tab .bp3-tag {
   padding: 0px 10px;
   margin-left: 5px;
+  line-height: 1em;
+  // font-size: 0.6em;
 }
 
-.pt-tabs .pt-large .pt-tab {
-  /* If no icon min-width then the default tabs border is rendered badly */
-  /* Tags (badges) in tabs have way too much padding by default and look huge */
-}
-.pt-tabs .pt-large .pt-tab .pt-icon-standard {
+.bp3-tabs .bp3-large .bp3-tab .bp3-icon-standard {
   min-width: 20px;
   margin-right: 10px;
 }
-.pt-tabs .pt-large .pt-tab .pt-tag {
+
+.bp3-tabs .bp3-large .bp3-tab .bp3-tag {
   padding: 0 10px;
   margin-left: 10px;
 }
 
 /* Buttons and Inputs in control groups have margin values they shouldn't
 * for some reason, even though my inspector says '0em'. */
-.pt-control-group * {
+.bp3-control-group * {
   margin-top: 0;
   margin-left: 0;
 }

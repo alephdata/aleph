@@ -39,21 +39,21 @@
     color: white !important;
   }
 
-  .pt-input.pt-disabled,
-  .pt-button.pt-disabled,
-  .pt-button:disabled {
+  .bp3-input.bp3-disabled,
+  .bp3-button.bp3-disabled,
+  .bp3-button:disabled {
     opacity: 0.5;
   }
 
-  .PagingText.pt-disabled {
+  .PagingText.bp3-disabled {
     opacity: 1;
   }
 
-  .pt-button:hover {
+  .bp3-button:hover {
     background-color: $button-color-hover !important;
   }
 
-  .pt-button.pt-active {
+  .bp3-button.bp3-active {
     background: #fff !important;
     color: $aleph-sidebar-background !important;
     * {
@@ -62,11 +62,11 @@
   }
   
   .search-box {
-    .pt-icon {
+    .bp3-icon {
      color: $aleph-sidebar-background !important;
     }
     
-    .pt-input {
+    .bp3-input {
       background: white !important;
       color: $pt-text-color !important;
     }

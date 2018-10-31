@@ -3,7 +3,7 @@ import Waypoint from 'react-waypoint';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';
-import { Button, Icon } from '@blueprintjs/core';
+import { Button, Icon, H1 } from '@blueprintjs/core';
 
 import Query from "src/app/Query";
 import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
@@ -112,7 +112,7 @@ class CasesIndexScreen extends Component {
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
-        <a className="pt-breadcrumb">
+        <a className="bp3-breadcrumb">
           <FormattedMessage id="cases.browser.breadcrumb"
                             defaultMessage="Cases overview"/>
         </a>
@@ -126,21 +126,21 @@ class CasesIndexScreen extends Component {
             <Icon icon="briefcase" iconSize={100}/>
           </DualPane.SidePane>
           <DualPane.ContentPane className="padded">
-            <h1 className='title-explanation'>
+            <H1 className='title-explanation'>
               <FormattedMessage id="case.question" defaultMessage="Manage your investigations"/>
-            </h1>
+            </H1>
             <p className='description-explanation'>
               <FormattedMessage id="case.description"
                                 defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."/>
             </p>
-            <div className="pt-control-group pt-large">
-              <div className="pt-input-group pt-large">
-                <i className="pt-icon pt-icon-search pt-large"/>
-                <input className="pt-input"
+            <div className="bp3-control-group bp3-large">
+              <div className="bp3-input-group bp3-large">
+                <i className="bp3-icon bp3-icon-search bp3-large"/>
+                <input className="bp3-input"
                        placeholder={intl.formatMessage(messages.filter)}
                        onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
               </div>
-              <Button onClick={this.toggleCreateCase} icon="plus" className="pt-intent-primary pt-large">
+              <Button onClick={this.toggleCreateCase} icon="plus" className="bp3-intent-primary bp3-large">
                 <FormattedMessage id="case.add" defaultMessage="New casefile"/>
               </Button>
             </div>

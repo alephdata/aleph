@@ -96,7 +96,7 @@ class DocumentUploadDialog extends Component {
               title={intl.formatMessage(messages.title)}
               onClose={this.props.toggleDialog}>
         { uploadingFile && (
-          <div className="pt-dialog-body">
+          <div className="bp3-dialog-body">
             <p>
               <FormattedMessage id='document.upload.progress'
                                 defaultMessage="Uploading: {file}..."
@@ -105,7 +105,7 @@ class DocumentUploadDialog extends Component {
             <ProgressBar value={percentCompleted}
                         animate={false}
                         stripes={false}
-                        className='pt-intent-success document-upload-progress-bar'/>
+                        className='bp3-intent-success document-upload-progress-bar'/>
             <p className="text-muted">
               <FormattedMessage id='document.upload.notice'
                                 defaultMessage="Once the upload is complete, it will take a few moments for the document to be processed and become searchable." />
@@ -114,14 +114,14 @@ class DocumentUploadDialog extends Component {
         )}
         { !uploadingFile && (
           <form onSubmit={this.onFormSubmit}>
-            <div className="pt-dialog-body">
-              <div className="pt-form-group">
-                <div className="pt-input-group pt-large pt-fill">
-                  <label className="pt-file-input pt-large pt-fill">
+            <div className="bp3-dialog-body">
+              <div className="bp3-form-group">
+                <div className="bp3-input-group bp3-large bp3-fill">
+                  <label className="bp3-file-input bp3-large bp3-fill">
                     <input type="file" multiple
-                          className="pt-large pt-fill" 
+                          className="bp3-large bp3-fill"
                           onChange={this.onFilesChange} />
-                    <span className="pt-file-upload-input">
+                    <span className="bp3-file-upload-input">
                       { fileNames.length >= 0 && wordList(fileNames, ', ')}
                       { fileNames.length === 0 && intl.formatMessage(messages.choose_file)}
                     </span>
@@ -129,8 +129,8 @@ class DocumentUploadDialog extends Component {
                 </div>
               </div>
             </div>
-            <div className="pt-dialog-footer">
-              <div className="pt-dialog-footer-actions">
+            <div className="bp3-dialog-footer">
+              <div className="bp3-dialog-footer-actions">
                 <Button type="submit"
                         intent={Intent.PRIMARY}
                         text={intl.formatMessage(messages.save)} />

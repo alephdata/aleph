@@ -103,41 +103,41 @@ class CreateCaseDialog extends Component {
               title={intl.formatMessage(messages.title)}
               onClose={this.props.toggleDialog}>
         <form onSubmit={this.onAddCase}>
-          <div className="pt-dialog-body">
-            <div className="pt-form-group">
-              <label className="pt-label">
+          <div className="bp3-dialog-body">
+            <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="case.choose.name" defaultMessage="Choose a title:"/>
               </label>
-              <div className="pt-input-group pt-large pt-fill">
+              <div className="bp3-input-group bp3-large bp3-fill">
                 <input id="label"
                       type="text"
                       autoFocus={true}
-                      className="pt-input"
+                      className="bp3-input"
                       autoComplete="off"
                       placeholder={intl.formatMessage(messages.untitled_label)}
                       onChange={this.onChangeLabel}
                       value={collection.label} />
               </div>
             </div>
-            <div className="pt-form-group">
-              <label className="pt-label">
+            <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="case.choose.summary"
                                   defaultMessage="Describe it briefly:"/>
               </label>
-              <div className="pt-input-group pt-fill">
+              <div className="bp3-input-group bp3-fill">
                 <textarea id="summary"
-                          className="pt-input"
+                          className="bp3-input"
                           placeholder={intl.formatMessage(messages.summary)}
                           onChange={this.onChangeSummary}
                           value={collection.summary} />
               </div>
             </div>
-            <div className="pt-form-group">
-              <label className="pt-label">
+            <div className="bp3-form-group">
+              <label className="bp3-label">
                 <FormattedMessage id="case.share.with"
                                   defaultMessage="Share with"/>
               </label>
-              <div className="pt-input-group pt-fill">
+              <div className="bp3-input-group bp3-fill">
                 <Role.Select onSelect={this.onAddRole}
                             exclude={exclude} />
               </div>
@@ -170,8 +170,8 @@ class CreateCaseDialog extends Component {
               </table>
           )}
           </div>
-          <div className="pt-dialog-footer">
-            <div className="pt-dialog-footer-actions">
+          <div className="bp3-dialog-footer">
+            <div className="bp3-dialog-footer-actions">
               <Button type="submit"
                       intent={Intent.PRIMARY}
                       text={intl.formatMessage(messages.save)} />

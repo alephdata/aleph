@@ -6,7 +6,6 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "./variables.scss";
 @import "./tables.scss";
 @import "./blueprint-overrides.scss";
-//@import "~react-md/src/scss/_react-md.scss";
 
 html {
   height: 100%;
@@ -75,7 +74,7 @@ a {
 
 // Used to render failed imports, missing connections.
 .PartialError {
-  .pt-non-ideal-state {
+  .bp3-non-ideal-state {
     min-height: 30vh;
   }
 }

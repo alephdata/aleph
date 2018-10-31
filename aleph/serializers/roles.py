@@ -49,7 +49,7 @@ class RoleCreateSchema(Schema):
     code = String(required=True)
 
 
-class RoleReferenceSchema(RoleSchema):
+class RoleReferenceSchema(Schema):
     id = String(required=True)
 
 

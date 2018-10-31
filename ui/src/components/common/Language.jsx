@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent, Component } from 'react';
 import {FormattedMessage} from 'react-intl';
 import { connect } from 'react-redux';
 
@@ -6,11 +6,7 @@ import wordList from 'src/util/wordList';
 import { selectMetadata } from 'src/selectors';
 
 
-class Name extends Component {
-  shouldComponentUpdate(nextProps) {
-    return this.props.code !== nextProps.code;
-  }
-
+class Name extends PureComponent {
   render() {
     const { code, languages } = this.props,
           codeLabel = code ? code.toUpperCase() : <FormattedMessage id="language.unknown" defaultMessage="Unknown"/>,

@@ -70,13 +70,13 @@ class DocumentFolderDialog extends Component {
               title={intl.formatMessage(messages.title)}
               onClose={this.props.toggleDialog}> 
         <form onSubmit={this.onFormSubmit}>
-          <div className="pt-dialog-body">
-            <div className="pt-form-group">
-              <div className="pt-input-group pt-large pt-fill">
+          <div className="bp3-dialog-body">
+            <div className="bp3-form-group">
+              <div className="bp3-input-group bp3-large bp3-fill">
                 <input id="label"
                       type="text"
                       autoFocus={true}
-                      className="pt-input"
+                      className="bp3-input"
                       autoComplete="off"
                       placeholder={intl.formatMessage(messages.untitled)}
                       onChange={this.onChangeTitle}
@@ -84,8 +84,8 @@ class DocumentFolderDialog extends Component {
               </div>
             </div>
           </div>
-          <div className="pt-dialog-footer">
-            <div className="pt-dialog-footer-actions">
+          <div className="bp3-dialog-footer">
+            <div className="bp3-dialog-footer-actions">
               <Button type="submit"
                       intent={Intent.PRIMARY}
                       text={intl.formatMessage(messages.save)} />

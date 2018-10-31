@@ -60,9 +60,9 @@ class DocumentSearch extends React.Component {
 
       return (
         <form onSubmit={this.onSubmitSearch} className="DocumentSearch search-box">
-          <div className="pt-input-group">
-            <span className="pt-icon pt-icon-search"/>
-            <input className="pt-input" type="search" dir="auto"
+          <div className="bp3-input-group">
+            <span className="bp3-icon bp3-icon-search"/>
+            <input className="bp3-input" type="search" dir="auto"
                     disabled={disabled}
                     placeholder={placeholder || intl.formatMessage(messages.search_paceholder)}
                     onChange={this.onSearchQueryChange}

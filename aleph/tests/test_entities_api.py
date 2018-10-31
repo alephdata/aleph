@@ -16,13 +16,14 @@ class EntitiesApiTestCase(TestCase):
         super(EntitiesApiTestCase, self).setUp()
         self.rolex = self.create_user(foreign_id='user_3')
         self.col = self.create_collection()
-        self.ent = Entity.create({
+        self.data = {
             'schema': 'LegalEntity',
             'properties': {
                 'name': 'Winnie the Pooh',
                 'country': 'pa',
             }
-        }, self.col)
+        }
+        self.ent = Entity.create(self.data, self.col)
         db.session.commit()
         index_entity(self.ent)
         self.flush_index()

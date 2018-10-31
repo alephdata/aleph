@@ -40,23 +40,15 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
     def delete(self, deleted_at=None):
         self.delete_matches()
         deleted_at = deleted_at or datetime.utcnow()
-        for alert in self.alerts:
-            alert.delete(deleted_at=deleted_at)
         super(Entity, self).delete(deleted_at=deleted_at)
 
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at=None):
-        from aleph.model import Alert
         deleted_at = deleted_at or datetime.utcnow()
 
         entities = db.session.query(cls.id)
         entities = entities.filter(cls.collection_id == collection_id)
         entities = entities.subquery()
-
-        pq = db.session.query(Alert)
-        pq = pq.filter(Alert.entity_id.in_(entities))
-        pq.update({Alert.deleted_at: deleted_at},
-                  synchronize_session=False)
 
         pq = db.session.query(Match)
         pq = pq.filter(Match.entity_id.in_(entities))
@@ -86,11 +78,6 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         self.apply_proxy(proxy)
         self.created_at = min((self.created_at, other.created_at))
         self.updated_at = datetime.utcnow()
-
-        # update alerts
-        from aleph.model.alert import Alert
-        q = db.session.query(Alert).filter(Alert.entity_id == other.id)
-        q.update({Alert.entity_id: self.id})
 
         # delete source entities
         other.delete()

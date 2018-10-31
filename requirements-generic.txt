@@ -6,7 +6,6 @@ Flask-Testing==0.7.1
 Flask-Fixtures==0.3.7
 Flask-Mail==0.9.1
 Flask-Migrate==2.2.1
-Flask-Caching==1.4.0
 Flask-Cors==3.0.6
 Flask_Babel==0.11.2
 SQLAlchemy==1.2.10
@@ -35,7 +34,7 @@ redis==2.10.6
 grpcio==1.14.0
 google-cloud-vision
 google-cloud-storage
-networkx==2.1
+networkx==2.2
 msgpack==0.5.6
 
 # Error reporting

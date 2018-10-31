@@ -17,7 +17,6 @@ from aleph.logic.collections import create_collection
 from aleph.logic.collections import update_collection, update_collections
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.collections import delete_entities
-from aleph.logic.collections import update_collection_access
 from aleph.logic.documents import ingest_document
 from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
@@ -180,15 +179,14 @@ def publish(foreign_id):
     role = Role.by_foreign_id(Role.SYSTEM_GUEST)
     editor = Role.load_cli_user()
     update_permission(role, collection, True, False, editor_id=editor.id)
-    update_collection_access(collection.id)
     update_collection(collection)
 
 
 @manager.command
 def graph(entity_id):
     """Generate a graph around the given entity."""
-    from aleph.logic.graph import export_node
-    graph = export_node(entity_id, steam=10000)
+    from aleph.logic.graph import export_graph
+    graph = export_graph(entity_id, steam=10000)
     with open('%s.gexf' % entity_id, 'w', encoding='utf-8') as fh:
         fh.write(graph)
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 import queryString from 'query-string';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
@@ -67,38 +68,34 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
-  constructor() {
-    super();
-    this.onClick = this.onClick.bind(this);
-  }
 
-  onClick(event) {
-    const { entity, history, location, preview } = this.props;
-    event.preventDefault();
+   static openPreview({ history, location, entity}){
+    const parsedHash = queryString.parse(location.hash);
+    const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
 
-    if (preview === true) {
-      const parsedHash = queryString.parse(location.hash);
-      const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
-      if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
-        parsedHash['preview:id'] = undefined;
-        parsedHash['preview:type'] = undefined;
-        parsedHash['preview:mode'] = undefined;
-      } else {
-        parsedHash['preview:id'] = entity.id;
-        parsedHash['preview:type'] = previewType;
-        parsedHash['preview:mode'] = undefined;
-      }
-      history.replace({
-        pathname: location.pathname,
-        search: location.search,
-        hash: queryString.stringify(parsedHash),
-      });
-    } else { 
-      history.push({
-        pathname: getPath(entity.links.ui)
-      });
+    if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
+      parsedHash['preview:id'] = undefined;
+      parsedHash['preview:type'] = undefined;
+      parsedHash['preview:mode'] = undefined;
+    } else {
+      parsedHash['preview:id'] = entity.id;
+      parsedHash['preview:type'] = previewType;
+      parsedHash['preview:mode'] = undefined;
     }
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
   }
+
+  onClick = (event) => {
+    const { preview } = this.props;
+    if (preview) {
+      event.preventDefault();
+      EntityLink.openPreview(this.props)
+    }
+  };
 
   render() {
     const { entity, className } = this.props;
@@ -106,10 +103,11 @@ class EntityLink extends Component {
       return <Entity.Label {...this.props} />;
     }
 
+    const link = getPath(entity.links.ui);
     return (
-      <a onClick={this.onClick} className={c('EntityLink', className)}>
+      <Link to={link} onClick={this.onClick} className={c('EntityLink', className)}>
         <Entity.Label {...this.props} />
-      </a>
+      </Link>
     );
   }
 }

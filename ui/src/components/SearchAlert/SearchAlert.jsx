@@ -81,11 +81,11 @@ class SearchAlert extends React.Component {
       return null;
     }
     const alertExists = this.alertExists();
-    const className = c('pt-button',
-                        'pt-minimal',
-                        'pt-icon-notifications',
-                        {'pt-intent-success': alertExists},
-                        {'pt-disabled': this.state.updating});
+    const className = c('bp3-button',
+                        'bp3-minimal',
+                        'bp3-icon-notifications',
+                        {'bp3-intent-success': alertExists},
+                        {'bp3-disabled': this.state.updating});
     const tooltip = alertExists ? intl.formatMessage(messages.alert_remove)
                                 : intl.formatMessage(messages.alert_add);
     return (

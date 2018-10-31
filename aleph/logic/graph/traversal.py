@@ -1,43 +1,40 @@
-import time
 import logging
 from pprint import pprint  # noqa
-from followthemoney.types import registry
 
 from aleph.logic.graph.expand import expand_node
 
 log = logging.getLogger(__name__)
 
 
-class Node(object):
+class Step(object):
 
-    def __init__(self, graph, type_, value, seed=None):
+    def __init__(self, graph, node, seed=None):
         self.graph = graph
-        self.ref = type_.ref(value)
-        self.type = type_
-        self.value = value
+        self.node = node
+        self.id = node.id
         self.seed = seed
         self.weight = seed or 0
-        self.decay = type_.specificity(value)
+        self.decay = node.type.specificity(node.value)
         self.origins = set()
 
     def compute_weight(self):
         weight = 0 if self.seed is None else self.seed
-        if self.type.prefix is None:
+        if self.node.type.group is None:
             return weight
         if self.decay == 0:
             return weight
-        for node in self.origins:
-            weight += node.weight
+        for step in self.origins:
+            weight += step.weight
         return weight * self.decay * 0.9
 
     def __hash__(self):
-        return hash(self.ref)
+        return hash(self.id)
 
     def __eq__(self, other):
-        return other.ref == self.ref
+        return other.id == self.id
 
     def __repr__(self):
-        return '<Node(%s, %r)>' % (self.type.name, self.value)
+        return '<Step(%r)>' % (self.id)
 
 
 class Path(object):
@@ -60,61 +57,52 @@ class Path(object):
 class Graph(object):
 
     def __init__(self):
-        self.nodes = {}
+        self.steps = {}
         self.paths = set()
         self.seen = set()
         self.links = []
 
-    def add_node(self, type_, value, seed=None):
-        node = self.nodes.get((type_, value))
-        if node is None:
-            node = Node(self, type_, value, seed=seed)
-            self.nodes[(type_, value)] = node
-        return node
+    def add_node(self, node, seed=None):
+        step = self.steps.get(node.id)
+        if step is None:
+            step = Step(self, node, seed=seed)
+            self.steps[step.id] = step
+        return step
 
-    def seed(self, type_, value):
-        self.add_node(type_, value, seed=1)
+    def seed(self, node):
+        self.add_node(node, seed=1)
 
-    def next_node(self):
-        nodes = []
-        for node in self.nodes.values():
-            if node.type.prefix is None:
+    def next_step(self):
+        steps = []
+        for step in self.steps.values():
+            if step.node.type.group is None:
                 continue
-            if node.weight == 0:
+            if step.weight == 0:
                 continue
-            if node in self.seen:
+            if step in self.seen:
                 continue
-            nodes.append(node)
-        if not len(nodes):
+            steps.append(step)
+        if not len(steps):
             return
-        return max(nodes, key=lambda n: n.weight)
+        return max(steps, key=lambda n: n.weight)
 
-    def expand_node(self, node):
-        self.seen.add(node)
-        log.debug("Expand: %r (%s)", node, node.weight)
-        for link in expand_node(node.type, node.value):
+    def expand_step(self, step):
+        self.seen.add(step)
+        log.debug("Expand: %r (%s)", step, step.weight)
+        for link in expand_node(step.node):
+            if link.inverted:
+                link = link.invert()
             self.links.append(link)
-            type_ = registry.entity if link.inverted else link.prop.type
-            target = self.add_node(type_, link.value)
-            target.origins.add(node)
-            self.paths.add(Path(self, node, target))
+            source = self.add_node(link.subject)
+            target = self.add_node(link.value_node)
+            target.origins.add(source)
+            self.paths.add(Path(self, source, target))
             if target.weight == 0:
                 target.weight = target.compute_weight()
 
     def build(self, steps):
         for i in range(steps):
-            node = self.next_node()
-            if node is None:
+            step = self.next_step()
+            if step is None:
                 break
-            self.expand_node(node)
-
-
-def traverse_entity(entity, steam=2):
-    start = time.time()
-    graph = Graph()
-    graph.seed(registry.entity, entity)
-    graph.build(steps=steam)
-    end = time.time()
-    duration = end - start
-    log.info("Traversal time: %s" % duration)
-    return graph.links
+            self.expand_step(step)

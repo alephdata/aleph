@@ -8,6 +8,7 @@ import wordList from 'src/util/wordList';
 import { suggestRoles } from "src/actions";
 
 import './Role.css';
+import Icon from "./Icon";
 
 const messages = defineMessages({
   label: {
@@ -39,7 +40,7 @@ class Label extends Component {
       <React.Fragment>
         { icon && (
           <React.Fragment>
-            <i className='fa fa-fw fa-user-circle-o' />
+            <Icon name="person"/>
             {' '}
           </React.Fragment>
         )}
@@ -127,7 +128,7 @@ class Select extends Component {
               resetOnClose={true}
               resetOnSelect={true}>
       <Button text={label}
-              className="pt-fill"
+              className="bp3-fill"
               alignText={Alignment.LEFT}
               rightIcon="search" />
     </BlueprintSelect>;
