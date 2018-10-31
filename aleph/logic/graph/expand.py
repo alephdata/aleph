@@ -2,12 +2,12 @@ import logging
 from banal import is_mapping
 from pprint import pprint  # noqa
 from followthemoney import model
-from followthemoney.link import Link
+from followthemoney.graph import Link
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es
-from aleph.model import Document, Entity
+from aleph.model import Entity
 from aleph.index.entities import get_entity
 from aleph.index.core import entities_index
 from aleph.logic.graph.cache import load_links, store_links
@@ -17,15 +17,12 @@ from aleph.logic.xref import xref_item
 log = logging.getLogger(__name__)
 
 
-def expand_group(type_, value):
-    if type_.prefix is None or value is None:
+def expand_group(node):
+    if node.type.group is None or node.value is None:
         return
-    value = str(value)
-    # value = type_.clean(value)
-    # if value is None:
-    #     return
+    value = str(node.value)
     query = {
-        'query': {'term': {type_.group: value}},
+        'query': {'term': {node.type.group: value}},
         '_source': {'includes': ['schema', 'properties']}
     }
     for res in scan(es, index=entities_index(), query=query):
@@ -34,17 +31,16 @@ def expand_group(type_, value):
         properties = source.get('properties')
         schema = model.get(source.get('schema'))
         for prop in schema.properties.values():
-            if prop.type != type_:
+            if prop.type != node.type:
                 continue
             values = properties.get(prop.name)
-            values = type_.normalize_set(values)
+            values = node.type.normalize_set(values)
             if value not in values:
                 continue
-            for item in values:
-                if prop.reverse:
-                    yield Link(item, type_, prop.reverse, entity_id)
-                else:
-                    yield Link(item, type_, prop, entity_id, inverted=True)
+            if prop.reverse:
+                yield Link(node, prop.reverse, entity_id)
+            else:
+                yield Link(node, prop, entity_id, inverted=True)
 
 
 def expand_entity(entity):
@@ -54,8 +50,6 @@ def expand_entity(entity):
         entity = get_entity(entity)
     if entity is None:
         return
-    if 'properties' not in entity:
-        entity.update(Document.doc_data_to_schema(entity))
 
     proxy = model.get_proxy(entity)
     yield from proxy.links
@@ -65,17 +59,17 @@ def expand_entity(entity):
     if proxy.schema.is_a(thing):
         sameAs = thing.get("sameAs")
         for (score, _, other) in xref_item(proxy):
-            yield Link(proxy.id, registry.entity, sameAs, other.id,
+            yield Link(proxy.node, sameAs, other.id,
                        weight=score, inferred=True)
 
 
-def expand_node(type_, value):
+def expand_node(node):
     try:
-        yield from load_links(type_, value)
+        yield from load_links(node)
     except CacheMiss:
-        log.debug("Cache miss [%s]: %s", type_, value)
-        links = list(expand_group(type_, value))
-        if type_ == registry.entity:
-            links.extend(expand_entity(value))
-        store_links(type_, value, links)
+        log.debug("Cache miss: %r", node)
+        links = list(expand_group(node))
+        if node.type == registry.entity:
+            links.extend(expand_entity(node.value))
+        store_links(node, links)
         yield from links

@@ -1,35 +1,30 @@
 import io
+import time
 import logging
 import networkx as nx
 from pprint import pprint  # noqa
-from followthemoney import model
+from followthemoney.graph import Node
+from followthemoney.types import registry
 from networkx.readwrite.gexf import write_gexf
 
 # from aleph.index.entities import iter_entities
-from aleph.logic.graph.traversal import traverse_entity
+from aleph.logic.graph.traversal import Graph
 
 log = logging.getLogger(__name__)
 
 
-def links_to_graph(links):
+def export_graph(entity_id, steam=2):
+    start = time.time()
+    query = Graph()
+    query.seed(Node(registry.entity, entity_id))
+    query.build(steps=steam)
+    end = time.time()
+    duration = end - start
+    log.info("Traversal time: %s" % duration)
+
     graph = nx.DiGraph()
-    for link in links:
-        graph.add_node(link.ref, label=link.subject)
-        if link.prop == model.get('Thing').get('name'):
-            graph.nodes[link.ref]['label'] = link.value
-        graph.add_node(link.value_ref)
-        edge = {
-            'weight': link.weight,
-            'label': link.prop.label,
-            'prop': link.prop.qname
-        }
-        graph.add_edge(link.ref, link.value_ref, **edge)
-    return graph
-
-
-def export_node(entity_id, steam=2):
-    links = traverse_entity(entity_id, steam=steam)
-    graph = links_to_graph(links)
+    for link in query.links:
+        link.to_digraph(graph)
     buffer = io.BytesIO()
     write_gexf(graph, buffer)
     text = buffer.getvalue()

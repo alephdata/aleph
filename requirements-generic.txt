@@ -34,7 +34,7 @@ redis==2.10.6
 grpcio==1.14.0
 google-cloud-vision
 google-cloud-storage
-networkx==2.1
+networkx==2.2
 msgpack==0.5.6
 
 # Error reporting
