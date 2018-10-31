@@ -1,6 +1,6 @@
 {
   "name": "aleph-ui",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.7.0",
