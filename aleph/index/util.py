@@ -131,7 +131,7 @@ def cleanup_query(body):
     return body
 
 
-def bulk_op(actions, chunk_size=BULK_PAGE, max_retries=10, refresh=True):
+def bulk_op(actions, chunk_size=BULK_PAGE, max_retries=10, refresh=False):
     """Standard parameters for bulk operations."""
     return bulk(es, actions,
                 chunk_size=chunk_size,
