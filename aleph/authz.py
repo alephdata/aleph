@@ -62,7 +62,7 @@ class Authz(object):
             q = q.filter(Permission.write == True)  # noqa
         q = q.distinct()
         collections = [c for (c,) in q.all()]
-        # log.debug("Authz: %s (%s): %s", self, action, collections)
+        log.debug("Authz: %s (%s): %s", self, action, collections)
         cache.kv.sadd(prefix_key, key)
         if len(collections):
             cache.kv.rpush(key, *collections)

@@ -24,6 +24,7 @@ def create_collection(data, role=None):
                 params={'collection': collection})
     db.session.commit()
     index.index_collection(collection)
+    Authz.flush()
     return collection
 
 
@@ -31,9 +32,6 @@ def update_collection(collection):
     """Create or update a collection."""
     index_collection_async.delay(collection.id)
     Authz.flush()
-    # from aleph.logic.xref import xref_collection
-    # if collection.casefile and collection.deleted_at is None:
-    #     xref_collection.apply_async([collection.id], priority=2)
 
 
 @celery.task(priority=7)
