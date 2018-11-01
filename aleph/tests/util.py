@@ -14,7 +14,7 @@ from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import update_entities
-from aleph.core import db, es, create_app
+from aleph.core import db, es, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
@@ -117,7 +117,8 @@ class TestCase(FlaskTestCase):
             db.create_all()
             delete_index()
             upgrade_search()
-
+        
+        kv.flushall()
         self.flush_index()
         es.delete_by_query(index=all_indexes(),
                            body={'query': {'match_all': {}}},
