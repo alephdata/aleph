@@ -53,6 +53,7 @@ class RoleReferenceSchema(Schema):
     id = String(required=True)
     name = String(dump_only=True)
     label = String(dump_only=True)
+    type = String(dump_only=True)
 
     @post_dump
     def hypermedia(self, data):
