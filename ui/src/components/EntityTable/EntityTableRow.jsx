@@ -6,6 +6,24 @@ import { Checkbox } from '@blueprintjs/core';
 import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
 
 class EntityTableRow extends Component {
+  constructor(props) {
+    super(props);
+
+    //this.getHighlight = this.getHighlight.bind(this);
+  }
+
+  static splitHighlight(split, givenHighlights) {
+    const highlightArray = givenHighlights.split(split);
+    let highlights = highlightArray.join('');
+
+    return highlights;
+  }
+
+  static getHighlight(highlight) {
+    let highlightArray = EntityTableRow.splitHighlight('<em>', highlight);
+
+    return EntityTableRow.splitHighlight('</em>', highlightArray);
+  }
 
   render() {
     const { entity, className, location } = this.props;
@@ -14,7 +32,8 @@ class EntityTableRow extends Component {
     const { updateSelection, selection } = this.props;
     const selectedIds = _.map(selection || [], 'id');
     const isSelected = selectedIds.indexOf(entity.id) > -1;
-    
+    const getHighlight = this.constructor.getHighlight;
+
     const parsedHash = queryString.parse(location.hash);
     let rowClassName = (className) ? `${className} nowrap` : 'nowrap';
 
@@ -27,37 +46,48 @@ class EntityTableRow extends Component {
     }
     
     return (
+      <React.Fragment>
       <tr className={rowClassName} key={entity.id}>
-        {updateSelection && <td className="select" key={entity.id +1}>
+        {updateSelection && <td className="select">
           <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
         </td>}
-        <td className="entity" key={entity.id +2}>
+        <td className="entity">
           <Entity.Link preview={showPreview}
                        documentMode={documentMode}
                        entity={entity} icon />
         </td>
         {!hideCollection && 
-          <td className="collection" key={entity.id +3}>
+          <td className="collection">
             <Collection.Link preview={true} collection={entity.collection} icon />
           </td>
         }
-        <td className="schema" key={entity.id +4}>
+        <td className="schema">
           <Schema.Label schema={entity.schema} />
         </td>
         {!documentMode && (
-          <td className="country" key={entity.id +5}>
+          <td className="country">
             <Country.List codes={entity.countries} />
           </td>
         )}
-        <td className="date" key={entity.id +6}>
+        <td className="date">
           <Date.Earliest values={entity.dates} />
         </td>
         {documentMode && (
-          <td className="file-size" key={entity.id +7}>
+          <td className="file-size">
             <FileSize value={entity.file_size}/>
           </td>
         )}
       </tr>
+    {entity.highlight !== undefined && entity.highlight.map(function(sentence, index){
+      return entity.name !== getHighlight(sentence) && <tr key={sentence}>
+        <td key={sentence} colSpan="5" className={index !== (entity.highlight.length - 1) ? 'highlighted-words' : ''}>
+          <React.Fragment>
+            <span dangerouslySetInnerHTML={{__html: sentence}} />...
+          </React.Fragment>
+        </td>
+      </tr>
+    })}
+      </React.Fragment>
     );
   }
 }
