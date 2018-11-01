@@ -13,6 +13,7 @@ from aleph.logic.collections import delete_entities, delete_documents
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
+from aleph.logic.util import collection_url
 from aleph.index.util import refresh_index
 from aleph.index.core import collections_index
 from aleph.serializers import CollectionSchema
@@ -49,8 +50,12 @@ def view(id):
 
 @blueprint.route('/api/2/collections/<int:id>/sitemap.xml', methods=['GET'])
 def sitemap(id):
-    get_db_collection(id, request.authz.READ)
-    return render_xml('sitemap.xml', entries=generate_sitemap(id))
+    collection = get_db_collection(id, request.authz.READ)
+    url = collection_url(collection_id=collection.id)
+    return render_xml('sitemap.xml',
+                      url=url,
+                      updated_at=collection.updated_at,
+                      entries=generate_sitemap(id))
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
