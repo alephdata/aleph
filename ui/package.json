@@ -3,23 +3,60 @@
   "version": "2.2.2",
   "private": true,
   "dependencies": {
+    "@babel/core": "7.1.0",
     "@blueprintjs/core": "^3.7.0",
     "@blueprintjs/select": "^3.2.1",
     "@blueprintjs/table": "^3.2.0",
+    "@svgr/webpack": "2.4.1",
     "axios": "^0.18.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "9.0.0",
+    "babel-jest": "23.6.0",
+    "babel-loader": "8.0.4",
+    "babel-plugin-named-asset-import": "^0.2.2",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-react-app": "^6.0.0",
+    "bfj": "6.1.1",
     "bourbon": "^5.1.0",
+    "case-sensitive-paths-webpack-plugin": "2.1.2",
+    "chalk": "2.4.1",
     "classnames": "^2.2.6",
-    "dotenv": "^6.0.0",
+    "css-loader": "1.0.0",
+    "dotenv": "6.0.0",
+    "dotenv-expand": "4.2.0",
+    "eslint": "5.6.0",
+    "eslint-config-react-app": "^3.0.5",
+    "eslint-loader": "2.1.1",
+    "eslint-plugin-flowtype": "2.50.1",
+    "eslint-plugin-import": "2.14.0",
+    "eslint-plugin-jsx-a11y": "6.1.2",
+    "eslint-plugin-react": "7.11.1",
+    "file-loader": "2.0.0",
     "filesize": "^3.6.1",
+    "fork-ts-checker-webpack-plugin-alt": "0.4.14",
+    "fs-extra": "7.0.0",
     "google-palette": "^1.1.0",
+    "html-webpack-plugin": "4.0.0-alpha.2",
+    "identity-obj-proxy": "3.0.0",
+    "jest": "23.6.0",
+    "jest-pnp-resolver": "1.0.1",
+    "jest-resolve": "23.6.0",
     "jwt-decode": "latest",
     "lodash": "^4.17.10",
+    "mini-css-extract-plugin": "0.4.3",
     "node-sass-package-importer": "^5.2.0",
     "normalizr": "^3.2.4",
     "numeral": "^2.0.6",
+    "optimize-css-assets-webpack-plugin": "5.0.1",
+    "pnp-webpack-plugin": "1.1.0",
+    "postcss-flexbugs-fixes": "4.1.0",
+    "postcss-loader": "3.0.0",
+    "postcss-preset-env": "6.0.6",
+    "postcss-safe-parser": "4.0.1",
     "query-string": "^4.3.4",
     "react": "^16.4.2",
+    "react-app-polyfill": "^0.1.3",
+    "react-dev-utils": "^6.1.0",
     "react-dom": "^16.4.2",
     "react-file-drop": "^0.2.6",
     "react-helmet": "^5.2.0",
@@ -28,7 +65,6 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.0",
     "react-svg": "^6.0.17",
     "react-transition-group": "^2.4.0",
     "react-truncate": "^2.4.0",
@@ -37,15 +73,23 @@
     "redux-act": "^1.7.4",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "resolve": "1.8.1",
+    "sass-loader": "7.1.0",
+    "style-loader": "0.23.0",
+    "terser-webpack-plugin": "1.1.0",
     "truncate": "^2.0.1",
-    "uuid": "^3.3.2"
+    "url-loader": "1.1.1",
+    "uuid": "^3.3.2",
+    "webpack": "4.19.1",
+    "webpack-dev-server": "3.1.9",
+    "webpack-manifest-plugin": "2.0.4",
+    "workbox-webpack-plugin": "3.6.3"
   },
   "devDependencies": {
     "faker": "^4.1.0",
     "json-server": "^0.14.0",
     "react-intl-cra": "^0.3.3",
-    "react-intl-po": "^2.2.2",
-    "react-scripts": "1.1.4"
+    "react-intl-po": "^2.2.2"
   },
   "proxy": "http://api:5000/",
   "browserslist": [
@@ -59,10 +103,58 @@
     "messages": "react-intl-cra 'src/**/*.{js,jsx}' -o i18n/messages.json",
     "json2pot": "react-intl-po json2pot 'i18n/messages.json' -o 'i18n/messages.pot'",
     "po2json": "react-intl-po po2json 'i18n/translations/*.po' -m 'i18n/messages.json' -o src/content/translations.json",
-    "start": "react-scripts start",
-    "build": "npm run build-css && react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
+    "start": "node scripts/start.js",
+    "build": "npm run build-css && node scripts/build.js",
+    "test": "node scripts/test.js --env=jsdom",
     "start-mocks": "node mocks/server.js"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "resolver": "jest-pnp-resolver",
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jsdom",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }
