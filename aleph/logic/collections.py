@@ -42,11 +42,11 @@ def index_collection_async(collection_id):
         index.index_collection(collection)
 
 
-def update_collections():
-    cq = db.session.query(Collection)
+def index_collections():
+    cq = db.session.query(Collection.id)
     cq = cq.order_by(Collection.id.desc())
-    for collection in cq.all():
-        update_collection(collection)
+    for collection_id, in cq.all():
+        index_collection_async.delay(collection_id)
 
 
 def generate_sitemap(collection_id):

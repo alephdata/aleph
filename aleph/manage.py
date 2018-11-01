@@ -14,7 +14,7 @@ from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.logic.collections import create_collection
-from aleph.logic.collections import update_collection, update_collections
+from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.collections import delete_entities
 from aleph.logic.documents import ingest_document
@@ -145,7 +145,7 @@ def resetindex():
 @manager.command
 def repair():
     """Re-index all the collections and entities."""
-    update_collections()
+    index_collections()
     update_entities()
     update_roles()
 

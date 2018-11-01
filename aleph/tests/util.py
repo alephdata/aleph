@@ -12,7 +12,7 @@ from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.core import all_indexes
 from aleph.index.util import refresh_index
 from aleph.logic.documents import process_document
-from aleph.logic.collections import update_collection, update_collections
+from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import update_entities
 from aleph.core import db, es, create_app
 from aleph.views import mount_app_blueprints
@@ -98,7 +98,7 @@ class TestCase(FlaskTestCase):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
     def update_index(self):
-        update_collections()
+        index_collections()
         update_entities()
         self.flush_index()
 
