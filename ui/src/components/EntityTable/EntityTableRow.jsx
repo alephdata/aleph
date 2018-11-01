@@ -7,9 +7,7 @@ import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/compone
 
 class EntityTableRow extends Component {
   constructor(props) {
-    super(props);
-
-    //this.getHighlight = this.getHighlight.bind(this);
+    super(props)
   }
 
   static splitHighlight(split, givenHighlights) {
