@@ -1,11 +1,11 @@
 import logging
-from elasticsearch.helpers import scan
+from elasticsearch.helpers import scan, bulk
 
 from aleph.core import db, es
 from aleph.model import DocumentRecord
 from aleph.index.core import record_index, records_index
-from aleph.index.util import query_delete, index_form
-from aleph.index.util import bulk_op, unpack_result
+from aleph.index.util import query_delete, index_form, unpack_result
+from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 
 log = logging.getLogger(__name__)
 
@@ -39,9 +39,13 @@ def generate_records(document):
 def index_records(document):
     if not document.supports_records:
         return
-
-    clear_records(document.id)
-    bulk_op(generate_records(document))
+    return bulk(es, generate_records(document),
+                chunk_size=MAX_PAGE,
+                max_retries=10,
+                initial_backoff=2,
+                request_timeout=REQUEST_TIMEOUT,
+                timeout=TIMEOUT,
+                refresh=False)
 
 
 def iter_records(document_id=None, collection_id=None):

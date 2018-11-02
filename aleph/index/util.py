@@ -1,5 +1,4 @@
 import logging
-from itertools import count
 from banal import ensure_list
 from elasticsearch.helpers import bulk
 from elasticsearch import TransportError
@@ -12,6 +11,7 @@ log = logging.getLogger(__name__)
 # This means that text beyond the first 100 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
+REQUEST_RETRIES = 10
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 BULK_PAGE = 1000
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
@@ -144,7 +144,7 @@ def bulk_op(actions, chunk_size=BULK_PAGE, max_retries=10, refresh=False):
 
 def query_delete(index, query):
     "Delete all documents matching the given query inside the index."
-    for attempt in count():
+    for attempt in range(REQUEST_RETRIES):
         try:
             es.delete_by_query(index=index,
                                body={'query': query},
@@ -159,7 +159,7 @@ def query_delete(index, query):
 
 def index_safe(index, id, body):
     """Index a single document and retry until it has been stored."""
-    for attempt in count():
+    for attempt in range(REQUEST_RETRIES):
         try:
             es.index(index=index,
                      doc_type='doc',
@@ -176,7 +176,7 @@ def search_safe(*args, **kwargs):
     # This is not supposed to be used in every location where search is
     # run, but only where it's a backend search that we could back off of
     # without hurting UX.
-    for attempt in count():
+    for attempt in range(REQUEST_RETRIES):
         try:
             kwargs['doc_type'] = 'doc'
             return es.search(*args, **kwargs)
