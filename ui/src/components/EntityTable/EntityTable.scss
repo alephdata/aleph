@@ -21,6 +21,26 @@
   }
 }
 
+.EntityTableRow {
+  &.active {
+    em {
+      background: inherit;
+    }
+  }
+
+  &.prefix {
+    td {
+      border-bottom: 0px !important;
+      padding-bottom: 0;
+    }
+  }
+
+  em {
+    background: $aleph-text-highlight-color;
+    font-style: normal;
+  }
+}
+
 //medium and small screen
 @media screen and (max-width: $aleph-screen-md-max-width) {
   .EntityTable {

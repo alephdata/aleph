@@ -301,6 +301,7 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'highlight': true,
     'highlight_count': 3,
+    'highlight_length': 140,
     'filter:schemata': 'Thing',
     'limit': 50
   };
