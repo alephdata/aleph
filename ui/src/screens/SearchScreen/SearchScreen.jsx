@@ -299,6 +299,8 @@ const mapStateToProps = (state, ownProps) => {
 
   // We normally only want Things, not Intervals (relations between things).
   const context = {
+    'highlight': true,
+    'highlight_count': 3,
     'filter:schemata': 'Thing',
     'limit': 50
   };

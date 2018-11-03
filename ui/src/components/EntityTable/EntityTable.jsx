@@ -112,17 +112,15 @@ class EntityTable extends Component {
           </tr>
         </thead>
         <tbody className={c({'updating': isLoading})}>
-          {result.results !== undefined && result.results.map(entity =>
-            <React.Fragment>
-              <EntityTableRow key={entity.id}
-                              entity={entity}
-                              location={location}
-                              hideCollection={hideCollection}
-                              showPreview={showPreview}
-                              documentMode={documentMode}
-                              updateSelection={updateSelection}
-                              selection={selection} />
-            </React.Fragment>
+          {result.results !== undefined && result.results.map(entity =>            
+            <EntityTableRow key={entity.id}
+                            entity={entity}
+                            location={location}
+                            hideCollection={hideCollection}
+                            showPreview={showPreview}
+                            documentMode={documentMode}
+                            updateSelection={updateSelection}
+                            selection={selection} />
           )}
         </tbody>
       </table>

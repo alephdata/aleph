@@ -55,8 +55,7 @@ class HomeScreen extends Component {
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: this.state.value,
-        highlight: true
+        q: this.state.value
       })
     });
   }
