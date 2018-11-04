@@ -164,7 +164,10 @@ def index_bulk(collection, entities):
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
     finally:
-        lock.release()
+        try:
+            lock.release()
+        except Exception:
+            log.exception("Cannot release index lock.")
 
 
 def finalize_index(proxy, context, texts):
