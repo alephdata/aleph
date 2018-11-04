@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
@@ -52,7 +51,7 @@ class Reverse extends Component {
   }
 }
 
-class Values extends Component {
+class Values extends PureComponent {
   render() {
     const { values, model } = this.props;
     const vals = ensureArray(values).map((value, idx) => (
