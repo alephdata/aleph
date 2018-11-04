@@ -11,7 +11,7 @@ from aleph import __version__
 from aleph.core import settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection
-from aleph.logic.statistics import get_instance_stats
+from aleph.index.collections import get_instance_stats
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify, render_xml
 

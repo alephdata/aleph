@@ -1,9 +1,10 @@
 import logging
 from pprint import pprint  # noqa
+from banal import ensure_list
 from normality import normalize
-from followthemoney import types
+from followthemoney import types, model
 
-from aleph.core import es
+from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.core import collections_index, entities_index, records_index
 from aleph.index.util import query_delete, unpack_result, index_safe
@@ -55,42 +56,23 @@ def index_collection(collection):
         })
         texts.append(role.name)
 
-    # Compute some statistics on the content of a collection.
-    query = {
-        'size': 0,
-        'query': {
-            'bool': {
-                'filter': [
-                    {'term': {'collection_id': collection.id}},
-                    {'term': {'schemata': Entity.THING}}
-                ]
-            }
-        },
-        'aggs': {
-            'schema': {'terms': {'field': 'schema', 'size': 1000}},
-            'countries': {'terms': {'field': 'countries', 'size': 500}},
-            'languages': {'terms': {'field': 'languages', 'size': 100}},
-        }
-    }
-    result = search_safe(index=entities_index(), body=query)
-    aggregations = result.get('aggregations')
-    data['count'] = result['hits']['total']
+    stats = get_collection_stats(collection.id)
+    data['count'] = stats['count']
 
     # expose entities by schema count.
-    for schema in aggregations['schema']['buckets']:
-        data['schemata'][schema['key']] = schema['doc_count']
+    thing = model.get(Entity.THING)
+    for schema, count in stats['schemata'].items():
+        schema = model.get(schema)
+        if schema is not None and schema.is_a(thing):
+            data['schemata'][schema.name] = count
 
     # if no countries or langs are given, take the most common from the data.
-    countries = collection.countries
-    if countries is None or not len(countries):
-        countries = aggregations['countries']['buckets']
-        countries = [c['key'] for c in countries]
+    countries = ensure_list(collection.countries)
+    countries = countries or stats['countries'].keys()
     data['countries'] = types.countries.normalize_set(countries)
 
-    languages = collection.languages
-    if languages is None or not len(languages):
-        languages = aggregations['languages']['buckets']
-        languages = [c['key'] for c in languages]
+    languages = ensure_list(collection.languages)
+    languages = languages or stats['languages'].keys()
     data['languages'] = types.languages.normalize_set(languages)
 
     texts.extend([normalize(t, ascii=True) for t in texts])
@@ -106,6 +88,58 @@ def get_collection(collection_id):
                     ignore=[404],
                     _source_exclude=['text'])
     return unpack_result(result)
+
+
+def flush_collection_stats(collection_id):
+    key = cache.key('cstats', collection_id)
+    cache.kv.delete(key)
+
+
+def get_collection_stats(collection_id):
+    """Compute some statistics on the content of a collection."""
+    key = cache.key('cstats', collection_id)
+    data = cache.get_complex(key)
+    if data is not None:
+        return data
+
+    log.info("Generating collection stats: %s", collection_id)
+    query = {
+        'size': 0,
+        'query': {
+            'bool': {
+                'filter': [
+                    {'term': {'collection_id': collection_id}}
+                ]
+            }
+        },
+        'aggs': {
+            'schemata': {'terms': {'field': 'schema', 'size': 1000}},
+            'countries': {'terms': {'field': 'countries', 'size': 500}},
+            'languages': {'terms': {'field': 'languages', 'size': 10}},
+        }
+    }
+    result = search_safe(index=entities_index(), body=query)
+    aggregations = result.get('aggregations')
+    data = {'count': result['hits']['total']}
+
+    for facet in ['schemata', 'countries', 'languages']:
+        data[facet] = {}
+        for bucket in aggregations[facet]['buckets']:
+            data[facet][bucket['key']] = bucket['doc_count']
+    cache.set_complex(key, data, expire=3599)
+    return data
+
+
+def get_instance_stats(authz):
+    collections = authz.collections(authz.READ)
+    entities = 0
+    for collection in collections:
+        stats = get_collection_stats(collection)
+        entities += stats['count']
+    return {
+        'collections': len(collections),
+        'entities': entities
+    }
 
 
 def delete_collection(collection_id):

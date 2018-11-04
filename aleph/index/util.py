@@ -161,10 +161,7 @@ def index_safe(index, id, body):
     """Index a single document and retry until it has been stored."""
     for attempt in range(REQUEST_RETRIES):
         try:
-            es.index(index=index,
-                     doc_type='doc',
-                     id=str(id),
-                     body=body)
+            es.index(index=index, doc_type='doc', id=str(id), body=body)
             body['id'] = str(id)
             return body
         except Exception as exc:

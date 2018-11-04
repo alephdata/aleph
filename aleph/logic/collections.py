@@ -39,14 +39,14 @@ def index_collection_async(collection_id):
     collection = Collection.by_id(collection_id, deleted=True)
     if collection is not None:
         log.info("Index [%s]: %s", collection.id, collection.label)
+        index.flush_collection_stats(collection_id)
         index.index_collection(collection)
 
 
 def index_collections():
-    cq = db.session.query(Collection.id)
-    cq = cq.order_by(Collection.id.desc())
-    for collection_id, in cq.all():
-        index_collection_async.delay(collection_id)
+    for collection in Collection.all(deleted=True):
+        log.info("Index [%s]: %s", collection.id, collection.label)
+        index.index_collection(collection)
 
 
 def generate_sitemap(collection_id):
