@@ -1,9 +1,6 @@
 import io
 import csv
-import json
-from datetime import datetime, date
 from flask import Response, request, render_template
-from flask_babel.speaklater import LazyString
 from normality import stringify
 from urllib.parse import urlparse, urljoin
 from werkzeug.exceptions import MethodNotAllowed, Forbidden
@@ -17,6 +14,7 @@ from aleph.authz import Authz
 from aleph.model import Document, Collection, Entity
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
+from aleph.util import JSONEncoder
 
 
 def require(*predicates):
@@ -166,24 +164,6 @@ def normalize_href(href, base_url):
         return href
     except Exception:
         return None
-
-
-class JSONEncoder(json.JSONEncoder):
-    """ This encoder will serialize all entities that have a to_dict
-    method by calling that method and serializing the result. """
-
-    def default(self, obj):
-        if isinstance(obj, (datetime, date)):
-            return obj.isoformat()
-        if isinstance(obj, bytes):
-            return obj.decode('utf-8')
-        if isinstance(obj, LazyString):
-            return str(obj)
-        if isinstance(obj, set):
-            return [o for o in obj]
-        if hasattr(obj, 'to_dict'):
-            return obj.to_dict()
-        return json.JSONEncoder.default(self, obj)
 
 
 def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
