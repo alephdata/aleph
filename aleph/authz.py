@@ -53,14 +53,17 @@ class Authz(object):
             collections = [int(c) for c in collections]
             # log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
-        q = db.session.query(Permission.collection_id)
-        q = q.filter(Permission.deleted_at == None)  # noqa
-        q = q.filter(Permission.role_id.in_(self.roles))
-        if action == self.READ:
-            q = q.filter(Permission.read == True)  # noqa
-        if action == self.WRITE:
-            q = q.filter(Permission.write == True)  # noqa
-        q = q.distinct()
+        if self.is_admin:
+            q = Collection.all_ids()
+        else:
+            q = db.session.query(Permission.collection_id)
+            q = q.filter(Permission.deleted_at == None)  # noqa
+            q = q.filter(Permission.role_id.in_(self.roles))
+            if action == self.READ:
+                q = q.filter(Permission.read == True)  # noqa
+            if action == self.WRITE:
+                q = q.filter(Permission.write == True)  # noqa
+            q = q.distinct()
         collections = [c for (c,) in q.all()]
         log.debug("Authz: %s (%s): %s", self, action, collections)
         cache.kv.sadd(prefix_key, key)
