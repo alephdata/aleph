@@ -131,7 +131,11 @@ class SearchScreen extends React.Component {
         icon: 'person'
       }
     ];
-    this.state = {facets: facets, hideFacets: false};
+
+    this.state = {
+      facets: facets,
+      hideFacets: false
+    };
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -295,6 +299,9 @@ const mapStateToProps = (state, ownProps) => {
 
   // We normally only want Things, not Intervals (relations between things).
   const context = {
+    'highlight': true,
+    'highlight_count': 3,
+    'highlight_length': 140,
     'filter:schemata': 'Thing',
     'limit': 50
   };

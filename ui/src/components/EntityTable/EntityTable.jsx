@@ -112,7 +112,7 @@ class EntityTable extends Component {
           </tr>
         </thead>
         <tbody className={c({'updating': isLoading})}>
-          {result.results !== undefined && result.results.map(entity =>
+          {result.results !== undefined && result.results.map(entity =>            
             <EntityTableRow key={entity.id}
                             entity={entity}
                             location={location}

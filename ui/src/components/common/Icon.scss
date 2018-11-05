@@ -4,10 +4,12 @@
   display: inline-block;;
   vertical-align: middle;
   line-height: 1;
-  width: 1.28571429em;
+  padding-right: 0.3em;
+
   & > div:first-child {
     display: inline-block;
   }
+
   &--svg {
     height: 1em;
     width:initial;
