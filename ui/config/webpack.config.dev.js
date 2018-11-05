@@ -121,8 +121,19 @@ module.exports = {
     // https://twitter.com/wSokra/status/969633336732905474
     // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
     splitChunks: {
-      chunks: 'all',
       name: false,
+      cacheGroups:{
+        vendors:{
+          test: /[\\/]node_modules[\\/]/,
+          chunks:'initial',
+          minChunks: 5,
+        },
+        commons:{
+          test: /[\\/]src[\\/]/,
+          priority:10,
+          minChunks: 4,
+        }
+      }
     },
     // Keep the runtime chunk seperated to enable long term caching
     // https://twitter.com/wSokra/status/969679223278505985
