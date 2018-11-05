@@ -3,18 +3,27 @@ import logging
 from aleph.core import settings, celery
 from aleph.model import Document
 from aleph.index import documents as index
-from aleph.index.documents import index_document_id
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.documents.ingest import ingest, ingest_document  # noqa
-from aleph.logic.documents.ingest import process_document  # noqa
 
 log = logging.getLogger(__name__)
 
 
-def update_document(document):
+@celery.task()
+def update_document_id(document_id, index_records=False):
+    document = Document.by_id(document_id)
+    if document is None:
+        log.info("Could not find document: %r", document_id)
+        return
+    update_document(document)
+
+
+def update_document(document, index_records=False):
     # These are operations that should be executed after each
     # write to a document or its metadata.
-    index.index_document(document)
+    if index_records:
+        index.index_records(document)
+    return index.index_document(document)
 
 
 def delete_document(document, deleted_at=None):
@@ -36,7 +45,7 @@ def process_documents(collection_id=None, failed_only=False, index_only=False):
     q = q.all() if settings.EAGER else q.yield_per(5000)
     for idx, (doc_id,) in enumerate(q, 1):
         if index_only:
-            index_document_id.apply_async([doc_id], priority=1)
+            update_document_id.apply_async([doc_id], priority=1)
         else:
             ingest.apply_async([doc_id], {'refresh': True}, priority=1)
         if idx % 10000 == 0:

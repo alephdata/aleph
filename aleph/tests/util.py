@@ -11,7 +11,7 @@ from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.core import all_indexes
 from aleph.index.util import refresh_index
-from aleph.logic.documents import process_document
+from aleph.logic.documents import update_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import update_entities
 from aleph.core import db, es, kv, create_app
@@ -107,7 +107,7 @@ class TestCase(FlaskTestCase):
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
         for doc in Document.all():
-            process_document(doc)
+            update_document(doc, index_records=True)
         self.update_index()
 
     def setUp(self):
@@ -117,7 +117,7 @@ class TestCase(FlaskTestCase):
             db.create_all()
             delete_index()
             upgrade_search()
-        
+
         kv.flushall()
         self.flush_index()
         es.delete_by_query(index=all_indexes(),

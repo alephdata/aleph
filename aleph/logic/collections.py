@@ -23,24 +23,15 @@ def create_collection(data, role=None):
                 actor_id=role.id,
                 params={'collection': collection})
     db.session.commit()
-    index.index_collection(collection)
     Authz.flush()
-    return collection
+    return index.index_collection(collection)
 
 
 def update_collection(collection):
     """Create or update a collection."""
-    index_collection_async.delay(collection.id)
     Authz.flush()
-
-
-@celery.task(priority=7)
-def index_collection_async(collection_id):
-    collection = Collection.by_id(collection_id, deleted=True)
-    if collection is not None:
-        log.info("Index [%s]: %s", collection.id, collection.label)
-        index.flush_collection_stats(collection_id)
-        index.index_collection(collection)
+    # index.flush_collection_stats(collection.id)
+    return index.index_collection(collection)
 
 
 def index_collections():

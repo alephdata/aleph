@@ -56,7 +56,6 @@ def create():
     db.session.commit()
     data = update_entity(entity)
     update_collection(collection)
-    refresh_index(entities_index())
     return serialize_data(data, CombinedSchema)
 
 

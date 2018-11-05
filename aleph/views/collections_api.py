@@ -37,8 +37,7 @@ def create():
     data = parse_request(CollectionSchema)
     role = Role.by_id(request.authz.id)
     collection = create_collection(data, role=role)
-    refresh_index(collections_index())
-    return view(collection.id)
+    return serialize_data(collection, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
@@ -64,8 +63,8 @@ def update(id):
     data = parse_request(CollectionSchema)
     collection.update(data)
     db.session.commit()
-    update_collection(collection)
-    return serialize_data(collection, CollectionSchema)
+    data = update_collection(collection)
+    return serialize_data(data, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa

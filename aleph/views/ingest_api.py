@@ -2,7 +2,7 @@ import os
 import json
 import shutil
 import logging
-from banal import is_mapping
+from banal import is_mapping, as_bool
 from storagelayer import checksum
 from flask import Blueprint, request
 from tempfile import mkdtemp
@@ -11,8 +11,9 @@ from normality import safe_filename, stringify
 
 from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
-from aleph.index.documents import index_document_id
+from aleph.logic.documents import update_document, update_document_id
 from aleph.logic.documents import ingest_document
+from aleph.logic.collections import update_collection
 from aleph.index.util import refresh_index
 from aleph.index.core import entities_index
 from aleph.views.util import get_db_collection, jsonify, validate_data
@@ -114,11 +115,15 @@ def ingest_upload(id):
 
     # Update child counts in index.
     if parent_id is not None:
-        index_document_id.apply_async([parent_id], priority=1)
+        update_document_id.apply_async([parent_id], priority=1)
 
     # Make sure collection counts are always accurate.
-    if collection.casefile:
+    if as_bool(request.args.get('sync')):
+        for document in documents:
+            update_document(document)
         refresh_index(entities_index())
+        update_collection(collection)
+
     return jsonify({
         'status': 'ok',
         'documents': [CombinedSchema().dump(d).data for d in documents]
