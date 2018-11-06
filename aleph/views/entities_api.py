@@ -1,5 +1,4 @@
 import logging
-from banal import as_bool
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
@@ -8,17 +7,14 @@ from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
-from aleph.model import Entity, Audit
-from aleph.logic.entities import update_entity, delete_entity
-from aleph.logic.collections import update_collection
+from aleph.model import Audit
+from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.audit import record_audit
-from aleph.index.util import refresh_index
-from aleph.index.core import entities_index
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, serialize_data
+from aleph.views.util import jsonify, parse_request, serialize_data, get_flag
 from aleph.views.cache import enable_cache
 from aleph.serializers.entities import CombinedSchema
 from aleph.serializers.entities import EntityCreateSchema, EntityUpdateSchema
@@ -52,11 +48,8 @@ def match():
 def create():
     data = parse_request(EntityCreateSchema)
     collection = get_db_collection(data['collection_id'], request.authz.WRITE)
-    entity = Entity.create(data, collection)
-    db.session.commit()
-    data = update_entity(entity)
-    update_collection(collection)
-    refresh_index(entities_index())
+    sync = get_flag('sync')
+    data = create_entity(data, collection, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
@@ -131,13 +124,13 @@ def tags(id):
 def update(id):
     entity = get_db_entity(id, request.authz.WRITE)
     data = parse_request(EntityUpdateSchema)
-    if as_bool(request.args.get('merge')):
+    sync = get_flag('sync')
+    if get_flag('merge'):
         props = merge_data(data.get('properties'), entity.data)
         data['properties'] = props
     entity.update(data)
     db.session.commit()
-    data = update_entity(entity)
-    update_collection(entity.collection)
+    data = update_entity(entity, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
@@ -145,6 +138,7 @@ def update(id):
 def merge(id, other_id):
     entity = get_db_entity(id, request.authz.WRITE)
     other = get_db_entity(other_id, request.authz.WRITE)
+    sync = get_flag('sync')
 
     try:
         entity.merge(other)
@@ -152,19 +146,16 @@ def merge(id, other_id):
         raise BadRequest(ve.message)
 
     db.session.commit()
-    data = update_entity(entity)
-    update_entity(other)
-    update_collection(entity.collection)
+    data = update_entity(entity, sync=sync)
+    update_entity(other, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = get_db_entity(id, request.authz.WRITE)
-    delete_entity(entity)
+    delete_entity(entity, sync=True)
     db.session.commit()
-    update_collection(entity.collection)
-    refresh_index(entities_index())
     return ('', 204)
 
 

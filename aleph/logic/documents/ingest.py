@@ -9,8 +9,7 @@ from aleph.logic.notifications import publish
 from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
 from aleph.logic.extractors import extract_document_tags
-from aleph.logic.collections import index_collection_async
-from aleph.index.documents import index_document, index_records
+from aleph.index.documents import index_document
 
 log = logging.getLogger(__name__)
 
@@ -27,9 +26,6 @@ def process_document(document):
     """Perform post-ingest tasks like analysis and indexing."""
     extract_document_tags(document)
     index_document(document)
-    index_records(document)
-    if document.collection.casefile:
-        index_collection_async.delay(document.collection_id)
 
 
 def ingest_document(document, file_path, role_id=None, content_hash=None):
@@ -49,11 +45,7 @@ def ingest_document(document, file_path, role_id=None, content_hash=None):
         document.content_hash = ch
 
     db.session.commit()
-    priority = 3
-    if document.collection.casefile:
-        priority = 6
-        index_document(document)
-
+    priority = 6 if document.collection.casefile else 3
     ingest.apply_async(args=[document.id], priority=priority)
 
 
