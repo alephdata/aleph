@@ -14,10 +14,8 @@ class EntityTableRow extends Component {
     const { updateSelection, selection } = this.props;
     const selectedIds = _.map(selection || [], 'id');
     const isSelected = selectedIds.indexOf(entity.id) > -1;
-    const highlights = !entity.highlight ? [] : entity.highlight;
-
     const parsedHash = queryString.parse(location.hash);
-
+    const highlights = !entity.highlight ? [] : entity.highlight;
     // Select the current row if the ID of the entity matches the ID of the
     // current object being previewed. We do this so that if a link is shared
     // the currently displayed preview will also have the row it corresponds to
@@ -28,7 +26,7 @@ class EntityTableRow extends Component {
     return (
       <React.Fragment>
         <tr key={entity.id}
-            className={c('EntityTableRow', 'nowrap', className, {'active': isActive}, 'prefix': isPrefix)}>
+            className={c('EntityTableRow', 'nowrap', className, {'active': isActive}, {'prefix': isPrefix})}>
           {updateSelection && <td className="select">
             <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
           </td>}
@@ -59,7 +57,7 @@ class EntityTableRow extends Component {
             </td>
           )}
         </tr>
-        {highlights.length &&
+        {!!highlights.length &&
           <tr key={entity.id + '-hl'}
               className={c('EntityTableRow', className, {'active': isActive})}>
             <td colSpan="5" className="highlights">
