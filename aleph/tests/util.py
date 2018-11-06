@@ -9,12 +9,11 @@ from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
-from aleph.index.core import all_indexes
-from aleph.index.util import refresh_index
+from aleph.index.admin import clear_index, refresh_index
 from aleph.logic.documents import update_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import update_entities
-from aleph.core import db, es, kv, create_app
+from aleph.core import db, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
@@ -92,7 +91,7 @@ class TestCase(FlaskTestCase):
         self.grant(collection, visitor, True, False)
 
     def flush_index(self):
-        refresh_index(all_indexes())
+        refresh_index()
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
@@ -119,13 +118,7 @@ class TestCase(FlaskTestCase):
             upgrade_search()
 
         kv.flushall()
-        self.flush_index()
-        es.delete_by_query(index=all_indexes(),
-                           body={'query': {'match_all': {}}},
-                           refresh=True,
-                           ignore=[404, 400],
-                           wait_for_completion=True,
-                           conflicts='proceed')
+        clear_index()
 
         for table in reversed(db.metadata.sorted_tables):
             q = 'TRUNCATE %s RESTART IDENTITY CASCADE;' % table.name

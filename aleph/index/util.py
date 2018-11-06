@@ -1,6 +1,6 @@
 import logging
 from banal import ensure_list
-from elasticsearch import TransportError, RequestError
+from elasticsearch import RequestError
 
 from aleph.core import es
 from aleph.util import backoff
@@ -15,17 +15,6 @@ TIMEOUT = '%ss' % REQUEST_TIMEOUT
 BULK_PAGE = 1000
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
-
-
-def refresh_index(index):
-    """Run a refresh to apply all indexing changes."""
-    try:
-        es.indices.refresh(index=index,
-                           ignore=[404, 400],
-                           ignore_unavailable=True)
-    except TransportError as terr:
-        log.warning("Index refresh failed: %s", terr)
-        backoff_cluster()
 
 
 def backoff_cluster(failures=0):
