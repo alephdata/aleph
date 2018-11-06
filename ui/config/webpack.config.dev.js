@@ -72,7 +72,7 @@ const getStyleLoaders = (cssOptions, preProcessor) => {
   }
   return loaders;
 };
-
+console.log('Yes executed');
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
@@ -104,6 +104,11 @@ module.exports = {
   output: {
     // Add /* filename */ comments to generated require()s in the output.
     pathinfo: true,
+    // Temporary solution to make webWorkers work with hot-module-replacement
+    // Related issues:
+    // https://github.com/webpack/webpack/issues/6642
+    // https://github.com/wojtekmaj/react-pdf/issues/179
+    globalObject: '(typeof self !== \'undefined\' ? self : this)',
     // This does not produce a real file. It's just the virtual path that is
     // served by WebpackDevServer in development. This is the JS bundle
     // containing code from all our entry points, and the Webpack runtime.
@@ -115,6 +120,7 @@ module.exports = {
     // Point sourcemap entries to original disk location (format as URL on Windows)
     devtoolModuleFilenameTemplate: info =>
       path.resolve(info.absoluteResourcePath).replace(/\\/g, '/'),
+
   },
   optimization: {
     // Automatically split vendor and commons
