@@ -1,5 +1,6 @@
 import io
 import csv
+from banal import as_bool
 from flask import Response, request, render_template
 from normality import stringify
 from urllib.parse import urlparse, urljoin
@@ -29,6 +30,10 @@ def obj_or_404(obj):
     if obj is None:
         raise NotFound()
     return obj
+
+
+def get_flag(name, default=False):
+    return as_bool(request.args.get(name), default=default)
 
 
 def serialize_validation_error(errors):

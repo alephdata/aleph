@@ -18,19 +18,19 @@ def update_document_id(document_id, index_records=False):
     update_document(document)
 
 
-def update_document(document, index_records=False):
+def update_document(document, index_records=False, sync=False):
     # These are operations that should be executed after each
     # write to a document or its metadata.
     if index_records:
-        index.index_records(document)
-    return index.index_document(document)
+        index.index_records(document, sync=sync)
+    return index.index_document(document, sync=sync)
 
 
-def delete_document(document, deleted_at=None):
+def delete_document(document, deleted_at=None, sync=False):
     for child in document.children:
         # TODO: are we likely to hit recursion limits?
-        delete_document(child, deleted_at=deleted_at)
-    index.delete_document(document.id)
+        delete_document(child, deleted_at=deleted_at, sync=sync)
+    index.delete_document(document.id, sync=sync)
     flush_notifications(document)
     document.delete(deleted_at=deleted_at)
 

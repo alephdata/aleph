@@ -14,9 +14,8 @@ log = logging.getLogger(__name__)
 BULK_PAGE = 500
 
 
-def update_entity(entity):
-    log.info("Update [%s]: %s", entity.id, entity.name)
-    return index.index_entity(entity)
+def update_entity(entity, sync=False):
+    return index.index_entity(entity, sync=sync)
 
 
 def update_entities():
@@ -25,10 +24,10 @@ def update_entities():
         update_entity(entity)
 
 
-def delete_entity(entity, deleted_at=None):
+def delete_entity(entity, deleted_at=None, sync=False):
     flush_notifications(entity)
     entity.delete(deleted_at=deleted_at)
-    index.delete_entity(entity.id)
+    index.delete_entity(entity.id, sync=sync)
 
 
 def entity_references(entity, authz):

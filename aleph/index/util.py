@@ -1,7 +1,6 @@
 import logging
 from banal import ensure_list
-from elasticsearch.helpers import bulk
-from elasticsearch import TransportError
+from elasticsearch import TransportError, RequestError
 
 from aleph.core import es
 from aleph.util import backoff
@@ -131,18 +130,7 @@ def cleanup_query(body):
     return body
 
 
-def bulk_op(actions, chunk_size=BULK_PAGE, max_retries=10, refresh=False):
-    """Standard parameters for bulk operations."""
-    return bulk(es, actions,
-                chunk_size=chunk_size,
-                max_retries=max_retries,
-                initial_backoff=2,
-                request_timeout=REQUEST_TIMEOUT,
-                timeout=TIMEOUT,
-                refresh=refresh)
-
-
-def query_delete(index, query):
+def query_delete(index, query, **kwargs):
     "Delete all documents matching the given query inside the index."
     for attempt in range(REQUEST_RETRIES):
         try:
@@ -150,20 +138,26 @@ def query_delete(index, query):
                                body={'query': query},
                                conflicts='proceed',
                                timeout=TIMEOUT,
-                               request_timeout=REQUEST_TIMEOUT)
+                               request_timeout=REQUEST_TIMEOUT,
+                               **kwargs)
             return
+        except RequestError:
+            raise
         except Exception as exc:
             log.warning("Query delete failed: %s", exc)
         backoff_cluster(failures=attempt)
 
 
-def index_safe(index, id, body):
+def index_safe(index, id, body, **kwargs):
     """Index a single document and retry until it has been stored."""
     for attempt in range(REQUEST_RETRIES):
         try:
-            es.index(index=index, doc_type='doc', id=str(id), body=body)
+            es.index(index=index, doc_type='doc', id=id, body=body, **kwargs)
             body['id'] = str(id)
+            body.pop('text', None)
             return body
+        except RequestError:
+            raise
         except Exception as exc:
             log.warning("Index error [%s:%s]: %s", index, id, exc)
         backoff_cluster(failures=attempt)
@@ -177,6 +171,8 @@ def search_safe(*args, **kwargs):
         try:
             kwargs['doc_type'] = 'doc'
             return es.search(*args, **kwargs)
+        except RequestError:
+            raise
         except Exception as exc:
             log.warning("Search error: %s", exc)
         backoff_cluster(failures=attempt)

@@ -13,7 +13,7 @@ from aleph.index.util import index_form, search_safe
 log = logging.getLogger(__name__)
 
 
-def index_collection(collection):
+def index_collection(collection, sync=False):
     """Index a collection."""
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
@@ -77,7 +77,8 @@ def index_collection(collection):
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    return index_safe(collections_index(), collection.id, data)
+    return index_safe(collections_index(), collection.id, data,
+                      refresh=sync)
 
 
 def get_collection(collection_id):
@@ -142,29 +143,34 @@ def get_instance_stats(authz):
     }
 
 
-def delete_collection(collection_id):
+def delete_collection(collection_id, sync=False):
     """Delete all documents from a particular collection."""
     q = {'ids': {'values': str(collection_id)}}
-    query_delete(collections_index(), q)
+    query_delete(collections_index(), q,
+                 wait_for_completion=sync,
+                 refresh=sync)
 
 
-def delete_entities(collection_id):
+def delete_entities(collection_id, sync=False):
     """Delete entities from a collection."""
     query = {'bool': {
         'must_not': {'term': {'schemata': 'Document'}},
         'must': {'term': {'collection_id': collection_id}}
     }}
-    query_delete(entities_index(), query)
+    query_delete(entities_index(), query,
+                 wait_for_completion=sync)
 
 
-def delete_documents(collection_id):
+def delete_documents(collection_id, sync=False):
     """Delete documents from a collection."""
     records_query = {'term': {'collection_id': collection_id}}
-    query_delete(records_index(), records_query)
+    query_delete(records_index(), records_query,
+                 wait_for_completion=sync)
     query = {'bool': {
         'must': [
             {'term': {'schemata': 'Document'}},
             {'term': {'collection_id': collection_id}}
         ]
     }}
-    query_delete(entities_index(), query)
+    query_delete(entities_index(), query,
+                 wait_for_completion=sync)

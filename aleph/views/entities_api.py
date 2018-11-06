@@ -1,5 +1,4 @@
 import logging
-from banal import as_bool
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
@@ -15,10 +14,8 @@ from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.audit import record_audit
-from aleph.index.util import refresh_index
-from aleph.index.core import entities_index
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, serialize_data
+from aleph.views.util import jsonify, parse_request, serialize_data, get_flag
 from aleph.views.cache import enable_cache
 from aleph.serializers.entities import CombinedSchema
 from aleph.serializers.entities import EntityCreateSchema, EntityUpdateSchema
@@ -130,13 +127,14 @@ def tags(id):
 def update(id):
     entity = get_db_entity(id, request.authz.WRITE)
     data = parse_request(EntityUpdateSchema)
-    if as_bool(request.args.get('merge')):
+    sync = get_flag('sync')
+    if get_flag('merge'):
         props = merge_data(data.get('properties'), entity.data)
         data['properties'] = props
     entity.update(data)
     db.session.commit()
-    data = update_entity(entity)
-    update_collection(entity.collection)
+    data = update_entity(entity, sync=sync)
+    update_collection(entity.collection, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
@@ -144,6 +142,7 @@ def update(id):
 def merge(id, other_id):
     entity = get_db_entity(id, request.authz.WRITE)
     other = get_db_entity(other_id, request.authz.WRITE)
+    sync = get_flag('sync')
 
     try:
         entity.merge(other)
@@ -151,9 +150,9 @@ def merge(id, other_id):
         raise BadRequest(ve.message)
 
     db.session.commit()
-    data = update_entity(entity)
-    update_entity(other)
-    update_collection(entity.collection)
+    data = update_entity(entity, sync=sync)
+    update_entity(other, sync=sync)
+    update_collection(entity.collection, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
@@ -162,8 +161,7 @@ def delete(id):
     entity = get_db_entity(id, request.authz.WRITE)
     delete_entity(entity)
     db.session.commit()
-    update_collection(entity.collection)
-    refresh_index(entities_index())
+    update_collection(entity.collection, sync=True)
     return ('', 204)
 
 

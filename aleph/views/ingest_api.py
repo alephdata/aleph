@@ -2,7 +2,7 @@ import os
 import json
 import shutil
 import logging
-from banal import is_mapping, as_bool
+from banal import is_mapping
 from storagelayer import checksum
 from flask import Blueprint, request
 from tempfile import mkdtemp
@@ -14,9 +14,8 @@ from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.logic.documents import update_document, update_document_id
 from aleph.logic.documents import ingest_document
 from aleph.logic.collections import update_collection
-from aleph.index.util import refresh_index
-from aleph.index.core import entities_index
-from aleph.views.util import get_db_collection, jsonify, validate_data
+from aleph.views.util import get_db_collection, get_flag
+from aleph.views.util import jsonify, validate_data
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
@@ -118,11 +117,10 @@ def ingest_upload(id):
         update_document_id.apply_async([parent_id], priority=1)
 
     # Make sure collection counts are always accurate.
-    if as_bool(request.args.get('sync')):
+    if get_flag('sync'):
         for document in documents:
-            update_document(document)
-        refresh_index(entities_index())
-        update_collection(collection)
+            update_document(document, sync=True)
+        update_collection(collection, sync=True)
 
     return jsonify({
         'status': 'ok',

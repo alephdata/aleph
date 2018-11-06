@@ -7,7 +7,7 @@ from aleph.index.entities import delete_entity, index_single
 log = logging.getLogger(__name__)
 
 
-def index_document(document):
+def index_document(document, sync=False):
     name = document.name
     log.info("Index document [%s]: %s", document.id, name)
     proxy = document.to_proxy()
@@ -52,9 +52,9 @@ def index_document(document):
             'schema': parent.schema,
             'title': parent.title,
         }
-    return index_single(document, proxy, context, texts)
+    return index_single(document, proxy, context, texts, sync=sync)
 
 
-def delete_document(document_id):
-    clear_records(document_id)
-    delete_entity(document_id)
+def delete_document(document_id, sync=False):
+    # clear_records(document_id)
+    delete_entity(document_id, sync=sync)

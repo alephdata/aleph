@@ -14,7 +14,7 @@ from aleph.logic.util import document_url, entity_url
 log = logging.getLogger(__name__)
 
 
-def create_collection(data, role=None):
+def create_collection(data, role=None, sync=False):
     role = role or Role.load_cli_user()
     created_at = datetime.utcnow()
     collection = Collection.create(data, role=role, created_at=created_at)
@@ -24,14 +24,14 @@ def create_collection(data, role=None):
                 params={'collection': collection})
     db.session.commit()
     Authz.flush()
-    return index.index_collection(collection)
+    return index.index_collection(collection, sync=sync)
 
 
-def update_collection(collection):
+def update_collection(collection, sync=False):
     """Create or update a collection."""
     Authz.flush()
     # index.flush_collection_stats(collection.id)
-    return index.index_collection(collection)
+    return index.index_collection(collection, sync=sync)
 
 
 def index_collections():
@@ -57,11 +57,11 @@ def generate_sitemap(collection_id):
         yield (url, updated_at)
 
 
-def delete_collection(collection):
+def delete_collection(collection, sync=False):
     flush_notifications(collection)
     collection.delete()
     db.session.commit()
-    index.delete_collection(collection.id)
+    index.delete_collection(collection.id, sync=sync)
     delete_collection_content.apply_async([collection.id], priority=7)
     Authz.flush()
 
