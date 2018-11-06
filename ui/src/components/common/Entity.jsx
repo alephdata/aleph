@@ -13,7 +13,7 @@ import getPath from 'src/util/getPath';
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 
-import './Entity.css';
+import './Entity.scss';
 
 
 class EntityLabel extends Component {

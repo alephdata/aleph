@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Icon as IconBlueprint } from "@blueprintjs/core/lib/esm/components/icon/icon";
 import { Icon } from "./Icon";
 
-import './Tag.css';
+import './Tag.scss';
 
 class TagIcon extends PureComponent {
   className="tag-icon";

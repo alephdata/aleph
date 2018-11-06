@@ -1,7 +1,7 @@
 import React from 'react';
 import { Spinner } from '@blueprintjs/core';
 
-import './SectionLoading.css';
+import './SectionLoading.scss';
 
 const SectionLoading = () => (
   <div className="SectionLoading">

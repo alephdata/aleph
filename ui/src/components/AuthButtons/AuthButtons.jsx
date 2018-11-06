@@ -6,7 +6,7 @@ import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@b
 import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
-import './AuthButtons.css';
+import './AuthButtons.scss';
 
 const messages = defineMessages({
   view_notifications: {

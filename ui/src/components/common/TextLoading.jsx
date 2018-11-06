@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import './TextLoading.css';
+import './TextLoading.scss';
 
 
 class TextLoading extends PureComponent {

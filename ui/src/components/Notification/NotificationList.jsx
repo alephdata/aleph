@@ -9,7 +9,7 @@ import Notification from './Notification';
 import { queryNotifications } from "src/actions";
 import { selectNotificationsResult } from "src/selectors";
 
-import './NotificationList.css';
+import './NotificationList.scss';
 
 const messages = defineMessages({
   no_notifications: {

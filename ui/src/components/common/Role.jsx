@@ -7,7 +7,7 @@ import { Select as BlueprintSelect } from "@blueprintjs/select";
 import wordList from 'src/util/wordList';
 import { suggestRoles } from "src/actions";
 
-import './Role.css';
+import './Role.scss';
 import Icon from "./Icon";
 
 const messages = defineMessages({

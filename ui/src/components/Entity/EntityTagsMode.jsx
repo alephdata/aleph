@@ -8,7 +8,7 @@ import { Tag } from 'src/components/common';
 import { ErrorSection } from 'src/components/common';
 import { selectEntityTags } from "src/selectors";
 
-import './EntityTagsMode.css';
+import './EntityTagsMode.scss';
 
 const messages = defineMessages({
   no_tags: {

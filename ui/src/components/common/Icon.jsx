@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactSVG from 'react-svg'
 import c from 'classnames';
-import './Icon.css'
+import './Icon.scss'
 
 const ICONS_PATH = '/icons/';
 

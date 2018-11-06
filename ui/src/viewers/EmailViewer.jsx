@@ -6,7 +6,7 @@ import { Pre } from '@blueprintjs/core';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
 
-import './EmailViewer.css';
+import './EmailViewer.scss';
 
 class EmailViewer extends React.Component {  
   renderBody() {

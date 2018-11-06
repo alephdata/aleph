@@ -9,7 +9,7 @@ import { fetchStatistics } from 'src/actions/index';
 import { selectStatistics, selectMetadata } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 
-import './HomeScreen.css';
+import './HomeScreen.scss';
 
 const messages = defineMessages({
   title: {

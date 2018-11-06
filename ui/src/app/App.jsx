@@ -18,7 +18,7 @@ import { endpoint } from './api';
 import { logout } from 'src/actions/sessionActions';
 import { selectLocale } from '../selectors';
 
-import './App.css';
+import './App.scss';
 
 // have blueprint handle focus properly
 FocusStyleManager.onlyShowFocusOnTabs();

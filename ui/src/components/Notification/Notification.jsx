@@ -5,7 +5,7 @@ import Role from 'src/components/common/Role';
 import Collection from 'src/components/common/Collection';
 import Entity from 'src/components/common/Entity';
 
-import './Notification.css';
+import './Notification.scss';
 
 
 class Notification extends Component {

@@ -2,7 +2,7 @@ import React from 'react';
 import c from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 
-import './CheckboxList.css';
+import './CheckboxList.scss';
 
 const CheckboxList = ({ items, selectedItems, onItemClick, children }) => (
   <ul className="CheckboxList">

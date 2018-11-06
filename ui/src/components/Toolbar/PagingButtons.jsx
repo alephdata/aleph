@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { ButtonGroup, Button, AnchorButton } from "@blueprintjs/core";
 
-import './PagingButtons.css';
+import './PagingButtons.scss';
 
 
 class PagingButtons extends React.Component {

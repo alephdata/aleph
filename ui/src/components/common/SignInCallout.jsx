@@ -6,7 +6,7 @@ import { Callout } from '@blueprintjs/core';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import { selectSession, selectMetadata } from 'src/selectors';
 
-import './SignInCallout.css';
+import './SignInCallout.scss';
 
 
 class SignInCallout extends React.Component {

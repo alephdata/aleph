@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './ImageViewer.css';
+import './ImageViewer.scss';
 
 
 class ImageViewer extends Component {

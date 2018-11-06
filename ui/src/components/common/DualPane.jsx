@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import c from 'classnames';
 
-import './DualPane.css';
+import './DualPane.scss';
 
 
 class InfoPane extends Component {
