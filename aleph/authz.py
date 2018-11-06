@@ -49,7 +49,7 @@ class Authz(object):
         prefix_key = cache.key(self.PREFIX)
         key = cache.key(self.PREFIX, action, self.id)
         if cache.kv.sismember(prefix_key, key):
-            collections = cache.kv.lrange(key, 0, -1)
+            collections = cache.get_list(key)
             collections = [int(c) for c in collections]
             # log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
@@ -68,7 +68,7 @@ class Authz(object):
         log.debug("Authz: %s (%s): %s", self, action, collections)
         cache.kv.sadd(prefix_key, key)
         if len(collections):
-            cache.kv.rpush(key, *collections)
+            cache.set_list(key, collections)
         return collections
 
     def can(self, collection, action):
