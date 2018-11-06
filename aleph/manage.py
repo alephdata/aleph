@@ -14,14 +14,14 @@ from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.logic.collections import create_collection
-from aleph.logic.collections import update_collection, update_collections
+from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.collections import delete_collection, delete_documents
 from aleph.logic.collections import delete_entities
 from aleph.logic.documents import ingest_document
 from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
-from aleph.logic.entities import bulk_load, update_entities
+from aleph.logic.entities import bulk_load, index_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.graph.rdf import export_collection
 from aleph.logic.permissions import update_permission
@@ -145,8 +145,8 @@ def resetindex():
 @manager.command
 def repair():
     """Re-index all the collections and entities."""
-    update_collections()
-    update_entities()
+    index_collections()
+    index_entities()
     update_roles()
 
 

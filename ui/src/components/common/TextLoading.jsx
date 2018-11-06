@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import './TextLoading.scss';
 
 
-export default class TextLoading extends React.Component {
+class TextLoading extends PureComponent {
   render() {
-    const { loading, children } = this.props;
+    const { loading } = this.props;
     if (loading) {
-      return (<span className="TextLoading">
-        <FormattedMessage id="text.loading" defaultMessage="Loading…" />
-      </span>);
+      return (
+        <span className="TextLoading">
+          <FormattedMessage id="text.loading" defaultMessage="Loading…" />
+        </span>
+      );
     }
-    return (<React.Fragment>{children}</React.Fragment>);
+    return this.props.children;
   }
 }
+
+export default TextLoading;

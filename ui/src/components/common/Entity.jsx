@@ -50,7 +50,7 @@ class EntityLabel extends Component {
     if (!text || !text.length || text.length < 1) {
       return (
         <span className='EntityLabel untitled'>
-          {icon && <Schema.Icon schema={schema}/>}
+          {icon && <Schema.Icon schema={schema} />}
           {icon && ' '}
           <FormattedMessage id='entity.label.missing' defaultMessage="Untitled" />
         </span>

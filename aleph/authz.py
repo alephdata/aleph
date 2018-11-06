@@ -49,23 +49,26 @@ class Authz(object):
         prefix_key = cache.key(self.PREFIX)
         key = cache.key(self.PREFIX, action, self.id)
         if cache.kv.sismember(prefix_key, key):
-            collections = cache.kv.lrange(key, 0, -1)
+            collections = cache.get_list(key)
             collections = [int(c) for c in collections]
             # log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
-        q = db.session.query(Permission.collection_id)
-        q = q.filter(Permission.deleted_at == None)  # noqa
-        q = q.filter(Permission.role_id.in_(self.roles))
-        if action == self.READ:
-            q = q.filter(Permission.read == True)  # noqa
-        if action == self.WRITE:
-            q = q.filter(Permission.write == True)  # noqa
-        q = q.distinct()
+        if self.is_admin:
+            q = Collection.all_ids()
+        else:
+            q = db.session.query(Permission.collection_id)
+            q = q.filter(Permission.deleted_at == None)  # noqa
+            q = q.filter(Permission.role_id.in_(self.roles))
+            if action == self.READ:
+                q = q.filter(Permission.read == True)  # noqa
+            if action == self.WRITE:
+                q = q.filter(Permission.write == True)  # noqa
+            q = q.distinct()
         collections = [c for (c,) in q.all()]
-        # log.debug("Authz: %s (%s): %s", self, action, collections)
+        log.debug("Authz: %s (%s): %s", self, action, collections)
         cache.kv.sadd(prefix_key, key)
         if len(collections):
-            cache.kv.rpush(key, *collections)
+            cache.set_list(key, collections)
         return collections
 
     def can(self, collection, action):

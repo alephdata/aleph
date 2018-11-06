@@ -5,31 +5,33 @@ from banal import clean_dict, ensure_list
 from datetime import datetime
 from followthemoney import model
 from followthemoney.util import merge_data
-from elasticsearch.helpers import scan, BulkIndexError
+from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es, cache
 from aleph.model import Document
 from aleph.index.core import entity_index, entities_index, entities_index_list
-from aleph.index.util import bulk_op, unpack_result, index_form, query_delete
+from aleph.index.util import unpack_result, index_form
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
-from aleph.index.util import MAX_PAGE
+from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 
 log = logging.getLogger(__name__)
 
 
-def index_entity(entity):
+def index_entity(entity, sync=False):
     """Index an entity."""
     if entity.deleted_at is not None:
         return delete_entity(entity.id)
 
     context = {'foreign_id': entity.foreign_id}
-    return index_single(entity, entity.to_proxy(), context, [])
+    return index_single(entity, entity.to_proxy(), context, [], sync=sync)
 
 
-def delete_entity(entity_id):
+def delete_entity(entity_id, sync=False):
     """Delete an entity from the index."""
-    q = {'ids': {'values': str(entity_id)}}
-    query_delete(entities_index(), q)
+    refresh = 'wait_for' if sync else False
+    for index in entities_index_list():
+        es.delete(index=index, doc_type='doc', id=str(entity_id),
+                  refresh=refresh, ignore=[404])
 
 
 def get_entity(entity_id):
@@ -154,11 +156,20 @@ def index_bulk(collection, entities):
     try:
         actions = _index_updates(collection, entities)
         chunk_size = len(actions) + 1
-        bulk_op(actions, chunk_size=chunk_size, refresh=False)
+        return bulk(es, actions,
+                    chunk_size=chunk_size,
+                    max_retries=10,
+                    initial_backoff=2,
+                    request_timeout=REQUEST_TIMEOUT,
+                    timeout=TIMEOUT,
+                    refresh='wait_for')
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
     finally:
-        lock.release()
+        try:
+            lock.release()
+        except Exception:
+            log.exception("Cannot release index lock.")
 
 
 def finalize_index(proxy, context, texts):
@@ -184,7 +195,7 @@ def finalize_index(proxy, context, texts):
     return clean_dict(data)
 
 
-def index_single(obj, proxy, data, texts):
+def index_single(obj, proxy, data, texts, sync=False):
     """Indexing aspects common to entities and documents."""
     data = finalize_index(proxy, data, texts)
     data['bulk'] = False
@@ -192,4 +203,5 @@ def index_single(obj, proxy, data, texts):
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
     # pprint(data)
-    return index_safe(entity_index(), obj.id, data)
+    refresh = 'wait_for' if sync else False
+    return index_safe(entity_index(), obj.id, data, refresh=refresh)

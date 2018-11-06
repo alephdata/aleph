@@ -1,11 +1,14 @@
 # coding: utf-8
+import json
 import time
 import random
 import logging
 from celery import Task
 from banal import ensure_list
 from normality import stringify
+from datetime import datetime, date
 from pkg_resources import iter_entry_points
+from flask_babel.speaklater import LazyString
 
 log = logging.getLogger(__name__)
 EXTENSIONS = {}
@@ -88,3 +91,21 @@ class SessionTask(Task):
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         from aleph.core import db
         db.session.remove()
+
+
+class JSONEncoder(json.JSONEncoder):
+    """ This encoder will serialize all entities that have a to_dict
+    method by calling that method and serializing the result. """
+
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        if isinstance(obj, bytes):
+            return obj.decode('utf-8')
+        if isinstance(obj, LazyString):
+            return str(obj)
+        if isinstance(obj, set):
+            return [o for o in obj]
+        if hasattr(obj, 'to_dict'):
+            return obj.to_dict()
+        return json.JSONEncoder.default(self, obj)

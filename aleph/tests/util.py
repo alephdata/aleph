@@ -9,12 +9,12 @@ from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
-from aleph.index.core import all_indexes
-from aleph.index.util import refresh_index
-from aleph.logic.documents import process_document
-from aleph.logic.collections import update_collection, update_collections
-from aleph.logic.entities import update_entities
-from aleph.core import db, es, create_app
+from aleph.index.admin import clear_index, refresh_index
+from aleph.index.documents import index_document
+from aleph.index.records import index_records
+from aleph.logic.collections import update_collection, index_collections
+from aleph.logic.entities import index_entities
+from aleph.core import db, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
@@ -92,22 +92,24 @@ class TestCase(FlaskTestCase):
         self.grant(collection, visitor, True, False)
 
     def flush_index(self):
-        refresh_index(all_indexes())
+        refresh_index()
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
     def update_index(self):
-        update_collections()
-        update_entities()
+        index_collections()
+        index_entities()
         self.flush_index()
 
     def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
-        for doc in Document.all():
-            process_document(doc)
+        for document in Document.all():
+            index_document(document)
+            if document.supports_records:
+                index_records(document)
         self.update_index()
 
     def setUp(self):
@@ -118,13 +120,8 @@ class TestCase(FlaskTestCase):
             delete_index()
             upgrade_search()
 
-        self.flush_index()
-        es.delete_by_query(index=all_indexes(),
-                           body={'query': {'match_all': {}}},
-                           refresh=True,
-                           ignore=[404, 400],
-                           wait_for_completion=True,
-                           conflicts='proceed')
+        kv.flushall()
+        clear_index()
 
         for table in reversed(db.metadata.sorted_tables):
             q = 'TRUNCATE %s RESTART IDENTITY CASCADE;' % table.name

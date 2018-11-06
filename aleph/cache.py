@@ -1,7 +1,7 @@
 import json
 import logging
 
-from aleph.util import make_key
+from aleph.util import make_key, JSONEncoder
 
 log = logging.getLogger(__name__)
 
@@ -21,8 +21,12 @@ class Cache(object):
         self.kv.set(key, value, ex=expire)
 
     def set_complex(self, key, value, expire=None):
-        value = json.dumps(value)
+        value = json.dumps(value, cls=JSONEncoder)
         return self.set(key, value, expire=expire)
+
+    def set_list(self, key, values, expire=None):
+        self.kv.delete(key)
+        self.kv.rpush(key, *values)
 
     def get(self, key):
         return self.kv.get(key)
@@ -32,5 +36,8 @@ class Cache(object):
         if value is not None:
             return json.loads(value)
 
-    def lock(self, key, timeout=60):
+    def get_list(self, key):
+        return self.kv.lrange(key, 0, -1)
+
+    def lock(self, key, timeout=120):
         return self.kv.lock(key, timeout=timeout)

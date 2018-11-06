@@ -2,12 +2,13 @@ import logging
 import fingerprints
 from followthemoney.types import registry
 
+from aleph.model import Entity
 from aleph.index.util import bool_query, none_query
 
 log = logging.getLogger(__name__)
 
 
-def match_query(proxy, collection_id=None, query=None, broad=False):
+def match_query(proxy, collection_id=None, query=None):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
     if query is None:
@@ -18,16 +19,17 @@ def match_query(proxy, collection_id=None, query=None, broad=False):
         sq = {"ids": {"values": [proxy.id]}}
         query['bool']['must_not'].append(sq)
 
-    if not broad:
-        # Attempt to find only matches within the "matchable" set of
-        # entity schemata. For example, a Company and be matched to
-        # another company or a LegalEntity, but not a Person.
-        # Real estate is "unmatchable", i.e. even if two plots of land
-        # have almost the same name and criteria, it does not make
-        # sense to suggest they are the same.
+    # Attempt to find only matches within the "matchable" set of
+    # entity schemata. For example, a Company and be matched to
+    # another company or a LegalEntity, but not a Person.
+    # Real estate is "unmatchable", i.e. even if two plots of land
+    # have almost the same name and criteria, it does not make
+    # sense to suggest they are the same.
+    if proxy.schema.name != Entity.THING:
         matchable = [s.name for s in proxy.schema.matchable_schemata]
         if not len(matchable):
             return none_query()
+
         query['bool']['must'].append({
             "terms": {"schema": matchable}
         })

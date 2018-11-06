@@ -26,8 +26,8 @@ class BaseApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'entities' in res.json, res.json
         assert res.json['entities'] == 0, res.json
-        kv.flushall()
         self.load_fixtures('docs.yaml')
+        kv.flushall()
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res
         assert res.json['entities'] == 4, res.json

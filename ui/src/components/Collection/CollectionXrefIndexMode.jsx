@@ -15,7 +15,7 @@ import './CollectionXrefIndexMode.scss';
 class CollectionXrefIndexMode extends React.Component {
   render() {
     const { collection, xrefIndex } = this.props;
-    if (xrefIndex.results === undefined) {
+    if (xrefIndex.results === undefined || xrefIndex.total === undefined) {
       return null;
     }
 
@@ -39,17 +39,17 @@ class CollectionXrefIndexMode extends React.Component {
                 </span>
               </th>
             </tr>
-            {xrefIndex.total && (
-              <tr>
-                <th colSpan={2}>
+            <tr>
+              <th colSpan={2}>
+                {xrefIndex.total && (
                   <a href={csvPath} download>
                     <Icon icon="download" />
                     <FormattedMessage id="xref.download"
                                       defaultMessage="Download matches as CSV" />
                   </a>
-                </th>
-              </tr>
-            )}
+                )}
+              </th>
+            </tr>
           </thead>
           <tbody>
           {xrefIndex.results.map((xref) => (

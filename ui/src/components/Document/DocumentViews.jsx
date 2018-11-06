@@ -79,7 +79,7 @@ class DocumentViews extends React.Component {
           <Tab id="text"
                title={
                   <React.Fragment>
-                    <Icon name="documenttxt" />
+                    <Icon name="plaintext" />
                     <FormattedMessage id="entity.info.text" defaultMessage="Text"/>
                   </React.Fragment>
                }

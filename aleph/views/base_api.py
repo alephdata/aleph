@@ -8,10 +8,10 @@ from followthemoney.types import countries, languages
 from jwt import ExpiredSignatureError
 
 from aleph import __version__
-from aleph.core import settings, url_for
+from aleph.core import cache, settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection
-from aleph.logic.statistics import get_instance_stats
+from aleph.index.collections import get_instance_stats
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify, render_xml
 
@@ -23,6 +23,10 @@ log = logging.getLogger(__name__)
 def metadata():
     locale = get_locale()
     enable_cache(vary_user=False)
+    key = cache.key('metadata', id(settings), locale)
+    data = cache.get_complex(key)
+    if data is not None:
+        return jsonify(data)
 
     auth = {}
     if settings.PASSWORD_LOGIN:
@@ -31,7 +35,7 @@ def metadata():
     if settings.OAUTH:
         auth['oauth_uri'] = url_for('sessions_api.oauth_init')
 
-    return jsonify({
+    data = {
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
         'app': {
@@ -50,7 +54,9 @@ def metadata():
         'languages': languages.names,
         'schemata': model,
         'auth': auth
-    })
+    }
+    cache.set_complex(key, data, expire=84600)
+    return jsonify(data)
 
 
 @blueprint.route('/api/2/statistics')

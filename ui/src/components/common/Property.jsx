@@ -1,5 +1,4 @@
-import _ from 'lodash';
-import React, {Component} from 'react';
+import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
@@ -11,13 +10,9 @@ import ensureArray from 'src/util/ensureArray';
 
 import './Property.scss';
 
-class Value extends Component {
-  shouldComponentUpdate(nextProps) {
-    return !_.isEqual(this.props.value, nextProps.value);
-  }
-
+class Value extends PureComponent {
   render() {
-    const {value, model} = this.props;
+    const { value, model } = this.props;
     if (!value) {
       return null;
     }
@@ -37,9 +32,9 @@ class Value extends Component {
   }
 }
 
-class Name extends Component {
+class Name extends PureComponent {
   render() {
-    const {name, model} = this.props;
+    const { name, model } = this.props;
     return (<span>{model.label || name}</span>);
   }
 }
@@ -56,9 +51,9 @@ class Reverse extends Component {
   }
 }
 
-class Values extends Component {
+class Values extends PureComponent {
   render() {
-    const {values, model} = this.props;
+    const { values, model } = this.props;
     const vals = ensureArray(values).map((value, idx) => (
       <Value key={idx} model={model} value={value} />
     ));

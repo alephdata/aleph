@@ -13,12 +13,11 @@ from aleph.logic.collections import delete_entities, delete_documents
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
-from aleph.index.util import refresh_index
-from aleph.index.core import collections_index
+from aleph.logic.util import collection_url
 from aleph.serializers import CollectionSchema
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, jsonify, parse_request, serialize_data
-from aleph.views.util import render_xml
+from aleph.views.util import render_xml, get_flag
 from aleph.util import dict_list
 
 blueprint = Blueprint('collections_api', __name__)
@@ -35,9 +34,9 @@ def create():
     require(request.authz.logged_in)
     data = parse_request(CollectionSchema)
     role = Role.by_id(request.authz.id)
-    collection = create_collection(data, role=role)
-    refresh_index(collections_index())
-    return view(collection.id)
+    sync = get_flag('sync')
+    collection = create_collection(data, role=role, sync=sync)
+    return serialize_data(collection, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
@@ -49,18 +48,23 @@ def view(id):
 
 @blueprint.route('/api/2/collections/<int:id>/sitemap.xml', methods=['GET'])
 def sitemap(id):
-    get_db_collection(id, request.authz.READ)
-    return render_xml('sitemap.xml', entries=generate_sitemap(id))
+    collection = get_db_collection(id, request.authz.READ)
+    url = collection_url(collection_id=collection.id)
+    return render_xml('sitemap.xml',
+                      url=url,
+                      updated_at=collection.updated_at,
+                      entries=generate_sitemap(id))
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     collection = get_db_collection(id, request.authz.WRITE)
     data = parse_request(CollectionSchema)
+    sync = get_flag('sync')
     collection.update(data)
     db.session.commit()
-    update_collection(collection)
-    return serialize_data(collection, CollectionSchema)
+    data = update_collection(collection, sync=sync)
+    return serialize_data(data, CollectionSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
@@ -99,8 +103,7 @@ def bulk(id):
 @blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    delete_collection(collection)
-    refresh_index(collections_index())
+    delete_collection(collection, sync=True)
     return ('', 204)
 
 

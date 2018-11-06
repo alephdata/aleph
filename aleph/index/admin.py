@@ -29,16 +29,26 @@ def upgrade_search():
             'settings': settings,
             'mappings': {'doc': mapping}
         }
-        es.indices.create(index, body=body, ignore=[404, 400])
-        # es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
-        es.indices.open(index=index, ignore=[400, 404])
-        es.indices.clear_cache(index=index, ignore=[400, 404])
+        res = es.indices.create(index, body=body, ignore=[404, 400])
+        if res.get('status') == 400:
+            # es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
+            es.indices.open(index=index, ignore=[400, 404])
+            es.indices.clear_cache(index=index, ignore=[400, 404])
 
 
 def delete_index():
     es.indices.delete(index=all_indexes(), ignore=[404, 400])
 
 
+def refresh_index():
+    es.indices.refresh(index=all_indexes(), ignore=[404, 400])
+
+
 def clear_index():
     q = {'query': {'match_all': {}}}
-    es.delete_by_query(index=all_indexes(), body=q)
+    refresh_index()
+    es.delete_by_query(index=all_indexes(),
+                       body=q,
+                       refresh=True,
+                       wait_for_completion=True,
+                       conflicts='proceed')

@@ -1,19 +1,19 @@
 import logging
-from elasticsearch.helpers import scan
+from elasticsearch.helpers import scan, bulk
 
 from aleph.core import db, es
 from aleph.model import DocumentRecord
 from aleph.index.core import record_index, records_index
-from aleph.index.util import query_delete, index_form
-from aleph.index.util import bulk_op, unpack_result
+from aleph.index.util import query_delete, index_form, unpack_result
+from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 
 log = logging.getLogger(__name__)
 
 
-def clear_records(document_id):
+def delete_records(document_id, sync=False):
     """Delete all records associated with the given document."""
     q = {'term': {'document_id': document_id}}
-    query_delete(records_index(), q)
+    query_delete(records_index(), q, wait_for_completion=sync, refresh=sync)
 
 
 def generate_records(document):
@@ -36,12 +36,16 @@ def generate_records(document):
             log.info("Indexed [%s]: %s records...", document.id, idx)
 
 
-def index_records(document):
+def index_records(document, sync=False):
     if not document.supports_records:
         return
-
-    clear_records(document.id)
-    bulk_op(generate_records(document))
+    # TODO: should ``sync`` do anything here?
+    return bulk(es, generate_records(document),
+                chunk_size=MAX_PAGE,
+                max_retries=10,
+                initial_backoff=2,
+                request_timeout=REQUEST_TIMEOUT,
+                timeout=TIMEOUT)
 
 
 def iter_records(document_id=None, collection_id=None):

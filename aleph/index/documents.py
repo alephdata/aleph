@@ -1,25 +1,13 @@
 import logging
 from pprint import pprint  # noqa
 
-from aleph.core import celery
-from aleph.model import Document
-from aleph.index.records import index_records, clear_records
+from aleph.index.records import index_records, delete_records
 from aleph.index.entities import delete_entity, index_single
 
 log = logging.getLogger(__name__)
 
 
-@celery.task()
-def index_document_id(document_id):
-    document = Document.by_id(document_id)
-    if document is None:
-        log.info("Could not find document: %r", document_id)
-        return
-    index_document(document)
-    index_records(document)
-
-
-def index_document(document):
+def index_document(document, shallow=False, sync=False):
     name = document.name
     log.info("Index document [%s]: %s", document.id, name)
     proxy = document.to_proxy()
@@ -64,9 +52,11 @@ def index_document(document):
             'schema': parent.schema,
             'title': parent.title,
         }
-    return index_single(document, proxy, context, texts)
+    if not shallow:
+        index_records(document, sync=False)
+    return index_single(document, proxy, context, texts, sync=sync)
 
 
-def delete_document(document_id):
-    clear_records(document_id)
-    delete_entity(document_id)
+def delete_document(document_id, sync=False):
+    delete_records(document_id, sync=False)
+    delete_entity(document_id, sync=sync)
