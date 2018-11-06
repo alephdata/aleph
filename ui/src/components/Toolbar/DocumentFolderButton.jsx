@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Button } from '@blueprintjs/core';
 
 import DocumentFolderDialog from "src/dialogs/DocumentFolderDialog/DocumentFolderDialog";
 
@@ -27,10 +28,9 @@ class DocumentFolderButton extends React.Component {
 
     return (
       <React.Fragment>
-        <a onClick={this.toggleFolder} className="bp3-button">
-          <span className="bp3-icon-standard bp3-icon-folder-new"/>
+        <Button onClick={this.toggleFolder} icon="folder-new">
           <FormattedMessage id="document.folder.button" defaultMessage="New folder"/>
-        </a>
+        </Button>
         <DocumentFolderDialog collection={collection}
                               parent={parent}
                               isOpen={this.state.isFolderOpen}

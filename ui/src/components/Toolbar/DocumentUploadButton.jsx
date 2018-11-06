@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Button } from '@blueprintjs/core';
 
 import DocumentUploadDialog from "src/dialogs/DocumentUploadDialog/DocumentUploadDialog";
 
@@ -9,7 +10,6 @@ class DocumentUploadButton extends React.Component {
     this.state = {
       isUploadOpen: false
     };
-
     this.toggleUpload = this.toggleUpload.bind(this);
   }
 
@@ -27,10 +27,9 @@ class DocumentUploadButton extends React.Component {
 
     return (
       <React.Fragment>
-        <a onClick={this.toggleUpload} className="bp3-button">
-          <span className="bp3-icon-standard bp3-icon-upload"/>
+        <Button onClick={this.toggleUpload} icon="upload">
           <FormattedMessage id="document.upload.button" defaultMessage="Upload"/>
-        </a>
+        </Button>
         <DocumentUploadDialog collection={collection}
                               parent={parent}
                               isOpen={this.state.isUploadOpen}

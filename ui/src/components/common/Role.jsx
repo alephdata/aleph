@@ -92,7 +92,8 @@ class Select extends Component {
     })
   }
 
-  onSelectRole(role) {
+  onSelectRole(role, event) {
+    event.stopPropagation();
     this.props.onSelect(role);
   }
 
@@ -128,7 +129,7 @@ class Select extends Component {
               resetOnClose={true}
               resetOnSelect={true}>
       <Button text={label}
-              className="bp3-fill"
+              fill={true}
               alignText={Alignment.LEFT}
               rightIcon="search" />
     </BlueprintSelect>;

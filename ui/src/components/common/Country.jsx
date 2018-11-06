@@ -97,7 +97,8 @@ class MultiSelect extends Component {
     this.props.onChange(codes);
   }
 
-  onItemSelect(item) {
+  onItemSelect(item, event) {
+    event.stopPropagation();
     const { codes } = this.state;
     codes.push(item);
     this.setState({codes});
