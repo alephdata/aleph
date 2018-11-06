@@ -11,9 +11,8 @@ from normality import safe_filename, stringify
 
 from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
-from aleph.logic.documents import update_document, update_document_id
-from aleph.logic.documents import ingest_document
-from aleph.logic.collections import update_collection
+from aleph.logic.documents import ingest_document, update_document
+from aleph.logic.documents import index_document_id
 from aleph.views.util import get_db_collection, get_flag
 from aleph.views.util import jsonify, validate_data
 
@@ -114,13 +113,12 @@ def ingest_upload(id):
 
     # Update child counts in index.
     if parent_id is not None:
-        update_document_id.apply_async([parent_id], priority=1)
+        index_document_id.apply_async([parent_id], priority=1)
 
     # Make sure collection counts are always accurate.
     if get_flag('sync'):
         for document in documents:
-            update_document(document, sync=True)
-        update_collection(collection, sync=True)
+            update_document(document, shallow=True, sync=True)
 
     return jsonify({
         'status': 'ok',

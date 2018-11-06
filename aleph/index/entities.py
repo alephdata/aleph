@@ -30,10 +30,8 @@ def delete_entity(entity_id, sync=False):
     """Delete an entity from the index."""
     refresh = 'wait_for' if sync else False
     for index in entities_index_list():
-        es.delete(index=index,
-                  doc_type='doc',
-                  id=str(entity_id),
-                  refresh=refresh)
+        es.delete(index=index, doc_type='doc', id=str(entity_id),
+                  refresh=refresh, ignore=[404])
 
 
 def get_entity(entity_id):

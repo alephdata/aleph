@@ -7,13 +7,12 @@ from celestial.types import PDF
 from aleph.core import archive, db
 from aleph.model import DocumentRecord, Audit
 from aleph.logic.documents import update_document, delete_document
-from aleph.logic.collections import update_collection
 from aleph.logic.util import document_url
 from aleph.logic.audit import record_audit
 from aleph.views.cache import enable_cache
 from aleph.views.entities_api import view
 from aleph.views.util import jsonify, parse_request, sanitize_html
-from aleph.views.util import serialize_data, get_db_document
+from aleph.views.util import serialize_data, get_db_document, get_flag
 from aleph.serializers import RecordSchema
 from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
 from aleph.search import DocumentsQuery, RecordsQuery
@@ -54,10 +53,10 @@ def content(document_id):
 def update(document_id):
     document = get_db_document(document_id, request.authz.WRITE)
     data = parse_request(DocumentUpdateSchema)
+    sync = get_flag('sync')
     document.update(data)
     db.session.commit()
-    update_document(document)
-    update_collection(document.collection)
+    update_document(document, shallow=True, sync=sync)
     return view(document_id)
 
 
@@ -65,7 +64,6 @@ def update(document_id):
 def delete(document_id):
     document = get_db_document(document_id, request.authz.WRITE)
     delete_document(document, sync=True)
-    update_collection(document.collection, sync=True)
     return ('', 204)
 
 

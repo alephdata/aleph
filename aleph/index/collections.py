@@ -145,32 +145,27 @@ def get_instance_stats(authz):
 
 def delete_collection(collection_id, sync=False):
     """Delete all documents from a particular collection."""
-    q = {'ids': {'values': str(collection_id)}}
-    query_delete(collections_index(), q,
-                 wait_for_completion=sync,
-                 refresh=sync)
+    es.delete(collections_index(), doc_type='doc', id=str(collection_id),
+              refresh=sync, ignore=[404])
 
 
-def delete_entities(collection_id, sync=False):
+def delete_entities(collection_id):
     """Delete entities from a collection."""
     query = {'bool': {
         'must_not': {'term': {'schemata': 'Document'}},
         'must': {'term': {'collection_id': collection_id}}
     }}
-    query_delete(entities_index(), query,
-                 wait_for_completion=sync)
+    query_delete(entities_index(), query)
 
 
-def delete_documents(collection_id, sync=False):
+def delete_documents(collection_id):
     """Delete documents from a collection."""
     records_query = {'term': {'collection_id': collection_id}}
-    query_delete(records_index(), records_query,
-                 wait_for_completion=sync)
+    query_delete(records_index(), records_query)
     query = {'bool': {
         'must': [
             {'term': {'schemata': 'Document'}},
             {'term': {'collection_id': collection_id}}
         ]
     }}
-    query_delete(entities_index(), query,
-                 wait_for_completion=sync)
+    query_delete(entities_index(), query)

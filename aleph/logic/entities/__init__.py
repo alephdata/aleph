@@ -7,6 +7,7 @@ from aleph.model import Entity
 from aleph.index import entities as index
 from aleph.index.core import entities_index
 from aleph.index.util import authz_query, field_filter_query
+from aleph.logic.collections import refresh_collection
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.entities.bulk import bulk_load, bulk_load_query, bulk_write  # noqa
 
@@ -14,20 +15,32 @@ log = logging.getLogger(__name__)
 BULK_PAGE = 500
 
 
+def create_entity(data, collection, role=None, sync=False):
+    entity = Entity.create(data, collection)
+    db.session.commit()
+    data = index.index_entity(entity, sync=sync)
+    refresh_collection(collection, sync=sync)
+    return data
+
+
 def update_entity(entity, sync=False):
-    return index.index_entity(entity, sync=sync)
-
-
-def update_entities():
-    q = db.session.query(Entity)
-    for entity in q:
-        update_entity(entity)
+    data = index.index_entity(entity, sync=sync)
+    refresh_collection(entity.collection, sync=sync)
+    return data
 
 
 def delete_entity(entity, deleted_at=None, sync=False):
     flush_notifications(entity)
+    collection = entity.collection
     entity.delete(deleted_at=deleted_at)
     index.delete_entity(entity.id, sync=sync)
+    refresh_collection(collection, sync=sync)
+
+
+def index_entities():
+    q = db.session.query(Entity)
+    for entity in q:
+        index.index_entity(entity, sync=False)
 
 
 def entity_references(entity, authz):

@@ -1,13 +1,13 @@
 import logging
 from pprint import pprint  # noqa
 
-from aleph.index.records import index_records, clear_records  # noqa
+from aleph.index.records import index_records, delete_records
 from aleph.index.entities import delete_entity, index_single
 
 log = logging.getLogger(__name__)
 
 
-def index_document(document, sync=False):
+def index_document(document, shallow=False, sync=False):
     name = document.name
     log.info("Index document [%s]: %s", document.id, name)
     proxy = document.to_proxy()
@@ -52,9 +52,11 @@ def index_document(document, sync=False):
             'schema': parent.schema,
             'title': parent.title,
         }
+    if not shallow:
+        index_records(document, sync=False)
     return index_single(document, proxy, context, texts, sync=sync)
 
 
 def delete_document(document_id, sync=False):
-    # clear_records(document_id)
+    delete_records(document_id, sync=False)
     delete_entity(document_id, sync=sync)

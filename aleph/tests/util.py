@@ -10,9 +10,10 @@ from aleph.model import Role, Document, Collection, Permission
 from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.admin import clear_index, refresh_index
-from aleph.logic.documents import update_document
+from aleph.index.documents import index_document
+from aleph.index.records import index_records
 from aleph.logic.collections import update_collection, index_collections
-from aleph.logic.entities import update_entities
+from aleph.logic.entities import index_entities
 from aleph.core import db, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
@@ -98,15 +99,17 @@ class TestCase(FlaskTestCase):
 
     def update_index(self):
         index_collections()
-        update_entities()
+        index_entities()
         self.flush_index()
 
     def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
-        for doc in Document.all():
-            update_document(doc, index_records=True)
+        for document in Document.all():
+            index_document(document)
+            if document.supports_records:
+                index_records(document)
         self.update_index()
 
     def setUp(self):

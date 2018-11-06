@@ -91,8 +91,6 @@ class Document(db.Model, DatedModel, Metadata):
             return self.file_name
         if self.source_url is not None:
             return self.source_url
-        if self.content_hash is not None:
-            return self.content_hash
 
     @property
     def supports_records(self):

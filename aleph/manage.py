@@ -21,7 +21,7 @@ from aleph.logic.documents import ingest_document
 from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
-from aleph.logic.entities import bulk_load, update_entities
+from aleph.logic.entities import bulk_load, index_entities
 from aleph.logic.xref import xref_collection
 from aleph.logic.graph.rdf import export_collection
 from aleph.logic.permissions import update_permission
@@ -146,7 +146,7 @@ def resetindex():
 def repair():
     """Re-index all the collections and entities."""
     index_collections()
-    update_entities()
+    index_entities()
     update_roles()
 
 

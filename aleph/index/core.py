@@ -6,14 +6,14 @@ def entity_index():
     return settings.ENTITIES_INDEX
 
 
-def entities_index():
-    """Combined index to run all queries against."""
-    return ','.join(settings.ENTITIES_INDEX_SET)
-
-
 def entities_index_list():
     """Combined index to run all queries against."""
     return settings.ENTITIES_INDEX_SET
+
+
+def entities_index():
+    """Combined index to run all queries against."""
+    return ','.join(entities_index_list())
 
 
 def record_index():

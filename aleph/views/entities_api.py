@@ -7,9 +7,8 @@ from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
-from aleph.model import Entity, Audit
-from aleph.logic.entities import update_entity, delete_entity
-from aleph.logic.collections import update_collection
+from aleph.model import Audit
+from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery
 from aleph.search import SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
@@ -49,10 +48,8 @@ def match():
 def create():
     data = parse_request(EntityCreateSchema)
     collection = get_db_collection(data['collection_id'], request.authz.WRITE)
-    entity = Entity.create(data, collection)
-    db.session.commit()
-    data = update_entity(entity)
-    update_collection(collection)
+    sync = get_flag('sync')
+    data = create_entity(data, collection, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
@@ -134,7 +131,6 @@ def update(id):
     entity.update(data)
     db.session.commit()
     data = update_entity(entity, sync=sync)
-    update_collection(entity.collection, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
@@ -152,16 +148,14 @@ def merge(id, other_id):
     db.session.commit()
     data = update_entity(entity, sync=sync)
     update_entity(other, sync=sync)
-    update_collection(entity.collection, sync=sync)
     return serialize_data(data, CombinedSchema)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['DELETE'])
 def delete(id):
     entity = get_db_entity(id, request.authz.WRITE)
-    delete_entity(entity)
+    delete_entity(entity, sync=True)
     db.session.commit()
-    update_collection(entity.collection, sync=True)
     return ('', 204)
 
 
