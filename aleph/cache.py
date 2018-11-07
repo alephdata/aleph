@@ -26,7 +26,8 @@ class Cache(object):
 
     def set_list(self, key, values, expire=None):
         self.kv.delete(key)
-        self.kv.rpush(key, *values)
+        if len(values):
+            self.kv.rpush(key, *values)
 
     def get(self, key):
         return self.kv.get(key)

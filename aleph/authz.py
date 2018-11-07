@@ -26,31 +26,17 @@ class Authz(object):
         self.is_admin = is_admin
         self.in_maintenance = settings.MAINTENANCE
         self.session_write = not self.in_maintenance and self.logged_in
-
-    def to_token(self, scope=None, role=None):
-        exp = datetime.utcnow() + timedelta(days=1)
-        payload = {
-            'id': self.id,
-            'exp': exp,
-            'roles': list(self.roles),
-            'is_admin': self.is_admin
-        }
-        if scope is not None:
-            payload['scope'] = scope
-        if role is not None:
-            from aleph.serializers.roles import RoleSchema
-            role, _ = RoleSchema().dump(role)
-            role.pop('created_at', None)
-            role.pop('updated_at', None)
-            payload['role'] = role
-        return jwt.encode(payload, settings.SECRET_KEY)
+        self._collections = {}
 
     def collections(self, action):
+        if action in self._collections:
+            return self._collections.get(action)
         prefix_key = cache.key(self.PREFIX)
         key = cache.key(self.PREFIX, action, self.id)
         if cache.kv.sismember(prefix_key, key):
             collections = cache.get_list(key)
             collections = [int(c) for c in collections]
+            self._collections[action] = collections
             # log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
         if self.is_admin:
@@ -67,8 +53,8 @@ class Authz(object):
         collections = [c for (c,) in q.all()]
         log.debug("Authz: %s (%s): %s", self, action, collections)
         cache.kv.sadd(prefix_key, key)
-        if len(collections):
-            cache.set_list(key, collections)
+        cache.set_list(key, collections)
+        self._collections[action] = collections
         return collections
 
     def can(self, collection, action):
@@ -96,6 +82,24 @@ class Authz(object):
         if not len(roles):
             return False
         return self.roles.intersection(roles) > 0
+
+    def to_token(self, scope=None, role=None):
+        exp = datetime.utcnow() + timedelta(days=1)
+        payload = {
+            'id': self.id,
+            'exp': exp,
+            'roles': list(self.roles),
+            'is_admin': self.is_admin
+        }
+        if scope is not None:
+            payload['scope'] = scope
+        if role is not None:
+            from aleph.serializers.roles import RoleSchema
+            role, _ = RoleSchema().dump(role)
+            role.pop('created_at', None)
+            role.pop('updated_at', None)
+            payload['role'] = role
+        return jwt.encode(payload, settings.SECRET_KEY)
 
     def __repr__(self):
         return '<Authz(%s)>' % self.id
