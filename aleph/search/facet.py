@@ -1,5 +1,5 @@
 from followthemoney import model
-from followthemoney.types import countries, languages
+from followthemoney.types import registry
 
 from aleph.model import Collection
 
@@ -74,13 +74,13 @@ class SchemaFacet(Facet):
 class CountryFacet(Facet):
 
     def update(self, result, key):
-        result['label'] = countries.names.get(key, key)
+        result['label'] = registry.country.names.get(key, key)
 
 
 class LanguageFacet(Facet):
 
     def update(self, result, key):
-        result['label'] = languages.names.get(key, key)
+        result['label'] = registry.language.names.get(key, key)
 
 
 class CategoryFacet(Facet):

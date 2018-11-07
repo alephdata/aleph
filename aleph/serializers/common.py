@@ -1,7 +1,7 @@
 from banal import is_mapping
 from normality import stringify
 from followthemoney import model
-from followthemoney.types import countries, languages, dates
+from followthemoney.types import registry
 from marshmallow.fields import String, Raw, Float
 from marshmallow.exceptions import ValidationError
 
@@ -21,7 +21,7 @@ class Language(String):
     """A valid language code."""
 
     def _validate(self, value):
-        if not languages.validate(value):
+        if not registry.language.validate(value):
             raise ValidationError('Invalid language code.')
 
 
@@ -29,7 +29,7 @@ class Country(String):
     """A valid country code."""
 
     def _validate(self, value):
-        if not countries.validate(value):
+        if not registry.country.validate(value):
             raise ValidationError('Invalid country code: %s' % value)
 
 
@@ -37,7 +37,7 @@ class PartialDate(String):
     """Any valid prefix of an ISO 8601 datetime string."""
 
     def _validate(self, value):
-        if not dates.validate(value):
+        if not registry.date.validate(value):
             raise ValidationError('Invalid date: %s' % value)
 
 
