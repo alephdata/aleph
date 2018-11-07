@@ -10,7 +10,7 @@ import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 import { loginWithPassword, loginWithToken } from "src/actions/sessionActions";
 import { selectMetadata } from 'src/selectors';
 
-import './AuthenticationDialog.css';
+import './AuthenticationDialog.scss';
 
 const messages = defineMessages({
   title: {
@@ -127,7 +127,7 @@ class AuthenticationDialog extends Component {
           {auth.oauth_uri && (
             <React.Fragment>
               <MenuDivider className='menu-divider'/>
-              <Button icon="log-in" className="bp3-large bp3-fill" onClick={this.onOAuthLogin}>
+              <Button icon="log-in" large={true} fill={true} onClick={this.onOAuthLogin}>
                 <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth"/>
               </Button>
             </React.Fragment>

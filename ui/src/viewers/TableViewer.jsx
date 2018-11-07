@@ -8,7 +8,7 @@ import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
 import { selectDocumentRecordsResult, selectSchemata } from 'src/selectors';
 
-import './TableViewer.css';
+import './TableViewer.scss';
 
 
 class TableViewer extends Component {

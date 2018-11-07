@@ -24,7 +24,7 @@ class DownloadButton extends React.Component {
     if (document.links !== undefined && document.links.file !== undefined) {
       return (
         <Tooltip content={intl.formatMessage(messages.mode_download)} position={Position.BOTTOM_RIGHT}>
-          <a href={document.links.file} download type="button" target="_blank" className="DownloadButton bp3-button" rel="nofollow">
+          <a href={document.links.file} download type="button" target="_blank" className="DownloadButton bp3-button" rel="nofollow noopener noreferrer">
             {content}
           </a>
         </Tooltip>

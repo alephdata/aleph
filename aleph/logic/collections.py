@@ -14,7 +14,7 @@ from aleph.logic.util import document_url, entity_url
 log = logging.getLogger(__name__)
 
 
-def create_collection(data, role=None):
+def create_collection(data, role=None, sync=False):
     role = role or Role.load_cli_user()
     created_at = datetime.utcnow()
     collection = Collection.create(data, role=role, created_at=created_at)
@@ -23,24 +23,23 @@ def create_collection(data, role=None):
                 actor_id=role.id,
                 params={'collection': collection})
     db.session.commit()
-    index.index_collection(collection)
     Authz.flush()
-    return collection
+    return index.index_collection(collection, sync=sync)
 
 
-def update_collection(collection):
+def update_collection(collection, sync=False):
     """Create or update a collection."""
-    index_collection_async.delay(collection.id)
     Authz.flush()
+    return index.index_collection(collection, sync=sync)
 
 
-@celery.task(priority=7)
-def index_collection_async(collection_id):
-    collection = Collection.by_id(collection_id, deleted=True)
-    if collection is not None:
-        log.info("Index [%s]: %s", collection.id, collection.label)
-        index.flush_collection_stats(collection_id)
-        index.index_collection(collection)
+def refresh_collection(collection, sync=False):
+    """Operations to execute after updating a collection-related
+    domain object. This will refresh stats and re-index."""
+    if not sync:
+        return
+    index.flush_collection_stats(collection.id)
+    index.index_collection(collection, sync=sync)
 
 
 def index_collections():
@@ -66,11 +65,11 @@ def generate_sitemap(collection_id):
         yield (url, updated_at)
 
 
-def delete_collection(collection):
+def delete_collection(collection, sync=False):
     flush_notifications(collection)
     collection.delete()
     db.session.commit()
-    index.delete_collection(collection.id)
+    index.delete_collection(collection.id, sync=sync)
     delete_collection_content.apply_async([collection.id], priority=7)
     Authz.flush()
 

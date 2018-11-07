@@ -4,26 +4,19 @@ import { Icon, H4 } from "@blueprintjs/core";
 import Truncate from 'react-truncate';
 
 import { Date, Role, Category, Country, Collection } from 'src/components/common';
-import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 
-import './CollectionListItem.css';
+import './CollectionListItem.scss';
+
 
 class CollectionListItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      deleteIsOpen: false
-    };
-    this.toggleDelete = this.toggleDelete.bind(this);
-  }
-
-  toggleDelete() {
-    this.setState({deleteIsOpen: !this.state.deleteIsOpen});
+  shouldComponentUpdate(nextProps) {
+    return nextProps.collection.id !== this.props.collection.id || 
+      nextProps.collection.updated_at !== this.props.collection.updated_at;
   }
 
   render() {
     const { collection, preview = true } = this.props;
-    if (!collection || !collection.id) {
+    if (!collection.id) {
       return null;
     }
     return (
@@ -71,18 +64,6 @@ class CollectionListItem extends Component {
               <Role.List roles={collection.team} icon={false} truncate={3} />
             </span>
           )}
-          
-          { collection.casefile && (
-            <span className="delete-item">
-              <a onClick={this.toggleDelete}>
-                <Icon icon="trash" />
-              </a>
-              <CollectionDeleteDialog collection={collection}
-                                      isOpen={this.state.deleteIsOpen}
-                                      toggleDialog={this.toggleDelete} />
-            </span>
-          )}
-
         </p>
       </li>
     );

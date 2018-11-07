@@ -4,7 +4,7 @@ import c from 'classnames';
 
 import { Collection, Entity } from 'src/components/common';
 
-import './Breadcrumbs.css';
+import './Breadcrumbs.scss';
 
 const messages = defineMessages({
   search_placeholder: {

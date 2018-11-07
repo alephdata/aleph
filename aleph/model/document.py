@@ -4,7 +4,7 @@ from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
-from aleph.core import db
+from aleph.core import db, cache
 from aleph.model.metadata import Metadata
 from aleph.model.collection import Collection
 from aleph.model.match import Match
@@ -91,8 +91,6 @@ class Document(db.Model, DatedModel, Metadata):
             return self.file_name
         if self.source_url is not None:
             return self.source_url
-        if self.content_hash is not None:
-            return self.content_hash
 
     @property
     def supports_records(self):
@@ -118,11 +116,16 @@ class Document(db.Model, DatedModel, Metadata):
 
     @property
     def ancestors(self):
-        if self.parent_id is not None and self.parent:
-            ids = self.parent.ancestors
-            ids.append(self.parent_id)
-            return ids
-        return []
+        if self.parent_id is None or not self.parent:
+            return []
+        key = cache.key('ancestors', self.id)
+        ancestors = cache.get_list(key)
+        if ancestors is not None:
+            return ancestors
+        ancestors = self.parent.ancestors
+        ancestors.append(self.parent_id)
+        cache.set_list(key, ancestors)
+        return ancestors
 
     def update(self, data):
         props = ('title', 'summary', 'author', 'crawler', 'source_url',

@@ -14,7 +14,7 @@ import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
 import getPath from 'src/util/getPath';
 
-import './CollectionXrefMatchesScreen.css';
+import './CollectionXrefMatchesScreen.scss';
 
 const messages = defineMessages({
   screen_title: {

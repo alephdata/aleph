@@ -1,18 +1,14 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import { FormattedRelative } from 'react-intl';
 
 import Role from 'src/components/common/Role';
 import Collection from 'src/components/common/Collection';
 import Entity from 'src/components/common/Entity';
 
-import './Notification.css';
+import './Notification.scss';
 
 
-class Notification extends Component {
-  shouldComponentUpdate(nextProps) {
-    return false;
-  }
-
+class Notification extends PureComponent {
   getParam(name) {
     const { event, params } = this.props.notification;
     const object = params[name];
@@ -24,7 +20,7 @@ class Notification extends Component {
       return <Entity.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
-      return object.label;
+      return object ? object.label : null; 
     }
     if (type === 'role') {
       return <Role.Label role={object} />;

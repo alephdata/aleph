@@ -11,7 +11,7 @@ import Navbar from 'src/components/Navbar/Navbar';
 import Footer from 'src/components/Footer/Footer';
 import { selectSession, selectMetadata } from 'src/selectors';
 
-import './Screen.css';
+import './Screen.scss';
 
 class Screen extends React.Component {
   constructor(props) {

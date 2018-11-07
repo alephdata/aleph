@@ -13,7 +13,7 @@ from aleph.index.util import index_form, search_safe
 log = logging.getLogger(__name__)
 
 
-def index_collection(collection):
+def index_collection(collection, sync=False):
     """Index a collection."""
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
@@ -77,7 +77,8 @@ def index_collection(collection):
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)
-    return index_safe(collections_index(), collection.id, data)
+    return index_safe(collections_index(), collection.id, data,
+                      refresh=sync)
 
 
 def get_collection(collection_id):
@@ -142,10 +143,10 @@ def get_instance_stats(authz):
     }
 
 
-def delete_collection(collection_id):
+def delete_collection(collection_id, sync=False):
     """Delete all documents from a particular collection."""
-    q = {'ids': {'values': str(collection_id)}}
-    query_delete(collections_index(), q)
+    es.delete(collections_index(), doc_type='doc', id=str(collection_id),
+              refresh=sync, ignore=[404])
 
 
 def delete_entities(collection_id):

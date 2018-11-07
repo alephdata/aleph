@@ -24,6 +24,10 @@ class Cache(object):
         value = json.dumps(value, cls=JSONEncoder)
         return self.set(key, value, expire=expire)
 
+    def set_list(self, key, values, expire=None):
+        self.kv.delete(key)
+        self.kv.rpush(key, *values)
+
     def get(self, key):
         return self.kv.get(key)
 
@@ -31,6 +35,9 @@ class Cache(object):
         value = self.get(key)
         if value is not None:
             return json.loads(value)
+
+    def get_list(self, key):
+        return self.kv.lrange(key, 0, -1)
 
     def lock(self, key, timeout=120):
         return self.kv.lock(key, timeout=timeout)

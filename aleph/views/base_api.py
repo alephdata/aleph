@@ -4,7 +4,7 @@ from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
 from followthemoney import model
 from followthemoney.exc import InvalidData
-from followthemoney.types import countries, languages
+from followthemoney.types import registry
 from jwt import ExpiredSignatureError
 
 from aleph import __version__
@@ -50,8 +50,8 @@ def metadata():
         },
         'categories': Collection.CATEGORIES,
         'statistics': get_instance_stats(Authz.from_role(None)),
-        'countries': countries.names,
-        'languages': languages.names,
+        'countries': registry.country.names,
+        'languages': registry.language.names,
         'schemata': model,
         'auth': auth
     }

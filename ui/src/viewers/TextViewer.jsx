@@ -5,7 +5,7 @@ import { Pre } from '@blueprintjs/core';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
 
-import './TextViewer.css';
+import './TextViewer.scss';
 
 class TextViewer extends React.Component {
   render() {

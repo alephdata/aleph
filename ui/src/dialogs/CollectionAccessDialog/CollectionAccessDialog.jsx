@@ -8,7 +8,7 @@ import { selectCollectionPermissions } from 'src/selectors';
 import { Role } from 'src/components/common';
 import { showSuccessToast } from "src/app/toast";
 
-import './CollectionAccessDialog.css';
+import './CollectionAccessDialog.scss';
 
 
 const messages = defineMessages({

@@ -14,7 +14,7 @@ import ImageViewer from 'src/viewers/ImageViewer';
 import FolderViewer from 'src/viewers/FolderViewer';
 import EmailViewer from 'src/viewers/EmailViewer';
 
-import './DocumentViewMode.css';
+import './DocumentViewMode.scss';
 
 
 class DocumentViewMode extends React.Component {

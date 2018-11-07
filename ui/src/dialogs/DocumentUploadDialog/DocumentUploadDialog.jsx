@@ -8,7 +8,7 @@ import { ingestDocument } from "src/actions";
 import { showErrorToast } from "src/app/toast";
 import wordList from 'src/util/wordList';
 
-import "./DocumentUploadDialog.css";
+import "./DocumentUploadDialog.scss";
 
 const messages = defineMessages({
   title: {

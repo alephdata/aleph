@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import Query from 'src/app/Query';
 import DocumentManager from 'src/components/Document/DocumentManager';
 
-import './FolderViewer.css';
+import './FolderViewer.scss';
 
 class FolderViewer extends Component {
   render() {

@@ -10,10 +10,10 @@ from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 log = logging.getLogger(__name__)
 
 
-def clear_records(document_id):
+def delete_records(document_id, sync=False):
     """Delete all records associated with the given document."""
     q = {'term': {'document_id': document_id}}
-    query_delete(records_index(), q)
+    query_delete(records_index(), q, wait_for_completion=sync, refresh=sync)
 
 
 def generate_records(document):
@@ -36,16 +36,16 @@ def generate_records(document):
             log.info("Indexed [%s]: %s records...", document.id, idx)
 
 
-def index_records(document):
+def index_records(document, sync=False):
     if not document.supports_records:
         return
+    # TODO: should ``sync`` do anything here?
     return bulk(es, generate_records(document),
                 chunk_size=MAX_PAGE,
                 max_retries=10,
                 initial_backoff=2,
                 request_timeout=REQUEST_TIMEOUT,
-                timeout=TIMEOUT,
-                refresh=False)
+                timeout=TIMEOUT)
 
 
 def iter_records(document_id=None, collection_id=None):

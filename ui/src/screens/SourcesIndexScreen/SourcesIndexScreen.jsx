@@ -13,7 +13,7 @@ import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
 import { CollectionListItem } from 'src/components/Collection';
 
-import './SourcesIndexScreen.css';
+import './SourcesIndexScreen.scss';
 
 const messages = defineMessages({
   title: {

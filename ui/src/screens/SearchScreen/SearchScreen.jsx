@@ -16,7 +16,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
 
-import './SearchScreen.css';
+import './SearchScreen.scss';
 
 const messages = defineMessages({
   facet_schema: {
@@ -131,7 +131,11 @@ class SearchScreen extends React.Component {
         icon: 'person'
       }
     ];
-    this.state = {facets: facets, hideFacets: false};
+
+    this.state = {
+      facets: facets,
+      hideFacets: false
+    };
 
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -295,6 +299,9 @@ const mapStateToProps = (state, ownProps) => {
 
   // We normally only want Things, not Intervals (relations between things).
   const context = {
+    'highlight': true,
+    'highlight_count': 3,
+    'highlight_length': 140,
     'filter:schemata': 'Thing',
     'limit': 50
   };

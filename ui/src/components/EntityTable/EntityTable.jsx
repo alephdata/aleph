@@ -6,7 +6,7 @@ import c from 'classnames';
 import EntityTableRow from './EntityTableRow';
 import { SortableTH, ErrorSection } from 'src/components/common';
 
-import './EntityTable.css';
+import './EntityTable.scss';
 
 const messages = defineMessages({
   column_name: {
@@ -112,7 +112,7 @@ class EntityTable extends Component {
           </tr>
         </thead>
         <tbody className={c({'updating': isLoading})}>
-          {result.results !== undefined && result.results.map(entity =>
+          {result.results !== undefined && result.results.map(entity =>            
             <EntityTableRow key={entity.id}
                             entity={entity}
                             location={location}

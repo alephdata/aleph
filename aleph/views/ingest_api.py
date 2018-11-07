@@ -11,11 +11,10 @@ from normality import safe_filename, stringify
 
 from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
-from aleph.index.documents import index_document_id
-from aleph.logic.documents import ingest_document
-from aleph.index.util import refresh_index
-from aleph.index.core import entities_index
-from aleph.views.util import get_db_collection, jsonify, validate_data
+from aleph.logic.documents import ingest_document, update_document
+from aleph.logic.documents import index_document_id
+from aleph.views.util import get_db_collection, get_flag
+from aleph.views.util import jsonify, validate_data
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
@@ -117,8 +116,10 @@ def ingest_upload(id):
         index_document_id.apply_async([parent_id], priority=1)
 
     # Make sure collection counts are always accurate.
-    if collection.casefile:
-        refresh_index(entities_index())
+    if get_flag('sync'):
+        for document in documents:
+            update_document(document, shallow=True, sync=True)
+
     return jsonify({
         'status': 'ok',
         'documents': [CombinedSchema().dump(d).data for d in documents]

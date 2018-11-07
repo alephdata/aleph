@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import './Toolbar.css';
+import './Toolbar.scss';
 
 export default class extends React.Component {
   render() {

@@ -13,7 +13,7 @@ import getPath from 'src/util/getPath';
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 
-import './Entity.css';
+import './Entity.scss';
 
 
 class EntityLabel extends Component {
@@ -50,7 +50,7 @@ class EntityLabel extends Component {
     if (!text || !text.length || text.length < 1) {
       return (
         <span className='EntityLabel untitled'>
-          {icon && <Schema.Icon schema={schema}/>}
+          {icon && <Schema.Icon schema={schema} />}
           {icon && ' '}
           <FormattedMessage id='entity.label.missing' defaultMessage="Untitled" />
         </span>

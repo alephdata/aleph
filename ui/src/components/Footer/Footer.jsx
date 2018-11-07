@@ -2,7 +2,7 @@ import React from 'react';
 import {FormattedMessage} from 'react-intl';
 import { Icon } from '@blueprintjs/core';
 
-import './Footer.css';
+import './Footer.scss';
 
 class Footer extends React.Component {
 

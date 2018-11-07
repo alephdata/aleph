@@ -8,7 +8,7 @@ import queryString from 'query-string';
 import { DualPane, ErrorSection } from 'src/components/common';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
-import './AlertsManager.css';
+import './AlertsManager.scss';
 
 const messages = defineMessages({
   title: {

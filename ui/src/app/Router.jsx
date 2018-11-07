@@ -1,28 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
 import { fetchMetadata } from 'src/actions';
 import { selectSession, selectMetadata } from 'src/selectors';
-import NotFoundScreen from 'src/screens/NotFoundScreen/NotFoundScreen';
-import OAuthScreen from "src/screens/OAuthScreen/OAuthScreen";
-import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
-import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
-import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
-import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
-import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
-import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
-import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
-// import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
-import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
-import CollectionDocumentsScreen from 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen';
-import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
-import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
-import DocumentScreen from 'src/screens/DocumentScreen/DocumentScreen';
-import DocumentRedirectScreen from 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen';
+import './Router.scss';
 
-import './Router.css';
+
+const  NotFoundScreen = lazy(()=> import(/* webpackChunkName: 'NotFoundScreen' */ 'src/screens/NotFoundScreen/NotFoundScreen'));
+const OAuthScreen = lazy(()=> import(/* webpackChunkName: 'OAuthScreen' */ "src/screens/OAuthScreen/OAuthScreen"));
+const LogoutScreen  = lazy(()=> import(/* webpackChunkName: 'LogoutScreen' */ 'src/screens/LogoutScreen/LogoutScreen'));
+const ActivateScreen = lazy(() => import(/* webpackChunkName: 'ActivateScreen' */ 'src/screens/ActivateScreen/ActivateScreen'));
+const HomeScreen = lazy(()=> import(/* webpackChunkName: 'HomeScreen' */ 'src/screens/HomeScreen/HomeScreen'));
+const SearchScreen = lazy(()=> import(/* webpackChunkName: 'SearchScreen' */ 'src/screens/SearchScreen/SearchScreen'));
+const NotificationsScreen  = lazy(()=> import(/* webpackChunkName: 'NotificationsScreen' */ 'src/screens/NotificationsScreen/NotificationsScreen'));
+const SourcesIndexScreen  = lazy(()=> import(/* webpackChunkName: 'SourcesIndexScreen' */ 'src/screens/SourcesIndexScreen/SourcesIndexScreen'));
+const CasesIndexScreen  = lazy(()=> import(/* webpackChunkName: 'CasesIndexScreen' */ 'src/screens/CasesIndexScreen/CasesIndexScreen'));
+// import CaseScreen from 'src/screens/CaseScreen/CaseScreen';
+const CollectionScreen  = lazy(()=> import(/* webpackChunkName: 'CollectionScreen' */ 'src/screens/CollectionScreen/CollectionScreen'));
+const CollectionDocumentsScreen  = lazy(()=> import(/* webpackChunkName: 'CollectionDocumentsScreen' */ 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen'));
+const CollectionXrefMatchesScreen  = lazy(()=> import(/* webpackChunkName: 'CollectionXrefMatchesScreen' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
+const EntityScreen  = lazy(()=> import(/* webpackChunkName: 'EntityScreen' */ 'src/screens/EntityScreen/EntityScreen'));
+const DocumentScreen  = lazy(()=> import(/* webpackChunkName: 'DocumentScreen' */ 'src/screens/DocumentScreen/DocumentScreen'));
+const  DocumentRedirectScreen  = lazy(()=> import(/* webpackChunkName: 'DocumentRedirectScreen' */ 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen'));
+
 
 
 class Router extends Component {
@@ -38,34 +40,37 @@ class Router extends Component {
     const { metadata, session } = this.props;
     const isLoaded = metadata && metadata.app && session;
 
+    const Loading = (
+      <div className="RouterLoading">
+        <div className="spinner"><Spinner className="bp3-large"/></div>
+      </div>
+    );
     if (!isLoaded) {
-      return (
-        <div className="RouterLoading">
-          <div className="spinner"><Spinner className="bp3-large"/></div>
-        </div>
-      )
+      return Loading;
     }
 
     return (
-      <Switch>
-        <Route path="/oauth" exact component={OAuthScreen}/>
-        <Route path="/logout" exact component={LogoutScreen}/>
-        <Route path="/activate/:code" exact component={ActivateScreen}/>
-        <Route path="/entities/:entityId" exact component={EntityScreen}/>
-        <Route path="/documents/:documentId" exact component={DocumentScreen}/>
-        <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
-        <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
-        <Route path="/sources" exact component={SourcesIndexScreen}/>
-        <Route path="/cases" exact component={CasesIndexScreen}/>
-        {/*<Route path="/cases/:collectionId" exact component={CaseScreen}/>*/}
-        <Route path="/collections/:collectionId/documents" exact component={CollectionDocumentsScreen}/>
-        <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
-        <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen}/>
-        <Route path="/search" exact component={SearchScreen}/>
-        <Route path="/notifications" exact component={NotificationsScreen}/>
-        <Route path="/" exact component={HomeScreen}/>
-        <Route component={NotFoundScreen}/>
-      </Switch>
+      <Suspense fallback={Loading}>
+        <Switch>
+          <Route path="/oauth" exact component={OAuthScreen}/>
+          <Route path="/logout" exact component={LogoutScreen}/>
+          <Route path="/activate/:code" exact component={ActivateScreen}/>
+          <Route path="/entities/:entityId" exact component={EntityScreen}/>
+          <Route path="/documents/:documentId" exact component={DocumentScreen}/>
+          <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
+          <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
+          <Route path="/sources" exact component={SourcesIndexScreen}/>
+          <Route path="/cases" exact component={CasesIndexScreen}/>
+          {/*<Route path="/cases/:collectionId" exact component={CaseScreen}/>*/}
+          <Route path="/collections/:collectionId/documents" exact component={CollectionDocumentsScreen}/>
+          <Route path="/collections/:collectionId" exact component={CollectionScreen}/>
+          <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen}/>
+          <Route path="/search" exact component={SearchScreen}/>
+          <Route path="/notifications" exact component={NotificationsScreen}/>
+          <Route path="/" exact component={HomeScreen}/>
+          <Route component={NotFoundScreen}/>
+        </Switch>
+      </Suspense>
     );
   }
 }

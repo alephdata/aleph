@@ -14,7 +14,7 @@ import { CollectionListItem } from 'src/components/Collection';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
-import './CasesIndexScreen.css';
+import './CasesIndexScreen.scss';
 
 const messages = defineMessages({
   no_results_title: {

@@ -9,7 +9,7 @@ import { showWarningToast } from "src/app/toast";
 import { Role } from "src/components/common";
 import getCollectionLink from 'src/util/getCollectionLink';
 
-import "./CreateCaseDialog.css";
+import "./CreateCaseDialog.scss";
 
 const messages = defineMessages({
   untitled_label: {
@@ -60,7 +60,7 @@ class CreateCaseDialog extends Component {
     this.setState({permissions: permissions});
   }
 
-  onDeleteRole(role) {
+  onDeleteRole(role, event) {
     const { permissions } = this.state;
     const newPermissions = permissions.filter((permission) => permission.role.id !== role.role.id);
     this.setState({permissions: newPermissions});
@@ -138,8 +138,7 @@ class CreateCaseDialog extends Component {
                                   defaultMessage="Share with"/>
               </label>
               <div className="bp3-input-group bp3-fill">
-                <Role.Select onSelect={this.onAddRole}
-                            exclude={exclude} />
+                <Role.Select onSelect={this.onAddRole} exclude={exclude} />
               </div>
             </div>
             {permissions.length !== 0 && (
@@ -159,10 +158,8 @@ class CreateCaseDialog extends Component {
                         <Role.Label role={permission.role} icon={false} long={true} />
                       </td>
                       <td>
-                        <a onClick={(e) => this.onDeleteRole(permission, e)}>
-                          <FormattedMessage id="case.remove"
-                                            defaultMessage="Remove"/>
-                        </a>
+                        <Button onClick={(e) => this.onDeleteRole(permission, e)}
+                                small={true} minimal={true} icon="remove" />
                       </td>
                     </tr>
                   )}
