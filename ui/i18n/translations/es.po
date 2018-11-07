@@ -1,8 +1,9 @@
 # Translators:
 # John Ospina <jmospina@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-10-31T08:34:01.847Z\n"
+"POT-Creation-Date: 2018-11-07T12:46:55.047Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -952,13 +953,6 @@ msgstr "Destinatario"
 #: i18n/messages.json
 msgid "Register"
 msgstr "Registro"
-
-#. [case.remove]
-#. defaultMessage is:
-#. Remove
-#: i18n/messages.json
-msgid "Remove"
-msgstr ""
 
 #. [tags.results]
 #. defaultMessage is:

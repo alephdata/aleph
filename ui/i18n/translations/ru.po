@@ -1,8 +1,9 @@
 # Translators:
 # jen occrp <jen@occrp.org>, 2018
+# 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-10-31T08:34:01.847Z\n"
+"POT-Creation-Date: 2018-11-07T12:46:55.047Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -387,13 +388,15 @@ msgid ""
 "Cross-referencing against all other data may take a lot of time. Only start "
 "this process once and allow several hours for it to complete."
 msgstr ""
+"Перекрёстное сравнение со всеми доступными коллекциями данных отнимает "
+"несколько часов. Запускайте процедуру только один раз."
 
 #. [collection.xref.processing]
 #. defaultMessage is:
 #. Cross-referencing started.
 #: i18n/messages.json
 msgid "Cross-referencing started."
-msgstr ""
+msgstr "Перекрёстное сравнение запущено."
 
 #. [document.date]
 #. defaultMessage is:
@@ -488,7 +491,7 @@ msgstr "Скачать"
 #. Download matches as CSV
 #: i18n/messages.json
 msgid "Download matches as CSV"
-msgstr ""
+msgstr "Скачать результаты в формате CSV"
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -960,13 +963,6 @@ msgstr "Получатель"
 msgid "Register"
 msgstr "Зарегистрироваться"
 
-#. [case.remove]
-#. defaultMessage is:
-#. Remove
-#: i18n/messages.json
-msgid "Remove"
-msgstr "Удалить"
-
 #. [tags.results]
 #. defaultMessage is:
 #. Results
@@ -1126,7 +1122,7 @@ msgstr "Настройки"
 #. Share
 #: i18n/messages.json
 msgid "Share"
-msgstr ""
+msgstr "Предоставить доступ"
 
 #. [case.share.with]
 #. defaultMessage is:
@@ -1255,7 +1251,7 @@ msgstr "Источники данных"
 #. Start cross-referencing
 #: i18n/messages.json
 msgid "Start cross-referencing"
-msgstr ""
+msgstr "Запустить перекрёстное сравнение"
 
 #. [alerts.alert.delete]
 #. defaultMessage is:

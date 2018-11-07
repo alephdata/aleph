@@ -3,17 +3,20 @@
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
 # 
+# Translators:
+# jen occrp <jen@occrp.org>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-10-31 09:33+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2018-11-07 13:44+0100\n"
+"PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 "Language: ru\n"
@@ -33,43 +36,43 @@ msgstr "Владимир Путин"
 
 #: aleph/logic/xref.py:125
 msgid "Score"
-msgstr ""
+msgstr "Оценка"
 
 #: aleph/logic/xref.py:126
 msgid "EntityName"
-msgstr ""
+msgstr "Название сущности"
 
 #: aleph/logic/xref.py:127
 msgid "EntityDate"
-msgstr ""
+msgstr "Дата"
 
 #: aleph/logic/xref.py:128
 msgid "EntityCountries"
-msgstr ""
+msgstr "Страна"
 
 #: aleph/logic/xref.py:129
 msgid "MatchCollection"
-msgstr ""
+msgstr "Источник"
 
 #: aleph/logic/xref.py:130
 msgid "MatchName"
-msgstr ""
+msgstr "Совпадение имени"
 
 #: aleph/logic/xref.py:131
 msgid "MatchDate"
-msgstr ""
+msgstr "Совпадение даты"
 
 #: aleph/logic/xref.py:132
 msgid "MatchCountries"
-msgstr ""
+msgstr "Совпадение страны"
 
 #: aleph/logic/xref.py:133
 msgid "EntityLink"
-msgstr ""
+msgstr "Ссылка на сущность"
 
 #: aleph/logic/xref.py:134
 msgid "MatchLink"
-msgstr ""
+msgstr "Ссылка на совпадение"
 
 #: aleph/model/collection.py:24
 msgid "News archives"
@@ -214,19 +217,19 @@ msgstr ""
 "\n"
 "    Для завершения регистрации, пожалуйста, перейдите на <a href=\"%(url)s\"> страницу регистрации </a>."
 
-#: aleph/views/base_api.py:83
+#: aleph/views/base_api.py:89
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
 
-#: aleph/views/base_api.py:91
+#: aleph/views/base_api.py:97
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:100
+#: aleph/views/base_api.py:106
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:116
+#: aleph/views/base_api.py:122
 msgid "Access token has expired."
 msgstr "Ключ доступа устарел."
 
