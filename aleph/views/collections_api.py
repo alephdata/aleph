@@ -72,7 +72,6 @@ def process(id):
     collection = get_db_collection(id, request.authz.WRITE)
     # re-process the documents
     process_documents.delay(collection_id=collection.id)
-    update_collection(collection)
     return ('', 204)
 
 
