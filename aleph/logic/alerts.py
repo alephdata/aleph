@@ -1,12 +1,11 @@
 import logging
 from pprint import pprint  # noqa
-from elasticsearch.helpers import scan
 
 from aleph.authz import Authz
-from aleph.core import db, es
+from aleph.core import db
 from aleph.model import Alert, Events
 from aleph.index.core import entities_index
-from aleph.index.util import unpack_result, authz_query
+from aleph.index.util import search_safe, unpack_result, authz_query, MAX_PAGE
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -26,10 +25,10 @@ def check_alert(alert_id):
         return
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
-    found = 0
-    for result in scan(es, query=query, index=entities_index()):
+    result = search_safe(index=entities_index(), body=query)
+    for result in result.get('hits').get('hits', []):
         entity = unpack_result(result)
-        found += 1
+        log.info('Alert [%d]: %s', alert.label, entity.get('name'))
         params = {
             'alert': alert,
             'role': alert.role,
@@ -38,10 +37,8 @@ def check_alert(alert_id):
         publish(Events.MATCH_ALERT,
                 actor_id=entity.get('uploader_id'),
                 params=params)
-        db.session.commit()
 
     alert.update()
-    log.info('Found %d new results for: %s', found, alert.label)
     db.session.commit()
     db.session.close()
 
@@ -66,6 +63,7 @@ def alert_query(alert, authz):
         }
     }
     return {
+        'size': MAX_PAGE,
         'query': {
             'bool': {
                 'should': [query],
