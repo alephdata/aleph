@@ -28,7 +28,7 @@ def check_alert(alert_id):
     result = search_safe(index=entities_index(), body=query)
     for result in result.get('hits').get('hits', []):
         entity = unpack_result(result)
-        log.info('Alert [%d]: %s', alert.label, entity.get('name'))
+        log.info('Alert [%s]: %s', alert.label, entity.get('name'))
         params = {
             'alert': alert,
             'role': alert.role,
