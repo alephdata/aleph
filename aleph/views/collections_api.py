@@ -50,9 +50,8 @@ def view(id):
 def sitemap(id):
     collection = get_db_collection(id, request.authz.READ)
     url = collection_url(collection_id=collection.id)
-    return render_xml('sitemap.xml',
-                      url=url,
-                      updated_at=collection.updated_at,
+    updated_at = collection.updated_at.date().isoformat()
+    return render_xml('sitemap.xml', url=url, updated_at=updated_at,
                       entries=generate_sitemap(id))
 
 
