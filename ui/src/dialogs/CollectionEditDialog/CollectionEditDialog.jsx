@@ -18,6 +18,22 @@ const messages = defineMessages({
     id: 'collection.edit.info.placeholder_summary',
     defaultMessage: 'A brief summary',
   },
+  placeholder_publisher: {
+    id: 'collection.edit.info.placeholder_publisher',
+    defaultMessage: 'Organisation or person publishing this data',
+  },
+  placeholder_publisher_url: {
+    id: 'collection.edit.info.placeholder_publisher_url',
+    defaultMessage: 'Link to the publisher',
+  },
+  placeholder_info_url: {
+    id: 'collection.edit.info.placeholder_info_url',
+    defaultMessage: 'Link to further information',
+  },
+  placeholder_data_url: {
+    id: 'collection.edit.info.placeholder_data_url',
+    defaultMessage: 'Link to the raw data in a downloadable form',
+  },
   source_title : {
     id: 'collection.edit.title.source',
     defaultMessage: 'Source settings'
@@ -121,11 +137,9 @@ class CollectionEditDialog extends Component {
                 <FormattedMessage id="collection.edit.info.label" defaultMessage="Label"/>
               </label>
             <div className="bp3-form-content">
-              <input id="label"
+              <input id="label" type="text"
                      className="bp3-input bp3-large bp3-fill"
-                     type="text"
                      placeholder={intl.formatMessage(messages.placeholder_label)}
-                     dir="auto"
                      onChange={this.onFieldChange}
                      value={collection.label || ''}/>
             </div>
@@ -161,6 +175,58 @@ class CollectionEditDialog extends Component {
                         value={collection.summary || ''}/>
             </div>
           </div>
+          { !collection.casefile && (
+            <React.Fragment>
+              <div className="bp3-form-group">
+                <label className="bp3-label">
+                  <FormattedMessage id="collection.edit.info.publisher" defaultMessage="Publisher"/>
+                </label>
+                <div className="bp3-fill">
+                  <input id="publisher" type="text"
+                        className="bp3-input bp3-fill"
+                        placeholder={intl.formatMessage(messages.placeholder_publisher)}
+                        onChange={this.onFieldChange}
+                        value={collection.publisher || ''}/>
+                </div>
+              </div>
+              <div className="bp3-form-group">
+                <label className="bp3-label">
+                  <FormattedMessage id="collection.edit.info.publisher_url" defaultMessage="Publisher URL"/>
+                </label>
+                <div className="bp3-fill">
+                  <input id="publisher_url" type="text"
+                        className="bp3-input bp3-fill"
+                        placeholder={intl.formatMessage(messages.placeholder_publisher_url)}
+                        onChange={this.onFieldChange}
+                        value={collection.publisher_url || ''}/>
+                </div>
+              </div>
+              <div className="bp3-form-group">
+                <label className="bp3-label">
+                  <FormattedMessage id="collection.edit.info.info_url" defaultMessage="Information URL"/>
+                </label>
+                <div className="bp3-fill">
+                  <input id="info_url" type="text"
+                        className="bp3-input bp3-fill"
+                        placeholder={intl.formatMessage(messages.placeholder_info_url)}
+                        onChange={this.onFieldChange}
+                        value={collection.info_url || ''}/>
+                </div>
+              </div>
+              <div className="bp3-form-group">
+                <label className="bp3-label">
+                  <FormattedMessage id="collection.edit.info.data_url" defaultMessage="Data source URL"/>
+                </label>
+                <div className="bp3-fill">
+                  <input id="data_url" type="text"
+                        className="bp3-input bp3-fill"
+                        placeholder={intl.formatMessage(messages.placeholder_data_url)}
+                        onChange={this.onFieldChange}
+                        value={collection.data_url || ''}/>
+                </div>
+              </div>
+            </React.Fragment>
+          )}
           <div className="bp3-form-group">
               <label className="bp3-label">
                 <FormattedMessage id="collection.edit.info.contact" defaultMessage="Contact"/>

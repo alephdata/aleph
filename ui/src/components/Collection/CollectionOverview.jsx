@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
-import { Category, Country, Role, Date, Collection } from 'src/components/common';
+import { Category, Country, Role, Date, Collection, URL } from 'src/components/common';
 
 import './CollectionOverview.scss';
 
 class CollectionOverview extends Component {
   render() {
     const { collection, hasHeader = false } = this.props;
-    
-    // If collection data it hasn't loaded yet don't attempt to draw anything
-    if (!collection)
+    if (!collection) {
       return null;
+    }
+
+
 
     return (
       <div className='CollectionOverview'>
@@ -30,6 +31,46 @@ class CollectionOverview extends Component {
               </span>
               <span className="value">
                 <Category collection={collection} />
+              </span>
+            </li>
+          )}
+          { (collection.publisher || collection.publisher_url) && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.publisher" defaultMessage="Publisher"/>
+              </span>
+              <span className="value">
+                { !collection.publisher && (
+                  <URL value={collection.publisher_url} />
+                )}
+                { !collection.publisher_url && (
+                  <span>{collection.publisher}</span>
+                )}
+                { (collection.publisher && collection.publisher_url) && (
+                  <a href={collection.publisher_url} target="_blank">
+                    {collection.publisher}
+                  </a>
+                )} 
+              </span>
+            </li>
+          )}
+          { collection.info_url && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.info_url" defaultMessage="Information URL"/>
+              </span>
+              <span className="value">
+                <URL value={collection.info_url} />
+              </span>
+            </li>
+          )}
+          { collection.data_url && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.data_url" defaultMessage="Data URL"/>
+              </span>
+              <span className="value">
+                <URL value={collection.data_url} />
               </span>
             </li>
           )}
