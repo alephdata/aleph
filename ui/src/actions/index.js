@@ -62,14 +62,6 @@ export {
   tiggerXrefMatches
 };
 
-export const fetchMetadata = asyncActionCreator(() => async dispatch => {
-  const response = await endpoint.get('metadata');
-  return { metadata: response.data };
-}, { name: 'FETCH_METADATA' });
-
-export const fetchStatistics = asyncActionCreator(() => async dispatch => {
-  const response = await endpoint.get('statistics');
-  return { statistics: response.data };
-}, { name: 'FETCH_STATISTICS' });
+export { fetchMetadata, fetchStatistics } from './metadata'
 
 export const setLocale = createAction('SET_LOCALE');

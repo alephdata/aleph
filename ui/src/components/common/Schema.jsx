@@ -23,11 +23,10 @@ class SchemaIcon extends PureComponent {
 class SchemaLabel extends Component {
   render() {
     const { schema, schemata, plural, icon } = this.props;
-    const model = schemata[schema] || {};
-    let label = model.label || schema;
-    if (plural) {
-      label = model.plural || label;
-    }
+    const model = schemata[schema];
+    const label = model.getLabel({
+      forcePlural:plural
+    });
     if (icon) {
       return (
         <span><Schema.Icon schema={schema}/> {label}</span>

@@ -91,7 +91,8 @@
     "json-server": "^0.14.0",
     "node-sass": "^4.9.4",
     "react-intl-cra": "^0.3.3",
-    "react-intl-po": "^2.2.2"
+    "react-intl-po": "^2.2.2",
+    "typescript": "^3.1.6"
   },
   "proxy": "http://api:5000/",
   "browserslist": [
