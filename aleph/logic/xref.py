@@ -33,9 +33,10 @@ def xref_item(proxy):
     results = result.get('hits').get('hits')
     for result in results:
         result = unpack_result(result)
-        other = model.get_proxy(result)
-        score = compare(model, proxy, other)
-        yield score, result.get('collection_id'), other
+        if result is not None:
+            other = model.get_proxy(result)
+            score = compare(model, proxy, other)
+            yield score, result.get('collection_id'), other
 
 
 @celery.task()

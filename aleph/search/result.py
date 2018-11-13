@@ -89,7 +89,9 @@ class SearchQueryResult(QueryResult):
         hits = self.result.get('hits', {})
         self.total = hits.get('total')
         for doc in hits.get('hits', []):
-            self.results.append(unpack_result(doc))
+            doc = unpack_result(doc)
+            if doc is not None:
+                self.results.append(doc)
 
     def get_facets(self):
         facets = {}

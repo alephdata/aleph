@@ -60,4 +60,6 @@ def iter_records(document_id=None, collection_id=None):
         'sort': ['_doc']
     }
     for res in scan(es, index=records_index(), query=query, scroll='1410m'):
-        yield unpack_result(res)
+        record = unpack_result(res)
+        if record is not None:
+            yield record

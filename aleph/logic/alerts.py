@@ -21,7 +21,7 @@ def check_alerts():
 
 def check_alert(alert_id):
     alert = Alert.by_id(alert_id)
-    if alert is None:
+    if alert is None or alert.role is None:
         return
     if not alert.role.is_alertable:
         return
@@ -30,6 +30,8 @@ def check_alert(alert_id):
     result = search_safe(index=entities_index(), body=query)
     for result in result.get('hits').get('hits', []):
         entity = unpack_result(result)
+        if entity is None:
+            continue
         log.info('Alert [%s]: %s', alert.query, entity.get('name'))
         params = {
             'alert': alert,
