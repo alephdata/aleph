@@ -80,7 +80,17 @@ class CollectionOverview extends Component {
                 <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
               </span>
               <span className="value">
-                <Role.Label role={collection.creator} />
+                <Role.Link role={collection.creator} />
+              </span>
+            </li>
+          )}
+          { collection.team.length > 1 && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.team" defaultMessage="Accessible to"/>
+              </span>
+              <span className="value">
+                <Role.List roles={collection.team} />
               </span>
             </li>
           )}
