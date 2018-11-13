@@ -46,7 +46,7 @@ class QueryFilterTag extends PureComponent {
       case 'creator_id':
       case 'uploader_id':
         return (
-          <FormattedMessage id="search.filterTag.role" defaultMessage="Filter by user" />
+          <FormattedMessage id="search.filterTag.role" defaultMessage="Filter by access" />
         );
       case 'ancestors':
       case 'parent.id':
