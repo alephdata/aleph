@@ -17,7 +17,7 @@ class AlertsTestCase(TestCase):
         self.role_no_email.email = None
 
     def test_notify(self):
-        data = {'query_text': 'fruit', 'label': 'Test Alert'}
+        data = {'query': 'fruit'}
         alert = Alert.create(data, self.role_email.id)
         alert.notified_at = datetime.utcnow() + timedelta(hours=72)
         db.session.commit()
@@ -39,7 +39,7 @@ class AlertsTestCase(TestCase):
         assert notcount == 1, notcount
 
     def test_notify_entity(self):
-        data = {'query_text': 'kwazulu', 'label': 'Test Alert'}
+        data = {'query': 'kwazulu'}
         alert = Alert.create(data, self.role_email.id)
         alert.notified_at = datetime.utcnow() - timedelta(hours=72)
         db.session.add(alert)

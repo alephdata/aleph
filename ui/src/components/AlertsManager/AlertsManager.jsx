@@ -29,7 +29,7 @@ const messages = defineMessages({
   },
   search_alert: {
     id: 'alerts.alert.search',
-    defaultMessage: 'Search for {label}',
+    defaultMessage: 'Search for {query}',
   },
   delete_alert: {
     id: 'alerts.alert.delete',
@@ -68,7 +68,7 @@ class AlertsDialog extends Component {
     if (!newAlert.split().length) {
       return;
     }
-    await this.props.addAlert({query_text: newAlert});
+    await this.props.addAlert({query: newAlert});
     await this.props.fetchAlerts();
   }
 
@@ -126,12 +126,12 @@ class AlertsDialog extends Component {
               {alerts.results.map((item) => (
                 <tr key={item.id}>
                   <td className="alert-label">
-                    {item.label}
+                    {item.query}
                   </td>
                   <td className="narrow">
-                    <Tooltip content={intl.formatMessage(messages.search_alert, {label: item.label})}>
+                    <Tooltip content={intl.formatMessage(messages.search_alert, {query: item.query})}>
                       <Button icon="search" minimal={true} small={true}
-                              onClick={() => this.onSearch(item.label)} />
+                              onClick={() => this.onSearch(item.query)} />
                     </Tooltip>
                   </td>
                   <td className="narrow">

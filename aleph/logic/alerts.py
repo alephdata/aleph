@@ -23,12 +23,14 @@ def check_alert(alert_id):
     alert = Alert.by_id(alert_id)
     if alert is None:
         return
+    if not alert.role.is_alertable:
+        return
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
     result = search_safe(index=entities_index(), body=query)
     for result in result.get('hits').get('hits', []):
         entity = unpack_result(result)
-        log.info('Alert [%s]: %s', alert.label, entity.get('name'))
+        log.info('Alert [%s]: %s', alert.query, entity.get('name'))
         params = {
             'alert': alert,
             'role': alert.role,
@@ -51,7 +53,7 @@ def alert_query(alert, authz):
     # precise match query.
     query = {
         'simple_query_string': {
-            'query': alert.query_text,
+            'query': alert.query,
             'fields': ['text'],
             'default_operator': 'AND',
             'minimum_should_match': '90%'
