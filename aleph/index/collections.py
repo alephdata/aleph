@@ -31,6 +31,7 @@ def index_collection(collection, sync=False):
         'info_url': collection.info_url,
         'data_url': collection.data_url,
         'casefile': collection.casefile,
+        'secret': collection.secret,
         'collection_id': collection.id,
         'schemata': {},
         'team': []
