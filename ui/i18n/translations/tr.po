@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-11-07T12:46:55.047Z\n"
+"POT-Creation-Date: 2018-11-14T15:37:11.048Z\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +57,13 @@ msgstr ""
 #. Access control
 #: i18n/messages.json
 msgid "Access control"
+msgstr ""
+
+#. [collection.team]
+#. defaultMessage is:
+#. Accessible to
+#: i18n/messages.json
+msgid "Accessible to"
 msgstr ""
 
 #. [password_auth.activate]
@@ -390,6 +397,20 @@ msgstr ""
 msgid "Cross-referencing started."
 msgstr ""
 
+#. [collection.data_url]
+#. defaultMessage is:
+#. Data URL
+#: i18n/messages.json
+msgid "Data URL"
+msgstr ""
+
+#. [collection.edit.info.data_url]
+#. defaultMessage is:
+#. Data source URL
+#: i18n/messages.json
+msgid "Data source URL"
+msgstr ""
+
 #. [document.date]
 #. defaultMessage is:
 #. Date
@@ -555,6 +576,13 @@ msgstr ""
 msgid "File types"
 msgstr ""
 
+#. [search.filterTag.role]
+#. defaultMessage is:
+#. Filter by access
+#: i18n/messages.json
+msgid "Filter by access"
+msgstr ""
+
 #. [sources.index.filter]
 #. defaultMessage is:
 #. Filter the sources…
@@ -638,6 +666,16 @@ msgstr ""
 msgid "Info"
 msgstr ""
 
+#. [collection.info_url]
+#. defaultMessage is:
+#. Information URL
+#. [collection.edit.info.info_url]
+#. defaultMessage is:
+#. Information URL
+#: i18n/messages.json i18n/messages.json
+msgid "Information URL"
+msgstr ""
+
 #. [alerts.add_placeholder]
 #. defaultMessage is:
 #. Keep track of searches...
@@ -670,6 +708,27 @@ msgstr ""
 #. Last updated
 #: i18n/messages.json
 msgid "Last updated"
+msgstr ""
+
+#. [collection.edit.info.placeholder_info_url]
+#. defaultMessage is:
+#. Link to further information
+#: i18n/messages.json
+msgid "Link to further information"
+msgstr ""
+
+#. [collection.edit.info.placeholder_publisher_url]
+#. defaultMessage is:
+#. Link to the publisher
+#: i18n/messages.json
+msgid "Link to the publisher"
+msgstr ""
+
+#. [collection.edit.info.placeholder_data_url]
+#. defaultMessage is:
+#. Link to the raw data in a downloadable form
+#: i18n/messages.json
+msgid "Link to the raw data in a downloadable form"
 msgstr ""
 
 #. [text.loading]
@@ -885,6 +944,13 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+#. [collection.edit.info.placeholder_publisher]
+#. defaultMessage is:
+#. Organisation or person publishing this data
+#: i18n/messages.json
+msgid "Organisation or person publishing this data"
+msgstr ""
+
 #. [category.other]
 #. defaultMessage is:
 #. Other
@@ -928,6 +994,23 @@ msgstr ""
 #. Profile
 #: i18n/messages.json
 msgid "Profile"
+msgstr ""
+
+#. [collection.publisher]
+#. defaultMessage is:
+#. Publisher
+#. [collection.edit.info.publisher]
+#. defaultMessage is:
+#. Publisher
+#: i18n/messages.json i18n/messages.json
+msgid "Publisher"
+msgstr ""
+
+#. [collection.edit.info.publisher_url]
+#. defaultMessage is:
+#. Publisher URL
+#: i18n/messages.json
+msgid "Publisher URL"
 msgstr ""
 
 #. [notifications.title]
@@ -1039,9 +1122,9 @@ msgstr ""
 
 #. [alerts.alert.search]
 #. defaultMessage is:
-#. Search for {label}
+#. Search for {query}
 #: i18n/messages.json
-msgid "Search for {label}"
+msgid "Search for {query}"
 msgstr ""
 
 #. [collections.index.filter]
