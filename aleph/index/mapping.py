@@ -37,6 +37,7 @@ COLLECTION_MAPPING = {
         "kind": {"type": "keyword"},
         "text": {"type": "text", "analyzer": "icu_latin"},
         "casefile": {"type": "boolean"},
+        "secret": {"type": "boolean"},
         "created_at": {"type": "date"},
         "updated_at": {"type": "date"},
         "count": {"type": "long"},

@@ -1,5 +1,6 @@
 from datetime import datetime
-from normality import stringify
+from itertools import permutations
+from normality import stringify, normalize
 
 from aleph.core import db
 from aleph.model.role import Role
@@ -11,22 +12,15 @@ class Alert(db.Model, SoftDeleteModel):
     __tablename__ = 'alert'
 
     id = db.Column(db.Integer, primary_key=True)
-    custom_label = db.Column(db.Unicode, nullable=True)
-    query_text = db.Column(db.Unicode, nullable=True)
+    query = db.Column(db.Unicode, nullable=True)
     notified_at = db.Column(db.DateTime, nullable=True)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     role = db.relationship(Role, backref=db.backref('alerts', lazy='dynamic'))  # noqa
 
     @property
-    def label(self):
-        if self.custom_label is not None:
-            return self.custom_label
-        return self.query_text
-
-    @property
-    def norm_text(self):
-        return stringify(self.query_text)
+    def normalized(self):
+        return normalize(self.query)
 
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
@@ -41,7 +35,7 @@ class Alert(db.Model, SoftDeleteModel):
     def is_same(self, other):
         if other.role_id != self.role_id:
             return False
-        if other.norm_text != self.norm_text:
+        if other.normalized != self.normalized:
             return False
         return True
 
@@ -64,20 +58,18 @@ class Alert(db.Model, SoftDeleteModel):
     def create(cls, data, role_id):
         alert = cls()
         alert.role_id = role_id
-        alert.query_text = stringify(data.get('query_text'))
-        alert.custom_label = stringify(data.get('label'))
+        alert.query = stringify(data.get('query'))
         alert.update()
         return alert
 
     @classmethod
     def dedupe(cls):
         alerts = cls.all()
-        for left in alerts:
-            for right in alerts:
-                if left.id >= right.id:
-                    continue
-                if left.is_same(right):
-                    left.delete()
+        for (left, right) in permutations(alerts, 2):
+            if left.id >= right.id:
+                continue
+            if left.is_same(right):
+                left.delete()
 
     def __repr__(self):
         return '<Alert(%r, %r)>' % (self.id, self.label)

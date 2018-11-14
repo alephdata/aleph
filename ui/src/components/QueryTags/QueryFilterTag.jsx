@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
-import { Schema, Tag, Country, Language, Category, Collection, Entity } from 'src/components/common';
+import { Schema, Tag, Country, Language, Category, Collection, Entity, Role } from 'src/components/common';
 
 import './QueryFilterTag.scss';
 
@@ -42,6 +42,12 @@ class QueryFilterTag extends PureComponent {
             <Collection.Link collection={collection} />
           )}</Collection.Load>
         );
+      case 'team.id':
+      case 'creator_id':
+      case 'uploader_id':
+        return (
+          <FormattedMessage id="search.filterTag.role" defaultMessage="Filter by access" />
+        );
       case 'ancestors':
       case 'parent.id':
         return (       
@@ -79,18 +85,15 @@ class QueryFilterTag extends PureComponent {
           </React.Fragment>
         );
       default:
-        return (
-          <React.Fragment>{value}</React.Fragment>
-        );
+        return value;
     }
   }
 
   render() {
     const { filter, value } = this.props;
     return (
-        <TagWidget
-          className="bp3-large bp3-intent-primary QueryFilterTag"
-          onRemove={this.onRemove}>
+        <TagWidget className="bp3-large bp3-intent-primary QueryFilterTag"
+                   onRemove={this.onRemove}>
           {this.label(filter, value)}
         </TagWidget>
     );

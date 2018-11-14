@@ -70,7 +70,9 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         '_source': source
     }
     for res in scan(es, index=entities_index(), query=query, scroll='1410m'):
-        yield unpack_result(res)
+        entity = unpack_result(res)
+        if entity is not None:
+            yield entity
 
 
 def iter_proxies(**kw):
@@ -105,8 +107,10 @@ def iter_entities_by_ids(ids, authz=None):
         result = search_safe(index=entity_index(),
                              body=query,
                              request_cache=False)
-        for doc in result.get('hits').get('hits', []):
-            yield unpack_result(doc)
+        for doc in result.get('hits', {}).get('hits', []):
+            entity = unpack_result(doc)
+            if entity is not None:
+                yield entity
 
 
 def _index_updates(collection, entities):

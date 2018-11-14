@@ -7,8 +7,8 @@ from aleph.serializers.roles import RoleReferenceSchema
 
 
 class AlertSchema(BaseSchema):
-    query_text = String()
-    label = String()
+    query = String()
+    normalized = String(dump_only=True)
     role = Nested(RoleReferenceSchema, dump_only=True)
     notified_at = DateTime(dump_only=True)
 

@@ -49,7 +49,10 @@ def reconcile_op(query):
     query = MatchQuery(parser, entity=proxy)
     matches = []
     for doc in query.search().get('hits').get('hits'):
-        entity = model.get_proxy(unpack_result(doc))
+        entity = unpack_result(doc)
+        if entity is None:
+            continue
+        entity = model.get_proxy(entity)
         score = math.ceil(compare(model, proxy, entity) * 100)
         match = {
             'id': entity.id,

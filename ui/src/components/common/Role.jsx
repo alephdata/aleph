@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
 import { Button, MenuItem, Position, Classes, Alignment } from "@blueprintjs/core";
 import { Select as BlueprintSelect } from "@blueprintjs/select";
 
@@ -26,7 +27,7 @@ const messages = defineMessages({
 });
 
 
-class Label extends Component {
+class RoleLabel extends Component {
   shouldComponentUpdate(nextProps) {
     return this.props.role.id !== nextProps.role.id;
   }
@@ -51,20 +52,35 @@ class Label extends Component {
 }
 
 
-class List extends Component {
+class RoleLink extends Component {
+  render() {
+    const { role } = this.props;
+    if (!role) {
+      return null;
+    }
+    return (
+      <Link to={'/sources?collectionsfilter:team.id=' + role.id}>
+        <RoleLabel {...this.props} />
+      </Link>
+    );
+  }
+}
+
+
+class RoleList extends Component {
   render() {
     const { roles, truncate = Infinity } = this.props;
     if (!roles) return null;
 
     let names = roles.map((role, i) => {
-      return <Label key={role.id} role={role} {...this.props} />;
+      return <RoleLink key={role.id} role={role} {...this.props} />;
     });
 
     // Truncate if too long
     if (names.length > truncate) {
       names = [...names.slice(0, truncate), '…'];
     }
-    return wordList(names, ', ');
+    return wordList(names, ' · ');
   }
 }
 
@@ -138,8 +154,9 @@ class Select extends Component {
 
 
 class Role {
-  static Label = Label;
-  static List = List;
+  static Label = RoleLabel;
+  static Link = RoleLink;
+  static List = RoleList;
   static Select = connect(null, {suggestRoles})(injectIntl(Select));;
 }
 

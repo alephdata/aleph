@@ -1,7 +1,6 @@
 import logging
 from flask import request
-from banal import is_mapping
-from marshmallow import post_dump, pre_dump, pre_load
+from marshmallow import post_dump, pre_load
 from marshmallow.fields import Nested, Integer, String, List
 from marshmallow.fields import Dict, Boolean, Url
 from marshmallow.validate import Length
@@ -43,14 +42,6 @@ class CollectionSchema(BaseSchema):
     @pre_load
     def flatten_collection(self, data):
         flatten_id(data, 'creator_id', 'creator')
-
-    @pre_dump
-    def visibility(self, data):
-        if not is_mapping(data):
-            return
-        roles = [int(r) for r in data.get('roles', [])]
-        public = Role.public_roles()
-        data['secret'] = len(public.intersection(roles)) == 0
 
     @post_dump
     def hypermedia(self, data):

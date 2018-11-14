@@ -47,7 +47,7 @@ class SearchAlert extends React.Component {
       return false;
     }
     return !!alerts.results.some((a) => {
-      return a.query_text && a.query_text.trim() === queryText.trim();
+      return a.query && a.query.trim() === queryText.trim();
     });
   }
 
@@ -63,13 +63,13 @@ class SearchAlert extends React.Component {
     this.setState({updating: true});
     if (alertExists) {
       for (let alert of alerts.results) {
-        if (alert.query_text.trim() === queryText.trim()) {
+        if (alert.query.trim() === queryText.trim()) {
           await this.props.deleteAlert(alert.id);
           await this.props.fetchAlerts();
         }
       }
     } else {
-      await this.props.addAlert({query_text: queryText.trim()});
+      await this.props.addAlert({query: queryText.trim()});
       await this.props.fetchAlerts();
     }
     this.setState({updating: false});

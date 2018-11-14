@@ -4,7 +4,7 @@ from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from aleph.core import db, settings, cache
+from aleph.core import db, settings
 from aleph.model.common import SoftDeleteModel, IdModel, make_textid
 from aleph.util import anonymize_email
 
@@ -43,6 +43,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     email = db.Column(db.Unicode, nullable=True)
     api_key = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
+    is_muted = db.Column(db.Boolean, nullable=False, default=False)
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
     password_digest = db.Column(db.Unicode, nullable=True)
     password = None
@@ -60,24 +61,37 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return self.id in self.public_roles()
 
     @property
+    def is_alertable(self):
+        if self.email is None:
+            return False
+        if self.is_muted:
+            return False
+        # TODO: ignore people that have not logged in for a certain time?
+        return True
+
+    @property
     def label(self):
         return anonymize_email(self.name, self.email)
 
     def update(self, data):
         self.name = data.get('name', self.name)
+        self.is_muted = data.get('is_muted', self.is_muted)
         if data.get('password'):
             self.set_password(data.get('password'))
+        self.updated_at = datetime.utcnow()
 
     def clear_roles(self):
         """Removes any existing roles from group membership."""
         self.roles = []
         db.session.add(self)
+        self.updated_at = datetime.utcnow()
 
     def add_role(self, role):
         """Adds an existing role as a membership of a group."""
         self.roles.append(role)
         db.session.add(role)
         db.session.add(self)
+        self.updated_at = datetime.utcnow()
 
     @classmethod
     def by_foreign_id(cls, foreign_id):
@@ -136,14 +150,13 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     @classmethod
     def load_id(cls, foreign_id):
         """Load a role and return the ID."""
-        key = cache.key('role_id', foreign_id)
-        role_id = cache.get(key)
-        if role_id is not None:
-            return int(role_id)
-        role_id, = cls.all_ids().filter_by(foreign_id=foreign_id).first()
-        if role_id is not None:
-            cache.set(foreign_id, role_id)
-            return role_id
+        if not hasattr(settings, '_roles'):
+            settings._roles = {}
+        if foreign_id not in settings._roles:
+            role_id, = cls.all_ids().filter_by(foreign_id=foreign_id).first()
+            if role_id is not None:
+                settings._roles[foreign_id] = role_id
+        return settings._roles.get(foreign_id)
 
     @classmethod
     def public_roles(cls):
