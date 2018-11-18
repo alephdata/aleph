@@ -29,7 +29,7 @@ class DocumentsQuery(AuthzQuery):
 
 
 class EntitiesQuery(AuthzQuery):
-    TEXT_FIELDS = ['name^3', 'text']
+    TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
     EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
     SORT_DEFAULT = ['_score']
 

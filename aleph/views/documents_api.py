@@ -32,8 +32,8 @@ def _resp_canonical(resp, document_id):
 
 @blueprint.route('/api/2/documents', methods=['GET'])
 def index():
-    enable_cache()
     result = DocumentsQuery.handle(request, schema=CombinedSchema)
+    enable_cache(vary=result.cache_key)
     return jsonify(result)
 
 

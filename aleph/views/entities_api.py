@@ -27,11 +27,10 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/2/entities', methods=['GET'])
 def index():
     parser = SearchQueryParser(request.args, request.authz)
-    if parser.cache:
-        enable_cache()
     result = EntitiesQuery.handle(request,
                                   parser=parser,
                                   schema=CombinedSchema)
+    enable_cache(vary=result.cache_key)
     return jsonify(result)
 
 

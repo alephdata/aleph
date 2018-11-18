@@ -12,7 +12,7 @@ from aleph.core import cache, settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.index.collections import get_instance_stats
-from aleph.views.cache import enable_cache
+from aleph.views.cache import enable_cache, NotModified
 from aleph.views.util import jsonify, render_xml
 
 blueprint = Blueprint('base_api', __name__)
@@ -88,6 +88,11 @@ def api_v1_message(path):
         'status': 'error',
         'message': gettext('/api/1/ is deprecated, please use /api/2/.')
     }, status=501)
+
+
+@blueprint.app_errorhandler(NotModified)
+def handle_not_modified(err):
+    return ('', 304)
 
 
 @blueprint.app_errorhandler(403)

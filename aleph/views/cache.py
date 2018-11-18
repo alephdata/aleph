@@ -59,7 +59,7 @@ def enable_cache(vary_user=True, vary=None):
         request._http_private = True
 
     request._http_etag = hash_data(cache_parts)
-    if request.if_none_match == request._http_etag:
+    if request._http_etag in request.if_none_match:
         raise NotModified()
 
 

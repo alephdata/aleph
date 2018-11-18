@@ -15,6 +15,7 @@ from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
 from aleph.logic.util import collection_url
 from aleph.serializers import CollectionSchema
+from aleph.views.cache import enable_cache
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, jsonify, parse_request, serialize_data
 from aleph.views.util import render_xml, get_flag
@@ -26,6 +27,7 @@ blueprint = Blueprint('collections_api', __name__)
 @blueprint.route('/api/2/collections', methods=['GET'])
 def index():
     result = CollectionsQuery.handle(request, schema=CollectionSchema)
+    enable_cache(vary=result.cache_key)
     return jsonify(result)
 
 

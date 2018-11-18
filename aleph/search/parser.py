@@ -1,8 +1,10 @@
 import logging
+from uuid import uuid4
 from normality import stringify
 from banal import as_bool, hash_data
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
+from aleph.core import settings
 from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
@@ -26,6 +28,9 @@ class QueryParser(object):
         self.limit = limit
         self.text = stringify(self.get('q'))
         self.prefix = stringify(self.get('prefix'))
+
+        # Disable or enable query caching
+        self.cache = self.getbool('cache', settings.CACHE)
 
     @property
     def page(self):
@@ -107,7 +112,9 @@ class QueryParser(object):
     @property
     def cache_key(self):
         """Generate a key for the current result."""
-        return hash_data((self.args.items(), self.authz.id, self.limit))
+        if not self.cache:
+            return uuid4().hex
+        return hash_data(self.to_dict())
 
     def to_dict(self):
         parser = {
@@ -145,9 +152,6 @@ class SearchQueryParser(QueryParser):
         self.highlight_length = self.getint('highlight_length', 100)
         # Number of snippets per document, 0 = return full document text.
         self.highlight_count = self.getint('highlight_count', 5)
-
-        # Disable or enable query caching
-        self.cache = self.getbool('cache', True)
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""
