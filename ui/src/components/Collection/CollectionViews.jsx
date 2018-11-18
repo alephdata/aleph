@@ -67,7 +67,11 @@ class CollectionViews extends React.Component {
     const entitySchemata = this.getEntitySchmata();
     const hasBrowse = (numOfDocs > 0 || collection.casefile);
     return (
-      <Tabs id="EntityInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
+      <Tabs id="EntityInfoTabs"
+            onChange={this.handleTabChange}
+            selectedTabId={activeMode}
+            renderActiveTabPanelOnly={true}
+            className='info-tabs-padding'>
         {isPreview && (
           <Tab id="info"
                title={

@@ -8,16 +8,10 @@ export async function queryEndpoint({query, next}) {
   // will be used instead of generating a URI.
   if (next) {
     const response = await endpoint.get(next);
-    return {
-      query,
-      result: response.data
-    };
+    return { query, result: response.data };
   }
   const response = await endpoint.get(query.path, {
     params: query.toParams()
   });
-  return {
-    query,
-    result: response.data
-  };
+  return { query, result: response.data };
 } 
