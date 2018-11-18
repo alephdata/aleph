@@ -112,10 +112,8 @@ class CasesIndexScreen extends Component {
 
     const breadcrumbs = (<Breadcrumbs>
       <li>
-        <a className="bp3-breadcrumb">
-          <FormattedMessage id="cases.browser.breadcrumb"
-                            defaultMessage="Cases overview"/>
-        </a>
+        <FormattedMessage id="cases.browser.breadcrumb"
+                          defaultMessage="Cases overview"/>
       </li>
     </Breadcrumbs>);
 

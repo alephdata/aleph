@@ -6,11 +6,11 @@ import Waypoint from 'react-waypoint';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
-import Fragment from 'src/app/Fragment';
 import { queryEntities } from 'src/actions/index';
 import { selectEntityReference, selectEntitiesResult, selectSchemata } from "src/selectors";
 import { SectionLoading, ErrorSection, Property } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
+import togglePreview from 'src/util/togglePreview';
 
 const messages = defineMessages({
   no_relationships: {
@@ -48,25 +48,10 @@ class EntityReferencesMode extends React.Component {
     }
   }
 
-  onShowDetails(entity) {
+  onShowDetails(event, entity) {
     const { history } = this.props;
-    return (event) => {
-      event.preventDefault();
-      const fragment = new Fragment(history);
-      if(fragment.state['preview:id'] === entity.id && fragment.state['preview:type'] === 'entity') {
-        fragment.update({
-          'preview:id': undefined,
-          'preview:type': undefined,
-          'preview:mode': undefined,
-        });
-      } else {
-        fragment.update({
-          'preview:mode': 'info',
-          'preview:type': 'entity',
-          'preview:id': entity.id
-        });
-      }
-    }
+    event.preventDefault();
+    togglePreview(history, entity, 'entity');
   }
 
   render() {
@@ -104,7 +89,7 @@ class EntityReferencesMode extends React.Component {
                   </td>
                 ))}
                 <td key="details" className="narrow">
-                  <a onClick={this.onShowDetails(entity)}>
+                  <a onClick={(e) => this.onShowDetails(e, entity)} href="#">
                     <span>
                       <FormattedMessage id="references.details" defaultMessage="Details" />
                     </span>

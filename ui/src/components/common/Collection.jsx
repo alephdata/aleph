@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -11,9 +10,10 @@ import c from 'classnames';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
-// import { getColor } from 'src/util/colorScheme';
+import togglePreview from 'src/util/togglePreview';
 
 import './Collection.scss';
+
 
 class CollectionLabel extends Component {
   shouldComponentUpdate(nextProps) {
@@ -31,7 +31,6 @@ class CollectionLabel extends Component {
     let iconName = "database", style = {};
     if (collection.casefile) {
       iconName = "briefcase";
-      // style = {color: getColor(collection.id)};
     } else if (collection.secret) {
       iconName = "lock";
     }
@@ -58,25 +57,10 @@ class CollectionLink extends Component {
   }
 
   onClick(event) {
-    const { collection, history, location, preview } = this.props;
+    const { collection, history, preview } = this.props;
     if (preview === true) {
       event.preventDefault();
-      const parsedHash = queryString.parse(location.hash);
-      const previewType = 'collection';
-      if (parsedHash['preview:id'] === collection.id && parsedHash['preview:type'] === previewType) {
-        parsedHash['preview:id'] = undefined;
-        parsedHash['preview:type'] = undefined;
-        parsedHash['preview:mode'] = undefined;
-      } else {
-        parsedHash['preview:id'] = collection.id;
-        parsedHash['preview:type'] = previewType;
-        parsedHash['preview:mode'] = undefined;
-      }
-      history.replace({
-        pathname: location.pathname,
-        search: location.search,
-        hash: queryString.stringify(parsedHash),
-      });
+      togglePreview(history, collection, 'collection');
     }
   }
 

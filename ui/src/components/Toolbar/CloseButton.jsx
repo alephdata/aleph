@@ -18,7 +18,7 @@ class CloseButton extends React.Component {
     parsedHash['preview:mode'] = undefined;
     parsedHash['page'] = undefined;
     parsedHash['mode'] = undefined;
-    history.replace({
+    history.push({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),

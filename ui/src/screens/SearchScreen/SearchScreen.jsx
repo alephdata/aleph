@@ -11,10 +11,10 @@ import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import { DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
-import Entity from 'src/components/common/Entity';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
+import togglePreview from 'src/util/togglePreview';
 
 import './SearchScreen.scss';
 
@@ -176,37 +176,37 @@ class SearchScreen extends React.Component {
       hash: queryString.stringify(parsedHash),
     });
   }
-  getCurrentPreviewIndex = () => {
-    const { location } = this.props;
 
+  getCurrentPreviewIndex() {
+    const { location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     return this.props.result.results.findIndex(
       entity => entity.id === parsedHash['preview:id']
     )
-  };
+  }
 
-  showNextPreview = () => {
+  showNextPreview() {
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[1 + currentSelectionIndex];
     if(nextEntity){
       this.showPreview(nextEntity)
     }
-  };
+  }
 
-  showPreviousPreview = () => {
+  showPreviousPreview() {
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[currentSelectionIndex - 1];
     if(nextEntity){
       this.showPreview(nextEntity)
     }
-  };
+  }
 
-  showPreview = (entity)  => Entity.Link.openPreview({
-    location: this.props.location,
-    history:this.props.history,
-    entity,
-  });
-
+  showPreview(entity) {
+    const { history } = this.props;
+    const isDocument = entity.schemata.indexOf('Document') !== -1;
+    const previewType = isDocument ? 'document' : 'entity';
+    togglePreview(history, entity, previewType);
+  }
 
   toggleFacets() {
     this.setState({hideFacets: !this.state.hideFacets});

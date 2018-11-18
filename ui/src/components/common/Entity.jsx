@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
-import queryString from 'query-string';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -10,6 +9,7 @@ import c from 'classnames';
 
 import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
+import togglePreview from 'src/util/togglePreview';
 import { fetchEntity } from 'src/actions';
 import { selectEntity } from 'src/selectors';
 
@@ -68,32 +68,13 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
-
-   static openPreview({ history, location, entity}){
-    const parsedHash = queryString.parse(location.hash);
-    const previewType = entity.schemata.indexOf('Document') !== -1 ? 'document' : 'entity';
-
-    if (parsedHash['preview:id'] === entity.id && parsedHash['preview:type'] === previewType) {
-      parsedHash['preview:id'] = undefined;
-      parsedHash['preview:type'] = undefined;
-      parsedHash['preview:mode'] = undefined;
-    } else {
-      parsedHash['preview:id'] = entity.id;
-      parsedHash['preview:type'] = previewType;
-      parsedHash['preview:mode'] = undefined;
-    }
-    history.replace({
-      pathname: location.pathname,
-      search: location.search,
-      hash: queryString.stringify(parsedHash),
-    });
-  }
-
-  onClick = (event) => {
-    const { preview } = this.props;
+  onClick(event) {
+    const { entity, history, preview } = this.props;
     if (preview) {
+      const isDocument = entity.schemata.indexOf('Document') !== -1;
+      const previewType = isDocument ? 'document' : 'entity';
       event.preventDefault();
-      EntityLink.openPreview(this.props)
+      togglePreview(history, entity, previewType);
     }
   };
 

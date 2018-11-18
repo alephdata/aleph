@@ -9,11 +9,6 @@ import './CollectionListItem.scss';
 
 
 class CollectionListItem extends Component {
-  shouldComponentUpdate(nextProps) {
-    return nextProps.collection.id !== this.props.collection.id || 
-      nextProps.collection.updated_at !== this.props.collection.updated_at;
-  }
-
   render() {
     const { collection, preview = true } = this.props;
     if (!collection.id) {
