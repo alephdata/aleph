@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
@@ -29,7 +30,6 @@ class PdfViewer extends Component {
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onResize = this.onResize.bind(this);
-    this.onSearchResultClick = this.onSearchResultClick.bind(this);
   }
 
   onDocumentLoad(pdfInfo) {
@@ -117,14 +117,10 @@ class PdfViewer extends Component {
     }
   }
 
-  onSearchResultClick(e, res) {
-    const { document, history } = this.props;
-    e.preventDefault();
-    history.push({
-      pathname: getPath(document.links.ui),
-      search: queryString.stringify({documentq: undefined}),
-      hash: `page=${res.index}&mode=view`
-    });
+  getResultLink(result) {
+    const { document } = this.props;
+    const path = getPath(document.links.ui);
+    return `${path}#page=${result.index}&mode=view`;
   }
 
   renderPDFView (){
@@ -199,9 +195,9 @@ class PdfViewer extends Component {
                       {result.results.map((res) => (
                         <li key={`page-${res.id}`}>
                           <p>
-                            <a onClick={(e) => this.onSearchResultClick(e, res)} className={classNames({active: page === res.index})}>
+                            <Link to={this.getResultLink(res)} className={classNames({active: page === res.index})}>
                               <span className={`bp3-icon-document`}/> Page {res.index}
-                            </a>
+                            </Link>
                           </p>
                           <p>
                             { res.highlight !== undefined && (

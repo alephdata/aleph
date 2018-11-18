@@ -47,7 +47,7 @@ class CollectionOverview extends Component {
                   <span>{collection.publisher}</span>
                 )}
                 { (collection.publisher && collection.publisher_url) && (
-                  <a href={collection.publisher_url} target="_blank">
+                  <a href={collection.publisher_url} target="_blank" rel="noopener noreferrer">
                     {collection.publisher}
                   </a>
                 )} 
