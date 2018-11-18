@@ -24,7 +24,7 @@ def create():
     data = parse_request(AlertSchema)
     alert = Alert.create(data, request.authz.id)
     db.session.commit()
-    return view(alert.id)
+    return serialize_data(alert, AlertSchema)
 
 
 @blueprint.route('/api/2/alerts/<int:id>', methods=['GET'])

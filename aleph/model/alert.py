@@ -72,4 +72,4 @@ class Alert(db.Model, SoftDeleteModel):
                 left.delete()
 
     def __repr__(self):
-        return '<Alert(%r, %r)>' % (self.id, self.label)
+        return '<Alert(%r, %r)>' % (self.id, self.query)
