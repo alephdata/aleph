@@ -44,7 +44,7 @@ class Query(object):
                     "query": self.parser.text,
                     "fields": self.TEXT_FIELDS,
                     "default_operator": "AND",
-                    "minimum_should_match": "67%",
+                    "minimum_should_match": "80%",
                     "lenient": True
                 }
             })
