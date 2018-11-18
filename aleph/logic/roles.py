@@ -1,6 +1,7 @@
 import logging
 
-from aleph.core import db, celery
+from aleph.core import db, cache, celery
+from aleph.authz import Authz
 from aleph.model import Role, Subscription, Notification
 from aleph.logic.notifications import channel
 
@@ -10,6 +11,8 @@ log = logging.getLogger(__name__)
 def update_role(role):
     """Synchronize denormalised role configuration."""
     update_subscriptions.delay(role.id)
+    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ, role.id))
+    cache.kv.delete(cache.key(Authz.PREFIX, Authz.WRITE, role.id))
 
 
 @celery.task(priority=3)
