@@ -68,6 +68,11 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
+  constructor() {
+    super();
+    this.onClick = this.onClick.bind(this);
+  }
+
   onClick(event) {
     const { entity, history, preview } = this.props;
     if (preview) {
