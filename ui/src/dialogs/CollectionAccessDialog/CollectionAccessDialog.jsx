@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
 import { selectCollectionPermissions } from 'src/selectors';
 import { Role } from 'src/components/common';
-import { showSuccessToast } from "src/app/toast";
+import { showSuccessToast, showWarningToast } from "src/app/toast";
 
 import './CollectionAccessDialog.scss';
 
@@ -55,7 +55,8 @@ class CollectionAccessDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      permissions: []
+      permissions: [],
+      blocking: false
     };
     this.onAddRole = this.onAddRole.bind(this);
     this.onToggle = this.onToggle.bind(this);
@@ -69,17 +70,22 @@ class CollectionAccessDialog extends Component {
   componentDidUpdate(prevProps) {
     const { collection, permissions } = this.props;
     if (prevProps.collection && collection.id !== undefined && prevProps.collection.id !== collection.id) {
-      this.setState({permissions: []});
       this.fetchPermissions();
     }
     if (!this.state.permissions.length && permissions.results) {
-      this.setState({permissions: permissions.results});
+      this.setState({
+        permissions: permissions.results,
+        blocking: false
+      });
     }
   }
 
   fetchPermissions() {
     const { collection } = this.props;
-    this.setState({permissions: []});
+    this.setState({
+      permissions: [],
+      blocking: true
+    });
     if (collection && collection.writeable) {
       this.props.fetchCollectionPermissions(collection.id);
     }
@@ -110,15 +116,23 @@ class CollectionAccessDialog extends Component {
 
   async onSave() {
     const { intl, collection, updateCollectionPermissions } = this.props;
-    const { permissions } = this.state;
-    this.props.toggleDialog();
-    showSuccessToast(intl.formatMessage(messages.save_success));
-    await updateCollectionPermissions(collection.id, permissions);
+    const { permissions, blocking } = this.state;
+    if (blocking) return;
+    this.setState({blocking: true});
+    try {
+      await updateCollectionPermissions(collection.id, permissions);
+      this.props.toggleDialog();
+      this.setState({blocking: false});
+      showSuccessToast(intl.formatMessage(messages.save_success));
+    } catch (e) {
+      this.setState({blocking: false});
+      showWarningToast(e.message);
+    }
   }
 
   render() {
-    const {collection, intl} = this.props;
-    const {permissions} = this.state;
+    const { collection, intl } = this.props;
+    const { permissions, blocking } = this.state;
 
     if (!collection || !collection.writeable || !permissions) {
       return null;
@@ -187,13 +201,13 @@ class CollectionAccessDialog extends Component {
         </div>
         <div className="bp3-dialog-footer">
           <div className="bp3-dialog-footer-actions">
-            <Button
-              onClick={this.props.toggleDialog}
-              text={intl.formatMessage(messages.cancel_button)} />
-            <Button
-              intent={Intent.PRIMARY}
-              onClick={this.onSave}
-              text={intl.formatMessage(messages.save_button)} />
+            <Button onClick={this.props.toggleDialog}
+                    disabled={blocking}
+                    text={intl.formatMessage(messages.cancel_button)} />
+            <Button intent={Intent.PRIMARY}
+                    onClick={this.onSave}
+                    disabled={blocking}
+                    text={intl.formatMessage(messages.save_button)} />
           </div>
         </div>
       </Dialog>

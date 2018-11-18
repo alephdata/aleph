@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 @blueprint.route('/api/2/metadata')
 def metadata():
     locale = get_locale()
-    enable_cache(vary_user=False)
+    enable_cache(vary_user=False, vary=str(locale))
     key = cache.key('metadata', id(settings), locale)
     data = cache.get_complex(key)
     if data is not None:
@@ -61,7 +61,7 @@ def metadata():
 
 @blueprint.route('/api/2/statistics')
 def statistics():
-    enable_cache(vary_user=True)
+    enable_cache(vary=request.authz.id)
     return jsonify(get_instance_stats(request.authz))
 
 

@@ -44,7 +44,8 @@ class CreateCaseDialog extends Component {
         summary: '',
         casefile: true
       },
-      permissions: []
+      permissions: [],
+      blocking: false
     };
 
     this.onAddCase = this.onAddCase.bind(this);
@@ -68,14 +69,18 @@ class CreateCaseDialog extends Component {
 
   async onAddCase(event) {
     const { history } = this.props;
-    const { collection, permissions } = this.state;
+    const { collection, permissions, blocking } = this.state;
     event.preventDefault();
+    if (blocking) return;
+    this.setState({blocking: true});
     try {
       const response = await this.props.createCollection(collection);
       const collectionId = response.data.id;
       await this.props.updateCollectionPermissions(collectionId, permissions);
+      this.setState({blocking: false});
       history.push(getCollectionLink(response.data));
     } catch (e) {
+      this.setState({blocking: false});
       showWarningToast(e.message);
     }
   }
@@ -94,7 +99,7 @@ class CreateCaseDialog extends Component {
 
   render() {
     const { intl } = this.props;
-    const { collection, permissions } = this.state;
+    const { collection, permissions, blocking } = this.state;
     const exclude = permissions.map((perm) => parseInt(perm.role.id, 10));
 
     return (
@@ -171,6 +176,7 @@ class CreateCaseDialog extends Component {
             <div className="bp3-dialog-footer-actions">
               <Button type="submit"
                       intent={Intent.PRIMARY}
+                      disabled={blocking}
                       text={intl.formatMessage(messages.save)} />
             </div>
           </div>

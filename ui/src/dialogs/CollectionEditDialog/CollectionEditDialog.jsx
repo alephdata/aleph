@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { Role, Country } from 'src/components/common';
-import { showSuccessToast } from "src/app/toast";
+import { showSuccessToast, showWarningToast } from "src/app/toast";
 import { updateCollection } from "src/actions";
 import { selectMetadata } from 'src/selectors';
 
@@ -57,10 +57,6 @@ const messages = defineMessages({
   save_success: {
     id: 'collection.edit.save_success',
     defaultMessage: 'Your changes are saved.',
-  },
-  save_error: {
-    id: 'collection.edit.save_error',
-    defaultMessage: 'Failed to save changes.',
   }
 });
 
@@ -70,7 +66,8 @@ class CollectionEditDialog extends Component {
     super(props);
     this.state = {
       collection: props.collection,
-      deleteIsOpen: false
+      deleteIsOpen: false,
+      blocking: false
     };
 
     this.onSave = this.onSave.bind(this);
@@ -108,20 +105,24 @@ class CollectionEditDialog extends Component {
 
   async onSave() {
     const { intl } = this.props;
-    const { collection } = this.state;
+    const { collection, blocking } = this.state;
+    if (blocking) return;
+    this.setState({blocking: true});
 
     try {
       await this.props.updateCollection(collection);
       showSuccessToast(intl.formatMessage(messages.save_success));
       this.props.toggleDialog();
+      this.setState({blocking: false});
     } catch (e) {
-      alert(intl.formatMessage(messages.save_error));
+      showWarningToast(e.message);
+      this.setState({blocking: false});
     }
   }
 
   render() {
     const { intl, categories } = this.props;
-    const { collection } = this.state;
+    const { collection, blocking } = this.state;
     const title = collection.casefile ? 
                   intl.formatMessage(messages.case_title) :
                   intl.formatMessage(messages.source_title);
@@ -266,13 +267,16 @@ class CollectionEditDialog extends Component {
             <Button
               intent={Intent.DANGER}
               onClick={this.toggleDeleteCollection}
+              disabled={blocking}
               text={intl.formatMessage(messages.delete_button)} />
             <Button
               onClick={this.props.toggleDialog}
+              disabled={blocking}
               text={intl.formatMessage(messages.cancel_button)} />
             <Button
               intent={Intent.PRIMARY}
               onClick={this.onSave}
+              disabled={blocking}
               text={intl.formatMessage(messages.save_button)} />
           </div>
         </div>
