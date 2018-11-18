@@ -70,11 +70,14 @@ def cache_response(resp):
         resp.headers['X-Accel-Buffering'] = 'no'
 
     if not request._http_cache:
+        resp.cache_control.no_cache = True
         return resp
 
     if request.method != 'GET' or resp.status_code != 200:
+        resp.cache_control.no_cache = True
         return resp
 
+    resp.cache_control.public = True
     resp.vary.add('Accept-Language')
     resp.vary.add('Authorization')
 
@@ -86,6 +89,4 @@ def cache_response(resp):
 
     if request._http_private:
         resp.cache_control.private = True
-    else:
-        resp.cache_control.public = True
     return resp
