@@ -50,7 +50,11 @@ class DocumentViews extends React.Component {
     const hasViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
 
     return (
-      <Tabs id="DocumentInfoTabs" onChange={this.handleTabChange} selectedTabId={activeMode} className='info-tabs-padding'>
+      <Tabs id="DocumentInfoTabs"
+            onChange={this.handleTabChange}
+            selectedTabId={activeMode}
+            renderActiveTabPanelOnly={true}
+            className='info-tabs-padding'>
         {isPreview && (
           <Tab id="info"
                title={

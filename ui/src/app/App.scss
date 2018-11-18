@@ -107,9 +107,6 @@ th.clickable {
 .info-tabs-padding {
   padding: $aleph-grid-size;
   width: 100%;
-  i {
-    margin-right: $aleph-grid-size * 0.5;
-  }
 }
 
 /* This causes toasts to appear *below* the navbar instead of on top of it */
