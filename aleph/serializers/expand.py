@@ -47,8 +47,9 @@ class ExpandableSchema(Schema):
         results = es.mget(body={'docs': [q[1] for q in queries]},
                           _source_exclude=['text'])
         for (key, _), doc in zip(queries, results['docs']):
-            if cache.get(key) is None:
-                cache[key] = unpack_result(doc)
+            doc = unpack_result(doc)
+            if cache.get(key) is None and doc is not None:
+                cache[key] = doc
 
     @post_dump(pass_many=True)
     def expand(self, objs, many=False):
