@@ -34,7 +34,7 @@ def resolve_id(object_id, clazz):
         return role.name, None
     elif clazz == Alert:
         alert = Alert.by_id(object_id)
-        return alert.label, None
+        return alert.query, None
     elif clazz == Collection:
         collection = Collection.by_id(object_id)
         if collection is not None:

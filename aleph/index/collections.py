@@ -121,7 +121,7 @@ def get_collection_stats(collection_id):
         }
     }
     result = search_safe(index=entities_index(), body=query)
-    aggregations = result.get('aggregations')
+    aggregations = result.get('aggregations', {})
     data = {'count': result['hits']['total']}
 
     for facet in ['schemata', 'countries', 'languages']:
