@@ -33,6 +33,7 @@ def setup_caching():
 
     request._http_cache = False
     request._http_private = False
+    request._http_revalidate = False
     request._http_etag = None
 
 
@@ -47,6 +48,7 @@ def enable_cache(vary_user=True, vary=None):
         return
 
     request._http_cache = True
+    request._http_revalidate = vary is not None
     args = sorted(set(request.args.items()))
     # jquery where is your god now?!?
     args = [(k, v) for (k, v) in args if k != '_']
@@ -78,15 +80,20 @@ def cache_response(resp):
         return resp
 
     resp.cache_control.public = True
+    resp.vary.add('X-Aleph-Session')
     resp.vary.add('Accept-Language')
     resp.vary.add('Authorization')
 
     if request._http_etag:
         resp.set_etag(request._http_etag)
-        resp.cache_control.max_age = 3600 * 12
+        if request._http_revalidate:
+            resp.cache_control.must_revalidate = request._http_revalidate
+        else:
+            resp.cache_control.max_age = 3600 * 12
     else:
         resp.expires = -1
 
     if request._http_private:
+        resp.cache_control.public = None
         resp.cache_control.private = True
     return resp

@@ -107,7 +107,7 @@ def update(id):
     db.session.add(role)
     db.session.commit()
     update_role(role)
-    return view(role.id)
+    return serialize_data(role, RoleSchema)
 
 
 @blueprint.route('/api/2/collections/<int:id>/permissions')

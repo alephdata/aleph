@@ -1,6 +1,6 @@
 import logging
-from banal import as_bool
 from normality import stringify
+from banal import as_bool, hash_data
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
 from aleph.index.util import MAX_PAGE
@@ -103,6 +103,11 @@ class QueryParser(object):
 
     def getbool(self, name, default=False):
         return as_bool(self.get(name), default=default)
+
+    @property
+    def cache_key(self):
+        """Generate a key for the current result."""
+        return hash_data((self.args.items(), self.authz.id, self.limit))
 
     def to_dict(self):
         parser = {

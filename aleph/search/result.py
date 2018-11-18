@@ -1,5 +1,6 @@
 import math
 import logging
+from banal import hash_data
 
 from aleph.core import url_external
 from aleph.index.util import unpack_result
@@ -33,6 +34,11 @@ class QueryResult(object):
         args = [('offset', str(offset))]
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
+
+    @property
+    def cache_key(self):
+        """Generate a key for the current result."""
+        return hash_data((self.parser.cache_key, self.total, self.results))
 
     def to_dict(self):
         results = list(self.results)
