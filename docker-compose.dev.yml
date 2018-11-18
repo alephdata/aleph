@@ -13,7 +13,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:4
+    image: alephdata/aleph-elasticsearch:6
     restart: on-failure
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data

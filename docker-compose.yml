@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:4
+    image: alephdata/aleph-elasticsearch:6
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
