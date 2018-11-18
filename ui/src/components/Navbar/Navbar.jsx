@@ -99,7 +99,7 @@ class Navbar extends React.Component {
                         type="text"
                         leftIcon="search"
                         id="search-box"
-                        className='bp3-large'
+                        large={true}
                         onChange={this.onChange} value={searchValue}
                         placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
                         rightElement={<SearchAlert queryText={searchValue}/>}
@@ -128,11 +128,12 @@ class Navbar extends React.Component {
                   </Button>
                 </Link>
                 {session.loggedIn &&
-                <Link to='/cases'>
-                  <Button icon='briefcase' className='bp3-minimal'>
-                    <FormattedMessage id="nav.cases" defaultMessage="Cases"/>
-                  </Button>
-                </Link>}
+                  <Link to='/cases'>
+                    <Button icon='briefcase' className='bp3-minimal'>
+                      <FormattedMessage id="nav.cases" defaultMessage="Cases"/>
+                    </Button>
+                  </Link>
+                }
                 <div className="bp3-navbar-divider"/>
                 <AuthButtons session={session} auth={metadata.auth}/>
                 <LanguageMenu/>

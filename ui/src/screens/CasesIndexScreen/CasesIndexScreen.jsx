@@ -110,12 +110,14 @@ class CasesIndexScreen extends Component {
     const {query, result, intl} = this.props;
     const {queryPrefix} = this.state;
 
-    const breadcrumbs = (<Breadcrumbs>
-      <li>
-        <FormattedMessage id="cases.browser.breadcrumb"
-                          defaultMessage="Cases overview"/>
-      </li>
-    </Breadcrumbs>);
+    const breadcrumbs = (
+      <Breadcrumbs>
+        <li>
+          <FormattedMessage id="cases.browser.breadcrumb"
+                            defaultMessage="Cases overview"/>
+        </li>
+      </Breadcrumbs>)
+    ;
 
     return (
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs} requireSession={true}>

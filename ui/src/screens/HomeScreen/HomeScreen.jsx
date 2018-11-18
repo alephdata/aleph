@@ -83,9 +83,10 @@ class HomeScreen extends Component {
                     type="text"
                     leftIcon="search"
                     id="search-box"
-                    className="bp3-large"
+                    large={true}
                     autoFocus={true}
-                    onChange={this.onChange} value={this.state.value}
+                    onChange={this.onChange}
+                    value={this.state.value}
                     placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
                   />
                   <Button
