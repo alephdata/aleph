@@ -54,7 +54,7 @@ def compile_entity_mapping():
             raise RuntimeError("Ambiguous type for FtM property: %s" % prop)
         mapping[prop.name] = config
     ENTITY_MAPPING['properties']['properties']['properties'] = mapping
-    log.info("%s", pformat(ENTITY_MAPPING))
+    # log.info("%s", pformat(ENTITY_MAPPING))
 
 
 def delete_index():
