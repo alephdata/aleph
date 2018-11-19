@@ -10,6 +10,7 @@ from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
 from aleph.logic.extractors import extract_document_tags
 from aleph.index.documents import index_document
+from aleph.index.collections import flush_collection_stats
 
 log = logging.getLogger(__name__)
 
@@ -26,6 +27,7 @@ def process_document(document):
     """Perform post-ingest tasks like analysis and indexing."""
     extract_document_tags(document)
     index_document(document)
+    flush_collection_stats(document.collection_id)
 
 
 def ingest_document(document, file_path, role_id=None, content_hash=None):

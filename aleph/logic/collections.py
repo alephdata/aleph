@@ -30,22 +30,21 @@ def create_collection(data, role=None, sync=False):
 def update_collection(collection, sync=False):
     """Create or update a collection."""
     Authz.flush()
+    index.flush_collection_stats(collection.id)
     return index.index_collection(collection, sync=sync)
 
 
 def refresh_collection(collection, sync=False):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and re-index."""
-    if not sync:
-        return
     index.flush_collection_stats(collection.id)
-    index.index_collection(collection, sync=sync)
+    if sync:
+        index.index_collection(collection, sync=sync)
 
 
 def index_collections():
     for collection in Collection.all(deleted=True):
         log.info("Index [%s]: %s", collection.id, collection.label)
-        index.flush_collection_stats(collection.id)
         index.index_collection(collection)
 
 
