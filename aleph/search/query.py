@@ -84,8 +84,7 @@ class Query(object):
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
-        if len(filters):
-            return {'bool': {'filter': filters}}
+        return {'bool': {'filter': filters}}
 
     def get_query(self):
         return {
@@ -173,6 +172,7 @@ class Query(object):
     def get_body(self):
         body = {
             'query': self.get_query(),
+            'post_filter': self.get_post_filters(),
             'from': self.parser.offset,
             'size': self.parser.limit,
             'aggregations': self.get_aggregations(),
@@ -180,9 +180,6 @@ class Query(object):
             'highlight': self.get_highlight(),
             '_source': self.get_source()
         }
-        post_filters = self.get_post_filters()
-        if post_filters is not None:
-            body['post_filter'] = post_filters
         # log.info("Query: %s", pformat(body))
         return body
 

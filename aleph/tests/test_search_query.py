@@ -76,7 +76,7 @@ class QueryTestCase(TestCase):
         self.assertEqual(q.get_filters(), [
             {
                 'terms': {
-                    'key1': ['foo' ,'bar']
+                    'key1': ['foo', 'bar']
                 }
             },
             {
