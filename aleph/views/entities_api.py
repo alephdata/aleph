@@ -30,7 +30,7 @@ def index():
     result = EntitiesQuery.handle(request,
                                   parser=parser,
                                   schema=CombinedSchema)
-    enable_cache(vary=result.cache_key)
+    enable_cache(vary_user=True, vary=result.cache_key)
     return jsonify(result)
 
 

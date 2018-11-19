@@ -27,7 +27,7 @@ blueprint = Blueprint('collections_api', __name__)
 @blueprint.route('/api/2/collections', methods=['GET'])
 def index():
     result = CollectionsQuery.handle(request, schema=CollectionSchema)
-    enable_cache(vary=result.cache_key)
+    enable_cache(vary_user=True, vary=result.cache_key)
     return jsonify(result)
 
 

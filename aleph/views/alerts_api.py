@@ -16,7 +16,7 @@ def index():
     require(request.authz.logged_in)
     query = Alert.by_role_id(request.authz.id)
     result = DatabaseQueryResult(request, query, schema=AlertSchema)
-    enable_cache(vary=result.cache_key)
+    enable_cache(vary_user=True, vary=result.cache_key)
     return jsonify(result)
 
 
