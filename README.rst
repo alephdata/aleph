@@ -42,8 +42,8 @@ Support
 -------
 
 Aleph is used by multiple organisations, including Code for Africa, OCCRP and
-OpenOil. For coordination, the following mailing list exists:
-`aleph-search <https://groups.google.com/forum/#!forum/aleph-search>`_
+OpenOil. For coordination, please join the Aleph slack workspace:
+`alephdata <http://slack.alephdata.org/>`_
 
 If you find any errors or issues using Aleph please
 `file an issue on GitHub <https://github.com/alephdata/aleph/issues/new>`_ or
