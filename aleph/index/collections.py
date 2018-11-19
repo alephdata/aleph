@@ -2,7 +2,8 @@ import logging
 from pprint import pprint  # noqa
 from banal import ensure_list
 from normality import normalize
-from followthemoney import types, model
+from followthemoney import model
+from followthemoney.types import registry
 
 from aleph.core import es, cache
 from aleph.model import Entity, Collection
@@ -70,11 +71,11 @@ def index_collection(collection, sync=False):
     # if no countries or langs are given, take the most common from the data.
     countries = ensure_list(collection.countries)
     countries = countries or stats['countries'].keys()
-    data['countries'] = types.countries.normalize_set(countries)
+    data['countries'] = registry.country.normalize_set(countries)
 
     languages = ensure_list(collection.languages)
     languages = languages or stats['languages'].keys()
-    data['languages'] = types.languages.normalize_set(languages)
+    data['languages'] = registry.language.normalize_set(languages)
 
     texts.extend([normalize(t, ascii=True) for t in texts])
     data['text'] = index_form(texts)

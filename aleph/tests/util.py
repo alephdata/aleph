@@ -11,7 +11,6 @@ from aleph.model import create_system_roles, destroy_db
 from aleph.index.admin import delete_index, upgrade_search
 from aleph.index.admin import clear_index, refresh_index
 from aleph.index.documents import index_document
-from aleph.index.records import index_records
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import index_entities
 from aleph.core import db, kv, create_app
@@ -108,8 +107,6 @@ class TestCase(FlaskTestCase):
         db.session.commit()
         for document in Document.all():
             index_document(document)
-            if document.supports_records:
-                index_records(document)
         self.update_index()
 
     def setUp(self):

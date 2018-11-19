@@ -41,6 +41,8 @@ def upgrade_search():
 
 
 def compile_entity_mapping():
+    # Generate relevant type mappings for entity properties so that
+    # we can do correct searches on each.
     TYPES = {
         registry.text: {"type": "text", "analyzer": "icu_latin"},
         registry.date: {"type": "date", "format": PARTIAL_DATE},
