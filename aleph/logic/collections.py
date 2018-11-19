@@ -45,6 +45,7 @@ def refresh_collection(collection, sync=False):
 def index_collections():
     for collection in Collection.all(deleted=True):
         log.info("Index [%s]: %s", collection.id, collection.label)
+        index.flush_collection_stats(collection.id)
         index.index_collection(collection)
 
 

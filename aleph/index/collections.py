@@ -129,7 +129,7 @@ def get_collection_stats(collection_id):
         data[facet] = {}
         for bucket in aggregations[facet]['buckets']:
             data[facet][bucket['key']] = bucket['doc_count']
-    cache.set_complex(key, data, expire=3599)
+    cache.set_complex(key, data, expire=4000)
     return data
 
 

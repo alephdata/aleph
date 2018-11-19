@@ -9,14 +9,9 @@ class SchemaIcon extends PureComponent {
     const {schema, schemata} = this.props,
           model = schemata[schema] || {};
 
-    if (!model.icon) {
-      return null;
-    }
-
-    return (<Icon
-      className='entity-icon'
-      iconSize={'16px'}
-      name={schema.toLowerCase()}/>);
+    return <Icon className='entity-icon'
+                 iconSize='16px'
+                 name={schema.toLowerCase()} />;
   }
 }
 
