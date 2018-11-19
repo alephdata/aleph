@@ -50,7 +50,7 @@ def authz_query(authz):
     collections = authz.collections(authz.READ)
     if not len(collections):
         return {'match_none': {}}
-    return field_filter_query('collection_id', collections)
+    return {'terms': {'collection_id': collections}}
 
 
 def bool_query():
@@ -81,42 +81,9 @@ def field_filter_query(field, values):
     if len(values) == 1:
         if field in ['names', 'addresses']:
             field = '%s.text' % field
-            return {
-                # 'match': {
-                #     field: {
-                #         'query': values[0],
-                #         'operator': 'and',
-                #         'zero_terms_query': 'all',
-                #         'cutoff_frequency': 0.0001
-                #     }
-                # }
-                'match_phrase': {
-                    field: values[0]
-                }
-            }
+            return {'match_phrase': {field: values[0]}}
         return {'term': {field: values[0]}}
     return {'terms': {field: values}}
-
-
-def cleanup_query(body):
-    """Make a query simpler and more readable. This largely exists for
-    debugging help, since ES should be able to perform the same
-    optimisations internally."""
-    query = body.get('query', {})
-    bool_query = query.get('bool', {})
-    for section in ['filter', 'must', 'must_not', 'should']:
-            parts = []
-            for part in bool_query.pop(section, []):
-                if 'match_all' not in part:
-                    parts.append(part)
-            if len(parts):
-                bool_query[section] = parts
-    body['query'] = {'bool': bool_query}
-    if not len(body.get('highlight', {})):
-        body.pop('highlight')
-    if not len(body.get('aggregations', {})):
-        body.pop('aggregations')
-    return body
 
 
 def query_delete(index, query, **kwargs):

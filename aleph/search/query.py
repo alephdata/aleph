@@ -5,7 +5,7 @@ from elasticsearch.helpers import scan
 from aleph.core import es
 from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
-from aleph.index.util import cleanup_query, REQUEST_TIMEOUT
+from aleph.index.util import REQUEST_TIMEOUT
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.logic.audit import record_audit
@@ -84,15 +84,17 @@ class Query(object):
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
-        return {'bool': {'filter': filters}}
+        if len(filters):
+            return {'bool': {'filter': filters}}
 
     def get_query(self):
         return {
             'bool': {
-                'should': [],
-                'must': self.get_text_query(),
+                'should': self.get_text_query(),
+                'must': [],
                 'must_not': self.get_negative_filters(),
-                'filter': self.get_filters()
+                'filter': self.get_filters(),
+                'minimum_should_match': 1
             }
         }
 
@@ -169,16 +171,18 @@ class Query(object):
         return source
 
     def get_body(self):
-        body = cleanup_query({
+        body = {
             'query': self.get_query(),
             'from': self.parser.offset,
             'size': self.parser.limit,
             'aggregations': self.get_aggregations(),
-            'post_filter': self.get_post_filters(),
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
             '_source': self.get_source()
-        })
+        }
+        post_filters = self.get_post_filters()
+        if post_filters is not None:
+            body['post_filter'] = post_filters
         # log.info("Query: %s", pformat(body))
         return body
 
@@ -189,7 +193,7 @@ class Query(object):
                            request_cache=self.parser.cache,
                            request_timeout=REQUEST_TIMEOUT)
         log.info("Took: %sms", result.get('took'))
-        # log.info("%s", pformat(result))
+        # log.info("%s", pformat(result.get('profile')))
         return result
 
     def scan(self):
