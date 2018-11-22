@@ -188,3 +188,20 @@ export function selectCollectionXrefIndex(state, collectionId) {
 export function selectCollectionXrefMatches(state, query) {
   return selectObject(state.collectionXrefMatches, query.toKey());
 }
+
+export function selectQueryLog(state){
+  return selectObject(state, 'queryLogs');
+}
+
+export function selectQueryLogsLimited(state, limit = 9){
+  const queryLogs = selectQueryLog(state);
+  console.log(queryLogs);
+  let result = [];
+  if(queryLogs.results){
+    result = queryLogs.results.slice(-limit);
+  }
+  return {
+    ...queryLogs,
+    result,
+  };
+}

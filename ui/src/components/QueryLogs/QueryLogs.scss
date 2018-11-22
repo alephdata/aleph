@@ -1,0 +1,4 @@
+@import "~src/app/tables";
+.querylog-table{
+  @extend .settings-table
+}

@@ -7,6 +7,7 @@ import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './AuthButtons.scss';
+import QueryLogsDialog from "../../dialogs/QueryLogsDialog/QueryLogsDialog";
 
 const messages = defineMessages({
   view_notifications: {
@@ -32,6 +33,7 @@ class AuthButtons extends Component {
     super();
     this.state = {
       settingsIsOpen: false,
+      queryLogsIsOpen: false,
       isSignupOpen: false
     };
 
@@ -42,6 +44,8 @@ class AuthButtons extends Component {
   toggleAuthentication() {
     this.setState({isSignupOpen: !this.state.isSignupOpen})
   }
+  toggleQueryLogs = () => this.setState((state) => ({queryLogsIsOpen: !state.queryLogsIsOpen}));
+
 
   toggleSettings() {
     this.setState({settingsIsOpen: !this.state.settingsIsOpen})
@@ -62,6 +66,7 @@ class AuthButtons extends Component {
                 </div>
               </Link>
               <MenuItem icon="cog" onClick={this.toggleSettings} text={intl.formatMessage(messages.settings)+'…'} />
+              <MenuItem icon="edit" onClick={this.toggleQueryLogs} text={intl.formatMessage(messages.settings)+'…'} />
               <MenuDivider />
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
             </Menu>
@@ -71,6 +76,7 @@ class AuthButtons extends Component {
             </Button>
           </Popover>
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
+          <QueryLogsDialog isOpen={this.state.queryLogsIsOpen} toggleDialog={this.toggleQueryLogs} />
         </span>
       )
     }
