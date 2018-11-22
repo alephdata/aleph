@@ -12,10 +12,16 @@ from aleph.search.query import Query, AuthzQuery
 log = logging.getLogger(__name__)
 
 
-class DocumentsQuery(AuthzQuery):
+class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text']
+    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
     SORT_DEFAULT = ['_score']
+
+    def get_index(self):
+        return entities_index()
+
+
+class DocumentsQuery(EntitiesQuery):
 
     def get_filters(self):
         filters = super(DocumentsQuery, self).get_filters()
@@ -23,18 +29,6 @@ class DocumentsQuery(AuthzQuery):
             'term': {'schemata': Document.SCHEMA}
         })
         return filters
-
-    def get_index(self):
-        return entities_index()
-
-
-class EntitiesQuery(AuthzQuery):
-    TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
-    SORT_DEFAULT = ['_score']
-
-    def get_index(self):
-        return entities_index()
 
 
 class MatchQuery(EntitiesQuery):
@@ -88,8 +82,6 @@ class RecordsQuery(Query):
     def get_query(self):
         query = super(RecordsQuery, self).get_query()
         query['bool']['filter'].append({
-            'term': {
-                'document_id': self.document.id
-            }
+            'term': {'document_id': self.document.id}
         })
         return query

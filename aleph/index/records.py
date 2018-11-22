@@ -55,10 +55,7 @@ def iter_records(document_id=None, collection_id=None):
         filters.append({'term': {'document_id': document_id}})
     if collection_id is not None:
         filters.append({'term': {'collection_id': collection_id}})
-    query = {
-        'query': {'bool': {'filter': filters}},
-        'sort': ['_doc']
-    }
+    query = {'query': {'bool': {'filter': filters}}}
     for res in scan(es, index=records_index(), query=query, scroll='1410m'):
         record = unpack_result(res)
         if record is not None:
