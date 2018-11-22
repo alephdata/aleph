@@ -6,7 +6,7 @@ import { Cell, Column, TruncatedFormat, Table, TableLoadingOption } from "@bluep
 
 import Query from 'src/app/Query';
 import { queryDocumentRecords } from 'src/actions';
-import { selectDocumentRecordsResult, selectSchemata } from 'src/selectors';
+import { selectDocumentRecordsResult } from 'src/selectors';
 
 import './TableViewer.scss';
 
@@ -103,7 +103,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     query: query,
     result: selectDocumentRecordsResult(state, query),
-    model: selectSchemata(state)[ownProps.schema]
   }
 }
 

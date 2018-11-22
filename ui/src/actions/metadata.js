@@ -1,17 +1,16 @@
 import asyncActionCreator from "./asyncActionCreator";
 import {endpoint} from "src/app/api";
-import {model, initialize} from "src/ftm/model.ts";
+import Model from "src/ftm/model.ts";
 
 export const fetchMetadata = asyncActionCreator(
   () => {
     return async dispatch => {
       const response = await endpoint.get('metadata');
       const { schemata, ...metadata } = response.data;
-      debugger;
-      initialize(schemata);
+      const model = new Model(schemata);
       return { metadata: {
           ...metadata,
-          schemata:model
+          schemata:model.getInstance()
         }};
     }
   },

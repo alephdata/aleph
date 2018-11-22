@@ -53,7 +53,7 @@ class EntityReferencesMode extends React.Component {
     return (event) => {
       event.preventDefault();
       const fragment = new Fragment(history);
-      if(fragment.state['preview:id'] === entity.id && fragment.state['preview:type'] === 'entity') {
+      if (fragment.state['preview:id'] === entity.id && fragment.state['preview:type'] === 'entity') {
         fragment.update({
           'preview:id': undefined,
           'preview:type': undefined,
@@ -76,11 +76,10 @@ class EntityReferencesMode extends React.Component {
     }
     const { property } = reference;
     const results = ensureArray(result.results);
-    const columns = _.map(model.featured, (name) => {
-      return model.properties[name];
-    }).filter((prop) => {
-      return prop.name !== property.name && !prop.caption;
-    });
+    const columns = model.getFeaturedProperties()
+      .filter((prop) => {
+        return prop.name !== property.name && !prop.caption;
+      });
 
     return (
       <section key={property.qname} className="EntityReferencesTable">
