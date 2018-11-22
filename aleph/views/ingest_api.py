@@ -36,7 +36,7 @@ def _load_parent(collection, meta):
         parent = Document.by_id(data.get('id'),
                                 collection_id=collection.id)
     elif 'foreign_id' in data:
-        parent = Document.by_keys(collection=collection,
+        parent = Document.by_keys(collection_id=collection.id,
                                   foreign_id=data.get('foreign_id'))
     if parent is None:
         raise BadRequest(response=jsonify({
@@ -84,7 +84,7 @@ def ingest_upload(id):
             path = os.path.join(upload_dir, path)
             storage.save(path)
             content_hash = checksum(path)
-            document = Document.by_keys(collection=collection,
+            document = Document.by_keys(collection_id=collection.id,
                                         parent_id=parent_id,
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
@@ -100,7 +100,7 @@ def ingest_upload(id):
             # directory instead. Maybe this should be more explicit,
             # but it seemed like the most simple way of fitting it
             # into the API.
-            document = Document.by_keys(collection=collection,
+            document = Document.by_keys(collection_id=collection.id,
                                         parent_id=parent_id,
                                         foreign_id=foreign_id)
             document.update(meta)

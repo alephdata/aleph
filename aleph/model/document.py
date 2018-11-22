@@ -210,11 +210,11 @@ class Document(db.Model, DatedModel, Metadata):
         yield from filter_texts(self.raw_texts())
 
     @classmethod
-    def by_keys(cls, parent_id=None, collection=None, foreign_id=None,
+    def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
                 content_hash=None):
         """Try and find a document by various criteria."""
         q = cls.all()
-        q = q.filter(Document.collection_id == collection.id)
+        q = q.filter(Document.collection_id == collection_id)
 
         if parent_id is not None:
             q = q.filter(Document.parent_id == parent_id)
@@ -230,8 +230,7 @@ class Document(db.Model, DatedModel, Metadata):
         if document is None:
             document = cls()
             document.schema = cls.SCHEMA
-            document.collection_id = collection.id
-            document.collection = collection
+            document.collection_id = collection_id
 
         if parent_id is not None:
             document.parent_id = parent_id

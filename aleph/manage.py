@@ -76,8 +76,9 @@ def crawldir(path, language=None, foreign_id=None):
         'label': path_name,
         'languages': language
     })
-    log.info('Crawling %s to %s...', path, foreign_id)
-    document = Document.by_keys(collection=collection, foreign_id=path)
+    collection_id = collection.get('id')
+    log.info('Crawling %s to %s (%s)...', path, foreign_id, collection_id)
+    document = Document.by_keys(collection_id=collection_id, foreign_id=path)
     document.file_name = path_name
     db.session.commit()
     ingest_document(document, path)

@@ -45,7 +45,7 @@ class DocumentManager(Manager):
         parent_doc = parent.document
 
         doc = Document.by_keys(parent_id=parent_doc.id,
-                               collection=parent_doc.collection,
+                               collection_id=parent_doc.collection_id,
                                foreign_id=id)
         doc.title = title or doc.meta.get('title')
         doc.file_name = file_name or doc.meta.get('file_name')
