@@ -3,7 +3,7 @@ from elasticsearch.helpers import scan, bulk
 
 from aleph.core import db, es
 from aleph.model import DocumentRecord
-from aleph.index.core import record_index, records_index
+from aleph.index.core import records_read_index, records_write_index
 from aleph.index.util import query_delete, index_form, unpack_result
 from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 
@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 def delete_records(document_id, sync=False):
     """Delete all records associated with the given document."""
     q = {'term': {'document_id': document_id}}
-    query_delete(records_index(), q, wait_for_completion=sync, refresh=sync)
+    query_delete(records_read_index(), q, refresh=sync)
 
 
 def generate_records(document):
@@ -23,7 +23,7 @@ def generate_records(document):
     for idx, record in enumerate(q):
         yield {
             '_id': record.id,
-            '_index': record_index(),
+            '_index': records_write_index(),
             '_type': 'doc',
             '_source': {
                 'document_id': document.id,
@@ -56,7 +56,8 @@ def iter_records(document_id=None, collection_id=None):
     if collection_id is not None:
         filters.append({'term': {'collection_id': collection_id}})
     query = {'query': {'bool': {'filter': filters}}}
-    for res in scan(es, index=records_index(), query=query, scroll='1410m'):
+    index = records_read_index()
+    for res in scan(es, index=index, query=query, scroll='1410m'):
         record = unpack_result(res)
         if record is not None:
             yield record

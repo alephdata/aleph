@@ -1,7 +1,7 @@
 import logging
 import fingerprints
 from pprint import pprint  # noqa
-from banal import clean_dict, ensure_list
+from banal import ensure_list
 from datetime import datetime
 from followthemoney import model
 from followthemoney.util import merge_data
@@ -9,7 +9,7 @@ from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es, cache
 from aleph.model import Document
-from aleph.index.core import entity_index, entities_index, entities_index_list
+from aleph.index.core import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
 from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
@@ -26,27 +26,13 @@ def index_entity(entity, sync=False):
     return index_single(entity, entity.to_proxy(), context, [], sync=sync)
 
 
-def delete_entity(entity_id, sync=False):
+def delete_entity(entity_id, exclude=None, sync=False):
     """Delete an entity from the index."""
-    refresh = 'wait_for' if sync else False
-    for index in entities_index_list():
-        es.delete(index=index, doc_type='doc', id=str(entity_id),
-                  refresh=refresh, ignore=[404])
-
-
-def get_entity(entity_id):
-    """Fetch an entity from the index."""
-    if entity_id is None:
-        return None
-    for index in entities_index_list():
-        result = es.get(index=index,
-                        doc_type='doc',
-                        id=entity_id,
-                        ignore=[404],
-                        _source_exclude=['text'])
-        result = unpack_result(result)
-        if result is not None:
-            return result
+    query = {'query': {'ids': {'values': str(entity_id)}}}
+    es.delete_by_query(index=entities_read_index(exclude=exclude),
+                       body=query,
+                       wait_for_completion=sync,
+                       refresh=sync)
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
@@ -69,7 +55,8 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         'sort': ['_doc'],
         '_source': source
     }
-    for res in scan(es, index=entities_index(), query=query, scroll='1410m'):
+    index = entities_read_index(schema=schemata)
+    for res in scan(es, index=index, query=query, scroll='1410m'):
         entity = unpack_result(res)
         if entity is not None:
             yield entity
@@ -87,7 +74,7 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def iter_entities_by_ids(ids, authz=None):
+def entities_by_ids(ids, authz=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     for i in range(0, len(ids), MAX_PAGE):
@@ -98,19 +85,25 @@ def iter_entities_by_ids(ids, authz=None):
         query['bool']['filter'].append({'ids': {'values': chunk}})
         if authz is not None:
             query['bool']['filter'].append(authz_query(authz))
-        includes = ['schema', 'properties', 'collection_id', 'created_at']
         query = {
             'query': query,
-            '_source': {'includes': includes},
-            'size': min(MAX_PAGE, len(chunk) * 2)
+            '_source': {'excludes': ['text']},
+            'size': min(MAX_PAGE, len(chunk))
         }
-        result = search_safe(index=entity_index(),
+        result = search_safe(index=entities_read_index(),
                              body=query,
+                             ignore=[404],
                              request_cache=False)
         for doc in result.get('hits', {}).get('hits', []):
             entity = unpack_result(doc)
             if entity is not None:
                 yield entity
+
+
+def get_entity(entity_id):
+    """Fetch an entity from the index."""
+    for entity in entities_by_ids(ensure_list(entity_id)):
+        return entity
 
 
 def _index_updates(collection, entities):
@@ -131,7 +124,7 @@ def _index_updates(collection, entities):
     if not len(entities):
         return []
 
-    for result in iter_entities_by_ids(list(entities.keys())):
+    for result in entities_by_ids(list(entities.keys())):
         if int(result.get('collection_id')) != collection.id:
             raise RuntimeError("Key collision between collections.")
         existing = model.get_proxy(result)
@@ -142,13 +135,13 @@ def _index_updates(collection, entities):
     for entity_id, entity in entities.items():
         context = dict(common)
         context['created_at'] = timestamps.get(entity.id)
-        entity = finalize_index(entity, context, [])
+        body = finalize_index(entity, context, [])
         # pprint(entity)
         actions.append({
             '_id': entity_id,
-            '_index': entity_index(),
+            '_index': entities_write_index(entity.schema),
             '_type': 'doc',
-            '_source': entity
+            '_source': body
         })
     return actions
 
@@ -196,7 +189,8 @@ def finalize_index(proxy, context, texts):
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
     data.pop('id', None)
-    return clean_dict(data)
+    # return clean_dict(data)
+    return data
 
 
 def index_single(obj, proxy, data, texts, sync=False):
@@ -208,4 +202,6 @@ def index_single(obj, proxy, data, texts, sync=False):
     data['updated_at'] = obj.updated_at
     # pprint(data)
     refresh = 'wait_for' if sync else False
-    return index_safe(entity_index(), obj.id, data, refresh=refresh)
+    index = entities_write_index(proxy.schema)
+    # delete_entity(obj.id, exclude=proxy.schema)
+    return index_safe(index, obj.id, data, refresh=refresh)

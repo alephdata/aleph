@@ -37,16 +37,6 @@ class NotificationSchema(BaseSchema):
     event = Nested(EventSchema(), dump_only=True)
     params = Raw()
 
-    def _resolve_alerts(self, cache):
-        alerts = set()
-        for (type_, id_) in cache.keys():
-            if type_ == Alert:
-                alerts.add(id_)
-        if not len(alerts):
-            return
-        for alert in Alert.all_by_ids(alerts, deleted=True):
-            cache[(Alert, str(alert.id))] = alert
-
     @pre_dump(pass_many=True)
     def expand(self, objs, many=False):
         cache = {}
@@ -56,7 +46,8 @@ class NotificationSchema(BaseSchema):
 
         self._resolve_alerts(cache)
         self._resolve_roles(cache)
-        self._resolve_index(cache)
+        self._resolve_entities(cache)
+        self._resolve_collections(cache)
 
         results = []
         for obj in ensure_list(objs):

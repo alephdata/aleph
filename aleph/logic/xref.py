@@ -8,9 +8,9 @@ from followthemoney.compare import compare
 
 from aleph.core import db, celery
 from aleph.model import Match, Document, Collection
-from aleph.index.core import entities_index
+from aleph.index.core import entities_read_index
 from aleph.index.match import match_query
-from aleph.index.entities import iter_proxies, iter_entities_by_ids
+from aleph.index.entities import iter_proxies, entities_by_ids
 from aleph.index.util import search_safe, unpack_result, none_query
 from aleph.index.util import BULK_PAGE
 from aleph.logic.util import entity_url
@@ -29,7 +29,8 @@ def xref_item(proxy):
         'size': 100,
         '_source': {'includes': ['schema', 'properties', 'collection_id']}
     }
-    result = search_safe(index=entities_index(), body=query)
+    index = entities_read_index(schema=proxy.schema.matchable_schemata)
+    result = search_safe(index=index, body=query)
     results = result.get('hits').get('hits')
     for result in results:
         result = unpack_result(result)
@@ -92,7 +93,7 @@ def _iter_match_batch(batch, authz):
 
     collections = Collection.all_by_ids(collections, authz=authz)
     collections = {c.id: c.label for c in collections}
-    entities = iter_entities_by_ids(list(entities), authz=authz)
+    entities = entities_by_ids(list(entities), authz=authz)
     entities = {e.get('id'): e for e in entities}
     for obj in batch:
         entity = entities.get(str(obj.entity_id))

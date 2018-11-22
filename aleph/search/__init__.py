@@ -1,7 +1,8 @@
 import logging
 
 from aleph.model import Document, DocumentRecord
-from aleph.index.core import entities_index, records_index
+from aleph.index.core import entities_read_index
+from aleph.index.core import records_read_index
 from aleph.index.core import collections_index
 from aleph.index.match import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
@@ -18,7 +19,13 @@ class EntitiesQuery(AuthzQuery):
     SORT_DEFAULT = ['_score']
 
     def get_index(self):
-        return entities_index()
+        schema = self.parser.getlist('filter:schema')
+        if len(schema):
+            return entities_read_index(schema=schema, descendants=False)
+        schemata = self.parser.getlist('filter:schemata')
+        if len(schemata):
+            return entities_read_index(schema=schemata)
+        return entities_read_index()
 
 
 class DocumentsQuery(EntitiesQuery):
@@ -77,7 +84,7 @@ class RecordsQuery(Query):
         self.document = document
 
     def get_index(self):
-        return records_index()
+        return records_read_index()
 
     def get_query(self):
         query = super(RecordsQuery, self).get_query()

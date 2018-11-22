@@ -4,7 +4,7 @@ from pprint import pprint  # noqa
 from aleph.authz import Authz
 from aleph.core import db
 from aleph.model import Alert, Events
-from aleph.index.core import entities_index
+from aleph.index.core import entities_read_index
 from aleph.index.util import search_safe, unpack_result, authz_query, MAX_PAGE
 from aleph.logic.notifications import publish
 
@@ -27,7 +27,7 @@ def check_alert(alert_id):
         return
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
-    result = search_safe(index=entities_index(), body=query)
+    result = search_safe(index=entities_read_index(), body=query)
     for result in result.get('hits').get('hits', []):
         entity = unpack_result(result)
         if entity is None:
