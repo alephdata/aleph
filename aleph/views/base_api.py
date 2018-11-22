@@ -61,7 +61,7 @@ def metadata():
 
 @blueprint.route('/api/2/statistics')
 def statistics():
-    enable_cache(vary=request.authz.id)
+    enable_cache(vary_user=True)
     return jsonify(get_instance_stats(request.authz))
 
 

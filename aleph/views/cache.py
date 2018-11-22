@@ -80,7 +80,6 @@ def cache_response(resp):
         return resp
 
     resp.cache_control.public = True
-    resp.vary.add('X-Aleph-Session')
     resp.vary.add('Accept-Language')
     resp.vary.add('Authorization')
 
