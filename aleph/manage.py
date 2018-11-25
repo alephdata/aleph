@@ -8,7 +8,7 @@ from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, archive
+from aleph.core import create_app, archive, cache
 from aleph.model import db, upgrade_db, destroy_db
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
@@ -141,6 +141,12 @@ def resetindex():
     """Re-create the ES index configuration, dropping all data."""
     delete_index()
     upgrade_search()
+
+
+@manager.command
+def resetcache():
+    """Clear the redis cache."""
+    cache.flush()
 
 
 @manager.command

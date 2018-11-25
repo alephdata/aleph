@@ -37,7 +37,7 @@ class Authz(object):
             collections = cache.get_list(key)
             collections = [int(c) for c in collections]
             self._collections[action] = collections
-            # log.debug("[C] Authz: %s (%s): %s", self, action, collections)
+            log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
         if self.is_admin:
             q = Collection.all_ids()
