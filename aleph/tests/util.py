@@ -68,7 +68,9 @@ class TestCase(FlaskTestCase):
 
     def login(self, foreign_id='tester', name=None, email=None,
               is_admin=False):
-        role = self.create_user(foreign_id=foreign_id, name=name, email=email,
+        role = self.create_user(foreign_id=foreign_id,
+                                name=name,
+                                email=email,
                                 is_admin=is_admin)
         headers = {'Authorization': role.api_key}
         return role, headers

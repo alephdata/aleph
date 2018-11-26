@@ -18,7 +18,6 @@ class Authz(object):
     READ = 'read'
     WRITE = 'write'
     PREFIX = 'authz'
-    PREFIX_KEY = cache.key(PREFIX)
 
     def __init__(self, role_id, roles, is_admin=False):
         self.id = role_id
@@ -32,11 +31,11 @@ class Authz(object):
     def collections(self, action):
         if action in self._collections:
             return self._collections.get(action)
-
+        prefix_key = cache.key(self.PREFIX)
         key = cache.key(self.PREFIX, action, self.id)
         collections = cache.get_list(key)
-        collections = [int(c) for c in collections]
         if len(collections):
+            collections = [int(c) for c in collections]
             self._collections[action] = collections
             log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
@@ -56,7 +55,7 @@ class Authz(object):
         collections = [c for (c,) in q.all()]
         log.debug("Authz: %s (%s): %s", self, action, collections)
 
-        cache.kv.sadd(self.PREFIX_KEY, key)
+        cache.kv.sadd(prefix_key, key)
         cache.set_list(key, collections)
         self._collections[action] = collections
         return collections
@@ -136,7 +135,8 @@ class Authz(object):
     @classmethod
     def flush(cls):
         pipe = cache.kv.pipeline()
-        for key in cache.kv.sscan_iter(cls.PREFIX_KEY):
+        prefix_key = cache.key(cls.PREFIX)
+        for key in cache.kv.sscan_iter(prefix_key):
             pipe.delete(key)
-        pipe.delete(cls.PREFIX_KEY)
+        pipe.delete(prefix_key)
         pipe.execute()
