@@ -7,7 +7,7 @@ env:
   global:
     - ALEPH_DATABASE_NAME=aleph
     - ALEPH_DATABASE_URI=postgresql://localhost/$ALEPH_DATABASE_NAME
-    - DOCKER_COMPOSE_VERSION=1.16.1
+    - DOCKER_COMPOSE_VERSION=1.23.1
     - DOCKER_IMAGE_NAME=alephdata/aleph
 
 before_install:
