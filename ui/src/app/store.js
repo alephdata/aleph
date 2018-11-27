@@ -1,6 +1,6 @@
 import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import logger from 'redux-logger';
+// import logger from 'redux-logger';
 import {throttle} from 'lodash';
 
 import rootReducer from 'src/reducers';
@@ -14,7 +14,7 @@ const store = createStore(
   applyMiddleware(
     thunk,
     errorToastMiddleware,
-    logger
+    // logger
   )
 );
 
