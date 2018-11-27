@@ -1,14 +1,7 @@
 import classNames from "classnames";
 import * as React from "react";
 
-import {
-  DISPLAYNAME_PREFIX,
-  InputGroup,
-  Keys,
-  Popover,
-  Position,
-  Utils,
-} from "@blueprintjs/core";
+import {DISPLAYNAME_PREFIX, InputGroup, Keys, Popover, Position, Utils,} from "@blueprintjs/core";
 import {Classes} from "@blueprintjs/select/lib/esm/common";
 import {QueryList} from "@blueprintjs/select/lib/esm/components/query-list/queryList";
 
@@ -98,7 +91,7 @@ export class Suggest extends React.PureComponent {
           onFocus={this.handleInputFocus}
           onKeyDown={this.getTargetKeyDownHandler(handleKeyDown)}
           onKeyUp={this.getTargetKeyUpHandler(handleKeyUp)}
-          value={isOpen ? listProps.query : selectedItemText}
+          value={listProps.query}
         />
         <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
           {listProps.itemList}

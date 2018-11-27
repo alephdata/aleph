@@ -2,14 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
-import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import queryString from 'query-string';
-import { ControlGroup, InputGroup, Icon, Button } from "@blueprintjs/core";
+import {Button, Icon} from "@blueprintjs/core";
 
-import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
-import { selectSession } from 'src/selectors';
+import {selectSession} from 'src/selectors';
 
 import './Navbar.scss';
 import SearchBox from "./SearchBox";
@@ -63,7 +62,12 @@ class Navbar extends React.Component {
   }
 
   onSubmit = event => event.preventDefault();
-  updateSearchValue = searchValue => this.setState({ searchValue });
+
+  updateSearchValue = searchValue => {
+    console.log('Search value got updated', searchValue, searchValue.length);
+    this.setState({searchValue});
+  };
+
   doSearch = (searchValue = this.state.searchValue) => {
     const { query, updateQuery, history } = this.props;
     if (updateQuery !== undefined) {
@@ -76,7 +80,7 @@ class Navbar extends React.Component {
         })
       })
     }
-  }
+  };
 
   onOpenMenu(event) {
     event.preventDefault();
@@ -116,16 +120,6 @@ class Navbar extends React.Component {
                       updateSearchValue={this.updateSearchValue}
                       searchValue={this.state.searchValue}
                     />
-                    {/*<ControlGroup fill={true}>*/}
-                      {/*<InputGroup*/}
-                        {/*type="text"*/}
-                        {/*leftIcon="search"*/}
-                        {/*large={true}*/}
-                        {/*onChange={this.onChange} value={searchValue}*/}
-                        {/*placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}*/}
-                        {/*rightElement={<SearchAlert queryText={searchValue}/>}*/}
-                      {/*/>*/}
-                    {/*</ControlGroup>*/}
                   </form>
                 )}
               </div>

@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import { ProgressBar, Intent, Dialog, Button } from "@blueprintjs/core";
-import { defineMessages, FormattedMessage, injectIntl } from "react-intl";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
+import {Button, Dialog, Intent, ProgressBar} from "@blueprintjs/core";
+import {defineMessages, FormattedMessage, injectIntl} from "react-intl";
+import {connect} from "react-redux";
+import {withRouter} from "react-router";
 
-import { ingestDocument } from "src/actions";
-import { showErrorToast } from "src/app/toast";
+import {ingestDocument} from "src/actions";
+import {showErrorToast} from "src/app/toast";
 import wordList from 'src/util/wordList';
 
 import "./DocumentUploadDialog.scss";
@@ -122,7 +122,7 @@ class DocumentUploadDialog extends Component {
                           className="bp3-large bp3-fill"
                           onChange={this.onFilesChange} />
                     <span className="bp3-file-upload-input">
-                      { fileNames.length >= 0 && wordList(fileNames, ', ')}
+                      {wordList(fileNames, ', ')}
                       { fileNames.length === 0 && intl.formatMessage(messages.choose_file)}
                     </span>
                   </label>

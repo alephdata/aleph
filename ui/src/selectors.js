@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { documentRecordKey } from 'src/reducers/documentRecords';
+import {documentRecordKey} from 'src/reducers/documentRecords';
 import isDocumentSchema from 'src/util/isDocumentSchema';
 
 function selectResult(state, query, expand) {
@@ -196,12 +196,12 @@ export function selectQueryLog(state){
 export function selectQueryLogsLimited(state, limit = 9){
   const queryLogs = selectQueryLog(state);
   console.log(queryLogs);
-  let result = [];
+  let results = [];
   if(queryLogs.results){
-    result = queryLogs.results.slice(-limit);
+    results = queryLogs.results.slice(0, limit);
   }
   return {
     ...queryLogs,
-    result,
+    results,
   };
 }

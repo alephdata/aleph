@@ -15,28 +15,28 @@ import './QueryLogs.scss'
 
 const messages = defineMessages({
   title: {
-    id: 'alerts.heading',
+    id: 'queryLogs.heading',
     defaultMessage: 'Manage your alerts',
   },
   save_button: {
-    id: 'alerts.save',
+    id: 'queryLogs.save',
     defaultMessage: 'Update',
   },
   add_placeholder: {
-    id: 'alerts.add_placeholder',
+    id: 'queryLogs.add_placeholder',
     defaultMessage: 'Keep track of searches...',
   },
   no_alerts: {
-    id: 'alerts.no_alerts',
+    id: 'queryLogs.no_alerts',
     defaultMessage: 'You are not tracking any searches',
   },
-  search_alert: {
-    id: 'alerts.alert.search',
+  search_query: {
+    id: 'queryLogs.query.search',
     defaultMessage: 'Search for {query}',
   },
-  delete_alert: {
-    id: 'alerts.alert.delete',
-    defaultMessage: 'Stop tracking',
+  delete_query: {
+    id: 'queryLogs.query.delete',
+    defaultMessage: 'Remove from search history',
   }
 });
 
@@ -63,24 +63,23 @@ class QueryLogs extends PureComponent{
     }
   }
   getMoreResults = () => {
-    const { query, result } = this.props;
-    if (!result.isLoading && result.next) {
+    const {query, result, limit} = this.props;
+    if (!limit && !result.isLoading && result.next) {
       this.props.fetchQueryLogs({ query, next: result.next });
     }
   };
   render(){
-    const { intl, result: alerts} = this.props;
-    console.log('Results', this.props.result);
-    return  alerts.page !== undefined && alerts.results.length > 0 && (
+    const {intl, result} = this.props;
+    return result.page !== undefined && result.results.length > 0 && (
       <table className="bp3-html-table querylog-table">
         <tbody>
-        {alerts.results.map((item) => (
+        {result.results.map(item => (
           <tr key={item.id}>
-            <td className="alert-label">
+            <td>
               {item.text}
             </td>
             <td className="narrow">
-              <Tooltip content={intl.formatMessage(messages.search_alert, {query: item.text})}>
+              <Tooltip content={intl.formatMessage(messages.search_query, {query: item.text})}>
                 <Button minimal={true}
                         className="bp3-icon-search"
                         onClick={() => this.onSearch(item.text)} />
@@ -90,34 +89,30 @@ class QueryLogs extends PureComponent{
                 <SearchAlert queryText={item.text}/>
             </td>
             <td className="narrow">
-              <Tooltip content={intl.formatMessage(messages.delete_alert)}>
+              <Tooltip content={intl.formatMessage(messages.delete_query)}>
                 <Button
                   className="bp3-icon-cross"
-                   minimal={true}
-                        onClick={() => this.props.deleteQueryLog(item)} />
+                  minimal={true}
+                  onClick={() => this.props.deleteQueryLog(item)}/>
               </Tooltip>
             </td>
           </tr>
         ))}
-        {alerts.isLoading && <tr>
+        <tr>
           <td colSpan="4">
-            <SectionLoading/>
+            <Waypoint onEnter={this.getMoreResults}
+                      bottomOffset="-50px"
+            />
+            {result.isLoading && <SectionLoading/>}
           </td>
-        </tr>}
-
-        <Waypoint onEnter={this.getMoreResults}
-                  bottomOffset="-50px"
-                  />
-
+        </tr>
         </tbody>
-
       </table>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  // const { location } = ownProps;
   const query = Query.fromLocation('querylog', document.location, {}, 'queryLog').limit(20);
   const result = selectQueryLog(state, query);
   return { query, result };
@@ -130,6 +125,6 @@ const mapDispatchToProps = ({
 
 QueryLogs = injectIntl(QueryLogs);
 QueryLogs = withRouter(QueryLogs);
-QueryLogs = connect(mapStateToProps,mapDispatchToProps)(QueryLogs)
+QueryLogs = connect(mapStateToProps, mapDispatchToProps)(QueryLogs);
 export { QueryLogs };
 export default QueryLogs;

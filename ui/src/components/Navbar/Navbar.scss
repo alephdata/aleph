@@ -57,18 +57,11 @@
     }
 
     form {
-      width: 100%;
 
       .bp3-control-group {
         width: 100%;
       }
 
-      .navbar-search-input {
-        width:100%;
-        .bp3-input{
-          width:100%;
-        }
-      }
       .search-popover {
         margin-top: $aleph-grid-size / 2 ;
       }
@@ -78,6 +71,20 @@
         color: $pt-text-color;
         border-radius: 2px !important;
       }
+      ul.bp3-menu > li {
+        .navbar-search-item {
+          color: $aleph-visited-link-color;
+          &.bp3-menu-item.bp3-active {
+            background-color: $light-gray2
+          }
+        }
+        &:first-child:last-child {
+          .navbar-search-item {
+            color: $aleph-link-color;
+          }
+        }
+      }
+
     }
 
     .icon {
@@ -130,8 +137,6 @@
   }
 
   .navbar-search-form {
-    display: inline-flex;
-    align-items: center;
 
     .alert-toggle {
       .bp3-button {

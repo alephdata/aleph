@@ -18,5 +18,4 @@ export default function togglePreview(history, previewObject, previewType) {
     search: location.search,
     hash: queryString.stringify(parsedHash),
   });
-
-};
+}

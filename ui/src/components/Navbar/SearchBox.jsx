@@ -1,18 +1,17 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import React, {PureComponent} from 'react';
+import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 
-import { Suggest } from 'src/components/common/Suggest';
-import { MenuItem } from "@blueprintjs/core/lib/esm/components/menu/menuItem";
+import {MenuItem} from "@blueprintjs/core/lib/esm/components/menu/menuItem";
+import {Suggest} from "src/components/common/Suggest";
 import SearchAlert from 'src/components/SearchAlert/SearchAlert'
 import {selectQueryLogsLimited, selectSession} from 'src/selectors';
 import {fetchQueryLogs} from 'src/actions/queryLogsActions';
 import Query from "../../app/Query";
 
 
-
 const ICON_VIRTUAL_SUGGEST = 'edit';
-const ICON_EXISTING_SUGGEST = 'arrow-right';
+const ICON_EXISTING_SUGGEST = undefined;
 
 
 class SearchBox extends PureComponent {
@@ -27,7 +26,7 @@ class SearchBox extends PureComponent {
     }
   }
 
-  onChange = ({target}) => this.props.updateSearchValue(target.value);
+  onChange = (newSearchValue) => this.props.updateSearchValue(newSearchValue);
 
   onItemSelect = ({text}) => {
     this.props.updateSearchValue(text);
@@ -36,41 +35,44 @@ class SearchBox extends PureComponent {
 
   itemRenderer =  (queryItem, { handleClick, modifiers }) => {
     const icon = queryItem.isVirtual ? ICON_VIRTUAL_SUGGEST : ICON_EXISTING_SUGGEST;
-
+    const props = {
+      active: modifiers.active,
+      className: 'navbar-search-item',
+      key: queryItem.text,
+      onClick: handleClick,
+      text: queryItem.text,
+      icon
+    };
     return ( <MenuItem
-        icon={icon}
-        active={modifiers.active}
-        className="navbar-search-item"
-        key={queryItem.text}
-        onClick={handleClick}
-        text={queryItem.text }
+      {...props}
       />);
   };
 
-  get queryLogItems(){
-    return this.props.searchValue ? [{text:this.props.searchValue, isVirtual: true}] : this.props.queryLogs.result
+  queryLogItems(text, queryList) {
+    return text ? [{text: text, isVirtual: true}] : queryList
   }
 
   render() {
     const {
       props: { placeholder, searchValue },
       itemRenderer, onChange,
-      queryLogItems
+      queryLogItems,
+      onItemSelect
     } = this;
     const inputProps = {
       type:'text',
       leftIcon:'search',
-      value:searchValue,
-      className:'pt-large',
+      className: 'bp3-large',
       rightElement:<SearchAlert queryText={searchValue}/>,
-      onChange,
       placeholder,
+      value: searchValue,
       id:'search-box'
     };
 
     const popoverProps = {
       popoverClassName:'search-popover',
       usePortal: false,
+      targetTagName: 'div',
       modifiers:{
         arrow: {enabled: false}
       },
@@ -83,11 +85,15 @@ class SearchBox extends PureComponent {
     return (<Suggest
       inputProps={inputProps}
       popoverProps={popoverProps}
-      items={queryLogItems}
+      items={this.props.queryLogs.results}
       itemRenderer={itemRenderer}
       inputValueRenderer={({ text }) => text}
+      onQueryChange={onChange}
+      query={searchValue}
+      itemListPredicate={queryLogItems}
       className="navbar-search-input"
-      onItemSelect={this.onItemSelect}
+      onItemSelect={onItemSelect}
+      resetOnQuery={true}
     />);
   }
 }

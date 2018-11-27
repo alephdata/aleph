@@ -72,6 +72,19 @@
     max-width: 50em;
     margin: 0 auto;
     padding-bottom: 2em;
+    ul.bp3-menu > li {
+      .navbar-search-item {
+        color: $aleph-visited-link-color;
+        &.bp3-menu-item.bp3-active {
+          background-color: $light-gray2
+        }
+      }
+      &:first-child:last-child {
+        .navbar-search-item {
+          color: $aleph-link-color;
+        }
+      }
+    }
   }
 
   .calls-to-action {

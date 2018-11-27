@@ -1,23 +1,17 @@
 import React, {Component} from 'react';
-import { toString } from 'lodash';
-import { connect } from 'react-redux';
-import { Dialog, Button, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import c from 'classnames';
+import {connect} from 'react-redux';
+import {Dialog} from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import {defineMessages, injectIntl} from 'react-intl';
 
-import { updateRole, fetchRole } from 'src/actions';
-import { selectSession } from 'src/selectors';
+import {fetchRole, updateRole} from 'src/actions';
+import {selectSession} from 'src/selectors';
 import QueryLogs from "../../components/QueryLogs/QueryLogs";
 
 
 const messages = defineMessages({
   title: {
-    id: 'settings.title',
-    defaultMessage: 'Query ',
-  },
-  save_button: {
-    id: 'settings.save',
-    defaultMessage: 'Update QUery',
+    id: 'queryLogs.title',
+    defaultMessage: 'Search history',
   },
 });
 
@@ -29,10 +23,10 @@ class QueryLogsDialog extends Component {
 
     return (
       <Dialog
-          icon="cog"
-          isOpen={this.props.isOpen}
-          onClose={this.props.toggleDialog}
-          title={intl.formatMessage(messages.title)}>
+        icon="history"
+        isOpen={this.props.isOpen}
+        onClose={this.props.toggleDialog}
+        title={intl.formatMessage(messages.title)}>
         <div className="bp3-dialog-body">
           <QueryLogs
             closeDialog={this.props.toggleDialog}
@@ -43,7 +37,7 @@ class QueryLogsDialog extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     session: selectSession(state),
     role: state.session.role

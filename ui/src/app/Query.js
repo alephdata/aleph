@@ -16,7 +16,7 @@ class Query {
 
   static fromLocation(path, location, context, queryName) {
     const state = queryString.parse(location.search);
-    return new this(path, state, context, queryName);
+    return new Query(path, state, context, queryName);
   }
 
   clone(update) {
@@ -104,7 +104,7 @@ class Query {
         name = name.substr(this.queryName.length);
         keys.push(name);
       }
-    })
+    });
     return _.uniq(keys);
   }
 
