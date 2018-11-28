@@ -134,15 +134,12 @@ class CasesIndexScreen extends Component {
                                 defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."/>
             </p>
             <div className="bp3-control-group bp3-large">
-              <div className="bp3-input-group bp3-large">
+              <div className="bp3-input-group bp3-large case-search">
                 <i className="bp3-icon bp3-icon-search bp3-large"/>
-                <input className="bp3-input"
+                <input className="bp3-input "
                        placeholder={intl.formatMessage(messages.filter)}
                        onChange={this.onChangeQueryPrefix} value={queryPrefix}/>
               </div>
-              <Button onClick={this.toggleCreateCase} icon="plus" className="bp3-intent-primary bp3-large">
-                <FormattedMessage id="case.add" defaultMessage="New casefile"/>
-              </Button>
             </div>
           </DualPane.ContentPane>
         </DualPane>
@@ -154,6 +151,15 @@ class CasesIndexScreen extends Component {
                           updateQuery={this.updateQuery}/>
           </DualPane.SidePane>
           <DualPane.ContentPane className='table-padded'>
+            <div className="add-case">
+              <Button
+                onClick={this.toggleCreateCase}
+                icon="plus"
+                className="bp3-intent-primary bp3-large add-case--button"
+              >
+                <FormattedMessage id="case.add" defaultMessage="New casefile"/>
+              </Button>
+            </div>
             <ul className="results">
               {result.results !== undefined && result.results.map(res =>
                 <CollectionListItem key={res.id} collection={res} preview={false} />
