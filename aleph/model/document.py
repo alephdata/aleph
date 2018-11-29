@@ -7,7 +7,6 @@ from sqlalchemy.orm.attributes import flag_modified
 from aleph.core import db, cache
 from aleph.model.metadata import Metadata
 from aleph.model.collection import Collection
-from aleph.model.match import Match
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
 from aleph.model.document_tag import DocumentTag

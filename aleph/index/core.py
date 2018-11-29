@@ -9,15 +9,12 @@ log = logging.getLogger(__name__)
 
 def schema_index(schema):
     """Convert a schema object to an index name."""
-    # return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
-    return settings.ENTITIES_INDEX
+    return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
 
 
 def entities_write_index(schema):
     """Index that us currently written by new queries."""
-    schema = model.get(schema)
-    if schema is not None:
-        return schema_index(schema)
+    return schema_index(model.get(schema))
 
 
 def entities_read_index(schema=None, descendants=True, exclude=None):

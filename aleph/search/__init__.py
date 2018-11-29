@@ -19,9 +19,9 @@ class EntitiesQuery(AuthzQuery):
     SORT_DEFAULT = ['_score']
 
     def get_index(self):
-        schema = self.parser.getlist('filter:schema')
-        if len(schema):
-            return entities_read_index(schema=schema, descendants=False)
+        # schema = self.parser.getlist('filter:schema')
+        # if len(schema):
+        #     return entities_read_index(schema=schema, descendants=False)
         schemata = self.parser.getlist('filter:schemata')
         if len(schemata):
             return entities_read_index(schema=schemata)
