@@ -7,10 +7,10 @@ from followthemoney.types import registry
 from followthemoney.compare import compare
 
 from aleph.core import db, celery
-from aleph.model import Match, Document, Collection
-from aleph.index.core import entities_index
+from aleph.model import Match, Collection
+from aleph.index.core import entities_read_index
 from aleph.index.match import match_query
-from aleph.index.entities import iter_proxies, iter_entities_by_ids
+from aleph.index.entities import iter_proxies, entities_by_ids
 from aleph.index.util import search_safe, unpack_result, none_query
 from aleph.index.util import BULK_PAGE
 from aleph.logic.util import entity_url
@@ -29,7 +29,9 @@ def xref_item(proxy):
         'size': 100,
         '_source': {'includes': ['schema', 'properties', 'collection_id']}
     }
-    result = search_safe(index=entities_index(), body=query)
+    matchable = list(proxy.schema.matchable_schemata)
+    index = entities_read_index(schema=matchable)
+    result = search_safe(index=index, body=query)
     results = result.get('hits').get('hits')
     for result in results:
         result = unpack_result(result)
@@ -46,22 +48,14 @@ def xref_collection(collection_id):
     entities = iter_proxies(collection_id=collection_id, schemata=matchable)
     for entity in entities:
         proxy = model.get_proxy(entity)
-        entity_id, document_id = None, None
-        if Document.SCHEMA in proxy.schema.names:
-            document_id = proxy.id
-        else:
-            entity_id = proxy.id
-
         dq = db.session.query(Match)
-        dq = dq.filter(Match.entity_id == entity_id)
-        dq = dq.filter(Match.document_id == document_id)
+        dq = dq.filter(Match.entity_id == proxy.id)
         dq.delete()
         matches = xref_item(proxy)
         for (score, other_id, other) in matches:
-            log.info("Xref [%.1f]: %s <=> %s", score, proxy, other)
+            log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
             obj = Match()
-            obj.entity_id = entity_id
-            obj.document_id = document_id
+            obj.entity_id = proxy.id
             obj.collection_id = collection_id
             obj.match_id = other.id
             obj.match_collection_id = other_id
@@ -92,7 +86,7 @@ def _iter_match_batch(batch, authz):
 
     collections = Collection.all_by_ids(collections, authz=authz)
     collections = {c.id: c.label for c in collections}
-    entities = iter_entities_by_ids(list(entities), authz=authz)
+    entities = entities_by_ids(list(entities), authz=authz)
     entities = {e.get('id'): e for e in entities}
     for obj in batch:
         entity = entities.get(str(obj.entity_id))

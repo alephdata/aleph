@@ -126,7 +126,7 @@ class CombinedSchema(ShallowCombinedSchema):
         ('collection_id', Collection, 'collection', CollectionSchema, False),
         ('entities', Entity, '_related', ShallowCombinedSchema, True),
         ('uploader_id', Role, 'uploader', RoleReferenceSchema, False),
-        ('parent', Document, 'parent', ShallowCombinedSchema, False),
+        ('parent', Entity, 'parent', ShallowCombinedSchema, False),
     ]
     related = List(Nested(ShallowCombinedSchema()))
     parent = Nested(ShallowCombinedSchema())

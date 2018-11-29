@@ -9,7 +9,7 @@ from elasticsearch.helpers import scan
 from aleph.core import es
 from aleph.model import Entity
 from aleph.index.entities import get_entity
-from aleph.index.core import entities_index
+from aleph.index.core import entities_read_index
 from aleph.logic.graph.cache import load_links, store_links
 from aleph.logic.graph.cache import CacheMiss
 from aleph.logic.xref import xref_item
@@ -25,7 +25,7 @@ def expand_group(node):
         'query': {'term': {node.type.group: value}},
         '_source': {'includes': ['schema', 'properties']}
     }
-    for res in scan(es, index=entities_index(), query=query):
+    for res in scan(es, index=entities_read_index(), query=query):
         entity_id = res.get('_id')
         source = res.get('_source')
         properties = source.get('properties')

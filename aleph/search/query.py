@@ -185,6 +185,7 @@ class Query(object):
 
     def search(self):
         """Execute the query as assmbled."""
+        # log.info("Search index: %s", self.get_index())
         result = es.search(index=self.get_index(),
                            body=self.get_body(),
                            request_cache=self.parser.cache,
@@ -196,13 +197,11 @@ class Query(object):
     def scan(self):
         """Return an iterator over the whole result set, unpaginated and
         without aggregations."""
-        body = {
+        query = {
             'query': self.get_query(),
             '_source': self.get_source()
         }
-        return scan(es,
-                    index=self.get_index(),
-                    query=body)
+        return scan(es, index=self.get_index(), query=query)
 
     @classmethod
     def handle(cls, request, limit=None, schema=None, parser=None, **kwargs):

@@ -8,6 +8,13 @@ from aleph.logic.notifications import channel
 log = logging.getLogger(__name__)
 
 
+def create_system_roles():
+    log.info("Creating system roles...")
+    Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM, 'All visitors')
+    Role.load_or_create(Role.SYSTEM_USER, Role.SYSTEM, 'Logged-in users')
+    db.session.commit()
+
+
 def update_role(role):
     """Synchronize denormalised role configuration."""
     update_subscriptions.delay(role.id)

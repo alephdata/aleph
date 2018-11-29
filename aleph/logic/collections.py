@@ -87,33 +87,18 @@ def delete_collection_content(collection_id):
 
     log.info("Deleting collection [%r]: %r", collection.id, collection.label)
     deleted_at = collection.deleted_at or datetime.utcnow()
-    index.delete_collection(collection_id)
-
-    delete_documents(collection_id, deleted_at=deleted_at)
-    delete_entities(collection_id, deleted_at=deleted_at)
-
-    log.info("Deleting permissions...")
+    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
+    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
-
+    index.delete_collection(collection_id)
+    index.delete_records(collection_id)
+    index.delete_entities(collection_id)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
 
 
-@celery.task()
-def delete_entities(collection_id, deleted_at=None):
+def delete_bulk_entities(collection_id, deleted_at=None):
     deleted_at = deleted_at or datetime.utcnow()
     log.info("Deleting entities...")
-    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
-    index.delete_entities(collection_id)
-    log.info("Deleting cross-referencing matches...")
-    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
-
-
-@celery.task()
-def delete_documents(collection_id, deleted_at=None):
-    deleted_at = deleted_at or datetime.utcnow()
-    log.info("Deleting documents...")
-    Document.delete_by_collection(collection_id, deleted_at=deleted_at)
-    index.delete_documents(collection_id)
-    log.info("Deleting cross-referencing matches...")
+    index.delete_entities(collection_id, bulk_only=True)
     Match.delete_by_collection(collection_id, deleted_at=deleted_at)
