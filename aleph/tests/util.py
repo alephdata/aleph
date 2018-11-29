@@ -18,7 +18,7 @@ from aleph.core import db, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
-APP_NAME = 'alephtest'
+APP_NAME = 'aleph-test'
 UI_URL = 'http://aleph.ui/'
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 DB_URI = settings.DATABASE_URI + '_test'

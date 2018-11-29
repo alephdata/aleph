@@ -29,7 +29,8 @@ def xref_item(proxy):
         'size': 100,
         '_source': {'includes': ['schema', 'properties', 'collection_id']}
     }
-    index = entities_read_index(schema=proxy.schema.matchable_schemata)
+    matchable = list(proxy.schema.matchable_schemata)
+    index = entities_read_index(schema=matchable)
     result = search_safe(index=index, body=query)
     results = result.get('hits').get('hits')
     for result in results:
@@ -52,7 +53,7 @@ def xref_collection(collection_id):
         dq.delete()
         matches = xref_item(proxy)
         for (score, other_id, other) in matches:
-            log.info("Xref [%.3f]: %r <=> %r", score, proxy, other)
+            log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
             obj = Match()
             obj.entity_id = proxy.id
             obj.collection_id = collection_id

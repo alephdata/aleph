@@ -9,7 +9,8 @@ log = logging.getLogger(__name__)
 
 def schema_index(schema):
     """Convert a schema object to an index name."""
-    return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
+    # return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
+    return settings.ENTITIES_INDEX
 
 
 def entities_write_index(schema):

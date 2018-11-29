@@ -26,10 +26,8 @@ def refresh_index():
 
 
 def clear_index():
-    q = {'query': {'match_all': {}}}
-    refresh_index()
     es.delete_by_query(index=all_indexes(),
-                       body=q,
+                       body={'query': {'match_all': {}}},
                        refresh=True,
                        wait_for_completion=True,
                        conflicts='proceed',

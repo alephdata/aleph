@@ -107,9 +107,10 @@ def configure_records():
 
 
 def configure_entities():
-    for schema in model.schemata.values():
-        if not schema.abstract:
-            configure_schema(schema)
+    configure_schema(model.get('Thing'))
+    # for schema in model.schemata.values():
+    #     if not schema.abstract:
+    #         configure_schema(schema)
 
 
 def configure_schema(schema):

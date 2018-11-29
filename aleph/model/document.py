@@ -152,16 +152,9 @@ class Document(db.Model, DatedModel, Metadata):
         pq.delete()
         db.session.flush()
 
-    def delete_matches(self):
-        pq = db.session.query(Match)
-        pq = pq.filter(Match.document_id == self.id)
-        pq.delete()
-        db.session.flush()
-
     def delete(self, deleted_at=None):
         self.delete_records()
         self.delete_tags()
-        self.delete_matches()
         db.session.delete(self)
 
     @classmethod
@@ -176,10 +169,6 @@ class Document(db.Model, DatedModel, Metadata):
 
         pq = db.session.query(DocumentTag)
         pq = pq.filter(DocumentTag.document_id.in_(documents))
-        pq.delete(synchronize_session=False)
-
-        pq = db.session.query(Match)
-        pq = pq.filter(Match.document_id.in_(documents))
         pq.delete(synchronize_session=False)
 
         pq = db.session.query(cls)
