@@ -35,7 +35,7 @@ const messages = defineMessages({
     defaultMessage: 'Search for {query}',
   },
   delete_query: {
-    id: 'queryLogs.query.delete',
+    id: 'queryLogs.query.delete.tooltip',
     defaultMessage: 'Remove from search history',
   }
 });
