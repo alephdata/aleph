@@ -63,10 +63,7 @@ class Navbar extends React.Component {
 
   onSubmit = event => event.preventDefault();
 
-  updateSearchValue = searchValue => {
-    console.log('Search value got updated', searchValue, searchValue.length);
-    this.setState({searchValue});
-  };
+  updateSearchValue = searchValue => this.setState({searchValue});
 
   doSearch = (searchValue = this.state.searchValue) => {
     const { query, updateQuery, history } = this.props;

@@ -78,7 +78,7 @@ class SearchBox extends PureComponent {
       },
     };
 
-    if(!this.props.session.loggedIn){
+    if(!this.props.session.loggedIn || searchValue){
       Object.assign(popoverProps, {isOpen:false})
     }
 

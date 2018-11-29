@@ -195,7 +195,6 @@ export function selectQueryLog(state){
 
 export function selectQueryLogsLimited(state, limit = 9){
   const queryLogs = selectQueryLog(state);
-  console.log(queryLogs);
   let results = [];
   if(queryLogs.results){
     results = queryLogs.results.slice(0, limit);

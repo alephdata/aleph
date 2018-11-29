@@ -74,9 +74,9 @@ class QueryLogs extends PureComponent{
       <table className="bp3-html-table querylog-table">
         <tbody>
         {result.results.map(item => (
-          <tr key={item.id}>
-            <td>
-              {item.text}
+          <tr key={item.text}>
+            <td className="querylog-table--text">
+              <b>{item.text}</b>
             </td>
             <td className="narrow">
               <Tooltip content={intl.formatMessage(messages.search_query, {query: item.text})}>
