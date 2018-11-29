@@ -1,0 +1,25 @@
+@import "src/app/variables.scss";
+.search-popover{
+  ul.bp3-menu > li {
+    .navbar-search-item {
+      color: $aleph-visited-link-color * 1.1;
+      &.bp3-menu-item.bp3-active {
+        background-color: $light-gray2;
+      }
+      .querylog-remove{
+        color: $aleph-link-color;
+        background: unset;
+        font-size: $aleph-font-size * .9;
+        padding:unset;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+    }
+    &:first-child:last-child {
+      .navbar-search-item {
+        color: $aleph-link-color;
+      }
+    }
+  }
+}

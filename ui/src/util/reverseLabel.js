@@ -6,4 +6,4 @@ export default function reverseLabel(schemata, reference) {
   const schema = schemata[prop.schema];
   const reverse = schema.properties[prop.reverse] || prop;
   return reverse.label;
-};
+}

@@ -1,0 +1,7 @@
+@import "~src/app/tables";
+.querylog-table{
+  @extend .settings-table;
+  &--text{
+    vertical-align: middle;
+  }
+}

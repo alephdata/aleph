@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
-import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
+import {defineMessages, FormattedMessage, FormattedNumber, injectIntl} from 'react-intl';
 import numeral from 'numeral';
-import { ControlGroup, InputGroup, Button, Intent } from "@blueprintjs/core";
+import {Button, ControlGroup, Intent} from "@blueprintjs/core";
+import SearchBox from "src/components/Navbar/SearchBox";
 
-import { fetchStatistics } from 'src/actions/index';
-import { selectStatistics, selectMetadata } from 'src/selectors';
+import {fetchStatistics} from 'src/actions/index';
+import {selectMetadata, selectStatistics} from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 
 import './HomeScreen.scss';
@@ -49,16 +50,19 @@ class HomeScreen extends Component {
     this.setState({value: target.value})
   }
 
-  onSubmit(event) {
-    event.preventDefault();
+  updateSearchValue = value => this.setState({value});
+  onSubmit = event => event.preventDefault();
+
+  handleSearchBtn = () => this.doSearch();
+  doSearch = (searchValue = this.state.value) => {
     const { history } = this.props;
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: this.state.value
+        q: searchValue
       })
     });
-  }
+  };
 
   render() {
     const { intl, metadata, statistics } = this.props;
@@ -77,22 +81,19 @@ class HomeScreen extends Component {
                                   collections: <FormattedNumber value={statistics.collections} />
                                 }} />
               </div>
-              <form onSubmit={this.onSubmit} className="search-form">
+              <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill={true}>
-                  <InputGroup
-                    type="text"
-                    leftIcon="search"
+                  <SearchBox
                     id="search-box"
-                    large={true}
-                    autoFocus={true}
-                    onChange={this.onChange}
-                    value={this.state.value}
+                    doSearch={this.doSearch}
+                    updateSearchValue={this.updateSearchValue}
+                    searchValue={this.state.value}
                     placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
                   />
                   <Button
                     className="bp3-large bp3-fixed"
                     intent={Intent.PRIMARY}
-                    onClick={this.onSubmit}
+                    onClick={this.handleSearchBtn}
                     text={
                       <React.Fragment>
                         {intl.formatMessage(messages.home_search)}
