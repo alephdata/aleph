@@ -33,9 +33,13 @@ def unpack_result(res):
         return
     data = res.get('_source', {})
     data['id'] = str(res.get('_id'))
-    if res.get('_score') is not None:
-        data['score'] = res.get('_score')
+
+    _score = res.get('_score')
+    if _score is not None and _score != 0.0:
+        data['score'] = _score
+
     data['_index'] = res.get('_index')
+
     if 'highlight' in res:
         data['highlight'] = []
         for key, value in res.get('highlight', {}).items():

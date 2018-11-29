@@ -47,8 +47,7 @@ def match():
 def create():
     data = parse_request(EntityCreateSchema)
     collection = get_db_collection(data['collection_id'], request.authz.WRITE)
-    sync = get_flag('sync')
-    data = create_entity(data, collection, sync=sync)
+    data = create_entity(data, collection, sync=get_flag('sync', True))
     return serialize_data(data, CombinedSchema)
 
 
@@ -123,13 +122,12 @@ def tags(id):
 def update(id):
     entity = get_db_entity(id, request.authz.WRITE)
     data = parse_request(EntityUpdateSchema)
-    sync = get_flag('sync')
     if get_flag('merge'):
         props = merge_data(data.get('properties'), entity.data)
         data['properties'] = props
     entity.update(data)
     db.session.commit()
-    data = update_entity(entity, sync=sync)
+    data = update_entity(entity, sync=get_flag('sync', True))
     return serialize_data(data, CombinedSchema)
 
 
@@ -137,7 +135,6 @@ def update(id):
 def merge(id, other_id):
     entity = get_db_entity(id, request.authz.WRITE)
     other = get_db_entity(other_id, request.authz.WRITE)
-    sync = get_flag('sync')
 
     try:
         entity.merge(other)
@@ -145,6 +142,7 @@ def merge(id, other_id):
         raise BadRequest(ve.message)
 
     db.session.commit()
+    sync = get_flag('sync', True)
     data = update_entity(entity, sync=sync)
     update_entity(other, sync=sync)
     return serialize_data(data, CombinedSchema)
