@@ -106,7 +106,7 @@ def get_entity(entity_id):
         return entity
 
 
-def _index_updates(collection, entities):
+def _index_updates(collection_id, entities):
     """Look up existing index documents and generate an updated form.
 
     This is necessary to make the index accumulative, i.e. if an entity or link
@@ -116,7 +116,7 @@ def _index_updates(collection, entities):
     implement this in Groovy on the ES.
     """
     common = {
-        'collection_id': collection.id,
+        'collection_id': collection_id,
         'updated_at': datetime.utcnow(),
         'bulk': True
     }
@@ -125,7 +125,7 @@ def _index_updates(collection, entities):
         return []
 
     for result in entities_by_ids(list(entities.keys())):
-        if int(result.get('collection_id')) != collection.id:
+        if int(result.get('collection_id')) != collection_id:
             raise RuntimeError("Key collision between collections.")
         existing = model.get_proxy(result)
         entities[existing.id].merge(existing)
@@ -146,12 +146,12 @@ def _index_updates(collection, entities):
     return actions
 
 
-def index_bulk(collection, entities):
+def index_bulk(collection_id, entities):
     """Index a set of entities."""
     lock = cache.lock(cache.key('index_bulk'))
     lock.acquire(blocking=True)
     try:
-        actions = _index_updates(collection, entities)
+        actions = _index_updates(collection_id, entities)
         chunk_size = len(actions) + 1
         return bulk(es, actions,
                     chunk_size=chunk_size,

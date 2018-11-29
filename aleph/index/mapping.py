@@ -24,14 +24,13 @@ TYPE_MAPPINGS = {
 def configure_index(index, mapping, settings):
     log.info("Configuring index: %s...", index)
     mapping['date_detection'] = False
-    res = es.indices.put_mapping(index=index, doc_type='doc',
-                                 body=mapping, ignore=[404])
+    body = {
+        'settings': settings,
+        'mappings': {'doc': mapping}
+    }
+    res = es.indices.create(index, body=body, ignore=[400])
     if res.get('status') == 404:
-        body = {
-            'settings': settings,
-            'mappings': {'doc': mapping}
-        }
-        res = es.indices.create(index, body=body)
+        es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
 
 
 def configure_collections():

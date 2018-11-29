@@ -7,8 +7,7 @@ from faker import Factory
 
 from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
-from aleph.index.admin import delete_index, upgrade_search
-from aleph.index.admin import clear_index, refresh_index
+from aleph.index.admin import ensure_index, clear_index, refresh_index
 from aleph.index.documents import index_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import index_entities
@@ -116,8 +115,7 @@ class TestCase(FlaskTestCase):
             settings._global_test_state = True
             destroy_db()
             db.create_all()
-            delete_index()
-            upgrade_search()
+            ensure_index()
 
         kv.flushall()
         clear_index()
