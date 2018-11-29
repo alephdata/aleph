@@ -3,6 +3,7 @@ import fingerprints
 from pprint import pprint  # noqa
 from banal import ensure_list
 from datetime import datetime
+from collections import defaultdict
 from followthemoney import model
 from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, bulk, BulkIndexError
@@ -10,7 +11,7 @@ from elasticsearch.helpers import scan, bulk, BulkIndexError
 from aleph.core import es, cache
 from aleph.model import Document
 from aleph.index.core import entities_write_index, entities_read_index
-from aleph.index.util import unpack_result, index_form
+from aleph.index.util import unpack_result, index_form, refresh_sync
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
 from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 
@@ -32,7 +33,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
     es.delete_by_query(index=entities_read_index(exclude=exclude),
                        body=query,
                        wait_for_completion=sync,
-                       refresh=sync)
+                       refresh=refresh_sync(sync))
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
@@ -121,6 +122,7 @@ def _index_updates(collection_id, entities):
         'bulk': True
     }
     timestamps = {}
+    indexes = defaultdict(list)
     if not len(entities):
         return []
 
@@ -128,6 +130,7 @@ def _index_updates(collection_id, entities):
         if int(result.get('collection_id')) != collection_id:
             raise RuntimeError("Key collision between collections.")
         existing = model.get_proxy(result)
+        indexes[existing.id].append(result.get('_index'))
         entities[existing.id].merge(existing)
         timestamps[existing.id] = result.get('created_at')
 
@@ -136,10 +139,19 @@ def _index_updates(collection_id, entities):
         context = dict(common)
         context['created_at'] = timestamps.get(entity.id)
         body = finalize_index(entity, context, [])
-        # pprint(entity)
+        index = entities_write_index(entity.schema)
+        for other in indexes.get(entity_id, []):
+            if other != index:
+                # log.info("Delete ID [%s] from index: %s", entity_id, other)
+                actions.append({
+                    '_id': entity_id,
+                    '_index': other,
+                    '_type': 'doc',
+                    '_op_type': 'delete'
+                })
         actions.append({
             '_id': entity_id,
-            '_index': entities_write_index(entity.schema),
+            '_index': index,
             '_type': 'doc',
             '_source': body
         })
@@ -159,7 +171,7 @@ def index_bulk(collection_id, entities):
                     initial_backoff=2,
                     request_timeout=REQUEST_TIMEOUT,
                     timeout=TIMEOUT,
-                    refresh='wait_for')
+                    refresh=refresh_sync(True))
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
     finally:
@@ -201,7 +213,7 @@ def index_single(obj, proxy, data, texts, sync=False):
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
     # pprint(data)
-    refresh = 'wait_for' if sync else False
+    delete_entity(obj.id, exclude=proxy.schema, sync=sync)
     index = entities_write_index(proxy.schema)
-    # delete_entity(obj.id, exclude=proxy.schema)
+    refresh = refresh_sync(sync)
     return index_safe(index, obj.id, data, refresh=refresh)

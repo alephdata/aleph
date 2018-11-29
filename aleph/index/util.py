@@ -2,7 +2,7 @@ import logging
 from banal import ensure_list
 from elasticsearch import RequestError
 
-from aleph.core import es
+from aleph.core import es, settings
 from aleph.util import backoff
 
 log = logging.getLogger(__name__)
@@ -22,6 +22,12 @@ def backoff_cluster(failures=0):
     recovery state, e.g. after a master failure or severe node failures.
     """
     backoff(failures=failures)
+
+
+def refresh_sync(sync):
+    if settings.TESTING:
+        return True
+    return 'wait_for' if sync else False
 
 
 def unpack_result(res):
