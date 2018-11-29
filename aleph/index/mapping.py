@@ -6,6 +6,7 @@ from aleph.core import es
 from aleph.index.core import collections_index
 from aleph.index.core import records_write_index
 from aleph.index.core import entities_write_index
+from aleph.index.util import index_settings
 
 log = logging.getLogger(__name__)
 
@@ -66,9 +67,7 @@ def configure_collections():
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
             "count": {"type": "long"},
-            "schemata": {
-                "type": "object"
-            },
+            "schemata": {"type": "object"},
             "creator": {
                 "type": "object",
                 "properties": {
@@ -107,7 +106,6 @@ def configure_records():
 
 
 def configure_entities():
-    # configure_schema(model.get('Thing'))
     for schema in model.schemata.values():
         if not schema.abstract:
             configure_schema(schema)
@@ -191,26 +189,3 @@ def configure_schema(schema):
     }
     settings = index_settings(shards=10)
     configure_index(entities_write_index(schema), mapping, settings)
-
-
-def index_settings(shards=5, refresh_interval=None):
-    return {
-        "index": {
-            "number_of_shards": shards,
-            "refresh_interval": refresh_interval,
-            "analysis": {
-                "analyzer": {
-                    "icu_latin": {
-                        "tokenizer": "lowercase",
-                        "filter": ["latinize"]
-                    }
-                },
-                "filter": {
-                    "latinize": {
-                        "type": "icu_transform",
-                        "id": "Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC"  # noqa
-                    }
-                }
-            }
-        }
-    }

@@ -180,7 +180,7 @@ class Query(object):
             'highlight': self.get_highlight(),
             '_source': self.get_source()
         }
-        log.info("Query: %s", pformat(body))
+        # log.info("Query: %s", pformat(body))
         return body
 
     def search(self):

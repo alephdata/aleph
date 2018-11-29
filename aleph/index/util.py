@@ -161,3 +161,27 @@ def index_form(texts):
                 total_len += len(text)
                 results.append(text)
     return results
+
+
+def index_settings(shards=5, refresh_interval=None):
+    """Configure an index in ES with support for text transliteration."""
+    return {
+        "index": {
+            "number_of_shards": shards,
+            "refresh_interval": refresh_interval,
+            "analysis": {
+                "analyzer": {
+                    "icu_latin": {
+                        "tokenizer": "lowercase",
+                        "filter": ["latinize"]
+                    }
+                },
+                "filter": {
+                    "latinize": {
+                        "type": "icu_transform",
+                        "id": "Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC"  # noqa
+                    }
+                }
+            }
+        }
+    }
