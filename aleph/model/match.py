@@ -11,7 +11,6 @@ log = logging.getLogger(__name__)
 
 class Match(db.Model, IdModel, DatedModel):
     entity_id = db.Column(db.String(64))
-    document_id = db.Column(db.BigInteger())
     collection_id = db.Column(db.Integer,
                               db.ForeignKey('collection.id'),
                               index=True)
@@ -25,7 +24,6 @@ class Match(db.Model, IdModel, DatedModel):
     def find_by_collection(cls, collection_id, other_id):
         q = Match.all()
         q = q.filter(Match.collection_id == collection_id)
-        q = q.filter(Match.document_id == None)  # noqa
         q = q.filter(Match.match_collection_id == other_id)
         q = q.order_by(Match.score.desc())
         q = q.order_by(Match.id)
@@ -48,7 +46,6 @@ class Match(db.Model, IdModel, DatedModel):
         coll = aliased(Collection, name='collection')
         q = db.session.query(cnt, parent)
         q = q.filter(Match.collection_id == collection_id)
-        q = q.filter(Match.document_id == None)  # noqa
         q = q.filter(Match.match_collection_id != collection_id)
         q = q.join(coll, Match.match_collection_id == coll.id)
         q = q.filter(coll.deleted_at == None)  # noqa
@@ -66,6 +63,5 @@ class Match(db.Model, IdModel, DatedModel):
 
     def __repr__(self):
         return 'Match(%r, %r, %r, %r)' % (self.entity_id,
-                                          self.document_id,
                                           self.match_id,
                                           self.score)

@@ -7,7 +7,7 @@ from followthemoney.types import registry
 from followthemoney.compare import compare
 
 from aleph.core import db, celery
-from aleph.model import Match, Document, Collection
+from aleph.model import Match, Collection
 from aleph.index.core import entities_read_index
 from aleph.index.match import match_query
 from aleph.index.entities import iter_proxies, entities_by_ids
@@ -47,22 +47,14 @@ def xref_collection(collection_id):
     entities = iter_proxies(collection_id=collection_id, schemata=matchable)
     for entity in entities:
         proxy = model.get_proxy(entity)
-        entity_id, document_id = None, None
-        if Document.SCHEMA in proxy.schema.names:
-            document_id = proxy.id
-        else:
-            entity_id = proxy.id
-
         dq = db.session.query(Match)
-        dq = dq.filter(Match.entity_id == entity_id)
-        dq = dq.filter(Match.document_id == document_id)
+        dq = dq.filter(Match.entity_id == proxy.id)
         dq.delete()
         matches = xref_item(proxy)
         for (score, other_id, other) in matches:
-            log.info("Xref [%.1f]: %s <=> %s", score, proxy, other)
+            log.info("Xref [%.3f]: %r <=> %r", score, proxy, other)
             obj = Match()
-            obj.entity_id = entity_id
-            obj.document_id = document_id
+            obj.entity_id = proxy.id
             obj.collection_id = collection_id
             obj.match_id = other.id
             obj.match_collection_id = other_id
