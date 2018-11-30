@@ -12,7 +12,6 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from "src/components/Entity/EntityInfoMode";
-import reverseLabel from 'src/util/reverseLabel';
 import { Icon, TextLoading } from 'src/components/common';
 
 class EntityViews extends React.Component {
@@ -68,7 +67,7 @@ class EntityViews extends React.Component {
                title={
                  <React.Fragment>
                    <Icon name={ref.schema.toLowerCase()} iconSize='14px' className='entity-icon'/>
-                   {reverseLabel(schemata, ref)}
+                   {schemata[ref.property.schema].reverseLabel(ref)}
                    <Count count={ref.count} />
                  </React.Fragment>
                }

@@ -61,11 +61,10 @@ class EntityReferencesMode extends React.Component {
     }
     const { property } = reference;
     const results = ensureArray(result.results);
-    const columns = _.map(model.featured, (name) => {
-      return model.properties[name];
-    }).filter((prop) => {
-      return prop.name !== property.name && !prop.caption;
-    });
+    const columns = model.getFeaturedProperties()
+      .filter((prop) => {
+        return prop.name !== property.name && !prop.caption;
+      });
 
     return (
       <section key={property.qname} className="EntityReferencesTable">

@@ -13,9 +13,7 @@ class EntityInfoMode extends Component {
       return null;
     }
 
-    const entityProperties = _.values(schema.properties).filter((prop) => {
-      return !prop.caption && (schema.featured.indexOf(prop.name) !== -1 || entity.properties[prop.name]);
-    });
+    const entityProperties = schema.getEntityProperties(entity);
     return (
       <ul className="info-sheet">
         { entityProperties.map((prop) => (
