@@ -1,14 +1,13 @@
-import _ from 'lodash';
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import Waypoint from 'react-waypoint';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 
 import Query from 'src/app/Query';
-import { queryEntities } from 'src/actions/index';
-import { selectEntityReference, selectEntitiesResult, selectSchemata } from "src/selectors";
-import { SectionLoading, ErrorSection, Property } from 'src/components/common';
+import {queryEntities} from 'src/actions/index';
+import {selectEntitiesResult, selectEntityReference, selectSchemata} from "src/selectors";
+import {ErrorSection, Property, SectionLoading} from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
 

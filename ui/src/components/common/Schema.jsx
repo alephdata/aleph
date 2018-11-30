@@ -19,7 +19,7 @@ class SchemaLabel extends Component {
     const { schema, schemata, plural, icon } = this.props;
     const model = schemata[schema];
     const label = model.getLabel({
-      forcePlural:plural
+      forcePlural: plural
     });
     if (icon) {
       return (

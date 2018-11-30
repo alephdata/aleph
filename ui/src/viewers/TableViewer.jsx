@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { Cell, Column, TruncatedFormat, Table, TableLoadingOption } from "@blueprintjs/table";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
+import {Cell, Column, Table, TableLoadingOption, TruncatedFormat} from "@blueprintjs/table";
 
 import Query from 'src/app/Query';
-import { queryDocumentRecords } from 'src/actions';
-import { selectDocumentRecordsResult } from 'src/selectors';
+import {queryDocumentRecords} from 'src/actions';
+import {selectDocumentRecordsResult} from 'src/selectors';
 
 import './TableViewer.scss';
 
@@ -68,7 +68,7 @@ class TableViewer extends Component {
 
   render() {
     const { document, result } = this.props;
-    const loadingOptions = []
+    const loadingOptions = [];
     if (document.id === undefined) {
       return null;
     }
@@ -104,7 +104,7 @@ const mapStateToProps = (state, ownProps) => {
     query: query,
     result: selectDocumentRecordsResult(state, query),
   }
-}
+};
 
 TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
 TableViewer = withRouter(TableViewer);

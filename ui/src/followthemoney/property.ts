@@ -8,13 +8,16 @@ export default class Property {
     this.schema = schema;
     this.behaviour = behaviour
   }
-  get caption(){
+
+  get caption() {
     return this.behaviour.caption
   }
-  extends(parentSchema){
-    return this.behaviour.schema === parentSchema;
-  }
-  get label(): string{
+
+  get label(): string {
     return this.behaviour.label || this.name;
+  }
+
+  extends(parentSchema) {
+    return this.behaviour.schema === parentSchema;
   }
 }

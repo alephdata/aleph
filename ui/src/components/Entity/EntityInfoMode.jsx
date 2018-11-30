@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import _ from "lodash";
 
-import { Property } from 'src/components/common';
-import { selectSchemata } from "../../selectors";
-import { connect } from "react-redux";
+import {Property} from 'src/components/common';
+import {selectSchemata} from "../../selectors";
+import {connect} from "react-redux";
 
 
 class EntityInfoMode extends Component {

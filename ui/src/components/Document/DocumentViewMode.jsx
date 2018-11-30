@@ -1,10 +1,9 @@
-import _ from 'lodash';
 import React from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
+import {withRouter} from 'react-router';
+import {connect} from 'react-redux';
 
 import Query from 'src/app/Query';
-import Schema from 'src/ftm/schema.ts';
+import Schema from 'src/followthemoney/schema.ts';
 // import { DocumentSearch } from 'src/components/Toolbar';
 import DefaultViewer from 'src/viewers/DefaultViewer';
 import TableViewer from 'src/viewers/TableViewer';
@@ -30,7 +29,7 @@ class DocumentViewMode extends React.Component {
                           queryText={queryText}
                           activeMode={activeMode} />;
     }
-    if (Schema.hasSchemata(document,['Image'])) {
+    if (Schema.hasSchemata(document, ['Image'])) {
       if (activeMode === 'text') {
         return <TextViewer document={document}
                            queryText={queryText} />;

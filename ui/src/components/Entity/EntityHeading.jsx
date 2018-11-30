@@ -1,8 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { Entity, Schema } from 'src/components/common';
-import { selectSchemata } from 'src/selectors';
+import {Entity, Schema} from 'src/components/common';
+import {selectSchemata} from 'src/selectors';
 
 
 class EntityHeading extends React.Component {

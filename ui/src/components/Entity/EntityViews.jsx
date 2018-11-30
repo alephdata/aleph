@@ -1,18 +1,17 @@
 import React from 'react';
-import { withRouter } from 'react-router';
-import { FormattedMessage } from 'react-intl';
-import { connect } from "react-redux";
-import { Tabs, Tab } from '@blueprintjs/core';
+import {withRouter} from 'react-router';
+import {FormattedMessage} from 'react-intl';
+import {connect} from "react-redux";
+import {Tab, Tabs} from '@blueprintjs/core';
 import queryString from "query-string";
 
-import { Count, SectionLoading } from 'src/components/common';
-import { queryEntitySimilar } from 'src/queries';
-import { selectEntityReferences, selectEntityTags, selectSchemata, selectEntitiesResult } from "src/selectors";
+import {Count, Icon, SectionLoading, TextLoading} from 'src/components/common';
+import {queryEntitySimilar} from 'src/queries';
+import {selectEntitiesResult, selectEntityReferences, selectEntityTags, selectSchemata} from "src/selectors";
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from "src/components/Entity/EntityInfoMode";
-import { Icon, TextLoading } from 'src/components/common';
 
 class EntityViews extends React.Component {
   constructor(props) {

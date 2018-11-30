@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
+import {withRouter} from 'react-router';
+import {connect} from 'react-redux';
 import queryString from 'query-string';
 
-import { selectEntity, selectEntityView } from 'src/selectors';
+import {selectEntity, selectEntityReference, selectEntityView} from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
-import { selectEntityReference } from "src/selectors";
 
 class EntityScreen extends Component {
   render() {
-      const { entityId, mode } = this.props;
+    const {entityId, mode} = this.props;
       return (
         <EntityScreenContext entityId={entityId}
                              activeMode={mode}/>

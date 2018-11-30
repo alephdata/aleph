@@ -11,21 +11,20 @@ interface ISchemaList {
 }
 
 
-
-export default class Model{
-  private schemaCache:ISchemaList = {};
+export default class Model {
+  private schemaCache: ISchemaList = {};
   private readonly schemata: ISchemata = {};
 
-  constructor(schemeta: ISchemata){
+  constructor(schemeta: ISchemata) {
     this.schemata = schemeta;
   }
 
-  getInstance(){
+  getInstance() {
     return new Proxy(this.schemata, {
       get: (schemata: ISchemata, schemaName: string): Schema => {
-        if(this.schemaCache[schemaName]){
+        if (this.schemaCache[schemaName]) {
           return this.schemaCache[schemaName];
-        }else if (Object.keys(schemata).length) {
+        } else if (Object.keys(schemata).length) {
           const schema = schemata[schemaName];
           if (schema) {
             return this.schemaCache[schemaName] = new Schema(schemaName, schema);

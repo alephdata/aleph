@@ -11,12 +11,12 @@ interface IProperties {
 
 
 export default class Schema {
+  public readonly icon: string;
+  public properties: IProperties = new Map();
   private readonly name: string;
   private readonly label: string;
   private readonly plural: string;
-  public readonly icon: string;
   private readonly featured: Array<string>;
-  public properties: IProperties = new Map();
   private readonly DOCUMENT_SCHEMATA: string[] = [
     'Document', 'Pages', 'Folder',
     'Package', 'Email', 'HyperText',
@@ -24,12 +24,6 @@ export default class Schema {
     'Image', 'Video', 'Audio'
   ];
 
-  static hasSchemata(document, schemata:string[]):boolean{
-    if(document){
-      return !!schemata.find(schema => !!~document.schemata.indexOf(schema))
-    }
-    return false;
-  }
   constructor(schemaName, theImplementation) {
     this.name = schemaName;
     this.label = theImplementation.label;
@@ -41,6 +35,13 @@ export default class Schema {
       .forEach(([propertyName, property]) => {
         this.properties.set(propertyName, new Property(property, this))
       })
+  }
+
+  static hasSchemata(document, schemata: string[]): boolean {
+    if (document) {
+      return !!schemata.find(schema => !!~document.schemata.indexOf(schema))
+    }
+    return false;
   }
 
   getLabel({forcePlural}: ILabelReadingConfiguration) {
@@ -60,30 +61,30 @@ export default class Schema {
     return reverse.label;
   };
 
-  isFeaturedProp(propertyName){
+  isFeaturedProp(propertyName) {
     return !!~this.featured.indexOf(propertyName)
   }
 
-  isDocumentSchema():boolean{
+  isDocumentSchema(): boolean {
     return !!~this.DOCUMENT_SCHEMATA.indexOf(this.name)
   }
 
-  getEntityProperties(entity:Schema):Property[]{
+  getEntityProperties(entity: Schema): Property[] {
     return this.getFeaturedProperties()
       .filter(property => {
         return !property.caption && entity.properties[property.name]
       })
   }
 
-  getFeaturedProperties(){
+  getFeaturedProperties() {
     return this.featured
-      .map(featuredPropertyName=> this.properties.get(featuredPropertyName))
+      .map(featuredPropertyName => this.properties.get(featuredPropertyName))
   }
 
-  extends(schemaName):boolean{
+  extends(schemaName): boolean {
     /*FIXME: Include parent schema name*/
-   return !!Array.from(this.properties.values())
-     .find((property:Property) => property.extends(schemaName))
+    return !!Array.from(this.properties.values())
+      .find((property: Property) => property.extends(schemaName))
   }
 
 }
