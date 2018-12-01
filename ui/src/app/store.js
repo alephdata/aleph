@@ -1,6 +1,6 @@
 import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import logger from 'redux-logger';
+// import logger from 'redux-logger';
 import {throttle} from 'lodash';
 
 import rootReducer from 'src/reducers';
@@ -11,11 +11,11 @@ const persistedState = loadState();
 const store = createStore(
   rootReducer,
   persistedState,
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(applyMiddleware(
+  /*window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(*/applyMiddleware(
     thunk,
     errorToastMiddleware,
-    logger
-  ))
+    // logger
+  )/*)*/
 );
 
 store.subscribe(throttle(() => {
