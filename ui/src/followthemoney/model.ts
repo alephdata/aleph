@@ -1,5 +1,6 @@
 // @ts-ignore
 import Schema from './schema.ts';
+import {schema} from "normalizr";
 
 
 interface ISchemata {
@@ -19,23 +20,32 @@ export default class Model {
     this.schemata = schemeta;
   }
 
-  getInstance() {
-    return new Proxy(this.schemata, {
-      get: (schemata: ISchemata, schemaName: string): Schema => {
-        if (this.schemaCache[schemaName]) {
-          return this.schemaCache[schemaName];
-        } else if (Object.keys(schemata).length) {
-          const schema = schemata[schemaName];
-          if (schema) {
-            return this.schemaCache[schemaName] = new Schema(schemaName, schema);
-          }
-        } else {
-          console.error(
-            new Error(`Provide schemas implementation firs via 'Model.constructor' function`)
-          )
-        }
-        return {};
-      }
-    });
+  getInstance(){
+    return Object.entries(this.schemata)
+      .reduce(function(reducer, [schemaName, schemaImplementation]){
+        return Object.assign(reducer,{
+          [schemaName]:new Schema(schemaName, schemaImplementation)
+        })
+      }, {})
   }
+
+  // _getInstance() {
+  //   return new Proxy(this.schemata, {
+  //     get: (schemata: ISchemata, schemaName: string): Schema => {
+  //       if (this.schemaCache[schemaName]) {
+  //         return this.schemaCache[schemaName];
+  //       } else if (Object.keys(schemata).length) {
+  //         const schema = schemata[schemaName];
+  //         if (schema) {
+  //           return this.schemaCache[schemaName] = new Schema(schemaName, schema);
+  //         }
+  //       } else {
+  //         console.error(
+  //           new Error(`Provide schemas implementation firs via 'Model.constructor' function`)
+  //         )
+  //       }
+  //       return {};
+  //     }
+  //   });
+  // }
 }
