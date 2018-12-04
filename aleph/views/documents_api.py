@@ -2,7 +2,7 @@ import logging
 from flask.wrappers import Response
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
-from celestial.types import PDF
+from pantomime.types import PDF
 
 from aleph.core import archive, db
 from aleph.model import DocumentRecord, Audit
