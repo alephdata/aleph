@@ -186,5 +186,6 @@ def configure_schema(schema):
             "ancestors": KEYWORD,
         }
     }
-    settings = index_settings(shards=10)
-    configure_index(entities_write_index(schema), mapping, settings)
+    index = entities_write_index(schema)
+    settings = index_settings()
+    configure_index(index, mapping, settings)
