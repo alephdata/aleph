@@ -14,9 +14,9 @@ setup(
     package_data={},
     install_requires=[
         'PyICU==2.0.6',
-        'pycld2==0.31',
-        'polyglot==16.7.4',
-        'Morfessor==2.0.4',
+        # 'pycld2==0.31',
+        # 'polyglot==16.7.4',
+        # 'Morfessor==2.0.4',
         # 'spacy', - explicit in Dockerfile
         'grpcio==1.11.0',
         'alephclient==0.7.2'

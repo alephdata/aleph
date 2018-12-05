@@ -48,11 +48,11 @@ ENV LANG='en_US.UTF-8' \
 
 # Data cache URLs:
 # https://cdn.occrp.org/projects/aleph/polyglot-data-201809.tar (slow!)
-ENV POLYGLOT_DATA_PATH=/opt/data/polyglot
-RUN curl -s -o /tmp/polyglot.tar http://assets.data.occrp.org/tools/aleph/polyglot-data-201809.tar \
-    && cd /opt/data \
-    && tar xvf /tmp/polyglot.tar \
-    && rm /tmp/polyglot.tar
+# ENV POLYGLOT_DATA_PATH=/opt/data/polyglot
+# RUN curl -s -o /tmp/polyglot.tar http://assets.data.occrp.org/tools/aleph/polyglot-data-201809.tar \
+#     && cd /opt/data \
+#     && tar xvf /tmp/polyglot.tar \
+#     && rm /tmp/polyglot.tar
 
 
 ##########################################################################################################
@@ -78,8 +78,8 @@ ADD setup.py /service/
 RUN pip3 install -e /service
 COPY . /service/
 
-HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
-    CMD curl --fail http://localhost:50000 || exit 1
+# HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
+#     CMD curl --fail http://localhost:50000 || exit 1
 
 # USER nobody:nogroup
 EXPOSE 50000
