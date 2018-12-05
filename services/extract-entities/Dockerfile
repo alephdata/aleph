@@ -47,10 +47,9 @@ ENV LANG='en_US.UTF-8' \
 # RUN polyglot download ner2.de embeddings2.de ner2.cs embeddings2.cs ner2.he embeddings2.he
 
 # Data cache URLs:
-# http://archive.pudo.org/aleph/polyglot/polyglot-data-201809.tar 
 # https://cdn.occrp.org/projects/aleph/polyglot-data-201809.tar (slow!)
 ENV POLYGLOT_DATA_PATH=/opt/data/polyglot
-RUN curl -s -o /tmp/polyglot.tar http://archive.pudo.org/aleph/polyglot/polyglot-data-201809.tar \
+RUN curl -s -o /tmp/polyglot.tar http://assets.data.occrp.org/tools/aleph/polyglot-data-201809.tar \
     && cd /opt/data \
     && tar xvf /tmp/polyglot.tar \
     && rm /tmp/polyglot.tar
@@ -65,7 +64,7 @@ RUN pip3 install -q --upgrade pip setuptools six
 ##########################################################################################################
 # spaCy NER
 #
-RUN pip3 install spacy==2.0.16
+RUN pip3 install spacy==2.0.18
 RUN python3 -m spacy download xx
 # RUN python3 -m spacy download en && python3 -m spacy download de
 # RUN python3 -m spacy download es && python3 -m spacy download pt

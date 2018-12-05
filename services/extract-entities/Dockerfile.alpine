@@ -1,0 +1,8 @@
+FROM python:3-alpine
+
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache --virtual=build_deps g++ gfortran && \
+    pip install --no-cache-dir spacy==2.0.18 && \
+    python -m spacy download xx && \
+    apk del build_deps
