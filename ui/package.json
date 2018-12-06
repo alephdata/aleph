@@ -87,6 +87,8 @@
     "workbox-webpack-plugin": "3.6.3"
   },
   "devDependencies": {
+    "cypress": "^3.1.2",
+    "eslint-plugin-cypress": "^2.1.2",
     "faker": "^4.1.0",
     "json-server": "^0.14.0",
     "node-sass": "^4.9.4",
@@ -108,7 +110,9 @@
     "po2json": "react-intl-po po2json 'i18n/translations/*.po' -m 'i18n/messages.json' -o src/content/translations.json",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test:unit": "node scripts/test.js --env=jsdom --no-watchman",
+    "test:ui": "npx cypress run ",
+    "test": "npm run test:unit &&  npm run test:ui",
     "start-mocks": "node mocks/server.js"
   },
   "jest": {
@@ -160,7 +164,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "sideEffects":[
+  "sideEffects": [
     "*.css"
   ]
 }
