@@ -14,11 +14,19 @@ def schema_index(schema):
 
 def entities_write_index(schema):
     """Index that us currently written by new queries."""
+    if not settings.ENTITIES_INDEX_SPLIT:
+        return settings.ENTITIES_INDEX
+
     return schema_index(model.get(schema))
 
 
 def entities_read_index(schema=None, descendants=True, exclude=None):
     """Combined index to run all queries against."""
+    if not settings.ENTITIES_INDEX_SPLIT:
+        indexes = set(settings.ENTITIES_INDEX_SET)
+        indexes.add(settings.ENTITIES_INDEX)
+        return ','.join(indexes)
+
     schemata = set()
     names = ensure_list(schema) or model.schemata.values()
     for schema in names:
@@ -29,7 +37,7 @@ def entities_read_index(schema=None, descendants=True, exclude=None):
         if descendants:
             schemata.update(schema.descendants)
     exclude = model.get(exclude)
-    indexes = list(settings.ENTITIES_INDEX_LEGACY)
+    indexes = list(settings.ENTITIES_INDEX_SET)
     for schema in schemata:
         if not schema.abstract and schema != exclude:
             indexes.append(schema_index(schema))

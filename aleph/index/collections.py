@@ -164,7 +164,7 @@ def delete_entities(collection_id, schema=None, bulk_only=False):
     if schema is not None:
         filters.append({'term': {'schemata': schema.name}})
     query = {'bool': {'filter': filters}}
-    query_delete(entities_read_index(), query)
+    query_delete(entities_read_index(schema), query)
 
 
 def delete_records(collection_id):

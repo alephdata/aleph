@@ -2,7 +2,7 @@ import logging
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.core import es
+from aleph.core import es, settings
 from aleph.index.core import collections_index
 from aleph.index.core import records_write_index
 from aleph.index.core import entities_write_index
@@ -105,6 +105,8 @@ def configure_records():
 
 
 def configure_entities():
+    if not settings.ENTITIES_INDEX_SPLIT:
+        return configure_schema(None)
     for schema in model.schemata.values():
         if not schema.abstract:
             configure_schema(schema)
@@ -114,9 +116,10 @@ def configure_schema(schema):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
-    for name, prop in schema.properties.items():
-        config = TYPE_MAPPINGS.get(prop.type, KEYWORD)
-        schema_mapping[name] = config
+    if settings.ENTITIES_INDEX_SPLIT:
+        for name, prop in schema.properties.items():
+            config = TYPE_MAPPINGS.get(prop.type, KEYWORD)
+            schema_mapping[name] = config
 
     mapping = {
         "date_detection": False,
@@ -187,5 +190,4 @@ def configure_schema(schema):
         }
     }
     index = entities_write_index(schema)
-    settings = index_settings()
-    configure_index(index, mapping, settings)
+    configure_index(index, mapping, index_settings())
