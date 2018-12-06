@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-11-14 16:44+0100\n"
+"POT-Creation-Date: 2018-12-06 23:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,43 +29,43 @@ msgstr ""
 msgid "Vladimir Putin"
 msgstr ""
 
-#: aleph/logic/xref.py:126
+#: aleph/logic/xref.py:120
 msgid "Score"
 msgstr ""
 
-#: aleph/logic/xref.py:127
+#: aleph/logic/xref.py:121
 msgid "EntityName"
 msgstr ""
 
-#: aleph/logic/xref.py:128
+#: aleph/logic/xref.py:122
 msgid "EntityDate"
 msgstr ""
 
-#: aleph/logic/xref.py:129
+#: aleph/logic/xref.py:123
 msgid "EntityCountries"
 msgstr ""
 
-#: aleph/logic/xref.py:130
+#: aleph/logic/xref.py:124
 msgid "MatchCollection"
 msgstr ""
 
-#: aleph/logic/xref.py:131
+#: aleph/logic/xref.py:125
 msgid "MatchName"
 msgstr ""
 
-#: aleph/logic/xref.py:132
+#: aleph/logic/xref.py:126
 msgid "MatchDate"
 msgstr ""
 
-#: aleph/logic/xref.py:133
+#: aleph/logic/xref.py:127
 msgid "MatchCountries"
 msgstr ""
 
-#: aleph/logic/xref.py:134
+#: aleph/logic/xref.py:128
 msgid "EntityLink"
 msgstr ""
 
-#: aleph/logic/xref.py:135
+#: aleph/logic/xref.py:129
 msgid "MatchLink"
 msgstr ""
 
@@ -208,15 +208,15 @@ msgstr ""
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:97
+#: aleph/views/base_api.py:102
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:106
+#: aleph/views/base_api.py:111
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:122
+#: aleph/views/base_api.py:127
 msgid "Access token has expired."
 msgstr ""
 
