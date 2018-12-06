@@ -180,9 +180,12 @@ def configure_index(index, mapping, settings):
         'settings': settings,
         'mappings': {'doc': mapping}
     }
-    res = es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
+    res = es.indices.put_mapping(index=index,
+                                 doc_type='doc',
+                                 body=mapping,
+                                 ignore=[404])
     if res.get('status') == 404:
-        es.indices.create(index, body=body, ignore=[400])
+        es.indices.create(index, body=body)
 
 
 def index_settings(shards=5, refresh_interval=None):
