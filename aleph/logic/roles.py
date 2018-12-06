@@ -43,6 +43,7 @@ def update_roles():
     q = db.session.query(Role)
     for role in q.all():
         update_role(role)
+    Authz.flush()
 
 
 def check_visible(role, authz):

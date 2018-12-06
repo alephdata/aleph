@@ -2,11 +2,11 @@ import logging
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.core import es, settings
+from aleph.core import settings
 from aleph.index.core import collections_index
 from aleph.index.core import records_write_index
 from aleph.index.core import entities_write_index
-from aleph.index.util import index_settings
+from aleph.index.util import index_settings, configure_index
 
 log = logging.getLogger(__name__)
 
@@ -19,18 +19,6 @@ TYPE_MAPPINGS = {
     registry.text: LATIN_TEXT,
     registry.date: PARTIAL_DATE,
 }
-
-
-def configure_index(index, mapping, settings):
-    log.info("Configuring index: %s...", index)
-    mapping['date_detection'] = False
-    body = {
-        'settings': settings,
-        'mappings': {'doc': mapping}
-    }
-    res = es.indices.create(index, body=body, ignore=[400])
-    if res.get('status') == 404:
-        es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
 
 
 def configure_collections():
