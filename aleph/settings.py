@@ -145,6 +145,8 @@ LANGUAGES = [l.lower().strip() for l in LANGUAGES]
 
 # User interface
 UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
+UI_LANGUAGES = env_list('UI_LANGUAGES', UI_LANGUAGES)
+UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
 
 # Geonames data file
 GEONAMES_DATA = env('GEONAMES_DATA')
