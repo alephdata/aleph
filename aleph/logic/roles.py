@@ -18,6 +18,10 @@ def create_system_roles():
 def update_role(role):
     """Synchronize denormalised role configuration."""
     update_subscriptions.delay(role.id)
+    refresh_role(role)
+
+
+def refresh_role(role, sync=False):
     cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ, role.id))
     cache.kv.delete(cache.key(Authz.PREFIX, Authz.WRITE, role.id))
 
