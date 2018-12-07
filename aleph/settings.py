@@ -149,6 +149,9 @@ UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
 # Geonames data file
 GEONAMES_DATA = env('GEONAMES_DATA')
 
+# Result high-lighting
+RESULT_HIGHLIGHT = env_bool('RESULT_HIGHLIGHT', True)
+
 ##############################################################################
 # E-mail settings
 
