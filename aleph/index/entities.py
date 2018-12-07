@@ -8,7 +8,7 @@ from followthemoney import model
 from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, bulk, BulkIndexError
 
-from aleph.core import es, cache
+from aleph.core import es, settings, cache
 from aleph.model import Document
 from aleph.index.core import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form, refresh_sync
@@ -75,7 +75,7 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def entities_by_ids(ids, authz=None):
+def entities_by_ids(ids, authz=None, cached=True):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     for i in range(0, len(ids), MAX_PAGE):
@@ -94,7 +94,7 @@ def entities_by_ids(ids, authz=None):
         result = search_safe(index=entities_read_index(),
                              body=query,
                              ignore=[404],
-                             request_cache=False)
+                             request_cache=cached)
         for doc in result.get('hits', {}).get('hits', []):
             entity = unpack_result(doc)
             if entity is not None:
@@ -126,7 +126,7 @@ def _index_updates(collection_id, entities):
     if not len(entities):
         return []
 
-    for result in entities_by_ids(list(entities.keys())):
+    for result in entities_by_ids(list(entities.keys()), cached=False):
         if int(result.get('collection_id')) != collection_id:
             raise RuntimeError("Key collision between collections.")
         existing = model.get_proxy(result)
@@ -213,7 +213,8 @@ def index_single(obj, proxy, data, texts, sync=False):
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
     # pprint(data)
-    delete_entity(obj.id, exclude=proxy.schema, sync=sync)
     index = entities_write_index(proxy.schema)
     refresh = refresh_sync(sync)
+    if settings.ENTITIES_INDEX_SPLIT:
+        delete_entity(obj.id, exclude=proxy.schema, sync=False)
     return index_safe(index, obj.id, data, refresh=refresh)

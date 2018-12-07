@@ -5,8 +5,8 @@ urlnormalizer==1.2.0
 followthemoney==1.4.0
 fingerprints==0.6.2
 storagelayer==0.5.2
-ingestors==0.11.2
+ingestors==0.11.3
 normality==0.6.1
-celestial==0.2.3
+pantomime==0.3.2
 pdflib==0.1.7
 alephclient==0.8.2

@@ -2,11 +2,11 @@ import logging
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.core import es
+from aleph.core import settings
 from aleph.index.core import collections_index
 from aleph.index.core import records_write_index
 from aleph.index.core import entities_write_index
-from aleph.index.util import index_settings
+from aleph.index.util import index_settings, configure_index
 
 log = logging.getLogger(__name__)
 
@@ -19,18 +19,6 @@ TYPE_MAPPINGS = {
     registry.text: LATIN_TEXT,
     registry.date: PARTIAL_DATE,
 }
-
-
-def configure_index(index, mapping, settings):
-    log.info("Configuring index: %s...", index)
-    mapping['date_detection'] = False
-    body = {
-        'settings': settings,
-        'mappings': {'doc': mapping}
-    }
-    res = es.indices.create(index, body=body, ignore=[400])
-    if res.get('status') == 404:
-        es.indices.put_mapping(index=index, doc_type='doc', body=mapping)
 
 
 def configure_collections():
@@ -105,6 +93,8 @@ def configure_records():
 
 
 def configure_entities():
+    if not settings.ENTITIES_INDEX_SPLIT:
+        return configure_schema(None)
     for schema in model.schemata.values():
         if not schema.abstract:
             configure_schema(schema)
@@ -114,9 +104,10 @@ def configure_schema(schema):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
-    for name, prop in schema.properties.items():
-        config = TYPE_MAPPINGS.get(prop.type, KEYWORD)
-        schema_mapping[name] = config
+    if settings.ENTITIES_INDEX_SPLIT:
+        for name, prop in schema.properties.items():
+            config = TYPE_MAPPINGS.get(prop.type, KEYWORD)
+            schema_mapping[name] = config
 
     mapping = {
         "date_detection": False,
@@ -186,5 +177,5 @@ def configure_schema(schema):
             "ancestors": KEYWORD,
         }
     }
-    settings = index_settings(shards=10)
-    configure_index(entities_write_index(schema), mapping, settings)
+    index = entities_write_index(schema)
+    configure_index(index, mapping, index_settings())

@@ -169,6 +169,25 @@ def index_form(texts):
     return results
 
 
+def configure_index(index, mapping, settings):
+    """Create or update a search index with the given mapping and
+    settings. This will try to make a new index, or update an
+    existing mapping with new properties.
+    """
+    log.info("Configuring index: %s...", index)
+    mapping['date_detection'] = False
+    body = {
+        'settings': settings,
+        'mappings': {'doc': mapping}
+    }
+    res = es.indices.put_mapping(index=index,
+                                 doc_type='doc',
+                                 body=mapping,
+                                 ignore=[404])
+    if res.get('status') == 404:
+        es.indices.create(index, body=body)
+
+
 def index_settings(shards=5, refresh_interval=None):
     """Configure an index in ES with support for text transliteration."""
     return {
