@@ -10,9 +10,11 @@ from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 log = logging.getLogger(__name__)
 
 
-def delete_records(document_id, sync=False):
+def delete_records(document_id=None, collection_id=None, sync=False):
     """Delete all records associated with the given document."""
     q = {'term': {'document_id': document_id}}
+    if collection_id is not None:
+        q = {'term': {'collection_id': collection_id}}
     query_delete(records_read_index(), q, refresh=sync)
 
 

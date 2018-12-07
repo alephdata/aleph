@@ -8,6 +8,7 @@ from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
 from aleph.index.entities import iter_entities
+from aleph.index.records import delete_records
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.util import document_url, entity_url
 
@@ -91,8 +92,8 @@ def delete_collection_content(collection_id):
     Match.delete_by_collection(collection_id, deleted_at=deleted_at)
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
     index.delete_collection(collection_id)
-    index.delete_records(collection_id)
     index.delete_entities(collection_id)
+    delete_records(collection_id)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
 

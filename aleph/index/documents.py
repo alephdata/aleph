@@ -58,4 +58,4 @@ def index_document(document, shallow=False, sync=False):
 
 def delete_document(document_id, sync=False):
     delete_records(document_id, sync=False)
-    delete_entity(document_id, sync=sync)
+    delete_entity(document_id=document_id, sync=sync)
