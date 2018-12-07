@@ -177,7 +177,8 @@ def clean_query(query):
     if is_mapping(query):
         data = {}
         for key, value in query.items():
-            value = clean_query(value)
+            if key not in ['match_all', 'match_none']:
+                value = clean_query(value)
             if value is not None:
                 data[key] = value
         if not len(data):
