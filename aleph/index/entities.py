@@ -10,7 +10,7 @@ from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es, settings, cache
 from aleph.model import Document
-from aleph.index.core import entities_write_index, entities_read_index
+from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form, refresh_sync
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
 from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT

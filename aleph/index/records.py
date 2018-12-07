@@ -3,7 +3,7 @@ from elasticsearch.helpers import scan, bulk
 
 from aleph.core import db, es
 from aleph.model import DocumentRecord
-from aleph.index.core import records_read_index, records_write_index
+from aleph.index.indexes import records_read_index, records_write_index
 from aleph.index.util import query_delete, index_form, unpack_result
 from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
 

@@ -8,7 +8,7 @@ from followthemoney.types import registry
 
 from aleph.core import es, cache
 from aleph.model import Entity, Collection
-from aleph.index.core import collections_index, entities_read_index
+from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
 from aleph.index.util import index_form, search_safe
 

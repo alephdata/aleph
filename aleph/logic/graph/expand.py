@@ -9,7 +9,7 @@ from elasticsearch.helpers import scan
 from aleph.core import es
 from aleph.model import Entity
 from aleph.index.entities import get_entity
-from aleph.index.core import entities_read_index
+from aleph.index.indexes import entities_read_index
 from aleph.logic.graph.cache import load_links, store_links
 from aleph.logic.graph.cache import CacheMiss
 from aleph.logic.xref import xref_item

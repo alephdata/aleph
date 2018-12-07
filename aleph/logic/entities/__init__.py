@@ -5,7 +5,7 @@ from followthemoney.types import registry
 from aleph.core import es, db
 from aleph.model import Entity
 from aleph.index import entities as index
-from aleph.index.core import entities_read_index
+from aleph.index.indexes import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
 from aleph.logic.collections import refresh_collection
 from aleph.logic.notifications import flush_notifications
