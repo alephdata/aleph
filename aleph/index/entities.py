@@ -31,6 +31,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
     """Delete an entity from the index."""
     query = {'query': {'ids': {'values': str(entity_id)}}}
     es.delete_by_query(index=entities_read_index(exclude=exclude),
+                       doc_type='doc',
                        body=query,
                        wait_for_completion=sync,
                        refresh=refresh_sync(sync))

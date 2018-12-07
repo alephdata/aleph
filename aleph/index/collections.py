@@ -9,7 +9,6 @@ from followthemoney.types import registry
 from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.core import collections_index, entities_read_index
-from aleph.index.core import records_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
 from aleph.index.util import index_form, search_safe
 
@@ -165,8 +164,3 @@ def delete_entities(collection_id, schema=None, bulk_only=False):
         filters.append({'term': {'schemata': schema.name}})
     query = {'bool': {'filter': filters}}
     query_delete(entities_read_index(schema), query)
-
-
-def delete_records(collection_id):
-    records_query = {'term': {'collection_id': collection_id}}
-    query_delete(records_read_index(), records_query)
