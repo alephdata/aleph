@@ -3,10 +3,10 @@ from pprint import pprint, pformat  # noqa
 from elasticsearch.exceptions import RequestError
 
 from aleph.core import es
-from aleph.index.core import all_indexes
-from aleph.index.mapping import configure_collections
-from aleph.index.mapping import configure_records
-from aleph.index.mapping import configure_entities
+from aleph.index.indexes import all_indexes
+from aleph.index.indexes import configure_collections
+from aleph.index.indexes import configure_records
+from aleph.index.indexes import configure_entities
 
 log = logging.getLogger(__name__)
 

@@ -4,7 +4,7 @@ from pprint import pprint  # noqa
 from aleph.authz import Authz
 from aleph.core import db
 from aleph.model import Alert, Events
-from aleph.index.core import entities_read_index
+from aleph.index.indexes import entities_read_index
 from aleph.index.util import search_safe, unpack_result, authz_query, MAX_PAGE
 from aleph.logic.notifications import publish
 
