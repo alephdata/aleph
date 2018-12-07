@@ -21,7 +21,7 @@ const mapStateToProps = (state, ownProps) => {
     'filter:schema': activeMode,
     'filter:collection_id': collection.id
   };
-  const query = Query.fromLocation('search', location, context, 'entities').limit(50);
+  const query = Query.fromLocation('entities', location, context, 'entities').limit(50);
   return { query };
 };
 
