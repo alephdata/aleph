@@ -189,7 +189,6 @@ class Query(object):
         # log.info("Search index: %s", self.get_index())
         result = es.search(index=self.get_index(),
                            body=self.get_body(),
-                           request_cache=self.parser.cache,
                            request_timeout=REQUEST_TIMEOUT)
         log.info("Took: %sms", result.get('took'))
         # log.info("%s", pformat(result.get('profile')))
