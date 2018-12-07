@@ -7,7 +7,7 @@ export function queryCollectionDocuments(location, collectionId) {
     'filter:schemata': 'Document',
     'empty:parent': true
   };
-  return Query.fromLocation('search', location, context, 'document').limit(50); 
+  return Query.fromLocation('entities', location, context, 'document').limit(50); 
 }
 
 export function queryEntitySimilar(location, entityId) {

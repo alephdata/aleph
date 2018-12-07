@@ -117,7 +117,7 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     [`filter:properties.${reference.property.name}`]: entity.id
   };
-  const query = Query.fromLocation('search', location, context, reference.property.name);
+  const query = Query.fromLocation('entities', location, context, reference.property.name);
   return {
     reference, query,
     result: selectEntitiesResult(state, query),
