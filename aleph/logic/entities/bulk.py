@@ -6,7 +6,6 @@ from followthemoney.exc import InvalidData
 from aleph.core import celery
 from aleph.model import Collection
 from aleph.index import entities as index
-from aleph.index.collections import index_collection
 from aleph.index.util import BULK_PAGE
 from aleph.util import dict_list
 
@@ -65,8 +64,6 @@ def bulk_load_query(collection_id, query):
             entities = {}
 
     index.index_bulk(collection.id, entities)
-    # Update collection stats
-    index_collection(collection)
 
 
 def bulk_write(collection, items):
