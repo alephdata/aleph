@@ -2,7 +2,7 @@ import logging
 from flask.wrappers import Response
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
-from celestial.types import PDF
+from pantomime.types import PDF
 
 from aleph.core import archive, db
 from aleph.model import DocumentRecord, Audit
@@ -53,10 +53,9 @@ def content(document_id):
 def update(document_id):
     document = get_db_document(document_id, request.authz.WRITE)
     data = parse_request(DocumentUpdateSchema)
-    sync = get_flag('sync')
     document.update(data)
     db.session.commit()
-    update_document(document, shallow=True, sync=sync)
+    update_document(document, shallow=True, sync=get_flag('sync', True))
     return view(document_id)
 
 

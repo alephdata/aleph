@@ -5,7 +5,7 @@ from followthemoney.types import registry
 from aleph.core import es, db
 from aleph.model import Entity
 from aleph.index import entities as index
-from aleph.index.core import entities_index
+from aleph.index.core import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
 from aleph.logic.collections import refresh_collection
 from aleph.logic.notifications import flush_notifications
@@ -77,7 +77,7 @@ def entity_references(entity, authz):
         return
 
     # Run a count search (with schema facet?)
-    res = es.msearch(index=entities_index(), body=queries)
+    res = es.msearch(index=entities_read_index(), body=queries)
     for prop, resp in zip(properties, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total is not None and total > 0:
@@ -122,7 +122,7 @@ def entity_tags(entity, authz):
     if not len(queries):
         return
 
-    res = es.msearch(index=entities_index(), body=queries)
+    res = es.msearch(index=entities_read_index(), body=queries)
     for (field, value), resp in zip(pivots, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total is not None and total > 0:

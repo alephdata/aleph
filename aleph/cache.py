@@ -42,3 +42,15 @@ class Cache(object):
 
     def lock(self, key, timeout=120):
         return self.kv.lock(key, timeout=timeout)
+
+    def flush(self, prefix=None):
+        prefix = prefix or self.prefix
+        keys = []
+        for key in self.kv.scan_iter(match='%s*' % prefix):
+            log.info("Flush: %s", key.decode('utf-8'))
+            keys.append(key)
+            if len(keys) > 0 and len(keys) % 1000 == 0:
+                self.kv.delete(*keys)
+                keys = []
+        if len(keys) > 0:
+            self.kv.delete(*keys)

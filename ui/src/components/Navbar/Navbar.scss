@@ -47,12 +47,6 @@
       }
     }
 
-    .bp3-popover-target {
-      input {
-        width: $aleph-grid-size * 3 !important;
-      }
-    }
-
     a {
       color: inherit;
 
@@ -63,10 +57,13 @@
     }
 
     form {
-      width: 100%;
 
       .bp3-control-group {
         width: 100%;
+      }
+
+      .search-popover {
+        margin-top: $aleph-grid-size / 2 ;
       }
 
       input {
@@ -74,6 +71,8 @@
         color: $pt-text-color;
         border-radius: 2px !important;
       }
+
+
     }
 
     .icon {
@@ -126,8 +125,6 @@
   }
 
   .navbar-search-form {
-    display: inline-flex;
-    align-items: center;
 
     .alert-toggle {
       .bp3-button {

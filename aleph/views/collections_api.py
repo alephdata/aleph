@@ -9,7 +9,6 @@ from aleph.model import Role, Audit
 from aleph.search import CollectionsQuery
 from aleph.logic.collections import create_collection, generate_sitemap
 from aleph.logic.collections import delete_collection, update_collection
-from aleph.logic.collections import delete_entities, delete_documents
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
@@ -105,17 +104,3 @@ def delete(id):
     collection = get_db_collection(id, request.authz.WRITE)
     delete_collection(collection, sync=True)
     return ('', 204)
-
-
-@blueprint.route('/api/2/collections/<int:id>/entities', methods=['DELETE'])
-def delete_entities_api(id):
-    collection = get_db_collection(id, request.authz.WRITE)
-    delete_entities.delay(collection.id)
-    return view(collection.id)
-
-
-@blueprint.route('/api/2/collections/<int:id>/documents', methods=['DELETE'])
-def delete_documents_api(id):
-    collection = get_db_collection(id, request.authz.WRITE)
-    delete_documents.delay(collection.id)
-    return view(collection.id)

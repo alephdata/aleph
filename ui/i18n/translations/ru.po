@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-11-14T15:37:11.048Z\n"
+"POT-Creation-Date: 2018-12-06T22:01:42.270Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,7 @@ msgstr "Права доступа"
 #. Accessible to
 #: i18n/messages.json
 msgid "Accessible to"
-msgstr ""
+msgstr "Доступ"
 
 #. [password_auth.activate]
 #. defaultMessage is:
@@ -410,14 +410,14 @@ msgstr "Перекрёстное сравнение запущено."
 #. Data URL
 #: i18n/messages.json
 msgid "Data URL"
-msgstr ""
+msgstr "Ссылка на данные"
 
 #. [collection.edit.info.data_url]
 #. defaultMessage is:
 #. Data source URL
 #: i18n/messages.json
 msgid "Data source URL"
-msgstr ""
+msgstr "Ссылка на исходные данные"
 
 #. [document.date]
 #. defaultMessage is:
@@ -556,13 +556,6 @@ msgstr "Электронный адрес"
 msgid "Error"
 msgstr "Ошибка"
 
-#. [collection.edit.save_error]
-#. defaultMessage is:
-#. Failed to save changes.
-#: i18n/messages.json
-msgid "Failed to save changes."
-msgstr "Не удалось сохранить изменения."
-
 #. [document.file_name]
 #. defaultMessage is:
 #. File name
@@ -589,7 +582,7 @@ msgstr "Типы файлов"
 #. Filter by access
 #: i18n/messages.json
 msgid "Filter by access"
-msgstr ""
+msgstr "Фильтровать по доступу"
 
 #. [sources.index.filter]
 #. defaultMessage is:
@@ -682,12 +675,15 @@ msgstr "Информация"
 #. Information URL
 #: i18n/messages.json i18n/messages.json
 msgid "Information URL"
-msgstr ""
+msgstr "Ссылка на описание"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
 #. Keep track of searches...
-#: i18n/messages.json
+#. [queryLogs.add_placeholder]
+#. defaultMessage is:
+#. Keep track of searches...
+#: i18n/messages.json i18n/messages.json
 msgid "Keep track of searches..."
 msgstr "Оповещать о новых результатах поиска..."
 
@@ -723,21 +719,21 @@ msgstr "Последнее изменение"
 #. Link to further information
 #: i18n/messages.json
 msgid "Link to further information"
-msgstr ""
+msgstr "Ссылка на более подробное описание"
 
 #. [collection.edit.info.placeholder_publisher_url]
 #. defaultMessage is:
 #. Link to the publisher
 #: i18n/messages.json
 msgid "Link to the publisher"
-msgstr ""
+msgstr "Ссылка на источник"
 
 #. [collection.edit.info.placeholder_data_url]
 #. defaultMessage is:
 #. Link to the raw data in a downloadable form
 #: i18n/messages.json
 msgid "Link to the raw data in a downloadable form"
-msgstr ""
+msgstr "Ссылка на исходные данные в скачиваемом формате"
 
 #. [text.loading]
 #. defaultMessage is:
@@ -782,7 +778,10 @@ msgstr "MIME"
 #. [alerts.heading]
 #. defaultMessage is:
 #. Manage your alerts
-#: i18n/messages.json
+#. [queryLogs.heading]
+#. defaultMessage is:
+#. Manage your alerts
+#: i18n/messages.json i18n/messages.json
 msgid "Manage your alerts"
 msgstr "Оповещения о новых результатах поиска"
 
@@ -849,7 +848,7 @@ msgstr "Имена"
 #. New casefile
 #: i18n/messages.json
 msgid "New casefile"
-msgstr "Новый кейс-файл"
+msgstr "Создать кейс-файл"
 
 #. [document.folder.button]
 #. defaultMessage is:
@@ -961,7 +960,7 @@ msgstr "Открыть"
 #. Organisation or person publishing this data
 #: i18n/messages.json
 msgid "Organisation or person publishing this data"
-msgstr ""
+msgstr "Организация или лицо, опубликовавшее данные"
 
 #. [category.other]
 #. defaultMessage is:
@@ -1016,14 +1015,14 @@ msgstr "Профиль"
 #. Publisher
 #: i18n/messages.json i18n/messages.json
 msgid "Publisher"
-msgstr ""
+msgstr "Издатель"
 
 #. [collection.edit.info.publisher_url]
 #. defaultMessage is:
 #. Publisher URL
 #: i18n/messages.json
 msgid "Publisher URL"
-msgstr ""
+msgstr "Ссылка на издателя"
 
 #. [notifications.title]
 #. defaultMessage is:
@@ -1045,6 +1044,20 @@ msgstr "Получатель"
 #: i18n/messages.json
 msgid "Register"
 msgstr "Зарегистрироваться"
+
+#. [queryLogs.query.delete]
+#. defaultMessage is:
+#. Remove
+#: i18n/messages.json
+msgid "Remove"
+msgstr ""
+
+#. [queryLogs.query.delete.tooltip]
+#. defaultMessage is:
+#. Remove from search history
+#: i18n/messages.json
+msgid "Remove from search history"
+msgstr ""
 
 #. [tags.results]
 #. defaultMessage is:
@@ -1135,8 +1148,21 @@ msgstr "Искать людей, компании или документы."
 #. [alerts.alert.search]
 #. defaultMessage is:
 #. Search for {query}
-#: i18n/messages.json
+#. [queryLogs.query.search]
+#. defaultMessage is:
+#. Search for {query}
+#: i18n/messages.json i18n/messages.json
 msgid "Search for {query}"
+msgstr "Искть {query}"
+
+#. [nav.queryLogs]
+#. defaultMessage is:
+#. Search history
+#. [queryLogs.title]
+#. defaultMessage is:
+#. Search history
+#: i18n/messages.json i18n/messages.json
+msgid "Search history"
 msgstr ""
 
 #. [collections.index.filter]
@@ -1205,7 +1231,7 @@ msgstr "Настройки"
 #. Share
 #: i18n/messages.json
 msgid "Share"
-msgstr "Предоставить доступ"
+msgstr "Доступ"
 
 #. [case.share.with]
 #. defaultMessage is:
@@ -1517,10 +1543,13 @@ msgstr "Безымянный кейс-файл"
 #. [alerts.save]
 #. defaultMessage is:
 #. Update
+#. [queryLogs.save]
+#. defaultMessage is:
+#. Update
 #. [settings.save]
 #. defaultMessage is:
 #. Update
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Update"
 msgstr "Обновить"
 
@@ -1613,7 +1642,10 @@ msgstr "Мы отправили вам письмо с ссылкой для з�
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You are not tracking any searches
-#: i18n/messages.json
+#. [queryLogs.no_alerts]
+#. defaultMessage is:
+#. You are not tracking any searches
+#: i18n/messages.json i18n/messages.json
 msgid "You are not tracking any searches"
 msgstr "Вы не подписаны на оповещения"
 

@@ -33,12 +33,13 @@ class Authz(object):
             return self._collections.get(action)
         prefix_key = cache.key(self.PREFIX)
         key = cache.key(self.PREFIX, action, self.id)
-        if cache.kv.sismember(prefix_key, key):
-            collections = cache.get_list(key)
+        collections = cache.get_list(key)
+        if len(collections):
             collections = [int(c) for c in collections]
             self._collections[action] = collections
-            # log.debug("[C] Authz: %s (%s): %s", self, action, collections)
+            log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
+
         if self.is_admin:
             q = Collection.all_ids()
         else:
@@ -50,8 +51,10 @@ class Authz(object):
             if action == self.WRITE:
                 q = q.filter(Permission.write == True)  # noqa
             q = q.distinct()
+            # log.info("Query: %s", q)
         collections = [c for (c,) in q.all()]
         log.debug("Authz: %s (%s): %s", self, action, collections)
+
         cache.kv.sadd(prefix_key, key)
         cache.set_list(key, collections)
         self._collections[action] = collections

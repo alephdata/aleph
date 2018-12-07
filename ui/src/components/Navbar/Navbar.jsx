@@ -2,16 +2,16 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {Link} from 'react-router-dom';
-import {defineMessages, injectIntl, FormattedMessage} from 'react-intl';
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 import queryString from 'query-string';
-import { ControlGroup, InputGroup, Icon, Button } from "@blueprintjs/core";
+import {Button, Icon} from "@blueprintjs/core";
 
-import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
-import { selectSession } from 'src/selectors';
+import {selectSession} from 'src/selectors';
 
 import './Navbar.scss';
+import SearchBox from "./SearchBox";
 
 const messages = defineMessages({
   search_placeholder: {
@@ -35,7 +35,21 @@ class Navbar extends React.Component {
     this.onOpenMenu = this.onOpenMenu.bind(this);
     this.onToggleSearch = this.onToggleSearch.bind(this);
   }
-
+  getSnapshotBeforeUpdate(prevProps){
+    if(this.props.query && (prevProps.query.state.q !== this.props.query.state.q)){
+      if(this.props.query.state.q !== this.state.searchValue){
+        return {shouldChangeSearchValue: this.props.query.state.q}
+      }
+    }
+    return {}
+  }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (snapshot !== null && snapshot.shouldChangeSearchValue) {
+      this.setState({
+        searchValue:snapshot.shouldChangeSearchValue
+      })
+    }
+  }
   componentDidMount() {
     const { query } = this.props;
     if (query !== undefined) {
@@ -47,20 +61,23 @@ class Navbar extends React.Component {
     this.setState({searchValue: target.value});
   }
 
-  onSubmit(event) {
+  onSubmit = event => event.preventDefault();
+
+  updateSearchValue = searchValue => this.setState({searchValue});
+
+  doSearch = (searchValue = this.state.searchValue) => {
     const { query, updateQuery, history } = this.props;
-    event.preventDefault();
     if (updateQuery !== undefined) {
-      updateQuery(query.set('q', this.state.searchValue));
+      updateQuery(query.set('q', searchValue));
     } else {
       history.push({
         pathname: '/search',
         search: queryString.stringify({
-          q: this.state.searchValue
+          q: searchValue
         })
       })
     }
-  }
+  };
 
   onOpenMenu(event) {
     event.preventDefault();
@@ -74,7 +91,7 @@ class Navbar extends React.Component {
 
   render() {
     const {metadata, session, intl, isHomepage} = this.props;
-    const {searchValue, isMenuOpen, searchOpen} = this.state;
+    const { isMenuOpen, searchOpen} = this.state;
 
     return (
       <div id="Navbar" className="Navbar">
@@ -93,18 +110,13 @@ class Navbar extends React.Component {
 
               <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'hide'}>
                 <button type="button" className="back-button visible-sm-block bp3-button bp3-large bp3-minimal bp3-icon-arrow-left" onClick={this.onToggleSearch}/>
-                {!isHomepage && ( <form onSubmit={this.onSubmit} className='navbar-search-form'>
-                    <ControlGroup fill={true}>
-                      <InputGroup
-                        type="text"
-                        leftIcon="search"
-                        id="search-box"
-                        large={true}
-                        onChange={this.onChange} value={searchValue}
-                        placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
-                        rightElement={<SearchAlert queryText={searchValue}/>}
-                      />
-                    </ControlGroup>
+                {!isHomepage && ( <form onSubmit={this.onSubmit} autoComplete="off" className='navbar-search-form'>
+                    <SearchBox
+                      doSearch={this.doSearch}
+                      placeholder={intl.formatMessage(searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder)}
+                      updateSearchValue={this.updateSearchValue}
+                      searchValue={this.state.searchValue}
+                    />
                   </form>
                 )}
               </div>

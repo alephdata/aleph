@@ -61,10 +61,10 @@ def bulk_load_query(collection_id, query):
                      entities_count)
 
         if len(entities) >= BULK_PAGE:
-            index.index_bulk(collection, entities)
+            index.index_bulk(collection.id, entities)
             entities = {}
 
-    index.index_bulk(collection, entities)
+    index.index_bulk(collection.id, entities)
     # Update collection stats
     index_collection(collection)
 
@@ -90,8 +90,8 @@ def bulk_write(collection, items):
             entities[entity.id] = entity
 
         if len(entities) >= BULK_PAGE:
-            index.index_bulk(collection, entities)
+            index.index_bulk(collection.id, entities)
             entities = {}
 
     if len(entities):
-        index.index_bulk(collection, entities)
+        index.index_bulk(collection.id, entities)

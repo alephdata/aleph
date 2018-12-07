@@ -8,18 +8,17 @@ from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, archive
-from aleph.model import db, upgrade_db, destroy_db
+from aleph.core import create_app, db, cache
 from aleph.model import Collection, Document, Role
 from aleph.views import mount_app_blueprints
-from aleph.index.admin import delete_index, upgrade_search
+from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection
 from aleph.logic.collections import update_collection, index_collections
-from aleph.logic.collections import delete_collection, delete_documents
-from aleph.logic.collections import delete_entities
+from aleph.logic.collections import delete_collection, delete_bulk_entities
 from aleph.logic.documents import ingest_document
 from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
+from aleph.logic.migration import upgrade_system, destroy_db
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load, index_entities
 from aleph.logic.xref import xref_collection
@@ -92,18 +91,10 @@ def flush(foreign_id):
 
 
 @manager.command
-def flushdocuments(foreign_id):
-    """Delete all documents from given collection."""
-    collection = get_collection(foreign_id)
-    delete_documents(collection.id)
-    db.session.commit()
-
-
-@manager.command
-def flushentities(foreign_id):
+def flushbulk(foreign_id):
     """Delete all entities from given collection."""
     collection = get_collection(foreign_id)
-    delete_entities(collection.id)
+    delete_bulk_entities(collection.id)
     db.session.commit()
 
 
@@ -134,21 +125,6 @@ def bulkload(file_name):
     log.info("Loading bulk data from: %s", file_name)
     config = load_config_file(file_name)
     bulk_load(config)
-
-
-@manager.command
-def resetindex():
-    """Re-create the ES index configuration, dropping all data."""
-    delete_index()
-    upgrade_search()
-
-
-@manager.command
-def repair():
-    """Re-index all the collections and entities."""
-    index_collections()
-    index_entities()
-    update_roles()
 
 
 @manager.command
@@ -207,9 +183,28 @@ def rdf(foreign_id):
 @manager.command
 def upgrade():
     """Create or upgrade the search index and database."""
-    upgrade_db()
-    upgrade_search()
-    archive.upgrade()
+    upgrade_system()
+
+
+@manager.command
+def resetindex():
+    """Re-create the ES index configuration, dropping all data."""
+    delete_index()
+    upgrade()
+
+
+@manager.command
+def resetcache():
+    """Clear the redis cache."""
+    cache.flush()
+
+
+@manager.command
+def repair():
+    """Re-index all the collections and entities."""
+    index_collections()
+    index_entities()
+    update_roles()
 
 
 @manager.command

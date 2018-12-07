@@ -11,11 +11,11 @@ const persistedState = loadState();
 const store = createStore(
   rootReducer,
   persistedState,
-  applyMiddleware(
+  /*window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(*/applyMiddleware(
     thunk,
     errorToastMiddleware,
     // logger
-  )
+  )/*)*/
 );
 
 store.subscribe(throttle(() => {

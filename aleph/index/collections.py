@@ -8,7 +8,8 @@ from followthemoney.types import registry
 
 from aleph.core import es, cache
 from aleph.model import Entity, Collection
-from aleph.index.core import collections_index, entities_index, records_index
+from aleph.index.core import collections_index, entities_read_index
+from aleph.index.core import records_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
 from aleph.index.util import index_form, search_safe
 
@@ -121,7 +122,7 @@ def get_collection_stats(collection_id):
             'languages': {'terms': {'field': 'languages', 'size': 10}},
         }
     }
-    result = search_safe(index=entities_index(), body=query)
+    result = search_safe(index=entities_read_index(), body=query)
     aggregations = result.get('aggregations', {})
     data = {'count': result['hits']['total']}
 
@@ -148,27 +149,24 @@ def get_instance_stats(authz):
 
 def delete_collection(collection_id, sync=False):
     """Delete all documents from a particular collection."""
-    es.delete(collections_index(), doc_type='doc', id=str(collection_id),
-              refresh=sync, ignore=[404])
+    es.delete(collections_index(),
+              doc_type='doc',
+              id=str(collection_id),
+              refresh=sync,
+              ignore=[404])
 
 
-def delete_entities(collection_id):
+def delete_entities(collection_id, schema=None, bulk_only=False):
     """Delete entities from a collection."""
-    query = {'bool': {
-        'must_not': {'term': {'schemata': 'Document'}},
-        'must': {'term': {'collection_id': collection_id}}
-    }}
-    query_delete(entities_index(), query)
+    filters = [{'term': {'collection_id': collection_id}}]
+    if bulk_only:
+        filters.append({'term': {'bulk': True}})
+    if schema is not None:
+        filters.append({'term': {'schemata': schema.name}})
+    query = {'bool': {'filter': filters}}
+    query_delete(entities_read_index(schema), query)
 
 
-def delete_documents(collection_id):
-    """Delete documents from a collection."""
+def delete_records(collection_id):
     records_query = {'term': {'collection_id': collection_id}}
-    query_delete(records_index(), records_query)
-    query = {'bool': {
-        'must': [
-            {'term': {'schemata': 'Document'}},
-            {'term': {'collection_id': collection_id}}
-        ]
-    }}
-    query_delete(entities_index(), query)
+    query_delete(records_read_index(), records_query)

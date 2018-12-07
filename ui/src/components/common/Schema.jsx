@@ -1,13 +1,12 @@
-import React, { PureComponent, Component } from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { selectSchemata } from 'src/selectors';
+import React, {Component, PureComponent} from 'react';
+import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
+import {selectSchemata} from 'src/selectors';
 import Icon from "./Icon";
 
 class SchemaIcon extends PureComponent {
   render() {
-    const {schema, schemata} = this.props,
-          model = schemata[schema] || {};
+    const {schema} = this.props;
 
     return <Icon className='entity-icon'
                  iconSize='16px'
@@ -18,11 +17,10 @@ class SchemaIcon extends PureComponent {
 class SchemaLabel extends Component {
   render() {
     const { schema, schemata, plural, icon } = this.props;
-    const model = schemata[schema] || {};
-    let label = model.label || schema;
-    if (plural) {
-      label = model.plural || label;
-    }
+    const model = schemata[schema];
+    const label = model.getLabel({
+      forcePlural: plural
+    });
     if (icon) {
       return (
         <span><Schema.Icon schema={schema}/> {label}</span>

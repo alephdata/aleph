@@ -7,17 +7,17 @@ from faker import Factory
 
 from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
-from aleph.model import create_system_roles, destroy_db
-from aleph.index.admin import delete_index, upgrade_search
-from aleph.index.admin import clear_index, refresh_index
+from aleph.index.admin import ensure_index, clear_index, refresh_index
 from aleph.index.documents import index_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import index_entities
+from aleph.logic.roles import create_system_roles
+from aleph.logic.migration import destroy_db
 from aleph.core import db, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
-APP_NAME = 'aleph_test_instance'
+APP_NAME = 'aleph-test'
 UI_URL = 'http://aleph.ui/'
 FIXTURES = os.path.join(os.path.dirname(__file__), 'fixtures')
 DB_URI = settings.DATABASE_URI + '_test'
@@ -47,11 +47,10 @@ class TestCase(FlaskTestCase):
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.MAIL_SERVER = None
         settings.ENTITIES_SERVICE = None
-        settings.ENTITIES_INDEX = '%s_entity' % APP_NAME
-        settings.ENTITIES_INDEX_SET = [settings.ENTITIES_INDEX]
-        settings.RECORDS_INDEX = '%s_records' % APP_NAME
+        settings.ENTITIES_INDEX = '%s-entity' % APP_NAME
+        settings.RECORDS_INDEX = '%s-record' % APP_NAME
         settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
-        settings.COLLECTIONS_INDEX = '%s_collection' % APP_NAME
+        settings.COLLECTIONS_INDEX = '%s-collection' % APP_NAME
         settings.REDIS_URL = None
         app = create_app({})
         mount_app_blueprints(app)
@@ -68,7 +67,9 @@ class TestCase(FlaskTestCase):
 
     def login(self, foreign_id='tester', name=None, email=None,
               is_admin=False):
-        role = self.create_user(foreign_id=foreign_id, name=name, email=email,
+        role = self.create_user(foreign_id=foreign_id,
+                                name=name,
+                                email=email,
                                 is_admin=is_admin)
         headers = {'Authorization': role.api_key}
         return role, headers
@@ -114,8 +115,7 @@ class TestCase(FlaskTestCase):
             settings._global_test_state = True
             destroy_db()
             db.create_all()
-            delete_index()
-            upgrade_search()
+            ensure_index()
 
         kv.flushall()
         clear_index()

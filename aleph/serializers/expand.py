@@ -2,10 +2,8 @@ import logging
 from banal import ensure_list, first
 from marshmallow import Schema, post_dump
 
-from aleph.core import es
-from aleph.model import Role, Document, Entity, Collection
-from aleph.index.core import entities_index_list, collections_index
-from aleph.index.util import unpack_result
+from aleph.model import Role, Alert, Entity, Collection
+from aleph.index.entities import entities_by_ids
 
 log = logging.getLogger(__name__)
 
@@ -29,27 +27,35 @@ class ExpandableSchema(Schema):
         for role in Role.all_by_ids(roles, deleted=True):
             cache[(Role, str(role.id))] = role
 
-    def _resolve_index(self, cache):
-        queries = []
+    def _resolve_collections(self, cache):
+        collections = set()
         for (type_, id_) in cache.keys():
-            if type_ in [Collection]:
-                index = collections_index()
-                query = {'_index': index, '_id': id_}
-                queries.append(((type_, id_), query))
-            elif type_ in [Document, Entity]:
-                for index in entities_index_list():
-                    query = {'_index': index, '_id': id_}
-                    queries.append(((type_, id_), query))
-
-        if not len(queries):
+            if type_ == Collection:
+                collections.add(id_)
+        if not len(collections):
             return
+        for coll in Collection.all_by_ids(collections, deleted=True):
+            cache[(Collection, str(coll.id))] = coll
 
-        results = es.mget(body={'docs': [q[1] for q in queries]},
-                          _source_exclude=['text'])
-        for (key, _), doc in zip(queries, results['docs']):
-            doc = unpack_result(doc)
-            if cache.get(key) is None and doc is not None:
-                cache[key] = doc
+    def _resolve_entities(self, cache):
+        entities = set()
+        for (type_, id_) in cache.keys():
+            if type_ == Entity:
+                entities.add(id_)
+        if not len(entities):
+            return
+        for entity in entities_by_ids(list(entities)):
+            cache[(Entity, entity.get('id'))] = entity
+
+    def _resolve_alerts(self, cache):
+        alerts = set()
+        for (type_, id_) in cache.keys():
+            if type_ == Alert:
+                alerts.add(id_)
+        if not len(alerts):
+            return
+        for alert in Alert.all_by_ids(alerts, deleted=True):
+            cache[(Alert, str(alert.id))] = alert
 
     @post_dump(pass_many=True)
     def expand(self, objs, many=False):
@@ -60,7 +66,8 @@ class ExpandableSchema(Schema):
                     cache[(type_, key)] = None
 
         self._resolve_roles(cache)
-        self._resolve_index(cache)
+        self._resolve_collections(cache)
+        self._resolve_entities(cache)
 
         for obj in ensure_list(objs):
             for (field, type_, target, schema, multi) in self.EXPAND:

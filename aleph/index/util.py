@@ -2,7 +2,7 @@ import logging
 from banal import ensure_list
 from elasticsearch import RequestError
 
-from aleph.core import es
+from aleph.core import es, settings
 from aleph.util import backoff
 
 log = logging.getLogger(__name__)
@@ -24,17 +24,28 @@ def backoff_cluster(failures=0):
     backoff(failures=failures)
 
 
+def refresh_sync(sync):
+    if settings.TESTING:
+        return True
+    return 'wait_for' if sync else False
+
+
 def unpack_result(res):
     """Turn a document hit from ES into a more traditional JSON object."""
     error = res.get('error')
     if error is not None:
-        raise RuntimeError("Query error: %(reason)s" % error)
+        raise RuntimeError("Query error: %r" % error)
     if res.get('found') is False:
         return
     data = res.get('_source', {})
     data['id'] = str(res.get('_id'))
-    if res.get('_score') is not None:
-        data['score'] = res.get('_score')
+
+    _score = res.get('_score')
+    if _score is not None and _score != 0.0:
+        data['score'] = _score
+
+    data['_index'] = res.get('_index')
+
     if 'highlight' in res:
         data['highlight'] = []
         for key, value in res.get('highlight', {}).items():
@@ -101,7 +112,8 @@ def query_delete(index, query, **kwargs):
             raise
         except Exception as exc:
             log.warning("Query delete failed: %s", exc)
-        backoff_cluster(failures=attempt)
+        # backoff_cluster(failures=attempt)
+        raise
 
 
 def index_safe(index, id, body, **kwargs):
@@ -151,7 +163,50 @@ def index_form(texts):
 
         if isinstance(text, str):
             text = text.strip()
-            if len(text):
+            if len(text) > 2:
                 total_len += len(text)
                 results.append(text)
     return results
+
+
+def configure_index(index, mapping, settings):
+    """Create or update a search index with the given mapping and
+    settings. This will try to make a new index, or update an
+    existing mapping with new properties.
+    """
+    log.info("Configuring index: %s...", index)
+    mapping['date_detection'] = False
+    body = {
+        'settings': settings,
+        'mappings': {'doc': mapping}
+    }
+    res = es.indices.put_mapping(index=index,
+                                 doc_type='doc',
+                                 body=mapping,
+                                 ignore=[404])
+    if res.get('status') == 404:
+        es.indices.create(index, body=body)
+
+
+def index_settings(shards=5, refresh_interval=None):
+    """Configure an index in ES with support for text transliteration."""
+    return {
+        "index": {
+            "number_of_shards": shards,
+            "refresh_interval": refresh_interval,
+            "analysis": {
+                "analyzer": {
+                    "icu_latin": {
+                        "tokenizer": "lowercase",
+                        "filter": ["latinize"]
+                    }
+                },
+                "filter": {
+                    "latinize": {
+                        "type": "icu_transform",
+                        "id": "Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC"  # noqa
+                    }
+                }
+            }
+        }
+    }

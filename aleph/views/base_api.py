@@ -55,7 +55,7 @@ def metadata():
         'schemata': model,
         'auth': auth
     }
-    cache.set_complex(key, data, expire=84600)
+    cache.set_complex(key, data, expire=3600)
     return jsonify(data)
 
 

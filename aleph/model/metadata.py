@@ -4,7 +4,7 @@ import mimetypes
 from banal import ensure_list
 from collections import Mapping
 from followthemoney.types import registry
-from celestial import normalize_mimetype, DEFAULT
+from pantomime import normalize_mimetype, DEFAULT
 from urllib.parse import unquote, urlparse
 
 from normality import safe_filename, stringify, slugify

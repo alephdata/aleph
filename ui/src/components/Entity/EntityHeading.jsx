@@ -1,17 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { Entity, Schema } from 'src/components/common';
-import { selectSchemata } from 'src/selectors';
+import {Entity, Schema} from 'src/components/common';
+import {selectSchemata} from 'src/selectors';
 
 
 class EntityHeading extends React.Component {
   render() {
     const { entity, schema } = this.props;
-    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
     if (schema === undefined) {  // entity hasn't loaded.
       return null;
     }
+    const isThing = schema.extends('Thing');
 
     return (
       <React.Fragment>

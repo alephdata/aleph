@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import _ from "lodash";
 
-import { Property } from 'src/components/common';
-import { selectSchemata } from "../../selectors";
-import { connect } from "react-redux";
+import {Property} from 'src/components/common';
+import {selectSchemata} from "../../selectors";
+import {connect} from "react-redux";
 
 
 class EntityInfoMode extends Component {
@@ -13,9 +12,7 @@ class EntityInfoMode extends Component {
       return null;
     }
 
-    const entityProperties = _.values(schema.properties).filter((prop) => {
-      return !prop.caption && (schema.featured.indexOf(prop.name) !== -1 || entity.properties[prop.name]);
-    });
+    const entityProperties = schema.getEntityProperties(entity);
     return (
       <ul className="info-sheet">
         { entityProperties.map((prop) => (

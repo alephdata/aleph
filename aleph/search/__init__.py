@@ -1,7 +1,8 @@
 import logging
 
 from aleph.model import Document, DocumentRecord
-from aleph.index.core import entities_index, records_index
+from aleph.index.core import entities_read_index
+from aleph.index.core import records_read_index
 from aleph.index.core import collections_index
 from aleph.index.match import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
@@ -12,10 +13,22 @@ from aleph.search.query import Query, AuthzQuery
 log = logging.getLogger(__name__)
 
 
-class DocumentsQuery(AuthzQuery):
+class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text']
+    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
     SORT_DEFAULT = ['_score']
+
+    def get_index(self):
+        # schema = self.parser.getlist('filter:schema')
+        # if len(schema):
+        #     return entities_read_index(schema=schema, descendants=False)
+        schemata = self.parser.getlist('filter:schemata')
+        if len(schemata):
+            return entities_read_index(schema=schemata)
+        return entities_read_index()
+
+
+class DocumentsQuery(EntitiesQuery):
 
     def get_filters(self):
         filters = super(DocumentsQuery, self).get_filters()
@@ -23,18 +36,6 @@ class DocumentsQuery(AuthzQuery):
             'term': {'schemata': Document.SCHEMA}
         })
         return filters
-
-    def get_index(self):
-        return entities_index()
-
-
-class EntitiesQuery(AuthzQuery):
-    TEXT_FIELDS = ['name^3', 'names.text^2', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
-    SORT_DEFAULT = ['_score']
-
-    def get_index(self):
-        return entities_index()
 
 
 class MatchQuery(EntitiesQuery):
@@ -83,13 +84,11 @@ class RecordsQuery(Query):
         self.document = document
 
     def get_index(self):
-        return records_index()
+        return records_read_index()
 
     def get_query(self):
         query = super(RecordsQuery, self).get_query()
         query['bool']['filter'].append({
-            'term': {
-                'document_id': self.document.id
-            }
+            'term': {'document_id': self.document.id}
         })
         return query

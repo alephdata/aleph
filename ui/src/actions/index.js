@@ -1,35 +1,28 @@
-import { createAction } from 'redux-act';
-import { endpoint } from 'src/app/api';
-import asyncActionCreator from './asyncActionCreator';
-import { suggestRoles, fetchRole, updateRole } from './roleActions';
-import { fetchAlerts, addAlert, deleteAlert } from './alertActions';
-import { queryNotifications, deleteNotifications } from './notificationActions';
+import {createAction} from 'redux-act';
+import {fetchRole, suggestRoles, updateRole} from './roleActions';
+import {addAlert, deleteAlert, fetchAlerts} from './alertActions';
+import {deleteNotifications, queryNotifications} from './notificationActions';
 import {
+  deleteDocument,
   fetchDocument,
-  queryDocumentRecords,
-  fetchDocumentPage,
   fetchDocumentContent,
+  fetchDocumentPage,
   ingestDocument,
-  deleteDocument
+  queryDocumentRecords
 } from './documentActions';
 import {
-  queryCollections,
-  fetchCollection,
-  updateCollection,
-  fetchCollectionPermissions,
-  updateCollectionPermissions,
-  fetchCollectionXrefIndex,
-  queryXrefMatches,
   createCollection,
   deleteCollection,
-  tiggerXrefMatches
+  fetchCollection,
+  fetchCollectionPermissions,
+  fetchCollectionXrefIndex,
+  queryCollections,
+  queryXrefMatches,
+  tiggerXrefMatches,
+  updateCollection,
+  updateCollectionPermissions
 } from './collectionActions';
-import {
-  queryEntities,
-  fetchEntity,
-  fetchEntityReferences,
-  fetchEntityTags
-} from './entityActions';
+import {fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities} from './entityActions';
 
 export {
   suggestRoles,
@@ -62,14 +55,6 @@ export {
   tiggerXrefMatches
 };
 
-export const fetchMetadata = asyncActionCreator(() => async dispatch => {
-  const response = await endpoint.get('metadata');
-  return { metadata: response.data };
-}, { name: 'FETCH_METADATA' });
-
-export const fetchStatistics = asyncActionCreator(() => async dispatch => {
-  const response = await endpoint.get('statistics');
-  return { statistics: response.data };
-}, { name: 'FETCH_STATISTICS' });
+export {fetchMetadata, fetchStatistics} from './metadata'
 
 export const setLocale = createAction('SET_LOCALE');

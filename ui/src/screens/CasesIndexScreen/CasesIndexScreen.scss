@@ -9,6 +9,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    flex-grow:0;
 
     .ContentPane, .SidePane {
       margin-top: 3em;
@@ -37,6 +38,17 @@
   }
 
   .table-padded {
-    padding: $aleph-grid-size * 3;
+    padding: $aleph-grid-size*1 $aleph-grid-size * 3 ;
+
+  }
+  .add-case{
+    margin-bottom: $aleph-grid-size ;
+    padding-bottom: $aleph-grid-size ;
+    border-bottom: 1px solid $table-border-color;
+    display:flex;
+    flex-direction: row-reverse;
+  }
+  .case-search{
+    flex-grow: .3;
   }
 }

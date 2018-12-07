@@ -3,7 +3,7 @@ from pprint import pprint  # noqa
 
 from aleph.core import db
 from aleph.model import Collection, Entity
-from aleph.index import index_entity
+from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 
 
@@ -40,8 +40,6 @@ class EntitiesTestCase(TestCase):
             }
         }, self.col)
         db.session.commit()
-        index_entity(self.ent)
-        index_entity(self.other)
 
     def test_merge(self):
         self.ent.merge(self.other)
@@ -52,15 +50,14 @@ class EntitiesTestCase(TestCase):
         assert self.other.deleted_at is not None, self.other
 
     def test_api_merge(self):
+        index_entity(self.ent)
+        index_entity(self.other)
+        self.flush_index()
         url = '/api/2/entities/%s/merge/%s' % (self.ent.id, self.other.id)
-        res = self.client.delete(url,
-                                 data={},
-                                 content_type='application/json')
+        res = self.client.delete(url, content_type='application/json')
         assert res.status_code == 403, res.status_code
         _, headers = self.login(is_admin=True)
-        res = self.client.delete(url,
-                                 data={},
-                                 headers=headers,
+        res = self.client.delete(url, headers=headers,
                                  content_type='application/json')
         data = res.json['properties']
         assert 'bear' in data['description'][0], data

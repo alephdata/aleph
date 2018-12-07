@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-11-14T15:37:11.048Z\n"
+"POT-Creation-Date: 2018-12-06T22:01:42.270Z\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -548,13 +548,6 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#. [collection.edit.save_error]
-#. defaultMessage is:
-#. Failed to save changes.
-#: i18n/messages.json
-msgid "Failed to save changes."
-msgstr ""
-
 #. [document.file_name]
 #. defaultMessage is:
 #. File name
@@ -679,7 +672,10 @@ msgstr ""
 #. [alerts.add_placeholder]
 #. defaultMessage is:
 #. Keep track of searches...
-#: i18n/messages.json
+#. [queryLogs.add_placeholder]
+#. defaultMessage is:
+#. Keep track of searches...
+#: i18n/messages.json i18n/messages.json
 msgid "Keep track of searches..."
 msgstr ""
 
@@ -772,7 +768,10 @@ msgstr ""
 #. [alerts.heading]
 #. defaultMessage is:
 #. Manage your alerts
-#: i18n/messages.json
+#. [queryLogs.heading]
+#. defaultMessage is:
+#. Manage your alerts
+#: i18n/messages.json i18n/messages.json
 msgid "Manage your alerts"
 msgstr ""
 
@@ -1034,6 +1033,20 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
+#. [queryLogs.query.delete]
+#. defaultMessage is:
+#. Remove
+#: i18n/messages.json
+msgid "Remove"
+msgstr ""
+
+#. [queryLogs.query.delete.tooltip]
+#. defaultMessage is:
+#. Remove from search history
+#: i18n/messages.json
+msgid "Remove from search history"
+msgstr ""
+
 #. [tags.results]
 #. defaultMessage is:
 #. Results
@@ -1123,8 +1136,21 @@ msgstr ""
 #. [alerts.alert.search]
 #. defaultMessage is:
 #. Search for {query}
-#: i18n/messages.json
+#. [queryLogs.query.search]
+#. defaultMessage is:
+#. Search for {query}
+#: i18n/messages.json i18n/messages.json
 msgid "Search for {query}"
+msgstr ""
+
+#. [nav.queryLogs]
+#. defaultMessage is:
+#. Search history
+#. [queryLogs.title]
+#. defaultMessage is:
+#. Search history
+#: i18n/messages.json i18n/messages.json
+msgid "Search history"
 msgstr ""
 
 #. [collections.index.filter]
@@ -1501,10 +1527,13 @@ msgstr ""
 #. [alerts.save]
 #. defaultMessage is:
 #. Update
+#. [queryLogs.save]
+#. defaultMessage is:
+#. Update
 #. [settings.save]
 #. defaultMessage is:
 #. Update
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Update"
 msgstr ""
 
@@ -1597,7 +1626,10 @@ msgstr ""
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You are not tracking any searches
-#: i18n/messages.json
+#. [queryLogs.no_alerts]
+#. defaultMessage is:
+#. You are not tracking any searches
+#: i18n/messages.json i18n/messages.json
 msgid "You are not tracking any searches"
 msgstr ""
 

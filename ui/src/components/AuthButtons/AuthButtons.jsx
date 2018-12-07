@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
-import { Menu, MenuItem, MenuDivider, Popover, Button, Position, Icon } from "@blueprintjs/core";
+import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
+import {Link} from 'react-router-dom';
+import {Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position} from "@blueprintjs/core";
 
 import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 
 import './AuthButtons.scss';
+import QueryLogsDialog from "../../dialogs/QueryLogsDialog/QueryLogsDialog";
 
 const messages = defineMessages({
   view_notifications: {
@@ -24,7 +25,11 @@ const messages = defineMessages({
   signin: {
     id: 'nav.signin',
     defaultMessage: 'Sign in / Register',
-  }
+  },
+  queryLogs: {
+    id: 'nav.queryLogs',
+    defaultMessage: 'Search history',
+  },
 });
 
 class AuthButtons extends Component {
@@ -32,6 +37,7 @@ class AuthButtons extends Component {
     super();
     this.state = {
       settingsIsOpen: false,
+      queryLogsIsOpen: false,
       isSignupOpen: false
     };
 
@@ -42,6 +48,8 @@ class AuthButtons extends Component {
   toggleAuthentication() {
     this.setState({isSignupOpen: !this.state.isSignupOpen})
   }
+  toggleQueryLogs = () => this.setState((state) => ({queryLogsIsOpen: !state.queryLogsIsOpen}));
+
 
   toggleSettings() {
     this.setState({settingsIsOpen: !this.state.settingsIsOpen})
@@ -61,6 +69,7 @@ class AuthButtons extends Component {
                   {intl.formatMessage(messages.view_notifications)}
                 </div>
               </Link>
+              <MenuItem icon="history" onClick={this.toggleQueryLogs} text={intl.formatMessage(messages.queryLogs)}/>
               <MenuItem icon="cog" onClick={this.toggleSettings} text={intl.formatMessage(messages.settings)+'…'} />
               <MenuDivider />
               <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
@@ -71,6 +80,7 @@ class AuthButtons extends Component {
             </Button>
           </Popover>
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
+          <QueryLogsDialog isOpen={this.state.queryLogsIsOpen} toggleDialog={this.toggleQueryLogs} />
         </span>
       )
     }

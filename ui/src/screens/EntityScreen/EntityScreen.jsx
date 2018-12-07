@@ -1,20 +1,17 @@
 import React, {Component} from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
+import {withRouter} from 'react-router';
+import {connect} from 'react-redux';
 import queryString from 'query-string';
 
-import { selectEntity, selectEntityView, selectSchemata } from 'src/selectors';
+import {selectEntity, selectEntityReference, selectEntityView} from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
-import { selectEntityReference } from "src/selectors";
-import reverseLabel from 'src/util/reverseLabel';
 
 class EntityScreen extends Component {
   render() {
-      const { entityId, mode, reference, schemata } = this.props;
+    const {entityId, mode} = this.props;
       return (
         <EntityScreenContext entityId={entityId}
-                             activeMode={mode}
-                             screenTitle={reverseLabel(schemata, reference)} />
+                             activeMode={mode}/>
       );
   }
 }
@@ -29,7 +26,6 @@ const mapStateToProps = (state, ownProps) => {
     reference,
     entity: selectEntity(state, entityId),
     mode: selectEntityView(state, entityId, hashQuery.mode, false),
-    schemata: selectSchemata(state)
   };
 };
 

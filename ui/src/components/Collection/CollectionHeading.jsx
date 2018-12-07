@@ -1,21 +1,26 @@
-import _ from 'lodash';
 import React, {Component} from 'react';
-import { FormattedMessage } from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
-import { Collection } from 'src/components/common';
+import {Collection} from 'src/components/common';
 
 
 class CollectionHeading extends Component {
   render() {
     const { collection } = this.props;
 
-    let content = [];
-    for (let key in collection.schemata) {
-      if (collection.schemata.hasOwnProperty(key)) {
-        content.push({name: key, number: collection.schemata[key]});
-      }
-    }
-    content = _.reverse(_.sortBy(content, ['number']));
+    /***
+     * To be removed, unused code, waiting for @pudo's approval
+     *
+     * let content = [];
+     *   for (let key in collection.schemata) {
+     *    if (collection.schemata.hasOwnProperty(key)) {
+     *      content.push({name: key, number: collection.schemata[key]});
+     *    }
+     *  }
+     *   content = _.reverse(_.sortBy(content, ['number']));
+     *
+     */
+
 
     return (
       <React.Fragment>

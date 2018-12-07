@@ -7,7 +7,7 @@ env:
   global:
     - ALEPH_DATABASE_NAME=aleph
     - ALEPH_DATABASE_URI=postgresql://localhost/$ALEPH_DATABASE_NAME
-    - DOCKER_COMPOSE_VERSION=1.16.1
+    - DOCKER_COMPOSE_VERSION=1.23.1
     - DOCKER_IMAGE_NAME=alephdata/aleph
 
 before_install:
@@ -34,15 +34,15 @@ script:
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  # push tag as well
   - if [[ $TRAVIS_BRANCH = "master" ]]; then
-      make TAG=latest build-full docker-push ;
+      make TAG=master build-full docker-push ;
     fi
   - if [[ $TRAVIS_BRANCH = "develop" ]]; then
-      make TAG=staging build-full docker-push ;
+      make TAG=develop build-full docker-push ;
     fi
   - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
       make TAG=$TRAVIS_TAG build-full docker-push ;
+      make build-full docker-push ;
     fi
   - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
       make TAG=occrp build-full docker-push ;

@@ -8,8 +8,7 @@ log = logging.getLogger(__name__)
 
 
 def index_document(document, shallow=False, sync=False):
-    name = document.name
-    log.info("Index document [%s]: %s", document.id, name)
+    log.info("Index document [%s]: %s", document.id, document.name)
     proxy = document.to_proxy()
     context = {
         'status': document.status,
@@ -18,7 +17,7 @@ def index_document(document, shallow=False, sync=False):
         'error_message': document.error_message,
         'uploader_id': document.uploader_id,
         'title': document.title,
-        'name': name,
+        'name': document.name,
         'summary': document.summary,
         'author': document.author,
         'generator': document.generator,
