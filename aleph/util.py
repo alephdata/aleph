@@ -4,7 +4,7 @@ import time
 import random
 import logging
 from celery import Task
-from banal import ensure_list
+from banal import ensure_list, is_mapping
 from normality import stringify
 from datetime import datetime, date
 from pkg_resources import iter_entry_points
@@ -109,3 +109,10 @@ class JSONEncoder(json.JSONEncoder):
         if hasattr(obj, 'to_dict'):
             return obj.to_dict()
         return json.JSONEncoder.default(self, obj)
+
+
+def result_key(obj):
+    """Generate a tuple to describe a cache ID for a search result"""
+    if is_mapping(obj):
+        return (obj.get('id'), obj.get('updated_at'))
+    return (getattr(obj, 'id', None), getattr(obj, 'updated_at', None))
