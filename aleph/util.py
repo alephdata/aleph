@@ -3,12 +3,15 @@ import json
 import time
 import random
 import logging
+from datetime import datetime, date
+import functools
+from pkg_resources import iter_entry_points
+
 from celery import Task
 from banal import ensure_list
 from normality import stringify
-from datetime import datetime, date
-from pkg_resources import iter_entry_points
 from flask_babel.speaklater import LazyString
+from opencensus.trace import execution_context
 
 log = logging.getLogger(__name__)
 EXTENSIONS = {}
@@ -109,3 +112,15 @@ class JSONEncoder(json.JSONEncoder):
         if hasattr(obj, 'to_dict'):
             return obj.to_dict()
         return json.JSONEncoder.default(self, obj)
+
+
+def trace_function(span_name):
+    def decorator_trace(func):
+        @functools.wraps(func)
+        def wrapper_trace(*args, **kwargs):
+            tracer = execution_context.get_opencensus_tracer()
+            with tracer.span(name=span_name):
+                value = func(*args, **kwargs)
+                return value
+        return wrapper_trace
+    return decorator_trace

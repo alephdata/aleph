@@ -2,9 +2,9 @@ import logging
 from banal import hash_data
 from flask_babel import get_locale
 from flask import request, Response, Blueprint
-from opencensus.trace import execution_context
 
 from aleph.core import settings
+from aleph.util import trace_function
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('cache', __name__)
@@ -38,6 +38,7 @@ def setup_caching():
     request._http_etag = None
 
 
+@trace_function(span_name="ENABLE_CACHE")
 def enable_cache(vary_user=True, vary=None):
     """Enable caching in the context of a view.
 
@@ -45,25 +46,23 @@ def enable_cache(vary_user=True, vary=None):
     if the data is fit for public caches (default: no, vary_user) and what
     values to include in the generation of an etag.
     """
-    tracer = execution_context.get_opencensus_tracer()
-    with tracer.span(name='enable_cache'):
-        if not settings.CACHE:
-            return
+    if not settings.CACHE:
+        return
 
-        request._http_cache = True
-        request._http_revalidate = vary is not None
-        args = sorted(set(request.args.items()))
-        # jquery where is your god now?!?
-        args = [(k, v) for (k, v) in args if k != '_']
-        cache_parts = [args, vary, request._app_locale]
+    request._http_cache = True
+    request._http_revalidate = vary is not None
+    args = sorted(set(request.args.items()))
+    # jquery where is your god now?!?
+    args = [(k, v) for (k, v) in args if k != '_']
+    cache_parts = [args, vary, request._app_locale]
 
-        if vary_user and request.authz.logged_in:
-            cache_parts.extend((request.authz.roles))
-            request._http_private = True
+    if vary_user and request.authz.logged_in:
+        cache_parts.extend((request.authz.roles))
+        request._http_private = True
 
-        request._http_etag = hash_data(cache_parts)
-        if request._http_etag in request.if_none_match:
-            raise NotModified()
+    request._http_etag = hash_data(cache_parts)
+    if request._http_etag in request.if_none_match:
+        raise NotModified()
 
 
 @blueprint.after_app_request

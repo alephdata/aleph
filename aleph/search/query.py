@@ -216,7 +216,7 @@ class Query(object):
         record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
 
         tracer = execution_context.get_opencensus_tracer()
-        with tracer.span(name='es_query') as span:
+        with tracer.span(name='ES_QUERY') as span:
             for key, val in parser.to_dict().items():
                 span.add_attribute(str(key), str(val))
             result = cls(parser, **kwargs).search()

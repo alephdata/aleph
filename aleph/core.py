@@ -105,7 +105,9 @@ def create_app(config={}):
         exporter = stackdriver_exporter.StackdriverExporter(
             project_id=settings.STACKDRIVER_TRACE_PROJECT_ID
         )
-        sampler = probability.ProbabilitySampler(rate=5)
+        sampler = probability.ProbabilitySampler(
+            rate=settings.TRACE_SAMPLING_RATE
+        )
         FlaskMiddleware(app, exporter=exporter, sampler=sampler)
         integrations = ['postgresql', 'sqlalchemy']
         config_integration.trace_integrations(integrations)

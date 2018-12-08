@@ -2,25 +2,24 @@ import logging
 from datetime import datetime
 
 from flask import request
-from opencensus.trace import execution_context
 
 from aleph.core import db, celery
 from aleph.model import Audit
+from aleph.util import trace_function
 
 log = logging.getLogger(__name__)
 
 
+@trace_function(span_name='RECORD_AUDIT')
 def record_audit(activity, keys=None, **data):
-    tracer = execution_context.get_opencensus_tracer()
-    with tracer.span(name='record_audit'):
-        keys = keys or list(data.keys())
-        timestamp = datetime.utcnow().timestamp()
-        record_audit_task.delay(activity,
-                                request.session_id,
-                                request.authz.id,
-                                timestamp,
-                                data,
-                                keys)
+    keys = keys or list(data.keys())
+    timestamp = datetime.utcnow().timestamp()
+    record_audit_task.delay(activity,
+                            request.session_id,
+                            request.authz.id,
+                            timestamp,
+                            data,
+                            keys)
 
 
 @celery.task(priority=4)
