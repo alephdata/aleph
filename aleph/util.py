@@ -8,10 +8,17 @@ import functools
 from pkg_resources import iter_entry_points
 
 from celery import Task
+from celery.signals import task_prerun, task_postrun
 from banal import ensure_list
 from normality import stringify
 from flask_babel.speaklater import LazyString
 from opencensus.trace import execution_context
+from opencensus.trace import tracer as tracer_module
+from opencensus.trace.exporters import stackdriver_exporter
+from opencensus.trace.samplers import probability
+from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
+
+from aleph import settings
 
 log = logging.getLogger(__name__)
 EXTENSIONS = {}
@@ -124,3 +131,28 @@ def trace_function(span_name):
                 return value
         return wrapper_trace
     return decorator_trace
+
+
+@task_prerun.connect
+def create_publish_span(task_id=None, task=None, *args, **kwargs):
+    if settings.STACKDRIVER_TRACE_PROJECT_ID:
+        exporter = stackdriver_exporter.StackdriverExporter(
+            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
+            transport=BackgroundThreadTransport
+        )
+        sampler = probability.ProbabilitySampler(
+            rate=settings.TRACE_SAMPLING_RATE
+        )
+        tracer = tracer_module.Tracer(exporter=exporter, sampler=sampler)
+        span = tracer.start_span()
+        span.name = '[celery]{0}'.format(task.name)
+        execution_context.set_opencensus_tracer(tracer)
+        span.add_attribute('args', str(kwargs['args']))
+        span.add_attribute('kwargs', str(kwargs['kwargs']))
+        execution_context.set_current_span(span)
+
+
+@task_postrun.connect
+def end_successful_task_span(task_id=None, task=None, *args, **kwargs):
+    tracer = execution_context.get_opencensus_tracer()
+    tracer.end_span()
