@@ -20,6 +20,10 @@ from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
 from fakeredis import FakeRedis
 import storagelayer
+from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
+from opencensus.trace import config_integration
+from opencensus.trace.exporters import stackdriver_exporter
+from opencensus.trace.samplers import probability
 
 from aleph import settings
 from aleph.util import SessionTask, get_extensions
@@ -97,6 +101,14 @@ def create_app(config={}):
     # applications can register their behaviour.
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
+    if settings.STACKDRIVER_TRACE_PROJECT_ID:
+        exporter = stackdriver_exporter.StackdriverExporter(
+            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID
+        )
+        sampler = probability.ProbabilitySampler(rate=5)
+        FlaskMiddleware(app, exporter=exporter, sampler=sampler)
+        integrations = ['postgresql', 'sqlalchemy']
+        config_integration.trace_integrations(integrations)
     return app
 
 
