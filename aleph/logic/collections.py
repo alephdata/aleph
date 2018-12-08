@@ -2,7 +2,7 @@ import logging
 from itertools import islice
 from datetime import datetime
 
-from aleph.core import db, celery
+from aleph.core import db, cache, celery
 from aleph.authz import Authz
 from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
@@ -15,6 +15,15 @@ from aleph.logic.util import document_url, entity_url
 log = logging.getLogger(__name__)
 
 
+def get_collection(collection_id):
+    key = cache.object_key(Collection, collection_id)
+    data = cache.get_complex(key)
+    if data is None:
+        data = index.get_collection(collection_id)
+        cache.set_complex(key, data, expire=cache.EXPIRE)
+    return data
+
+
 def create_collection(data, role=None, sync=False):
     role = role or Role.load_cli_user()
     created_at = datetime.utcnow()
@@ -25,22 +34,22 @@ def create_collection(data, role=None, sync=False):
                 params={'collection': collection})
     db.session.commit()
     Authz.flush()
+    refresh_collection(collection.id)
     return index.index_collection(collection, sync=sync)
 
 
 def update_collection(collection, sync=False):
     """Create or update a collection."""
     Authz.flush()
-    index.flush_collection_stats(collection.id)
+    refresh_collection(collection.id)
     return index.index_collection(collection, sync=sync)
 
 
-def refresh_collection(collection, sync=False):
+def refresh_collection(collection_id, sync=False):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and re-index."""
-    index.flush_collection_stats(collection.id)
-    if sync:
-        index.index_collection(collection, sync=sync)
+    cache.kv.delete(cache.object_key(Collection, collection_id),
+                    cache.object_key(Collection, collection_id, 'stats'))
 
 
 def index_collections():

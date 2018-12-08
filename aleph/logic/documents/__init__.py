@@ -3,7 +3,7 @@ import logging
 from aleph.core import settings, celery
 from aleph.model import Document
 from aleph.index import documents as index
-from aleph.logic.collections import refresh_collection
+from aleph.logic.entities import refresh_entity
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.documents.ingest import ingest, ingest_document  # noqa
 
@@ -22,9 +22,8 @@ def index_document_id(document_id):
 def update_document(document, shallow=False, sync=False):
     # These are operations that should be executed after each
     # write to a document or its metadata.
-    data = index.index_document(document, shallow=shallow, sync=sync)
-    refresh_collection(document.collection, sync=sync)
-    return data
+    refresh_entity(document, sync=sync)
+    return index.index_document(document, shallow=shallow, sync=sync)
 
 
 def _delete_document(document, deleted_at=None, sync=False):
@@ -37,9 +36,8 @@ def _delete_document(document, deleted_at=None, sync=False):
 
 
 def delete_document(document, deleted_at=None, sync=False):
-    collection = document.collection
+    refresh_entity(document, sync=sync)
     _delete_document(document, deleted_at=deleted_at, sync=sync)
-    refresh_collection(collection, sync=sync)
 
 
 @celery.task(priority=1)

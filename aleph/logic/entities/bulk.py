@@ -7,6 +7,7 @@ from aleph.core import celery
 from aleph.model import Collection
 from aleph.index import entities as index
 from aleph.index.util import BULK_PAGE
+from aleph.logic.collections import refresh_collection
 from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
@@ -64,6 +65,7 @@ def bulk_load_query(collection_id, query):
             entities = {}
 
     index.index_bulk(collection.id, entities)
+    refresh_collection(collection)
 
 
 def bulk_write(collection, items):
