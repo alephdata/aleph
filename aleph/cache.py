@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 
 
 class Cache(object):
+    EXPIRE = 84600 * 7
 
     def __init__(self, kv, expire=None, prefix=None):
         self.kv = kv
@@ -15,6 +16,9 @@ class Cache(object):
 
     def key(self, *parts):
         return make_key(self.prefix, *parts)
+
+    def object_key(self, clazz, key, *parts):
+        return self.key(clazz.__name__, key, *parts)
 
     def set(self, key, value, expire=None):
         expire = expire or self.expire

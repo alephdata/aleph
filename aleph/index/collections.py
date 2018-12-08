@@ -1,6 +1,5 @@
 import logging
 from pprint import pprint  # noqa
-from random import randint
 from banal import ensure_list
 from normality import normalize
 from followthemoney import model
@@ -94,13 +93,9 @@ def get_collection(collection_id):
     return unpack_result(result)
 
 
-def flush_collection_stats(collection_id):
-    cache.kv.delete(cache.key('cstats', collection_id))
-
-
 def get_collection_stats(collection_id):
     """Compute some statistics on the content of a collection."""
-    key = cache.key('cstats', collection_id)
+    key = cache.object_key(Collection, collection_id, 'stats')
     data = cache.get_complex(key)
     if data is not None:
         return data
@@ -129,8 +124,7 @@ def get_collection_stats(collection_id):
         data[facet] = {}
         for bucket in aggregations[facet]['buckets']:
             data[facet][bucket['key']] = bucket['doc_count']
-    expire = randint(3600 * 3, 3600 * 12)
-    cache.set_complex(key, data, expire=expire)
+    cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
 
 

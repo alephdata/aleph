@@ -13,8 +13,8 @@ from lxml.html.clean import Cleaner
 from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Document, Collection, Entity
-from aleph.index.entities import get_entity as _get_index_entity
-from aleph.index.collections import get_collection as _get_index_collection
+from aleph.logic.entities import get_entity as _get_index_entity
+from aleph.logic.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
 
 
