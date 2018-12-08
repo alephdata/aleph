@@ -111,7 +111,7 @@ def create_app(config={}):
             rate=settings.TRACE_SAMPLING_RATE
         )
         FlaskMiddleware(app, exporter=exporter, sampler=sampler)
-        integrations = ['postgresql', 'sqlalchemy']
+        integrations = ['postgresql', 'sqlalchemy', 'httplib']
         config_integration.trace_integrations(integrations)
     return app
 
