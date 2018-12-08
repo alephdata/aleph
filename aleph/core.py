@@ -24,6 +24,7 @@ from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace import config_integration
 from opencensus.trace.exporters import stackdriver_exporter
 from opencensus.trace.samplers import probability
+from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
 from aleph.util import SessionTask, get_extensions
@@ -103,7 +104,8 @@ def create_app(config={}):
         plugin(app=app)
     if settings.STACKDRIVER_TRACE_PROJECT_ID:
         exporter = stackdriver_exporter.StackdriverExporter(
-            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID
+            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
+            transport=BackgroundThreadTransport
         )
         sampler = probability.ProbabilitySampler(
             rate=settings.TRACE_SAMPLING_RATE
