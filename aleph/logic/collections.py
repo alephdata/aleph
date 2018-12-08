@@ -81,6 +81,7 @@ def delete_collection(collection, sync=False):
     db.session.commit()
     index.delete_collection(collection.id, sync=sync)
     delete_collection_content.apply_async([collection.id], priority=7)
+    refresh_collection(collection.id)
     Authz.flush()
 
 
