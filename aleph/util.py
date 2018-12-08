@@ -9,6 +9,7 @@ from pkg_resources import iter_entry_points
 
 from celery import Task
 from celery.signals import task_prerun, task_postrun
+from elasticsearch import Transport
 from banal import ensure_list
 from normality import stringify
 from flask_babel.speaklater import LazyString
@@ -156,3 +157,26 @@ def create_publish_span(task_id=None, task=None, *args, **kwargs):
 def end_successful_task_span(task_id=None, task=None, *args, **kwargs):
     tracer = execution_context.get_opencensus_tracer()
     tracer.end_span()
+
+
+class TracingTransport(Transport):
+    def __init__(self, *args, **kwargs):
+        super(TracingTransport, self).__init__(*args, **kwargs)
+
+    def perform_request(
+        self, method, url, headers=None, params=None, body=None
+    ):
+        span_name = 'es.{}'.format(url)
+        tracer = execution_context.get_opencensus_tracer()
+        with tracer.span(name=span_name) as span:
+            span.add_attribute('elasticsearch.url', url)
+            span.add_attribute('elasticsearch.method', method)
+            if body:
+                span.add_attribute('elasticsearch.statement', str(body))
+            if params:
+                span.add_attribute('elasticsearch.params', str(params))
+            if headers:
+                span.add_attribute('elasticsearch.headers', str(headers))
+            return super(TracingTransport, self).perform_request(
+                                method, url, headers, params, body
+                        )

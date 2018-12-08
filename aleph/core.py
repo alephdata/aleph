@@ -27,7 +27,7 @@ from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
-from aleph.util import SessionTask, get_extensions
+from aleph.util import SessionTask, get_extensions, TracingTransport
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -138,7 +138,9 @@ def get_es():
     if not hasattr(settings, '_es_instance'):
         url = settings.ELASTICSEARCH_URL
         timeout = settings.ELASTICSEARCH_TIMEOUT
-        settings._es_instance = Elasticsearch(url, timeout=timeout)
+        settings._es_instance = Elasticsearch(
+            url, timeout=timeout, transport_class=TracingTransport
+        )
     return settings._es_instance
 
 
