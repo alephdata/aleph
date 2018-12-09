@@ -1,6 +1,7 @@
 import logging
 from itertools import islice
 from datetime import datetime
+from followthemoney import model
 
 from aleph.core import db, settings, cache, celery
 from aleph.authz import Authz
@@ -61,15 +62,19 @@ def index_collections():
 def generate_sitemap(collection_id):
     """Generate entries for a collection-based sitemap.xml file."""
     # cf. https://www.sitemaps.org/protocol.html
+    document = model.get(Document.SCHEMA)
     entities = iter_entities(authz=Authz.from_role(None),
                              collection_id=collection_id,
                              schemata=[Entity.THING],
-                             includes=['schemata', 'updated_at'])
+                             includes=['schema', 'updated_at'])
     # strictly, the limit for sitemap.xml is 50,000
     for entity in islice(entities, 49500):
         updated_at = entity.get('updated_at', '').split('T', 1)[0]
         updated_at = max(settings.SITEMAP_FLOOR, updated_at)
-        if Document.SCHEMA in entity.get('schemata', []):
+        schema = model.get(entity.get('schema'))
+        if schema is None:
+            continue
+        if schema.is_a(document):
             url = document_url(entity.get('id'))
         else:
             url = entity_url(entity.get('id'))

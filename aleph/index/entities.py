@@ -50,7 +50,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
     source = {}
     if ensure_list(includes):
         source['includes'] = ensure_list(includes)
-    if ensure_list(excludes):
+    elif ensure_list(excludes):
         source['excludes'] = ensure_list(excludes)
     query = {
         'query': {'bool': {'filter': filters}},
