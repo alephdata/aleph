@@ -12,7 +12,7 @@ from google.cloud.vision import types
 from aleph import settings
 from aleph.core import kv
 from aleph.services import ServiceClientMixin
-from aleph.util import backoff, make_key
+from aleph.util import backoff, make_key, trace_function
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
     SERVICE = settings.OCR_SERVICE
 
+    @trace_function(span_name="OCR")
     def extract_text(self, data, languages=None):
         key = make_key('ocr', sha1(data).hexdigest())
         text = kv.get(key)
@@ -56,6 +57,7 @@ class GoogleVisionService(OCRService, OCRUtils):
         self.client = ImageAnnotatorClient(credentials=credentials)
         log.info("Using Google Vision API. Charges apply.")
 
+    @trace_function(span_name="GOOGLE_VISION_OCR")
     def extract_text(self, data, languages=None):
         key = make_key('ocr', sha1(data).hexdigest())
         text = kv.get(key)

@@ -9,7 +9,7 @@ from aleph import settings
 from aleph.services import ServiceClientMixin
 from aleph.logic.extractors.result import PersonResult, LocationResult
 from aleph.logic.extractors.result import OrganizationResult, LanguageResult
-from aleph.util import backoff
+from aleph.util import backoff, trace_function
 
 log = logging.getLogger(__name__)
 
@@ -25,6 +25,7 @@ class NERService(ServiceClientMixin):
         ExtractedEntity.LANGUAGE: LanguageResult
     }
 
+    @trace_function(span_name='NER')
     def extract(self, text, languages):
         if text is None or len(text) < self.MIN_LENGTH:
             return

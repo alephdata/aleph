@@ -3,12 +3,23 @@ import json
 import time
 import random
 import logging
+from datetime import datetime, date
+import functools
+from pkg_resources import iter_entry_points
+
 from celery import Task
+from celery.signals import task_prerun, task_postrun
+from elasticsearch import Transport
 from banal import ensure_list, is_mapping
 from normality import stringify
-from datetime import datetime, date
-from pkg_resources import iter_entry_points
 from flask_babel.speaklater import LazyString
+from opencensus.trace import execution_context
+from opencensus.trace import tracer as tracer_module
+from opencensus.trace.exporters import stackdriver_exporter
+from opencensus.trace.samplers import probability
+from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
+
+from aleph import settings
 
 log = logging.getLogger(__name__)
 EXTENSIONS = {}
@@ -110,6 +121,65 @@ class JSONEncoder(json.JSONEncoder):
             return obj.to_dict()
         return json.JSONEncoder.default(self, obj)
 
+      
+def trace_function(span_name):
+    def decorator_trace(func):
+        @functools.wraps(func)
+        def wrapper_trace(*args, **kwargs):
+            tracer = execution_context.get_opencensus_tracer()
+            with tracer.span(name=span_name):
+                value = func(*args, **kwargs)
+                return value
+        return wrapper_trace
+    return decorator_trace
+
+
+@task_prerun.connect
+def create_publish_span(task_id=None, task=None, *args, **kwargs):
+    if settings.STACKDRIVER_TRACE_PROJECT_ID:
+        exporter = stackdriver_exporter.StackdriverExporter(
+            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
+            transport=BackgroundThreadTransport
+        )
+        sampler = probability.ProbabilitySampler(
+            rate=settings.TRACE_SAMPLING_RATE
+        )
+        tracer = tracer_module.Tracer(exporter=exporter, sampler=sampler)
+        span = tracer.start_span()
+        span.name = '[celery]{0}'.format(task.name)
+        execution_context.set_opencensus_tracer(tracer)
+        span.add_attribute('args', str(kwargs['args']))
+        span.add_attribute('kwargs', str(kwargs['kwargs']))
+        execution_context.set_current_span(span)
+
+
+@task_postrun.connect
+def end_successful_task_span(task_id=None, task=None, *args, **kwargs):
+    tracer = execution_context.get_opencensus_tracer()
+    tracer.end_span()
+
+
+class TracingTransport(Transport):
+    def __init__(self, *args, **kwargs):
+        super(TracingTransport, self).__init__(*args, **kwargs)
+
+    def perform_request(
+        self, method, url, headers=None, params=None, body=None
+    ):
+        span_name = 'es.{}'.format(url)
+        tracer = execution_context.get_opencensus_tracer()
+        with tracer.span(name=span_name) as span:
+            span.add_attribute('elasticsearch.url', url)
+            span.add_attribute('elasticsearch.method', method)
+            if body:
+                span.add_attribute('elasticsearch.statement', str(body))
+            if params:
+                span.add_attribute('elasticsearch.params', str(params))
+            if headers:
+                span.add_attribute('elasticsearch.headers', str(headers))
+            return super(TracingTransport, self).perform_request(
+                                method, url, headers, params, body
+                        )
 
 def result_key(obj):
     """Generate a tuple to describe a cache ID for a search result"""
