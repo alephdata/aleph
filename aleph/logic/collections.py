@@ -2,7 +2,7 @@ import logging
 from itertools import islice
 from datetime import datetime
 
-from aleph.core import db, cache, celery
+from aleph.core import db, settings, cache, celery
 from aleph.authz import Authz
 from aleph.model import Collection, Document, Entity, Match
 from aleph.model import Role, Permission, Events
@@ -68,6 +68,7 @@ def generate_sitemap(collection_id):
     # strictly, the limit for sitemap.xml is 50,000
     for entity in islice(entities, 49500):
         updated_at = entity.get('updated_at', '').split('T', 1)[0]
+        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
         if Document.SCHEMA in entity.get('schemata', []):
             url = document_url(entity.get('id'))
         else:

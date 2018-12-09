@@ -152,6 +152,9 @@ GEONAMES_DATA = env('GEONAMES_DATA')
 # Result high-lighting
 RESULT_HIGHLIGHT = env_bool('RESULT_HIGHLIGHT', True)
 
+# Minimum update date for sitemap.xml
+SITEMAP_FLOOR = '2018-12-09'
+
 ##############################################################################
 # E-mail settings
 
