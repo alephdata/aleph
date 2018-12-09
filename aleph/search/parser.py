@@ -114,7 +114,7 @@ class QueryParser(object):
         """Generate a key for the current result."""
         if not self.cache:
             return uuid4().hex
-        return hash_data(self.to_dict())
+        return hash_data((self.args.items(), self.limit, self.offset))
 
     def to_dict(self):
         parser = {

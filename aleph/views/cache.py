@@ -28,9 +28,9 @@ def setup_caching():
 
     request.session_id = request.headers.get('X-Aleph-Session')
     if request.session_id is None:
-        request.session_id = hash_data([request.remote_addr,
+        request.session_id = hash_data((request.remote_addr,
                                         request.accept_languages,
-                                        request.user_agent])
+                                        request.user_agent))
 
     request._http_cache = False
     request._http_private = False
@@ -52,8 +52,6 @@ def enable_cache(vary_user=True, vary=None):
     request._http_cache = True
     request._http_revalidate = vary is not None
     args = sorted(set(request.args.items()))
-    # jquery where is your god now?!?
-    args = [(k, v) for (k, v) in args if k != '_']
     cache_parts = [args, vary, request._app_locale]
 
     if vary_user and request.authz.logged_in:

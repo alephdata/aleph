@@ -1,11 +1,12 @@
 import logging
+from banal import is_mapping
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.core import es, db
+from aleph.core import es, db, cache
 from aleph.model import Entity
 from aleph.index import entities as index
-from aleph.index.core import entities_read_index
+from aleph.index.indexes import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
 from aleph.logic.collections import refresh_collection
 from aleph.logic.notifications import flush_notifications
@@ -15,26 +16,45 @@ log = logging.getLogger(__name__)
 BULK_PAGE = 500
 
 
+def get_entity(entity_id):
+    key = cache.object_key(Entity, entity_id)
+    entity = cache.get_complex(key)
+    if entity is None:
+        entity = index.get_entity(entity_id)
+        cache.set_complex(key, entity, expire=cache.EXPIRE)
+    return entity
+
+
 def create_entity(data, collection, role=None, sync=False):
     entity = Entity.create(data, collection)
     db.session.commit()
     data = index.index_entity(entity, sync=sync)
-    refresh_collection(collection, sync=sync)
+    refresh_entity(entity)
     return data
 
 
 def update_entity(entity, sync=False):
     data = index.index_entity(entity, sync=sync)
-    refresh_collection(entity.collection, sync=sync)
+    refresh_entity(entity)
     return data
+
+
+def refresh_entity(entity, sync=False):
+    if is_mapping(entity):
+        entity_id = entity.get('id')
+        collection_id = entity.get('collection_id')
+    else:
+        entity_id = entity.id
+        collection_id = entity.collection_id
+    cache.kv.delete(cache.object_key(Entity, entity_id))
+    refresh_collection(collection_id, sync=sync)
 
 
 def delete_entity(entity, deleted_at=None, sync=False):
     flush_notifications(entity)
-    collection = entity.collection
     entity.delete(deleted_at=deleted_at)
+    refresh_entity(entity)
     index.delete_entity(entity.id, sync=sync)
-    refresh_collection(collection, sync=sync)
 
 
 def index_entities():
@@ -58,7 +78,9 @@ def entity_references(entity, authz):
             continue
 
         field = 'properties.%s' % prop.name
-        queries.append({})
+        queries.append({
+            'index': entities_read_index(prop.schema)
+        })
         queries.append({
             'size': 0,
             'query': {
@@ -77,7 +99,7 @@ def entity_references(entity, authz):
         return
 
     # Run a count search (with schema facet?)
-    res = es.msearch(index=entities_read_index(), body=queries)
+    res = es.msearch(body=queries)
     for prop, resp in zip(properties, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total is not None and total > 0:
@@ -122,7 +144,8 @@ def entity_tags(entity, authz):
     if not len(queries):
         return
 
-    res = es.msearch(index=entities_read_index(), body=queries)
+    index = entities_read_index(schema=Entity.THING)
+    res = es.msearch(index=index, body=queries)
     for (field, value), resp in zip(pivots, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total is not None and total > 0:

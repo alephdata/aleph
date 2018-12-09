@@ -113,7 +113,7 @@ const mapStateToProps = (state, ownProps) => {
     'limit': 50,
     ...context,
   };
-  const searchQuery = query !== undefined ? query : Query.fromLocation('search', location, contextWithDefaults, prefix);
+  const searchQuery = query !== undefined ? query : Query.fromLocation('entities', location, contextWithDefaults, prefix);
   return {
     query: searchQuery,
     result: selectEntitiesResult(state, searchQuery)

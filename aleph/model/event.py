@@ -78,7 +78,9 @@ class Events(object, metaclass=EventsRegistry):
     # PUBLISH COLLECTION (collection)
     PUBLISH_COLLECTION = Event(
         template='{{actor}} published {{collection}}.',
-        params={'collection': Collection}
+        params={
+            'collection': Collection
+        }
     )
 
     # REVOKE COLLECTION (collection, role)

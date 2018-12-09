@@ -1,14 +1,13 @@
 import logging
+from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.core import settings
-from aleph.index.core import collections_index
-from aleph.index.core import records_write_index
-from aleph.index.core import entities_write_index
 from aleph.index.util import index_settings, configure_index
 
 log = logging.getLogger(__name__)
+
 
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
@@ -19,6 +18,17 @@ TYPE_MAPPINGS = {
     registry.text: LATIN_TEXT,
     registry.date: PARTIAL_DATE,
 }
+
+
+def collections_index():
+    """Combined index to run all queries against."""
+    return settings.COLLECTIONS_INDEX
+
+
+def all_indexes():
+    return ','.join((collections_index(),
+                     entities_read_index(),
+                     records_read_index()))
 
 
 def configure_collections():
@@ -79,6 +89,16 @@ def configure_collections():
     configure_index(collections_index(), mapping, index_settings())
 
 
+def records_write_index():
+    """Index that us currently written by new queries."""
+    return settings.RECORDS_INDEX
+
+
+def records_read_index():
+    """Combined index to run all queries against."""
+    return ','.join(settings.RECORDS_INDEX_SET)
+
+
 def configure_records():
     mapping = {
         "properties": {
@@ -90,6 +110,44 @@ def configure_records():
     }
     settings = index_settings(shards=10, refresh_interval='15s')
     configure_index(records_write_index(), mapping, settings)
+
+
+def schema_index(schema):
+    """Convert a schema object to an index name."""
+    return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
+
+
+def entities_write_index(schema):
+    """Index that us currently written by new queries."""
+    if not settings.ENTITIES_INDEX_SPLIT:
+        return settings.ENTITIES_INDEX
+
+    return schema_index(model.get(schema))
+
+
+def entities_read_index(schema=None, descendants=True, exclude=None):
+    """Combined index to run all queries against."""
+    if not settings.ENTITIES_INDEX_SPLIT:
+        indexes = set(settings.ENTITIES_INDEX_SET)
+        indexes.add(settings.ENTITIES_INDEX)
+        return ','.join(indexes)
+
+    schemata = set()
+    names = ensure_list(schema) or model.schemata.values()
+    for schema in names:
+        schema = model.get(schema)
+        if schema is None:
+            continue
+        schemata.add(schema)
+        if descendants:
+            schemata.update(schema.descendants)
+    exclude = model.get(exclude)
+    indexes = list(settings.ENTITIES_INDEX_SET)
+    for schema in schemata:
+        if not schema.abstract and schema != exclude:
+            indexes.append(schema_index(schema))
+    # log.info("Read index: %r", indexes)
+    return ','.join(indexes)
 
 
 def configure_entities():
