@@ -78,7 +78,9 @@ def entity_references(entity, authz):
             continue
 
         field = 'properties.%s' % prop.name
-        queries.append({})
+        queries.append({
+            'index': entities_read_index(prop.schema)
+        })
         queries.append({
             'size': 0,
             'query': {
@@ -97,7 +99,7 @@ def entity_references(entity, authz):
         return
 
     # Run a count search (with schema facet?)
-    res = es.msearch(index=entities_read_index(), body=queries)
+    res = es.msearch(body=queries)
     for prop, resp in zip(properties, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total is not None and total > 0:
@@ -142,7 +144,8 @@ def entity_tags(entity, authz):
     if not len(queries):
         return
 
-    res = es.msearch(index=entities_read_index(), body=queries)
+    index = entities_read_index(schema=Entity.THING)
+    res = es.msearch(index=index, body=queries)
     for (field, value), resp in zip(pivots, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total is not None and total > 0:
