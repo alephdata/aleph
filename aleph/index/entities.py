@@ -209,7 +209,7 @@ def index_single(obj, proxy, data, texts, sync=False):
     """Indexing aspects common to entities and documents."""
     data = finalize_index(proxy, data, texts)
     data['bulk'] = False
-    data['collection_id'] = obj.collection.id
+    data['collection_id'] = obj.collection_id
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
     # pprint(data)
