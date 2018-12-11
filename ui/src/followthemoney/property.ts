@@ -3,7 +3,7 @@ export default class Property {
   private schema: any;
   private behaviour: any;
 
-  constructor({name, type, ...behaviour}, schema) {
+  constructor({name, ...behaviour}, schema) {
     this.name = name;
     this.schema = schema;
     this.behaviour = behaviour;
