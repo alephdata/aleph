@@ -6,7 +6,7 @@ interface ILabelReadingConfiguration {
 }
 
 interface IProperties {
-  [x: string]: Property,
+  [propertyName: string]: Property,
 }
 
 
@@ -70,10 +70,9 @@ export default class Schema {
   }
 
   getEntityProperties(entity: Schema): Property[] {
-    return this.getFeaturedProperties()
-      .filter(property => {
-        return !property.caption && entity.properties[property.name]
-      })
+    return Object.keys(entity.properties).filter((entityProperty)=>{
+      return  !this.properties.get(entityProperty).caption
+    }).map(property => this.properties.get(property))
   }
 
   getFeaturedProperties() {
