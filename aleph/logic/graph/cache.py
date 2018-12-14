@@ -6,7 +6,6 @@ from followthemoney.graph import Link
 from aleph.core import cache
 
 log = logging.getLogger(__name__)
-EXPIRATION = 84600 * 7
 DEGREE = '&deg'
 
 
@@ -18,11 +17,11 @@ def typed_key(node, *extra):
     return cache.key('g3', node.type.name, node.value, *extra)
 
 
-def store_links(node, links, expire=EXPIRATION):
+def store_links(node, links):
     key = typed_key(node)
     degree_key = typed_key(node, DEGREE)
     pipe = cache.kv.pipeline()
-    pipe.set(degree_key, len(links), ex=expire)
+    pipe.set(degree_key, len(links), ex=cache.EXPIRE)
     pipe.delete(key)
     for link in links:
         values = list(link.to_tuple())[1:]

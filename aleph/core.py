@@ -167,7 +167,6 @@ def get_redis():
 def get_cache():
     if not hasattr(settings, '_cache') or settings._cache is None:
         settings._cache = Cache(get_redis(),
-                                expire=settings.REDIS_EXPIRE,
                                 prefix=settings.APP_NAME)
     return settings._cache
 

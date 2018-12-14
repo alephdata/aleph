@@ -1,13 +1,14 @@
 import json
 import logging
 
+from aleph import settings
 from aleph.util import make_key, JSONEncoder
 
 log = logging.getLogger(__name__)
 
 
 class Cache(object):
-    EXPIRE = 84600 * 7
+    EXPIRE = settings.REDIS_EXPIRE
 
     def __init__(self, kv, expire=None, prefix=None):
         self.kv = kv
