@@ -39,20 +39,12 @@ class NotificationSchema(BaseSchema):
 
     @pre_dump(pass_many=True)
     def expand(self, objs, many=False):
-        cache = {}
-        for obj in ensure_list(objs):
-            for name, clazz, value in obj.iterparams():
-                cache[(clazz, str(value))] = None
-
         results = []
         for obj in ensure_list(objs):
             params = {}
             for name, clazz, value in obj.iterparams():
                 schema = self.SCHEMATA.get(clazz)
-                if (clazz, value) not in cache:
-                    data = self._get_object(clazz, value)
-                    cache[(clazz, value)] = data
-                data = cache.get((clazz, value))
+                data = self._get_object(clazz, value)
                 if data is not None:
                     params[name], _ = schema().dump(data)
             results.append({

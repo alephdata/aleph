@@ -190,7 +190,7 @@ def finalize_index(proxy, context, texts):
 
     entity = proxy.to_full_dict()
     data = merge_data(context, entity)
-    data['name'] = proxy.caption
+    data['name'] = data.get('name', proxy.caption)
     data['text'] = index_form(texts)
 
     names = data.get('names', [])

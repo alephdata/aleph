@@ -1,5 +1,5 @@
 import logging
-from banal import ensure_list
+from banal import ensure_list, is_mapping
 from datetime import datetime, timedelta
 
 from aleph.core import db
@@ -20,7 +20,7 @@ def object_id(obj, clazz=None):
     clazz = clazz or type(obj)
     if isinstance(obj, clazz):
         obj = obj.id
-    elif isinstance(obj, dict):
+    elif is_mapping(obj):
         obj = obj.get('id')
     return obj
 
