@@ -112,11 +112,15 @@ def process(foreign_id=None, index=False, retry=False):
                       failed_only=retry)
 
 
-@manager.command
-def xref(foreign_id):
+@manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')
+@manager.option('-f', '--foreign_id', dest='foreign_id', required=True, help='foreign-id of collection to xref')
+def xref(foreign_id, against=None):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
-    xref_collection(collection.id)
+    against_collection_ids = None
+    if against is not None:
+        against_collection_ids = list(map(lambda entry: get_collection(entry).id, against))
+    xref_collection(collection.id, against_collection_ids=against_collection_ids)
 
 
 @manager.command
