@@ -8,7 +8,7 @@ from aleph.index.util import bool_query, none_query
 log = logging.getLogger(__name__)
 
 
-def match_query(proxy, collection_id=None, query=None):
+def match_query(proxy, collection_ids=None, query=None):
     """Given a document or entity in indexed form, build a query that
     will find similar entities based on a variety of criteria."""
     if query is None:
@@ -34,9 +34,9 @@ def match_query(proxy, collection_id=None, query=None):
             "terms": {"schema": matchable}
         })
 
-    if collection_id is not None:
+    if collection_ids is not None:
         query['bool']['must'].append({
-            'term': {'collection_id': collection_id}
+            'terms': {'collection_id': collection_ids}
         })
 
     required = []

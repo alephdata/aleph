@@ -18,9 +18,9 @@ from aleph.logic.util import entity_url
 log = logging.getLogger(__name__)
 
 
-def xref_item(proxy):
+def xref_item(proxy, collection_ids=None):
     """Cross-reference an entity or document, given as an indexed document."""
-    query = match_query(proxy)
+    query = match_query(proxy, collection_ids=collection_ids)
     if query == none_query():
         return
 
@@ -42,7 +42,7 @@ def xref_item(proxy):
 
 
 @celery.task()
-def xref_collection(collection_id):
+def xref_collection(collection_id, against_collection_ids=None):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
     entities = iter_proxies(collection_id=collection_id, schemata=matchable)
@@ -51,7 +51,7 @@ def xref_collection(collection_id):
         dq = db.session.query(Match)
         dq = dq.filter(Match.entity_id == proxy.id)
         dq.delete()
-        matches = xref_item(proxy)
+        matches = xref_item(proxy, collection_ids=against_collection_ids)
         for (score, other_id, other) in matches:
             log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
             obj = Match()
