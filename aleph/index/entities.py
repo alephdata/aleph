@@ -76,7 +76,7 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def entities_by_ids(ids, authz=None):
+def entities_by_ids(ids, authz=None, schemata=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     for i in range(0, len(ids), MAX_PAGE):
@@ -92,9 +92,8 @@ def entities_by_ids(ids, authz=None):
             '_source': {'excludes': ['text']},
             'size': min(MAX_PAGE, len(chunk))
         }
-        result = search_safe(index=entities_read_index(),
-                             body=query,
-                             ignore=[404])
+        index = entities_read_index(schema=schemata)
+        result = search_safe(index=index, body=query, ignore=[404])
         for doc in result.get('hits', {}).get('hits', []):
             entity = unpack_result(doc)
             if entity is not None:

@@ -102,6 +102,8 @@ class Graph(object):
 
     def build(self, steps):
         for i in range(steps):
+            if len(self.steps) > 1000:
+                break
             step = self.next_step()
             if step is None:
                 break
