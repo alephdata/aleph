@@ -8,7 +8,7 @@ import { Button } from "@blueprintjs/core";
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
-import CollectionXrefAlert from 'src/components/Collection/CollectionXrefAlert';
+import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectCollectionXrefIndex } from "../../selectors";
 
 
@@ -72,9 +72,9 @@ class CollectionToolbar extends Component {
         <CollectionAccessDialog collection={collection}
                                 isOpen={accessIsOpen}
                                 toggleDialog={this.toggleAccess} />
-        <CollectionXrefAlert collection={collection}
+        <CollectionXrefDialog collection={collection}
                              isOpen={xrefIsOpen}
-                             toggleAlert={this.toggleXref} />
+                             toggleDialog={this.toggleXref} />
       </Toolbar>
     );
   }
