@@ -121,7 +121,7 @@ class JSONEncoder(json.JSONEncoder):
             return obj.to_dict()
         return json.JSONEncoder.default(self, obj)
 
-      
+
 def trace_function(span_name):
     def decorator_trace(func):
         @functools.wraps(func)
@@ -135,14 +135,14 @@ def trace_function(span_name):
 
 
 @task_prerun.connect
-def create_publish_span(task_id=None, task=None, *args, **kwargs):
+def prerun_task_span(task_id=None, task=None, *args, **kwargs):
     if settings.STACKDRIVER_TRACE_PROJECT_ID:
         exporter = stackdriver_exporter.StackdriverExporter(
             project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
             transport=BackgroundThreadTransport
         )
         sampler = probability.ProbabilitySampler(
-            rate=settings.TRACE_SAMPLING_RATE
+            rate=settings.CELERY_TRACE_SAMPLING_RATE
         )
         tracer = tracer_module.Tracer(exporter=exporter, sampler=sampler)
         span = tracer.start_span()
@@ -154,7 +154,7 @@ def create_publish_span(task_id=None, task=None, *args, **kwargs):
 
 
 @task_postrun.connect
-def end_successful_task_span(task_id=None, task=None, *args, **kwargs):
+def end_task_span(task_id=None, task=None, *args, **kwargs):
     tracer = execution_context.get_opencensus_tracer()
     tracer.end_span()
 
@@ -180,6 +180,7 @@ class TracingTransport(Transport):
             return super(TracingTransport, self).perform_request(
                                 method, url, headers, params, body
                         )
+
 
 def result_key(obj):
     """Generate a tuple to describe a cache ID for a search result"""
