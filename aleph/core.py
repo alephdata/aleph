@@ -1,4 +1,6 @@
 import logging
+import sys
+
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -27,7 +29,10 @@ from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
-from aleph.util import SessionTask, get_extensions, TracingTransport
+from aleph.util import (
+    SessionTask, get_extensions, TracingTransport, MaxLevelLogFilter,
+    StackdriverJsonFormatter
+)
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -102,6 +107,8 @@ def create_app(config={}):
     # applications can register their behaviour.
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
+    # Set up opencensus tracing and its integrations. Export collected traces
+    # to Stackdriver Trace on a background thread.
     if settings.STACKDRIVER_TRACE_PROJECT_ID:
         exporter = stackdriver_exporter.StackdriverExporter(
             project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
@@ -113,6 +120,25 @@ def create_app(config={}):
         FlaskMiddleware(app, exporter=exporter, sampler=sampler)
         integrations = ['postgresql', 'sqlalchemy', 'httplib']
         config_integration.trace_integrations(integrations)
+    # Set up logging
+    formatter = StackdriverJsonFormatter()
+    # A handler for low level logs that should be sent to STDOUT
+    info_handler = logging.StreamHandler(sys.stdout)
+    info_handler.setLevel(logging.DEBUG)
+    info_handler.addFilter(MaxLevelLogFilter(logging.WARNING))
+    info_handler.setFormatter(formatter)
+    info_handler.setFormatter(formatter)
+
+    # A handler for high level logs that should be sent to STDERR
+    error_handler = logging.StreamHandler(sys.stderr)
+    error_handler.setLevel(logging.ERROR)
+    error_handler.setFormatter(formatter)
+
+    root_logger = logging.getLogger()
+    # root logger default level is WARNING, so we'll override to be DEBUG
+    root_logger.setLevel(logging.DEBUG)
+    root_logger.addHandler(info_handler)
+    root_logger.addHandler(error_handler)
     return app
 
 

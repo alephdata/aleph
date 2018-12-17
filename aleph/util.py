@@ -18,6 +18,7 @@ from opencensus.trace import tracer as tracer_module
 from opencensus.trace.exporters import stackdriver_exporter
 from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
+from pythonjsonlogger import jsonlogger
 
 from aleph import settings
 
@@ -187,3 +188,23 @@ def result_key(obj):
     if is_mapping(obj):
         return (obj.get('id'), obj.get('updated_at'))
     return (getattr(obj, 'id', None), getattr(obj, 'updated_at', None))
+
+
+class MaxLevelLogFilter(object):
+    def __init__(self, highest_log_level):
+        self._highest_log_level = highest_log_level
+
+    def filter(self, log_record):
+        return log_record.levelno <= self._highest_log_level
+
+
+class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
+    def __init__(self, fmt="%(levelname) %(message)", style='%', *args, **kwargs):  # noqa
+        jsonlogger.JsonFormatter.__init__(self, fmt=fmt, *args, **kwargs)
+
+    def process_log_record(self, log_record):
+        log_record['severity'] = log_record['levelname']
+        del log_record['levelname']
+        return super(
+            StackdriverJsonFormatter, self
+        ).process_log_record(log_record)
