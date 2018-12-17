@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { InputGroup, Spinner, Icon, Button, MenuItem } from '@blueprintjs/core';
+import { InputGroup, Button, MenuItem } from '@blueprintjs/core';
 import { Select } from "@blueprintjs/select";
 import { defineMessages, injectIntl } from 'react-intl';
 import { debounce } from "lodash";
@@ -66,7 +66,9 @@ class CollectionXrefFilter extends Component {
   }
 
   onCategoryChange(item) {
-    if (item.id === null) item = null;
+    if (item.id === null) {
+      item = null;
+    }
     const filterValues = this.onChange({ category: item });
     this.triggerChangeFn(filterValues);
   }
@@ -77,7 +79,7 @@ class CollectionXrefFilter extends Component {
 
     let selectableCategories = categories.slice();
     if (filter.category) {
-      selectableCategories.unshift({id: null, label: intl.formatMessage(messages.allCategories)})
+      selectableCategories.unshift({ id: null, label: intl.formatMessage(messages.allCategories) })
     }
 
     return (

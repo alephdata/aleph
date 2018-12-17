@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, Button, Spinner } from '@blueprintjs/core';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import CollectionXrefFilter from './CollectionXrefFilter';
-import { queryEndpoint, MAX_RESULTS } from '../../actions/util';
+import { queryEndpoint } from '../../actions/util';
 import Query from 'src/app/Query';
 import CheckboxList from 'src/components/common/CheckboxList';
 import Waypoint from "react-waypoint";
