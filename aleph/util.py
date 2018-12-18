@@ -203,8 +203,20 @@ class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
         jsonlogger.JsonFormatter.__init__(self, fmt=fmt, *args, **kwargs)
 
     def process_log_record(self, log_record):
+        # Set some parameters from
+        # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
         log_record['severity'] = log_record['levelname']
         del log_record['levelname']
+        trace_id = execution_context.get_opencensus_tracer().span_context.trace_id  # noqa
+        current_span = execution_context.get_current_span()
+        span_id = current_span.span_id if current_span else None
+        trace_sampled = execution_context.get_opencensus_tracer().should_sample()  # noqa
+        log_record['trace'] = "projects/{0}/traces/{1}".format(
+            settings.STACKDRIVER_TRACE_PROJECT_ID,
+            trace_id
+        )
+        log_record['spanId'] = span_id
+        log_record['traceSampled'] = trace_sampled
         return super(
             StackdriverJsonFormatter, self
         ).process_log_record(log_record)
