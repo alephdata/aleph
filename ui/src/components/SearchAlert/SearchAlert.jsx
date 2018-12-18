@@ -22,6 +22,14 @@ const messages = defineMessages({
 
 
 class SearchAlert extends React.Component {
+  static doesAlertExist({queryText, session, alerts}){
+    if (!session.loggedIn || !alerts || !alerts.results || !queryText) {
+      return false;
+    }
+    return !!alerts.results.some((a) => {
+      return a.query && a.query.trim() === queryText.trim();
+    });
+  }
   constructor(props) {
     super(props);
     this.state = {updating: false};
@@ -42,13 +50,7 @@ class SearchAlert extends React.Component {
   }
 
   alertExists() {
-    const { queryText, session, alerts } = this.props;
-    if (!session.loggedIn || !alerts || !alerts.results || !queryText) {
-      return false;
-    }
-    return !!alerts.results.some((a) => {
-      return a.query && a.query.trim() === queryText.trim();
-    });
+    return SearchAlert.doesAlertExist(this.props)
   }
 
   async onToggleAlert(event) {
