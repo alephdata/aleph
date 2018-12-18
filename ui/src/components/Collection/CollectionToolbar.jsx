@@ -9,8 +9,10 @@ import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionXrefAlert from 'src/components/Collection/CollectionXrefAlert';
-import { selectCollectionXrefIndex } from "../../selectors";
-import CollectionAnalyzeAlert from "./CollectionAnalyzeAlert";
+import CollectionAnalyzeAlert from "src/components/Collection/CollectionAnalyzeAlert";
+import CollectionDeleteDialog from "src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog";
+
+import { selectCollectionXrefIndex } from "src/selectors";
 
 
 class CollectionToolbar extends Component {
@@ -21,6 +23,7 @@ class CollectionToolbar extends Component {
       accessIsOpen: false,
       xrefIsOpen: false,
       analyzeIsOpen: false,
+      deleteIsOpen: false,
     };
 
     this.toggleSettings = this.toggleSettings.bind(this);
@@ -40,13 +43,14 @@ class CollectionToolbar extends Component {
     this.setState({ xrefIsOpen: !this.state.xrefIsOpen });
   }
 
-  toggleAnalyze = () => {
-    this.setState(({analyzeIsOpen }) => ({ analyzeIsOpen : !analyzeIsOpen  }));
-  };
+  toggleAnalyze = () => this.setState( ({ analyzeIsOpen }) => ({ analyzeIsOpen : !analyzeIsOpen  }) );
+
+  toggleDelete = () => this.setState( ({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }) );
+
 
   render() {
     const { collection, isPreview } = this.props;
-    const { settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen } = this.state;
+    const { settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen, deleteIsOpen } = this.state;
 
     return (
       <Toolbar className="toolbar-preview">
@@ -78,6 +82,13 @@ class CollectionToolbar extends Component {
                   onClick={this.toggleAnalyze}
                   text={<FormattedMessage id="collection.info.analyze" defaultMessage="Re-Analyze"/>}
                 />
+                <Menu.Divider />
+                <Menu.Item
+                  icon="trash"
+                  intent="danger"
+                  onClick={this.toggleDelete}
+                  text={<FormattedMessage id="collection.info.delete" defaultMessage="Delete"/>}
+                />
 
               </Menu>} position={Position.RIGHT_TOP}>
                 <Button icon="control" text="Control..." />
@@ -101,6 +112,9 @@ class CollectionToolbar extends Component {
         <CollectionAnalyzeAlert collection={collection}
                                 isOpen={analyzeIsOpen}
                                 toggleAlert={this.toggleAnalyze} />
+        <CollectionDeleteDialog isOpen={deleteIsOpen}
+                                collection={collection}
+                                toggleDialog={this.toggleDelete} />
       </Toolbar>
     );
   }
