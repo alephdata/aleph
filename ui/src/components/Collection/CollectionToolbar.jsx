@@ -3,13 +3,14 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { Button } from "@blueprintjs/core";
+import { Button, Menu, Position, Popover } from "@blueprintjs/core";
 
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionXrefAlert from 'src/components/Collection/CollectionXrefAlert';
 import { selectCollectionXrefIndex } from "../../selectors";
+import CollectionAnalyzeAlert from "./CollectionAnalyzeAlert";
 
 
 class CollectionToolbar extends Component {
@@ -19,6 +20,7 @@ class CollectionToolbar extends Component {
       settingsIsOpen: false,
       accessIsOpen: false,
       xrefIsOpen: false,
+      analyzeIsOpen: false,
     };
 
     this.toggleSettings = this.toggleSettings.bind(this);
@@ -38,9 +40,13 @@ class CollectionToolbar extends Component {
     this.setState({ xrefIsOpen: !this.state.xrefIsOpen });
   }
 
+  toggleAnalyze = () => {
+    this.setState(({analyzeIsOpen }) => ({ analyzeIsOpen : !analyzeIsOpen  }));
+  };
+
   render() {
     const { collection, isPreview } = this.props;
-    const { settingsIsOpen, accessIsOpen, xrefIsOpen } = this.state;
+    const { settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen } = this.state;
 
     return (
       <Toolbar className="toolbar-preview">
@@ -51,15 +57,32 @@ class CollectionToolbar extends Component {
           </Link>
           {collection.writeable &&
             <React.Fragment>
-              <Button icon="cog" onClick={this.toggleSettings}>
-                <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
-              </Button>
-              <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
-                <FormattedMessage id="collection.info.share" defaultMessage="Share"/>
-              </Button>
-              <Button icon="search-around" onClick={this.toggleXref} className='button-hover'>
-                <FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>
-              </Button>
+              <Popover content={<Menu>
+                <Menu.Item
+                  icon="cog"
+                  onClick={this.toggleSettings}
+                  text={<FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>} />
+                <Menu.Item
+                  icon="key"
+                  onClick={this.toggleAccess}
+                  text={<FormattedMessage id="collection.info.share" defaultMessage="Share"/>}
+                />
+                <Menu.Divider />
+                <Menu.Item
+                  icon="search-around"
+                  onClick={this.toggleXref}
+                  text={<FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>}
+                />
+                <Menu.Item
+                  icon="automatic-updates"
+                  onClick={this.toggleAnalyze}
+                  text={<FormattedMessage id="collection.info.analyze" defaultMessage="Re-Analyze"/>}
+                />
+
+              </Menu>} position={Position.RIGHT_TOP}>
+                <Button icon="control" text="Control..." />
+              </Popover>
+
             </React.Fragment>
           }
         </div>
@@ -75,6 +98,9 @@ class CollectionToolbar extends Component {
         <CollectionXrefAlert collection={collection}
                              isOpen={xrefIsOpen}
                              toggleAlert={this.toggleXref} />
+        <CollectionAnalyzeAlert collection={collection}
+                                isOpen={analyzeIsOpen}
+                                toggleAlert={this.toggleAnalyze} />
       </Toolbar>
     );
   }
