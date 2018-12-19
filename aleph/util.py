@@ -100,11 +100,11 @@ def filter_texts(texts):
         yield text
 
 
-class SessionTask(Task):
-
-    def on_failure(self, exc, task_id, args, kwargs, einfo):
-        from aleph.core import db
-        db.session.remove()
+def result_key(obj):
+    """Generate a tuple to describe a cache ID for a search result"""
+    if is_mapping(obj):
+        return (obj.get('id'), obj.get('updated_at'))
+    return (getattr(obj, 'id', None), getattr(obj, 'updated_at', None))
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -125,6 +125,8 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+# Tracing Utilities
+
 def trace_function(span_name):
     def decorator_trace(func):
         @functools.wraps(func)
@@ -135,31 +137,6 @@ def trace_function(span_name):
                 return value
         return wrapper_trace
     return decorator_trace
-
-
-@task_prerun.connect
-def prerun_task_span(task_id=None, task=None, *args, **kwargs):
-    if settings.STACKDRIVER_TRACE_PROJECT_ID:
-        exporter = stackdriver_exporter.StackdriverExporter(
-            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
-            transport=BackgroundThreadTransport
-        )
-        sampler = probability.ProbabilitySampler(
-            rate=settings.CELERY_TRACE_SAMPLING_RATE
-        )
-        tracer = tracer_module.Tracer(exporter=exporter, sampler=sampler)
-        span = tracer.start_span()
-        span.name = '[celery]{0}'.format(task.name)
-        execution_context.set_opencensus_tracer(tracer)
-        span.add_attribute('args', str(kwargs['args']))
-        span.add_attribute('kwargs', str(kwargs['kwargs']))
-        execution_context.set_current_span(span)
-
-
-@task_postrun.connect
-def end_task_span(task_id=None, task=None, *args, **kwargs):
-    tracer = execution_context.get_opencensus_tracer()
-    tracer.end_span()
 
 
 class TracingTransport(Transport):
@@ -186,12 +163,7 @@ class TracingTransport(Transport):
                         )
 
 
-def result_key(obj):
-    """Generate a tuple to describe a cache ID for a search result"""
-    if is_mapping(obj):
-        return (obj.get('id'), obj.get('updated_at'))
-    return (getattr(obj, 'id', None), getattr(obj, 'updated_at', None))
-
+# Logging Utilities
 
 class MaxLevelLogFilter(object):
     def __init__(self, highest_log_level):
@@ -249,6 +221,40 @@ def setup_stackdriver_logging():
     root_logger.setLevel(logging.DEBUG)
     root_logger.addHandler(info_handler)
     root_logger.addHandler(error_handler)
+
+
+# Celery Utilities
+
+class SessionTask(Task):
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        from aleph.core import db
+        db.session.remove()
+
+
+@task_prerun.connect
+def prerun_task_span(task_id=None, task=None, *args, **kwargs):
+    if settings.STACKDRIVER_TRACE_PROJECT_ID:
+        exporter = stackdriver_exporter.StackdriverExporter(
+            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
+            transport=BackgroundThreadTransport
+        )
+        sampler = probability.ProbabilitySampler(
+            rate=settings.CELERY_TRACE_SAMPLING_RATE
+        )
+        tracer = tracer_module.Tracer(exporter=exporter, sampler=sampler)
+        span = tracer.start_span()
+        span.name = '[celery]{0}'.format(task.name)
+        execution_context.set_opencensus_tracer(tracer)
+        span.add_attribute('args', str(kwargs['args']))
+        span.add_attribute('kwargs', str(kwargs['kwargs']))
+        execution_context.set_current_span(span)
+
+
+@task_postrun.connect
+def end_task_span(task_id=None, task=None, *args, **kwargs):
+    tracer = execution_context.get_opencensus_tracer()
+    tracer.end_span()
 
 
 @setup_logging.connect
