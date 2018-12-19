@@ -18,6 +18,7 @@ from opencensus.trace import tracer as tracer_module
 from opencensus.trace.exporters import stackdriver_exporter
 from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
+from opencensus.trace.tracers.noop_tracer import NoopTracer
 from pythonjsonlogger import jsonlogger
 
 from aleph import settings
@@ -161,6 +162,7 @@ def end_task_span(task_id=None, task=None, *args, **kwargs):
 
 
 class TracingTransport(Transport):
+    """Trace all network calls to ElasticSearch"""
     def __init__(self, *args, **kwargs):
         super(TracingTransport, self).__init__(*args, **kwargs)
 
@@ -199,6 +201,7 @@ class MaxLevelLogFilter(object):
 
 
 class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
+    """Format logs in a way that Stackdriver likes"""
     def __init__(self, fmt="%(levelname) %(message)", style='%', *args, **kwargs):  # noqa
         jsonlogger.JsonFormatter.__init__(self, fmt=fmt, *args, **kwargs)
 
@@ -207,14 +210,19 @@ class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
         # https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
         log_record['severity'] = log_record['levelname']
         del log_record['levelname']
-        trace_id = execution_context.get_opencensus_tracer().span_context.trace_id  # noqa
-        current_span = execution_context.get_current_span()
-        span_id = current_span.span_id if current_span else None
-        trace_sampled = execution_context.get_opencensus_tracer().should_sample()  # noqa
+        tracer = execution_context.get_opencensus_tracer()
+        trace_id = tracer.span_context.trace_id
         log_record['trace'] = "projects/{0}/traces/{1}".format(
             settings.STACKDRIVER_TRACE_PROJECT_ID,
             trace_id
         )
+        if not isinstance(tracer, NoopTracer):
+            current_span = execution_context.get_current_span()
+            span_id = current_span.span_id if current_span else None
+            trace_sampled = execution_context.get_opencensus_tracer().should_sample()  # noqa
+        else:
+            span_id = None
+            trace_sampled = None
         log_record['spanId'] = span_id
         log_record['traceSampled'] = trace_sampled
         return super(

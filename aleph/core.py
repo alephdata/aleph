@@ -127,7 +127,6 @@ def create_app(config={}):
     info_handler.setLevel(logging.DEBUG)
     info_handler.addFilter(MaxLevelLogFilter(logging.WARNING))
     info_handler.setFormatter(formatter)
-    info_handler.setFormatter(formatter)
 
     # A handler for high level logs that should be sent to STDERR
     error_handler = logging.StreamHandler(sys.stderr)
