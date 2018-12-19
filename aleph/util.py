@@ -6,9 +6,10 @@ import logging
 from datetime import datetime, date
 import functools
 from pkg_resources import iter_entry_points
+import sys
 
 from celery import Task
-from celery.signals import task_prerun, task_postrun
+from celery.signals import task_prerun, task_postrun, setup_logging
 from elasticsearch import Transport
 from banal import ensure_list, is_mapping
 from normality import stringify
@@ -228,3 +229,29 @@ class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
         return super(
             StackdriverJsonFormatter, self
         ).process_log_record(log_record)
+
+
+def setup_stackdriver_logging():
+    formatter = StackdriverJsonFormatter()
+    # A handler for low level logs that should be sent to STDOUT
+    info_handler = logging.StreamHandler(sys.stdout)
+    info_handler.setLevel(logging.DEBUG)
+    info_handler.addFilter(MaxLevelLogFilter(logging.WARNING))
+    info_handler.setFormatter(formatter)
+
+    # A handler for high level logs that should be sent to STDERR
+    error_handler = logging.StreamHandler(sys.stderr)
+    error_handler.setLevel(logging.ERROR)
+    error_handler.setFormatter(formatter)
+
+    root_logger = logging.getLogger()
+    # root logger default level is WARNING, so we'll override to be DEBUG
+    root_logger.setLevel(logging.DEBUG)
+    root_logger.addHandler(info_handler)
+    root_logger.addHandler(error_handler)
+
+
+@setup_logging.connect
+def config_loggers(*args, **kwags):
+    if settings.STACKDRIVER_TRACE_PROJECT_ID:
+        setup_stackdriver_logging()

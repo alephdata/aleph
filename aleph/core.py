@@ -1,5 +1,4 @@
 import logging
-import sys
 
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
@@ -30,8 +29,7 @@ from opencensus.trace.exporters.transports.background_thread import BackgroundTh
 
 from aleph import settings
 from aleph.util import (
-    SessionTask, get_extensions, TracingTransport, MaxLevelLogFilter,
-    StackdriverJsonFormatter
+    SessionTask, get_extensions, TracingTransport, setup_stackdriver_logging
 )
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
@@ -121,23 +119,7 @@ def create_app(config={}):
         integrations = ['postgresql', 'sqlalchemy', 'httplib']
         config_integration.trace_integrations(integrations)
         # Set up logging
-        formatter = StackdriverJsonFormatter()
-        # A handler for low level logs that should be sent to STDOUT
-        info_handler = logging.StreamHandler(sys.stdout)
-        info_handler.setLevel(logging.DEBUG)
-        info_handler.addFilter(MaxLevelLogFilter(logging.WARNING))
-        info_handler.setFormatter(formatter)
-
-        # A handler for high level logs that should be sent to STDERR
-        error_handler = logging.StreamHandler(sys.stderr)
-        error_handler.setLevel(logging.ERROR)
-        error_handler.setFormatter(formatter)
-
-        root_logger = logging.getLogger()
-        # root logger default level is WARNING, so we'll override to be DEBUG
-        root_logger.setLevel(logging.DEBUG)
-        root_logger.addHandler(info_handler)
-        root_logger.addHandler(error_handler)
+        setup_stackdriver_logging()
     return app
 
 
