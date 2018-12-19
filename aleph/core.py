@@ -115,7 +115,11 @@ def create_app(config={}):
         sampler = probability.ProbabilitySampler(
             rate=settings.TRACE_SAMPLING_RATE
         )
-        FlaskMiddleware(app, exporter=exporter, sampler=sampler)
+        blacklist_paths = ['/healthz', ]
+        FlaskMiddleware(
+            app, exporter=exporter, sampler=sampler,
+            blacklist_paths=blacklist_paths
+        )
         integrations = ['postgresql', 'sqlalchemy', 'httplib']
         config_integration.trace_integrations(integrations)
         # Set up logging
