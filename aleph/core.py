@@ -120,24 +120,24 @@ def create_app(config={}):
         FlaskMiddleware(app, exporter=exporter, sampler=sampler)
         integrations = ['postgresql', 'sqlalchemy', 'httplib']
         config_integration.trace_integrations(integrations)
-    # Set up logging
-    formatter = StackdriverJsonFormatter()
-    # A handler for low level logs that should be sent to STDOUT
-    info_handler = logging.StreamHandler(sys.stdout)
-    info_handler.setLevel(logging.DEBUG)
-    info_handler.addFilter(MaxLevelLogFilter(logging.WARNING))
-    info_handler.setFormatter(formatter)
+        # Set up logging
+        formatter = StackdriverJsonFormatter()
+        # A handler for low level logs that should be sent to STDOUT
+        info_handler = logging.StreamHandler(sys.stdout)
+        info_handler.setLevel(logging.DEBUG)
+        info_handler.addFilter(MaxLevelLogFilter(logging.WARNING))
+        info_handler.setFormatter(formatter)
 
-    # A handler for high level logs that should be sent to STDERR
-    error_handler = logging.StreamHandler(sys.stderr)
-    error_handler.setLevel(logging.ERROR)
-    error_handler.setFormatter(formatter)
+        # A handler for high level logs that should be sent to STDERR
+        error_handler = logging.StreamHandler(sys.stderr)
+        error_handler.setLevel(logging.ERROR)
+        error_handler.setFormatter(formatter)
 
-    root_logger = logging.getLogger()
-    # root logger default level is WARNING, so we'll override to be DEBUG
-    root_logger.setLevel(logging.DEBUG)
-    root_logger.addHandler(info_handler)
-    root_logger.addHandler(error_handler)
+        root_logger = logging.getLogger()
+        # root logger default level is WARNING, so we'll override to be DEBUG
+        root_logger.setLevel(logging.DEBUG)
+        root_logger.addHandler(info_handler)
+        root_logger.addHandler(error_handler)
     return app
 
 
