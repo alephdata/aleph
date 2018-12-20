@@ -48,7 +48,7 @@ class CollectionAnalyzeAlert extends Component {
              onConfirm={this.onConfirm}>
         <p>
           <FormattedMessage id="collection.analyze.alert.text"
-                            defaultMessage="Re-analyzing the collection may take a a time. Only start this process once and allow several hours for it to complete." />
+                            defaultMessage="Re-analyzing the collection will take some time. Please start the process only once and allow time for it to complete." />
         </p>
       </Alert>
     );
