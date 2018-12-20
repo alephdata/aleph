@@ -135,7 +135,7 @@ class CollectionXrefSelect extends Component {
           <div>
             {selectedCollections.length > 0 &&
             <Button icon="eye-open" active={showSelected} onClick={() => this.toggleShowSelected()}>
-              <FormattedMessage id="collection.xref.select.showSelected" defaultMessage="Revise"/>
+              <FormattedMessage id="collection.xref.select.showSelected" defaultMessage="Review selection"/>
             </Button>}
           </div>
         </div>

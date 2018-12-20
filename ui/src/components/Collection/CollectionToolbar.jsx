@@ -8,7 +8,6 @@ import { Button, Menu, Position, Popover } from "@blueprintjs/core";
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
-import CollectionXrefAlert from 'src/components/Collection/CollectionXrefAlert';
 import CollectionAnalyzeAlert from "src/components/Collection/CollectionAnalyzeAlert";
 import CollectionDeleteDialog from "src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog";
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
