@@ -61,8 +61,12 @@ export const queryXrefMatches = asyncActionCreator((query) => async dispatch => 
 }, { name: 'QUERY_XREF_MATCHES' });
 
 
-export const tiggerXrefMatches = asyncActionCreator((id) => async dispatch => {
-  const response = await endpoint.post(`collections/${id}/xref`);
+export const tiggerXrefMatches = asyncActionCreator((id, againstCollectionIds) => async dispatch => {
+  let data = null;
+  if (againstCollectionIds && againstCollectionIds.length > 0) {
+    data = { "against_collection_ids": againstCollectionIds }
+  }
+  const response = await endpoint.post(`collections/${id}/xref`, data);
   return { data: response.data };
 }, {name: 'TRIGGER_XREF_MATCHES'});
 

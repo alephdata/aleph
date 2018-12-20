@@ -11,7 +11,7 @@ import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/Collectio
 import CollectionXrefAlert from 'src/components/Collection/CollectionXrefAlert';
 import CollectionAnalyzeAlert from "src/components/Collection/CollectionAnalyzeAlert";
 import CollectionDeleteDialog from "src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog";
-
+import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectCollectionXrefIndex } from "src/selectors";
 
 
@@ -105,9 +105,9 @@ class CollectionToolbar extends Component {
         <CollectionAccessDialog collection={collection}
                                 isOpen={accessIsOpen}
                                 toggleDialog={this.toggleAccess} />
-        <CollectionXrefAlert collection={collection}
+        <CollectionXrefDialog collection={collection}
                              isOpen={xrefIsOpen}
-                             toggleAlert={this.toggleXref} />
+                             toggleDialog={this.toggleXref} />
         <CollectionAnalyzeAlert collection={collection}
                                 isOpen={analyzeIsOpen}
                                 toggleAlert={this.toggleAnalyze} />

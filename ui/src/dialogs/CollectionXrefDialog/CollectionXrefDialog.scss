@@ -1,0 +1,30 @@
+@import "src/app/variables.scss";
+
+.CollectionXrefDialog {
+  .xref-filter {
+    display: flex;
+    margin-bottom: $aleph-grid-size;
+
+    &-select, &-input {
+      padding-right: $aleph-grid-size;
+      box-sizing: border-box;
+    }
+  }
+
+  &-popover {
+    max-height: 30vh;
+    overflow: auto;
+  }
+
+  .xref-select-status {
+    margin-top: $aleph-grid-size;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .xref-select-list {
+    max-height: 196px;
+    overflow: auto;
+  }
+}
