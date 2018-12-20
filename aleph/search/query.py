@@ -1,7 +1,6 @@
 import logging
 from pprint import pprint, pformat  # noqa
 from elasticsearch.helpers import scan
-from opencensus.trace import execution_context
 
 from aleph.core import es, settings
 from aleph.model import Audit
@@ -216,13 +215,8 @@ class Query(object):
         # Log the search
         keys = ['prefix', 'text', 'filters']
         record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
-
-        tracer = execution_context.get_opencensus_tracer()
-        with tracer.span(name='ES_QUERY') as span:
-            for key, val in parser.to_dict().items():
-                span.add_attribute(str(key), str(val))
-            result = cls(parser, **kwargs).search()
-            return cls.RESULT_CLASS(request, parser, result, schema=schema)
+        result = cls(parser, **kwargs).search()
+        return cls.RESULT_CLASS(request, parser, result, schema=schema)
 
 
 class AuthzQuery(Query):

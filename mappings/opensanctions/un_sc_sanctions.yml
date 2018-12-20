@@ -8,23 +8,23 @@ un_sc_sanctions:
   roles:
     - guest
   queries:
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/entities.csv
       include: partial/person.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/entities.csv
       include: partial/entity.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/identifiers.csv
       include: partial/passport.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/identifiers.csv
       include: partial/otherid.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/addresses.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/addresses.csv
       include: partial/address.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/aliases.csv
       include: partial/strongalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/aliases.csv
       include: partial/weakalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/birthdates.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/birthdates.csv
       include: partial/birthdate.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/birthplaces.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/birthplaces.csv
       include: partial/birthplace.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/un-sc-sanctions/latest/nationalities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/un-sc-sanctions/latest/nationalities.csv
       include: partial/nationality.yml

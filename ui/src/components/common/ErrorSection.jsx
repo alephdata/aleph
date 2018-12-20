@@ -30,7 +30,7 @@ class ErrorSection extends PureComponent {
 
   render() {
     const { error, metadata } = this.props;
-    const { title = '', description = '', visual = 'error' } = this.props;
+    const { title = '', description = '', visual = 'error', resolver } = this.props;
     const message = error === undefined ? title : error.message;
 
     return (
@@ -41,7 +41,7 @@ class ErrorSection extends PureComponent {
                               toggleDialog={this.onSignIn} />
         <div className='ErrorSection'>
           <div className='inner-div'>
-            <NonIdealState visual={visual} title={message} description={description} />
+            <NonIdealState action={resolver} visual={visual} title={message} description={description} />
           </div>
         </div>
       </React.Fragment>

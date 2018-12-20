@@ -39,9 +39,9 @@ def update_role(role):
 
 
 def refresh_role(role, sync=False):
-    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ, role.id))
-    cache.kv.delete(cache.key(Authz.PREFIX, Authz.WRITE, role.id))
-    cache.kv.delete(cache.object_key(Role, role.id))
+    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ, role.id),
+                    cache.key(Authz.PREFIX, Authz.WRITE, role.id),
+                    cache.object_key(Role, role.id))
 
 
 @celery.task(priority=3)
@@ -63,9 +63,8 @@ def update_subscriptions(role_id):
 
 def update_roles():
     q = db.session.query(Role)
-    for role in q.all():
+    for role in q:
         update_role(role)
-    Authz.flush()
 
 
 def check_visible(role, authz):

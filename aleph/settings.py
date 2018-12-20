@@ -145,6 +145,8 @@ LANGUAGES = [l.lower().strip() for l in LANGUAGES]
 
 # User interface
 UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
+UI_LANGUAGES = env_list('UI_LANGUAGES', UI_LANGUAGES)
+UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
 
 # Geonames data file
 GEONAMES_DATA = env('GEONAMES_DATA')
@@ -206,3 +208,4 @@ REDIS_EXPIRE = int(env('REDIS_EXPIRE', 84600 * 7))
 
 STACKDRIVER_TRACE_PROJECT_ID = env('STACKDRIVER_TRACE_PROJECT_ID')
 TRACE_SAMPLING_RATE = float(env('TRACE_SAMPLING_RATE', 0.10))
+CELERY_TRACE_SAMPLING_RATE = float(env('CELERY_TRACE_SAMPLING_RATE', 0.01))

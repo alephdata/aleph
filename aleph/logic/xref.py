@@ -7,12 +7,13 @@ from followthemoney.types import registry
 from followthemoney.compare import compare
 
 from aleph.core import db, celery
-from aleph.model import Match, Collection
+from aleph.model import Match
 from aleph.index.indexes import entities_read_index
 from aleph.index.entities import iter_proxies, entities_by_ids
 from aleph.index.match import match_query
 from aleph.index.util import search_safe, unpack_result, none_query
 from aleph.index.util import BULK_PAGE
+from aleph.logic.collections import get_collection
 from aleph.logic.util import entity_url
 
 log = logging.getLogger(__name__)
@@ -77,21 +78,18 @@ def _format_country(proxy):
 
 
 def _iter_match_batch(batch, authz):
+    matchable = [s.name for s in model if s.matchable]
     entities = set()
-    collections = set()
     for match in batch:
         entities.add(match.entity_id)
         entities.add(match.match_id)
-        collections.add(match.match_collection_id)
 
-    collections = Collection.all_by_ids(collections, authz=authz)
-    collections = {c.id: c.label for c in collections}
-    entities = entities_by_ids(list(entities), authz=authz)
+    entities = entities_by_ids(list(entities), authz=authz, schemata=matchable)
     entities = {e.get('id'): e for e in entities}
     for obj in batch:
         entity = entities.get(str(obj.entity_id))
         match = entities.get(str(obj.match_id))
-        collection = collections.get(obj.match_collection_id)
+        collection = get_collection(obj.match_collection_id)
         if entity is None or match is None or collection is None:
             continue
         eproxy = model.get_proxy(entity)
@@ -101,7 +99,7 @@ def _iter_match_batch(batch, authz):
             eproxy.caption,
             _format_date(eproxy),
             _format_country(eproxy),
-            collection,
+            collection.get('label'),
             mproxy.caption,
             _format_date(mproxy),
             _format_country(mproxy),

@@ -8,23 +8,23 @@ eu_meps:
   roles:
     - guest
   queries:
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/entities.csv
       include: partial/person.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/entities.csv
       include: partial/entity.yml 
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/identifiers.csv
       include: partial/passport.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/identifiers.csv
       include: partial/otherid.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/addresses.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/addresses.csv
       include: partial/address.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/aliases.csv
       include: partial/strongalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/aliases.csv
       include: partial/weakalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/birthdates.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/birthdates.csv
       include: partial/birthdate.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/birthplaces.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/birthplaces.csv
       include: partial/birthplace.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/eu-meps/latest/nationalities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/eu-meps/latest/nationalities.csv
       include: partial/nationality.yml

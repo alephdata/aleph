@@ -19,6 +19,7 @@ import {
   queryCollections,
   queryXrefMatches,
   tiggerXrefMatches,
+  triggerCollectionAnalyze,
   updateCollection,
   updateCollectionPermissions
 } from './collectionActions';
@@ -52,6 +53,7 @@ export {
   deleteNotifications,
   ingestDocument,
   deleteDocument,
+  triggerCollectionAnalyze,
   tiggerXrefMatches
 };
 

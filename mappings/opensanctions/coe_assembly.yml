@@ -8,23 +8,23 @@ coe_assembly:
   roles:
     - guest
   queries:
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/entities.csv
       include: partial/person.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/entities.csv
       include: partial/entity.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/identifiers.csv
       include: partial/passport.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/identifiers.csv
       include: partial/otherid.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/addresses.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/addresses.csv
       include: partial/address.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/aliases.csv
       include: partial/strongalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/aliases.csv
       include: partial/weakalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/birthdates.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/birthdates.csv
       include: partial/birthdate.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/birthplaces.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/birthplaces.csv
       include: partial/birthplace.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/coe-assembly/latest/nationalities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/coe-assembly/latest/nationalities.csv
       include: partial/nationality.yml

@@ -8,23 +8,23 @@ everypolitician:
   roles:
     - guest
   queries:
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/entities.csv
       include: partial/person.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/entities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/entities.csv
       include: partial/entity.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/identifiers.csv
       include: partial/passport.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/identifiers.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/identifiers.csv
       include: partial/otherid.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/addresses.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/addresses.csv
       include: partial/address.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/aliases.csv
       include: partial/strongalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/aliases.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/aliases.csv
       include: partial/weakalias.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/birthdates.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/birthdates.csv
       include: partial/birthdate.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/birthplaces.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/birthplaces.csv
       include: partial/birthplace.yml
-    - csv_url: http://data.opensanctions.org/v1/sources/everypolitician/latest/nationalities.csv
+    - csv_url: http://assets.data.occrp.org/datasets/opensanctions/everypolitician/latest/nationalities.csv
       include: partial/nationality.yml
