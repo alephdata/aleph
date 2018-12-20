@@ -66,11 +66,11 @@ def create_app(config={}):
         task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
-        task_acks_late=True,
+        task_acks_late=False,
         task_queues=(queue,),
         task_default_queue=settings.QUEUE_NAME,
         task_default_routing_key=settings.QUEUE_ROUTING_KEY,
-        worker_max_tasks_per_child=500,
+        worker_max_tasks_per_child=1000,
         result_persistent=False,
         beat_schedule={
             'hourly': {
