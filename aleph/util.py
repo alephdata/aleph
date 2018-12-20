@@ -219,6 +219,8 @@ def setup_stackdriver_logging():
     root_logger = logging.getLogger()
     # root logger default level is WARNING, so we'll override to be DEBUG
     root_logger.setLevel(logging.DEBUG)
+    # Clear out existing handlers
+    root_logger.handlers.clear()
     root_logger.addHandler(info_handler)
     root_logger.addHandler(error_handler)
 
