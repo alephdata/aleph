@@ -15,7 +15,7 @@ class SuggestAlert extends PureComponent{
     return (<Callout>
       <FormattedMessage
         id="alert.suggest.text"
-        defaultMessage={`or get notified {alertComponent} when {queryText} related data will be added.`}
+        defaultMessage={`Get notified {alertComponent} when data related to {queryText} is added.`}
         values={{alertComponent: <SearchAlert queryText={queryText}/>, queryText:<Tag large>{queryText}</Tag>}}
       />
 
