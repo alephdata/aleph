@@ -80,7 +80,7 @@ class CollectionToolbar extends Component {
                 <Menu.Item
                   icon="automatic-updates"
                   onClick={this.toggleAnalyze}
-                  text={<FormattedMessage id="collection.info.analyze" defaultMessage="Re-Analyze"/>}
+                  text={<FormattedMessage id="collection.info.analyze" defaultMessage="Re-analyze"/>}
                 />
                 <Menu.Divider />
                 <Menu.Item
@@ -91,9 +91,8 @@ class CollectionToolbar extends Component {
                 />
 
               </Menu>} position={Position.RIGHT_TOP}>
-                <Button icon="control" text="Control..." />
+                <Button icon="cog" text="Manage..." />
               </Popover>
-
             </React.Fragment>
           }
         </div>
