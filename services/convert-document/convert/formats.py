@@ -1,6 +1,6 @@
 from lxml import etree
 from collections import defaultdict, OrderedDict
-from celestial import normalize_mimetype, normalize_extension
+from pantomime import normalize_mimetype, normalize_extension
 
 NS = {'oor': 'http://openoffice.org/2001/registry'}
 NAME = '{%s}name' % NS['oor']

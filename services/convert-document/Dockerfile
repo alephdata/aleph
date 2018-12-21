@@ -13,7 +13,7 @@ RUN apt-get -qq -y update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN pip3 install -q aiohttp celestial>=0.2.3 pyicu>=2.0.6
+RUN pip3 install -q aiohttp pantomime>=0.3.2 pyicu>=2.0.6
 RUN mkdir -p /convert
 COPY setup.py /convert
 COPY convert /convert/convert

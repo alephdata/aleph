@@ -5,7 +5,7 @@ setup(
     packages=find_packages(exclude=[]),
     install_requires=[
         'aiohttp',
-        'celestial',
+        'pantomime',
         'pyicu',
         'pytest'
     ],

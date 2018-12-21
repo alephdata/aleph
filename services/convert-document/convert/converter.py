@@ -94,6 +94,7 @@ class PdfConverter(object):
                 doc.storeToURL(output_url, prop)
                 doc.dispose()
                 doc.close(True)
+                del doc
         finally:
             timer.cancel()
 
