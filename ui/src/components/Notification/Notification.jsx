@@ -20,7 +20,7 @@ class Notification extends PureComponent {
       return <Entity.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
-      return object ? object.label : null; 
+      return object ? object.query : null; 
     }
     if (type === 'role') {
       return <Role.Label role={object} />;

@@ -5,6 +5,7 @@ import {Callout, Intent, Dialog, MenuDivider, Button} from '@blueprintjs/core';
 
 import { endpoint } from 'src/app/api';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
+import { showErrorToast } from 'src/app/toast';
 import {PasswordAuthLogin} from 'src/components/auth/PasswordAuth';
 import {PasswordAuthSignup} from 'src/components/auth/PasswordAuth';
 import { loginWithPassword, loginWithToken } from "src/actions/sessionActions";
@@ -24,6 +25,10 @@ const messages = defineMessages({
   not_available_title: {
     id: 'login.not_available_title',
     defaultMessage: 'Login is disabled',
+  },
+  pw_wrong_credentials: {
+    id: 'login.pw_wrong_credentials',
+    defaultMessage: 'You have entered an invalid username or password',
   }
 });
 
@@ -66,9 +71,18 @@ class AuthenticationDialog extends Component {
   }
 
   async onLogin(data) {
-    const { nextPath } = this.props;
-    await this.props.loginWithPassword(data.email, data.password);
-    window.location.replace(nextPath || '/');
+    const { nextPath, intl } = this.props;
+    try {
+      await this.props.loginWithPassword(data.email, data.password);
+      window.location.replace(nextPath || '/');
+    } catch (e) {
+        console.error(e);
+        if (e.response && e.response.status === 401) {
+          showErrorToast(intl.formatMessage(messages.pw_wrong_credentials));
+        } else {
+          xhrErrorToast(e.response, intl);
+        }
+    }
   }
 
   onRegisterClick() {

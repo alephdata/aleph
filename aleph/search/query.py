@@ -2,10 +2,10 @@ import logging
 from pprint import pprint, pformat  # noqa
 from elasticsearch.helpers import scan
 
-from aleph.core import es
+from aleph.core import es, settings
 from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
-from aleph.index.util import REQUEST_TIMEOUT
+from aleph.index.util import search_safe, clean_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.logic.audit import record_audit
@@ -43,6 +43,7 @@ class Query(object):
                 "simple_query_string": {
                     "query": self.parser.text,
                     "fields": self.TEXT_FIELDS,
+                    "analyzer": "icu_latin",
                     "default_operator": "AND",
                     "minimum_should_match": "80%",
                     "lenient": True
@@ -126,10 +127,11 @@ class Query(object):
             # See here for an explanation of the whole post_filters and
             # aggregation filters thing:
             # https://www.elastic.co/guide/en/elasticsearch/reference/6.2/search-request-post-filter.html  # noqa
-            if len(self.parser.facet_filters):
+            other_filters = self.get_post_filters(exclude=facet_name)
+            if len(other_filters['bool']['filter']):
                 agg_name = '%s.filtered' % facet_name
                 aggregations[agg_name] = {
-                    'filter': self.get_post_filters(exclude=facet_name),
+                    'filter': other_filters,
                     'aggregations': facet_aggregations
                 }
             else:
@@ -149,6 +151,8 @@ class Query(object):
         return list(reversed(sort_fields))
 
     def get_highlight(self):
+        if not settings.RESULT_HIGHLIGHT:
+            return {}
         if not self.parser.highlight:
             return {}
 
@@ -170,7 +174,7 @@ class Query(object):
         return source
 
     def get_body(self):
-        body = {
+        body = clean_query({
             'query': self.get_query(),
             'post_filter': self.get_post_filters(),
             'from': self.parser.offset,
@@ -179,17 +183,15 @@ class Query(object):
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
             '_source': self.get_source()
-        }
+        })
         # log.info("Query: %s", pformat(body))
         return body
 
     def search(self):
         """Execute the query as assmbled."""
         # log.info("Search index: %s", self.get_index())
-        result = es.search(index=self.get_index(),
-                           body=self.get_body(),
-                           request_cache=self.parser.cache,
-                           request_timeout=REQUEST_TIMEOUT)
+        result = search_safe(index=self.get_index(),
+                             body=self.get_body())
         log.info("Took: %sms", result.get('took'))
         # log.info("%s", pformat(result.get('profile')))
         return result
@@ -213,7 +215,6 @@ class Query(object):
         # Log the search
         keys = ['prefix', 'text', 'filters']
         record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
-
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result, schema=schema)
 

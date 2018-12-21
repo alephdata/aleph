@@ -145,9 +145,17 @@ LANGUAGES = [l.lower().strip() for l in LANGUAGES]
 
 # User interface
 UI_LANGUAGES = ['ru', 'es', 'de', 'bs', 'en']
+UI_LANGUAGES = env_list('UI_LANGUAGES', UI_LANGUAGES)
+UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
 
 # Geonames data file
 GEONAMES_DATA = env('GEONAMES_DATA')
+
+# Result high-lighting
+RESULT_HIGHLIGHT = env_bool('RESULT_HIGHLIGHT', True)
+
+# Minimum update date for sitemap.xml
+SITEMAP_FLOOR = '2018-12-09'
 
 ##############################################################################
 # E-mail settings
@@ -196,4 +204,8 @@ BROKER_URI = env('BROKER_URI', BROKER_URI)
 
 REDIS_URL = env('REDIS_URL', 'redis://redis:6379/0')
 REDIS_BATCH_SIZE = int(env('REDIS_BATCH_SIZE', 10000))
-REDIS_EXPIRE = int(env('REDIS_EXPIRE', 84600))
+REDIS_EXPIRE = int(env('REDIS_EXPIRE', 84600 * 7))
+
+STACKDRIVER_TRACE_PROJECT_ID = env('STACKDRIVER_TRACE_PROJECT_ID')
+TRACE_SAMPLING_RATE = float(env('TRACE_SAMPLING_RATE', 0.10))
+CELERY_TRACE_SAMPLING_RATE = float(env('CELERY_TRACE_SAMPLING_RATE', 0.01))

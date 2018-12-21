@@ -39,7 +39,6 @@ class CollectionDeleteDialog extends Component {
     const { intl } = this.props;
     return (
       <Alert isOpen={this.props.isOpen}
-             onClose={this.props.toggleDialog}
              icon="trash"
              intent={Intent.DANGER}
              cancelButtonText={intl.formatMessage(messages.button_cancel)}

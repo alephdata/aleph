@@ -102,7 +102,7 @@ class QueryTestCase(TestCase):
         self.assertEqual(q.get_filters(), [{
             'term': {'key1': 'foo'}
         }])
-        self.assertEqual(q.get_body().get('post_filter'), {
+        self.assertEqual(q.get_post_filters(), {
             'bool': {
                 'filter': [
                     {

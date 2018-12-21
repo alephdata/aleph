@@ -75,7 +75,7 @@ class DocumentSearch extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('search', location, {}, 'document').limit(50);
+  const query = Query.fromLocation('entities', location, {}, 'document').limit(50);
   return { query };
 };
 

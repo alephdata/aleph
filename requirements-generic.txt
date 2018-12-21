@@ -65,3 +65,8 @@ ply==3.11
 
 # Not entirely sure why this is needed:
 # urllib3==1.23
+
+# Tracing and logging libraries
+opencensus==0.1.9
+google-cloud-trace==0.20.0
+python-json-logger==0.1.10

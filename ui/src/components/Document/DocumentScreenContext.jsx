@@ -102,7 +102,7 @@ class DocumentScreenContext extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { documentId, location } = ownProps;
   const document = selectEntity(state, documentId);
-  const query = Query.fromLocation('search', location, {}, 'document');
+  const query = Query.fromLocation('entities', location, {}, 'document');
   return { document, query };
 };
 

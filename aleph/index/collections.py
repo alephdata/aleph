@@ -1,6 +1,5 @@
 import logging
 from pprint import pprint  # noqa
-from random import randint
 from banal import ensure_list
 from normality import normalize
 from followthemoney import model
@@ -8,8 +7,7 @@ from followthemoney.types import registry
 
 from aleph.core import es, cache
 from aleph.model import Entity, Collection
-from aleph.index.core import collections_index, entities_read_index
-from aleph.index.core import records_read_index
+from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
 from aleph.index.util import index_form, search_safe
 
@@ -95,13 +93,9 @@ def get_collection(collection_id):
     return unpack_result(result)
 
 
-def flush_collection_stats(collection_id):
-    cache.kv.delete(cache.key('cstats', collection_id))
-
-
 def get_collection_stats(collection_id):
     """Compute some statistics on the content of a collection."""
-    key = cache.key('cstats', collection_id)
+    key = cache.object_key(Collection, collection_id, 'stats')
     data = cache.get_complex(key)
     if data is not None:
         return data
@@ -130,8 +124,7 @@ def get_collection_stats(collection_id):
         data[facet] = {}
         for bucket in aggregations[facet]['buckets']:
             data[facet][bucket['key']] = bucket['doc_count']
-    expire = randint(3600 * 3, 3600 * 12)
-    cache.set_complex(key, data, expire=expire)
+    cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
 
 
@@ -165,8 +158,3 @@ def delete_entities(collection_id, schema=None, bulk_only=False):
         filters.append({'term': {'schemata': schema.name}})
     query = {'bool': {'filter': filters}}
     query_delete(entities_read_index(schema), query)
-
-
-def delete_records(collection_id):
-    records_query = {'term': {'collection_id': collection_id}}
-    query_delete(records_read_index(), records_query)

@@ -6,7 +6,7 @@ export default class Property {
   constructor({name, ...behaviour}, schema) {
     this.name = name;
     this.schema = schema;
-    this.behaviour = behaviour
+    this.behaviour = behaviour;
   }
 
   get caption() {
@@ -15,6 +15,10 @@ export default class Property {
 
   get label(): string {
     return this.behaviour.label || this.name;
+  }
+
+  get type(): string {
+    return this.behaviour.type;
   }
 
   extends(parentSchema) {

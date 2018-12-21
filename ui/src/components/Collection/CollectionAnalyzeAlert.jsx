@@ -3,25 +3,25 @@ import { connect } from "react-redux";
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Alert, Intent } from "@blueprintjs/core";
 
-import { tiggerXrefMatches } from "src/actions";
+import { triggerCollectionAnalyze } from "src/actions";
 import { showSuccessToast } from "src/app/toast";
 
 const messages = defineMessages({
   processing: {
-    id: 'collection.xref.processing',
-    defaultMessage: 'Cross-referencing started.'
+    id: 'collection.analyze.processing',
+    defaultMessage: 'Re-analyzing started.'
   },
   cancel: {
-    id: 'collection.xref.cancel',
+    id: 'collection.analyze.cancel',
     defaultMessage: 'Cancel'
   },
   confirm: {
-    id: 'collection.xref.confirm',
-    defaultMessage: 'Start cross-referencing'
+    id: 'collection.analyze.confirm',
+    defaultMessage: 'Start re-analyzing'
   }
 });
 
-class CollectionXrefAlert extends Component {
+class CollectionAnalyzeAlert extends Component {
   constructor(props) {
     super(props);
     this.onConfirm = this.onConfirm.bind(this);
@@ -29,7 +29,7 @@ class CollectionXrefAlert extends Component {
 
   onConfirm() {
     const { collection, intl } = this.props;
-    this.props.tiggerXrefMatches(collection.id);
+    this.props.triggerCollectionAnalyze(collection.id);
     showSuccessToast(intl.formatMessage(messages.processing));
     this.props.toggleAlert();
   }
@@ -41,14 +41,14 @@ class CollectionXrefAlert extends Component {
              confirmButtonText={intl.formatMessage(messages.confirm)}
              canEscapeKeyCancel={true}
              canOutsideClickCancel={true}
-             icon="search-around"
+             icon="automatic-updates"
              intent={Intent.DANGER}
              isOpen={isOpen}
              onCancel={this.props.toggleAlert}
              onConfirm={this.onConfirm}>
         <p>
-          <FormattedMessage id="collection.xref.alert.text"
-                            defaultMessage="Cross-referencing against all other data may take a lot of time. Only start this process once and allow several hours for it to complete." />
+          <FormattedMessage id="collection.analyze.alert.text"
+                            defaultMessage="Re-analyzing the collection will take some time. Please start the process only once and allow time for it to complete." />
         </p>
       </Alert>
     );
@@ -56,6 +56,6 @@ class CollectionXrefAlert extends Component {
 }
 
 
-CollectionXrefAlert = connect(null, { tiggerXrefMatches })(CollectionXrefAlert);
-CollectionXrefAlert = injectIntl(CollectionXrefAlert);
-export default CollectionXrefAlert;
+CollectionAnalyzeAlert = connect(null, { triggerCollectionAnalyze })(CollectionAnalyzeAlert);
+CollectionAnalyzeAlert = injectIntl(CollectionAnalyzeAlert);
+export default CollectionAnalyzeAlert;

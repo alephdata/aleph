@@ -38,7 +38,7 @@ const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
   // when a query is defined, we switch to recursive folder search - otherwise
   // a flat listing of the immediate children of this directory is shown.
-  const q = Query.fromLocation('search', location, {}, 'document').getString('q'),
+  const q = Query.fromLocation('entities', location, {}, 'document').getString('q'),
         hasSearch = (q.length !== 0 || queryText),
         context = {};
     
@@ -48,7 +48,7 @@ const mapStateToProps = (state, ownProps) => {
     context['filter:parent.id'] = document.id;
   }
 
-  let query = Query.fromLocation('search', location, context, 'document').limit(50);
+  let query = Query.fromLocation('entities', location, context, 'document').limit(50);
   if (queryText) {
     query = query.setString('q', queryText);
   }

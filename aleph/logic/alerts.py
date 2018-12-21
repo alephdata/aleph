@@ -2,13 +2,36 @@ import logging
 from pprint import pprint  # noqa
 
 from aleph.authz import Authz
-from aleph.core import db
-from aleph.model import Alert, Events
-from aleph.index.core import entities_read_index
+from aleph.core import db, cache
+from aleph.model import Alert, Events, Entity
+from aleph.index.indexes import entities_read_index
 from aleph.index.util import search_safe, unpack_result, authz_query, MAX_PAGE
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
+
+
+def get_alert(alert_id):
+    key = cache.object_key(Alert, alert_id)
+    data = cache.get_complex(key)
+    if data is None:
+        alert = Alert.by_id(alert_id)
+        if alert is None:
+            return
+        data = {
+            'id': alert.id,
+            'query': alert.query,
+            'role_id': alert.role_id,
+            'notified_at': alert.notified_at,
+            'created_at': alert.created_at,
+            'updated_at': alert.updated_at
+        }
+        cache.set_complex(key, data, expire=cache.EXPIRE)
+    return data
+
+
+def refresh_alert(alert, sync=False):
+    cache.kv.delete(cache.object_key(Alert, alert.id))
 
 
 def check_alerts():
@@ -27,7 +50,8 @@ def check_alert(alert_id):
         return
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
-    result = search_safe(index=entities_read_index(), body=query)
+    index = entities_read_index(schema=Entity.THING)
+    result = search_safe(index=index, body=query)
     for result in result.get('hits').get('hits', []):
         entity = unpack_result(result)
         if entity is None:

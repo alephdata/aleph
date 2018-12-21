@@ -8,6 +8,23 @@ from aleph.logic.notifications import channel
 log = logging.getLogger(__name__)
 
 
+def get_role(role_id):
+    key = cache.object_key(Role, role_id)
+    data = cache.get_complex(key)
+    if data is None:
+        role = Role.by_id(role_id)
+        if role is None:
+            return
+        data = {
+            'id': role.id,
+            'name': role.name,
+            'label': role.label,
+            'type': role.type
+        }
+        cache.set_complex(key, data, expire=cache.EXPIRE)
+    return data
+
+
 def create_system_roles():
     log.info("Creating system roles...")
     Role.load_or_create(Role.SYSTEM_GUEST, Role.SYSTEM, 'All visitors')
@@ -18,8 +35,13 @@ def create_system_roles():
 def update_role(role):
     """Synchronize denormalised role configuration."""
     update_subscriptions.delay(role.id)
-    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ, role.id))
-    cache.kv.delete(cache.key(Authz.PREFIX, Authz.WRITE, role.id))
+    refresh_role(role)
+
+
+def refresh_role(role, sync=False):
+    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ, role.id),
+                    cache.key(Authz.PREFIX, Authz.WRITE, role.id),
+                    cache.object_key(Role, role.id))
 
 
 @celery.task(priority=3)
@@ -41,9 +63,8 @@ def update_subscriptions(role_id):
 
 def update_roles():
     q = db.session.query(Role)
-    for role in q.all():
+    for role in q:
         update_role(role)
-    Authz.flush()
 
 
 def check_visible(role, authz):

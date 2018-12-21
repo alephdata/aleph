@@ -4,7 +4,7 @@ import {withRouter} from 'react-router';
 import queryString from 'query-string';
 import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'react-intl';
 import Waypoint from 'react-waypoint';
-import { Icon } from '@blueprintjs/core';
+import { Icon} from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
@@ -13,6 +13,7 @@ import { DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs } fr
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
+import SuggestAlert from "src/components/SuggestAlert/SuggestAlert";
 import Screen from 'src/components/Screen/Screen';
 import togglePreview from 'src/util/togglePreview';
 
@@ -274,6 +275,7 @@ class SearchScreen extends React.Component {
             {result.total === 0 && (
               <ErrorSection visual="search"
                             title={intl.formatMessage(messages.no_results_title)}
+                            resolver={<SuggestAlert queryText={query.state.q}/>}
                             description={intl.formatMessage(messages.no_results_description)}/>
             )}
             {!result.isLoading && result.next && (
@@ -305,7 +307,7 @@ const mapStateToProps = (state, ownProps) => {
     'filter:schemata': 'Thing',
     'limit': 50
   };
-  const query = Query.fromLocation('search', location, context, '');
+  const query = Query.fromLocation('entities', location, context, '');
   const result = selectEntitiesResult(state, query);
   return { query, result };
 };

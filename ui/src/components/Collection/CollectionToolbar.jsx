@@ -3,13 +3,15 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { Button } from "@blueprintjs/core";
+import { Button, Menu, Position, Popover } from "@blueprintjs/core";
 
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
-import CollectionXrefAlert from 'src/components/Collection/CollectionXrefAlert';
-import { selectCollectionXrefIndex } from "../../selectors";
+import CollectionAnalyzeAlert from "src/components/Collection/CollectionAnalyzeAlert";
+import CollectionDeleteDialog from "src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog";
+import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
+import { selectCollectionXrefIndex } from "src/selectors";
 
 
 class CollectionToolbar extends Component {
@@ -19,6 +21,8 @@ class CollectionToolbar extends Component {
       settingsIsOpen: false,
       accessIsOpen: false,
       xrefIsOpen: false,
+      analyzeIsOpen: false,
+      deleteIsOpen: false,
     };
 
     this.toggleSettings = this.toggleSettings.bind(this);
@@ -38,9 +42,14 @@ class CollectionToolbar extends Component {
     this.setState({ xrefIsOpen: !this.state.xrefIsOpen });
   }
 
+  toggleAnalyze = () => this.setState( ({ analyzeIsOpen }) => ({ analyzeIsOpen : !analyzeIsOpen  }) );
+
+  toggleDelete = () => this.setState( ({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }) );
+
+
   render() {
     const { collection, isPreview } = this.props;
-    const { settingsIsOpen, accessIsOpen, xrefIsOpen } = this.state;
+    const { settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen, deleteIsOpen } = this.state;
 
     return (
       <Toolbar className="toolbar-preview">
@@ -51,15 +60,38 @@ class CollectionToolbar extends Component {
           </Link>
           {collection.writeable &&
             <React.Fragment>
-              <Button icon="cog" onClick={this.toggleSettings}>
-                <FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>
-              </Button>
-              <Button icon="key" onClick={this.toggleAccess} className='button-hover'>
-                <FormattedMessage id="collection.info.share" defaultMessage="Share"/>
-              </Button>
-              <Button icon="search-around" onClick={this.toggleXref} className='button-hover'>
-                <FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>
-              </Button>
+              <Popover content={<Menu>
+                <Menu.Item
+                  icon="cog"
+                  onClick={this.toggleSettings}
+                  text={<FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>} />
+                <Menu.Item
+                  icon="key"
+                  onClick={this.toggleAccess}
+                  text={<FormattedMessage id="collection.info.share" defaultMessage="Share"/>}
+                />
+                <Menu.Divider />
+                <Menu.Item
+                  icon="search-around"
+                  onClick={this.toggleXref}
+                  text={<FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>}
+                />
+                <Menu.Item
+                  icon="automatic-updates"
+                  onClick={this.toggleAnalyze}
+                  text={<FormattedMessage id="collection.info.analyze" defaultMessage="Re-analyze"/>}
+                />
+                <Menu.Divider />
+                <Menu.Item
+                  icon="trash"
+                  intent="danger"
+                  onClick={this.toggleDelete}
+                  text={<FormattedMessage id="collection.info.delete" defaultMessage="Delete"/>}
+                />
+
+              </Menu>} position={Position.RIGHT_TOP}>
+                <Button icon="cog" text="Manage..." />
+              </Popover>
             </React.Fragment>
           }
         </div>
@@ -72,9 +104,15 @@ class CollectionToolbar extends Component {
         <CollectionAccessDialog collection={collection}
                                 isOpen={accessIsOpen}
                                 toggleDialog={this.toggleAccess} />
-        <CollectionXrefAlert collection={collection}
+        <CollectionXrefDialog collection={collection}
                              isOpen={xrefIsOpen}
-                             toggleAlert={this.toggleXref} />
+                             toggleDialog={this.toggleXref} />
+        <CollectionAnalyzeAlert collection={collection}
+                                isOpen={analyzeIsOpen}
+                                toggleAlert={this.toggleAnalyze} />
+        <CollectionDeleteDialog isOpen={deleteIsOpen}
+                                collection={collection}
+                                toggleDialog={this.toggleDelete} />
       </Toolbar>
     );
   }

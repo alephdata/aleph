@@ -8,7 +8,7 @@ md_companies:
   roles:
     - guest
   queries:
-    - csv_url: http://archive.pudo.org/md-companies/latest/companies.csv
+    - csv_url: http://assets.data.occrp.org/tools/aleph/fixtures/md_companies/companies.csv
       entities:
         company:
           schema: Company
@@ -30,7 +30,7 @@ md_companies:
               column: Forma_org
             status:
               column: Statutul
-    - csv_url: http://archive.pudo.org/md-companies/latest/directors.csv
+    - csv_url: http://assets.data.occrp.org/tools/aleph/fixtures/md_companies/directors.csv
       entities:
         company:
           schema: Company
@@ -58,7 +58,7 @@ md_companies:
               entity: director
             organization:
               entity: company
-    - csv_url: http://archive.pudo.org/md-companies/latest/founders.csv
+    - csv_url: http://assets.data.occrp.org/tools/aleph/fixtures/md_companies/founders.csv
       entities:
         company:
           schema: Company
@@ -88,7 +88,7 @@ md_companies:
               entity: company
             role:
               literal: founder
-    - csv_url: http://archive.pudo.org/md-companies/latest/licensed.csv
+    - csv_url: http://assets.data.occrp.org/tools/aleph/fixtures/md_companies/licensed.csv
       entities:
         company:
           schema: Company
@@ -98,7 +98,7 @@ md_companies:
           properties:
             sector:
               column: Denumire
-    - csv_url: http://archive.pudo.org/md-companies/latest/unlicensed.csv
+    - csv_url: http://assets.data.occrp.org/tools/aleph/fixtures/md_companies/unlicensed.csv
       entities:
         company:
           schema: Company

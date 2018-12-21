@@ -1,13 +1,16 @@
 import logging
-from flask import request
 from datetime import datetime
+
+from flask import request
 
 from aleph.core import db, celery
 from aleph.model import Audit
+from aleph.util import trace_function
 
 log = logging.getLogger(__name__)
 
 
+@trace_function(span_name='RECORD_AUDIT')
 def record_audit(activity, keys=None, **data):
     keys = keys or list(data.keys())
     timestamp = datetime.utcnow().timestamp()

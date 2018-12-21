@@ -10,7 +10,7 @@ from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es, settings, cache
 from aleph.model import Document
-from aleph.index.core import entities_write_index, entities_read_index
+from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form, refresh_sync
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
 from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
@@ -31,6 +31,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
     """Delete an entity from the index."""
     query = {'query': {'ids': {'values': str(entity_id)}}}
     es.delete_by_query(index=entities_read_index(exclude=exclude),
+                       doc_type='doc',
                        body=query,
                        wait_for_completion=sync,
                        refresh=refresh_sync(sync))
@@ -49,7 +50,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
     source = {}
     if ensure_list(includes):
         source['includes'] = ensure_list(includes)
-    if ensure_list(excludes):
+    elif ensure_list(excludes):
         source['excludes'] = ensure_list(excludes)
     query = {
         'query': {'bool': {'filter': filters}},
@@ -75,7 +76,7 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def entities_by_ids(ids, authz=None, cached=True):
+def entities_by_ids(ids, authz=None, schemata=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     for i in range(0, len(ids), MAX_PAGE):
@@ -91,10 +92,8 @@ def entities_by_ids(ids, authz=None, cached=True):
             '_source': {'excludes': ['text']},
             'size': min(MAX_PAGE, len(chunk))
         }
-        result = search_safe(index=entities_read_index(),
-                             body=query,
-                             ignore=[404],
-                             request_cache=cached)
+        index = entities_read_index(schema=schemata)
+        result = search_safe(index=index, body=query, ignore=[404])
         for doc in result.get('hits', {}).get('hits', []):
             entity = unpack_result(doc)
             if entity is not None:
@@ -126,7 +125,7 @@ def _index_updates(collection_id, entities):
     if not len(entities):
         return []
 
-    for result in entities_by_ids(list(entities.keys()), cached=False):
+    for result in entities_by_ids(list(entities.keys())):
         if int(result.get('collection_id')) != collection_id:
             raise RuntimeError("Key collision between collections.")
         existing = model.get_proxy(result)
@@ -190,7 +189,7 @@ def finalize_index(proxy, context, texts):
 
     entity = proxy.to_full_dict()
     data = merge_data(context, entity)
-    data['name'] = proxy.caption
+    data['name'] = data.get('name', proxy.caption)
     data['text'] = index_form(texts)
 
     names = data.get('names', [])
@@ -209,7 +208,7 @@ def index_single(obj, proxy, data, texts, sync=False):
     """Indexing aspects common to entities and documents."""
     data = finalize_index(proxy, data, texts)
     data['bulk'] = False
-    data['collection_id'] = obj.collection.id
+    data['collection_id'] = obj.collection_id
     data['created_at'] = obj.created_at
     data['updated_at'] = obj.updated_at
     # pprint(data)

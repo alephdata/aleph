@@ -1,5 +1,5 @@
 import logging
-from banal import ensure_list
+from banal import ensure_list, is_mapping, is_listish
 from elasticsearch import RequestError
 
 from aleph.core import es, settings
@@ -138,7 +138,10 @@ def search_safe(*args, **kwargs):
     for attempt in range(REQUEST_RETRIES):
         try:
             kwargs['doc_type'] = 'doc'
-            return es.search(*args, **kwargs)
+            return es.search(*args,
+                             timeout=TIMEOUT,
+                             request_timeout=REQUEST_TIMEOUT,
+                             **kwargs)
         except RequestError:
             raise
         except Exception as exc:
@@ -167,6 +170,27 @@ def index_form(texts):
                 total_len += len(text)
                 results.append(text)
     return results
+
+
+def clean_query(query):
+    # XXX - do these premises hold?
+    if is_mapping(query):
+        data = {}
+        for key, value in query.items():
+            if key not in ['match_all', 'match_none']:
+                value = clean_query(value)
+            if value is not None:
+                data[key] = value
+        if not len(data):
+            return None
+        return data
+    if is_listish(query):
+        values = [clean_query(v) for v in query]
+        values = [v for v in values if v is not None]
+        if not len(values):
+            return None
+        return values
+    return query
 
 
 def configure_index(index, mapping, settings):

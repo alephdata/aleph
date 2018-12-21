@@ -8,9 +8,13 @@ from aleph.model import Document, Events
 from aleph.logic.notifications import publish
 from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
+from aleph.logic.entities import refresh_entity
 from aleph.logic.extractors import extract_document_tags
 from aleph.index.documents import index_document
-from aleph.index.collections import flush_collection_stats
+
+
+from aleph.util import trace_function
+
 
 log = logging.getLogger(__name__)
 
@@ -26,8 +30,8 @@ def get_manager():
 def process_document(document):
     """Perform post-ingest tasks like analysis and indexing."""
     extract_document_tags(document)
+    refresh_entity(document)
     index_document(document)
-    flush_collection_stats(document.collection_id)
 
 
 def ingest_document(document, file_path, role_id=None, content_hash=None):
@@ -52,6 +56,7 @@ def ingest_document(document, file_path, role_id=None, content_hash=None):
 
 
 @celery.task()
+@trace_function(span_name='INGEST_DOCUMENT')
 def ingest(document_id, file_path=None, refresh=False):
     """Process a given document by extracting its contents.
     This may include creating or updating child documents."""

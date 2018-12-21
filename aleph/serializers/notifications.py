@@ -39,24 +39,14 @@ class NotificationSchema(BaseSchema):
 
     @pre_dump(pass_many=True)
     def expand(self, objs, many=False):
-        cache = {}
-        for obj in ensure_list(objs):
-            for name, clazz, value in obj.iterparams():
-                cache[(clazz, str(value))] = None
-
-        self._resolve_alerts(cache)
-        self._resolve_roles(cache)
-        self._resolve_entities(cache)
-        self._resolve_collections(cache)
-
         results = []
         for obj in ensure_list(objs):
             params = {}
             for name, clazz, value in obj.iterparams():
                 schema = self.SCHEMATA.get(clazz)
-                value = cache.get((clazz, str(value)))
-                if value is not None:
-                    params[name], _ = schema().dump(value)
+                data = self._get_object(clazz, value)
+                if data is not None:
+                    params[name], _ = schema().dump(data)
             results.append({
                 'id': obj.id,
                 'created_at': obj.created_at,
