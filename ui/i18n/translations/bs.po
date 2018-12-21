@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-12-06T22:01:42.270Z\n"
+"POT-Creation-Date: 2018-12-21T10:20:36.774Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -98,6 +98,13 @@ msgstr "Dodaj notifikaciju"
 msgid "Addresses"
 msgstr "Adrese"
 
+#. [collection.xref.filter.allCategories]
+#. defaultMessage is:
+#. All
+#: i18n/messages.json
+msgid "All"
+msgstr ""
+
 #. [signup.login]
 #. defaultMessage is:
 #. Already have account? Sign in!
@@ -171,7 +178,7 @@ msgstr "BCC"
 msgid "CC"
 msgstr "CC"
 
-#. [collection.xref.cancel]
+#. [collection.analyze.cancel]
 #. defaultMessage is:
 #. Cancel
 #. [collection.edit.cancel_button]
@@ -183,11 +190,14 @@ msgstr "CC"
 #. [collection.edit.info.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [collection.xref.cancel_button]
+#. defaultMessage is:
+#. Cancel
 #. [document.delete.cancel]
 #. defaultMessage is:
 #. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "Otkaži"
 
@@ -231,10 +241,13 @@ msgstr ""
 msgid "Cases overview"
 msgstr ""
 
+#. [collection.xref.filter.categories]
+#. defaultMessage is:
+#. Categories
 #. [search.facets.facet.category]
 #. defaultMessage is:
 #. Categories
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Categories"
 msgstr "Kategorije"
 
@@ -370,12 +383,30 @@ msgstr ""
 #. [entity.info.xref]
 #. defaultMessage is:
 #. Cross-reference
+#. [collection.xref.title]
+#. defaultMessage is:
+#. Cross-reference
 #. [matches.screen.xref]
 #. defaultMessage is:
 #. Cross-reference
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cross-reference"
 msgstr "Povezane reference"
+
+#. [collection.xref.xrefAll]
+#. defaultMessage is:
+#. Cross-reference all sources
+#: i18n/messages.json
+msgid "Cross-reference all sources"
+msgstr ""
+
+#. [collection.xref.xrefSpecific]
+#. defaultMessage is:
+#. Cross-reference specific sources (faster)
+#: i18n/messages.json
+msgid "Cross-reference specific sources (faster)"
+msgstr ""
 
 #. [xref.collection]
 #. defaultMessage is:
@@ -431,6 +462,9 @@ msgstr ""
 msgid "Date"
 msgstr "Datum"
 
+#. [collection.info.delete]
+#. defaultMessage is:
+#. Delete
 #. [collection.delete.confirm]
 #. defaultMessage is:
 #. Delete
@@ -440,7 +474,7 @@ msgstr "Datum"
 #. [document.delete.confirm]
 #. defaultMessage is:
 #. Delete
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "Izbriši"
 
@@ -580,6 +614,13 @@ msgstr "Tip fajla"
 msgid "Filter by access"
 msgstr ""
 
+#. [collection.xref.filter.sources]
+#. defaultMessage is:
+#. Filter sources
+#: i18n/messages.json
+msgid "Filter sources"
+msgstr ""
+
 #. [sources.index.filter]
 #. defaultMessage is:
 #. Filter the sources…
@@ -621,6 +662,14 @@ msgstr "Od"
 #: i18n/messages.json
 msgid "Generator"
 msgstr "Generator"
+
+#. [alert.suggest.text]
+#. defaultMessage is:
+#. Get notified {alertComponent} when data related to {queryText} is added.
+#: i18n/messages.json
+msgid ""
+"Get notified {alertComponent} when data related to {queryText} is added."
+msgstr ""
 
 #. [collection.edit.groups]
 #. defaultMessage is:
@@ -1018,6 +1067,30 @@ msgstr ""
 msgid "Publisher URL"
 msgstr ""
 
+#. [collection.info.analyze]
+#. defaultMessage is:
+#. Re-analyze
+#: i18n/messages.json
+msgid "Re-analyze"
+msgstr ""
+
+#. [collection.analyze.processing]
+#. defaultMessage is:
+#. Re-analyzing started.
+#: i18n/messages.json
+msgid "Re-analyzing started."
+msgstr ""
+
+#. [collection.analyze.alert.text]
+#. defaultMessage is:
+#. Re-analyzing the collection will take some time. Please start the process
+#. only once and allow time for it to complete.
+#: i18n/messages.json
+msgid ""
+"Re-analyzing the collection will take some time. Please start the process "
+"only once and allow time for it to complete."
+msgstr ""
+
 #. [notifications.title]
 #. defaultMessage is:
 #. Recent notifications
@@ -1066,6 +1139,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "Retrieved"
 msgstr "Preuzeto"
+
+#. [collection.xref.select.showSelected]
+#. defaultMessage is:
+#. Review selection
+#: i18n/messages.json
+msgid "Review selection"
+msgstr ""
 
 #. [case.save]
 #. defaultMessage is:
@@ -1351,11 +1431,18 @@ msgstr "Podešavanja izvora"
 msgid "Sources"
 msgstr "Izvori"
 
-#. [collection.xref.confirm]
+#. [collection.xref.confirm_button]
 #. defaultMessage is:
-#. Start cross-referencing
+#. Start
 #: i18n/messages.json
-msgid "Start cross-referencing"
+msgid "Start"
+msgstr ""
+
+#. [collection.analyze.confirm]
+#. defaultMessage is:
+#. Start re-analyzing
+#: i18n/messages.json
+msgid "Start re-analyzing"
 msgstr ""
 
 #. [alerts.alert.delete]
@@ -1661,6 +1748,23 @@ msgstr "Dobijate notifikacije u vezi ove pretrage."
 msgid "You do not have any case files yet"
 msgstr ""
 
+#. [login.pw_wrong_credentials]
+#. defaultMessage is:
+#. You have entered an invalid username or password
+#: i18n/messages.json
+msgid "You have entered an invalid username or password"
+msgstr ""
+
+#. [collection.xref.select.selectStatus]
+#. defaultMessage is:
+#. You have selected {selectedCount, number} {selectedCount, plural, one
+#. {source} other {sources}}
+#: i18n/messages.json
+msgid ""
+"You have selected {selectedCount, number} {selectedCount, plural, one "
+"{source} other {sources}}"
+msgstr ""
+
 #. [navbar.alert_add]
 #. defaultMessage is:
 #. You will receive alerts for new results.
@@ -1731,6 +1835,13 @@ msgstr "aleph {version}"
 #: i18n/messages.json
 msgid "in:"
 msgstr "unutar:"
+
+#. [collection.xref.filter.selectNotAvailable]
+#. defaultMessage is:
+#. no options
+#: i18n/messages.json
+msgid "no options"
+msgstr ""
 
 #. [search.filterTag.exclude]
 #. defaultMessage is:

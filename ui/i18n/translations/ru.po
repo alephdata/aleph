@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2018-12-06T22:01:42.270Z\n"
+"POT-Creation-Date: 2018-12-21T10:20:36.774Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -97,6 +97,13 @@ msgstr "Добавить оповещение"
 msgid "Addresses"
 msgstr "Адреса"
 
+#. [collection.xref.filter.allCategories]
+#. defaultMessage is:
+#. All
+#: i18n/messages.json
+msgid "All"
+msgstr ""
+
 #. [signup.login]
 #. defaultMessage is:
 #. Already have account? Sign in!
@@ -170,7 +177,7 @@ msgstr "Скрытая копия"
 msgid "CC"
 msgstr "Копия"
 
-#. [collection.xref.cancel]
+#. [collection.analyze.cancel]
 #. defaultMessage is:
 #. Cancel
 #. [collection.edit.cancel_button]
@@ -182,11 +189,14 @@ msgstr "Копия"
 #. [collection.edit.info.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [collection.xref.cancel_button]
+#. defaultMessage is:
+#. Cancel
 #. [document.delete.cancel]
 #. defaultMessage is:
 #. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -233,10 +243,13 @@ msgstr "Кейсы"
 msgid "Cases overview"
 msgstr "Обзор кейсов"
 
+#. [collection.xref.filter.categories]
+#. defaultMessage is:
+#. Categories
 #. [search.facets.facet.category]
 #. defaultMessage is:
 #. Categories
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Categories"
 msgstr "Категории"
 
@@ -372,12 +385,30 @@ msgstr "Создать новый кейс-файл"
 #. [entity.info.xref]
 #. defaultMessage is:
 #. Cross-reference
+#. [collection.xref.title]
+#. defaultMessage is:
+#. Cross-reference
 #. [matches.screen.xref]
 #. defaultMessage is:
 #. Cross-reference
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cross-reference"
 msgstr "Перекрёстное сравнение"
+
+#. [collection.xref.xrefAll]
+#. defaultMessage is:
+#. Cross-reference all sources
+#: i18n/messages.json
+msgid "Cross-reference all sources"
+msgstr ""
+
+#. [collection.xref.xrefSpecific]
+#. defaultMessage is:
+#. Cross-reference specific sources (faster)
+#: i18n/messages.json
+msgid "Cross-reference specific sources (faster)"
+msgstr ""
 
 #. [xref.collection]
 #. defaultMessage is:
@@ -435,6 +466,9 @@ msgstr "Ссылка на исходные данные"
 msgid "Date"
 msgstr "Дата"
 
+#. [collection.info.delete]
+#. defaultMessage is:
+#. Delete
 #. [collection.delete.confirm]
 #. defaultMessage is:
 #. Delete
@@ -444,7 +478,7 @@ msgstr "Дата"
 #. [document.delete.confirm]
 #. defaultMessage is:
 #. Delete
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "Удалить"
 
@@ -584,6 +618,13 @@ msgstr "Типы файлов"
 msgid "Filter by access"
 msgstr "Фильтровать по доступу"
 
+#. [collection.xref.filter.sources]
+#. defaultMessage is:
+#. Filter sources
+#: i18n/messages.json
+msgid "Filter sources"
+msgstr ""
+
 #. [sources.index.filter]
 #. defaultMessage is:
 #. Filter the sources…
@@ -625,6 +666,14 @@ msgstr "От"
 #: i18n/messages.json
 msgid "Generator"
 msgstr "Генератор"
+
+#. [alert.suggest.text]
+#. defaultMessage is:
+#. Get notified {alertComponent} when data related to {queryText} is added.
+#: i18n/messages.json
+msgid ""
+"Get notified {alertComponent} when data related to {queryText} is added."
+msgstr ""
 
 #. [collection.edit.groups]
 #. defaultMessage is:
@@ -1024,6 +1073,30 @@ msgstr "Издатель"
 msgid "Publisher URL"
 msgstr "Ссылка на издателя"
 
+#. [collection.info.analyze]
+#. defaultMessage is:
+#. Re-analyze
+#: i18n/messages.json
+msgid "Re-analyze"
+msgstr ""
+
+#. [collection.analyze.processing]
+#. defaultMessage is:
+#. Re-analyzing started.
+#: i18n/messages.json
+msgid "Re-analyzing started."
+msgstr ""
+
+#. [collection.analyze.alert.text]
+#. defaultMessage is:
+#. Re-analyzing the collection will take some time. Please start the process
+#. only once and allow time for it to complete.
+#: i18n/messages.json
+msgid ""
+"Re-analyzing the collection will take some time. Please start the process "
+"only once and allow time for it to complete."
+msgstr ""
+
 #. [notifications.title]
 #. defaultMessage is:
 #. Recent notifications
@@ -1050,14 +1123,14 @@ msgstr "Зарегистрироваться"
 #. Remove
 #: i18n/messages.json
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #. [queryLogs.query.delete.tooltip]
 #. defaultMessage is:
 #. Remove from search history
 #: i18n/messages.json
 msgid "Remove from search history"
-msgstr ""
+msgstr "Удалить из истории поиска"
 
 #. [tags.results]
 #. defaultMessage is:
@@ -1072,6 +1145,13 @@ msgstr "Результаты"
 #: i18n/messages.json
 msgid "Retrieved"
 msgstr "Получено"
+
+#. [collection.xref.select.showSelected]
+#. defaultMessage is:
+#. Review selection
+#: i18n/messages.json
+msgid "Review selection"
+msgstr ""
 
 #. [case.save]
 #. defaultMessage is:
@@ -1163,7 +1243,7 @@ msgstr "Искть {query}"
 #. Search history
 #: i18n/messages.json i18n/messages.json
 msgid "Search history"
-msgstr ""
+msgstr "История поиска"
 
 #. [collections.index.filter]
 #. defaultMessage is:
@@ -1355,12 +1435,19 @@ msgstr "Настройки"
 msgid "Sources"
 msgstr "Источники данных"
 
-#. [collection.xref.confirm]
+#. [collection.xref.confirm_button]
 #. defaultMessage is:
-#. Start cross-referencing
+#. Start
 #: i18n/messages.json
-msgid "Start cross-referencing"
-msgstr "Запустить перекрёстное сравнение"
+msgid "Start"
+msgstr ""
+
+#. [collection.analyze.confirm]
+#. defaultMessage is:
+#. Start re-analyzing
+#: i18n/messages.json
+msgid "Start re-analyzing"
+msgstr ""
 
 #. [alerts.alert.delete]
 #. defaultMessage is:
@@ -1663,6 +1750,23 @@ msgstr "Вы подписаны на оповещения для этого по
 msgid "You do not have any case files yet"
 msgstr "У вас нет кейс-файлов"
 
+#. [login.pw_wrong_credentials]
+#. defaultMessage is:
+#. You have entered an invalid username or password
+#: i18n/messages.json
+msgid "You have entered an invalid username or password"
+msgstr ""
+
+#. [collection.xref.select.selectStatus]
+#. defaultMessage is:
+#. You have selected {selectedCount, number} {selectedCount, plural, one
+#. {source} other {sources}}
+#: i18n/messages.json
+msgid ""
+"You have selected {selectedCount, number} {selectedCount, plural, one "
+"{source} other {sources}}"
+msgstr ""
+
 #. [navbar.alert_add]
 #. defaultMessage is:
 #. You will receive alerts for new results.
@@ -1734,6 +1838,13 @@ msgstr "алеф {version}"
 #: i18n/messages.json
 msgid "in:"
 msgstr "в:"
+
+#. [collection.xref.filter.selectNotAvailable]
+#. defaultMessage is:
+#. no options
+#: i18n/messages.json
+msgid "no options"
+msgstr ""
 
 #. [search.filterTag.exclude]
 #. defaultMessage is:

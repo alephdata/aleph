@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-12-06 23:02+0100\n"
+"POT-Creation-Date: 2018-12-21 11:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,43 +29,43 @@ msgstr ""
 msgid "Vladimir Putin"
 msgstr ""
 
-#: aleph/logic/xref.py:120
+#: aleph/logic/xref.py:118
 msgid "Score"
 msgstr ""
 
-#: aleph/logic/xref.py:121
+#: aleph/logic/xref.py:119
 msgid "EntityName"
 msgstr ""
 
-#: aleph/logic/xref.py:122
+#: aleph/logic/xref.py:120
 msgid "EntityDate"
 msgstr ""
 
-#: aleph/logic/xref.py:123
+#: aleph/logic/xref.py:121
 msgid "EntityCountries"
 msgstr ""
 
-#: aleph/logic/xref.py:124
+#: aleph/logic/xref.py:122
 msgid "MatchCollection"
 msgstr ""
 
-#: aleph/logic/xref.py:125
+#: aleph/logic/xref.py:123
 msgid "MatchName"
 msgstr ""
 
-#: aleph/logic/xref.py:126
+#: aleph/logic/xref.py:124
 msgid "MatchDate"
 msgstr ""
 
-#: aleph/logic/xref.py:127
+#: aleph/logic/xref.py:125
 msgid "MatchCountries"
 msgstr ""
 
-#: aleph/logic/xref.py:128
+#: aleph/logic/xref.py:126
 msgid "EntityLink"
 msgstr ""
 
-#: aleph/logic/xref.py:129
+#: aleph/logic/xref.py:127
 msgid "MatchLink"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "{{actor}} gave {{role}} access to {{collection}}."
 msgstr ""
 
-#: aleph/model/event.py:86
+#: aleph/model/event.py:88
 msgid "{{actor}} removed access to {{collection}} from {{role}}."
 msgstr ""
 
@@ -204,19 +204,19 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:89
+#: aleph/views/base_api.py:91
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:102
+#: aleph/views/base_api.py:104
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:111
+#: aleph/views/base_api.py:113
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:127
+#: aleph/views/base_api.py:129
 msgid "Access token has expired."
 msgstr ""
 
