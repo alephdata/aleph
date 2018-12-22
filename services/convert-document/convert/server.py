@@ -4,7 +4,7 @@ import logging
 import asyncio
 from aiohttp import web
 from tempfile import mkstemp
-from celestial import normalize_mimetype, normalize_extension
+from pantomime import normalize_mimetype, normalize_extension
 
 from convert.converter import FORMATS, PdfConverter
 from convert.converter import ConversionFailure
