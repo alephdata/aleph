@@ -200,6 +200,7 @@ def finalize_index(proxy, context, texts):
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
     data.pop('id', None)
+    data.pop('_index', None)
     # return clean_dict(data)
     return data
 
