@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { Button, Menu, Position, Popover } from "@blueprintjs/core";
+import { Button, Menu, MenuItem, MenuDivider, Position, Popover } from "@blueprintjs/core";
 
 import { Toolbar, CloseButton } from 'src/components/Toolbar';
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
@@ -61,28 +61,28 @@ class CollectionToolbar extends Component {
           {collection.writeable &&
             <React.Fragment>
               <Popover content={<Menu>
-                <Menu.Item
+                <MenuItem
                   icon="cog"
                   onClick={this.toggleSettings}
                   text={<FormattedMessage id="collection.info.edit_button" defaultMessage="Settings"/>} />
-                <Menu.Item
+                <MenuItem
                   icon="key"
                   onClick={this.toggleAccess}
                   text={<FormattedMessage id="collection.info.share" defaultMessage="Share"/>}
                 />
-                <Menu.Divider />
-                <Menu.Item
+                <MenuDivider />
+                <MenuItem
                   icon="search-around"
                   onClick={this.toggleXref}
                   text={<FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference"/>}
                 />
-                <Menu.Item
+                <MenuItem
                   icon="automatic-updates"
                   onClick={this.toggleAnalyze}
                   text={<FormattedMessage id="collection.info.analyze" defaultMessage="Re-analyze"/>}
                 />
                 <Menu.Divider />
-                <Menu.Item
+                <MenuItem
                   icon="trash"
                   intent="danger"
                   onClick={this.toggleDelete}
