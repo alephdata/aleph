@@ -89,7 +89,7 @@ def api_v1_message(path):
     return jsonify({
         'status': 'error',
         'message': gettext('/api/1/ is deprecated, please use /api/2/.')
-    }, status=501)
+    }, status=410)
 
 
 @blueprint.app_errorhandler(NotModified)
