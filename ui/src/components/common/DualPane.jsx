@@ -43,10 +43,10 @@ class DualPane extends Component {
   static ContentPane = ContentPane;
 
   render() {
-    const { children, className } = this.props;
+    const { children, className, ...restProps } = this.props;
 
     return (
-      <article className={c("DualPane", className)}>
+      <article {...restProps} className={c("DualPane", className)}>
         { children }
       </article>
     );
