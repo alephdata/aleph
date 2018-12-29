@@ -15,7 +15,8 @@ RUN python3 -m spacy download xx
 
 RUN mkdir -p /service
 WORKDIR /service
-COPY setup.py entityextractor /service/
+ADD setup.py /service/
+ADD entityextractor/ /service/entityextractor
 RUN pip3 install -e /service
 
 EXPOSE 50000
