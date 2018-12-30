@@ -2,7 +2,7 @@
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
     <title>Payment</title>
-    <desc>Created with Sketch.</desc>
+    <desc>Payment</desc>
     <g id="Payment" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g fill="#000000" fill-rule="nonzero">
             <path d="M1,15 L1,23 L19,23 L19,15 L1,15 Z M1,14 L19,14 C19.5522847,14 20,14.4477153 20,15 L20,23 C20,23.5522847 19.5522847,24 19,24 L1,24 C0.44771525,24 6.76353751e-17,23.5522847 0,23 L0,15 C-6.76353751e-17,14.4477153 0.44771525,14 1,14 Z" id="Rectangle-8-Copy-5"></path>
