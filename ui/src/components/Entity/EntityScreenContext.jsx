@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import { withRouter } from "react-router";
 import { connect } from 'react-redux';
 
@@ -11,7 +12,7 @@ import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
-import { selectEntity } from 'src/selectors';
+import {selectEntity, selectSchemata} from 'src/selectors';
 
 
 class EntityScreenContext extends Component {
@@ -38,6 +39,9 @@ class EntityScreenContext extends Component {
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.name}>
+          <Helmet>
+            <meta name="keywords" content={Object.values(entity.properties).map(([p]) => p).join(',')}/>
+          </Helmet>
           {breadcrumbs}
           <DualPane>`
             <DualPane.ContentPane className="view-menu-flex-direction">
@@ -63,7 +67,7 @@ class EntityScreenContext extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { entityId } = ownProps;
   const entity = selectEntity(state, entityId);
-  return { entity }
+  return { entity, schemata:selectSchemata(state)}
 };
 
 EntityScreenContext = connect(mapStateToProps, {})(EntityScreenContext);
