@@ -94,3 +94,5 @@ def bulk_write(collection, items):
 
     if len(entities):
         index.index_bulk(collection.id, entities)
+
+    refresh_collection(collection)

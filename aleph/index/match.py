@@ -1,5 +1,6 @@
 import logging
 import fingerprints
+from banal import ensure_list
 from followthemoney.types import registry
 
 from aleph.model import Entity
@@ -15,7 +16,7 @@ def match_query(proxy, collection_ids=None, query=None):
         query = bool_query()
 
     # Don't match the query entity:
-    if proxy.id:
+    if proxy.id is not None:
         sq = {"ids": {"values": [proxy.id]}}
         query['bool']['must_not'].append(sq)
 
@@ -34,7 +35,8 @@ def match_query(proxy, collection_ids=None, query=None):
             "terms": {"schema": matchable}
         })
 
-    if collection_ids is not None:
+    collection_ids = ensure_list(collection_ids)
+    if len(collection_ids):
         query['bool']['must'].append({
             'terms': {'collection_id': collection_ids}
         })

@@ -78,7 +78,7 @@ def process(id):
 @blueprint.route('/api/2/collections/<int:id>/mapping', methods=['POST', 'PUT'])  # noqa
 def mapping_process(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    require(request.authz.is_admin)
+    require(request.authz.can_import())
     if not request.is_json:
         raise BadRequest()
     data = request.get_json().get(collection.foreign_id)
@@ -94,6 +94,7 @@ def mapping_process(id):
 @blueprint.route('/api/2/collections/<int:id>/_bulk', methods=['POST'])
 def bulk(id):
     collection = get_db_collection(id, request.authz.WRITE)
+    require(request.authz.can_import())
     entities = ensure_list(request.get_json(force=True))
     bulk_write(collection, entities)
     return ('', 204)

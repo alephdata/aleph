@@ -186,6 +186,7 @@ def stream_ijson(iterable, encoder=JSONEncoder):
     """Stream JSON line-based data."""
     def _generate_stream():
         for row in iterable:
+            row.pop('_index', None)
             yield encoder().encode(row)
             yield '\n'
     return Response(_generate_stream(), mimetype='application/json+stream')

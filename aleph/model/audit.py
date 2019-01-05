@@ -17,6 +17,7 @@ class Audit(db.Model, DatedModel):
     __tablename__ = 'audit'
 
     ACT_LOGIN = 'LOGIN'
+    ACT_MATCH = 'MATCH'
     ACT_SEARCH = 'SEARCH'
     ACT_ENTITY = 'VIEW_ENITTY'
     ACT_COLLECTION = 'VIEW_COLLECTION'

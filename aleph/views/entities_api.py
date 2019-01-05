@@ -38,8 +38,13 @@ def index():
 def match():
     enable_cache()
     entity = parse_request(EntityUpdateSchema)
+    record_audit(Audit.ACT_MATCH, entity=entity)
     entity = model.get_proxy(entity)
-    result = MatchQuery.handle(request, entity=entity, schema=CombinedSchema)
+    collection_ids = request.args.getlist('collection_ids')
+    result = MatchQuery.handle(request,
+                               entity=entity,
+                               collection_ids=collection_ids,
+                               schema=CombinedSchema)
     return jsonify(result)
 
 

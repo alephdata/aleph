@@ -41,13 +41,16 @@ class DocumentsQuery(EntitiesQuery):
 class MatchQuery(EntitiesQuery):
     """Given an entity, find the most similar other entities."""
 
-    def __init__(self, parser, entity=None):
+    def __init__(self, parser, entity=None, collection_ids=None):
         self.entity = entity
+        self.collection_ids = collection_ids
         super(MatchQuery, self).__init__(parser)
 
     def get_query(self):
         query = super(MatchQuery, self).get_query()
-        return match_query(self.entity, query=query)
+        return match_query(self.entity,
+                           collection_ids=self.collection_ids,
+                           query=query)
 
 
 class CollectionsQuery(AuthzQuery):

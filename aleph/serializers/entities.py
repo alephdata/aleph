@@ -153,6 +153,7 @@ class CombinedSchema(ShallowCombinedSchema):
 
 
 class EntityUpdateSchema(Schema):
+    id = String(allow_none=True)
     name = String(allow_none=True)
     schema = SchemaName(required=True)
     properties = Dict()

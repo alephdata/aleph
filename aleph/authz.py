@@ -77,7 +77,10 @@ class Authz(object):
         return collection in self.collections(action)
 
     def can_export(self):
-        return self.is_admin
+        return self.logged_in
+
+    def can_import(self):
+        return self.logged_in
 
     def match(self, roles):
         """See if there's overlap in roles."""
