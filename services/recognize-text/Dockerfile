@@ -1,29 +1,89 @@
-FROM ubuntu:18.04
-ENV DEBIAN_FRONTEND noninteractive
+FROM alpine:edge
 
-RUN apt-get -qq -y update \
-    && apt-get -qq -y install build-essential \
-        # python deps (mostly to install their dependencies)
-        python3-pip python3-dev python3-pil libboost-python-dev \
-        # libraries
-        libxslt1-dev libpq-dev libgsf-1-dev \
-        zlib1g-dev libicu-dev libxml2-dev \
-        libtiff5-dev libjpeg-dev libfreetype6-dev libwebp-dev liblcms2-dev \
-        # tesseract
-        libtesseract-dev tesseract-ocr-all libleptonica-dev \
-    && apt-get -qq -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Not using Python image because this is smaller
+RUN apk update && apk upgrade && \
+    apk add --no-cache tesseract-ocr
 
+RUN apk add --no-cache tesseract-ocr-data-swa \
+    tesseract-ocr-data-swe \
+    # tesseract-ocr-data-tam \
+    # tesseract-ocr-data-tel \
+    # tesseract-ocr-data-tgl \
+    # tesseract-ocr-data-tha \
+    tesseract-ocr-data-tur \
+    tesseract-ocr-data-ukr \
+    # tesseract-ocr-data-vie \
+    tesseract-ocr-data-nld \
+    tesseract-ocr-data-nor \
+    tesseract-ocr-data-pol \
+    tesseract-ocr-data-por \
+    tesseract-ocr-data-ron \
+    tesseract-ocr-data-rus \
+    tesseract-ocr-data-slk \
+    tesseract-ocr-data-slv \
+    tesseract-ocr-data-spa \
+    # tesseract-ocr-data-spa_old \
+    tesseract-ocr-data-sqi \
+    tesseract-ocr-data-srp \
+    tesseract-ocr-data-ind \
+    tesseract-ocr-data-isl \
+    tesseract-ocr-data-ita \
+    # tesseract-ocr-data-ita_old \
+    # tesseract-ocr-data-jpn \
+    tesseract-ocr-data-kan \
+    # tesseract-ocr-data-kor \
+    tesseract-ocr-data-lav \
+    tesseract-ocr-data-lit \
+    # tesseract-ocr-data-mal \
+    tesseract-ocr-data-mkd \
+    tesseract-ocr-data-mlt \
+    tesseract-ocr-data-msa \
+    tesseract-ocr-data-est \
+    # tesseract-ocr-data-eus \
+    tesseract-ocr-data-fin \
+    tesseract-ocr-data-fra \
+    tesseract-ocr-data-frk \
+    tesseract-ocr-data-frm \
+    # tesseract-ocr-data-glg \
+    # tesseract-ocr-data-grc \
+    tesseract-ocr-data-heb \
+    tesseract-ocr-data-hin \
+    tesseract-ocr-data-hrv \
+    tesseract-ocr-data-hun \
+    # tesseract-ocr-data-ben \
+    tesseract-ocr-data-bul \
+    tesseract-ocr-data-cat \
+    tesseract-ocr-data-ces \
+    # tesseract-ocr-data-chi_sim \
+    # tesseract-ocr-data-chi_tra \
+    # tesseract-ocr-data-chr \
+    tesseract-ocr-data-dan \
+    tesseract-ocr-data-deu \
+    tesseract-ocr-data-ell \
+    # tesseract-ocr-data-enm \
+    # tesseract-ocr-data-epo \
+    tesseract-ocr-data-equ \
+    tesseract-ocr-data-afr \
+    tesseract-ocr-data-ara \
+    tesseract-ocr-data-aze \
+    tesseract-ocr-data-bel
+
+RUN apk add --no-cache python3 py3-pillow py3-icu libstdc++
+RUN pip3 install --no-cache-dir --upgrade pip
+
+# Install Python binary builds
+RUN apk add --no-cache --virtual=build_deps python3-dev g++ tesseract-ocr-dev cython-dev ca-certificates && \
+    pip3 install --no-cache-dir tesserocr normality grpcio==1.11.0 && \
+    apk del build_deps
+
+ENV LANG=C
+ENV LC_ALL=C
 ENV OMP_THREAD_LIMIT=1
 RUN mkdir -p /service
 WORKDIR /service
-ADD setup.py /service/
+COPY setup.py /service/
 RUN pip3 install -q -e /service
 COPY . /service/
-
-HEALTHCHECK --interval=10s --timeout=2s --start-period=4s --retries=3 \
-    CMD curl --fail http://localhost:50000 || exit 1
 
 # USER nobody:nogroup
 EXPOSE 50000
