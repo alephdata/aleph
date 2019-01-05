@@ -1,7 +1,7 @@
 import os
 import json
 # from pprint import pprint
-from alephclient.tasks.util import load_config_file
+from alephclient.util import load_config_file
 
 from aleph.core import db
 from aleph.model import Entity

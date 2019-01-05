@@ -1,6 +1,6 @@
 import os
 from unittest import skip  # noqa
-from alephclient.tasks.util import load_config_file
+from alephclient.util import load_config_file
 
 from aleph.logic.entities import bulk_load
 from aleph.model import Collection

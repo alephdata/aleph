@@ -1,9 +1,10 @@
 # coding: utf-8
 import os
 import logging
+from banal import ensure_list
 from normality import slugify
 from ingestors.util import decode_path
-from alephclient.tasks.util import load_config_file
+from alephclient.util import load_config_file
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
@@ -112,15 +113,14 @@ def process(foreign_id=None, index=False, retry=False):
                       failed_only=retry)
 
 
-@manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')
-@manager.option('-f', '--foreign_id', dest='foreign_id', required=True, help='foreign-id of collection to xref')
+@manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa
+@manager.option('-f', '--foreign_id', dest='foreign_id', required=True, help='foreign-id of collection to xref')  # noqa
 def xref(foreign_id, against=None):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
-    against_collection_ids = None
-    if against is not None:
-        against_collection_ids = list(map(lambda entry: get_collection(entry).id, against))
-    xref_collection(collection.id, against_collection_ids=against_collection_ids)
+    against = ensure_list(against)
+    against = [get_collection(c).id for c in against]
+    xref_collection(collection.id, against_collection_ids=against)
 
 
 @manager.command
