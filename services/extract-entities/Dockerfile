@@ -3,11 +3,10 @@ FROM alpine
 # Not using Python image because this is smaller
 RUN apk update && apk upgrade && \
     apk add --no-cache python3 libstdc++
-RUN pip3 install --no-cache-dir --upgrade pip
 
 # Install Python binary builds
 RUN apk add --no-cache --virtual=build_deps python3-dev g++ gfortran && \
-    pip3 install --no-cache-dir spacy==2.0.18 grpcio==1.11.0 && \
+    pip3 install --no-cache-dir spacy==2.0.18 grpcio==1.17.1 alephclient==0.10.0 && \
     apk del build_deps
 
 # Download spaCy models

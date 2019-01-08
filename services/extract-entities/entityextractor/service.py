@@ -3,13 +3,14 @@ import grpc
 import time
 import spacy
 import logging
+from threading import RLock
 from concurrent import futures
 from alephclient.services.entityextract_pb2_grpc import (
     add_EntityExtractServicer_to_server, EntityExtractServicer
 )
 from alephclient.services.entityextract_pb2 import ExtractedEntity
 
-log = logging.getLogger('service')
+log = logging.getLogger('entityextractor')
 
 # https://spacy.io/api/annotation#named-entities
 SPACY_TYPES = {
@@ -19,14 +20,22 @@ SPACY_TYPES = {
     'LOC': ExtractedEntity.LOCATION,
     'GPE': ExtractedEntity.LOCATION
 }
-nlp = spacy.load('xx')
 
 
 class EntityServicer(EntityExtractServicer):
 
+    def __init__(self):
+        self.lock = RLock()
+        self.nlp = None
+
     def Extract(self, request, context):
+        if self.nlp is None:
+            with self.lock:
+                log.info("Loading spaCy model...")
+                self.nlp = spacy.load('xx')
+
         try:
-            doc = nlp(request.text)
+            doc = self.nlp(request.text)
             count = 0
             for ent in doc.ents:
                 type_ = SPACY_TYPES.get(ent.label_)
