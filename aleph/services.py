@@ -9,6 +9,8 @@ class ServiceClientMixin(object):
     SERVICE = None
     Error = grpc.RpcError
     Status = grpc.StatusCode
+    TEMPORARY_ERRORS = (grpc.StatusCode.UNAVAILABLE,
+                        grpc.StatusCode.RESOURCE_EXHAUSTED)
 
     @property
     def channel(self):

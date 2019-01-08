@@ -3,14 +3,13 @@ from banal import ensure_list, is_mapping, is_listish
 from elasticsearch import RequestError
 
 from aleph.core import es, settings
-from aleph.util import backoff
+from aleph.util import backoff, service_retries
 
 log = logging.getLogger(__name__)
 
 # This means that text beyond the first 100 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
-REQUEST_RETRIES = 10
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
 BULK_PAGE = 1000
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
@@ -92,7 +91,7 @@ def field_filter_query(field, values):
 
 def query_delete(index, query, **kwargs):
     "Delete all documents matching the given query inside the index."
-    for attempt in range(REQUEST_RETRIES):
+    for attempt in service_retries():
         try:
             es.delete_by_query(index=index,
                                body={'query': query},
@@ -105,13 +104,12 @@ def query_delete(index, query, **kwargs):
             raise
         except Exception as exc:
             log.warning("Query delete failed: %s", exc)
-        # backoff_cluster(failures=attempt)
-        raise
+        backoff(failures=attempt)
 
 
 def index_safe(index, id, body, **kwargs):
     """Index a single document and retry until it has been stored."""
-    for attempt in range(REQUEST_RETRIES):
+    for attempt in service_retries():
         try:
             es.index(index=index, doc_type='doc', id=id, body=body, **kwargs)
             body['id'] = str(id)
@@ -128,7 +126,7 @@ def search_safe(*args, **kwargs):
     # This is not supposed to be used in every location where search is
     # run, but only where it's a backend search that we could back off of
     # without hurting UX.
-    for attempt in range(REQUEST_RETRIES):
+    for attempt in service_retries():
         try:
             kwargs['doc_type'] = 'doc'
             return es.search(*args,
@@ -137,8 +135,8 @@ def search_safe(*args, **kwargs):
                              **kwargs)
         except RequestError:
             raise
-        except Exception as exc:
-            log.warning("Search error: %s", exc)
+        except Exception:
+            log.exception("Search error: %r", kwargs)
         backoff(failures=attempt)
 
 

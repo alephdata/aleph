@@ -46,9 +46,15 @@ def dict_list(data, *keys):
 
 
 def backoff(failures=0):
+    """Implement a random, growing delay between external service retries."""
     sleep = min(5, failures) * random.random()
     log.debug("Back-off: %.2fs", sleep)
     time.sleep(sleep)
+
+
+def service_retries():
+    """A default number of tries to re-try an external service."""
+    return range(10)
 
 
 def make_key(*criteria):

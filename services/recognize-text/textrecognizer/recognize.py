@@ -27,7 +27,7 @@ class OCR(object):
 
     def configure_engine(self, languages, mode):
         # log.info("Configuring OCR engine (%s)", languages)
-        if not hasattr(self, 'api'):
+        if not hasattr(self, 'api') or self.api is None:
             self.api = PyTessBaseAPI(lang=languages, oem=OEM.LSTM_ONLY)
         if languages != self.api.GetInitLanguagesAsString():
             self.api.Init(lang=languages, oem=OEM.LSTM_ONLY)
@@ -35,13 +35,25 @@ class OCR(object):
             self.api.SetPageSegMode(mode)
         return self.api
 
+    def clear_engine(self):
+        """Shut down tesseract and clear all memory."""
+        try:
+            self.api.End()
+        except Exception:
+            log.exception("Failed to shut down tesseract")
+        self.api = None
+
     def extract_text(self, data, languages=None, mode=DEFAULT_MODE):
         """Extract text from a binary string of data."""
-        languages = self.language_list(languages)
-        api = self.configure_engine(languages, mode)
-
         try:
             image = Image.open(BytesIO(data))
+        except Exception:
+            log.exception("Cannot open image data using Pillow")
+            return None
+
+        try:
+            languages = self.language_list(languages)
+            api = self.configure_engine(languages, mode)
             # TODO: play with contrast and sharpening the images.
             start_time = time.time()
             api.SetImage(image)
@@ -53,7 +65,5 @@ class OCR(object):
                      len(text), image.width, image.height, languages,
                      confidence, duration)
             return text
-        except Exception as ex:
-            log.exception("Failed to OCR: %s", languages)
         finally:
             api.Clear()

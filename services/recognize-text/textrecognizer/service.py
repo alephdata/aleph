@@ -38,6 +38,12 @@ class OCRServicer(RecognizeTextServicer):
                                          mode=mode,
                                          languages=image.languages)
             return Text(text=text)
+        except Exception as exc:
+            log.exception("Failed OCR.")
+            self.ocr.clear_engine()
+            context.set_details(str(exc))
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return Text()
         finally:
             self.lock.release()
 

@@ -25,17 +25,22 @@ nlp = spacy.load('xx')
 class EntityServicer(EntityExtractServicer):
 
     def Extract(self, request, context):
-        doc = nlp(request.text)
-        for ent in doc.ents:
-            type_ = SPACY_TYPES.get(ent.label_)
-            label = ent.text.strip()
-            if type_ is not None and len(label):
-                entity = ExtractedEntity()
-                entity.text = label
-                entity.type = type_
-                entity.start = ent.start
-                entity.end = ent.end
-                yield entity
+        try:
+            doc = nlp(request.text)
+            for ent in doc.ents:
+                type_ = SPACY_TYPES.get(ent.label_)
+                label = ent.text.strip()
+                if type_ is not None and len(label):
+                    entity = ExtractedEntity()
+                    entity.text = label
+                    entity.type = type_
+                    entity.start = ent.start
+                    entity.end = ent.end
+                    yield entity
+        except Exception as exc:
+            log.exception("Failed to extract entities")
+            context.set_details(str(exc))
+            context.set_code(grpc.StatusCode.INTERNAL)
 
 
 def serve(port):
