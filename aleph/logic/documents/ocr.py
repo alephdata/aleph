@@ -45,9 +45,9 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
             except self.Error as e:
                 if e.code() == self.Status.RESOURCE_EXHAUSTED:
                     continue
+                self.reset_channel()
                 log.warning("gRPC [%s]: %s", e.code(), e.details())
                 backoff(failures=attempt)
-                self.reset_channel()
 
 
 class GoogleVisionService(OCRService, OCRUtils):

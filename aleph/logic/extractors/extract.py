@@ -29,7 +29,10 @@ class NERService(ServiceClientMixin):
     def extract(self, text, languages):
         if text is None or len(text) < self.MIN_LENGTH:
             return
-        texts = textwrap.wrap(text, self.MAX_LENGTH)
+        if len(text) > self.MAX_LENGTH:
+            texts = textwrap.wrap(text, self.MAX_LENGTH)
+        else:
+            texts = [text]
         for text in texts:
             for attempt in range(10):
                 try:
@@ -42,9 +45,9 @@ class NERService(ServiceClientMixin):
                 except self.Error as e:
                     if e.code() == self.Status.RESOURCE_EXHAUSTED:
                         continue
+                    self.reset_channel()
                     log.warning("gRPC [%s]: %s", e.code(), e.details())
                     backoff(failures=attempt)
-                    self.reset_channel()
 
 
 def extract_entities(ctx, text, languages):
