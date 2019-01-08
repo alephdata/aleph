@@ -50,7 +50,6 @@ class TextRecognizerService(OCRService, ServiceClientMixin, OCRUtils):
                 if text is not None:
                     log.info('OCR: %s chars (from %s bytes)',
                              len(text), len(data))
-                    text = text.encode('utf-8')
                 kv.set(key, text)
                 return text
             except self.Error as e:
