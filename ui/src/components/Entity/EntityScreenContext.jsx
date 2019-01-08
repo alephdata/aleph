@@ -13,6 +13,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import {selectEntity, selectSchemata} from 'src/selectors';
+import Entity from 'src/followthemoney/Entity.ts';
 
 
 class EntityScreenContext extends Component {
@@ -28,7 +29,7 @@ class EntityScreenContext extends Component {
         </EntityContextLoader>
       ); 
     }
-
+    const entityModel = new Entity(entity);
     const breadcrumbs = (
       <Breadcrumbs>
         <Breadcrumbs.Collection collection={entity.collection} />
@@ -40,7 +41,8 @@ class EntityScreenContext extends Component {
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.name}>
           <Helmet>
-            <meta name="keywords" content={Object.values(entity.properties).map(([p]) => p).join(',')}/>
+            <meta name="keywords" content={entityModel.propertiesToKeyword()}/>
+            <meta name="description" content={entityModel.description}/>
           </Helmet>
           {breadcrumbs}
           <DualPane>`
