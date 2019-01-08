@@ -14,8 +14,6 @@ from kombu import Queue
 from celery import Celery
 from celery.schedules import crontab
 from followthemoney import set_model_locale
-from raven.contrib.flask import Sentry
-from raven.contrib.celery import register_signal, register_logger_signal
 from elasticsearch import Elasticsearch
 from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
@@ -40,7 +38,6 @@ db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 celery = Celery('aleph', task_cls=SessionTask)
-sentry = Sentry()
 babel = Babel()
 
 
@@ -90,16 +87,6 @@ def create_app(config={}):
     db.init_app(app)
     babel.init_app(app)
     CORS(app, origins=settings.CORS_ORIGINS)
-
-    # Enable raven to submit issues to sentry if a DSN is defined. This will
-    # report errors from Flask and Celery operation modes to Sentry.
-    if settings.SENTRY_DSN:
-        sentry.init_app(app,
-                        dsn=settings.SENTRY_DSN,
-                        logging=True,
-                        level=logging.ERROR)
-        register_logger_signal(sentry.client)
-        register_signal(sentry.client, ignore_expected=True)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
