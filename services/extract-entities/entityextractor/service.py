@@ -27,16 +27,20 @@ class EntityServicer(EntityExtractServicer):
     def Extract(self, request, context):
         try:
             doc = nlp(request.text)
+            count = 0
             for ent in doc.ents:
                 type_ = SPACY_TYPES.get(ent.label_)
                 label = ent.text.strip()
                 if type_ is not None and len(label):
+                    count += 1
                     entity = ExtractedEntity()
                     entity.text = label
                     entity.type = type_
                     entity.start = ent.start
                     entity.end = ent.end
                     yield entity
+            log.info("[NER]: %d entities from %d chars",
+                     count, len(request.text))
         except Exception as exc:
             log.exception("Failed to extract entities")
             context.set_details(str(exc))
