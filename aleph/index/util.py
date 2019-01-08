@@ -17,13 +17,6 @@ BULK_PAGE = 1000
 MAX_PAGE = 9999
 
 
-def backoff_cluster(failures=0):
-    """This is intended to halt traffic to the cluster if it is in a
-    recovery state, e.g. after a master failure or severe node failures.
-    """
-    backoff(failures=failures)
-
-
 def refresh_sync(sync):
     if settings.TESTING:
         return True
@@ -128,7 +121,7 @@ def index_safe(index, id, body, **kwargs):
             raise
         except Exception as exc:
             log.warning("Index error [%s:%s]: %s", index, id, exc)
-        backoff_cluster(failures=attempt)
+        backoff(failures=attempt)
 
 
 def search_safe(*args, **kwargs):
@@ -146,7 +139,7 @@ def search_safe(*args, **kwargs):
             raise
         except Exception as exc:
             log.warning("Search error: %s", exc)
-        backoff_cluster(failures=attempt)
+        backoff(failures=attempt)
 
 
 def index_form(texts):
