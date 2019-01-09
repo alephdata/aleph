@@ -6,7 +6,7 @@ RUN apk update && apk upgrade && \
 
 # Install Python binary builds
 RUN apk add --no-cache --virtual=build_deps python3-dev g++ gfortran && \
-    pip3 install --no-cache-dir spacy==2.0.18 grpcio==1.17.1 alephclient==0.10.0 && \
+    pip3 install --no-cache-dir spacy==2.0.18 protobuf grpcio==1.17.1 alephclient==0.10.1 && \
     apk del build_deps
 
 # Download spaCy models
