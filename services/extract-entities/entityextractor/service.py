@@ -52,12 +52,11 @@ class EntityServicer(EntityExtractServicer):
                      count, len(request.text))
         except Exception as exc:
             log.exception("Failed to extract entities")
-            context.set_details(str(exc))
-            context.set_code(grpc.StatusCode.INTERNAL)
+            context.abort(grpc.StatusCode.INTERNAL, str(exc))
 
 
 def serve(port):
-    executor = futures.ThreadPoolExecutor(max_workers=10)
+    executor = futures.ThreadPoolExecutor(max_workers=3)
     server = grpc.server(executor)
     add_EntityExtractServicer_to_server(EntityServicer(), server)
     server.add_insecure_port(port)

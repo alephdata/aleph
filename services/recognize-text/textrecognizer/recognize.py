@@ -47,6 +47,7 @@ class OCR(object):
         """Extract text from a binary string of data."""
         try:
             image = Image.open(BytesIO(data))
+            image.load()
         except Exception:
             log.exception("Cannot open image data using Pillow")
             return None
@@ -61,7 +62,7 @@ class OCR(object):
             confidence = api.MeanTextConf()
             end_time = time.time()
             duration = end_time - start_time
-            log.info("%s chars (w: %s, h: %s, langs: %s, c: %s), took: %.5f",
+            log.info("[OCR] %s chars (w: %s, h: %s, l: %s, c: %s), took: %.5f",
                      len(text), image.width, image.height, languages,
                      confidence, duration)
             return text

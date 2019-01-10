@@ -41,9 +41,7 @@ class OCRServicer(RecognizeTextServicer):
         except Exception as exc:
             log.exception("Failed OCR.")
             self.ocr.clear_engine()
-            context.set_details(str(exc))
-            context.set_code(grpc.StatusCode.INTERNAL)
-            return Text()
+            context.abort(grpc.StatusCode.INTERNAL, str(exc))
         finally:
             self.lock.release()
 
