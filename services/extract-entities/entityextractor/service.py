@@ -3,7 +3,6 @@ import grpc
 import time
 import spacy
 import logging
-from threading import RLock
 from concurrent import futures
 from alephclient.services.entityextract_pb2_grpc import (
     add_EntityExtractServicer_to_server, EntityExtractServicer
@@ -24,16 +23,10 @@ SPACY_TYPES = {
 
 class EntityServicer(EntityExtractServicer):
 
-    def __init__(self):
-        self.lock = RLock()
-        self.nlp = None
+    def __init__(self, nlp):
+        self.nlp = nlp
 
     def Extract(self, request, context):
-        if self.nlp is None:
-            with self.lock:
-                log.info("Loading spaCy model...")
-                self.nlp = spacy.load('xx')
-
         try:
             doc = self.nlp(request.text)
             count = 0
@@ -58,7 +51,11 @@ class EntityServicer(EntityExtractServicer):
 def serve(port):
     executor = futures.ThreadPoolExecutor(max_workers=3)
     server = grpc.server(executor)
-    add_EntityExtractServicer_to_server(EntityServicer(), server)
+    log.info("Loading spaCy model...")
+    nlp = spacy.load('xx')
+    log.info("Model loaded.")
+    servicer = EntityServicer(nlp)
+    add_EntityExtractServicer_to_server(servicer, server)
     server.add_insecure_port(port)
     server.start()
     log.info("Server started: %s", port)
