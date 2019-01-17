@@ -3,7 +3,7 @@ from banal import is_mapping
 from pprint import pprint  # noqa
 from normality import stringify
 from followthemoney import model
-from followthemoney.graph import Link
+from followthemoney.graph import Statement
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
@@ -79,15 +79,15 @@ def expand_entity(entity):
         return
 
     proxy = model.get_proxy(entity)
-    yield from proxy.links
+    yield from proxy.statements
 
     # TODO: factor out inference
     thing = model.get(Entity.THING)
     if proxy.schema.is_a(thing):
         sameAs = thing.get("sameAs")
         for (score, _, other) in xref_item(proxy):
-            yield Link(proxy.node, sameAs, other.id,
-                       weight=score, inferred=True)
+            yield Statement(proxy.node, sameAs, other.id,
+                            weight=score, inferred=True)
 
 
 def expand_node(node):
@@ -96,6 +96,6 @@ def expand_node(node):
 
     for entity_id, prop in iter_value_entities(node.type, node.value):
         if prop.reverse:
-            yield Link(node, prop.reverse, entity_id)
+            yield Statement(node, prop.reverse, entity_id)
         else:
-            yield Link(node, prop, entity_id, inverted=True)
+            yield Statement(node, prop, entity_id, inverted=True)
