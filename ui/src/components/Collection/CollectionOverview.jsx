@@ -22,7 +22,7 @@ class CollectionOverview extends Component {
             <Collection.Link collection={collection} />
           </h4>
         )}
-        <p>{collection.summary}</p>
+        <p itemProp="description">{collection.summary}</p>
         <ul className='info-sheet'>
           { !collection.casefile && (
             <li>
@@ -60,7 +60,7 @@ class CollectionOverview extends Component {
                 <FormattedMessage id="collection.info_url" defaultMessage="Information URL"/>
               </span>
               <span className="value">
-                <URL value={collection.info_url} />
+                <URL value={collection.info_url} itemProp="identifier" />
               </span>
             </li>
           )}
@@ -99,7 +99,7 @@ class CollectionOverview extends Component {
               <span className="key">
                 <FormattedMessage id="collection.countries" defaultMessage="Country"/>
               </span>
-              <span className="value">
+              <span className="value" itemProp="spatialCoverage">
                 <Country.List codes={collection.countries} />
               </span>
             </li>
@@ -108,7 +108,7 @@ class CollectionOverview extends Component {
             <span className="key">
               <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
             </span>
-            <span className="value">
+            <span className="value" itemProp="dateModified">
               <Date value={collection.updated_at} />
             </span>
           </li>

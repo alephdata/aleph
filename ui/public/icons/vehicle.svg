@@ -2,7 +2,7 @@
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
     <title>Vehicle</title>
-    <desc>Created with Sketch.</desc>
+    <desc>Vehicle</desc>
     <g id="Vehicle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g transform="translate(0.000000, 5.000000)" fill="#000000" fill-rule="nonzero">
             <path d="M22,12 C22.5522847,12 23,11.5522847 23,11 L23,2 C23,1.44771525 22.5522847,1 22,1 L9,1 C8.44771525,1 8,1.44771525 8,2 L8,12 L16.0500091,12 C16.2816442,10.8588798 17.290521,10 18.5,10 C19.709479,10 20.7183558,10.8588798 20.9499909,12 L22,12 Z M20,12.5 C20,11.6715729 19.3284271,11 18.5,11 C17.6715729,11 17,11.6715729 17,12.5 C17,12.6753177 17.0300771,12.8436105 17.0853529,13 L7,13 L7,2 C7,0.8954305 7.8954305,-1.59872116e-14 9,-1.59872116e-14 L22,-1.59872116e-14 C23.1045695,-1.59872116e-14 24,0.8954305 24,2 L24,11 C24,12.1045695 23.1045695,13 22,13 L19.9146471,13 C19.9699229,12.8436105 20,12.6753177 20,12.5 Z" id="Combined-Shape"></path>

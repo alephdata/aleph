@@ -34,7 +34,7 @@ class CollectionHeading extends Component {
               <FormattedMessage id="collection.info.source" defaultMessage="Source"/>
             )}
           </span>
-          <h1>
+          <h1 itemProp="name">
             {collection.label}
           </h1>
         </div>
