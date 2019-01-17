@@ -69,7 +69,7 @@ def bulk_load_query(collection_id, query):
 
 
 def bulk_write(collection, items):
-    """Write a set of entities - given as raw dicts - to the index in bulk
+    """Write a set of entities - given as dicts - to the index in bulk
     mode. This will perform validation but is dangerous as it means the
     application has no control over key generation and a few other aspects
     of building the entity.
