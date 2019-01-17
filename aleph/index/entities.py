@@ -13,7 +13,7 @@ from aleph.model import Document
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form, refresh_sync
 from aleph.index.util import index_safe, search_safe, authz_query, bool_query
-from aleph.index.util import MAX_PAGE, TIMEOUT, REQUEST_TIMEOUT
+from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT
 
 log = logging.getLogger(__name__)
 
@@ -79,23 +79,20 @@ def iter_proxies(**kw):
 def entities_by_ids(ids, schemata=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
+    ids = ensure_list(ids)
     index = entities_read_index(schema=schemata)
-    for i in range(0, len(ids), MAX_PAGE):
-        chunk = ids[i:i + MAX_PAGE]
-        if not len(chunk):
-            return
-        query = bool_query()
-        query['bool']['filter'] = [{'ids': {'values': chunk}}]
-        query = {
-            'query': query,
-            '_source': {'excludes': ['text']},
-            'size': (MAX_PAGE + 1)
-        }
-        result = search_safe(index=index, body=query, ignore=[404])
-        for doc in result.get('hits', {}).get('hits', []):
-            entity = unpack_result(doc)
-            if entity is not None:
-                yield entity
+    query = bool_query()
+    query['bool']['filter'] = [{'ids': {'values': ids}}]
+    query = {
+        'query': query,
+        '_source': {'excludes': ['text']},
+        'size': len(ids) + 1
+    }
+    result = search_safe(index=index, body=query, ignore=[404])
+    for doc in result.get('hits', {}).get('hits', []):
+        entity = unpack_result(doc)
+        if entity is not None:
+            yield entity
 
 
 def get_entity(entity_id):
