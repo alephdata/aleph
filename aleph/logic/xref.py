@@ -1,5 +1,4 @@
 import logging
-# import xlsxwriter
 from pprint import pprint  # noqa
 from flask_babel import lazy_gettext
 from followthemoney import model
