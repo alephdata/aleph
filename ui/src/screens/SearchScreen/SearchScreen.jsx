@@ -141,6 +141,11 @@ class SearchScreen extends React.Component {
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
     this.toggleFacets = this.toggleFacets.bind(this);
+    this.fetchIfNeeded = this.fetchIfNeeded.bind(this);
+    this.getCurrentPreviewIndex = this.getCurrentPreviewIndex.bind(this);
+    this.showNextPreview = this.showNextPreview.bind(this);
+    this.showPreviousPreview = this.showPreviousPreview.bind(this);
+    this.showPreview = this.showPreview.bind(this);
   }
 
   componentDidMount() {
