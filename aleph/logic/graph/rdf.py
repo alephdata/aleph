@@ -7,7 +7,7 @@ from aleph.index.entities import iter_proxies
 from aleph.logic.util import ui_url
 
 DCMI = Namespace('http://purl.org/dc/dcmitype/')
-ALEPH = Namespace('https://alephdata.github.io/aleph/terms#')
+ALEPH = Namespace('https://schema.alephdata.org/terms#')
 
 log = logging.getLogger(__name__)
 
@@ -27,8 +27,8 @@ def export_entity(entity, collection_uri):
     g.add((collection_uri, DCTERMS.hasPart, uri))
     if entity.caption:
         g.add((uri, SKOS.prefLabel, Literal(entity.caption)))
-    for link in entity.links:
-        triple = link.rdf()
+    for stmt in entity.statements:
+        triple = stmt.rdf()
         if triple is not None:
             g.add(triple)
     return g

@@ -68,8 +68,8 @@ def bulk_load_query(collection_id, query):
     refresh_collection(collection)
 
 
-def bulk_write(collection, items):
-    """Write a set of entities - given as raw dicts - to the index in bulk
+def bulk_write(collection, items, merge=True):
+    """Write a set of entities - given as dicts - to the index in bulk
     mode. This will perform validation but is dangerous as it means the
     application has no control over key generation and a few other aspects
     of building the entity.
@@ -89,10 +89,10 @@ def bulk_write(collection, items):
             entities[entity.id] = entity
 
         if len(entities) >= BULK_PAGE:
-            index.index_bulk(collection.id, entities)
+            index.index_bulk(collection.id, entities, merge=merge)
             entities = {}
 
     if len(entities):
-        index.index_bulk(collection.id, entities)
+        index.index_bulk(collection.id, entities, merge=merge)
 
     refresh_collection(collection)

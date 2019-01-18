@@ -1,5 +1,4 @@
 import logging
-# import xlsxwriter
 from pprint import pprint  # noqa
 from flask_babel import lazy_gettext
 from followthemoney import model
@@ -84,9 +83,11 @@ def _iter_match_batch(batch, authz):
         entities.add(match.entity_id)
         entities.add(match.match_id)
 
-    entities = entities_by_ids(list(entities), authz=authz, schemata=matchable)
+    entities = entities_by_ids(list(entities), schemata=matchable)
     entities = {e.get('id'): e for e in entities}
     for obj in batch:
+        if not authz.can(obj.match_collection_id, authz.READ):
+            continue
         entity = entities.get(str(obj.entity_id))
         match = entities.get(str(obj.match_id))
         collection = get_collection(obj.match_collection_id)

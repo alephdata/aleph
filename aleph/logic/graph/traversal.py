@@ -60,7 +60,7 @@ class Graph(object):
         self.steps = {}
         self.paths = set()
         self.seen = set()
-        self.links = []
+        self.statements = []
 
     def add_node(self, node, seed=None):
         step = self.steps.get(node.id)
@@ -89,12 +89,12 @@ class Graph(object):
     def expand_step(self, step):
         self.seen.add(step)
         log.debug("Expand: %r (%s)", step, step.weight)
-        for link in expand_node(step.node):
-            if link.inverted:
-                link = link.invert()
-            self.links.append(link)
-            source = self.add_node(link.subject)
-            target = self.add_node(link.value_node)
+        for stmt in expand_node(step.node):
+            if stmt.inverted:
+                stmt = stmt.invert()
+            self.statements.append(stmt)
+            source = self.add_node(stmt.subject)
+            target = self.add_node(stmt.value_node)
             target.origins.add(source)
             self.paths.add(Path(self, source, target))
             if target.weight == 0:

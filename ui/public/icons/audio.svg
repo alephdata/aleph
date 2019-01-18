@@ -2,7 +2,7 @@
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
     <title>Audio</title>
-    <desc>Created with Sketch.</desc>
+    <desc>Audio</desc>
     <g id="Audio" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g transform="translate(1.000000, 5.000000)" fill="#000000" fill-rule="nonzero">
             <path d="M4,9 L4,5 L2,5 C1.44771525,5 1,5.44771525 1,6 L1,8 C1,8.55228475 1.44771525,9 2,9 L4,9 Z M2,4 L5,4 L5,10 L2,10 C0.8954305,10 2.22044605e-16,9.1045695 0,8 L0,6 C-1.11022302e-16,4.8954305 0.8954305,4 2,4 Z" id="Rectangle-Copy-7"></path>

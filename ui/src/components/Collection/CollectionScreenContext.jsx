@@ -76,7 +76,7 @@ class CollectionScreenContext extends Component {
       <CollectionContextLoader collectionId={collectionId}>
         <Screen title={collection.label}>
           {breadcrumbs}
-          <DualPane>
+          <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.ContentPane className="view-menu-flex-direction">
               <CollectionViews collection={collection}
                                activeMode={activeMode}

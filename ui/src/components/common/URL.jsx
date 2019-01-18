@@ -8,13 +8,13 @@ import './URL.scss';
 
 class URL extends PureComponent {
   render() {
-    const { value } = this.props;
+    const { value, ...restProps} = this.props;
     if (!value) {
       return null;
     }
 
     return (
-      <a href={value} className="URL" rel="noopener noreferrer" target='_blank' title={value}>
+      <a {...restProps} href={value} className="URL" rel="noopener noreferrer" target='_blank' title={value}>
         <Icon icon="link" iconSize={14} />
         {getHost(value)}
       </a>

@@ -54,9 +54,9 @@ class Router extends Component {
           <Route path="/oauth" exact component={OAuthScreen}/>
           <Route path="/logout" exact component={LogoutScreen}/>
           <Route path="/activate/:code" exact component={ActivateScreen}/>
-          <Route path="/entities/:entityId" exact component={EntityScreen}/>
-          <Route path="/documents/:documentId" exact component={DocumentScreen}/>
-          <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
+          {/*[ ]*/}<Route path="/entities/:entityId" exact component={EntityScreen}/>
+          {/*[ ]*/}<Route path="/documents/:documentId" exact component={DocumentScreen}/>
+          {/*[X]*/}<Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
           <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
           <Route path="/sources" exact component={SourcesIndexScreen}/>
           <Route path="/cases" exact component={CasesIndexScreen}/>
