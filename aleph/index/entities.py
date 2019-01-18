@@ -113,7 +113,7 @@ def get_entity(entity_id):
             return entity
 
 
-def _index_updates(collection_id, entities):
+def _index_updates(collection_id, entities, merge=True):
     """Look up existing index documents and generate an updated form.
 
     This is necessary to make the index accumulative, i.e. if an entity or link
@@ -132,13 +132,14 @@ def _index_updates(collection_id, entities):
     if not len(entities):
         return []
 
-    for result in entities_by_ids(list(entities.keys())):
-        if int(result.get('collection_id')) != collection_id:
-            raise RuntimeError("Key collision between collections.")
-        existing = model.get_proxy(result)
-        indexes[existing.id].append(result.get('_index'))
-        entities[existing.id].merge(existing)
-        timestamps[existing.id] = result.get('created_at')
+    if merge:
+        for result in entities_by_ids(list(entities.keys())):
+            if int(result.get('collection_id')) != collection_id:
+                raise RuntimeError("Key collision between collections.")
+            existing = model.get_proxy(result)
+            indexes[existing.id].append(result.get('_index'))
+            entities[existing.id].merge(existing)
+            timestamps[existing.id] = result.get('created_at')
 
     actions = []
     for entity_id, entity in entities.items():
@@ -164,13 +165,13 @@ def _index_updates(collection_id, entities):
     return actions
 
 
-def index_bulk(collection_id, entities):
+def index_bulk(collection_id, entities, merge=True):
     """Index a set of entities."""
     lock = cache.lock(cache.key('index_bulk'))
     lock.acquire(blocking=True)
     start_time = time()
     try:
-        actions = _index_updates(collection_id, entities)
+        actions = _index_updates(collection_id, entities, merge=merge)
         chunk_size = len(actions) + 1
         return bulk(es, actions,
                     chunk_size=chunk_size,

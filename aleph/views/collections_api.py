@@ -95,8 +95,9 @@ def mapping_process(id):
 def bulk(id):
     collection = get_db_collection(id, request.authz.WRITE)
     require(request.authz.can_import())
+    merge = get_flag('merge', default=False)
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities)
+    bulk_write(collection, entities, merge=merge)
     return ('', 204)
 
 
