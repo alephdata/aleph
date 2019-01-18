@@ -1,3 +1,4 @@
+from time import time
 import logging
 import fingerprints
 from pprint import pprint  # noqa
@@ -97,8 +98,19 @@ def entities_by_ids(ids, schemata=None):
 
 def get_entity(entity_id):
     """Fetch an entity from the index."""
-    for entity in entities_by_ids(ensure_list(entity_id)):
-        return entity
+    # for entity in entities_by_ids(ensure_list(entity_id)):
+    #     return entity
+
+    docs = []
+    for index in entities_read_index().split(','):
+        docs.append({'_index': index, '_id': entity_id})
+
+    body = {'docs': docs}
+    res = es.mget(body=body, _source_exclude=['text'], ignore=[404])
+    for doc in res.get('docs', []):
+        entity = unpack_result(doc)
+        if entity is not None:
+            return entity
 
 
 def _index_updates(collection_id, entities):
@@ -156,6 +168,7 @@ def index_bulk(collection_id, entities):
     """Index a set of entities."""
     lock = cache.lock(cache.key('index_bulk'))
     lock.acquire(blocking=True)
+    start_time = time()
     try:
         actions = _index_updates(collection_id, entities)
         chunk_size = len(actions) + 1
@@ -169,6 +182,8 @@ def index_bulk(collection_id, entities):
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
     finally:
+        duration = (time() - start_time)
+        log.info("Bulk write: %.4fs", duration)
         try:
             lock.release()
         except Exception:
