@@ -68,15 +68,15 @@ class SearchBox extends PureComponent {
       />);
   };
 
-  queryLogItems(text, queryList) {
-    return text ? [{text: text, isVirtual: true}] : queryList
+  itemListPredicate(text, queryList) {
+    return text ? [{text: text, isVirtual: true}] : [{text:''},...queryList]
   }
 
   render() {
     const {
       props: { placeholder, searchValue },
       itemRenderer, onChange,
-      queryLogItems,
+      itemListPredicate,
       onItemSelect
     } = this;
     const inputProps = {
@@ -109,7 +109,7 @@ class SearchBox extends PureComponent {
       inputValueRenderer={({ text }) => text}
       onQueryChange={onChange}
       query={searchValue}
-      itemListPredicate={queryLogItems}
+      itemListPredicate={itemListPredicate}
       className="navbar-search-input"
       onItemSelect={onItemSelect}
       resetOnQuery={true}

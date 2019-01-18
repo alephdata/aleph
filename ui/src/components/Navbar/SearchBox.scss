@@ -16,9 +16,9 @@
         }
       }
     }
-    &:first-child:last-child {
+    &:first-child {
       .navbar-search-item {
-        color: $aleph-link-color;
+        display: none;
       }
     }
   }
