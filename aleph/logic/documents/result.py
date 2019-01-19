@@ -6,7 +6,7 @@ from followthemoney import model
 from ingestors import Result
 from ingestors.util import safe_string
 
-from aleph.core import db, archive, settings
+from aleph.core import db, archive
 from aleph.model import Document, DocumentRecord
 from aleph.model import DocumentTag, DocumentTagCollector
 
@@ -38,7 +38,6 @@ class DocumentResult(Result):
         ocr_languages = set(document.languages)
         if document.collection.languages is not None:
             ocr_languages.update(document.collection.languages)
-        ocr_languages.update(settings.OCR_DEFAULTS)
         bind = super(DocumentResult, self)
         bind.__init__(id=document.foreign_id,
                       checksum=document.content_hash,
