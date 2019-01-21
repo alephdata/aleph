@@ -1,0 +1,80 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: ssd
+  namespace: aleph
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: standard
+  namespace: aleph
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard
+---
+# task-queue (rabbitmq) disk cache
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: task-queue-pvc
+  namespace: aleph
+  labels:
+    service: task-queue
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: {{ .Values.queue.resources.requests.storage }}
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ssd
+  {{ if (.Values.storage.queue) and (.Values.storage.queue.pvc) }}
+  gcePersistentDisk:
+    pdName: {{ .Values.storage.queue.pvc }}
+  {{ end }}
+---
+# redis disk cache
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: redis-pvc
+  namespace: aleph
+  labels:
+    service: redis
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: {{ .Values.redis.resources.requests.storage }}
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ssd
+  {{- if (.Values.storage.redis) and (.Values.storage.redis.pvc)}}
+  gcePersistentDisk:
+    pdName: {{ .Values.storage.redis.pvc }}
+  {{- end }}
+---
+{{- if (.Values.storage.index) and (.Values.storage.index.pvc) }}
+{{- range .Values.storage.index.pvc}}
+# ES index disk cache
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: es-index-pvc
+  namespace: aleph
+  labels:
+    service: es-index
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: {{ $.Values.index.resources.requests.storage }}
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ssd
+  gcePersistentDisk:
+    pdName: {{ . }}
+---
+{{- end }}
+{{- end }}

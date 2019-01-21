@@ -11,14 +11,18 @@ metadata:
     certmanager.k8s.io/acme-http01-edit-in-place: "true"
 spec:
   tls:
-    - secretName: tls-staging.data.occrp.org
+    - secretName: tls-{{ .Values.certs.domain }}
       hosts:
-        - staging.data.occrp.org
+        - {{ .Values.certs.domain }}
   rules:
-    - host: staging.data.occrp.org
+    - host: {{ .Values.certs.domain }}
       http:
         paths:
-          - backend:
-              serviceName: search-web
+          - path: /
+            backend:
+              serviceName: web
               servicePort: 80
----
+          - path: /api
+            backend:
+              serviceName: api
+              servicePort: 8000

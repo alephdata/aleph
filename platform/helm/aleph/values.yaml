@@ -16,6 +16,11 @@ api:
       cpu: 1000m
 
 
+certs:
+  email: data@occrp.org
+  domain: staging.data.occrp.org
+
+
 config:
   ALEPH_URL_SCHEME: http
   ALEPH_APP_TITLE: "OCCRP Data (Staging)"
@@ -26,7 +31,7 @@ config:
   ALEPH_PASSWORD_LOGIN: "true"
   ALEPH_ADMINS: "admin@example.com"
   ALEPH_MAIL_FROM: notifications@example.com
-  ALEPH_MAIL_HOST: core-mail.default.svc.cluster.local
+  ALEPH_MAIL_HOST: mail.aleph.svc.cluster.local
   ALEPH_MAIL_USERNAME: ""
   ALEPH_MAIL_PASSWORD: ""
   ALEPH_MAIL_PORT: "25"
@@ -43,9 +48,12 @@ config:
   ALEPH_OAUTH_BASE_URL: ""
   ALEPH_OAUTH_TOKEN_URL: ""
   ALEPH_OAUTH_AUTHORIZE_URL: ""
+  ALEPH_STACKDRIVER_TRACE_PROJECT_ID: 'occrp-data-testing-223805'
+  ALEPH_TRACE_SAMPLING_RATE: '0.001'
+  ALEPH_CELERY_TRACE_SAMPLING_RATE: '0.00001'
 
 
-convertdocument:
+convertDocument:
   minReplicas: 1
   maxReplicas: 3
   resources:
@@ -57,7 +65,7 @@ convertdocument:
       cpu: 1000m
 
 
-extractentities:
+extractEntities:
   minReplicas: 1
   maxReplicas: 3
   resources:
@@ -83,6 +91,13 @@ index:
   ES_JAVA_OPTS_MEMORY_LIMIT: -Xms2g -Xmx2g
 
 
+indexAdmin:
+  resources:
+    limits:
+      memory: 1Gi
+
+
+
 queue:
   image: rabbitmq:management-alpine
   replicas: 1
@@ -96,7 +111,7 @@ queue:
       cpu: 400m
 
 
-recognizetext:
+recognizeText:
   minReplicas: 1
   maxReplicas: 3
   resources:
@@ -114,6 +129,7 @@ redis:
     requests:
       memory: 1Gi
       cpu: 300m
+      storage: 10Gi
     limits:
       memory: 2Gi
       cpu: 600m
@@ -127,6 +143,13 @@ scheduler:
     limits:
       memory: 500Mi
       cpu: 500m
+
+
+storage:
+  index:
+  queue:
+  redis:
+
 
 
 web:

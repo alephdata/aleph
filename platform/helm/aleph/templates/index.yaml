@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: search-index
+  name: es-index
   namespace: aleph
   labels:
-    app: search-index
+    app: es-index
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
@@ -20,25 +20,25 @@ spec:
       targetPort: 9300
       name: node-to-node
   selector:
-    app: search-index
+    app: es-index
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: search-index
+  name: es-index
   namespace: aleph
   labels:
-    app: search-index
+    app: es-index
 spec:
-  serviceName: search-index
+  serviceName: es-index
   replicas: {{ .Values.index.replicas }}
   selector:
     matchLabels:
-      app: search-index
+      app: es-index
   template:
     metadata:
       labels:
-        app: search-index
+        app: es-index
     spec:
       affinity: # Ask k8s to preferr that pods are placed across zones if available
         podAntiAffinity:
@@ -101,12 +101,15 @@ spec:
         #     privileged: true
       containers:
         - name: elasticsearch
-          # securityContext:
-          #   capabilities:
-          #     add:
-          #       - IPC_LOCK
-          #       - SYS_RESOURCE
-          image: alephdata/platform-elasticsearch:{{ .Values.global.imagetag }}
+          securityContext:
+            capabilities:
+              add:
+                - IPC_LOCK
+                - SYS_RESOURCE
+          image: alephdata/aleph-elasticsearch:6
+          command:
+            - /k8s-entrypoint.sh
+            - eswrapper
           ports:
             - containerPort: 9200
               name: http
@@ -122,17 +125,17 @@ spec:
               cpu: {{ .Values.index.resources.limits.cpu }}
           env:
             - name: cluster.name
-              value: search-index
+              value: es-index
             - name: node.name
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: discovery.zen.ping.unicast.hosts
-              value: search-index.aleph.svc.cluster.local
+              value: es-index.aleph.svc.cluster.local
             - name: discovery.zen.minimum_master_nodes
               value: {{ .Values.index.minMasterNodes | quote }}
-            # - name: bootstrap.memory_lock
-            #   value: "true"
+            - name: bootstrap.memory_lock
+              value: "true"
             - name: ES_JAVA_OPTS
               value: -Djava.net.preferIPv4Stack=true {{ .Values.index.ES_JAVA_OPTS_MEMORY_LIMIT }}
           volumeMounts:
@@ -141,7 +144,13 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
+        namespace: aleph
       spec:
+        {{- if (.Values.storage.index) and (.Values.storage.index.pvc) }}
+        selector:
+          matchLabels:
+            service: es-index
+        {{- end }}
         accessModes:
           - ReadWriteOnce
         storageClassName: ssd

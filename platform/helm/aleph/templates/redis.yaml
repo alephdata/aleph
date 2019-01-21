@@ -1,30 +1,30 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: search-redis
+  name: redis
   namespace: aleph
 spec:
   ports:
     - port: 6379
-      name: search-redis
+      name: redis
   selector:
-    app: search-redis
+    app: redis
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: search-redis
+  name: redis
   namespace: aleph
 spec:
   selector:
     matchLabels:
-      app: search-redis
+      app: redis
   serviceName: redis
   replicas: 1
   template:
     metadata:
       labels:
-        app: search-redis
+        app: redis
     spec:
       containers:
         - name: redis
@@ -32,7 +32,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 6379
-              name: search-redis
+              name: redis
           args:
             - --save
             - "1200"
@@ -54,10 +54,14 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
+        namespace: aleph
       spec:
+        selector:
+          matchLabels:
+            service: redis
         accessModes:
           - ReadWriteOnce
         storageClassName: ssd
         resources:
           requests:
-            storage: 10Gi
+            storage: {{ .Values.redis.resources.requests.storage }}
