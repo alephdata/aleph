@@ -1,68 +1,38 @@
-apiVersion: apps/v1
-kind: Deployment
+# Upgrade job for making sure that Aleph DB is up2date
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: search-scheduler
+  name: aleph-upgrade
   namespace: aleph
-  labels:
-    app: search-scheduler
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: search-scheduler
-  strategy:
-    rollingUpdate:
-      maxSurge: 0
-      maxUnavailable: 100%
-    type: RollingUpdate
+  backoffLimit: 4
   template:
-    metadata:
-      labels:
-        app: search-scheduler
     spec:
-      affinity: # Ask k8s to preferr that pods are placed across zones if available
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - {{ .Values.global.reponame }}
-              topologyKey: failure-domain.beta.kubernetes.io/zone
-      restartPolicy: Always
+      restartPolicy: Never
       containers:
-        - name: search-scheduler
+        - name: aleph-upgrade
           image: alephdata/aleph:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
-          command:
-            - celery
-            - -A
-            - aleph.queues
-            - beat
-            - -s
-            - /var/lib/celerybeat-schedule.db
+          command: ["aleph", "upgrade"]
           resources:
             requests:
-              memory: {{ .Values.scheduler.resources.requests.memory }}
-              cpu: {{ .Values.scheduler.resources.requests.cpu }}
+              memory: 500Mi
+              cpu: 200m
             limits:
-              memory: {{ .Values.scheduler.resources.limits.memory }}
-              cpu: {{ .Values.scheduler.resources.limits.cpu }}
+              memory: 1000Mi
+              cpu: 600m
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /credentials/service-account.json
           envFrom:
             - configMapRef:
-                name: search-config
+                name: aleph-config
             - secretRef:
                 name: common-secrets
           volumeMounts:
             - mountPath: /credentials
               name: service-account-app
-        - name: search-db-sidecar
+        - name: db-sidecar
           resources:
             requests:
               memory: 64Mi
@@ -101,4 +71,3 @@ spec:
         - name: service-account-db
           secret:
             secretName: service-account-db
-

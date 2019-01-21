@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: search-index-admin
+  name: es-index-admin
+  namespace: aleph
   labels:
-    app: search-index-admin
+    app: es-index-admin
 spec:
   type: ClusterIP
   clusterIP: None
   selector:
-    app: search-index-admin
+    app: es-index-admin
   ports:
     - port: 9000
       targetPort: 9000
@@ -17,30 +18,31 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-index-admin
+  name: es-index-admin
+  namespace: aleph
   labels:
-    app: search-index-admin
+    app: es-index-admin
 spec:
-  replicas: {{ Values.index-admin.replicas }}
+  replicas: 1
   selector:
     matchLabels:
-      app: search-index-admin
+      app: es-index-admin
   strategy:
     rollingUpdate:
-      maxSurge: {{ Values.index-admin.maxSurge }}
-      maxUnavailable: {{ Values.index-admin.maxUnavailable }}
+      maxSurge: 1
+      maxUnavailable: 100%
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: search-index-admin
+        app: es-index-admin
     spec:
       nodeSelector:
         tier: application
       restartPolicy: Always
       containers:
         - name: index-admin
-          image: {{ .Values.index-admin.image }}
+          image: lmenezes/cerebro
           ports:
             - containerPort: 9000
               name: http
@@ -49,4 +51,4 @@ spec:
           #     value: http://search-index:9200
           resources:
             limits:
-              memory: {{ Values.index-admin.resources.limits.memory }}
+              memory: {{ .Values.indexAdmin.resources.limits.memory }}

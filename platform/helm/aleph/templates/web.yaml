@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: search-web
+  name: web
+  namespace: aleph
   labels:
-    app: search-web
+    app: web
 spec:
   type: NodePort
   selector:
-    app: search-web
+    app: web
   ports:
     - port: 80
       targetPort: 80
@@ -16,7 +17,8 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: search-web-config
+  name: web-config
+  namespace: aleph
 data:
   mime.types: |
     types {
@@ -36,57 +38,45 @@ data:
         application/zip                                  zip;
     }
   nginx.conf: |
-    worker_processes {{ .Values.web.workerProcesses }};
+    worker_processes 3;
 
     events {
-      worker_connections {{ .Values.web.workerConnections }};
+      worker_connections 1024;
     }
 
     http {
       include mime.types;
       index index.html;
       sendfile on;
-      client_max_body_size {{ .Values.web.clientMaxBodySize }};
-      client_body_timeout {{ .Values.web.clientMaxBodyTimeout }};
-      proxy_connect_timeout {{ .Values.web.proxyConnectTimeout }};
-      proxy_read_timeout {{ .Values.web.proxyReadTimeout }};
-      proxy_send_timeout {{ .Values.web.proxySendTimeout }};
-      send_timeout {{ .Values.web.sendTimeout }};
-      proxy_cache {{ .Values.web.proxyCache }};
-      proxy_buffering {{ .Values.web.proxyBuffering }};
-      proxy_request_buffering {{ .Values.web.proxyRequestBuffering }};
-      keepalive_timeout {{ .Values.web.keepliveTimeout }};
-      keepalive_requests {{ .Values.web.keepaliveRequests }};
+      client_max_body_size 2000g;
+      client_body_timeout 84600s;
+      proxy_connect_timeout 600s;
+      proxy_send_timeout 84600s;
+      proxy_read_timeout 84600s;
+      send_timeout 84600s;
+      proxy_buffering off;
+      proxy_request_buffering off;
+      keepalive_timeout 650;
+      keepalive_requests 10000;
+
+      upstream api {
+        server api.aleph.svc.cluster.local:8000;
+      }
 
       server {
         listen 80 default_server;
         
-        location / {
-          return 200 'under maintenance - please give us 30mins';
-        }
-
-        location /healthz {
-          return 200 'ok';
-        }
-      }
-
-      upstream search-api {
-        server search-api.default.svc.cluster.local:8000;
-      }
-
-      server {
-        listen 80;
-        server_name {{ .Values.web.alephServerName }};
-
-        if ($http_x_forwarded_proto = "http") {
-          return 301 https://$host$request_uri;
-        }
+        #if ($http_x_forwarded_proto = "http") {
+        #  return 301 https://$host$request_uri;
+        #}
 
         location / {
           root /assets;
           try_files $uri $uri/ /index.html;
           expires 2d;
           access_log off;
+          add_header X-debug-host $host;
+          add_header X-debug-hostname $hostname;
           add_header Cache-Control "public";
           gzip_vary on;
           gzip_static on;
@@ -94,8 +84,12 @@ data:
           gzip_types text/plain text/xml text/css text/javascript application/x-javascript;
         }
 
+        location /.well-known {
+          root /assets;
+        }
+
         location /api {
-          proxy_pass         http://search-api;
+          proxy_pass         http://api;
           proxy_redirect     off;
           proxy_set_header   Host $http_host;
           proxy_set_header   X-Real-IP $remote_addr;
@@ -107,55 +101,75 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-web
+  name: web
+  namespace: aleph
   labels:
-    app: search-web
+    app: web
 spec:
   replicas: {{ .Values.web.replicas }}
   selector:
     matchLabels:
-      app: search-web
+      app: web
   strategy:
     rollingUpdate:
-      maxSurge: {{ .Values.web.maxSurge }}
-      maxUnavailable: {{ .Values.web.maxUnavailable }}
+      maxSurge: 2
+      maxUnavailable: 50%
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: search-web
+        app: web
     spec:
-      nodeSelector:
-        tier: application
-        lifespan: permanent
+      affinity: # Ask k8s to preferr that pods are placed across zones if available
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Values.global.reponame }}
+              topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       volumes:
-        - name: search-web-config
+        - name: web-config
           configMap:
-            name: search-web-config
+            name: web-config
       containers:
-        - name: search-web
-          image: {{ .Values.web.image }}
+        - name: web
+          image: alephdata/aleph-ui-production:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           resources:
             requests:
               memory: {{ .Values.web.resources.requests.memory }}
+              cpu: {{ .Values.web.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.web.resources.limits.memory }}
+              cpu: {{ .Values.web.resources.limits.cpu }}
           ports:
             - containerPort: 80
               name: http
           volumeMounts:
-            - name: search-web-config
+            - name: web-config
               mountPath: /etc/nginx
               readOnly: true
           livenessProbe:
             httpGet:
               path: /healthz
               port: 80
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: https
             initialDelaySeconds: 3
             periodSeconds: 5
           readinessProbe:
             httpGet:
               path: /healthz
               port: 80
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: https
             initialDelaySeconds: 3
             periodSeconds: 5

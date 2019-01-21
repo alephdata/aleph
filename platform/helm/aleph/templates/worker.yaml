@@ -1,47 +1,58 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: search-worker
+  name: worker
+  namespace: aleph
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: search-worker
+    name: worker
   minReplicas: {{ .Values.worker.minReplicas }}
   maxReplicas: {{ .Values.worker.maxReplicas }}
   metrics:
   - type: Resource
     resource:
       name: cpu
-      targetAverageUtilization: {{ .Values.worker.targetAverageCPUUtilization }}
+      targetAverageUtilization: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-worker
+  name: worker
+  namespace: aleph
   labels:
-    app: search-worker
+    app: worker
 spec:
   selector:
     matchLabels:
-      app: search-worker
+      app: worker
   strategy:
     rollingUpdate:
-      maxSurge: {{ .Values.worker.maxSurge }}
-      maxUnavailable: {{ .Values.worker.maxUnavailable }}
+      maxSurge: 2
+      maxUnavailable: 75%
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: search-worker
+        app: worker
     spec:
-      nodeSelector:
-        tier: application
-        # lifespan: transient
+      affinity: # Ask k8s to preferr that pods are placed across zones if available
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Values.global.reponame }}
+              topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       containers:
-        - name: search-worker
-          image: {{ .Values.worker.image }}
+        - name: worker
+          image: alephdata/aleph:occrp
           imagePullPolicy: Always
           command:
             - celery
@@ -55,38 +66,29 @@ spec:
           resources:
             requests:
               memory: {{ .Values.worker.resources.requests.memory }}
+              cpu: {{ .Values.worker.resources.requests.cpu }}
             limits:
               memory: {{ .Values.worker.resources.limits.memory }}
+              cpu: {{ .Values.worker.resources.limits.cpu }}
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /var/secrets/google/service-account.json
-            - name: ALEPH_DATABASE_URI
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: ALEPH_DATABASE_URI
-            - name: ALEPH_OAUTH_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: ALEPH_OAUTH_SECRET
-            - name: ALEPH_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: ALEPH_SECRET_KEY
-            - name: DATAVAULT_DATABASE_URI
-              valueFrom:
-                secretKeyRef:
-                  name: common-secrets
-                  key: DATAVAULT_SIDECAR_URI
+              value: /credentials/service-account.json
           envFrom:
             - configMapRef:
-                name: search-config
+                name: aleph-config
+            - secretRef:
+                name: common-secrets
           volumeMounts:
-            - mountPath: /var/secrets/google
+            - mountPath: /credentials
               name: service-account-app
-        - name: search-db-sidecar
+        - name: db-sidecar
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: "0.1"
+            limits:
+              memory: 64Mi
+              cpu: "0.1"
           image: b.gcr.io/cloudsql-docker/gce-proxy:latest
           imagePullPolicy: Always
           command:
@@ -94,6 +96,20 @@ spec:
             - -dir=/cloudsql
             - -instances={{ .Values.global.dbInstance }}
             - -credential_file=/credentials/service-account.json
+          livenessProbe:
+            exec:
+              command:
+                - nc
+                - -z
+                - 127.0.0.1
+                - "5432"
+          readinessProbe:
+            exec:
+              command:
+                - nc
+                - -z
+                - 127.0.0.1
+                - "5432"
           volumeMounts:
             - mountPath: /credentials
               name: service-account-db
@@ -104,3 +120,4 @@ spec:
         - name: service-account-db
           secret:
             secretName: service-account-db
+

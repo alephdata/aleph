@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: search-convert-document
+  name: convert-document
   namespace: aleph
   labels:
-    app: search-convert-document
+    app: convert-document
 spec:
   selector:
-    app: search-convert-document
+    app: convert-document
   type: ClusterIP
   ports:
     - port: 3000
@@ -17,15 +17,15 @@ spec:
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: search-convert-document
+  name: convert-document
   namespace: aleph
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: search-convert-document
-  minReplicas: {{ .Values.convertdocument.minReplicas }}
-  maxReplicas: {{ .Values.convertdocument.maxReplicas }}
+    name: convert-document
+  minReplicas: {{ .Values.convertDocument.minReplicas }}
+  maxReplicas: {{ .Values.convertDocument.maxReplicas }}
   metrics:
   - type: Resource
     resource:
@@ -35,26 +35,26 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: search-convert-document-policy
+  name: convert-document-policy
   namespace: aleph
 spec:
   podSelector:
     matchLabels:
-      app: search-convert-document
+      app: convert-document
   policyTypes:
     - Egress
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-convert-document
+  name: convert-document
   namespace: aleph
   labels:
-    app: search-convert-document
+    app: convert-document
 spec:
   selector:
     matchLabels:
-      app: search-convert-document
+      app: convert-document
   strategy:
     rollingUpdate:
       maxSurge: 2
@@ -63,7 +63,7 @@ spec:
   template:
     metadata:
       labels:
-        app: search-convert-document
+        app: convert-document
     spec:
       affinity: # Ask k8s to preferr that pods are placed across zones if available
         podAntiAffinity:
@@ -79,7 +79,7 @@ spec:
               topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       containers:
-        - name: search-convert-document
+        - name: convert-document
           image: alephdata/aleph-convert-document:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           ports:
@@ -87,11 +87,11 @@ spec:
               name: http
           resources:
             requests:
-              cpu: {{ .Values.convertdocument.resources.requests.cpu }}
-              memory: {{ .Values.convertdocument.resources.requests.memory }}
+              cpu: {{ .Values.convertDocument.resources.requests.cpu }}
+              memory: {{ .Values.convertDocument.resources.requests.memory }}
             limits:
-              cpu: {{ .Values.convertdocument.resources.limits.memory }}
-              memory: {{ .Values.convertdocument.resources.limits.memory }}
+              cpu: {{ .Values.convertDocument.resources.limits.memory }}
+              memory: {{ .Values.convertDocument.resources.limits.memory }}
           readinessProbe:
             httpGet:
               path: /
