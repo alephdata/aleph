@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: recognize-text
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: recognize-text
 spec:
@@ -18,7 +18,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: recognize-text
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -36,7 +36,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: recognize-text-policy
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
 spec:
   podSelector:
     matchLabels:
@@ -48,9 +48,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: recognize-text
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: recognize-text
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   selector:
     matchLabels:

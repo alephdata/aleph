@@ -2,7 +2,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: aleph-config
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
 data:
   C_FORCE_ROOT: 'true'
   GRPC_VERBOSITY: 'ERROR'
@@ -28,18 +28,18 @@ data:
   ALEPH_UI_URL: {{ .Values.config.ALEPH_UI_URL }}
   ALEPH_FAVICON: {{ .Values.config.ALEPH_FAVICON }}
   ALEPH_LOGO: {{ .Values.config.ALEPH_LOGO }}
-  ALEPH_ELASTICSEARCH_URI: http://search-index.default.svc.cluster.local:9200/
+  ALEPH_ELASTICSEARCH_URI: {{ printf "http://es-index.%s.svc.cluster.local:9200/" .Values.global.namespace }}
   ALEPH_ELASTICSEARCH_SHARDS: '20'
   ALEPH_ENTITIES_INDEX: aleph-entity-v2
   ALEPH_ENTITIES_INDEX_SET: aleph-entity-v1
   ALEPH_ENTITIES_INDEX_SPLIT: 'true'
   ALEPH_RECORDS_INDEX: aleph-record-v1
   ALEPH_COLLECTIONS_INDEX: aleph-collection-v2
-  ALEPH_BROKER_URI: amqp://guest:guest@task-queue.aleph.svc.cluster.local:5672
-  ALEPH_REDIS_URL: redis://redis.aleph.svc.cluster.local:6379/0
-  ALEPH_NER_SERVICE: extract-entities.aleph.svc.cluster.local:50000
-  ALEPH_OCR_SERVICE: recognize-text.aleph.svc.cluster.local:50000
-  UNOSERVICE_URL: http://convert-document.aleph.svc.cluster.local:3000/convert
+  ALEPH_BROKER_URI: {{ printf "amqp://guest:guest@task-queue.%s.cluster.local:5672" .Values.global.namespace }}
+  ALEPH_REDIS_URL: {{ printf "redis://redis.%s.cluster.local:6379/0" .Values.global.namespace }}
+  ALEPH_NER_SERVICE: {{ printf "extract-entities.%s.cluster.local:50000" .Values.global.namespace }}
+  ALEPH_OCR_SERVICE: {{ printf "recognize-text.%s.cluster.local:50000" .Values.global.namespace }}
+  UNOSERVICE_URL: {{ printf "http://convert-document.%s.cluster.local:3000/convert" .Values.global.namespace }}
   ALEPH_OAUTH: 'true'
   ALEPH_OAUTH_KEY: {{ .Values.config.ALEPH_OAUTH_KEY }}
   ALEPH_OAUTH_NAME: {{ .Values.config.ALEPH_OAUTH_NAME }}

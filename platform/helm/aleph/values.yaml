@@ -1,8 +1,31 @@
 global:
   reponame: aleph
+  # Make sure the namespace exists first. Edit and apply core/namespace.yaml
+  namespace: aleph
   dbInstance: "occrp-data:us-east1:aleph-staging=tcp:5432"
-  imagetag: latest
+  repository: alephdata/aleph
+  imagetag: develop
 
+
+## External Dependencies
+
+keel:
+  enabled: true
+  # keel policy (all/major/minor/patch/force)
+  policy: force
+  # trigger type, defaults to events such as pubsub, webhooks
+  trigger: poll
+  # polling schedule
+  pollSchedule: "@every 1m"
+  # approvals required to proceed with an update
+  approvals: 0
+  # images to track and update
+  images:
+    - repository: global.repository
+      tag: global.imagetag
+
+
+## Aleph's internal configurations
 
 api:
   minReplicas: 1

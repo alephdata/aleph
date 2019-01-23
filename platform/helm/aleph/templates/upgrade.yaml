@@ -3,7 +3,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: aleph-upgrade
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   backoffLimit: 4
   template:
