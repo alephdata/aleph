@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: es-index-admin
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: es-index-admin
 spec:
@@ -19,9 +19,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: es-index-admin
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: es-index-admin
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   replicas: 1
   selector:

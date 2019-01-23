@@ -2,9 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduler
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: scheduler
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   replicas: 1
   selector:

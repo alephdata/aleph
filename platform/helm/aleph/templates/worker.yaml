@@ -2,7 +2,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: worker
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -20,9 +20,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: worker
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: worker
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   selector:
     matchLabels:

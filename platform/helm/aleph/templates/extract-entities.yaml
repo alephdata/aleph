@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: extract-entities
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: extract-entities
 spec:
@@ -18,7 +18,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: extract-entities
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
@@ -36,9 +36,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: extract-entities
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: extract-entities
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   replicas: 1
   selector:

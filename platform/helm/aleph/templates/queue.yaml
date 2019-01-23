@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: task-queue
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   labels:
     app: task-queue
 spec:
@@ -20,7 +20,9 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: task-queue
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   selector:
     matchLabels:
@@ -71,7 +73,7 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
-        namespace: aleph
+        namespace: {{ .Values.global.namespace }}
       spec:
         selector:
           matchLabels:
