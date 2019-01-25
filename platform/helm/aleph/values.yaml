@@ -2,10 +2,10 @@ global:
   reponame: aleph
   # Make sure the namespace exists first. Edit and apply core/namespace.yaml
   namespace: aleph
-  dbInstance: "occrp-data:us-east1:aleph-staging=tcp:5432"
+  dbInstance: "occrp-data-testing-223805:us-east1:staging-db=tcp:5432"
   repository: alephdata/aleph
   imagetag: develop
-
+  domain: staging.data.occrp.org
 
 ## External Dependencies
 
@@ -24,6 +24,59 @@ keel:
     - repository: global.repository
       tag: global.imagetag
 
+cert-manager:
+  rbac:
+    create: true
+
+nginx-ingress:
+  # https://kubernetes.github.io/ingress-nginx/deploy/#using-helm
+  # based on: https://github.com/helm/charts/blob/master/stable/nginx-ingress/values.yaml
+  rbac:
+    create: true
+
+  controller:
+    replicaCount: 1
+    service:
+      #TODO: set this
+      loadBalancerIP: ""
+      externalTrafficPolicy: "Local"
+    extraArgs:
+      default-ssl-certificate: "aleph/tls-staging.data.occrp.org"
+    defaultBackendService: "aleph/web"
+    config:
+      # cf. https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#configuration-options
+      # also, https://github.com/kubernetes/ingress-nginx
+      # networking
+      disable-ipv6: 'true'
+      disable-ipv6-dns: 'true'
+      use-geoip: 'false'
+      use-http2: 'true'
+      use-gzip: 'true'
+      hsts: 'false'
+      # large-chunk proxy
+      client-header-timeout: '30'
+      client-body-buffer-size: '1024k'
+      proxy-connect-timeout: '3600'
+      proxy-read-timeout: '3600'
+      proxy-send-timeout: '84600'
+      proxy-stream-timeout: '3600'
+      proxy-buffering: 'off'
+      proxy-request-buffering: 'off'
+      proxy-buffer-size: '1024k'
+      proxy-headers-hash-max-size: '1024'
+      proxy-headers-hash-bucket-size: '1024'
+      proxy-body-size: '2000g'
+      client-max-body-size: '2000g'
+      client-body-timeout: '84600s'
+      keepalive-timeout: '650'
+      keepalive-requests: '10000'
+      send-timeout: '84600s'
+      ssl-redirect: 'true'
+      # replace nginx status page:
+      enable-vts-status: 'false'
+
+  defaultBackend:
+    enabled: false
 
 ## Aleph's internal configurations
 
@@ -41,7 +94,6 @@ api:
 
 certs:
   email: data@occrp.org
-  domain: staging.data.occrp.org
 
 
 config:
