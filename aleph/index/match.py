@@ -66,7 +66,7 @@ def match_query(proxy, collection_ids=None, query=None):
             })
 
     for type_ in registry.types:
-        if not type_.strong or type_.group is None:
+        if type_.group is None:
             continue
         for value in proxy.get_type_values(type_):
             required.append({
