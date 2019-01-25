@@ -72,8 +72,7 @@ def match_query(proxy, collection_ids=None, query=None):
             required.append({
                 'term': {
                     type_.group: {
-                        'value': value,
-                        'boost': 3.0
+                        'value': value
                     }
                 }
             })

@@ -109,6 +109,7 @@ def entity_references(entity, authz):
 def entity_tags(entity, authz):
     """Do a search on tags of an entity."""
     # NOTE: This must also work for documents.
+    Thing = model.get(Entity.THING)
     types = [registry.name, registry.email, registry.identifier,
              registry.iban, registry.phone, registry.address]
     pivots = []
@@ -122,6 +123,7 @@ def entity_tags(entity, authz):
             if value is None or not len(value):
                 continue
             schemata = model.get_type_schemata(type_)
+            schemata = [s for s in schemata if s.is_a(Thing)]
             index = entities_read_index(schemata)
             queries.append({'index': index})
             queries.append({
