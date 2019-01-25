@@ -39,8 +39,6 @@ spec:
       labels:
         app: es-index-admin
     spec:
-      nodeSelector:
-        tier: application
       restartPolicy: Always
       containers:
         - name: index-admin

@@ -27,18 +27,18 @@ spec:
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: tls-{{ .Values.certs.domain }}
+  name: tls-{{ .Values.global.domain }}
   namespace: {{ .Values.global.namespace }}
 spec:
-  secretName: tls-{{ .Values.certs.domain }}
+  secretName: tls-{{ .Values.global.domain }}
   dnsNames:
-    - {{ .Values.certs.domain }}
+    - {{ .Values.global.domain }}
   acme:
     config:
       - http01:
           ingress: ingress-nginx
         domains:
-          - {{ .Values.certs.domain }}
+          - {{ .Values.global.domain }}
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
