@@ -5,7 +5,7 @@ from elasticsearch.helpers import scan
 from aleph.core import es, settings
 from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
-from aleph.index.util import search_safe, clean_query
+from aleph.index.util import clean_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.logic.audit import record_audit
@@ -190,8 +190,8 @@ class Query(object):
     def search(self):
         """Execute the query as assmbled."""
         # log.info("Search index: %s", self.get_index())
-        result = search_safe(index=self.get_index(),
-                             body=self.get_body())
+        result = es.search(index=self.get_index(),
+                           body=self.get_body())
         log.info("Took: %sms", result.get('took'))
         # log.info("%s", pformat(result.get('profile')))
         return result
