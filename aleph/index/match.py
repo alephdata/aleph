@@ -1,5 +1,6 @@
 import logging
 import fingerprints
+from pprint import pprint  # noqa
 from banal import ensure_list
 from followthemoney.types import registry
 
@@ -7,6 +8,52 @@ from aleph.model import Entity
 from aleph.index.util import bool_query, none_query
 
 log = logging.getLogger(__name__)
+
+REQUIRED = [registry.name, registry.iban, registry.identifier]
+
+
+def _make_queries(prop, value):
+    if not prop.matchable:
+        return
+
+    specificity = prop.type.specificity(value)
+    if specificity == 0:
+        return
+
+    if prop.type == registry.name:
+        yield {
+            'match': {
+                'names.text': {
+                    'query': value,
+                    'operator': 'and',
+                    'minimum_should_match': '60%',
+                    'boost': 2 * specificity
+                }
+            }
+        }
+        fp = fingerprints.generate(value)
+        if fp is not None:
+            yield {
+                'match': {
+                    'fingerprints': {
+                        'query': fp,
+                        'operator': 'and',
+                        'minimum_should_match': '60%',
+                        'boost': 2 * specificity
+                    }
+                }
+            }
+    else:
+        if prop.type.group is None:
+            return
+        yield {
+            'term': {
+                prop.type.group: {
+                    'value': value,
+                    'boost': specificity
+                }
+            }
+        }
 
 
 def match_query(proxy, collection_ids=None, query=None):
@@ -31,51 +78,24 @@ def match_query(proxy, collection_ids=None, query=None):
         if not len(matchable):
             return none_query()
 
-        query['bool']['must'].append({
+        query['bool']['filter'].append({
             "terms": {"schema": matchable}
         })
 
     collection_ids = ensure_list(collection_ids)
     if len(collection_ids):
-        query['bool']['must'].append({
+        query['bool']['filter'].append({
             'terms': {'collection_id': collection_ids}
         })
 
     required = []
-    for name in proxy.names:
-        required.append({
-            'match': {
-                'names.text': {
-                    'query': name,
-                    'operator': 'and',
-                    'minimum_should_match': '60%',
-                }
-            }
-        })
-        fp = fingerprints.generate(name)
-        if fp is not None:
-            required.append({
-                'match': {
-                    'fingerprints': {
-                        'query': fp,
-                        'fuzziness': 1,
-                        'operator': 'and',
-                        'boost': 3.0
-                    }
-                }
-            })
-
-    for type_ in registry.types:
-        if type_.group is None:
-            continue
-        for value in proxy.get_type_values(type_):
-            required.append({
-                'term': {
-                    type_.group: {
-                        'value': value
-                    }
-                }
-            })
+    scoring = []
+    for (prop, value) in proxy.itervalues():
+        queries = list(_make_queries(prop, value))
+        if prop.type in REQUIRED:
+            required.extend(queries)
+        else:
+            scoring.extend(queries)
 
     if not len(required):
         # e.g. a document from which no features have been extracted.
@@ -83,9 +103,10 @@ def match_query(proxy, collection_ids=None, query=None):
 
     # make it mandatory to have at least one match
     query['bool']['must'].append({
-        "bool": {
-            "should": required,
-            "minimum_should_match": 1
+        'bool': {
+            'should': [required],
+            'minimum_should_match': 1
         }
     })
+    query['bool']['should'].extend(scoring)
     return query
