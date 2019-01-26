@@ -113,6 +113,15 @@ def handle_not_found_error(err):
     }, status=404)
 
 
+@blueprint.app_errorhandler(500)
+def handle_server_error(err):
+    log.exception("%s: %s", type(err).__name__, err)
+    return jsonify({
+        'status': 'error',
+        'message': gettext('Internal server error.')
+    }, status=500)
+
+
 @blueprint.app_errorhandler(InvalidData)
 def handle_invalid_data(err):
     return jsonify({
