@@ -49,13 +49,12 @@ def metadata():
             'locales': settings.UI_LANGUAGES
         },
         'categories': Collection.CATEGORIES,
-        'statistics': get_instance_stats(Authz.from_role(None)),
         'countries': registry.country.names,
         'languages': registry.language.names,
         'schemata': model,
         'auth': auth
     }
-    cache.set_complex(key, data, expire=3600)
+    cache.set_complex(key, data, expire=84600)
     return jsonify(data)
 
 
