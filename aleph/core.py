@@ -92,6 +92,7 @@ def create_app(config={}):
     # applications can register their behaviour.
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
+
     # Set up opencensus tracing and its integrations. Export collected traces
     # to Stackdriver Trace on a background thread.
     if settings.STACKDRIVER_TRACE_PROJECT_ID:
