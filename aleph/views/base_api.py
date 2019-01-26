@@ -146,12 +146,3 @@ def handle_es_error(err):
         'status': 'error',
         'message': message
     }, status=status)
-
-
-@blueprint.app_errorhandler(Exception)
-def handle_generic(err):
-    log.exception("%s [%s]: %s", type(err), request.path, err)
-    return jsonify({
-        'status': 'error',
-        'message': gettext('An internal error has occurred.')
-    }, status=500)
