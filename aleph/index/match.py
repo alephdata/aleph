@@ -37,23 +37,25 @@ def _make_queries(prop, value):
                 'match': {
                     'fingerprints': {
                         'query': fp,
+                        # 'fuzziness': 1,
                         'operator': 'and',
                         'minimum_should_match': '60%',
                         'boost': 2 * specificity
                     }
                 }
             }
-    else:
-        if prop.type.group is None:
-            return
-        yield {
-            'term': {
-                prop.type.group: {
-                    'value': value,
-                    'boost': specificity
-                }
+        return
+
+    if prop.type.group is None:
+        return
+    yield {
+        'term': {
+            prop.type.group: {
+                'value': value,
+                'boost': specificity
             }
         }
+    }
 
 
 def match_query(proxy, collection_ids=None, query=None):
