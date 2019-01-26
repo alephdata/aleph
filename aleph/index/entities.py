@@ -98,19 +98,8 @@ def entities_by_ids(ids, schemata=None):
 
 def get_entity(entity_id):
     """Fetch an entity from the index."""
-    # for entity in entities_by_ids(ensure_list(entity_id)):
-    #     return entity
-
-    docs = []
-    for index in entities_read_index().split(','):
-        docs.append({'_index': index, '_id': entity_id})
-
-    body = {'docs': docs}
-    res = es.mget(body=body, _source_exclude=['text'], ignore=[404])
-    for doc in res.get('docs', []):
-        entity = unpack_result(doc)
-        if entity is not None:
-            return entity
+    for entity in entities_by_ids(ensure_list(entity_id)):
+        return entity
 
 
 def _index_updates(collection_id, entities, merge=True):
