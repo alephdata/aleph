@@ -66,7 +66,7 @@ class EntityViews extends React.Component {
                title={
                  <React.Fragment>
                    <Icon name={ref.schema.toLowerCase()} iconSize='14px' className='entity-icon'/>
-                   {schemata[ref.property.schema].reverseLabel(ref)}
+                   {schemata[ref.property.range].reverseLabel(ref)}
                    <Count count={ref.count} />
                  </React.Fragment>
                }
