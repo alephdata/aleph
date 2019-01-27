@@ -46,7 +46,6 @@ clean:
 build:
 	docker build --cache-from alephdata/aleph -t alephdata/aleph:$(TAG) .
 	docker build --cache-from alephdata/aleph-ui -t alephdata/aleph-ui:$(TAG) ui
-	docker build --cache-from alephdata/aleph-convert-document -t alephdata/aleph-convert-document:$(TAG) services/convert-document
 	docker build --cache-from alephdata/aleph-recognize-text -t alephdata/aleph-recognize-text:$(TAG) services/recognize-text
 	docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities:$(TAG) services/extract-entities
 
@@ -58,7 +57,6 @@ build-full: build build-ui
 docker-pull:
 	docker pull alephdata/aleph
 	docker pull alephdata/aleph-ui
-	docker pull alephdata/aleph-convert-document
 	docker pull alephdata/aleph-recognize-text
 	docker pull alephdata/aleph-extract-entities
 
@@ -66,7 +64,6 @@ docker-push:
 	docker push alephdata/aleph:$(TAG)
 	docker push alephdata/aleph-ui:$(TAG)
 	docker push alephdata/aleph-ui-production:$(TAG)
-	docker push alephdata/aleph-convert-document:$(TAG)
 	docker push alephdata/aleph-recognize-text:$(TAG)
 	docker push alephdata/aleph-extract-entities:$(TAG)
 
