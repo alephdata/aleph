@@ -13,9 +13,6 @@ REQUIRED = [registry.name, registry.iban, registry.identifier]
 
 
 def _make_queries(prop, value):
-    if not prop.matchable:
-        return
-
     specificity = prop.type.specificity(value)
     if specificity == 0:
         return

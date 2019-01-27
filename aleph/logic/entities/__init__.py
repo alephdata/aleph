@@ -120,7 +120,7 @@ def entity_tags(entity, authz):
         if type_.group is None:
             continue
         for value in ensure_list(entity.get(type_.group)):
-            if value is None or not len(value):
+            if type_.specificity(value) < 0.1:
                 continue
             schemata = model.get_type_schemata(type_)
             schemata = [s for s in schemata if s.is_a(Thing)]
