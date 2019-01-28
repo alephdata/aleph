@@ -23,6 +23,7 @@ export default class Schema {
     'Workbook', 'Table', 'PlainText',
     'Image', 'Video', 'Audio'
   ];
+  private readonly schemata: Array<string>;
 
   constructor(schemaName, theImplementation) {
     this.name = schemaName;
@@ -30,6 +31,7 @@ export default class Schema {
     this.plural = theImplementation.plural;
     this.icon = theImplementation.icon;
     this.featured = theImplementation.featured;
+    this.schemata = theImplementation.schemata;
     Object
       .entries(theImplementation.properties)
       .forEach(([propertyName, property]) => {
@@ -80,10 +82,8 @@ export default class Schema {
       .map(featuredPropertyName => this.properties.get(featuredPropertyName))
   }
 
-  extends(schemaName): boolean {
-    /*FIXME: Include parent schema name*/
-    return !!Array.from(this.properties.values())
-      .find((property: Property) => property.extends(schemaName))
+  extends(schemaName:string): boolean {
+    return !!~this.schemata.indexOf(schemaName);
   }
 
 }
