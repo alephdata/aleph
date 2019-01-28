@@ -80,6 +80,8 @@ class Authz(object):
         return self.logged_in
 
     def can_import(self):
+        if not self.session_write:
+            return False
         return self.logged_in
 
     def match(self, roles):
