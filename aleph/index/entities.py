@@ -55,7 +55,6 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         source['excludes'] = ensure_list(excludes)
     query = {
         'query': {'bool': {'filter': filters}},
-        'sort': ['_doc'],
         '_source': source
     }
     index = entities_read_index(schema=schemata)

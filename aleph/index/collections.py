@@ -9,7 +9,7 @@ from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
-from aleph.index.util import index_form, search_safe
+from aleph.index.util import index_form, search_safe, MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -138,6 +138,29 @@ def get_instance_stats(authz):
         'collections': len(collections),
         'entities': entities
     }
+
+
+def get_sitemap_entities(collection_id):
+    filters = [
+        {'term': {'collection_id': collection_id}},
+        {'term': {'schemata': Entity.THING}},
+    ]
+    query = {
+        'query': {
+            'bool': {
+                'filter': filters
+            }
+        },
+        'size': MAX_PAGE,
+        'sort': [{'updated_at': 'desc'}],
+        '_source': {'includes': ['schema', 'updated_at']}
+    }
+    index = entities_read_index(Entity.THING)
+    res = es.search(index=index, body=query)
+    for res in res.get('hits', {}).get('hits', []):
+        source = res.get('_source')
+        source['id'] = res.get('_id')
+        yield source
 
 
 def delete_collection(collection_id, sync=False):

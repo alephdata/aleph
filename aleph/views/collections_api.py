@@ -4,15 +4,16 @@ from werkzeug.exceptions import BadRequest
 from followthemoney import model
 from followthemoney.exc import InvalidMapping
 
-from aleph.core import db
-from aleph.model import Role, Audit
+from aleph.core import db, settings
+from aleph.model import Role, Audit, Document
 from aleph.search import CollectionsQuery
-from aleph.logic.collections import create_collection, generate_sitemap
+from aleph.index.collections import get_sitemap_entities
+from aleph.logic.collections import create_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
-from aleph.logic.util import collection_url
+from aleph.logic.util import collection_url, document_url, entity_url
 from aleph.serializers import CollectionSchema
 from aleph.views.cache import enable_cache
 from aleph.views.util import get_db_collection, get_index_collection
@@ -49,11 +50,27 @@ def view(id):
 
 @blueprint.route('/api/2/collections/<int:id>/sitemap.xml', methods=['GET'])
 def sitemap(id):
+    """Generate entries for a collection-based sitemap.xml file."""
+    # cf. https://www.sitemaps.org/protocol.html
     collection = get_db_collection(id, request.authz.READ)
+    document = model.get(Document.SCHEMA)
+    entries = []
+    for entity in get_sitemap_entities(id):
+        updated_at = entity.get('updated_at', '').split('T', 1)[0]
+        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
+        schema = model.get(entity.get('schema'))
+        if schema is None:
+            continue
+        if schema.is_a(document):
+            url = document_url(entity.get('id'))
+        else:
+            url = entity_url(entity.get('id'))
+        entries.append((url, updated_at))
     url = collection_url(collection_id=collection.id)
     updated_at = collection.updated_at.date().isoformat()
-    return render_xml('sitemap.xml', url=url, updated_at=updated_at,
-                      entries=generate_sitemap(id))
+    return render_xml('sitemap.xml', url=url,
+                      updated_at=updated_at,
+                      entries=entries)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
