@@ -76,13 +76,13 @@ class Authz(object):
         collection = int(collection)
         return collection in self.collections(action)
 
-    def can_export(self):
-        return self.logged_in
+    def can_stream(self):
+        return self.is_admin
 
-    def can_import(self):
+    def can_bulk_import(self):
         if not self.session_write:
             return False
-        return self.logged_in
+        return self.is_admin
 
     def match(self, roles):
         """See if there's overlap in roles."""

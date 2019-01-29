@@ -9,7 +9,7 @@ from followthemoney import model
 from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, bulk, BulkIndexError
 
-from aleph.core import es, settings, cache
+from aleph.core import es, settings
 from aleph.model import Document
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form, refresh_sync
@@ -156,10 +156,8 @@ def _index_updates(collection_id, entities, merge=True):
 
 def index_bulk(collection_id, entities, merge=True):
     """Index a set of entities."""
-    lock = cache.lock(cache.key('index_bulk'))
-    lock.acquire(blocking=True)
-    start_time = time()
     try:
+        start_time = time()
         actions = _index_updates(collection_id, entities, merge=merge)
         chunk_size = len(actions) + 1
         return bulk(es, actions,
@@ -169,15 +167,10 @@ def index_bulk(collection_id, entities, merge=True):
                     request_timeout=REQUEST_TIMEOUT,
                     timeout=TIMEOUT,
                     refresh=refresh_sync(True))
-    except BulkIndexError as exc:
-        log.warning('Indexing error: %s', exc)
-    finally:
         duration = (time() - start_time)
         log.info("Bulk write: %.4fs", duration)
-        try:
-            lock.release()
-        except Exception:
-            log.exception("Cannot release index lock.")
+    except BulkIndexError as exc:
+        log.warning('Indexing error: %s', exc)
 
 
 def finalize_index(proxy, context, texts):

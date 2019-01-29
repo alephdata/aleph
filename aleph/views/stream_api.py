@@ -18,7 +18,9 @@ blueprint = Blueprint('bulk_api', __name__)
 @blueprint.route('/api/2/entities/_stream')
 @blueprint.route('/api/2/collections/<int:collection_id>/_stream')
 def entities(collection_id=None):
-    require(request.authz.can_export())
+    require(request.authz.can_stream())
+    log.debug("Stream entities [%r] begins... (coll: %s)",
+              request.authz, collection_id)
     schemata = ensure_list(request.args.getlist('schema'))
     excludes = ['text', 'roles', 'fingerprints']
     includes = ensure_list(request.args.getlist('include'))
@@ -38,7 +40,9 @@ def entities(collection_id=None):
 @blueprint.route('/api/2/collections/<int:collection_id>/_records')
 @blueprint.route('/api/2/documents/<int:document_id>/records/_stream')
 def records(document_id=None, collection_id=None):
-    require(request.authz.can_export())
+    require(request.authz.can_stream())
+    log.debug("Stream records [%r] begins... (coll: %s)",
+              request.authz, collection_id)
     if collection_id is not None:
         get_db_collection(collection_id, request.authz.READ)
         record_audit(Audit.ACT_COLLECTION, id=collection_id)
@@ -55,7 +59,9 @@ def records(document_id=None, collection_id=None):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/_rdf')
 def triples(collection_id):
-    require(request.authz.can_export())
+    require(request.authz.can_stream())
+    log.debug("Stream triples [%r] begins... (coll: %s)",
+              request.authz, collection_id)
     collection = get_db_collection(collection_id, request.authz.READ)
     record_audit(Audit.ACT_COLLECTION, id=collection_id)
     return Response(export_collection(collection), mimetype='text/plain')

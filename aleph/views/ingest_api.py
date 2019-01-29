@@ -13,14 +13,14 @@ from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.logic.documents import ingest_document, update_document
 from aleph.logic.documents import index_document_id
-from aleph.views.util import get_db_collection, get_flag
+from aleph.views.util import require, get_flag
 from aleph.views.util import jsonify, validate_data
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
 
 
-def _load_parent(collection, meta):
+def _load_parent(collection_id, meta):
     # Determine the parent document for the document that is to be
     # ingested. This can either be specified using a document ID,
     # or using a foreign ID (because the document ID may not be as
@@ -31,12 +31,12 @@ def _load_parent(collection, meta):
     parent = None
     if not is_mapping(data):
         parent = Document.by_id(data,
-                                collection_id=collection.id)
+                                collection_id=collection_id)
     elif 'id' in data:
         parent = Document.by_id(data.get('id'),
-                                collection_id=collection.id)
+                                collection_id=collection_id)
     elif 'foreign_id' in data:
-        parent = Document.by_keys(collection_id=collection.id,
+        parent = Document.by_keys(collection_id=collection_id,
                                   foreign_id=data.get('foreign_id'))
     if parent is None:
         raise BadRequest(response=jsonify({
@@ -46,7 +46,7 @@ def _load_parent(collection, meta):
     return parent.id
 
 
-def _load_metadata(collection):
+def _load_metadata():
     """Unpack the common, pre-defined metadata for all the uploaded files."""
     try:
         meta = json.loads(request.form.get('meta', '{}'))
@@ -71,11 +71,12 @@ def _load_metadata(collection):
     return meta, foreign_id
 
 
-@blueprint.route('/api/2/collections/<int:id>/ingest', methods=['POST', 'PUT'])
-def ingest_upload(id):
-    collection = get_db_collection(id, request.authz.WRITE)
-    meta, foreign_id = _load_metadata(collection)
-    parent_id = _load_parent(collection, meta)
+@blueprint.route('/api/2/collections/<int:collection_id>/ingest',
+                 methods=['POST', 'PUT'])
+def ingest_upload(collection_id):
+    require(request.authz.can(collection_id, request.authz.WRITE))
+    meta, foreign_id = _load_metadata()
+    parent_id = _load_parent(collection_id, meta)
     upload_dir = mkdtemp(prefix='aleph.upload.')
     try:
         documents = []
@@ -84,7 +85,7 @@ def ingest_upload(id):
             path = os.path.join(upload_dir, path)
             storage.save(path)
             content_hash = checksum(path)
-            document = Document.by_keys(collection_id=collection.id,
+            document = Document.by_keys(collection_id=collection_id,
                                         parent_id=parent_id,
                                         foreign_id=foreign_id,
                                         content_hash=content_hash)
@@ -100,7 +101,7 @@ def ingest_upload(id):
             # directory instead. Maybe this should be more explicit,
             # but it seemed like the most simple way of fitting it
             # into the API.
-            document = Document.by_keys(collection_id=collection.id,
+            document = Document.by_keys(collection_id=collection_id,
                                         parent_id=parent_id,
                                         foreign_id=foreign_id)
             document.update(meta)

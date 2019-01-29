@@ -20,6 +20,7 @@ def get_collection(collection_id):
     key = cache.object_key(Collection, collection_id)
     data = cache.get_complex(key)
     if data is None:
+        log.debug("Collection [%s]: object cache miss", collection_id)
         data = index.get_collection(collection_id)
         cache.set_complex(key, data, expire=cache.EXPIRE)
     return data

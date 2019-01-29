@@ -20,6 +20,7 @@ def get_entity(entity_id):
     key = cache.object_key(Entity, entity_id)
     entity = cache.get_complex(key)
     if entity is None:
+        log.debug("Entity [%s]: object cache miss", entity_id)
         entity = index.get_entity(entity_id)
         cache.set_complex(key, entity, expire=cache.EXPIRE)
     return entity
