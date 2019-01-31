@@ -8,7 +8,7 @@ from aleph.core import db, settings
 from aleph.model import Role, Audit, Document
 from aleph.search import CollectionsQuery
 from aleph.index.collections import get_sitemap_entities
-from aleph.logic.collections import create_collection
+from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
@@ -115,11 +115,13 @@ def bulk(id):
     merge = get_flag('merge', default=False)
     entities = ensure_list(request.get_json(force=True))
     bulk_write(collection, entities, merge=merge)
+    refresh_collection(id)
     return ('', 204)
 
 
 @blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
 def delete(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    delete_collection(collection, sync=True)
+    sync = get_flag('sync', default=True)
+    delete_collection(collection, sync=sync)
     return ('', 204)
