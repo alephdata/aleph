@@ -18,13 +18,14 @@ def _make_queries(prop, value):
         return
 
     if prop.type == registry.name:
+        boost = (1 + specificity) * 2
         yield {
             'match': {
                 'names.text': {
                     'query': value,
                     'operator': 'and',
                     'minimum_should_match': '60%',
-                    'boost': 2 * specificity
+                    'boost': boost
                 }
             }
         }
@@ -34,7 +35,7 @@ def _make_queries(prop, value):
                 'term': {
                     'fingerprints': {
                         'value': fp,
-                        'boost': 2 * specificity
+                        'boost': boost
                     }
                 }
             }
