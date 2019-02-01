@@ -132,6 +132,7 @@ def search_safe(*args, **kwargs):
             return es.search(*args,
                              timeout=TIMEOUT,
                              request_timeout=REQUEST_TIMEOUT,
+                             ignore=[404],
                              **kwargs)
         except RequestError:
             raise
@@ -189,17 +190,18 @@ def configure_index(index, mapping, settings):
     settings. This will try to make a new index, or update an
     existing mapping with new properties.
     """
-    log.info("Configuring index: %s...", index)
-    mapping['date_detection'] = False
-    body = {
-        'settings': settings,
-        'mappings': {'doc': mapping}
-    }
-    res = es.indices.put_mapping(index=index,
-                                 doc_type='doc',
-                                 body=mapping,
-                                 ignore=[404])
-    if res.get('status') == 404:
+    if es.indices.exists(index=index):
+        log.info("Configuring index: %s...", index)
+        es.indices.put_mapping(index=index,
+                               doc_type='doc',
+                               body=mapping,
+                               ignore=[400])
+    else:
+        log.info("Creating index: %s...", index)
+        body = {
+            'settings': settings,
+            'mappings': {'doc': mapping}
+        }
         es.indices.create(index, body=body)
 
 
@@ -212,7 +214,7 @@ def index_settings(shards=5, refresh_interval=None):
             "analysis": {
                 "analyzer": {
                     "icu_latin": {
-                        "tokenizer": "lowercase",
+                        "tokenizer": "standard",
                         "filter": ["latinize"]
                     }
                 },

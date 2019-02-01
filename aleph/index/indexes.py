@@ -33,6 +33,7 @@ def all_indexes():
 
 def configure_collections():
     mapping = {
+        "date_detection": False,
         "dynamic_templates": [
             {
                 "fields": {
@@ -101,6 +102,7 @@ def records_read_index():
 
 def configure_records():
     mapping = {
+        "date_detection": False,
         "properties": {
             "collection_id": KEYWORD,
             "document_id": KEYWORD,
@@ -169,12 +171,15 @@ def configure_schema(schema):
 
     mapping = {
         "date_detection": False,
+        "_source": {
+            "excludes": ["text"]
+        },
         "properties": {
-            "title": RAW_TEXT,
             "name": {
                 "type": "text",
                 "analyzer": "icu_latin",
-                "fields": {"kw": KEYWORD}
+                "fields": {"kw": KEYWORD},
+                "boost": 3.0
             },
             "schema": KEYWORD,
             "schemata": KEYWORD,
@@ -198,7 +203,8 @@ def configure_schema(schema):
             "fingerprints": KEYWORD,
             "names": {
                 "type": "keyword",
-                "fields": {"text": RAW_TEXT}
+                "fields": {"text": RAW_TEXT},
+                "boost": 2.0
             },
             "emails": KEYWORD,
             "phones": KEYWORD,
@@ -219,7 +225,12 @@ def configure_schema(schema):
             "author": KEYWORD,
             "generator": KEYWORD,
             "summary": RAW_TEXT,
-            "text": LATIN_TEXT,
+            "text": {
+                "type": "text",
+                "analyzer": "icu_latin",
+                "term_vector": "with_positions_offsets",
+                "store": True
+            },
             "properties": {
                 "type": "object",
                 "properties": schema_mapping

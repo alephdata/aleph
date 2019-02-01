@@ -2,7 +2,7 @@ import logging
 from pprint import pprint, pformat  # noqa
 from elasticsearch.helpers import scan
 
-from aleph.core import es, settings
+from aleph.core import es
 from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
 from aleph.index.util import clean_query
@@ -151,14 +151,12 @@ class Query(object):
         return list(reversed(sort_fields))
 
     def get_highlight(self):
-        if not settings.RESULT_HIGHLIGHT:
-            return {}
         if not self.parser.highlight:
             return {}
-
         return {
             'fields': {
                 'text': {
+                    # 'type': 'fvh',
                     'number_of_fragments': self.parser.highlight_count,
                     'fragment_size': self.parser.highlight_length
                 }

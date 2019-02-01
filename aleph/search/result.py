@@ -1,6 +1,7 @@
 import math
 import logging
 from banal import hash_data
+from pprint import pprint, pformat  # noqa
 
 from aleph.core import url_external
 from aleph.index.util import unpack_result
@@ -97,6 +98,7 @@ class SearchQueryResult(QueryResult):
         hits = self.result.get('hits', {})
         self.total = hits.get('total')
         for doc in hits.get('hits', []):
+            # log.info("Res: %s", pformat(doc))
             doc = unpack_result(doc)
             if doc is not None:
                 self.results.append(doc)

@@ -82,7 +82,7 @@ def entities_by_ids(ids, schemata=None, source=None):
         '_source': source,
         'size': MAX_PAGE
     }
-    result = search_safe(index=index, body=query, ignore=[404])
+    result = search_safe(index=index, body=query)
     for doc in result.get('hits', {}).get('hits', []):
         entity = unpack_result(doc)
         if entity is not None:
