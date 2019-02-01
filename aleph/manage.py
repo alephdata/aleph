@@ -206,8 +206,8 @@ def resetcache():
 @manager.command
 def repair():
     """Re-index all the collections and entities."""
-    index_collections()
     index_entities()
+    index_collections(refresh=True)
     update_roles()
 
 

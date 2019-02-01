@@ -221,7 +221,7 @@ def index_settings(shards=5, refresh_interval=None):
                 "filter": {
                     "latinize": {
                         "type": "icu_transform",
-                        "id": "Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC"  # noqa
+                        "id": "Any-Latin; NFKD; Lower(); [:Nonspacing Mark:] Remove; NFC"  # noqa
                     }
                 }
             }

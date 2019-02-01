@@ -15,7 +15,8 @@ log = logging.getLogger(__name__)
 
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints']
+    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints', 'names',
+                      'phones', 'emails', 'identifiers']
     SORT_DEFAULT = []
 
     def get_index(self):

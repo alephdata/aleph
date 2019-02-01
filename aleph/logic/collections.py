@@ -50,9 +50,11 @@ def refresh_collection(collection_id, sync=False):
                     cache.object_key(Collection, collection_id, 'stats'))
 
 
-def index_collections():
+def index_collections(refresh=False):
     for collection in Collection.all(deleted=True):
         log.info("Index [%s]: %s", collection.id, collection.label)
+        if refresh:
+            refresh_collection(collection.id, sync=False)
         index.index_collection(collection)
 
 

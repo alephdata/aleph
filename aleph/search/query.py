@@ -45,7 +45,7 @@ class Query(object):
                     "fields": self.TEXT_FIELDS,
                     "analyzer": "icu_latin",
                     "default_operator": "AND",
-                    "minimum_should_match": "80%",
+                    "minimum_should_match": "70%",
                     "lenient": True
                 }
             })
@@ -156,7 +156,7 @@ class Query(object):
         return {
             'fields': {
                 'text': {
-                    # 'type': 'fvh',
+                    'type': 'fvh',
                     'number_of_fragments': self.parser.highlight_count,
                     'fragment_size': self.parser.highlight_length
                 }
@@ -226,5 +226,6 @@ class AuthzQuery(Query):
 
     def get_filters(self):
         filters = super(AuthzQuery, self).get_filters()
-        filters.append(authz_query(self.parser.authz))
+        if not self.parser.authz.is_admin:
+            filters.append(authz_query(self.parser.authz))
         return filters
