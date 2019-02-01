@@ -17,6 +17,8 @@ from aleph.index.util import index_safe, search_safe, authz_query
 from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE
 
 log = logging.getLogger(__name__)
+EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
+                   'identifiers', 'addresses']
 
 
 def index_entity(entity, sync=False):
@@ -38,14 +40,13 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         filters.append({'term': {'collection_id': collection_id}})
     if ensure_list(schemata):
         filters.append({'terms': {'schemata': ensure_list(schemata)}})
-    source = {}
-    if ensure_list(includes):
-        source['includes'] = ensure_list(includes)
-    elif ensure_list(excludes):
-        source['excludes'] = ensure_list(excludes)
+    includes = ensure_list(includes)
+    excludes = ensure_list(excludes)
+    if not len(excludes):
+        excludes = EXCLUDE_DEFAULT
     query = {
         'query': {'bool': {'filter': filters}},
-        '_source': source
+        '_source': {'includes': includes, 'excludes': excludes}
     }
     index = entities_read_index(schema=schemata)
     for res in scan(es, index=index, query=query, scroll='1410m'):
@@ -179,20 +180,16 @@ def delete_entity(entity_id, exclude=None, sync=False):
 
 def finalize_index(proxy, context, texts):
     """Apply final denormalisations to the index."""
-    for prop, value in proxy.itervalues():
-        if prop.type.name in ['entity', 'date', 'url', 'country', 'language']:
-            continue
-        texts.append(value)
-
     entity = proxy.to_full_dict()
     data = merge_data(context, entity)
     data['name'] = data.get('name', proxy.caption)
     data['text'] = index_form(texts)
 
-    names = data.get('names', [])
-    fps = [fingerprints.generate(name) for name in names]
-    fps = [fp for fp in fps if fp is not None]
-    data['fingerprints'] = list(set(fps))
+    names = ensure_list(data.get('names'))
+    fps = set([fingerprints.generate(name) for name in names])
+    fps.update(names)
+    fps.discard(None)
+    data['fingerprints'] = list(fps)
 
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')

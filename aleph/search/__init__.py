@@ -4,6 +4,7 @@ from aleph.model import Document, DocumentRecord
 from aleph.index.indexes import entities_read_index
 from aleph.index.indexes import records_read_index
 from aleph.index.indexes import collections_index
+from aleph.index.entities import EXCLUDE_DEFAULT
 from aleph.index.match import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
@@ -15,8 +16,7 @@ log = logging.getLogger(__name__)
 
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'text']
-    EXCLUDE_FIELDS = ['roles', 'text', 'fingerprints', 'names',
-                      'phones', 'emails', 'identifiers']
+    EXCLUDE_FIELDS = EXCLUDE_DEFAULT
     SORT_DEFAULT = []
 
     def get_index(self):

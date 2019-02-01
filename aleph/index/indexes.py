@@ -14,6 +14,7 @@ PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
 RAW_TEXT = {"type": "text"}
 KEYWORD = {"type": "keyword"}
+LATIN_KEYWORD = {"type": "keyword", "normalizer": "icu_latin"}
 TYPE_MAPPINGS = {
     registry.text: LATIN_TEXT,
     registry.date: PARTIAL_DATE,
@@ -107,7 +108,11 @@ def configure_records():
             "collection_id": KEYWORD,
             "document_id": KEYWORD,
             "index": {"type": "long"},
-            "text": LATIN_TEXT
+            "text": {
+                "type": "text",
+                "analyzer": "icu_latin",
+                "term_vector": "with_positions_offsets"
+            },
         }
     }
     settings = index_settings(shards=10, refresh_interval='15s')
@@ -166,13 +171,14 @@ def configure_schema(schema):
     schema_mapping = {}
     if settings.ENTITIES_INDEX_SPLIT:
         for name, prop in schema.properties.items():
-            config = TYPE_MAPPINGS.get(prop.type, KEYWORD)
+            config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
+            config['copy_to'] = 'text'
             schema_mapping[name] = config
 
     mapping = {
         "date_detection": False,
         "_source": {
-            "excludes": ["text"]
+            "excludes": ["text", "fingerprints"]
         },
         "properties": {
             "name": {
@@ -195,16 +201,14 @@ def configure_schema(schema):
             "source_url": KEYWORD,
             "extension": KEYWORD,
             "mime_type": KEYWORD,
-            "encoding": KEYWORD,
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
             "keywords": KEYWORD,
-            "fingerprints": KEYWORD,
+            "fingerprints": LATIN_KEYWORD,
             "names": {
                 "type": "keyword",
-                "fields": {"text": RAW_TEXT},
-                "boost": 2.0
+                "fields": {"text": RAW_TEXT}
             },
             "emails": KEYWORD,
             "phones": KEYWORD,

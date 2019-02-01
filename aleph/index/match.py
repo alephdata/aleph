@@ -31,12 +31,9 @@ def _make_queries(prop, value):
         fp = fingerprints.generate(value)
         if fp is not None:
             yield {
-                'match': {
+                'term': {
                     'fingerprints': {
-                        'query': fp,
-                        # 'fuzziness': 1,
-                        'operator': 'and',
-                        'minimum_should_match': '60%',
+                        'value': fp,
                         'boost': 2 * specificity
                     }
                 }

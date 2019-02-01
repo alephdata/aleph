@@ -82,7 +82,9 @@ def field_filter_query(field, values):
     if field in ['_id', 'id']:
         return {'ids': {'values': values}}
     if len(values) == 1:
-        if field in ['names', 'addresses']:
+        if field in ['names']:
+            field = 'fingerprints'
+        if field in ['addresses']:
             field = '%s.text' % field
             return {'match_phrase': {field: values[0]}}
         return {'term': {field: values[0]}}
@@ -215,6 +217,12 @@ def index_settings(shards=5, refresh_interval=None):
                 "analyzer": {
                     "icu_latin": {
                         "tokenizer": "standard",
+                        "filter": ["latinize"]
+                    }
+                },
+                "normalizer": {
+                    "icu_latin": {
+                        "type": "custom",
                         "filter": ["latinize"]
                     }
                 },
