@@ -118,11 +118,11 @@ def get_collection_stats(collection_id):
     }
     result = search_safe(index=entities_read_index(), body=query)
     aggregations = result.get('aggregations', {})
-    data = {'count': result['hits']['total']}
+    data = {'count': result.get('hits', {}).get('total', 0)}
 
     for facet in ['schemata', 'countries', 'languages']:
         data[facet] = {}
-        for bucket in aggregations[facet]['buckets']:
+        for bucket in aggregations.get(facet, {}).get('buckets', []):
             data[facet][bucket['key']] = bucket['doc_count']
     cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
