@@ -43,8 +43,7 @@ def resolve_id(object_id, clazz):
         entity = get_entity(object_id)
         if entity is not None:
             if Document.SCHEMA in entity.get('schemata'):
-                title = entity.get('title', entity.get('file_name'))
-                return title, document_url(object_id)
+                return entity.get('name'), document_url(object_id)
             else:
                 return entity.get('name'), entity_url(object_id)
     return None, None

@@ -24,7 +24,7 @@ class Query(object):
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ['text']
-    PREFIX_FIELD = 'text'
+    PREFIX_FIELD = 'name'
     SORT_FIELDS = {
         'label': 'label.kw',
         'name': 'name.kw',
