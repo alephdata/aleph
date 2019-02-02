@@ -1,7 +1,6 @@
 import logging
-from uuid import uuid4
+from banal import as_bool
 from normality import stringify
-from banal import as_bool, hash_data
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
 from aleph.core import settings
@@ -108,13 +107,6 @@ class QueryParser(object):
 
     def getbool(self, name, default=False):
         return as_bool(self.get(name), default=default)
-
-    @property
-    def cache_key(self):
-        """Generate a key for the current result."""
-        if not self.cache:
-            return uuid4().hex
-        return hash_data((self.args.items(), self.limit, self.offset))
 
     def to_dict(self):
         parser = {

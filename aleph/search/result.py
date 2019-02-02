@@ -1,6 +1,5 @@
 import math
 import logging
-from banal import hash_data
 from pprint import pprint, pformat  # noqa
 
 from aleph.core import url_external
@@ -8,7 +7,6 @@ from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
 from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
-from aleph.util import result_key
 
 log = logging.getLogger(__name__)
 
@@ -36,12 +34,6 @@ class QueryResult(object):
         args = [('offset', str(offset))]
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
-
-    @property
-    def cache_key(self):
-        """Generate a key for the current result."""
-        results = [result_key(r) for r in self.results]
-        return hash_data((self.parser.cache_key, self.total, results))
 
     def to_dict(self):
         results = list(self.results)

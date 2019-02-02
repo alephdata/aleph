@@ -11,7 +11,7 @@ import sys
 from celery import Task
 from celery.signals import task_prerun, task_postrun, setup_logging
 from elasticsearch import Transport
-from banal import ensure_list, is_mapping
+from banal import ensure_list
 from normality import stringify
 from flask_babel.speaklater import LazyString
 from opencensus.trace import execution_context
@@ -103,13 +103,6 @@ def filter_texts(texts):
         except Exception:
             pass
         yield text
-
-
-def result_key(obj):
-    """Generate a tuple to describe a cache ID for a search result"""
-    if is_mapping(obj):
-        return (obj.get('id'), obj.get('updated_at'))
-    return (getattr(obj, 'id', None), getattr(obj, 'updated_at', None))
 
 
 class JSONEncoder(json.JSONEncoder):
