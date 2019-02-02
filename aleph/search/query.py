@@ -1,6 +1,5 @@
 import logging
 from pprint import pprint, pformat  # noqa
-from elasticsearch.helpers import scan
 
 from aleph.core import es
 from aleph.model import Audit
@@ -193,15 +192,6 @@ class Query(object):
         log.info("Took: %sms", result.get('took'))
         # log.info("%s", pformat(result.get('profile')))
         return result
-
-    def scan(self):
-        """Return an iterator over the whole result set, unpaginated and
-        without aggregations."""
-        query = {
-            'query': self.get_query(),
-            '_source': self.get_source()
-        }
-        return scan(es, index=self.get_index(), query=query)
 
     @classmethod
     def handle(cls, request, limit=None, schema=None, parser=None, **kwargs):
