@@ -79,7 +79,7 @@ class DocumentsApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res.json
-        assert res.json['title'] == data['title'], res.json
+        assert res.json['name'] == data['title'], res.json
 
     def test_update_invalid(self):
         url = '/api/2/documents/1000'

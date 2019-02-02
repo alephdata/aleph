@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 
 class EntitiesQuery(AuthzQuery):
     TEXT_FIELDS = ['name^3', 'text']
+    PREFIX_FIELD = 'names.text'
     EXCLUDE_FIELDS = EXCLUDE_DEFAULT
     SORT_DEFAULT = []
 
@@ -57,6 +58,7 @@ class MatchQuery(EntitiesQuery):
 class CollectionsQuery(AuthzQuery):
     TEXT_FIELDS = ['label^3', 'text']
     SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
+    PREFIX_FIELD = 'label'
 
     def get_index(self):
         return collections_index()

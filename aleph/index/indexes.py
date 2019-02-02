@@ -185,7 +185,8 @@ def configure_schema(schema):
                 "type": "text",
                 "analyzer": "icu_latin",
                 "fields": {"kw": KEYWORD},
-                "boost": 3.0
+                "boost": 3.0,
+                "copy_to": "text"
             },
             "schema": KEYWORD,
             "schemata": KEYWORD,
@@ -208,14 +209,15 @@ def configure_schema(schema):
             "fingerprints": LATIN_KEYWORD,
             "names": {
                 "type": "keyword",
-                "fields": {"text": RAW_TEXT}
+                "fields": {"text": LATIN_TEXT},
+                "copy_to": "text"
             },
             "emails": KEYWORD,
             "phones": KEYWORD,
             "identifiers": KEYWORD,
             "addresses": {
                 "type": "keyword",
-                "fields": {"text": RAW_TEXT}
+                "fields": {"text": LATIN_TEXT}
             },
             "columns": KEYWORD,
             "created_at": {"type": "date"},

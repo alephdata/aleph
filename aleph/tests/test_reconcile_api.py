@@ -36,7 +36,7 @@ class ReconcileApiTestCase(TestCase):
 
         res = self.client.get('/api/freebase/suggest?prefix=kwa')
         assert res.status_code == 200, res
-        assert 2 == len(res.json['result']), res.json
+        assert 1 == len(res.json['result']), res.json
 
         res = self.client.get('/api/freebase/suggest?prefix=kwa&type=Person')
         assert res.status_code == 200, res
