@@ -46,7 +46,6 @@ clean:
 build:
 	docker build --cache-from alephdata/aleph -t alephdata/aleph:$(TAG) .
 	docker build --cache-from alephdata/aleph-ui -t alephdata/aleph-ui:$(TAG) ui
-	docker build --cache-from alephdata/aleph-extract-entities -t alephdata/aleph-extract-entities:$(TAG) services/extract-entities
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
@@ -56,13 +55,11 @@ build-full: build build-ui
 docker-pull:
 	docker pull alephdata/aleph
 	docker pull alephdata/aleph-ui
-	docker pull alephdata/aleph-extract-entities
 
 docker-push:
 	docker push alephdata/aleph:$(TAG)
 	docker push alephdata/aleph-ui:$(TAG)
 	docker push alephdata/aleph-ui-production:$(TAG)
-	docker push alephdata/aleph-extract-entities:$(TAG)
 
 dev: 
 	pip install -q transifex-client bumpversion babel jinja2

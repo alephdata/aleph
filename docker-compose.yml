@@ -45,7 +45,7 @@ services:
       - 50000
   
   extract-entities:
-    image: alephdata/aleph-extract-entities
+    image: alephdata/aleph-extract-entities:1.0.0
     restart: on-failure
     mem_limit: 4g
     expose:
