@@ -1,3 +1,4 @@
+import time
 import logging
 from banal import hash_data
 from flask_babel import get_locale
@@ -19,9 +20,11 @@ def handle_not_modified(exc):
 
 
 @blueprint.before_app_request
-def setup_caching():
+def setup_request():
     """Set some request attributes at the beginning of the request.
     By default, caching will be disabled."""
+    request._begin_time = time.time()
+
     locale = get_locale()
     request._app_locale = str(locale)
 

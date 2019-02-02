@@ -11,12 +11,12 @@ def index_document(document, shallow=False, sync=False):
     log.info("Index document [%s]: %s", document.id, document.name)
     proxy = document.to_proxy()
     context = {
+        'name': document.name,
         'status': document.status,
         'content_hash': document.content_hash,
         'foreign_id': document.foreign_id,
         'error_message': document.error_message,
         'uploader_id': document.uploader_id,
-        'name': document.name,
         'summary': document.summary,
         'author': document.author,
         'generator': document.generator,
