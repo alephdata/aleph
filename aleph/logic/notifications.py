@@ -6,8 +6,7 @@ from aleph.core import db
 from aleph.model import Role, Alert, Event, Notification
 from aleph.model import Collection, Document, Entity
 from aleph.index.entities import get_entity
-from aleph.logic.util import collection_url, entity_url, document_url
-from aleph.logic.util import ui_url
+from aleph.logic.util import collection_url, entity_url, ui_url
 from aleph.notify import notify_role
 from aleph.util import html_link
 
@@ -42,10 +41,7 @@ def resolve_id(object_id, clazz):
     elif clazz in [Document, Entity]:
         entity = get_entity(object_id)
         if entity is not None:
-            if Document.SCHEMA in entity.get('schemata'):
-                return entity.get('name'), document_url(object_id)
-            else:
-                return entity.get('name'), entity_url(object_id)
+            return entity.get('name'), entity_url(object_id)
     return None, None
 
 
