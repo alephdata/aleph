@@ -87,7 +87,7 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
-            'schema': 'Asset',
+            'schema': 'RealEstate',
             'collection_id': self.col.id,
             'properties': {
                 'name': "Our house",
@@ -105,7 +105,7 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
-            'schema': 'Asset',
+            'schema': 'RealEstate',
             'collection': {
                 'id': self.col.id,
                 'label': 'blaaa'
