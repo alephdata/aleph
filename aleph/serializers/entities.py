@@ -169,7 +169,7 @@ class DocumentParentSchema(Schema):
     foreign_id = String(allow_none=True)
 
 
-class DocumentUpdateSchema(Schema):
+class DocumentCreateSchema(Schema):
     title = String(allow_none=True)
     summary = String(allow_none=True)
     countries = List(Country())
@@ -185,7 +185,4 @@ class DocumentUpdateSchema(Schema):
     generator = String(allow_none=True)
     mime_type = String(allow_none=True)
     source_url = String(allow_none=True)
-
-
-class DocumentCreateSchema(DocumentUpdateSchema):
     parent = Nested(DocumentParentSchema())

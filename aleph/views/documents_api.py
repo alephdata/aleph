@@ -4,18 +4,16 @@ from werkzeug.exceptions import BadRequest, NotFound
 from flask import Blueprint, redirect, send_file, request
 from pantomime.types import PDF
 
-from aleph.core import archive, db
+from aleph.core import archive
 from aleph.model import DocumentRecord, Audit
-from aleph.logic.documents import update_document, delete_document
+from aleph.logic.documents import delete_document
 from aleph.logic.util import document_url
 from aleph.logic.audit import record_audit
 from aleph.views.cache import enable_cache
-from aleph.views.entities_api import view
-from aleph.views.util import jsonify, parse_request, sanitize_html
-from aleph.views.util import serialize_data, get_db_document, get_flag
+from aleph.views.util import jsonify, sanitize_html
+from aleph.views.util import serialize_data, get_db_document
 from aleph.serializers import RecordSchema
-from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
-from aleph.search import DocumentsQuery, RecordsQuery
+from aleph.search import RecordsQuery
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)

@@ -1,6 +1,6 @@
 import logging
 
-from aleph.model import Document, DocumentRecord
+from aleph.model import DocumentRecord
 from aleph.index.indexes import entities_read_index
 from aleph.index.indexes import records_read_index
 from aleph.index.indexes import collections_index
@@ -28,16 +28,6 @@ class EntitiesQuery(AuthzQuery):
         if len(schemata):
             return entities_read_index(schema=schemata)
         return entities_read_index()
-
-
-class DocumentsQuery(EntitiesQuery):
-
-    def get_filters(self):
-        filters = super(DocumentsQuery, self).get_filters()
-        filters.append({
-            'term': {'schemata': Document.SCHEMA}
-        })
-        return filters
 
 
 class MatchQuery(EntitiesQuery):
