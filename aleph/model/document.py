@@ -1,5 +1,4 @@
 import logging
-from banal import is_mapping
 from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -251,24 +250,6 @@ class Document(db.Model, DatedModel, Metadata):
             q = q.filter(cls.status != cls.STATUS_SUCCESS)
         q = q.order_by(cls.id.asc())
         return q
-
-    @classmethod
-    def doc_data_to_schema(cls, data):
-        """Convert an existing dict with document information (e.g. from the search
-        index) to it's followthemoney form."""
-        proxy = model.get_proxy(data)
-        for prop, field in cls.SCHEMA_MAPPING.items():
-            proxy.add(prop, data.get(field))
-        proxy.add('namesMentioned', data.get('names'))
-        proxy.add('ibanMentioned', data.get('ibans'))
-        proxy.add('ipMentioned', data.get('ips'))
-        proxy.add('locationMentioned', data.get('locations'))
-        proxy.add('phoneMentioned', data.get('phones'))
-        proxy.add('emailMentioned', data.get('email'))
-        parent = data.get('parent')
-        if is_mapping(parent):
-            proxy.add('parent', parent.get('id'))
-        return proxy.to_dict()
 
     def to_proxy(self):
         proxy = model.make_entity(self.model)

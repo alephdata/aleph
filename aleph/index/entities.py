@@ -10,7 +10,6 @@ from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es
-from aleph.model import Document
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form, refresh_sync
 from aleph.index.util import index_safe, search_safe, authz_query
@@ -56,14 +55,11 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
 
 
 def iter_proxies(**kw):
-    document = model.get(Document.SCHEMA)
     includes = ['schema', 'properties']
     for data in iter_entities(includes=includes, **kw):
         schema = model.get(data.get('schema'))
         if schema is None:
             continue
-        if 'properties' not in data and schema.is_a(document):
-            data.update(Document.doc_data_to_schema(data))
         yield model.get_proxy(data)
 
 
