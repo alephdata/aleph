@@ -63,10 +63,6 @@ class ShallowCombinedSchema(BaseSchema):
     columns = List(String())
     headers = Dict()
 
-    # TODO: is this a separate endpoint?
-    text = String()
-    html = String()
-
     def document_links(self, data, pk, schemata):
         links = {
             'self': url_for('entities_api.view', id=pk),

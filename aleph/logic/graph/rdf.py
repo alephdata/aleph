@@ -1,7 +1,7 @@
 import logging
 from followthemoney.types import registry
 from rdflib import Namespace, Graph, URIRef, Literal
-from rdflib.namespace import DCTERMS, RDF, RDFS, SKOS
+from rdflib.namespace import DCTERMS, RDF, RDFS
 
 from aleph.index.entities import iter_proxies
 from aleph.logic.util import ui_url
@@ -25,12 +25,8 @@ def export_entity(entity, collection_uri):
     uri = registry.entity.rdf(entity.id)
     g.add((uri, DCTERMS.isPartOf, collection_uri))
     g.add((collection_uri, DCTERMS.hasPart, uri))
-    if entity.caption:
-        g.add((uri, SKOS.prefLabel, Literal(entity.caption)))
-    for stmt in entity.statements:
-        triple = stmt.rdf()
-        if triple is not None:
-            g.add(triple)
+    for triple in entity.triples:
+        g.add(triple)
     return g
 
 
