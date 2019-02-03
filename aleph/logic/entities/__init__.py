@@ -17,6 +17,8 @@ BULK_PAGE = 500
 
 
 def get_entity(entity_id):
+    if entity_id is None:
+        return
     key = cache.object_key(Entity, entity_id)
     entity = cache.get_complex(key)
     if entity is None:

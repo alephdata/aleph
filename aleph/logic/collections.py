@@ -13,6 +13,8 @@ log = logging.getLogger(__name__)
 
 
 def get_collection(collection_id):
+    if collection_id is None:
+        return
     key = cache.object_key(Collection, collection_id)
     data = cache.get_complex(key)
     if data is None:

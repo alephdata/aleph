@@ -9,6 +9,8 @@ log = logging.getLogger(__name__)
 
 
 def get_role(role_id):
+    if role_id is None:
+        return
     key = cache.object_key(Role, role_id)
     data = cache.get_complex(key)
     if data is None:
