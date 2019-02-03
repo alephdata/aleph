@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {withRouter} from 'react-router';
+import { withRouter, Redirect } from 'react-router';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
 
@@ -8,11 +8,11 @@ import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
 
 class EntityScreen extends Component {
   render() {
-    const {entityId, mode} = this.props;
-      return (
-        <EntityScreenContext entityId={entityId}
-                             activeMode={mode}/>
-      );
+    const {entityId, entity, mode} = this.props;
+    if (entity.schemata && entity.schemata.indexOf('Document') !== -1) {
+      return <Redirect to={`/documents/${entityId}`} />;
+    }
+    return <EntityScreenContext entityId={entityId} activeMode={mode}/>;
   }
 }
 

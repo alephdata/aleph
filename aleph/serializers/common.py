@@ -45,7 +45,7 @@ class SchemaName(String):
 
     def _validate(self, value):
         schema = model.get(value)
-        if schema is None:
+        if schema is None or schema.abstract:
             raise ValidationError('Invalid schema name: %s' % value)
 
 

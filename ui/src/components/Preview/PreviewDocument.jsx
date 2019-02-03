@@ -12,7 +12,7 @@ import { selectEntity, selectDocumentView } from 'src/selectors';
 
 
 class PreviewDocument extends React.Component {
-  render() {
+  render() {  
     const { previewId } = this.props;
     return (
       <DocumentContextLoader documentId={previewId}>
