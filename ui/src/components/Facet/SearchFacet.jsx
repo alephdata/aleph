@@ -130,7 +130,7 @@ class SearchFacet extends Component {
                           selectedItems={current}
                           onItemClick={this.onSelect}>
               {!isUpdating && hasMoreValues && (
-                <a className="ShowMore" onClick={this.showMore}>
+                <a className="ShowMore" onClick={this.showMore} href="/">
                   <FormattedMessage id="search.facets.showMore"
                                     defaultMessage="Show more…"
                                     style={{paddingTop: 10}}/>

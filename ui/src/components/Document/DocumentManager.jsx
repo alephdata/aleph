@@ -26,6 +26,7 @@ class DocumentManager extends Component {
   }
 
   componentDidMount() {
+    this.refreshPending();
     this.interval = setInterval(() => this.refreshPending(), 2000);
   }
 
@@ -111,7 +112,6 @@ const mapStateToProps = (state, ownProps) => {
   const result = selectEntitiesResult(state, query);
   const status = _.map(result.results || [], 'status');
   const hasPending = status.indexOf('pending') !== -1;
-
   return { query, result, hasPending, editable };
 };
 

@@ -7,7 +7,8 @@ import queryString from "query-string";
 import { withRouter } from "react-router";
 
 import { Count } from 'src/components/common';
-import { selectEntityTags } from "src/selectors";
+import { selectEntityTags, selectEntitiesResult } from "src/selectors";
+import { queryFolderDocuments } from "src/queries";
 import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
@@ -43,7 +44,7 @@ class DocumentViews extends React.Component {
   }
 
   render() {
-    const { document, isPreview, activeMode, tags } = this.props;
+    const { document, isPreview, activeMode, tags, childrenResult } = this.props;
     const hasTextMode = this.hasSchemata(['Pages', 'Image']);
     const hasBrowseMode = this.hasSchemata(['Folder']);
     const hasViewer = this.hasSchemata(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
@@ -93,12 +94,12 @@ class DocumentViews extends React.Component {
         )}
         {hasBrowseMode && (
           <Tab id="browse"
-               disabled={document.children < 1}
+               disabled={childrenResult.total < 1}
                title={
-                  <TextLoading loading={document.isLoading} children={<React.Fragment>
+                  <TextLoading loading={childrenResult.isLoading} children={<React.Fragment>
                     <Icon name="folder" />
                     <FormattedMessage id="entity.info.browse" defaultMessage="Documents"/>
-                    <Count count={document.children} />
+                    <Count count={childrenResult.total} />
                   </React.Fragment>}/>
                }
                panel={
@@ -124,13 +125,15 @@ class DocumentViews extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document } = ownProps;
+  const { document, location } = ownProps;
+  const childrenQuery = queryFolderDocuments(location, document.id, undefined);
   return {
-    tags: selectEntityTags(state, document.id)
+    tags: selectEntityTags(state, document.id),
+    childrenResult: selectEntitiesResult(state, childrenQuery)
   };
 };
 
+DocumentViews = connect(mapStateToProps, {}, null, {pure: false})(DocumentViews);
 DocumentViews = withRouter(DocumentViews);
 DocumentViews = injectIntl(DocumentViews);
-DocumentViews = connect(mapStateToProps, {}, null, {pure: false})(DocumentViews);
 export default DocumentViews;

@@ -117,7 +117,7 @@ class AuthenticationDialog extends Component {
           <section className={firstSection}>
             {passwordLogin && <PasswordAuthLogin buttonClassName='signin-button' onSubmit={this.onLogin}/>}
             {passwordLogin && <div className='link-box'>
-              <a key='oauth' href='#' onClick={this.onRegisterClick}>
+              <a key='oauth' href='/' onClick={this.onRegisterClick}>
                 <FormattedMessage id="signup.register.question"
                                   defaultMessage="Don't have account? Register!"/>
               </a>
@@ -133,7 +133,7 @@ class AuthenticationDialog extends Component {
               <span>
                 <PasswordAuthSignup buttonClassName='signin-button' onSubmit={this.onSignup}/>
                 <div className='link-box'>
-                  <a key='oauth' href='#' onClick={this.onSignInClick}>
+                  <a key='oauth' href='/' onClick={this.onSignInClick}>
                     <FormattedMessage id="signup.login"
                                       defaultMessage="Already have account? Sign in!"/>
                   </a>
