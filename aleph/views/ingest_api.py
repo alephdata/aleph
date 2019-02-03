@@ -12,7 +12,6 @@ from normality import safe_filename, stringify
 from aleph.model import Document
 from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.logic.documents import ingest_document, update_document
-from aleph.logic.documents import index_document_id
 from aleph.views.util import require, get_flag
 from aleph.views.util import jsonify, validate_data
 
@@ -111,10 +110,6 @@ def ingest_upload(collection_id):
             documents.append(document)
     finally:
         shutil.rmtree(upload_dir)
-
-    # Update child counts in index.
-    if parent_id is not None:
-        index_document_id.apply_async([parent_id], priority=1)
 
     # Make sure collection counts are always accurate.
     if get_flag('sync'):

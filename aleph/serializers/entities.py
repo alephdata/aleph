@@ -45,7 +45,6 @@ class ShallowCombinedSchema(BaseSchema):
     uploader_id = String()
     uploader = Nested(RoleReferenceSchema())
     error_message = String()
-    title = String()
     summary = String()
     languages = List(Language())
     keywords = List(String())
@@ -59,13 +58,10 @@ class ShallowCombinedSchema(BaseSchema):
     author = String()
     generator = String()
     mime_type = String()
-    extension = String()
-    encoding = String()
     source_url = String()
     pdf_version = String()
     columns = List(String())
     headers = Dict()
-    children = Integer()
 
     # TODO: is this a separate endpoint?
     text = String()

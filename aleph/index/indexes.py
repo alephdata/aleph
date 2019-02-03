@@ -198,7 +198,6 @@ def configure_schema(schema):
             "file_name": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
-            "children": KEYWORD,
             "source_url": KEYWORD,
             "extension": KEYWORD,
             "mime_type": KEYWORD,

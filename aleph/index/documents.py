@@ -31,13 +31,10 @@ def index_document(document, shallow=False, sync=False):
         'modified_at': document.modified_at,
         'published_at': document.published_at,
         'retrieved_at': document.retrieved_at,
-        # 'extension': document.extension,
-        # 'encoding': document.encoding,
         'mime_type': document.mime_type,
         'pdf_version': document.pdf_version,
         'columns': document.columns,
-        'ancestors': document.ancestors,
-        'children': document.children.count()
+        'ancestors': document.ancestors
     }
     texts = list(document.texts)
     texts.extend(document.columns)
