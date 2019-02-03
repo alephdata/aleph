@@ -55,11 +55,10 @@ class IngestApiTestCase(TestCase):
         assert docs[0]['file_name'] == 'experts.csv', docs
         self.flush_index()
 
-        res = self.client.get('/api/2/documents',
+        res = self.client.get('/api/2/entities',
                               headers=headers)
         assert res.json['total'] == 1, res.json
-        res = self.client.get('/api/2/documents/1',
-                              headers=headers)
+        res = self.client.get('/api/2/entities/1', headers=headers)
         assert 'de' in res.json['countries'], res.json
         assert 'us' in res.json['countries'], res.json
         res = self.client.get('/api/2/documents/1/file',
@@ -88,8 +87,7 @@ class IngestApiTestCase(TestCase):
         assert docs[0]['schema'] == 'HyperText', docs
         self.flush_index()
 
-        res = self.client.get('/api/2/documents',
-                              headers=headers)
+        res = self.client.get('/api/2/entities', headers=headers)
         assert res.json['total'] == 1, res.json
 
         res = self.client.get('/api/2/documents/1/content',

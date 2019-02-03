@@ -30,41 +30,6 @@ def _resp_canonical(resp, document_id):
     return resp
 
 
-@blueprint.route('/api/2/documents', methods=['GET'])
-def index():
-    result = DocumentsQuery.handle(request, schema=CombinedSchema)
-    return jsonify(result)
-
-
-@blueprint.route('/api/2/documents/<int:document_id>/content')
-def content(document_id):
-    enable_cache()
-    document = get_db_document(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    return jsonify({
-        'headers': document.headers,
-        'text': document.body_text,
-        'html': sanitize_html(document.body_raw, document.source_url)
-    })
-
-
-@blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
-def update(document_id):
-    document = get_db_document(document_id, request.authz.WRITE)
-    data = parse_request(DocumentUpdateSchema)
-    document.update(data)
-    db.session.commit()
-    update_document(document, shallow=True, sync=get_flag('sync', True))
-    return view(document_id)
-
-
-@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
-def delete(document_id):
-    document = get_db_document(document_id, request.authz.WRITE)
-    delete_document(document, sync=True)
-    return ('', 204)
-
-
 def _serve_archive(content_hash, file_name, mime_type):
     """Serve a file from the archive or by generating an external URL."""
     url = archive.generate_url(content_hash,
@@ -85,6 +50,25 @@ def _serve_archive(content_hash, file_name, mime_type):
                          mimetype=mime_type)
     finally:
         archive.cleanup_file(content_hash)
+
+
+@blueprint.route('/api/2/documents/<int:document_id>/content')
+def content(document_id):
+    enable_cache()
+    document = get_db_document(document_id)
+    record_audit(Audit.ACT_ENTITY, id=document_id)
+    return jsonify({
+        'headers': document.headers,
+        'text': document.body_text,
+        'html': sanitize_html(document.body_raw, document.source_url)
+    })
+
+
+@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
+def delete(document_id):
+    document = get_db_document(document_id, request.authz.WRITE)
+    delete_document(document, sync=True)
+    return ('', 204)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/file')

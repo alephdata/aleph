@@ -85,8 +85,8 @@ class ShallowCombinedSchema(BaseSchema):
         if schemata.intersection([Document.SCHEMA_PDF, Document.SCHEMA_TABLE]):
             links['records'] = url_for('documents_api.records', document_id=pk)
         if schemata.intersection([Document.SCHEMA_FOLDER]):
-            query = (('filter:parent.id', pk),)
-            links['children'] = url_for('documents_api.index', _query=query)
+            query = (('filter:properties.parent', pk),)
+            links['children'] = url_for('entities_api.index', _query=query)
         return links
 
     def entity_links(self, data, pk, schemata):

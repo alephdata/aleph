@@ -1,5 +1,3 @@
-import json
-
 from aleph.tests.util import TestCase
 
 
@@ -8,22 +6,6 @@ class DocumentsApiTestCase(TestCase):
     def setUp(self):
         super(DocumentsApiTestCase, self).setUp()
         self.load_fixtures('docs.yaml')
-
-    def test_index(self):
-        res = self.client.get('/api/2/documents')
-        assert res.status_code == 200, res
-
-        _, headers = self.login(is_admin=True)
-        res = self.client.get('/api/2/documents', headers=headers)
-        assert res.status_code == 200, res
-        assert res.json['total'] == 4, res.json
-
-        fix = '720badc9cfa9a80fc455239f86c56273dc5c8291'
-        res = self.client.get('/api/2/documents?filter:content_hash=%s' % fix,
-                              headers=headers)
-        assert res.status_code == 200, res
-        assert res.json['total'] == 1, res.json
-        assert res.json['results'][0]['content_hash'] == fix, res.json
 
     def test_view(self):
         doc_id = 1000
@@ -61,54 +43,6 @@ class DocumentsApiTestCase(TestCase):
         assert res.status_code == 400, res
         res = self.client.get('/api/2/documents/1000/pdf')
         assert res.status_code == 404, res
-
-    def test_update_simple(self):
-        url = '/api/2/documents/1000'
-        res = self.client.get(url)
-        assert res.status_code == 200, res
-
-        data = res.json
-        res = self.client.post(url, data=json.dumps(data),
-                               content_type='application/json')
-        assert res.status_code == 403, res.json
-
-        data['title'] = 'Eaten by a pumpkin'
-        _, headers = self.login(is_admin=True)
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 200, res.json
-        assert res.json['name'] == data['title'], res.json
-
-    def test_update_invalid(self):
-        url = '/api/2/documents/1000'
-        ores = self.client.get(url)
-        _, headers = self.login(is_admin=True)
-
-        data = ores.json.copy()
-        data['published_at'] = 'yesterday'
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 400, res.json
-
-        data = ores.json.copy()
-        data['countries'] = ['xz']
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 400, res.json
-
-        data = ores.json.copy()
-        data['keywords'] = ['']
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 400, res.json
 
     def test_delete(self):
         res = self.client.get('/api/2/documents/1003')
