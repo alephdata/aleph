@@ -1,9 +1,9 @@
 import logging
 from banal import ensure_list, is_mapping, is_listish
 from elasticsearch import RequestError
+from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
-from aleph.util import backoff, service_retries
 
 log = logging.getLogger(__name__)
 

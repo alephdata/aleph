@@ -1,4 +1,4 @@
-from banal import ensure_list
+from banal import ensure_list, keys_values
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
@@ -18,7 +18,6 @@ from aleph.serializers import CollectionSchema
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, jsonify, parse_request, serialize_data
 from aleph.views.util import render_xml, get_flag
-from aleph.util import dict_list
 
 blueprint = Blueprint('collections_api', __name__)
 
@@ -97,7 +96,7 @@ def mapping_process(id):
     if not request.is_json:
         raise BadRequest()
     data = request.get_json().get(collection.foreign_id)
-    for query in dict_list(data, 'queries', 'query'):
+    for query in keys_values(data, 'queries', 'query'):
         try:
             model.make_mapping(query)
             bulk_load_query.apply_async([collection.id, query], priority=6)

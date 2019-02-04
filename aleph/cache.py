@@ -1,8 +1,9 @@
 import json
 import logging
+from servicelayer import settings
+from servicelayer.cache import make_key
 
-from aleph import settings
-from aleph.util import make_key, JSONEncoder
+from aleph.util import JSONEncoder
 
 log = logging.getLogger(__name__)
 

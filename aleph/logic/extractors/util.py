@@ -2,9 +2,9 @@ import io
 import csv
 import logging
 from normality import normalize
+from servicelayer.cache import make_key
 
 from aleph.core import settings, kv
-from aleph.util import make_key
 
 log = logging.getLogger(__name__)
 PLACE_KEY = 'ner*gns'

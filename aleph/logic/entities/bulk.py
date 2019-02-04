@@ -1,5 +1,5 @@
 import logging
-from banal import is_mapping
+from banal import is_mapping, keys_values
 from followthemoney import model
 from followthemoney.exc import InvalidData
 
@@ -8,7 +8,6 @@ from aleph.model import Collection
 from aleph.index import entities as index
 from aleph.index.util import BULK_PAGE
 from aleph.logic.collections import refresh_collection
-from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ def bulk_load(config):
         collection = create_collection(data)
         collection_id = collection.get('id')
         # FIXME: this does not perform collection metadata validation.
-        for query in dict_list(data, 'queries', 'query'):
+        for query in keys_values(data, 'queries', 'query'):
             bulk_load_query.apply_async([collection_id, query], priority=6)
 
 

@@ -15,10 +15,9 @@ from celery import Celery
 from celery.schedules import crontab
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
-from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
-from fakeredis import FakeRedis
 import storagelayer
+from servicelayer.cache import get_redis
 from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace import config_integration
 from opencensus.trace.exporters import stackdriver_exporter
@@ -26,9 +25,8 @@ from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
-from aleph.util import (
-    SessionTask, get_extensions, TracingTransport, setup_stackdriver_logging
-)
+from aleph.util import SessionTask, get_extensions
+from aleph.util import TracingTransport, setup_stackdriver_logging
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -153,14 +151,6 @@ def get_archive():
                                     bucket=settings.ARCHIVE_BUCKET)  # noqa
         settings._aleph_archive = archive
     return settings._aleph_archive
-
-
-def get_redis():
-    if settings.REDIS_URL is None:
-        return FakeRedis()
-    if not hasattr(settings, '_redis_pool'):
-        settings._redis_pool = ConnectionPool.from_url(settings.REDIS_URL)
-    return Redis(connection_pool=settings._redis_pool)
 
 
 def get_cache():

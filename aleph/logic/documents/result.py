@@ -113,7 +113,6 @@ class DocumentResult(Result):
         doc.authored_at = self.created_at or doc.meta.get('authored_at')
         doc.modified_at = self.modified_at or doc.meta.get('modified_at')
         doc.published_at = self.published_at or doc.meta.get('published_at')
-        doc.headers = self.headers or doc.meta.get('headers')
         doc.message_id = self.message_id or doc.meta.get('message_id')
         doc.in_reply_to = ensure_list(self.in_reply_to)
         doc.columns = list(self.columns.keys())

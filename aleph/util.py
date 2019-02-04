@@ -1,18 +1,14 @@
 # coding: utf-8
-import json
-import time
-import random
-import logging
-from datetime import datetime, date
-import functools
-from pkg_resources import iter_entry_points
 import sys
-
+import json
+import logging
+import functools
+from normality import stringify
+from datetime import datetime, date
+from pkg_resources import iter_entry_points
 from celery import Task
 from celery.signals import task_prerun, task_postrun, setup_logging
 from elasticsearch import Transport
-from banal import ensure_list
-from normality import stringify
 from flask_babel.speaklater import LazyString
 from opencensus.trace import execution_context
 from opencensus.trace import tracer as tracer_module
@@ -35,33 +31,6 @@ def get_extensions(section):
         for ep in iter_entry_points(section):
             EXTENSIONS[section][ep.name] = ep.load()
     return list(EXTENSIONS[section].values())
-
-
-def dict_list(data, *keys):
-    """Get an entry as a list from a dict. Provide a fallback key."""
-    for key in keys:
-        if key in data:
-            return ensure_list(data[key])
-    return []
-
-
-def backoff(failures=0):
-    """Implement a random, growing delay between external service retries."""
-    sleep = min(3, failures) * random.random()
-    log.debug("Back-off: %.2fs", sleep)
-    time.sleep(sleep)
-
-
-def service_retries():
-    """A default number of tries to re-try an external service."""
-    return range(30)
-
-
-def make_key(*criteria):
-    """Make a string key out of many criteria."""
-    criteria = [c or '' for c in criteria]
-    criteria = [str(c) for c in criteria]
-    return ':'.join(criteria)
 
 
 def html_link(text, link):
