@@ -1,6 +1,6 @@
 import logging
 from banal import ensure_list, is_mapping, is_listish
-from elasticsearch import RequestError
+from elasticsearch import TransportError
 from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
@@ -102,11 +102,9 @@ def query_delete(index, query, **kwargs):
                                request_timeout=REQUEST_TIMEOUT,
                                **kwargs)
             return
-        except RequestError:
-            raise
-        except Exception as exc:
+        except TransportError as exc:
             log.warning("Query delete failed: %s", exc)
-        backoff(failures=attempt)
+            backoff(failures=attempt)
 
 
 def index_safe(index, id, body, **kwargs):
@@ -117,11 +115,9 @@ def index_safe(index, id, body, **kwargs):
             body['id'] = str(id)
             body.pop('text', None)
             return body
-        except RequestError:
-            raise
-        except Exception as exc:
+        except TransportError as exc:
             log.warning("Index error [%s:%s]: %s", index, id, exc)
-        backoff(failures=attempt)
+            backoff(failures=attempt)
 
 
 def search_safe(*args, **kwargs):
@@ -136,11 +132,9 @@ def search_safe(*args, **kwargs):
                              request_timeout=REQUEST_TIMEOUT,
                              ignore=[404],
                              **kwargs)
-        except RequestError:
-            raise
-        except Exception:
-            log.exception("Search error: %r", kwargs)
-        backoff(failures=attempt)
+        except TransportError as exc:
+            log.exception("Search error: %r", exc)
+            backoff(failures=attempt)
 
 
 def index_form(texts):

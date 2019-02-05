@@ -43,6 +43,9 @@ def configure_collections():
                 }
             }
         ],
+        "_source": {
+            "excludes": ["text"]
+        },
         "properties": {
             "label": {
                 "type": "text",

@@ -167,7 +167,7 @@ def normalize_href(href, base_url):
         if not parsed.netloc:
             return None
         return href
-    except Exception:
+    except ValueError:
         return None
 
 
