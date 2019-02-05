@@ -58,6 +58,7 @@ odfpy==1.3.6
 olefile==0.46
 -e git://github.com/alephdata/flanker.git@65eb960f1eaa1fe2925b03f3740e2eff3c21dafc#egg=flanker
 ply==3.11
+six>=1.12.0
 
 # Not entirely sure why this is needed:
 # urllib3==1.23

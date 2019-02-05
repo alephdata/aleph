@@ -38,14 +38,14 @@ services:
       - 3000
 
   recognize-text:
-    image: alephdata/aleph-recognize-text:1.0.1
+    image: alephdata/aleph-recognize-text:1.1.0
     restart: on-failure
     mem_limit: 2g
     expose:
       - 50000
   
   extract-entities:
-    image: alephdata/aleph-extract-entities:1.0.0
+    image: alephdata/aleph-extract-entities:1.1.0
     restart: on-failure
     mem_limit: 4g
     expose:
