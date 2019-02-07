@@ -3,7 +3,7 @@ import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
 
 import Query from 'src/app/Query';
-import Schema from 'src/followthemoney/schema.ts';
+import Schema from '../../followthemoney/lib/followthemoney/schema';
 // import { DocumentSearch } from 'src/components/Toolbar';
 import DefaultViewer from 'src/viewers/DefaultViewer';
 import TableViewer from 'src/viewers/TableViewer';

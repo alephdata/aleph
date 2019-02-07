@@ -1,6 +1,5 @@
 // @ts-ignore
 import Property from './property.ts';
-
 interface ILabelReadingConfiguration {
   forcePlural: boolean
 }
@@ -10,9 +9,10 @@ interface IProperties {
 }
 
 
+
 export default class Schema {
   public readonly icon: string;
-  public properties: IProperties = new Map();
+  public properties: Map<any, any> = new Map();
   private readonly name: string;
   private readonly label: string;
   private readonly plural: string;

@@ -84,7 +84,8 @@
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-dev-server": "3.1.11",
     "webpack-manifest-plugin": "2.0.4",
-    "workbox-webpack-plugin": "3.6.3"
+    "workbox-webpack-plugin": "3.6.3",
+    "@alephdata/vis2": "alpha"
   },
   "devDependencies": {
     "faker": "^4.1.0",
@@ -160,7 +161,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "sideEffects":[
+  "sideEffects": [
     "*.css"
   ]
 }

@@ -1,11 +1,11 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint } from './util';
+import { queryEndpoint, resultEntity } from './util';
 
 
-export const fetchDocument = asyncActionCreator(({ id }) => async dispatch => {
+export const fetchDocument = asyncActionCreator(({ id }) => async (dispatch, getState) => {
   const response = await endpoint.get(`documents/${id}`);
-  return { id, data: response.data };
+  return {id, data: resultEntity(getState(), response.data)}
 }, { name: 'FETCH_DOCUMENT' });
 
 

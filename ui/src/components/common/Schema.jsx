@@ -10,15 +10,15 @@ class SchemaIcon extends PureComponent {
 
     return <Icon className='entity-icon'
                  iconSize='16px'
-                 name={schema.toLowerCase()} />;
+                 name={schema.name.toLowerCase()} />;
   }
 }
 
 class SchemaLabel extends Component {
   render() {
-    const { schema, schemata, plural, icon } = this.props;
-    const model = schemata[schema];
-    const label = model.getLabel({
+    const { schema:schemaName, schemata, plural, icon } = this.props;
+    const schema = schemata.getSchema(schemaName);
+    const label = schema.getLabel({
       forcePlural: plural
     });
     if (icon) {

@@ -62,10 +62,10 @@ export function objectDelete(state, id) {
   return state;
 }
 
-export function resultObjects(state, result) {
-  if (result.results !== undefined) {
+export function resultObjects(state, result, onComplete = objectLoadComplete) {
+  if (result.onComplete !== undefined) {
     for (let object of result.results) {
-      state = objectLoadComplete(state, object.id, object);
+      state = onComplete(state, object.id, object);
     }  
   }
   return state;

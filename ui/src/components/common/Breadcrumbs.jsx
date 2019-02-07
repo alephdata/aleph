@@ -112,7 +112,7 @@ class EntityBreadcrumb extends PureComponent {
   render() {
     const { entity } = this.props;
     return (
-      <li key={entity.id}>
+      <li key={entity.ftm.id}>
         <Entity.Link entity={entity} className="bp3-breadcrumb" icon truncate={30} />
       </li>
     );

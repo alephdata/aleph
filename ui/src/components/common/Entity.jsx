@@ -28,8 +28,7 @@ class EntityLabel extends Component {
     if (entity === undefined) {
       return null;
     }
-    let { title, name: entityName, file_name: fileName, schema } = entity;
-    
+    let { title, name: entityName, file_name: fileName} = entity;
     // Trim names *before* checking to see which ones look okay to use
     title = title ? title.trim() : null;
     entityName = entityName ? entityName.trim() : null;
@@ -50,7 +49,7 @@ class EntityLabel extends Component {
     if (!text || !text.length || text.length < 1) {
       return (
         <span className='EntityLabel untitled'>
-          {icon && <Schema.Icon schema={schema} />}
+          {icon && <Schema.Icon schema={entity.ftm.schema} />}
           {icon && ' '}
           <FormattedMessage id='entity.label.missing' defaultMessage="Untitled" />
         </span>
@@ -59,7 +58,7 @@ class EntityLabel extends Component {
     
     return (
       <span className={entityClassName} title={title || entityName}>
-        {icon && <Schema.Icon schema={schema}/>}
+        {icon && <Schema.Icon schema={entity.ftm.schema}/>}
         {icon && ' '}
         {text}
       </span>
@@ -68,18 +67,18 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onClick = this.onClick.bind(this);
   }
 
   onClick(event) {
     const { entity, history, preview } = this.props;
     if (preview) {
-      const isDocument = entity.schemata.indexOf('Document') !== -1;
+      const isDocument = entity.ftm.schema.isDocument();
       const previewType = isDocument ? 'document' : 'entity';
       event.preventDefault();
-      togglePreview(history, entity, previewType);
+      togglePreview(history, entity.plain, previewType);
     }
   };
 

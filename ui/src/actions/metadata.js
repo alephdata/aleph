@@ -1,6 +1,6 @@
 import asyncActionCreator from "./asyncActionCreator";
 import {endpoint} from "src/app/api";
-import Model from "src/followthemoney/model.ts";
+import {Model} from '@alephdata/vis2'
 
 export const fetchMetadata = asyncActionCreator(
   () => {
@@ -11,7 +11,7 @@ export const fetchMetadata = asyncActionCreator(
       return {
         metadata: {
           ...metadata,
-          schemata: model.getInstance()
+          schemata: model
         }
       };
     }
