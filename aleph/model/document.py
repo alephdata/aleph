@@ -247,8 +247,9 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('fileName', meta.get('file_name'))
         if not proxy.has('fileName'):
             disposition = headers.get('content_disposition')
-            _, attrs = cgi.parse_header(disposition)
-            proxy.set('fileName', attrs.get('filename'))
+            if disposition is not None:
+                _, attrs = cgi.parse_header(disposition)
+                proxy.set('fileName', attrs.get('filename'))
         proxy.set('extension', meta.get('extension'))
         proxy.set('encoding', meta.get('encoding'))
         proxy.set('mimeType', meta.get('mime_type'))
