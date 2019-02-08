@@ -93,6 +93,20 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         db.session.add(self)
         self.updated_at = datetime.utcnow()
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'type': self.type,
+            'name': self.name,
+            'label': self.label,
+            'api_key': self.api_key,
+            'is_admin': self.is_admin,
+            'notified_at': self.notified_at,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'deleted_at': self.deleted_at
+        }
+
     @classmethod
     def by_foreign_id(cls, foreign_id):
         if foreign_id is not None:
