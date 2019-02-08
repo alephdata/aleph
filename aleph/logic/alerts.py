@@ -18,14 +18,7 @@ def get_alert(alert_id):
         alert = Alert.by_id(alert_id)
         if alert is None:
             return
-        data = {
-            'id': alert.id,
-            'query': alert.query,
-            'role_id': alert.role_id,
-            'notified_at': alert.notified_at,
-            'created_at': alert.created_at,
-            'updated_at': alert.updated_at
-        }
+        data = Alert.to_dict()
         cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
 

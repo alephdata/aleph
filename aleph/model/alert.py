@@ -39,6 +39,18 @@ class Alert(db.Model, SoftDeleteModel):
             return False
         return True
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'query': self.query,
+            'normalized': self.normalized,
+            'role_id': self.role_id,
+            'notified_at': self.notified_at,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'deleted_at': self.deleted_at
+        }
+
     @classmethod
     def by_id(cls, id, role_id=None):
         q = cls.all().filter_by(id=id)
