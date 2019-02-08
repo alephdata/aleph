@@ -67,6 +67,8 @@ def entities_by_ids(ids, schemata=None, source=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     ids = ensure_list(ids)
+    if not len(ids):
+        return
     index = entities_read_index(schema=schemata)
     if source is None:
         source = {'excludes': ['text']}

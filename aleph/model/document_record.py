@@ -1,7 +1,9 @@
 import logging
+from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
+from aleph.model.ftm import pack_cells
 from aleph.util import filter_texts
 
 log = logging.getLogger(__name__)
@@ -9,9 +11,10 @@ log = logging.getLogger(__name__)
 
 class DocumentRecord(db.Model):
     """A record reflects a row or page of a document."""
+    SCHEMA_ROW = 'Row'
+    SCHEMA_PAGE = 'Page'
 
     id = db.Column(db.BigInteger, primary_key=True)
-    sheet = db.Column(db.Integer, nullable=True)
     index = db.Column(db.Integer, nullable=True, index=True)
     text = db.Column(db.Unicode, nullable=True)
     data = db.Column(JSONB, nullable=True)
@@ -64,6 +67,23 @@ class DocumentRecord(db.Model):
         q = q.filter(cls.document_id == document_id)
         q = q.filter(cls.index == index)
         return q.first()
+
+    def to_proxy(self):
+        if self.text is not None:
+            proxy = model.make_entity(self.SCHEMA_PAGE)
+            proxy.make_id('record', self.id)
+            proxy.set('document', self.document_id)
+            proxy.set('index', self.index)
+            proxy.set('bodyText', self.text)
+            return proxy
+        else:
+            proxy = model.make_entity(self.SCHEMA_ROW)
+            proxy.make_id('record', self.id)
+            proxy.set('table', self.document_id)
+            proxy.set('index', self.index)
+            values = [v for (k, v) in sorted(self.data.items())]
+            proxy.set('cells', pack_cells(values))
+            return proxy
 
     def __repr__(self):
         return '<DocumentRecord(%r,%r)>' % (self.document_id, self.index)

@@ -1,4 +1,6 @@
+import cgi
 import logging
+from normality import slugify
 from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -33,29 +35,6 @@ class Document(db.Model, DatedModel, Metadata):
     STATUS_PENDING = 'pending'
     STATUS_SUCCESS = 'success'
     STATUS_FAIL = 'fail'
-
-    SCHEMA_MAPPING = {
-        'contentHash': 'content_hash',
-        'title': 'title',
-        'author': 'author',
-        'generator': 'generator',
-        'crawler': 'crawler',
-        'fileSize': 'file_size',
-        'fileName': 'file_name',
-        'extension': 'extension',
-        'encoding': 'encoding',
-        'mimeType': 'mime_type',
-        'language': 'languages',
-        'country': 'countries',
-        'date': 'date',
-        'authoredAt': 'authored_at',
-        'modifiedAt': 'modified_at',
-        'publishedAt': 'published_at',
-        'retrievedAt': 'retrieved_at',
-        'parent': 'parent_id',
-        'messageId': 'message_id',
-        'inReplyTo': 'in_reply_to',
-    }
 
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
@@ -253,12 +232,44 @@ class Document(db.Model, DatedModel, Metadata):
 
     def to_proxy(self):
         proxy = model.make_entity(self.model)
-        proxy.id = self.id
-        for prop, field in self.SCHEMA_MAPPING.items():
-            prop = proxy.schema.get(prop)
-            if prop is not None:
-                values = getattr(self, field)
-                proxy.add(prop, values)
+        proxy.id = str(self.id)
+        proxy.set('contentHash', self.content_hash)
+        proxy.set('parent', self.parent_id)
+        proxy.set('ancestors', self.ancestors)
+        meta = self.meta
+        headers = meta.get('headers', {})
+        headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        proxy.set('title', meta.get('title'))
+        proxy.set('author', meta.get('author'))
+        proxy.set('generator', meta.get('generator'))
+        proxy.set('crawler', meta.get('crawler'))
+        proxy.set('fileSize', meta.get('file_size'))
+        proxy.set('fileName', meta.get('file_name'))
+        if not proxy.has('fileName'):
+            disposition = headers.get('content_disposition')
+            _, attrs = cgi.parse_header(disposition)
+            proxy.set('fileName', attrs.get('filename'))
+        proxy.set('extension', meta.get('extension'))
+        proxy.set('encoding', meta.get('encoding'))
+        proxy.set('mimeType', meta.get('mime_type'))
+        if not proxy.has('mimeType'):
+            proxy.set('mimeType', headers.get('content_type'))
+        proxy.set('language', meta.get('languages'))
+        proxy.set('country', meta.get('countries'))
+        proxy.set('date', meta.get('date'))
+        proxy.set('authoredAt', meta.get('authored_at'))
+        proxy.set('modifiedAt', meta.get('modified_at'))
+        proxy.set('publishedAt', meta.get('published_at'))
+        proxy.set('retrievedAt', meta.get('retrieved_at'))
+        proxy.set('sourceUrl', meta.get('source_url'))
+        proxy.set('messageId', meta.get('message_id'))
+        proxy.set('inReplyTo', meta.get('in_reply_to'))
+        proxy.set('keywords', meta.get('keywords'))
+
+        pdf = 'application/pdf'
+        if meta.get('extension') == 'pdf' or proxy.first('mimeType') == pdf:
+            proxy.set('pdfHash', self.content_hash, quiet=True)
+        proxy.add('pdfHash', meta.get('pdf_version'), quiet=True)
 
         q = db.session.query(DocumentTag)
         q = q.filter(DocumentTag.document_id == self.id)

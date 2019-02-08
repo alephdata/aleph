@@ -68,7 +68,7 @@ SYSTEM_USER = env.get('ALEPH_SYSTEM_USER', 'system:aleph')
 #
 OAUTH = env.to_bool('ALEPH_OAUTH', False)
 OAUTH_NAME = env.get('ALEPH_OAUTH_NAME', 'google')
-OAUTH_KEY = env.get('ALEPHOAUTH_KEY')
+OAUTH_KEY = env.get('ALEPH_OAUTH_KEY')
 OAUTH_SECRET = env.get('ALEPH_OAUTH_SECRET')
 OAUTH_SCOPE = env.get('ALEPH_OAUTH_SCOPE')
 OAUTH_BASE_URL = env.get('ALEPH_OAUTH_BASE_URL')
@@ -152,7 +152,6 @@ RECORDS_INDEX_SET = env.to_list('ALEPH_RECORDS_INDEX_SETs', [RECORDS_INDEX])
 COLLECTIONS_INDEX = '%s-collection-v1' % APP_NAME
 COLLECTIONS_INDEX = env.get('ALEPH_COLLECTIONS_INDEX', COLLECTIONS_INDEX)
 
-
 # Disable delayed processing via queue
 EAGER = env.to_bool('ALEPH_EAGER', DEBUG)
 QUEUE_PREFIX = env.get('ALEPH_QUEUE_PREFIX', APP_NAME)
@@ -161,6 +160,8 @@ QUEUE_ROUTING_KEY = 'worker.process'
 
 BROKER_URI = 'amqp://guest:guest@localhost:5672//'
 BROKER_URI = env.get('ALEPH_BROKER_URI', BROKER_URI)
+
+sls.REDIS_URL = sls.REDIS_URL or 'redis://redis:6379/0'
 
 STACKDRIVER_TRACE_PROJECT_ID = env.get('ALEPH_STACKDRIVER_TRACE_PROJECT_ID')
 TRACE_SAMPLING_RATE = float(env.get('ALEPH_TRACE_SAMPLING_RATE', 0.10))

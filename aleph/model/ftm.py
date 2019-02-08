@@ -1,8 +1,14 @@
+import json
+from banal import ensure_list
+# from normality import safe_filename
 
 
-def document_to_proxy(document):
-    pass
+def pack_cells(cells):
+    return json.dumps(cells)
 
 
-def record_to_proxy(record):
-    pass
+def unpack_cells(cells):
+    try:
+        return ensure_list(json.dumps(cells))
+    except Exception:
+        return []
