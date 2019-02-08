@@ -7,7 +7,7 @@ from aleph.core import url_for
 from aleph.model import Role
 from aleph.serializers.common import BaseSchema
 
-MIN_LENGTH = Length(min=Role.PASSWORD_MIN_LENGTH)
+MIN_LENGTH = Length(min=6)
 
 
 class RoleSchema(BaseSchema):

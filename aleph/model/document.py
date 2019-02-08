@@ -262,8 +262,8 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('publishedAt', meta.get('published_at'))
         proxy.set('retrievedAt', meta.get('retrieved_at'))
         proxy.set('sourceUrl', meta.get('source_url'))
-        proxy.set('messageId', meta.get('message_id'))
-        proxy.set('inReplyTo', meta.get('in_reply_to'))
+        proxy.set('messageId', meta.get('message_id'), quiet=True)
+        proxy.set('inReplyTo', meta.get('in_reply_to'), quiet=True)
         proxy.set('keywords', meta.get('keywords'))
 
         pdf = 'application/pdf'

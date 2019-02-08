@@ -18,7 +18,7 @@ def get_alert(alert_id):
         alert = Alert.by_id(alert_id)
         if alert is None:
             return
-        data = Alert.to_dict()
+        data = alert.to_dict()
         cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
 

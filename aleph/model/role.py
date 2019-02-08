@@ -35,9 +35,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     #: Signature maximum age, defaults to 1 day
     SIGNATURE_MAX_AGE = 60 * 60 * 24
 
-    #: Password minimum length
-    PASSWORD_MIN_LENGTH = 6
-
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
@@ -101,6 +98,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             'label': self.label,
             'api_key': self.api_key,
             'is_admin': self.is_admin,
+            'is_muted': self.is_muted,
+            'has_password': self.has_password,
             'notified_at': self.notified_at,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
