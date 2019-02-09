@@ -2,12 +2,12 @@
 # Dependencies maintained by OCCRP
 banal==0.4.2
 urlnormalizer==1.2.0
-followthemoney==1.5.5
+followthemoney==1.5.6
 fingerprints==0.6.2
 storagelayer==0.5.2
 servicelayer==0.1.4
 ingestors==0.12.0
 normality==1.0.0
-pantomime==0.3.2
+pantomime==0.3.3
 pdflib==0.1.7
-alephclient==0.10.2
+alephclient==0.10.4
