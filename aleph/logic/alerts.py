@@ -12,15 +12,10 @@ log = logging.getLogger(__name__)
 
 
 def get_alert(alert_id):
-    key = cache.object_key(Alert, alert_id)
-    data = cache.get_complex(key)
-    if data is None:
-        alert = Alert.by_id(alert_id)
-        if alert is None:
-            return
-        data = alert.to_dict()
-        cache.set_complex(key, data, expire=cache.EXPIRE)
-    return data
+    alert = Alert.by_id(alert_id)
+    if alert is None:
+        return
+    return alert.to_dict()
 
 
 def refresh_alert(alert, sync=False):
