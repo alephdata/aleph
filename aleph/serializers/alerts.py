@@ -1,15 +1,13 @@
 from marshmallow import post_dump
-from marshmallow.fields import Nested, String, DateTime
+from marshmallow.fields import String, DateTime
 
 from aleph.core import url_for
 from aleph.serializers.common import BaseSchema
-from aleph.serializers.roles import RoleReferenceSchema
 
 
 class AlertSchema(BaseSchema):
     query = String()
     normalized = String(dump_only=True)
-    role = Nested(RoleReferenceSchema, dump_only=True)
     notified_at = DateTime(dump_only=True)
 
     @post_dump
