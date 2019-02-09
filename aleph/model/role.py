@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from normality import stringify
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -92,7 +93,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'id': stringify(self.id),
             'type': self.type,
             'name': self.name,
             'label': self.label,

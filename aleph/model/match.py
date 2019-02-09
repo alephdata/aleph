@@ -1,5 +1,5 @@
 import logging
-# from datetime import datetime
+from normality import stringify
 from sqlalchemy import func, or_
 from sqlalchemy.orm import aliased
 
@@ -19,6 +19,17 @@ class Match(db.Model, IdModel, DatedModel):
                                     db.ForeignKey('collection.id'),
                                     index=True)
     score = db.Column(db.Float(), nullable=True)
+
+    def to_dict(self):
+        return {
+            'id': stringify(self.id),
+            'score': self.score,
+            'entity_id': stringify(self.entity_id),
+            'collection_id': stringify(self.collection_id),
+            'match_id': stringify(self.match_id),
+            'match_collection_id': stringify(self.match_collection_id),
+            'created_at': self.created_at,
+        }
 
     @classmethod
     def find_by_collection(cls, collection_id, other_id):
@@ -62,6 +73,5 @@ class Match(db.Model, IdModel, DatedModel):
         return q
 
     def __repr__(self):
-        return 'Match(%r, %r, %r, %r)' % (self.entity_id,
-                                          self.match_id,
-                                          self.score)
+        tmpl = 'Match(%r, %r, %r)'
+        return tmpl % (self.entity_id, self.match_id, self.score)

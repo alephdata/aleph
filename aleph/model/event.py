@@ -14,6 +14,13 @@ class Event(object):
         self.template = template
         self.params = params
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'template': self.template,
+            'params': {p: c.__name__.lower() for (p, c) in self.params.items()}
+        }
+
 
 class EventsRegistry(type):
 

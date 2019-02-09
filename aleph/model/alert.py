@@ -41,10 +41,10 @@ class Alert(db.Model, SoftDeleteModel):
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'id': stringify(self.id),
             'query': self.query,
             'normalized': self.normalized,
-            'role_id': self.role_id,
+            'role_id': stringify(self.role_id),
             'notified_at': self.notified_at,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
