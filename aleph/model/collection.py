@@ -1,8 +1,9 @@
 import logging
-from banal import as_bool, ensure_list
 from datetime import datetime
+from normality import stringify
 from flask_babel import lazy_gettext
 from sqlalchemy.orm import aliased
+from banal import as_bool, ensure_list
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
@@ -105,9 +106,28 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(Permission.deleted_at == None)  # noqa
         return q.count() < 1
 
-    @property
-    def kind(self):
-        return 'casefile' if self.casefile else 'source'
+    def to_dict(self):
+        category = self.DEFAULT
+        if self.category in self.CATEGORIES:
+            category = self.category
+        return {
+            'id': stringify(self.id),
+            'collection_id': stringify(self.id),
+            'foreign_id': self.foreign_id,
+            'label': self.label,
+            'kind': 'casefile' if self.casefile else 'source',
+            'summary': self.summary,
+            'category': category,
+            'publisher': self.publisher,
+            'publisher_url': self.publisher_url,
+            'info_url': self.info_url,
+            'data_url': self.data_url,
+            'casefile': self.casefile,
+            'secret': self.secret,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'deleted_at': self.deleted_at,
+        }
 
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):

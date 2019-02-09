@@ -19,28 +19,9 @@ def index_collection(collection, sync=False):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
-    data = {
-        'foreign_id': collection.foreign_id,
-        'created_at': collection.created_at,
-        'updated_at': collection.updated_at,
-        'label': collection.label,
-        'kind': collection.kind,
-        'summary': collection.summary,
-        'category': Collection.DEFAULT,
-        'publisher': collection.publisher,
-        'publisher_url': collection.publisher_url,
-        'info_url': collection.info_url,
-        'data_url': collection.data_url,
-        'casefile': collection.casefile,
-        'secret': collection.secret,
-        'collection_id': collection.id,
-        'schemata': {},
-        'team': []
-    }
+    data = collection.to_dict()
+    data.pop('id', None)
     texts = [v for v in data.values() if isinstance(v, str)]
-
-    if collection.category in Collection.CATEGORIES:
-        data['category'] = collection.category
 
     if collection.creator is not None:
         data['creator'] = {
@@ -50,6 +31,7 @@ def index_collection(collection, sync=False):
         }
         texts.append(collection.creator.name)
 
+    data['team'] = []
     for role in collection.team:
         data['team'].append({
             'id': role.id,
@@ -62,6 +44,7 @@ def index_collection(collection, sync=False):
     data['count'] = stats['count']
 
     # expose entities by schema count.
+    data['schemata'] = {}
     thing = model.get(Entity.THING)
     for schema, count in stats['schemata'].items():
         schema = model.get(schema)
