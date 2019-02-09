@@ -3,7 +3,6 @@ from flask_babel import lazy_gettext
 from aleph.model.role import Role
 from aleph.model.alert import Alert
 from aleph.model.entity import Entity
-from aleph.model.document import Document
 from aleph.model.collection import Collection
 
 
@@ -58,7 +57,7 @@ class Events(object, metaclass=EventsRegistry):
     INGEST_DOCUMENT = Event(
         template=lazy_gettext('{{actor}} added {{document}} to {{collection}}.'),  # noqa
         params={
-            'document': Document,
+            'document': Entity,
             'collection': Collection
         }
     )

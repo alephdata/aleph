@@ -3,7 +3,7 @@ from banal import ensure_list
 from marshmallow import pre_dump
 from marshmallow.fields import Raw, String, Nested, Field
 
-from aleph.model import Alert, Role, Entity, Collection, Document
+from aleph.model import Alert, Role, Entity, Collection
 from aleph.serializers.roles import RoleSchema
 from aleph.serializers.alerts import AlertSchema
 from aleph.serializers.entities import CombinedSchema
@@ -28,7 +28,6 @@ class NotificationSchema(BaseSchema):
     SCHEMATA = {
         Alert: AlertSchema,
         Role: RoleSchema,
-        Document: CombinedSchema,
         Entity: CombinedSchema,
         Collection: CollectionSchema
     }
