@@ -2,7 +2,6 @@ import os
 import json
 import shutil
 import logging
-from banal import is_mapping
 from storagelayer import checksum
 from flask import Blueprint, request
 from tempfile import mkdtemp
@@ -14,17 +13,13 @@ from aleph.logic.documents import ingest_document, update_document
 from aleph.views.util import require, get_flag
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema
-from aleph.views.serializers import EntitySerializer
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
 
 
 def _load_parent(collection_id, meta):
-    # Determine the parent document for the document that is to be
-    # ingested. This can either be specified using a document ID,
-    # or using a foreign ID (because the document ID may not be as
-    # easily accessible to the client).
+    """Determine the parent document for the document that is to be ingested."""
     parent_id = meta.get('parent_id')
     if parent_id is None:
         return
@@ -46,14 +41,6 @@ def _load_metadata():
 
     validate_data(meta, DocumentCreateSchema)
     foreign_id = stringify(meta.get('foreign_id'))
-
-    # If a foreign_id is specified, we cannot upload multiple files at once.
-    if len(request.files) > 1 and foreign_id is not None:
-        raise BadRequest(response=jsonify({
-            'status': 'error',
-            'message': 'Multiple files with one foreign_id'
-        }, status=400))
-
     if not len(request.files) and foreign_id is None:
         raise BadRequest(response=jsonify({
             'status': 'error',
@@ -66,49 +53,35 @@ def _load_metadata():
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
     require(request.authz.can(collection_id, request.authz.WRITE))
+    sync = get_flag('sync')
     meta, foreign_id = _load_metadata()
     parent_id = _load_parent(collection_id, meta)
     upload_dir = mkdtemp(prefix='aleph.upload.')
     try:
-        documents = []
+        path = None
+        content_hash = None
         for storage in request.files.values():
             path = safe_filename(storage.filename, default='upload')
             path = os.path.join(upload_dir, path)
             storage.save(path)
             content_hash = checksum(path)
-            document = Document.by_keys(collection_id=collection_id,
-                                        parent_id=parent_id,
-                                        foreign_id=foreign_id,
-                                        content_hash=content_hash)
-            document.update(meta)
-            document.schema = Document.SCHEMA
-            ingest_document(document, path,
-                            role_id=request.authz.id,
-                            content_hash=content_hash)
-            documents.append(document)
-
-        if not len(request.files):
-            # If there is no files uploaded, try to create an empty
-            # directory instead. Maybe this should be more explicit,
-            # but it seemed like the most simple way of fitting it
-            # into the API.
-            document = Document.by_keys(collection_id=collection_id,
-                                        parent_id=parent_id,
-                                        foreign_id=foreign_id)
-            document.update(meta)
+        document = Document.by_keys(collection_id=collection_id,
+                                    parent_id=parent_id,
+                                    foreign_id=foreign_id,
+                                    content_hash=content_hash)
+        document.update(meta)
+        document.schema = Document.SCHEMA
+        if content_hash is None:
             document.schema = Document.SCHEMA_FOLDER
-            ingest_document(document, None,
-                            role_id=request.authz.id)
-            documents.append(document)
+        ingest_document(document, path,
+                        role_id=request.authz.id,
+                        content_hash=content_hash)
     finally:
         shutil.rmtree(upload_dir)
 
     # Make sure collection counts are always accurate.
-    if get_flag('sync'):
-        for document in documents:
-            update_document(document, shallow=True, sync=True)
-
+    update_document(document, shallow=True, sync=sync)
     return jsonify({
         'status': 'ok',
-        'documents': EntitySerializer().serialize_many(documents)
-    })
+        'id': stringify(document.id)
+    }, status=201)

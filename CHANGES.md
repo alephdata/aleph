@@ -9,3 +9,6 @@ the development and perform upgrades to their local installation.
   `REDIS_EXPIRE`.
 * Variable `ALEPH_OCR_VISION_API` is now `OCR_VISION_API`, it will enable use of
   the Google Vision API for optical character recognition.
+* The `/api/2/collections/<id>/ingest` API now only accepts a single file, or
+  no file (which will create a folder). The response body contains only the ID
+  of the generated document. The status code on success is now 201, not 200.
