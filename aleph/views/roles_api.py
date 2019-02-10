@@ -8,10 +8,10 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import check_editable, update_role
 from aleph.notify import notify_role
-from aleph.serializers.roles import RoleSchema
-from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
-from aleph.views.util import require, jsonify, parse_request
-from aleph.views.util import obj_or_404, serialize_data
+from aleph.views.forms import RoleSchema
+from aleph.views.forms import RoleCodeCreateSchema, RoleCreateSchema
+from aleph.views.serializers import RoleSerializer
+from aleph.views.util import require, jsonify, parse_request, obj_or_404
 
 blueprint = Blueprint('roles_api', __name__)
 log = logging.getLogger(__name__)
@@ -31,8 +31,8 @@ def suggest():
         })
     # this only returns users, not groups
     q = Role.by_prefix(parser.prefix, exclude=parser.exclude)
-    result = DatabaseQueryResult(request, q, parser=parser, schema=RoleSchema)
-    return jsonify(result)
+    result = DatabaseQueryResult(request, q, parser=parser)
+    return RoleSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/roles/code', methods=['POST'])
@@ -84,14 +84,14 @@ def create():
     update_role(role)
     # Let the serializer return more info about this user
     request.authz.id = role.id
-    return serialize_data(role, RoleSchema, status=201)
+    return RoleSerializer.jsonify(role, status=201)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
     require(check_editable(role, request.authz))
-    return serialize_data(role, RoleSchema)
+    return RoleSerializer.jsonify(role)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
@@ -104,4 +104,4 @@ def update(id):
     db.session.add(role)
     db.session.commit()
     update_role(role)
-    return serialize_data(role, RoleSchema)
+    return RoleSerializer.jsonify(role)

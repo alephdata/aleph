@@ -102,8 +102,7 @@ class Authz(object):
         if scope is not None:
             payload['scope'] = scope
         if role is not None:
-            from aleph.serializers.roles import RoleSchema
-            role, _ = RoleSchema().dump(role)
+            role = role.to_dict()
             role.pop('created_at', None)
             role.pop('updated_at', None)
             payload['role'] = role

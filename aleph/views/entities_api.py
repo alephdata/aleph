@@ -9,15 +9,14 @@ from urlnormalizer import query_string
 from aleph.core import db, url_for
 from aleph.model import Audit
 from aleph.logic.entities import create_entity, update_entity, delete_entity
-from aleph.search import EntitiesQuery, MatchQuery
-from aleph.search import SearchQueryParser
+from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, serialize_data, get_flag
+from aleph.views.util import jsonify, parse_request, get_flag
 from aleph.views.cache import enable_cache
-from aleph.serializers.entities import CombinedSchema
-from aleph.serializers.entities import EntityCreateSchema, EntityUpdateSchema
+from aleph.views.serializers import EntitySerializer
+from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
@@ -27,10 +26,8 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/2/entities', methods=['GET'])
 def index():
     parser = SearchQueryParser(request.args, request.authz)
-    result = EntitiesQuery.handle(request,
-                                  parser=parser,
-                                  schema=CombinedSchema)
-    return jsonify(result)
+    result = EntitiesQuery.handle(request, parser=parser)
+    return EntitySerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/match', methods=['POST'])
@@ -40,11 +37,9 @@ def match():
     record_audit(Audit.ACT_MATCH, entity=entity)
     entity = model.get_proxy(entity)
     collection_ids = request.args.getlist('collection_ids')
-    result = MatchQuery.handle(request,
-                               entity=entity,
-                               collection_ids=collection_ids,
-                               schema=CombinedSchema)
-    return jsonify(result)
+    result = MatchQuery.handle(request, entity=entity,
+                               collection_ids=collection_ids)
+    return EntitySerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/entities', methods=['POST', 'PUT'])
@@ -52,7 +47,7 @@ def create():
     data = parse_request(EntityCreateSchema)
     collection = get_db_collection(data['collection_id'], request.authz.WRITE)
     data = create_entity(data, collection, sync=get_flag('sync', True))
-    return serialize_data(data, CombinedSchema)
+    return EntitySerializer.jsonify(data)
 
 
 @blueprint.route('/api/2/documents/<id>', methods=['GET'])
@@ -61,7 +56,7 @@ def view(id):
     enable_cache()
     entity = get_index_entity(id, request.authz.READ)
     record_audit(Audit.ACT_ENTITY, id=id)
-    return serialize_data(entity, CombinedSchema)
+    return EntitySerializer.jsonify(entity)
 
 
 @blueprint.route('/api/2/entities/<id>/similar', methods=['GET'])
@@ -70,8 +65,8 @@ def similar(id):
     entity = get_index_entity(id, request.authz.READ)
     entity = model.get_proxy(entity)
     record_audit(Audit.ACT_ENTITY, id=id)
-    result = MatchQuery.handle(request, entity=entity, schema=CombinedSchema)
-    return jsonify(result)
+    result = MatchQuery.handle(request, entity=entity)
+    return EntitySerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/entities/<id>/references', methods=['GET'])
@@ -132,7 +127,7 @@ def update(id):
     entity.update(data)
     db.session.commit()
     data = update_entity(entity, sync=get_flag('sync', True))
-    return serialize_data(data, CombinedSchema)
+    return EntitySerializer.jsonify(data)
 
 
 @blueprint.route('/api/2/entities/<id>/merge/<other_id>', methods=['DELETE'])
@@ -149,7 +144,7 @@ def merge(id, other_id):
     sync = get_flag('sync', True)
     data = update_entity(entity, sync=sync)
     update_entity(other, sync=sync)
-    return serialize_data(data, CombinedSchema)
+    return EntitySerializer.jsonify(data)
 
 
 @blueprint.route('/api/2/entities/<id>', methods=['DELETE'])
@@ -158,12 +153,3 @@ def delete(id):
     delete_entity(entity, sync=True)
     db.session.commit()
     return ('', 204)
-
-
-# @blueprint.route('/api/2/entities/<id>/graph', methods=['GET'])
-# def graph(id):
-#     update = request.args.get('update') == 'true'
-#     entity = export_node(id, update=update)
-#     resp = jsonify(entity)
-#     # resp.headers["Access-Control-Allow-Origin"] = "*"
-#     return resp

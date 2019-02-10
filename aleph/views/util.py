@@ -67,7 +67,7 @@ def parse_request(schema, many=None):
     return validate_data(data, schema, many=many)
 
 
-def serialize_data(data, schema, **kwargs):
+def serialize_data(data, schema, **kwargs):  # KUJAU
     """Serialise a single-object response using the schema."""
     data, errors = schema().dump(data)
     if len(errors):

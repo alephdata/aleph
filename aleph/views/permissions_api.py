@@ -6,7 +6,8 @@ from aleph.logic.roles import check_visible
 from aleph.logic.permissions import update_permission
 from aleph.logic.collections import update_collection
 from aleph.logic.audit import record_audit
-from aleph.serializers.roles import PermissionSchema
+from aleph.views.forms import PermissionSchema
+from aleph.views.serializers import PermissionSerializer
 from aleph.views.util import get_db_collection, jsonify, parse_request
 
 blueprint = Blueprint('permissions_api', __name__)
@@ -38,10 +39,10 @@ def index(id):
             'collection_id': collection.id,
             'write': False,
             'read': False,
-            'role': role
+            'role_id': str(role.id)
         })
 
-    permissions, errors = PermissionSchema().dump(permissions, many=True)
+    permissions = PermissionSerializer().serialize_many(permissions)
     return jsonify({
         'total': len(permissions),
         'results': permissions

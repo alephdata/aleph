@@ -17,7 +17,7 @@ class QueryResult(object):
                  schema=None):
         self.request = request
         self.parser = parser or QueryParser(request.args, request.authz)
-        self.schema = schema
+        self.schema = schema  # KUJAU
         self.results = results or []
         self.total = total or 0
 
@@ -35,7 +35,7 @@ class QueryResult(object):
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
 
-    def to_dict(self):
+    def to_dict(self, serializer=None):
         results = list(self.results)
         if self.schema:
             results, errors = self.schema().dump(results, many=True)
@@ -46,6 +46,9 @@ class QueryResult(object):
                     'results': [],
                     'errors': errors
                 }
+
+        if serializer:
+            results = serializer().serialize_many(results)
 
         return {
             'status': 'ok',
@@ -65,7 +68,8 @@ class DatabaseQueryResult(QueryResult):
     def __init__(self, request, query, parser=None, schema=None):
         super(DatabaseQueryResult, self).__init__(request,
                                                   parser=parser,
-                                                  schema=schema)
+                                                  schema=schema,  # KUJAU
+                                                  )
         self.total = query.count()
         results = query.limit(self.parser.limit)
         results = results.offset(self.parser.offset)
@@ -85,7 +89,8 @@ class SearchQueryResult(QueryResult):
     def __init__(self, request, parser, result, schema=None):
         super(SearchQueryResult, self).__init__(request,
                                                 parser=parser,
-                                                schema=schema)
+                                                schema=schema,  # KUJAU
+                                                )
         self.result = result
         hits = self.result.get('hits', {})
         self.total = hits.get('total')
@@ -103,7 +108,7 @@ class SearchQueryResult(QueryResult):
             facets[name] = facet_cls(name, aggregations, self.parser)
         return facets
 
-    def to_dict(self):
-        data = super(SearchQueryResult, self).to_dict()
+    def to_dict(self, serializer=None):
+        data = super(SearchQueryResult, self).to_dict(serializer=serializer)
         data['facets'] = self.get_facets()
         return data
