@@ -97,7 +97,8 @@ class XrefTestCase(TestCase):
         assert 0 == q.count(), q.count()
 
         self.flush_index()
-        xref_collection(self.coll_a.id, against_collection_ids=[self.coll_c.id])
+        xref_collection(self.coll_a.id,
+                        against_collection_ids=[self.coll_c.id])
 
         q = db.session.query(Match)
         assert 1 == q.count(), q.count()

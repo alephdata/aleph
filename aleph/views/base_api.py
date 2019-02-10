@@ -49,13 +49,12 @@ def metadata():
             'locales': settings.UI_LANGUAGES
         },
         'categories': Collection.CATEGORIES,
-        'statistics': get_instance_stats(Authz.from_role(None)),
         'countries': registry.country.names,
         'languages': registry.language.names,
         'schemata': model,
         'auth': auth
     }
-    cache.set_complex(key, data, expire=3600)
+    cache.set_complex(key, data, expire=84600)
     return jsonify(data)
 
 
@@ -114,6 +113,15 @@ def handle_not_found_error(err):
     }, status=404)
 
 
+@blueprint.app_errorhandler(500)
+def handle_server_error(err):
+    log.exception("%s: %s", type(err).__name__, err)
+    return jsonify({
+        'status': 'error',
+        'message': gettext('Internal server error.')
+    }, status=500)
+
+
 @blueprint.app_errorhandler(InvalidData)
 def handle_invalid_data(err):
     return jsonify({
@@ -133,6 +141,7 @@ def handle_jwt_expired(err):
 @blueprint.app_errorhandler(TransportError)
 def handle_es_error(err):
     message = err.error
+    log.error("ES [%s]: %r", err.error, err.info)
     try:
         status = int(err.status_code)
     except Exception:

@@ -63,13 +63,6 @@ CORS_ORIGINS = env_list('CORS_ORIGINS', separator='|')
 
 
 ###############################################################################
-# Error reporting
-
-# Using sentry raven
-SENTRY_DSN = env('SENTRY_DSN')
-
-
-###############################################################################
 # Data storage
 
 # Archive type (either 's3' or 'file', i.e. local file system):
@@ -116,10 +109,6 @@ PASSWORD_LOGIN = env_bool('PASSWORD_LOGIN', not OAUTH)
 
 DEFAULT_LANGUAGE = env('DEFAULT_LANGUAGE', 'en')
 
-# When no language is assigned, OCR will include these options:
-OCR_DEFAULTS = ['eng']
-OCR_DEFAULTS = env_list('OCR_DEFAULTS', OCR_DEFAULTS)
-
 # Whether to use Google Vision API or not
 OCR_VISION_API = env_bool('OCR_VISION_API', False)
 
@@ -156,6 +145,7 @@ RESULT_HIGHLIGHT = env_bool('RESULT_HIGHLIGHT', True)
 
 # Minimum update date for sitemap.xml
 SITEMAP_FLOOR = '2018-12-09'
+
 
 ##############################################################################
 # E-mail settings

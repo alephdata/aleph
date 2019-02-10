@@ -1,5 +1,5 @@
 import logging
-from banal import is_mapping
+from banal import is_mapping, ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -20,6 +20,7 @@ def get_entity(entity_id):
     key = cache.object_key(Entity, entity_id)
     entity = cache.get_complex(key)
     if entity is None:
+        log.debug("Entity [%s]: object cache miss", entity_id)
         entity = index.get_entity(entity_id)
         cache.set_complex(key, entity, expire=cache.EXPIRE)
     return entity
@@ -109,29 +110,30 @@ def entity_references(entity, authz):
 def entity_tags(entity, authz):
     """Do a search on tags of an entity."""
     # NOTE: This must also work for documents.
-    FIELDS = [
-        'names',
-        'emails',
-        'phones',
-        'addresses',
-        'identifiers'
-    ]
+    Thing = model.get(Entity.THING)
+    types = [registry.name, registry.email, registry.identifier,
+             registry.iban, registry.phone, registry.address]
     pivots = []
     queries = []
     # Go through all the tags which apply to this entity, and find how
     # often they've been mentioned in other entities.
-    for field in FIELDS:
-        for value in entity.get(field, []):
-            if value is None or not len(value):
+    for type_ in types:
+        if type_.group is None:
+            continue
+        for value in ensure_list(entity.get(type_.group)):
+            if type_.specificity(value) < 0.1:
                 continue
-            queries.append({})
+            schemata = model.get_type_schemata(type_)
+            schemata = [s for s in schemata if s.is_a(Thing)]
+            index = entities_read_index(schemata)
+            queries.append({'index': index})
             queries.append({
                 'size': 0,
                 'query': {
                     'bool': {
                         'filter': [
                             authz_query(authz),
-                            field_filter_query(field, value)
+                            field_filter_query(type_.group, value)
                         ],
                         'must_not': [
                             {'ids': {'values': [entity.get('id')]}},
@@ -139,13 +141,12 @@ def entity_tags(entity, authz):
                     }
                 }
             })
-            pivots.append((field, value))
+            pivots.append((type_.group, value))
 
     if not len(queries):
         return
 
-    index = entities_read_index(schema=Entity.THING)
-    res = es.msearch(index=index, body=queries)
+    res = es.msearch(body=queries)
     for (field, value), resp in zip(pivots, res.get('responses', [])):
         total = resp.get('hits', {}).get('total')
         if total is not None and total > 0:

@@ -1,17 +1,13 @@
 import logging
-from itertools import islice
 from datetime import datetime
-from followthemoney import model
 
-from aleph.core import db, settings, cache, celery
+from aleph.core import db, cache, celery
 from aleph.authz import Authz
-from aleph.model import Collection, Document, Entity, Match
+from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
-from aleph.index.entities import iter_entities
 from aleph.index.records import delete_records
 from aleph.logic.notifications import publish, flush_notifications
-from aleph.logic.util import document_url, entity_url
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +16,7 @@ def get_collection(collection_id):
     key = cache.object_key(Collection, collection_id)
     data = cache.get_complex(key)
     if data is None:
+        log.debug("Collection [%s]: object cache miss", collection_id)
         data = index.get_collection(collection_id)
         cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
@@ -57,28 +54,6 @@ def index_collections():
     for collection in Collection.all(deleted=True):
         log.info("Index [%s]: %s", collection.id, collection.label)
         index.index_collection(collection)
-
-
-def generate_sitemap(collection_id):
-    """Generate entries for a collection-based sitemap.xml file."""
-    # cf. https://www.sitemaps.org/protocol.html
-    document = model.get(Document.SCHEMA)
-    entities = iter_entities(authz=Authz.from_role(None),
-                             collection_id=collection_id,
-                             schemata=[Entity.THING],
-                             includes=['schema', 'updated_at'])
-    # strictly, the limit for sitemap.xml is 50,000
-    for entity in islice(entities, 49500):
-        updated_at = entity.get('updated_at', '').split('T', 1)[0]
-        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
-        schema = model.get(entity.get('schema'))
-        if schema is None:
-            continue
-        if schema.is_a(document):
-            url = document_url(entity.get('id'))
-        else:
-            url = entity_url(entity.get('id'))
-        yield (url, updated_at)
 
 
 def delete_collection(collection, sync=False):

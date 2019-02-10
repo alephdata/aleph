@@ -9,12 +9,12 @@ from followthemoney import model
 from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, bulk, BulkIndexError
 
-from aleph.core import es, settings, cache
+from aleph.core import es
 from aleph.model import Document
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, index_form, refresh_sync
-from aleph.index.util import index_safe, search_safe, authz_query, bool_query
-from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT
+from aleph.index.util import index_safe, search_safe, authz_query
+from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -26,16 +26,6 @@ def index_entity(entity, sync=False):
 
     context = {'foreign_id': entity.foreign_id}
     return index_single(entity, entity.to_proxy(), context, [], sync=sync)
-
-
-def delete_entity(entity_id, exclude=None, sync=False):
-    """Delete an entity from the index."""
-    query = {'query': {'ids': {'values': str(entity_id)}}}
-    es.delete_by_query(index=entities_read_index(exclude=exclude),
-                       doc_type='doc',
-                       body=query,
-                       wait_for_completion=sync,
-                       refresh=refresh_sync(sync))
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
@@ -55,7 +45,6 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         source['excludes'] = ensure_list(excludes)
     query = {
         'query': {'bool': {'filter': filters}},
-        'sort': ['_doc'],
         '_source': source
     }
     index = entities_read_index(schema=schemata)
@@ -77,17 +66,21 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def entities_by_ids(ids, schemata=None):
+def entities_by_ids(ids, schemata=None, source=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     ids = ensure_list(ids)
     index = entities_read_index(schema=schemata)
-    query = bool_query()
-    query['bool']['filter'] = [{'ids': {'values': ids}}]
+    if source is None:
+        source = {'excludes': ['text']}
     query = {
-        'query': query,
-        '_source': {'excludes': ['text']},
-        'size': len(ids) + 1
+        'query': {
+            'bool': {
+                'filter': {'ids': {'values': ids}}
+            }
+        },
+        '_source': source,
+        'size': MAX_PAGE
     }
     result = search_safe(index=index, body=query, ignore=[404])
     for doc in result.get('hits', {}).get('hits', []):
@@ -96,21 +89,10 @@ def entities_by_ids(ids, schemata=None):
             yield entity
 
 
-def get_entity(entity_id):
+def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
-    # for entity in entities_by_ids(ensure_list(entity_id)):
-    #     return entity
-
-    docs = []
-    for index in entities_read_index().split(','):
-        docs.append({'_index': index, '_id': entity_id})
-
-    body = {'docs': docs}
-    res = es.mget(body=body, _source_exclude=['text'], ignore=[404])
-    for doc in res.get('docs', []):
-        entity = unpack_result(doc)
-        if entity is not None:
-            return entity
+    for entity in entities_by_ids(ensure_list(entity_id)):
+        return entity
 
 
 def _index_updates(collection_id, entities, merge=True):
@@ -167,28 +149,32 @@ def _index_updates(collection_id, entities, merge=True):
 
 def index_bulk(collection_id, entities, merge=True):
     """Index a set of entities."""
-    lock = cache.lock(cache.key('index_bulk'))
-    lock.acquire(blocking=True)
-    start_time = time()
     try:
+        start_time = time()
         actions = _index_updates(collection_id, entities, merge=merge)
-        chunk_size = len(actions) + 1
-        return bulk(es, actions,
-                    chunk_size=chunk_size,
-                    max_retries=10,
-                    initial_backoff=2,
-                    request_timeout=REQUEST_TIMEOUT,
-                    timeout=TIMEOUT,
-                    refresh=refresh_sync(True))
-    except BulkIndexError as exc:
-        log.warning('Indexing error: %s', exc)
-    finally:
+        bulk(es, actions,
+             chunk_size=len(actions) + 1,
+             max_retries=10,
+             initial_backoff=2,
+             request_timeout=REQUEST_TIMEOUT,
+             timeout=TIMEOUT,
+             refresh=refresh_sync(True))
         duration = (time() - start_time)
         log.info("Bulk write: %.4fs", duration)
-        try:
-            lock.release()
-        except Exception:
-            log.exception("Cannot release index lock.")
+    except BulkIndexError as exc:
+        log.warning('Indexing error: %s', exc)
+
+
+def delete_entity(entity_id, exclude=None, sync=False):
+    """Delete an entity from the index."""
+    if exclude is not None:
+        exclude = entities_write_index(exclude)
+    for entity in entities_by_ids(entity_id, source=False):
+        index = entity.get('_index')
+        if index == exclude:
+            continue
+        refresh = refresh_sync(True)
+        es.delete(index=index, doc_type='doc', id=entity_id, refresh=refresh)
 
 
 def finalize_index(proxy, context, texts):
@@ -226,6 +212,6 @@ def index_single(obj, proxy, data, texts, sync=False):
     # pprint(data)
     index = entities_write_index(proxy.schema)
     refresh = refresh_sync(sync)
-    if settings.ENTITIES_INDEX_SPLIT:
-        delete_entity(obj.id, exclude=proxy.schema, sync=False)
+    # This is required if an entity changes its type:
+    # delete_entity(obj.id, exclude=proxy.schema, sync=False)
     return index_safe(index, obj.id, data, refresh=refresh)

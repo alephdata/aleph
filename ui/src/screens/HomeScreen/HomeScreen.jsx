@@ -36,14 +36,8 @@ class HomeScreen extends Component {
   }
 
   componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { statistics } = this.props;
-    if (statistics.shouldLoad) {
-      this.props.fetchStatistics();
-    }
+    // for now, always load
+    this.props.fetchStatistics();
   }
 
   onChange({target}) {
@@ -74,12 +68,14 @@ class HomeScreen extends Component {
           <div className='outer-searchbox'>
             <div className='inner-searchbox'>
               <div className='homepage-summary'>
-              <FormattedMessage id='home.summary'
-                                defaultMessage="Search {total} public records and leaks from {collections} sources"
-                                values={{
-                                  total: numeral(statistics.entities).format('0a'),
-                                  collections: <FormattedNumber value={statistics.collections} />
-                                }} />
+                {statistics.entities && (
+                  <FormattedMessage id='home.summary'
+                                    defaultMessage="Search {total} public records and leaks from {collections} sources"
+                                    values={{
+                                      total: numeral(statistics.entities).format('0a'),
+                                      collections: <FormattedNumber value={statistics.collections} />
+                                    }} />
+                )}
               </div>
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill={true}>

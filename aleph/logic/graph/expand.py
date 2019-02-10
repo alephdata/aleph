@@ -16,22 +16,13 @@ from aleph.logic.xref import xref_item
 log = logging.getLogger(__name__)
 
 
-def get_type_schemata(type_):
-    """Return all the schemata which have a property with the given type."""
-    schemata = set()
-    for schema in schemata:
-        for prop in schema.properties.values():
-            if prop.type == type_:
-                schemata.add(schema)
-    return schemata
-
-
 def _iter_value_entities(type_, value):
     query = {
         'query': {'term': {type_.group: value}},
         '_source': {'includes': ['schema', 'properties']}
     }
-    index = entities_read_index(schema=get_type_schemata(type_))
+    schemata = model.get_type_schemata(type_)
+    index = entities_read_index(schema=schemata)
     for res in scan(es, index=index, query=query):
         entity_id = res.get('_id')
         source = res.get('_source')

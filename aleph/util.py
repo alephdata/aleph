@@ -216,7 +216,7 @@ def setup_stackdriver_logging():
 
     # A handler for high level logs that should be sent to STDERR
     error_handler = logging.StreamHandler(sys.stderr)
-    error_handler.setLevel(logging.ERROR)
+    error_handler.setLevel(logging.WARNING)
     error_handler.setFormatter(formatter)
 
     root_logger = logging.getLogger()

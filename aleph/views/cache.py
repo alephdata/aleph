@@ -4,7 +4,6 @@ from flask_babel import get_locale
 from flask import request, Response, Blueprint
 
 from aleph.core import settings
-from aleph.util import trace_function
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('cache', __name__)
@@ -38,7 +37,6 @@ def setup_caching():
     request._http_etag = None
 
 
-@trace_function(span_name="ENABLE_CACHE")
 def enable_cache(vary_user=True, vary=None):
     """Enable caching in the context of a view.
 
