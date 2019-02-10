@@ -150,6 +150,10 @@ class EntitySerializer(Serializer):
     def _collect(self, obj):
         self.queue(Collection, obj.get('collection_id'))
         self.queue(Role, obj.get('uploader_id'))
+        schema = model.get(obj.get('schema'))
+        if schema is None:
+            return
+        # TODO associated entities
 
     def _serialize(self, obj):
         pk = obj.get('id')
@@ -187,10 +191,11 @@ class EntitySerializer(Serializer):
 
 
 class MatchCollectionsSerializer(Serializer):
-    # matches = Integer(dump_only=True)
-    # parent = Integer(dump_only=True)
-    # collection = Nested(CollectionSchema, required=True)
-    pass
+
+    def _serialize(self, obj):
+        serializer = CollectionSerializer(reference=True)
+        obj['collection'] = serializer.serialize(obj.get('collection'))
+        return obj
 
 
 class MatchSerializer(Serializer):
@@ -208,6 +213,10 @@ class MatchSerializer(Serializer):
 
 
 class QueryLogSerializer(Serializer):
+    pass
+
+
+class RecordSerializer(Serializer):
     pass
 
 
@@ -238,7 +247,3 @@ class NotificationSerializer(Serializer):
         obj['params'] = params
         obj['event'] = event.to_dict()
         return obj
-
-
-class RecordSerializer(Serializer):
-    pass

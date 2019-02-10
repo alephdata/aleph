@@ -1,6 +1,5 @@
 import logging
 from flask import Blueprint, request
-from flask.wrappers import Response
 
 from aleph.core import db
 from aleph.model import Audit
@@ -26,11 +25,12 @@ def delete():
     """Delete the query logs for a particular search term"""
     require(request.authz.logged_in)
     query = request.args.get('query')
-    if query:
-        audit_logs = Audit.by_query_text(query, role_id=request.authz.id)
-        if audit_logs.count():
-            for audit in audit_logs:
-                audit.delete()
-            db.session.commit()
-            return ('', 204)
-    return Response(status=404)
+    if not query:
+        return ('', 404)
+    audit_logs = Audit.by_query_text(query, role_id=request.authz.id)
+    if not audit_logs.count():
+        return ('', 404)
+    for audit in audit_logs:
+        audit.delete()
+    db.session.commit()
+    return ('', 204)
