@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from normality import stringify
 
 from aleph.core import db
 
@@ -11,11 +10,6 @@ def make_textid():
 
 class IdModel(object):
     id = db.Column(db.Integer(), primary_key=True)
-
-
-class UuidModel(object):
-    id = db.Column(db.String(32), primary_key=True, default=make_textid,
-                   nullable=False, unique=False)
 
 
 class DatedModel(object):

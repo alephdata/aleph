@@ -8,15 +8,17 @@ from aleph.core import db
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
 from aleph.model.match import Match
-from aleph.model.common import SoftDeleteModel, UuidModel
+from aleph.model.common import SoftDeleteModel
 from aleph.model.common import make_textid
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, UuidModel, SoftDeleteModel):
+class Entity(db.Model, SoftDeleteModel):
     THING = 'Thing'
 
+    id = db.Column(db.String(32), primary_key=True, default=make_textid,
+                   nullable=False, unique=False)
     name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
     foreign_id = db.Column(db.Unicode)

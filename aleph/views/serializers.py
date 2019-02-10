@@ -224,7 +224,8 @@ class MatchSerializer(Serializer):
         obj['entity'] = self.resolve(Entity, entity_id, EntitySerializer)
         match_id = obj.pop('match_id', None)
         obj['match'] = self.resolve(Entity, match_id, EntitySerializer)
-        return obj
+        if obj['entity'] and obj['match']:
+            return obj
 
 
 class QueryLogSerializer(Serializer):

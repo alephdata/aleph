@@ -8,8 +8,8 @@ log = logging.getLogger(__name__)
 
 
 def index_document(document, shallow=False, sync=False):
-    log.info("Index document [%s]: %s", document.id, document.name)
     proxy = document.to_proxy()
+    log.info("Index document [%s]: %s", document.id, proxy.caption)
     context = {
         'status': document.status,
         'content_hash': document.content_hash,

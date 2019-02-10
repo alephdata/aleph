@@ -102,14 +102,14 @@ def records(document_id):
     return RecordSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/documents/<int:document_id>/records/<int:index>')
-def record(document_id, index):
-    enable_cache()
-    document = get_db_document(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    if not document.supports_records:
-        raise BadRequest("This document does not have records.")
-    record = DocumentRecord.by_index(document.id, index)
-    if record is None:
-        raise NotFound("No such record: %s" % index)
-    return RecordSerializer.jsonify(record)
+# @blueprint.route('/api/2/documents/<int:document_id>/records/<int:index>')
+# def record(document_id, index):
+#     enable_cache()
+#     document = get_db_document(document_id)
+#     record_audit(Audit.ACT_ENTITY, id=document_id)
+#     if not document.supports_records:
+#         raise BadRequest("This document does not have records.")
+#     record = DocumentRecord.by_index(document.id, index)
+#     if record is None:
+#         raise NotFound("No such record: %s" % index)
+#     return RecordSerializer.jsonify(record)

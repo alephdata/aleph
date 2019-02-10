@@ -22,16 +22,16 @@ class DocumentsApiTestCase(TestCase):
         assert 'results' in res.json, res.json
         assert len(res.json['results']) == 10, res.json
 
-    def test_view_record_by_id(self):
-        doc_id = 1000
-        res = self.client.get('/api/2/documents/%s/records/1' % doc_id)
-        assert res.status_code == 200, res
-        assert 'banana' in res.json['text'], res
-        assert 'total' not in res.json['text'], res
-        res = self.client.get('/api/2/documents/%s/records/2' % doc_id)
-        assert 'total' in res.json['text'], res
-        res = self.client.get('/api/2/documents/%s/records/2000' % doc_id)
-        assert res.status_code == 404, res
+    # def test_view_record_by_id(self):
+    #     doc_id = 1000
+    #     res = self.client.get('/api/2/documents/%s/records/1' % doc_id)
+    #     assert res.status_code == 200, res
+    #     assert 'banana' in res.json['text'], res
+    #     assert 'total' not in res.json['text'], res
+    #     res = self.client.get('/api/2/documents/%s/records/2' % doc_id)
+    #     assert 'total' in res.json['text'], res
+    #     res = self.client.get('/api/2/documents/%s/records/2000' % doc_id)
+    #     assert res.status_code == 404, res
 
     def test_records_search(self):
         res = self.client.get('/api/2/documents/1003/records?q=kwazulu')
