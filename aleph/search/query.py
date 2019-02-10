@@ -194,17 +194,14 @@ class Query(object):
         return result
 
     @classmethod
-    def handle(cls, request, limit=None, schema=None, parser=None, **kwargs):
+    def handle(cls, request, parser=None, **kwargs):
         if parser is None:
-            parser = SearchQueryParser(request.args,
-                                       request.authz,
-                                       limit=limit)
-
+            parser = SearchQueryParser(request.args, request.authz)
         # Log the search
         keys = ['prefix', 'text', 'filters']
         record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
         result = cls(parser, **kwargs).search()
-        return cls.RESULT_CLASS(request, parser, result, schema=schema)
+        return cls.RESULT_CLASS(request, parser, result)
 
 
 class AuthzQuery(Query):

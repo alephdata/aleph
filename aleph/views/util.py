@@ -67,15 +67,6 @@ def parse_request(schema, many=None):
     return validate_data(data, schema, many=many)
 
 
-def serialize_data(data, schema, **kwargs):  # KUJAU
-    """Serialise a single-object response using the schema."""
-    data, errors = schema().dump(data)
-    if len(errors):
-        resp = serialize_validation_error(errors)
-        return jsonify(resp, status=500)
-    return jsonify(data, **kwargs)
-
-
 def get_db_entity(entity_id, action=Authz.READ):
     get_index_entity(entity_id, action=action)
     entity = Entity.by_id(entity_id)

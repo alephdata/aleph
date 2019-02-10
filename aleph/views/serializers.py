@@ -212,7 +212,12 @@ class QueryLogSerializer(Serializer):
 
 
 class NotificationSerializer(Serializer):
-    pass
+
+    def _collect(self, obj):
+        self.queue(Role, obj.get('actor_id'))
+
+    def _serialize(self, obj):
+        return obj
 
 
 class RecordSerializer(Serializer):
