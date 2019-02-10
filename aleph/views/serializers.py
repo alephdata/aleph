@@ -5,7 +5,7 @@ from normality import stringify
 from followthemoney import model
 
 from aleph.core import url_for
-from aleph.model import Role, Collection, Document, Entity
+from aleph.model import Role, Collection, Document, Entity, Events, Alert
 from aleph.logic import resolver
 from aleph.logic.util import collection_url, entity_url
 from aleph.views.util import jsonify
@@ -212,11 +212,31 @@ class QueryLogSerializer(Serializer):
 
 
 class NotificationSerializer(Serializer):
+    SERIALIZERS = {
+        Alert: AlertSerializer,
+        Entity: EntitySerializer,
+        Collection: CollectionSerializer,
+        Role: RoleSerializer
+    }
 
     def _collect(self, obj):
         self.queue(Role, obj.get('actor_id'))
+        event = Events.get(obj.get('event'))
+        for name, clazz in event.params.items():
+            key = obj.get('params', {}).get(name)
+            self.queue(clazz, key)
 
     def _serialize(self, obj):
+        event = Events.get(obj.get('event'))
+        params = {
+            'actor': self.resolve(Role, obj.get('actor_id'), RoleSerializer)
+        }
+        for name, clazz in event.params.items():
+            key = obj.get('params', {}).get(name)
+            serializer = self.SERIALIZERS.get(clazz)
+            params[name] = self.resolve(clazz, key, serializer)
+        obj['params'] = params
+        obj['event'] = event.to_dict()
         return obj
 
 

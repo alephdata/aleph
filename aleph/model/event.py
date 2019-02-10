@@ -33,6 +33,7 @@ class EventsRegistry(type):
 
 
 class Events(object, metaclass=EventsRegistry):
+
     @classmethod
     def get(cls, name):
         return cls.registry.get(name)
