@@ -25,25 +25,16 @@ def _load_parent(collection_id, meta):
     # ingested. This can either be specified using a document ID,
     # or using a foreign ID (because the document ID may not be as
     # easily accessible to the client).
-    if 'parent' not in meta:
+    parent_id = meta.get('parent_id')
+    if parent_id is None:
         return
-    data = meta.get('parent')
-    parent = None
-    if not is_mapping(data):
-        parent = Document.by_id(data,
-                                collection_id=collection_id)
-    elif 'id' in data:
-        parent = Document.by_id(data.get('id'),
-                                collection_id=collection_id)
-    elif 'foreign_id' in data:
-        parent = Document.by_keys(collection_id=collection_id,
-                                  foreign_id=data.get('foreign_id'))
+    parent = Document.by_id(parent_id, collection_id=collection_id)
     if parent is None:
         raise BadRequest(response=jsonify({
             'status': 'error',
             'message': 'Cannot load parent document'
         }, status=400))
-    return parent.id
+    return parent_id
 
 
 def _load_metadata():
@@ -119,5 +110,5 @@ def ingest_upload(collection_id):
 
     return jsonify({
         'status': 'ok',
-        'documents': EntitySerializer.serialize_many(documents)
+        'documents': EntitySerializer().serialize_many(documents)
     })

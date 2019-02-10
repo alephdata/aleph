@@ -56,9 +56,8 @@ class CollectionsQuery(AuthzQuery):
 
 class RecordsQueryResult(SearchQueryResult):
 
-    def __init__(self, request, parser, result, schema=None):
-        super(RecordsQueryResult, self).__init__(request, parser, result,
-                                                 schema=schema)
+    def __init__(self, request, parser, result):
+        super(RecordsQueryResult, self).__init__(request, parser, result)
         ids = [res.get('id') for res in self.results]
         for record in DocumentRecord.find_records(ids):
             for result in self.results:

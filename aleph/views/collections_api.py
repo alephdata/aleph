@@ -14,7 +14,7 @@ from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
 from aleph.logic.util import collection_url, document_url, entity_url
-from aleph.views.forms import CollectionSchema
+from aleph.views.forms import CollectionCreateSchema, CollectionUpdateSchema
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, parse_request
@@ -32,7 +32,7 @@ def index():
 @blueprint.route('/api/2/collections', methods=['POST', 'PUT'])
 def create():
     require(request.authz.logged_in)
-    data = parse_request(CollectionSchema)
+    data = parse_request(CollectionCreateSchema)
     role = Role.by_id(request.authz.id)
     sync = get_flag('sync')
     collection = create_collection(data, role=role, sync=sync)
@@ -74,7 +74,7 @@ def sitemap(id):
 @blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    data = parse_request(CollectionSchema)
+    data = parse_request(CollectionUpdateSchema)
     sync = get_flag('sync')
     collection.update(data)
     db.session.commit()
