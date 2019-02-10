@@ -18,6 +18,7 @@ from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
 import storagelayer
 from servicelayer.cache import get_redis
+from servicelayer.extensions import get_extensions
 from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace import config_integration
 from opencensus.trace.exporters import stackdriver_exporter
@@ -25,7 +26,7 @@ from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
-from aleph.util import SessionTask, get_extensions
+from aleph.util import SessionTask
 from aleph.util import TracingTransport, setup_stackdriver_logging
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth

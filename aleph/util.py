@@ -5,7 +5,6 @@ import logging
 import functools
 from normality import stringify
 from datetime import datetime, date
-from pkg_resources import iter_entry_points
 from celery import Task
 from celery.signals import task_prerun, task_postrun, setup_logging
 from elasticsearch import Transport
@@ -21,16 +20,6 @@ from pythonjsonlogger import jsonlogger
 from aleph import settings
 
 log = logging.getLogger(__name__)
-EXTENSIONS = {}
-
-
-def get_extensions(section):
-    if section not in EXTENSIONS:
-        EXTENSIONS[section] = {}
-    if not EXTENSIONS[section]:
-        for ep in iter_entry_points(section):
-            EXTENSIONS[section][ep.name] = ep.load()
-    return list(EXTENSIONS[section].values())
 
 
 def html_link(text, link):
