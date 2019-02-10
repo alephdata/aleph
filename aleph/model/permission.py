@@ -16,16 +16,15 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
     collection_id = db.Column(db.Integer, nullable=False)
 
     def to_dict(self):
-        return {
+        data = self.to_dict_dates()
+        data.update({
             'id': stringify(self.id),
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
             'read': self.read,
-            'write': self.write,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
-            'deleted_at': self.deleted_at
-        }
+            'write': self.write
+        })
+        return data
 
     @classmethod
     def grant(cls, collection, role, read, write):

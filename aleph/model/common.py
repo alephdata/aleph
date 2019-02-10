@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+from normality import stringify
 
 from aleph.core import db
 
@@ -46,6 +47,12 @@ class DatedModel(object):
         # hard delete
         db.session.delete(self)
 
+    def to_dict_dates(self):
+        return {
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }
+
 
 class SoftDeleteModel(DatedModel):
     deleted_at = db.Column(db.DateTime, default=None, nullable=True)
@@ -67,3 +74,9 @@ class SoftDeleteModel(DatedModel):
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
+
+    def to_dict_dates(self):
+        data = super(SoftDeleteModel, self).to_dict_dates()
+        if self.deleted_at:
+            data['deleted_at'] = self.deleted_at
+        return data

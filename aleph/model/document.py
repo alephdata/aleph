@@ -283,5 +283,9 @@ class Document(db.Model, DatedModel, Metadata):
                 proxy.add(prop, tag.text)
         return proxy
 
+    def to_dict(self):
+        data = self.to_dict_dates()
+        return data
+
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)

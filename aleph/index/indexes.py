@@ -13,7 +13,7 @@ DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
 RAW_TEXT = {"type": "text", "copy_to": "text"}
-KEYWORD = {"type": "keyword", "copy_to": "text"}
+KEYWORD = {"type": "keyword"}
 LATIN_KEYWORD = {"type": "keyword", "normalizer": "icu_latin"}
 TYPE_MAPPINGS = {
     registry.text: LATIN_TEXT,

@@ -52,14 +52,14 @@ class Notification(db.Model, IdModel, DatedModel):
                 yield name, clazz, value
 
     def to_dict(self):
-        return {
+        data = self.to_dict_dates()
+        data.update({
             'id': self.id,
             'actor_id': self.actor_id,
             'event': self._event,
-            'params': self.params,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at
-        }
+            'params': self.params
+        })
+        return data
 
     @classmethod
     def publish(cls, event, actor_id=None, channels=[], params={}):

@@ -92,7 +92,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         self.updated_at = datetime.utcnow()
 
     def to_dict(self):
-        return {
+        data = self.to_dict_dates()
+        data.update({
             'id': stringify(self.id),
             'type': self.type,
             'name': self.name,
@@ -102,11 +103,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             'is_admin': self.is_admin,
             'is_muted': self.is_muted,
             'has_password': self.has_password,
-            'notified_at': self.notified_at,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
-            'deleted_at': self.deleted_at
-        }
+            'notified_at': self.notified_at
+        })
+        return data
 
     @classmethod
     def by_foreign_id(cls, foreign_id):

@@ -85,5 +85,9 @@ class DocumentRecord(db.Model):
             proxy.set('cells', pack_cells(values))
             return proxy
 
+    def to_dict(self):
+        data = self.to_dict_dates()
+        return data
+
     def __repr__(self):
         return '<DocumentRecord(%r,%r)>' % (self.document_id, self.index)

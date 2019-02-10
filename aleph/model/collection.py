@@ -107,27 +107,25 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return q.count() < 1
 
     def to_dict(self):
-        category = self.DEFAULT
+        data = self.to_dict_dates()
+        data['category'] = self.DEFAULT
         if self.category in self.CATEGORIES:
-            category = self.category
-        return {
+            data['category'] = self.category
+        data['kind'] = 'casefile' if self.casefile else 'source'
+        data.update({
             'id': stringify(self.id),
             'collection_id': stringify(self.id),
             'foreign_id': self.foreign_id,
             'label': self.label,
-            'kind': 'casefile' if self.casefile else 'source',
             'summary': self.summary,
-            'category': category,
             'publisher': self.publisher,
             'publisher_url': self.publisher_url,
             'info_url': self.info_url,
             'data_url': self.data_url,
             'casefile': self.casefile,
-            'secret': self.secret,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
-            'deleted_at': self.deleted_at,
-        }
+            'secret': self.secret
+        })
+        return data
 
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):

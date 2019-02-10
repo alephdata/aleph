@@ -40,16 +40,15 @@ class Alert(db.Model, SoftDeleteModel):
         return True
 
     def to_dict(self):
-        return {
+        data = self.to_dict_dates()
+        data.update({
             'id': stringify(self.id),
             'query': self.query,
             'normalized': self.normalized,
             'role_id': stringify(self.role_id),
-            'notified_at': self.notified_at,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
-            'deleted_at': self.deleted_at
-        }
+            'notified_at': self.notified_at
+        })
+        return data
 
     @classmethod
     def by_id(cls, id, role_id=None):

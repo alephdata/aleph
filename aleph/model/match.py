@@ -21,15 +21,16 @@ class Match(db.Model, IdModel, DatedModel):
     score = db.Column(db.Float(), nullable=True)
 
     def to_dict(self):
-        return {
+        data = self.to_dict_dates()
+        data.update({
             'id': stringify(self.id),
             'score': self.score,
             'entity_id': stringify(self.entity_id),
             'collection_id': stringify(self.collection_id),
             'match_id': stringify(self.match_id),
-            'match_collection_id': stringify(self.match_collection_id),
-            'created_at': self.created_at,
-        }
+            'match_collection_id': stringify(self.match_collection_id)
+        })
+        return data
 
     @classmethod
     def find_by_collection(cls, collection_id, other_id):
