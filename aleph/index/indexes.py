@@ -12,8 +12,8 @@ log = logging.getLogger(__name__)
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
-RAW_TEXT = {"type": "text"}
-KEYWORD = {"type": "keyword"}
+RAW_TEXT = {"type": "text", "copy_to": "text"}
+KEYWORD = {"type": "keyword", "copy_to": "text"}
 LATIN_KEYWORD = {"type": "keyword", "normalizer": "icu_latin"}
 TYPE_MAPPINGS = {
     registry.text: LATIN_TEXT,
@@ -49,6 +49,7 @@ def configure_collections():
         "properties": {
             "label": {
                 "type": "text",
+                "copy_to": "text",
                 "analyzer": "icu_latin",
                 "fields": {"kw": KEYWORD}
             },
@@ -63,32 +64,20 @@ def configure_collections():
             "data_url": KEYWORD,
             "info_url": KEYWORD,
             "kind": KEYWORD,
-            "text": LATIN_TEXT,
+            "creator_id": KEYWORD,
+            "team_id": KEYWORD,
+            "text": {
+                "type": "text",
+                "analyzer": "icu_latin",
+                "term_vector": "with_positions_offsets",
+                "store": True
+            },
             "casefile": {"type": "boolean"},
             "secret": {"type": "boolean"},
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
             "count": {"type": "long"},
-            "schemata": {"type": "object"},
-            "creator": {
-                "type": "object",
-                "properties": {
-                    "id": KEYWORD,
-                    "type": KEYWORD,
-                    "name": {
-                        "type": "text",
-                        "fields": {"kw": KEYWORD}
-                    }
-                }
-            },
-            "team": {
-                "type": "object",
-                "properties": {
-                    "id": KEYWORD,
-                    "type": KEYWORD,
-                    "name": KEYWORD
-                }
-            },
+            "schemata": {"type": "object"}
         }
     }
     configure_index(collections_index(), mapping, index_settings())
@@ -198,12 +187,8 @@ def configure_schema(schema):
             "error_message": RAW_TEXT,
             "content_hash": KEYWORD,
             "foreign_id": KEYWORD,
-            "file_name": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
-            "source_url": KEYWORD,
-            "extension": KEYWORD,
-            "mime_type": KEYWORD,
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
@@ -221,18 +206,9 @@ def configure_schema(schema):
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT}
             },
-            "columns": KEYWORD,
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
-            "date": PARTIAL_DATE,
-            "authored_at": PARTIAL_DATE,
-            "modified_at": PARTIAL_DATE,
-            "published_at": PARTIAL_DATE,
-            "retrieved_at": PARTIAL_DATE,
             "dates": PARTIAL_DATE,
-            "author": KEYWORD,
-            "generator": KEYWORD,
-            "summary": RAW_TEXT,
             "text": {
                 "type": "text",
                 "analyzer": "icu_latin",
@@ -242,16 +218,7 @@ def configure_schema(schema):
             "properties": {
                 "type": "object",
                 "properties": schema_mapping
-            },
-            "parent": {
-                "type": "object",
-                "properties": {
-                    "id": KEYWORD,
-                    "type": KEYWORD,
-                    "title": KEYWORD
-                }
-            },
-            "ancestors": KEYWORD,
+            }
         }
     }
     index = entities_write_index(schema)

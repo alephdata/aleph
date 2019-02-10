@@ -11,41 +11,13 @@ def index_document(document, shallow=False, sync=False):
     log.info("Index document [%s]: %s", document.id, document.name)
     proxy = document.to_proxy()
     context = {
-        'name': document.name,
         'status': document.status,
         'content_hash': document.content_hash,
         'foreign_id': document.foreign_id,
         'error_message': document.error_message,
         'uploader_id': document.uploader_id,
-        'summary': document.summary,
-        'author': document.author,
-        'generator': document.generator,
-        'file_size': document.file_size,
-        'file_name': document.file_name,
-        'source_url': document.source_url,
-        'languages': document.languages,
-        'countries': document.countries,
-        'keywords': document.keywords,
-        'date': document.date,
-        'authored_at': document.authored_at,
-        'modified_at': document.modified_at,
-        'published_at': document.published_at,
-        'retrieved_at': document.retrieved_at,
-        'mime_type': document.mime_type,
-        'pdf_version': document.pdf_version,
-        'columns': document.columns,
-        'ancestors': document.ancestors
     }
     texts = list(document.texts)
-    texts.extend(document.columns)
-    parent = document.parent
-    if parent is not None:
-        texts.append(parent.title)
-        context['parent'] = {
-            'id': parent.id,
-            'schema': parent.schema,
-            'title': parent.title,
-        }
     if not shallow:
         index_records(document, sync=False)
     return index_single(document, proxy, context, texts, sync=sync)

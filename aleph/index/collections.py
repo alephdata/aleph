@@ -1,7 +1,6 @@
 import logging
 from pprint import pprint  # noqa
 from banal import ensure_list
-from normality import normalize
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -9,7 +8,7 @@ from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
-from aleph.index.util import index_form, search_safe, MAX_PAGE
+from aleph.index.util import search_safe, MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +20,6 @@ def index_collection(collection, sync=False):
 
     data = collection.to_dict()
     data.pop('id', None)
-    texts = [v for v in data.values() if isinstance(v, str)]
 
     if collection.creator is not None:
         data['creator'] = {
@@ -29,7 +27,6 @@ def index_collection(collection, sync=False):
             'type': collection.creator.type,
             'name': collection.creator.name
         }
-        texts.append(collection.creator.name)
 
     data['team'] = []
     for role in collection.team:
@@ -38,7 +35,6 @@ def index_collection(collection, sync=False):
             'type': role.type,
             'name': role.name
         })
-        texts.append(role.name)
 
     stats = get_collection_stats(collection.id)
     data['count'] = stats['count']
@@ -59,9 +55,6 @@ def index_collection(collection, sync=False):
     languages = ensure_list(collection.languages)
     languages = languages or stats['languages'].keys()
     data['languages'] = registry.language.normalize_set(languages)
-
-    texts.extend([normalize(t, ascii=True) for t in texts])
-    data['text'] = index_form(texts)
     return index_safe(collections_index(), collection.id, data,
                       refresh=sync)
 

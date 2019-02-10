@@ -19,7 +19,8 @@ blueprint = Blueprint('ingest_api', __name__)
 
 
 def _load_parent(collection_id, meta):
-    """Determine the parent document for the document that is to be ingested."""
+    """Determine the parent document for the document that is to be
+    ingested."""
     parent_id = meta.get('parent_id')
     if parent_id is None:
         return
