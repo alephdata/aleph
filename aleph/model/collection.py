@@ -85,17 +85,17 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             Permission.grant(self, self.creator, True, True)
 
     @property
-    def team(self):
+    def team_id(self):
         role = aliased(Role)
         perm = aliased(Permission)
-        q = db.session.query(role)
+        q = db.session.query(role.id)
         q = q.filter(role.type != Role.SYSTEM)
         q = q.filter(role.id == perm.role_id)
         q = q.filter(perm.collection_id == self.id)
         q = q.filter(perm.read == True)  # noqa
         q = q.filter(role.deleted_at == None)  # noqa
         q = q.filter(perm.deleted_at == None)  # noqa
-        return q
+        return [stringify(i) for (i,) in q.all()]
 
     @property
     def secret(self):
@@ -116,6 +116,8 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             'id': stringify(self.id),
             'collection_id': stringify(self.id),
             'foreign_id': self.foreign_id,
+            'creator_id': stringify(self.creator_id),
+            'team_id': self.team_id,
             'label': self.label,
             'summary': self.summary,
             'publisher': self.publisher,

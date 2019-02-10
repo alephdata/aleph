@@ -20,22 +20,6 @@ def index_collection(collection, sync=False):
 
     data = collection.to_dict()
     data.pop('id', None)
-
-    if collection.creator is not None:
-        data['creator'] = {
-            'id': collection.creator.id,
-            'type': collection.creator.type,
-            'name': collection.creator.name
-        }
-
-    data['team'] = []
-    for role in collection.team:
-        data['team'].append({
-            'id': role.id,
-            'type': role.type,
-            'name': role.name
-        })
-
     stats = get_collection_stats(collection.id)
     data['count'] = stats['count']
 
