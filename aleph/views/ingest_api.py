@@ -10,10 +10,11 @@ from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 
 from aleph.model import Document
-from aleph.serializers.entities import CombinedSchema, DocumentCreateSchema
 from aleph.logic.documents import ingest_document, update_document
 from aleph.views.util import require, get_flag
 from aleph.views.util import jsonify, validate_data
+from aleph.views.forms import DocumentCreateSchema
+from aleph.views.serializers import EntitySerializer
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
@@ -118,5 +119,5 @@ def ingest_upload(collection_id):
 
     return jsonify({
         'status': 'ok',
-        'documents': [CombinedSchema().dump(d).data for d in documents]
+        'documents': EntitySerializer.serialize_many(documents)
     })

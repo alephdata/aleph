@@ -213,3 +213,7 @@ class QueryLogSerializer(Serializer):
 
 class NotificationSerializer(Serializer):
     pass
+
+
+class RecordSerializer(Serializer):
+    pass

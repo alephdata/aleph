@@ -6,14 +6,13 @@ from pantomime.types import PDF
 
 from aleph.core import archive
 from aleph.model import DocumentRecord, Audit
+from aleph.search import RecordsQuery
 from aleph.logic.documents import delete_document
 from aleph.logic.util import document_url
 from aleph.logic.audit import record_audit
 from aleph.views.cache import enable_cache
-from aleph.views.util import jsonify, sanitize_html
-from aleph.views.util import serialize_data, get_db_document
-from aleph.serializers import RecordSchema
-from aleph.search import RecordsQuery
+from aleph.views.util import jsonify, sanitize_html, get_db_document
+from aleph.views.serializers import RecordSerializer
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
@@ -99,10 +98,8 @@ def records(document_id):
     record_audit(Audit.ACT_ENTITY, id=document_id)
     if not document.supports_records:
         raise BadRequest("This document does not have records.")
-    result = RecordsQuery.handle(request,
-                                 document=document,
-                                 schema=RecordSchema)
-    return jsonify(result)
+    result = RecordsQuery.handle(request, document=document)
+    return RecordSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/documents/<int:document_id>/records/<int:index>')
@@ -115,4 +112,4 @@ def record(document_id, index):
     record = DocumentRecord.by_index(document.id, index)
     if record is None:
         raise NotFound("No such record: %s" % index)
-    return serialize_data(record, RecordSchema)
+    return RecordSerializer.jsonify(record)
