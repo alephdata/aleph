@@ -83,10 +83,8 @@ class RoleSerializer(Serializer):
         obj['links'] = {
             'self': url_for('roles_api.view', id=obj.get('id'))
         }
-        writeable = obj.get('id') == stringify(request.authz.id)
-        writeable = writeable or request.authz.is_admin
-        obj['writeable'] = writeable
-        if writeable:
+        obj['writeable'] = obj.get('id') == stringify(request.authz.id)
+        if not obj['writeable']:
             obj.pop('has_password', None)
             obj.pop('api_key', None)
             obj.pop('email', None)

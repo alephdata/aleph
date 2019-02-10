@@ -1,8 +1,9 @@
 import io
 import csv
 from banal import as_bool
-from flask import Response, request, render_template
 from normality import stringify
+from flask import Response, request, render_template
+from flask_babel import gettext
 from urllib.parse import urlparse, urljoin
 from werkzeug.exceptions import MethodNotAllowed, Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
@@ -36,24 +37,15 @@ def get_flag(name, default=False):
     return as_bool(request.args.get(name), default=default)
 
 
-def serialize_validation_error(errors):
-    message = None
-    for field, errors in errors.items():
-        for error in errors:
-            message = error
-    return {
-        'status': 'error',
-        'errors': errors,
-        'message': message
-    }
-
-
 def validate_data(data, schema, many=None):
     """Validate the data inside a request against a schema."""
     data, errors = schema().load(data, many=many)
     if len(errors):
-        resp = serialize_validation_error(errors)
-        resp = jsonify(resp, status=400)
+        resp = jsonify({
+            'status': 'error',
+            'errors': errors,
+            'message': gettext('Error during data validation')
+        }, status=400)
         raise BadRequest(response=resp)
     return data
 
