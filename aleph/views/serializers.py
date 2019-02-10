@@ -3,6 +3,7 @@ from flask import request
 from banal import ensure_list
 from normality import stringify
 from followthemoney import model
+from followthemoney.types import registry
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events, Alert
@@ -151,7 +152,13 @@ class EntitySerializer(Serializer):
         schema = model.get(obj.get('schema'))
         if schema is None:
             return
-        # TODO associated entities
+        properties = obj.get('properties', {})
+        for prop in schema.properties.values():
+            if prop.type != registry.entity:
+                continue
+            values = ensure_list(properties.get(prop.name))
+            for value in values:
+                self.queue(Entity, value)
 
     def _serialize(self, obj):
         pk = obj.get('id')
@@ -160,9 +167,17 @@ class EntitySerializer(Serializer):
         obj['collection'] = self.resolve(Collection, collection_id,
                                          CollectionSerializer)
         schema = model.get(obj.get('schema'))
-        if schema is None:
-            return
         obj['schemata'] = schema.names
+        properties = obj.get('properties', {})
+        for prop in schema.properties.values():
+            if prop.type != registry.entity:
+                continue
+            values = ensure_list(properties.get(prop.name))
+            properties[prop.name] = []
+            for value in values:
+                entity = self.resolve(Entity, value, EntitySerializer)
+                properties[prop.name].append(entity)
+
         links = {
             'self': url_for('entities_api.view', id=pk),
             'references': url_for('entities_api.references', id=pk),
@@ -171,14 +186,16 @@ class EntitySerializer(Serializer):
         }
         if schema.is_a(Document.SCHEMA):
             links['content'] = url_for('documents_api.content', document_id=pk)
-        # if data.get('content_hash'):
-        #     links['file'] = url_for('documents_api.file',
-        #                             document_id=pk,
-        #                             _authorize=True)
-        # if schemata.intersection([Document.SCHEMA_PDF]):
-        #     links['pdf'] = url_for('documents_api.pdf',
-        #                            document_id=pk,
-        #                            _authorize=True)
+
+        for content_hash in ensure_list(properties.get('contentHash')):
+            links['file'] = url_for('documents_api.file',
+                                    document_id=pk,
+                                    _authorize=True)
+
+        for pdf_hash in ensure_list(properties.get('pdfHash')):
+            links['pdf'] = url_for('documents_api.pdf',
+                                   document_id=pk,
+                                   _authorize=True)
 
         obj['links'] = links
         obj['writeable'] = authz.can(collection_id, authz.WRITE)
