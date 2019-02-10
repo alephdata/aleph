@@ -239,6 +239,7 @@ class Document(db.Model, DatedModel, Metadata):
         meta = self.meta
         headers = meta.get('headers', {})
         headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        proxy.set('name', self.name)
         proxy.set('title', meta.get('title'))
         proxy.set('author', meta.get('author'))
         proxy.set('generator', meta.get('generator'))
