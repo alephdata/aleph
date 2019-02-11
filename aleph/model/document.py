@@ -285,7 +285,19 @@ class Document(db.Model, DatedModel, Metadata):
         return proxy
 
     def to_dict(self):
-        data = self.to_dict_dates()
+        proxy = self.to_proxy()
+        data = proxy.to_full_dict()
+        data.update(self.to_dict_dates())
+        data.update({
+            'name': proxy.caption,
+            'status': self.status,
+            'foreign_id': self.foreign_id,
+            'document_id': self.id,
+            'collection_id': self.collection_id,
+            'error_message': self.error_message,
+            'uploader_id': self.uploader_id,
+            'bulk': False,
+        })
         return data
 
     def __repr__(self):

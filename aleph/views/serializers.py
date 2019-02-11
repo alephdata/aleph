@@ -87,6 +87,7 @@ class RoleSerializer(Serializer):
         obj['writeable'] = obj.get('id') == stringify(request.authz.id)
         if not obj['writeable']:
             obj.pop('has_password', None)
+            obj.pop('is_muted', None)
             obj.pop('api_key', None)
             obj.pop('email', None)
         if obj['type'] != Role.USER:
@@ -236,10 +237,6 @@ class MatchSerializer(Serializer):
 
 
 class QueryLogSerializer(Serializer):
-    pass
-
-
-class RecordSerializer(Serializer):
     pass
 
 

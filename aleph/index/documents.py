@@ -1,28 +1,55 @@
 import logging
 from pprint import pprint  # noqa
+from banal import ensure_list
 
-from aleph.index.records import index_records, delete_records
-from aleph.index.entities import delete_entity, index_single
+from aleph.core import db
+from aleph.model import DocumentRecord
+from aleph.index.entities import index_operation, bulk_actions
+from aleph.index.indexes import entities_write_index
+from aleph.index.util import query_delete
 
 log = logging.getLogger(__name__)
 
 
 def index_document(document, shallow=False, sync=False):
-    proxy = document.to_proxy()
-    log.info("Index document [%s]: %s", document.id, proxy.caption)
-    context = {
-        'status': document.status,
-        'content_hash': document.content_hash,
-        'foreign_id': document.foreign_id,
-        'error_message': document.error_message,
-        'uploader_id': document.uploader_id,
-    }
-    texts = list(document.texts)
-    if not shallow:
-        index_records(document, sync=False)
-    return index_single(document, proxy, context, texts, sync=sync)
+    log.info("Index document [%s]: %s", document.id, document.name)
+    bulk_actions(generate_document(document), sync=sync)
 
 
 def delete_document(document_id, sync=False):
-    delete_records(document_id=document_id, sync=False)
-    delete_entity(document_id, sync=sync)
+    """Delete all records associated with the given document."""
+    q = {'term': {'document_id': document_id}}
+    query_delete(entities_write_index(), q, refresh=sync)
+
+
+def generate_document(document):
+    data = document.to_dict()
+    data['text'] = ensure_list(data.get('text'))
+    if document.supports_records:
+        q = db.session.query(DocumentRecord)
+        q = q.filter(DocumentRecord.document_id == document.id)
+        for idx, record in enumerate(q):
+            texts = list(record.texts)
+            data['text'].extend(texts)
+            record = record.to_dict()
+            record['collection_id'] = document.collection_id
+            record['created_at'] = document.created_at
+            record['updated_at'] = document.updated_at
+            record['text'] = texts
+            entity_id, index, body = index_operation(record)
+            yield {
+                '_id': entity_id,
+                '_index': index,
+                '_type': 'doc',
+                '_source': body
+            }
+            if idx > 0 and idx % 1000 == 0:
+                log.info("Indexed [%s]: %s records...", document.id, idx)
+
+    entity_id, index, body = index_operation(data)
+    yield {
+        '_id': entity_id,
+        '_index': index,
+        '_type': 'doc',
+        '_source': body
+    }

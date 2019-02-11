@@ -19,17 +19,6 @@ class StreamApiTestCase(TestCase):
         lines = len(res.data.split(b'\n'))
         assert 7 == lines, lines
 
-    def test_records(self):
-        self.load_fixtures('docs.yaml')
-        res = self.client.get('/api/2/records/_stream')
-        assert res.status_code == 403, res
-
-        _, headers = self.login(is_admin=True)
-        res = self.client.get('/api/2/records/_stream', headers=headers)
-        assert res.status_code == 200, res
-        lines = len(res.data.split(b'\n'))
-        assert 13 == lines, lines
-
     def test_rdf(self):
         coll = self.create_collection(
             label='Test Collection',

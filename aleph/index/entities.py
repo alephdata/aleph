@@ -6,14 +6,13 @@ from banal import ensure_list
 from datetime import datetime
 from collections import defaultdict
 from followthemoney import model
-from followthemoney.util import merge_data
 from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es
 from aleph.index.indexes import entities_write_index, entities_read_index
-from aleph.index.util import unpack_result, index_form, refresh_sync
+from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import index_safe, search_safe, authz_query
-from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE
+from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE, BULK_PAGE
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
@@ -25,8 +24,11 @@ def index_entity(entity, sync=False):
     if entity.deleted_at is not None:
         return delete_entity(entity.id)
 
-    context = {'foreign_id': entity.foreign_id}
-    return index_single(entity, entity.to_proxy(), context, [], sync=sync)
+    entity_id, index, data = index_operation(entity.to_dict())
+    refresh = refresh_sync(sync)
+    # This is required if an entity changes its type:
+    # delete_entity(entity_id, exclude=proxy.schema, sync=False)
+    return index_safe(index, entity_id, data, refresh=refresh)
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
@@ -123,11 +125,12 @@ def _index_updates(collection_id, entities, merge=True):
             timestamps[existing.id] = result.get('created_at')
 
     actions = []
-    for entity_id, entity in entities.items():
-        context = dict(common)
-        context['created_at'] = timestamps.get(entity.id)
-        body = finalize_index(entity, context, [])
-        index = entities_write_index(entity.schema)
+    for entity_id, proxy in entities.items():
+        entity = dict(common)
+        entity['created_at'] = timestamps.get(proxy.id)
+        entity.update(proxy.to_full_dict())
+        entity['name'] = entity.get('name', proxy.caption)
+        _, index, body = index_operation(entity)
         for other in indexes.get(entity_id, []):
             if other != index:
                 # log.info("Delete ID [%s] from index: %s", entity_id, other)
@@ -148,18 +151,25 @@ def _index_updates(collection_id, entities, merge=True):
 
 def index_bulk(collection_id, entities, merge=True):
     """Index a set of entities."""
+    actions = _index_updates(collection_id, entities, merge=merge)
+    bulk_actions(actions, sync=merge)
+
+
+def bulk_actions(actions, sync=False):
+    """Bulk indexing with timeouts, bells and whistles."""
     try:
         start_time = time()
-        actions = _index_updates(collection_id, entities, merge=merge)
-        bulk(es, actions,
-             chunk_size=len(actions) + 1,
-             max_retries=10,
-             initial_backoff=2,
-             request_timeout=REQUEST_TIMEOUT,
-             timeout=TIMEOUT,
-             refresh=refresh_sync(True))
+        res = bulk(es, actions,
+                   chunk_size=BULK_PAGE,
+                   max_retries=10,
+                   initial_backoff=2,
+                   request_timeout=REQUEST_TIMEOUT,
+                   timeout=TIMEOUT,
+                   refresh=refresh_sync(sync))
         duration = (time() - start_time)
-        log.info("Bulk write: %.4fs", duration)
+        total, _ = res
+        log.debug("Bulk write (%s): %.4fs", total, duration)
+        return res
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
 
@@ -176,13 +186,9 @@ def delete_entity(entity_id, exclude=None, sync=False):
         es.delete(index=index, doc_type='doc', id=entity_id, refresh=refresh)
 
 
-def finalize_index(proxy, context, texts):
+def index_operation(data):
     """Apply final denormalisations to the index."""
-    entity = proxy.to_full_dict()
-    data = merge_data(context, entity)
-    data['name'] = data.get('name', proxy.caption)
-    data['text'] = index_form(texts)
-
+    data['bulk'] = data.get('bulk', False)
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
@@ -191,22 +197,8 @@ def finalize_index(proxy, context, texts):
 
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
-    data.pop('id', None)
+    entity_id = data.pop('id')
     data.pop('_index', None)
-    # return clean_dict(data)
-    return data
-
-
-def index_single(obj, proxy, data, texts, sync=False):
-    """Indexing aspects common to entities and documents."""
-    data = finalize_index(proxy, data, texts)
-    data['bulk'] = False
-    data['collection_id'] = obj.collection_id
-    data['created_at'] = obj.created_at
-    data['updated_at'] = obj.updated_at
-    # pprint(data)
-    index = entities_write_index(proxy.schema)
-    refresh = refresh_sync(sync)
-    # This is required if an entity changes its type:
-    # delete_entity(obj.id, exclude=proxy.schema, sync=False)
-    return index_safe(index, obj.id, data, refresh=refresh)
+    schema = model.get(data.get('schema'))
+    index = entities_write_index(schema)
+    return entity_id, index, data

@@ -1,4 +1,5 @@
 import logging
+from banal import ensure_dict
 from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -81,12 +82,19 @@ class DocumentRecord(db.Model):
             proxy.make_id('record', self.id)
             proxy.set('table', self.document_id)
             proxy.set('index', self.index)
-            values = [v for (k, v) in sorted(self.data.items())]
+            data = ensure_dict(self.data)
+            values = [v for (k, v) in sorted(data.items())]
             proxy.set('cells', pack_cells(values))
             return proxy
 
     def to_dict(self):
-        data = self.to_dict_dates()
+        proxy = self.to_proxy()
+        data = proxy.to_full_dict()
+        data.update({
+            'document_id': self.document_id,
+            # 'collection_id': self.collection_id,
+            'bulk': False,
+        })
         return data
 
     def __repr__(self):

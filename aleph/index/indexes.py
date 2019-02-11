@@ -27,9 +27,7 @@ def collections_index():
 
 
 def all_indexes():
-    return ','.join((collections_index(),
-                     entities_read_index(),
-                     records_read_index()))
+    return ','.join((collections_index(), entities_read_index()))
 
 
 def configure_collections():
@@ -81,34 +79,6 @@ def configure_collections():
         }
     }
     configure_index(collections_index(), mapping, index_settings())
-
-
-def records_write_index():
-    """Index that us currently written by new queries."""
-    return settings.RECORDS_INDEX
-
-
-def records_read_index():
-    """Combined index to run all queries against."""
-    return ','.join(settings.RECORDS_INDEX_SET)
-
-
-def configure_records():
-    mapping = {
-        "date_detection": False,
-        "properties": {
-            "collection_id": KEYWORD,
-            "document_id": KEYWORD,
-            "index": {"type": "long"},
-            "text": {
-                "type": "text",
-                "analyzer": "icu_latin",
-                "term_vector": "with_positions_offsets"
-            },
-        }
-    }
-    settings = index_settings(shards=10, refresh_interval='15s')
-    configure_index(records_write_index(), mapping, settings)
 
 
 def schema_index(schema):
@@ -185,8 +155,8 @@ def configure_schema(schema):
             "bulk": {"type": "boolean"},
             "status": KEYWORD,
             "error_message": RAW_TEXT,
-            "content_hash": KEYWORD,
             "foreign_id": KEYWORD,
+            "document_id": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
             "entities": KEYWORD,

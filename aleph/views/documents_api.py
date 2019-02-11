@@ -1,18 +1,16 @@
 import logging
 from flask.wrappers import Response
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from pantomime.types import PDF
 
 from aleph.core import archive
-from aleph.model import DocumentRecord, Audit
-from aleph.search import RecordsQuery
+from aleph.model import Audit
 from aleph.logic.documents import delete_document
 from aleph.logic.util import document_url
 from aleph.logic.audit import record_audit
 from aleph.views.cache import enable_cache
 from aleph.views.util import jsonify, sanitize_html, get_db_document
-from aleph.views.serializers import RecordSerializer
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
@@ -89,27 +87,3 @@ def pdf(document_id):
         file_name = '%s.pdf' % file_name
     resp = _serve_archive(document.pdf_version, file_name, PDF)
     return _resp_canonical(resp, document_id)
-
-
-@blueprint.route('/api/2/documents/<int:document_id>/records')
-def records(document_id):
-    enable_cache()
-    document = get_db_document(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    if not document.supports_records:
-        raise BadRequest("This document does not have records.")
-    result = RecordsQuery.handle(request, document=document)
-    return RecordSerializer.jsonify_result(result)
-
-
-# @blueprint.route('/api/2/documents/<int:document_id>/records/<int:index>')
-# def record(document_id, index):
-#     enable_cache()
-#     document = get_db_document(document_id)
-#     record_audit(Audit.ACT_ENTITY, id=document_id)
-#     if not document.supports_records:
-#         raise BadRequest("This document does not have records.")
-#     record = DocumentRecord.by_index(document.id, index)
-#     if record is None:
-#         raise NotFound("No such record: %s" % index)
-#     return RecordSerializer.jsonify(record)

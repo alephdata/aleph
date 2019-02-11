@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
-BULK_PAGE = 1000
+BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
 
@@ -137,29 +137,6 @@ def search_safe(*args, **kwargs):
             backoff(failures=attempt)
 
 
-def index_form(texts):
-    """Turn a set of strings into the appropriate form for indexing."""
-    results = []
-    total_len = 0
-
-    for text in texts:
-        # We don't want to store more than INDEX_MAX_LEN of text per doc
-        if total_len > INDEX_MAX_LEN:
-            # TODO: there might be nicer techniques for dealing with overly
-            # long text buffers?
-            results = list(set(results))
-            total_len = sum((len(t) for t in results))
-            if total_len > INDEX_MAX_LEN:
-                break
-
-        if isinstance(text, str):
-            text = text.strip()
-            if len(text) > 2:
-                total_len += len(text)
-                results.append(text)
-    return results
-
-
 def clean_query(query):
     # XXX - do these premises hold?
     if is_mapping(query):
@@ -223,7 +200,7 @@ def index_settings(shards=5, refresh_interval=None):
                 "filter": {
                     "latinize": {
                         "type": "icu_transform",
-                        "id": "Any-Latin; NFKD; Lower(); [:Nonspacing Mark:] Remove; NFC"  # noqa
+                        "id": "Any-Latin; NFKD; Lower(); [:Nonspacing Mark:] Remove; NFKC"  # noqa
                     }
                 }
             }

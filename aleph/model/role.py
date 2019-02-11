@@ -103,7 +103,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             'is_admin': self.is_admin,
             'is_muted': self.is_muted,
             'has_password': self.has_password,
-            'notified_at': self.notified_at
+            # 'notified_at': self.notified_at
         })
         return data
 

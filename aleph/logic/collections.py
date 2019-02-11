@@ -6,7 +6,6 @@ from aleph.authz import Authz
 from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
-from aleph.index.records import delete_records
 from aleph.logic.notifications import publish, flush_notifications
 
 log = logging.getLogger(__name__)
@@ -88,7 +87,6 @@ def delete_collection_content(collection_id):
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
     index.delete_collection(collection_id)
     index.delete_entities(collection_id)
-    delete_records(collection_id)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
 

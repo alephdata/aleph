@@ -2,14 +2,13 @@ import logging
 
 from aleph.model import DocumentRecord
 from aleph.index.indexes import entities_read_index
-from aleph.index.indexes import records_read_index
 from aleph.index.indexes import collections_index
 from aleph.index.entities import EXCLUDE_DEFAULT
 from aleph.index.match import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
-from aleph.search.query import Query, AuthzQuery
+from aleph.search.query import AuthzQuery
 
 log = logging.getLogger(__name__)
 
@@ -66,24 +65,3 @@ class RecordsQueryResult(SearchQueryResult):
                         result['data'] = record.data
                     if record.text:
                         result['text'] = record.text
-
-
-class RecordsQuery(Query):
-    RESULT_CLASS = RecordsQueryResult
-    EXCLUDE_FIELDS = ['text']
-    TEXT_FIELDS = ['text']
-    SORT_DEFAULT = [{'index': 'asc'}]
-
-    def __init__(self, parser, document=None):
-        super(RecordsQuery, self).__init__(parser)
-        self.document = document
-
-    def get_index(self):
-        return records_read_index()
-
-    def get_query(self):
-        query = super(RecordsQuery, self).get_query()
-        query['bool']['filter'].append({
-            'term': {'document_id': self.document.id}
-        })
-        return query

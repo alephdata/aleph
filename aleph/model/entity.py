@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from normality import stringify
 from followthemoney import model
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
@@ -107,6 +108,17 @@ class Entity(db.Model, SoftDeleteModel):
         })
         proxy.add('name', self.name)
         return proxy
+
+    def to_dict(self):
+        proxy = self.to_proxy()
+        data = proxy.to_full_dict()
+        data.update(self.to_dict_dates())
+        data.update({
+            'foreign_id': self.foreign_id,
+            'collection_id': stringify(self.collection_id),
+            'bulk': False
+        })
+        return data
 
     @classmethod
     def create(cls, data, collection):
