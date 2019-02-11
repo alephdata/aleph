@@ -129,7 +129,6 @@ def _index_updates(collection_id, entities, merge=True):
         entity = dict(common)
         entity['created_at'] = timestamps.get(proxy.id)
         entity.update(proxy.to_full_dict())
-        entity['name'] = entity.get('name', proxy.caption)
         _, index, body = index_operation(entity)
         for other in indexes.get(entity_id, []):
             if other != index:

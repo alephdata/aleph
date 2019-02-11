@@ -13,7 +13,7 @@ class SearchApiTestCase(TestCase):
         # self.login(is_admin=True)
         res = self.client.get('/api/2/entities?q=banana&facet=collection_id')
         assert res.status_code == 200, res
-        assert res.json['total'] == 1, res.json
+        assert res.json['total'] == 2, res.json
         # assert '<em>banana</em>' in res.data, res.json
         assert b'Public Collection' in res.data, res.json
         assert b'Secret Document' not in res.data, res.json
@@ -46,22 +46,23 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/2/entities?facet=schema')
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 4, facet
+        assert len(facet['values']) == 6, facet
         keys = [val['id'] for val in facet['values']]
         assert 'PlainText' in keys, facet
         assert 'Company' in keys, facet
         assert 'Pages' in keys, facet
+        assert 'Row' in keys, facet
 
         res = self.client.get('/api/2/entities?facet=schema&filter:schema=Company')  # noqa
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 4, facet['values']
-        assert facet['values'][0]['label'] == 'Companies', facet
+        assert len(facet['values']) == 6, facet['values']
+        assert facet['values'][0]['label'] == 'Rows', facet
 
         res = self.client.get('/api/2/entities?facet=schema&post_filter:schema=Company')  # noqa
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 4, facet['values']
+        assert len(facet['values']) == 6, facet['values']
 
     def test_basic_filters(self):
         res = self.client.get('/api/2/entities?filter:source_id=23')

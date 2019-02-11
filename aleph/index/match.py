@@ -70,7 +70,11 @@ def match_query(proxy, collection_ids=None, query=None):
     # Real estate is "unmatchable", i.e. even if two plots of land
     # have almost the same name and criteria, it does not make
     # sense to suggest they are the same.
-    if proxy.schema.name != Entity.THING:
+    if proxy.schema.name == Entity.THING:
+        query['bool']['filter'].append({
+            "term": {"schemata": Entity.THING}
+        })
+    else:
         matchable = [s.name for s in proxy.schema.matchable_schemata]
         if not len(matchable):
             return none_query()

@@ -74,17 +74,17 @@ def alert_query(alert, authz):
             'minimum_should_match': '90%'
         }
     }
-    filter_since = {
-        'range': {
-            'created_at': {'gt': alert.notified_at}
-        }
-    }
+    filters = [
+        {'range': {'created_at': {'gt': alert.notified_at}}},
+        {'term': {'schemata': Entity.THING}},
+        authz_query(authz)
+    ]
     return {
         'size': MAX_PAGE,
         'query': {
             'bool': {
-                'should': [query],
-                'filter': [filter_since, authz_query(authz)],
+                'should': query,
+                'filter': filters,
                 'minimum_should_match': 1
             }
         }

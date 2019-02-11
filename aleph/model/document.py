@@ -231,8 +231,11 @@ class Document(db.Model, DatedModel, Metadata):
         return q
 
     def to_proxy(self):
-        proxy = model.make_entity(self.model)
-        proxy.id = str(self.id)
+        proxy = model.get_proxy({
+            'id': str(self.id),
+            'schema': self.model,
+            'properties': self.meta
+        })
         proxy.set('contentHash', self.content_hash)
         proxy.set('parent', self.parent_id)
         proxy.set('ancestors', self.ancestors)
@@ -240,10 +243,6 @@ class Document(db.Model, DatedModel, Metadata):
         headers = meta.get('headers', {})
         headers = {slugify(k, sep='_'): v for k, v in headers.items()}
         proxy.set('name', self.name)
-        proxy.set('title', meta.get('title'))
-        proxy.set('author', meta.get('author'))
-        proxy.set('generator', meta.get('generator'))
-        proxy.set('crawler', meta.get('crawler'))
         proxy.set('fileSize', meta.get('file_size'))
         proxy.set('fileName', meta.get('file_name'))
         if not proxy.has('fileName'):
@@ -251,14 +250,11 @@ class Document(db.Model, DatedModel, Metadata):
             if disposition is not None:
                 _, attrs = cgi.parse_header(disposition)
                 proxy.set('fileName', attrs.get('filename'))
-        proxy.set('extension', meta.get('extension'))
-        proxy.set('encoding', meta.get('encoding'))
         proxy.set('mimeType', meta.get('mime_type'))
         if not proxy.has('mimeType'):
             proxy.set('mimeType', headers.get('content_type'))
         proxy.set('language', meta.get('languages'))
         proxy.set('country', meta.get('countries'))
-        proxy.set('date', meta.get('date'))
         proxy.set('authoredAt', meta.get('authored_at'))
         proxy.set('modifiedAt', meta.get('modified_at'))
         proxy.set('publishedAt', meta.get('published_at'))
@@ -266,7 +262,6 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('sourceUrl', meta.get('source_url'))
         proxy.set('messageId', meta.get('message_id'), quiet=True)
         proxy.set('inReplyTo', meta.get('in_reply_to'), quiet=True)
-        proxy.set('keywords', meta.get('keywords'))
 
         pdf = 'application/pdf'
         if meta.get('extension') == 'pdf' or proxy.first('mimeType') == pdf:
@@ -289,7 +284,6 @@ class Document(db.Model, DatedModel, Metadata):
         data = proxy.to_full_dict()
         data.update(self.to_dict_dates())
         data.update({
-            'name': proxy.caption,
             'status': self.status,
             'foreign_id': self.foreign_id,
             'document_id': self.id,

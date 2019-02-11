@@ -3,9 +3,9 @@ from pprint import pprint  # noqa
 from banal import ensure_list
 
 from aleph.core import db
-from aleph.model import DocumentRecord
+from aleph.model import DocumentRecord, Document
 from aleph.index.entities import index_operation, bulk_actions
-from aleph.index.indexes import entities_write_index
+from aleph.index.indexes import entities_read_index
 from aleph.index.util import query_delete
 
 log = logging.getLogger(__name__)
@@ -19,7 +19,10 @@ def index_document(document, shallow=False, sync=False):
 def delete_document(document_id, sync=False):
     """Delete all records associated with the given document."""
     q = {'term': {'document_id': document_id}}
-    query_delete(entities_write_index(), q, refresh=sync)
+    schemata = (DocumentRecord.SCHEMA_PAGE,
+                DocumentRecord.SCHEMA_ROW,
+                Document.SCHEMA)
+    query_delete(entities_read_index(schemata), q, refresh=sync)
 
 
 def generate_document(document):

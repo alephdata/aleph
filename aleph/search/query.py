@@ -61,6 +61,12 @@ class Query(object):
     def get_filters(self):
         """Apply query filters from the user interface."""
         filters = []
+        # This enforces the authorization (access control) rules on
+        # a particular query by comparing the collections a user is
+        # authorized for with the one on the document.
+        if self.parser.authz and not self.parser.authz.is_admin:
+            filters.append(authz_query(self.parser.authz))
+
         for field, values in self.parser.filters.items():
             if field not in self.parser.facet_names:
                 filters.append(field_filter_query(field, values))
@@ -202,17 +208,3 @@ class Query(object):
         record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result)
-
-
-class AuthzQuery(Query):
-    """Apply roles-based filtering to the results.
-
-    This enforces the authorization (access control) rules on a particular
-    query by comparing the roles a user is in with the ones on the document.
-    """
-
-    def get_filters(self):
-        filters = super(AuthzQuery, self).get_filters()
-        if not self.parser.authz.is_admin:
-            filters.append(authz_query(self.parser.authz))
-        return filters

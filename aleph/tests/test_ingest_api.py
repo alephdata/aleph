@@ -51,7 +51,8 @@ class IngestApiTestCase(TestCase):
         assert 'id' in res.json, res.json
         self.flush_index()
 
-        res = self.client.get('/api/2/entities', headers=headers)
+        res = self.client.get('/api/2/entities?filter:schemata=Document',
+                              headers=headers)
         assert res.json['total'] == 1, res.json
         res = self.client.get('/api/2/entities/1', headers=headers)
         assert 'de' in res.json['countries'], res.json

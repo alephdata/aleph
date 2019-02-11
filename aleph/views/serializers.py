@@ -1,7 +1,7 @@
 import logging
 from flask import request
-from banal import ensure_list
 from normality import stringify
+from banal import ensure_list, clean_dict
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -94,7 +94,7 @@ class RoleSerializer(Serializer):
             obj.pop('api_key', None)
             obj.pop('email', None)
         obj.pop('password', None)
-        return obj
+        return clean_dict(obj)
 
 
 class AlertSerializer(Serializer):
@@ -137,7 +137,7 @@ class CollectionSerializer(Serializer):
             if role is not None:
                 obj['team'].append(role)
         obj.pop('_index', None)
-        return obj
+        return clean_dict(obj)
 
 
 class PermissionSerializer(Serializer):
@@ -210,7 +210,7 @@ class EntitySerializer(Serializer):
         if obj.get('bulk'):
             obj['writeable'] = False
         obj.pop('_index', None)
-        return obj
+        return clean_dict(obj)
 
 
 class MatchCollectionsSerializer(Serializer):
