@@ -11,7 +11,7 @@ from aleph import __version__
 from aleph.core import cache, settings, url_for
 from aleph.authz import Authz
 from aleph.model import Collection
-from aleph.index.collections import get_instance_stats
+from aleph.index.collections import get_collection_stats
 from aleph.views.cache import enable_cache, NotModified
 from aleph.views.util import jsonify, render_xml
 
@@ -61,7 +61,15 @@ def metadata():
 @blueprint.route('/api/2/statistics')
 def statistics():
     enable_cache(vary_user=True)
-    return jsonify(get_instance_stats(request.authz))
+    collections = request.authz.collections(request.authz.READ)
+    entities = 0
+    for collection in collections:
+        stats = get_collection_stats(collection)
+        entities += stats['count']
+    return jsonify({
+        'collections': len(collections),
+        'entities': entities
+    })
 
 
 @blueprint.route('/api/2/sitemap.xml')

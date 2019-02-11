@@ -88,18 +88,6 @@ def get_collection_stats(collection_id):
     return data
 
 
-def get_instance_stats(authz):
-    collections = authz.collections(authz.READ)
-    entities = 0
-    for collection in collections:
-        stats = get_collection_stats(collection)
-        entities += stats['count']
-    return {
-        'collections': len(collections),
-        'entities': entities
-    }
-
-
 def get_sitemap_entities(collection_id):
     filters = [
         {'term': {'collection_id': collection_id}},
