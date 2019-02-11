@@ -1,4 +1,5 @@
 import json
+from pprint import pprint  # noqa
 
 from aleph.tests.util import TestCase
 
@@ -21,7 +22,8 @@ class SearchApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         res = self.client.get('/api/2/entities?q=banana', headers=headers)
         assert res.status_code == 200, res
-        assert res.json['total'] == 3, res.json
+        assert res.json['total'] == 4, res.json
+        assert len(res.json['results']) == 4, res.json
         assert b'Secret Document' in res.data, res.json
 
     def test_facet_attribute(self):

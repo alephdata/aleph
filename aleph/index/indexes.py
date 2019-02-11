@@ -131,11 +131,13 @@ def configure_schema(schema):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
-    if settings.ENTITIES_INDEX_SPLIT:
-        for name, prop in schema.properties.items():
-            config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
-            config['copy_to'] = 'text'
-            schema_mapping[name] = config
+    properties = model.properties
+    if schema is not None:
+        properties = schema.properties.values()
+    for prop in properties:
+        config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
+        config['copy_to'] = ['text']
+        schema_mapping[prop.name] = config
 
     mapping = {
         "date_detection": False,

@@ -1,5 +1,6 @@
 import logging
 from banal import ensure_dict
+from normality import stringify
 from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 
@@ -59,7 +60,7 @@ class DocumentRecord(db.Model):
             proxy.make_id('record', self.id)
             proxy.set('document', self.document_id)
             proxy.set('index', self.index)
-            proxy.set('bodyText', self.text)
+            proxy.set('bodyText', stringify(self.text))
             return proxy
         else:
             proxy = model.make_entity(self.SCHEMA_ROW)
