@@ -22,7 +22,7 @@ class QueryFilterTag extends PureComponent {
     switch (filter) {
       case 'schema':
         return (
-          <Schema.Label schema={value} icon={true} plural={true} />
+          <Schema.Smart.Label schema={value} icon={true} plural={true} />
         );
       case 'countries':
         return (
@@ -91,6 +91,8 @@ class QueryFilterTag extends PureComponent {
 
   render() {
     const { filter, value } = this.props;
+    debugger;
+
     return (
         <TagWidget className="bp3-large bp3-intent-primary QueryFilterTag"
                    onRemove={this.onRemove}>

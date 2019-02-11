@@ -13,12 +13,11 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import {selectEntity, selectSchemata} from 'src/selectors';
-import {Entity} from '../../followthemoney/lib/followthemoney/entity'
 
 class EntityScreenContext extends Component {
   getKeywords(){
-    if(this.props.entity.ftm) {
-      return this.props.entity.ftm
+    if(this.props.entity) {
+      return this.props.entity
         .getProperties()
         .filter(property => property.name !== 'description')
         .map(property => property.toString(' '))
@@ -39,7 +38,7 @@ class EntityScreenContext extends Component {
     }
     const breadcrumbs = (
       <Breadcrumbs>
-        <Breadcrumbs.Collection collection={entity.plain.collection} />
+        <Breadcrumbs.Collection collection={entity.collection} />
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );
@@ -49,7 +48,7 @@ class EntityScreenContext extends Component {
         <Screen title={entity.name}>
           <Helmet>
             <meta name="keywords" content={keywords}/>
-            <meta name="description" content={entity.ftm.getProperty('description').toString(' ')}/>
+            <meta name="description" content={entity.getProperty('description').toString(' ')}/>
           </Helmet>
           {breadcrumbs}
           <DualPane>`

@@ -3,6 +3,7 @@
   "version": "2.3.5",
   "private": true,
   "dependencies": {
+    "@alephdata/vis2": "^1.0.2",
     "@babel/core": "7.1.0",
     "@blueprintjs/core": "^3.7.0",
     "@blueprintjs/select": "^3.2.1",
@@ -84,8 +85,7 @@
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-dev-server": "3.1.11",
     "webpack-manifest-plugin": "2.0.4",
-    "workbox-webpack-plugin": "3.6.3",
-    "@alephdata/vis2": "alpha"
+    "workbox-webpack-plugin": "3.6.3"
   },
   "devDependencies": {
     "faker": "^4.1.0",

@@ -48,13 +48,10 @@ export function resultLoadError(state, query, error) {
 }
 
 export function objectLoadComplete(state, id, data) {
-  const object = {
-    ...data,
-    isLoading: false,
-    isError: false,
-    shouldLoad: false
-  }
-  return { ...state, [id]: _.assign({}, state[id], object) };
+  data.isLoading = false;
+  data.isError = false;
+  data.shouldLoad = false;
+  return { ...state, [id]: data  };
 }
 
 export function objectDelete(state, id) {
@@ -63,7 +60,7 @@ export function objectDelete(state, id) {
 }
 
 export function resultObjects(state, result, onComplete = objectLoadComplete) {
-  if (result.onComplete !== undefined) {
+  if (result.results !== undefined) {
     for (let object of result.results) {
       state = onComplete(state, object.id, object);
     }  

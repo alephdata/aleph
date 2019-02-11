@@ -11,8 +11,7 @@ import CollectionInfoMode from "src/components/Collection/CollectionInfoMode";
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
-import { selectCollectionXrefIndex } from 'src/selectors';
-import isDocumentSchema from 'src/util/isDocumentSchema';
+import {selectCollectionXrefIndex, selectSchemata} from 'src/selectors';
 
 
 class CollectionViews extends React.Component {
@@ -25,7 +24,7 @@ class CollectionViews extends React.Component {
     const { schemata } = this.props.collection;
     let totalCount = 0;
     for (let key in schemata) {
-      if (isDocumentSchema(key)) {
+      if (this.props.schemata.getSchema(key).isDocument()) {
         totalCount += schemata[key];
       }
     }
@@ -36,7 +35,7 @@ class CollectionViews extends React.Component {
     const { schemata } = this.props.collection;
     const matching = [];
     for (let key in schemata) {
-      if (!isDocumentSchema(key)) {
+      if (!this.props.schemata.getSchema(key).isDocument()) {
         matching.push({
           schema: key,
           count: schemata[key]
@@ -103,7 +102,7 @@ class CollectionViews extends React.Component {
                key={ref.schema}
                title={
                   <React.Fragment>
-                    <Schema.Label schema={ref.schema} plural={true} icon={true} />
+                    <Schema.Smart.Label schema={ref.schema} plural={true} icon={true} />
                     <Count count={ref.count} />
                   </React.Fragment>
                 }
@@ -133,7 +132,9 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
+  const schemata = selectSchemata(state);
   return {
+    schemata,
     xrefIndex: selectCollectionXrefIndex(state, collection.id)
   };
 };

@@ -16,7 +16,6 @@ class CollectionInfoMode extends Component {
       }
     }
     content = _.reverse(_.sortBy(content, ['number']));
-
     return (
       <div className="CollectionInfoMode">
         <CollectionOverview collection={collection} hasHeader={false}/>
@@ -24,7 +23,7 @@ class CollectionInfoMode extends Component {
           { content.map((item, index) => (
             <li key={index}>
                 <span className="key">
-                  <Schema.Link schema={item.name}
+                  <Schema.Smart.Link schema={item.name}
                                plural={true}
                                url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}/>
                 </span>

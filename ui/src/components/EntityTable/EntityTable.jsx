@@ -91,7 +91,6 @@ class EntityTable extends Component {
         </SortableTH>
       );
     };
-
     return (
       <table className="EntityTable data-table">
         <thead>

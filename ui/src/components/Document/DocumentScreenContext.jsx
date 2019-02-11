@@ -14,7 +14,8 @@ import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
-import { selectEntity } from 'src/selectors';
+import {selectEntity, selectSchemata} from 'src/selectors';
+import {Entity} from "../../followthemoney/Entity.ts";
 
 const messages = defineMessages({
   placeholder: {
@@ -46,7 +47,7 @@ class DocumentScreenContext extends Component {
   }
 
   render() {
-    const { intl, document, documentId, activeMode, query } = this.props;
+    const { intl,schemata, document, documentId, activeMode, query } = this.props;
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
@@ -59,7 +60,7 @@ class DocumentScreenContext extends Component {
     }
 
     const title = document.title || document.file_name || document.name;
-    const hasSearch = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'].indexOf(document.schema) !== -1;
+    const hasSearch = document.hasSearch();
     const onSearch = hasSearch ? this.onSearch : undefined;
     const placeholder = intl.formatMessage(messages.placeholder, {label: title});
     const breadcrumbs = (
@@ -68,7 +69,7 @@ class DocumentScreenContext extends Component {
                    searchText={query.getString('q')} >
         <Breadcrumbs.Collection collection={document.collection} />
         {document.parent && (
-          <Breadcrumbs.Entity entity={document.parent} />
+          <Breadcrumbs.Entity entity={new Entity(schemata.getSchema(document.parent.schema), document.parent)} />
         )}
         <Breadcrumbs.Entity entity={document} />
       </Breadcrumbs>
@@ -102,8 +103,9 @@ class DocumentScreenContext extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { documentId, location } = ownProps;
   const document = selectEntity(state, documentId);
+  const schemata = selectSchemata(state);
   const query = Query.fromLocation('entities', location, {}, 'document');
-  return { document, query };
+  return { document, query, schemata };
 };
 
 DocumentScreenContext = connect(mapStateToProps, {})(DocumentScreenContext);

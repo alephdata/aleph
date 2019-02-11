@@ -49,7 +49,7 @@ class EntityLabel extends Component {
     if (!text || !text.length || text.length < 1) {
       return (
         <span className='EntityLabel untitled'>
-          {icon && <Schema.Icon schema={entity.ftm.schema} />}
+          {icon && <Schema.Icon schema={entity.schema} />}
           {icon && ' '}
           <FormattedMessage id='entity.label.missing' defaultMessage="Untitled" />
         </span>
@@ -58,7 +58,7 @@ class EntityLabel extends Component {
     
     return (
       <span className={entityClassName} title={title || entityName}>
-        {icon && <Schema.Icon schema={entity.ftm.schema}/>}
+        {icon && <Schema.Icon schema={entity.schema}/>}
         {icon && ' '}
         {text}
       </span>
@@ -75,10 +75,10 @@ class EntityLink extends Component {
   onClick(event) {
     const { entity, history, preview } = this.props;
     if (preview) {
-      const isDocument = entity.ftm.schema.isDocument();
+      const isDocument = entity.schema.isDocument();
       const previewType = isDocument ? 'document' : 'entity';
       event.preventDefault();
-      togglePreview(history, entity.plain, previewType);
+      togglePreview(history, entity, previewType);
     }
   };
 

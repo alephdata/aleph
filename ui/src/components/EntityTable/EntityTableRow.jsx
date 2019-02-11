@@ -22,7 +22,6 @@ class EntityTableRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    
     return (
       <React.Fragment>
         <tr key={entity.id}

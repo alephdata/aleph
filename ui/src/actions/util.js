@@ -1,5 +1,5 @@
 import {endpoint} from 'src/app/api';
-import {Entity} from "src/followthemoney/lib/followthemoney/entity";
+import {Entity} from "src/followthemoney/Entity.ts";
 
 export const MAX_RESULTS = 9999;
 
@@ -19,11 +19,7 @@ export async function queryEndpoint({query, next}) {
 
 export function resultEntity(state, entityDatum) {
   const {schemata} = state.metadata;
-  return {
-    plain: entityDatum,
-    ftm: Entity.generate(entityDatum.schema, schemata, entityDatum)
-  }
-
+  return new Entity(schemata.getSchema(entityDatum.schema), entityDatum)
 }
 export function resultEntities(state, response){
     return {

@@ -53,9 +53,10 @@ class Reverse extends Component {
 
 class Values extends PureComponent {
   render() {
-    const { values, model } = this.props;
+    // FIXME: refactor `model.value` to `model.values` once finished
+    const { model , values = model.values } = this.props;
     const vals = ensureArray(values).map((value, idx) => (
-      <Value key={idx} model={model} value={value} />
+      <Value key={idx} model={model.property} value={value} />
     ));
     if (!vals.length) {
       return (<span className='no-value'>—</span>);
