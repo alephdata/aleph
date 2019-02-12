@@ -7,22 +7,19 @@ import {connect} from "react-redux";
 
 class EntityInfoMode extends Component {
   render() {
-    const { entity, schema } = this.props;
-    if (schema === undefined) {
-      return null;
-    }
+    const { entity } = this.props;
 
-    const entityProperties = schema.getEntityProperties(entity);
+    const entityProperties = entity.getProperties()
+      .filter(propValue => !propValue.isEmpty());
     return (
       <ul className="info-sheet">
-        { entityProperties.map((prop) => (
-          <li key={prop.name}>
+        { entityProperties.map((propValue) => (
+          <li key={propValue.name}>
             <span className="key">
-              <Property.Name model={prop} />
+              <Property.Name model={propValue.property} />
             </span>
             <span className="value">
-              <Property.Values model={prop}
-                               values={entity.properties[prop.name]} />
+              <Property.Values model={propValue} />
             </span>
           </li>
         ))}

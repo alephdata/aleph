@@ -1,17 +1,12 @@
 import React from 'react';
-import {connect} from 'react-redux';
 
 import {Entity, Schema} from 'src/components/common';
-import {selectSchemata} from 'src/selectors';
 
 
 class EntityHeading extends React.Component {
   render() {
-    const { entity, schema } = this.props;
-    if (schema === undefined) {  // entity hasn't loaded.
-      return null;
-    }
-    const isThing = schema.extends('Thing');
+    const { entity} = this.props;
+    const isThing = entity.schema.isThing();
 
     return (
       <React.Fragment>
@@ -30,12 +25,5 @@ class EntityHeading extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { entity } = ownProps;
-  return {
-    schema: selectSchemata(state)[entity.schema]
-  };
-};
 
-EntityHeading = connect(mapStateToProps, {})(EntityHeading);
 export default EntityHeading;

@@ -1,7 +1,7 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint, MAX_RESULTS } from './util';
-
+import { queryEndpoint, MAX_RESULTS, resultEntity } from './util';
+import deepSet from 'lodash/set'
 
 export const queryCollections = asyncActionCreator((query) => async dispatch => {
   return queryEndpoint(query);
@@ -56,8 +56,14 @@ export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async dis
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 
 
-export const queryXrefMatches = asyncActionCreator((query) => async dispatch => {
-  return queryEndpoint(query);
+export const queryXrefMatches = asyncActionCreator((query) => async (dispatch, getState) => {
+  const payload = await queryEndpoint(query);
+  return deepSet(payload,'result.results', payload.result.results.map(pair =>{
+    return Object.assign(pair,{
+      match: resultEntity(getState(), pair.match),
+      entity: resultEntity(getState(), pair.entity)
+    })
+  }))
 }, { name: 'QUERY_XREF_MATCHES' });
 
 

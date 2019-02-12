@@ -9,7 +9,7 @@ import getPath from 'src/util/getPath';
 class EntityToolbar extends React.Component {
   render() {
     const { entity, isPreview } = this.props;
-    const isThing = entity && entity.schemata && entity.schemata.indexOf('Thing') !== -1;
+    const isThing = entity && entity.schema.isThing();
 
     return (      
       <Toolbar className="toolbar-preview">

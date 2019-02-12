@@ -13,10 +13,17 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import {selectEntity, selectSchemata} from 'src/selectors';
-import Entity from 'src/followthemoney/Entity.ts';
-
 
 class EntityScreenContext extends Component {
+  getKeywords(){
+    if(this.props.entity) {
+      return this.props.entity
+        .getProperties()
+        .filter(property => property.name !== 'description')
+        .map(property => property.toString(' '))
+        .join(' ')
+    }
+  }
   render() {
     const { entity, entityId, activeMode } = this.props;
     if (entity.isError) {
@@ -29,20 +36,19 @@ class EntityScreenContext extends Component {
         </EntityContextLoader>
       ); 
     }
-    const entityModel = new Entity(entity);
     const breadcrumbs = (
       <Breadcrumbs>
         <Breadcrumbs.Collection collection={entity.collection} />
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );
-
+    const keywords = this.getKeywords();
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.name}>
           <Helmet>
-            <meta name="keywords" content={entityModel.propertiesToKeyword()}/>
-            <meta name="description" content={entityModel.description}/>
+            <meta name="keywords" content={keywords}/>
+            <meta name="description" content={entity.getProperty('description').toString(' ')}/>
           </Helmet>
           {breadcrumbs}
           <DualPane>`

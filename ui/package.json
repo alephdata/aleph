@@ -3,6 +3,7 @@
   "version": "2.3.5",
   "private": true,
   "dependencies": {
+    "@alephdata/vis2": "^1.0.2",
     "@babel/core": "7.1.0",
     "@blueprintjs/core": "^3.7.0",
     "@blueprintjs/select": "^3.2.1",
@@ -160,7 +161,7 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "sideEffects":[
+  "sideEffects": [
     "*.css"
   ]
 }

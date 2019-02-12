@@ -11,8 +11,8 @@ import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity } from 'src/actions';
-import { selectEntity } from 'src/selectors';
-
+import {selectEntity, selectSchemata} from 'src/selectors';
+import {Entity as EntityClass} from  "src/followthemoney/Entity.ts";
 import './Entity.scss';
 
 
@@ -28,8 +28,7 @@ class EntityLabel extends Component {
     if (entity === undefined) {
       return null;
     }
-    let { title, name: entityName, file_name: fileName, schema } = entity;
-    
+    let { title, name: entityName, file_name: fileName} = entity;
     // Trim names *before* checking to see which ones look okay to use
     title = title ? title.trim() : null;
     entityName = entityName ? entityName.trim() : null;
@@ -50,7 +49,7 @@ class EntityLabel extends Component {
     if (!text || !text.length || text.length < 1) {
       return (
         <span className='EntityLabel untitled'>
-          {icon && <Schema.Icon schema={schema} />}
+          {icon && <Schema.Icon schema={entity.schema} />}
           {icon && ' '}
           <FormattedMessage id='entity.label.missing' defaultMessage="Untitled" />
         </span>
@@ -59,7 +58,7 @@ class EntityLabel extends Component {
     
     return (
       <span className={entityClassName} title={title || entityName}>
-        {icon && <Schema.Icon schema={schema}/>}
+        {icon && <Schema.Icon schema={entity.schema}/>}
         {icon && ' '}
         {text}
       </span>
@@ -68,15 +67,15 @@ class EntityLabel extends Component {
 }
 
 class EntityLink extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onClick = this.onClick.bind(this);
   }
 
   onClick(event) {
     const { entity, history, preview } = this.props;
     if (preview) {
-      const isDocument = entity.schemata.indexOf('Document') !== -1;
+      const isDocument = entity.schema.isDocument();
       const previewType = isDocument ? 'document' : 'entity';
       event.preventDefault();
       togglePreview(history, entity, previewType);
@@ -137,8 +136,22 @@ EntityLoad.propTypes = {
   children: PropTypes.func.isRequired,
   renderWhenLoading: PropTypes.node,
 };
+function SmartEntityHOC(Component){
+  return function SmartEntityComponent(props){
+    const {schemata, entity:entityPure, ...rest} = props;
+    const schema = schemata.getSchema(entityPure.schema);
+    const entity = new EntityClass(schema, entityPure)
+    return <Component
+      entity={entity}
+      {...rest}
+    />
+  }
+}
 
 class Entity {
+  static Smart = {
+    Link: connect(state => ({schemata:selectSchemata(state)}))(SmartEntityHOC(EntityLink))
+  };
   static Label = EntityLabel;
   static Link = EntityLink;
   static Load = EntityLoad;

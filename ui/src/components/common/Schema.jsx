@@ -6,19 +6,20 @@ import Icon from "./Icon";
 
 class SchemaIcon extends PureComponent {
   render() {
-    const {schema} = this.props;
+    const {schema, ...rest} = this.props;
 
     return <Icon className='entity-icon'
                  iconSize='16px'
-                 name={schema.toLowerCase()} />;
+                 {...rest}
+                 name={schema.name.toLowerCase()}
+    />;
   }
 }
 
 class SchemaLabel extends Component {
   render() {
-    const { schema, schemata, plural, icon } = this.props;
-    const model = schemata[schema];
-    const label = model.getLabel({
+    const { schema, plural, icon } = this.props;
+    const label = schema.getLabel({
       forcePlural: plural
     });
     if (icon) {
@@ -43,15 +44,32 @@ class SchemaLink extends Component {
     );
   }
 }
+function SmartSchemaHOC(Component){
+  return function SmartSchemaComponent(props){
+    const {schemata, schema:schemaName,
+      /*omit*/ dispatch,
+      ...rest} = props;
+    const schema = schemata.getSchema(schemaName);
+    return <Component
+      schema={schema}
+      {...rest}
+    />
+  }
+}
 
 const mapStateToProps = state => ({
   schemata: selectSchemata(state),
 });
 
 class Schema extends Component {
-  static Label = connect(mapStateToProps)(SchemaLabel);
-  static Icon = connect(mapStateToProps)(SchemaIcon);
-  static Link = connect(mapStateToProps)(SchemaLink);
+  static Smart= {
+    Label:connect(mapStateToProps)(SmartSchemaHOC(SchemaLabel)),
+    Icon:connect(mapStateToProps)(SmartSchemaHOC(SchemaIcon)),
+    Link:connect(mapStateToProps)(SmartSchemaHOC(SchemaLink)),
+  };
+  static Label = SchemaLabel;
+  static Icon = SchemaIcon;
+  static Link = SchemaLink;
 }
 
 export default Schema;

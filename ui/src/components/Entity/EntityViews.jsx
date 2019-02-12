@@ -5,13 +5,14 @@ import {connect} from "react-redux";
 import {Tab, Tabs} from '@blueprintjs/core';
 import queryString from "query-string";
 
-import {Count, Icon, SectionLoading, TextLoading} from 'src/components/common';
+import {Count, Icon, Property, SectionLoading, TextLoading} from 'src/components/common';
 import {queryEntitySimilar} from 'src/queries';
 import {selectEntitiesResult, selectEntityReferences, selectEntityTags, selectSchemata} from "src/selectors";
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from "src/components/Entity/EntityInfoMode";
+import Schema from 'src/components/common/Schema';
 
 class EntityViews extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class EntityViews extends React.Component {
   }
 
   render() {
-    const { isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
+    const { isPreview, activeMode, entity, references, tags, similar } = this.props;
     if (references.shouldLoad || references.isLoading) {
       return <SectionLoading />;
     }
@@ -65,8 +66,8 @@ class EntityViews extends React.Component {
                key={ref.property.qname}
                title={
                  <React.Fragment>
-                   <Icon name={ref.schema.toLowerCase()} iconSize='14px' className='entity-icon'/>
-                   {schemata[ref.property.range].reverseLabel(ref)}
+                   <Schema.Smart.Icon schema={ref.property.range} iconSize='14px' />
+                   <Property.Reverse model={ref.property} />
                    <Count count={ref.count} />
                  </React.Fragment>
                }

@@ -29,7 +29,7 @@ export default createReducer({
   [fetchEntity.COMPLETE]: (state, { id, data }) =>
     objectLoadComplete(state, id, data),
 
-  [queryEntities.COMPLETE]: (state, { result }) => 
+  [queryEntities.COMPLETE]: (state, { result }) =>
     resultObjects(state, result),
 
   [deleteDocument.COMPLETE]: (state, { id, data }) =>

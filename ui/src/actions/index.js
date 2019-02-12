@@ -57,6 +57,6 @@ export {
   tiggerXrefMatches
 };
 
-export {fetchMetadata, fetchStatistics} from './metadata'
+export {fetchMetadata, fetchStatistics} from './metadataActions'
 
 export const setLocale = createAction('SET_LOCALE');

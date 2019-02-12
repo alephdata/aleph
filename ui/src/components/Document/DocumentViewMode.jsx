@@ -3,7 +3,6 @@ import {withRouter} from 'react-router';
 import {connect} from 'react-redux';
 
 import Query from 'src/app/Query';
-import Schema from 'src/followthemoney/schema.ts';
 // import { DocumentSearch } from 'src/components/Toolbar';
 import DefaultViewer from 'src/viewers/DefaultViewer';
 import TableViewer from 'src/viewers/TableViewer';
@@ -20,7 +19,7 @@ import './DocumentViewMode.scss';
 class DocumentViewMode extends React.Component {
   renderContent() {
     const { document, queryText, activeMode } = this.props;
-    if (Schema.hasSchemata(document, ['Email'])) {
+    if (document.schema.isA('Email')) {
       if (activeMode === 'browse') {
         return <FolderViewer document={document}
                              queryText={queryText} />;
@@ -29,7 +28,7 @@ class DocumentViewMode extends React.Component {
                           queryText={queryText}
                           activeMode={activeMode} />;
     }
-    if (Schema.hasSchemata(document, ['Image'])) {
+    if (document.schema.isA('Image')) {
       if (activeMode === 'text') {
         return <TextViewer document={document}
                            queryText={queryText} />;
@@ -38,24 +37,24 @@ class DocumentViewMode extends React.Component {
                           queryText={queryText}
                           activeMode={activeMode} />;
     }
-    if (Schema.hasSchemata(document, ['Table'])) {
+    if (document.schema.isA('Table')) {
       return <TableViewer document={document}
                           queryText={queryText} />;
     }
-    if (Schema.hasSchemata(document, ['PlainText'])) {
+    if (document.schema.isA('PlainText')) {
       return <TextViewer document={document}
                          queryText={queryText} />;
     }
-    if (Schema.hasSchemata(document, ['HyperText'])) {
+    if (document.schema.isA('HyperText')) {
       return <HtmlViewer document={document}
                          queryText={queryText} />;
     }
-    if (Schema.hasSchemata(document, ['Pages'])) {
+    if (document.schema.isA('Pages')) {
       return <PdfViewer document={document}
                         queryText={queryText}
                         activeMode={activeMode} />;
     }
-    if (Schema.hasSchemata(document, ['Folder'])) {
+    if (document.schema.isA('Folder')) {
       return <FolderViewer document={document}
                            queryText={queryText} />;
     }

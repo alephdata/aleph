@@ -23,7 +23,7 @@ class Value extends PureComponent {
       return <URL value={value} />;
     }
     if (model.type === 'entity') {
-      return <Entity.Link entity={value} icon />;
+      return <Entity.Smart.Link entity={value} icon />;
     }
     if (model.type === 'date') {
       return <Date value={value} />;
@@ -42,20 +42,20 @@ class Name extends PureComponent {
 class Reverse extends Component {
   render() {
     const { model, schemata } = this.props;
-    if (!model.schema || !model.reverse) {
+    if (!model.range || !model.reverse) {
       return <FormattedMessage id="property.inverse" defaultMessage="'{name}' of …" values={model} />
     }
-    const range = schemata[model.schema],
-          prop = range.properties[model.reverse];
-    return <span>{prop.plural || prop.name}</span>;
+    const range = schemata.getSchema(model.range),
+          prop = range.getProperty(model.reverse);
+    return <span>{prop.plural || prop.label}</span>;
   }
 }
 
 class Values extends PureComponent {
   render() {
-    const { values, model } = this.props;
+    const { model , values = model.values } = this.props;
     const vals = ensureArray(values).map((value, idx) => (
-      <Value key={idx} model={model} value={value} />
+      <Value key={idx} model={model.property} value={value} />
     ));
     if (!vals.length) {
       return (<span className='no-value'>—</span>);

@@ -51,8 +51,8 @@ class CollectionLabel extends Component {
 
 
 class CollectionLink extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onClick = this.onClick.bind(this);
   }
 

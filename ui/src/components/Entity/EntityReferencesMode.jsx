@@ -66,10 +66,10 @@ class EntityReferencesMode extends React.Component {
       });
 
     return (
-      <section key={property.qname} className="EntityReferencesTable">
-        <table key={property.qname} className="data-table references-data-table">
+      <section className="EntityReferencesTable">
+        <table className="data-table references-data-table">
           <thead>
-            <tr key={property.qname}>
+            <tr>
               {columns.map(prop => (
                 <th key={prop.name} className={prop.type}>
                   <Property.Name model={prop} />
@@ -83,7 +83,7 @@ class EntityReferencesMode extends React.Component {
               <tr key={entity.id}>
                 {columns.map(prop => (
                   <td key={prop.name} className={prop.type}>
-                    <Property.Values model={prop} values={entity.properties[prop.name]} />
+                    <Property.Values model={entity.getProperty(prop.name)} />
                   </td>
                 ))}
                 <td key="details" className="narrow">
@@ -121,7 +121,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     reference, query,
     result: selectEntitiesResult(state, query),
-    model: selectSchemata(state)[reference.schema]
+    model: selectSchemata(state).getSchema(reference.schema)
   };
 };
 
