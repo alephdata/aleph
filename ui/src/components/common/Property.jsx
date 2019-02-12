@@ -47,7 +47,6 @@ class Reverse extends Component {
     }
     const range = schemata.getSchema(model.range),
           prop = range.getProperty(model.reverse);
-    debugger;
     return <span>{prop.plural || prop.label}</span>;
   }
 }

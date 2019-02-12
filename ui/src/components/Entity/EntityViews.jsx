@@ -36,7 +36,7 @@ class EntityViews extends React.Component {
   }
 
   render() {
-    const { isPreview, activeMode, entity, references, tags, similar, schemata } = this.props;
+    const { isPreview, activeMode, entity, references, tags, similar } = this.props;
     if (references.shouldLoad || references.isLoading) {
       return <SectionLoading />;
     }

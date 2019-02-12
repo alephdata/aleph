@@ -91,7 +91,6 @@ class QueryFilterTag extends PureComponent {
 
   render() {
     const { filter, value } = this.props;
-    debugger;
 
     return (
         <TagWidget className="bp3-large bp3-intent-primary QueryFilterTag"
