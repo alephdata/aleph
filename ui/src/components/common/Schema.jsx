@@ -6,11 +6,13 @@ import Icon from "./Icon";
 
 class SchemaIcon extends PureComponent {
   render() {
-    const {schema} = this.props;
+    const {schema, ...rest} = this.props;
 
     return <Icon className='entity-icon'
                  iconSize='16px'
-                 name={schema.name.toLowerCase()} />;
+                 {...rest}
+                 name={schema.name.toLowerCase()}
+    />;
   }
 }
 
@@ -44,7 +46,9 @@ class SchemaLink extends Component {
 }
 function SmartSchemaHOC(Component){
   return function SmartSchemaComponent(props){
-    const {schemata, schema:schemaName, ...rest} = props;
+    const {schemata, schema:schemaName,
+      /*omit*/ dispatch,
+      ...rest} = props;
     const schema = schemata.getSchema(schemaName);
     return <Component
       schema={schema}

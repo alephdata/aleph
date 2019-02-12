@@ -11,8 +11,8 @@ import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity } from 'src/actions';
-import { selectEntity } from 'src/selectors';
-
+import {selectEntity, selectSchemata} from 'src/selectors';
+import {Entity as EntityClass} from  "src/followthemoney/Entity.ts";
 import './Entity.scss';
 
 
@@ -136,8 +136,22 @@ EntityLoad.propTypes = {
   children: PropTypes.func.isRequired,
   renderWhenLoading: PropTypes.node,
 };
+function SmartEntityHOC(Component){
+  return function SmartEntityComponent(props){
+    const {schemata, entity:entityPure, ...rest} = props;
+    const schema = schemata.getSchema(entityPure.schema);
+    const entity = new EntityClass(schema, entityPure)
+    return <Component
+      entity={entity}
+      {...rest}
+    />
+  }
+}
 
 class Entity {
+  static Smart = {
+    Link: connect(state => ({schemata:selectSchemata(state)}))(SmartEntityHOC(EntityLink))
+  };
   static Label = EntityLabel;
   static Link = EntityLink;
   static Load = EntityLoad;
