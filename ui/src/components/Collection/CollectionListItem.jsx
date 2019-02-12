@@ -46,7 +46,7 @@ class CollectionListItem extends Component {
                               }}/>
           </span>
           
-          { collection.countries.length > 0 && (
+          { collection.countries && collection.countries.length > 0 && (
             <span className="details-item">
               <Icon icon="globe" />
               <Country.List codes={collection.countries} truncate={3} />

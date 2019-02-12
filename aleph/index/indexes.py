@@ -165,6 +165,7 @@ def configure_schema(schema):
             "languages": KEYWORD,
             "countries": KEYWORD,
             "keywords": KEYWORD,
+            "ips": KEYWORD,
             "fingerprints": LATIN_KEYWORD,
             "names": {
                 "type": "keyword",

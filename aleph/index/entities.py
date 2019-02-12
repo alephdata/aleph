@@ -31,6 +31,14 @@ def index_entity(entity, sync=False):
     return index_safe(index, entity_id, data, refresh=refresh)
 
 
+def _source_spec(includes, excludes):
+    includes = ensure_list(includes)
+    excludes = ensure_list(excludes)
+    if not len(excludes):
+        excludes = EXCLUDE_DEFAULT
+    return {'includes': includes, 'excludes': excludes}
+
+
 def iter_entities(authz=None, collection_id=None, schemata=None,
                   includes=None, excludes=None):
     """Scan all entities matching the given criteria."""
@@ -41,13 +49,9 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         filters.append({'term': {'collection_id': collection_id}})
     if ensure_list(schemata):
         filters.append({'terms': {'schemata': ensure_list(schemata)}})
-    includes = ensure_list(includes)
-    excludes = ensure_list(excludes)
-    if not len(excludes):
-        excludes = EXCLUDE_DEFAULT
     query = {
         'query': {'bool': {'filter': filters}},
-        '_source': {'includes': includes, 'excludes': excludes}
+        '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
     for res in scan(es, index=index, query=query, scroll='1410m'):
@@ -65,22 +69,20 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def entities_by_ids(ids, schemata=None, source=None):
+def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     ids = ensure_list(ids)
     if not len(ids):
         return
     index = entities_read_index(schema=schemata)
-    if source is None:
-        source = {'excludes': ['text']}
     query = {
         'query': {
             'bool': {
                 'filter': {'ids': {'values': ids}}
             }
         },
-        '_source': source,
+        '_source': _source_spec(includes, excludes),
         'size': MAX_PAGE
     }
     result = search_safe(index=index, body=query)
@@ -177,7 +179,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
     """Delete an entity from the index."""
     if exclude is not None:
         exclude = entities_write_index(exclude)
-    for entity in entities_by_ids(entity_id, source=False):
+    for entity in entities_by_ids(entity_id, excludes='*'):
         index = entity.get('_index')
         if index == exclude:
             continue
