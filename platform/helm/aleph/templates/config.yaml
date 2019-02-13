@@ -35,11 +35,11 @@ data:
   ALEPH_ENTITIES_INDEX_SPLIT: 'true'
   ALEPH_RECORDS_INDEX: aleph-record-v1
   ALEPH_COLLECTIONS_INDEX: aleph-collection-v2
-  ALEPH_BROKER_URI: {{ printf "amqp://guest:guest@task-queue.%s.cluster.local:5672" .Values.global.namespace }}
-  ALEPH_REDIS_URL: {{ printf "redis://redis.%s.cluster.local:6379/0" .Values.global.namespace }}
-  ALEPH_NER_SERVICE: {{ printf "extract-entities.%s.cluster.local:50000" .Values.global.namespace }}
-  ALEPH_OCR_SERVICE: {{ printf "recognize-text.%s.cluster.local:50000" .Values.global.namespace }}
-  UNOSERVICE_URL: {{ printf "http://convert-document.%s.cluster.local:3000/convert" .Values.global.namespace }}
+  ALEPH_BROKER_URI: {{ printf "amqp://guest:guest@task-queue.%s.svc.cluster.local:5672" .Values.global.namespace }}
+  ALEPH_REDIS_URL: {{ printf "redis://redis.%s.svc.cluster.local:6379/0" .Values.global.namespace }}
+  ALEPH_NER_SERVICE: {{ printf "extract-entities.%s.svc.cluster.local:50000" .Values.global.namespace }}
+  ALEPH_OCR_SERVICE: {{ printf "recognize-text.%s.svc.cluster.local:50000" .Values.global.namespace }}
+  UNOSERVICE_URL: {{ printf "http://convert-document.%s.svc.cluster.local:3000/convert" .Values.global.namespace }}
   ALEPH_OAUTH: 'false'
   ALEPH_OAUTH_KEY: {{ .Values.config.ALEPH_OAUTH_KEY }}
   ALEPH_OAUTH_NAME: {{ .Values.config.ALEPH_OAUTH_NAME }}
