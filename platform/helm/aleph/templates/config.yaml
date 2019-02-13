@@ -16,7 +16,7 @@ data:
   ALEPH_CORS_ORIGINS: '*'
   ALEPH_ARCHIVE_TYPE: {{ .Values.config.ALEPH_ARCHIVE_TYPE }}
   ALEPH_ARCHIVE_BUCKET: {{ .Values.config.ALEPH_ARCHIVE_BUCKET }}
-  ALEPH_PASSWORD_LOGIN: 'false'
+  ALEPH_PASSWORD_LOGIN: 'true'
   ALEPH_ADMINS: {{ .Values.config.ALEPH_ADMINS }}
   ALEPH_MAIL_FROM: {{ .Values.config.ALEPH_MAIL_FROM }}
   ALEPH_MAIL_HOST: {{ .Values.config.ALEPH_MAIL_HOST }}
@@ -40,13 +40,13 @@ data:
   ALEPH_NER_SERVICE: {{ printf "extract-entities.%s.cluster.local:50000" .Values.global.namespace }}
   ALEPH_OCR_SERVICE: {{ printf "recognize-text.%s.cluster.local:50000" .Values.global.namespace }}
   UNOSERVICE_URL: {{ printf "http://convert-document.%s.cluster.local:3000/convert" .Values.global.namespace }}
-  ALEPH_OAUTH: 'true'
+  ALEPH_OAUTH: 'false'
   ALEPH_OAUTH_KEY: {{ .Values.config.ALEPH_OAUTH_KEY }}
   ALEPH_OAUTH_NAME: {{ .Values.config.ALEPH_OAUTH_NAME }}
   ALEPH_OAUTH_SCOPE: {{ .Values.config.ALEPH_OAUTH_SCOPE }}
   ALEPH_OAUTH_BASE_URL: {{ .Values.config.ALEPH_OAUTH_BASE_URL }}
   ALEPH_OAUTH_AUTHORIZE_URL: {{ .Values.config.ALEPH_OAUTH_AUTHORIZE_URL }}
   ALEPH_OAUTH_TOKEN_URL: {{ .Values.config.ALEPH_OAUTH_TOKEN_URL }}
-  ALEPH_STACKDRIVER_TRACE_PROJECT_ID: {{ .Values.config.ALEPH_STACKDRIVER_TARCE_RPOJECT_ID }}
-  ALEPH_TRACE_SAMPLING_RATE: {{ .Values.config.ALEPH_TRACE_SAMPLING_RATE }}
-  ALEPH_CELERY_TRACE_SAMPLING_RATE: {{ .Values.config.ALEPH_CELERY_TRACE_SAMPLING_RATE }}
+  ALEPH_STACKDRIVER_TRACE_PROJECT_ID: {{ .Values.config.ALEPH_STACKDRIVER_TRACE_PROJECT_ID }}
+  ALEPH_TRACE_SAMPLING_RATE: {{ .Values.config.ALEPH_TRACE_SAMPLING_RATE | quote }}
+  ALEPH_CELERY_TRACE_SAMPLING_RATE: {{ .Values.config.ALEPH_CELERY_TRACE_SAMPLING_RATE | quote }}

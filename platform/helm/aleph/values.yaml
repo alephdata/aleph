@@ -4,7 +4,7 @@ global:
   namespace: aleph
   dbInstance: "occrp-data-testing-223805:us-east1:staging-db=tcp:5432"
   repository: alephdata/aleph
-  imagetag: develop
+  imagetag: master
   domain: staging.data.occrp.org
 
 ## External Dependencies
@@ -38,7 +38,7 @@ nginx-ingress:
     replicaCount: 1
     service:
       #TODO: set this
-      loadBalancerIP: ""
+      loadBalancerIP: "35.196.61.207"
       externalTrafficPolicy: "Local"
     extraArgs:
       default-ssl-certificate: "aleph/tls-staging.data.occrp.org"
@@ -85,15 +85,17 @@ api:
   maxReplicas: 2
   resources:
     requests:
-      memory: 2Gi
-      cpu: 500m
+      memory: 1Gi
+      cpu: 600m
     limits:
-      memory: 3Gi
-      cpu: 1000m
+      memory: 2Gi
+      cpu: 700m
 
 
 certs:
   email: data@occrp.org
+  rbac:
+    create: true
 
 
 config:
@@ -116,16 +118,16 @@ config:
   ALEPH_FAVICON: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
   ALEPH_LOGO: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
   ALEPH_ELASTICSEARCH_SHARDS: "5"
-  ALEPH_OAUTH: "false"
+  ALEPH_OAUTH: ""
   ALEPH_OAUTH_KEY: key-name
   ALEPH_OAUTH_NAME: provider-name
   ALEPH_OAUTH_SCOPE: read
   ALEPH_OAUTH_BASE_URL: ""
   ALEPH_OAUTH_TOKEN_URL: ""
   ALEPH_OAUTH_AUTHORIZE_URL: ""
-  ALEPH_STACKDRIVER_TRACE_PROJECT_ID: 'occrp-data-testing-223805'
-  ALEPH_TRACE_SAMPLING_RATE: '0.001'
-  ALEPH_CELERY_TRACE_SAMPLING_RATE: '0.00001'
+  ALEPH_STACKDRIVER_TRACE_PROJECT_ID: "occrp-data-testing-223805"
+  ALEPH_TRACE_SAMPLING_RATE: "0.001"
+  ALEPH_CELERY_TRACE_SAMPLING_RATE: "0.00001"
 
 
 convertDocument:
@@ -134,10 +136,14 @@ convertDocument:
   resources:
     requests:
       memory: 500Mi
-      cpu: 500m
+      cpu: 100m
     limits:
       memory: 600Mi
-      cpu: 1000m
+      cpu: 200m
+
+
+db:
+  replicas: 1
 
 
 extractEntities:
@@ -146,30 +152,30 @@ extractEntities:
   resources:
     requests:
       memory: 500Mi
-      cpu: 500m
+      cpu: 150m
     limits:
-      memory: 1500Mi
-      cpu: 1000m
+      memory: 800Mi
+      cpu: 300m
 
 
 index:
-  replicas: 3
+  replicas: 1
   resources:
     requests:
-      memory: 2.2Gi
+      memory: 2.0Gi
       cpu: 300m
       storage: 100Gi
     limits:
-      memory: 2.5Gi
-      cpu: 1000m
-  minMasterNodes: "2"
-  ES_JAVA_OPTS_MEMORY_LIMIT: -Xms2g -Xmx2g
+      memory: 2.2Gi
+      cpu: 600m
+  minMasterNodes: "1"
+  ES_JAVA_OPTS_MEMORY_LIMIT: -Xms1g -Xmx1g
 
 
 indexAdmin:
   resources:
     limits:
-      memory: 1Gi
+      memory: 300Mi
 
 
 
@@ -178,12 +184,12 @@ queue:
   replicas: 1
   resources:
     requests:
-      memory: 500Mi
-      cpu: 200m
+      memory: 400Mi
+      cpu: 100m
       storage: 10Gi
     limits:
-      memory: 1.5Gi
-      cpu: 400m
+      memory: 800Mi
+      cpu: 200m
 
 
 recognizeText:
@@ -191,33 +197,33 @@ recognizeText:
   maxReplicas: 3
   resources:
     requests:
-      memory: 800Mi
-      cpu: 1000m
+      memory: 400Mi
+      cpu: 100m
     limits:
-      memory: 1400Mi
-      cpu: 1500m
+      memory: 600Mi
+      cpu: 200m
 
 
 redis:
-  maxMemory: 2g
+  maxMemory: 500Mi
   resources:
     requests:
-      memory: 1Gi
-      cpu: 300m
+      memory: 300Mi
+      cpu: 100m
       storage: 10Gi
     limits:
-      memory: 2Gi
-      cpu: 600m
+      memory: 500Mi
+      cpu: 200m
 
 
 scheduler:
   resources:
     requests:
-      memory: 200Mi
-      cpu: 200m
+      memory: 100Mi
+      cpu: 100m
     limits:
-      memory: 500Mi
-      cpu: 500m
+      memory: 300Mi
+      cpu: 200m
 
 
 storage:
@@ -228,24 +234,24 @@ storage:
 
 
 web:
-  replicas: 2
+  replicas: 1
   maxSurge: 2
   resources:
     requests:
       memory: 200Mi
-      cpu: 200m
+      cpu: 100m
     limits:
       memory: 300Mi
-      cpu: 500m
+      cpu: 200m
 
 
 worker:
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: 1
+  maxReplicas: 1
   resources:
     requests:
-      memory: 500Mi
-      cpu: 300m
+      memory: 300Mi
+      cpu: 100m
     limits:
-      memory: 4Gi
-      cpu: 1000m
+      memory: 500Mi
+      cpu: 200m

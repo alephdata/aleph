@@ -27,7 +27,7 @@ spec:
   selector:
     matchLabels:
       app: task-queue
-  serviceName: "task-queue"
+  serviceName: task-queue
   replicas: 1
   template:
     metadata:
@@ -75,9 +75,11 @@ spec:
         name: data
         namespace: {{ .Values.global.namespace }}
       spec:
+        {{- if (.Values.storage.queue) and (.Values.storage.queue.pvc) }}
         selector:
           matchLabels:
             service: task-queue
+        {{- end }}
         accessModes:
           - ReadWriteOnce
         storageClassName: ssd
