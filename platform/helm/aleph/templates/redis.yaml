@@ -58,9 +58,11 @@ spec:
         name: data
         namespace: {{ .Values.global.namespace }}
       spec:
+        {{- if (.Values.storage.redis) and (.Values.storage.redis.pvc) }}
         selector:
           matchLabels:
             service: redis
+        {{- end }}
         accessModes:
           - ReadWriteOnce
         storageClassName: ssd

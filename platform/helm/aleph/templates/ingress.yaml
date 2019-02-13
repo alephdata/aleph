@@ -11,11 +11,11 @@ metadata:
     certmanager.k8s.io/acme-http01-edit-in-place: "true"
 spec:
   tls:
-    - secretName: tls-{{ .Values.certs.domain }}
+    - secretName: tls-{{ .Values.global.domain }}
       hosts:
-        - {{ .Values.certs.domain }}
+        - {{ .Values.global.domain }}
   rules:
-    - host: {{ .Values.certs.domain }}
+    - host: {{ .Values.global.domain }}
       http:
         paths:
           - path: /
