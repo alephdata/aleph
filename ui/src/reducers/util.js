@@ -47,7 +47,7 @@ export function resultLoadError(state, query, error) {
   return objectLoadError(state, key, error);
 }
 
-export function objectLoadComplete(state, id, data) {
+export function objectLoadComplete(state, id, data = {}) {
   data.isLoading = false;
   data.isError = false;
   data.shouldLoad = false;

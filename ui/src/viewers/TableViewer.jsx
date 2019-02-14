@@ -6,7 +6,7 @@ import {Cell, Column, Table, TableLoadingOption, TruncatedFormat} from "@bluepri
 
 import Query from 'src/app/Query';
 import {queryDocumentRecords} from 'src/actions';
-import {selectDocumentRecordsResult} from 'src/selectors';
+// import {selectDocumentRecordsResult} from 'src/selectors';
 
 import './TableViewer.scss';
 
@@ -102,7 +102,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     query: query,
-    result: selectDocumentRecordsResult(state, query),
+    result: {} //selectDocumentRecordsResult(state, query),
   }
 };
 

@@ -77,7 +77,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('entities', location, {}, '');
   return {
-    queryText: query.getString('q')
+    queryText: query.getString('documentq')
   }
 };
 

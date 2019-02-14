@@ -6,14 +6,14 @@ import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 import classNames from 'classnames';
-import { Pre } from'@blueprintjs/core';
+import { Pre } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
 import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
-import { queryDocumentRecords, fetchDocumentPage } from 'src/actions';
-import { selectDocumentRecordsResult, selectDocumentPage } from 'src/selectors';
+import { queryDocumentRecords, queryEntities, fetchEnity } from 'src/actions';
+import { selectEntitiesResult } from 'src/selectors';
 
 import './PdfViewer.scss';
 
@@ -50,7 +50,6 @@ class PdfViewer extends Component {
   }
 
   componentDidMount() {
-    this.fetchRecords();
     this.fetchPage();
     this.onResize();
     this.fetchComponents();
@@ -74,7 +73,7 @@ class PdfViewer extends Component {
       }, 350);
     }
     if (!query.sameAs(prevProps.query)) {
-      this.fetchRecords();
+      this.fetchPage(true);
     }
     if (document.id !== prevProps.document.id || page !== prevProps.page) {
       this.fetchPage();
@@ -86,17 +85,10 @@ class PdfViewer extends Component {
       .then(components => this.setState({ components }));
   }
 
-  fetchRecords() {
-    const { query, result, isSearch } = this.props;
-    if (isSearch && result.shouldLoad) {
-      this.props.queryDocumentRecords({query})
-    }
-  }
-
-  fetchPage() {
-    const { document, page, pageResult } = this.props;
-    if (pageResult.shouldLoad) {
-      this.props.fetchDocumentPage({documentId: document.id, page});
+  fetchPage(force) {
+    const { query, result } = this.props;
+    if (result.shouldLoad || force) {
+      this.props.queryEntities({query, next:query.next});
     }
   }
   
@@ -147,9 +139,18 @@ class PdfViewer extends Component {
       </Document>
   </div>)
   }
+  TextMode(props){
+    const {document, result,page}  = props;
+    return <React.Fragment>
+      {result.total > 0 && (
+        <PagingButtons document={document} numberOfPages={result.pages}/>
+      )}
+      <Pre>{result.results[page-1].getProperty('bodyText').toString()}</Pre>
+    </React.Fragment>
+  }
 
   render() {
-    const { document, activeMode, page, pageResult, result, isSearch } = this.props;
+    const { document, activeMode, page, result, isSearch } = this.props;
     const { numPages } = this.state;
 
     if (document.id === undefined) {
@@ -159,22 +160,17 @@ class PdfViewer extends Component {
     if (isSearch && result.total === undefined) {
       return <SectionLoading />;
     }
-
     return (
       <div className="PdfViewer">
         <div className="outer">
           <div id="PdfViewer" className="inner">
             { activeMode === 'text' && (
               <div className="document">
-                {numPages !== null && numPages > 0 && (
-                  <PagingButtons document={document} numberOfPages={numPages}/>
-                )}
-                {pageResult.id !== undefined && (
-                  <Pre>{pageResult.text}</Pre>
-                )}
-                {pageResult.id === undefined && (
-                  <SectionLoading />
-                )}
+                {(result.isLoading || result.shouldLoad) ?<SectionLoading /> : <this.TextMode
+                  result={result}
+                  document={document}
+                  page={page}
+                />  }
               </div>
             )}
             { activeMode === 'view' && (
@@ -227,20 +223,25 @@ const mapStateToProps = (state, ownProps) => {
     highlight_count: 10,
     highlight_length: 120
   };
-  let query = Query.fromLocation(document.links.records, location, context, 'document').limit(50);
+  let query = Query.fromLocation('entities', location, context, 'document')
+    .offset(page-1)
+    .limit(1)
+    .setFilter('properties.document', document.id)
+    .setFilter('schemata','Page')
+    .sortBy('properties.index','asc')
   if (queryText.length > 0) {
-    query = query.setString('q', queryText);
+    query = query.setString('q', queryText)
+      .clearFilter('properties.index')
   }
 
   return {
-    result: selectDocumentRecordsResult(state, query),
-    pageResult: selectDocumentPage(state, document.id, page),
+    result: selectEntitiesResult(state, query),
     isSearch: !!query.getString('q'),
     page: page,
     query: query
   }
 }
 
-PdfViewer = connect(mapStateToProps, { queryDocumentRecords, fetchDocumentPage })(PdfViewer);
+PdfViewer = connect(mapStateToProps, { queryDocumentRecords, fetchEnity, queryEntities })(PdfViewer);
 PdfViewer = withRouter(PdfViewer);
 export default PdfViewer
