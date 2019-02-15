@@ -69,7 +69,6 @@ def alert_query(alert, authz):
         'simple_query_string': {
             'query': alert.query,
             'fields': ['fingerprints^3', 'text'],
-            'analyzer': 'icu_latin',
             'default_operator': 'AND',
             'minimum_should_match': '90%'
         }
@@ -83,7 +82,7 @@ def alert_query(alert, authz):
         'size': MAX_PAGE,
         'query': {
             'bool': {
-                'should': query,
+                'should': [query],
                 'filter': filters,
                 'minimum_should_match': 1
             }
