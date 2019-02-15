@@ -99,32 +99,44 @@ certs:
 
 
 config:
+  C_FORCE_ROOT: 'true'
+  GRPC_VERBOSITY: 'ERROR'
+  ALEPH_DEBUG: 'false'
+  ALEPH_CACHE: 'true'
+  ALEPH_EAGER: 'false'
   ALEPH_URL_SCHEME: http
   ALEPH_APP_TITLE: "OCCRP Data (Staging)"
-  ALEPH_OCR_VISION_API: "false"
-  ALEPH_CORS_ORIGINS: "*"
+  ALEPH_APP_NAME: aleph
+  ALEPH_OCR_VISION_API: 'false'
+  ALEPH_CORS_ORIGINS: '*'
   ALEPH_ARCHIVE_TYPE: gs
   ALEPH_ARCHIVE_BUCKET: "occrp-staging-data-archive"
-  ALEPH_PASSWORD_LOGIN: "true"
+  ALEPH_PASSWORD_LOGIN: 'true'
   ALEPH_ADMINS: "admin@example.com"
   ALEPH_MAIL_FROM: notifications@example.com
   ALEPH_MAIL_HOST: mail.aleph.svc.cluster.local
   ALEPH_MAIL_USERNAME: ""
   ALEPH_MAIL_PASSWORD: ""
-  ALEPH_MAIL_PORT: "25"
-  ALEPH_MAIL_TLS: "false"
-  ALEPH_MAIL_SSL: "false"
+  ALEPH_MAIL_PORT: '25'
+  ALEPH_MAIL_TLS: 'false'
+  ALEPH_MAIL_SSL: 'false'
   ALEPH_UI_URL: https://staging.data.occrp.org
   ALEPH_FAVICON: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
-  ALEPH_LOGO: https://cdn.occrp.org/common/logo/RedTransparent_globe.png
-  ALEPH_ELASTICSEARCH_SHARDS: "5"
-  ALEPH_OAUTH: ""
-  ALEPH_OAUTH_KEY: key-name
-  ALEPH_OAUTH_NAME: provider-name
-  ALEPH_OAUTH_SCOPE: read
-  ALEPH_OAUTH_BASE_URL: ""
-  ALEPH_OAUTH_TOKEN_URL: ""
-  ALEPH_OAUTH_AUTHORIZE_URL: ""
+  ALEPH_LOGO:  https://cdn.occrp.org/common/logo/RedTransparent_globe.png
+  ALEPH_ELASTICSEARCH_URI: http://es-index.aleph.svc.cluster.local:9200/
+  ALEPH_ELASTICSEARCH_SHARDS: '5'
+  ALEPH_ENTITIES_INDEX: aleph-entity-v2
+  ALEPH_ENTITIES_INDEX_SET: aleph-entity-v1
+  ALEPH_ENTITIES_INDEX_SPLIT: 'true'
+  ALEPH_RECORDS_INDEX: aleph-record-v1
+  ALEPH_COLLECTIONS_INDEX: aleph-collection-v2
+  ALEPH_OAUTH: ''
+  ALEPH_OAUTH_KEY: ''
+  ALEPH_OAUTH_NAME: ''
+  ALEPH_OAUTH_SCOPE: ''
+  ALEPH_OAUTH_BASE_URL: ''
+  ALEPH_OAUTH_AUTHORIZE_URL: ''
+  ALEPH_OAUTH_TOKEN_URL: ''
   ALEPH_STACKDRIVER_TRACE_PROJECT_ID: "occrp-data-testing-223805"
   ALEPH_TRACE_SAMPLING_RATE: "0.001"
   ALEPH_CELERY_TRACE_SAMPLING_RATE: "0.00001"

@@ -4,43 +4,43 @@ metadata:
   name: aleph-config
   namespace: {{ .Values.global.namespace }}
 data:
-  C_FORCE_ROOT: 'true'
-  GRPC_VERBOSITY: 'ERROR'
-  ALEPH_DEBUG: 'false'
-  ALEPH_CACHE: 'true'
-  ALEPH_EAGER: 'false'
+  C_FORCE_ROOT: {{ .Values.config.C_FORCE_ROOT }}
+  GRPC_VERBOSITY: {{ .Values.config.GRPC_VERBOSITY }}
+  ALEPH_DEBUG: {{ .Values.config.ALEPH_DEBUG }}
+  ALEPH_CACHE: {{ .Values.config.ALEPH_CACHE }}
+  ALEPH_EAGER: {{ .Values.config.ALEPH_EAGER }}
   ALEPH_URL_SCHEME: {{ .Values.config.ALEPH_URL_SCHEME }}
   ALEPH_APP_TITLE: {{ .Values.config.ALEPH_APP_TITLE }}
-  ALEPH_APP_NAME: aleph
-  ALEPH_OCR_VISION_API: 'false'
-  ALEPH_CORS_ORIGINS: '*'
+  ALEPH_APP_NAME: {{ .Values.config.ALEPH_APP_NAME }}
+  ALEPH_OCR_VISION_API: {{ .Values.config.ALEPH_OCR_VISION_API }}
+  ALEPH_CORS_ORIGINS: {{ .Values.config.ALEPH_CORS_ORIGINS }}
   ALEPH_ARCHIVE_TYPE: {{ .Values.config.ALEPH_ARCHIVE_TYPE }}
   ALEPH_ARCHIVE_BUCKET: {{ .Values.config.ALEPH_ARCHIVE_BUCKET }}
-  ALEPH_PASSWORD_LOGIN: 'true'
+  ALEPH_PASSWORD_LOGIN: {{ .Values.config.ALEPH_PASSWORD_LOGIN }}
   ALEPH_ADMINS: {{ .Values.config.ALEPH_ADMINS }}
   ALEPH_MAIL_FROM: {{ .Values.config.ALEPH_MAIL_FROM }}
   ALEPH_MAIL_HOST: {{ .Values.config.ALEPH_MAIL_HOST }}
   ALEPH_MAIL_USERNAME: {{ .Values.config.ALEPH_MAIL_USERNAME }}
   ALEPH_MAIL_PASSWORD: {{ .Values.config.ALEPH_MAIL_PASSWORD }}
-  ALEPH_MAIL_PORT: '25'
-  ALEPH_MAIL_TLS: 'false'
-  ALEPH_MAIL_SSL: 'false'
+  ALEPH_MAIL_PORT: {{ .Values.config.ALEPH_MAIL_PORT }}
+  ALEPH_MAIL_TLS: {{ .Values.config.ALEPH_MAIL_TLS }}
+  ALEPH_MAIL_SSL: {{ .Values.config.ALEPH_MAIL_SSL }}
   ALEPH_UI_URL: {{ .Values.config.ALEPH_UI_URL }}
   ALEPH_FAVICON: {{ .Values.config.ALEPH_FAVICON }}
   ALEPH_LOGO: {{ .Values.config.ALEPH_LOGO }}
-  ALEPH_ELASTICSEARCH_URI: {{ printf "http://es-index.%s.svc.cluster.local:9200/" .Values.global.namespace }}
-  ALEPH_ELASTICSEARCH_SHARDS: '20'
-  ALEPH_ENTITIES_INDEX: aleph-entity-v2
-  ALEPH_ENTITIES_INDEX_SET: aleph-entity-v1
-  ALEPH_ENTITIES_INDEX_SPLIT: 'true'
-  ALEPH_RECORDS_INDEX: aleph-record-v1
-  ALEPH_COLLECTIONS_INDEX: aleph-collection-v2
+  ALEPH_ELASTICSEARCH_URI: {{ .Values.config.ALEPH_ELASTICSEARCH_URI }}
+  ALEPH_ELASTICSEARCH_SHARDS: {{ .Values.config.ALEPH_ELASTICSEARCH_SHARDS }}
+  ALEPH_ENTITIES_INDEX: {{ .Values.config.ALEPH_ENTITIES_INDEX }}
+  ALEPH_ENTITIES_INDEX_SET: {{ .Values.config.ALEPH_ENTITIES_INDEX_SET }}
+  ALEPH_ENTITIES_INDEX_SPLIT: {{ .Values.config.ALEPH_ENTITIES_INDEX_SPLIT }}
+  ALEPH_RECORDS_INDEX: {{ .Values.config.ALEPH_RECORDS_INDEX }}
+  ALEPH_COLLECTIONS_INDEX: {{ .Values.config.ALEPH_COLLECTIONS_INDEX }}
   ALEPH_BROKER_URI: {{ printf "amqp://guest:guest@task-queue.%s.svc.cluster.local:5672" .Values.global.namespace }}
   ALEPH_REDIS_URL: {{ printf "redis://redis.%s.svc.cluster.local:6379/0" .Values.global.namespace }}
   ALEPH_NER_SERVICE: {{ printf "extract-entities.%s.svc.cluster.local:50000" .Values.global.namespace }}
   ALEPH_OCR_SERVICE: {{ printf "recognize-text.%s.svc.cluster.local:50000" .Values.global.namespace }}
   UNOSERVICE_URL: {{ printf "http://convert-document.%s.svc.cluster.local:3000/convert" .Values.global.namespace }}
-  ALEPH_OAUTH: 'false'
+  ALEPH_OAUTH: {{ .Values.config.ALEPH_OAUTH }}
   ALEPH_OAUTH_KEY: {{ .Values.config.ALEPH_OAUTH_KEY }}
   ALEPH_OAUTH_NAME: {{ .Values.config.ALEPH_OAUTH_NAME }}
   ALEPH_OAUTH_SCOPE: {{ .Values.config.ALEPH_OAUTH_SCOPE }}
