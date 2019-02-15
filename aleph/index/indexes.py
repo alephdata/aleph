@@ -12,11 +12,9 @@ log = logging.getLogger(__name__)
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
-RAW_TEXT = {"type": "text", "copy_to": "text"}
 KEYWORD = {"type": "keyword"}
-LATIN_KEYWORD = {"type": "keyword", "normalizer": "icu_latin"}
 TYPE_MAPPINGS = {
-    registry.text: LATIN_TEXT,
+    registry.text: {"type": "text", "index": False},
     registry.date: PARTIAL_DATE,
 }
 
@@ -60,7 +58,11 @@ def configure_collections():
             "languages": KEYWORD,
             "countries": KEYWORD,
             "category": KEYWORD,
-            "summary": RAW_TEXT,
+            "summary": {
+                "type": "text",
+                "copy_to": "text",
+                "index": False
+            },
             "publisher": KEYWORD,
             "publisher_url": KEYWORD,
             "data_url": KEYWORD,
@@ -96,7 +98,7 @@ def entities_write_index(schema):
     return schema_index(model.get(schema), settings.INDEX_WRITE)
 
 
-def entities_read_index(schema=None):
+def entities_read_index_list(schema=None):
     """Combined index to run all queries against."""
     schemata = set()
     names = ensure_list(schema) or model.schemata.values()
@@ -105,13 +107,14 @@ def entities_read_index(schema=None):
         if schema is not None:
             schemata.add(schema)
             schemata.update(schema.descendants)
-    indexes = []
     for schema in schemata:
         if not schema.abstract:
             for version in settings.INDEX_READ:
-                indexes.append(schema_index(schema, version))
-    # log.info("Read index: %r", indexes)
-    return ','.join(indexes)
+                yield schema_index(schema, version)
+
+
+def entities_read_index(schema=None):
+    return ','.join(entities_read_index_list(schema=schema))
 
 
 def configure_entities():
@@ -147,12 +150,19 @@ def configure_schema(schema, version):
             "schemata": KEYWORD,
             "bulk": {"type": "boolean"},
             "status": KEYWORD,
-            "error_message": RAW_TEXT,
+            "error_message": {
+                "type": "text",
+                "copy_to": "text",
+                "index": False
+            },
             "foreign_id": KEYWORD,
             "document_id": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
-            "fingerprints": LATIN_KEYWORD,
+            "fingerprints": {
+                "type": "keyword",
+                "normalizer": "icu_latin"
+            },
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
