@@ -178,12 +178,11 @@ def configure_index(index, mapping, settings):
         es.indices.create(index, body=body)
 
 
-def index_settings(shards=5, refresh_interval=None):
+def index_settings(shards=5):
     """Configure an index in ES with support for text transliteration."""
     return {
         "index": {
             "number_of_shards": shards,
-            "refresh_interval": refresh_interval,
             "analysis": {
                 "analyzer": {
                     "icu_latin": {

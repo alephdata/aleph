@@ -47,9 +47,9 @@ class TestCase(FlaskTestCase):
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.MAIL_SERVER = None
         settings.ENTITIES_SERVICE = None
-        settings.ENTITIES_INDEX_SPLIT = True
-        settings.ENTITIES_INDEX = '%s-entity' % APP_NAME
-        settings.COLLECTIONS_INDEX = '%s-collection' % APP_NAME
+        settings.INDEX_PREFIX = APP_NAME
+        settings.INDEX_WRITE = 'yolo'
+        settings.INDEX_READ = [settings.INDEX_WRITE]
         settings.REDIS_URL = None
         app = create_app({})
         mount_app_blueprints(app)

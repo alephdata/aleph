@@ -21,9 +21,13 @@ TYPE_MAPPINGS = {
 }
 
 
+def index_name(name, version):
+    return '-'.join((settings.INDEX_PREFIX, name, version))
+
+
 def collections_index():
     """Combined index to run all queries against."""
-    return settings.COLLECTIONS_INDEX
+    return index_name('collection', settings.INDEX_WRITE)
 
 
 def all_indexes():
@@ -81,60 +85,47 @@ def configure_collections():
     configure_index(collections_index(), mapping, index_settings())
 
 
-def schema_index(schema):
+def schema_index(schema, version):
     """Convert a schema object to an index name."""
-    return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
+    name = 'entity-%s' % schema.name.lower()
+    return index_name(name, version=version)
 
 
 def entities_write_index(schema):
     """Index that us currently written by new queries."""
-    if not settings.ENTITIES_INDEX_SPLIT:
-        return settings.ENTITIES_INDEX
-
-    return schema_index(model.get(schema))
+    return schema_index(model.get(schema), settings.INDEX_WRITE)
 
 
-def entities_read_index(schema=None, descendants=True, exclude=None):
+def entities_read_index(schema=None):
     """Combined index to run all queries against."""
-    if not settings.ENTITIES_INDEX_SPLIT:
-        indexes = set(settings.ENTITIES_INDEX_SET)
-        indexes.add(settings.ENTITIES_INDEX)
-        return ','.join(indexes)
-
     schemata = set()
     names = ensure_list(schema) or model.schemata.values()
     for schema in names:
         schema = model.get(schema)
-        if schema is None:
-            continue
-        schemata.add(schema)
-        if descendants:
+        if schema is not None:
+            schemata.add(schema)
             schemata.update(schema.descendants)
-    exclude = model.get(exclude)
-    indexes = list(settings.ENTITIES_INDEX_SET)
+    indexes = []
     for schema in schemata:
-        if not schema.abstract and schema != exclude:
-            indexes.append(schema_index(schema))
+        if not schema.abstract:
+            for version in settings.INDEX_READ:
+                indexes.append(schema_index(schema, version))
     # log.info("Read index: %r", indexes)
     return ','.join(indexes)
 
 
 def configure_entities():
-    if not settings.ENTITIES_INDEX_SPLIT:
-        return configure_schema(None)
     for schema in model.schemata.values():
         if not schema.abstract:
-            configure_schema(schema)
+            for version in settings.INDEX_READ:
+                configure_schema(schema, version)
 
 
-def configure_schema(schema):
+def configure_schema(schema, version):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
-    properties = model.properties
-    if schema is not None:
-        properties = schema.properties.values()
-    for prop in properties:
+    for prop in schema.properties.values():
         config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
         config['copy_to'] = ['text']
         schema_mapping[prop.name] = config
@@ -194,5 +185,5 @@ def configure_schema(schema):
             }
         }
     }
-    index = entities_write_index(schema)
+    index = schema_index(model.get(schema), version)
     configure_index(index, mapping, index_settings())
