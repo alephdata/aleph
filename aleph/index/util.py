@@ -46,7 +46,7 @@ def unpack_result(res):
 
 
 def authz_query(authz):
-    """Generate a search query from an authz object."""
+    """Generate a search query filter from an authz object."""
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
         return {'match_all': {}}
@@ -178,11 +178,12 @@ def configure_index(index, mapping, settings):
         es.indices.create(index, body=body)
 
 
-def index_settings(shards=5):
+def index_settings():
     """Configure an index in ES with support for text transliteration."""
     return {
         "index": {
-            "number_of_shards": shards,
+            "number_of_shards": 5,
+            "number_of_replicas": 2,
             "analysis": {
                 "analyzer": {
                     "icu_latin": {
