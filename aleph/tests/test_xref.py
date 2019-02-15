@@ -80,25 +80,17 @@ class XrefTestCase(TestCase):
 
     def test_xref(self):
         self.setup_entities()
-
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
-
-        self.flush_index()
         xref_collection(self.coll_a.id)
-
         q = db.session.query(Match)
         assert 3 == q.count(), q.count()
 
     def test_xref_specific_collections(self):
         self.setup_entities()
-
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
-
-        self.flush_index()
         xref_collection(self.coll_a.id,
                         against_collection_ids=[self.coll_c.id])
-
         q = db.session.query(Match)
         assert 1 == q.count(), q.count()

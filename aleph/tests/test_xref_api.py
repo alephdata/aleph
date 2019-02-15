@@ -99,7 +99,6 @@ class XrefApiTestCase(TestCase):
         index_entity(self.ent5)
         index_entity(self.ent6)
         index_entity(self.ent7)
-        self.flush_index()
 
     def test_summary(self):
         xref_collection(self.residents.id)
