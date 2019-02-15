@@ -76,12 +76,9 @@ def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
     if not len(ids):
         return
     index = entities_read_index(schema=schemata)
+    query = {'filter': {'ids': {'values': ids}}}
     query = {
-        'query': {
-            'bool': {
-                'filter': {'ids': {'values': ids}}
-            }
-        },
+        'query': {'bool': query},
         '_source': _source_spec(includes, excludes),
         'size': MAX_PAGE
     }
@@ -94,7 +91,7 @@ def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
 
 def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
-    for entity in entities_by_ids(ensure_list(entity_id)):
+    for entity in entities_by_ids(entity_id):
         return entity
 
 

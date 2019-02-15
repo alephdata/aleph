@@ -161,17 +161,12 @@ def configure_schema(schema):
             "document_id": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
+            "fingerprints": LATIN_KEYWORD,
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
             "keywords": KEYWORD,
             "ips": KEYWORD,
-            "fingerprints": LATIN_KEYWORD,
-            "names": {
-                "type": "keyword",
-                "fields": {"text": LATIN_TEXT},
-                "copy_to": "text"
-            },
             "emails": KEYWORD,
             "phones": KEYWORD,
             "identifiers": KEYWORD,
@@ -179,9 +174,14 @@ def configure_schema(schema):
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT}
             },
+            "dates": PARTIAL_DATE,
+            "names": {
+                "type": "keyword",
+                "fields": {"text": LATIN_TEXT},
+                "copy_to": "text"
+            },
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
-            "dates": PARTIAL_DATE,
             "text": {
                 "type": "text",
                 "analyzer": "icu_latin",
