@@ -157,17 +157,15 @@ def bulk_actions(actions, sync=False):
     """Bulk indexing with timeouts, bells and whistles."""
     try:
         start_time = time()
-        res = bulk(es, actions,
-                   chunk_size=BULK_PAGE,
-                   max_retries=10,
-                   initial_backoff=2,
-                   request_timeout=REQUEST_TIMEOUT,
-                   timeout=TIMEOUT,
-                   refresh=refresh_sync(sync))
+        total, _ = bulk(es, actions,
+                        chunk_size=BULK_PAGE,
+                        max_retries=10,
+                        initial_backoff=2,
+                        request_timeout=REQUEST_TIMEOUT,
+                        timeout=TIMEOUT,
+                        refresh=refresh_sync(sync))
         duration = (time() - start_time)
-        total, _ = res
         log.debug("Bulk write (%s): %.4fs", total, duration)
-        return res
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
 
