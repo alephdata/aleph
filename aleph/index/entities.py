@@ -10,13 +10,15 @@ from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es
 from aleph.index.indexes import entities_write_index, entities_read_index
+from aleph.index.indexes import entities_read_index_list
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import index_safe, search_safe, authz_query
 from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE, BULK_PAGE
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
-                   'identifiers', 'addresses']
+                   'identifiers', 'addresses', 'properties.bodyText',
+                   'properties.bodyRaw']
 
 
 def index_entity(entity, sync=False):
