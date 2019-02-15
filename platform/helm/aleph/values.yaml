@@ -2,9 +2,9 @@ global:
   reponame: aleph
   # Make sure the namespace exists first. Edit and apply core/namespace.yaml
   namespace: aleph
-  dbInstance: "occrp-data-testing-223805:us-east1:staging-db=tcp:5432"
+  dbInstance: occrp-data-testing-223805:us-east1:staging-db
   repository: alephdata/aleph
-  imagetag: master
+  imagetag: develop
   domain: staging.data.occrp.org
 
 ## External Dependencies
@@ -104,7 +104,7 @@ config:
   ALEPH_OCR_VISION_API: "false"
   ALEPH_CORS_ORIGINS: "*"
   ALEPH_ARCHIVE_TYPE: gs
-  ALEPH_ARCHIVE_BUCKET: "staging-data-archive"
+  ALEPH_ARCHIVE_BUCKET: "occrp-staging-data-archive"
   ALEPH_PASSWORD_LOGIN: "true"
   ALEPH_ADMINS: "admin@example.com"
   ALEPH_MAIL_FROM: notifications@example.com

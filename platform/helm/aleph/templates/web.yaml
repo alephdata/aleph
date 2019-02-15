@@ -60,7 +60,7 @@ data:
       keepalive_requests 10000;
 
       upstream api {
-        {{ printf "server api.%s.cluster.local:8000;" .Values.global.namespace }}
+        {{ printf "server api.%s.svc.cluster.local:8000;" .Values.global.namespace }}
       }
 
       server {
