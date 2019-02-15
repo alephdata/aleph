@@ -1,5 +1,5 @@
 import logging
-from banal import is_mapping, ensure_list
+from banal import is_mapping
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -111,7 +111,7 @@ def entity_references(entity, authz):
 
 def entity_tags(entity, authz):
     """Do a search on tags of an entity."""
-    # NOTE: This must also work for documents.
+    proxy = model.get_proxy(entity)
     Thing = model.get(Entity.THING)
     types = [registry.name, registry.email, registry.identifier,
              registry.iban, registry.phone, registry.address]
@@ -122,7 +122,7 @@ def entity_tags(entity, authz):
     for type_ in types:
         if type_.group is None:
             continue
-        for value in ensure_list(entity.get(type_.group)):
+        for value in proxy.get_type_values(type_):
             if type_.specificity(value) < 0.1:
                 continue
             schemata = model.get_type_schemata(type_)
