@@ -1,5 +1,5 @@
 import React, { Component, Suspense, lazy } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route,Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
@@ -22,7 +22,6 @@ const CollectionDocumentsScreen = lazy(()=> import(/* webpackChunkName: 'base' *
 const CollectionXrefMatchesScreen = lazy(()=> import(/* webpackChunkName: 'base' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
 const EntityScreen = lazy(()=> import(/* webpackChunkName: 'base' */ 'src/screens/EntityScreen/EntityScreen'));
 const DocumentScreen = lazy(()=> import(/* webpackChunkName: 'document' */ 'src/screens/DocumentScreen/DocumentScreen'));
-const DocumentRedirectScreen = lazy(()=> import(/* webpackChunkName: 'document' */ 'src/screens/DocumentRedirectScreen/DocumentRedirectScreen'));
 
 
 
@@ -55,9 +54,9 @@ class Router extends Component {
           <Route path="/logout" exact component={LogoutScreen}/>
           <Route path="/activate/:code" exact component={ActivateScreen}/>
           <Route path="/entities/:entityId" exact component={EntityScreen}/>
+          <Redirect from={"/text/:documentId"} to={"/documents/:documentId"}/>
+          <Redirect from="/tabular/:documentId/:sheet" to={"/documents/:documentId"}/>
           <Route path="/documents/:documentId" exact component={DocumentScreen}/>
-          <Route path="/text/:documentId" exact component={DocumentRedirectScreen}/>
-          <Route path="/tabular/:documentId/:sheet" exact component={DocumentRedirectScreen}/>
           <Route path="/sources" exact component={SourcesIndexScreen}/>
           <Route path="/cases" exact component={CasesIndexScreen}/>
           <Route path="/collections/:collectionId/documents" exact component={CollectionDocumentsScreen}/>

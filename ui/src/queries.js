@@ -15,8 +15,13 @@ export function queryFolderDocuments(location, documentId, queryText) {
   // a flat listing of the immediate children of this directory is shown.
   const q = Query.fromLocation('entities', location, {}, 'document').getString('q'),
         hasSearch = (q.length !== 0 || queryText),
-        context = {'filter:schemata': 'Document'} && {};
-    context['filter:properties.document'] = documentId;
+        context = {'filter:schemata': 'Document'};
+
+  if (hasSearch) {
+    context['filter:ancestors'] = documentId;
+  } else {
+    context['filter:parent.id'] = documentId;
+  }
 
   let query = Query.fromLocation('entities', location, context, 'document').limit(50);
   if (queryText) {

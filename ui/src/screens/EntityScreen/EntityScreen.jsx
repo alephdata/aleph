@@ -9,8 +9,11 @@ import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
 class EntityScreen extends Component {
   render() {
     const {entityId, entity, mode} = this.props;
-    if (entity.schemata && entity.schemata.indexOf('Document') !== -1) {
-      return <Redirect to={`/documents/${entityId}`} />;
+    if (entity.schemata && entity.schema.isDocument() ) {
+      return <Redirect to={{
+        ...this.props.location,
+        pathname:`/documents/${entityId}`}
+      } />;
     }
     return <EntityScreenContext entityId={entityId} activeMode={mode}/>;
   }
