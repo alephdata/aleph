@@ -180,8 +180,8 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get('_index')
         if index == exclude:
             continue
-        refresh = refresh_sync(True)
-        es.delete(index=index, doc_type='doc', id=entity_id, refresh=refresh)
+        es.delete(index=index, doc_type='doc', id=entity_id,
+                  refresh=refresh_sync(sync))
 
 
 def index_operation(data):

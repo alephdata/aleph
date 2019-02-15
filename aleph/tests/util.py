@@ -7,7 +7,7 @@ from faker import Factory
 
 from aleph import settings
 from aleph.model import Role, Document, Collection, Permission
-from aleph.index.admin import ensure_index, clear_index, refresh_index
+from aleph.index.admin import ensure_index, clear_index
 from aleph.index.documents import index_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import index_entities
@@ -85,14 +85,10 @@ class TestCase(FlaskTestCase):
         Permission.grant(collection, role, read, write)
         db.session.commit()
         update_collection(collection)
-        self.flush_index()
 
     def grant_publish(self, collection):
         visitor = Role.by_foreign_id(Role.SYSTEM_GUEST)
         self.grant(collection, visitor, True, False)
-
-    def flush_index(self):
-        refresh_index()
 
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
@@ -100,7 +96,6 @@ class TestCase(FlaskTestCase):
     def update_index(self):
         index_collections()
         index_entities()
-        self.flush_index()
 
     def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)

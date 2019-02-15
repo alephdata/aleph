@@ -28,10 +28,6 @@ def ensure_index():
         upgrade_search()
 
 
-def refresh_index():
-    es.indices.refresh(index=all_indexes(), ignore=[404, 400])
-
-
 def clear_index():
     es.delete_by_query(index=all_indexes(),
                        doc_type='doc',

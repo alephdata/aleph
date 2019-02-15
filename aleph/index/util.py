@@ -19,7 +19,7 @@ MAX_PAGE = 9999
 def refresh_sync(sync):
     if settings.TESTING:
         return True
-    return 'wait_for' if sync else False
+    return True if sync else False
 
 
 def unpack_result(res):
