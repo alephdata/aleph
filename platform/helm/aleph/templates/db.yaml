@@ -40,7 +40,7 @@ spec:
           command:
             - /cloud_sql_proxy
             - -dir=/cloudsql
-            - -instances={{ .Values.global.dbInstance }}
+            - -instances={{ printf "%s=tcp:0.0.0.0:5432" .Values.global.dbInstance }}
             - -credential_file=/credentials/service-account.json
           ports:
             - name: port-db
