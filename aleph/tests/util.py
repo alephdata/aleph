@@ -47,9 +47,8 @@ class TestCase(FlaskTestCase):
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.MAIL_SERVER = None
         settings.ENTITIES_SERVICE = None
+        settings.ENTITIES_INDEX_SPLIT = True
         settings.ENTITIES_INDEX = '%s-entity' % APP_NAME
-        settings.RECORDS_INDEX = '%s-record' % APP_NAME
-        settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
         settings.COLLECTIONS_INDEX = '%s-collection' % APP_NAME
         settings.REDIS_URL = None
         app = create_app({})

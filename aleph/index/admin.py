@@ -1,6 +1,5 @@
 import logging
 from pprint import pprint, pformat  # noqa
-from elasticsearch.exceptions import RequestError
 
 from aleph.core import es
 from aleph.index.indexes import all_indexes
@@ -21,11 +20,8 @@ def delete_index():
 
 
 def ensure_index():
-    try:
-        upgrade_search()
-    except RequestError:
-        delete_index()
-        upgrade_search()
+    delete_index()
+    upgrade_search()
 
 
 def clear_index():
