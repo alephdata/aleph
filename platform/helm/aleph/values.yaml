@@ -171,6 +171,7 @@ extractEntities:
 
 
 index:
+  ESonK8s: true
   replicas: 1
   resources:
     requests:

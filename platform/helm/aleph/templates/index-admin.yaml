@@ -1,3 +1,4 @@
+{{- if (.Values.index.ESonK8s) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -52,3 +53,4 @@ spec:
           resources:
             limits:
               memory: {{ .Values.indexAdmin.resources.limits.memory }}
+{{- end }}
