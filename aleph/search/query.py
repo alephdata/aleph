@@ -25,6 +25,7 @@ class Query(object):
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ['text']
     PREFIX_FIELD = 'name'
+    SKIP_FILTERS = []
     SORT_FIELDS = {
         'label': 'label.kw',
         'name': 'name.kw',
@@ -68,6 +69,8 @@ class Query(object):
             filters.append(authz_query(self.parser.authz))
 
         for field, values in self.parser.filters.items():
+            if field in self.SKIP_FILTERS:
+                continue
             if field not in self.parser.facet_names:
                 filters.append(field_filter_query(field, values))
         return filters
@@ -86,7 +89,7 @@ class Query(object):
         """Apply post-aggregation query filters."""
         filters = []
         for field, values in self.parser.filters.items():
-            if field == exclude:
+            if field in self.SKIP_FILTERS or field == exclude:
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
