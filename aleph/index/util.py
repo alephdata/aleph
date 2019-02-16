@@ -1,5 +1,5 @@
 import logging
-from banal import ensure_list, is_mapping, is_listish
+from banal import ensure_list
 from elasticsearch import TransportError
 from servicelayer.util import backoff, service_retries
 
@@ -30,7 +30,7 @@ def unpack_result(res):
     if res.get('found') is False:
         return
     data = res.get('_source', {})
-    data['id'] = str(res.get('_id'))
+    data['id'] = res.get('_id')
 
     _score = res.get('_score')
     if _score is not None and _score != 0.0:
@@ -122,27 +122,6 @@ def index_safe(index, id, body, **kwargs):
             backoff(failures=attempt)
 
 
-def clean_query(query):
-    # XXX - do these premises hold?
-    if is_mapping(query):
-        data = {}
-        for key, value in query.items():
-            if key not in ['match_all', 'match_none']:
-                value = clean_query(value)
-            if value is not None:
-                data[key] = value
-        if not len(data):
-            return None
-        return data
-    if is_listish(query):
-        values = [clean_query(v) for v in query]
-        values = [v for v in values if v is not None]
-        if not len(values):
-            return None
-        return values
-    return query
-
-
 def configure_index(index, mapping, settings):
     """Create or update a search index with the given mapping and
     settings. This will try to make a new index, or update an
@@ -150,17 +129,15 @@ def configure_index(index, mapping, settings):
     """
     if es.indices.exists(index=index):
         log.info("Configuring index: %s...", index)
-        es.indices.put_mapping(index=index,
-                               doc_type='doc',
-                               body=mapping,
-                               ignore=[400])
-    else:
-        log.info("Creating index: %s...", index)
-        body = {
-            'settings': settings,
-            'mappings': {'doc': mapping}
-        }
-        es.indices.create(index, body=body)
+        res = es.indices.put_mapping(index=index, doc_type='doc',
+                                     body=mapping, ignore=[400])
+        return res.get('status') != 400
+    log.info("Creating index: %s...", index)
+    es.indices.create(index, body={
+        'settings': settings,
+        'mappings': {'doc': mapping}
+    })
+    return True
 
 
 def index_settings():

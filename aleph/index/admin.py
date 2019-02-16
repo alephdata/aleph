@@ -19,11 +19,6 @@ def delete_index():
     es.indices.delete(index=all_indexes(), ignore=[404, 400])
 
 
-def ensure_index():
-    delete_index()
-    upgrade_search()
-
-
 def clear_index():
     es.delete_by_query(index=all_indexes(),
                        doc_type='doc',

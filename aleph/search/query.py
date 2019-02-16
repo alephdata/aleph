@@ -4,7 +4,6 @@ from pprint import pprint, pformat  # noqa
 from aleph.core import es
 from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
-from aleph.index.util import clean_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.logic.audit import record_audit
@@ -180,7 +179,7 @@ class Query(object):
         return source
 
     def get_body(self):
-        body = clean_query({
+        body = {
             'query': self.get_query(),
             'post_filter': self.get_post_filters(),
             'from': self.parser.offset,
@@ -189,7 +188,7 @@ class Query(object):
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
             '_source': self.get_source()
-        })
+        }
         # log.info("Query: %s", pformat(body))
         return body
 
