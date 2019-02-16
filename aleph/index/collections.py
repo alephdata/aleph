@@ -8,7 +8,7 @@ from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
-from aleph.index.util import search_safe, refresh_sync, MAX_PAGE
+from aleph.index.util import refresh_sync, MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ def get_collection_stats(collection_id):
             'languages': {'terms': {'field': 'languages', 'size': 10}},
         }
     }
-    result = search_safe(index=entities_read_index(), body=query)
+    result = es.search(index=entities_read_index(), body=query)
     aggregations = result.get('aggregations', {})
     data = {'count': result.get('hits', {}).get('total', 0)}
 

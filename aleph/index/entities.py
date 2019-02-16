@@ -10,9 +10,9 @@ from elasticsearch.helpers import scan, bulk, BulkIndexError
 
 from aleph.core import es
 from aleph.index.indexes import entities_write_index, entities_read_index
-from aleph.index.indexes import entities_read_index_list
+# from aleph.index.indexes import entities_read_index_list
 from aleph.index.util import unpack_result, refresh_sync
-from aleph.index.util import index_safe, search_safe, authz_query
+from aleph.index.util import index_safe, authz_query
 from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE, BULK_PAGE
 
 log = logging.getLogger(__name__)
@@ -84,11 +84,30 @@ def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
         '_source': _source_spec(includes, excludes),
         'size': MAX_PAGE
     }
-    result = search_safe(index=index, body=query)
+    result = es.search(index=index, body=query)
     for doc in result.get('hits', {}).get('hits', []):
         entity = unpack_result(doc)
         if entity is not None:
             yield entity
+
+
+# def entities_by_typed_ids(schema_ids, includes=None, excludes=None):
+#     docs = []
+#     spec = _source_spec(includes, excludes)
+#     for (schema, id) in schema_ids:
+#         for index in entities_read_index_list(schema):
+#             docs.append({
+#                 '_index': index,
+#                 '_type': 'doc',
+#                 '_id': id,
+#                 '_source': spec
+#             })
+#     if not len(docs):
+#         return
+#     for doc in es.mget(body={'docs': docs}):
+#         entity = unpack_result(doc)
+#         if entity is not None:
+#             yield entity
 
 
 def get_entity(entity_id, **kwargs):

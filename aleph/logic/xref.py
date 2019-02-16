@@ -5,12 +5,12 @@ from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.compare import compare
 
-from aleph.core import db, celery
+from aleph.core import db, es, celery
 from aleph.model import Match
 from aleph.index.indexes import entities_read_index
 from aleph.index.entities import iter_proxies, entities_by_ids
 from aleph.index.match import match_query
-from aleph.index.util import search_safe, unpack_result, none_query
+from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
 from aleph.logic.collections import get_collection
 from aleph.logic.util import entity_url
@@ -31,7 +31,7 @@ def xref_item(proxy, collection_ids=None):
     }
     matchable = list(proxy.schema.matchable_schemata)
     index = entities_read_index(schema=matchable)
-    result = search_safe(index=index, body=query)
+    result = es.search(index=index, body=query)
     results = result.get('hits').get('hits')
     for result in results:
         result = unpack_result(result)

@@ -22,7 +22,7 @@ def delete_document(document_id, sync=False):
     schemata = (DocumentRecord.SCHEMA_PAGE,
                 DocumentRecord.SCHEMA_ROW,
                 Document.SCHEMA)
-    query_delete(entities_read_index(schemata), q, refresh=sync)
+    query_delete(entities_read_index(schemata), q, sync=sync)
 
 
 def generate_document(document):

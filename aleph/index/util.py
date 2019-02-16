@@ -91,7 +91,7 @@ def field_filter_query(field, values):
     return {'terms': {field: values}}
 
 
-def query_delete(index, query, **kwargs):
+def query_delete(index, query, sync=False, **kwargs):
     "Delete all documents matching the given query inside the index."
     for attempt in service_retries():
         try:
@@ -100,6 +100,8 @@ def query_delete(index, query, **kwargs):
                                conflicts='proceed',
                                timeout=TIMEOUT,
                                request_timeout=REQUEST_TIMEOUT,
+                               wait_for_completion=sync,
+                               refresh=refresh_sync(sync),
                                **kwargs)
             return
         except TransportError as exc:
@@ -117,23 +119,6 @@ def index_safe(index, id, body, **kwargs):
             return body
         except TransportError as exc:
             log.warning("Index error [%s:%s]: %s", index, id, exc)
-            backoff(failures=attempt)
-
-
-def search_safe(*args, **kwargs):
-    # This is not supposed to be used in every location where search is
-    # run, but only where it's a backend search that we could back off of
-    # without hurting UX.
-    for attempt in service_retries():
-        try:
-            kwargs['doc_type'] = 'doc'
-            return es.search(*args,
-                             timeout=TIMEOUT,
-                             request_timeout=REQUEST_TIMEOUT,
-                             ignore=[404],
-                             **kwargs)
-        except TransportError as exc:
-            log.exception("Search error: %r", exc)
             backoff(failures=attempt)
 
 
