@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from aleph.core import db
 from aleph.model import Role, Alert, Event, Notification
 from aleph.model import Collection, Document, Entity
-from aleph.index.entities import get_entity
 from aleph.logic.util import collection_url, entity_url, ui_url
 from aleph.notify import notify_role
 from aleph.util import html_link
@@ -28,16 +27,22 @@ def resolve_id(object_id, clazz):
     """From an object ID and class type, generate a human-readable
     label and a link that can be rendered into the notification.
     """
+    from aleph.logic.entities import get_entity
+    from aleph.logic.roles import get_role
+    from aleph.logic.alerts import get_alert
+    from aleph.logic.collections import get_collection
     if clazz == Role:
-        role = Role.by_id(object_id)
-        return role.name, None
+        role = get_role(object_id)
+        if role is not None:
+            return role.get('name'), None
     elif clazz == Alert:
-        alert = Alert.by_id(object_id)
-        return alert.query, None
+        alert = get_alert(object_id)
+        if alert is not None:
+            return alert.get('query'), None
     elif clazz == Collection:
-        collection = Collection.by_id(object_id)
+        collection = get_collection(object_id)
         if collection is not None:
-            return collection.label, collection_url(object_id)
+            return collection.get('label'), collection_url(object_id)
     elif clazz in [Document, Entity]:
         entity = get_entity(object_id)
         if entity is not None:
