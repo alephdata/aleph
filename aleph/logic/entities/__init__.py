@@ -13,7 +13,6 @@ from aleph.logic.notifications import flush_notifications
 from aleph.logic.entities.bulk import bulk_load, bulk_load_query, bulk_write  # noqa
 
 log = logging.getLogger(__name__)
-BULK_PAGE = 500
 
 
 def get_entity(entity_id):

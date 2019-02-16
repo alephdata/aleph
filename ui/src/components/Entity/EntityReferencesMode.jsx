@@ -115,7 +115,8 @@ const mapStateToProps = (state, ownProps) => {
     return {};
   }
   const context = {
-    [`filter:properties.${reference.property.name}`]: entity.id
+    [`filter:properties.${reference.property.name}`]: entity.id,
+    'filter:schemata': reference.schema
   };
   const query = Query.fromLocation('entities', location, context, reference.property.name);
   return {

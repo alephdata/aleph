@@ -6,7 +6,7 @@ from followthemoney.util import merge_data
 from urllib.parse import quote
 from urlnormalizer import query_string
 
-from aleph.core import db, url_for
+from aleph.core import db
 from aleph.model import Audit
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
@@ -25,6 +25,7 @@ blueprint = Blueprint('entities_api', __name__)
 @blueprint.route('/api/2/search', methods=['GET'])
 @blueprint.route('/api/2/entities', methods=['GET'])
 def index():
+    # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.args, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
     return EntitySerializer.jsonify_result(result)
@@ -32,7 +33,6 @@ def index():
 
 @blueprint.route('/api/2/match', methods=['POST'])
 def match():
-    enable_cache()
     entity = parse_request(EntityUpdateSchema)
     record_audit(Audit.ACT_MATCH, entity=entity)
     entity = model.get_proxy(entity)
@@ -76,13 +76,10 @@ def references(id):
     record_audit(Audit.ACT_ENTITY, id=id)
     results = []
     for prop, total in entity_references(entity, request.authz):
-        key = ('filter:properties.%s' % prop.name, id)
-        link = url_for('entities_api.index', _query=(key,))
         results.append({
             'count': total,
             'property': prop,
             'schema': prop.schema.name,
-            'results': link
         })
     return jsonify({
         'status': 'ok',
@@ -100,13 +97,11 @@ def tags(id):
     for (field, value, total) in entity_tags(entity, request.authz):
         qvalue = quote(value.encode('utf-8'))
         key = ('filter:%s' % field, qvalue)
-        link = url_for('entities_api.index', _query=(key,))
         results.append({
             'id': query_string([key]),
             'value': value,
             'field': field,
             'count': total,
-            'results': link
         })
 
     results.sort(key=lambda p: p['count'], reverse=True)

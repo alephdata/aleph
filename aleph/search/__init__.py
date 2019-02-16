@@ -19,7 +19,8 @@ class EntitiesQuery(Query):
     SORT_DEFAULT = []
 
     def get_index(self):
-        schemata = self.parser.getlist('filter:schemata')
+        schemata = self.parser.getlist('filter:schema')
+        schemata = schemata or self.parser.getlist('filter:schemata')
         if len(schemata):
             return entities_read_index(schema=schemata)
         return entities_read_index()
