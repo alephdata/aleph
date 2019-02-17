@@ -22,7 +22,7 @@ from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load, index_entities
-from aleph.logic.xref import xref_collection
+from aleph.logic.entities.xref import xref_collection
 from aleph.logic.entities.rdf import export_collection
 from aleph.logic.permissions import update_permission
 
