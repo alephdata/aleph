@@ -12,7 +12,7 @@ from aleph.index.documents import index_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import index_entities
 from aleph.logic.roles import create_system_roles
-from aleph.logic.migration import destroy_db
+from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth

@@ -1,6 +1,8 @@
 import logging
+from time import time
 from banal import ensure_list
 from elasticsearch import TransportError
+from elasticsearch.helpers import bulk, BulkIndexError
 from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
@@ -107,6 +109,23 @@ def query_delete(index, query, sync=False, **kwargs):
         except TransportError as exc:
             log.warning("Query delete failed: %s", exc)
             backoff(failures=attempt)
+
+
+def bulk_actions(actions, sync=False):
+    """Bulk indexing with timeouts, bells and whistles."""
+    try:
+        start_time = time()
+        total, _ = bulk(es, actions,
+                        chunk_size=BULK_PAGE,
+                        max_retries=10,
+                        initial_backoff=2,
+                        request_timeout=REQUEST_TIMEOUT,
+                        timeout=TIMEOUT,
+                        refresh=refresh_sync(sync))
+        duration = (time() - start_time)
+        log.debug("Bulk write (%s): %.4fs", total, duration)
+    except BulkIndexError as exc:
+        log.warning('Indexing error: %s', exc)
 
 
 def index_safe(index, id, body, **kwargs):

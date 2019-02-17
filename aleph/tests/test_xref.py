@@ -3,7 +3,7 @@ from unittest import skip  # noqa
 
 from aleph.core import db
 from aleph.tests.util import TestCase
-from aleph.logic.xref import xref_collection
+from aleph.logic.entities.xref import xref_collection
 from aleph.model import Match
 
 

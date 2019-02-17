@@ -1,4 +1,3 @@
-from time import time
 import logging
 import fingerprints
 from pprint import pprint  # noqa
@@ -6,14 +5,14 @@ from banal import ensure_list
 from datetime import datetime
 from collections import defaultdict
 from followthemoney import model
-from elasticsearch.helpers import scan, bulk, BulkIndexError
+from elasticsearch.helpers import scan
 
 from aleph.core import es
 from aleph.index.indexes import entities_write_index, entities_read_index
 # from aleph.index.indexes import entities_read_index_list
 from aleph.index.util import unpack_result, refresh_sync
-from aleph.index.util import index_safe, authz_query
-from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE, BULK_PAGE
+from aleph.index.util import index_safe, authz_query, bulk_actions
+from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
@@ -172,23 +171,6 @@ def index_bulk(collection_id, entities, merge=True):
     """Index a set of entities."""
     actions = _index_updates(collection_id, entities, merge=merge)
     bulk_actions(actions, sync=merge)
-
-
-def bulk_actions(actions, sync=False):
-    """Bulk indexing with timeouts, bells and whistles."""
-    try:
-        start_time = time()
-        total, _ = bulk(es, actions,
-                        chunk_size=BULK_PAGE,
-                        max_retries=10,
-                        initial_backoff=2,
-                        request_timeout=REQUEST_TIMEOUT,
-                        timeout=TIMEOUT,
-                        refresh=refresh_sync(sync))
-        duration = (time() - start_time)
-        log.debug("Bulk write (%s): %.4fs", total, duration)
-    except BulkIndexError as exc:
-        log.warning('Indexing error: %s', exc)
 
 
 def delete_entity(entity_id, exclude=None, sync=False):

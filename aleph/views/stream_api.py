@@ -6,7 +6,7 @@ from flask import Blueprint, request
 from aleph.model import Audit
 from aleph.logic.audit import record_audit
 from aleph.index.entities import iter_entities
-from aleph.logic.graph.rdf import export_collection
+from aleph.logic.entities.rdf import export_collection
 from aleph.views.util import get_db_collection
 from aleph.views.util import require, stream_ijson
 

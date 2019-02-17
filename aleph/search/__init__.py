@@ -3,7 +3,7 @@ import logging
 from aleph.index.indexes import entities_read_index
 from aleph.index.indexes import collections_index
 from aleph.index.entities import EXCLUDE_DEFAULT
-from aleph.index.match import match_query
+from aleph.logic.entities.match import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
