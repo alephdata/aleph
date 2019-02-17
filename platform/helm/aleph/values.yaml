@@ -2,9 +2,9 @@ global:
   reponame: aleph
   # Make sure the namespace exists first. Edit and apply core/namespace.yaml
   namespace: aleph
-  dbInstance: occrp-data-testing-223805:us-east1:staging-db
+  dbInstance: occrp-data:us-east1:staging-db
   repository: alephdata/aleph
-  imagetag: develop
+  imagetag: staging
   domain: staging.data.occrp.org
 
 ## External Dependencies
