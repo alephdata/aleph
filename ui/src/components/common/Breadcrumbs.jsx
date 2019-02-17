@@ -120,7 +120,7 @@ class EntityBreadcrumb extends PureComponent {
     return (<React.Fragment>
         {this.props.parents
           .filter(parent => this.fetchIfNeeded(parent))
-          .map(parent=> <Breadcrumbs.Entity entity={parent[1]}/>)
+          .map(parent=> <Breadcrumbs.Entity key={parent[0]} entity={parent[1]}/>)
         }
         <li key={entity.id}>
           <Entity.Link entity={entity} className="bp3-breadcrumb" icon truncate={30}/>

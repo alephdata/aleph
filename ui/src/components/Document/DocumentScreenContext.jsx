@@ -9,13 +9,13 @@ import Screen from 'src/components/Screen/Screen';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentHeading from 'src/components/Document/DocumentHeading';
-import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import {selectEntity, selectSchemata} from 'src/selectors';
 import {Entity} from "../../followthemoney/Entity.ts";
+import EntityInfoMode from "../Entity/EntityInfoMode";
 
 const messages = defineMessages({
   placeholder: {
@@ -89,7 +89,7 @@ class DocumentScreenContext extends Component {
               <DocumentToolbar document={document} isPreview={false} />
               <DocumentHeading document={document} isPreview={false} />
               <div className="pane-content">
-                <DocumentInfoMode document={document} isPreview={false} />
+                <EntityInfoMode entity={document} isPreview={false} />
               </div>
             </DualPane.InfoPane>
           </DualPane>
