@@ -55,7 +55,8 @@ def handle_azure_oauth(sender, provider=None, oauth=None):
             mspubkey = key['x5c'][0]
             break
     cert_str = pemstart + mspubkey + pemend
-    cert_obj = load_pem_x509_certificate(cert_str.encode('ascii'), default_backend())
+    cert_obj = load_pem_x509_certificate(cert_str.encode('ascii'),
+                                         default_backend())
     public_key = cert_obj.public_key()
 
     # Decode incoming token and verify against the MS cert

@@ -4,7 +4,6 @@ from pprint import pprint, pformat  # noqa
 from aleph.core import es
 from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
-from aleph.index.util import clean_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.logic.audit import record_audit
@@ -25,6 +24,7 @@ class Query(object):
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ['text']
     PREFIX_FIELD = 'name'
+    SKIP_FILTERS = []
     SORT_FIELDS = {
         'label': 'label.kw',
         'name': 'name.kw',
@@ -68,6 +68,8 @@ class Query(object):
             filters.append(authz_query(self.parser.authz))
 
         for field, values in self.parser.filters.items():
+            if field in self.SKIP_FILTERS:
+                continue
             if field not in self.parser.facet_names:
                 filters.append(field_filter_query(field, values))
         return filters
@@ -86,7 +88,7 @@ class Query(object):
         """Apply post-aggregation query filters."""
         filters = []
         for field, values in self.parser.filters.items():
-            if field == exclude:
+            if field in self.SKIP_FILTERS or field == exclude:
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
@@ -177,7 +179,7 @@ class Query(object):
         return source
 
     def get_body(self):
-        body = clean_query({
+        body = {
             'query': self.get_query(),
             'post_filter': self.get_post_filters(),
             'from': self.parser.offset,
@@ -186,7 +188,7 @@ class Query(object):
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
             '_source': self.get_source()
-        })
+        }
         # log.info("Query: %s", pformat(body))
         return body
 

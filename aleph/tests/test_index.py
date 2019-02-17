@@ -14,6 +14,5 @@ class IndexTestCase(TestCase):
         res = self.client.get('/api/2/search?q="mention fruit"')
         assert res.json['total'] == 1, res.json
         delete_collection(collection)
-        self.flush_index()
         res = self.client.get('/api/2/search?q="mention fruit"')
         assert res.json['total'] == 0, res.json

@@ -2,11 +2,11 @@ apiVersion: certmanager.k8s.io/v1alpha1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: data@occrp.org
+    email: {{ .Values.certs.email }}
     privateKeySecretRef:
       name: letsencrypt-staging
     http01: {}
@@ -15,11 +15,11 @@ apiVersion: certmanager.k8s.io/v1alpha1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: data@occrp.org
+    email: {{ .Values.certs.email }}
     privateKeySecretRef:
       name: letsencrypt-prod
     http01: {}
@@ -27,18 +27,19 @@ spec:
 apiVersion: certmanager.k8s.io/v1alpha1
 kind: Certificate
 metadata:
-  name: tls-staging.data.occrp.org
-  namespace: aleph
+  name: tls-{{ .Values.global.domain }}
+  namespace: {{ .Values.global.namespace }}
 spec:
-  secretName: tls-staging.data.occrp.org
+  secretName: tls-{{ .Values.global.domain }}
   dnsNames:
-    - staging.data.occrp.org
+    - {{ .Values.global.domain }}
   acme:
     config:
       - http01:
           ingress: ingress-nginx
         domains:
-          - staging.data.occrp.org
+          - {{ .Values.global.domain }}
   issuerRef:
-    name: letsencrypt-prod
+    name: letsencrypt-staging
     kind: ClusterIssuer
+---

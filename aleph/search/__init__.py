@@ -3,7 +3,7 @@ import logging
 from aleph.index.indexes import entities_read_index
 from aleph.index.indexes import collections_index
 from aleph.index.entities import EXCLUDE_DEFAULT
-from aleph.index.match import match_query
+from aleph.logic.entities.match import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -15,11 +15,13 @@ log = logging.getLogger(__name__)
 class EntitiesQuery(Query):
     TEXT_FIELDS = ['name^3', 'text']
     PREFIX_FIELD = 'names.text'
+    SKIP_FILTERS = ['schema', 'schemata']
     EXCLUDE_FIELDS = EXCLUDE_DEFAULT
     SORT_DEFAULT = []
 
     def get_index(self):
-        schemata = self.parser.getlist('filter:schemata')
+        schemata = self.parser.getlist('filter:schema')
+        schemata = schemata or self.parser.getlist('filter:schemata')
         if len(schemata):
             return entities_read_index(schema=schemata)
         return entities_read_index()

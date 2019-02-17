@@ -12,18 +12,20 @@ log = logging.getLogger(__name__)
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
-RAW_TEXT = {"type": "text", "copy_to": "text"}
 KEYWORD = {"type": "keyword"}
-LATIN_KEYWORD = {"type": "keyword", "normalizer": "icu_latin"}
 TYPE_MAPPINGS = {
-    registry.text: LATIN_TEXT,
+    registry.text: {"type": "text", "index": False},
     registry.date: PARTIAL_DATE,
 }
 
 
+def index_name(name, version):
+    return '-'.join((settings.INDEX_PREFIX, name, version))
+
+
 def collections_index():
     """Combined index to run all queries against."""
-    return settings.COLLECTIONS_INDEX
+    return index_name('collection', settings.INDEX_WRITE)
 
 
 def all_indexes():
@@ -56,7 +58,11 @@ def configure_collections():
             "languages": KEYWORD,
             "countries": KEYWORD,
             "category": KEYWORD,
-            "summary": RAW_TEXT,
+            "summary": {
+                "type": "text",
+                "copy_to": "text",
+                "index": False
+            },
             "publisher": KEYWORD,
             "publisher_url": KEYWORD,
             "data_url": KEYWORD,
@@ -78,63 +84,51 @@ def configure_collections():
             "schemata": {"type": "object"}
         }
     }
-    configure_index(collections_index(), mapping, index_settings())
+    return configure_index(collections_index(), mapping, index_settings())
 
 
-def schema_index(schema):
+def schema_index(schema, version):
     """Convert a schema object to an index name."""
-    return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
+    name = 'entity-%s' % schema.name.lower()
+    return index_name(name, version=version)
 
 
 def entities_write_index(schema):
     """Index that us currently written by new queries."""
-    if not settings.ENTITIES_INDEX_SPLIT:
-        return settings.ENTITIES_INDEX
-
-    return schema_index(model.get(schema))
+    return schema_index(model.get(schema), settings.INDEX_WRITE)
 
 
-def entities_read_index(schema=None, descendants=True, exclude=None):
+def entities_read_index_list(schema=None):
     """Combined index to run all queries against."""
-    if not settings.ENTITIES_INDEX_SPLIT:
-        indexes = set(settings.ENTITIES_INDEX_SET)
-        indexes.add(settings.ENTITIES_INDEX)
-        return ','.join(indexes)
-
     schemata = set()
     names = ensure_list(schema) or model.schemata.values()
     for schema in names:
         schema = model.get(schema)
-        if schema is None:
-            continue
-        schemata.add(schema)
-        if descendants:
+        if schema is not None:
+            schemata.add(schema)
             schemata.update(schema.descendants)
-    exclude = model.get(exclude)
-    indexes = list(settings.ENTITIES_INDEX_SET)
     for schema in schemata:
-        if not schema.abstract and schema != exclude:
-            indexes.append(schema_index(schema))
-    # log.info("Read index: %r", indexes)
-    return ','.join(indexes)
+        if not schema.abstract:
+            for version in settings.INDEX_READ:
+                yield schema_index(schema, version)
+
+
+def entities_read_index(schema=None):
+    return ','.join(entities_read_index_list(schema=schema))
 
 
 def configure_entities():
-    if not settings.ENTITIES_INDEX_SPLIT:
-        return configure_schema(None)
     for schema in model.schemata.values():
         if not schema.abstract:
-            configure_schema(schema)
+            for version in settings.INDEX_READ:
+                configure_schema(schema, version)
 
 
-def configure_schema(schema):
+def configure_schema(schema, version):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
-    properties = model.properties
-    if schema is not None:
-        properties = schema.properties.values()
-    for prop in properties:
+    for prop in schema.properties.values():
         config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
         config['copy_to'] = ['text']
         schema_mapping[prop.name] = config
@@ -156,21 +150,24 @@ def configure_schema(schema):
             "schemata": KEYWORD,
             "bulk": {"type": "boolean"},
             "status": KEYWORD,
-            "error_message": RAW_TEXT,
+            "error_message": {
+                "type": "text",
+                "copy_to": "text",
+                "index": False
+            },
             "foreign_id": KEYWORD,
             "document_id": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
+            "fingerprints": {
+                "type": "keyword",
+                "normalizer": "icu_latin"
+            },
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
             "keywords": KEYWORD,
-            "fingerprints": LATIN_KEYWORD,
-            "names": {
-                "type": "keyword",
-                "fields": {"text": LATIN_TEXT},
-                "copy_to": "text"
-            },
+            "ips": KEYWORD,
             "emails": KEYWORD,
             "phones": KEYWORD,
             "identifiers": KEYWORD,
@@ -178,9 +175,14 @@ def configure_schema(schema):
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT}
             },
+            "dates": PARTIAL_DATE,
+            "names": {
+                "type": "keyword",
+                "fields": {"text": LATIN_TEXT},
+                "copy_to": "text"
+            },
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
-            "dates": PARTIAL_DATE,
             "text": {
                 "type": "text",
                 "analyzer": "icu_latin",
@@ -193,5 +195,5 @@ def configure_schema(schema):
             }
         }
     }
-    index = entities_write_index(schema)
-    configure_index(index, mapping, index_settings())
+    index = schema_index(model.get(schema), version)
+    return configure_index(index, mapping, index_settings())

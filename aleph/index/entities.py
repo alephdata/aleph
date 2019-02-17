@@ -1,4 +1,3 @@
-from time import time
 import logging
 import fingerprints
 from pprint import pprint  # noqa
@@ -6,17 +5,19 @@ from banal import ensure_list
 from datetime import datetime
 from collections import defaultdict
 from followthemoney import model
-from elasticsearch.helpers import scan, bulk, BulkIndexError
+from elasticsearch.helpers import scan
 
 from aleph.core import es
 from aleph.index.indexes import entities_write_index, entities_read_index
+# from aleph.index.indexes import entities_read_index_list
 from aleph.index.util import unpack_result, refresh_sync
-from aleph.index.util import index_safe, search_safe, authz_query
-from aleph.index.util import TIMEOUT, REQUEST_TIMEOUT, MAX_PAGE, BULK_PAGE
+from aleph.index.util import index_safe, authz_query, bulk_actions
+from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
-                   'identifiers', 'addresses']
+                   'identifiers', 'addresses', 'properties.bodyText',
+                   'properties.bodyRaw']
 
 
 def index_entity(entity, sync=False):
@@ -31,6 +32,14 @@ def index_entity(entity, sync=False):
     return index_safe(index, entity_id, data, refresh=refresh)
 
 
+def _source_spec(includes, excludes):
+    includes = ensure_list(includes)
+    excludes = ensure_list(excludes)
+    if not len(excludes):
+        excludes = EXCLUDE_DEFAULT
+    return {'includes': includes, 'excludes': excludes}
+
+
 def iter_entities(authz=None, collection_id=None, schemata=None,
                   includes=None, excludes=None):
     """Scan all entities matching the given criteria."""
@@ -41,13 +50,9 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         filters.append({'term': {'collection_id': collection_id}})
     if ensure_list(schemata):
         filters.append({'terms': {'schemata': ensure_list(schemata)}})
-    includes = ensure_list(includes)
-    excludes = ensure_list(excludes)
-    if not len(excludes):
-        excludes = EXCLUDE_DEFAULT
     query = {
         'query': {'bool': {'filter': filters}},
-        '_source': {'includes': includes, 'excludes': excludes}
+        '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
     for res in scan(es, index=index, query=query, scroll='1410m'):
@@ -65,34 +70,48 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def entities_by_ids(ids, schemata=None, source=None):
+def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     ids = ensure_list(ids)
     if not len(ids):
         return
     index = entities_read_index(schema=schemata)
-    if source is None:
-        source = {'excludes': ['text']}
+    query = {'filter': {'ids': {'values': ids}}}
     query = {
-        'query': {
-            'bool': {
-                'filter': {'ids': {'values': ids}}
-            }
-        },
-        '_source': source,
+        'query': {'bool': query},
+        '_source': _source_spec(includes, excludes),
         'size': MAX_PAGE
     }
-    result = search_safe(index=index, body=query)
+    result = es.search(index=index, body=query)
     for doc in result.get('hits', {}).get('hits', []):
         entity = unpack_result(doc)
         if entity is not None:
             yield entity
 
 
+# def entities_by_typed_ids(schema_ids, includes=None, excludes=None):
+#     docs = []
+#     spec = _source_spec(includes, excludes)
+#     for (schema, id) in schema_ids:
+#         for index in entities_read_index_list(schema):
+#             docs.append({
+#                 '_index': index,
+#                 '_type': 'doc',
+#                 '_id': id,
+#                 '_source': spec
+#             })
+#     if not len(docs):
+#         return
+#     for doc in es.mget(body={'docs': docs}):
+#         entity = unpack_result(doc)
+#         if entity is not None:
+#             yield entity
+
+
 def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
-    for entity in entities_by_ids(ensure_list(entity_id)):
+    for entity in entities_by_ids(entity_id):
         return entity
 
 
@@ -154,35 +173,16 @@ def index_bulk(collection_id, entities, merge=True):
     bulk_actions(actions, sync=merge)
 
 
-def bulk_actions(actions, sync=False):
-    """Bulk indexing with timeouts, bells and whistles."""
-    try:
-        start_time = time()
-        res = bulk(es, actions,
-                   chunk_size=BULK_PAGE,
-                   max_retries=10,
-                   initial_backoff=2,
-                   request_timeout=REQUEST_TIMEOUT,
-                   timeout=TIMEOUT,
-                   refresh=refresh_sync(sync))
-        duration = (time() - start_time)
-        total, _ = res
-        log.debug("Bulk write (%s): %.4fs", total, duration)
-        return res
-    except BulkIndexError as exc:
-        log.warning('Indexing error: %s', exc)
-
-
 def delete_entity(entity_id, exclude=None, sync=False):
     """Delete an entity from the index."""
     if exclude is not None:
         exclude = entities_write_index(exclude)
-    for entity in entities_by_ids(entity_id, source=False):
+    for entity in entities_by_ids(entity_id, excludes='*'):
         index = entity.get('_index')
         if index == exclude:
             continue
-        refresh = refresh_sync(True)
-        es.delete(index=index, doc_type='doc', id=entity_id, refresh=refresh)
+        es.delete(index=index, doc_type='doc', id=entity_id,
+                  refresh=refresh_sync(sync))
 
 
 def index_operation(data):

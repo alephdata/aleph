@@ -1,7 +1,7 @@
 import logging
 from flask import request
 from normality import stringify
-from banal import ensure_list, clean_dict
+from banal import ensure_list, is_listish, is_mapping
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -67,6 +67,23 @@ class Serializer(object):
             obj = obj._asdict()
         return obj
 
+    def _clean_response(self, data):
+        """Remove unset values from the response to save some bandwidth."""
+        if is_mapping(data):
+            out = {}
+            for k, v in data.items():
+                v = self._clean_response(v)
+                if v is not None:
+                    out[k] = v
+            return out if len(out) else None
+        elif is_listish(data):
+            data = [self._clean_response(d) for d in data]
+            data = [d for d in data if d is not None]
+            return data if len(data) else None
+        elif isinstance(data, str):
+            return data if len(data) else None
+        return data
+
     @classmethod
     def jsonify(cls, obj, **kwargs):
         data = cls().serialize(obj)
@@ -94,7 +111,7 @@ class RoleSerializer(Serializer):
             obj.pop('api_key', None)
             obj.pop('email', None)
         obj.pop('password', None)
-        return clean_dict(obj)
+        return self._clean_response(obj)
 
 
 class AlertSerializer(Serializer):
@@ -137,7 +154,7 @@ class CollectionSerializer(Serializer):
             if role is not None:
                 obj['team'].append(role)
         obj.pop('_index', None)
-        return clean_dict(obj)
+        return self._clean_response(obj)
 
 
 class PermissionSerializer(Serializer):
@@ -210,7 +227,7 @@ class EntitySerializer(Serializer):
         if obj.get('bulk'):
             obj['writeable'] = False
         obj.pop('_index', None)
-        return clean_dict(obj)
+        return self._clean_response(obj)
 
 
 class MatchCollectionsSerializer(Serializer):

@@ -8,7 +8,7 @@ from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, unpack_result, index_safe
-from aleph.index.util import search_safe, MAX_PAGE
+from aleph.index.util import refresh_sync, MAX_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ def index_collection(collection, sync=False):
     languages = languages or stats['languages'].keys()
     data['languages'] = registry.language.normalize_set(languages)
     return index_safe(collections_index(), collection.id, data,
-                      refresh=sync)
+                      refresh=refresh_sync(sync))
 
 
 def get_collection(collection_id):
@@ -76,7 +76,7 @@ def get_collection_stats(collection_id):
             'languages': {'terms': {'field': 'languages', 'size': 10}},
         }
     }
-    result = search_safe(index=entities_read_index(), body=query)
+    result = es.search(index=entities_read_index(), body=query)
     aggregations = result.get('aggregations', {})
     data = {'count': result.get('hits', {}).get('total', 0)}
 
@@ -116,7 +116,7 @@ def delete_collection(collection_id, sync=False):
     es.delete(collections_index(),
               doc_type='doc',
               id=str(collection_id),
-              refresh=sync,
+              refresh=refresh_sync(sync),
               ignore=[404])
 
 

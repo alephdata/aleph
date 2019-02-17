@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ingress-nginx
-  namespace: aleph
+  namespace: {{ .Values.global.namespace }}
   annotations:
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
@@ -11,14 +11,18 @@ metadata:
     certmanager.k8s.io/acme-http01-edit-in-place: "true"
 spec:
   tls:
-    - secretName: tls-staging.data.occrp.org
+    - secretName: tls-{{ .Values.global.domain }}
       hosts:
-        - staging.data.occrp.org
+        - {{ .Values.global.domain }}
   rules:
-    - host: staging.data.occrp.org
+    - host: {{ .Values.global.domain }}
       http:
         paths:
-          - backend:
-              serviceName: search-web
+          - path: /
+            backend:
+              serviceName: web
               servicePort: 80
----
+          - path: /api
+            backend:
+              serviceName: api
+              servicePort: 8000

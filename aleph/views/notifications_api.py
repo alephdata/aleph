@@ -17,7 +17,6 @@ blueprint = Blueprint('notifications_api', __name__)
 def index():
     require(request.authz.logged_in)
     role = Role.by_id(request.authz.id)
-    require(role is not None)
     query = Notification.by_role(role)
     result = DatabaseQueryResult(request, query)
     return NotificationSerializer.jsonify_result(result)

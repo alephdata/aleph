@@ -1,6 +1,7 @@
 import cgi
 import logging
 from normality import slugify
+from banal import ensure_list
 from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
@@ -11,6 +12,7 @@ from aleph.model.collection import Collection
 from aleph.model.common import DatedModel
 from aleph.model.document_record import DocumentRecord
 from aleph.model.document_tag import DocumentTag
+from aleph.model.ftm import pack_cells
 from aleph.util import filter_texts
 
 log = logging.getLogger(__name__)
@@ -263,6 +265,9 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('inReplyTo', meta.get('in_reply_to'), quiet=True)
         proxy.set('bodyText', self.body_text, quiet=True)
         proxy.set('bodyHtml', self.body_raw, quiet=True)
+
+        columns = pack_cells(ensure_list(meta.get('columns')))
+        proxy.set('columns', columns, quiet=True)
 
         pdf = 'application/pdf'
         if meta.get('extension') == 'pdf' or proxy.first('mimeType') == pdf:

@@ -32,7 +32,6 @@ class IngestApiTestCase(TestCase):
         assert res.status_code == 400, res
 
     def test_upload_csv_doc(self):
-        self.flush_index()
         _, headers = self.login(is_admin=True)
         meta = {
             'countries': ['de', 'us'],
@@ -49,7 +48,6 @@ class IngestApiTestCase(TestCase):
                                headers=headers)
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
-        self.flush_index()
 
         res = self.client.get('/api/2/entities?filter:schemata=Document',
                               headers=headers)
@@ -77,7 +75,6 @@ class IngestApiTestCase(TestCase):
         res = self.client.post(self.url, data=data, headers=headers)
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
-        self.flush_index()
 
         res = self.client.get('/api/2/entities', headers=headers)
         assert res.json['total'] == 1, res.json

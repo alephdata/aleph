@@ -79,6 +79,9 @@ def bulk_write(collection, items, merge=True):
             raise InvalidData("Failed to read input data")
 
         entity = model.get_proxy(item)
+        entity.context = {
+            'bulk': True
+        }
         if entity.id is None:
             raise InvalidData("No ID for entity")
 

@@ -1,0 +1,56 @@
+{{- if (.Values.index.ESonK8s) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: es-index-admin
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: es-index-admin
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: es-index-admin
+  ports:
+    - port: 9000
+      targetPort: 9000
+      name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: es-index-admin
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: es-index-admin
+  annotations:
+    date/deploy-date: {{ now | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: es-index-admin
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 100%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: es-index-admin
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: index-admin
+          image: lmenezes/cerebro
+          ports:
+            - containerPort: 9000
+              name: http
+          # env:
+          #   - name: HQ_DEFAULT_URL
+          #     value: http://search-index:9200
+          resources:
+            limits:
+              memory: {{ .Values.indexAdmin.resources.limits.memory }}
+{{- end }}

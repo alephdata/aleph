@@ -115,15 +115,15 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         data.update({
             'id': stringify(self.id),
             'collection_id': stringify(self.id),
-            'foreign_id': stringify(self.foreign_id),
+            'foreign_id': self.foreign_id,
             'creator_id': stringify(self.creator_id),
             'team_id': self.team_id,
             'label': self.label,
-            'summary': stringify(self.summary),
-            'publisher': stringify(self.publisher),
-            'publisher_url': stringify(self.publisher_url),
-            'info_url': stringify(self.info_url),
-            'data_url': stringify(self.data_url),
+            'summary': self.summary,
+            'publisher': self.publisher,
+            'publisher_url': self.publisher_url,
+            'info_url': self.info_url,
+            'data_url': self.data_url,
             'casefile': self.casefile,
             'secret': self.secret
         })

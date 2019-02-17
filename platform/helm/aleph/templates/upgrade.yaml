@@ -2,15 +2,17 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: search-upgrade
-  namespace: aleph
+  name: aleph-upgrade
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   backoffLimit: 4
   template:
     spec:
       restartPolicy: Never
       containers:
-        - name: search-upgrade
+        - name: aleph-upgrade
           image: alephdata/aleph:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           command: ["aleph", "upgrade"]
@@ -26,44 +28,12 @@ spec:
               value: /credentials/service-account.json
           envFrom:
             - configMapRef:
-                name: search-config
+                name: aleph-config
             - secretRef:
                 name: common-secrets
           volumeMounts:
             - mountPath: /credentials
               name: service-account-app
-        - name: search-db-sidecar
-          resources:
-            requests:
-              memory: 64Mi
-              cpu: "0.1"
-            limits:
-              memory: 64Mi
-              cpu: "0.1"
-          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
-          imagePullPolicy: Always
-          command:
-            - /cloud_sql_proxy
-            - -dir=/cloudsql
-            - -instances={{ .Values.global.dbInstance }}
-            - -credential_file=/credentials/service-account.json
-          livenessProbe:
-            exec:
-              command:
-                - nc
-                - -z
-                - 127.0.0.1
-                - "5432"
-          readinessProbe:
-            exec:
-              command:
-                - nc
-                - -z
-                - 127.0.0.1
-                - "5432"
-          volumeMounts:
-            - mountPath: /credentials
-              name: service-account-db
       volumes:
         - name: service-account-app
           secret:

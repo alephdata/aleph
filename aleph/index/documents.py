@@ -4,9 +4,9 @@ from banal import ensure_list
 
 from aleph.core import db
 from aleph.model import DocumentRecord, Document
-from aleph.index.entities import index_operation, bulk_actions
+from aleph.index.entities import index_operation
 from aleph.index.indexes import entities_read_index
-from aleph.index.util import query_delete
+from aleph.index.util import query_delete, bulk_actions
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def delete_document(document_id, sync=False):
     schemata = (DocumentRecord.SCHEMA_PAGE,
                 DocumentRecord.SCHEMA_ROW,
                 Document.SCHEMA)
-    query_delete(entities_read_index(schemata), q, refresh=sync)
+    query_delete(entities_read_index(schemata), q, sync=sync)
 
 
 def generate_document(document):

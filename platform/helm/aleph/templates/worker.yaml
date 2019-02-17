@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: search-worker
-  namespace: aleph
+  name: worker
+  namespace: {{ .Values.global.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: search-worker
+    name: worker
   minReplicas: {{ .Values.worker.minReplicas }}
   maxReplicas: {{ .Values.worker.maxReplicas }}
   metrics:
@@ -19,14 +19,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-worker
-  namespace: aleph
+  name: worker
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: search-worker
+    app: worker
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   selector:
     matchLabels:
-      app: search-worker
+      app: worker
   strategy:
     rollingUpdate:
       maxSurge: 2
@@ -35,7 +37,7 @@ spec:
   template:
     metadata:
       labels:
-        app: search-worker
+        app: worker
     spec:
       affinity: # Ask k8s to preferr that pods are placed across zones if available
         podAntiAffinity:
@@ -51,7 +53,7 @@ spec:
               topologyKey: failure-domain.beta.kubernetes.io/zone
       restartPolicy: Always
       containers:
-        - name: search-worker
+        - name: worker
           image: alephdata/aleph:occrp
           imagePullPolicy: Always
           command:
@@ -75,44 +77,12 @@ spec:
               value: /credentials/service-account.json
           envFrom:
             - configMapRef:
-                name: search-config
+                name: aleph-config
             - secretRef:
                 name: common-secrets
           volumeMounts:
             - mountPath: /credentials
               name: service-account-app
-        - name: search-db-sidecar
-          resources:
-            requests:
-              memory: 64Mi
-              cpu: "0.1"
-            limits:
-              memory: 64Mi
-              cpu: "0.1"
-          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
-          imagePullPolicy: Always
-          command:
-            - /cloud_sql_proxy
-            - -dir=/cloudsql
-            - -instances={{ .Values.global.dbInstance }}
-            - -credential_file=/credentials/service-account.json
-          livenessProbe:
-            exec:
-              command:
-                - nc
-                - -z
-                - 127.0.0.1
-                - "5432"
-          readinessProbe:
-            exec:
-              command:
-                - nc
-                - -z
-                - 127.0.0.1
-                - "5432"
-          volumeMounts:
-            - mountPath: /credentials
-              name: service-account-db
       volumes:
         - name: service-account-app
           secret:

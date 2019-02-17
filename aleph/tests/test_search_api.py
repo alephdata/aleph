@@ -58,13 +58,8 @@ class SearchApiTestCase(TestCase):
         res = self.client.get('/api/2/entities?facet=schema&filter:schema=Company')  # noqa
         assert res.status_code == 200, res
         facet = res.json['facets']['schema']
-        assert len(facet['values']) == 6, facet['values']
-        assert facet['values'][0]['label'] == 'Rows', facet
-
-        res = self.client.get('/api/2/entities?facet=schema&post_filter:schema=Company')  # noqa
-        assert res.status_code == 200, res
-        facet = res.json['facets']['schema']
-        assert len(facet['values']) == 6, facet['values']
+        assert len(facet['values']) == 1, facet['values']
+        assert facet['values'][0]['id'] == 'Company', facet
 
     def test_basic_filters(self):
         res = self.client.get('/api/2/entities?filter:source_id=23')
