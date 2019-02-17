@@ -146,10 +146,9 @@ class TextBreadcrumb extends PureComponent {
 }
 
 const mapStateToProps = (state, {entity, discovery=true}) => {
-  const parentsProp = entity.getProperty('parent');
   let parents = [];
-  if (!parentsProp.isEmpty() && discovery) {
-    parents = parentsProp.values
+  if (entity.schema.hasProperty('parent') && discovery) {
+    parents = entity.getProperty('parent').values
       .map(parent => [parent.id, selectEntity(state, parent.id)])
   }
   return ({
