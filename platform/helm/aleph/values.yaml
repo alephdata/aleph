@@ -130,7 +130,7 @@ config:
   ALEPH_ENTITIES_INDEX_SPLIT: 'true'
   ALEPH_RECORDS_INDEX: aleph-record-v1
   ALEPH_COLLECTIONS_INDEX: aleph-collection-v2
-  ALEPH_OAUTH: ''
+  ALEPH_OAUTH: 'false'
   ALEPH_OAUTH_KEY: ''
   ALEPH_OAUTH_NAME: ''
   ALEPH_OAUTH_SCOPE: ''
