@@ -32,7 +32,6 @@ class DocumentScreenContext extends Component {
   }
 
   onSearch(queryText) {
-    debugger;
     const { history, location, query } = this.props;
     const parsedHash = queryString.parse(location.hash);
     const newQuery = query.setString('q', queryText);

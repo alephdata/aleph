@@ -5,7 +5,7 @@ import {withRouter} from 'react-router';
 import {Cell, Column, Table, TableLoadingOption, TruncatedFormat} from "@blueprintjs/table";
 
 import Query from 'src/app/Query';
-import {queryDocumentRecords} from 'src/actions';
+// import {queryDocumentRecords} from 'src/actions';
 // import {selectDocumentRecordsResult} from 'src/selectors';
 
 import './TableViewer.scss';
@@ -106,6 +106,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 };
 
-TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
+TableViewer = connect(mapStateToProps, { queryDocumentRecords:()=>{} })(TableViewer);
 TableViewer = withRouter(TableViewer);
 export default TableViewer;

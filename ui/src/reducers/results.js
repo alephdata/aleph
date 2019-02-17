@@ -6,7 +6,6 @@ import { updateResults, invalidateResults } from 'src/reducers/util';
 import {
   queryCollections,
   queryEntities,
-  queryDocumentRecords,
   queryNotifications,
   createCollection,
   deleteCollection,
@@ -33,14 +32,6 @@ export default createReducer({
     resultLoadError(state, query, error),
 
   [queryEntities.COMPLETE]: updateResults,
-
-  [queryDocumentRecords.START]: (state, { query }) => 
-    resultLoadStart(state, query),
-
-  [queryDocumentRecords.ERROR]: (state, { error, args: { query } }) =>
-    resultLoadError(state, query, error),
-
-  [queryDocumentRecords.COMPLETE]: updateResults,
 
   [queryNotifications.START]: (state, { query }) => 
     resultLoadStart(state, query),

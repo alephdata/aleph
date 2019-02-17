@@ -1,5 +1,5 @@
 import React, { Component, Suspense, lazy } from 'react';
-import { Route,Redirect, Switch } from 'react-router-dom';
+import { Route, Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
 
@@ -54,8 +54,8 @@ class Router extends Component {
           <Route path="/logout" exact component={LogoutScreen}/>
           <Route path="/activate/:code" exact component={ActivateScreen}/>
           <Route path="/entities/:entityId" exact component={EntityScreen}/>
-          <Redirect from={"/text/:documentId"} to={"/documents/:documentId"}/>
-          <Redirect from="/tabular/:documentId/:sheet" to={"/documents/:documentId"}/>
+          <Redirect from="/text/:documentId" to="/documents/:documentId"/>
+          <Redirect from="/tabular/:documentId/:sheet" to="/documents/:documentId"/>
           <Route path="/documents/:documentId" exact component={DocumentScreen}/>
           <Route path="/sources" exact component={SourcesIndexScreen}/>
           <Route path="/cases" exact component={CasesIndexScreen}/>

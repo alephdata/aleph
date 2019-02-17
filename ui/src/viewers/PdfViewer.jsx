@@ -12,7 +12,7 @@ import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';
 import {PagingButtons} from 'src/components/Toolbar';
 import {SectionLoading} from 'src/components/common';
-import {queryDocumentRecords, queryEntities} from 'src/actions';
+import {queryEntities} from 'src/actions';
 import {selectEntitiesResult} from 'src/selectors';
 
 import './PdfViewer.scss';
@@ -20,10 +20,8 @@ import './PdfViewer.scss';
 class PdfViewer extends Component {
   static TextMode(props) {
     const {document, result} = props;
-    return <React.Fragment>
-      {result.total > 0 && (
-        <PagingButtons document={document} numberOfPages={result.total}/>
-      )}
+    return result.total > 0 && <React.Fragment>
+      <PagingButtons document={document} numberOfPages={result.total}/>
       <Pre>{result.results[0].getProperty('bodyText').toString()}</Pre>
     </React.Fragment>
   }
@@ -242,19 +240,17 @@ const mapStateToProps = (state, ownProps) => {
   const {document, location, queryText} = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
-  const context = {
-    highlight: true,
-    highlight_count: 10,
-    highlight_length: 120
-  };
-  let query = Query.fromLocation('entities', location, context, 'document')
+  let query = Query.fromLocation('entities', location, {}, 'document')
     .offset(page - 1)
-    .limit(page)
+    .limit(50)
     .setFilter('properties.document', document.id)
     .setFilter('schemata', 'Page')
-    .sortBy('properties.index', 'asc')
+    .sortBy('properties.index', 'asc');
   if (queryText.length > 0) {
     query = query.setString('q', queryText)
+      .set('highlight', true)
+      .set('highlight_count', 10)
+      .set('highlight_length', 120)
       .clearFilter('properties.index')
       .clear('limit')
       .clear('offset')
@@ -269,6 +265,6 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-PdfViewer = connect(mapStateToProps, {queryDocumentRecords, queryEntities})(PdfViewer);
+PdfViewer = connect(mapStateToProps, {queryEntities})(PdfViewer);
 PdfViewer = withRouter(PdfViewer);
 export default PdfViewer
