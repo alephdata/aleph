@@ -26,7 +26,6 @@ export function queryFolderDocuments(location, documentId, queryText) {
   }
 
   let query = Query.fromLocation('entities', location, context, 'document')
-    .sortBy('properties.index', 'asc')
     .limit(50);
   if (queryText) {
     query = query.setString('q', queryText);
