@@ -6,13 +6,16 @@ class Query {
   // State of a particular API query. This doesn't need to be specific to any one 
   // of the APIs (entities, documents, collections, roles), but just serves as a
   // container for the default syntax of Aleph.
-
   constructor (path, state, context = {}, queryName = '') {
     this.path = path;
     this.state = state;
     this.context = context;
     this.queryName = queryName;
+
+    this.limit(Query.LIMIT)
   }
+
+  static LIMIT = 30;
 
   static fromLocation(path, location, context, queryName) {
     const state = queryString.parse(location.search);

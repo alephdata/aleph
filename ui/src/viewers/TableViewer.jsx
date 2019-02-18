@@ -92,7 +92,6 @@ class TableViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const {document, location, queryText} = ownProps;
   let query = Query.fromLocation('entities', location, {}, 'document')
-    .limit(50)
     .sortBy('properties.index', 'asc')
     .setFilter('properties.table', document.id)
     .setFilter('schemata', 'Record')
