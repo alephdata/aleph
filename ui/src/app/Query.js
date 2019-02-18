@@ -12,7 +12,7 @@ class Query {
     this.context = context;
     this.queryName = queryName;
 
-    this.limit(Query.LIMIT)
+    this.setPlain('limit', Query.LIMIT)
   }
 
   static LIMIT = 30;
@@ -27,10 +27,14 @@ class Query {
     return new Query(this.path, state, this.context, this.queryName);
   }
 
+  setPlain(name, value){
+    this.state[this.queryName + name] = ensureArray(value);
+    return this;
+  }
+
   set(name, value) {
     const child = this.clone();
-    child.state[this.queryName + name] = ensureArray(value);
-    return child;
+    return this.setPlain.call(child, name, value);
   }
 
   setString(name, value) {
