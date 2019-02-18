@@ -110,7 +110,7 @@ config:
   ALEPH_OCR_VISION_API: 'false'
   ALEPH_CORS_ORIGINS: '*'
   ALEPH_ARCHIVE_TYPE: gs
-  ALEPH_ARCHIVE_BUCKET: "occrp-staging-data-archive"
+  ALEPH_ARCHIVE_BUCKET: "occrp-data-archive-staging"
   ALEPH_PASSWORD_LOGIN: 'true'
   ALEPH_ADMINS: "admin@example.com"
   ALEPH_MAIL_FROM: notifications@example.com
