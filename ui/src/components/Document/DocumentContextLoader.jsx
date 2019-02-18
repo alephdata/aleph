@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
 
-import { fetchDocument, fetchDocumentContent, fetchEntityTags, queryEntities } from 'src/actions';
+import { fetchEntity, fetchDocumentContent, fetchEntityTags, queryEntities } from 'src/actions';
 import { selectEntity, selectEntityTags, selectEntitiesResult, selectDocumentContent } from 'src/selectors';
 import { queryFolderDocuments } from "src/queries";
 
@@ -19,7 +19,7 @@ class DocumentContextLoader extends Component {
   fetchIfNeeded() {
     const { documentId, document } = this.props;
     if (document.shouldLoad) {
-      this.props.fetchDocument({ id: documentId });
+      this.props.fetchEntity({ id: documentId });
     }
 
     const { content } = this.props;
@@ -56,6 +56,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-DocumentContextLoader = connect(mapStateToProps, { fetchDocument, fetchEntityTags, queryEntities, fetchDocumentContent })(DocumentContextLoader);
+DocumentContextLoader = connect(mapStateToProps, { fetchEntity, fetchEntityTags, queryEntities, fetchDocumentContent })(DocumentContextLoader);
 DocumentContextLoader = withRouter(DocumentContextLoader);
 export default DocumentContextLoader;

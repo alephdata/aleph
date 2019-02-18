@@ -1,6 +1,6 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint } from './util';
+import {queryEndpoint } from './util';
 
 
 export const queryNotifications = asyncActionCreator((query) => async dispatch => {

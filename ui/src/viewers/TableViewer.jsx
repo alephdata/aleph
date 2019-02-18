@@ -4,23 +4,22 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {Cell, Column, Table, TableLoadingOption, TruncatedFormat} from "@blueprintjs/table";
 
+import {queryEntities} from 'src/actions';
 import Query from 'src/app/Query';
-import {queryDocumentRecords} from 'src/actions';
-import {selectDocumentRecordsResult} from 'src/selectors';
-
+import {selectEntitiesResult} from "src/selectors";
 import './TableViewer.scss';
 
 
 class TableViewer extends Component {
   constructor(props) {
     super(props);
-    this.state = { requestedRow: 0 };
+    this.state = {requestedRow: 0};
     this.renderCell = this.renderCell.bind(this);
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
   }
-  
+
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { result } = nextProps;
+    const {result} = nextProps;
     return {
       requestedRow: Math.max(prevState.requestedRow, result.results.length)
     }
@@ -35,18 +34,18 @@ class TableViewer extends Component {
   }
 
   fetchRecords() {
-    const { result, query } = this.props;
+    const {result, query} = this.props;
     if (query.path && result.shouldLoad) {
-      this.props.queryDocumentRecords({query})
+      this.props.queryEntities({query})
     } else if (this.state.requestedRow > result.results.length) {
       if (!result.isLoading && result.next) {
-        this.props.queryDocumentRecords({query, next: result.next})
+        this.props.queryEntities({query, next: result.next})
       }
     }
   }
 
   onVisibleCellsChange(row) {
-    const { result } = this.props;
+    const {result} = this.props;
     const maxResult = this.state.requestedRow;
     if (result.limit !== undefined && row.rowIndexEnd >= (maxResult - 10)) {
       const nextResult = result.offset + (result.limit * 2);
@@ -55,10 +54,9 @@ class TableViewer extends Component {
   }
 
   renderCell(rowIndex, colIndex) {
-    const { result, document } = this.props;
-    const columnName = document.columns[colIndex];
+    const {result} = this.props;
     const loading = rowIndex >= result.results.length;
-    const value = _.get(result.results, [rowIndex, 'data', columnName], '');
+    const value = JSON.parse(result.results[rowIndex].getProperty('cells'))[colIndex];
     return <Cell loading={loading}>
       <TruncatedFormat detectTruncation={true}>
         {value || ''}
@@ -67,7 +65,7 @@ class TableViewer extends Component {
   }
 
   render() {
-    const { document, result } = this.props;
+    const {document, result} = this.props;
     const loadingOptions = [];
     if (document.id === undefined) {
       return null;
@@ -82,8 +80,8 @@ class TableViewer extends Component {
                enableRowHeader={true}
                loadingOptions={loadingOptions}
                onVisibleCellsChange={this.onVisibleCellsChange}>
-          {document.columns.map((column, i) => 
-            <Column key={i} id={i} name={column} cellRenderer={this.renderCell} />  
+          {JSON.parse(document.getProperty('columns').toString()).map((column, i) =>
+          <Column key={i} id={i} name={column} cellRenderer={this.renderCell}/>
           )}
         </Table>
       </div>
@@ -92,20 +90,22 @@ class TableViewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText } = ownProps;
-  const path = document.links ? document.links.records : null;
-  let query = Query.fromLocation(path, location, {}, 'document').limit(50);
+  const {document, location, queryText} = ownProps;
+  let query = Query.fromLocation('entities', location, {}, 'document')
+    .sortBy('properties.index', 'asc')
+    .setFilter('properties.table', document.id)
+    .setFilter('schemata', 'Record')
 
   if (queryText) {
     query = query.setString('q', queryText);
   }
 
   return {
-    query: query,
-    result: selectDocumentRecordsResult(state, query),
+    query,
+    result: selectEntitiesResult(state, query)
   }
 };
 
-TableViewer = connect(mapStateToProps, { queryDocumentRecords })(TableViewer);
+TableViewer = connect(mapStateToProps, {queryEntities})(TableViewer);
 TableViewer = withRouter(TableViewer);
 export default TableViewer;

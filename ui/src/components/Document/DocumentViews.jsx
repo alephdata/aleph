@@ -9,11 +9,11 @@ import { withRouter } from "react-router";
 import { Count } from 'src/components/common';
 import { selectEntityTags, selectEntitiesResult } from "src/selectors";
 import { queryFolderDocuments } from "src/queries";
-import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import TextLoading from "src/components/common/TextLoading";
 import Icon from "src/components/common/Icon";
+import EntityInfoMode from "src/components/Entity/EntityInfoMode";
 
 
 class DocumentViews extends React.Component {
@@ -65,7 +65,7 @@ class DocumentViews extends React.Component {
                   </React.Fragment>
                }
                panel={
-                  <DocumentInfoMode document={document}/>
+                  <EntityInfoMode entity={document}/>
                } />
         )}
         {hasViewMode && (

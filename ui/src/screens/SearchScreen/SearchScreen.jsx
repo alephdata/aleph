@@ -308,7 +308,6 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'highlight': true,
     'filter:schemata': 'Thing',
-    'limit': 50
   };
   const query = Query.fromLocation('entities', location, context, '');
   const result = selectEntitiesResult(state, query);

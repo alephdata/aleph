@@ -17,7 +17,7 @@ class Notification extends PureComponent {
       return <Collection.Link collection={object} preview icon />;
     }
     if (type === 'document' || type === 'entity') {
-      return <Entity.Link entity={object} preview icon />;
+      return <Entity.Smart.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
       return object ? object.query : null; 
@@ -56,7 +56,6 @@ class Notification extends PureComponent {
         message.push(token);
       }
     }
-
     let createdDate = this.convertUTCDateToLocalDate(new Date(created_at));
 
     return (

@@ -4,11 +4,8 @@ import {addAlert, deleteAlert, fetchAlerts} from './alertActions';
 import {deleteNotifications, queryNotifications} from './notificationActions';
 import {
   deleteDocument,
-  fetchDocument,
   fetchDocumentContent,
-  fetchDocumentPage,
   ingestDocument,
-  queryDocumentRecords
 } from './documentActions';
 import {
   createCollection,
@@ -36,9 +33,6 @@ export {
   fetchEntity,
   fetchEntityReferences,
   fetchEntityTags,
-  fetchDocument,
-  queryDocumentRecords,
-  fetchDocumentPage,
   fetchDocumentContent,
   queryCollections,
   fetchCollection,

@@ -10,7 +10,8 @@ class EntityInfoMode extends Component {
     const { entity } = this.props;
 
     const entityProperties = entity.getProperties()
-      .filter(propValue => !propValue.isEmpty());
+      .filter(propValue => !propValue.isEmpty())
+      .filter(propValue => !propValue.property.hidden);
     return (
       <ul className="info-sheet">
         { entityProperties.map((propValue) => (
