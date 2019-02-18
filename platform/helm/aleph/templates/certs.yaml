@@ -40,6 +40,6 @@ spec:
         domains:
           - {{ .Values.global.domain }}
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-prod
     kind: ClusterIssuer
 ---
