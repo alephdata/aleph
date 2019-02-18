@@ -40,12 +40,22 @@ class Notification extends PureComponent {
 
   render() {
     const { event, id, created_at } = this.props.notification;
+    const parts = event.template.split(/({{|}})/);
+    const message = [];
 
-    const message = event.template.match(/{{[a-z]+}}/g).map(component =>{
-      const paramName = component.replace(/({{|}})/g, '');
-      return (<span className="param">{this.getParam(paramName)}</span>)
-    });
-
+    let paramActive = false;
+    for (let token of parts) {
+      if (token === '{{') {
+        paramActive = true;
+      } else if (token === '}}') {
+        paramActive = false;
+      } else if (paramActive) {
+        const param = this.getParam(token);
+        message.push((<span className="param">{param}</span>));
+      } else {
+        message.push(token);
+      }
+    }
     let createdDate = this.convertUTCDateToLocalDate(new Date(created_at));
 
     return (
