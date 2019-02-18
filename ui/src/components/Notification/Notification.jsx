@@ -17,7 +17,7 @@ class Notification extends PureComponent {
       return <Collection.Link collection={object} preview icon />;
     }
     if (type === 'document' || type === 'entity') {
-      return <Entity.Link entity={object} preview icon />;
+      return <Entity.Smart.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
       return object ? object.query : null; 
@@ -40,22 +40,11 @@ class Notification extends PureComponent {
 
   render() {
     const { event, id, created_at } = this.props.notification;
-    const parts = event.template.split(/({{|}})/);
-    const message = [];
 
-    let paramActive = false;
-    for (let token of parts) {
-      if (token === '{{') {
-        paramActive = true;
-      } else if (token === '}}') {
-        paramActive = false;
-      } else if (paramActive) {
-        const param = this.getParam(token);
-        message.push((<span className="param">{param}</span>));
-      } else {
-        message.push(token);
-      }
-    }
+    const message = event.template.match(/{{[a-z]+}}/g).map(component =>{
+      const paramName = component.replace(/({{|}})/g, '');
+      return (<span className="param">{this.getParam(paramName)}</span>)
+    });
 
     let createdDate = this.convertUTCDateToLocalDate(new Date(created_at));
 

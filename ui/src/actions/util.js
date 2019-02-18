@@ -27,3 +27,4 @@ export function resultEntities(state, response){
       results: response.results.map(entityDatum => resultEntity(state, entityDatum))
     };
 }
+
