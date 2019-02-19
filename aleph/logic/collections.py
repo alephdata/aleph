@@ -11,18 +11,6 @@ from aleph.logic.notifications import publish, flush_notifications
 log = logging.getLogger(__name__)
 
 
-def get_collection(collection_id):
-    if collection_id is None:
-        return
-    key = cache.object_key(Collection, collection_id)
-    data = cache.get_complex(key)
-    if data is None:
-        log.debug("Collection [%s]: object cache miss", collection_id)
-        data = index.get_collection(collection_id)
-        cache.set_complex(key, data, expire=cache.EXPIRE)
-    return data
-
-
 def create_collection(data, role=None, sync=False):
     role = role or Role.load_cli_user()
     created_at = datetime.utcnow()

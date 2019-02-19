@@ -15,18 +15,6 @@ from aleph.logic.entities.bulk import bulk_load, bulk_load_query, bulk_write  # 
 log = logging.getLogger(__name__)
 
 
-def get_entity(entity_id):
-    if entity_id is None:
-        return
-    key = cache.object_key(Entity, entity_id)
-    entity = cache.get_complex(key)
-    if entity is None:
-        log.debug("Entity [%s]: object cache miss", entity_id)
-        entity = index.get_entity(entity_id)
-        cache.set_complex(key, entity, expire=cache.EXPIRE)
-    return entity
-
-
 def create_entity(data, collection, role=None, sync=False):
     entity = Entity.create(data, collection)
     db.session.commit()

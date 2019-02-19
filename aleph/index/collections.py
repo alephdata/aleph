@@ -44,12 +44,20 @@ def index_collection(collection, sync=False):
 
 def get_collection(collection_id):
     """Fetch a collection from the index."""
-    result = es.get(index=collections_index(),
-                    doc_type='doc',
-                    id=collection_id,
-                    ignore=[404],
-                    _source_exclude=['text'])
-    return unpack_result(result)
+    if collection_id is None:
+        return
+    key = cache.object_key(Collection, collection_id)
+    data = cache.get_complex(key)
+    if data is None:
+        log.debug("Collection [%s]: object cache miss", collection_id)
+        result = es.get(index=collections_index(),
+                        doc_type='doc',
+                        id=collection_id,
+                        ignore=[404],
+                        _source_exclude=['text'])
+        data = unpack_result(result)
+        cache.set_complex(key, data, expire=cache.EXPIRE)
+    return data
 
 
 def get_collection_stats(collection_id):

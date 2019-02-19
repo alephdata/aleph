@@ -100,8 +100,7 @@ def entities_write_index(schema):
     return schema_index(model.get(schema), settings.INDEX_WRITE)
 
 
-def entities_read_index_list(schema=None):
-    """Combined index to run all queries against."""
+def schema_scope(schema):
     schemata = set()
     names = ensure_list(schema) or model.schemata.values()
     for schema in names:
@@ -111,8 +110,14 @@ def entities_read_index_list(schema=None):
             schemata.update(schema.descendants)
     for schema in schemata:
         if not schema.abstract:
-            for version in settings.INDEX_READ:
-                yield schema_index(schema, version)
+            yield schema
+
+
+def entities_read_index_list(schema=None):
+    """Combined index to run all queries against."""
+    for schema in schema_scope(schema):
+        for version in settings.INDEX_READ:
+            yield schema_index(schema, version)
 
 
 def entities_read_index(schema=None):

@@ -11,7 +11,7 @@ from aleph.index.entities import iter_proxies, entities_by_ids
 from aleph.logic.entities.match import match_query
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
-from aleph.logic.collections import get_collection
+from aleph.index.collections import get_collection
 from aleph.logic.util import entity_url
 
 log = logging.getLogger(__name__)

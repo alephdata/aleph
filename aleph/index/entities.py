@@ -7,7 +7,8 @@ from collections import defaultdict
 from followthemoney import model
 from elasticsearch.helpers import scan
 
-from aleph.core import es
+from aleph.core import es, cache
+from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 # from aleph.index.indexes import entities_read_index_list
 from aleph.index.util import unpack_result, refresh_sync
@@ -112,7 +113,16 @@ def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
 
 def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
+    if entity_id is None:
+        return
+    key = cache.object_key(Entity, entity_id)
+    entity = cache.get_complex(key)
+    if entity is not None:
+        return entity
+    log.debug("Entity [%s]: object cache miss", entity_id)
     for entity in entities_by_ids(entity_id):
+        # Cache entities only briefly to avoid filling up the cache:
+        cache.set_complex(key, entity, expire=60 * 60)
         return entity
 
 
@@ -143,7 +153,8 @@ def _index_updates(collection_id, entities, merge=True):
     actions = []
     for entity_id, proxy in entities.items():
         entity = dict(common)
-        entity['created_at'] = timestamps.get(proxy.id)
+        created_at = timestamps.get(proxy.id, common.get('updated_at'))
+        entity['created_at'] = created_at
         entity.update(proxy.to_full_dict())
         _, index, body = index_operation(entity)
         for other in indexes.get(entity_id, []):
