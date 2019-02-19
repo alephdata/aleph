@@ -92,25 +92,6 @@ def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
             yield entity
 
 
-# def entities_by_typed_ids(schema_ids, includes=None, excludes=None):
-#     docs = []
-#     spec = _source_spec(includes, excludes)
-#     for (schema, id) in schema_ids:
-#         for index in entities_read_index_list(schema):
-#             docs.append({
-#                 '_index': index,
-#                 '_type': 'doc',
-#                 '_id': id,
-#                 '_source': spec
-#             })
-#     if not len(docs):
-#         return
-#     for doc in es.mget(body={'docs': docs}):
-#         entity = unpack_result(doc)
-#         if entity is not None:
-#             yield entity
-
-
 def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
     if entity_id is None:
@@ -121,9 +102,14 @@ def get_entity(entity_id, **kwargs):
         return entity
     log.debug("Entity [%s]: object cache miss", entity_id)
     for entity in entities_by_ids(entity_id):
-        # Cache entities only briefly to avoid filling up the cache:
-        cache.set_complex(key, entity, expire=60 * 60)
+        cache_entity(entity)
         return entity
+
+
+def cache_entity(data):
+    # Cache entities only briefly to avoid filling up the cache:
+    key = cache.object_key(Entity, data.get('id'))
+    cache.set_complex(key, data, expire=60 * 60)
 
 
 def _index_updates(collection_id, entities, merge=True):

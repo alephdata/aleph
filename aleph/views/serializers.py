@@ -25,9 +25,9 @@ class Serializer(object):
     def _serialize(self, obj):
         return obj
 
-    def queue(self, clazz, key):
+    def queue(self, clazz, key, schema=None):
         if not self.reference:
-            resolver.queue(request, clazz, key)
+            resolver.queue(request, clazz, key, schema=schema)
 
     def resolve(self, clazz, key, serializer=None):
         if self.reference:
@@ -183,7 +183,7 @@ class EntitySerializer(Serializer):
                 continue
             values = ensure_list(properties.get(prop.name))
             for value in values:
-                self.queue(Entity, value)
+                self.queue(Entity, value, prop.range)
 
     def _serialize(self, obj):
         pk = obj.get('id')
@@ -241,8 +241,9 @@ class MatchCollectionsSerializer(Serializer):
 class MatchSerializer(Serializer):
 
     def _collect(self, obj):
-        self.queue(Entity, obj.get('entity_id'))
-        self.queue(Entity, obj.get('match_id'))
+        matchable = tuple([s.matchable for s in model])
+        self.queue(Entity, obj.get('entity_id'), matchable)
+        self.queue(Entity, obj.get('match_id'), matchable)
 
     def _serialize(self, obj):
         entity_id = obj.pop('entity_id', None)
@@ -270,7 +271,7 @@ class NotificationSerializer(Serializer):
         event = Events.get(obj.get('event'))
         for name, clazz in event.params.items():
             key = obj.get('params', {}).get(name)
-            self.queue(clazz, key)
+            self.queue(clazz, key, Entity.THING)
 
     def _serialize(self, obj):
         event = Events.get(obj.get('event'))

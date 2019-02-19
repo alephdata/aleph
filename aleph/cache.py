@@ -43,6 +43,15 @@ class Cache(object):
         if value is not None:
             return json.loads(value)
 
+    def get_many_complex(self, keys):
+        if not len(keys):
+            return
+        values = self.kv.mget(keys)
+        for key, value in zip(keys, values):
+            if value is not None:
+                value = json.loads(value)
+            yield key, value
+
     def get_list(self, key):
         return self.kv.lrange(key, 0, -1)
 
