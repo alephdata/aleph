@@ -4,6 +4,7 @@ from tempfile import mkdtemp
 from ingestors.util import remove_directory
 
 from aleph.core import db, archive, celery
+from aleph.tracing import trace_function
 from aleph.model import Document, Events
 from aleph.logic.notifications import publish
 from aleph.logic.documents.manager import DocumentManager
@@ -11,10 +12,6 @@ from aleph.logic.documents.result import DocumentResult
 from aleph.logic.entities import refresh_entity
 from aleph.logic.extractors import extract_document_tags
 from aleph.index.documents import index_document
-
-
-from aleph.util import trace_function
-
 
 log = logging.getLogger(__name__)
 

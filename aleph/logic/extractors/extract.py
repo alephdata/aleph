@@ -4,9 +4,9 @@ from servicelayer.rpc import ExtractedEntity
 from servicelayer.rpc import EntityExtractService
 
 from aleph import settings
+from aleph.tracing import trace_function
 from aleph.logic.extractors.result import PersonResult, LocationResult
 from aleph.logic.extractors.result import OrganizationResult, LanguageResult
-from aleph.util import trace_function
 
 log = logging.getLogger(__name__)
 

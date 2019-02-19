@@ -11,7 +11,7 @@ from flask_mail import Mail
 from flask_cors import CORS
 from flask_babel import Babel
 from kombu import Queue
-from celery import Celery
+from celery import Celery, Task
 from celery.schedules import crontab
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
@@ -26,8 +26,7 @@ from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
-from aleph.util import SessionTask
-from aleph.util import TracingTransport, setup_stackdriver_logging
+from aleph.tracing import TracingTransport, setup_stackdriver_logging
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -36,6 +35,14 @@ log = logging.getLogger(__name__)
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
+
+
+class SessionTask(Task):
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        db.session.remove()
+
+
 celery = Celery('aleph', task_cls=SessionTask)
 babel = Babel()
 
