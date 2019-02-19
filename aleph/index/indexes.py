@@ -84,7 +84,9 @@ def configure_collections():
             "schemata": {"type": "object"}
         }
     }
-    return configure_index(collections_index(), mapping, index_settings())
+    index = collections_index()
+    settings = index_settings(shards=1)
+    return configure_index(index, mapping, settings)
 
 
 def schema_index(schema, version):

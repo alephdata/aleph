@@ -2,6 +2,7 @@ import logging
 from banal import is_mapping, keys_values
 from followthemoney import model
 from followthemoney.exc import InvalidData
+from followthemoney.namespace import Namespace
 
 from aleph.core import celery
 from aleph.model import Collection
@@ -36,12 +37,14 @@ def bulk_load_query(collection_id, query):
         log.warning("Collection does not exist: %s", collection_id)
         return
 
+    namespace = Namespace(collection.foreign_id)
     mapping = model.make_mapping(query, key_prefix=collection.foreign_id)
     records_total = len(mapping.source) or 'streaming'
     entities = {}
     entities_count = 0
     for records_index, record in enumerate(mapping.source.records, 1):
         for entity in mapping.map(record).values():
+            entity = namespace.apply(entity)
             # When loading from a tabular data source, we will often
             # encounter mappings where the same entity is emitted
             # multiple times in short sequence, e.g. when the data
@@ -73,14 +76,17 @@ def bulk_write(collection, items, merge=True):
     application has no control over key generation and a few other aspects
     of building the entity.
     """
+    namespace = Namespace(collection.foreign_id)
     entities = {}
     for item in items:
         if not is_mapping(item):
             raise InvalidData("Failed to read input data")
 
         entity = model.get_proxy(item)
+        entity = namespace.apply(entity)
         entity.context = {
-            'bulk': True
+            'bulk': True,
+            'collection_id': collection.id
         }
         if entity.id is None:
             raise InvalidData("No ID for entity")

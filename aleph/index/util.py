@@ -159,12 +159,12 @@ def configure_index(index, mapping, settings):
     return True
 
 
-def index_settings():
+def index_settings(shards=5, replicas=2):
     """Configure an index in ES with support for text transliteration."""
     return {
         "index": {
-            "number_of_shards": 5,
-            "number_of_replicas": 2,
+            "number_of_shards": shards,
+            "number_of_replicas": replicas,
             "analysis": {
                 "analyzer": {
                     "icu_latin": {

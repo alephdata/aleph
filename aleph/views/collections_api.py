@@ -94,6 +94,10 @@ def process(id):
 def mapping_process(id):
     collection = get_db_collection(id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
+    # TODO: we need to look into possible abuse of mapping load path for local
+    # path access on the machine running the mapping. Until then, this action
+    # must be restricted to admins:
+    require(request.authz.is_admin)
     if not request.is_json:
         raise BadRequest()
     data = request.get_json().get(collection.foreign_id)

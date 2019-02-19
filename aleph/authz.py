@@ -82,7 +82,7 @@ class Authz(object):
     def can_bulk_import(self):
         if not self.session_write:
             return False
-        return self.is_admin
+        return self.logged_in
 
     def match(self, roles):
         """See if there's overlap in roles."""
