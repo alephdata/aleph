@@ -25,10 +25,9 @@ def index_collection(collection, sync=False):
 
     # expose entities by schema count.
     data['schemata'] = {}
-    thing = model.get(Entity.THING)
     for schema, count in stats['schemata'].items():
         schema = model.get(schema)
-        if schema is not None and schema.is_a(thing):
+        if schema is not None:
             data['schemata'][schema.name] = count
 
     # if no countries or langs are given, take the most common from the data.
@@ -76,7 +75,8 @@ def get_collection_stats(collection_id):
             'languages': {'terms': {'field': 'languages', 'size': 10}},
         }
     }
-    result = es.search(index=entities_read_index(), body=query)
+    index = entities_read_index(schema=Entity.THING)
+    result = es.search(index=index, body=query)
     aggregations = result.get('aggregations', {})
     data = {'count': result.get('hits', {}).get('total', 0)}
 
