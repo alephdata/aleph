@@ -77,9 +77,10 @@ def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
     if not len(ids):
         return
     index = entities_read_index(schema=schemata)
-    query = {'filter': {'ids': {'values': ids}}}
+    query = {'ids': {'values': ids}}
+    # query = {'bool': {'filter': query}}
     query = {
-        'query': {'bool': query},
+        'query': query,
         '_source': _source_spec(includes, excludes),
         'size': MAX_PAGE
     }
@@ -124,20 +125,16 @@ def _index_updates(collection_id, entities, merge=True):
     document and losing field values. An alternative solution would be to
     implement this in Groovy on the ES.
     """
+    indexes = defaultdict(list)
+    timestamps = {}
     common = {
         'collection_id': collection_id,
         'updated_at': datetime.utcnow(),
         'bulk': True
     }
-    timestamps = {}
-    indexes = defaultdict(list)
-    if not len(entities):
-        return []
 
     if merge:
         for result in entities_by_ids(list(entities.keys())):
-            if int(result.get('collection_id')) != collection_id:
-                raise RuntimeError("Key collision between collections.")
             existing = model.get_proxy(result)
             indexes[existing.id].append(result.get('_index'))
             entities[existing.id].merge(existing)
@@ -196,6 +193,7 @@ def index_operation(data):
 
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
+
     entity_id = data.pop('id')
     data.pop('_index', None)
     schema = model.get(data.get('schema'))
