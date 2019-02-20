@@ -6,7 +6,7 @@ followthemoney==1.6.1
 fingerprints==0.6.2
 storagelayer==0.5.2
 servicelayer==0.1.4
-ingestors==0.12.1
+ingestors==0.12.2
 normality==1.0.0
 pantomime==0.3.3
 pdflib==0.1.7

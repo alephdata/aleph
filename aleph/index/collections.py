@@ -49,7 +49,7 @@ def get_collection(collection_id):
     key = cache.object_key(Collection, collection_id)
     data = cache.get_complex(key)
     if data is None:
-        log.debug("Collection [%s]: object cache miss", collection_id)
+        log.debug("Collection [%s]: regenerating cache", collection_id)
         result = es.get(index=collections_index(),
                         doc_type='doc',
                         id=collection_id,
