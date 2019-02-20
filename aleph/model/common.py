@@ -3,6 +3,8 @@ from datetime import datetime
 
 from aleph.core import db
 
+ENTITY_ID_LEN = 128
+
 
 def make_textid():
     return uuid.uuid4().hex

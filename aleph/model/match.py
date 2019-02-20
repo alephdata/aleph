@@ -4,17 +4,17 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import aliased
 
 from aleph.core import db
-from aleph.model.common import IdModel, DatedModel
+from aleph.model.common import IdModel, DatedModel, ENTITY_ID_LEN
 
 log = logging.getLogger(__name__)
 
 
 class Match(db.Model, IdModel, DatedModel):
-    entity_id = db.Column(db.String(64))
+    entity_id = db.Column(db.String(ENTITY_ID_LEN))
     collection_id = db.Column(db.Integer,
                               db.ForeignKey('collection.id'),
                               index=True)
-    match_id = db.Column(db.String(64))
+    match_id = db.Column(db.String(ENTITY_ID_LEN))
     match_collection_id = db.Column(db.Integer,
                                     db.ForeignKey('collection.id'),
                                     index=True)
