@@ -4,7 +4,7 @@ from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.core import settings
-from aleph.index.util import index_settings, configure_index
+from aleph.index.util import index_settings, configure_index, get_shard_weight
 
 log = logging.getLogger(__name__)
 
@@ -203,4 +203,6 @@ def configure_schema(schema, version):
         }
     }
     index = schema_index(model.get(schema), version)
-    return configure_index(index, mapping, index_settings())
+    return configure_index(
+        index, mapping, index_settings(shards=get_shard_weight(schema))
+    )

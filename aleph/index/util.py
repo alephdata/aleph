@@ -17,6 +17,64 @@ BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
 
+SHARDS_LIGHT = 1
+SHARDS_DEFAULT = 5
+SHARDS_HEAVY = 10
+
+SHARD_WEIGHTS = {
+    'Folder': SHARDS_LIGHT,
+    'Package': SHARDS_LIGHT,
+    'Workbook': SHARDS_LIGHT,
+    'Video': SHARDS_LIGHT,
+    'Audio': SHARDS_LIGHT,
+    'Airplane': SHARDS_LIGHT,
+    'Associate': SHARDS_LIGHT,
+    'Family': SHARDS_LIGHT,
+    'Passport': SHARDS_LIGHT,
+    'Document': SHARDS_LIGHT,
+
+    'Row': SHARDS_HEAVY,
+    'Page': SHARDS_HEAVY,
+    'Email': SHARDS_HEAVY,
+    'PlainText': SHARDS_HEAVY,
+    'HyperText': SHARDS_HEAVY,
+    'Pages': SHARDS_HEAVY,
+
+    'ContractAward': SHARDS_DEFAULT,
+    'Ownership': SHARDS_DEFAULT,
+    'CourtCaseParty': SHARDS_DEFAULT,
+    'Vehicle': SHARDS_DEFAULT,
+    'TaxRoll': SHARDS_DEFAULT,
+    'Image': SHARDS_DEFAULT,
+    'Table': SHARDS_DEFAULT,
+    'BankAccount': SHARDS_DEFAULT,
+    'Succession': SHARDS_DEFAULT,
+    'Relationship': SHARDS_DEFAULT,
+    'Person': SHARDS_DEFAULT,
+    'Payment': SHARDS_DEFAULT,
+    'Vessel': SHARDS_DEFAULT,
+    'LegalEntity': SHARDS_DEFAULT,
+    'RealEstate': SHARDS_DEFAULT,
+    'Land': SHARDS_DEFAULT,
+    'EconomicActivity': SHARDS_DEFAULT,
+    'PublicBody': SHARDS_DEFAULT,
+    'Organization': SHARDS_DEFAULT,
+    'Contract': SHARDS_DEFAULT,
+    'License': SHARDS_DEFAULT,
+    'Representation': SHARDS_DEFAULT,
+    'Sanction': SHARDS_DEFAULT,
+    'Membership': SHARDS_DEFAULT,
+    'UnknownLink': SHARDS_DEFAULT,
+    'Company': SHARDS_DEFAULT,
+    'CourtCase': SHARDS_DEFAULT,
+    'Event': SHARDS_DEFAULT,
+    'Directorship': SHARDS_DEFAULT,
+}
+
+
+def get_shard_weight(schema):
+    return SHARD_WEIGHTS.get(schema.name, SHARDS_DEFAULT)
+
 
 def refresh_sync(sync):
     if settings.TESTING:
