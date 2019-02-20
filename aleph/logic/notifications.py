@@ -1,6 +1,7 @@
 import logging
-from banal import ensure_list, is_mapping
+from banal import ensure_list
 from datetime import datetime, timedelta
+from followthemoney.util import get_entity_id
 
 from aleph.core import db
 from aleph.model import Role, Alert, Event, Notification
@@ -12,17 +13,6 @@ from aleph.notify import notify_role
 from aleph.util import html_link
 
 log = logging.getLogger(__name__)
-
-
-def object_id(obj, clazz=None):
-    """Turn a given object into an ID that can be stored in with
-    the notification."""
-    clazz = clazz or type(obj)
-    if isinstance(obj, clazz):
-        obj = obj.id
-    elif is_mapping(obj):
-        obj = obj.get('id')
-    return obj
 
 
 def resolve_id(object_id, clazz):
@@ -55,7 +45,7 @@ def channel(obj, clazz=None):
     if clazz == str:
         return obj
 
-    obj = object_id(obj, clazz=clazz)
+    obj = get_entity_id(obj)
     if obj is not None:
         return '%s:%s' % (clazz.__name__, obj)
 
@@ -70,7 +60,7 @@ def publish(event, actor_id=None, params=None, channels=None):
     channels.append(channel(actor_id, clazz=Role))
     for name, clazz in event.params.items():
         obj = params.get(name)
-        outparams[name] = object_id(obj, clazz=clazz)
+        outparams[name] = get_entity_id(obj)
         channels.append(channel(obj, clazz=clazz))
     Notification.publish(event,
                          actor_id=actor_id,
