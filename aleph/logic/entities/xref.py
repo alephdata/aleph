@@ -15,7 +15,7 @@ from aleph.index.collections import get_collection
 from aleph.logic.util import entity_url
 
 log = logging.getLogger(__name__)
-SCORE_CUTOFF = 0.1
+SCORE_CUTOFF = 0.05
 
 
 def xref_item(proxy, collection_ids=None):
@@ -38,7 +38,7 @@ def xref_item(proxy, collection_ids=None):
         if result is not None:
             other = model.get_proxy(result)
             score = compare(model, proxy, other)
-            if score > SCORE_CUTOFF:
+            if score >= SCORE_CUTOFF:
                 yield score, result.get('collection_id'), other
 
 
