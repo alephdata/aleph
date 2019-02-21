@@ -1,0 +1,11 @@
+{% extends "email/layout.txt" %}
+
+{% block content -%}
+{% trans -%}
+To complete your registration, please visit:
+
+{{url}}
+
+If you did not register, do not click the link above. Please instead inform the site administrators.
+{%- endtrans %}
+{%- endblock %}
