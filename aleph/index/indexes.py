@@ -2,6 +2,7 @@ import logging
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.exc import InvalidData
 
 from aleph.core import settings
 from aleph.index.util import index_settings, configure_index, get_shard_weight
@@ -92,7 +93,7 @@ def configure_collections():
 def schema_index(schema, version):
     """Convert a schema object to an index name."""
     if schema.abstract:
-        raise ValueError("Cannot write to abstract schema.")
+        raise InvalidData("Cannot index abstract schema: %s" % schema)
     name = 'entity-%s' % schema.name.lower()
     return index_name(name, version=version)
 
