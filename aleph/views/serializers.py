@@ -210,7 +210,7 @@ class EntitySerializer(Serializer):
             'ui': entity_url(pk)
         }
         if schema.is_a(Document.SCHEMA):
-            links['content'] = url_for('documents_api.content', document_id=pk)
+            links['content'] = url_for('entities_api.content', entity_id=pk)
 
         for content_hash in ensure_list(properties.get('contentHash')):
             links['file'] = url_for('documents_api.file',

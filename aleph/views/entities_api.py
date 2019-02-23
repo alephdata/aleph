@@ -70,7 +70,7 @@ def content(entity_id):
                                   excludes=['text']):
         proxy = model.get_proxy(entity)
         record_audit(Audit.ACT_ENTITY, id=entity_id)
-        html = sanitize_html(proxy.first('bodyRaw', quiet=True),
+        html = sanitize_html(proxy.first('bodyHtml', quiet=True),
                              proxy.first('sourceUrl', quiet=True))
         headers = proxy.first('headers', quiet=True)
         headers = registry.json.unpack(headers)

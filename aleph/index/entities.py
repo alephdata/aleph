@@ -18,7 +18,7 @@ from aleph.index.util import MAX_PAGE
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
                    'identifiers', 'addresses', 'properties.bodyText',
-                   'properties.bodyRaw', 'properties.headers']
+                   'properties.bodyHtml', 'properties.headers']
 
 
 def index_entity(entity, sync=False):
