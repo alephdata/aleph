@@ -91,13 +91,16 @@ def configure_collections():
 
 def schema_index(schema, version):
     """Convert a schema object to an index name."""
+    if schema.abstract:
+        raise ValueError("Cannot write to abstract schema.")
     name = 'entity-%s' % schema.name.lower()
     return index_name(name, version=version)
 
 
 def entities_write_index(schema):
     """Index that us currently written by new queries."""
-    return schema_index(model.get(schema), settings.INDEX_WRITE)
+    schema = model.get(schema)
+    return schema_index(schema, settings.INDEX_WRITE)
 
 
 def schema_scope(schema):
@@ -173,10 +176,14 @@ def configure_schema(schema, version):
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
+            "checksums": KEYWORD,
             "keywords": KEYWORD,
             "ips": KEYWORD,
+            "urls": KEYWORD,
+            "ibans": KEYWORD,
             "emails": KEYWORD,
             "phones": KEYWORD,
+            "mimetypes": KEYWORD,
             "identifiers": KEYWORD,
             "addresses": {
                 "type": "keyword",

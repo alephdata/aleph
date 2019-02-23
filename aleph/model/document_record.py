@@ -5,7 +5,6 @@ from followthemoney import model
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
-from aleph.model.ftm import pack_cells
 from aleph.util import filter_texts
 
 log = logging.getLogger(__name__)
@@ -69,7 +68,7 @@ class DocumentRecord(db.Model):
             proxy.set('index', self.index)
             data = ensure_dict(self.data)
             values = [v for (k, v) in sorted(data.items())]
-            proxy.set('cells', pack_cells(values))
+            proxy.set('cells', values)
             return proxy
 
     def to_dict(self):
@@ -77,7 +76,6 @@ class DocumentRecord(db.Model):
         data = proxy.to_full_dict()
         data.update({
             'document_id': self.document_id,
-            # 'collection_id': self.collection_id,
             'bulk': False,
         })
         return data

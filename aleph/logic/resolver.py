@@ -15,10 +15,9 @@ from aleph.model import Role, Collection, Alert, Entity
 from aleph.logic.roles import get_role
 from aleph.logic.alerts import get_alert
 from aleph.index.collections import get_collection
-from aleph.index.entities import entities_by_ids, cache_entity
+from aleph.index.entities import entities_by_ids
 
 log = logging.getLogger(__name__)
-
 LOADERS = {
     Role: get_role,
     Collection: get_collection,
@@ -70,8 +69,7 @@ def resolve(stub):
         stub._rx_cache[(clazz, key)] = value
 
     for schema, ids in queries.items():
-        for entity in entities_by_ids(ids, schemata=schema):
-            cache_entity(entity)
+        for entity in entities_by_ids(ids, schemata=schema, cached=True):
             stub._rx_cache[(Entity, entity.get('id'))] = entity
 
 

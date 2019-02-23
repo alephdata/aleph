@@ -9,8 +9,7 @@ from aleph.model import Audit
 from aleph.logic.documents import delete_document
 from aleph.logic.util import document_url
 from aleph.logic.audit import record_audit
-from aleph.views.cache import enable_cache
-from aleph.views.util import jsonify, sanitize_html, get_db_document
+from aleph.views.util import get_db_document
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
@@ -47,25 +46,6 @@ def _serve_archive(content_hash, file_name, mime_type):
         archive.cleanup_file(content_hash)
 
 
-@blueprint.route('/api/2/documents/<int:document_id>/content')
-def content(document_id):
-    enable_cache()
-    document = get_db_document(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    return jsonify({
-        'headers': document.headers,
-        'text': document.body_text,
-        'html': sanitize_html(document.body_raw, document.source_url)
-    })
-
-
-@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
-def delete(document_id):
-    document = get_db_document(document_id, request.authz.WRITE)
-    delete_document(document, sync=True)
-    return ('', 204)
-
-
 @blueprint.route('/api/2/documents/<int:document_id>/file')
 def file(document_id):
     document = get_db_document(document_id)
@@ -87,3 +67,10 @@ def pdf(document_id):
         file_name = '%s.pdf' % file_name
     resp = _serve_archive(document.pdf_version, file_name, PDF)
     return _resp_canonical(resp, document_id)
+
+
+@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
+def delete(document_id):
+    document = get_db_document(document_id, request.authz.WRITE)
+    delete_document(document, sync=True)
+    return ('', 204)

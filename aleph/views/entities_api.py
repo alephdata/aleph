@@ -2,6 +2,7 @@ import logging
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
+from followthemoney.types import registry
 from followthemoney.util import merge_data
 from urllib.parse import quote
 from urlnormalizer import query_string
@@ -11,9 +12,10 @@ from aleph.model import Audit
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
+from aleph.index.entities import entities_by_ids
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
-from aleph.views.util import jsonify, parse_request, get_flag
+from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
 from aleph.views.cache import enable_cache
 from aleph.views.serializers import EntitySerializer
 from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
@@ -50,30 +52,51 @@ def create():
     return EntitySerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/documents/<id>', methods=['GET'])
-@blueprint.route('/api/2/entities/<id>', methods=['GET'])
-def view(id):
+@blueprint.route('/api/2/documents/<entity_id>', methods=['GET'])
+@blueprint.route('/api/2/entities/<entity_id>', methods=['GET'])
+def view(entity_id):
     enable_cache()
-    entity = get_index_entity(id, request.authz.READ)
-    record_audit(Audit.ACT_ENTITY, id=id)
+    entity = get_index_entity(entity_id, request.authz.READ)
+    record_audit(Audit.ACT_ENTITY, id=entity_id)
     return EntitySerializer.jsonify(entity)
 
 
-@blueprint.route('/api/2/entities/<id>/similar', methods=['GET'])
-def similar(id):
+@blueprint.route('/api/2/entities/<entity_id>/content', methods=['GET'])
+def content(entity_id):
     enable_cache()
-    entity = get_index_entity(id, request.authz.READ)
+    entity = get_index_entity(entity_id, request.authz.READ)
+    for entity in entities_by_ids([entity_id],
+                                  schemata=entity.get('schema'),
+                                  excludes=['text']):
+        proxy = model.get_proxy(entity)
+        record_audit(Audit.ACT_ENTITY, id=entity_id)
+        html = sanitize_html(proxy.first('bodyRaw', quiet=True),
+                             proxy.first('sourceUrl', quiet=True))
+        headers = proxy.first('headers', quiet=True)
+        headers = registry.json.unpack(headers)
+        return jsonify({
+            'headers': headers,
+            'text': proxy.first('bodyText', quiet=True),
+            'html': html
+        })
+    return ('', 404)
+
+
+@blueprint.route('/api/2/entities/<entity_id>/similar', methods=['GET'])
+def similar(entity_id):
+    enable_cache()
+    entity = get_index_entity(entity_id, request.authz.READ)
     entity = model.get_proxy(entity)
-    record_audit(Audit.ACT_ENTITY, id=id)
+    record_audit(Audit.ACT_ENTITY, id=entity_id)
     result = MatchQuery.handle(request, entity=entity)
     return EntitySerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/entities/<id>/references', methods=['GET'])
-def references(id):
+@blueprint.route('/api/2/entities/<entity_id>/references', methods=['GET'])
+def references(entity_id):
     enable_cache()
-    entity = get_index_entity(id, request.authz.READ)
-    record_audit(Audit.ACT_ENTITY, id=id)
+    entity = get_index_entity(entity_id, request.authz.READ)
+    record_audit(Audit.ACT_ENTITY, id=entity_id)
     results = []
     for prop, total in entity_references(entity, request.authz):
         results.append({
@@ -88,11 +111,11 @@ def references(id):
     })
 
 
-@blueprint.route('/api/2/entities/<id>/tags', methods=['GET'])
-def tags(id):
+@blueprint.route('/api/2/entities/<entity_id>/tags', methods=['GET'])
+def tags(entity_id):
     enable_cache()
-    entity = get_index_entity(id, request.authz.READ)
-    record_audit(Audit.ACT_ENTITY, id=id)
+    entity = get_index_entity(entity_id, request.authz.READ)
+    record_audit(Audit.ACT_ENTITY, id=entity_id)
     results = []
     for (field, value, total) in entity_tags(entity, request.authz):
         qvalue = quote(value.encode('utf-8'))
@@ -112,9 +135,9 @@ def tags(id):
     })
 
 
-@blueprint.route('/api/2/entities/<id>', methods=['POST', 'PUT'])
-def update(id):
-    entity = get_db_entity(id, request.authz.WRITE)
+@blueprint.route('/api/2/entities/<entity_id>', methods=['POST', 'PUT'])
+def update(entity_id):
+    entity = get_db_entity(entity_id, request.authz.WRITE)
     data = parse_request(EntityUpdateSchema)
     if get_flag('merge'):
         props = merge_data(data.get('properties'), entity.data)
@@ -142,9 +165,9 @@ def merge(id, other_id):
     return EntitySerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/entities/<id>', methods=['DELETE'])
-def delete(id):
-    entity = get_db_entity(id, request.authz.WRITE)
+@blueprint.route('/api/2/entities/<entity_id>', methods=['DELETE'])
+def delete(entity_id):
+    entity = get_db_entity(entity_id, request.authz.WRITE)
     delete_entity(entity, sync=True)
     db.session.commit()
     return ('', 204)

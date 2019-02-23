@@ -18,7 +18,7 @@ from aleph.index.util import MAX_PAGE
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
                    'identifiers', 'addresses', 'properties.bodyText',
-                   'properties.bodyRaw']
+                   'properties.bodyRaw', 'properties.headers']
 
 
 def index_entity(entity, sync=False):
@@ -71,7 +71,8 @@ def iter_proxies(**kw):
         yield model.get_proxy(data)
 
 
-def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
+def entities_by_ids(ids, schemata=None, cached=False,
+                    includes=None, excludes=None):
     """Iterate over unpacked entities based on a search for the given
     entity IDs."""
     ids = ensure_list(ids)
@@ -89,6 +90,10 @@ def entities_by_ids(ids, schemata=None, includes=None, excludes=None):
     for doc in result.get('hits', {}).get('hits', []):
         entity = unpack_result(doc)
         if entity is not None:
+            # Cache entities only briefly to avoid filling up the cache:
+            if cached:
+                key = cache.object_key(Entity, entity.get('id'))
+                cache.set_complex(key, entity, expire=60 * 60)
             yield entity
 
 
@@ -101,15 +106,8 @@ def get_entity(entity_id, **kwargs):
     if entity is not None:
         return entity
     log.debug("Entity [%s]: object cache miss", entity_id)
-    for entity in entities_by_ids(entity_id):
-        cache_entity(entity)
+    for entity in entities_by_ids(entity_id, cached=True):
         return entity
-
-
-def cache_entity(data):
-    # Cache entities only briefly to avoid filling up the cache:
-    key = cache.object_key(Entity, data.get('id'))
-    cache.set_complex(key, data, expire=60 * 60)
 
 
 def _index_updates(collection_id, entities, merge=True):

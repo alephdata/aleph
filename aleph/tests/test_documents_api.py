@@ -7,15 +7,6 @@ class DocumentsApiTestCase(TestCase):
         super(DocumentsApiTestCase, self).setUp()
         self.load_fixtures('docs.yaml')
 
-    def test_view(self):
-        doc_id = 1000
-        res = self.client.get('/api/2/documents/%s' % doc_id)
-        assert res.status_code == 200, res
-        assert res.json['foreign_id'] == 'test1', res
-
-        res = self.client.get('/api/2/documents/328984')
-        assert res.status_code == 404, res
-
     def test_view_pdf(self):
         res = self.client.get('/api/2/documents/1003/pdf')
         assert res.status_code == 400, res
