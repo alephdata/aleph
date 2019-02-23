@@ -16,6 +16,7 @@ LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
 KEYWORD = {"type": "keyword"}
 TYPE_MAPPINGS = {
     registry.text: {"type": "text", "index": False},
+    registry.json: {"type": "text", "index": False},
     registry.date: PARTIAL_DATE,
 }
 
