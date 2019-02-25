@@ -38,15 +38,22 @@ class Navbar extends React.Component {
   getSnapshotBeforeUpdate(prevProps){
     if(this.props.query && (prevProps.query.state.q !== this.props.query.state.q)){
       if(this.props.query.state.q !== this.state.searchValue){
-        return {shouldChangeSearchValue: this.props.query.state.q}
+        return {
+          query:{
+            shouldUpdate: true,
+            nextValue: this.props.query.state.q || ''
+          }
+        }
       }
     }
-    return {}
+    return {
+      query:{}
+    }
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (snapshot !== null && snapshot.shouldChangeSearchValue) {
+    if(snapshot.query.shouldUpdate){
       this.setState({
-        searchValue:snapshot.shouldChangeSearchValue
+        searchValue:snapshot.query.nextValue
       })
     }
   }
