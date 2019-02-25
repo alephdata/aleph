@@ -84,7 +84,7 @@ class CollectionOverview extends Component {
               </span>
             </li>
           )}
-          { collection.team.length > 1 && (
+          { (collection.team && collection.team.length > 1) && (
             <li>
               <span className="key">
                 <FormattedMessage id="collection.team" defaultMessage="Accessible to"/>
@@ -117,11 +117,5 @@ class CollectionOverview extends Component {
     );
   }
 }
-
-const mapStateToProps = (state, ownProps) => {
-  return {};
-};
-
-CollectionOverview = connect(mapStateToProps)(CollectionOverview);
 
 export default CollectionOverview;

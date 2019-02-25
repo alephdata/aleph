@@ -75,7 +75,7 @@ class DocumentViewMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('entities', location, {}, 'document');
+  const query = Query.fromLocation('entities', location, {}, '');
   return {
     queryText: query.getString('q')
   }
@@ -84,3 +84,4 @@ const mapStateToProps = (state, ownProps) => {
 DocumentViewMode = connect(mapStateToProps)(DocumentViewMode);
 DocumentViewMode = withRouter(DocumentViewMode);
 export default DocumentViewMode;
+//1. death code cleanup\n2. Collection Screnn stabilisation\n3.Intra-document search recovery\n4.Preview sidebar fix\n5. Unused facets removal\n.6 PdfViewer text mode thru /content'

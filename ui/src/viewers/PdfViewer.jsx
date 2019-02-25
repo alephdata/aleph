@@ -16,13 +16,16 @@ import {queryEntities} from 'src/actions';
 import {selectEntitiesResult} from 'src/selectors';
 
 import './PdfViewer.scss';
+import TextViewer from 'src/viewers/TextViewer';
+
 
 class PdfViewer extends Component {
-  static TextMode(props) {
-    const {document, result} = props;
-    return result.total > 0 && <React.Fragment>
+
+  static TextMode(props){
+    const {document, result, page} = props;
+    return  result.total > 0 && <React.Fragment>
       <PagingButtons document={document} numberOfPages={result.total}/>
-      <Pre>{result.results[0].getProperty('bodyText').toString()}</Pre>
+      <TextViewer document={result.results[page-1]} noStyle={true}/>
     </React.Fragment>
   }
 
@@ -42,7 +45,7 @@ class PdfViewer extends Component {
             <li key={`page-${res.id}`}>
               <p>
                 <Link to={getResultLink(res)} className={classNames({active: page === res.index})}>
-                  <span className={`bp3-icon-document`}/> Page {res.index}
+                  <span className={`bp3-icon-document`}/> Page {res.getProperty('index').toString()}
                 </Link>
               </p>
               <p>
@@ -241,7 +244,6 @@ const mapStateToProps = (state, ownProps) => {
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
   let query = Query.fromLocation('entities', location, {}, 'document')
-    .offset(page - 1)
     .setFilter('properties.document', document.id)
     .setFilter('schemata', 'Page')
     .sortBy('properties.index', 'asc');
