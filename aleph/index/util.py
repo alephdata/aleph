@@ -9,7 +9,7 @@ from aleph.core import es, settings
 
 log = logging.getLogger(__name__)
 
-# This means that text beyond the first 100 MB will not be indexed
+# This means that text beyond the first 500 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 500
 REQUEST_TIMEOUT = 60 * 60 * 6
 TIMEOUT = '%ss' % REQUEST_TIMEOUT
@@ -37,7 +37,7 @@ SHARD_WEIGHTS = {
     'Page': SHARDS_HEAVY,
     'Email': SHARDS_HEAVY,
     'PlainText': SHARDS_HEAVY,
-    'HyperText': SHARDS_HEAVY,
+    # 'HyperText': SHARDS_HEAVY,
     'Pages': SHARDS_HEAVY,
     'Table': SHARDS_HEAVY,
 }

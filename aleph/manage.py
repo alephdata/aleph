@@ -195,10 +195,11 @@ def resetcache():
 
 
 @manager.command
-def repair():
+@manager.option('-d', '--documents', dest='documents')
+def repair(documents=False):
     """Re-index all the collections and entities."""
     index_entities()
-    index_collections(refresh=True)
+    index_collections(documents=True, refresh=True)
     update_roles()
 
 

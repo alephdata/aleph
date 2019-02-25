@@ -221,6 +221,12 @@ class Document(db.Model, DatedModel, Metadata):
         return q.first()
 
     @classmethod
+    def by_collection(cls, collection_id=None):
+        q = cls.all()
+        q = q.filter(cls.collection_id == collection_id)
+        return q
+
+    @classmethod
     def find_ids(cls, collection_id=None, failed_only=False):
         q = cls.all_ids()
         if collection_id is not None:

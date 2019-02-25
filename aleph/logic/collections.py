@@ -39,12 +39,14 @@ def refresh_collection(collection_id, sync=False):
                     cache.object_key(Collection, collection_id, 'stats'))
 
 
-def index_collections(refresh=False):
+def index_collections(documents=False, refresh=False):
     for collection in Collection.all(deleted=True):
         log.info("Index [%s]: %s", collection.id, collection.label)
         if refresh:
             refresh_collection(collection.id, sync=False)
         index.index_collection(collection)
+        if documents and collection.deleted_at is None:
+            index_collection_documents.delay(collection_id=collection.id)
 
 
 def delete_collection(collection, sync=False):
@@ -77,6 +79,14 @@ def delete_collection_content(collection_id):
     index.delete_entities(collection_id)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
+
+
+@celery.task(priority=1)
+def index_collection_documents(collection_id):
+    from aleph.index import documents
+    collection = Collection.by_id(collection_id)
+    documents.index_collection_documents(collection)
+    refresh_collection(collection_id)
 
 
 def delete_bulk_entities(collection_id, deleted_at=None):
