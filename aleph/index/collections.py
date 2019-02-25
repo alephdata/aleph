@@ -1,7 +1,6 @@
 import logging
 from pprint import pprint  # noqa
 from banal import ensure_list
-from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.core import es, cache
@@ -19,16 +18,13 @@ def index_collection(collection, sync=False):
         return delete_collection(collection.id)
 
     data = collection.to_dict()
-    data.pop('id', None)
     stats = get_collection_stats(collection.id)
     data['count'] = stats['count']
 
     # expose entities by schema count.
     data['schemata'] = {}
     for schema, count in stats['schemata'].items():
-        schema = model.get(schema)
-        if schema is not None:
-            data['schemata'][schema.name] = count
+        data['schemata'][schema] = count
 
     # if no countries or langs are given, take the most common from the data.
     countries = ensure_list(collection.countries)
@@ -38,6 +34,11 @@ def index_collection(collection, sync=False):
     languages = ensure_list(collection.languages)
     languages = languages or stats['languages'].keys()
     data['languages'] = registry.language.normalize_set(languages)
+
+    # We always want collections to be cached, so doing this at index times.
+    key = cache.object_key(Collection, collection.id)
+    cache.set_complex(key, data, expire=cache.EXPIRE)
+    data.pop('id', None)
     return index_safe(collections_index(), collection.id, data,
                       refresh=refresh_sync(sync))
 
@@ -62,21 +63,11 @@ def get_collection(collection_id):
 
 def get_collection_stats(collection_id):
     """Compute some statistics on the content of a collection."""
-    key = cache.object_key(Collection, collection_id, 'stats')
-    data = cache.get_complex(key)
-    if data is not None:
-        return data
-
     log.info("Generating collection stats: %s", collection_id)
+    query = {'term': {'collection_id': collection_id}}
     query = {
         'size': 0,
-        'query': {
-            'bool': {
-                'filter': [
-                    {'term': {'collection_id': collection_id}}
-                ]
-            }
-        },
+        'query': {'bool': {'filter': [query]}},
         'aggs': {
             'schemata': {'terms': {'field': 'schema', 'size': 1000}},
             'countries': {'terms': {'field': 'countries', 'size': 500}},
@@ -92,7 +83,6 @@ def get_collection_stats(collection_id):
         data[facet] = {}
         for bucket in aggregations.get(facet, {}).get('buckets', []):
             data[facet][bucket['key']] = bucket['doc_count']
-    cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
 
 

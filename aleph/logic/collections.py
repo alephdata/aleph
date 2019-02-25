@@ -35,18 +35,17 @@ def update_collection(collection, sync=False):
 def refresh_collection(collection_id, sync=False):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and re-index."""
-    cache.kv.delete(cache.object_key(Collection, collection_id),
-                    cache.object_key(Collection, collection_id, 'stats'))
+    cache.kv.delete(cache.object_key(Collection, collection_id))
 
 
 def index_collections(documents=False, refresh=False):
     for collection in Collection.all(deleted=True):
         log.info("Index [%s]: %s", collection.id, collection.label)
+        if documents and collection.deleted_at is None:
+            index_collection_documents.delay(collection_id=collection.id)
         if refresh:
             refresh_collection(collection.id, sync=False)
         index.index_collection(collection)
-        if documents and collection.deleted_at is None:
-            index_collection_documents.delay(collection_id=collection.id)
 
 
 def delete_collection(collection, sync=False):
