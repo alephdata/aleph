@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {FormattedMessage} from "react-intl";
 import {Count, Property} from 'src/components/common';
+import {Link} from 'react-router-dom';
 
-
+import getPath from 'src/util/getPath';
 
 
 class EntityInfoMode extends Component {
@@ -35,9 +36,9 @@ class EntityInfoMode extends Component {
             <span>
               <ui className="info-sheet">
                 <li>
-                  <a href={entity.collection.links.ui}>
+                  <Link to={getPath(entity.collection.links.ui)}>
                     <b>{entity.collection.label}</b>
-                  </a>
+                  </Link>
                 </li>
                 {entity.collection.summary && <li>
                   <span className='bp3-text-muted'>{entity.collection.summary}</span>
