@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 def metadata():
     locale = get_locale()
     enable_cache(vary_user=False, vary=str(locale))
-    key = cache.key('metadata', id(settings), locale)
+    key = cache.key('metadata', locale)
     data = cache.get_complex(key)
     if data is not None:
         return jsonify(data)
@@ -56,7 +56,7 @@ def metadata():
         'schemata': model,
         'auth': auth
     }
-    cache.set_complex(key, data, expire=84600)
+    cache.set_complex(key, data, expire=120)
     return jsonify(data)
 
 
