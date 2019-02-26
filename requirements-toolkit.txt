@@ -10,4 +10,4 @@ ingestors==0.12.2
 normality==1.0.0
 pantomime==0.3.3
 pdflib==0.1.7
-alephclient==0.10.4
+alephclient==0.10.7

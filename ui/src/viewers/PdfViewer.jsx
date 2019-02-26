@@ -6,7 +6,6 @@ import {FormattedMessage} from 'react-intl';
 import {throttle} from 'lodash';
 import queryString from 'query-string';
 import classNames from 'classnames';
-import {Pre} from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import getPath from 'src/util/getPath';

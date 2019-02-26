@@ -2,6 +2,7 @@ import cgi
 import logging
 from normality import slugify
 from followthemoney import model
+from followthemoney.types import registry
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -269,8 +270,9 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('inReplyTo', meta.get('in_reply_to'), quiet=True)
         proxy.set('bodyText', self.body_text, quiet=True)
         proxy.set('bodyHtml', self.body_raw, quiet=True)
-        proxy.set('columns', meta.get('columns'), quiet=True)
-        proxy.set('headers', headers, quiet=True)
+        columns = meta.get('columns')
+        proxy.set('columns', registry.json.pack(columns), quiet=True)
+        proxy.set('headers', registry.json.pack(headers), quiet=True)
 
         pdf = 'application/pdf'
         if meta.get('extension') == 'pdf' or proxy.first('mimeType') == pdf:

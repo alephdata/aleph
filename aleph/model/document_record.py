@@ -2,6 +2,7 @@ import logging
 from banal import ensure_dict
 from normality import stringify
 from followthemoney import model
+from followthemoney.types import registry
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -68,7 +69,7 @@ class DocumentRecord(db.Model):
             proxy.set('index', self.index)
             data = ensure_dict(self.data)
             values = [v for (k, v) in sorted(data.items())]
-            proxy.set('cells', values)
+            proxy.set('cells', registry.json.pack(values))
             return proxy
 
     def to_dict(self):
