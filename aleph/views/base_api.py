@@ -74,6 +74,8 @@ def statistics():
     categories = defaultdict(int)
     for collection_id in collections:
         data = resolver.get(request, Collection, collection_id)
+        if data is None:
+            continue
         categories[data.get('category')] += 1
         for schema, count in data.get('schemata', {}).items():
             schemata[schema] += count
