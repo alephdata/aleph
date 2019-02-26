@@ -53,12 +53,8 @@ const messages = defineMessages({
     defaultMessage: 'Addresses',
   },
   facet_mime_type: {
-    id: 'search.facets.facet.mime_type',
+    id: 'search.facets.facet.mimetypes',
     defaultMessage: 'File types',
-  },
-  facet_author: {
-    id: 'search.facets.facet.author',
-    defaultMessage: 'Authors',
   },
   no_results_title: {
     id: 'search.no_results_title',
@@ -122,15 +118,10 @@ class SearchScreen extends React.Component {
         icon: 'map'
       },
       {
-        field: 'mime_type',
+        field: 'mimetypes',
         label: intl.formatMessage(messages.facet_mime_type),
         icon: 'document'
       },
-      {
-        field: 'author',
-        label: intl.formatMessage(messages.facet_author),
-        icon: 'person'
-      }
     ];
 
     this.state = {

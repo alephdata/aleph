@@ -75,7 +75,7 @@ class DocumentViewMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('entities', location, {}, 'document');
+  const query = Query.fromLocation('entities', location, {}, '');
   return {
     queryText: query.getString('q')
   }
