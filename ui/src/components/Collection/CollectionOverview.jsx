@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import { Category, Country, Role, Date, Collection, URL } from 'src/components/common';
