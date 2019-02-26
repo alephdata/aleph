@@ -53,7 +53,7 @@ const messages = defineMessages({
     defaultMessage: 'Addresses',
   },
   facet_mime_type: {
-    id: 'search.facets.facet.mime_type',
+    id: 'search.facets.facet.mimetypes',
     defaultMessage: 'File types',
   },
   no_results_title: {
@@ -118,7 +118,7 @@ class SearchScreen extends React.Component {
         icon: 'map'
       },
       {
-        field: 'mime_type',
+        field: 'mimetypes',
         label: intl.formatMessage(messages.facet_mime_type),
         icon: 'document'
       },
