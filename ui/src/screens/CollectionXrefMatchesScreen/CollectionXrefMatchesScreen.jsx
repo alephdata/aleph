@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
-import Waypoint from 'react-waypoint';
-
+import { Waypoint }from 'react-waypoint';
 import { Entity, Date, Country, SectionLoading, Breadcrumbs } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';

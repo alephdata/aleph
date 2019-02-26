@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl } from 'react-intl';
-import Waypoint from 'react-waypoint';
-
+import { Waypoint }from 'react-waypoint';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 import Notification from './Notification';
 import { queryNotifications } from "src/actions";

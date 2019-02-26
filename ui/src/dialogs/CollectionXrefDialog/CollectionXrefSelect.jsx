@@ -5,7 +5,7 @@ import CollectionXrefFilter from './CollectionXrefFilter';
 import { queryEndpoint } from '../../actions/util';
 import Query from 'src/app/Query';
 import CheckboxList from 'src/components/common/CheckboxList';
-import Waypoint from "react-waypoint";
+import {Waypoint} from "react-waypoint";
 import { showWarningToast } from "../../app/toast";
 
 const convertCollectionToItem = (collection) => ({

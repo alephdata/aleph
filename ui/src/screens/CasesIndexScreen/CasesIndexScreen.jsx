@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Waypoint from 'react-waypoint';
+import { Waypoint }from 'react-waypoint';
 import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';

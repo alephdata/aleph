@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import Waypoint from 'react-waypoint';
+import { Waypoint }from 'react-waypoint';
 import {selectQueryLog} from "src/selectors";
 import Query from "src/app/Query";
 import {deleteQueryLog, fetchQueryLogs} from "src/actions/queryLogsActions";

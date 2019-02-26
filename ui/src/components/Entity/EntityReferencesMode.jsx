@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
-import Waypoint from 'react-waypoint';
+import { Waypoint }from 'react-waypoint';
 import {defineMessages, FormattedMessage, injectIntl} from 'react-intl';
 
 import Query from 'src/app/Query';

@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {defineMessages, injectIntl, FormattedMessage, FormattedNumber} from 'react-intl';
 import {debounce} from 'lodash';
-import Waypoint from 'react-waypoint';
-
+import { Waypoint }from 'react-waypoint';
 import Query from 'src/app/Query';
 import {queryCollections} from 'src/actions';
 import {selectCollectionsResult} from 'src/selectors';

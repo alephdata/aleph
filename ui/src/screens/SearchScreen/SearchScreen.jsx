@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import queryString from 'query-string';
 import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'react-intl';
-import Waypoint from 'react-waypoint';
+import { Waypoint }from 'react-waypoint';
 import { Icon} from '@blueprintjs/core';
 
 import Query from 'src/app/Query';

@@ -31,9 +31,9 @@ class EntityInfoMode extends Component {
               defaultMessage="Collection"
             /></span>
           </span>
-          <span className='value bp3-running-text'>
+          <span className='value'>
             <span>
-              <ui className="info-sheet">
+              <ul className="info-sheet">
                 <li>
                   <a href={entity.collection.links.ui}>
                     <b>{entity.collection.label}</b>
@@ -53,7 +53,7 @@ class EntityInfoMode extends Component {
                     />
                   </span>
                 </li>
-              </ui>
+              </ul>
             </span>
           </span>
         </li>
