@@ -38,7 +38,7 @@ def generate_document(document):
     if document.supports_records:
         q = db.session.query(DocumentRecord)
         q = q.filter(DocumentRecord.document_id == document.id)
-        for idx, record in enumerate(q):
+        for idx, record in enumerate(q.yield_per(5000)):
             texts = list(record.texts)
             if total_len < INDEX_MAX_LEN:
                 total_len += sum((len(t) for t in texts))
@@ -70,8 +70,7 @@ def generate_document(document):
 
 def generate_collection_docs(collection):
     q = Document.by_collection(collection.id)
-    for document in q.yield_per(5000):
-        document.collection = collection
+    for document in q.yield_per(1000):
         try:
             log.info("Index [%s]: %s", document.id, document.name)
             yield from generate_document(document)
