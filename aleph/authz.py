@@ -2,6 +2,7 @@ import jwt
 import logging
 from banal import ensure_list
 from datetime import datetime, timedelta
+from werkzeug.exceptions import Unauthorized
 
 from aleph.core import db, cache, settings
 from aleph.model import Collection, Role, Permission
@@ -129,12 +130,12 @@ class Authz(object):
         try:
             data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
             if 'scope' in data and data.get('scope') != scope:
-                return None
+                raise Unauthorized()
             return cls(data.get('id'),
                        data.get('roles'),
                        data.get('is_admin', False))
         except jwt.DecodeError:
-            return None
+            raise Unauthorized()
 
     @classmethod
     def flush(cls):
