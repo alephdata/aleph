@@ -9,13 +9,41 @@ import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import Preview from 'src/components/Preview/Preview';
 import { selectCollection } from 'src/selectors';
 
+const mapStateToProps = (state, ownProps) => ({
+  collection: selectCollection(state, ownProps.previewId),
+});
 
-class PreviewCollection extends React.Component {
+@connect(mapStateToProps)
+export default class PreviewCollection extends React.Component {
+  renderContext() {
+    const { collection, previewMode = 'info' } = this.props;
+    if (collection.isError) {
+      return <ErrorSection error={collection.error} />;
+    }
+    if (collection.shouldLoad || collection.isLoading) {
+      return <SectionLoading />;
+    }
+    return (
+      <React.Fragment>
+        <CollectionToolbar
+          collection={collection}
+          isPreview
+        />
+        <CollectionHeading collection={collection} />
+        <CollectionViews
+          collection={collection}
+          activeMode={previewMode}
+          isPreview
+        />
+      </React.Fragment>
+    );
+  }
+
   render() {
     const { previewId } = this.props;
     return (
       <CollectionContextLoader collectionId={previewId}>
-        <Preview maximised={true}>
+        <Preview maximised>
           <DualPane.InfoPane className="with-heading">
             {this.renderContext()}
           </DualPane.InfoPane>
@@ -23,34 +51,4 @@ class PreviewCollection extends React.Component {
       </CollectionContextLoader>
     );
   }
-
-  renderContext() {
-    const { collection, previewMode = 'info' } = this.props;
-    if (collection.isError) {
-      return <ErrorSection error={collection.error} />
-    }
-    if (collection.shouldLoad || collection.isLoading) {
-      return <SectionLoading/>;
-    }
-    return (
-      <React.Fragment>
-        <CollectionToolbar collection={collection}
-                           isPreview={true} />
-        <CollectionHeading collection={collection}/>
-        <CollectionViews collection={collection}
-                         activeMode={previewMode}
-                         isPreview={true} />
-      </React.Fragment>
-    );
-  }
 }
-
-
-const mapStateToProps = (state, ownProps) => {
-  return {
-    collection: selectCollection(state, ownProps.previewId)
-  };
-};
-
-PreviewCollection = connect(mapStateToProps, {})(PreviewCollection);
-export default PreviewCollection;

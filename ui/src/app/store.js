@@ -1,29 +1,29 @@
-import {applyMiddleware, createStore} from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import thunk from 'redux-thunk';
 // import logger from 'redux-logger';
-import {throttle} from 'lodash';
+import { throttle } from 'lodash';
 
 import rootReducer from 'src/reducers';
-import {loadState, saveState} from './storage';
+import { loadState, saveState } from './storage';
 import errorToastMiddleware from './error-toast-middleware';
 
 const persistedState = loadState();
 const store = createStore(
   rootReducer,
   persistedState,
-  /*window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(*/applyMiddleware(
+  /* window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( */applyMiddleware(
     thunk,
     errorToastMiddleware,
     // logger
-  )/*)*/
+  ), /* ) */
 );
 
 store.subscribe(throttle(() => {
   const state = store.getState();
   saveState({
     session: state.session,
-    config: state.config
-  })
+    config: state.config,
+  });
 }));
 
 export default store;

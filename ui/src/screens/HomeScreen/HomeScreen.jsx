@@ -1,13 +1,15 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import queryString from 'query-string';
-import {defineMessages, FormattedMessage, FormattedNumber, injectIntl} from 'react-intl';
+import {
+  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
+} from 'react-intl';
 import numeral from 'numeral';
-import {Button, ControlGroup, Intent} from "@blueprintjs/core";
-import SearchBox from "src/components/Navbar/SearchBox";
+import { Button, ControlGroup, Intent } from '@blueprintjs/core';
+import SearchBox from 'src/components/Navbar/SearchBox';
 
-import {fetchStatistics} from 'src/actions/index';
-import {selectMetadata, selectStatistics} from 'src/selectors';
+import { fetchStatistics } from 'src/actions/index';
+import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 
 import './HomeScreen.scss';
@@ -27,7 +29,14 @@ const messages = defineMessages({
   },
 });
 
-class HomeScreen extends Component {
+const mapStateToProps = state => ({
+  statistics: selectStatistics(state),
+  metadata: selectMetadata(state),
+});
+
+@injectIntl
+@connect(mapStateToProps, { fetchStatistics })
+export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = { value: '' };
@@ -40,45 +49,49 @@ class HomeScreen extends Component {
     this.props.fetchStatistics();
   }
 
-  onChange({target}) {
-    this.setState({value: target.value})
+  onChange({ target }) {
+    this.setState({ value: target.value });
   }
 
-  updateSearchValue = value => this.setState({value});
+  updateSearchValue = value => this.setState({ value });
+
   onSubmit = event => event.preventDefault();
 
   handleSearchBtn = () => this.doSearch();
+
   doSearch = (searchValue = this.state.value) => {
     const { history } = this.props;
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: searchValue
-      })
+        q: searchValue,
+      }),
     });
   };
 
   render() {
     const { intl, metadata, statistics } = this.props;
     const samples = metadata.app.samples.join(', ');
-    
+
     return (
-      <Screen isHomepage={true} title={intl.formatMessage(messages.title)}>
-        <section className='HomePage'>
-          <div className='outer-searchbox'>
-            <div className='inner-searchbox'>
-              <div className='homepage-summary'>
+      <Screen isHomepage title={intl.formatMessage(messages.title)}>
+        <section className="HomePage">
+          <div className="outer-searchbox">
+            <div className="inner-searchbox">
+              <div className="homepage-summary">
                 {statistics.entities && (
-                  <FormattedMessage id='home.summary'
-                                    defaultMessage="Search {total} public records and leaks from {collections} sources"
-                                    values={{
-                                      total: numeral(statistics.entities).format('0a'),
-                                      collections: <FormattedNumber value={statistics.collections} />
-                                    }} />
+                  <FormattedMessage
+                    id="home.summary"
+                    defaultMessage="Search {total} public records and leaks from {collections} sources"
+                    values={{
+                      total: numeral(statistics.entities).format('0a'),
+                      collections: <FormattedNumber value={statistics.collections} />,
+                    }}
+                  />
                 )}
               </div>
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
-                <ControlGroup fill={true}>
+                <ControlGroup fill>
                   <SearchBox
                     id="search-box"
                     doSearch={this.doSearch}
@@ -90,11 +103,11 @@ class HomeScreen extends Component {
                     className="bp3-large bp3-fixed"
                     intent={Intent.PRIMARY}
                     onClick={this.handleSearchBtn}
-                    text={
+                    text={(
                       <React.Fragment>
                         {intl.formatMessage(messages.home_search)}
                       </React.Fragment>
-                    }
+)}
                   />
                 </ControlGroup>
               </form>
@@ -105,11 +118,3 @@ class HomeScreen extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  statistics: selectStatistics(state),
-  metadata: selectMetadata(state)
-});
-
-HomeScreen = injectIntl(HomeScreen);
-export default connect(mapStateToProps, { fetchStatistics })(HomeScreen);

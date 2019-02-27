@@ -10,12 +10,40 @@ import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectEntityView, selectEntityReferences } from 'src/selectors';
 
 
-class PreviewEntity extends React.Component {
+const mapStateToProps = (state, ownProps) => {
+  const { previewId, previewMode } = ownProps;
+  const entity = selectEntity(state, previewId);
+  return {
+    entity,
+    references: selectEntityReferences(state, previewId),
+    previewMode: selectEntityView(state, previewId, previewMode, true),
+  };
+};
+
+@connect(mapStateToProps)
+export default class PreviewEntity extends React.Component {
+  renderContext() {
+    const { entity, references, previewMode } = this.props;
+    if (entity.isError) {
+      return <ErrorSection error={entity.error} />;
+    }
+    if (entity.shouldLoad || entity.isLoading || references.shouldLoad || references.isLoading) {
+      return <SectionLoading />;
+    }
+    return (
+      <React.Fragment>
+        <EntityToolbar entity={entity} isPreview />
+        <EntityHeading entity={entity} isPreview />
+        <EntityViews entity={entity} activeMode={previewMode} isPreview />
+      </React.Fragment>
+    );
+  }
+
   render() {
     const { previewId } = this.props;
     return (
       <EntityContextLoader entityId={previewId}>
-        <Preview maximised={true}>
+        <Preview maximised>
           <DualPane.InfoPane className="with-heading">
             {this.renderContext()}
           </DualPane.InfoPane>
@@ -23,35 +51,4 @@ class PreviewEntity extends React.Component {
       </EntityContextLoader>
     );
   }
-
-  renderContext() {
-    const { entity, references, previewMode } = this.props;
-    if (entity.isError) {
-      return <ErrorSection error={entity.error} />
-    }
-    if (entity.shouldLoad || entity.isLoading || references.shouldLoad || references.isLoading) {
-      return <SectionLoading/>;
-    }
-    return (
-      <React.Fragment>
-        <EntityToolbar entity={entity} isPreview={true} />
-        <EntityHeading entity={entity} isPreview={true} />
-        <EntityViews entity={entity} activeMode={previewMode} isPreview={true} />
-      </React.Fragment>
-    );
-  }
 }
-
-
-const mapStateToProps = (state, ownProps) => {
-  const { previewId, previewMode } = ownProps;
-  const entity = selectEntity(state, previewId);
-  return {
-    entity,
-    references: selectEntityReferences(state, previewId),
-    previewMode: selectEntityView(state, previewId, previewMode, true)
-  };
-};
-
-PreviewEntity = connect(mapStateToProps, {})(PreviewEntity);
-export default PreviewEntity;

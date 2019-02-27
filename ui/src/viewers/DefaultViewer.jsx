@@ -11,19 +11,20 @@ const messages = defineMessages({
   ignored_file: {
     id: 'document.viewer.ignored_file',
     defaultMessage: 'The system does not work with these types of files. Please download it so you’ll be able to see it.',
-  }
+  },
 });
 
-
-class DefaultViewer extends React.Component {
+@injectIntl
+export default class DefaultViewer extends React.Component {
   render() {
     const { intl, document } = this.props;
     const message = document.error_message || intl.formatMessage(messages.ignored_file);
-    return <ErrorSection visual='issue'
-                         title={intl.formatMessage(messages.no_viewer)}
-                         description={message} />;
+    return (
+      <ErrorSection
+        visual="issue"
+        title={intl.formatMessage(messages.no_viewer)}
+        description={message}
+      />
+    );
   }
 }
-
-DefaultViewer = injectIntl(DefaultViewer);
-export default DefaultViewer;

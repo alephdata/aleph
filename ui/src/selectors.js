@@ -8,9 +8,9 @@ function selectResult(state, query, expand) {
     isError: false,
     shouldLoad: true,
     results: [],
-    ...state.results[key]
+    ...state.results[key],
   };
-  result.results = result.results.map((id) => expand(state, id));
+  result.results = result.results.map(id => expand(state, id));
   return result;
 }
 
@@ -20,7 +20,7 @@ function selectObject(objects, id) {
       isLoading: false,
       isError: false,
       shouldLoad: true,
-    }
+    };
   }
   return objects[id];
 }
@@ -37,6 +37,7 @@ export function selectLocale(state) {
   if (metadata && metadata.app) {
     return metadata.app.locale;
   }
+  return undefined;
 }
 
 export function selectMetadata(state) {
@@ -76,7 +77,7 @@ export function selectEntity(state, entityId) {
 }
 
 
-export function selectDocumentContent(state, documentId, page) {
+export function selectDocumentContent(state, documentId) {
   return selectObject(state.documentContent, documentId);
 }
 
@@ -90,7 +91,7 @@ export function selectEntitiesResult(state, query) {
 
 
 export function selectNotificationsResult(state, query) {
-  return selectResult(state, query, (state, id) => state.notifications[id]);
+  return selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
 }
 
 export function selectEntityTags(state, entityId) {
@@ -106,12 +107,9 @@ export function selectEntityReference(state, entityId, qname) {
   if (!references.total) {
     return undefined;
   }
-  for (let ref of references.results) {
-    if (ref.property.qname === qname) {
-      return ref;
-    }
-  }
-  return references.results[0];
+
+  return references.results
+    .find(ref => ref.property.qname === qname) || references.results[0];
 }
 
 export function selectEntityView(state, entityId, mode, isPreview) {
@@ -125,6 +123,7 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   if (references.total) {
     return references.results[0].property.qname;
   }
+  return undefined;
 }
 
 export function selectDocumentView(state, documentId, mode) {
@@ -132,7 +131,7 @@ export function selectDocumentView(state, documentId, mode) {
     return mode;
   }
   const document = selectEntity(state, documentId);
-  const has = (s) => _.intersection(document.schemata, s).length > 0;
+  const has = s => _.intersection(document.schemata, s).length > 0;
   if (has(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
     return 'view';
   }
@@ -150,17 +149,20 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
     return 'info';
   }
   const collection = selectCollection(state, collectionId);
-  let largestSchema = 'Document', largestCount = 0;
+  let largestSchema = 'Document'; let
+    largestCount = 0;
   const schemata = {};
-  for (let key in collection.schemata) {
-    let norm = state.metadata.schemata.getSchema(key).isDocument() ? 'Document' : key;
-    schemata[norm] = (schemata[norm] || 0) + collection.schemata[key];
-    if (schemata[norm] > largestCount) {
-      largestCount = schemata[norm];
-      largestSchema = norm;
-    }
-  }
-  return largestSchema;  // yay.
+
+  Object.keys(collection.schemata)
+    .forEach((key) => {
+      const norm = state.metadata.schemata.getSchema(key).isDocument() ? 'Document' : key;
+      schemata[norm] = (schemata[norm] || 0) + collection.schemata[key];
+      if (schemata[norm] > largestCount) {
+        largestCount = schemata[norm];
+        largestSchema = norm;
+      }
+    });
+  return largestSchema; // yay.
 }
 
 export function selectCollectionPermissions(state, collectionId) {
@@ -175,14 +177,14 @@ export function selectCollectionXrefMatches(state, query) {
   return selectObject(state.collectionXrefMatches, query.toKey());
 }
 
-export function selectQueryLog(state){
+export function selectQueryLog(state) {
   return selectObject(state, 'queryLogs');
 }
 
-export function selectQueryLogsLimited(state, limit = 9){
+export function selectQueryLogsLimited(state, limit = 9) {
   const queryLogs = selectQueryLog(state);
   let results = [];
-  if(queryLogs.results){
+  if (queryLogs.results) {
     results = queryLogs.results.slice(0, limit);
   }
   return {

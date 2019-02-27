@@ -1,4 +1,4 @@
-/* 
+/*
  * https://stackoverflow.com/questions/23618744/rendering-comma-separated-list-of-links
  */
 export default function wordList(arr, sep) {
@@ -6,7 +6,5 @@ export default function wordList(arr, sep) {
     return [];
   }
 
-  return arr.slice(1).reduce(function(xs, x, i) {
-    return xs.concat([sep, x]);
-  }, [arr[0]]);
+  return arr.slice(1).reduce((xs, x) => xs.concat([sep, x]), [arr[0]]);
 }

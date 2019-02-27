@@ -1,7 +1,8 @@
 import { createReducer } from 'redux-act';
 
-import { resultLoadStart, resultLoadError } from 'src/reducers/util';
-import { updateResults, invalidateResults } from 'src/reducers/util';
+import {
+  resultLoadStart, resultLoadError, updateResults, invalidateResults,
+} from 'src/reducers/util';
 
 import {
   queryCollections,
@@ -10,34 +11,34 @@ import {
   createCollection,
   deleteCollection,
   ingestDocument,
-  deleteDocument
+  deleteDocument,
 } from 'src/actions';
 
 const initialState = {};
 
 export default createReducer({
-  
-  [queryCollections.START]: (state, { query }) => 
-    resultLoadStart(state, query),
 
-  [queryCollections.ERROR]: (state, { error, args: { query } }) =>
-    resultLoadError(state, query, error),
+  [queryCollections.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryCollections.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
 
   [queryCollections.COMPLETE]: updateResults,
 
-  [queryEntities.START]: (state, { query }) => 
-    resultLoadStart(state, query),
+  [queryEntities.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryEntities.ERROR]: (state, { error, args: { query } }) =>
-    resultLoadError(state, query, error),
+  [queryEntities.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
 
   [queryEntities.COMPLETE]: updateResults,
 
-  [queryNotifications.START]: (state, { query }) => 
-    resultLoadStart(state, query),
+  [queryNotifications.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryNotifications.ERROR]: (state, { error, args: { query } }) =>
-    resultLoadError(state, query, error),
+  [queryNotifications.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
 
   [queryNotifications.COMPLETE]: updateResults,
 

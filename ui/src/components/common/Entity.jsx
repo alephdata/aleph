@@ -10,9 +10,9 @@ import c from 'classnames';
 import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
 import togglePreview from 'src/util/togglePreview';
-import { fetchEntity } from 'src/actions';
-import {selectEntity, selectSchemata} from 'src/selectors';
-import {Entity as EntityClass} from  "src/followthemoney/Entity.ts";
+import { fetchEntity as fetchEntityAction } from 'src/actions';
+import { selectEntity, selectSchemata } from 'src/selectors';
+import { Entity as EntityClass } from 'src/followthemoney/Entity.ts';
 import './Entity.scss';
 
 
@@ -24,16 +24,18 @@ class EntityLabel extends Component {
   }
 
   render() {
-    const { entity, icon = false, documentMode = false, truncate } = this.props;
+    const {
+      entity, icon = false, documentMode = false, truncate,
+    } = this.props;
     if (entity === undefined) {
       return null;
     }
-    let { title, name: entityName, file_name: fileName} = entity;
+    let { title, name: entityName, file_name: fileName } = entity;
     // Trim names *before* checking to see which ones look okay to use
     title = title ? title.trim() : null;
     entityName = entityName ? entityName.trim() : null;
     fileName = fileName ? fileName.trim() : null;
-    
+
     let text = title || entityName || fileName;
 
     if (truncate) {
@@ -44,21 +46,21 @@ class EntityLabel extends Component {
       text = fileName || text;
     }
 
-    let entityClassName = entity.status === 'pending' ? 'EntityLabel disabled' : 'EntityLabel';
+    const entityClassName = entity.status === 'pending' ? 'EntityLabel disabled' : 'EntityLabel';
 
     if (!text || !text.length || text.length < 1) {
       return (
-        <span className='EntityLabel untitled'>
+        <span className="EntityLabel untitled">
           {icon && <Schema.Icon schema={entity.schema} />}
           {icon && ' '}
-          <FormattedMessage id='entity.label.missing' defaultMessage="Untitled" />
+          <FormattedMessage id="entity.label.missing" defaultMessage="Untitled" />
         </span>
       );
     }
-    
+
     return (
       <span className={entityClassName} title={title || entityName}>
-        {icon && <Schema.Icon schema={entity.schema}/>}
+        {icon && <Schema.Icon schema={entity.schema} />}
         {icon && ' '}
         {text}
       </span>
@@ -66,6 +68,7 @@ class EntityLabel extends Component {
   }
 }
 
+@withRouter
 class EntityLink extends Component {
   constructor(props) {
     super(props);
@@ -80,7 +83,7 @@ class EntityLink extends Component {
       event.preventDefault();
       togglePreview(history, entity, previewType);
     }
-  };
+  }
 
   render() {
     const { entity, className } = this.props;
@@ -97,22 +100,25 @@ class EntityLink extends Component {
   }
 }
 
-EntityLink = withRouter(EntityLink);
 
+const mapStateToProps = (state, ownProps) => ({
+  entity: selectEntity(state, ownProps.id),
+});
 
+@connect(mapStateToProps, { fetchEntity: fetchEntityAction })
 class EntityLoad extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
-    const { id, entity } = this.props;
+    const { id, entity, fetchEntity } = this.props;
     if (entity.shouldLoad) {
-      this.props.fetchEntity({ id });
+      fetchEntity({ id });
     }
   }
 
@@ -120,40 +126,40 @@ class EntityLoad extends Component {
     const { entity, children, renderWhenLoading } = this.props;
     if (entity.isLoading && renderWhenLoading !== undefined) {
       return renderWhenLoading;
-    } else {
-      return children(entity);
     }
+    return children(entity);
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  entity: selectEntity(state, ownProps.id),
-});
-EntityLoad = connect(mapStateToProps, { fetchEntity })(EntityLoad);
 
 EntityLoad.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.func.isRequired,
-  renderWhenLoading: PropTypes.node,
+  renderWhenLoading: PropTypes.node.isRequired,
 };
-function SmartEntityHOC(Component){
-  return function SmartEntityComponent(props){
-    const {schemata, entity:entityPure, ...rest} = props;
+function SmartEntityHOC(InnerComponent) {
+  return function SmartEntityComponent(props) {
+    const { schemata, entity: entityPure, ...rest } = props;
     const schema = schemata.getSchema(entityPure.schema);
-    const entity = new EntityClass(schema, entityPure)
-    return <Component
-      entity={entity}
-      {...rest}
-    />
-  }
+    const entity = new EntityClass(schema, entityPure);
+    return (
+      <InnerComponent
+        entity={entity}
+        {...rest}
+      />
+    );
+  };
 }
 
 class Entity {
   static Smart = {
-    Link: connect(state => ({schemata:selectSchemata(state)}))(SmartEntityHOC(EntityLink))
+    Link: connect(state => ({ schemata: selectSchemata(state) }))(SmartEntityHOC(EntityLink)),
   };
+
   static Label = EntityLabel;
+
   static Link = EntityLink;
+
   static Load = EntityLoad;
 }
 

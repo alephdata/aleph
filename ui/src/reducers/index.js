@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
 import metadata from './metadata';
 import session from './session';
@@ -33,7 +33,7 @@ const rootReducer = combineReducers({
   collectionXrefIndex,
   collectionXrefMatches,
   queryLogs,
-  results
+  results,
 });
 
 export default rootReducer;

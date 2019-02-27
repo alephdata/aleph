@@ -6,7 +6,7 @@ let counter = 1;
  * or erred.
  */
 export default function asyncActionCreator(actionCreator, {
-  name = actionCreator.name || `asyncAction_${counter++}`,
+  name = actionCreator.name || `asyncAction_${counter += 1}`,
   START = `${name}_START`,
   ERROR = `${name}_ERROR`,
   COMPLETE = `${name}_COMPLETE`,
@@ -34,10 +34,10 @@ export default function asyncActionCreator(actionCreator, {
     }
   };
 
-  if(Object.getOwnPropertyDescriptor(newActionCreator, 'name').configurable){
+  if (Object.getOwnPropertyDescriptor(newActionCreator, 'name').configurable) {
     Object.defineProperty(newActionCreator, 'name', { value: name });
-  }else{
-    Object.assign(newActionCreator, { toString: () => name })
+  } else {
+    Object.assign(newActionCreator, { toString: () => name });
   }
   newActionCreator.innerFunc = actionCreator;
 

@@ -13,7 +13,7 @@ import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
-import { selectCollection } from "src/selectors";
+import { selectCollection } from 'src/selectors';
 
 const messages = defineMessages({
   placeholder: {
@@ -23,11 +23,21 @@ const messages = defineMessages({
   xref_title: {
     id: 'collections.xref.title',
     defaultMessage: 'Cross-reference',
-  }
+  },
 });
 
 
-class CollectionScreenContext extends Component {
+const mapStateToProps = (state, ownProps) => {
+  const { collectionId } = ownProps;
+  return {
+    collection: selectCollection(state, collectionId),
+  };
+};
+
+@connect(mapStateToProps)
+@withRouter
+@injectIntl
+export default class CollectionScreenContext extends Component {
   constructor(props) {
     super(props);
     this.onSearch = this.onSearch.bind(this);
@@ -36,17 +46,19 @@ class CollectionScreenContext extends Component {
   onSearch(queryText) {
     const { history, collection } = this.props;
     const query = {
-      'q': queryText,
-      'filter:collection_id': collection.id
+      q: queryText,
+      'filter:collection_id': collection.id,
     };
     history.push({
-        pathname: '/search',
-        search: queryString.stringify(query)
+      pathname: '/search',
+      search: queryString.stringify(query),
     });
   }
 
   render() {
-    const { intl, collection, collectionId, activeMode } = this.props;
+    const {
+      intl, collection, collectionId, activeMode,
+    } = this.props;
     const { extraBreadcrumbs } = this.props;
 
     if (collection.isError) {
@@ -61,7 +73,7 @@ class CollectionScreenContext extends Component {
       );
     }
 
-    const placeholder = intl.formatMessage(messages.placeholder, {label: collection.label});
+    const placeholder = intl.formatMessage(messages.placeholder, { label: collection.label });
     const breadcrumbs = (
       <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
         <Breadcrumbs.Collection key="collection" collection={collection} />
@@ -78,9 +90,11 @@ class CollectionScreenContext extends Component {
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.ContentPane className="view-menu-flex-direction">
-              <CollectionViews collection={collection}
-                               activeMode={activeMode}
-                               isPreview={false} />
+              <CollectionViews
+                collection={collection}
+                activeMode={activeMode}
+                isPreview={false}
+              />
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <CollectionToolbar collection={collection} />
@@ -95,15 +109,3 @@ class CollectionScreenContext extends Component {
     );
   }
 }
-
-const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps;
-  return {
-    collection: selectCollection(state, collectionId)
-  };
-};
-
-CollectionScreenContext = connect(mapStateToProps, {})(CollectionScreenContext);
-CollectionScreenContext = withRouter(CollectionScreenContext);
-CollectionScreenContext = injectIntl(CollectionScreenContext);
-export default (CollectionScreenContext);

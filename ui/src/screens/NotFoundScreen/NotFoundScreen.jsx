@@ -7,16 +7,15 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 const messages = defineMessages({
   not_found: {
     id: 'error.screen.not_found',
-    defaultMessage: 'The requested page could not be found.'
-  }
+    defaultMessage: 'The requested page could not be found.',
+  },
 });
 
-class NotFoundScreen extends Component {
+
+@injectIntl
+export class NotFoundScreen extends Component {
   render() {
     const { intl } = this.props;
-    return <ErrorScreen title={intl.formatMessage(messages.not_found)} />
+    return <ErrorScreen title={intl.formatMessage(messages.not_found)} />;
   }
 }
-
-NotFoundScreen = injectIntl(NotFoundScreen);
-export default NotFoundScreen;

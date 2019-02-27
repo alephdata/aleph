@@ -6,5 +6,5 @@ import App from 'src/app/App';
 
 ReactDOM.render(
   React.createElement(App),
-  document.getElementById('root')
+  document.getElementById('root'),
 );
