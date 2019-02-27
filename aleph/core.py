@@ -180,27 +180,30 @@ def url_for(*a, **kw):
         kw['_external'] = False
         query = kw.pop('_query', None)
         authorize = kw.pop('_authorize', False)
+        relative = kw.pop('_relative', False)
         path = flask_url_for(*a, **kw)
         if authorize is True:
             token = request.authz.to_token(scope=path)
             query = list(ensure_list(query))
             query.append(('api_key', token))
-        return url_external(path, query)
+        return url_external(path, query, relative=relative)
     except RuntimeError:
         return None
 
 
-def url_external(path, query):
+def url_external(path, query, relative=False):
     """Generate external URLs with HTTPS (if configured)."""
     try:
+        if query is not None:
+            path = path + query_string(query)
+        if relative:
+            return path
+
         api_url = request.url_root
         if settings.URL_SCHEME is not None:
             parsed = urlparse(api_url)
             parsed = parsed._replace(scheme=settings.URL_SCHEME)
             api_url = parsed.geturl()
-
-        if query is not None:
-            path = path + query_string(query)
         return urljoin(api_url, path)
     except RuntimeError:
         return None
