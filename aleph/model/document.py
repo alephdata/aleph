@@ -94,7 +94,7 @@ class Document(db.Model, DatedModel, Metadata):
 
     @property
     def ancestors(self):
-        if self.parent_id is None or not self.parent:
+        if self.parent_id is None:
             return []
         key = cache.key('ancestors', self.id)
         ancestors = cache.get_list(key)

@@ -183,14 +183,12 @@ def index_operation(data):
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
-    fps.discard(None)
-    data['fingerprints'] = list(fps)
+    data['fingerprints'] = [fp for fp in fps if fp is not None]
 
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
 
-    entity_id = data.pop('id')
+    entity_id = str(data.pop('id'))
     data.pop('_index', None)
-    schema = model.get(data.get('schema'))
-    index = entities_write_index(schema)
+    index = entities_write_index(data.get('schema'))
     return entity_id, index, data

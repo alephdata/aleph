@@ -6,7 +6,8 @@ from aleph.core import db
 from aleph.model import DocumentRecord, Document
 from aleph.index.entities import index_operation
 from aleph.index.indexes import entities_read_index
-from aleph.index.util import INDEX_MAX_LEN, query_delete, bulk_actions
+from aleph.index.util import INDEX_MAX_LEN, BULK_PAGE
+from aleph.index.util import query_delete, bulk_actions
 
 log = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ def generate_document(document):
     if document.supports_records:
         q = db.session.query(DocumentRecord)
         q = q.filter(DocumentRecord.document_id == document.id)
-        for idx, record in enumerate(q.yield_per(5000)):
+        for idx, record in enumerate(q.yield_per(BULK_PAGE)):
             texts = list(record.texts)
             if total_len < INDEX_MAX_LEN:
                 total_len += sum((len(t) for t in texts))
@@ -70,9 +71,13 @@ def generate_document(document):
 
 def generate_collection_docs(collection):
     q = Document.by_collection(collection.id)
-    for document in q.yield_per(1000):
+    q = q.order_by(Document.id.asc())
+    for idx, document in enumerate(q.yield_per(BULK_PAGE)):
         try:
             log.info("Index [%s]: %s", document.id, document.name)
             yield from generate_document(document)
         except Exception:
             log.exception("Cannot index [%s]: %s", document.id, document.name)
+
+            if idx % 1000 == 0:
+                db.session.expunge_all()

@@ -1,5 +1,4 @@
 import logging
-from banal import ensure_dict
 from normality import stringify
 from followthemoney import model
 from followthemoney.types import registry
@@ -67,9 +66,9 @@ class DocumentRecord(db.Model):
             proxy.make_id('record', self.id)
             proxy.set('table', self.document_id)
             proxy.set('index', self.index)
-            data = ensure_dict(self.data)
-            values = [v for (k, v) in sorted(data.items())]
-            proxy.set('cells', registry.json.pack(values))
+            if self.data is not None:
+                values = [v for (k, v) in sorted(self.data.items())]
+                proxy.set('cells', registry.json.pack(values))
             return proxy
 
     def to_dict(self):
