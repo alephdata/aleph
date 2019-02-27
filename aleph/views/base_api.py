@@ -152,6 +152,7 @@ def handle_server_error(err):
 def handle_invalid_data(err):
     return jsonify({
         'status': 'error',
+        'message': str(err),
         'errors': err.errors
     }, status=400)
 
