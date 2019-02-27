@@ -135,7 +135,7 @@ class Authz(object):
                        data.get('roles'),
                        data.get('is_admin', False))
         except jwt.DecodeError:
-            raise Unauthorized()
+            raise
 
     @classmethod
     def flush(cls):
