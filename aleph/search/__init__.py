@@ -21,10 +21,10 @@ class EntitiesQuery(Query):
 
     def get_index(self):
         schemata = self.parser.getlist('filter:schema')
-        schemata = schemata or self.parser.getlist('filter:schemata')
         if len(schemata):
-            return entities_read_index(schema=schemata)
-        return entities_read_index()
+            return entities_read_index(schema=schemata, expand=False)
+        schemata = self.parser.getlist('filter:schemata')
+        return entities_read_index(schema=schemata)
 
 
 class MatchQuery(EntitiesQuery):
