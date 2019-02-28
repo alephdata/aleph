@@ -1,9 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import {
-  defineMessages, injectIntl, FormattedNumber, FormattedMessage,
+  defineMessages, FormattedNumber, FormattedMessage,
 } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
 import { Icon } from '@blueprintjs/core';
@@ -22,6 +20,7 @@ import Screen from 'src/components/Screen/Screen';
 import togglePreview from 'src/util/togglePreview';
 
 import './SearchScreen.scss';
+import { enhancer } from '../OAuthScreen/enhancers';
 
 const messages = defineMessages({
   facet_schema: {
@@ -74,7 +73,20 @@ const messages = defineMessages({
   },
 });
 
-class SearchScreen extends React.Component {
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+
+  // We normally only want Things, not Intervals (relations between things).
+  const context = {
+    highlight: true,
+    'filter:schemata': 'Thing',
+  };
+  const query = Query.fromLocation('entities', location, context, '');
+  const result = selectEntitiesResult(state, query);
+  return { query, result };
+};
+
+export class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
     const { intl } = props;
@@ -261,9 +273,12 @@ class SearchScreen extends React.Component {
         <DualPane className="SearchScreen">
           <DualPane.SidePane className="side-pane-padding">
             <div
-              role="button"
+              role="switch"
+              aria-checked={!hideFacets}
+              tabIndex={0}
               className="visible-sm-flex facets total-count bp3-text-muted"
               onClick={this.toggleFacets}
+              onKeyPress={this.toggleFacets}
             >
               <Icon icon={plusMinusIcon} />
               <span className="total-count-span">
@@ -311,21 +326,6 @@ class SearchScreen extends React.Component {
     );
   }
 }
-
-
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-
-  // We normally only want Things, not Intervals (relations between things).
-  const context = {
-    highlight: true,
-    'filter:schemata': 'Thing',
-  };
-  const query = Query.fromLocation('entities', location, context, '');
-  const result = selectEntitiesResult(state, query);
-  return { query, result };
-};
-
-SearchScreen = connect(mapStateToProps, { queryEntities })(SearchScreen);
-SearchScreen = withRouter(SearchScreen);
-export default injectIntl(SearchScreen);
+export default enhancer({
+  mapStateToProps, mapDispatchToProps: { queryEntities },
+})(SearchScreen);

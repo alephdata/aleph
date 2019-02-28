@@ -33,6 +33,7 @@
     "numeral": "^2.0.6"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.3.0",
     "@svgr/webpack": "2.4.1",
     "babel-eslint": "^10.0.1",
     "babel-jest": "24.1.0",
@@ -157,12 +158,8 @@
       "react/no-multi-comp": "off",
       "react/destructuring-assignment": "off",
       "import/no-extraneous-dependencies": "off",
+      "import/no-named-as-default": "off",
       "import/prefer-default-export": "off"
-    },
-    "parserOptions": {
-      "ecmaFeatures": {
-        "legacyDecorators": true
-      }
     }
   },
   "sideEffects": [

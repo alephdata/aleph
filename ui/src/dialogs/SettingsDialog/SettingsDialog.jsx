@@ -26,8 +26,7 @@ const mapStateToProps = state => ({
   role: state.session.role,
 });
 
-@connect(mapStateToProps, { fetchRole: fetchRoleAction, updateRole: updateRoleAction })
-export default class SettingsDialog extends Component {
+export class SettingsDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -246,3 +245,8 @@ export default class SettingsDialog extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, {
+  fetchRole: fetchRoleAction,
+  updateRole: updateRoleAction,
+});

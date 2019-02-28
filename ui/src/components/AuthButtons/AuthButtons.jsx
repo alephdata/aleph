@@ -33,8 +33,7 @@ const messages = defineMessages({
     defaultMessage: 'Search history',
   },
 });
-@injectIntl
-export default class AuthButtons extends Component {
+export class AuthButtons extends Component {
   constructor() {
     super();
     this.state = {
@@ -114,3 +113,4 @@ export default class AuthButtons extends Component {
     return null;
   }
 }
+export default injectIntl(AuthButtons);

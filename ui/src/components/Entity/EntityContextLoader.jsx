@@ -1,18 +1,21 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from "react-router";
+import { PureComponent } from 'react';
 
 import { queryEntitySimilar } from 'src/queries';
-import { fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities } from 'src/actions';
-import { selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult } from 'src/selectors';
+import {
+  fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
+} from 'src/actions';
+import {
+  selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
+} from 'src/selectors';
+import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
 
 
-class EntityScreenContext extends Component {
+class EntityScreenContext extends PureComponent {
   componentDidMount() {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
@@ -34,7 +37,7 @@ class EntityScreenContext extends Component {
 
     const { similarQuery, similarResult } = this.props;
     if (similarResult.shouldLoad) {
-      this.props.queryEntities({query: similarQuery});
+      this.props.queryEntities({ query: similarQuery });
     }
   }
 
@@ -51,11 +54,14 @@ const mapStateToProps = (state, ownProps) => {
     entity: selectEntity(state, entityId),
     tagsResult: selectEntityTags(state, entityId),
     referencesResult: selectEntityReferences(state, entityId),
-    similarQuery: similarQuery,
-    similarResult: selectEntitiesResult(state, similarQuery)
+    similarQuery,
+    similarResult: selectEntitiesResult(state, similarQuery),
   };
 };
 
-EntityScreenContext = connect(mapStateToProps, { fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities })(EntityScreenContext);
-EntityScreenContext = withRouter(EntityScreenContext);
-export default (EntityScreenContext);
+export default connectedWIthRouter({
+  mapStateToProps,
+  mapDispatchToProps: {
+    fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
+  },
+})(EntityScreenContext);

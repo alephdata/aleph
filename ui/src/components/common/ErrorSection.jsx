@@ -8,13 +8,7 @@ import { selectSession, selectMetadata } from 'src/selectors';
 
 import './ErrorSection.scss';
 
-const mapStateToProps = state => ({
-  metadata: selectMetadata(state),
-  session: selectSession(state),
-});
-
-@connect(mapStateToProps)
-export default class ErrorSection extends PureComponent {
+export class ErrorSection extends PureComponent {
   constructor(props) {
     super(props);
     this.state = { isOpen: false };
@@ -63,3 +57,10 @@ export default class ErrorSection extends PureComponent {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  metadata: selectMetadata(state),
+  session: selectSession(state),
+});
+
+export default connect(mapStateToProps)(ErrorSection);

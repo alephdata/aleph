@@ -3,8 +3,7 @@ import { withRouter } from 'react-router';
 import queryString from 'query-string';
 import { Button } from '@blueprintjs/core';
 
-@withRouter
-export default class CloseButton extends React.Component {
+export class CloseButton extends React.Component {
   constructor(props) {
     super(props);
     this.close = this.close.bind(this);
@@ -30,3 +29,4 @@ export default class CloseButton extends React.Component {
     );
   }
 }
+export default withRouter(CloseButton);

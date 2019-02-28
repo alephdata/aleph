@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import {
-  defineMessages, injectIntl, FormattedMessage, FormattedNumber,
+  defineMessages, FormattedMessage, FormattedNumber,
 } from 'react-intl';
 import { debounce } from 'lodash';
 import { Waypoint } from 'react-waypoint';
@@ -17,6 +16,7 @@ import Screen from 'src/components/Screen/Screen';
 import { CollectionListItem } from 'src/components/Collection';
 
 import './SourcesIndexScreen.scss';
+import { translatableConnected } from '../OAuthScreen/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -53,9 +53,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@injectIntl
-@connect(mapStateToProps, { queryCollections })
-export default class SourcesIndexScreen extends Component {
+export class SourcesIndexScreen extends Component {
   constructor(props) {
     super(props);
     const { intl } = props;
@@ -183,3 +181,8 @@ export default class SourcesIndexScreen extends Component {
     );
   }
 }
+
+export default translatableConnected({
+  mapStateToProps,
+  mapDispatchToProps: { queryCollections },
+})(SourcesIndexScreen);

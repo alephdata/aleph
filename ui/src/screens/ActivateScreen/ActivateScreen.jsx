@@ -1,23 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/Screen/Screen';
 import { endpoint } from 'src/app/api';
 import { loginWithPassword } from 'src/actions/sessionActions';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import { PasswordAuthActivate } from 'src/components/auth/PasswordAuth';
+import { translatableConnected } from '../OAuthScreen/enhancers';
 
 
-const mapStateToProps = ({ session }) => ({ session });
-
-@connect(
-  mapStateToProps,
-  { loginWithPassword },
-)
-@injectIntl
-export default class ActivateScreen extends Component {
+export class ActivateScreen extends Component {
   constructor(props) {
     super(props);
     this.onActivate = this.onActivate.bind(this);
@@ -54,3 +47,8 @@ export default class ActivateScreen extends Component {
     );
   }
 }
+const mapStateToProps = ({ session }) => ({ session });
+const mapDispatchToProps = { loginWithPassword };
+export default translatableConnected({
+  mapStateToProps, mapDispatchToProps,
+})(ActivateScreen);

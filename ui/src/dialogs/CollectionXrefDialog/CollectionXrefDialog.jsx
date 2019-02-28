@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import {
   RadioGroup, Radio, Callout, Dialog,
 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { tiggerXrefMatches, queryCollections } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
 import CollectionXrefDialogActions from './CollectionXrefDialogActions';
@@ -11,6 +10,7 @@ import CollectionXrefSelect from './CollectionXrefSelect';
 
 
 import './CollectionXrefDialog.scss';
+import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
 
 
 const messages = defineMessages({
@@ -54,13 +54,13 @@ class CollectionXrefDialog extends Component {
   async onConfirm() {
     const { xrefAgainst, selectedCollections } = this.state;
     const {
-      collection, intl, tiggerXrefMatches, toggleDialog,
+      collection, intl, toggleDialog,
     } = this.props;
     let againstCollectionIds = null;
     if (xrefAgainst === 'specific') {
       againstCollectionIds = selectedCollections.map(c => parseInt(c.id, 10));
     }
-    await tiggerXrefMatches(collection.id, againstCollectionIds);
+    await this.props.tiggerXrefMatches(collection.id, againstCollectionIds);
     toggleDialog();
     showSuccessToast(intl.formatMessage(messages.processing));
   }
@@ -79,16 +79,14 @@ class CollectionXrefDialog extends Component {
     }
   }
 
-  renderXrefAllWarning() {
-    return (
-      <Callout intent="warning">
-        <FormattedMessage
-          id="collection.xref.alert.text"
-          defaultMessage="Cross-referencing against all other data may take a lot of time. Only start this process once and allow several hours for it to complete."
-        />
-      </Callout>
-    );
-  }
+  renderXrefAllWarning = () => (
+    <Callout intent="warning">
+      <FormattedMessage
+        id="collection.xref.alert.text"
+        defaultMessage="Cross-referencing against all other data may take a lot of time. Only start this process once and allow several hours for it to complete."
+      />
+    </Callout>
+  )
 
   renderXrefSelection() {
     const { selectedCollections } = this.state;
@@ -135,7 +133,6 @@ class CollectionXrefDialog extends Component {
 }
 
 
-const mapStateToProps = () => ({});
-CollectionXrefDialog = injectIntl(CollectionXrefDialog);
-CollectionXrefDialog = connect(mapStateToProps, { tiggerXrefMatches, queryCollections })(CollectionXrefDialog);
-export default CollectionXrefDialog;
+export default translatableConnected({
+  mapDispatchToProps: { tiggerXrefMatches, queryCollections },
+})(CollectionXrefDialog);

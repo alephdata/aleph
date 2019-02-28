@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Dialog} from '@blueprintjs/core/lib/esm/components/dialog/dialog';
-import {defineMessages, injectIntl} from 'react-intl';
+import React, { PureComponent } from 'react';
+import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
+import { defineMessages } from 'react-intl';
 
-import {fetchRole, updateRole} from 'src/actions';
-import {selectSession} from 'src/selectors';
-import QueryLogs from "../../components/QueryLogs/QueryLogs";
+import { fetchRole, updateRole } from 'src/actions';
+import { selectSession } from 'src/selectors';
+import QueryLogs from '../../components/QueryLogs/QueryLogs';
+import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
 
 
 const messages = defineMessages({
@@ -16,8 +16,7 @@ const messages = defineMessages({
 });
 
 
-class QueryLogsDialog extends Component {
-
+class QueryLogsDialog extends PureComponent {
   render() {
     const { intl } = this.props;
 
@@ -26,7 +25,8 @@ class QueryLogsDialog extends Component {
         icon="history"
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
-        title={intl.formatMessage(messages.title)}>
+        title={intl.formatMessage(messages.title)}
+      >
         <div className="bp3-dialog-body">
           <QueryLogs
             closeDialog={this.props.toggleDialog}
@@ -37,11 +37,12 @@ class QueryLogsDialog extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    session: selectSession(state),
-    role: state.session.role
-  };
-};
+const mapStateToProps = state => ({
+  session: selectSession(state),
+  role: state.session.role,
+});
 
-export default connect(mapStateToProps, {fetchRole, updateRole})(injectIntl(QueryLogsDialog));
+export default translatableConnected({
+  mapStateToProps,
+  mapDispatchToProps: { fetchRole, updateRole },
+})(QueryLogsDialog);

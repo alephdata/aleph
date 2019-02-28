@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { withRouter, Redirect } from 'react-router';
-import { connect } from 'react-redux';
+import React, { PureComponent } from 'react';
+import { Redirect } from 'react-router';
 import queryString from 'query-string';
 
 import { selectEntity, selectEntityReference, selectEntityView } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
+import { connectedWIthRouter } from '../OAuthScreen/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId, mode } = ownProps.match.params;
@@ -19,9 +19,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps)
-@withRouter
-export default class EntityScreen extends Component {
+export class EntityScreen extends PureComponent {
   render() {
     const { entityId, entity, mode } = this.props;
     if (entity.schemata && entity.schema.isDocument()) {
@@ -37,3 +35,5 @@ export default class EntityScreen extends Component {
     return <EntityScreenContext entityId={entityId} activeMode={mode} />;
   }
 }
+
+export default connectedWIthRouter({ mapStateToProps })(EntityScreen);

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
@@ -16,6 +14,7 @@ import { selectEntitiesResult } from 'src/selectors';
 
 import './PdfViewer.scss';
 import TextViewer from 'src/viewers/TextViewer';
+import { connectedWIthRouter } from '../screens/OAuthScreen/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
@@ -44,9 +43,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 
-@connect(mapStateToProps, { queryEntities })
-@withRouter
-export default class PdfViewer extends Component {
+export class PdfViewer extends Component {
   static TextMode(props) {
     const { document, result, page } = props;
     return result.total > 0 && (
@@ -289,3 +286,8 @@ Page
     );
   }
 }
+
+export default connectedWIthRouter({
+  mapStateToProps,
+  mapDispatchToProps: { queryEntities },
+})(PdfViewer);

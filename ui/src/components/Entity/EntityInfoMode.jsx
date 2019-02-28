@@ -3,9 +3,8 @@ import { FormattedMessage } from 'react-intl';
 import { Count, Property } from 'src/components/common';
 
 
-
-function EntityInfoMode() {
-  const { entity } = this.props;
+function EntityInfoMode(props) {
+  const { entity } = props;
 
   const entityProperties = entity.getProperties()
     .filter(propValue => !propValue.isEmpty())
@@ -63,7 +62,6 @@ function EntityInfoMode() {
     </ul>
   );
 }
-
 
 
 export default EntityInfoMode;

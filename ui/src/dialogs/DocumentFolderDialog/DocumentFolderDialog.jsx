@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Intent, Dialog, Button } from '@blueprintjs/core';
-import { defineMessages, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { defineMessages } from 'react-intl';
 
 import { ingestDocument as ingestDocumentAction } from 'src/actions';
+import { enhancer } from '../../screens/OAuthScreen/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -22,12 +21,7 @@ const messages = defineMessages({
 });
 
 
-const mapStateToProps = () => ({});
-
-@injectIntl
-@withRouter
-@connect(mapStateToProps, { ingestDocument: ingestDocumentAction })
-export default class DocumentFolderDialog extends Component {
+export class DocumentFolderDialog extends Component {
   constructor(props) {
     super(props);
     this.state = { title: '' };
@@ -108,3 +102,5 @@ export default class DocumentFolderDialog extends Component {
     );
   }
 }
+const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
+export default enhancer({ mapDispatchToProps })(DocumentFolderDialog);

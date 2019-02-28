@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import queryString from 'query-string';
 import {
-  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
+  defineMessages, FormattedMessage, FormattedNumber,
 } from 'react-intl';
 import numeral from 'numeral';
 import { Button, ControlGroup, Intent } from '@blueprintjs/core';
@@ -13,6 +12,7 @@ import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 
 import './HomeScreen.scss';
+import { translatableConnected } from '../OAuthScreen/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -34,9 +34,7 @@ const mapStateToProps = state => ({
   metadata: selectMetadata(state),
 });
 
-@injectIntl
-@connect(mapStateToProps, { fetchStatistics })
-export default class HomeScreen extends Component {
+export class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = { value: '' };
@@ -118,3 +116,8 @@ export default class HomeScreen extends Component {
     );
   }
 }
+
+export default translatableConnected({
+  mapStateToProps,
+  mapDispatchToProps: { fetchStatistics },
+});

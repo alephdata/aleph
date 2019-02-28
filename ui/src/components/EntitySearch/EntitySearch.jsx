@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { Waypoint } from 'react-waypoint';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { queryEntities as queryEntitiesAction } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
+import { enhancer } from '../../screens/OAuthScreen/enhancers';
 
 const messages = defineMessages({
   no_results_title: {
@@ -42,10 +41,8 @@ const mapStateToProps = (state, ownProps) => {
     result: selectEntitiesResult(state, searchQuery),
   };
 };
-@connect(mapStateToProps, { queryEntities: queryEntitiesAction })
-@withRouter
-@injectIntl
-export default class EntitySearch extends Component {
+
+export class EntitySearch extends Component {
   constructor(props) {
     super(props);
     this.updateQuery = this.updateQuery.bind(this);
@@ -136,3 +133,7 @@ export default class EntitySearch extends Component {
     );
   }
 }
+export default enhancer({
+  mapStateToProps,
+  mapDispatchToProps: { queryEntities: queryEntitiesAction },
+})(EntitySearch);

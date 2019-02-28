@@ -13,8 +13,8 @@ const mapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.previewId),
 });
 
-@connect(mapStateToProps)
-export default class PreviewCollection extends React.Component {
+
+export class PreviewCollection extends React.Component {
   renderContext() {
     const { collection, previewMode = 'info' } = this.props;
     if (collection.isError) {
@@ -52,3 +52,4 @@ export default class PreviewCollection extends React.Component {
     );
   }
 }
+export default connect(mapStateToProps)(PreviewCollection);

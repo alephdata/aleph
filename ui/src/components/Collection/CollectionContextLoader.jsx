@@ -1,29 +1,28 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from "react-router";
+import { PureComponent } from 'react';
 
 import { fetchCollection, fetchCollectionXrefIndex } from 'src/actions';
-import { selectCollection, selectCollectionXrefIndex } from "src/selectors";
+import { selectCollection, selectCollectionXrefIndex } from 'src/selectors';
+import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
 
 
-class CollectionContextLoader extends Component {
+class CollectionContextLoader extends PureComponent {
   componentDidMount() {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
   fetchIfNeeded() {
     const { collectionId, collection } = this.props;
     if (collection.shouldLoad) {
-      this.props.fetchCollection({id: collectionId});
+      this.props.fetchCollection({ id: collectionId });
     }
 
     const { xrefIndex } = this.props;
     if (xrefIndex.shouldLoad) {
-      this.props.fetchCollectionXrefIndex({id: collectionId});
+      this.props.fetchCollectionXrefIndex({ id: collectionId });
     }
   }
 
@@ -37,10 +36,10 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps;
   return {
     collection: selectCollection(state, collectionId),
-    xrefIndex: selectCollectionXrefIndex(state, collectionId)
+    xrefIndex: selectCollectionXrefIndex(state, collectionId),
   };
 };
 
-CollectionContextLoader = withRouter(CollectionContextLoader);
-CollectionContextLoader = connect(mapStateToProps, { fetchCollection, fetchCollectionXrefIndex })(CollectionContextLoader);
-export default (CollectionContextLoader);
+export default connectedWIthRouter({
+  mapStateToProps, mapDispatchToProps: { fetchCollection, fetchCollectionXrefIndex },
+})(CollectionContextLoader);

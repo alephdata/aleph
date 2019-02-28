@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent, Component } from 'react';
 import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -55,7 +55,7 @@ class RoleLabel extends Component {
 }
 
 
-class RoleLink extends Component {
+class RoleLink extends PureComponent {
   render() {
     const { role } = this.props;
     if (!role) {
@@ -70,12 +70,12 @@ class RoleLink extends Component {
 }
 
 
-class RoleList extends Component {
+class RoleList extends PureComponent {
   render() {
     const { roles, truncate = Infinity } = this.props;
     if (!roles) return null;
 
-    let names = roles.map((role, i) => <RoleLink key={role.id} role={role} {...this.props} />);
+    let names = roles.map(role => <RoleLink key={role.id} role={role} {...this.props} />);
 
     // Truncate if too long
     if (names.length > truncate) {
@@ -86,7 +86,7 @@ class RoleList extends Component {
 }
 
 
-class Select extends Component {
+class Select extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -113,16 +113,14 @@ class Select extends Component {
     this.props.onSelect(role);
   }
 
-  renderRole(role, { handleClick, modifiers }) {
-    return (
-      <MenuItem
-        className={modifiers.active ? Classes.ACTIVE : ''}
-        key={role.id}
-        onClick={handleClick}
-        text={role.label}
-      />
-    );
-  }
+  renderRole = (role, { handleClick, modifiers }) => (
+    <MenuItem
+      className={modifiers.active ? Classes.ACTIVE : ''}
+      key={role.id}
+      onClick={handleClick}
+      text={role.label}
+    />
+  )
 
   render() {
     const { intl, role } = this.props;

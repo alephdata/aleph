@@ -14,8 +14,8 @@ const messages = defineMessages({
   },
 });
 
-@injectIntl
-export default class DefaultViewer extends React.Component {
+
+export class DefaultViewer extends React.PureComponent {
   render() {
     const { intl, document } = this.props;
     const message = document.error_message || intl.formatMessage(messages.ignored_file);
@@ -28,3 +28,5 @@ export default class DefaultViewer extends React.Component {
     );
   }
 }
+
+export default injectIntl(DefaultViewer);

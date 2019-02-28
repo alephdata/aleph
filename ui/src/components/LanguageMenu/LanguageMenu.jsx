@@ -15,8 +15,7 @@ const mapStateToProps = state => ({
   config: state.config,
 });
 
-@connect(mapStateToProps, { setLocale })
-export default class LanguageMenu extends Component {
+export class LanguageMenu extends Component {
   onSetLanguage(locale) {
     return async (event) => {
       event.preventDefault();
@@ -48,3 +47,4 @@ export default class LanguageMenu extends Component {
     );
   }
 }
+export default connect(mapStateToProps, { setLocale })(LanguageMenu);

@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { Callout } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
 import { Toolbar } from 'src/components/Toolbar';
@@ -12,6 +10,7 @@ import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
+import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -34,9 +33,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps, { queryEntities })
-@withRouter
-export default class DocumentManager extends Component {
+
+export class DocumentManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -128,3 +126,8 @@ export default class DocumentManager extends Component {
     );
   }
 }
+
+export default connectedWIthRouter({
+  mapStateToProps,
+  mapDispatchToProps: { queryEntities },
+})(DocumentManager);

@@ -14,8 +14,8 @@ const mapStateToProps = state => ({
   session: selectSession(state),
 });
 
-@connect(mapStateToProps)
-export default class SignInCallout extends React.Component {
+
+export class SignInCallout extends React.Component {
   constructor(props) {
     super(props);
     this.state = { isOpen: false };
@@ -47,3 +47,5 @@ export default class SignInCallout extends React.Component {
     );
   }
 }
+
+export default connect(mapStateToProps)(SignInCallout);

@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { Category, Country, Role, Date, Collection, URL } from 'src/components/common';
+import {
+  Category, Country, Role, Date, Collection, URL,
+} from 'src/components/common';
 
 import './CollectionOverview.scss';
 
-class CollectionOverview extends Component {
+class CollectionOverview extends PureComponent {
   render() {
     const { collection, hasHeader = false } = this.props;
     if (!collection) {
@@ -13,20 +15,19 @@ class CollectionOverview extends Component {
     }
 
 
-
     return (
-      <div className='CollectionOverview'>
+      <div className="CollectionOverview">
         {hasHeader && (
           <h4>
             <Collection.Link collection={collection} />
           </h4>
         )}
         <p itemProp="description">{collection.summary}</p>
-        <ul className='info-sheet'>
+        <ul className="info-sheet">
           { !collection.casefile && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.category" defaultMessage="Category"/>
+                <FormattedMessage id="collection.category" defaultMessage="Category" />
               </span>
               <span className="value">
                 <Category collection={collection} />
@@ -36,7 +37,7 @@ class CollectionOverview extends Component {
           { (collection.publisher || collection.publisher_url) && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.publisher" defaultMessage="Publisher"/>
+                <FormattedMessage id="collection.publisher" defaultMessage="Publisher" />
               </span>
               <span className="value">
                 { !collection.publisher && (
@@ -49,14 +50,14 @@ class CollectionOverview extends Component {
                   <a href={collection.publisher_url} target="_blank" rel="noopener noreferrer">
                     {collection.publisher}
                   </a>
-                )} 
+                )}
               </span>
             </li>
           )}
           { collection.info_url && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.info_url" defaultMessage="Information URL"/>
+                <FormattedMessage id="collection.info_url" defaultMessage="Information URL" />
               </span>
               <span className="value">
                 <URL value={collection.info_url} itemProp="identifier" />
@@ -66,7 +67,7 @@ class CollectionOverview extends Component {
           { collection.data_url && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.data_url" defaultMessage="Data URL"/>
+                <FormattedMessage id="collection.data_url" defaultMessage="Data URL" />
               </span>
               <span className="value">
                 <URL value={collection.data_url} />
@@ -76,7 +77,7 @@ class CollectionOverview extends Component {
           { collection.creator && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.creator" defaultMessage="Manager"/>
+                <FormattedMessage id="collection.creator" defaultMessage="Manager" />
               </span>
               <span className="value">
                 <Role.Link role={collection.creator} />
@@ -86,7 +87,7 @@ class CollectionOverview extends Component {
           { (collection.team && collection.team.length > 1) && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.team" defaultMessage="Accessible to"/>
+                <FormattedMessage id="collection.team" defaultMessage="Accessible to" />
               </span>
               <span className="value">
                 <Role.List roles={collection.team} />
@@ -96,7 +97,7 @@ class CollectionOverview extends Component {
           { collection.countries && !!collection.countries.length && (
             <li>
               <span className="key">
-                <FormattedMessage id="collection.countries" defaultMessage="Country"/>
+                <FormattedMessage id="collection.countries" defaultMessage="Country" />
               </span>
               <span className="value" itemProp="spatialCoverage">
                 <Country.List codes={collection.countries} />
@@ -105,7 +106,7 @@ class CollectionOverview extends Component {
           )}
           <li>
             <span className="key">
-              <FormattedMessage id="collection.updated_at" defaultMessage="Last updated"/>
+              <FormattedMessage id="collection.updated_at" defaultMessage="Last updated" />
             </span>
             <span className="value" itemProp="dateModified">
               <Date value={collection.updated_at} />

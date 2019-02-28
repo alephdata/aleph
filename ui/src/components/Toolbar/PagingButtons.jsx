@@ -2,12 +2,12 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { ButtonGroup, Button, AnchorButton } from "@blueprintjs/core";
+import { ButtonGroup, Button, AnchorButton } from '@blueprintjs/core';
 
 import './PagingButtons.scss';
 
 
-class PagingButtons extends React.Component {
+class PagingButtons extends React.PureComponent {
   render() {
     const { document, location, numberOfPages } = this.props;
 
@@ -17,7 +17,9 @@ class PagingButtons extends React.Component {
 
     // Preserve exsting hash value while updating any existing value for 'page'
     const parsedHash = queryString.parse(location.hash);
-    const currentPage = (parsedHash.page && parseInt(parsedHash.page, 10) <= numberOfPages) ? parseInt(parsedHash.page, 10) : 1;
+    const currentPage = (
+      parsedHash.page && parseInt(parsedHash.page, 10) <= numberOfPages
+    ) ? parseInt(parsedHash.page, 10) : 1;
 
     parsedHash.page = currentPage - 1;
     const prevButtonLink = queryString.stringify(parsedHash);
@@ -27,29 +29,28 @@ class PagingButtons extends React.Component {
 
     // Only displays paging buttons on PDF docs
     // Having the logic here makes it easier to use this component.
-    if (currentPage && currentPage > 0 &&
-        numberOfPages && numberOfPages > 0) {
+    if (currentPage && currentPage > 0
+        && numberOfPages && numberOfPages > 0) {
       return (
-        <ButtonGroup className="PagingButtons" fill={true}>
-          <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={currentPage <= 1}/>
+        <ButtonGroup className="PagingButtons" fill>
+          <AnchorButton href={`#${prevButtonLink}`} icon="arrow-left" disabled={currentPage <= 1} />
           <Button disabled className="paging-text">
             <FormattedMessage
-                id="document.paging"
-                defaultMessage="Page {currentPage} of {numberOfPages}"
-                values={{
-                    currentPage: currentPage,
-                    numberOfPages: numberOfPages
-                }}
+              id="document.paging"
+              defaultMessage="Page {currentPage} of {numberOfPages}"
+              values={{
+                currentPage,
+                numberOfPages,
+              }}
             />
           </Button>
-          <AnchorButton href={`#${nextButtonLink}`} icon="arrow-right" disabled={currentPage >= numberOfPages}/>
+          <AnchorButton href={`#${nextButtonLink}`} icon="arrow-right" disabled={currentPage >= numberOfPages} />
         </ButtonGroup>
       );
-    } else {
-      return null;
     }
+    return null;
   }
 }
 
-PagingButtons = withRouter(PagingButtons);
-export default PagingButtons;
+
+export default withRouter(PagingButtons);

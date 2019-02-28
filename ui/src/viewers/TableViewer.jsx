@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import {
   Cell, Column, Table, TableLoadingOption, TruncatedFormat,
 } from '@blueprintjs/table';
@@ -9,6 +7,7 @@ import { queryEntities } from 'src/actions';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
 import './TableViewer.scss';
+import { connectedWIthRouter } from '../screens/OAuthScreen/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -28,9 +27,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps, { queryEntities })
-@withRouter
-export default class TableViewer extends Component {
+
+export class TableViewer extends Component {
   constructor(props) {
     super(props);
     this.state = { requestedRow: 0 };
@@ -118,3 +116,5 @@ export default class TableViewer extends Component {
     );
   }
 }
+const mapDispatchToProps = { queryEntities };
+export default connectedWIthRouter({ mapStateToProps, mapDispatchToProps });

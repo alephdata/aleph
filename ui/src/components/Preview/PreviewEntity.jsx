@@ -20,8 +20,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps)
-export default class PreviewEntity extends React.Component {
+
+export class PreviewEntity extends React.Component {
   renderContext() {
     const { entity, references, previewMode } = this.props;
     if (entity.isError) {
@@ -52,3 +52,5 @@ export default class PreviewEntity extends React.Component {
     );
   }
 }
+
+export default connect(mapStateToProps)(PreviewEntity);

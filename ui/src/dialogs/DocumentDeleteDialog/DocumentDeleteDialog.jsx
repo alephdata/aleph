@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
 
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { deleteDocument } from 'src/actions';
+import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
 
 const messages = defineMessages({
   button_confirm: {
@@ -19,10 +19,7 @@ const messages = defineMessages({
     defaultMessage: 'An error occured while attempting to delete this case.',
   },
 });
-
-@injectIntl
-@connect(null, { deleteDocument })
-export default class DocumentDeleteDialog extends Component {
+export class DocumentDeleteDialog extends Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
@@ -57,3 +54,7 @@ export default class DocumentDeleteDialog extends Component {
     );
   }
 }
+
+export default translatableConnected({
+  mapDispatchToProps: { deleteDocument },
+})(DocumentDeleteDialog);

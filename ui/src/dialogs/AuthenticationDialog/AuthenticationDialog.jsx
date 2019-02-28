@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import {
   Callout, Intent, Dialog, MenuDivider, Button,
 } from '@blueprintjs/core';
@@ -16,6 +15,7 @@ import {
 import { selectMetadata } from 'src/selectors';
 
 import './AuthenticationDialog.scss';
+import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -37,11 +37,7 @@ const messages = defineMessages({
 });
 const mapStateToProps = state => ({ metadata: selectMetadata(state) });
 
-@connect(mapStateToProps, {
-  loginWithToken: loginWithTokenAction, loginWithPassword: loginWithPasswordAction,
-})
-@injectIntl
-export default class AuthenticationDialog extends Component {
+export class AuthenticationDialog extends Component {
   constructor(props) {
     super(props);
 
@@ -179,3 +175,9 @@ export default class AuthenticationDialog extends Component {
     );
   }
 }
+export default translatableConnected({
+  mapStateToProps,
+  mapDispatchToProps: {
+    loginWithToken: loginWithTokenAction, loginWithPassword: loginWithPasswordAction,
+  },
+})(AuthenticationDialog);

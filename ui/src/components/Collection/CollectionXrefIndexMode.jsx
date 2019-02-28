@@ -1,7 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
 import { Icon } from '@blueprintjs/core';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
@@ -10,6 +8,7 @@ import getPath from 'src/util/getPath';
 import { selectCollectionXrefIndex } from 'src/selectors';
 
 import './CollectionXrefIndexMode.scss';
+import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
@@ -18,9 +17,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps)
-@withRouter
-export default class CollectionXrefIndexMode extends React.Component {
+
+export class CollectionXrefIndexMode extends React.PureComponent {
   render() {
     const { collection, xrefIndex } = this.props;
     if (xrefIndex.results === undefined || xrefIndex.total === undefined) {
@@ -84,3 +82,7 @@ export default class CollectionXrefIndexMode extends React.Component {
     );
   }
 }
+
+export default connectedWIthRouter({
+  mapStateToProps,
+})(CollectionXrefIndexMode);

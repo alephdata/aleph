@@ -1,16 +1,13 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-
 import queryString from 'query-string';
 import { loginWithToken } from 'src/actions/sessionActions';
+import { connectedWIthRouter } from './enhancers';
 
 
 const mapStateToProps = ({ session }) => ({ session });
 
-@connect(mapStateToProps, { loginWithToken })
-@withRouter
-export default class OAuthScreen extends Component {
+
+export class OAuthScreen extends Component {
   componentDidMount() {
     const { location } = this.props;
     const parsedHash = queryString.parse(location.hash);
@@ -29,3 +26,8 @@ export default class OAuthScreen extends Component {
     return null;
   }
 }
+
+export default connectedWIthRouter({
+  mapStateToProps,
+  mapDispatchToProps: { loginWithToken },
+})(OAuthScreen);

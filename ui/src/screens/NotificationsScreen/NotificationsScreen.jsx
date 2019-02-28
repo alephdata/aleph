@@ -1,7 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
@@ -16,6 +14,7 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { selectNotificationsResult } from 'src/selectors';
 
 import './NotificationsScreen.scss';
+import { enhancer } from '../OAuthScreen/enhancers';
 
 
 const messages = defineMessages({
@@ -33,10 +32,7 @@ const mapStateToProps = (state, ownProps) => {
   return { query, result };
 };
 
-@connect(mapStateToProps, { deleteNotifications: deleteNotificationsAction })
-@withRouter
-@injectIntl
-export default class NotificationsScreen extends React.Component {
+export class NotificationsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = { isMarkedRead: false };
@@ -85,3 +81,8 @@ export default class NotificationsScreen extends React.Component {
     );
   }
 }
+
+export default enhancer({
+  mapStateToProps,
+  mapDispatchToProps: { deleteNotifications: deleteNotificationsAction },
+})(NotificationsScreen);

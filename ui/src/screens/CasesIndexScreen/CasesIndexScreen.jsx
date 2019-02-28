@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Waypoint } from 'react-waypoint';
-import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 import { debounce } from 'lodash';
 import { Button, Icon, H1 } from '@blueprintjs/core';
 
@@ -17,6 +16,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
 import './CasesIndexScreen.scss';
+import { translatableConnected } from '../OAuthScreen/enhancers';
 
 const messages = defineMessages({
   no_results_title: {
@@ -57,13 +57,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@injectIntl
-@connect(mapStateToProps, {
-  queryCollections,
-  updateCollectionPermissions,
-  createCollection,
-})
-export default class CasesIndexScreen extends Component {
+export class CasesIndexScreen extends Component {
   constructor(props) {
     super(props);
     const { intl } = props;
@@ -221,3 +215,12 @@ export default class CasesIndexScreen extends Component {
     );
   }
 }
+
+export default translatableConnected({
+  mapStateToProps,
+  mapDispatchToProps: {
+    queryCollections,
+    updateCollectionPermissions,
+    createCollection,
+  },
+})(CasesIndexScreen);

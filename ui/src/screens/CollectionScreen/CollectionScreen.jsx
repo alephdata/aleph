@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import React, { PureComponent } from 'react';
 import queryString from 'query-string';
 
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import { selectCollection, selectCollectionView } from 'src/selectors';
+import { connectedWIthRouter } from '../OAuthScreen/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -18,9 +17,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps)
-@withRouter
-export default class CollectionScreen extends Component {
+export class CollectionScreen extends PureComponent {
   render() {
     const { collectionId, mode } = this.props;
     return (
@@ -31,3 +28,5 @@ export default class CollectionScreen extends Component {
     );
   }
 }
+
+export default connectedWIthRouter({ mapStateToProps })(CollectionScreen);

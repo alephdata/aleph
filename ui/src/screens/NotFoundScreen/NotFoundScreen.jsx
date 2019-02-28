@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
 
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -12,10 +12,10 @@ const messages = defineMessages({
 });
 
 
-@injectIntl
-export class NotFoundScreen extends Component {
+export class NotFoundScreen extends PureComponent {
   render() {
     const { intl } = this.props;
     return <ErrorScreen title={intl.formatMessage(messages.not_found)} />;
   }
 }
+export default injectIntl(NotFoundScreen);

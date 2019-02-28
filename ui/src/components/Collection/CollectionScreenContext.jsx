@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import queryString from 'query-string';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
+
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
@@ -14,6 +13,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection } from 'src/selectors';
+import { enhancer } from '../../screens/OAuthScreen/enhancers';
 
 const messages = defineMessages({
   placeholder: {
@@ -34,10 +34,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps)
-@withRouter
-@injectIntl
-export default class CollectionScreenContext extends Component {
+
+export class CollectionScreenContext extends Component {
   constructor(props) {
     super(props);
     this.onSearch = this.onSearch.bind(this);
@@ -109,3 +107,5 @@ export default class CollectionScreenContext extends Component {
     );
   }
 }
+
+export default enhancer({ mapStateToProps })(CollectionScreenContext);

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
-import { showWarningToast } from "src/app/toast";
+import { showWarningToast } from 'src/app/toast';
 
 
 const messages = defineMessages({
@@ -11,8 +11,8 @@ const messages = defineMessages({
   },
   confirm_button: {
     id: 'collection.xref.confirm_button',
-    defaultMessage: 'Start'
-  }
+    defaultMessage: 'Start',
+  },
 });
 
 
@@ -20,7 +20,7 @@ class CollectionXrefDialogActions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      blocking: false
+      blocking: false,
     };
   }
 
@@ -45,20 +45,23 @@ class CollectionXrefDialogActions extends Component {
     const { blocking } = this.state;
 
     return (
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
-            <Button onClick={cancelFn}
-                    disabled={blocking}
-                    text={intl.formatMessage(messages.cancel_button)}/>
-            <Button intent={Intent.PRIMARY}
-                    onClick={() => this.onConfirm()}
-                    disabled={confirmDisabled || blocking}
-                    text={intl.formatMessage(messages.confirm_button)}/>
-          </div>
+      <div className="bp3-dialog-footer">
+        <div className="bp3-dialog-footer-actions">
+          <Button
+            onClick={cancelFn}
+            disabled={blocking}
+            text={intl.formatMessage(messages.cancel_button)}
+          />
+          <Button
+            intent={Intent.PRIMARY}
+            onClick={() => this.onConfirm()}
+            disabled={confirmDisabled || blocking}
+            text={intl.formatMessage(messages.confirm_button)}
+          />
         </div>
+      </div>
     );
   }
 }
 
-CollectionXrefDialogActions = injectIntl(CollectionXrefDialogActions);
-export default CollectionXrefDialogActions;
+export default injectIntl(CollectionXrefDialogActions);

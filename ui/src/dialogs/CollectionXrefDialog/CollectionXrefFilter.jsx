@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { InputGroup, Button, MenuItem } from '@blueprintjs/core';
-import { Select } from "@blueprintjs/select";
+import { Select } from '@blueprintjs/select';
 import { defineMessages, injectIntl } from 'react-intl';
-import { debounce } from "lodash";
+import { debounce } from 'lodash';
 
 
 const messages = defineMessages({
@@ -21,43 +21,39 @@ const messages = defineMessages({
   selectNotAvailable: {
     id: 'collection.xref.filter.selectNotAvailable',
     defaultMessage: 'no options',
-  }
+  },
 });
 
-const itemRenderer = (item, { handleClick }) => {
-  return <MenuItem
+const itemRenderer = (item, { handleClick }) => (
+  <MenuItem
     key={item.id}
     text={item.label}
     label={item.count}
     onClick={handleClick}
   />
-};
+);
 
 class CollectionXrefFilter extends Component {
   constructor(props) {
     super(props);
     this.state = {
       filter: {
-        searchTerm: "",
-        category: null
-      }
+        searchTerm: '',
+        category: null,
+      },
     };
     this.triggerChangeFnDebounced = debounce(this.triggerChangeFn.bind(this), 200);
   }
 
+  componentDidMount() {
+    this.triggerChangeFn(this.state.filter);
+  }
+
   onChange(filterUpdate) {
+    /* eslint-disable-next-line react/no-access-state-in-setstate */
     const filter = Object.assign({}, this.state.filter, filterUpdate);
     this.setState({ filter });
     return filter;
-  }
-
-  triggerChangeFn(filterValues) {
-    const { changeFn } = this.props;
-    changeFn(filterValues);
-  }
-
-  componentDidMount() {
-    this.triggerChangeFn(this.state.filter);
   }
 
   onSearchTermChange(event) {
@@ -66,20 +62,22 @@ class CollectionXrefFilter extends Component {
   }
 
   onCategoryChange(item) {
-    if (item.id === null) {
-      item = null;
-    }
-    const filterValues = this.onChange({ category: item });
+    const filterValues = this.onChange({ category: item.id && item });
     this.triggerChangeFn(filterValues);
+  }
+
+  triggerChangeFn(filterValues) {
+    const { changeFn } = this.props;
+    changeFn(filterValues);
   }
 
   render() {
     const { intl, categories } = this.props;
     const { filter } = this.state;
 
-    let selectableCategories = categories.slice();
+    const selectableCategories = categories.slice();
     if (filter.category) {
-      selectableCategories.unshift({ id: null, label: intl.formatMessage(messages.allCategories) })
+      selectableCategories.unshift({ id: null, label: intl.formatMessage(messages.allCategories) });
     }
 
     return (
@@ -87,7 +85,7 @@ class CollectionXrefFilter extends Component {
         <div className="xref-filter-input">
           <InputGroup
             leftIcon="filter"
-            onChange={(value) => this.onSearchTermChange(value)}
+            onChange={value => this.onSearchTermChange(value)}
             placeholder={intl.formatMessage(messages.filter)}
             value={filter.searchTerm}
           />
@@ -98,11 +96,16 @@ class CollectionXrefFilter extends Component {
             hasInitialContent={false}
             items={selectableCategories}
             itemRenderer={itemRenderer}
-            noResults={<MenuItem disabled={true} text={intl.formatMessage(messages.selectNotAvailable)}/>}
-            popoverProps={{ popoverClassName: "CollectionXrefDialog-popover" }}
-            onItemSelect={(item) => this.onCategoryChange(item)}>
-            <Button text={filter.category ? filter.category.label : intl.formatMessage(messages.categories)}
-                    rightIcon="double-caret-vertical"/>
+            noResults={<MenuItem disabled text={intl.formatMessage(messages.selectNotAvailable)} />}
+            popoverProps={{ popoverClassName: 'CollectionXrefDialog-popover' }}
+            onItemSelect={item => this.onCategoryChange(item)}
+          >
+            <Button
+              text={
+                filter.category ? filter.category.label : intl.formatMessage(messages.categories)
+              }
+              rightIcon="double-caret-vertical"
+            />
           </Select>
         </div>
       </div>
@@ -110,5 +113,4 @@ class CollectionXrefFilter extends Component {
   }
 }
 
-CollectionXrefFilter = injectIntl(CollectionXrefFilter);
-export default CollectionXrefFilter;
+export default injectIntl(CollectionXrefFilter);

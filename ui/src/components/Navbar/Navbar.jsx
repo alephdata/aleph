@@ -1,8 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Icon } from '@blueprintjs/core';
 
@@ -12,6 +10,7 @@ import { selectSession } from 'src/selectors';
 
 import './Navbar.scss';
 import SearchBox from './SearchBox';
+import { enhancer } from '../../screens/OAuthScreen/enhancers';
 
 const messages = defineMessages({
   search_placeholder: {
@@ -26,10 +25,8 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({ session: selectSession(state) });
 
-@connect(mapStateToProps)
-@injectIntl
-@withRouter
-export default class Navbar extends React.Component {
+
+export class Navbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = { searchValue: '', isMenuOpen: false, searchOpen: false };
@@ -181,3 +178,4 @@ export default class Navbar extends React.Component {
     );
   }
 }
+export default enhancer({ mapStateToProps })(Navbar);

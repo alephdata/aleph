@@ -15,8 +15,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-@connect(mapStateToProps)
-export default class EmailViewer extends React.Component {
+export class EmailViewer extends React.Component {
   renderBody() {
     const { content } = this.props;
     if (content.html && content.html.length) {
@@ -92,3 +91,5 @@ export default class EmailViewer extends React.Component {
     );
   }
 }
+
+export default connect(mapStateToProps)(EmailViewer);
