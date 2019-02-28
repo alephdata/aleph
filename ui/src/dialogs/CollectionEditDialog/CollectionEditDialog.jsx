@@ -7,7 +7,7 @@ import { Role, Country } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import { updateCollection } from 'src/actions';
 import { selectMetadata } from 'src/selectors';
-import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 const messages = defineMessages({
   placeholder_label: {

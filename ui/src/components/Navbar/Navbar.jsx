@@ -10,7 +10,7 @@ import { selectSession } from 'src/selectors';
 
 import './Navbar.scss';
 import SearchBox from './SearchBox';
-import { enhancer } from '../../screens/OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   search_placeholder: {

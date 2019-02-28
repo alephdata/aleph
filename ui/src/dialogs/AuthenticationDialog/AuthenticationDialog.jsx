@@ -15,7 +15,7 @@ import {
 import { selectMetadata } from 'src/selectors';
 
 import './AuthenticationDialog.scss';
-import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 const messages = defineMessages({
   title: {

@@ -57,7 +57,6 @@ class CollectionLabel extends Component {
 }
 
 
-@withRouter
 class CollectionLink extends Component {
   constructor(props) {
     super(props);
@@ -87,11 +86,6 @@ class CollectionLink extends Component {
 }
 
 
-const mapStateToProps = (state, ownProps) => ({
-  collection: selectCollection(state, ownProps.id),
-});
-
-@connect(mapStateToProps, { fetchCollection })
 class CollectionLoad extends Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
@@ -123,13 +117,15 @@ class CollectionLoad extends Component {
   }
 }
 
-
+const mapStateToProps = (state, ownProps) => ({
+  collection: selectCollection(state, ownProps.id),
+});
 class Collection {
   static Label = CollectionLabel;
 
-  static Link = CollectionLink;
+  static Link = withRouter(CollectionLink);
 
-  static Load = CollectionLoad;
+  static Load = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 }
 
 export default Collection;

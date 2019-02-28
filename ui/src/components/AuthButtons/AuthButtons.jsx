@@ -34,8 +34,8 @@ const messages = defineMessages({
   },
 });
 export class AuthButtons extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       settingsIsOpen: false,
       queryLogsIsOpen: false,

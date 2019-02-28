@@ -12,7 +12,7 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import TextLoading from 'src/components/common/TextLoading';
 import Icon from 'src/components/common/Icon';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import { enhancer } from '../../screens/OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 
 
 class DocumentViews extends React.Component {

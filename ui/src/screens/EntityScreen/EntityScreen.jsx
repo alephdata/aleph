@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import { selectEntity, selectEntityReference, selectEntityView } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
-import { connectedWIthRouter } from '../OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId, mode } = ownProps.match.params;

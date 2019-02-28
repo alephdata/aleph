@@ -12,7 +12,7 @@ import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeA
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectCollectionXrefIndex } from 'src/selectors';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 class CollectionToolbar extends Component {

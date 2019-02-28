@@ -9,7 +9,7 @@ import ImageViewer from 'src/viewers/ImageViewer';
 import FolderViewer from 'src/viewers/FolderViewer';
 import EmailViewer from 'src/viewers/EmailViewer';
 
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 // import { DocumentSearch } from 'src/components/Toolbar';
 
 import './DocumentViewMode.scss';

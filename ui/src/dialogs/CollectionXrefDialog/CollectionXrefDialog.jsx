@@ -10,7 +10,7 @@ import CollectionXrefSelect from './CollectionXrefSelect';
 
 
 import './CollectionXrefDialog.scss';
-import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 
 const messages = defineMessages({

@@ -8,7 +8,7 @@ import { selectEntitiesResult, selectEntityReference, selectSchemata } from 'src
 import { ErrorSection, Property, SectionLoading } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
-import { enhancer } from '../../screens/OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 import getPath from '../../util/getPath';
 
 const messages = defineMessages({

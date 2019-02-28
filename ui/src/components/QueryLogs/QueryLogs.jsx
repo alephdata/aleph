@@ -10,7 +10,7 @@ import SectionLoading from '../common/SectionLoading';
 import SearchAlert from '../SearchAlert/SearchAlert';
 
 import './QueryLogs.scss';
-import { enhancer } from '../../screens/OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   title: {

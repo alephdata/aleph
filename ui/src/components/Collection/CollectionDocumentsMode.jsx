@@ -1,7 +1,7 @@
 import React from 'react';
 import DocumentManager from 'src/components/Document/DocumentManager';
 import { queryCollectionDocuments } from 'src/queries';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 class CollectionDocumentsMode extends React.PureComponent {

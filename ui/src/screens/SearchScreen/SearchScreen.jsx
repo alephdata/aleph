@@ -20,7 +20,7 @@ import Screen from 'src/components/Screen/Screen';
 import togglePreview from 'src/util/togglePreview';
 
 import './SearchScreen.scss';
-import { enhancer } from '../OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   facet_schema: {
@@ -310,13 +310,12 @@ export class SearchScreen extends React.Component {
                 description={intl.formatMessage(messages.no_results_description)}
               />
             )}
-            {!result.isLoading && result.next && (
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-600px"
-                scrollableAncestor={window}
-              />
-            )}
+            <Waypoint
+              onEnter={this.getMoreResults}
+              bottomOffset="-600px"
+              scrollableAncestor={window}
+            />
+
             {result.isLoading && (
               <SectionLoading />
             )}

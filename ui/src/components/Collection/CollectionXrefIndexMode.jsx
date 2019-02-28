@@ -8,7 +8,7 @@ import getPath from 'src/util/getPath';
 import { selectCollectionXrefIndex } from 'src/selectors';
 
 import './CollectionXrefIndexMode.scss';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;

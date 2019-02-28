@@ -2,7 +2,7 @@ import React from 'react';
 
 import Query from 'src/app/Query';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 class CollectionEntitiesMode extends React.PureComponent {

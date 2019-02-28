@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import c from 'classnames';
 
 import './DualPane.scss';
 
 
-class InfoPane extends Component {
+class InfoPane extends PureComponent {
   render() {
     const { children, className } = this.props;
     return (
@@ -15,7 +15,7 @@ class InfoPane extends Component {
   }
 }
 
-class SidePane extends Component {
+class SidePane extends PureComponent {
   render() {
     const { children, className } = this.props;
     return (
@@ -26,7 +26,7 @@ class SidePane extends Component {
   }
 }
 
-class ContentPane extends Component {
+class ContentPane extends PureComponent {
   render() {
     const { children, className = '' } = this.props;
     return (
@@ -37,21 +37,22 @@ class ContentPane extends Component {
   }
 }
 
-class DualPane extends Component {
+class DualPane extends PureComponent {
   static InfoPane = InfoPane;
+
   static SidePane = SidePane;
+
   static ContentPane = ContentPane;
 
   render() {
     const { children, className, ...restProps } = this.props;
 
     return (
-      <article {...restProps} className={c("DualPane", className)}>
+      <article {...restProps} className={c('DualPane', className)}>
         { children }
       </article>
     );
   }
-
 }
 
 export default DualPane;

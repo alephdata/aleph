@@ -4,7 +4,10 @@ import queryString from 'query-string';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Country, Schema, Collection, Entity, FileSize, Date } from 'src/components/common';
+import {
+  Country, Schema, Collection, Entity, FileSize, Date,
+} from 'src/components/common';
+/* eslint-disable */
 
 class EntityTableRow extends Component {
   render() {
@@ -24,20 +27,29 @@ class EntityTableRow extends Component {
     const isPrefix = !!highlights.length;
     return (
       <React.Fragment>
-        <tr key={entity.id}
-            className={c('EntityTableRow', 'nowrap', className, {'active': isActive}, {'prefix': isPrefix})}>
-          {updateSelection && <td className="select">
+        <tr
+          key={entity.id}
+          className={c('EntityTableRow', 'nowrap', className, { active: isActive }, { prefix: isPrefix })}
+        >
+          {updateSelection && (
+          <td className="select">
             <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
-          </td>}
-          <td className="entity">
-            <Entity.Link preview={showPreview}
-                        documentMode={documentMode}
-                        entity={entity} icon />
           </td>
-          {!hideCollection && 
+          )}
+          <td className="entity">
+            <Entity.Link
+              preview={showPreview}
+              documentMode={documentMode}
+              entity={entity}
+              icon
+            />
+          </td>
+          {!hideCollection
+            && (
             <td className="collection">
-              <Collection.Link preview={true} collection={entity.collection} icon />
+              <Collection.Link preview collection={entity.collection} icon />
             </td>
+            )
           }
           <td className="schema">
             <Schema.Label schema={entity.schema} />
@@ -52,21 +64,26 @@ class EntityTableRow extends Component {
           </td>
           {documentMode && (
             <td className="file-size">
-              <FileSize value={entity.file_size}/>
+              <FileSize value={entity.file_size} />
             </td>
           )}
         </tr>
-        {!!highlights.length &&
-          <tr key={entity.id + '-hl'}
-              className={c('EntityTableRow', className, {'active': isActive})}>
+        {!!highlights.length
+          && (
+          <tr
+            key={`${entity.id}-hl`}
+            className={c('EntityTableRow', className, { active: isActive })}
+          >
             <td colSpan="5" className="highlights">
-              {highlights.map((phrase, index) =>
+              {highlights.map((phrase, index) => (
                 <span key={index}>
-                  <span dangerouslySetInnerHTML={{__html: phrase}} />…
+                  <span dangerouslySetInnerHTML={{ __html: phrase }} />
+…
                 </span>
-              )}
+              ))}
             </td>
           </tr>
+          )
         }
       </React.Fragment>
     );

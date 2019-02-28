@@ -7,7 +7,7 @@ import { DualPane, ErrorSection } from 'src/components/common';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
 import './AlertsManager.scss';
-import { enhancer } from '../../screens/OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   title: {

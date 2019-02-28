@@ -16,8 +16,7 @@ const messages = defineMessages({
 });
 
 
-@injectIntl
-class BreadcrumbSearch extends Component {
+class BreadcrumbSearchPure extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -73,6 +72,8 @@ class BreadcrumbSearch extends Component {
     );
   }
 }
+// FIXME: fin out proper way for HOC's
+const BreadcrumbSearch = injectIntl(BreadcrumbSearchPure);
 
 
 class CollectionBreadcrumb extends PureComponent {
@@ -86,17 +87,7 @@ class CollectionBreadcrumb extends PureComponent {
   }
 }
 
-const mapStateToProps = (state, { entity, discovery = true }) => {
-  let parents = [];
-  if (entity.schema.hasProperty('parent') && discovery) {
-    parents = entity.getProperty('parent').values
-      .map(parent => [parent.id, selectEntity(state, parent.id)]);
-  }
-  return ({
-    parents,
-  });
-};
-@connect(mapStateToProps, { fetchEntity })
+
 class EntityBreadcrumb extends PureComponent {
   fetchIfNeeded([id, entity]) {
     if (entity.shouldLoad) {
@@ -134,11 +125,21 @@ class TextBreadcrumb extends PureComponent {
     );
   }
 }
+const mapStateToProps = (state, { entity, discovery = true }) => {
+  let parents = [];
+  if (entity.schema.hasProperty('parent') && discovery) {
+    parents = entity.getProperty('parent').values
+      .map(parent => [parent.id, selectEntity(state, parent.id)]);
+  }
+  return ({
+    parents,
+  });
+};
 
 export default class Breadcrumbs extends Component {
   static Collection = CollectionBreadcrumb;
 
-  static Entity = EntityBreadcrumb;
+  static Entity = connect(mapStateToProps, { fetchEntity })(EntityBreadcrumb);
 
   static Text = TextBreadcrumb;
 

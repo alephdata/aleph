@@ -14,7 +14,7 @@ import { selectEntitiesResult } from 'src/selectors';
 
 import './PdfViewer.scss';
 import TextViewer from 'src/viewers/TextViewer';
-import { connectedWIthRouter } from '../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../util/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;

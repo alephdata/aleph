@@ -7,7 +7,7 @@ import {
   selectEntity, selectEntityTags, selectEntitiesResult, selectDocumentContent,
 } from 'src/selectors';
 import { queryFolderDocuments } from 'src/queries';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 class DocumentContextLoader extends Component {

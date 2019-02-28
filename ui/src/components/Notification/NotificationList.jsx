@@ -7,7 +7,7 @@ import { selectNotificationsResult } from 'src/selectors';
 import Notification from './Notification';
 
 import './NotificationList.scss';
-import { enhancer } from '../../screens/OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   no_notifications: {

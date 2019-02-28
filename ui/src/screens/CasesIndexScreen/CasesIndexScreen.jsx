@@ -16,7 +16,7 @@ import SearchFacets from 'src/components/Facet/SearchFacets';
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 
 import './CasesIndexScreen.scss';
-import { translatableConnected } from '../OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 const messages = defineMessages({
   no_results_title: {

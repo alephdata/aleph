@@ -10,7 +10,7 @@ import { Role } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 import './CollectionAccessDialog.scss';
-import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 
 const messages = defineMessages({

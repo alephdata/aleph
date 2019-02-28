@@ -15,7 +15,7 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import Schema from 'src/components/common/Schema';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 class EntityViews extends React.Component {
   constructor(props) {

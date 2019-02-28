@@ -68,7 +68,7 @@ class EntityLabel extends Component {
   }
 }
 
-@withRouter
+
 class EntityLink extends Component {
   constructor(props) {
     super(props);
@@ -101,11 +101,6 @@ class EntityLink extends Component {
 }
 
 
-const mapStateToProps = (state, ownProps) => ({
-  entity: selectEntity(state, ownProps.id),
-});
-
-@connect(mapStateToProps, { fetchEntity: fetchEntityAction })
 class EntityLoad extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
@@ -151,16 +146,20 @@ function SmartEntityHOC(InnerComponent) {
   };
 }
 
-class Entity {
-  static Smart = {
-    Link: connect(state => ({ schemata: selectSchemata(state) }))(SmartEntityHOC(EntityLink)),
-  };
+const mapStateToProps = (state, ownProps) => ({
+  entity: selectEntity(state, ownProps.id),
+});
 
+class Entity {
   static Label = EntityLabel;
 
-  static Link = EntityLink;
+  static Link = withRouter(EntityLink);
 
-  static Load = EntityLoad;
+  static Load = connect(mapStateToProps, { fetchEntity: fetchEntityAction })(EntityLoad);
+
+  static Smart = {
+    Link: connect(state => ({ schemata: selectSchemata(state) }))(SmartEntityHOC(Entity.Link)),
+  };
 }
 
 export default Entity;

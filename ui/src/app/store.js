@@ -11,11 +11,12 @@ const persistedState = loadState();
 const store = createStore(
   rootReducer,
   persistedState,
-  /* window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__( */applyMiddleware(
+  // eslint-disable-next-line
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(applyMiddleware(
     thunk,
     errorToastMiddleware,
     // logger
-  ), /* ) */
+  )),
 );
 
 store.subscribe(throttle(() => {

@@ -17,13 +17,13 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
-export default
-@withRouter
-@connect(mapStateToProps)
+/* eslint-disable */
 class DocumentScreen extends Component {
   render() {
     const { documentId, mode } = this.props;
     return <DocumentScreenContext documentId={documentId} activeMode={mode} />;
   }
 }
+DocumentScreen = connect(mapStateToProps)(DocumentScreen);
+DocumentScreen = withRouter(DocumentScreen);
+export default DocumentScreen;

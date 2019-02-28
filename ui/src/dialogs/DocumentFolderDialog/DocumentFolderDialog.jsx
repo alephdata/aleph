@@ -3,7 +3,7 @@ import { Intent, Dialog, Button } from '@blueprintjs/core';
 import { defineMessages } from 'react-intl';
 
 import { ingestDocument as ingestDocumentAction } from 'src/actions';
-import { enhancer } from '../../screens/OAuthScreen/enhancers';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   title: {

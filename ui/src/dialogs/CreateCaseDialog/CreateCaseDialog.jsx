@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import {
-  createCollection as createCollectionAction,
-  updateCollectionPermissions as updateCollectionPermissionsAction,
+  createCollection,
+  updateCollectionPermissions,
 } from 'src/actions';
 import { showWarningToast } from 'src/app/toast';
 import { Role } from 'src/components/common';
@@ -37,6 +37,7 @@ const messages = defineMessages({
   },
 });
 
+/* eslint-disable */
 
 class CreateCaseDialog extends Component {
   constructor(props) {

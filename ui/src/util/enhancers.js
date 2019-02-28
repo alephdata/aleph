@@ -8,8 +8,8 @@ export function connectedWIthRouter({
   mapStateToProps = () => {}, mapDispatchToProps, mergeProps, options,
 }) {
   return compose(
-    connect(mapStateToProps, mapDispatchToProps, mergeProps, options),
     withRouter,
+    connect(mapStateToProps, mapDispatchToProps, mergeProps, options),
   );
 }
 export function translatableConnected({
@@ -25,8 +25,15 @@ export function enhancer({
   mapStateToProps = () => {}, mapDispatchToProps, mergeProps, options,
 }) {
   return compose(
-    injectIntl,
-    connect(mapStateToProps, mapDispatchToProps, mergeProps, options),
     withRouter,
+    connect(mapStateToProps, mapDispatchToProps, mergeProps, options),
+    injectIntl,
+  );
+}
+
+export function withRouterTranslation() {
+  return compose(
+    withRouter,
+    injectIntl,
   );
 }

@@ -9,7 +9,7 @@ import { Tag, ErrorSection } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
 
 import './EntityTagsMode.scss';
-import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 const messages = defineMessages({
   no_tags: {

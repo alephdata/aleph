@@ -7,7 +7,7 @@ import {
 import {
   selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
 } from 'src/selectors';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 class EntityScreenContext extends PureComponent {

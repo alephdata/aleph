@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import queryString from 'query-string';
 import { loginWithToken } from 'src/actions/sessionActions';
-import { connectedWIthRouter } from './enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 const mapStateToProps = ({ session }) => ({ session });

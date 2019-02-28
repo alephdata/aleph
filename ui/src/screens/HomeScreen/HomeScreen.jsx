@@ -12,7 +12,7 @@ import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 
 import './HomeScreen.scss';
-import { translatableConnected } from '../OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -120,4 +120,4 @@ export class HomeScreen extends Component {
 export default translatableConnected({
   mapStateToProps,
   mapDispatchToProps: { fetchStatistics },
-});
+})(HomeScreen);

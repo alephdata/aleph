@@ -7,7 +7,7 @@ import { queryEntities } from 'src/actions';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
 import './TableViewer.scss';
-import { connectedWIthRouter } from '../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {

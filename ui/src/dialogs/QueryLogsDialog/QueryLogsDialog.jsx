@@ -5,7 +5,7 @@ import { defineMessages } from 'react-intl';
 import { fetchRole, updateRole } from 'src/actions';
 import { selectSession } from 'src/selectors';
 import QueryLogs from '../../components/QueryLogs/QueryLogs';
-import { translatableConnected } from '../../screens/OAuthScreen/enhancers';
+import { translatableConnected } from '../../util/enhancers';
 
 
 const messages = defineMessages({

@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 
 import { fetchCollection, fetchCollectionXrefIndex } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex } from 'src/selectors';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 class CollectionContextLoader extends PureComponent {

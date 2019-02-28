@@ -10,7 +10,7 @@ import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { connectedWIthRouter } from '../../screens/OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {

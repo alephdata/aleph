@@ -3,7 +3,7 @@ import queryString from 'query-string';
 
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import { selectCollection, selectCollectionView } from 'src/selectors';
-import { connectedWIthRouter } from '../OAuthScreen/enhancers';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
