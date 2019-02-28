@@ -79,5 +79,5 @@ def generate_collection_docs(collection):
         except Exception:
             log.exception("Cannot index [%s]: %s", document.id, document.name)
 
-            if idx % 1000 == 0:
-                db.session.expunge_all()
+        if idx % 1000 == 0:
+            db.session.expunge_all()
