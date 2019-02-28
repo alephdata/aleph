@@ -19,7 +19,8 @@ def index_document(document, shallow=False, sync=False):
 
 def index_collection_documents(collection, sync=False):
     """Re-index all documents in a collection in one go."""
-    bulk_actions(generate_collection_docs(collection), sync=sync)
+    bulk_actions(generate_collection_docs(collection),
+                 chunk_size=BULK_PAGE / 2, sync=sync)
 
 
 def delete_document(document_id, sync=False):

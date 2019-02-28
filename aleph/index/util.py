@@ -2,7 +2,7 @@ import logging
 from time import time
 from banal import ensure_list
 from elasticsearch import TransportError
-from elasticsearch.helpers import bulk, BulkIndexError
+from elasticsearch.helpers import streaming_bulk, BulkIndexError
 from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
@@ -140,19 +140,23 @@ def query_delete(index, query, sync=False, **kwargs):
             backoff(failures=attempt)
 
 
-def bulk_actions(actions, sync=False):
+def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     """Bulk indexing with timeouts, bells and whistles."""
     try:
         start_time = time()
-        total, _ = bulk(es, actions,
-                        chunk_size=BULK_PAGE,
-                        max_retries=10,
-                        initial_backoff=2,
-                        request_timeout=REQUEST_TIMEOUT,
-                        timeout=TIMEOUT,
-                        refresh=refresh_sync(sync))
+        stream = streaming_bulk(es, actions,
+                                chunk_size=chunk_size,
+                                max_chunk_bytes=INDEX_MAX_LEN * 2,
+                                max_retries=10,
+                                initial_backoff=2,
+                                request_timeout=REQUEST_TIMEOUT,
+                                yield_ok=False,
+                                timeout=TIMEOUT,
+                                refresh=refresh_sync(sync))
+        for result in stream:
+            log.warning("Error during index: %r", result)
         duration = (time() - start_time)
-        log.debug("Bulk write (%s): %.4fs", total, duration)
+        log.debug("Bulk write: %.4fs", duration)
     except BulkIndexError as exc:
         log.warning('Indexing error: %s', exc)
 

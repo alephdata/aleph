@@ -163,8 +163,7 @@ def get_archive():
 
 def get_cache():
     if not hasattr(settings, '_cache') or settings._cache is None:
-        settings._cache = Cache(get_redis(),
-                                prefix=settings.APP_NAME)
+        settings._cache = Cache(get_redis(), prefix=settings.APP_NAME)
     return settings._cache
 
 
