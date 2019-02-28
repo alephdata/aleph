@@ -129,14 +129,14 @@ export class SourcesIndexScreen extends Component {
         searchText={queryPrefix}
       >
         { result.total && (
-        <Breadcrumbs.Text text={(
-          <FormattedMessage
-            id="sources.index.total"
-            defaultMessage="{total} sources of documents and data"
-            values={{ total }}
+          <Breadcrumbs.Text text={(
+            <FormattedMessage
+              id="sources.index.total"
+              defaultMessage="{total} sources of documents and data"
+              values={{ total }}
+            />
+            )}
           />
-)}
-        />
         )}
       </Breadcrumbs>
     );

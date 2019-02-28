@@ -1,18 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
+import _ from 'lodash';
 import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, FormattedNumber,
 } from 'react-intl';
-import numeral from 'numeral';
+import { Link } from 'react-router-dom';
 import { Button, ControlGroup, Intent } from '@blueprintjs/core';
 import SearchBox from 'src/components/Navbar/SearchBox';
 
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-
+import c from 'classnames';
 import './HomeScreen.scss';
 import { translatableConnected } from '../../util/enhancers';
+import DualPane from '../../components/common/DualPane';
+import { Category, Country, Schema } from '../../components/common';
 
 const messages = defineMessages({
   title: {
@@ -29,11 +32,64 @@ const messages = defineMessages({
   },
 });
 
+class Statistics extends PureComponent {
+  static Item({
+    Name = Statistics.Name,
+    Count = Statistics.Count,
+    item: [name, count],
+    ...rest
+  }) {
+    return (
+      <li {...rest}>
+        <Name name={name} />
+        <Count count={count} />
+      </li>
+    );
+  }
+
+  static Name({ name }) {
+    return <span>{name}</span>;
+  }
+
+  static Count({ count }) {
+    return (
+      <span><FormattedNumber value={count} /></span>
+    );
+  }
+
+  static Noop(props) { return <div {...props}>skeleton</div>; }
+
+  render() {
+    const {
+      statistic,
+      headline,
+      isLoading,
+      children = isLoading ? Statistics.Noop : Statistics.Item,
+      Name = Statistics.Name,
+      Count = Statistics.Count,
+    } = this.props;
+    const list = isLoading ? Array(10).fill([]) : Object.entries(statistic);
+    return (
+      <div className="statistic bp3-callout ">
+        <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
+        <ul className="statistic--list">
+          {_.sortBy(list, [1]).splice(-15).reverse().map(item => children({
+            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
+            key: item.name,
+            item,
+            Name,
+            Count,
+          }))}
+        </ul>
+      </div>
+    );
+  }
+}
+
 const mapStateToProps = state => ({
   statistics: selectStatistics(state),
   metadata: selectMetadata(state),
 });
-
 export class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -76,18 +132,6 @@ export class HomeScreen extends Component {
         <section className="HomePage">
           <div className="outer-searchbox">
             <div className="inner-searchbox">
-              <div className="homepage-summary">
-                {statistics.things && (
-                  <FormattedMessage
-                    id="home.summary"
-                    defaultMessage="Search {total} public records and leaks from {collections} sources"
-                    values={{
-                      total: numeral(statistics.things).format('0a'),
-                      collections: <FormattedNumber value={statistics.collections} />,
-                    }}
-                  />
-                )}
-              </div>
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill>
                   <SearchBox
@@ -101,14 +145,68 @@ export class HomeScreen extends Component {
                     className="bp3-large bp3-fixed"
                     intent={Intent.PRIMARY}
                     onClick={this.handleSearchBtn}
-                    text={(
-                      <React.Fragment>
-                        {intl.formatMessage(messages.home_search)}
-                      </React.Fragment>
-)}
+                    text={intl.formatMessage(messages.home_search)}
                   />
                 </ControlGroup>
               </form>
+              <DualPane className="statistics-list">
+                <Statistics
+                  headline={(
+                    <FormattedMessage
+                      id="home.statistics.schemata"
+                      defaultMessage="Search {things} entities"
+                      values={statistics}
+                    />
+                  )}
+                  statistic={statistics.schemata}
+                  isLoading={!statistics.schemata}
+                  Name={props => (
+                    <span>
+                      <Schema.Smart.Link
+                        url={`/search?filter:schema=${props.name}`}
+                        schema={props.name}
+                        {...props}
+                      />
+                    </span>
+                  )}
+                />
+                <Statistics
+                  headline={(
+                    <FormattedMessage
+                      id="home.statistics.categories"
+                      defaultMessage="from {collections} sources"
+                      values={statistics}
+                    />
+                  )}
+                  statistic={statistics.categories}
+                  isLoading={!statistics.categories}
+                  Name={props => (
+                    <Link
+                      to={`/sources?collectionsfilter:category=${props.name}`}
+                    >
+                      <Category category={props.name} />
+                    </Link>
+                  )}
+                />
+                <Statistics
+                  headline={(
+                    <FormattedMessage
+                      id="home.statistics.countries"
+                      defaultMessage="in {count} countries"
+                      values={{
+                        count: _.size(statistics.countries),
+                      }}
+                    />
+                  )}
+                  statistic={statistics.countries}
+                  isLoading={!statistics.countries}
+                  Name={props => (
+                    <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
+                      <Country.Name {...props} code={props.name} />
+                    </Link>
+                  )}
+                />
+              </DualPane>
             </div>
           </div>
         </section>

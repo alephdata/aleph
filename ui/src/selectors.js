@@ -153,7 +153,7 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
     largestCount = 0;
   const schemata = {};
 
-  Object.keys(collection.schemata)
+  Object.keys(collection.schemata || {})
     .forEach((key) => {
       const norm = state.metadata.schemata.getSchema(key).isDocument() ? 'Document' : key;
       schemata[norm] = (schemata[norm] || 0) + collection.schemata[key];

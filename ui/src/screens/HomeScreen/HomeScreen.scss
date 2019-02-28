@@ -1,13 +1,8 @@
 @import 'src/app/variables.scss';
 
 .HomePage {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100vh;
   min-height: 400px;
-  padding: 4em 0;
   background-color: black;
   background-image: url("../../assets/europe_asia_dark.jpg");
   background-size: cover;
@@ -16,8 +11,9 @@
   text-align: center;
 
   .outer-searchbox {
+    max-width: 50em;
+    margin: 0 auto;
     display: table;
-    position: absolute;
     height: 80%;
     width: 100%;
     padding: $aleph-grid-size * 2;
@@ -52,21 +48,6 @@
     color: white;
   }
 
-  .homepage-summary {
-    margin-bottom: 0.75em;
-    font-size: $pt-font-size-large * 2.2;
-    min-height: $pt-font-size-large * 3;
-    color: white;
-    
-    > * {
-      animation: fadein 2s;
-    }
-    
-    @keyframes fadein {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-  }
 
   .search-form {
     max-width: 50em;
@@ -74,6 +55,26 @@
     padding-bottom: 2em;
   }
 
+  .statistics-list{
+    color: $aleph-content-background;
+   }
+  .statistic{
+    display: inline-block;
+    &--list{
+      list-style: none;
+      padding: unset;
+    }
+    &--headline{
+      color:white;
+      text-align: left;
+    }
+    &--list-item{
+      margin:3px;
+      display: flex;
+      justify-content: space-between;
+      a {color:$aleph-content-background;}
+    }
+  }
   .calls-to-action {
     .bp3-button {
       margin-left: $aleph-grid-size;

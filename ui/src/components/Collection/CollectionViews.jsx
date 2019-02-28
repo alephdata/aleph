@@ -80,61 +80,49 @@ class CollectionViews extends React.Component {
         {isPreview && (
           <Tab
             id="info"
-            title={(
+            title={
               <React.Fragment>
                 <Icon name="info" />
                 <FormattedMessage id="entity.info.info" defaultMessage="Info" />
-              </React.Fragment>
-)}
-            panel={
-              <CollectionInfoMode collection={collection} />
-                }
+              </React.Fragment>}
+            panel={<CollectionInfoMode collection={collection} />}
           />
         )}
         {hasBrowse && (
           <Tab
             id="Document"
             disabled={numOfDocs === 0}
-            title={(
+            title={
               <React.Fragment>
                 <Icon name="folder" />
                 <FormattedMessage id="entity.info.source" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
-              </React.Fragment>
-)}
-            panel={
-              <CollectionDocumentsMode collection={collection} />
-               }
+              </React.Fragment>}
+            panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
         {entitySchemata.map(ref => (
           <Tab
             id={ref.schema}
             key={ref.schema}
-            title={(
+            title={
               <React.Fragment>
                 <Schema.Smart.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
-              </React.Fragment>
-)}
-            panel={
-              <CollectionEntitiesMode collection={collection} activeMode={activeMode} />
-                }
+              </React.Fragment>}
+            panel={<CollectionEntitiesMode collection={collection} activeMode={activeMode} />}
           />
         ))}
         <Tab
           id="xref"
           disabled={xrefIndex.total < 1}
-          title={(
+          title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
               <Icon name="relationship" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xrefIndex.total} />
-            </TextLoading>
-)}
-          panel={
-            <CollectionXrefIndexMode collection={collection} />
-              }
+            </TextLoading>}
+          panel={<CollectionXrefIndexMode collection={collection} />}
         />
       </Tabs>
     );

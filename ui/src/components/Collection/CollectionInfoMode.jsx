@@ -9,13 +9,13 @@ import { Schema } from 'src/components/common';
 class CollectionInfoMode extends PureComponent {
   render() {
     const { collection } = this.props;
-    const content = _.reverse(
+    const content = collection.schemata ? _.reverse(
       _.sortBy(
         Object.entries(collection.schemata)
           .map(([name, number]) => ({ name, number })),
         ['number'],
       ),
-    );
+    ) : [];
     return (
       <div className="CollectionInfoMode">
         <CollectionOverview collection={collection} hasHeader={false} />
