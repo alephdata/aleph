@@ -80,7 +80,7 @@ def bulk_write(collection, items, merge=True):
     entities = {}
     for item in items:
         if not is_mapping(item):
-            raise InvalidData("Failed to read input data")
+            raise InvalidData("Failed to read input data", errors=item)
 
         entity = model.get_proxy(item)
         entity = namespace.apply(entity)
@@ -89,7 +89,7 @@ def bulk_write(collection, items, merge=True):
             'collection_id': collection.id
         }
         if entity.id is None:
-            raise InvalidData("No ID for entity")
+            raise InvalidData("No ID for entity", errors=item)
 
         if entity.id in entities:
             entities[entity.id].merge(entity)

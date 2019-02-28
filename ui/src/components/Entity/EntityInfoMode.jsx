@@ -1,6 +1,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Count, Property } from 'src/components/common';
+import { Link } from 'react-router-dom';
+
+import getPath from 'src/util/getPath';
 
 
 function EntityInfoMode(props) {
@@ -31,18 +34,18 @@ function EntityInfoMode(props) {
             />
           </span>
         </span>
-        <span className="value">
+        <span className="value bp3-running-text">
           <span>
-            <ul className="info-sheet">
+            <ui className="info-sheet">
               <li>
-                <a href={entity.collection.links.ui}>
+                <Link to={getPath(entity.collection.links.ui)}>
                   <b>{entity.collection.label}</b>
-                </a>
+                </Link>
               </li>
               {entity.collection.summary && (
-              <li>
-                <span className="bp3-text-muted">{entity.collection.summary}</span>
-              </li>
+                <li>
+                  <span className="bp3-text-muted">{entity.collection.summary}</span>
+                </li>
               )}
               <li>
                 <span>
@@ -55,7 +58,7 @@ function EntityInfoMode(props) {
                   />
                 </span>
               </li>
-            </ul>
+            </ui>
           </span>
         </span>
       </li>

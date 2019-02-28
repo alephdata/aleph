@@ -312,7 +312,7 @@ export class SearchScreen extends React.Component {
             )}
             <Waypoint
               onEnter={this.getMoreResults}
-              bottomOffset="-600px"
+              bottomOffset="-400px"
               scrollableAncestor={window}
             />
 

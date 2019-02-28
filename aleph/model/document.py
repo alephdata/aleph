@@ -2,6 +2,7 @@ import cgi
 import logging
 from normality import slugify
 from followthemoney import model
+from followthemoney.types import registry
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -93,7 +94,7 @@ class Document(db.Model, DatedModel, Metadata):
 
     @property
     def ancestors(self):
-        if self.parent_id is None or not self.parent:
+        if self.parent_id is None:
             return []
         key = cache.key('ancestors', self.id)
         ancestors = cache.get_list(key)
@@ -221,6 +222,12 @@ class Document(db.Model, DatedModel, Metadata):
         return q.first()
 
     @classmethod
+    def by_collection(cls, collection_id=None):
+        q = cls.all()
+        q = q.filter(cls.collection_id == collection_id)
+        return q
+
+    @classmethod
     def find_ids(cls, collection_id=None, failed_only=False):
         q = cls.all_ids()
         if collection_id is not None:
@@ -263,8 +270,9 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('inReplyTo', meta.get('in_reply_to'), quiet=True)
         proxy.set('bodyText', self.body_text, quiet=True)
         proxy.set('bodyHtml', self.body_raw, quiet=True)
-        proxy.set('columns', meta.get('columns'), quiet=True)
-        proxy.set('headers', headers, quiet=True)
+        columns = meta.get('columns')
+        proxy.set('columns', registry.json.pack(columns), quiet=True)
+        proxy.set('headers', registry.json.pack(headers), quiet=True)
 
         pdf = 'application/pdf'
         if meta.get('extension') == 'pdf' or proxy.first('mimeType') == pdf:

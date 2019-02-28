@@ -6,9 +6,8 @@ from flask_fixtures import loaders, load_fixtures
 from faker import Factory
 
 from aleph import settings
-from aleph.model import Role, Document, Collection, Permission
+from aleph.model import Role, Collection, Permission
 from aleph.index.admin import delete_index, upgrade_search, clear_index
-from aleph.index.documents import index_document
 from aleph.logic.collections import update_collection, index_collections
 from aleph.logic.entities import index_entities
 from aleph.logic.roles import create_system_roles
@@ -93,15 +92,13 @@ class TestCase(FlaskTestCase):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
     def update_index(self):
-        index_collections()
         index_entities()
+        index_collections(documents=True)
 
     def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
-        for document in Document.all():
-            index_document(document)
         self.update_index()
 
     def setUp(self):

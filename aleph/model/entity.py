@@ -17,6 +17,7 @@ log = logging.getLogger(__name__)
 
 class Entity(db.Model, SoftDeleteModel):
     THING = 'Thing'
+    LEGAL_ENTITY = 'LegalEntity'
 
     id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True,
                    default=make_textid, nullable=False, unique=False)

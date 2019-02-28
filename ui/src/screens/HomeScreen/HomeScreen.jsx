@@ -77,12 +77,12 @@ export class HomeScreen extends Component {
           <div className="outer-searchbox">
             <div className="inner-searchbox">
               <div className="homepage-summary">
-                {statistics.entities && (
+                {statistics.things && (
                   <FormattedMessage
                     id="home.summary"
                     defaultMessage="Search {total} public records and leaks from {collections} sources"
                     values={{
-                      total: numeral(statistics.entities).format('0a'),
+                      total: numeral(statistics.things).format('0a'),
                       collections: <FormattedNumber value={statistics.collections} />,
                     }}
                   />

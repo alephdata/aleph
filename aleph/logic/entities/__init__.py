@@ -4,11 +4,10 @@ from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.core import es, db, cache
-from aleph.model import Entity
+from aleph.model import Entity, Collection
 from aleph.index import entities as index
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
-from aleph.logic.collections import refresh_collection
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.entities.bulk import bulk_load, bulk_load_query, bulk_write  # noqa
 
@@ -36,8 +35,8 @@ def refresh_entity(entity, sync=False):
     else:
         entity_id = entity.id
         collection_id = entity.collection_id
-    cache.kv.delete(cache.object_key(Entity, entity_id))
-    refresh_collection(collection_id, sync=sync)
+    cache.kv.delete(cache.object_key(Entity, entity_id),
+                    cache.object_key(Collection, collection_id))
 
 
 def delete_entity(entity, deleted_at=None, sync=False):

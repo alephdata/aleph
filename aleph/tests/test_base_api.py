@@ -24,13 +24,13 @@ class BaseApiTestCase(TestCase):
     def test_statistics(self):
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res
-        assert 'entities' in res.json, res.json
-        assert res.json['entities'] == 0, res.json
+        assert 'things' in res.json, res.json
+        assert res.json['things'] == 0, res.json
         self.load_fixtures('docs.yaml')
         kv.flushall()
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res
-        assert res.json['entities'] == 4, res.json
+        assert res.json['things'] == 4, res.json
 
     def test_sitemap(self):
         self.load_fixtures('docs.yaml')

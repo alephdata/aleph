@@ -35,13 +35,14 @@ def update_collection(collection, sync=False):
 def refresh_collection(collection_id, sync=False):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and re-index."""
-    cache.kv.delete(cache.object_key(Collection, collection_id),
-                    cache.object_key(Collection, collection_id, 'stats'))
+    cache.kv.delete(cache.object_key(Collection, collection_id))
 
 
-def index_collections(refresh=False):
+def index_collections(documents=False, refresh=False):
     for collection in Collection.all(deleted=True):
         log.info("Index [%s]: %s", collection.id, collection.label)
+        if documents and collection.deleted_at is None:
+            index_collection_documents.delay(collection_id=collection.id)
         if refresh:
             refresh_collection(collection.id, sync=False)
         index.index_collection(collection)
@@ -77,6 +78,14 @@ def delete_collection_content(collection_id):
     index.delete_entities(collection_id)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
+
+
+@celery.task(priority=1)
+def index_collection_documents(collection_id):
+    from aleph.index import documents
+    collection = Collection.by_id(collection_id)
+    documents.index_collection_documents(collection)
+    refresh_collection(collection_id)
 
 
 def delete_bulk_entities(collection_id, deleted_at=None):

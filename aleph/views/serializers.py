@@ -142,7 +142,11 @@ class CollectionSerializer(Serializer):
         obj['links'] = {
             'self': url_for('collections_api.view', id=pk),
             'xref': url_for('xref_api.index', id=pk),
-            'xref_csv': url_for('xref_api.csv_export', id=pk, _authorize=True),
+            'xref_csv': url_for('xref_api.csv_export', id=pk,
+                                _authorize=obj.get('secret')),
+            'reconcile': url_for('reconcile_api.reconcile',
+                                 collection_id=pk,
+                                 _authorize=obj.get('secret')),
             'ui': collection_url(pk)
         }
         obj['writeable'] = request.authz.can(pk, request.authz.WRITE)
