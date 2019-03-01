@@ -57,7 +57,7 @@ class Statistics extends PureComponent {
     );
   }
 
-  static Noop(props) { return <div {...props}>skeleton</div>; }
+  static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
 
   render() {
     const {
@@ -68,7 +68,9 @@ class Statistics extends PureComponent {
       Name = Statistics.Name,
       Count = Statistics.Count,
     } = this.props;
-    const list = isLoading ? Array(10).fill([]) : Object.entries(statistic);
+    const list = isLoading ? Array.from(
+      { length: 40 }, (i, ii) => ([ii]),
+    ) : Object.entries(statistic);
     const rest = list.length - 15;
     return (
       <div className="statistic bp3-callout ">
@@ -76,7 +78,7 @@ class Statistics extends PureComponent {
         <ul className="statistic--list">
           {_.sortBy(list, [1]).splice(-15).reverse().map(item => children({
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
-            key: item.name,
+            key: item[0],
             item,
             Name,
             Count,
@@ -129,7 +131,7 @@ export class HomeScreen extends Component {
   };
 
   render() {
-    const { intl, metadata, statistics } = this.props;
+    const { intl, metadata, statistics = {} } = this.props;
     const samples = metadata.app.samples.join(', ');
 
     return (
@@ -160,7 +162,7 @@ export class HomeScreen extends Component {
                     <FormattedMessage
                       id="home.statistics.schemata"
                       defaultMessage="Search {things} entities"
-                      values={statistics}
+                      values={{ things: statistics.things }}
                     />
                   )}
                   statistic={statistics.schemata}
@@ -180,7 +182,7 @@ export class HomeScreen extends Component {
                     <FormattedMessage
                       id="home.statistics.categories"
                       defaultMessage="from {collections} sources"
-                      values={statistics}
+                      values={{ collections: statistics.collections }}
                     />
                   )}
                   statistic={statistics.categories}
