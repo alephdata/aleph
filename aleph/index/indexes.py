@@ -14,6 +14,7 @@ DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
 KEYWORD = {"type": "keyword"}
+KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 TYPE_MAPPINGS = {
     registry.text: {"type": "text", "index": False},
     registry.json: {"type": "text", "index": False},
@@ -56,19 +57,19 @@ def configure_collections():
                 "fields": {"kw": KEYWORD}
             },
             "collection_id": KEYWORD,
-            "foreign_id": KEYWORD,
-            "languages": KEYWORD,
-            "countries": KEYWORD,
-            "category": KEYWORD,
+            "foreign_id": KEYWORD_COPY,
+            "languages": KEYWORD_COPY,
+            "countries": KEYWORD_COPY,
+            "category": KEYWORD_COPY,
             "summary": {
                 "type": "text",
                 "copy_to": "text",
                 "index": False
             },
-            "publisher": KEYWORD,
-            "publisher_url": KEYWORD,
-            "data_url": KEYWORD,
-            "info_url": KEYWORD,
+            "publisher": KEYWORD_COPY,
+            "publisher_url": KEYWORD_COPY,
+            "data_url": KEYWORD_COPY,
+            "info_url": KEYWORD_COPY,
             "kind": KEYWORD,
             "creator_id": KEYWORD,
             "team_id": KEYWORD,
