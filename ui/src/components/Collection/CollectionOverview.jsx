@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-
 import {
   Category, Country, Role, Date, Collection, URL,
 } from 'src/components/common';
 
 import './CollectionOverview.scss';
+import ClipboardInput from '../ClipboardInput';
 
 class CollectionOverview extends PureComponent {
   render() {
@@ -110,6 +110,24 @@ class CollectionOverview extends PureComponent {
             </span>
             <span className="value" itemProp="dateModified">
               <Date value={collection.updated_at} />
+            </span>
+          </li>
+          <li>
+            <span className="key">
+              <FormattedMessage
+                defaultMessage="Reconcile"
+                id="collection.reconcile"
+              />
+            </span>
+            <span className="value bp3-callout">
+              <span className="bp3-text-small bp3-text-muted bp3-monospace-text">
+                <FormattedMessage
+                  id="collection.reconcile.description"
+                  defaultMessage="Use the entities in this collection for data cleaning with the free OpenRefine[Link: openrefine.org]
+                tool by adding the following reconciliation endpoint"
+                />
+              </span>
+              <ClipboardInput value={collection.links.reconcile} />
             </span>
           </li>
         </ul>

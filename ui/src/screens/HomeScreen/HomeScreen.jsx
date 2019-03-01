@@ -69,6 +69,7 @@ class Statistics extends PureComponent {
       Count = Statistics.Count,
     } = this.props;
     const list = isLoading ? Array(10).fill([]) : Object.entries(statistic);
+    const rest = list.length - 15;
     return (
       <div className="statistic bp3-callout ">
         <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
@@ -80,6 +81,10 @@ class Statistics extends PureComponent {
             Name,
             Count,
           }))}
+          {rest > 0 && children({
+            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
+            item: ['and other', list.length - 15],
+          })}
         </ul>
       </div>
     );
