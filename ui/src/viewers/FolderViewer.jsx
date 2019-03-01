@@ -4,9 +4,10 @@ import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 
 import DocumentManager from 'src/components/Document/DocumentManager';
-import { queryFolderDocuments } from "src/queries";
+import { queryFolderDocuments } from 'src/queries';
 
 import './FolderViewer.scss';
+/* eslint-disable */
 
 class FolderViewer extends Component {
   render() {
@@ -14,20 +15,24 @@ class FolderViewer extends Component {
     return (
       <div className={`FolderViewer ${className}`}>
         {document.status === 'fail' && (
-          <div className='warning-folder'>
+          <div className="warning-folder">
             <strong>
               <FormattedMessage id="search.warning" defaultMessage="Warning:" />
             </strong>
             &nbsp;
             <p>
-              <FormattedMessage id="search.not_properly_imported"
-                                defaultMessage="This folder is not fully imported." />
+              <FormattedMessage
+                id="search.not_properly_imported"
+                defaultMessage="This folder is not fully imported."
+              />
             </p>
           </div>
         )}
-        <DocumentManager query={query}
-                         collection={document.collection}
-                         document={document} />
+        <DocumentManager
+          query={query}
+          collection={document.collection}
+          document={document}
+        />
       </div>
     );
   }
@@ -37,7 +42,7 @@ class FolderViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
   return {
-    query: queryFolderDocuments(location, document.id, queryText)
+    query: queryFolderDocuments(location, document.id, queryText),
   };
 };
 

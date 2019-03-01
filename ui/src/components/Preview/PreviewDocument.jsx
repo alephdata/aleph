@@ -6,17 +6,18 @@ import Preview from 'src/components/Preview/Preview';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentHeading from 'src/components/Document/DocumentHeading';
-import DocumentViews from "src/components/Document/DocumentViews";
+import DocumentViews from 'src/components/Document/DocumentViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectDocumentView } from 'src/selectors';
+/* eslint-disable */
 
 
 class PreviewDocument extends React.Component {
-  render() {  
+  render() {
     const { previewId } = this.props;
     return (
       <DocumentContextLoader documentId={previewId}>
-        <Preview maximised={true}>
+        <Preview maximised>
           <DualPane.InfoPane className="with-heading">
             {this.renderContext()}
           </DualPane.InfoPane>
@@ -28,20 +29,24 @@ class PreviewDocument extends React.Component {
   renderContext() {
     const { document, previewMode } = this.props;
     if (document.isError) {
-      return <ErrorSection error={document.error} />
+      return <ErrorSection error={document.error} />;
     }
     if (document.shouldLoad || document.isLoading) {
-      return <SectionLoading/>;
+      return <SectionLoading />;
     }
 
     return (
       <React.Fragment>
-        <DocumentToolbar document={document}
-                         isPreview={true} />
+        <DocumentToolbar
+          document={document}
+          isPreview
+        />
         <DocumentHeading document={document} />
-        <DocumentViews document={document}
-                       activeMode={previewMode}
-                       isPreview={true} />
+        <DocumentViews
+          document={document}
+          activeMode={previewMode}
+          isPreview
+        />
       </React.Fragment>
     );
   }
@@ -52,7 +57,7 @@ const mapStateToProps = (state, ownProps) => {
   const { previewId, previewMode } = ownProps;
   return {
     document: selectEntity(state, previewId),
-    previewMode: selectDocumentView(state, previewId, previewMode)
+    previewMode: selectDocumentView(state, previewId, previewMode),
   };
 };
 

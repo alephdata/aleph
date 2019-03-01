@@ -1,21 +1,9 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { withRouter } from 'react-router';
+import React, { PureComponent } from 'react';
 import queryString from 'query-string';
 
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
-import { selectCollection, selectCollectionView } from "src/selectors";
-
-
-class CollectionScreen extends Component {
-  render() {
-    const { collectionId, mode } = this.props;
-    return (
-      <CollectionScreenContext collectionId={collectionId}
-                               activeMode={mode} />
-    );
-  }
-}
+import { selectCollection, selectCollectionView } from 'src/selectors';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -25,10 +13,20 @@ const mapStateToProps = (state, ownProps) => {
   return {
     collectionId,
     collection: selectCollection(state, collectionId),
-    mode: selectCollectionView(state, collectionId, hashQuery.mode)
+    mode: selectCollectionView(state, collectionId, hashQuery.mode),
   };
 };
 
-CollectionScreen = connect(mapStateToProps)(CollectionScreen);
-CollectionScreen = withRouter(CollectionScreen);
-export default CollectionScreen;
+export class CollectionScreen extends PureComponent {
+  render() {
+    const { collectionId, mode } = this.props;
+    return (
+      <CollectionScreenContext
+        collectionId={collectionId}
+        activeMode={mode}
+      />
+    );
+  }
+}
+
+export default connectedWIthRouter({ mapStateToProps })(CollectionScreen);

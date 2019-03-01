@@ -6,13 +6,12 @@ import { objectLoadStart, objectLoadError, objectLoadComplete } from 'src/reduce
 const initialState = {};
 
 export default createReducer({
-  [fetchCollectionXrefIndex.START]: (state, { id }) =>
-    objectLoadStart(state, id),
+  [fetchCollectionXrefIndex.START]: (state, { id }) => objectLoadStart(state, id),
 
-  [fetchCollectionXrefIndex.ERROR]: (state, { error, args: { id } }) =>
-    objectLoadError(state, id, error),
+  [fetchCollectionXrefIndex.ERROR]: (state, {
+    error, args: { id },
+  }) => objectLoadError(state, id, error),
 
-  [fetchCollectionXrefIndex.COMPLETE]: (state, { id, data }) =>
-    objectLoadComplete(state, id, data),
+  [fetchCollectionXrefIndex.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
 }, initialState);

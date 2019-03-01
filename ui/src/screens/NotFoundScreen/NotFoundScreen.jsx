@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
 
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -7,16 +7,15 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 const messages = defineMessages({
   not_found: {
     id: 'error.screen.not_found',
-    defaultMessage: 'The requested page could not be found.'
-  }
+    defaultMessage: 'The requested page could not be found.',
+  },
 });
 
-class NotFoundScreen extends Component {
+
+export class NotFoundScreen extends PureComponent {
   render() {
     const { intl } = this.props;
-    return <ErrorScreen title={intl.formatMessage(messages.not_found)} />
+    return <ErrorScreen title={intl.formatMessage(messages.not_found)} />;
   }
 }
-
-NotFoundScreen = injectIntl(NotFoundScreen);
-export default NotFoundScreen;
+export default injectIntl(NotFoundScreen);

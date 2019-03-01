@@ -1,35 +1,37 @@
-import _ from "lodash";
-import React, {Component} from 'react';
+import _ from 'lodash';
+import React, { PureComponent } from 'react';
 import { FormattedNumber } from 'react-intl';
 
 import { CollectionOverview } from 'src/components/Collection';
 import { Schema } from 'src/components/common';
 
 
-class CollectionInfoMode extends Component {
+class CollectionInfoMode extends PureComponent {
   render() {
     const { collection } = this.props;
-    let content = [];
-    for (let key in collection.schemata) {
-      if (collection.schemata.hasOwnProperty(key)) {
-        content.push({name: key, number: collection.schemata[key]});
-      }
-    }
-    content = _.reverse(_.sortBy(content, ['number']));
+    const content = collection.schemata ? _.reverse(
+      _.sortBy(
+        Object.entries(collection.schemata)
+          .map(([name, number]) => ({ name, number })),
+        ['number'],
+      ),
+    ) : [];
     return (
       <div className="CollectionInfoMode">
-        <CollectionOverview collection={collection} hasHeader={false}/>
+        <CollectionOverview collection={collection} hasHeader={false} />
         <ul className="info-rank">
-          { content.map((item, index) => (
-            <li key={index}>
-                <span className="key">
-                  <Schema.Smart.Link schema={item.name}
-                               plural={true}
-                               url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}/>
-                </span>
+          { content.map(item => (
+            <li key={item.name}>
+              <span className="key">
+                <Schema.Smart.Link
+                  schema={item.name}
+                  plural
+                  url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}
+                />
+              </span>
               <span className="value">
-                  <FormattedNumber value={item.number} />
-                </span>
+                <FormattedNumber value={item.number} />
+              </span>
             </li>
           ))}
         </ul>

@@ -6,19 +6,18 @@ const initialState = {
 };
 
 export default createReducer({
-  [fetchMetadata.START]: (state) => 
-    ({ isLoading: true, isError: false }),
+  [fetchMetadata.START]: () => ({ isLoading: true, isError: false }),
 
   [fetchMetadata.ERROR]: (state, { error }) => ({
     isLoading: false,
     isError: true,
-    error 
+    error,
   }),
 
   [fetchMetadata.COMPLETE]: (state, { metadata }) => ({
     ...metadata,
     isLoading: false,
-    isError: false
+    isError: false,
   }),
 
 }, initialState);

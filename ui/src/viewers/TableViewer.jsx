@@ -1,70 +1,91 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
-import {Cell, Column, Table, TableLoadingOption, TruncatedFormat} from "@blueprintjs/table";
+import React, { Component } from 'react';
+import {
+  Cell, Column, Table, TableLoadingOption, TruncatedFormat,
+} from '@blueprintjs/table';
 
-import {queryEntities} from 'src/actions';
+import { queryEntities } from 'src/actions';
 import Query from 'src/app/Query';
-import {selectEntitiesResult} from "src/selectors";
+import { selectEntitiesResult } from 'src/selectors';
 import './TableViewer.scss';
+import { connectedWIthRouter } from '../util/enhancers';
 
 
-class TableViewer extends Component {
+const mapStateToProps = (state, ownProps) => {
+  const { document, location, queryText } = ownProps;
+  let query = Query.fromLocation('entities', location, {}, 'document')
+    .sortBy('properties.index', 'asc')
+    .setFilter('properties.table', document.id)
+    .setFilter('schemata', 'Record');
+
+  if (queryText) {
+    query = query.setString('q', queryText);
+  }
+
+  return {
+    query,
+    result: selectEntitiesResult(state, query),
+  };
+};
+
+
+export class TableViewer extends Component {
   constructor(props) {
     super(props);
-    this.state = {requestedRow: 0};
+    this.state = { requestedRow: 0 };
     this.renderCell = this.renderCell.bind(this);
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {result} = nextProps;
+    const { result } = nextProps;
     return {
-      requestedRow: Math.max(prevState.requestedRow, result.results.length)
-    }
+      requestedRow: Math.max(prevState.requestedRow, result.results.length),
+    };
   }
 
   componentDidMount() {
     this.fetchRecords();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.fetchRecords();
   }
 
+  onVisibleCellsChange(row) {
+    const { result } = this.props;
+    const maxResult = this.state.requestedRow;
+    if (result.limit !== undefined && row.rowIndexEnd >= (maxResult - 10)) {
+      const nextResult = result.offset + (result.limit * 2);
+      this.setState({ requestedRow: nextResult });
+    }
+  }
+
   fetchRecords() {
-    const {result, query} = this.props;
+    const { result, query } = this.props;
     if (query.path && result.shouldLoad) {
-      this.props.queryEntities({query})
+      this.props.queryEntities({ query });
     } else if (this.state.requestedRow > result.results.length) {
       if (!result.isLoading && result.next) {
-        this.props.queryEntities({query, next: result.next})
+        this.props.queryEntities({ query, next: result.next });
       }
     }
   }
 
-  onVisibleCellsChange(row) {
-    const {result} = this.props;
-    const maxResult = this.state.requestedRow;
-    if (result.limit !== undefined && row.rowIndexEnd >= (maxResult - 10)) {
-      const nextResult = result.offset + (result.limit * 2);
-      this.setState({requestedRow: nextResult});
-    }
-  }
-
   renderCell(rowIndex, colIndex) {
-    const {result} = this.props;
+    const { result } = this.props;
     const loading = rowIndex >= result.results.length;
     const value = JSON.parse(result.results[rowIndex].getProperty('cells'))[colIndex];
-    return <Cell loading={loading}>
-      <TruncatedFormat detectTruncation={true}>
-        {value || ''}
-      </TruncatedFormat>
-    </Cell>
+    return (
+      <Cell loading={loading}>
+        <TruncatedFormat detectTruncation>
+          {value || ''}
+        </TruncatedFormat>
+      </Cell>
+    );
   }
 
   render() {
-    const {document, result} = this.props;
+    const { document, result } = this.props;
     const loadingOptions = [];
     if (document.id === undefined) {
       return null;
@@ -74,37 +95,26 @@ class TableViewer extends Component {
     }
     return (
       <div className="TableViewer">
-        <Table numRows={result.total}
-               enableGhostCells={true}
-               enableRowHeader={true}
-               loadingOptions={loadingOptions}
-               onVisibleCellsChange={this.onVisibleCellsChange}>
-          {JSON.parse(document.getProperty('columns').toString()).map((column, i) =>
-          <Column key={i} id={i} name={column} cellRenderer={this.renderCell}/>
-          )}
+        <Table
+          numRows={result.total}
+          enableGhostCells
+          enableRowHeader
+          loadingOptions={loadingOptions}
+          onVisibleCellsChange={this.onVisibleCellsChange}
+        >
+          {JSON.parse(document.getProperty('columns').toString())
+            .map((column, i) => (
+              <Column
+                key={column}
+                id={i}
+                name={column}
+                cellRenderer={this.renderCell}
+              />
+            ))}
         </Table>
       </div>
     );
   }
 }
-
-const mapStateToProps = (state, ownProps) => {
-  const {document, location, queryText} = ownProps;
-  let query = Query.fromLocation('entities', location, {}, 'document')
-    .sortBy('properties.index', 'asc')
-    .setFilter('properties.table', document.id)
-    .setFilter('schemata', 'Record')
-
-  if (queryText) {
-    query = query.setString('q', queryText);
-  }
-
-  return {
-    query,
-    result: selectEntitiesResult(state, query)
-  }
-};
-
-TableViewer = connect(mapStateToProps, {queryEntities})(TableViewer);
-TableViewer = withRouter(TableViewer);
-export default TableViewer;
+const mapDispatchToProps = { queryEntities };
+export default connectedWIthRouter({ mapStateToProps, mapDispatchToProps });

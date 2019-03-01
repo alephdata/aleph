@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 import c from 'classnames';
 
-import EntityTableRow from './EntityTableRow';
 import { SortableTH, ErrorSection } from 'src/components/common';
-
+import EntityTableRow from './EntityTableRow';
+/* eslint-disable */
 import './EntityTable.scss';
+import { withRouterTranslation } from '../../util/enhancers';
 
 const messages = defineMessages({
   column_name: {
@@ -36,15 +36,14 @@ const messages = defineMessages({
 });
 
 class EntityTable extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      result: props.result
+      result: props.result,
     };
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps) {
     const { result } = nextProps;
     return (!result.isLoading) ? { result } : null;
   }
@@ -55,13 +54,13 @@ class EntityTable extends Component {
     // Toggle through sorting states: ascending, descending, or unsorted.
     if (currentField !== newField) {
       return updateQuery(query.sortBy(newField, 'asc'));
-    } else {
-      if (direction === 'asc') {
-        updateQuery(query.sortBy(currentField, 'desc'));
-      } else {
-        updateQuery(query.sortBy(currentField, undefined));
-      }
     }
+    if (direction === 'asc') {
+      updateQuery(query.sortBy(currentField, 'desc'));
+    } else {
+      updateQuery(query.sortBy(currentField, undefined));
+    }
+    return undefined;
   }
 
   render() {
@@ -79,14 +78,18 @@ class EntityTable extends Component {
       return null;
     }
 
-    const TH = ({ sortable, field, className, ...otherProps }) => {
+    const TH = ({
+      sortable, field, className, ...otherProps
+    }) => {
       const { field: sortedField, direction } = query.getSort();
       return (
-        <SortableTH sortable={sortable}
-                    className={className}
-                    sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
-                    onClick={() => this.sortColumn(field)}
-                    {...otherProps}>
+        <SortableTH
+          sortable={sortable}
+          className={className}
+          sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
+          onClick={() => this.sortColumn(field)}
+          {...otherProps}
+        >
           {intl.formatMessage(messages[`column_${field}`])}
         </SortableTH>
       );
@@ -95,38 +98,39 @@ class EntityTable extends Component {
       <table className="EntityTable data-table">
         <thead>
           <tr>
-            {updateSelection && (<th className="select"/>)}
-            <TH field="name" className="wide" sortable={true} />
-            {!hideCollection && 
-              <TH field="collection_id" />
+            {updateSelection && (<th className="select" />)}
+            <TH field="name" className="wide" sortable />
+            {!hideCollection
+              && <TH field="collection_id" />
             }
-            <TH className='header-schema visible-md-none' field="schema" sortable={true} />
+            <TH className="header-schema visible-md-none" field="schema" sortable />
             {!documentMode && (
-              <TH className='header-country' field="countries" sortable={true} />
+              <TH className="header-country" field="countries" sortable />
             )}
-            <TH className='header-dates' field="dates" sortable={true} />
+            <TH className="header-dates" field="dates" sortable />
             {documentMode && (
-              <TH className='header-size' field="file_size" sortable={true} />
+              <TH className="header-size" field="file_size" sortable />
             )}
           </tr>
         </thead>
-        <tbody className={c({'updating': isLoading})}>
-          {result.results !== undefined && result.results.map(entity =>            
-            <EntityTableRow key={entity.id}
-                            entity={entity}
-                            location={location}
-                            hideCollection={hideCollection}
-                            showPreview={showPreview}
-                            documentMode={documentMode}
-                            updateSelection={updateSelection}
-                            selection={selection} />
-          )}
+        <tbody className={c({ updating: isLoading })}>
+          {result.results !== undefined && result.results.map(entity => (
+            <EntityTableRow
+              key={entity.id}
+              entity={entity}
+              location={location}
+              hideCollection={hideCollection}
+              showPreview={showPreview}
+              documentMode={documentMode}
+              updateSelection={updateSelection}
+              selection={selection}
+            />
+          ))}
         </tbody>
       </table>
     );
   }
 }
 
-EntityTable = injectIntl(EntityTable);
-EntityTable = withRouter(EntityTable);
-export default EntityTable;
+export default withRouterTranslation()(EntityTable);
+

@@ -4,8 +4,8 @@ import PreviewDocument from './PreviewDocument';
 import PreviewEntity from './PreviewEntity';
 
 export {
-    Preview,
-    PreviewEntity,
-    PreviewDocument,
-    PreviewCollection
-}
+  Preview,
+  PreviewEntity,
+  PreviewDocument,
+  PreviewCollection,
+};

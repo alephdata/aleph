@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 
 export default function togglePreview(history, previewObject, previewType) {
-  const location = history.location;
+  const { location } = history;
   const parsedHash = queryString.parse(location.hash);
   parsedHash['preview:mode'] = undefined;
 

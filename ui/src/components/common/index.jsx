@@ -20,7 +20,7 @@ import SortableTH from './SortableTH';
 import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
-import Icon from './Icon';
+import { Icon } from './Icon';
 
 export {
   Breadcrumbs,
@@ -45,5 +45,5 @@ export {
   Count,
   Tag,
   URL,
-  Icon
-}
+  Icon,
+};

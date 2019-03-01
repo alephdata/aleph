@@ -1,23 +1,26 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
 import queryString from 'query-string';
-import {defineMessages, injectIntl, FormattedNumber, FormattedMessage} from 'react-intl';
-import Waypoint from 'react-waypoint';
-import { Icon} from '@blueprintjs/core';
+import {
+  defineMessages, FormattedNumber, FormattedMessage,
+} from 'react-intl';
+import { Waypoint } from 'react-waypoint';
+import { Icon } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs } from 'src/components/common';
+import {
+  DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs,
+} from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
-import SuggestAlert from "src/components/SuggestAlert/SuggestAlert";
+import SuggestAlert from 'src/components/SuggestAlert/SuggestAlert';
 import Screen from 'src/components/Screen/Screen';
 import togglePreview from 'src/util/togglePreview';
 
 import './SearchScreen.scss';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   facet_schema: {
@@ -67,10 +70,23 @@ const messages = defineMessages({
   page_title: {
     id: 'search.title',
     defaultMessage: 'Search',
-  }
+  },
 });
 
-class SearchScreen extends React.Component {
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+
+  // We normally only want Things, not Intervals (relations between things).
+  const context = {
+    highlight: true,
+    'filter:schemata': 'Thing',
+  };
+  const query = Query.fromLocation('entities', location, context, '');
+  const result = selectEntitiesResult(state, query);
+  return { query, result };
+};
+
+export class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
     const { intl } = props;
@@ -79,54 +95,54 @@ class SearchScreen extends React.Component {
       {
         field: 'collection_id',
         label: intl.formatMessage(messages.facet_collection_id),
-        icon: 'database'
+        icon: 'database',
       },
       {
         field: 'schema',
         label: intl.formatMessage(messages.facet_schema),
         icon: 'list',
-        defaultSize: 20
+        defaultSize: 20,
       },
       {
         field: 'countries',
         label: intl.formatMessage(messages.facet_countries),
-        icon: 'globe'
+        icon: 'globe',
       },
       {
         field: 'languages',
         label: intl.formatMessage(messages.facet_languages),
-        icon: 'translate'
+        icon: 'translate',
       },
       {
         field: 'emails',
         label: intl.formatMessage(messages.facet_emails),
-        icon: 'envelope'
+        icon: 'envelope',
       },
       {
         field: 'phones',
         label: intl.formatMessage(messages.facet_phones),
-        icon: 'phone'
+        icon: 'phone',
       },
       {
         field: 'names',
         label: intl.formatMessage(messages.facet_names),
-        icon: 'id-number'
+        icon: 'id-number',
       },
       {
         field: 'addresses',
         label: intl.formatMessage(messages.facet_addresses),
-        icon: 'map'
+        icon: 'map',
       },
       {
         field: 'mimetypes',
         label: intl.formatMessage(messages.facet_mime_type),
-        icon: 'document'
+        icon: 'document',
       },
     ];
 
     this.state = {
-      facets: facets,
-      hideFacets: false
+      facets,
+      hideFacets: false,
     };
 
     this.updateQuery = this.updateQuery.bind(this);
@@ -143,21 +159,29 @@ class SearchScreen extends React.Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.fetchIfNeeded();
+  }
+
+  getMoreResults() {
+    const { query, result } = this.props;
+    if (!result.isLoading && result.next) {
+      this.props.queryEntities({ query, next: result.next });
+    }
+  }
+
+  getCurrentPreviewIndex() {
+    const { location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    return this.props.result.results.findIndex(
+      entity => entity.id === parsedHash['preview:id'],
+    );
   }
 
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (result.shouldLoad) {
-      this.props.queryEntities({query: query});
-    }
-  }
-
-  getMoreResults() {
-    const {query, result, queryEntities} = this.props;
-    if (!result.isLoading && result.next) {
-      queryEntities({query, next: result.next});
+      this.props.queryEntities({ query });
     }
   }
 
@@ -174,27 +198,19 @@ class SearchScreen extends React.Component {
     });
   }
 
-  getCurrentPreviewIndex() {
-    const { location } = this.props;
-    const parsedHash = queryString.parse(location.hash);
-    return this.props.result.results.findIndex(
-      entity => entity.id === parsedHash['preview:id']
-    )
-  }
-
   showNextPreview() {
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[1 + currentSelectionIndex];
-    if(nextEntity){
-      this.showPreview(nextEntity)
+    if (nextEntity) {
+      this.showPreview(nextEntity);
     }
   }
 
   showPreviousPreview() {
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[currentSelectionIndex - 1];
-    if(nextEntity){
-      this.showPreview(nextEntity)
+    if (nextEntity) {
+      this.showPreview(nextEntity);
     }
   }
 
@@ -206,34 +222,37 @@ class SearchScreen extends React.Component {
   }
 
   toggleFacets() {
-    this.setState({hideFacets: !this.state.hideFacets});
+    this.setState(({ hideFacets }) => ({ hideFacets: !hideFacets }));
   }
 
   render() {
-    const {query, result, intl} = this.props;
-    const {hideFacets} = this.state;
+    const { query, result, intl } = this.props;
+    const { hideFacets } = this.state;
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
 
-    const breadcrumbs = (<Breadcrumbs hasSearchBar={false}>
-      <li>
-        <span className="bp3-breadcrumb bp3-breadcrumb-current">
-          {!(result.isLoading || result.total === undefined) && (
+    const breadcrumbs = (
+      <Breadcrumbs hasSearchBar={false}>
+        <li>
+          <span className="bp3-breadcrumb bp3-breadcrumb-current">
+            {!(result.isLoading || result.total === undefined) && (
             <React.Fragment>
-              <FormattedNumber value={result.total}/>&nbsp;
-              <FormattedMessage id="search.screen.results" defaultMessage="results"/>
+              <FormattedNumber value={result.total} />
+&nbsp;
+              <FormattedMessage id="search.screen.results" defaultMessage="results" />
             </React.Fragment>
-          )}
-          { result.isLoading && (
-            <FormattedMessage id="search.screen.searching" defaultMessage="Searching..."/>
-          )}
-          { result.isError && (
-            <FormattedMessage id="search.screen.error" defaultMessage="Error"/>
-          )}
-        </span>
-      </li>
-    </Breadcrumbs>);
+            )}
+            { result.isLoading && (
+            <FormattedMessage id="search.screen.searching" defaultMessage="Searching..." />
+            )}
+            { result.isError && (
+            <FormattedMessage id="search.screen.error" defaultMessage="Error" />
+            )}
+          </span>
+        </li>
+      </Breadcrumbs>
+    );
 
     return (
       <Screen
@@ -241,70 +260,71 @@ class SearchScreen extends React.Component {
         updateQuery={this.updateQuery}
         title={title}
         hotKeys={[
-          {combo:'j', global:true, label:"Preview next search entity", onKeyDown:this.showNextPreview },
-          {combo:'k', global:true, label:"Preview previous search entity" ,onKeyDown:this.showPreviousPreview }
+          {
+            combo: 'j', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
+          },
+          {
+            combo: 'k', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
+          },
         ]}
       >
 
         {breadcrumbs}
         <DualPane className="SearchScreen">
-          <DualPane.SidePane className='side-pane-padding'>
-            <div onClick={this.toggleFacets} className='visible-sm-flex facets total-count bp3-text-muted'>
+          <DualPane.SidePane className="side-pane-padding">
+            <div
+              role="switch"
+              aria-checked={!hideFacets}
+              tabIndex={0}
+              className="visible-sm-flex facets total-count bp3-text-muted"
+              onClick={this.toggleFacets}
+              onKeyPress={this.toggleFacets}
+            >
               <Icon icon={plusMinusIcon} />
-              <span className='total-count-span'>
-                <FormattedMessage id="search.screen.filters" defaultMessage="Filters"/>
+              <span className="total-count-span">
+                <FormattedMessage id="search.screen.filters" defaultMessage="Filters" />
               </span>
             </div>
             <div className={hideFacetsClass}>
-              <SearchFacets query={query}
-                            result={result}
-                            updateQuery={this.updateQuery}
-                            facets={this.state.facets}/>
+              <SearchFacets
+                query={query}
+                result={result}
+                updateQuery={this.updateQuery}
+                facets={this.state.facets}
+              />
             </div>
           </DualPane.SidePane>
           <DualPane.ContentPane className="padded">
-            <SignInCallout/>
-            <QueryTags query={query} updateQuery={this.updateQuery}/>
-            <EntityTable query={query}
-                         updateQuery={this.updateQuery}
-                         result={result} />
+            <SignInCallout />
+            <QueryTags query={query} updateQuery={this.updateQuery} />
+            <EntityTable
+              query={query}
+              updateQuery={this.updateQuery}
+              result={result}
+            />
             {result.total === 0 && (
-              <ErrorSection visual="search"
-                            title={intl.formatMessage(messages.no_results_title)}
-                            resolver={<SuggestAlert queryText={query.state.q}/>}
-                            description={intl.formatMessage(messages.no_results_description)}/>
-            )}
-            {!result.isLoading && result.next && (
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-600px"
-                scrollableAncestor={window}
+              <ErrorSection
+                visual="search"
+                title={intl.formatMessage(messages.no_results_title)}
+                resolver={<SuggestAlert queryText={query.state.q} />}
+                description={intl.formatMessage(messages.no_results_description)}
               />
             )}
+            <Waypoint
+              onEnter={this.getMoreResults}
+              bottomOffset="-400px"
+              scrollableAncestor={window}
+            />
+
             {result.isLoading && (
-              <SectionLoading/>
+              <SectionLoading />
             )}
           </DualPane.ContentPane>
         </DualPane>
       </Screen>
-    )
+    );
   }
 }
-
-
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-
-  // We normally only want Things, not Intervals (relations between things).
-  const context = {
-    'highlight': true,
-    'filter:schemata': 'Thing',
-  };
-  const query = Query.fromLocation('entities', location, context, '');
-  const result = selectEntitiesResult(state, query);
-  return { query, result };
-};
-
-SearchScreen = connect(mapStateToProps, { queryEntities })(SearchScreen);
-SearchScreen = withRouter(SearchScreen);
-export default injectIntl(SearchScreen);
+export default enhancer({
+  mapStateToProps, mapDispatchToProps: { queryEntities },
+})(SearchScreen);

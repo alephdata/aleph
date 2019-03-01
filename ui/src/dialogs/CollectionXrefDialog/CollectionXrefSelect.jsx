@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { Card, Button, Spinner } from '@blueprintjs/core';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import CollectionXrefFilter from './CollectionXrefFilter';
-import { queryEndpoint } from '../../actions/util';
 import Query from 'src/app/Query';
 import CheckboxList from 'src/components/common/CheckboxList';
-import Waypoint from "react-waypoint";
-import { showWarningToast } from "../../app/toast";
+import { Waypoint } from 'react-waypoint';
+import { queryEndpoint } from '../../actions/util';
+import CollectionXrefFilter from './CollectionXrefFilter';
+import { showWarningToast } from '../../app/toast';
 
-const convertCollectionToItem = (collection) => ({
+const convertCollectionToItem = collection => ({
   id: collection.id,
   label: collection.label,
-  count: collection.count
+  count: collection.count,
 });
 
 class CollectionXrefSelect extends Component {
@@ -19,7 +19,7 @@ class CollectionXrefSelect extends Component {
     super(props);
     this.state = {
       queryResult: null,
-      showSelected: false
+      showSelected: false,
     };
     this.listRef = React.createRef();
   }
@@ -28,54 +28,25 @@ class CollectionXrefSelect extends Component {
     const { showSelected } = this.state;
     const { selectedCollections } = this.props;
     if (selectedCollections.length <= 0 && showSelected) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ showSelected: false });
-    }
-  }
-
-  fetchCollections(query, next) {
-    const { queryResult } = this.state;
-    this.setState({ loading: true });
-    queryEndpoint({ query, next})
-      .then((response) => {
-        if (next) {
-          const updatedQueryResult = Object.assign({}, queryResult, {
-            results: queryResult.results.concat(response.result.results),
-            next: response.result.next
-          });
-          this.setState({ queryResult: updatedQueryResult, loading: false });
-        } else {
-          this.setState({ queryResult: response.result, loading: false });
-          this.listRef.current.scrollTop = 0;
-        }
-      })
-      .catch((e) => {
-        this.setState({ loading: false });
-        console.error(e);
-        showWarningToast(e.message);
-      });
-  }
-
-  getMoreResults() {
-    const { queryResult, loading, query } = this.state;
-    if (!loading && queryResult && queryResult.next) {
-      this.fetchCollections(query, queryResult.next);
     }
   }
 
   onFilterChange(filter) {
     const context = {
       facet: ['category'],
-      'filter:kind': 'source'
+      'filter:kind': 'source',
     };
     const state = {
-      "filter:category": filter.category ? filter.category.id : null,
-      "prefix": filter.searchTerm
+      'filter:category': filter.category ? filter.category.id : null,
+      prefix: filter.searchTerm,
     };
     const query = new Query('collections', state, context, '')
       .sortBy('count', 'desc')
       .limit(40);
 
-    this.setState({ query: query });
+    this.setState({ query });
     this.fetchCollections(query);
   }
 
@@ -88,6 +59,36 @@ class CollectionXrefSelect extends Component {
     if (matchingCollection) {
       collectionSelectFn(matchingCollection);
     }
+  }
+
+  getMoreResults() {
+    const { queryResult, loading, query } = this.state;
+    if (!loading && queryResult && queryResult.next) {
+      this.fetchCollections(query, queryResult.next);
+    }
+  }
+
+  fetchCollections(query, next) {
+    const { queryResult } = this.state;
+    this.setState({ loading: true });
+    queryEndpoint({ query, next })
+      .then((response) => {
+        if (next) {
+          const updatedQueryResult = Object.assign({}, queryResult, {
+            results: queryResult.results.concat(response.result.results),
+            next: response.result.next,
+          });
+          this.setState({ queryResult: updatedQueryResult, loading: false });
+        } else {
+          this.setState({ queryResult: response.result, loading: false });
+          this.listRef.current.scrollTop = 0;
+        }
+      })
+      .catch((e) => {
+        this.setState({ loading: false });
+        console.error(e);
+        showWarningToast(e.message);
+      });
   }
 
   toggleShowSelected() {
@@ -110,16 +111,18 @@ class CollectionXrefSelect extends Component {
       <Card>
         <CollectionXrefFilter
           categories={queryResult ? queryResult.facets.category.values : []}
-          changeFn={(filter) => this.onFilterChange(filter)}
+          changeFn={filter => this.onFilterChange(filter)}
         />
-        <div className={"xref-select-list"} ref={this.listRef}>
-          <CheckboxList items={showSelected ? selectedCollections : getCheckboxItems()}
-                        selectedItems={selectedCollections.map(c => c.id)}
-                        onItemClick={(id) => this.onSelect(id)}/>
-          {queryResult && queryResult.next && !loading && <Waypoint onEnter={() => this.getMoreResults()} bottomOffset="-40px"/>}
-          {loading && ( <Spinner/> )}
+        <div className="xref-select-list" ref={this.listRef}>
+          <CheckboxList
+            items={showSelected ? selectedCollections : getCheckboxItems()}
+            selectedItems={selectedCollections.map(c => c.id)}
+            onItemClick={id => this.onSelect(id)}
+          />
+          {queryResult && queryResult.next && !loading && <Waypoint onEnter={() => this.getMoreResults()} bottomOffset="-40px" />}
+          {loading && (<Spinner />)}
         </div>
-        <div className={"xref-select-status"}>
+        <div className="xref-select-status">
           <div>
             <strong>
               <FormattedMessage
@@ -133,10 +136,12 @@ class CollectionXrefSelect extends Component {
             </strong>
           </div>
           <div>
-            {selectedCollections.length > 0 &&
+            {selectedCollections.length > 0
+            && (
             <Button icon="eye-open" active={showSelected} onClick={() => this.toggleShowSelected()}>
-              <FormattedMessage id="collection.xref.select.showSelected" defaultMessage="Review selection"/>
-            </Button>}
+              <FormattedMessage id="collection.xref.select.showSelected" defaultMessage="Review selection" />
+            </Button>
+            )}
           </div>
         </div>
       </Card>
@@ -144,5 +149,4 @@ class CollectionXrefSelect extends Component {
   }
 }
 
-CollectionXrefSelect = injectIntl(CollectionXrefSelect);
-export default CollectionXrefSelect;
+export default injectIntl(CollectionXrefSelect);

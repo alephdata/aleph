@@ -7,15 +7,20 @@ import { selectMetadata } from 'src/selectors';
 
 class Category extends Component {
   shouldComponentUpdate(nextProps) {
-    const { category } = this.props.collection;
-    return category !== nextProps.collection.category;
+    const {
+      collection = {},
+      category = collection.category,
+    } = this.props;
+    const {
+      category: nextCategory = nextProps.collection.category,
+    } = nextProps;
+    return category !== nextCategory;
   }
 
   render() {
-    const { collection, categories } = this.props;
-    let category = collection ? collection.category : this.props.category;
-    const label = categories[category] || <FormattedMessage id="category.other" defaultMessage="Other"/>;
-    return label;
+    const { collection, categories, category: pureCategory } = this.props;
+    const category = collection ? collection.category : pureCategory;
+    return categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
   }
 }
 

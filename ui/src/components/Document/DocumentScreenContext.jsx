@@ -13,17 +13,18 @@ import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
-import {selectEntity, selectSchemata} from 'src/selectors';
-import {Entity} from "src/followthemoney/Entity.ts";
-import EntityInfoMode from "src/components/Entity/EntityInfoMode";
+import { selectEntity, selectSchemata } from 'src/selectors';
+import { Entity } from 'src/followthemoney/Entity.ts';
+import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 
 const messages = defineMessages({
   placeholder: {
     id: 'documents.screen.filter',
     defaultMessage: 'Search in {label}',
-  }
+  },
 });
 
+/* eslint-disable */
 
 class DocumentScreenContext extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class DocumentScreenContext extends Component {
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
-    parsedHash['page'] = undefined;
+    parsedHash.page = undefined;
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -47,7 +48,9 @@ class DocumentScreenContext extends Component {
   }
 
   render() {
-    const { intl,schemata, document, documentId, activeMode, query } = this.props;
+    const {
+      intl, schemata, document, documentId, activeMode, query,
+    } = this.props;
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
@@ -56,17 +59,19 @@ class DocumentScreenContext extends Component {
         <DocumentContextLoader documentId={documentId}>
           <LoadingScreen />
         </DocumentContextLoader>
-      ); 
+      );
     }
 
     const title = document.title || document.file_name || document.name;
     const hasSearch = document.hasSearch();
     const onSearch = hasSearch ? this.onSearch : undefined;
-    const placeholder = intl.formatMessage(messages.placeholder, {label: title});
+    const placeholder = intl.formatMessage(messages.placeholder, { label: title });
     const breadcrumbs = (
-      <Breadcrumbs onSearch={onSearch}
-                   searchPlaceholder={placeholder}
-                   searchText={query.getString('q')} >
+      <Breadcrumbs
+        onSearch={onSearch}
+        searchPlaceholder={placeholder}
+        searchText={query.getString('q')}
+      >
         <Breadcrumbs.Collection collection={document.collection} />
         {document.parent && (
           <Breadcrumbs.Entity entity={new Entity(schemata.getSchema(document.parent.schema), document.parent)} />
@@ -81,9 +86,11 @@ class DocumentScreenContext extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
-              <DocumentViews document={document}
-                             activeMode={activeMode}
-                             isPreview={false} />
+              <DocumentViews
+                document={document}
+                activeMode={activeMode}
+                isPreview={false}
+              />
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <DocumentToolbar document={document} isPreview={false} />

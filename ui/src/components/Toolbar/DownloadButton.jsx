@@ -6,20 +6,23 @@ const messages = defineMessages({
   mode_download: {
     id: 'document.download.tooltip',
     defaultMessage: 'Download the original document',
-  }
+  },
 });
 
+/* eslint-disable */
 
 class DownloadButton extends React.Component {
   render() {
     const { intl, document } = this.props;
 
-    const content = <React.Fragment>
-      <span className="bp3-icon-standard bp3-icon-download"/>
-      <span>
-        <FormattedMessage id="document.download" defaultMessage="Download"/>
-      </span>
-    </React.Fragment>;
+    const content = (
+      <React.Fragment>
+        <span className="bp3-icon-standard bp3-icon-download" />
+        <span>
+          <FormattedMessage id="document.download" defaultMessage="Download" />
+        </span>
+      </React.Fragment>
+    );
 
     if (document.links !== undefined && document.links.file !== undefined) {
       return (
@@ -29,16 +32,15 @@ class DownloadButton extends React.Component {
           </a>
         </Tooltip>
       );
-    } else {
-      // Render disabled control
-      return (
-        <Tooltip content={intl.formatMessage(messages.mode_download)} position={Position.BOTTOM_RIGHT}>
-          <button type="button" className="DownloadButton bp3-button" disabled>
-            {content}
-          </button>
-        </Tooltip>
-      );
     }
+    // Render disabled control
+    return (
+      <Tooltip content={intl.formatMessage(messages.mode_download)} position={Position.BOTTOM_RIGHT}>
+        <button type="button" className="DownloadButton bp3-button" disabled>
+          {content}
+        </button>
+      </Tooltip>
+    );
   }
 }
 

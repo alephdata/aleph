@@ -1,14 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Button, Tooltip, H4 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 
 import { DualPane, ErrorSection } from 'src/components/common';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
 import './AlertsManager.scss';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -34,14 +33,13 @@ const messages = defineMessages({
   delete_alert: {
     id: 'alerts.alert.delete',
     defaultMessage: 'Stop tracking',
-  }
+  },
 });
 
 class AlertsDialog extends Component {
-
   constructor(props) {
     super(props);
-    this.state = {newAlert: ''};
+    this.state = { newAlert: '' };
 
     this.onDeleteAlert = this.onDeleteAlert.bind(this);
     this.onAddAlert = this.onAddAlert.bind(this);
@@ -50,13 +48,13 @@ class AlertsDialog extends Component {
   }
 
   componentDidMount() {
-    const { alerts, fetchAlerts } = this.props;
+    const { alerts } = this.props;
     if (alerts.total === undefined) {
-      fetchAlerts();
+      this.props.fetchAlerts();
     }
   }
 
-  async onDeleteAlert(id, event) {
+  async onDeleteAlert(id) {
     await this.props.deleteAlert(id);
     await this.props.fetchAlerts();
   }
@@ -64,11 +62,11 @@ class AlertsDialog extends Component {
   async onAddAlert(event) {
     const { newAlert } = this.state;
     event.preventDefault();
-    this.setState({newAlert: ''});
+    this.setState({ newAlert: '' });
     if (!newAlert.split().length) {
       return;
     }
-    await this.props.addAlert({query: newAlert});
+    await this.props.addAlert({ query: newAlert });
     await this.props.fetchAlerts();
   }
 
@@ -77,13 +75,13 @@ class AlertsDialog extends Component {
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: alert
-      })
+        q: alert,
+      }),
     });
   }
 
-  onChangeAddingInput({target}) {
-    this.setState({newAlert: target.value});
+  onChangeAddingInput({ target }) {
+    this.setState({ newAlert: target.value });
   }
 
   render() {
@@ -101,43 +99,59 @@ class AlertsDialog extends Component {
         <form onSubmit={this.onAddAlert} className="add-form">
           <div className="bp3-control-group bp3-fill">
             <div className="bp3-input-group bp3-fill">
-              <input type="text"
-                autoFocus={true}
+              <input
+                type="text"
                 className="bp3-input"
                 autoComplete="off"
                 placeholder={intl.formatMessage(messages.add_placeholder)}
                 onChange={this.onChangeAddingInput}
-                value={newAlert} />
+                value={newAlert}
+              />
             </div>
-            <button className="bp3-button bp3-fixed"
-                    disabled={newAlert.length === 0}
-                    onClick={this.onAddAlert}>
-              <FormattedMessage id="alerts.add" defaultMessage="Add alert"/>
+            <button
+              type="button"
+              className="bp3-button bp3-fixed"
+              disabled={newAlert.length === 0}
+              onClick={this.onAddAlert}
+            >
+              <FormattedMessage id="alerts.add" defaultMessage="Add alert" />
             </button>
           </div>
         </form>
         { alerts.page !== undefined && !alerts.results.length && (
-          <ErrorSection visual="eye-off"
-                        title={intl.formatMessage(messages.no_alerts)}/>
+          <ErrorSection
+            visual="eye-off"
+            title={intl.formatMessage(messages.no_alerts)}
+          />
         )}
         { alerts.page !== undefined && alerts.results.length > 0 && (
           <table className="alerts-table settings-table">
             <tbody>
-              {alerts.results.map((item) => (
+              {alerts.results.map(item => (
                 <tr key={item.id}>
                   <td className="alert-label">
                     {item.query}
                   </td>
                   <td className="narrow">
-                    <Tooltip content={intl.formatMessage(messages.search_alert, {query: item.query})}>
-                      <Button icon="search" minimal={true} small={true}
-                              onClick={() => this.onSearch(item.query)} />
+                    <Tooltip
+                      content={intl.formatMessage(messages.search_alert, { query: item.query })}
+                    >
+                      <Button
+                        icon="search"
+                        minimal
+                        small
+                        onClick={() => this.onSearch(item.query)}
+                      />
                     </Tooltip>
                   </td>
                   <td className="narrow">
                     <Tooltip content={intl.formatMessage(messages.delete_alert)}>
-                      <Button icon="cross" minimal={true} small={true}
-                              onClick={() => this.onDeleteAlert(item.id)} />
+                      <Button
+                        icon="cross"
+                        minimal
+                        small
+                        onClick={() => this.onDeleteAlert(item.id)}
+                      />
                     </Tooltip>
                   </td>
                 </tr>
@@ -150,10 +164,13 @@ class AlertsDialog extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  alerts: state.alerts
+const mapStateToProps = state => ({
+  alerts: state.alerts,
 });
 
-AlertsDialog = injectIntl(AlertsDialog);
-AlertsDialog = withRouter(AlertsDialog);
-export default connect(mapStateToProps, {fetchAlerts, addAlert, deleteAlert})(AlertsDialog);
+export default enhancer({
+  mapStateToProps,
+  mapDispatchToProps: {
+    fetchAlerts, addAlert, deleteAlert,
+  },
+})(AlertsDialog);

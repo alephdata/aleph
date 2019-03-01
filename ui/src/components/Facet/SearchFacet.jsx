@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
-import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
-import { Button, Icon, Collapse, Spinner } from '@blueprintjs/core';
+import {
+  defineMessages, FormattedMessage, FormattedNumber,
+} from 'react-intl';
+import {
+  Button, Icon, Collapse, Spinner,
+} from '@blueprintjs/core';
 import c from 'classnames';
 
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.scss';
+import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   clear_filter: {
@@ -19,9 +22,9 @@ const messages = defineMessages({
 const defaultFacet = {};
 
 class SearchFacet extends Component {
-  constructor(props)  {
+  constructor(props) {
     super(props);
-    this.state = {facet: defaultFacet, isExpanding: false};
+    this.state = { facet: defaultFacet, isExpanding: false };
     this.FACET_INCREMENT = 10;
     this.onToggleOpen = this.onToggleOpen.bind(this);
     this.onSelect = this.onSelect.bind(this);
@@ -29,36 +32,16 @@ class SearchFacet extends Component {
     this.showMore = this.showMore.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps) {
     const { field, result } = nextProps;
     if (result.total !== undefined && !result.isLoading) {
       const facets = result.facets || {};
       return {
         facet: facets[field] || defaultFacet,
-        isExpanding: false
+        isExpanding: false,
       };
     }
-    return null
-  }
-
-  updateFacetSize(newSize) {
-    const { query, field } = this.props;
-    let newQuery = query.set('facet_size:' + field, newSize);
-    if (!newSize) {
-      newQuery = newQuery.remove('facet', field);
-      newQuery = newQuery.add('facet_total:' + field, undefined);
-      newQuery = newQuery.set('facet_size:' + field, undefined);
-    } else { 
-      newQuery = newQuery.add('facet', field);
-      newQuery = newQuery.add('facet_total:' + field, true);
-    }
-    this.props.updateQuery(newQuery);
-    this.setState({isExpanding: true});
-  }
-
-  showMore(event) {
-    event.preventDefault();
-    this.updateFacetSize(this.props.facetSize + this.FACET_INCREMENT);
+    return null;
   }
 
   onToggleOpen() {
@@ -78,8 +61,30 @@ class SearchFacet extends Component {
     this.props.updateQuery(query.clearFilter(field));
   }
 
+  updateFacetSize(newSize) {
+    const { query, field } = this.props;
+    let newQuery = query.set(`facet_size:${field}`, newSize);
+    if (!newSize) {
+      newQuery = newQuery.remove('facet', field);
+      newQuery = newQuery.add(`facet_total:${field}`, undefined);
+      newQuery = newQuery.set(`facet_size:${field}`, undefined);
+    } else {
+      newQuery = newQuery.add('facet', field);
+      newQuery = newQuery.add(`facet_total:${field}`, true);
+    }
+    this.props.updateQuery(newQuery);
+    this.setState({ isExpanding: true });
+  }
+
+  showMore(event) {
+    event.preventDefault();
+    this.updateFacetSize(this.props.facetSize + this.FACET_INCREMENT);
+  }
+
   render() {
-    const { query, facetSize, isOpen, result, field, label, icon, intl } = this.props;
+    const {
+      query, facetSize, isOpen, result, field, label, icon, intl,
+    } = this.props;
     const { facet, isExpanding } = this.state;
     const current = query.getFilter(field);
     const count = current ? current.length : 0;
@@ -89,24 +94,36 @@ class SearchFacet extends Component {
 
     return (
       <div className="SearchFacet">
-        <div className={c('opener clickable', { active: !isUpdating && isFiltered })} onClick={this.onToggleOpen} style={{position: 'relative'}}>
-          <Icon icon={`caret-right`} className={c('caret', {rotate: isOpen})} />
+        <div
+          className={c('opener clickable', { active: !isUpdating && isFiltered })}
+          onClick={this.onToggleOpen}
+          onKeyPress={this.onToggleOpen}
+          tabIndex={0}
+          style={{ position: 'relative' }}
+          role="switch"
+          aria-checked={isOpen}
+        >
+          <Icon icon="caret-right" className={c('caret', { rotate: isOpen })} />
           <span className="FacetName">
-            <span className={`FacetIcon bp3-icon bp3-icon-${icon}`}/>
-            {label} 
+            <span className={`FacetIcon bp3-icon bp3-icon-${icon}`} />
+            {label}
           </span>
-            
+
           {isFiltered && (
             <React.Fragment>
               <span className="FilterCount bp3-text-muted">
-                <FormattedMessage id="search.facets.filtersSelected"
+                <FormattedMessage
+                  id="search.facets.filtersSelected"
                   defaultMessage="{count} selected"
                   values={{ count: intl.formatNumber(count) }}
-                  />
+                />
               </span>
-              <Button onClick={this.onClear}
+              <Button
+                onClick={this.onClear}
                 className="ClearButton bp3-minimal bp3-small"
-                title={intl.formatMessage(messages.clear_filter)} icon="cross"/>
+                title={intl.formatMessage(messages.clear_filter)}
+                icon="cross"
+              />
             </React.Fragment>
           )}
 
@@ -115,25 +132,29 @@ class SearchFacet extends Component {
               {facet.total === 0 && (
                 <span className="bp3-tag bp3-small bp3-round bp3-minimal">0</span>
               )}
-              
+
               {facet.total > 0 && (
                 <span className="bp3-tag bp3-small bp3-round bp3-intent-primary">
                   <FormattedNumber value={facet.total} />
                 </span>
               )}
             </React.Fragment>
-          )} 
+          )}
         </div>
-          <Collapse isOpen={isOpen} className={c({updating: isUpdating})}>
+        <Collapse isOpen={isOpen} className={c({ updating: isUpdating })}>
           {facet.values !== undefined && (
-            <CheckboxList items={facet.values}
-                          selectedItems={current}
-                          onItemClick={this.onSelect}>
+            <CheckboxList
+              items={facet.values}
+              selectedItems={current}
+              onItemClick={this.onSelect}
+            >
               {!isUpdating && hasMoreValues && (
                 <a className="ShowMore" onClick={this.showMore} href="/">
-                  <FormattedMessage id="search.facets.showMore"
-                                    defaultMessage="Show more…"
-                                    style={{paddingTop: 10}}/>
+                  <FormattedMessage
+                    id="search.facets.showMore"
+                    defaultMessage="Show more…"
+                    style={{ paddingTop: 10 }}
+                  />
                 </a>
               )}
             </CheckboxList>
@@ -149,17 +170,16 @@ class SearchFacet extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { query, field, defaultSize } = ownProps;
-  const facetSize = query.getInt('facet_size:' + field, defaultSize),
-        isOpen = query.hasFacet(field) && facetSize > 0;
+  const facetSize = query.getInt(`facet_size:${field}`, defaultSize);
+  const isOpen = query.hasFacet(field) && facetSize > 0;
 
   return {
-    facetSize: facetSize,
-    defaultSize: defaultSize,
-    isOpen: isOpen
+    facetSize,
+    defaultSize,
+    isOpen,
   };
 };
 
-SearchFacet = injectIntl(SearchFacet);
-SearchFacet = connect(mapStateToProps)(SearchFacet);
-SearchFacet = withRouter(SearchFacet);
-export default SearchFacet;
+export default enhancer({
+  mapStateToProps,
+})(SearchFacet);

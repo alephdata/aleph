@@ -1,10 +1,13 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from "react-router";
 
-import { fetchEntity, fetchDocumentContent, fetchEntityTags, queryEntities } from 'src/actions';
-import { selectEntity, selectEntityTags, selectEntitiesResult, selectDocumentContent } from 'src/selectors';
-import { queryFolderDocuments } from "src/queries";
+import {
+  fetchEntity, fetchDocumentContent, fetchEntityTags, queryEntities,
+} from 'src/actions';
+import {
+  selectEntity, selectEntityTags, selectEntitiesResult, selectDocumentContent,
+} from 'src/selectors';
+import { queryFolderDocuments } from 'src/queries';
+import { connectedWIthRouter } from '../../util/enhancers';
 
 
 class DocumentContextLoader extends Component {
@@ -12,7 +15,7 @@ class DocumentContextLoader extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
@@ -34,7 +37,7 @@ class DocumentContextLoader extends Component {
 
     const { childrenResult, childrenQuery } = this.props;
     if (childrenResult.shouldLoad) {
-      this.props.queryEntities({ query: childrenQuery});
+      this.props.queryEntities({ query: childrenQuery });
     }
   }
 
@@ -51,11 +54,14 @@ const mapStateToProps = (state, ownProps) => {
     document: selectEntity(state, documentId),
     content: selectDocumentContent(state, documentId),
     tags: selectEntityTags(state, documentId),
-    childrenQuery: childrenQuery,
-    childrenResult: selectEntitiesResult(state, childrenQuery)
+    childrenQuery,
+    childrenResult: selectEntitiesResult(state, childrenQuery),
   };
 };
 
-DocumentContextLoader = connect(mapStateToProps, { fetchEntity, fetchEntityTags, queryEntities, fetchDocumentContent })(DocumentContextLoader);
-DocumentContextLoader = withRouter(DocumentContextLoader);
-export default DocumentContextLoader;
+export default connectedWIthRouter({
+  mapStateToProps,
+  mapDispatchToProps: {
+    fetchEntity, fetchEntityTags, queryEntities, fetchDocumentContent,
+  },
+})(DocumentContextLoader);

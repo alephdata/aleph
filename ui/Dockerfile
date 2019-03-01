@@ -3,7 +3,7 @@ FROM node:10-alpine
 RUN mkdir /alephui
 WORKDIR /alephui
 COPY package.json /alephui
-RUN npm --quiet --silent install .
+RUN npm install
 
 COPY .npmrc /alephui/.npmrc
 COPY i18n /alephui/i18n

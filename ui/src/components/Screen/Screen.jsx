@@ -1,6 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router';
-import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import c from 'classnames';
 import { HotkeysTarget, Hotkeys, Hotkey } from '@blueprintjs/core';
@@ -12,8 +10,14 @@ import Footer from 'src/components/Footer/Footer';
 import { selectSession, selectMetadata } from 'src/selectors';
 
 import './Screen.scss';
+import { connectedWIthRouter } from '../../util/enhancers';
 
-class Screen extends React.Component {
+const mapStateToProps = state => ({
+  metadata: selectMetadata(state),
+  session: selectSession(state),
+});
+
+export class Screen extends React.Component {
   constructor(props) {
     super(props);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
@@ -29,20 +33,37 @@ class Screen extends React.Component {
     }
   }
 
-  toggleAuthentication(event) {
-    event.preventDefault()
-  }
+  toggleAuthentication = event => event.preventDefault();
 
-  focusSearchBox(){
+  focusSearchBox = () => {
     const searchBox = document.querySelector('#search-box');
-    if(searchBox){
+    if (searchBox) {
       searchBox.focus();
     }
   }
 
+  renderHotkeys() {
+    const { hotKeys = [] } = this.props;
+    return (
+      <Hotkeys>
+        <Hotkey combo="/" label="Search" global onKeyUp={this.focusSearchBox} />
+        {hotKeys.map(hotKey => (
+          <Hotkey
+            key={hotKey.combo + hotKey.group}
+            {...hotKey}
+          />
+        ))}
+      </Hotkeys>
+    );
+  }
+
   render() {
-    const { isHomepage, requireSession, title, className } = this.props;
-    const { session, metadata, query, updateQuery } = this.props;
+    const {
+      isHomepage, requireSession, title, className,
+    } = this.props;
+    const {
+      session, metadata, query, updateQuery,
+    } = this.props;
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
 
@@ -50,13 +71,15 @@ class Screen extends React.Component {
       <div className={c('Screen', className)}>
         <Helmet titleTemplate={`%s - ${metadata.app.title}`}>
           <title>{title || metadata.app.title}</title>
-          <link rel='shortcut icon' href={metadata.app.favicon} />
+          <link rel="shortcut icon" href={metadata.app.favicon} />
         </Helmet>
-        <Navbar metadata={metadata}
-                session={session}
-                query={query}
-                updateQuery={updateQuery}
-                isHomepage={isHomepage} />
+        <Navbar
+          metadata={metadata}
+          session={session}
+          query={query}
+          updateQuery={updateQuery}
+          isHomepage={isHomepage}
+        />
         {!forceAuth && (
           <React.Fragment>
             <main className={mainClass}>
@@ -66,34 +89,18 @@ class Screen extends React.Component {
           </React.Fragment>
         )}
         {forceAuth && (
-          <AuthenticationDialog auth={metadata.auth}
-                                isOpen={true}
-                                toggleDialog={this.toggleAuthentication} />
+          <AuthenticationDialog
+            auth={metadata.auth}
+            isOpen
+            toggleDialog={this.toggleAuthentication}
+          />
         )}
-        <Footer isHomepage={isHomepage}
-                metadata={metadata}/>
+        <Footer
+          isHomepage={isHomepage}
+          metadata={metadata}
+        />
       </div>
-    )
-  }
-  renderHotkeys(){
-    const { hotKeys = [] } = this.props;
-    return <Hotkeys>
-      <Hotkey combo="/" label="Search" global onKeyUp={this.focusSearchBox}/>
-      {hotKeys.map(hotKey => <Hotkey
-        key={hotKey.combo + hotKey.group}
-        {...hotKey}
-      />)}
-    </Hotkeys>
+    );
   }
 }
-
-const mapStateToProps = (state) => {
-  return {
-    metadata: selectMetadata(state),
-    session: selectSession(state)
-  };
-};
-Screen = HotkeysTarget(Screen);
-Screen = connect(mapStateToProps)(Screen);
-Screen = withRouter(Screen);
-export default Screen;
+export default connectedWIthRouter({ mapStateToProps })(HotkeysTarget(Screen));

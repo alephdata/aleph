@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { queryEntitySimilar } from 'src/queries';
 
+/* eslint-disable */
 
 class EntitySimilarMode extends Component {
   render() {
