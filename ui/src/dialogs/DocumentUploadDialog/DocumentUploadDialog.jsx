@@ -9,7 +9,7 @@ import { showErrorToast } from 'src/app/toast';
 import wordList from 'src/util/wordList';
 
 import './DocumentUploadDialog.scss';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   title: {

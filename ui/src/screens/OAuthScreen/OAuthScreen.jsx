@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import queryString from 'query-string';
 import { loginWithToken } from 'src/actions/sessionActions';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 const mapStateToProps = ({ session }) => ({ session });
@@ -27,7 +27,7 @@ export class OAuthScreen extends Component {
   }
 }
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
   mapDispatchToProps: { loginWithToken },
 })(OAuthScreen);

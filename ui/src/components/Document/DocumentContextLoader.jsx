@@ -7,7 +7,7 @@ import {
   selectEntity, selectEntityTags, selectEntitiesResult, selectDocumentContent,
 } from 'src/selectors';
 import { queryFolderDocuments } from 'src/queries';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class DocumentContextLoader extends Component {
@@ -59,7 +59,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
   mapDispatchToProps: {
     fetchEntity, fetchEntityTags, queryEntities, fetchDocumentContent,

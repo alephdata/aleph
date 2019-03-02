@@ -10,7 +10,7 @@ import Footer from 'src/components/Footer/Footer';
 import { selectSession, selectMetadata } from 'src/selectors';
 
 import './Screen.scss';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 const mapStateToProps = state => ({
   metadata: selectMetadata(state),
@@ -103,4 +103,4 @@ export class Screen extends React.Component {
     );
   }
 }
-export default connectedWIthRouter({ mapStateToProps })(HotkeysTarget(Screen));
+export default connectedWithRouter({ mapStateToProps })(HotkeysTarget(Screen));

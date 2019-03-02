@@ -7,10 +7,10 @@ import { Button, Icon } from '@blueprintjs/core';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 import { selectSession } from 'src/selectors';
+import SearchBox from 'src/components/Navbar/SearchBox';
+import { enhancer } from 'src/util/enhancers';
 
 import './Navbar.scss';
-import SearchBox from './SearchBox';
-import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   search_placeholder: {

@@ -7,7 +7,7 @@ import { endpoint } from 'src/app/api';
 import { loginWithPassword } from 'src/actions/sessionActions';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import { PasswordAuthActivate } from 'src/components/auth/PasswordAuth';
-import { translatableConnected } from '../../util/enhancers';
+import { translatableConnected } from 'src/util/enhancers';
 
 
 export class ActivateScreen extends Component {

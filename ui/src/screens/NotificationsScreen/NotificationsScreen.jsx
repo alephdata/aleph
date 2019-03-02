@@ -14,7 +14,7 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { selectNotificationsResult } from 'src/selectors';
 
 import './NotificationsScreen.scss';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 
 const messages = defineMessages({

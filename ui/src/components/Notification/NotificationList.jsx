@@ -4,10 +4,10 @@ import { Waypoint } from 'react-waypoint';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
-import Notification from './Notification';
+import Notification from 'src/components/Notification/Notification';
+import { enhancer } from 'src/util/enhancers';
 
 import './NotificationList.scss';
-import { enhancer } from '../../util/enhancers';
 
 const messages = defineMessages({
   no_notifications: {

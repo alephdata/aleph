@@ -62,7 +62,7 @@ class RoleLink extends PureComponent {
       return null;
     }
     return (
-      <Link to={`/sources?collectionsfilter:team.id=${role.id}`}>
+      <Link to={`/sources?collectionsfilter:team_id=${role.id}`}>
         <RoleLabel {...this.props} />
       </Link>
     );

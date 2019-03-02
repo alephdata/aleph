@@ -11,7 +11,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectEntity, selectSchemata } from 'src/selectors';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 class EntityScreenContext extends Component {
   getKeywords() {
@@ -83,6 +83,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
 })(EntityScreenContext);

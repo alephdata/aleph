@@ -16,7 +16,7 @@ import Screen from 'src/components/Screen/Screen';
 import { CollectionListItem } from 'src/components/Collection';
 
 import './SourcesIndexScreen.scss';
-import { translatableConnected } from '../../util/enhancers';
+import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   title: {

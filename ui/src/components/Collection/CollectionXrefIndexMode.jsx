@@ -8,7 +8,7 @@ import getPath from 'src/util/getPath';
 import { selectCollectionXrefIndex } from 'src/selectors';
 
 import './CollectionXrefIndexMode.scss';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
@@ -83,6 +83,6 @@ export class CollectionXrefIndexMode extends React.PureComponent {
   }
 }
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
 })(CollectionXrefIndexMode);

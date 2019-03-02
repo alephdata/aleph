@@ -7,7 +7,7 @@ import { queryEntities as queryEntitiesAction } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   no_results_title: {

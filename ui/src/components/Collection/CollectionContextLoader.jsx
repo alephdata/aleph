@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 
 import { fetchCollection, fetchCollectionXrefIndex } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex } from 'src/selectors';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class CollectionContextLoader extends PureComponent {
@@ -40,6 +40,6 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps, mapDispatchToProps: { fetchCollection, fetchCollectionXrefIndex },
 })(CollectionContextLoader);

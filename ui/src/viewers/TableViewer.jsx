@@ -7,7 +7,7 @@ import { queryEntities } from 'src/actions';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
 import './TableViewer.scss';
-import { connectedWIthRouter } from '../util/enhancers';
+import { connectedWithRouter } from '../util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -117,4 +117,4 @@ export class TableViewer extends Component {
   }
 }
 const mapDispatchToProps = { queryEntities };
-export default connectedWIthRouter({ mapStateToProps, mapDispatchToProps });
+export default connectedWithRouter({ mapStateToProps, mapDispatchToProps });

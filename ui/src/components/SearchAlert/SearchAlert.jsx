@@ -5,7 +5,7 @@ import c from 'classnames';
 
 import { addAlert, deleteAlert, fetchAlerts } from 'src/actions';
 import { selectSession, selectAlerts } from 'src/selectors';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 
 const messages = defineMessages({

@@ -1,11 +1,13 @@
+import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
 import {
-  Category, Country, Role, Date, Collection, URL,
+  Category, Country, Role, Date, Collection, URL, Schema,
 } from 'src/components/common';
+import ClipboardInput from 'src/components/common/ClipboardInput';
 
 import './CollectionOverview.scss';
-import ClipboardInput from '../ClipboardInput';
+
 
 class CollectionOverview extends PureComponent {
   render() {
@@ -14,6 +16,13 @@ class CollectionOverview extends PureComponent {
       return null;
     }
 
+    const content = collection.schemata ? _.reverse(
+      _.sortBy(
+        Object.entries(collection.schemata)
+          .map(([name, number]) => ({ name, number })),
+        ['number'],
+      ),
+    ) : [];
 
     return (
       <div className="CollectionOverview">
@@ -114,20 +123,43 @@ class CollectionOverview extends PureComponent {
           </li>
           <li>
             <span className="key">
-              <FormattedMessage
-                defaultMessage="Reconcile"
-                id="collection.reconcile"
-              />
+              <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
             </span>
             <span className="value bp3-callout">
-              <span className="bp3-text-small bp3-text-muted bp3-monospace-text">
+              <ClipboardInput value={collection.links.reconcile} />
+              <span className="bp3-text-small bp3-text-muted">
                 <FormattedMessage
                   id="collection.reconcile.description"
-                  defaultMessage="Use the entities in this collection for data cleaning with the free OpenRefine[Link: openrefine.org]
-                tool by adding the following reconciliation endpoint"
+                  defaultMessage="Match your own data against the entities in this collection using the free {openrefine}
+                tool by adding the following reconciliation endpoint:"
+                  values={{
+                    openrefine: <a href="http://openrefine.org">OpenRefine</a>,
+                  }}
                 />
               </span>
-              <ClipboardInput value={collection.links.reconcile} />
+            </span>
+          </li>
+          <li>
+            <span className="key">
+              <FormattedMessage id="collection.entity_types" defaultMessage="Entity types" />
+            </span>
+            <span className="value">
+              <ul className="info-rank">
+                { content.map(item => (
+                  <li key={item.name}>
+                    <span className="category">
+                      <Schema.Smart.Link
+                        schema={item.name}
+                        plural
+                        url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}
+                      />
+                    </span>
+                    <span className="count">
+                      <FormattedNumber value={item.number} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </span>
           </li>
         </ul>

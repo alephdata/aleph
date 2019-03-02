@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import { selectEntity, selectEntityReference, selectEntityView } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId, mode } = ownProps.match.params;
@@ -36,4 +36,4 @@ export class EntityScreen extends PureComponent {
   }
 }
 
-export default connectedWIthRouter({ mapStateToProps })(EntityScreen);
+export default connectedWithRouter({ mapStateToProps })(EntityScreen);

@@ -3,7 +3,7 @@ import queryString from 'query-string';
 
 import CollectionScreenContext from 'src/components/Collection/CollectionScreenContext';
 import { selectCollection, selectCollectionView } from 'src/selectors';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -29,4 +29,4 @@ export class CollectionScreen extends PureComponent {
   }
 }
 
-export default connectedWIthRouter({ mapStateToProps })(CollectionScreen);
+export default connectedWithRouter({ mapStateToProps })(CollectionScreen);

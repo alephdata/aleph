@@ -13,7 +13,7 @@ import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import c from 'classnames';
 import './HomeScreen.scss';
-import { translatableConnected } from '../../util/enhancers';
+import { translatableConnected } from 'src/util/enhancers';
 import DualPane from '../../components/common/DualPane';
 import { Category, Country, Schema } from '../../components/common';
 
@@ -52,9 +52,7 @@ class Statistics extends PureComponent {
   }
 
   static Count({ count }) {
-    return (
-      <span><FormattedNumber value={count} /></span>
-    );
+    return (<span><FormattedNumber value={count} /></span>);
   }
 
   static Noop(props) { return <div {...props}>skeleton</div>; }

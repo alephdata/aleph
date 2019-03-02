@@ -1,7 +1,7 @@
 import React from 'react';
 import DocumentManager from 'src/components/Document/DocumentManager';
 import { queryCollectionDocuments } from 'src/queries';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class CollectionDocumentsMode extends React.PureComponent {
@@ -18,4 +18,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWIthRouter({ mapStateToProps })(CollectionDocumentsMode);
+export default connectedWithRouter({ mapStateToProps })(CollectionDocumentsMode);

@@ -156,24 +156,18 @@ ul.info-sheet {
 
 ul.info-rank li {
   flex-flow: row nowrap;
+  width: 100%;
 
   // Ensure things stay on a single line, truncating the key if needed.
-  .key {
+  .category {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .value {
+  .count {
     white-space: nowrap;
     overflow: visible;
-  }
-
-  .key i { // the icon, if any
-    padding-right: $aleph-grid-size * 2;
-  }
-
-  .value {
     color: $aleph-greyed-text;
     margin-left: auto; // = align right
   }

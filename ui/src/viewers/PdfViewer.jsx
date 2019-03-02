@@ -14,7 +14,7 @@ import { selectEntitiesResult } from 'src/selectors';
 
 import './PdfViewer.scss';
 import TextViewer from 'src/viewers/TextViewer';
-import { connectedWIthRouter } from '../util/enhancers';
+import { connectedWithRouter } from '../util/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;
@@ -287,7 +287,7 @@ Page
   }
 }
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
   mapDispatchToProps: { queryEntities },
 })(PdfViewer);
