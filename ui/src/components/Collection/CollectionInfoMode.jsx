@@ -6,8 +6,6 @@ import {
 } from 'src/components/common';
 import ClipboardInput from 'src/components/common/ClipboardInput';
 
-import './CollectionOverview.scss';
-
 
 class CollectionInfoMode extends PureComponent {
   render() {

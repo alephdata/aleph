@@ -1,21 +1,24 @@
 import React, { Component, PureComponent } from 'react';
 import _ from 'lodash';
+import c from 'classnames';
+import numeral from 'numeral';
 import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, FormattedNumber,
 } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Button, ControlGroup, Intent } from '@blueprintjs/core';
-import SearchBox from 'src/components/Navbar/SearchBox';
 
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import c from 'classnames';
-import './HomeScreen.scss';
+import SearchBox from 'src/components/Navbar/SearchBox';
 import { translatableConnected } from 'src/util/enhancers';
-import DualPane from '../../components/common/DualPane';
-import { Category, Country, Schema } from '../../components/common';
+import DualPane from 'src/components/common/DualPane';
+import { Category, Country, Schema } from 'src/components/common';
+
+import './HomeScreen.scss';
+
 
 const messages = defineMessages({
   title: {
@@ -158,7 +161,9 @@ export class HomeScreen extends Component {
                     <FormattedMessage
                       id="home.statistics.schemata"
                       defaultMessage="Search {things} entities"
-                      values={statistics}
+                      values={{
+                        things: numeral(statistics.things).format('0a'),
+                      }}
                     />
                   )}
                   statistic={statistics.schemata}
@@ -178,7 +183,9 @@ export class HomeScreen extends Component {
                     <FormattedMessage
                       id="home.statistics.categories"
                       defaultMessage="from {collections} sources"
-                      values={statistics}
+                      values={{
+                        collections: <FormattedNumber value={statistics.collections} />,
+                      }}
                     />
                   )}
                   statistic={statistics.categories}
