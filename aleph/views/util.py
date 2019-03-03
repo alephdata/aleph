@@ -1,8 +1,9 @@
 import io
 import csv
 from banal import as_bool
-from flask import Response, request, render_template
 from normality import stringify
+from flask import Response, request, render_template
+from flask_babel import gettext
 from urllib.parse import urlparse, urljoin
 from werkzeug.exceptions import MethodNotAllowed, Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
@@ -13,8 +14,8 @@ from lxml.html.clean import Cleaner
 from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Document, Collection, Entity
-from aleph.logic.entities import get_entity as _get_index_entity
-from aleph.logic.collections import get_collection as _get_index_collection
+from aleph.index.entities import get_entity as _get_index_entity
+from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
 
 
@@ -36,24 +37,15 @@ def get_flag(name, default=False):
     return as_bool(request.args.get(name), default=default)
 
 
-def serialize_validation_error(errors):
-    message = None
-    for field, errors in errors.items():
-        for error in errors:
-            message = error
-    return {
-        'status': 'error',
-        'errors': errors,
-        'message': message
-    }
-
-
 def validate_data(data, schema, many=None):
     """Validate the data inside a request against a schema."""
     data, errors = schema().load(data, many=many)
     if len(errors):
-        resp = serialize_validation_error(errors)
-        resp = jsonify(resp, status=400)
+        resp = jsonify({
+            'status': 'error',
+            'errors': errors,
+            'message': gettext('Error during data validation')
+        }, status=400)
         raise BadRequest(response=resp)
     return data
 
@@ -65,15 +57,6 @@ def parse_request(schema, many=None):
     else:
         data = request.form.to_dict(flat=True)
     return validate_data(data, schema, many=many)
-
-
-def serialize_data(data, schema, **kwargs):
-    """Serialise a single-object response using the schema."""
-    data, errors = schema().dump(data)
-    if len(errors):
-        resp = serialize_validation_error(errors)
-        return jsonify(resp, status=500)
-    return jsonify(data, **kwargs)
 
 
 def get_db_entity(entity_id, action=Authz.READ):
@@ -167,7 +150,7 @@ def normalize_href(href, base_url):
         if not parsed.netloc:
             return None
         return href
-    except Exception:
+    except ValueError:
         return None
 
 

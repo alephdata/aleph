@@ -1,14 +1,14 @@
 import logging
-from banal import is_mapping
+from banal import is_mapping, keys_values
 from followthemoney import model
 from followthemoney.exc import InvalidData
+from followthemoney.namespace import Namespace
 
 from aleph.core import celery
 from aleph.model import Collection
 from aleph.index import entities as index
 from aleph.index.util import BULK_PAGE
 from aleph.logic.collections import refresh_collection
-from aleph.util import dict_list
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ def bulk_load(config):
         collection = create_collection(data)
         collection_id = collection.get('id')
         # FIXME: this does not perform collection metadata validation.
-        for query in dict_list(data, 'queries', 'query'):
+        for query in keys_values(data, 'queries', 'query'):
             bulk_load_query.apply_async([collection_id, query], priority=6)
 
 
@@ -37,12 +37,14 @@ def bulk_load_query(collection_id, query):
         log.warning("Collection does not exist: %s", collection_id)
         return
 
+    namespace = Namespace(collection.foreign_id)
     mapping = model.make_mapping(query, key_prefix=collection.foreign_id)
     records_total = len(mapping.source) or 'streaming'
     entities = {}
     entities_count = 0
     for records_index, record in enumerate(mapping.source.records, 1):
         for entity in mapping.map(record).values():
+            entity = namespace.apply(entity)
             # When loading from a tabular data source, we will often
             # encounter mappings where the same entity is emitted
             # multiple times in short sequence, e.g. when the data
@@ -74,14 +76,20 @@ def bulk_write(collection, items, merge=True):
     application has no control over key generation and a few other aspects
     of building the entity.
     """
+    namespace = Namespace(collection.foreign_id)
     entities = {}
     for item in items:
         if not is_mapping(item):
-            raise InvalidData("Failed to read input data")
+            raise InvalidData("Failed to read input data", errors=item)
 
         entity = model.get_proxy(item)
+        entity = namespace.apply(entity)
+        entity.context = {
+            'bulk': True,
+            'collection_id': collection.id
+        }
         if entity.id is None:
-            raise InvalidData("No ID for entity")
+            raise InvalidData("No ID for entity", errors=item)
 
         if entity.id in entities:
             entities[entity.id].merge(entity)

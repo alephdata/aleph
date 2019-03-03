@@ -9,20 +9,22 @@ import Screen from 'src/components/Screen/Screen';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import DocumentToolbar from 'src/components/Document/DocumentToolbar';
 import DocumentHeading from 'src/components/Document/DocumentHeading';
-import DocumentInfoMode from 'src/components/Document/DocumentInfoMode';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
-import { selectEntity } from 'src/selectors';
+import { selectEntity, selectSchemata } from 'src/selectors';
+import { Entity } from 'src/followthemoney/Entity.ts';
+import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 
 const messages = defineMessages({
   placeholder: {
     id: 'documents.screen.filter',
     defaultMessage: 'Search in {label}',
-  }
+  },
 });
 
+/* eslint-disable */
 
 class DocumentScreenContext extends Component {
   constructor(props) {
@@ -37,7 +39,7 @@ class DocumentScreenContext extends Component {
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
-    parsedHash['page'] = undefined;
+    parsedHash.page = undefined;
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -46,7 +48,9 @@ class DocumentScreenContext extends Component {
   }
 
   render() {
-    const { intl, document, documentId, activeMode, query } = this.props;
+    const {
+      intl, schemata, document, documentId, activeMode, query,
+    } = this.props;
     if (document.isError) {
       return <ErrorScreen error={document.error} />;
     }
@@ -55,20 +59,22 @@ class DocumentScreenContext extends Component {
         <DocumentContextLoader documentId={documentId}>
           <LoadingScreen />
         </DocumentContextLoader>
-      ); 
+      );
     }
 
     const title = document.title || document.file_name || document.name;
-    const hasSearch = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'].indexOf(document.schema) !== -1;
+    const hasSearch = document.hasSearch();
     const onSearch = hasSearch ? this.onSearch : undefined;
-    const placeholder = intl.formatMessage(messages.placeholder, {label: title});
+    const placeholder = intl.formatMessage(messages.placeholder, { label: title });
     const breadcrumbs = (
-      <Breadcrumbs onSearch={onSearch}
-                   searchPlaceholder={placeholder}
-                   searchText={query.getString('q')} >
+      <Breadcrumbs
+        onSearch={onSearch}
+        searchPlaceholder={placeholder}
+        searchText={query.getString('q')}
+      >
         <Breadcrumbs.Collection collection={document.collection} />
         {document.parent && (
-          <Breadcrumbs.Entity entity={document.parent} />
+          <Breadcrumbs.Entity entity={new Entity(schemata.getSchema(document.parent.schema), document.parent)} />
         )}
         <Breadcrumbs.Entity entity={document} />
       </Breadcrumbs>
@@ -80,15 +86,17 @@ class DocumentScreenContext extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">
-              <DocumentViews document={document}
-                             activeMode={activeMode}
-                             isPreview={false} />
+              <DocumentViews
+                document={document}
+                activeMode={activeMode}
+                isPreview={false}
+              />
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <DocumentToolbar document={document} isPreview={false} />
               <DocumentHeading document={document} isPreview={false} />
               <div className="pane-content">
-                <DocumentInfoMode document={document} isPreview={false} />
+                <EntityInfoMode entity={document} isPreview={false} />
               </div>
             </DualPane.InfoPane>
           </DualPane>
@@ -102,8 +110,9 @@ class DocumentScreenContext extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { documentId, location } = ownProps;
   const document = selectEntity(state, documentId);
+  const schemata = selectSchemata(state);
   const query = Query.fromLocation('entities', location, {}, 'document');
-  return { document, query };
+  return { document, query, schemata };
 };
 
 DocumentScreenContext = connect(mapStateToProps, {})(DocumentScreenContext);

@@ -1,14 +1,16 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Icon, H4 } from "@blueprintjs/core";
+import { Icon, H4 } from '@blueprintjs/core';
 import Truncate from 'react-truncate';
 
-import { Date, Role, Category, Country, Collection } from 'src/components/common';
+import {
+  Date, Role, Category, Country, Collection,
+} from 'src/components/common';
 
 import './CollectionListItem.scss';
 
 
-class CollectionListItem extends Component {
+class CollectionListItem extends PureComponent {
   render() {
     const { collection, preview = true } = this.props;
     if (!collection.id) {
@@ -22,12 +24,14 @@ class CollectionListItem extends Component {
           </span>
           <Collection.Link preview={preview} collection={collection} icon />
         </H4>
-        {collection.summary &&
+        {collection.summary
+          && (
           <p className="summary">
             <Truncate lines={2} title={collection.summary}>
               { collection.summary }
             </Truncate>
           </p>
+          )
         }
         <p className="details">
           { !collection.casefile && (
@@ -39,14 +43,16 @@ class CollectionListItem extends Component {
 
           <span className="details-item">
             <Icon icon="time" />
-            <FormattedMessage id="collection.last_updated"
-                              defaultMessage="Updated {date}"
-                              values={{
-                                date: <Date value={collection.updated_at} />
-                              }}/>
+            <FormattedMessage
+              id="collection.last_updated"
+              defaultMessage="Updated {date}"
+              values={{
+                date: <Date value={collection.updated_at} />,
+              }}
+            />
           </span>
-          
-          { collection.countries.length > 0 && (
+
+          { collection.countries && collection.countries.length > 0 && (
             <span className="details-item">
               <Icon icon="globe" />
               <Country.List codes={collection.countries} truncate={3} />

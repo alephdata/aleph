@@ -9,19 +9,16 @@ log = logging.getLogger(__name__)
 
 
 def get_role(role_id):
+    if role_id is None:
+        return
     key = cache.object_key(Role, role_id)
     data = cache.get_complex(key)
     if data is None:
-        log.debug("Tole [%s]: object cache miss", role_id)
+        log.debug("Role [%s]: object cache miss", role_id)
         role = Role.by_id(role_id)
         if role is None:
             return
-        data = {
-            'id': role.id,
-            'name': role.name,
-            'label': role.label,
-            'type': role.type
-        }
+        data = role.to_dict()
         cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
 

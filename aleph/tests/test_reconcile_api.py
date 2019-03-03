@@ -1,5 +1,4 @@
 import json
-from followthemoney import model
 
 from aleph.tests.util import TestCase
 
@@ -32,11 +31,11 @@ class ReconcileApiTestCase(TestCase):
         res = self.client.get('/api/freebase/suggest')
         assert res.status_code == 200, res
         assert 'result' in res.json, res.json
-        assert not len(res.json['result']), res.json
+        # assert not len(res.json['result']), res.json
 
         res = self.client.get('/api/freebase/suggest?prefix=kwa')
         assert res.status_code == 200, res
-        assert 2 == len(res.json['result']), res.json
+        assert 1 == len(res.json['result']), res.json
 
         res = self.client.get('/api/freebase/suggest?prefix=kwa&type=Person')
         assert res.status_code == 200, res
@@ -50,10 +49,16 @@ class ReconcileApiTestCase(TestCase):
         res = self.client.get('/api/freebase/property')
         assert res.status_code == 200, res
         assert 'result' in res.json, res.json
-        assert len(model.properties) == len(res.json['result']), res.json
+
+        res = self.client.get('/api/freebase/property?prefix=country')
+        assert 1 == len(res.json['result']), res.json
 
         res = self.client.get('/api/freebase/property?prefix=email')
-        assert 2 == len(res.json['result']), res.json
+        assert 0 == len(res.json['result']), res.json
+
+        url = '/api/freebase/property?prefix=email&type=Person'
+        res = self.client.get(url)
+        assert 0 == len(res.json['result']), res.json
 
         res = self.client.get('/api/freebase/property?prefix=banana')
         assert 0 == len(res.json['result']), res.json
@@ -63,8 +68,8 @@ class ReconcileApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert len(res.json['result']) > 3, res.json
 
-        res = self.client.get('/api/freebase/property?prefix=Compa')
+        res = self.client.get('/api/freebase/type?prefix=Compa')
         assert 1 == len(res.json['result']), res.json
 
-        res = self.client.get('/api/freebase/property?prefix=Banana')
+        res = self.client.get('/api/freebase/type?prefix=Banana')
         assert 0 == len(res.json['result']), res.json

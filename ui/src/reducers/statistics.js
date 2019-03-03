@@ -5,5 +5,5 @@ import { fetchStatistics } from 'src/actions';
 const initialState = {};
 
 export default createReducer({
-    [fetchStatistics.COMPLETE]: (state, { statistics }) => (statistics),
+  [fetchStatistics.COMPLETE]: (state, { statistics }) => (statistics),
 }, initialState);

@@ -1,21 +1,15 @@
 import logging
 from flask.wrappers import Response
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import BadRequest
 from flask import Blueprint, redirect, send_file, request
 from pantomime.types import PDF
 
-from aleph.core import archive, db
-from aleph.model import DocumentRecord, Audit
-from aleph.logic.documents import update_document, delete_document
+from aleph.core import archive
+from aleph.model import Audit
+from aleph.logic.documents import delete_document
 from aleph.logic.util import document_url
 from aleph.logic.audit import record_audit
-from aleph.views.cache import enable_cache
-from aleph.views.entities_api import view
-from aleph.views.util import jsonify, parse_request, sanitize_html
-from aleph.views.util import serialize_data, get_db_document, get_flag
-from aleph.serializers import RecordSchema
-from aleph.serializers.entities import CombinedSchema, DocumentUpdateSchema
-from aleph.search import DocumentsQuery, RecordsQuery
+from aleph.views.util import get_db_document
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('documents_api', __name__)
@@ -28,42 +22,6 @@ def _resp_canonical(resp, document_id):
     link_header = '<%s>; rel="canonical"' % document_url(document_id)
     resp.headers['Link'] = link_header
     return resp
-
-
-@blueprint.route('/api/2/documents', methods=['GET'])
-def index():
-    result = DocumentsQuery.handle(request, schema=CombinedSchema)
-    enable_cache(vary_user=True, vary=result.cache_key)
-    return jsonify(result)
-
-
-@blueprint.route('/api/2/documents/<int:document_id>/content')
-def content(document_id):
-    enable_cache()
-    document = get_db_document(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    return jsonify({
-        'headers': document.headers,
-        'text': document.body_text,
-        'html': sanitize_html(document.body_raw, document.source_url)
-    })
-
-
-@blueprint.route('/api/2/documents/<int:document_id>', methods=['POST', 'PUT'])
-def update(document_id):
-    document = get_db_document(document_id, request.authz.WRITE)
-    data = parse_request(DocumentUpdateSchema)
-    document.update(data)
-    db.session.commit()
-    update_document(document, shallow=True, sync=get_flag('sync', True))
-    return view(document_id)
-
-
-@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
-def delete(document_id):
-    document = get_db_document(document_id, request.authz.WRITE)
-    delete_document(document, sync=True)
-    return ('', 204)
 
 
 def _serve_archive(content_hash, file_name, mime_type):
@@ -111,27 +69,8 @@ def pdf(document_id):
     return _resp_canonical(resp, document_id)
 
 
-@blueprint.route('/api/2/documents/<int:document_id>/records')
-def records(document_id):
-    enable_cache()
-    document = get_db_document(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    if not document.supports_records:
-        raise BadRequest("This document does not have records.")
-    result = RecordsQuery.handle(request,
-                                 document=document,
-                                 schema=RecordSchema)
-    return jsonify(result)
-
-
-@blueprint.route('/api/2/documents/<int:document_id>/records/<int:index>')
-def record(document_id, index):
-    enable_cache()
-    document = get_db_document(document_id)
-    record_audit(Audit.ACT_ENTITY, id=document_id)
-    if not document.supports_records:
-        raise BadRequest("This document does not have records.")
-    record = DocumentRecord.by_index(document.id, index)
-    if record is None:
-        raise NotFound("No such record: %s" % index)
-    return serialize_data(record, RecordSchema)
+@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
+def delete(document_id):
+    document = get_db_document(document_id, request.authz.WRITE)
+    delete_document(document, sync=True)
+    return ('', 204)

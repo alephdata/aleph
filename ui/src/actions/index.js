@@ -1,14 +1,11 @@
-import {createAction} from 'redux-act';
-import {fetchRole, suggestRoles, updateRole} from './roleActions';
-import {addAlert, deleteAlert, fetchAlerts} from './alertActions';
-import {deleteNotifications, queryNotifications} from './notificationActions';
+import { createAction } from 'redux-act';
+import { fetchRole, suggestRoles, updateRole } from './roleActions';
+import { addAlert, deleteAlert, fetchAlerts } from './alertActions';
+import { deleteNotifications, queryNotifications } from './notificationActions';
 import {
   deleteDocument,
-  fetchDocument,
   fetchDocumentContent,
-  fetchDocumentPage,
   ingestDocument,
-  queryDocumentRecords
 } from './documentActions';
 import {
   createCollection,
@@ -21,9 +18,11 @@ import {
   tiggerXrefMatches,
   triggerCollectionAnalyze,
   updateCollection,
-  updateCollectionPermissions
+  updateCollectionPermissions,
 } from './collectionActions';
-import {fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities} from './entityActions';
+import {
+  fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities,
+} from './entityActions';
 
 export {
   suggestRoles,
@@ -36,9 +35,6 @@ export {
   fetchEntity,
   fetchEntityReferences,
   fetchEntityTags,
-  fetchDocument,
-  queryDocumentRecords,
-  fetchDocumentPage,
   fetchDocumentContent,
   queryCollections,
   fetchCollection,
@@ -54,9 +50,9 @@ export {
   ingestDocument,
   deleteDocument,
   triggerCollectionAnalyze,
-  tiggerXrefMatches
+  tiggerXrefMatches,
 };
 
-export {fetchMetadata, fetchStatistics} from './metadata'
+export { fetchMetadata, fetchStatistics } from './metadataActions';
 
 export const setLocale = createAction('SET_LOCALE');

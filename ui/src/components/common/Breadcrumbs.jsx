@@ -1,44 +1,22 @@
 import React, { PureComponent, Component } from 'react';
+import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
 import { Collection, Entity } from 'src/components/common';
-
 import './Breadcrumbs.scss';
+import { selectEntity } from 'src/selectors';
+import { fetchEntity } from 'src/actions';
 
 const messages = defineMessages({
   search_placeholder: {
     id: 'search.placeholder',
     defaultMessage: 'Search…',
-  }
+  },
 });
 
 
-class Breadcrumbs extends Component {
-  render() {
-    const { collection, children } = this.props;
-
-    let collectionCrumbs = [];
-    if (collection) {
-      collectionCrumbs.push((
-        <CollectionBreadcrumb collection={collection} />
-      ));
-    }
-
-    return (
-      <nav className="Breadcrumbs">
-        <ul className="bp3-breadcrumbs">
-          {collectionCrumbs}
-          {children}
-        </ul>
-        <BreadcrumbSearch {...this.props} />
-      </nav>
-    );
-  }
-}
-
-
-class BreadcrumbSearch extends Component {
+class BreadcrumbSearchPure extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -48,9 +26,9 @@ class BreadcrumbSearch extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.searchText !== prevState.searchText) {
-      return { 
+      return {
         searchText: nextProps.searchText,
-        queryText: nextProps.searchText
+        queryText: nextProps.searchText,
       };
     }
     return {};
@@ -79,21 +57,23 @@ class BreadcrumbSearch extends Component {
     }
     return (
       <form onSubmit={this.onSubmitSearch} className="BreadcrumbSearch search-box">
-        <div className={c("bp3-input-group")}>
-          <span className="bp3-icon bp3-icon-search"/>
-          <input className="bp3-input"
-                 type="search"
-                 dir="auto"
-                 placeholder={placeholder}
-                 onChange={this.onSearchChange}
-                 value={queryText || ''} />
+        <div className={c('bp3-input-group')}>
+          <span className="bp3-icon bp3-icon-search" />
+          <input
+            className="bp3-input"
+            type="search"
+            dir="auto"
+            placeholder={placeholder}
+            onChange={this.onSearchChange}
+            value={queryText || ''}
+          />
         </div>
       </form>
     );
   }
 }
-
-BreadcrumbSearch = injectIntl(BreadcrumbSearch);
+// FIXME: fin out proper way for HOC's
+const BreadcrumbSearch = injectIntl(BreadcrumbSearchPure);
 
 
 class CollectionBreadcrumb extends PureComponent {
@@ -109,12 +89,24 @@ class CollectionBreadcrumb extends PureComponent {
 
 
 class EntityBreadcrumb extends PureComponent {
+  fetchIfNeeded([id, entity]) {
+    if (entity.shouldLoad) {
+      return !this.props.fetchEntity({ id });
+    } return !entity.isLoading;
+  }
+
   render() {
     const { entity } = this.props;
     return (
-      <li key={entity.id}>
-        <Entity.Link entity={entity} className="bp3-breadcrumb" icon truncate={30} />
-      </li>
+      <React.Fragment>
+        {this.props.parents
+          .filter(parent => this.fetchIfNeeded(parent))
+          .map(parent => <Breadcrumbs.Entity key={parent[0]} entity={parent[1]} />)
+        }
+        <li key={entity.id}>
+          <Entity.Link entity={entity} className="bp3-breadcrumb" icon truncate={30} />
+        </li>
+      </React.Fragment>
     );
   }
 }
@@ -123,7 +115,7 @@ class EntityBreadcrumb extends PureComponent {
 class TextBreadcrumb extends PureComponent {
   render() {
     const { text } = this.props;
-    if ( !text ) {
+    if (!text) {
       return null;
     }
     return (
@@ -133,9 +125,42 @@ class TextBreadcrumb extends PureComponent {
     );
   }
 }
+const mapStateToProps = (state, { entity, discovery = true }) => {
+  let parents = [];
+  if (entity.schema.hasProperty('parent') && discovery) {
+    parents = entity.getProperty('parent').values
+      .map(parent => [parent.id, selectEntity(state, parent.id)]);
+  }
+  return ({
+    parents,
+  });
+};
 
+export default class Breadcrumbs extends Component {
+  static Collection = CollectionBreadcrumb;
 
-Breadcrumbs.Collection = CollectionBreadcrumb;
-Breadcrumbs.Entity = EntityBreadcrumb;
-Breadcrumbs.Text = TextBreadcrumb;
-export default Breadcrumbs;
+  static Entity = connect(mapStateToProps, { fetchEntity })(EntityBreadcrumb);
+
+  static Text = TextBreadcrumb;
+
+  render() {
+    const { collection, children } = this.props;
+
+    const collectionCrumbs = [];
+    if (collection) {
+      collectionCrumbs.push((
+        <CollectionBreadcrumb collection={collection} />
+      ));
+    }
+
+    return (
+      <nav className="Breadcrumbs">
+        <ul className="bp3-breadcrumbs">
+          {collectionCrumbs}
+          {children}
+        </ul>
+        <BreadcrumbSearch {...this.props} />
+      </nav>
+    );
+  }
+}

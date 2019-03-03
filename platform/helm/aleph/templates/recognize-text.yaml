@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: recognize-text
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: recognize-text
+spec:
+  selector:
+    app: recognize-text
+  type: ClusterIP
+  ports:
+    - port: 50000
+      protocol: "TCP"
+      name: grpc-api
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: recognize-text
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: recognize-text
+  minReplicas: {{ .Values.recognizeText.minReplicas }}
+  maxReplicas: {{ .Values.recognizeText.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: recognize-text-policy
+  namespace: {{ .Values.global.namespace }}
+spec:
+  podSelector:
+    matchLabels:
+      app: recognize-text
+  policyTypes:
+    - Egress
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recognize-text
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: recognize-text
+  annotations:
+    date/deploy-date: {{ now | quote }}
+spec:
+  selector:
+    matchLabels:
+      app: recognize-text
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: recognize-text
+    spec:
+      affinity: # Ask k8s to preferr that pods are placed across zones if available
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Values.global.reponame }}
+              topologyKey: failure-domain.beta.kubernetes.io/zone
+      restartPolicy: Always
+      containers:
+        - name: recognize-text
+          image: alephdata/aleph-recognize-text:{{ .Values.global.imagetag }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 50000
+              name: http
+          resources:
+            requests:
+              memory: {{ .Values.recognizeText.resources.requests.memory }}
+              cpu: {{ .Values.recognizeText.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.recognizeText.resources.limits.memory }}
+              cpu: {{ .Values.recognizeText.resources.limits.cpu }}
+          livenessProbe:
+            tcpSocket:
+              port: grpc-api
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 12
+          readinessProbe:
+            tcpSocket:
+              port: grpc-api
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 12

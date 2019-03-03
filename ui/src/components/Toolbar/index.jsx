@@ -6,10 +6,10 @@ import DocumentUploadButton from './DocumentUploadButton';
 import DocumentFolderButton from './DocumentFolderButton';
 
 export {
-    Toolbar,
-    CloseButton,
-    DownloadButton,
-    PagingButtons,
-    DocumentUploadButton,
-    DocumentFolderButton,
+  Toolbar,
+  CloseButton,
+  DownloadButton,
+  PagingButtons,
+  DocumentUploadButton,
+  DocumentFolderButton,
 };

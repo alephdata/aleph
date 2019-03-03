@@ -9,15 +9,15 @@ export default createReducer({
     ...state,
     isLoading: true,
     shouldLoad: false,
-    isError: false
+    isError: false,
   }),
   [fetchAlerts.ERROR]: (state, { error }) => ({
     isLoading: false,
     shouldLoad: false,
     isError: true,
-    error 
+    error,
   }),
   [fetchAlerts.COMPLETE]: (state, { alerts }) => ({
-    ...alerts
+    ...alerts,
   }),
 }, initialState);

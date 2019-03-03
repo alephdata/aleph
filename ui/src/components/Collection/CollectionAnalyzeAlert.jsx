@@ -1,24 +1,24 @@
-import React, {Component} from 'react';
-import { connect } from "react-redux";
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Alert, Intent } from "@blueprintjs/core";
+import React, { Component } from 'react';
+import { defineMessages, FormattedMessage } from 'react-intl';
+import { Alert, Intent } from '@blueprintjs/core';
 
-import { triggerCollectionAnalyze } from "src/actions";
-import { showSuccessToast } from "src/app/toast";
+import { triggerCollectionAnalyze } from 'src/actions';
+import { showSuccessToast } from 'src/app/toast';
+import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   processing: {
     id: 'collection.analyze.processing',
-    defaultMessage: 'Re-analyzing started.'
+    defaultMessage: 'Re-analyzing started.',
   },
   cancel: {
     id: 'collection.analyze.cancel',
-    defaultMessage: 'Cancel'
+    defaultMessage: 'Cancel',
   },
   confirm: {
     id: 'collection.analyze.confirm',
-    defaultMessage: 'Start re-analyzing'
-  }
+    defaultMessage: 'Start re-analyzing',
+  },
 });
 
 class CollectionAnalyzeAlert extends Component {
@@ -37,18 +37,22 @@ class CollectionAnalyzeAlert extends Component {
   render() {
     const { intl, isOpen } = this.props;
     return (
-      <Alert cancelButtonText={intl.formatMessage(messages.cancel)}
-             confirmButtonText={intl.formatMessage(messages.confirm)}
-             canEscapeKeyCancel={true}
-             canOutsideClickCancel={true}
-             icon="automatic-updates"
-             intent={Intent.DANGER}
-             isOpen={isOpen}
-             onCancel={this.props.toggleAlert}
-             onConfirm={this.onConfirm}>
+      <Alert
+        cancelButtonText={intl.formatMessage(messages.cancel)}
+        confirmButtonText={intl.formatMessage(messages.confirm)}
+        canEscapeKeyCancel
+        canOutsideClickCancel
+        icon="automatic-updates"
+        intent={Intent.DANGER}
+        isOpen={isOpen}
+        onCancel={this.props.toggleAlert}
+        onConfirm={this.onConfirm}
+      >
         <p>
-          <FormattedMessage id="collection.analyze.alert.text"
-                            defaultMessage="Re-analyzing the collection will take some time. Please start the process only once and allow time for it to complete." />
+          <FormattedMessage
+            id="collection.analyze.alert.text"
+            defaultMessage="Re-analyzing the collection will take some time. Please start the process only once and allow time for it to complete."
+          />
         </p>
       </Alert>
     );
@@ -56,6 +60,6 @@ class CollectionAnalyzeAlert extends Component {
 }
 
 
-CollectionAnalyzeAlert = connect(null, { triggerCollectionAnalyze })(CollectionAnalyzeAlert);
-CollectionAnalyzeAlert = injectIntl(CollectionAnalyzeAlert);
-export default CollectionAnalyzeAlert;
+export default translatableConnected({
+  mapDispatchToProps: { triggerCollectionAnalyze },
+})(CollectionAnalyzeAlert);

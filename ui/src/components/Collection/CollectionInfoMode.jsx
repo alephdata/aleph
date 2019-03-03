@@ -1,38 +1,165 @@
-import _ from "lodash";
-import React, {Component} from 'react';
-import { FormattedNumber } from 'react-intl';
+import _ from 'lodash';
+import React, { PureComponent } from 'react';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
+import {
+  Category, Country, Role, Date, Collection, URL, Schema,
+} from 'src/components/common';
+import ClipboardInput from 'src/components/common/ClipboardInput';
 
-import { CollectionOverview } from 'src/components/Collection';
-import { Schema } from 'src/components/common';
 
-
-class CollectionInfoMode extends Component {
+class CollectionInfoMode extends PureComponent {
   render() {
-    const { collection } = this.props;
-    let content = [];
-    for (let key in collection.schemata) {
-      if (collection.schemata.hasOwnProperty(key)) {
-        content.push({name: key, number: collection.schemata[key]});
-      }
+    const { collection, hasHeader = false } = this.props;
+    if (!collection) {
+      return null;
     }
-    content = _.reverse(_.sortBy(content, ['number']));
+
+    const content = collection.schemata ? _.reverse(
+      _.sortBy(
+        Object.entries(collection.schemata)
+          .map(([name, number]) => ({ name, number })),
+        ['number'],
+      ),
+    ) : [];
 
     return (
-      <div className="CollectionInfoMode">
-        <CollectionOverview collection={collection} hasHeader={false}/>
-        <ul className="info-rank">
-          { content.map((item, index) => (
-            <li key={index}>
-                <span className="key">
-                  <Schema.Link schema={item.name}
-                               plural={true}
-                               url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}/>
-                </span>
+      <div className="CollectionOverview">
+        {hasHeader && (
+          <h4>
+            <Collection.Link collection={collection} />
+          </h4>
+        )}
+        <p itemProp="description">{collection.summary}</p>
+        <ul className="info-sheet">
+          { !collection.casefile && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.category" defaultMessage="Category" />
+              </span>
               <span className="value">
-                  <FormattedNumber value={item.number} />
-                </span>
+                <Category collection={collection} />
+              </span>
             </li>
-          ))}
+          )}
+          { (collection.publisher || collection.publisher_url) && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.publisher" defaultMessage="Publisher" />
+              </span>
+              <span className="value">
+                { !collection.publisher && (
+                  <URL value={collection.publisher_url} />
+                )}
+                { !collection.publisher_url && (
+                  <span>{collection.publisher}</span>
+                )}
+                { (collection.publisher && collection.publisher_url) && (
+                  <a href={collection.publisher_url} target="_blank" rel="noopener noreferrer">
+                    {collection.publisher}
+                  </a>
+                )}
+              </span>
+            </li>
+          )}
+          { collection.info_url && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.info_url" defaultMessage="Information URL" />
+              </span>
+              <span className="value">
+                <URL value={collection.info_url} itemProp="identifier" />
+              </span>
+            </li>
+          )}
+          { collection.data_url && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.data_url" defaultMessage="Data URL" />
+              </span>
+              <span className="value">
+                <URL value={collection.data_url} />
+              </span>
+            </li>
+          )}
+          { collection.creator && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.creator" defaultMessage="Manager" />
+              </span>
+              <span className="value">
+                <Role.Link role={collection.creator} />
+              </span>
+            </li>
+          )}
+          { (collection.team && collection.team.length > 1) && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.team" defaultMessage="Accessible to" />
+              </span>
+              <span className="value">
+                <Role.List roles={collection.team} />
+              </span>
+            </li>
+          )}
+          { collection.countries && !!collection.countries.length && (
+            <li>
+              <span className="key">
+                <FormattedMessage id="collection.countries" defaultMessage="Country" />
+              </span>
+              <span className="value" itemProp="spatialCoverage">
+                <Country.List codes={collection.countries} />
+              </span>
+            </li>
+          )}
+          <li>
+            <span className="key">
+              <FormattedMessage id="collection.updated_at" defaultMessage="Last updated" />
+            </span>
+            <span className="value" itemProp="dateModified">
+              <Date value={collection.updated_at} />
+            </span>
+          </li>
+          <li>
+            <span className="key">
+              <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
+            </span>
+            <span className="value bp3-callout">
+              <ClipboardInput value={collection.links.reconcile} />
+              <span className="bp3-text-small bp3-text-muted">
+                <FormattedMessage
+                  id="collection.reconcile.description"
+                  defaultMessage="Match your own data against the entities in this collection using the free {openrefine}
+                tool by adding the following reconciliation endpoint:"
+                  values={{
+                    openrefine: <a href="http://openrefine.org">OpenRefine</a>,
+                  }}
+                />
+              </span>
+            </span>
+          </li>
+          <li>
+            <span className="key">
+              <FormattedMessage id="collection.entity_types" defaultMessage="Entity types" />
+            </span>
+            <span className="value">
+              <ul className="info-rank">
+                { content.map(item => (
+                  <li key={item.name}>
+                    <span className="category">
+                      <Schema.Smart.Link
+                        schema={item.name}
+                        plural
+                        url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}
+                      />
+                    </span>
+                    <span className="count">
+                      <FormattedNumber value={item.number} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </span>
+          </li>
         </ul>
       </div>
     );

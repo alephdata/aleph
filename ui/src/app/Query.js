@@ -3,31 +3,38 @@ import queryString from 'query-string';
 import ensureArray from 'src/util/ensureArray';
 
 class Query {
-  // State of a particular API query. This doesn't need to be specific to any one 
+  // State of a particular API query. This doesn't need to be specific to any one
   // of the APIs (entities, documents, collections, roles), but just serves as a
   // container for the default syntax of Aleph.
-
-  constructor (path, state, context = {}, queryName = '') {
+  constructor(path, state, context = {}, queryName = '') {
     this.path = path;
     this.state = state;
     this.context = context;
     this.queryName = queryName;
+
+    this.setPlain('limit', Query.LIMIT);
   }
+
+  static LIMIT = 30;
 
   static fromLocation(path, location, context, queryName) {
     const state = queryString.parse(location.search);
     return new Query(path, state, context, queryName);
   }
 
-  clone(update) {
+  clone() {
     const state = _.cloneDeep(this.state);
     return new Query(this.path, state, this.context, this.queryName);
   }
 
+  setPlain(name, value) {
+    this.state[this.queryName + name] = ensureArray(value);
+    return this;
+  }
+
   set(name, value) {
     const child = this.clone();
-    child.state[this.queryName + name] = ensureArray(value);
-    return child;
+    return this.setPlain.call(child, name, value);
   }
 
   setString(name, value) {
@@ -35,9 +42,9 @@ class Query {
   }
 
   getList(name) {
-    const fieldName = this.queryName + _.toString(name),
-        ctxValues = ensureArray(this.context[name]),
-        stateValues = ensureArray(this.state[fieldName]);
+    const fieldName = this.queryName + _.toString(name);
+    const ctxValues = ensureArray(this.context[name]);
+    const stateValues = ensureArray(this.state[fieldName]);
     return _.uniq(_.concat(ctxValues, stateValues));
   }
 
@@ -60,17 +67,17 @@ class Query {
   }
 
   toggle(name, value) {
-    let values = this.getList(name);
+    const values = this.getList(name);
     return this.set(name, _.xor(values, [value]));
   }
 
   add(name, value) {
-    let values = this.getList(name);
+    const values = this.getList(name);
     return this.set(name, _.union(values, [value]));
   }
 
   remove(name, value) {
-    let values = this.getList(name);
+    const values = this.getList(name);
     return this.set(name, _.without(values, value));
   }
 
@@ -83,15 +90,15 @@ class Query {
   }
 
   hasFilter(name) {
-    return this.has('filter:' + name);
+    return this.has(`filter:${name}`);
   }
 
   hasQuery() {
     if (this.getString('q').length > 0) {
-      return true
+      return true;
     }
     if (this.getString('prefix').length > 0) {
-      return true
+      return true;
     }
     return false;
   }
@@ -101,8 +108,7 @@ class Query {
     const keys = _.keys(this.context);
     _.keys(this.state).forEach((name) => {
       if (name.startsWith(this.queryName)) {
-        name = name.substr(this.queryName.length);
-        keys.push(name);
+        keys.push(name.substr(this.queryName.length));
       }
     });
     return _.uniq(keys);
@@ -111,30 +117,30 @@ class Query {
   filters() {
     // List all the filters explictly active in this query
     // (i.e. not through the context)
-    const fieldPrefix = this.queryName + 'filter:';
+    const fieldPrefix = `${this.queryName}filter:`;
     return _.keys(this.state)
-    .filter(name => name.startsWith(fieldPrefix))
-    .map(name => name.substr(fieldPrefix.length));
+      .filter(name => name.startsWith(fieldPrefix))
+      .map(name => name.substr(fieldPrefix.length));
   }
 
   getFilter(name) {
-    return this.getList('filter:' + name);
+    return this.getList(`filter:${name}`);
   }
 
   setFilter(name, value) {
-    return this.set('filter:' + name, value);
+    return this.set(`filter:${name}`, value);
   }
 
   toggleFilter(name, value) {
-    return this.toggle('filter:' + name, value);
+    return this.toggle(`filter:${name}`, value);
   }
 
   removeFilter(name, value) {
-    return this.remove('filter:' + name, value);
+    return this.remove(`filter:${name}`, value);
   }
 
   clearFilter(name) {
-    return this.clear('filter:' + name);
+    return this.clear(`filter:${name}`);
   }
 
   getSort() {
@@ -153,15 +159,15 @@ class Query {
     if (!name || !direction) {
       return this.clear('sort');
     }
-    return this.set('sort', `${name}:${direction}`)
+    return this.set('sort', `${name}:${direction}`);
   }
 
   limit(count) {
-    return this.set('limit', count + '');
+    return this.set('limit', `${count}`);
   }
 
   offset(count) {
-    return this.set('offset', count + '');
+    return this.set('offset', `${count}`);
   }
 
   addFacet(value) {

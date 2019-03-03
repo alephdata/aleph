@@ -12,12 +12,12 @@ class AuditApiTestCase(TestCase):
         headers = {}
         headers[HDR] = 'foo'
         res = self.client.get('/api/2/querylog', headers=headers)
-        assert res.json['total'] == 0, res
+        assert res.json['total'] == 0, res.json
 
         res = self.client.get('/api/2/search?q=foo', headers=headers)
         res = self.client.get('/api/2/search?q=foo', headers=headers)
         res = self.client.get('/api/2/querylog', headers=headers)
-        assert res.json['total'] == 1, res
+        assert res.json['total'] == 1, res.json
         res0 = res.json['results'][0]
         assert res0['text'] == 'foo', res0
         assert res0['count'] == 2, res0

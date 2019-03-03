@@ -1,52 +1,42 @@
 import logging
-from banal import ensure_list, is_mapping
+from banal import ensure_list
 from datetime import datetime, timedelta
+from followthemoney.util import get_entity_id
 
 from aleph.core import db
 from aleph.model import Role, Alert, Event, Notification
 from aleph.model import Collection, Document, Entity
+from aleph.logic.util import collection_url, entity_url, ui_url
 from aleph.index.entities import get_entity
-from aleph.logic.util import collection_url, entity_url, document_url
-from aleph.logic.util import ui_url
+from aleph.index.collections import get_collection
 from aleph.notify import notify_role
 from aleph.util import html_link
 
 log = logging.getLogger(__name__)
 
 
-def object_id(obj, clazz=None):
-    """Turn a given object into an ID that can be stored in with
-    the notification."""
-    clazz = clazz or type(obj)
-    if isinstance(obj, clazz):
-        obj = obj.id
-    elif is_mapping(obj):
-        obj = obj.get('id')
-    return obj
-
-
 def resolve_id(object_id, clazz):
     """From an object ID and class type, generate a human-readable
     label and a link that can be rendered into the notification.
     """
+    from aleph.logic.roles import get_role
+    from aleph.logic.alerts import get_alert
     if clazz == Role:
-        role = Role.by_id(object_id)
-        return role.name, None
+        role = get_role(object_id)
+        if role is not None:
+            return role.get('name'), None
     elif clazz == Alert:
-        alert = Alert.by_id(object_id)
-        return alert.query, None
+        alert = get_alert(object_id)
+        if alert is not None:
+            return alert.get('query'), None
     elif clazz == Collection:
-        collection = Collection.by_id(object_id)
+        collection = get_collection(object_id)
         if collection is not None:
-            return collection.label, collection_url(object_id)
+            return collection.get('label'), collection_url(object_id)
     elif clazz in [Document, Entity]:
         entity = get_entity(object_id)
         if entity is not None:
-            if Document.SCHEMA in entity.get('schemata'):
-                title = entity.get('title', entity.get('file_name'))
-                return title, document_url(object_id)
-            else:
-                return entity.get('name'), entity_url(object_id)
+            return entity.get('name'), entity_url(object_id)
     return None, None
 
 
@@ -55,7 +45,7 @@ def channel(obj, clazz=None):
     if clazz == str:
         return obj
 
-    obj = object_id(obj, clazz=clazz)
+    obj = get_entity_id(obj)
     if obj is not None:
         return '%s:%s' % (clazz.__name__, obj)
 
@@ -70,7 +60,7 @@ def publish(event, actor_id=None, params=None, channels=None):
     channels.append(channel(actor_id, clazz=Role))
     for name, clazz in event.params.items():
         obj = params.get(name)
-        outparams[name] = object_id(obj, clazz=clazz)
+        outparams[name] = get_entity_id(obj)
         channels.append(channel(obj, clazz=clazz))
     Notification.publish(event,
                          actor_id=actor_id,

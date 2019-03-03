@@ -20,17 +20,15 @@ const handleLogin = (state, token) => {
   };
 };
 
-const handleLogout = (state) => {
-  return {
-    loggedIn: false,
-    sessionID: state.sessionID || uuidv4(),
-  }
-};
+const handleLogout = state => ({
+  loggedIn: false,
+  sessionID: state.sessionID || uuidv4(),
+});
 
 const storeRole = (state, { role }) => ({
   ...state,
-  role: role
-})
+  role,
+});
 
 export default createReducer({
   [loginWithToken]: handleLogin,

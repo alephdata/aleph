@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
 import metadata from './metadata';
 import session from './session';
@@ -7,7 +7,6 @@ import statistics from './statistics';
 import entities from './entities';
 import entityReferences from './entityReferences';
 import entityTags from './entityTags';
-import documentRecords from './documentRecords';
 import documentContent from './documentContent';
 import collections from './collections';
 import collectionPermissions from './collectionPermissions';
@@ -25,7 +24,6 @@ const rootReducer = combineReducers({
   statistics,
   entities,
   entityReferences,
-  documentRecords,
   documentContent,
   alerts,
   notifications,
@@ -35,7 +33,7 @@ const rootReducer = combineReducers({
   collectionXrefIndex,
   collectionXrefMatches,
   queryLogs,
-  results
+  results,
 });
 
 export default rootReducer;

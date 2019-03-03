@@ -1,4 +1,5 @@
 from datetime import datetime
+from normality import stringify
 
 from aleph.core import db
 from aleph.model.common import SoftDeleteModel, IdModel
@@ -13,6 +14,17 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
     read = db.Column(db.Boolean, default=False)
     write = db.Column(db.Boolean, default=False)
     collection_id = db.Column(db.Integer, nullable=False)
+
+    def to_dict(self):
+        data = self.to_dict_dates()
+        data.update({
+            'id': stringify(self.id),
+            'role_id': stringify(self.role_id),
+            'collection_id': stringify(self.collection_id),
+            'read': self.read,
+            'write': self.write
+        })
+        return data
 
     @classmethod
     def grant(cls, collection, role, read, write):

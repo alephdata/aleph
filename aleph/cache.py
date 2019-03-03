@@ -1,8 +1,9 @@
 import json
 import logging
+from servicelayer import settings
+from servicelayer.cache import make_key
 
-from aleph import settings
-from aleph.util import make_key, JSONEncoder
+from aleph.util import JSONEncoder
 
 log = logging.getLogger(__name__)
 
@@ -41,6 +42,15 @@ class Cache(object):
         value = self.get(key)
         if value is not None:
             return json.loads(value)
+
+    def get_many_complex(self, keys):
+        if not len(keys):
+            return
+        values = self.kv.mget(keys)
+        for key, value in zip(keys, values):
+            if value is not None:
+                value = json.loads(value)
+            yield key, value
 
     def get_list(self, key):
         return self.kv.lrange(key, 0, -1)

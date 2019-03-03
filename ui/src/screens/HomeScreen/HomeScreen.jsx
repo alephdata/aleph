@@ -1,16 +1,24 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import queryString from 'query-string';
-import {defineMessages, FormattedMessage, FormattedNumber, injectIntl} from 'react-intl';
+import React, { Component, PureComponent } from 'react';
+import _ from 'lodash';
+import c from 'classnames';
 import numeral from 'numeral';
-import {Button, ControlGroup, Intent} from "@blueprintjs/core";
-import SearchBox from "src/components/Navbar/SearchBox";
+import queryString from 'query-string';
+import {
+  defineMessages, FormattedMessage, FormattedNumber,
+} from 'react-intl';
+import { Link } from 'react-router-dom';
+import { Button, ControlGroup, Intent } from '@blueprintjs/core';
 
-import {fetchStatistics} from 'src/actions/index';
-import {selectMetadata, selectStatistics} from 'src/selectors';
+import { fetchStatistics } from 'src/actions/index';
+import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
+import SearchBox from 'src/components/Navbar/SearchBox';
+import { translatableConnected } from 'src/util/enhancers';
+import DualPane from 'src/components/common/DualPane';
+import { Category, Country, Schema } from 'src/components/common';
 
 import './HomeScreen.scss';
+
 
 const messages = defineMessages({
   title: {
@@ -27,7 +35,68 @@ const messages = defineMessages({
   },
 });
 
-class HomeScreen extends Component {
+class Statistics extends PureComponent {
+  static Item({
+    Name = Statistics.Name,
+    Count = Statistics.Count,
+    item: [name, count],
+    ...rest
+  }) {
+    return (
+      <li {...rest}>
+        <Name name={name} />
+        <Count count={count} />
+      </li>
+    );
+  }
+
+  static Name({ name }) {
+    return <span>{name}</span>;
+  }
+
+  static Count({ count }) {
+    return (<span><FormattedNumber value={count} /></span>);
+  }
+
+  static Noop(props) { return <div {...props}>skeleton</div>; }
+
+  render() {
+    const {
+      statistic,
+      headline,
+      isLoading,
+      children = isLoading ? Statistics.Noop : Statistics.Item,
+      Name = Statistics.Name,
+      Count = Statistics.Count,
+    } = this.props;
+    const list = isLoading ? Array(10).fill([]) : Object.entries(statistic);
+    const rest = list.length - 15;
+    return (
+      <div className="statistic bp3-callout ">
+        <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
+        <ul className="statistic--list">
+          {_.sortBy(list, [1]).splice(-15).reverse().map(item => children({
+            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
+            key: item.name,
+            item,
+            Name,
+            Count,
+          }))}
+          {rest > 0 && children({
+            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
+            item: ['and other', list.length - 15],
+          })}
+        </ul>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  statistics: selectStatistics(state),
+  metadata: selectMetadata(state),
+});
+export class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = { value: '' };
@@ -40,45 +109,37 @@ class HomeScreen extends Component {
     this.props.fetchStatistics();
   }
 
-  onChange({target}) {
-    this.setState({value: target.value})
+  onChange({ target }) {
+    this.setState({ value: target.value });
   }
 
-  updateSearchValue = value => this.setState({value});
+  updateSearchValue = value => this.setState({ value });
+
   onSubmit = event => event.preventDefault();
 
   handleSearchBtn = () => this.doSearch();
+
   doSearch = (searchValue = this.state.value) => {
     const { history } = this.props;
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: searchValue
-      })
+        q: searchValue,
+      }),
     });
   };
 
   render() {
     const { intl, metadata, statistics } = this.props;
     const samples = metadata.app.samples.join(', ');
-    
+
     return (
-      <Screen isHomepage={true} title={intl.formatMessage(messages.title)}>
-        <section className='HomePage'>
-          <div className='outer-searchbox'>
-            <div className='inner-searchbox'>
-              <div className='homepage-summary'>
-                {statistics.entities && (
-                  <FormattedMessage id='home.summary'
-                                    defaultMessage="Search {total} public records and leaks from {collections} sources"
-                                    values={{
-                                      total: numeral(statistics.entities).format('0a'),
-                                      collections: <FormattedNumber value={statistics.collections} />
-                                    }} />
-                )}
-              </div>
+      <Screen isHomepage title={intl.formatMessage(messages.title)}>
+        <section className="HomePage">
+          <div className="outer-searchbox">
+            <div className="inner-searchbox">
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
-                <ControlGroup fill={true}>
+                <ControlGroup fill>
                   <SearchBox
                     id="search-box"
                     doSearch={this.doSearch}
@@ -90,14 +151,72 @@ class HomeScreen extends Component {
                     className="bp3-large bp3-fixed"
                     intent={Intent.PRIMARY}
                     onClick={this.handleSearchBtn}
-                    text={
-                      <React.Fragment>
-                        {intl.formatMessage(messages.home_search)}
-                      </React.Fragment>
-                    }
+                    text={intl.formatMessage(messages.home_search)}
                   />
                 </ControlGroup>
               </form>
+              <DualPane className="statistics-list">
+                <Statistics
+                  headline={(
+                    <FormattedMessage
+                      id="home.statistics.schemata"
+                      defaultMessage="Search {things} entities"
+                      values={{
+                        things: numeral(statistics.things).format('0a'),
+                      }}
+                    />
+                  )}
+                  statistic={statistics.schemata}
+                  isLoading={!statistics.schemata}
+                  Name={props => (
+                    <span>
+                      <Schema.Smart.Link
+                        url={`/search?filter:schema=${props.name}`}
+                        schema={props.name}
+                        {...props}
+                      />
+                    </span>
+                  )}
+                />
+                <Statistics
+                  headline={(
+                    <FormattedMessage
+                      id="home.statistics.categories"
+                      defaultMessage="from {collections} sources"
+                      values={{
+                        collections: <FormattedNumber value={statistics.collections} />,
+                      }}
+                    />
+                  )}
+                  statistic={statistics.categories}
+                  isLoading={!statistics.categories}
+                  Name={props => (
+                    <Link
+                      to={`/sources?collectionsfilter:category=${props.name}`}
+                    >
+                      <Category category={props.name} />
+                    </Link>
+                  )}
+                />
+                <Statistics
+                  headline={(
+                    <FormattedMessage
+                      id="home.statistics.countries"
+                      defaultMessage="in {count} countries"
+                      values={{
+                        count: _.size(statistics.countries),
+                      }}
+                    />
+                  )}
+                  statistic={statistics.countries}
+                  isLoading={!statistics.countries}
+                  Name={props => (
+                    <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
+                      <Country.Name {...props} code={props.name} />
+                    </Link>
+                  )}
+                />
+              </DualPane>
             </div>
           </div>
         </section>
@@ -106,10 +225,7 @@ class HomeScreen extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  statistics: selectStatistics(state),
-  metadata: selectMetadata(state)
-});
-
-HomeScreen = injectIntl(HomeScreen);
-export default connect(mapStateToProps, { fetchStatistics })(HomeScreen);
+export default translatableConnected({
+  mapStateToProps,
+  mapDispatchToProps: { fetchStatistics },
+})(HomeScreen);

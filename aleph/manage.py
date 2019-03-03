@@ -11,6 +11,7 @@ from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, db, cache
 from aleph.model import Collection, Document, Role
+from aleph.migration import upgrade_system, destroy_db
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection
@@ -19,11 +20,10 @@ from aleph.logic.collections import delete_collection, delete_bulk_entities
 from aleph.logic.documents import ingest_document
 from aleph.logic.documents import process_documents
 from aleph.logic.scheduled import daily, hourly
-from aleph.logic.migration import upgrade_system, destroy_db
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities import bulk_load, index_entities
-from aleph.logic.xref import xref_collection
-from aleph.logic.graph.rdf import export_collection
+from aleph.logic.entities.xref import xref_collection
+from aleph.logic.entities.rdf import export_collection
 from aleph.logic.permissions import update_permission
 
 log = logging.getLogger('aleph')
@@ -164,15 +164,6 @@ def publish(foreign_id):
 
 
 @manager.command
-def graph(entity_id):
-    """Generate a graph around the given entity."""
-    from aleph.logic.graph import export_graph
-    graph = export_graph(entity_id, steam=10000)
-    with open('%s.gexf' % entity_id, 'w', encoding='utf-8') as fh:
-        fh.write(graph)
-
-
-@manager.command
 def rdf(foreign_id):
     """Generate a RDF triples for the given collection."""
     collection = Collection.by_foreign_id(foreign_id)
@@ -204,10 +195,11 @@ def resetcache():
 
 
 @manager.command
-def repair():
+@manager.option('-d', '--documents', dest='documents')
+def repair(documents=False):
     """Re-index all the collections and entities."""
-    index_collections()
     index_entities()
+    index_collections(documents=True, refresh=True)
     update_roles()
 
 

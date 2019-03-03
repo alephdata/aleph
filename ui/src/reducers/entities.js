@@ -2,37 +2,24 @@ import { createReducer } from 'redux-act';
 
 import {
   queryEntities,
-  fetchDocument,
   fetchEntity,
-  deleteDocument
+  deleteDocument,
 } from 'src/actions';
-import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects } from 'src/reducers/util';
+import {
+  objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects,
+} from 'src/reducers/util';
 
 const initialState = {};
 
 export default createReducer({
-  [fetchDocument.START]: (state, { id }) =>
-    objectLoadStart(state, id),
+  [fetchEntity.START]: (state, { id }) => objectLoadStart(state, id),
 
-  [fetchEntity.START]: (state, { id }) =>
-    objectLoadStart(state, id),
+  [fetchEntity.ERROR]: (state, { error, args: { id } }) => objectLoadError(state, id, error),
 
-  [fetchDocument.ERROR]: (state, { error, args: { id } }) =>
-    objectLoadError(state, id, error),
+  [fetchEntity.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
-  [fetchEntity.ERROR]: (state, { error, args: { id } }) =>
-    objectLoadError(state, id, error),
+  [queryEntities.COMPLETE]: (state, { result }) => resultObjects(state, result),
 
-  [fetchDocument.COMPLETE]: (state, { id, data }) =>
-    objectLoadComplete(state, id, data),
-
-  [fetchEntity.COMPLETE]: (state, { id, data }) =>
-    objectLoadComplete(state, id, data),
-
-  [queryEntities.COMPLETE]: (state, { result }) => 
-    resultObjects(state, result),
-
-  [deleteDocument.COMPLETE]: (state, { id, data }) =>
-    objectDelete(state, id),
+  [deleteDocument.COMPLETE]: (state, { id }) => objectDelete(state, id),
 
 }, initialState);

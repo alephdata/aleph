@@ -1,0 +1,93 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: worker
+  namespace: {{ .Values.global.namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: worker
+  minReplicas: {{ .Values.worker.minReplicas }}
+  maxReplicas: {{ .Values.worker.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: worker
+  annotations:
+    date/deploy-date: {{ now | quote }}
+spec:
+  selector:
+    matchLabels:
+      app: worker
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 75%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      affinity: # Ask k8s to preferr that pods are placed across zones if available
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Values.global.reponame }}
+              topologyKey: failure-domain.beta.kubernetes.io/zone
+      restartPolicy: Always
+      containers:
+        - name: worker
+          image: alephdata/aleph:occrp
+          imagePullPolicy: Always
+          command:
+            - celery
+            - -A
+            - aleph.queues
+            - -c
+            - '4'
+            - -l
+            - INFO
+            - worker
+          resources:
+            requests:
+              memory: {{ .Values.worker.resources.requests.memory }}
+              cpu: {{ .Values.worker.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.worker.resources.limits.memory }}
+              cpu: {{ .Values.worker.resources.limits.cpu }}
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /credentials/service-account.json
+          envFrom:
+            - configMapRef:
+                name: aleph-config
+            - secretRef:
+                name: common-secrets
+          volumeMounts:
+            - mountPath: /credentials
+              name: service-account-app
+      volumes:
+        - name: service-account-app
+          secret:
+            secretName: service-account-app
+        - name: service-account-db
+          secret:
+            secretName: service-account-db
+

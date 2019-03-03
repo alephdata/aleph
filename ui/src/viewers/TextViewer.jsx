@@ -4,23 +4,38 @@ import { Pre } from '@blueprintjs/core';
 
 import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
+import { fetchDocumentContent } from 'src/actions';
 
 import './TextViewer.scss';
 
 class TextViewer extends React.Component {
+  componentWillMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { content, document } = this.props;
+    if (content.shouldLoad) {
+      this.props.fetchDocumentContent(document);
+    }
+  }
+
   render() {
-    const { content } = this.props;
+    const { content, noStyle } = this.props;
     if (content.shouldLoad || content.isLoading) {
       return <SectionLoading />;
     }
-    return (
-      <React.Fragment>
-        <div className="outer">
-          <div className="inner TextViewer">
-            <Pre>{content.text}</Pre>
-          </div>
+    const text = <Pre>{content.text}</Pre>;
+    return noStyle ? text : (
+      <div className="outer">
+        <div className="inner TextViewer">
+          {text}
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
@@ -28,9 +43,8 @@ class TextViewer extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { document } = ownProps;
   return {
-    content: selectDocumentContent(state, document.id)
+    content: selectDocumentContent(state, document.id),
   };
-}
+};
 
-TextViewer = connect(mapStateToProps)(TextViewer);
-export default TextViewer;
+export default connect(mapStateToProps, { fetchDocumentContent })(TextViewer);

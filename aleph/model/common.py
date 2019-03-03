@@ -3,6 +3,8 @@ from datetime import datetime
 
 from aleph.core import db
 
+ENTITY_ID_LEN = 128
+
 
 def make_textid():
     return uuid.uuid4().hex
@@ -10,11 +12,6 @@ def make_textid():
 
 class IdModel(object):
     id = db.Column(db.Integer(), primary_key=True)
-
-
-class UuidModel(object):
-    id = db.Column(db.String(32), primary_key=True, default=make_textid,
-                   nullable=False, unique=False)
 
 
 class DatedModel(object):
@@ -46,6 +43,12 @@ class DatedModel(object):
         # hard delete
         db.session.delete(self)
 
+    def to_dict_dates(self):
+        return {
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
+        }
+
 
 class SoftDeleteModel(DatedModel):
     deleted_at = db.Column(db.DateTime, default=None, nullable=True)
@@ -67,3 +70,9 @@ class SoftDeleteModel(DatedModel):
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
+
+    def to_dict_dates(self):
+        data = super(SoftDeleteModel, self).to_dict_dates()
+        if self.deleted_at:
+            data['deleted_at'] = self.deleted_at
+        return data

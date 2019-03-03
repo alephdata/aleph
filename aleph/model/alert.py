@@ -39,6 +39,17 @@ class Alert(db.Model, SoftDeleteModel):
             return False
         return True
 
+    def to_dict(self):
+        data = self.to_dict_dates()
+        data.update({
+            'id': stringify(self.id),
+            'query': self.query,
+            'normalized': self.normalized,
+            'role_id': stringify(self.role_id),
+            'notified_at': self.notified_at
+        })
+        return data
+
     @classmethod
     def by_id(cls, id, role_id=None):
         q = cls.all().filter_by(id=id)

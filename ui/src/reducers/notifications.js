@@ -6,7 +6,6 @@ import { resultObjects } from './util';
 const initialState = {};
 
 export default createReducer({
-  [queryNotifications.COMPLETE]: (state, { result }) =>
-    resultObjects(state, result),
+  [queryNotifications.COMPLETE]: (state, { result }) => resultObjects(state, result),
 
 }, initialState);

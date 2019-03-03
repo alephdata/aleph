@@ -2,11 +2,11 @@ from flask import Blueprint, request, stream_with_context
 
 from aleph.model import Match, Audit
 from aleph.logic.audit import record_audit
-from aleph.views.util import get_db_collection, jsonify, stream_csv
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.serializers import MatchSchema, MatchCollectionsSchema
-from aleph.serializers.xref import XrefSchema
-from aleph.logic.xref import xref_collection, export_matches_csv
+from aleph.logic.entities.xref import xref_collection, export_matches_csv
+from aleph.views.serializers import MatchSerializer, MatchCollectionsSerializer
+from aleph.views.forms import XrefSchema
+from aleph.views.util import get_db_collection, jsonify, stream_csv
 from aleph.views.util import parse_request
 
 
@@ -19,10 +19,8 @@ def index(id):
     record_audit(Audit.ACT_COLLECTION, id=collection.id)
     parser = QueryParser(request.args, request.authz)
     q = Match.group_by_collection(collection.id, authz=request.authz)
-    result = DatabaseQueryResult(request, q,
-                                 parser=parser,
-                                 schema=MatchCollectionsSchema)
-    return jsonify(result)
+    result = DatabaseQueryResult(request, q, parser=parser)
+    return MatchCollectionsSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/collections/<int:id>/xref/<int:other_id>',
@@ -34,18 +32,18 @@ def matches(id, other_id):
     record_audit(Audit.ACT_COLLECTION, id=other.id)
     parser = QueryParser(request.args, request.authz)
     q = Match.find_by_collection(collection.id, other.id)
-    result = DatabaseQueryResult(request, q,
-                                 parser=parser,
-                                 schema=MatchSchema)
-    return jsonify(result)
+    result = DatabaseQueryResult(request, q, parser=parser)
+    return MatchSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/collections/<int:id>/xref', methods=['POST'])
 def generate(id):
     data = parse_request(XrefSchema)
     collection = get_db_collection(id, request.authz.WRITE)
-    against_ids = data.get("against_collection_ids")
-    xref_collection.apply_async([collection.id], kwargs={"against_collection_ids": against_ids}, priority=5)
+    args = {
+        "against_collection_ids": data.get("against_collection_ids")
+    }
+    xref_collection.apply_async([collection.id], kwargs=args, priority=5)
     return jsonify({'status': 'accepted'}, status=202)
 
 

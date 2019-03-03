@@ -2,6 +2,7 @@ import jwt
 import logging
 from banal import ensure_list
 from datetime import datetime, timedelta
+from werkzeug.exceptions import Unauthorized
 
 from aleph.core import db, cache, settings
 from aleph.model import Collection, Role, Permission
@@ -82,7 +83,7 @@ class Authz(object):
     def can_bulk_import(self):
         if not self.session_write:
             return False
-        return self.is_admin
+        return self.logged_in
 
     def match(self, roles):
         """See if there's overlap in roles."""
@@ -102,8 +103,7 @@ class Authz(object):
         if scope is not None:
             payload['scope'] = scope
         if role is not None:
-            from aleph.serializers.roles import RoleSchema
-            role, _ = RoleSchema().dump(role)
+            role = role.to_dict()
             role.pop('created_at', None)
             role.pop('updated_at', None)
             payload['role'] = role
@@ -130,12 +130,12 @@ class Authz(object):
         try:
             data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
             if 'scope' in data and data.get('scope') != scope:
-                return None
+                raise Unauthorized()
             return cls(data.get('id'),
                        data.get('roles'),
                        data.get('is_admin', False))
         except jwt.DecodeError:
-            return None
+            return
 
     @classmethod
     def flush(cls):

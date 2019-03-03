@@ -1,31 +1,36 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Redirect} from 'react-router';
-import {injectIntl, FormattedMessage} from 'react-intl';
+import React, { Component } from 'react';
+import { Redirect } from 'react-router';
+import { FormattedMessage } from 'react-intl';
 
 import Screen from 'src/components/Screen/Screen';
 import { endpoint } from 'src/app/api';
 import { loginWithPassword } from 'src/actions/sessionActions';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import { PasswordAuthActivate } from 'src/components/auth/PasswordAuth';
+import { translatableConnected } from 'src/util/enhancers';
 
 
-class ActivateScreen extends Component {
+export class ActivateScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.onActivate = this.onActivate.bind(this);
+  }
+
   onActivate(data) {
-    const {match: {params}, intl, loginWithPassword} = this.props;
+    const { match: { params }, intl } = this.props;
 
-    endpoint.post('/roles', {code: params.code, ...data}).then((res) => {
-      return loginWithPassword(res.data.email, data.password);
-    }).catch(e => {
-      xhrErrorToast(e.response, intl);
-    });
+    endpoint.post('/roles', { code: params.code, ...data })
+      .then(res => this.props.loginWithPassword(res.data.email, data.password))
+      .catch((e) => {
+        xhrErrorToast(e.response, intl);
+      });
   }
 
   render() {
-    const {match: {params}, session, intl} = this.props;
+    const { match: { params }, session, intl } = this.props;
 
     if (!params.code || session.loggedIn) {
-      return <Redirect to="/"/>;
+      return <Redirect to="/" />;
     }
 
     return (
@@ -33,8 +38,8 @@ class ActivateScreen extends Component {
         <div className="small-screen-outer">
           <div className="small-screen-inner">
             <section className="small-screen">
-              <h1><FormattedMessage id="signup.title" defaultMessage="Activate your account"/></h1>
-              <PasswordAuthActivate className='bp3-card' onSubmit={this.onActivate.bind(this)} intl={intl}/>
+              <h1><FormattedMessage id="signup.title" defaultMessage="Activate your account" /></h1>
+              <PasswordAuthActivate className="bp3-card" onSubmit={this.onActivate} intl={intl} />
             </section>
           </div>
         </div>
@@ -42,12 +47,8 @@ class ActivateScreen extends Component {
     );
   }
 }
-
-const mapStateToProps = ({session}) => ({session});
-
-ActivateScreen = connect(
-  mapStateToProps,
-  {loginWithPassword}
-)(injectIntl(ActivateScreen));
-
-export default ActivateScreen;
+const mapStateToProps = ({ session }) => ({ session });
+const mapDispatchToProps = { loginWithPassword };
+export default translatableConnected({
+  mapStateToProps, mapDispatchToProps,
+})(ActivateScreen);

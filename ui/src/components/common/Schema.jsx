@@ -1,47 +1,70 @@
-import React, {Component, PureComponent} from 'react';
-import {connect} from 'react-redux';
-import {Link} from 'react-router-dom';
-import {selectSchemata} from 'src/selectors';
-import Icon from "./Icon";
+import React, { Component, PureComponent } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { selectSchemata } from 'src/selectors';
+import { Icon } from './Icon';
 
 class SchemaIcon extends PureComponent {
   render() {
-    const {schema} = this.props;
+    const { schema, ...rest } = this.props;
 
-    return <Icon className='entity-icon'
-                 iconSize='16px'
-                 name={schema.toLowerCase()} />;
+    return (
+      <Icon
+        className="entity-icon"
+        iconSize="16px"
+        {...rest}
+        name={schema.name.toLowerCase()}
+      />
+    );
   }
 }
 
 class SchemaLabel extends Component {
   render() {
-    const { schema, schemata, plural, icon } = this.props;
-    const model = schemata[schema];
-    const label = model.getLabel({
-      forcePlural: plural
+    const { schema, plural, icon } = this.props;
+    const label = schema.getLabel({
+      forcePlural: plural,
     });
     if (icon) {
       return (
-        <span><Schema.Icon schema={schema}/> {label}</span>
+        <span>
+          <Schema.Icon schema={schema} />
+          {' '}
+          {label}
+        </span>
       );
     }
     return label;
   }
 }
 
-class SchemaLink extends Component {
-  render() {
-    const { schema, plural, url } = this.props;
+function SchemaLink(props) {
+  const { schema, plural, url } = props;
+  return (
+    <React.Fragment>
+      <Schema.Icon schema={schema} />
+      <Link to={url}>
+        <Schema.Label schema={schema} icon={false} plural={plural} />
+      </Link>
+    </React.Fragment>
+  );
+}
+
+function SmartSchemaHOC(InnerComponent) {
+  return function SmartSchemaComponent(props) {
+    const {
+      schemata, schema: schemaName,
+      /* omit */ dispatch,
+      ...rest
+    } = props;
+    const schema = schemata.getSchema(schemaName);
     return (
-        <React.Fragment>
-          <Schema.Icon schema={schema}/>
-          <Link to={url}>
-            <Schema.Label schema={schema} icon={false} plural={plural}/>
-          </Link>
-        </React.Fragment>
+      <InnerComponent
+        schema={schema}
+        {...rest}
+      />
     );
-  }
+  };
 }
 
 const mapStateToProps = state => ({
@@ -49,9 +72,17 @@ const mapStateToProps = state => ({
 });
 
 class Schema extends Component {
-  static Label = connect(mapStateToProps)(SchemaLabel);
-  static Icon = connect(mapStateToProps)(SchemaIcon);
-  static Link = connect(mapStateToProps)(SchemaLink);
+  static Smart= {
+    Label: connect(mapStateToProps)(SmartSchemaHOC(SchemaLabel)),
+    Icon: connect(mapStateToProps)(SmartSchemaHOC(SchemaIcon)),
+    Link: connect(mapStateToProps)(SmartSchemaHOC(SchemaLink)),
+  };
+
+  static Label = SchemaLabel;
+
+  static Icon = SchemaIcon;
+
+  static Link = SchemaLink;
 }
 
 export default Schema;

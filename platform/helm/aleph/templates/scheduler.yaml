@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: scheduler
+  annotations:
+    date/deploy-date: {{ now | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 100%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: scheduler
+    spec:
+      affinity: # Ask k8s to preferr that pods are placed across zones if available
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Values.global.reponame }}
+              topologyKey: failure-domain.beta.kubernetes.io/zone
+      restartPolicy: Always
+      containers:
+        - name: scheduler
+          image: alephdata/aleph:{{ .Values.global.imagetag }}
+          imagePullPolicy: Always
+          command:
+            - celery
+            - -A
+            - aleph.queues
+            - beat
+            - -s
+            - /var/lib/celerybeat-schedule.db
+          resources:
+            requests:
+              memory: {{ .Values.scheduler.resources.requests.memory }}
+              cpu: {{ .Values.scheduler.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.scheduler.resources.limits.memory }}
+              cpu: {{ .Values.scheduler.resources.limits.cpu }}
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /credentials/service-account.json
+          envFrom:
+            - configMapRef:
+                name: aleph-config
+            - secretRef:
+                name: common-secrets
+          volumeMounts:
+            - mountPath: /credentials
+              name: service-account-app
+      volumes:
+        - name: service-account-app
+          secret:
+            secretName: service-account-app
+        - name: service-account-db
+          secret:
+            secretName: service-account-db
+

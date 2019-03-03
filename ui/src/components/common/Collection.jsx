@@ -23,16 +23,19 @@ class CollectionLabel extends Component {
   }
 
   render() {
-    const { collection, icon = true, label = true, truncate } = this.props;
+    const {
+      collection, icon = true, label = true, truncate,
+    } = this.props;
     if (collection === undefined || collection.id === undefined) {
       return null;
     }
 
-    let iconName = "database", style = {};
+    let iconName = 'database';
+    const style = {};
     if (collection.casefile) {
-      iconName = "briefcase";
+      iconName = 'briefcase';
     } else if (collection.secret) {
-      iconName = "lock";
+      iconName = 'lock';
     }
 
     let text = collection.label;
@@ -43,7 +46,11 @@ class CollectionLabel extends Component {
     return (
       <span className="CollectionLabel" title={collection.label}>
         { icon && (<Icon icon={iconName} style={style} />)}
-        <span> { label && text } </span>
+        <span>
+          {' '}
+          { label && text }
+          {' '}
+        </span>
       </span>
     );
   }
@@ -51,8 +58,8 @@ class CollectionLabel extends Component {
 
 
 class CollectionLink extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onClick = this.onClick.bind(this);
   }
 
@@ -78,16 +85,19 @@ class CollectionLink extends Component {
   }
 }
 
-CollectionLink = withRouter(CollectionLink);
-
 
 class CollectionLoad extends Component {
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    children: PropTypes.func.isRequired,
+    renderWhenLoading: PropTypes.node.isRequired,
+  }
 
   componentDidMount() {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     this.fetchIfNeeded();
   }
 
@@ -102,28 +112,20 @@ class CollectionLoad extends Component {
     const { collection, children, renderWhenLoading } = this.props;
     if (collection.isLoading && renderWhenLoading !== undefined) {
       return renderWhenLoading;
-    } else {
-      return children(collection);
     }
+    return children(collection);
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
-
-CollectionLoad = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
-CollectionLoad.propTypes = {
-  id: PropTypes.string.isRequired,
-  children: PropTypes.func.isRequired,
-  renderWhenLoading: PropTypes.node,
-};
-
 class Collection {
   static Label = CollectionLabel;
-  static Link = CollectionLink;
-  static Load = CollectionLoad;
+
+  static Link = withRouter(CollectionLink);
+
+  static Load = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
 }
 
 export default Collection;

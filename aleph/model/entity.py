@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from normality import stringify
 from followthemoney import model
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
@@ -8,15 +9,18 @@ from aleph.core import db
 from aleph.model.collection import Collection
 from aleph.model.permission import Permission
 from aleph.model.match import Match
-from aleph.model.common import SoftDeleteModel, UuidModel
-from aleph.model.common import make_textid
+from aleph.model.common import SoftDeleteModel
+from aleph.model.common import make_textid, ENTITY_ID_LEN
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, UuidModel, SoftDeleteModel):
+class Entity(db.Model, SoftDeleteModel):
     THING = 'Thing'
+    LEGAL_ENTITY = 'LegalEntity'
 
+    id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True,
+                   default=make_textid, nullable=False, unique=False)
     name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
     foreign_id = db.Column(db.Unicode)
@@ -105,6 +109,17 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         })
         proxy.add('name', self.name)
         return proxy
+
+    def to_dict(self):
+        proxy = self.to_proxy()
+        data = proxy.to_full_dict()
+        data.update(self.to_dict_dates())
+        data.update({
+            'foreign_id': self.foreign_id,
+            'collection_id': stringify(self.collection_id),
+            'bulk': False
+        })
+        return data
 
     @classmethod
     def create(cls, data, collection):

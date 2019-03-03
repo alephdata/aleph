@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import numeral from 'numeral';
 
 
-
 class Count extends PureComponent {
   render() {
     const { count } = this.props;

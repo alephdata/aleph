@@ -1,4 +1,7 @@
 import logging
+from normality import stringify
+from followthemoney import model
+from followthemoney.types import registry
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
@@ -9,9 +12,10 @@ log = logging.getLogger(__name__)
 
 class DocumentRecord(db.Model):
     """A record reflects a row or page of a document."""
+    SCHEMA_ROW = 'Row'
+    SCHEMA_PAGE = 'Page'
 
     id = db.Column(db.BigInteger, primary_key=True)
-    sheet = db.Column(db.Integer, nullable=True)
     index = db.Column(db.Integer, nullable=True, index=True)
     text = db.Column(db.Unicode, nullable=True)
     data = db.Column(JSONB, nullable=True)
@@ -49,21 +53,32 @@ class DocumentRecord(db.Model):
             q = table.insert().values(chunk)
             db.session.execute(q)
 
-    @classmethod
-    def find_records(cls, ids):
-        if not len(ids):
-            return []
-        q = db.session.query(cls)
-        q = q.filter(cls.id.in_(ids))
-        return q
+    def to_proxy(self):
+        if self.text is not None:
+            proxy = model.make_entity(self.SCHEMA_PAGE)
+            proxy.make_id('record', self.id)
+            proxy.set('document', self.document_id)
+            proxy.set('index', self.index)
+            proxy.set('bodyText', stringify(self.text))
+            return proxy
+        else:
+            proxy = model.make_entity(self.SCHEMA_ROW)
+            proxy.make_id('record', self.id)
+            proxy.set('table', self.document_id)
+            proxy.set('index', self.index)
+            if self.data is not None:
+                values = [v for (k, v) in sorted(self.data.items())]
+                proxy.set('cells', registry.json.pack(values))
+            return proxy
 
-    @classmethod
-    def by_index(cls, document_id, index):
-        q = db.session.query(cls)
-        q = db.session.query(DocumentRecord)
-        q = q.filter(cls.document_id == document_id)
-        q = q.filter(cls.index == index)
-        return q.first()
+    def to_dict(self):
+        proxy = self.to_proxy()
+        data = proxy.to_full_dict()
+        data.update({
+            'document_id': self.document_id,
+            'bulk': False,
+        })
+        return data
 
     def __repr__(self):
         return '<DocumentRecord(%r,%r)>' % (self.document_id, self.index)

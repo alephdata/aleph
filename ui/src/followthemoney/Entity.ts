@@ -1,29 +1,16 @@
-type IProperty = string[]
-interface IProperties{
-  [propertyName:string]:IProperty
-}
-class Entity {
-  private readonly DESCRIPTION_PROPERTY:string = 'description';
-  private readonly STRING_SEPARATOR:string = ',';
-  private behaviour: any;
-  constructor(entity){
-    this.behaviour = entity;
+import {Entity as FTMEntity } from '@alephdata/vis2';
+import Schema from '@alephdata/vis2/dist/types/followthemoney/schema'
+export class Entity extends FTMEntity{
+  private readonly SEARCHABLES = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'];
+  constructor(schema:Schema, specifications){
+    super(schema, specifications);
+    if(specifications){
+      Object.entries(specifications)
+        .filter(specification => !this[specification[0]])
+        .forEach(specification => Reflect.set(this, specification[0], specification[1]))
+    }
   }
-  get properties() : IProperty[]{
-    return Object.values(this.behaviour.properties) || [];
-  }
-  get description(): string{
-    const description = this.properties
-      .find(([property]:IProperty) => (this.DESCRIPTION_PROPERTY === property));
-    return description ? description[0] : ''
-  }
-  propertiesToKeyword(separate = this.STRING_SEPARATOR){
-    return this.properties
-      .map(([property]:IProperty) => property)
-      .filter((property:string) => property !== this.DESCRIPTION_PROPERTY)
-      .join(separate)
+  hasSearch():boolean{
+    return !!~this.SEARCHABLES.indexOf(this.schema.name)
   }
 }
-
-export default Entity;
-export {Entity}

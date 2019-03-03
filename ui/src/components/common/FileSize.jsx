@@ -8,7 +8,7 @@ class FileSize extends PureComponent {
     if (!value) {
       return null;
     }
-    return filesize(value, {round: 0});
+    return filesize(value, { round: 0 });
   }
 }
 

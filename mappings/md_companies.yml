@@ -46,6 +46,7 @@ md_companies:
           properties:
             name:
               column: Director
+              required: true
         directorship:
           schema: Directorship
           key_literal: Directorship
@@ -56,8 +57,12 @@ md_companies:
           properties:
             director:
               entity: director
+              required: true
             organization:
               entity: company
+              required: true
+            role:
+              literal: director
     - csv_url: http://assets.data.occrp.org/tools/aleph/fixtures/md_companies/founders.csv
       entities:
         company:
@@ -74,6 +79,7 @@ md_companies:
           properties:
             name:
               column: Founder
+              required: true
         ownership:
           schema: Ownership
           key_literal: Ownership
@@ -84,8 +90,10 @@ md_companies:
           properties:
             owner:
               entity: founder
+              required: true
             asset:
               entity: company
+              required: true
             role:
               literal: founder
     - csv_url: http://assets.data.occrp.org/tools/aleph/fixtures/md_companies/licensed.csv

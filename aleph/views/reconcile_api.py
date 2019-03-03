@@ -1,17 +1,15 @@
 import json
-import math
 import logging
 from pprint import pprint  # noqa
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
-from followthemoney.compare import compare
 
 from aleph.core import settings, url_for
 from aleph.model import Entity
 from aleph.search import SearchQueryParser
 from aleph.search import EntitiesQuery, MatchQuery
-from aleph.views.util import jsonify
+from aleph.views.util import jsonify, get_index_collection
 from aleph.logic.util import entity_url
 from aleph.index.util import unpack_result
 
@@ -25,63 +23,43 @@ def get_freebase_types():
     types = []
     for schema in model:
         if schema.matchable:
-            types.append({
-                'id': schema.name,
-                'name': schema.label
-            })
+            types.append(get_freebase_type(schema))
     return types
 
 
-def reconcile_op(query):
-    """Reconcile operation for a single query."""
-    parser = SearchQueryParser({
-        'limit': query.get('limit', '5'),
-        'strict': 'false'
-    }, request.authz)
+def get_freebase_type(schema):
+    return {'id': schema.name, 'name': schema.label}
 
-    name = query.get('query', '')
-    schema = query.get('type') or Entity.THING
-    proxy = model.make_entity(schema)
-    proxy.add('name', query.get('query', ''))
-    for p in query.get('properties', []):
-        proxy.add(p.get('pid'), p.get('v'), quiet=True)
 
-    query = MatchQuery(parser, entity=proxy)
-    matches = []
-    for doc in query.search().get('hits').get('hits'):
+def entity_matches(result):
+    for doc in result.get('hits').get('hits'):
         entity = unpack_result(doc)
-        if entity is None:
-            continue
-        entity = model.get_proxy(entity)
-        score = math.ceil(compare(model, proxy, entity) * 100)
-        match = {
-            'id': entity.id,
-            'name': entity.caption,
-            'score': score,
-            'uri': entity_url(entity.id),
+        proxy = model.get_proxy(entity)
+        yield {
+            'id': proxy.id,
+            'name': proxy.caption,
+            'n:type': get_freebase_type(proxy.schema),
+            'type': [get_freebase_type(proxy.schema)],
+            'r:score': doc.get('_score'),
+            'uri': entity_url(proxy.id, _relative=True),
             'match': False
         }
-        for type_ in get_freebase_types():
-            if entity.schema.name == type_['id']:
-                match['type'] = [type_]
-        matches.append(match)
-
-    log.info("Reconciled: %r -> %d matches", name, len(matches))
-    return {
-        'result': matches,
-        'num': len(matches)
-    }
 
 
-def reconcile_index():
+def reconcile_index(collection=None):
     domain = settings.APP_UI_URL.strip('/')
-    meta = {
-        'name': settings.APP_TITLE,
+    label = settings.APP_TITLE
+    suggest_query = []
+    schemata = list(model)
+    if collection is not None:
+        label = '%s (%s)' % (collection.get('label'), label)
+        suggest_query.append(('filter:collection_id', collection.get('id')))
+        schemata = [model.get(s) for s in collection.get('schemata').keys()]
+    return jsonify({
+        'name': label,
         'identifierSpace': 'http://rdf.freebase.com/ns/type.object.id',
         'schemaSpace': 'http://rdf.freebase.com/ns/type.object.id',
-        'view': {
-            'url': entity_url('{{id}}')
-        },
+        'view': {'url': entity_url('{{id}}')},
         'preview': {
             'url': entity_url('{{id}}'),
             'width': 800,
@@ -91,87 +69,94 @@ def reconcile_index():
             'entity': {
                 'service_url': domain,
                 'service_path': url_for('reconcile_api.suggest_entity',
-                                        _authorize=True)
+                                        _query=suggest_query,
+                                        _authorize=True,
+                                        _relative=True)
             },
             'type': {
                 'service_url': domain,
-                'service_path': url_for('reconcile_api.suggest_type')
+                'service_path': url_for('reconcile_api.suggest_type',
+                                        _relative=True)
             },
             'property': {
                 'service_url': domain,
-                'service_path': url_for('reconcile_api.suggest_property')
+                'service_path': url_for('reconcile_api.suggest_property',
+                                        _relative=True)
             }
         },
-        'defaultTypes': [{
-            'id': Entity.THING,
-            'name': model.get(Entity.THING).label
-        }]
-    }
-    return jsonify(meta)
+        'defaultTypes': [get_freebase_type(s) for s in schemata if s.matchable]
+    })
 
 
 @blueprint.route('/api/freebase/reconcile', methods=['GET', 'POST'])
-def reconcile():
-    """
-    Reconciliation API, emulates Google Refine API.
-
-    See: http://code.google.com/p/google-refine/wiki/ReconciliationServiceApi
-    """
-    if 'query' in request.values:
+@blueprint.route('/api/2/collections/<collection_id>/reconcile',
+                 methods=['GET', 'POST'])
+def reconcile(collection_id=None):
+    """Reconciliation API, emulates Google Refine API."""
+    collection = None
+    if collection_id is not None:
+        collection = get_index_collection(collection_id)
+    query = request.values.get('query')
+    if query is not None:
         # single
-        q = request.values.get('query')
-        if q.startswith('{'):
-            try:
-                q = json.loads(q)
-            except ValueError:
-                raise BadRequest()
-        else:
-            q = request.values
-        return jsonify(reconcile_op(q))
-    elif 'queries' in request.values:
-        # multiple requests in one query
-        qs = request.values.get('queries')
         try:
-            qs = json.loads(qs)
+            query = json.loads(query)
+        except ValueError:
+            query = {'query': query}
+        return jsonify(reconcile_op(query, collection))
+
+    queries = request.values.get('queries')
+    if queries is not None:
+        # multiple requests in one query
+        try:
+            qs = json.loads(queries)
+            results = {}
+            for k, q in qs.items():
+                results[k] = reconcile_op(q, collection)
+            return jsonify(results)
         except ValueError:
             raise BadRequest()
-        queries = {}
-        for k, q in qs.items():
-            queries[k] = reconcile_op(q)
-        return jsonify(queries)
-    else:
-        return reconcile_index()
+    return reconcile_index(collection)
+
+
+def reconcile_op(query, collection=None):
+    """Reconcile operation for a single query."""
+    log.info("Reconcile: %r", query)
+    args = {'limit': query.get('limit', '5')}
+    if collection is not None:
+        args['filter:collection_id'] = collection.get('id')
+    parser = SearchQueryParser(args, request.authz)
+    schema = query.get('type') or Entity.THING
+    proxy = model.make_entity(schema)
+    proxy.add('name', query.get('query'))
+    for p in query.get('properties', []):
+        proxy.add(p.get('pid'), p.get('v'), quiet=True)
+
+    query = MatchQuery(parser, entity=proxy)
+    matches = list(entity_matches(query.search()))
+    return {
+        'result': matches,
+        'num': len(matches)
+    }
 
 
 @blueprint.route('/api/freebase/suggest', methods=['GET', 'POST'])
 def suggest_entity():
     """Suggest API, emulates Google Refine API."""
+    prefix = request.args.get('prefix', '')
     args = {
-        'prefix': request.args.get('prefix'),
-        'filter:schemata': request.args.getlist('type')
+        'prefix': prefix,
+        'filter:schemata': request.args.getlist('type'),
+        'filter:collection_id': request.args.getlist('filter:collection_id')
     }
-    matches = []
     parser = SearchQueryParser(args, request.authz)
-    if parser.prefix is not None:
-        query = EntitiesQuery(parser)
-        for doc in query.search().get('hits').get('hits'):
-            source = doc.get('_source')
-            match = {
-                'quid': doc.get('_id'),
-                'id': doc.get('_id'),
-                'name': source.get('name'),
-                'r:score': doc.get('_score'),
-            }
-            for type_ in get_freebase_types():
-                if source.get('schema') == type_['id']:
-                    match['n:type'] = type_
-                    match['type'] = [type_['name']]
-            matches.append(match)
-
+    query = EntitiesQuery(parser)
+    result = query.search()
+    matches = list(entity_matches(result))
     return jsonify({
         "code": "/api/status/ok",
         "status": "200 OK",
-        "prefix": request.args.get('prefix', ''),
+        "prefix": prefix,
         "result": matches
     })
 
@@ -179,12 +164,12 @@ def suggest_entity():
 @blueprint.route('/api/freebase/property', methods=['GET', 'POST'])
 def suggest_property():
     prefix = request.args.get('prefix', '').lower().strip()
+    schema = request.args.get('schema', Entity.THING)
     matches = []
-    for prop in model.properties:
+    for prop in model.get(schema).properties.values():
         match = not len(prefix)
-        if not match:
-            match = prefix in prop.name.lower()
-            match = match or prefix in prop.label.lower()
+        match = prefix in prop.name.lower()
+        match = match or prefix in prop.label.lower()
         if match:
             matches.append({
                 'id': prop.name,
@@ -208,10 +193,12 @@ def suggest_property():
 def suggest_type():
     prefix = request.args.get('prefix', '').lower().strip()
     matches = []
-    for type_ in get_freebase_types():
-        name = type_.get('name').lower()
-        if not len(prefix) or prefix in name:
-            matches.append(type_)
+    for schema in model:
+        match = not len(prefix)
+        match = match or prefix in schema.name.lower()
+        match = match or prefix in schema.label.lower()
+        if match and schema.matchable:
+            matches.append(get_freebase_type(schema))
     return jsonify({
         "code": "/api/status/ok",
         "status": "200 OK",

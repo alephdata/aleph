@@ -8,7 +8,7 @@ class Preview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      previewTop: 0
+      previewTop: 0,
     };
     this.handleScroll = this.handleScroll.bind(this);
   }
@@ -17,20 +17,21 @@ class Preview extends React.Component {
     window.addEventListener('scroll', this.handleScroll);
     this.handleScroll();
   }
-  
+
+  componentDidUpdate() {
+    this.handleScroll();
+  }
+
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-  componentDidUpdate(prevProps) {
-    this.handleScroll();
-  }
-
   // @TODO Debounce this callback!
-  handleScroll(event) {
+  handleScroll() {
+    const { previewTop } = this.state;
     const navbarHeight = document.getElementById('Navbar').getBoundingClientRect().height;
     const scrollPos = window.scrollY;
-    const previewTop = (scrollPos <= navbarHeight) ? navbarHeight - scrollPos : 0;
+    const nextPreviewTop = (scrollPos <= navbarHeight) ? navbarHeight - scrollPos : 0;
 
     // @EXPERIMENTAL When enabled this adds right padding (equal to the width
     // of the Preview bar) any ContentPane elements on the page.
@@ -47,17 +48,16 @@ class Preview extends React.Component {
       }, 500);
     }
     */
-    
-    if (previewTop === this.state.previewTop)
-      return;
-    
+
+    if (nextPreviewTop === previewTop) return;
+
     this.setState({
-      previewTop: previewTop
-    })
+      previewTop: nextPreviewTop,
+    });
   }
-  
+
   render() {
-    const { maximised, hidden } = this.props;
+    const { maximised, hidden, children } = this.props;
     const { previewTop } = this.state;
     let className = 'Preview';
 
@@ -72,7 +72,7 @@ class Preview extends React.Component {
 
     return (
       <div id="Preview" className={className} style={{ top: previewTop }}>
-        {this.props.children}
+        {children}
       </div>
     );
   }

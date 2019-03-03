@@ -1,11 +1,9 @@
 import logging
 from pprint import pprint, pformat  # noqa
-from elasticsearch.helpers import scan
 
-from aleph.core import es, settings
+from aleph.core import es
 from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
-from aleph.index.util import clean_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.logic.audit import record_audit
@@ -25,7 +23,8 @@ class Query(object):
     INCLUDE_FIELDS = None
     EXCLUDE_FIELDS = None
     TEXT_FIELDS = ['text']
-    PREFIX_FIELD = 'text'
+    PREFIX_FIELD = 'name'
+    SKIP_FILTERS = []
     SORT_FIELDS = {
         'label': 'label.kw',
         'name': 'name.kw',
@@ -45,7 +44,7 @@ class Query(object):
                     "fields": self.TEXT_FIELDS,
                     "analyzer": "icu_latin",
                     "default_operator": "AND",
-                    "minimum_should_match": "80%",
+                    "minimum_should_match": "70%",
                     "lenient": True
                 }
             })
@@ -62,7 +61,15 @@ class Query(object):
     def get_filters(self):
         """Apply query filters from the user interface."""
         filters = []
+        # This enforces the authorization (access control) rules on
+        # a particular query by comparing the collections a user is
+        # authorized for with the one on the document.
+        if self.parser.authz and not self.parser.authz.is_admin:
+            filters.append(authz_query(self.parser.authz))
+
         for field, values in self.parser.filters.items():
+            if field in self.SKIP_FILTERS:
+                continue
             if field not in self.parser.facet_names:
                 filters.append(field_filter_query(field, values))
         return filters
@@ -81,7 +88,7 @@ class Query(object):
         """Apply post-aggregation query filters."""
         filters = []
         for field, values in self.parser.filters.items():
-            if field == exclude:
+            if field in self.SKIP_FILTERS or field == exclude:
                 continue
             if field in self.parser.facet_filters:
                 filters.append(field_filter_query(field, values))
@@ -151,14 +158,12 @@ class Query(object):
         return list(reversed(sort_fields))
 
     def get_highlight(self):
-        if not settings.RESULT_HIGHLIGHT:
-            return {}
         if not self.parser.highlight:
             return {}
-
         return {
             'fields': {
                 'text': {
+                    'type': 'fvh',
                     'number_of_fragments': self.parser.highlight_count,
                     'fragment_size': self.parser.highlight_length
                 }
@@ -174,7 +179,7 @@ class Query(object):
         return source
 
     def get_body(self):
-        body = clean_query({
+        body = {
             'query': self.get_query(),
             'post_filter': self.get_post_filters(),
             'from': self.parser.offset,
@@ -183,7 +188,7 @@ class Query(object):
             'sort': self.get_sort(),
             'highlight': self.get_highlight(),
             '_source': self.get_source()
-        })
+        }
         # log.info("Query: %s", pformat(body))
         return body
 
@@ -196,37 +201,12 @@ class Query(object):
         # log.info("%s", pformat(result.get('profile')))
         return result
 
-    def scan(self):
-        """Return an iterator over the whole result set, unpaginated and
-        without aggregations."""
-        query = {
-            'query': self.get_query(),
-            '_source': self.get_source()
-        }
-        return scan(es, index=self.get_index(), query=query)
-
     @classmethod
-    def handle(cls, request, limit=None, schema=None, parser=None, **kwargs):
+    def handle(cls, request, parser=None, **kwargs):
         if parser is None:
-            parser = SearchQueryParser(request.args,
-                                       request.authz,
-                                       limit=limit)
-
+            parser = SearchQueryParser(request.args, request.authz)
         # Log the search
         keys = ['prefix', 'text', 'filters']
         record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
         result = cls(parser, **kwargs).search()
-        return cls.RESULT_CLASS(request, parser, result, schema=schema)
-
-
-class AuthzQuery(Query):
-    """Apply roles-based filtering to the results.
-
-    This enforces the authorization (access control) rules on a particular
-    query by comparing the roles a user is in with the ones on the document.
-    """
-
-    def get_filters(self):
-        filters = super(AuthzQuery, self).get_filters()
-        filters.append(authz_query(self.parser.authz))
-        return filters
+        return cls.RESULT_CLASS(request, parser, result)

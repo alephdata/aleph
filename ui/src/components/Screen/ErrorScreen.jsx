@@ -1,24 +1,23 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import DualPane from 'src/components/common/DualPane';
 import ErrorSection from 'src/components/common/ErrorSection';
 import Screen from 'src/components/Screen/Screen';
 
-class ErrorScreen extends Component {
-  render() {
-    const { title = '', error } = this.props;
-    const screenTitle = error === undefined ? title : error.message;
 
-    return (
-      <Screen title={screenTitle}>
-        <DualPane>
-          <DualPane.ContentPane>
-            <ErrorSection {...this.props} />
-          </DualPane.ContentPane>
-        </DualPane>
-      </Screen>
-    )
-  }
+function ErrorScreen(props) {
+  const { title = '', error } = props;
+  const screenTitle = error === undefined ? title : error.message;
+
+  return (
+    <Screen title={screenTitle}>
+      <DualPane>
+        <DualPane.ContentPane>
+          <ErrorSection {...props} />
+        </DualPane.ContentPane>
+      </DualPane>
+    </Screen>
+  );
 }
 
 export default ErrorScreen;

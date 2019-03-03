@@ -1,13 +1,11 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
-import Waypoint from 'react-waypoint';
-
+import React, { Component } from 'react';
+import { defineMessages } from 'react-intl';
+import { Waypoint } from 'react-waypoint';
 import { SectionLoading, ErrorSection } from 'src/components/common';
-import Notification from './Notification';
-import { queryNotifications } from "src/actions";
-import { selectNotificationsResult } from "src/selectors";
+import { queryNotifications } from 'src/actions';
+import { selectNotificationsResult } from 'src/selectors';
+import Notification from 'src/components/Notification/Notification';
+import { enhancer } from 'src/util/enhancers';
 
 import './NotificationList.scss';
 
@@ -38,17 +36,17 @@ class NotificationList extends Component {
   // componentWillUnmount() {
   // }
 
-  fetchIfNeeded() {
-    const { result, query } = this.props;
-    if (!result.isLoading) {
-      this.props.queryNotifications({ query });
-    }
-  }
-
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isLoading && result.next && !result.isError) {
       this.props.queryNotifications({ query, next: result.next });
+    }
+  }
+
+  fetchIfNeeded() {
+    const { result, query } = this.props;
+    if (!result.isLoading) {
+      this.props.queryNotifications({ query });
     }
   }
 
@@ -57,20 +55,26 @@ class NotificationList extends Component {
 
     return (
       <React.Fragment>
-        { result.total === 0 &&
-          <ErrorSection visual="notifications"
-                        title={intl.formatMessage(messages.no_notifications)} />
+        { result.total === 0
+          && (
+          <ErrorSection
+            visual="notifications"
+            title={intl.formatMessage(messages.no_notifications)}
+          />
+          )
         }
-        { result.total !== 0 &&
+        { result.total !== 0
+          && (
           <ul className="NotificationList">
-            {result.results.map((notif) =>
-              <Notification key={notif.id} notification={notif} />
-            )}
+            {result.results.map(notif => <Notification key={notif.id} notification={notif} />)}
           </ul>
+          )
         }
-        <Waypoint onEnter={this.getMoreResults}
-                  bottomOffset="-300px"
-                  scrollableAncestor={window} />
+        <Waypoint
+          onEnter={this.getMoreResults}
+          bottomOffset="-300px"
+          scrollableAncestor={window}
+        />
         { result.isLoading && (
           <SectionLoading />
         )}
@@ -85,6 +89,7 @@ const mapStateToProps = (state, ownProps) => {
   return { query, result };
 };
 
-NotificationList = connect(mapStateToProps, { queryNotifications })(NotificationList);
-NotificationList = withRouter(NotificationList);
-export default injectIntl(NotificationList);
+export default enhancer({
+  mapDispatchToProps: { queryNotifications },
+  mapStateToProps,
+})(NotificationList);
