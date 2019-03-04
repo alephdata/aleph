@@ -10,7 +10,7 @@ import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -127,7 +127,7 @@ export class DocumentManager extends Component {
   }
 }
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
   mapDispatchToProps: { queryEntities },
 })(DocumentManager);

@@ -21,10 +21,10 @@ class EntitiesQuery(Query):
 
     def get_index(self):
         schemata = self.parser.getlist('filter:schema')
-        schemata = schemata or self.parser.getlist('filter:schemata')
         if len(schemata):
-            return entities_read_index(schema=schemata)
-        return entities_read_index()
+            return entities_read_index(schema=schemata, expand=False)
+        schemata = self.parser.getlist('filter:schemata')
+        return entities_read_index(schema=schemata)
 
 
 class MatchQuery(EntitiesQuery):
@@ -42,9 +42,8 @@ class MatchQuery(EntitiesQuery):
         # Real estate is "unmatchable", i.e. even if two plots of land
         # have almost the same name and criteria, it does not make
         # sense to suggest they are the same.
-        schema = self.entity.schema
-        matchable = [s.name for s in schema.matchable_schemata]
-        return entities_read_index(schema=matchable)
+        schemata = list(self.entity.schema.matchable_schemata)
+        return entities_read_index(schema=schemata)
 
     def get_query(self):
         query = super(MatchQuery, self).get_query()

@@ -3,7 +3,7 @@ import { Alert, Intent } from '@blueprintjs/core';
 
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { deleteDocument } from 'src/actions';
-import { translatableConnected } from '../../util/enhancers';
+import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   button_confirm: {

@@ -5,12 +5,11 @@ import {
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { tiggerXrefMatches, queryCollections } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
+import { translatableConnected } from 'src/util/enhancers';
 import CollectionXrefDialogActions from './CollectionXrefDialogActions';
 import CollectionXrefSelect from './CollectionXrefSelect';
 
-
 import './CollectionXrefDialog.scss';
-import { translatableConnected } from '../../util/enhancers';
 
 
 const messages = defineMessages({

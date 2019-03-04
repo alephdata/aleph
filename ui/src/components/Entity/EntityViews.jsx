@@ -15,7 +15,8 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import Schema from 'src/components/common/Schema';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
+
 
 class EntityViews extends React.Component {
   constructor(props) {
@@ -129,4 +130,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWIthRouter({ mapStateToProps })(EntityViews);
+export default connectedWithRouter({ mapStateToProps })(EntityViews);

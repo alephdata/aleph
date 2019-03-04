@@ -6,7 +6,7 @@ import c from 'classnames';
 
 import { updateRole as updateRoleAction, fetchRole as fetchRoleAction } from 'src/actions';
 import { selectSession } from 'src/selectors';
-import { translatableConnected } from '../../util/enhancers';
+import { translatableConnected } from 'src/util/enhancers';
 
 
 const messages = defineMessages({

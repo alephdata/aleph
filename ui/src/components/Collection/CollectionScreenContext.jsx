@@ -13,7 +13,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection } from 'src/selectors';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   placeholder: {

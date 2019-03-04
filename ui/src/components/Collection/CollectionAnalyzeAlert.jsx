@@ -4,7 +4,7 @@ import { Alert, Intent } from '@blueprintjs/core';
 
 import { triggerCollectionAnalyze } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
-import { translatableConnected } from '../../util/enhancers';
+import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   processing: {

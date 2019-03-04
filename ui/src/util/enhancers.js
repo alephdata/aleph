@@ -4,7 +4,7 @@ import withRouter from 'react-router/es/withRouter';
 import { injectIntl } from 'react-intl';
 
 
-export function connectedWIthRouter({
+export function connectedWithRouter({
   mapStateToProps = () => {}, mapDispatchToProps, mergeProps, options,
 }) {
   return compose(

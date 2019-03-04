@@ -7,7 +7,7 @@ import {
 import {
   selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
 } from 'src/selectors';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class EntityScreenContext extends PureComponent {
@@ -59,7 +59,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
   mapDispatchToProps: {
     fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,

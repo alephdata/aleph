@@ -20,7 +20,7 @@ import Screen from 'src/components/Screen/Screen';
 import togglePreview from 'src/util/togglePreview';
 
 import './SearchScreen.scss';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   facet_schema: {

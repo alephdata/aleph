@@ -1,21 +1,24 @@
 import React, { Component, PureComponent } from 'react';
 import _ from 'lodash';
+import c from 'classnames';
+import numeral from 'numeral';
 import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, FormattedNumber,
 } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Button, ControlGroup, Intent } from '@blueprintjs/core';
-import SearchBox from 'src/components/Navbar/SearchBox';
 
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import c from 'classnames';
+import SearchBox from 'src/components/Navbar/SearchBox';
+import { translatableConnected } from 'src/util/enhancers';
+import DualPane from 'src/components/common/DualPane';
+import { Category, Country, Schema } from 'src/components/common';
+
 import './HomeScreen.scss';
-import { translatableConnected } from '../../util/enhancers';
-import DualPane from '../../components/common/DualPane';
-import { Category, Country, Schema } from '../../components/common';
+
 
 const messages = defineMessages({
   title: {
@@ -52,9 +55,7 @@ class Statistics extends PureComponent {
   }
 
   static Count({ count }) {
-    return (
-      <span><FormattedNumber value={count} /></span>
-    );
+    return count && (<span><FormattedNumber value={count} /></span>);
   }
 
   static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
@@ -65,6 +66,7 @@ class Statistics extends PureComponent {
       headline,
       isLoading,
       children = isLoading ? Statistics.Noop : Statistics.Item,
+      Others = isLoading ? Statistics.Noop : Statistics.Item,
       Name = Statistics.Name,
       Count = Statistics.Count,
     } = this.props;
@@ -83,9 +85,13 @@ class Statistics extends PureComponent {
             Name,
             Count,
           }))}
-          {rest > 0 && children({
+          {rest > 0 && Others({
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
-            item: ['and other', list.length - 15],
+            item: [<FormattedMessage
+              id="home.statistics.other"
+              values={{ count: list.length - 15 }}
+              defaultMessage="other {count}"
+            />, null],
           })}
         </ul>
       </div>
@@ -162,7 +168,9 @@ export class HomeScreen extends Component {
                     <FormattedMessage
                       id="home.statistics.schemata"
                       defaultMessage="Search {things} entities"
-                      values={{ things: statistics.things }}
+                      values={{
+                        things: numeral(statistics.things).format('0a'),
+                      }}
                     />
                   )}
                   statistic={statistics.schemata}
@@ -176,13 +184,21 @@ export class HomeScreen extends Component {
                       />
                     </span>
                   )}
+                  Others={props => (
+                    <Statistics.Item
+                      {...props}
+                      Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)}
+                    />
+                  )}
                 />
                 <Statistics
                   headline={(
                     <FormattedMessage
                       id="home.statistics.categories"
                       defaultMessage="from {collections} sources"
-                      values={{ collections: statistics.collections }}
+                      values={{
+                        collections: <FormattedNumber value={statistics.collections || 0} />,
+                      }}
                     />
                   )}
                   statistic={statistics.categories}
@@ -193,6 +209,12 @@ export class HomeScreen extends Component {
                     >
                       <Category category={props.name} />
                     </Link>
+                  )}
+                  Others={props => (
+                    <Statistics.Item
+                      {...props}
+                      Name={({ name }) => (<Link to="/sources?facet=schema">{name}</Link>)}
+                    />
                   )}
                 />
                 <Statistics
@@ -211,6 +233,12 @@ export class HomeScreen extends Component {
                     <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
                       <Country.Name {...props} code={props.name} />
                     </Link>
+                  )}
+                  Others={props => (
+                    <Statistics.Item
+                      {...props}
+                      Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)}
+                    />
                   )}
                 />
               </DualPane>

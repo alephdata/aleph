@@ -69,7 +69,7 @@ def create_app(config={}):
         task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
-        task_acks_late=False,
+        task_acks_late=True,
         task_queues=(queue,),
         task_default_queue=settings.QUEUE_NAME,
         task_default_routing_key=settings.QUEUE_ROUTING_KEY,
@@ -163,8 +163,7 @@ def get_archive():
 
 def get_cache():
     if not hasattr(settings, '_cache') or settings._cache is None:
-        settings._cache = Cache(get_redis(),
-                                prefix=settings.APP_NAME)
+        settings._cache = Cache(get_redis(), prefix=settings.APP_NAME)
     return settings._cache
 
 

@@ -4,8 +4,8 @@ import { defineMessages } from 'react-intl';
 
 import { fetchRole, updateRole } from 'src/actions';
 import { selectSession } from 'src/selectors';
-import QueryLogs from '../../components/QueryLogs/QueryLogs';
-import { translatableConnected } from '../../util/enhancers';
+import QueryLogs from 'src/components/QueryLogs/QueryLogs';
+import { translatableConnected } from 'src/util/enhancers';
 
 
 const messages = defineMessages({

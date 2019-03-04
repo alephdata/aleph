@@ -8,7 +8,7 @@ import { selectEntitiesResult, selectEntityReference, selectSchemata } from 'src
 import { ErrorSection, Property, SectionLoading } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 import getPath from '../../util/getPath';
 
 const messages = defineMessages({

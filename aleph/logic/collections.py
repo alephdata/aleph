@@ -39,7 +39,9 @@ def refresh_collection(collection_id, sync=False):
 
 
 def index_collections(documents=False, refresh=False):
-    for collection in Collection.all(deleted=True):
+    q = Collection.all(deleted=True)
+    q = q.order_by(Collection.updated_at.desc())
+    for collection in q:
         log.info("Index [%s]: %s", collection.id, collection.label)
         if documents and collection.deleted_at is None:
             index_collection_documents.delay(collection_id=collection.id)

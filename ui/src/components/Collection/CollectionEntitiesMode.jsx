@@ -2,7 +2,7 @@ import React from 'react';
 
 import Query from 'src/app/Query';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class CollectionEntitiesMode extends React.PureComponent {
@@ -28,4 +28,4 @@ const mapStateToProps = (state, ownProps) => {
   return { query };
 };
 
-export default connectedWIthRouter({ mapStateToProps })(CollectionEntitiesMode);
+export default connectedWithRouter({ mapStateToProps })(CollectionEntitiesMode);

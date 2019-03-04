@@ -1,16 +1,18 @@
 import React, { PureComponent } from 'react';
 import { Waypoint } from 'react-waypoint';
-import { selectQueryLog } from 'src/selectors';
-import Query from 'src/app/Query';
-import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
 import { Button, Tooltip } from '@blueprintjs/core';
 import { defineMessages } from 'react-intl';
 import queryString from 'query-string';
-import SectionLoading from '../common/SectionLoading';
-import SearchAlert from '../SearchAlert/SearchAlert';
+
+import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
+import SectionLoading from 'src/components/common/SectionLoading';
+import SearchAlert from 'src/components/SearchAlert/SearchAlert';
+import { enhancer } from 'src/util/enhancers';
+import { selectQueryLog } from 'src/selectors';
+import Query from 'src/app/Query';
 
 import './QueryLogs.scss';
-import { enhancer } from '../../util/enhancers';
+
 
 const messages = defineMessages({
   title: {

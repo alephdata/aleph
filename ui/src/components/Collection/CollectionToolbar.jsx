@@ -12,7 +12,7 @@ import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeA
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectCollectionXrefIndex } from 'src/selectors';
-import { connectedWIthRouter } from '../../util/enhancers';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class CollectionToolbar extends Component {
@@ -144,6 +144,6 @@ const mapStateToProps = (state, ownProps) => ({
   xrefIndex: selectCollectionXrefIndex(state, ownProps.collection.id),
 });
 
-export default connectedWIthRouter({
+export default connectedWithRouter({
   mapStateToProps,
 })(CollectionToolbar);

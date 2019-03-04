@@ -46,7 +46,7 @@ class QueryFilterTag extends PureComponent {
             )}
           </Collection.Load>
         );
-      case 'team.id':
+      case 'team_id':
       case 'creator_id':
       case 'uploader_id':
         return (

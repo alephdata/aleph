@@ -10,7 +10,7 @@ import c from 'classnames';
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.scss';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   clear_filter: {

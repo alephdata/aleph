@@ -16,7 +16,7 @@ import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatche
 import getPath from 'src/util/getPath';
 
 import './CollectionXrefMatchesScreen.scss';
-import { enhancer } from '../../util/enhancers';
+import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   screen_title: {
