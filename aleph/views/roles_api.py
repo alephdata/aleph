@@ -6,8 +6,7 @@ from itsdangerous import BadSignature
 from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
-from aleph.logic.roles import check_editable, update_role
-from aleph.notify import notify_role
+from aleph.logic.roles import check_editable, challenge_role, update_role
 from aleph.views.forms import RoleSchema
 from aleph.views.forms import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.serializers import RoleSerializer
@@ -38,13 +37,7 @@ def suggest():
 @blueprint.route('/api/2/roles/code', methods=['POST'])
 def create_code():
     data = parse_request(RoleCodeCreateSchema)
-    signature = Role.SIGNATURE.dumps(data['email'])
-    url = '{}activate/{}'.format(settings.APP_UI_URL, signature)
-    role = Role(email=data['email'], name='Visitor')
-    log.info("Confirmation URL [%r]: %s", role, url)
-    notify_role(role, gettext('Registration'),
-                'email/registration_code.html',
-                url=url)
+    challenge_role(data)
     return jsonify({
         'status': 'ok',
         'message': gettext('To proceed, please check your email.')

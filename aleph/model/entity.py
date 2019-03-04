@@ -7,7 +7,6 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
 from aleph.model.collection import Collection
-from aleph.model.permission import Permission
 from aleph.model.match import Match
 from aleph.model.common import SoftDeleteModel
 from aleph.model.common import make_textid, ENTITY_ID_LEN
@@ -145,15 +144,8 @@ class Entity(db.Model, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def all_ids(cls, deleted=False, authz=None):
-        q = super(Entity, cls).all_ids(deleted=deleted)
-        if authz is not None and not authz.is_admin:
-            q = q.join(Permission,
-                       cls.collection_id == Permission.collection_id)
-            q = q.filter(Permission.deleted_at == None)  # noqa
-            q = q.filter(Permission.read == True)  # noqa
-            q = q.filter(Permission.role_id.in_(authz.roles))
-        return q
+    def by_collection(cls, collection_id):
+        return cls.all().filter(Entity.collection_id == collection_id)
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

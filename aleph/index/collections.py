@@ -62,8 +62,8 @@ def get_collection_stats(collection_id):
         'query': {'bool': {'filter': [query]}},
         'aggs': {
             'schemata': {'terms': {'field': 'schema', 'size': 1000}},
-            'countries': {'terms': {'field': 'countries', 'size': 500}},
-            'languages': {'terms': {'field': 'languages', 'size': 10}},
+            'countries': {'terms': {'field': 'countries', 'size': 1000}},
+            'languages': {'terms': {'field': 'languages', 'size': 1000}},
         }
     }
     index = entities_read_index(schema=Entity.THING)

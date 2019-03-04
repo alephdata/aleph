@@ -9,7 +9,6 @@ from aleph import settings
 from aleph.model import Role, Collection, Permission
 from aleph.index.admin import delete_index, upgrade_search, clear_index
 from aleph.logic.collections import update_collection, index_collections
-from aleph.logic.entities import index_entities
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
@@ -92,8 +91,7 @@ class TestCase(FlaskTestCase):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
     def update_index(self):
-        index_entities()
-        index_collections(documents=True)
+        index_collections(entities=True)
 
     def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)

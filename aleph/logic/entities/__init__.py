@@ -23,6 +23,7 @@ def create_entity(data, collection, role=None, sync=False):
 
 
 def update_entity(entity, sync=False):
+    # TODO: delete from index upon type change.
     data = index.index_entity(entity, sync=sync)
     refresh_entity(entity)
     return data
@@ -44,12 +45,6 @@ def delete_entity(entity, deleted_at=None, sync=False):
     entity.delete(deleted_at=deleted_at)
     refresh_entity(entity)
     index.delete_entity(entity.id, sync=sync)
-
-
-def index_entities():
-    q = db.session.query(Entity)
-    for entity in q:
-        index.index_entity(entity, sync=False)
 
 
 def entity_references(entity, authz):

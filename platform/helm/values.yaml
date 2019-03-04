@@ -91,6 +91,27 @@ api:
       memory: 2Gi
       cpu: 700m
 
+web:
+  replicas: 1
+  maxSurge: 2
+  resources:
+    requests:
+      memory: 200Mi
+      cpu: 100m
+    limits:
+      memory: 300Mi
+      cpu: 200m
+
+worker:
+  minReplicas: 1
+  maxReplicas: 1
+  resources:
+    requests:
+      memory: 300Mi
+      cpu: 100m
+    limits:
+      memory: 500Mi
+      cpu: 200m
 
 certs:
   email: data@occrp.org
@@ -153,10 +174,8 @@ convertDocument:
       memory: 600Mi
       cpu: 200m
 
-
 db:
   replicas: 1
-
 
 extractEntities:
   minReplicas: 1
@@ -168,7 +187,6 @@ extractEntities:
     limits:
       memory: 800Mi
       cpu: 300m
-
 
 index:
   ESonK8s: false
@@ -245,26 +263,3 @@ storage:
   redis:
 
 
-
-web:
-  replicas: 1
-  maxSurge: 2
-  resources:
-    requests:
-      memory: 200Mi
-      cpu: 100m
-    limits:
-      memory: 300Mi
-      cpu: 200m
-
-
-worker:
-  minReplicas: 1
-  maxReplicas: 1
-  resources:
-    requests:
-      memory: 300Mi
-      cpu: 100m
-    limits:
-      memory: 500Mi
-      cpu: 200m
