@@ -33,6 +33,24 @@ def index_entity(entity, sync=False):
     return index_safe(index, entity_id, data, refresh=refresh)
 
 
+def index_collection_entities(collection, sync=False):
+    """Re-index all documents in a collection in one go."""
+    from aleph.index.documents import generate_collection_docs
+
+    def _generate():
+        for entity in Entity.by_collection(collection.id):
+            entity_id, index, body = index_operation(entity.to_dict())
+            yield {
+                '_id': entity_id,
+                '_index': index,
+                '_type': 'doc',
+                '_source': body
+            }
+        yield from generate_collection_docs(collection)
+
+    bulk_actions(_generate(), sync=sync)
+
+
 def _source_spec(includes, excludes):
     includes = ensure_list(includes)
     excludes = ensure_list(excludes)
