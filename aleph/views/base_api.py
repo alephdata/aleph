@@ -11,9 +11,9 @@ from jwt import ExpiredSignatureError
 from aleph import __version__
 from aleph.core import cache, settings, url_for
 from aleph.authz import Authz
-from aleph.model import Collection
+from aleph.model import Collection, Role
 from aleph.logic import resolver
-# from aleph.index.collections import get_collection
+from aleph.views.serializers import RoleSerializer
 from aleph.views.cache import enable_cache, NotModified
 from aleph.views.util import jsonify, render_xml
 
@@ -67,8 +67,13 @@ def statistics():
     collections = request.authz.collections(request.authz.READ)
     for collection_id in collections:
         resolver.queue(request, Collection, collection_id)
+    for role_id in request.authz.roles:
+        resolver.queue(request, Role, role_id)
     resolver.resolve(request)
 
+    # Summarise stats. This is meant for display, so the counting is a bit
+    # inconsistent between counting all collections, and source collections
+    # only.
     schemata = defaultdict(int)
     countries = defaultdict(int)
     categories = defaultdict(int)
@@ -81,11 +86,21 @@ def statistics():
             schemata[schema] += count
         for country in data.get('countries', []):
             countries[country] += 1
+
+    # Add a users roles to the home page:
+    groups = []
+    for role_id in request.authz.roles:
+        data = resolver.get(request, Role, role_id)
+        if data is None or data.get('type') != Role.GROUP:
+            continue
+        groups.append(RoleSerializer().serialize(data))
+
     return jsonify({
         'collections': len(collections),
         'schemata': dict(schemata),
         'countries': dict(countries),
         'categories': dict(categories),
+        'groups': groups,
         'things': sum(schemata.values()),
     })
 
