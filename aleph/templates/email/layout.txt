@@ -5,4 +5,4 @@ Dear {{name}},
 {% block content %}{% endblock %}
 
 --
-{{app_title}} ({{ui_url}}).
+{{app_title}} ({{ui_url}})

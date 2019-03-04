@@ -90,11 +90,13 @@ export class AuthenticationDialog extends Component {
     }
   }
 
-  onRegisterClick() {
+  onRegisterClick(e) {
+    e.preventDefault();
     this.setState({ firstSection: 'hide', secondSection: '' });
   }
 
-  onSignInClick() {
+  onSignInClick(e) {
+    e.preventDefault();
     this.setState({ firstSection: '', secondSection: 'hide' });
   }
 
