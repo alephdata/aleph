@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Icon, H4 } from '@blueprintjs/core';
 import Truncate from 'react-truncate';
-
+import Count from 'src/components/common/Count';
 import {
   Date, Role, Category, Country, Collection,
 } from 'src/components/common';
@@ -19,9 +19,7 @@ class CollectionListItem extends PureComponent {
     return (
       <li className="CollectionListItem" key={collection.id}>
         <H4>
-          <span className="bp3-tag bp3-small bp3-round bp3-intent-primary">
-            <FormattedNumber value={collection.count} />
-          </span>
+          <Count count={collection.count} full />
           <Collection.Link preview={preview} collection={collection} icon />
         </H4>
         {collection.summary
