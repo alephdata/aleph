@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { FocusStyleManager } from '@blueprintjs/core';
 import { inRange } from 'lodash';
 import { logout } from 'src/actions/sessionActions';
+import { selectLocale } from 'src/selectors';
 import Router from './Router';
 import Translator from './Translator';
 
@@ -15,7 +16,6 @@ import store from './store';
 // TODO Initialise endpoint in here instead of api.js. And then pass it down as
 // context, like Provider passes down the store? Or use redux-axios-middleware?
 import { endpoint } from './api';
-import { selectLocale } from '../selectors';
 
 import './App.scss';
 

@@ -55,10 +55,10 @@ class Statistics extends PureComponent {
   }
 
   static Count({ count }) {
-    return (<span><FormattedNumber value={count} /></span>);
+    return count && (<span><FormattedNumber value={count} /></span>);
   }
 
-  static Noop(props) { return <div {...props}>skeleton</div>; }
+  static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
 
   render() {
     const {
@@ -66,10 +66,13 @@ class Statistics extends PureComponent {
       headline,
       isLoading,
       children = isLoading ? Statistics.Noop : Statistics.Item,
+      Others = isLoading ? Statistics.Noop : Statistics.Item,
       Name = Statistics.Name,
       Count = Statistics.Count,
     } = this.props;
-    const list = isLoading ? Array(10).fill([]) : Object.entries(statistic);
+    const list = isLoading ? Array.from(
+      { length: 40 }, (i, ii) => ([ii]),
+    ) : Object.entries(statistic);
     const rest = list.length - 15;
     return (
       <div className="statistic bp3-callout ">
@@ -77,14 +80,18 @@ class Statistics extends PureComponent {
         <ul className="statistic--list">
           {_.sortBy(list, [1]).splice(-15).reverse().map(item => children({
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
-            key: item.name,
+            key: item[0],
             item,
             Name,
             Count,
           }))}
-          {rest > 0 && children({
+          {rest > 0 && Others({
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
-            item: ['and other', list.length - 15],
+            item: [<FormattedMessage
+              id="home.statistics.other"
+              values={{ count: list.length - 15 }}
+              defaultMessage="other {count}"
+            />, null],
           })}
         </ul>
       </div>
@@ -130,7 +137,7 @@ export class HomeScreen extends Component {
   };
 
   render() {
-    const { intl, metadata, statistics } = this.props;
+    const { intl, metadata, statistics = {} } = this.props;
     const samples = metadata.app.samples.join(', ');
 
     return (
@@ -177,6 +184,9 @@ export class HomeScreen extends Component {
                       />
                     </span>
                   )}
+                  Others={props => (
+                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)} />
+                  )}
                 />
                 <Statistics
                   headline={(
@@ -184,7 +194,7 @@ export class HomeScreen extends Component {
                       id="home.statistics.categories"
                       defaultMessage="from {collections} sources"
                       values={{
-                        collections: <FormattedNumber value={statistics.collections} />,
+                        collections: <FormattedNumber value={statistics.collections || 0} />,
                       }}
                     />
                   )}
@@ -196,6 +206,9 @@ export class HomeScreen extends Component {
                     >
                       <Category category={props.name} />
                     </Link>
+                  )}
+                  Others={props => (
+                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
                 <Statistics
@@ -214,6 +227,9 @@ export class HomeScreen extends Component {
                     <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
                       <Country.Name {...props} code={props.name} />
                     </Link>
+                  )}
+                  Others={props => (
+                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
               </DualPane>

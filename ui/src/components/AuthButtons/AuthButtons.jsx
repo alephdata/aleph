@@ -7,9 +7,10 @@ import {
 
 import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
+import QueryLogsDialog from 'src/dialogs/QueryLogsDialog/QueryLogsDialog';
 
 import './AuthButtons.scss';
-import QueryLogsDialog from '../../dialogs/QueryLogsDialog/QueryLogsDialog';
+
 
 const messages = defineMessages({
   view_notifications: {

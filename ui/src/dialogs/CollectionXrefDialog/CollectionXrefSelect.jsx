@@ -4,9 +4,11 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import Query from 'src/app/Query';
 import CheckboxList from 'src/components/common/CheckboxList';
 import { Waypoint } from 'react-waypoint';
-import { queryEndpoint } from '../../actions/util';
+import { queryEndpoint } from 'src/actions/util';
+import { showWarningToast } from 'src/app/toast';
+
 import CollectionXrefFilter from './CollectionXrefFilter';
-import { showWarningToast } from '../../app/toast';
+
 
 const convertCollectionToItem = collection => ({
   id: collection.id,

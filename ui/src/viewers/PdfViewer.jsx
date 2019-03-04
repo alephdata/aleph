@@ -11,10 +11,11 @@ import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
+import { connectedWithRouter } from 'src/util/enhancers';
+import TextViewer from 'src/viewers/TextViewer';
 
 import './PdfViewer.scss';
-import TextViewer from 'src/viewers/TextViewer';
-import { connectedWithRouter } from '../util/enhancers';
+
 
 const mapStateToProps = (state, ownProps) => {
   const { document, location, queryText } = ownProps;

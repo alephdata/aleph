@@ -12,6 +12,7 @@
     "uuid": "^3.3.2",
     "babel-polyfill": "^6.26.0",
     "axios": "^0.18.0",
+    "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-helmet": "^5.2.0",
     "react-intl": "^2.8.0",
@@ -27,7 +28,6 @@
     "truncate": "^2.0.1",
     "redux": "^4.0.1",
     "query-string": "^6.2.0",
-    "react": "^16.8.3",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
     "numeral": "^2.0.6"

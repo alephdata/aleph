@@ -6,8 +6,8 @@ import {
 import { queryEntities } from 'src/actions';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
+import { connectedWithRouter } from 'src/util/enhancers';
 import './TableViewer.scss';
-import { connectedWithRouter } from '../util/enhancers';
 
 
 const mapStateToProps = (state, ownProps) => {
