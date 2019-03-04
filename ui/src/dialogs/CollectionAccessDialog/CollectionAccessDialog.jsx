@@ -121,7 +121,7 @@ class CollectionAccessDialog extends Component {
   setPermissions(permissions, blocking) {
     this.setState(state => ({
       permissions: permissions || state.permissions,
-      blocking: blocking || state.blocking,
+      blocking: blocking === undefined ? state.blocking : blocking,
     }));
   }
 

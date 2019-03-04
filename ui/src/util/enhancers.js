@@ -5,7 +5,7 @@ import { injectIntl } from 'react-intl';
 
 
 export function connectedWithRouter({
-  mapStateToProps = () => {}, mapDispatchToProps, mergeProps, options,
+  mapStateToProps = null, mapDispatchToProps, mergeProps, options,
 }) {
   return compose(
     withRouter,
@@ -13,7 +13,7 @@ export function connectedWithRouter({
   );
 }
 export function translatableConnected({
-  mapStateToProps = () => {}, mapDispatchToProps, mergeProps, options,
+  mapStateToProps = null, mapDispatchToProps, mergeProps, options,
 }) {
   return compose(
     connect(mapStateToProps, mapDispatchToProps, mergeProps, options),
@@ -22,7 +22,7 @@ export function translatableConnected({
 }
 
 export function enhancer({
-  mapStateToProps = () => {}, mapDispatchToProps, mergeProps, options,
+  mapStateToProps = null, mapDispatchToProps, mergeProps, options,
 }) {
   return compose(
     withRouter,
