@@ -185,10 +185,7 @@ export class HomeScreen extends Component {
                     </span>
                   )}
                   Others={props => (
-                    <Statistics.Item
-                      {...props}
-                      Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)}
-                    />
+                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)} />
                   )}
                 />
                 <Statistics
@@ -211,10 +208,7 @@ export class HomeScreen extends Component {
                     </Link>
                   )}
                   Others={props => (
-                    <Statistics.Item
-                      {...props}
-                      Name={({ name }) => (<Link to="/sources?facet=schema">{name}</Link>)}
-                    />
+                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
                 <Statistics
@@ -235,10 +229,7 @@ export class HomeScreen extends Component {
                     </Link>
                   )}
                   Others={props => (
-                    <Statistics.Item
-                      {...props}
-                      Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)}
-                    />
+                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
               </DualPane>
