@@ -86,7 +86,8 @@ def delete_collection_content(collection_id):
 def index_collection_documents(collection_id):
     from aleph.index import documents
     collection = Collection.by_id(collection_id)
-    documents.index_collection_documents(collection)
+    if collection is not None:
+        documents.index_collection_documents(collection)
     refresh_collection(collection_id)
 
 
