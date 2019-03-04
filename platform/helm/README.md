@@ -1,5 +1,7 @@
 # Usage
 
+This is work in progress, do not use yet.
+
 - Create DB instance
 - Add database user and database
 - Create K8s cluster
