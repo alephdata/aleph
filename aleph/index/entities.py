@@ -203,6 +203,13 @@ def index_operation(data):
     fps.update(names)
     data['fingerprints'] = [fp for fp in fps if fp is not None]
 
+    # Slight hack: a magic property in followthemoney that gets taken out
+    # of the properties and added straight to the index text.
+    texts = data.pop('texts', [])
+    texts.extend(data.get('properties', {}).pop('indexText', []))
+    texts.extend(fps)
+    data['texts'] = texts
+
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')
 

@@ -30,6 +30,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'company': lazy_gettext('Company registries'),
         'sanctions': lazy_gettext('Sanctions lists'),
         'procurement': lazy_gettext('Procurement'),
+        'finance': lazy_gettext('Financial records'),
         'grey': lazy_gettext('Grey literature'),
         'library': lazy_gettext('Document libraries'),
         'license': lazy_gettext('Licenses and concessions'),
