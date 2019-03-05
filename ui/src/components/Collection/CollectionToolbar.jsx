@@ -57,14 +57,16 @@ class CollectionToolbar extends Component {
     return (
       <Toolbar className="toolbar-preview">
         <div className="bp3-button-group">
-          <Link to={`/collections/${collection.id}`} className="bp3-button button-link">
-            <span className="bp3-icon-folder-open" />
-            <FormattedMessage id="collection.info.browse_button" defaultMessage="Browse" />
-          </Link>
           <Link to={`/search?filter:collection_id=${collection.id}`} className="bp3-button button-link">
             <span className="bp3-icon-search" />
             <FormattedMessage id="collection.info.search_button" defaultMessage="Search" />
           </Link>
+          {isPreview && (
+            <Link to={`/collections/${collection.id}`} className="bp3-button button-link">
+              <span className="bp3-icon-folder-open" />
+              <FormattedMessage id="collection.info.browse_button" defaultMessage="Browse" />
+            </Link>
+          )}
           {collection.writeable
             && (
             <React.Fragment>
