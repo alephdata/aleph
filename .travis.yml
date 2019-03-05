@@ -42,6 +42,9 @@ after_success:
       make TAG=develop build-full docker-push ;
       make TAG=$TRAVIS_COMMIT build-full docker-push ;
     fi
+  - if [[ $TRAVIS_BRANCH = "occrp/production" ]]; then
+      make TAG=occrp build-full docker-push ;
+    fi
   - if [[ $TRAVIS_TAG = $TRAVIS_BRANCH ]]; then
       make TAG=$TRAVIS_TAG build-full docker-push ;
       make TAG=$TRAVIS_COMMIT build-full docker-push ;
