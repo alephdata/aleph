@@ -16,7 +16,7 @@ import SearchBox from 'src/components/Navbar/SearchBox';
 import { translatableConnected } from 'src/util/enhancers';
 import DualPane from 'src/components/common/DualPane';
 import {
-  Category, Country, Schema, Count as CommonCount,
+  Category, Country, Schema, Count,
 } from 'src/components/common';
 
 import './HomeScreen.scss';
@@ -40,7 +40,6 @@ const messages = defineMessages({
 class Statistics extends PureComponent {
   static Item({
     Name = Statistics.Name,
-    Count = Statistics.Count,
     item: [name, count],
     ...rest
   }) {
@@ -56,8 +55,6 @@ class Statistics extends PureComponent {
     return <span>{name}</span>;
   }
 
-  static Count = CommonCount;
-
   static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
 
   render() {
@@ -68,7 +65,6 @@ class Statistics extends PureComponent {
       children = isLoading ? Statistics.Noop : Statistics.Item,
       Others = isLoading ? Statistics.Noop : Statistics.Item,
       Name = Statistics.Name,
-      Count = Statistics.Count,
     } = this.props;
     const list = isLoading ? Array.from(
       { length: 40 }, (i, ii) => ([ii]),
@@ -83,7 +79,6 @@ class Statistics extends PureComponent {
             key: item[0],
             item,
             Name,
-            Count,
           }))}
           {rest > 0 && Others({
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
