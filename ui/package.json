@@ -159,6 +159,7 @@
       "react/destructuring-assignment": "off",
       "import/no-extraneous-dependencies": "off",
       "import/no-named-as-default": "off",
+      "import/no-relative-parent-imports": "error",
       "import/prefer-default-export": "off"
     }
   },

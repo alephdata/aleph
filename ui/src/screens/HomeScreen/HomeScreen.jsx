@@ -7,16 +7,18 @@ import {
   defineMessages, FormattedMessage, FormattedNumber,
 } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { Button, ControlGroup, Intent } from '@blueprintjs/core';
+import {
+  Button, ControlGroup, Intent, Divider, Callout,
+} from '@blueprintjs/core';
 
 import { fetchStatistics } from 'src/actions/index';
-import { selectMetadata, selectStatistics } from 'src/selectors';
+import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import SearchBox from 'src/components/Navbar/SearchBox';
 import { translatableConnected } from 'src/util/enhancers';
-import DualPane from 'src/components/common/DualPane';
 import {
   Category, Country, Schema, Count,
+  DualPane, SignInCallout, Role,
 } from 'src/components/common';
 
 import './HomeScreen.scss';
@@ -84,9 +86,9 @@ class Statistics extends PureComponent {
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
             item: [<FormattedMessage
               id="home.statistics.other"
-              values={{ count: list.length - 15 }}
+              values={{ count: rest }}
               defaultMessage="other {count}"
-            />, null],
+            />],
           })}
         </ul>
       </div>
@@ -96,9 +98,28 @@ class Statistics extends PureComponent {
 
 const mapStateToProps = state => ({
   statistics: selectStatistics(state),
+  session: selectSession(state),
   metadata: selectMetadata(state),
 });
 export class HomeScreen extends Component {
+  static SubNavigation = function SubNavigation(props) {
+    const { session, statistics } = props;
+    if (session.loggedIn) {
+      return (
+        <React.Fragment>
+          <Callout className="SignInCallout bp3-icon-path-search bp3-intent-primary">
+            <FormattedMessage
+              id="search.callout_message.signedIn"
+              defaultMessage="here's all the security groups you are part of {roles}, click one of them to see the associated collections!"
+              values={{ roles: <Role.List roles={statistics.groups} /> }}
+            />
+          </Callout>
+        </React.Fragment>
+      );
+    }
+    return <SignInCallout />;
+  }
+
   constructor(props) {
     super(props);
     this.state = { value: '' };
@@ -134,9 +155,12 @@ export class HomeScreen extends Component {
   render() {
     const { intl, metadata, statistics = {} } = this.props;
     const samples = metadata.app.samples.join(', ');
-
     return (
       <Screen isHomepage title={intl.formatMessage(messages.title)}>
+        <HomeScreen.SubNavigation
+          session={this.props.session}
+          statistics={statistics}
+        />
         <section className="HomePage">
           <div className="outer-searchbox">
             <div className="inner-searchbox">
@@ -228,6 +252,7 @@ export class HomeScreen extends Component {
                   )}
                 />
               </DualPane>
+              <Divider />
             </div>
           </div>
         </section>
