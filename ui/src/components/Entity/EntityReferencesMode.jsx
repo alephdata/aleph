@@ -10,7 +10,7 @@ import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
 import { enhancer } from 'src/util/enhancers';
 import getPath from 'src/util/getPath';
-import Breadcrumbs from '../common/Breadcrumbs';
+import Breadcrumbs from 'src/components/common/Breadcrumbs';
 
 const messages = defineMessages({
   no_relationships: {
