@@ -14,7 +14,7 @@ class Count extends PureComponent {
     }
     return (
       <span className={c({ 'bp3-tag': !noTag }, 'bp3-round', 'bp3-intent-primary', 'count')}>
-        {full ? <FormattedNumber value={count} /> : numeral(count).format('0a')}
+        {full ? <FormattedNumber value={count || 0} /> : numeral(count).format('0a')}
       </span>
     );
   }

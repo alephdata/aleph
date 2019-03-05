@@ -81,7 +81,7 @@ class EntityReferencesMode extends React.Component {
     }
     const { property } = reference;
     const results = ensureArray(result.results);
-    const isSearchable = result.total > result.limit;
+    const isSearchable = reference.count > result.limit;
     const columns = model.getFeaturedProperties()
       .filter(prop => prop.name !== property.name && !prop.caption);
 
