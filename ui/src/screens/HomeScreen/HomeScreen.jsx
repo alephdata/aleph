@@ -86,9 +86,9 @@ class Statistics extends PureComponent {
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
             item: [<FormattedMessage
               id="home.statistics.other"
-              values={{ count: list.length - 15 }}
+              values={{ count: rest }}
               defaultMessage="other {count}"
-            />, null],
+            />],
           })}
         </ul>
       </div>
