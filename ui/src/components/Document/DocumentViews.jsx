@@ -67,10 +67,8 @@ class DocumentViews extends React.Component {
                 <Icon name="info" />
                 <FormattedMessage id="entity.info.info" defaultMessage="Info" />
               </React.Fragment>
-)}
-            panel={
-              <EntityInfoMode entity={document} />
-               }
+            )}
+            panel={<EntityInfoMode entity={document} />}
           />
         )}
         {hasViewMode && (
@@ -81,10 +79,8 @@ class DocumentViews extends React.Component {
                 <Icon name="showdocuments" />
                 <FormattedMessage id="entity.info.view" defaultMessage="View" />
               </React.Fragment>
-)}
-            panel={
-              <DocumentViewMode document={document} activeMode={activeMode} />
-             }
+            )}
+            panel={<DocumentViewMode document={document} activeMode={activeMode} />}
           />
         )}
         {hasTextMode && (
@@ -95,10 +91,8 @@ class DocumentViews extends React.Component {
                 <Icon name="plaintext" />
                 <FormattedMessage id="entity.info.text" defaultMessage="Text" />
               </React.Fragment>
-)}
-            panel={
-              <DocumentViewMode document={document} activeMode={activeMode} />
-               }
+            )}
+            panel={<DocumentViewMode document={document} activeMode={activeMode} />}
           />
         )}
         {hasBrowseMode && (
@@ -106,16 +100,14 @@ class DocumentViews extends React.Component {
             id="browse"
             disabled={childrenResult.total < 1}
             title={(
-              <TextLoading
-                loading={childrenResult.isLoading}
-              >
+              <TextLoading loading={childrenResult.isLoading}>
                 <React.Fragment>
                   <Icon name="folder" />
                   <FormattedMessage id="entity.info.browse" defaultMessage="Documents" />
                   <Count count={childrenResult.total} />
                 </React.Fragment>
               </TextLoading>
-)}
+              )}
             panel={
               <DocumentViewMode document={document} activeMode={activeMode} />
                }
@@ -130,7 +122,7 @@ class DocumentViews extends React.Component {
               <FormattedMessage id="entity.info.tags" defaultMessage="Tags" />
               <Count count={tags.total} />
             </TextLoading>
-)}
+          )}
           panel={
             <EntityTagsMode entity={document} />
              }

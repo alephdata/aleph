@@ -143,6 +143,8 @@ export default class Breadcrumbs extends Component {
 
   static Text = TextBreadcrumb;
 
+  static Search = BreadcrumbSearch;
+
   render() {
     const { collection, children } = this.props;
 

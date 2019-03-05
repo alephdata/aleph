@@ -36,7 +36,7 @@ function EntityInfoMode(props) {
         </span>
         <span className="value bp3-running-text">
           <span>
-            <ui className="info-sheet">
+            <ul className="info-sheet">
               <li>
                 <Link to={getPath(entity.collection.links.ui)}>
                   <b>{entity.collection.label}</b>
@@ -58,7 +58,7 @@ function EntityInfoMode(props) {
                   />
                 </span>
               </li>
-            </ui>
+            </ul>
           </span>
         </span>
       </li>

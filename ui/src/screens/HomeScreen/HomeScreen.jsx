@@ -15,7 +15,9 @@ import Screen from 'src/components/Screen/Screen';
 import SearchBox from 'src/components/Navbar/SearchBox';
 import { translatableConnected } from 'src/util/enhancers';
 import DualPane from 'src/components/common/DualPane';
-import { Category, Country, Schema } from 'src/components/common';
+import {
+  Category, Country, Schema, Count as CommonCount,
+} from 'src/components/common';
 
 import './HomeScreen.scss';
 
@@ -45,7 +47,7 @@ class Statistics extends PureComponent {
     return (
       <li {...rest}>
         <Name name={name} />
-        <Count count={count} />
+        <Count count={count} noTag full />
       </li>
     );
   }
@@ -54,9 +56,7 @@ class Statistics extends PureComponent {
     return <span>{name}</span>;
   }
 
-  static Count({ count }) {
-    return count && (<span><FormattedNumber value={count} /></span>);
-  }
+  static Count = CommonCount;
 
   static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
 
@@ -75,7 +75,7 @@ class Statistics extends PureComponent {
     ) : Object.entries(statistic);
     const rest = list.length - 15;
     return (
-      <div className="statistic bp3-callout ">
+      <div className="statistic bp3-callout">
         <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
         <ul className="statistic--list">
           {_.sortBy(list, [1]).splice(-15).reverse().map(item => children({

@@ -10,6 +10,7 @@ import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
 import { enhancer } from 'src/util/enhancers';
 import getPath from 'src/util/getPath';
+import Breadcrumbs from '../common/Breadcrumbs';
 
 const messages = defineMessages({
   no_relationships: {
@@ -20,6 +21,24 @@ const messages = defineMessages({
 
 
 class EntityReferencesMode extends React.Component {
+  static SearchBox = function SearchBox(props) {
+    return (
+      <div className="bp3-callout bp3-intent-primary">
+        <Breadcrumbs.Search
+          onSearch={(queryText) => {
+            const { history } = props;
+            history.push({
+              pathname: props.location.pathname,
+              search: props.query.setString('q', queryText).toLocation(),
+              hash: props.location.hash,
+            });
+          }}
+        />
+      </div>
+
+    );
+  }
+
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -62,11 +81,19 @@ class EntityReferencesMode extends React.Component {
     }
     const { property } = reference;
     const results = ensureArray(result.results);
+    const isSearchable = reference.count > result.limit;
     const columns = model.getFeaturedProperties()
       .filter(prop => prop.name !== property.name && !prop.caption);
 
     return (
       <section className="EntityReferencesTable">
+        {isSearchable && (
+          <EntityReferencesMode.SearchBox
+            query={this.props.query}
+            history={this.props.history}
+            location={this.props.location}
+          />
+        )}
         <table className="data-table references-data-table">
           <thead>
             <tr>
