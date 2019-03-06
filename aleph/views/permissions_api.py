@@ -54,13 +54,14 @@ def index(id):
 def update(id):
     collection = get_db_collection(id, request.authz.WRITE)
     for permission in parse_request(PermissionSchema, many=True):
-        role_id = permission.get('role', {}).get('id')
+        role_id = permission.get('role_id')
         role = Role.by_id(role_id)
         if not check_visible(role, request.authz):
             continue
+        if role.is_public:
+            permission['write'] = False
         if collection.casefile and role.is_public:
             permission['read'] = False
-            permission['write'] = False
 
         update_permission(role,
                           collection,
