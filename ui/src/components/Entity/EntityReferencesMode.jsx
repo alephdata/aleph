@@ -88,7 +88,7 @@ class EntityReferencesMode extends React.Component {
 
     return (
       <section className="EntityReferencesTable">
-        {!isSearchable && (
+        {isSearchable && (
           <EntityReferencesMode.SearchBox
             query={this.props.query}
             history={this.props.history}
