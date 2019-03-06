@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, request
+from flask import Blueprint, request, Response
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
 from followthemoney.types import registry
@@ -20,6 +20,8 @@ from aleph.views.cache import enable_cache
 from aleph.views.serializers import EntitySerializer
 from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
 
+from aleph.views.export import export_entities
+
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
 
@@ -31,6 +33,20 @@ def index():
     parser = SearchQueryParser(request.args, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
     return EntitySerializer.jsonify_result(result)
+
+
+@blueprint.route('/api/2/search/export/<any(csv, excel):format>', methods=['GET'])  # noqa
+@blueprint.route('/api/2/entities/export/<any(csv, excel):format>', methods=['GET'])  # noqa
+def export(format):
+    parser = SearchQueryParser(request.args, request.authz)
+    result = EntitiesQuery.handle(request, parser=parser)
+    results = result.to_dict(serializer=EntitySerializer)['results']
+    entities = [model.get_proxy(ent) for ent in results]
+    response = Response(
+        export_entities(entities, format), mimetype='application/zip'
+    )
+    response.headers['Content-Disposition'] = 'attachment; filename={}'.format('export.zip')  # noqa
+    return response
 
 
 @blueprint.route('/api/2/match', methods=['POST'])
