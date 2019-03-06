@@ -4,13 +4,16 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions/index';
-import { selectEntitiesResult, selectEntityReference, selectSchemata } from 'src/selectors';
-import { ErrorSection, Property, SectionLoading } from 'src/components/common';
+import {
+  selectEntitiesResult, selectEntityReference, selectSchemata,
+} from 'src/selectors';
+import {
+  ErrorSection, Property, SectionLoading, SearchBox,
+} from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
 import { enhancer } from 'src/util/enhancers';
 import getPath from 'src/util/getPath';
-import Breadcrumbs from 'src/components/common/Breadcrumbs';
 
 const messages = defineMessages({
   no_relationships: {
@@ -21,10 +24,10 @@ const messages = defineMessages({
 
 
 class EntityReferencesMode extends React.Component {
-  static SearchBox = function SearchBox(props) {
+  static Search = function Search(props) {
     return (
       <div className="bp3-callout bp3-intent-primary">
-        <Breadcrumbs.Search
+        <SearchBox
           searchText={props.query.getString('q')}
           onSearch={(queryText) => {
             const { history } = props;
@@ -89,7 +92,7 @@ class EntityReferencesMode extends React.Component {
     return (
       <section className="EntityReferencesTable">
         {isSearchable && (
-          <EntityReferencesMode.SearchBox
+          <EntityReferencesMode.Search
             query={this.props.query}
             history={this.props.history}
             location={this.props.location}

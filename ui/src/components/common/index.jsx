@@ -21,6 +21,7 @@ import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
 import { Icon } from './Icon';
+import SearchBox from './SearchBox';
 
 export {
   Breadcrumbs,
@@ -45,5 +46,6 @@ export {
   Count,
   Tag,
   URL,
+  SearchBox,
   Icon,
 };

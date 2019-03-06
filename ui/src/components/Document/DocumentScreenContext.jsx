@@ -14,7 +14,6 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectEntity, selectSchemata } from 'src/selectors';
-import { Entity } from 'src/followthemoney/Entity.ts';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 
 const messages = defineMessages({
@@ -73,9 +72,6 @@ class DocumentScreenContext extends Component {
         searchText={query.getString('q')}
       >
         <Breadcrumbs.Collection collection={document.collection} />
-        {document.parent && (
-          <Breadcrumbs.Entity entity={new Entity(schemata.getSchema(document.parent.schema), document.parent)} />
-        )}
         <Breadcrumbs.Entity entity={document} />
       </Breadcrumbs>
     );
