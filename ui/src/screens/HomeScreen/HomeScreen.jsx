@@ -105,13 +105,13 @@ const mapStateToProps = state => ({
 export class HomeScreen extends Component {
   static SubNavigation = function SubNavigation(props) {
     const { session, statistics } = props;
-    if (session.loggedIn) {
+    if (session.loggedIn && statistics.groups && statistics.groups.length) {
       return (
         <React.Fragment>
           <Callout className="SignInCallout bp3-icon-path-search bp3-intent-primary">
             <FormattedMessage
               id="search.callout_message.signedIn"
-              defaultMessage="You are part of {roles} - click to see the associated collections."
+              defaultMessage="You are part of {roles} - click to see the associated sources."
               values={{ roles: <Role.List roles={statistics.groups} /> }}
             />
           </Callout>

@@ -45,7 +45,6 @@ class RoleLabel extends Component {
         { icon && (
           <React.Fragment>
             <Icon name="person" />
-            {' '}
           </React.Fragment>
         )}
         { long ? role.label : role.name }
