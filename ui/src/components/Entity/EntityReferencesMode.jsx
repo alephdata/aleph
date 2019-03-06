@@ -25,6 +25,7 @@ class EntityReferencesMode extends React.Component {
     return (
       <div className="bp3-callout bp3-intent-primary">
         <Breadcrumbs.Search
+          searchText={props.query.getString('q')}
           onSearch={(queryText) => {
             const { history } = props;
             history.push({
@@ -87,7 +88,7 @@ class EntityReferencesMode extends React.Component {
 
     return (
       <section className="EntityReferencesTable">
-        {isSearchable && (
+        {!isSearchable && (
           <EntityReferencesMode.SearchBox
             query={this.props.query}
             history={this.props.history}
