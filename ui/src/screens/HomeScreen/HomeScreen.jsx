@@ -101,6 +101,7 @@ const mapStateToProps = state => ({
   session: selectSession(state),
   metadata: selectMetadata(state),
 });
+
 export class HomeScreen extends Component {
   static SubNavigation = function SubNavigation(props) {
     const { session, statistics } = props;
@@ -110,7 +111,7 @@ export class HomeScreen extends Component {
           <Callout className="SignInCallout bp3-icon-path-search bp3-intent-primary">
             <FormattedMessage
               id="search.callout_message.signedIn"
-              defaultMessage="here's all the security groups you are part of {roles}, click one of them to see the associated collections!"
+              defaultMessage="You are part of {roles} - click to see the associated collections."
               values={{ roles: <Role.List roles={statistics.groups} /> }}
             />
           </Callout>
@@ -157,10 +158,7 @@ export class HomeScreen extends Component {
     const samples = metadata.app.samples.join(', ');
     return (
       <Screen isHomepage title={intl.formatMessage(messages.title)}>
-        <HomeScreen.SubNavigation
-          session={this.props.session}
-          statistics={statistics}
-        />
+        <HomeScreen.SubNavigation session={this.props.session} statistics={statistics} />
         <section className="HomePage">
           <div className="outer-searchbox">
             <div className="inner-searchbox">
