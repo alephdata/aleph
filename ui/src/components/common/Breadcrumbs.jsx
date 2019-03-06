@@ -1,80 +1,14 @@
 import React, { PureComponent, Component } from 'react';
 import { connect } from 'react-redux';
-import { defineMessages, injectIntl } from 'react-intl';
-import c from 'classnames';
-
-import { Collection, Entity } from 'src/components/common';
-import './Breadcrumbs.scss';
 import { selectEntity } from 'src/selectors';
 import { fetchEntity } from 'src/actions';
+import { Collection, Entity } from 'src/components/common';
+import SearchBox from './SearchBox';
+import './Breadcrumbs.scss';
 
-const messages = defineMessages({
-  search_placeholder: {
-    id: 'search.placeholder',
-    defaultMessage: 'Search…',
-  },
-});
-
-
-class BreadcrumbSearchPure extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.onSearchChange = this.onSearchChange.bind(this);
-    this.onSubmitSearch = this.onSubmitSearch.bind(this);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.searchText !== prevState.searchText) {
-      return {
-        searchText: nextProps.searchText,
-        queryText: nextProps.searchText,
-      };
-    }
-    return {};
-  }
-
-  onSearchChange(e) {
-    const queryText = (e.target.value && e.target.value.length > 0) ? e.target.value : null;
-    this.setState({ queryText });
-  }
-
-  onSubmitSearch(event) {
-    const { onSearch } = this.props;
-    const { queryText } = this.state;
-    event.preventDefault();
-    if (onSearch) {
-      onSearch(queryText);
-    }
-  }
-
-  render() {
-    const { intl, searchPlaceholder } = this.props;
-    const { queryText } = this.state;
-    const placeholder = searchPlaceholder || intl.formatMessage(messages.search_placeholder);
-    if (!this.props.onSearch) {
-      return null;
-    }
-    return (
-      <form onSubmit={this.onSubmitSearch} className="BreadcrumbSearch search-box">
-        <div className={c('bp3-input-group')}>
-          <span className="bp3-icon bp3-icon-search" />
-          <input
-            className="bp3-input"
-            type="search"
-            dir="auto"
-            placeholder={placeholder}
-            onChange={this.onSearchChange}
-            value={queryText || ''}
-          />
-        </div>
-      </form>
-    );
-  }
+function BreadcrumbSearch() {
+  return <SearchBox className="BreadcrumbSearch" />;
 }
-// FIXME: fin out proper way for HOC's
-const BreadcrumbSearch = injectIntl(BreadcrumbSearchPure);
-
 
 class CollectionBreadcrumb extends PureComponent {
   render() {
