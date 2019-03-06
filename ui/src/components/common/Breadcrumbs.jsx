@@ -6,8 +6,13 @@ import { Collection, Entity } from 'src/components/common';
 import SearchBox from './SearchBox';
 import './Breadcrumbs.scss';
 
-function BreadcrumbSearch() {
-  return <SearchBox className="BreadcrumbSearch" />;
+function BreadcrumbSearch(props) {
+  return (
+    <SearchBox
+      className="BreadcrumbSearch"
+      {...props}
+    />
+  );
 }
 
 class CollectionBreadcrumb extends PureComponent {
