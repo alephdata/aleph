@@ -196,6 +196,8 @@ class EntitySerializer(Serializer):
         obj['collection'] = self.resolve(Collection, collection_id,
                                          CollectionSerializer)
         schema = model.get(obj.get('schema'))
+        if schema is None:
+            return None
         obj['schemata'] = schema.names
         properties = obj.get('properties', {})
         for prop in schema.properties.values():
