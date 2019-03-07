@@ -7,5 +7,5 @@ export const endpoint = axios.create({
   baseURL: apiEndpoint,
   headers: {},
   // Use non-bracket array params format
-  paramsSerializer: queryString.stringify
+  paramsSerializer: queryString.stringify,
 });

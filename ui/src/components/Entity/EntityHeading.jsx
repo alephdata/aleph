@@ -1,27 +1,22 @@
 import React from 'react';
-import {connect} from 'react-redux';
 
-import {Entity, Schema} from 'src/components/common';
-import {selectSchemata} from 'src/selectors';
+import { Entity, Schema } from 'src/components/common';
 
 
-class EntityHeading extends React.Component {
+class EntityHeading extends React.PureComponent {
   render() {
-    const { entity, schema } = this.props;
-    if (schema === undefined) {  // entity hasn't loaded.
-      return null;
-    }
-    const isThing = schema.extends('Thing');
+    const { entity } = this.props;
+    const isThing = entity.schema.isThing();
 
     return (
       <React.Fragment>
         <div className="pane-heading">
           <span>
-            <Schema.Label schema={entity.schema} icon={true} />
+            <Schema.Label schema={entity.schema} icon />
           </span>
           <h1>
             {isThing && (
-              <Entity.Label entity={entity} addClass={true}/>
+              <Entity.Label entity={entity} addClass />
             )}
           </h1>
         </div>
@@ -30,12 +25,5 @@ class EntityHeading extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { entity } = ownProps;
-  return {
-    schema: selectSchemata(state)[entity.schema]
-  };
-};
 
-EntityHeading = connect(mapStateToProps, {})(EntityHeading);
 export default EntityHeading;

@@ -9,15 +9,21 @@ import { selectSession, selectMetadata } from 'src/selectors';
 import './SignInCallout.scss';
 
 
-class SignInCallout extends React.Component {
+const mapStateToProps = state => ({
+  metadata: selectMetadata(state),
+  session: selectSession(state),
+});
+
+
+export class SignInCallout extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {isOpen: false};
+    this.state = { isOpen: false };
     this.onSignIn = this.onSignIn.bind(this);
   }
 
   onSignIn() {
-    this.setState({isOpen: !this.state.isOpen})
+    this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
   }
 
   render() {
@@ -30,24 +36,16 @@ class SignInCallout extends React.Component {
 
     return (
       <React.Fragment>
-        <AuthenticationDialog auth={metadata.auth} isOpen={isOpen} toggleDialog={this.onSignIn}/>
+        <AuthenticationDialog auth={metadata.auth} isOpen={isOpen} toggleDialog={this.onSignIn} />
         <Callout onClick={this.onSignIn} className="SignInCallout clickable bp3-icon-info-sign bp3-intent-warning">
           <FormattedMessage
             id="search.callout_message"
-            defaultMessage="Some sources are hidden from anonymous users. Please sign in to see all results you’re authorised to access!"
-            />
+            defaultMessage="Some sources are hidden from anonymous users. Sign in to see all results you are authorised to access."
+          />
         </Callout>
       </React.Fragment>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    metadata: selectMetadata(state),
-    session: selectSession(state)
-  };
-};
-
-SignInCallout = connect(mapStateToProps)(SignInCallout);
-export default SignInCallout;
+export default connect(mapStateToProps)(SignInCallout);

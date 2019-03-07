@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from normality import stringify
 from sqlalchemy import or_, not_, func
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -34,9 +35,6 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
     #: Signature maximum age, defaults to 1 day
     SIGNATURE_MAX_AGE = 60 * 60 * 24
-
-    #: Password minimum length
-    PASSWORD_MIN_LENGTH = 6
 
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
@@ -92,6 +90,22 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         db.session.add(role)
         db.session.add(self)
         self.updated_at = datetime.utcnow()
+
+    def to_dict(self):
+        data = self.to_dict_dates()
+        data.update({
+            'id': stringify(self.id),
+            'type': self.type,
+            'name': self.name,
+            'label': self.label,
+            'email': self.email,
+            'api_key': self.api_key,
+            'is_admin': self.is_admin,
+            'is_muted': self.is_muted,
+            'has_password': self.has_password,
+            # 'notified_at': self.notified_at
+        })
+        return data
 
     @classmethod
     def by_foreign_id(cls, foreign_id):

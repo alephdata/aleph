@@ -1,6 +1,6 @@
 import { defineMessages } from 'react-intl';
 
-import {showErrorToast, showSuccessToast} from 'src/app/toast';
+import { showErrorToast, showSuccessToast } from 'src/app/toast';
 
 const messages = defineMessages({
   bad_request: {
@@ -31,11 +31,13 @@ const defaultStatusMap = {
   500: messages.server_error,
 };
 
-const xhrToastFn = (showToastFn, fallbackMessageKey) => (response, intl, statusMap={}) => {
+const xhrToastFn = (showToastFn, fallbackMessageKey) => (response, intl, statusMap = {}) => {
   if (response && response.data && response.data.message) {
     showToastFn(response.data.message);
   } else {
-    const messageKey = response && (statusMap[response.status] || defaultStatusMap[response.status]);
+    const messageKey = response && (
+      statusMap[response.status] || defaultStatusMap[response.status]
+    );
     showToastFn(intl.formatMessage(messageKey || fallbackMessageKey));
   }
 };

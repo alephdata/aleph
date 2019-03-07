@@ -5,6 +5,7 @@ import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
 
 import './HtmlViewer.scss';
+/* eslint-disable */
 
 class HtmlViewer extends Component {
   render() {
@@ -16,7 +17,7 @@ class HtmlViewer extends Component {
       <React.Fragment>
         <div className="outer">
           <div className="inner HtmlViewer">
-            <span dangerouslySetInnerHTML={{__html: content.html}} />
+            <span dangerouslySetInnerHTML={{ __html: content.html }} />
           </div>
         </div>
       </React.Fragment>
@@ -28,9 +29,9 @@ class HtmlViewer extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { document } = ownProps;
   return {
-    content: selectDocumentContent(state, document.id)
+    content: selectDocumentContent(state, document.id),
   };
-}
+};
 
 HtmlViewer = connect(mapStateToProps)(HtmlViewer);
 export default HtmlViewer;

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: search-extract-entities
-  namespace: aleph
+  name: extract-entities
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: search-extract-entities
+    app: extract-entities
 spec:
   selector:
-    app: search-extract-entities
+    app: extract-entities
   ports:
     - port: 50000
       targetPort: 50000
@@ -17,15 +17,15 @@ spec:
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: search-extract-entities
-  namespace: aleph
+  name: extract-entities
+  namespace: {{ .Values.global.namespace }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: search-extract-entities
-  minReplicas: {{ .Values.extractentities.minReplicas }}
-  maxReplicas: {{ .Values.extractentities.maxReplicas }}
+    name: extract-entities
+  minReplicas: {{ .Values.extractEntities.minReplicas }}
+  maxReplicas: {{ .Values.extractEntities.maxReplicas }}
   metrics:
   - type: Resource
     resource:
@@ -35,15 +35,17 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: search-extract-entities
-  namespace: aleph
+  name: extract-entities
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: search-extract-entities
+    app: extract-entities
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: search-extract-entities
+      app: extract-entities
   strategy:
     rollingUpdate:
       maxSurge: 2
@@ -52,11 +54,11 @@ spec:
   template:
     metadata:
       labels:
-        app: search-extract-entities
+        app: extract-entities
     spec:
       restartPolicy: Always
       containers:
-        - name: search-extract-entities
+        - name: extract-entities
           image: alephdata/aleph-extract-entities:{{ .Values.global.imagetag }}
           imagePullPolicy: Always
           ports:
@@ -64,8 +66,8 @@ spec:
               name: grpc-api
           resources:
             requests:
-              cpu: {{ .Values.extractentities.resources.requests.cpu }}
-              memory: {{ .Values.extractentities.resources.requests.memory }}
+              cpu: {{ .Values.extractEntities.resources.requests.cpu }}
+              memory: {{ .Values.extractEntities.resources.requests.memory }}
             limits:
-              cpu: {{ .Values.extractentities.resources.limits.memory }}
-              memory: {{ .Values.extractentities.resources.limits.memory }}
+              cpu: {{ .Values.extractEntities.resources.limits.memory }}
+              memory: {{ .Values.extractEntities.resources.limits.memory }}

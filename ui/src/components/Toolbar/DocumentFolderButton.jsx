@@ -2,20 +2,20 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button } from '@blueprintjs/core';
 
-import DocumentFolderDialog from "src/dialogs/DocumentFolderDialog/DocumentFolderDialog";
+import DocumentFolderDialog from 'src/dialogs/DocumentFolderDialog/DocumentFolderDialog';
 
 class DocumentFolderButton extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      isFolderOpen: false
+      isFolderOpen: false,
     };
 
     this.toggleFolder = this.toggleFolder.bind(this);
   }
 
   toggleFolder() {
-    this.setState({isFolderOpen: !this.state.isFolderOpen})
+    this.setState(({ isFolderOpen }) => ({ isFolderOpen: !isFolderOpen }));
   }
 
   render() {
@@ -29,12 +29,14 @@ class DocumentFolderButton extends React.Component {
     return (
       <React.Fragment>
         <Button onClick={this.toggleFolder} icon="folder-new">
-          <FormattedMessage id="document.folder.button" defaultMessage="New folder"/>
+          <FormattedMessage id="document.folder.button" defaultMessage="New folder" />
         </Button>
-        <DocumentFolderDialog collection={collection}
-                              parent={parent}
-                              isOpen={this.state.isFolderOpen}
-                              toggleDialog={this.toggleFolder} />
+        <DocumentFolderDialog
+          collection={collection}
+          parent={parent}
+          isOpen={this.state.isFolderOpen}
+          toggleDialog={this.toggleFolder}
+        />
       </React.Fragment>
     );
   }

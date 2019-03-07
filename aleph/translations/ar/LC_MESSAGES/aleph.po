@@ -1,165 +1,133 @@
 # Translations template for PROJECT.
-# Copyright (C) 2018 ORGANIZATION
+# Copyright (C) 2019 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-10-31 09:33+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2019-03-07 15:42+0100\n"
+"PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.6.0\n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: aleph/settings.py:48
+#: aleph/settings.py:25
 msgid "Aleph"
 msgstr ""
 
-#: aleph/settings.py:58
+#: aleph/settings.py:35
 msgid "TeliaSonera"
 msgstr ""
 
-#: aleph/settings.py:58
+#: aleph/settings.py:35
 msgid "Vladimir Putin"
 msgstr ""
 
-#: aleph/logic/xref.py:125
-msgid "Score"
-msgstr ""
-
-#: aleph/logic/xref.py:126
-msgid "EntityName"
-msgstr ""
-
-#: aleph/logic/xref.py:127
-msgid "EntityDate"
-msgstr ""
-
-#: aleph/logic/xref.py:128
-msgid "EntityCountries"
-msgstr ""
-
-#: aleph/logic/xref.py:129
-msgid "MatchCollection"
-msgstr ""
-
-#: aleph/logic/xref.py:130
-msgid "MatchName"
-msgstr ""
-
-#: aleph/logic/xref.py:131
-msgid "MatchDate"
-msgstr ""
-
-#: aleph/logic/xref.py:132
-msgid "MatchCountries"
-msgstr ""
-
-#: aleph/logic/xref.py:133
-msgid "EntityLink"
-msgstr ""
-
-#: aleph/logic/xref.py:134
-msgid "MatchLink"
-msgstr ""
-
-#: aleph/model/collection.py:24
-msgid "News archives"
+#: aleph/logic/roles.py:42
+msgid "Registration"
 msgstr ""
 
 #: aleph/model/collection.py:25
-msgid "Leaks"
+msgid "News archives"
 msgstr ""
 
 #: aleph/model/collection.py:26
-msgid "Land registry"
+msgid "Leaks"
 msgstr ""
 
 #: aleph/model/collection.py:27
-msgid "Gazettes"
+msgid "Land registry"
 msgstr ""
 
 #: aleph/model/collection.py:28
-msgid "Court archives"
+msgid "Gazettes"
 msgstr ""
 
 #: aleph/model/collection.py:29
-msgid "Company registries"
+msgid "Court archives"
 msgstr ""
 
 #: aleph/model/collection.py:30
-msgid "Sanctions lists"
+msgid "Company registries"
 msgstr ""
 
 #: aleph/model/collection.py:31
-msgid "Procurement"
+msgid "Sanctions lists"
 msgstr ""
 
 #: aleph/model/collection.py:32
-msgid "Grey literature"
+msgid "Procurement"
 msgstr ""
 
 #: aleph/model/collection.py:33
-msgid "Document libraries"
+msgid "Financial records"
 msgstr ""
 
 #: aleph/model/collection.py:34
-msgid "Licenses and concessions"
+msgid "Grey literature"
 msgstr ""
 
 #: aleph/model/collection.py:35
-msgid "Regulatory filings"
+msgid "Document libraries"
 msgstr ""
 
 #: aleph/model/collection.py:36
-msgid "Persons of interest"
+msgid "Licenses and concessions"
 msgstr ""
 
 #: aleph/model/collection.py:37
-msgid "Customs declarations"
+msgid "Regulatory filings"
 msgstr ""
 
 #: aleph/model/collection.py:38
-msgid "Population census"
+msgid "Persons of interest"
 msgstr ""
 
 #: aleph/model/collection.py:39
-msgid "Air and maritime registers"
+msgid "Customs declarations"
 msgstr ""
 
 #: aleph/model/collection.py:40
+msgid "Population census"
+msgstr ""
+
+#: aleph/model/collection.py:41
+msgid "Air and maritime registers"
+msgstr ""
+
+#: aleph/model/collection.py:42
 msgid "Other material"
 msgstr ""
 
-#: aleph/model/event.py:40
-msgid "{{actor}} created {{collection}}."
+#: aleph/model/event.py:48
+msgid "{{actor}} created {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:46
-msgid "{{actor}} changed the settings of {{collection}}."
+#: aleph/model/event.py:55
+msgid "{{actor}} changed the settings of {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:52
-msgid "{{actor}} added {{document}} to {{collection}}."
+#: aleph/model/event.py:62
+msgid "{{actor}} added {{document}} to {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:61
-msgid "{{entity}} matches your alert for {{alert}}."
+#: aleph/model/event.py:72
+msgid "{{entity}} matches your alert for {{alert}}"
 msgstr ""
 
-#: aleph/model/event.py:71
-msgid "{{actor}} gave {{role}} access to {{collection}}."
+#: aleph/model/event.py:83
+msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:86
-msgid "{{actor}} removed access to {{collection}} from {{role}}."
+#: aleph/model/event.py:100
+msgid "{{actor}} removed access to {{collection}} from {{role}}"
 msgstr ""
 
 #: aleph/templates/email/layout.html:45
@@ -174,7 +142,7 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>.\n"
+"          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>\n"
 "        "
 msgstr ""
 
@@ -202,38 +170,42 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:83
+#: aleph/views/base_api.py:131
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:91
+#: aleph/views/base_api.py:144
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:100
+#: aleph/views/base_api.py:153
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:116
+#: aleph/views/base_api.py:162
+msgid "Internal server error."
+msgstr ""
+
+#: aleph/views/base_api.py:179
 msgid "Access token has expired."
 msgstr ""
 
-#: aleph/views/roles_api.py:31
+#: aleph/views/roles_api.py:27
 msgid "prefix filter is too short"
 msgstr ""
 
-#: aleph/views/roles_api.py:48
-msgid "Registration"
-msgstr ""
-
-#: aleph/views/roles_api.py:53
+#: aleph/views/roles_api.py:43
 msgid "To proceed, please check your email."
 msgstr ""
 
-#: aleph/views/roles_api.py:68
+#: aleph/views/roles_api.py:58
 msgid "Invalid code"
 msgstr ""
 
-#: aleph/views/roles_api.py:75
+#: aleph/views/roles_api.py:65
 msgid "Email is already registered"
+msgstr ""
+
+#: aleph/views/util.py:47
+msgid "Error during data validation"
 msgstr ""

@@ -1,18 +1,18 @@
 import React, { PureComponent } from 'react';
-import numeral from 'numeral';
 
-
+import { Numeric } from 'src/components/common';
 
 class Count extends PureComponent {
   render() {
-    const { count } = this.props;
+    const { count, full = false } = this.props;
 
     if (count === undefined || count === 0) {
       return null;
     }
+
     return (
       <span className="bp3-tag bp3-round bp3-intent-primary">
-        {numeral(count).format('0a')}
+        <Numeric num={count} abbr={!full} />
       </span>
     );
   }

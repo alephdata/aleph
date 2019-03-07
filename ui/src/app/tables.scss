@@ -75,8 +75,13 @@ table {
     max-width: unset;
   }
 
-  th.numeric, td.numeric {
+  // th.numeric, td.numeric, th.number, td.number {
+  td.numeric, td.number {
     text-align: right;
+    white-space: nowrap;
+    overflow: visible;
+    max-width: unset;
+    text-overflow: unset;
 
     // Float on the right, so that numbers overflow to the left.
     // (FormattedNumber creates a <span>)
@@ -156,24 +161,18 @@ ul.info-sheet {
 
 ul.info-rank li {
   flex-flow: row nowrap;
+  width: 100%;
 
   // Ensure things stay on a single line, truncating the key if needed.
-  .key {
+  .category {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .value {
+  .count {
     white-space: nowrap;
     overflow: visible;
-  }
-
-  .key i { // the icon, if any
-    padding-right: $aleph-grid-size * 2;
-  }
-
-  .value {
     color: $aleph-greyed-text;
     margin-left: auto; // = align right
   }

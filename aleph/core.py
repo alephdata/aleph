@@ -11,14 +11,14 @@ from flask_mail import Mail
 from flask_cors import CORS
 from flask_babel import Babel
 from kombu import Queue
-from celery import Celery
+from celery import Celery, Task
 from celery.schedules import crontab
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
-from redis import ConnectionPool, Redis
 from urlnormalizer import query_string
-from fakeredis import FakeRedis
 import storagelayer
+from servicelayer.cache import get_redis
+from servicelayer.extensions import get_extensions
 from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace import config_integration
 from opencensus.trace.exporters import stackdriver_exporter
@@ -26,9 +26,7 @@ from opencensus.trace.samplers import probability
 from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
-from aleph.util import (
-    SessionTask, get_extensions, TracingTransport, setup_stackdriver_logging
-)
+from aleph.tracing import TracingTransport, setup_stackdriver_logging
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -37,6 +35,14 @@ log = logging.getLogger(__name__)
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
+
+
+class SessionTask(Task):
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        db.session.remove()
+
+
 celery = Celery('aleph', task_cls=SessionTask)
 babel = Babel()
 
@@ -63,7 +69,7 @@ def create_app(config={}):
         task_always_eager=settings.EAGER,
         task_eager_propagates=True,
         task_ignore_result=True,
-        task_acks_late=False,
+        task_acks_late=True,
         task_queues=(queue,),
         task_default_queue=settings.QUEUE_NAME,
         task_default_routing_key=settings.QUEUE_ROUTING_KEY,
@@ -155,18 +161,9 @@ def get_archive():
     return settings._aleph_archive
 
 
-def get_redis():
-    if settings.REDIS_URL is None:
-        return FakeRedis()
-    if not hasattr(settings, '_redis_pool'):
-        settings._redis_pool = ConnectionPool.from_url(settings.REDIS_URL)
-    return Redis(connection_pool=settings._redis_pool)
-
-
 def get_cache():
     if not hasattr(settings, '_cache') or settings._cache is None:
-        settings._cache = Cache(get_redis(),
-                                prefix=settings.APP_NAME)
+        settings._cache = Cache(get_redis(), prefix=settings.APP_NAME)
     return settings._cache
 
 
@@ -182,27 +179,30 @@ def url_for(*a, **kw):
         kw['_external'] = False
         query = kw.pop('_query', None)
         authorize = kw.pop('_authorize', False)
+        relative = kw.pop('_relative', False)
         path = flask_url_for(*a, **kw)
         if authorize is True:
             token = request.authz.to_token(scope=path)
             query = list(ensure_list(query))
             query.append(('api_key', token))
-        return url_external(path, query)
+        return url_external(path, query, relative=relative)
     except RuntimeError:
         return None
 
 
-def url_external(path, query):
+def url_external(path, query, relative=False):
     """Generate external URLs with HTTPS (if configured)."""
     try:
+        if query is not None:
+            path = path + query_string(query)
+        if relative:
+            return path
+
         api_url = request.url_root
         if settings.URL_SCHEME is not None:
             parsed = urlparse(api_url)
             parsed = parsed._replace(scheme=settings.URL_SCHEME)
             api_url = parsed.geturl()
-
-        if query is not None:
-            path = path + query_string(query)
         return urljoin(api_url, path)
     except RuntimeError:
         return None

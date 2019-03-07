@@ -8,8 +8,8 @@
     {% endtrans %}
   </p>
   <ul>
-      {% for notification in notifications %}
-        <li>{{notification | safe}}</li>
+      {% for notification in notifications -%}
+        <li>{{notification.html | safe}}</li>
       {% endfor %}
   </ul>
   <p>

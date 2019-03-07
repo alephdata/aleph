@@ -2,7 +2,9 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tag as TagWidget } from '@blueprintjs/core';
 
-import { Schema, Tag, Country, Language, Category, Collection, Entity } from 'src/components/common';
+import {
+  Schema, Tag, Country, Language, Category, Collection, Entity,
+} from 'src/components/common';
 
 import './QueryFilterTag.scss';
 
@@ -17,12 +19,12 @@ class QueryFilterTag extends PureComponent {
     const { filter, value, remove } = this.props;
     remove(filter, value);
   }
-  
-  label(filter, value) {
+
+  label = (filter, value) => {
     switch (filter) {
       case 'schema':
         return (
-          <Schema.Label schema={value} icon={true} plural={true} />
+          <Schema.Smart.Label schema={value} icon plural />
         );
       case 'countries':
         return (
@@ -38,11 +40,13 @@ class QueryFilterTag extends PureComponent {
         );
       case 'collection_id':
         return (
-          <Collection.Load id={value} renderWhenLoading={'…'}>{collection => (
-            <Collection.Link collection={collection} />
-          )}</Collection.Load>
+          <Collection.Load id={value} renderWhenLoading="…">
+            {collection => (
+              <Collection.Link collection={collection} />
+            )}
+          </Collection.Load>
         );
-      case 'team.id':
+      case 'team_id':
       case 'creator_id':
       case 'uploader_id':
         return (
@@ -50,28 +54,34 @@ class QueryFilterTag extends PureComponent {
         );
       case 'ancestors':
       case 'parent.id':
-        return (       
-          <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
-            <React.Fragment>
-              <FormattedMessage id="search.filterTag.ancestors" defaultMessage="in:" />
-              <Entity.Label entity={entity} icon />
-            </React.Fragment>
-          )}</Entity.Load>
+        return (
+          <Entity.Load id={value} renderWhenLoading="…">
+            {entity => (
+              <React.Fragment>
+                <FormattedMessage id="search.filterTag.ancestors" defaultMessage="in:" />
+                <Entity.Label entity={entity} icon />
+              </React.Fragment>
+            )}
+          </Entity.Load>
         );
       case 'exclude':
         return (
-          <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
-            <React.Fragment>
-              <FormattedMessage id="search.filterTag.exclude" defaultMessage="not:" />
-              <Entity.Label entity={entity} icon />
-            </React.Fragment>
-          )}</Entity.Load>
+          <Entity.Load id={value} renderWhenLoading="…">
+            {entity => (
+              <React.Fragment>
+                <FormattedMessage id="search.filterTag.exclude" defaultMessage="not:" />
+                <Entity.Label entity={entity} icon />
+              </React.Fragment>
+            )}
+          </Entity.Load>
         );
       case 'entities':
         return (
-          <Entity.Load id={value} renderWhenLoading={'…'}>{entity => (
-            <Entity.Label entity={entity} icon />
-          )}</Entity.Load>
+          <Entity.Load id={value} renderWhenLoading="…">
+            {entity => (
+              <Entity.Label entity={entity} icon />
+            )}
+          </Entity.Load>
         );
       case 'names':
       case 'identifiers':
@@ -91,11 +101,14 @@ class QueryFilterTag extends PureComponent {
 
   render() {
     const { filter, value } = this.props;
+
     return (
-        <TagWidget className="bp3-large bp3-intent-primary QueryFilterTag"
-                   onRemove={this.onRemove}>
-          {this.label(filter, value)}
-        </TagWidget>
+      <TagWidget
+        className="bp3-large bp3-intent-primary QueryFilterTag"
+        onRemove={this.onRemove}
+      >
+        {this.label(filter, value)}
+      </TagWidget>
     );
   }
 }

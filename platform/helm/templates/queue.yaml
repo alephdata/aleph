@@ -1,13 +1,13 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: search-queue
-  namespace: aleph
+  name: task-queue
+  namespace: {{ .Values.global.namespace }}
   labels:
-    app: search-queue
+    app: task-queue
 spec:
   selector:
-    app: search-queue
+    app: task-queue
   ports:
     - name: epmd
       port: 4369
@@ -19,18 +19,20 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: search-queue
-  namespace: aleph
+  name: task-queue
+  namespace: {{ .Values.global.namespace }}
+  annotations:
+    date/deploy-date: {{ now | quote }}
 spec:
   selector:
     matchLabels:
-      app: search-queue
-  serviceName: "search-queue"
+      app: task-queue
+  serviceName: task-queue
   replicas: 1
   template:
     metadata:
       labels:
-        app: search-queue
+        app: task-queue
     spec:
       terminationGracePeriodSeconds: 10
       affinity: # Ask k8s to preferr that pods are placed across zones if available
@@ -46,7 +48,7 @@ spec:
                   - {{ .Values.global.reponame }}
               topologyKey: failure-domain.beta.kubernetes.io/zone
       containers:
-        - name: search-queue
+        - name: task-queue
           image: rabbitmq:management-alpine
           ports:
             - name: epmd-port
@@ -64,18 +66,20 @@ spec:
               memory: {{ .Values.queue.resources.requests.memory }}
           env: 
             - name: RABBITMQ_NODENAME
-              value: "rabbit@search-queue"
-          #   - name: POD_IP
-          #     valueFrom:
-          #       fieldRef:
-          #         fieldPath: status.podIP
+              value: "rabbit@task-queue"
           volumeMounts:
             - name: data
               mountPath: /var/lib/rabbitmq
   volumeClaimTemplates:
     - metadata:
         name: data
+        namespace: {{ .Values.global.namespace }}
       spec:
+        {{- if (.Values.storage.queue) and (.Values.storage.queue.pvc) }}
+        selector:
+          matchLabels:
+            service: task-queue
+        {{- end }}
         accessModes:
           - ReadWriteOnce
         storageClassName: ssd

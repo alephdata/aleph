@@ -5,16 +5,12 @@ from itsdangerous import BadSignature
 
 from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.model import Role, Permission, Audit
-from aleph.logic.roles import check_visible, check_editable, update_role
-from aleph.logic.permissions import update_permission
-from aleph.logic.collections import update_collection
-from aleph.notify import notify_role
-from aleph.logic.audit import record_audit
-from aleph.serializers.roles import RoleSchema, PermissionSchema
-from aleph.serializers.roles import RoleCodeCreateSchema, RoleCreateSchema
-from aleph.views.util import require, get_db_collection, jsonify, parse_request
-from aleph.views.util import obj_or_404, serialize_data
+from aleph.model import Role
+from aleph.logic.roles import check_editable, challenge_role, update_role
+from aleph.views.forms import RoleSchema
+from aleph.views.forms import RoleCodeCreateSchema, RoleCreateSchema
+from aleph.views.serializers import RoleSerializer
+from aleph.views.util import require, jsonify, parse_request, obj_or_404
 
 blueprint = Blueprint('roles_api', __name__)
 log = logging.getLogger(__name__)
@@ -34,20 +30,14 @@ def suggest():
         })
     # this only returns users, not groups
     q = Role.by_prefix(parser.prefix, exclude=parser.exclude)
-    result = DatabaseQueryResult(request, q, parser=parser, schema=RoleSchema)
-    return jsonify(result)
+    result = DatabaseQueryResult(request, q, parser=parser)
+    return RoleSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/roles/code', methods=['POST'])
 def create_code():
     data = parse_request(RoleCodeCreateSchema)
-    signature = Role.SIGNATURE.dumps(data['email'])
-    url = '{}activate/{}'.format(settings.APP_UI_URL, signature)
-    role = Role(email=data['email'], name='Visitor')
-    log.info("Confirmation URL [%r]: %s", role, url)
-    notify_role(role, gettext('Registration'),
-                'email/registration_code.html',
-                url=url)
+    challenge_role(data)
     return jsonify({
         'status': 'ok',
         'message': gettext('To proceed, please check your email.')
@@ -87,14 +77,14 @@ def create():
     update_role(role)
     # Let the serializer return more info about this user
     request.authz.id = role.id
-    return serialize_data(role, RoleSchema, status=201)
+    return RoleSerializer.jsonify(role, status=201)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
     require(check_editable(role, request.authz))
-    return serialize_data(role, RoleSchema)
+    return RoleSerializer.jsonify(role)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
@@ -107,61 +97,4 @@ def update(id):
     db.session.add(role)
     db.session.commit()
     update_role(role)
-    return serialize_data(role, RoleSchema)
-
-
-@blueprint.route('/api/2/collections/<int:id>/permissions')
-def permissions_index(id):
-    collection = get_db_collection(id, request.authz.WRITE)
-    record_audit(Audit.ACT_COLLECTION, id=id)
-    roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
-    q = Permission.all()
-    q = q.filter(Permission.collection_id == collection.id)
-    permissions = []
-    for permission in q.all():
-        if not check_visible(permission.role, request.authz):
-            continue
-        permissions.append(permission)
-        if permission.role in roles:
-            roles.remove(permission.role)
-
-    # this workaround ensures that all groups are visible for the user to
-    # select in the UI even if they are not currently associated with the
-    # collection.
-    for role in roles:
-        if collection.casefile and role.is_public:
-            continue
-        permissions.append({
-            'collection_id': collection.id,
-            'write': False,
-            'read': False,
-            'role': role
-        })
-
-    permissions, errors = PermissionSchema().dump(permissions, many=True)
-    return jsonify({
-        'total': len(permissions),
-        'results': permissions
-    })
-
-
-@blueprint.route('/api/2/collections/<int:id>/permissions',
-                 methods=['POST', 'PUT'])
-def permissions_update(id):
-    collection = get_db_collection(id, request.authz.WRITE)
-    for permission in parse_request(PermissionSchema, many=True):
-        role_id = permission.get('role', {}).get('id')
-        role = Role.by_id(role_id)
-        if not check_visible(role, request.authz):
-            continue
-        if collection.casefile and role.is_public:
-            permission['read'] = False
-            permission['write'] = False
-
-        update_permission(role,
-                          collection,
-                          permission['read'],
-                          permission['write'],
-                          editor_id=request.authz.id)
-    update_collection(collection)
-    return permissions_index(id)
+    return RoleSerializer.jsonify(role)

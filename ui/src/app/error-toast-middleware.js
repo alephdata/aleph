@@ -24,7 +24,7 @@ const errorActionTypes = [
 
 // Middleware that after handling any action normally, shows a toast if the
 // action was reporting an error.
-const errorToastMiddleware = store => next => action => {
+const errorToastMiddleware = () => next => (action) => {
   const newState = next(action);
 
   if (errorActionTypes.includes(action.type)) {

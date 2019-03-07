@@ -2,6 +2,7 @@ from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.model import Collection
+from aleph.logic import resolver
 
 
 class Facet(object):
@@ -92,11 +93,12 @@ class CategoryFacet(Facet):
 class CollectionFacet(Facet):
 
     def expand(self, keys):
-        q = Collection.all_by_ids(keys, authz=self.parser.authz)
-        self.collections = q.all()
+        for key in keys:
+            resolver.queue(self.parser, Collection, key)
+        resolver.resolve(self.parser)
 
     def update(self, result, key):
-        for collection in self.collections:
-            if str(collection.id) == key:
-                result['label'] = collection.label
-                result['category'] = collection.category
+        collection = resolver.get(self.parser, Collection, key)
+        if collection is not None:
+            result['label'] = collection.get('label')
+            result['category'] = collection.get('category')

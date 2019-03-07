@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactSVG from 'react-svg'
+import ReactSVG from 'react-svg';
 import c from 'classnames';
-import './Icon.scss'
+import './Icon.scss';
 
 const ICONS_PATH = '/icons/';
 
@@ -14,23 +14,25 @@ function Icon(props) {
     className,
     ...otherProps
   } = props;
-  const svgStyles = {...style};
+  const svgStyles = { ...style };
   if (color) {
-    Object.assign(svgStyles, {color});
+    Object.assign(svgStyles, { color });
   }
   if (iconSize) {
     Object.assign(svgStyles, {
       width: iconSize,
-      height: iconSize
-    })
+      height: iconSize,
+    });
   }
-  return (<ReactSVG
-    className={c("al-icon", className)}
-    svgClassName="al-icon--svg"
-    src={`${ICONS_PATH}${name}.svg`}
-    svgStyle={svgStyles}
-    {...otherProps}
-  />)
+  return (
+    <ReactSVG
+      className={c('al-icon', className)}
+      svgClassName="al-icon--svg"
+      src={`${ICONS_PATH}${name}.svg`}
+      svgStyle={svgStyles}
+      {...otherProps}
+    />
+  );
 }
-export {Icon}
+export { Icon };
 export default Icon;

@@ -1,9 +1,12 @@
-import classNames from "classnames";
-import * as React from "react";
+/* eslint-disable */
+import classNames from 'classnames';
+import * as React from 'react';
 
-import {DISPLAYNAME_PREFIX, InputGroup, Keys, Popover, Position, Utils,} from "@blueprintjs/core";
-import {Classes} from "@blueprintjs/select/lib/esm/common";
-import {QueryList} from "@blueprintjs/select/lib/esm/components/query-list/queryList";
+import {
+  DISPLAYNAME_PREFIX, InputGroup, Keys, Popover, Position, Utils,
+} from '@blueprintjs/core';
+import { Classes } from '@blueprintjs/select/lib/esm/common';
+import { QueryList } from '@blueprintjs/select/lib/esm/components/query-list/queryList';
 
 
 export class Suggest extends React.PureComponent {
@@ -15,18 +18,16 @@ export class Suggest extends React.PureComponent {
     openOnKeyDown: false,
   };
 
-  static ofType() {
-    return Suggest => Suggest;
-  }
 
   TypedQueryList = QueryList.ofType();
+
   refHandlers = {
     input: (ref) => {
       this.input = ref;
-      const {inputProps = {}} = this.props;
+      const { inputProps = {} } = this.props;
       Utils.safeInvoke(inputProps.inputRef, ref);
     },
-    queryList: (ref) => (this.queryList = ref),
+    queryList: ref => (this.queryList = ref),
   };
 
   constructor(props, context) {
@@ -39,7 +40,7 @@ export class Suggest extends React.PureComponent {
 
   render() {
     // omit props specific to this component, spread the rest.
-    const {inputProps, popoverProps, ...restProps} = this.props;
+    const { inputProps, popoverProps, ...restProps } = this.props;
 
     return (
       // @ts-ignore
@@ -54,7 +55,7 @@ export class Suggest extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedItem !== undefined && nextProps.selectedItem !== this.state.selectedItem) {
-      this.setState({selectedItem: nextProps.selectedItem});
+      this.setState({ selectedItem: nextProps.selectedItem });
     }
   }
 
@@ -65,12 +66,12 @@ export class Suggest extends React.PureComponent {
   }
 
   renderQueryList = (listProps) => {
-    const {inputProps = {}, popoverProps = {}} = this.props;
-    const {isOpen, selectedItem} = this.state;
-    const {handleKeyDown, handleKeyUp} = listProps;
-    const {placeholder = "Search..."} = inputProps;
+    const { inputProps = {}, popoverProps = {} } = this.props;
+    const { isOpen, selectedItem } = this.state;
+    const { handleKeyDown, handleKeyUp } = listProps;
+    const { placeholder = 'Search...' } = inputProps;
 
-    const selectedItemText = selectedItem ? this.props.inputValueRenderer(selectedItem) : "";
+    const selectedItemText = selectedItem ? this.props.inputValueRenderer(selectedItem) : '';
     return (
       <Popover
         autoFocus={false}
@@ -110,13 +111,13 @@ export class Suggest extends React.PureComponent {
   };
 
   handleInputFocus = (event) => {
-    const {openOnKeyDown, inputProps = {}} = this.props;
+    const { openOnKeyDown, inputProps = {} } = this.props;
 
     this.selectText();
 
     // TODO can we leverage Popover.openOnTargetFocus for this?
     if (!openOnKeyDown) {
-      this.setState({isOpen: true});
+      this.setState({ isOpen: true });
     }
 
     Utils.safeInvoke(inputProps.onFocus, event);
@@ -144,7 +145,7 @@ export class Suggest extends React.PureComponent {
       });
     } else {
       // otherwise just set the next open state.
-      this.setState({isOpen: nextOpenState});
+      this.setState({ isOpen: nextOpenState });
     }
 
     Utils.safeInvoke(this.props.onItemSelect, item, event);
@@ -154,27 +155,25 @@ export class Suggest extends React.PureComponent {
     // controlled > uncontrolled > default
     if (this.props.selectedItem !== undefined) {
       return this.props.selectedItem;
-    } else if (this.props.defaultSelectedItem !== undefined) {
+    } if (this.props.defaultSelectedItem !== undefined) {
       return this.props.defaultSelectedItem;
-    } else {
-      return null;
     }
+    return null;
   }
 
-  handlePopoverInteraction = (nextOpenState) =>
-    requestAnimationFrame(() => {
-      const {popoverProps = {}} = this.props;
+  handlePopoverInteraction = nextOpenState => requestAnimationFrame(() => {
+    const { popoverProps = {} } = this.props;
 
-      if (this.input != null && this.input !== document.activeElement) {
-        // the input is no longer focused so we can close the popover
-        this.setState({isOpen: false});
-      }
+    if (this.input != null && this.input !== document.activeElement) {
+      // the input is no longer focused so we can close the popover
+      this.setState({ isOpen: false });
+    }
 
-      Utils.safeInvoke(popoverProps.onInteraction, nextOpenState);
-    });
+    Utils.safeInvoke(popoverProps.onInteraction, nextOpenState);
+  });
 
   handlePopoverOpened = (node) => {
-    const {popoverProps = {}} = this.props;
+    const { popoverProps = {} } = this.props;
 
     // scroll active item into view after popover transition completes and all dimensions are stable.
     if (this.queryList != null) {
@@ -184,44 +183,40 @@ export class Suggest extends React.PureComponent {
     Utils.safeInvoke(popoverProps.onOpened, node);
   };
 
-  getTargetKeyDownHandler = (
-    handleQueryListKeyDown,
-  ) => {
-    return (evt) => {
-      const {which} = evt;
-      const {inputProps = {}, openOnKeyDown} = this.props;
+  getTargetKeyDownHandler = handleQueryListKeyDown => (evt) => {
+    const { which } = evt;
+    const { inputProps = {}, openOnKeyDown } = this.props;
 
-      if (which === Keys.ESCAPE || which === Keys.TAB) {
-        if (this.input != null) {
-          this.input.blur();
-        }
-        this.setState({
-          isOpen: false,
-        });
-      } else if (
-        openOnKeyDown &&
-        which !== Keys.BACKSPACE &&
-        which !== Keys.ARROW_LEFT &&
-        which !== Keys.ARROW_RIGHT
-      ) {
-        this.setState({isOpen: true});
+    if (which === Keys.ESCAPE || which === Keys.TAB) {
+      if (this.input != null) {
+        this.input.blur();
       }
+      this.setState({
+        isOpen: false,
+      });
+    } else if (
+      openOnKeyDown
+        && which !== Keys.BACKSPACE
+        && which !== Keys.ARROW_LEFT
+        && which !== Keys.ARROW_RIGHT
+    ) {
+      this.setState({ isOpen: true });
+    }
 
-      if (this.state.isOpen) {
-        Utils.safeInvoke(handleQueryListKeyDown, evt);
-      }
+    if (this.state.isOpen) {
+      Utils.safeInvoke(handleQueryListKeyDown, evt);
+    }
 
-      Utils.safeInvoke(inputProps.onKeyDown, evt);
-    };
+    Utils.safeInvoke(inputProps.onKeyDown, evt);
   };
 
-  getTargetKeyUpHandler = (handleQueryListKeyUp) => {
-    return (evt) => {
-      const {inputProps = {}} = this.props;
-      if (this.state.isOpen) {
-        Utils.safeInvoke(handleQueryListKeyUp, evt);
-      }
-      Utils.safeInvoke(inputProps.onKeyUp, evt);
-    };
+  getTargetKeyUpHandler = handleQueryListKeyUp => (evt) => {
+    const { inputProps = {} } = this.props;
+    if (this.state.isOpen) {
+      Utils.safeInvoke(handleQueryListKeyUp, evt);
+    }
+    Utils.safeInvoke(inputProps.onKeyUp, evt);
   };
 }
+
+/* eslint-enable */

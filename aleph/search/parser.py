@@ -1,7 +1,6 @@
 import logging
-from uuid import uuid4
+from banal import as_bool
 from normality import stringify
-from banal import as_bool, hash_data
 from werkzeug.datastructures import MultiDict, OrderedMultiDict
 
 from aleph.core import settings
@@ -109,13 +108,6 @@ class QueryParser(object):
     def getbool(self, name, default=False):
         return as_bool(self.get(name), default=default)
 
-    @property
-    def cache_key(self):
-        """Generate a key for the current result."""
-        if not self.cache:
-            return uuid4().hex
-        return hash_data((self.args.items(), self.limit, self.offset))
-
     def to_dict(self):
         parser = {
             'text': self.text,
@@ -148,10 +140,12 @@ class SearchQueryParser(QueryParser):
 
         # Include highlighted fragments of matching text in the result.
         self.highlight = self.getbool('highlight', False)
+        self.highlight = self.highlight and settings.RESULT_HIGHLIGHT
+        self.highlight = self.highlight and self.text
         # Length of each snippet in characters
         self.highlight_length = self.getint('highlight_length', 100)
         # Number of snippets per document, 0 = return full document text.
-        self.highlight_count = self.getint('highlight_count', 5)
+        self.highlight_count = self.getint('highlight_count', 1)
 
     def get_facet_size(self, name):
         """Number of distinct values to be included (i.e. top N)."""

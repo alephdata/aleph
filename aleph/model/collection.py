@@ -1,8 +1,9 @@
 import logging
-from banal import as_bool, ensure_list
 from datetime import datetime
+from normality import stringify
 from flask_babel import lazy_gettext
 from sqlalchemy.orm import aliased
+from banal import as_bool, ensure_list
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from aleph.core import db
@@ -29,6 +30,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'company': lazy_gettext('Company registries'),
         'sanctions': lazy_gettext('Sanctions lists'),
         'procurement': lazy_gettext('Procurement'),
+        'finance': lazy_gettext('Financial records'),
         'grey': lazy_gettext('Grey literature'),
         'library': lazy_gettext('Document libraries'),
         'license': lazy_gettext('Licenses and concessions'),
@@ -84,17 +86,17 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             Permission.grant(self, self.creator, True, True)
 
     @property
-    def team(self):
+    def team_id(self):
         role = aliased(Role)
         perm = aliased(Permission)
-        q = db.session.query(role)
+        q = db.session.query(role.id)
         q = q.filter(role.type != Role.SYSTEM)
         q = q.filter(role.id == perm.role_id)
         q = q.filter(perm.collection_id == self.id)
         q = q.filter(perm.read == True)  # noqa
         q = q.filter(role.deleted_at == None)  # noqa
         q = q.filter(perm.deleted_at == None)  # noqa
-        return q
+        return [stringify(i) for (i,) in q.all()]
 
     @property
     def secret(self):
@@ -105,9 +107,28 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(Permission.deleted_at == None)  # noqa
         return q.count() < 1
 
-    @property
-    def kind(self):
-        return 'casefile' if self.casefile else 'source'
+    def to_dict(self):
+        data = self.to_dict_dates()
+        data['category'] = self.DEFAULT
+        if self.category in self.CATEGORIES:
+            data['category'] = self.category
+        data['kind'] = 'casefile' if self.casefile else 'source'
+        data.update({
+            'id': stringify(self.id),
+            'collection_id': stringify(self.id),
+            'foreign_id': self.foreign_id,
+            'creator_id': stringify(self.creator_id),
+            'team_id': self.team_id,
+            'label': self.label,
+            'summary': self.summary,
+            'publisher': self.publisher,
+            'publisher_url': self.publisher_url,
+            'info_url': self.info_url,
+            'data_url': self.data_url,
+            'casefile': self.casefile,
+            'secret': self.secret
+        })
+        return data
 
     @classmethod
     def by_foreign_id(cls, foreign_id, deleted=False):

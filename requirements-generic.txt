@@ -13,7 +13,7 @@ alembic==1.0.3
 
 celery==4.2.1
 elasticsearch==6.3.1
-marshmallow==2.17.0
+marshmallow==2.18.0
 psycopg2-binary==2.7.6.1
 gunicorn==19.9.0
 blinker==1.4
@@ -23,12 +23,12 @@ PyICU==2.2.0
 chardet==3.0.4
 cchardet==2.1.4
 regex==2018.8.29
-cryptography==2.4.2
+cryptography==2.5.0
 pylru==1.1.0
 pyjwt==1.7.1
 rdflib==4.2.2
 idna==2.7.0
-requests[security]==2.20.1
+requests[security]==2.21.0
 redis==2.10.6
 grpcio==1.17.1
 google-cloud-vision==0.35.2
@@ -48,16 +48,17 @@ coveralls
 # Duplicative for speed of docker builds
 lxml==4.2.5
 xlrd==1.1.0
-phonenumbers==8.10.0
+phonenumbers==8.10.5
 python-levenshtein==0.12.0
 openpyxl==2.5.3
 dbf==0.97.11
-python-dateutil==2.6.1
+python-dateutil==2.8.0
 python-magic==0.4.15
 odfpy==1.3.6
 olefile==0.46
--e git://github.com/alephdata/flanker.git@65eb960f1eaa1fe2925b03f3740e2eff3c21dafc#egg=flanker
+-e git://github.com/mailgun/flanker.git@master#egg=flanker
 ply==3.11
+six==1.12.0
 
 # Not entirely sure why this is needed:
 # urllib3==1.23

@@ -1,0 +1,8 @@
+{% trans name=role.name -%}
+Dear {{name}},
+{%- endtrans %}
+
+{% block content %}{% endblock %}
+
+--
+{{app_title}} ({{ui_url}})

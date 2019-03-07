@@ -52,7 +52,6 @@ class EntitiesTestCase(TestCase):
     def test_api_merge(self):
         index_entity(self.ent)
         index_entity(self.other)
-        self.flush_index()
         url = '/api/2/entities/%s/merge/%s' % (self.ent.id, self.other.id)
         res = self.client.delete(url, content_type='application/json')
         assert res.status_code == 403, res.status_code

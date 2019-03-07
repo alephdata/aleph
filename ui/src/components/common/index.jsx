@@ -4,6 +4,7 @@ import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Country from './Country';
+import Numeric from './Numeric';
 import Date from './Date';
 import DualPane from './DualPane';
 import Entity from './Entity';
@@ -20,7 +21,8 @@ import SortableTH from './SortableTH';
 import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
-import Icon from './Icon';
+import { Icon } from './Icon';
+import SearchBox from './SearchBox';
 
 export {
   Breadcrumbs,
@@ -29,6 +31,7 @@ export {
   CheckboxList,
   Collection,
   Country,
+  Numeric,
   Date,
   DualPane,
   Entity,
@@ -45,5 +48,6 @@ export {
   Count,
   Tag,
   URL,
-  Icon
-}
+  SearchBox,
+  Icon,
+};

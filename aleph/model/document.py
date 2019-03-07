@@ -1,6 +1,8 @@
+import cgi
 import logging
-from banal import is_mapping
+from normality import slugify
 from followthemoney import model
+from followthemoney.types import registry
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -34,29 +36,6 @@ class Document(db.Model, DatedModel, Metadata):
     STATUS_PENDING = 'pending'
     STATUS_SUCCESS = 'success'
     STATUS_FAIL = 'fail'
-
-    SCHEMA_MAPPING = {
-        'contentHash': 'content_hash',
-        'title': 'title',
-        'author': 'author',
-        'generator': 'generator',
-        'crawler': 'crawler',
-        'fileSize': 'file_size',
-        'fileName': 'file_name',
-        'extension': 'extension',
-        'encoding': 'encoding',
-        'mimeType': 'mime_type',
-        'language': 'languages',
-        'country': 'countries',
-        'date': 'date',
-        'authoredAt': 'authored_at',
-        'modifiedAt': 'modified_at',
-        'publishedAt': 'published_at',
-        'retrievedAt': 'retrieved_at',
-        'parent': 'parent_id',
-        'messageId': 'message_id',
-        'inReplyTo': 'in_reply_to',
-    }
 
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
@@ -115,7 +94,7 @@ class Document(db.Model, DatedModel, Metadata):
 
     @property
     def ancestors(self):
-        if self.parent_id is None or not self.parent:
+        if self.parent_id is None:
             return []
         key = cache.key('ancestors', self.id)
         ancestors = cache.get_list(key)
@@ -243,6 +222,12 @@ class Document(db.Model, DatedModel, Metadata):
         return q.first()
 
     @classmethod
+    def by_collection(cls, collection_id=None):
+        q = cls.all()
+        q = q.filter(cls.collection_id == collection_id)
+        return q
+
+    @classmethod
     def find_ids(cls, collection_id=None, failed_only=False):
         q = cls.all_ids()
         if collection_id is not None:
@@ -252,32 +237,47 @@ class Document(db.Model, DatedModel, Metadata):
         q = q.order_by(cls.id.asc())
         return q
 
-    @classmethod
-    def doc_data_to_schema(cls, data):
-        """Convert an existing dict with document information (e.g. from the search
-        index) to it's followthemoney form."""
-        proxy = model.get_proxy(data)
-        for prop, field in cls.SCHEMA_MAPPING.items():
-            proxy.add(prop, data.get(field))
-        proxy.add('namesMentioned', data.get('names'))
-        proxy.add('ibanMentioned', data.get('ibans'))
-        proxy.add('ipMentioned', data.get('ips'))
-        proxy.add('locationMentioned', data.get('locations'))
-        proxy.add('phoneMentioned', data.get('phones'))
-        proxy.add('emailMentioned', data.get('email'))
-        parent = data.get('parent')
-        if is_mapping(parent):
-            proxy.add('parent', parent.get('id'))
-        return proxy.to_dict()
-
     def to_proxy(self):
-        proxy = model.make_entity(self.model)
-        proxy.id = self.id
-        for prop, field in self.SCHEMA_MAPPING.items():
-            prop = proxy.schema.get(prop)
-            if prop is not None:
-                values = getattr(self, field)
-                proxy.add(prop, values)
+        meta = dict(self.meta)
+        headers = meta.pop('headers', {})
+        headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        proxy = model.get_proxy({
+            'id': str(self.id),
+            'schema': self.model,
+            'properties': meta
+        })
+        proxy.set('contentHash', self.content_hash)
+        proxy.set('parent', self.parent_id)
+        proxy.set('ancestors', self.ancestors)
+        proxy.set('fileSize', meta.get('file_size'))
+        proxy.set('fileName', meta.get('file_name'))
+        if not proxy.has('fileName'):
+            disposition = headers.get('content_disposition')
+            if disposition is not None:
+                _, attrs = cgi.parse_header(disposition)
+                proxy.set('fileName', attrs.get('filename'))
+        proxy.set('mimeType', meta.get('mime_type'))
+        if not proxy.has('mimeType'):
+            proxy.set('mimeType', headers.get('content_type'))
+        proxy.set('language', meta.get('languages'))
+        proxy.set('country', meta.get('countries'))
+        proxy.set('authoredAt', meta.get('authored_at'))
+        proxy.set('modifiedAt', meta.get('modified_at'))
+        proxy.set('publishedAt', meta.get('published_at'))
+        proxy.set('retrievedAt', meta.get('retrieved_at'))
+        proxy.set('sourceUrl', meta.get('source_url'))
+        proxy.set('messageId', meta.get('message_id'), quiet=True)
+        proxy.set('inReplyTo', meta.get('in_reply_to'), quiet=True)
+        proxy.set('bodyText', self.body_text, quiet=True)
+        proxy.set('bodyHtml', self.body_raw, quiet=True)
+        columns = meta.get('columns')
+        proxy.set('columns', registry.json.pack(columns), quiet=True)
+        proxy.set('headers', registry.json.pack(headers), quiet=True)
+
+        pdf = 'application/pdf'
+        if meta.get('extension') == 'pdf' or proxy.first('mimeType') == pdf:
+            proxy.set('pdfHash', self.content_hash, quiet=True)
+        proxy.add('pdfHash', meta.get('pdf_version'), quiet=True)
 
         q = db.session.query(DocumentTag)
         q = q.filter(DocumentTag.document_id == self.id)
@@ -289,6 +289,22 @@ class Document(db.Model, DatedModel, Metadata):
             if prop is not None:
                 proxy.add(prop, tag.text)
         return proxy
+
+    def to_dict(self):
+        proxy = self.to_proxy()
+        data = proxy.to_full_dict()
+        data.update(self.to_dict_dates())
+        data.update({
+            'name': self.name,
+            'status': self.status,
+            'foreign_id': self.foreign_id,
+            'document_id': self.id,
+            'collection_id': self.collection_id,
+            'error_message': self.error_message,
+            'uploader_id': self.uploader_id,
+            'bulk': False,
+        })
+        return data
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)

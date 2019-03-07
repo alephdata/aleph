@@ -4,29 +4,40 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 
 import './CheckboxList.scss';
 
-const CheckboxList = ({ items, selectedItems, onItemClick, children }) => (
+const CheckboxList = ({
+  items, selectedItems, onItemClick, children,
+}) => (
   <ul className="CheckboxList">
     {items && items.length === 0 && (
       <li className="faint">
-        <FormattedMessage id="search.facets.no_items"
-                          defaultMessage="No options"/>
+        <FormattedMessage
+          id="search.facets.no_items"
+          defaultMessage="No options"
+        />
       </li>
     )}
-    {items && items.map(item => (
-      <li className={c('clickable', {'active': selectedItems.includes(item.id)})}
-        onClick={() => onItemClick(item.id)}
-        key={item.id}>
-        
-        <span className={c('bp3-icon-standard', 'Tick')} />
-        <span className="label" title={item.label}>{item.label}</span>
-        {item.count !== undefined && (
+    {items && items.map((item) => {
+      const isChecked = selectedItems.includes(item.id);
+      /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+      return (
+        <li
+          className={c('clickable', { active: isChecked })}
+          onClick={() => onItemClick(item.id)}
+          onKeyDown={() => onItemClick(item.id)}
+          key={item.id}
+        >
+
+          <span className={c('bp3-icon-standard', 'Tick')} />
+          <span className="label" title={item.label}>{item.label}</span>
+          {item.count !== undefined && (
           <span className="count">
             <FormattedNumber value={item.count} />
           </span>
-        )}
+          )}
 
-      </li>
-    ))}
+        </li>
+      );
+    })}
     {children && (
       <li>
         {children}

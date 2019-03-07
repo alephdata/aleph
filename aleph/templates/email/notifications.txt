@@ -1,0 +1,15 @@
+{% extends "email/layout.txt" %}
+
+{% block content -%}
+{% trans -%}
+You have {{total_count}} pending notifications. Here are the latest updates you may be interested in:
+{%- endtrans %}
+
+{% for notification in notifications -%}
+* {{notification.plain}}
+{% endfor %}
+{% trans -%}
+Browse and manage all of your notifications here:
+{%- endtrans %}
+{{manage_url}}
+{%- endblock %}

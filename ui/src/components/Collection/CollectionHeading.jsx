@@ -1,26 +1,12 @@
-import React, {Component} from 'react';
-import {FormattedMessage} from 'react-intl';
+import React, { PureComponent } from 'react';
+import { FormattedMessage } from 'react-intl';
 
-import {Collection} from 'src/components/common';
+import { Collection } from 'src/components/common';
 
 
-class CollectionHeading extends Component {
+class CollectionHeading extends PureComponent {
   render() {
     const { collection } = this.props;
-
-    /***
-     * To be removed, unused code, waiting for @pudo's approval
-     *
-     * let content = [];
-     *   for (let key in collection.schemata) {
-     *    if (collection.schemata.hasOwnProperty(key)) {
-     *      content.push({name: key, number: collection.schemata[key]});
-     *    }
-     *  }
-     *   content = _.reverse(_.sortBy(content, ['number']));
-     *
-     */
-
 
     return (
       <React.Fragment>
@@ -28,10 +14,10 @@ class CollectionHeading extends Component {
           <span>
             <Collection.Label collection={collection} label={false} />
             { collection.casefile && (
-              <FormattedMessage id="collection.info.case" defaultMessage="Casefile"/>
+              <FormattedMessage id="collection.info.case" defaultMessage="Casefile" />
             )}
             { !collection.casefile && (
-              <FormattedMessage id="collection.info.source" defaultMessage="Source"/>
+              <FormattedMessage id="collection.info.source" defaultMessage="Source" />
             )}
           </span>
           <h1 itemProp="name">

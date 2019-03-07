@@ -2,9 +2,10 @@ import logging
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.exc import InvalidData
 
 from aleph.core import settings
-from aleph.index.util import index_settings, configure_index
+from aleph.index.util import index_settings, configure_index, get_shard_weight
 
 log = logging.getLogger(__name__)
 
@@ -12,27 +13,31 @@ log = logging.getLogger(__name__)
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
-RAW_TEXT = {"type": "text"}
 KEYWORD = {"type": "keyword"}
+KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 TYPE_MAPPINGS = {
-    registry.text: LATIN_TEXT,
+    registry.text: {"type": "text", "index": False},
+    registry.json: {"type": "text", "index": False},
     registry.date: PARTIAL_DATE,
 }
 
 
+def index_name(name, version):
+    return '-'.join((settings.INDEX_PREFIX, name, version))
+
+
 def collections_index():
     """Combined index to run all queries against."""
-    return settings.COLLECTIONS_INDEX
+    return index_name('collection', settings.INDEX_WRITE)
 
 
 def all_indexes():
-    return ','.join((collections_index(),
-                     entities_read_index(),
-                     records_read_index()))
+    return ','.join((collections_index(), entities_read_index()))
 
 
 def configure_collections():
     mapping = {
+        "date_detection": False,
         "dynamic_templates": [
             {
                 "fields": {
@@ -41,199 +46,175 @@ def configure_collections():
                 }
             }
         ],
+        "_source": {
+            "excludes": ["text"]
+        },
         "properties": {
             "label": {
                 "type": "text",
+                "copy_to": "text",
                 "analyzer": "icu_latin",
                 "fields": {"kw": KEYWORD}
             },
             "collection_id": KEYWORD,
-            "foreign_id": KEYWORD,
-            "languages": KEYWORD,
-            "countries": KEYWORD,
-            "category": KEYWORD,
-            "summary": RAW_TEXT,
-            "publisher": KEYWORD,
-            "publisher_url": KEYWORD,
-            "data_url": KEYWORD,
-            "info_url": KEYWORD,
+            "foreign_id": KEYWORD_COPY,
+            "languages": KEYWORD_COPY,
+            "countries": KEYWORD_COPY,
+            "category": KEYWORD_COPY,
+            "summary": {
+                "type": "text",
+                "copy_to": "text",
+                "index": False
+            },
+            "publisher": KEYWORD_COPY,
+            "publisher_url": KEYWORD_COPY,
+            "data_url": KEYWORD_COPY,
+            "info_url": KEYWORD_COPY,
             "kind": KEYWORD,
-            "text": LATIN_TEXT,
+            "creator_id": KEYWORD,
+            "team_id": KEYWORD,
+            "text": {
+                "type": "text",
+                "analyzer": "icu_latin",
+                "term_vector": "with_positions_offsets",
+                "store": True
+            },
             "casefile": {"type": "boolean"},
             "secret": {"type": "boolean"},
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
             "count": {"type": "long"},
-            "schemata": {"type": "object"},
-            "creator": {
-                "type": "object",
-                "properties": {
-                    "id": KEYWORD,
-                    "type": KEYWORD,
-                    "name": {
-                        "type": "text",
-                        "fields": {"kw": KEYWORD}
-                    }
-                }
-            },
-            "team": {
-                "type": "object",
-                "properties": {
-                    "id": KEYWORD,
-                    "type": KEYWORD,
-                    "name": KEYWORD
-                }
-            },
+            "schemata": {"type": "object"}
         }
     }
-    configure_index(collections_index(), mapping, index_settings())
+    index = collections_index()
+    settings = index_settings(shards=1)
+    return configure_index(index, mapping, settings)
 
 
-def records_write_index():
-    """Index that us currently written by new queries."""
-    return settings.RECORDS_INDEX
-
-
-def records_read_index():
-    """Combined index to run all queries against."""
-    return ','.join(settings.RECORDS_INDEX_SET)
-
-
-def configure_records():
-    mapping = {
-        "properties": {
-            "collection_id": KEYWORD,
-            "document_id": KEYWORD,
-            "index": {"type": "long"},
-            "text": LATIN_TEXT
-        }
-    }
-    settings = index_settings(shards=10, refresh_interval='15s')
-    configure_index(records_write_index(), mapping, settings)
-
-
-def schema_index(schema):
+def schema_index(schema, version):
     """Convert a schema object to an index name."""
-    return '-'.join((settings.ENTITIES_INDEX, schema.name.lower()))
+    if schema.abstract:
+        raise InvalidData("Cannot index abstract schema: %s" % schema)
+    name = 'entity-%s' % schema.name.lower()
+    return index_name(name, version=version)
 
 
 def entities_write_index(schema):
     """Index that us currently written by new queries."""
-    if not settings.ENTITIES_INDEX_SPLIT:
-        return settings.ENTITIES_INDEX
-
-    return schema_index(model.get(schema))
+    schema = model.get(schema)
+    return schema_index(schema, settings.INDEX_WRITE)
 
 
-def entities_read_index(schema=None, descendants=True, exclude=None):
-    """Combined index to run all queries against."""
-    if not settings.ENTITIES_INDEX_SPLIT:
-        indexes = set(settings.ENTITIES_INDEX_SET)
-        indexes.add(settings.ENTITIES_INDEX)
-        return ','.join(indexes)
-
+def schema_scope(schema, expand=True):
     schemata = set()
     names = ensure_list(schema) or model.schemata.values()
     for schema in names:
         schema = model.get(schema)
-        if schema is None:
-            continue
-        schemata.add(schema)
-        if descendants:
-            schemata.update(schema.descendants)
-    exclude = model.get(exclude)
-    indexes = list(settings.ENTITIES_INDEX_SET)
+        if schema is not None:
+            schemata.add(schema)
+            if expand:
+                schemata.update(schema.descendants)
     for schema in schemata:
-        if not schema.abstract and schema != exclude:
-            indexes.append(schema_index(schema))
-    # log.info("Read index: %r", indexes)
+        if not schema.abstract:
+            yield schema
+
+
+def entities_read_index_list(schema=None, expand=True):
+    """Combined index to run all queries against."""
+    for schema in schema_scope(schema, expand=expand):
+        for version in settings.INDEX_READ:
+            yield schema_index(schema, version)
+
+
+def entities_read_index(schema=None, expand=True):
+    indexes = entities_read_index_list(schema=schema, expand=expand)
     return ','.join(indexes)
 
 
 def configure_entities():
-    if not settings.ENTITIES_INDEX_SPLIT:
-        return configure_schema(None)
     for schema in model.schemata.values():
         if not schema.abstract:
-            configure_schema(schema)
+            for version in settings.INDEX_READ:
+                configure_schema(schema, version)
 
 
-def configure_schema(schema):
+def configure_schema(schema, version):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
-    if settings.ENTITIES_INDEX_SPLIT:
-        for name, prop in schema.properties.items():
-            config = TYPE_MAPPINGS.get(prop.type, KEYWORD)
-            schema_mapping[name] = config
+    for prop in schema.properties.values():
+        config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
+        config['copy_to'] = ['text']
+        schema_mapping[prop.name] = config
 
     mapping = {
         "date_detection": False,
+        "_source": {
+            "excludes": ["text", "fingerprints"]
+        },
         "properties": {
-            "title": RAW_TEXT,
             "name": {
                 "type": "text",
                 "analyzer": "icu_latin",
-                "fields": {"kw": KEYWORD}
+                "fields": {"kw": KEYWORD},
+                "boost": 3.0,
+                "copy_to": "text"
             },
             "schema": KEYWORD,
             "schemata": KEYWORD,
             "bulk": {"type": "boolean"},
             "status": KEYWORD,
-            "error_message": RAW_TEXT,
-            "content_hash": KEYWORD,
+            "error_message": {
+                "type": "text",
+                "copy_to": "text",
+                "index": False
+            },
             "foreign_id": KEYWORD,
-            "file_name": KEYWORD,
+            "document_id": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
-            "children": KEYWORD,
-            "source_url": KEYWORD,
-            "extension": KEYWORD,
-            "mime_type": KEYWORD,
-            "encoding": KEYWORD,
+            "fingerprints": {
+                "type": "keyword",
+                "normalizer": "icu_latin"
+            },
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
+            "checksums": KEYWORD,
             "keywords": KEYWORD,
-            "fingerprints": KEYWORD,
-            "names": {
-                "type": "keyword",
-                "fields": {"text": RAW_TEXT}
-            },
+            "ips": KEYWORD,
+            "urls": KEYWORD,
+            "ibans": KEYWORD,
             "emails": KEYWORD,
             "phones": KEYWORD,
+            "mimetypes": KEYWORD,
             "identifiers": KEYWORD,
             "addresses": {
                 "type": "keyword",
-                "fields": {"text": RAW_TEXT}
+                "fields": {"text": LATIN_TEXT}
             },
-            "columns": KEYWORD,
+            "dates": PARTIAL_DATE,
+            "names": {
+                "type": "keyword",
+                "fields": {"text": LATIN_TEXT},
+                "copy_to": "text"
+            },
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
-            "date": PARTIAL_DATE,
-            "authored_at": PARTIAL_DATE,
-            "modified_at": PARTIAL_DATE,
-            "published_at": PARTIAL_DATE,
-            "retrieved_at": PARTIAL_DATE,
-            "dates": PARTIAL_DATE,
-            "author": KEYWORD,
-            "generator": KEYWORD,
-            "summary": RAW_TEXT,
-            "text": LATIN_TEXT,
+            "text": {
+                "type": "text",
+                "analyzer": "icu_latin",
+                "term_vector": "with_positions_offsets",
+                "store": True
+            },
             "properties": {
                 "type": "object",
                 "properties": schema_mapping
-            },
-            "parent": {
-                "type": "object",
-                "properties": {
-                    "id": KEYWORD,
-                    "type": KEYWORD,
-                    "title": KEYWORD
-                }
-            },
-            "ancestors": KEYWORD,
+            }
         }
     }
-    index = entities_write_index(schema)
-    configure_index(index, mapping, index_settings())
+    index = schema_index(model.get(schema), version)
+    return configure_index(
+        index, mapping, index_settings(shards=get_shard_weight(schema))
+    )

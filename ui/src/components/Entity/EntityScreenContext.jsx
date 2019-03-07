@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
-import { withRouter } from "react-router";
-import { connect } from 'react-redux';
 
 import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
@@ -12,11 +10,21 @@ import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
-import {selectEntity, selectSchemata} from 'src/selectors';
-import Entity from 'src/followthemoney/Entity.ts';
-
+import { selectEntity, selectSchemata } from 'src/selectors';
+import { connectedWithRouter } from 'src/util/enhancers';
 
 class EntityScreenContext extends Component {
+  getKeywords() {
+    if (this.props.entity) {
+      return this.props.entity
+        .getProperties()
+        .filter(property => property.name !== 'description')
+        .map(property => property.toString(' '))
+        .join(' ');
+    }
+    return undefined;
+  }
+
   render() {
     const { entity, entityId, activeMode } = this.props;
     if (entity.isError) {
@@ -27,29 +35,31 @@ class EntityScreenContext extends Component {
         <EntityContextLoader entityId={entityId}>
           <LoadingScreen />
         </EntityContextLoader>
-      ); 
+      );
     }
-    const entityModel = new Entity(entity);
     const breadcrumbs = (
       <Breadcrumbs>
         <Breadcrumbs.Collection collection={entity.collection} />
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );
-
+    const keywords = this.getKeywords();
     return (
       <EntityContextLoader entityId={entityId}>
         <Screen title={entity.name}>
           <Helmet>
-            <meta name="keywords" content={entityModel.propertiesToKeyword()}/>
-            <meta name="description" content={entityModel.description}/>
+            <meta name="keywords" content={keywords} />
+            <meta name="description" content={entity.getProperty('description').toString(' ')} />
           </Helmet>
           {breadcrumbs}
-          <DualPane>`
+          <DualPane>
+`
             <DualPane.ContentPane className="view-menu-flex-direction">
-              <EntityViews entity={entity}
-                           activeMode={activeMode}
-                           isPreview={false} />
+              <EntityViews
+                entity={entity}
+                activeMode={activeMode}
+                isPreview={false}
+              />
             </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <EntityToolbar entity={entity} isPreview={false} />
@@ -69,9 +79,10 @@ class EntityScreenContext extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { entityId } = ownProps;
   const entity = selectEntity(state, entityId);
-  return { entity, schemata:selectSchemata(state)}
+  return { entity, schemata: selectSchemata(state) };
 };
 
-EntityScreenContext = connect(mapStateToProps, {})(EntityScreenContext);
-EntityScreenContext = withRouter(EntityScreenContext);
-export default (EntityScreenContext);
+
+export default connectedWithRouter({
+  mapStateToProps,
+})(EntityScreenContext);

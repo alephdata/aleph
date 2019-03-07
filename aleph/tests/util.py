@@ -6,13 +6,11 @@ from flask_fixtures import loaders, load_fixtures
 from faker import Factory
 
 from aleph import settings
-from aleph.model import Role, Document, Collection, Permission
-from aleph.index.admin import ensure_index, clear_index, refresh_index
-from aleph.index.documents import index_document
+from aleph.model import Role, Collection, Permission
+from aleph.index.admin import delete_index, upgrade_search, clear_index
 from aleph.logic.collections import update_collection, index_collections
-from aleph.logic.entities import index_entities
 from aleph.logic.roles import create_system_roles
-from aleph.logic.migration import destroy_db
+from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
 from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
@@ -47,10 +45,9 @@ class TestCase(FlaskTestCase):
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.MAIL_SERVER = None
         settings.ENTITIES_SERVICE = None
-        settings.ENTITIES_INDEX = '%s-entity' % APP_NAME
-        settings.RECORDS_INDEX = '%s-record' % APP_NAME
-        settings.RECORDS_INDEX_SET = [settings.RECORDS_INDEX]
-        settings.COLLECTIONS_INDEX = '%s-collection' % APP_NAME
+        settings.INDEX_PREFIX = APP_NAME
+        settings.INDEX_WRITE = 'yolo'
+        settings.INDEX_READ = [settings.INDEX_WRITE]
         settings.REDIS_URL = None
         app = create_app({})
         mount_app_blueprints(app)
@@ -85,29 +82,21 @@ class TestCase(FlaskTestCase):
         Permission.grant(collection, role, read, write)
         db.session.commit()
         update_collection(collection)
-        self.flush_index()
 
     def grant_publish(self, collection):
         visitor = Role.by_foreign_id(Role.SYSTEM_GUEST)
         self.grant(collection, visitor, True, False)
 
-    def flush_index(self):
-        refresh_index()
-
     def get_fixture_path(self, file_name):
         return os.path.abspath(os.path.join(FIXTURES, file_name))
 
     def update_index(self):
-        index_collections()
-        index_entities()
-        self.flush_index()
+        index_collections(entities=True)
 
     def load_fixtures(self, file_name):
         filepath = self.get_fixture_path(file_name)
         load_fixtures(db, loaders.load(filepath))
         db.session.commit()
-        for document in Document.all():
-            index_document(document)
         self.update_index()
 
     def setUp(self):
@@ -115,11 +104,11 @@ class TestCase(FlaskTestCase):
             settings._global_test_state = True
             destroy_db()
             db.create_all()
-            ensure_index()
+            delete_index()
+            upgrade_search()
 
         kv.flushall()
         clear_index()
-
         for table in reversed(db.metadata.sorted_tables):
             q = 'TRUNCATE %s RESTART IDENTITY CASCADE;' % table.name
             db.engine.execute(q)

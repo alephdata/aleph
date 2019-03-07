@@ -1,7 +1,10 @@
 import logging
+from flask_babel import gettext
+from flask import render_template
 
-from aleph.core import db, cache, celery
+from aleph.core import db, settings, cache, celery
 from aleph.authz import Authz
+from aleph.mail import email_role
 from aleph.model import Role, Subscription, Notification
 from aleph.logic.notifications import channel
 
@@ -9,21 +12,34 @@ log = logging.getLogger(__name__)
 
 
 def get_role(role_id):
+    if role_id is None:
+        return
     key = cache.object_key(Role, role_id)
     data = cache.get_complex(key)
     if data is None:
-        log.debug("Tole [%s]: object cache miss", role_id)
+        log.debug("Role [%s]: object cache miss", role_id)
         role = Role.by_id(role_id)
         if role is None:
             return
-        data = {
-            'id': role.id,
-            'name': role.name,
-            'label': role.label,
-            'type': role.type
-        }
+        data = role.to_dict()
         cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
+
+
+def challenge_role(data):
+    """Given an email address, this will send out a message to allow
+    the user to then register an account."""
+    signature = Role.SIGNATURE.dumps(data['email'])
+    url = '{}activate/{}'.format(settings.APP_UI_URL, signature)
+    role = Role(email=data['email'], name=data['email'])
+    params = dict(url=url,
+                  role=role,
+                  ui_url=settings.APP_UI_URL,
+                  app_title=settings.APP_TITLE)
+    plain = render_template('email/registration_code.txt', **params)
+    html = render_template('email/registration_code.html', **params)
+    log.info("Challenge: %s", plain)
+    email_role(role, gettext('Registration'), html=html, plain=plain)
 
 
 def create_system_roles():
@@ -65,6 +81,7 @@ def update_subscriptions(role_id):
 def update_roles():
     q = db.session.query(Role)
     for role in q:
+        refresh_role(role)
         update_role(role)
 
 

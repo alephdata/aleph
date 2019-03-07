@@ -6,20 +6,9 @@ from aleph.authz import Authz
 from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
-from aleph.index.records import delete_records
 from aleph.logic.notifications import publish, flush_notifications
 
 log = logging.getLogger(__name__)
-
-
-def get_collection(collection_id):
-    key = cache.object_key(Collection, collection_id)
-    data = cache.get_complex(key)
-    if data is None:
-        log.debug("Collection [%s]: object cache miss", collection_id)
-        data = index.get_collection(collection_id)
-        cache.set_complex(key, data, expire=cache.EXPIRE)
-    return data
 
 
 def create_collection(data, role=None, sync=False):
@@ -46,13 +35,18 @@ def update_collection(collection, sync=False):
 def refresh_collection(collection_id, sync=False):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and re-index."""
-    cache.kv.delete(cache.object_key(Collection, collection_id),
-                    cache.object_key(Collection, collection_id, 'stats'))
+    cache.kv.delete(cache.object_key(Collection, collection_id))
 
 
-def index_collections():
-    for collection in Collection.all(deleted=True):
+def index_collections(entities=False, refresh=False):
+    q = Collection.all(deleted=True)
+    q = q.order_by(Collection.updated_at.desc())
+    for collection in q:
         log.info("Index [%s]: %s", collection.id, collection.label)
+        if entities and collection.deleted_at is None:
+            index_collection_entities.delay(collection_id=collection.id)
+        if refresh:
+            refresh_collection(collection.id, sync=False)
         index.index_collection(collection)
 
 
@@ -84,9 +78,17 @@ def delete_collection_content(collection_id):
     Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
     index.delete_collection(collection_id)
     index.delete_entities(collection_id)
-    delete_records(collection_id)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
+
+
+@celery.task(priority=1)
+def index_collection_entities(collection_id):
+    from aleph.index import entities
+    collection = Collection.by_id(collection_id)
+    if collection is not None:
+        entities.index_collection_entities(collection)
+    refresh_collection(collection_id)
 
 
 def delete_bulk_entities(collection_id, deleted_at=None):

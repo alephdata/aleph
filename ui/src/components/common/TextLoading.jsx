@@ -4,9 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import './TextLoading.scss';
 
 
-class TextLoading extends PureComponent {
+export default class TextLoading extends PureComponent {
   render() {
-    const { loading } = this.props;
+    const { loading, children } = this.props;
     if (loading) {
       return (
         <span className="TextLoading">
@@ -14,8 +14,6 @@ class TextLoading extends PureComponent {
         </span>
       );
     }
-    return this.props.children;
+    return children;
   }
 }
-
-export default TextLoading;

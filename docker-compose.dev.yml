@@ -33,7 +33,7 @@ services:
         - redis-data:/data
 
   convert-document:
-    image: alephdata/aleph-convert-document
+    image: alephdata/convert-document:1.4.0
     restart: on-failure
     tmpfs:
       - /tmp
@@ -42,13 +42,13 @@ services:
       - 3000
 
   recognize-text:
-    image: alephdata/aleph-recognize-text
+    image: alephdata/recognize-text:1.2.0
     restart: on-failure
     expose:
       - 50000
   
   extract-entities:
-    image: alephdata/aleph-extract-entities
+    image: alephdata/extract-entities:1.2.0
     restart: on-failure
     expose:
       - 50000

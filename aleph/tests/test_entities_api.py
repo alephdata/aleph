@@ -26,7 +26,6 @@ class EntitiesApiTestCase(TestCase):
         self.ent = Entity.create(self.data, self.col)
         db.session.commit()
         index_entity(self.ent)
-        self.flush_index()
 
     def test_index(self):
         res = self.client.get('/api/2/entities?facet=collection_id')
@@ -87,7 +86,7 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
-            'schema': 'Asset',
+            'schema': 'RealEstate',
             'collection_id': self.col.id,
             'properties': {
                 'name': "Our house",
@@ -105,7 +104,7 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
-            'schema': 'Asset',
+            'schema': 'RealEstate',
             'collection': {
                 'id': self.col.id,
                 'label': 'blaaa'
@@ -242,7 +241,6 @@ class EntitiesApiTestCase(TestCase):
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
-        self.flush_index()
         url = '/api/2/entities/%s/similar' % obj.json['id']
         similar = self.client.get(url, headers=headers)
         assert similar.status_code == 200, (similar.status_code, similar.json)
@@ -267,7 +265,6 @@ class EntitiesApiTestCase(TestCase):
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
-        self.flush_index()
         data = {
             'schema': 'Person',
             'properties': {
@@ -291,7 +288,6 @@ class EntitiesApiTestCase(TestCase):
         config = load_config_file(yml_path)
         bulk_load(config)
         _, headers = self.login(is_admin=True)
-        self.flush_index()
 
         res = self.client.get('/api/2/entities?q=Climate',
                               headers=headers)
@@ -315,8 +311,7 @@ class EntitiesApiTestCase(TestCase):
                 'phone': '+491769817271'
             }
         }
-        resa = self.client.post(url,
-                                data=json.dumps(data),
+        resa = self.client.post(url, data=json.dumps(data),
                                 headers=headers,
                                 content_type='application/json')
         data = {
@@ -327,11 +322,9 @@ class EntitiesApiTestCase(TestCase):
                 'phone': '+491769817271'
             }
         }
-        resa = self.client.post(url,
-                                data=json.dumps(data),
+        resa = self.client.post(url, data=json.dumps(data),
                                 headers=headers,
                                 content_type='application/json')
-        self.flush_index()
         url = '/api/2/entities/%s/tags' % resa.json['id']
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, (res.status_code, res.json)

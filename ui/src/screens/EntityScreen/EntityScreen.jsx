@@ -1,26 +1,16 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router';
-import {connect} from 'react-redux';
+import React, { PureComponent } from 'react';
+import { Redirect } from 'react-router';
 import queryString from 'query-string';
 
-import {selectEntity, selectEntityReference, selectEntityView} from 'src/selectors';
+import { selectEntity, selectEntityReference, selectEntityView } from 'src/selectors';
 import EntityScreenContext from 'src/components/Entity/EntityScreenContext';
-
-class EntityScreen extends Component {
-  render() {
-    const {entityId, mode} = this.props;
-      return (
-        <EntityScreenContext entityId={entityId}
-                             activeMode={mode}/>
-      );
-  }
-}
+import { connectedWithRouter } from 'src/util/enhancers';
 
 const mapStateToProps = (state, ownProps) => {
   const { entityId, mode } = ownProps.match.params;
   const { location } = ownProps;
   const reference = selectEntityReference(state, entityId, mode);
-  const hashQuery = queryString.parse(location.hash);  
+  const hashQuery = queryString.parse(location.hash);
   return {
     entityId,
     reference,
@@ -29,12 +19,21 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-EntityScreen = connect(mapStateToProps)(EntityScreen);
-EntityScreen = withRouter(EntityScreen);
-export default EntityScreen;
+export class EntityScreen extends PureComponent {
+  render() {
+    const { entityId, entity, mode } = this.props;
+    if (entity.schemata && entity.schema.isDocument()) {
+      return (
+        <Redirect to={{
+          ...this.props.location,
+          pathname: `/documents/${entityId}`,
+        }
+      }
+        />
+      );
+    }
+    return <EntityScreenContext entityId={entityId} activeMode={mode} />;
+  }
+}
 
-
-
-
-
-
+export default connectedWithRouter({ mapStateToProps })(EntityScreen);

@@ -3,11 +3,9 @@ import logging
 from ingestors import Manager
 from ingestors.util import decode_path
 
-from aleph.core import db, settings
+from aleph.core import db
 from aleph.model import Document
 from aleph.logic.documents.result import DocumentResult
-from aleph.logic.documents.ocr import TextRecognizerService
-from aleph.logic.documents.ocr import GoogleVisionService
 
 log = logging.getLogger(__name__)
 
@@ -22,12 +20,7 @@ class DocumentManager(Manager):
     RESULT_CLASS = DocumentResult
 
     def __init__(self, archive):
-        ocr_service = None
-        if settings.OCR_VISION_API:
-            ocr_service = GoogleVisionService()
-        elif settings.OCR_SERVICE:
-            ocr_service = TextRecognizerService()
-        super(DocumentManager, self).__init__({}, ocr_service=ocr_service)
+        super(DocumentManager, self).__init__({})
         self.archive = archive
 
     def before(self, result):

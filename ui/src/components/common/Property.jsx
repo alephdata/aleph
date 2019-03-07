@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
-import { Country, Date, URL } from 'src/components/common';
+import {
+  Numeric, Country, Date, URL,
+} from 'src/components/common';
 import { selectMetadata } from 'src/selectors';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
@@ -23,10 +25,13 @@ class Value extends PureComponent {
       return <URL value={value} />;
     }
     if (model.type === 'entity') {
-      return <Entity.Link entity={value} icon />;
+      return <Entity.Smart.Link entity={value} icon />;
     }
     if (model.type === 'date') {
       return <Date value={value} />;
+    }
+    if (model.type === 'number') {
+      return <Numeric num={value} />;
     }
     return value;
   }
@@ -39,26 +44,26 @@ class Name extends PureComponent {
   }
 }
 
-class Reverse extends Component {
+class Reverse extends PureComponent {
   render() {
     const { model, schemata } = this.props;
-    if (!model.schema || !model.reverse) {
-      return <FormattedMessage id="property.inverse" defaultMessage="'{name}' of …" values={model} />
+    if (!model.range || !model.reverse) {
+      return <FormattedMessage id="property.inverse" defaultMessage="'{name}' of …" values={model} />;
     }
-    const range = schemata[model.schema],
-          prop = range.properties[model.reverse];
-    return <span>{prop.plural || prop.name}</span>;
+    const range = schemata.getSchema(model.range);
+    const prop = range.getProperty(model.reverse);
+    return <span>{prop.plural || prop.label}</span>;
   }
 }
 
 class Values extends PureComponent {
   render() {
-    const { values, model } = this.props;
-    const vals = ensureArray(values).map((value, idx) => (
-      <Value key={idx} model={model} value={value} />
+    const { model, values = model.values } = this.props;
+    const vals = ensureArray(values).map(value => (
+      <Value key={value.toString()} model={model.property} value={value} />
     ));
     if (!vals.length) {
-      return (<span className='no-value'>—</span>);
+      return (<span className="no-value">—</span>);
     }
     return (<span>{ wordList(vals, ' · ') }</span>);
   }
@@ -70,8 +75,11 @@ const mapStateToProps = state => ({
 
 class Property extends Component {
     static Name = Name;
+
     static Reverse = connect(mapStateToProps)(Reverse);
+
     static Value = Value;
+
     static Values = Values;
 }
 

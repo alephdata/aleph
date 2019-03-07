@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import { FormattedRelative } from 'react-intl';
 
 import Role from 'src/components/common/Role';
@@ -17,21 +17,22 @@ class Notification extends PureComponent {
       return <Collection.Link collection={object} preview icon />;
     }
     if (type === 'document' || type === 'entity') {
-      return <Entity.Link entity={object} preview icon />;
+      return <Entity.Smart.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
-      return object ? object.query : null; 
+      return object ? object.query : null;
     }
     if (type === 'role') {
       return <Role.Label role={object} />;
     }
+    return undefined;
   }
 
-  convertUTCDateToLocalDate(date) {
-    let newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+  convertUTCDateToLocalDate = (date) => {
+    const newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
-    let offset = date.getTimezoneOffset() / 60;
-    let hours = date.getHours();
+    const offset = date.getTimezoneOffset() / 60;
+    const hours = date.getHours();
 
     newDate.setHours(hours - offset);
 
@@ -39,12 +40,13 @@ class Notification extends PureComponent {
   }
 
   render() {
-    const { event, id, created_at } = this.props.notification;
+    const { event, id, created_at: createdAt } = this.props.notification;
     const parts = event.template.split(/({{|}})/);
     const message = [];
 
     let paramActive = false;
-    for (let token of parts) {
+    // TODO: Could be done with Array.prototype.reducer very nicely
+    parts.forEach((token) => {
       if (token === '{{') {
         paramActive = true;
       } else if (token === '}}') {
@@ -55,18 +57,18 @@ class Notification extends PureComponent {
       } else {
         message.push(token);
       }
-    }
+    });
 
-    let createdDate = this.convertUTCDateToLocalDate(new Date(created_at));
+    const createdDate = this.convertUTCDateToLocalDate(new Date(createdAt));
 
     return (
       <li key={id} className="Notification">
         <div className="timestamp">
-          <FormattedRelative value={createdDate.toString()}/>
+          <FormattedRelative value={createdDate.toString()} />
         </div>
         <React.Fragment>
-          {message.map((m, i) => (
-            <span key={i}>{m}</span>
+          {message.map(m => (
+            <span key={m}>{m}</span>
           ))}
         </React.Fragment>
       </li>

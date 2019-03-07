@@ -4,11 +4,12 @@ from urlnormalizer import query_string
 from aleph.core import settings
 
 
-def ui_url(resource, id=None, **query):
+def ui_url(resource, id=None, _relative=False, **query):
     """Make a UI link."""
     if id is not None:
         resource = '%s/%s' % (resource, id)
-    url = urljoin(settings.APP_UI_URL, resource)
+    url = '/' if _relative else settings.APP_UI_URL
+    url = urljoin(url, resource)
     return url + query_string(list(query.items()))
 
 

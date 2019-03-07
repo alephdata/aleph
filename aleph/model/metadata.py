@@ -268,7 +268,6 @@ class Metadata(object):
 
     @property
     def encoding(self):
-        # TODO: read from HTTP headers?
         return self.meta.get('encoding')
 
     @encoding.setter

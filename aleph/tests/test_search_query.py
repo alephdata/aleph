@@ -49,7 +49,7 @@ class QueryTestCase(TestCase):
     def test_has_prefix(self):
         q = query([('prefix', 'tex')])
         text_q = q.get_text_query()
-        self.assertEqual(text_q[0]['match_phrase_prefix']['text'], 'tex')
+        self.assertEqual(text_q[0]['match_phrase_prefix']['name'], 'tex')
 
     def test_id_filter(self):
         q = query([

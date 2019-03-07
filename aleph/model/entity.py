@@ -1,22 +1,25 @@
 import logging
 from datetime import datetime
+from normality import stringify
 from followthemoney import model
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 
 from aleph.core import db
 from aleph.model.collection import Collection
-from aleph.model.permission import Permission
 from aleph.model.match import Match
-from aleph.model.common import SoftDeleteModel, UuidModel
-from aleph.model.common import make_textid
+from aleph.model.common import SoftDeleteModel
+from aleph.model.common import make_textid, ENTITY_ID_LEN
 
 log = logging.getLogger(__name__)
 
 
-class Entity(db.Model, UuidModel, SoftDeleteModel):
+class Entity(db.Model, SoftDeleteModel):
     THING = 'Thing'
+    LEGAL_ENTITY = 'LegalEntity'
 
+    id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True,
+                   default=make_textid, nullable=False, unique=False)
     name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
     foreign_id = db.Column(db.Unicode)
@@ -106,6 +109,17 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         proxy.add('name', self.name)
         return proxy
 
+    def to_dict(self):
+        proxy = self.to_proxy()
+        data = proxy.to_full_dict()
+        data.update(self.to_dict_dates())
+        data.update({
+            'foreign_id': self.foreign_id,
+            'collection_id': stringify(self.collection_id),
+            'bulk': False
+        })
+        return data
+
     @classmethod
     def create(cls, data, collection):
         foreign_id = data.get('foreign_id')
@@ -130,15 +144,8 @@ class Entity(db.Model, UuidModel, SoftDeleteModel):
         return q.first()
 
     @classmethod
-    def all_ids(cls, deleted=False, authz=None):
-        q = super(Entity, cls).all_ids(deleted=deleted)
-        if authz is not None and not authz.is_admin:
-            q = q.join(Permission,
-                       cls.collection_id == Permission.collection_id)
-            q = q.filter(Permission.deleted_at == None)  # noqa
-            q = q.filter(Permission.read == True)  # noqa
-            q = q.filter(Permission.role_id.in_(authz.roles))
-        return q
+    def by_collection(cls, collection_id):
+        return cls.all().filter(Entity.collection_id == collection_id)
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

@@ -12,9 +12,8 @@ from aleph.oauth import oauth
 from aleph.model import Role, Audit
 from aleph.logic.roles import update_role
 from aleph.logic.audit import record_audit
+from aleph.views.forms import LoginSchema
 from aleph.views.util import get_best_next_url, parse_request, jsonify
-from aleph.serializers.roles import LoginSchema
-
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)

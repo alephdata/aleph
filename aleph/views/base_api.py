@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 from flask import Blueprint, request
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
@@ -10,8 +11,9 @@ from jwt import ExpiredSignatureError
 from aleph import __version__
 from aleph.core import cache, settings, url_for
 from aleph.authz import Authz
-from aleph.model import Collection
-from aleph.index.collections import get_instance_stats
+from aleph.model import Collection, Role
+from aleph.logic import resolver
+from aleph.views.serializers import RoleSerializer
 from aleph.views.cache import enable_cache, NotModified
 from aleph.views.util import jsonify, render_xml
 
@@ -23,7 +25,7 @@ log = logging.getLogger(__name__)
 def metadata():
     locale = get_locale()
     enable_cache(vary_user=False, vary=str(locale))
-    key = cache.key('metadata', id(settings), locale)
+    key = cache.key('metadata', locale)
     data = cache.get_complex(key)
     if data is not None:
         return jsonify(data)
@@ -54,14 +56,53 @@ def metadata():
         'schemata': model,
         'auth': auth
     }
-    cache.set_complex(key, data, expire=84600)
+    cache.set_complex(key, data, expire=120)
     return jsonify(data)
 
 
 @blueprint.route('/api/2/statistics')
 def statistics():
-    enable_cache(vary_user=True)
-    return jsonify(get_instance_stats(request.authz))
+    """Get a summary of the data acessible to the current user."""
+    enable_cache()
+    collections = request.authz.collections(request.authz.READ)
+    for collection_id in collections:
+        resolver.queue(request, Collection, collection_id)
+    for role_id in request.authz.roles:
+        resolver.queue(request, Role, role_id)
+    resolver.resolve(request)
+
+    # Summarise stats. This is meant for display, so the counting is a bit
+    # inconsistent between counting all collections, and source collections
+    # only.
+    schemata = defaultdict(int)
+    countries = defaultdict(int)
+    categories = defaultdict(int)
+    for collection_id in collections:
+        data = resolver.get(request, Collection, collection_id)
+        if data is None or data.get('casefile'):
+            continue
+        categories[data.get('category')] += 1
+        for schema, count in data.get('schemata', {}).items():
+            schemata[schema] += count
+        for country in data.get('countries', []):
+            countries[country] += 1
+
+    # Add a users roles to the home page:
+    groups = []
+    for role_id in request.authz.roles:
+        data = resolver.get(request, Role, role_id)
+        if data is None or data.get('type') != Role.GROUP:
+            continue
+        groups.append(RoleSerializer().serialize(data))
+
+    return jsonify({
+        'collections': len(collections),
+        'schemata': dict(schemata),
+        'countries': dict(countries),
+        'categories': dict(categories),
+        'groups': groups,
+        'things': sum(schemata.values()),
+    })
 
 
 @blueprint.route('/api/2/sitemap.xml')
@@ -126,6 +167,7 @@ def handle_server_error(err):
 def handle_invalid_data(err):
     return jsonify({
         'status': 'error',
+        'message': str(err),
         'errors': err.errors
     }, status=400)
 

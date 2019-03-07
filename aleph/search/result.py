@@ -1,24 +1,21 @@
 import math
 import logging
-from banal import hash_data
+from pprint import pprint, pformat  # noqa
 
 from aleph.core import url_external
 from aleph.index.util import unpack_result
 from aleph.search.parser import QueryParser
 from aleph.search.facet import CategoryFacet, CollectionFacet, CountryFacet
 from aleph.search.facet import LanguageFacet, SchemaFacet, Facet
-from aleph.util import result_key
 
 log = logging.getLogger(__name__)
 
 
 class QueryResult(object):
 
-    def __init__(self, request, parser=None, results=None, total=None,
-                 schema=None):
+    def __init__(self, request, parser=None, results=None, total=None):
         self.request = request
         self.parser = parser or QueryParser(request.args, request.authz)
-        self.schema = schema
         self.results = results or []
         self.total = total or 0
 
@@ -36,23 +33,10 @@ class QueryResult(object):
         args.extend(self.parser.items)
         return url_external(self.request.path, args)
 
-    @property
-    def cache_key(self):
-        """Generate a key for the current result."""
-        results = [result_key(r) for r in self.results]
-        return hash_data((self.parser.cache_key, self.total, results))
-
-    def to_dict(self):
+    def to_dict(self, serializer=None):
         results = list(self.results)
-        if self.schema:
-            results, errors = self.schema().dump(results, many=True)
-            if len(errors):
-                return {
-                    'status': 'error',
-                    'total': 0,
-                    'results': [],
-                    'errors': errors
-                }
+        if serializer:
+            results = serializer().serialize_many(results)
 
         return {
             'status': 'ok',
@@ -69,10 +53,8 @@ class QueryResult(object):
 
 class DatabaseQueryResult(QueryResult):
 
-    def __init__(self, request, query, parser=None, schema=None):
-        super(DatabaseQueryResult, self).__init__(request,
-                                                  parser=parser,
-                                                  schema=schema)
+    def __init__(self, request, query, parser=None):
+        super(DatabaseQueryResult, self).__init__(request, parser=parser)
         self.total = query.count()
         results = query.limit(self.parser.limit)
         results = results.offset(self.parser.offset)
@@ -89,14 +71,13 @@ class SearchQueryResult(QueryResult):
         'schemata': SchemaFacet
     }
 
-    def __init__(self, request, parser, result, schema=None):
-        super(SearchQueryResult, self).__init__(request,
-                                                parser=parser,
-                                                schema=schema)
+    def __init__(self, request, parser, result):
+        super(SearchQueryResult, self).__init__(request, parser=parser)
         self.result = result
         hits = self.result.get('hits', {})
         self.total = hits.get('total')
         for doc in hits.get('hits', []):
+            # log.info("Res: %s", pformat(doc))
             doc = unpack_result(doc)
             if doc is not None:
                 self.results.append(doc)
@@ -109,7 +90,7 @@ class SearchQueryResult(QueryResult):
             facets[name] = facet_cls(name, aggregations, self.parser)
         return facets
 
-    def to_dict(self):
-        data = super(SearchQueryResult, self).to_dict()
+    def to_dict(self, serializer=None):
+        data = super(SearchQueryResult, self).to_dict(serializer=serializer)
         data['facets'] = self.get_facets()
         return data

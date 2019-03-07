@@ -26,18 +26,14 @@ class QueryTags extends Component {
     // "?ancestors={id}"
     return (
       <div className="QueryTags">
-        {activeFilters.map(filter =>
-          query.getFilter(filter).map(value => {
-            return (
-              <QueryFilterTag
-                filter={filter}
-                value={value}
-                remove={this.removeFilterValue}
-                key={value}
-              />
-            )
-          })
-        )}
+        {activeFilters.map(filter => query.getFilter(filter).map(value => (
+          <QueryFilterTag
+            filter={filter}
+            value={value}
+            remove={this.removeFilterValue}
+            key={value}
+          />
+        )))}
       </div>
     );
   }

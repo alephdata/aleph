@@ -11,19 +11,26 @@ export function mergeResults(previous, current) {
   }
   return previous;
 }
-
+export function objectLoadComplete(state, id, data = {}) {
+  /* eslint-disable no-param-reassign */
+  data.isLoading = false;
+  data.isError = false;
+  data.shouldLoad = false;
+  /* eslint-enable no-param-reassign */
+  return { ...state, [id]: data };
+}
 export function updateResults(state, { query, result }) {
   const key = query.toKey();
-  const res = { ...result, results: result.results.map((r) => r.id) };
+  const res = { ...result, results: result.results.map(r => r.id) };
   return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
 
-export function invalidateResults(state) {
+export function invalidateResults() {
   return {};
 }
 
 export function objectLoadStart(state, id) {
-  const object = { isLoading: true, shouldLoad: false }
+  const object = { isLoading: true, shouldLoad: false };
   return { ...state, [id]: _.assign({}, state[id], object) };
 }
 
@@ -37,7 +44,7 @@ export function objectLoadError(state, id, error) {
     isLoading: false,
     isError: true,
     shouldLoad: false,
-    error
+    error,
   };
   return { ...state, [id]: _.assign({}, state[id], object) };
 }
@@ -47,26 +54,16 @@ export function resultLoadError(state, query, error) {
   return objectLoadError(state, key, error);
 }
 
-export function objectLoadComplete(state, id, data) {
-  const object = {
-    ...data,
-    isLoading: false,
-    isError: false,
-    shouldLoad: false
-  }
-  return { ...state, [id]: _.assign({}, state[id], object) };
-}
 
 export function objectDelete(state, id) {
   _.unset(state, id);
   return state;
 }
 
-export function resultObjects(state, result) {
+export function resultObjects(state, result, onComplete = objectLoadComplete) {
   if (result.results !== undefined) {
-    for (let object of result.results) {
-      state = objectLoadComplete(state, object.id, object);
-    }  
+    return result.results
+      .reduce((finalState, object) => onComplete(finalState, object.id, object), state);
   }
   return state;
 }
