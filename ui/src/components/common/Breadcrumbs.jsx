@@ -6,13 +6,6 @@ import { Collection, Entity } from 'src/components/common';
 import SearchBox from './SearchBox';
 import './Breadcrumbs.scss';
 
-function BreadcrumbSearch(props) {
-  return (
-    <SearchBox
-      className="BreadcrumbSearch"
-      {...props}
-    />
-  );
 
 class CollectionBreadcrumb extends PureComponent {
   render() {
@@ -81,8 +74,6 @@ export default class Breadcrumbs extends Component {
 
   static Text = TextBreadcrumb;
 
-  static Search = BreadcrumbSearch;
-
   render() {
     const { collection, children } = this.props;
 
@@ -99,7 +90,7 @@ export default class Breadcrumbs extends Component {
           {collectionCrumbs}
           {children}
         </ul>
-        <BreadcrumbSearch {...this.props} />
+        <SearchBox className="BreadcrumbSearch" {...this.props} />
       </nav>
     );
   }

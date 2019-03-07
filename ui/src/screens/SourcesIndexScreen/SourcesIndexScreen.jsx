@@ -128,12 +128,21 @@ export class SourcesIndexScreen extends Component {
         searchPlaceholder={intl.formatMessage(messages.placeholder)}
         searchText={queryPrefix}
       >
-        { result.total && (
+        { !!result.total && (
           <Breadcrumbs.Text text={(
             <FormattedMessage
               id="sources.index.total"
               defaultMessage="{total} sources of documents and data"
               values={{ total }}
+            />
+            )}
+          />
+        )}
+        { !result.total && (
+          <Breadcrumbs.Text text={(
+            <FormattedMessage
+              id="sources.index.none"
+              defaultMessage="No sources were found"
             />
             )}
           />
