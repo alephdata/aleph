@@ -26,7 +26,7 @@ aleph resetindex
 # Apply a database schema change:
 aleph upgrade
 # Re-index collections and documents:
-aleph repair --documents
+aleph repair --entities
 ```
 
 Be advised that any data loaded via the entity mapping mechanism will need to
