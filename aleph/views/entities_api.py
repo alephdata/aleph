@@ -12,6 +12,7 @@ from aleph.model import Audit
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
+from aleph.logic.export import export_entities
 from aleph.index.entities import entities_by_ids
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
@@ -20,7 +21,6 @@ from aleph.views.cache import enable_cache
 from aleph.views.serializers import EntitySerializer
 from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
 
-from aleph.views.export import export_entities
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
