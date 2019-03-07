@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
-import { Country, Date, URL } from 'src/components/common';
+import {
+  Count, Country, Date, URL,
+} from 'src/components/common';
 import { selectMetadata } from 'src/selectors';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
@@ -27,6 +29,9 @@ class Value extends PureComponent {
     }
     if (model.type === 'date') {
       return <Date value={value} />;
+    }
+    if (Number.isFinite(1 * value)) {
+      return <Count noTag full count={value} />;
     }
     return value;
   }
