@@ -13,7 +13,6 @@ function BreadcrumbSearch(props) {
       {...props}
     />
   );
-}
 
 class CollectionBreadcrumb extends PureComponent {
   render() {

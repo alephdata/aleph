@@ -198,7 +198,7 @@ def resetcache():
 @manager.option('-e', '--entities', dest='entities')
 def repair(entities=False):
     """Re-index all the collections and entities."""
-    index_collections(entities=True, refresh=True)
+    index_collections(entities=entities, refresh=True)
     update_roles()
 
 

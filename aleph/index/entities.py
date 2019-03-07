@@ -205,10 +205,10 @@ def index_operation(data):
 
     # Slight hack: a magic property in followthemoney that gets taken out
     # of the properties and added straight to the index text.
-    texts = data.pop('texts', [])
+    texts = data.pop('text', [])
     texts.extend(data.get('properties', {}).pop('indexText', []))
     texts.extend(fps)
-    data['texts'] = texts
+    data['text'] = texts
 
     if not data.get('created_at'):
         data['created_at'] = data.get('updated_at')

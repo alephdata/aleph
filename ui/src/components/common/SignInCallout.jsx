@@ -40,7 +40,7 @@ export class SignInCallout extends React.Component {
         <Callout onClick={this.onSignIn} className="SignInCallout clickable bp3-icon-info-sign bp3-intent-warning">
           <FormattedMessage
             id="search.callout_message"
-            defaultMessage="Some sources are hidden from anonymous users. Please sign in to see all results you’re authorised to access!"
+            defaultMessage="Some sources are hidden from anonymous users. Sign in to see all results you are authorised to access."
           />
         </Callout>
       </React.Fragment>

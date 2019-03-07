@@ -129,7 +129,7 @@ class CollectionInfoMode extends PureComponent {
                 <FormattedMessage
                   id="collection.reconcile.description"
                   defaultMessage="Match your own data against the entities in this collection using the free {openrefine}
-                tool by adding the following reconciliation endpoint:"
+                tool by adding the reconciliation endpoint."
                   values={{
                     openrefine: <a href="http://openrefine.org">OpenRefine</a>,
                   }}
