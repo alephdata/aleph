@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-04T17:28:59.162Z\n"
+"POT-Creation-Date: 2019-03-07T14:43:44.022Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -148,6 +148,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "BCC"
 msgstr "BCC"
+
+#. [collection.info.browse_button]
+#. defaultMessage is:
+#. Browse
+#: i18n/messages.json
+msgid "Browse"
+msgstr ""
 
 #. [email.cc]
 #. defaultMessage is:
@@ -815,11 +822,11 @@ msgstr ""
 #. defaultMessage is:
 #. Match your own data against the entities in this collection using the free
 #. {openrefine}
-#.                 tool by adding the following reconciliation endpoint:
+#.                 tool by adding the reconciliation endpoint.
 #: i18n/messages.json
 msgid ""
 "Match your own data against the entities in this collection using the free {openrefine}\n"
-"                tool by adding the following reconciliation endpoint:"
+"                tool by adding the reconciliation endpoint."
 msgstr ""
 
 #. [xref.matches]
@@ -926,6 +933,13 @@ msgstr ""
 #. No search results
 #: i18n/messages.json i18n/messages.json
 msgid "No search results"
+msgstr ""
+
+#. [sources.index.none]
+#. defaultMessage is:
+#. No sources were found
+#: i18n/messages.json
+msgid "No sources were found"
 msgstr ""
 
 #. [auth.unauthorized]
@@ -1343,12 +1357,12 @@ msgstr ""
 
 #. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users. Please sign in to see all
-#. results you’re authorised to access!
+#. Some sources are hidden from anonymous users. Sign in to see all results
+#. you are authorised to access.
 #: i18n/messages.json
 msgid ""
-"Some sources are hidden from anonymous users. Please sign in to see all "
-"results you’re authorised to access!"
+"Some sources are hidden from anonymous users. Sign in to see all results you"
+" are authorised to access."
 msgstr ""
 
 #. [collection.info.source]
@@ -1671,6 +1685,13 @@ msgstr ""
 #. You are not tracking any searches
 #: i18n/messages.json i18n/messages.json
 msgid "You are not tracking any searches"
+msgstr ""
+
+#. [search.callout_message.signedIn]
+#. defaultMessage is:
+#. You are part of {roles} - click to see the associated sources.
+#: i18n/messages.json
+msgid "You are part of {roles} - click to see the associated sources."
 msgstr ""
 
 #. [navbar.alert_remove]

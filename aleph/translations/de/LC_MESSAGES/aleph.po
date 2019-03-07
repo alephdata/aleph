@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
 # 
 # Translators:
-# pudo <friedrich@pudo.org>, 2018
+# pudo <friedrich@pudo.org>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-04 18:28+0100\n"
+"POT-Creation-Date: 2019-03-07 15:42+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
-"Last-Translator: pudo <friedrich@pudo.org>, 2018\n"
+"Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +36,7 @@ msgstr "Gerhard Schröder"
 
 #: aleph/logic/roles.py:42
 msgid "Registration"
-msgstr ""
+msgstr "Anmeldung"
 
 #: aleph/model/collection.py:25
 msgid "News archives"
@@ -71,38 +71,42 @@ msgid "Procurement"
 msgstr "Auftragsvergabe"
 
 #: aleph/model/collection.py:33
+msgid "Financial records"
+msgstr ""
+
+#: aleph/model/collection.py:34
 msgid "Grey literature"
 msgstr "Graue Literatur"
 
-#: aleph/model/collection.py:34
-msgid "Document libraries"
-msgstr ""
-
 #: aleph/model/collection.py:35
+msgid "Document libraries"
+msgstr "Dokumentensammlungen"
+
+#: aleph/model/collection.py:36
 msgid "Licenses and concessions"
 msgstr "Lizenzen und Zulassungen"
 
-#: aleph/model/collection.py:36
+#: aleph/model/collection.py:37
 msgid "Regulatory filings"
 msgstr "Aufsichtsbekanntmachungen"
 
-#: aleph/model/collection.py:37
-msgid "Persons of interest"
-msgstr ""
-
 #: aleph/model/collection.py:38
-msgid "Customs declarations"
-msgstr ""
+msgid "Persons of interest"
+msgstr "Zielpersonen"
 
 #: aleph/model/collection.py:39
-msgid "Population census"
-msgstr ""
+msgid "Customs declarations"
+msgstr "Zolldokumente"
 
 #: aleph/model/collection.py:40
-msgid "Air and maritime registers"
-msgstr ""
+msgid "Population census"
+msgstr "Bevölkerungszensus"
 
 #: aleph/model/collection.py:41
+msgid "Air and maritime registers"
+msgstr "Luft- und Seeregister"
+
+#: aleph/model/collection.py:42
 msgid "Other material"
 msgstr "Anderes Material"
 
@@ -184,7 +188,7 @@ msgstr "Dieser Pfad existiert nicht."
 
 #: aleph/views/base_api.py:162
 msgid "Internal server error."
-msgstr ""
+msgstr "Interner Server-Fehler"
 
 #: aleph/views/base_api.py:179
 msgid "Access token has expired."

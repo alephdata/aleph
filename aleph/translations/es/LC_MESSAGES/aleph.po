@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-04 18:28+0100\n"
+"POT-Creation-Date: 2019-03-07 15:42+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
@@ -71,38 +71,42 @@ msgid "Procurement"
 msgstr "Obtención"
 
 #: aleph/model/collection.py:33
+msgid "Financial records"
+msgstr ""
+
+#: aleph/model/collection.py:34
 msgid "Grey literature"
 msgstr "Literatura Gris"
 
-#: aleph/model/collection.py:34
+#: aleph/model/collection.py:35
 msgid "Document libraries"
 msgstr ""
 
-#: aleph/model/collection.py:35
+#: aleph/model/collection.py:36
 msgid "Licenses and concessions"
 msgstr "Licencias y concesiones"
 
-#: aleph/model/collection.py:36
+#: aleph/model/collection.py:37
 msgid "Regulatory filings"
 msgstr "Documentación regulatoria"
 
-#: aleph/model/collection.py:37
+#: aleph/model/collection.py:38
 msgid "Persons of interest"
 msgstr ""
 
-#: aleph/model/collection.py:38
+#: aleph/model/collection.py:39
 msgid "Customs declarations"
 msgstr ""
 
-#: aleph/model/collection.py:39
+#: aleph/model/collection.py:40
 msgid "Population census"
 msgstr ""
 
-#: aleph/model/collection.py:40
+#: aleph/model/collection.py:41
 msgid "Air and maritime registers"
 msgstr ""
 
-#: aleph/model/collection.py:41
+#: aleph/model/collection.py:42
 msgid "Other material"
 msgstr "Otro material"
 

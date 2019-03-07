@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-04 18:28+0100\n"
+"POT-Creation-Date: 2019-03-07 15:42+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
@@ -73,38 +73,42 @@ msgid "Procurement"
 msgstr "Nabavke"
 
 #: aleph/model/collection.py:33
+msgid "Financial records"
+msgstr ""
+
+#: aleph/model/collection.py:34
 msgid "Grey literature"
 msgstr "Tajni dokumenti"
 
-#: aleph/model/collection.py:34
+#: aleph/model/collection.py:35
 msgid "Document libraries"
 msgstr "Biblioteke dokumenata"
 
-#: aleph/model/collection.py:35
+#: aleph/model/collection.py:36
 msgid "Licenses and concessions"
 msgstr "Dozvole i koncesije"
 
-#: aleph/model/collection.py:36
+#: aleph/model/collection.py:37
 msgid "Regulatory filings"
 msgstr "Regulatorni zapisi"
 
-#: aleph/model/collection.py:37
+#: aleph/model/collection.py:38
 msgid "Persons of interest"
 msgstr "Osobe od interesa"
 
-#: aleph/model/collection.py:38
+#: aleph/model/collection.py:39
 msgid "Customs declarations"
 msgstr "Carinske deklaracije"
 
-#: aleph/model/collection.py:39
+#: aleph/model/collection.py:40
 msgid "Population census"
 msgstr "Popis stanovništva"
 
-#: aleph/model/collection.py:40
+#: aleph/model/collection.py:41
 msgid "Air and maritime registers"
 msgstr "Vazdušni i pomorski registri"
 
-#: aleph/model/collection.py:41
+#: aleph/model/collection.py:42
 msgid "Other material"
 msgstr "Ostali materijal"
 

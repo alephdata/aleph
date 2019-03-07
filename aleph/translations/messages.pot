@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-04 18:29+0100\n"
+"POT-Creation-Date: 2019-03-07 15:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,38 +66,42 @@ msgid "Procurement"
 msgstr ""
 
 #: aleph/model/collection.py:33
-msgid "Grey literature"
+msgid "Financial records"
 msgstr ""
 
 #: aleph/model/collection.py:34
-msgid "Document libraries"
+msgid "Grey literature"
 msgstr ""
 
 #: aleph/model/collection.py:35
-msgid "Licenses and concessions"
+msgid "Document libraries"
 msgstr ""
 
 #: aleph/model/collection.py:36
-msgid "Regulatory filings"
+msgid "Licenses and concessions"
 msgstr ""
 
 #: aleph/model/collection.py:37
-msgid "Persons of interest"
+msgid "Regulatory filings"
 msgstr ""
 
 #: aleph/model/collection.py:38
-msgid "Customs declarations"
+msgid "Persons of interest"
 msgstr ""
 
 #: aleph/model/collection.py:39
-msgid "Population census"
+msgid "Customs declarations"
 msgstr ""
 
 #: aleph/model/collection.py:40
-msgid "Air and maritime registers"
+msgid "Population census"
 msgstr ""
 
 #: aleph/model/collection.py:41
+msgid "Air and maritime registers"
+msgstr ""
+
+#: aleph/model/collection.py:42
 msgid "Other material"
 msgstr ""
 

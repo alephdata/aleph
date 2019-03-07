@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-04T17:28:59.162Z\n"
+"POT-Creation-Date: 2019-03-07T14:43:44.022Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -149,6 +149,13 @@ msgstr "Da li ste sigurni da želite da izbrišete ovu stavku?"
 #: i18n/messages.json
 msgid "BCC"
 msgstr "BCC"
+
+#. [collection.info.browse_button]
+#. defaultMessage is:
+#. Browse
+#: i18n/messages.json
+msgid "Browse"
+msgstr ""
 
 #. [email.cc]
 #. defaultMessage is:
@@ -816,11 +823,11 @@ msgstr "Označi kao viđeno"
 #. defaultMessage is:
 #. Match your own data against the entities in this collection using the free
 #. {openrefine}
-#.                 tool by adding the following reconciliation endpoint:
+#.                 tool by adding the reconciliation endpoint.
 #: i18n/messages.json
 msgid ""
 "Match your own data against the entities in this collection using the free {openrefine}\n"
-"                tool by adding the following reconciliation endpoint:"
+"                tool by adding the reconciliation endpoint."
 msgstr ""
 
 #. [xref.matches]
@@ -928,6 +935,13 @@ msgstr "Nema rezultata."
 #: i18n/messages.json i18n/messages.json
 msgid "No search results"
 msgstr "Nema rezultata pretrage"
+
+#. [sources.index.none]
+#. defaultMessage is:
+#. No sources were found
+#: i18n/messages.json
+msgid "No sources were found"
+msgstr ""
 
 #. [auth.unauthorized]
 #. defaultMessage is:
@@ -1346,15 +1360,13 @@ msgstr "Veličina"
 
 #. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users. Please sign in to see all
-#. results you’re authorised to access!
+#. Some sources are hidden from anonymous users. Sign in to see all results
+#. you are authorised to access.
 #: i18n/messages.json
 msgid ""
-"Some sources are hidden from anonymous users. Please sign in to see all "
-"results you’re authorised to access!"
+"Some sources are hidden from anonymous users. Sign in to see all results you"
+" are authorised to access."
 msgstr ""
-"Neki izvori su sakriveni od korisnika koji nisu logovani. Molimo vas da se "
-"logujete kako bi vidjeli sve rezultate koje ste ovlašteni da vidite!"
 
 #. [collection.info.source]
 #. defaultMessage is:
@@ -1681,6 +1693,13 @@ msgstr ""
 #: i18n/messages.json i18n/messages.json
 msgid "You are not tracking any searches"
 msgstr "Ne pratite nijednu pretragu"
+
+#. [search.callout_message.signedIn]
+#. defaultMessage is:
+#. You are part of {roles} - click to see the associated sources.
+#: i18n/messages.json
+msgid "You are part of {roles} - click to see the associated sources."
+msgstr ""
 
 #. [navbar.alert_remove]
 #. defaultMessage is:
