@@ -1,6 +1,6 @@
 {
   "name": "aleph-ui",
-  "version": "2.3.6",
+  "version": "3.0.0",
   "private": true,
   "dependencies": {
     "@alephdata/vis2": "~1.0.3-alpha.1",
