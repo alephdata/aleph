@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
 import {
-  Count, Country, Date, URL,
+  Numeric, Country, Date, URL,
 } from 'src/components/common';
 import { selectMetadata } from 'src/selectors';
 import wordList from 'src/util/wordList';
@@ -30,8 +30,8 @@ class Value extends PureComponent {
     if (model.type === 'date') {
       return <Date value={value} />;
     }
-    if (Number.isFinite(1 * value)) {
-      return <Count noTag full count={value} />;
+    if (model.type === 'number') {
+      return <Numeric num={value} />;
     }
     return value;
   }

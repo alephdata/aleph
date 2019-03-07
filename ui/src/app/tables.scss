@@ -75,8 +75,13 @@ table {
     max-width: unset;
   }
 
-  th.numeric, td.numeric {
+  // th.numeric, td.numeric, th.number, td.number {
+  td.numeric, td.number {
     text-align: right;
+    white-space: nowrap;
+    overflow: visible;
+    max-width: unset;
+    text-overflow: unset;
 
     // Float on the right, so that numbers overflow to the left.
     // (FormattedNumber creates a <span>)

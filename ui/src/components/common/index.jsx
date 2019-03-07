@@ -4,6 +4,7 @@ import Category from './Category';
 import CheckboxList from './CheckboxList';
 import Collection from './Collection';
 import Country from './Country';
+import Numeric from './Numeric';
 import Date from './Date';
 import DualPane from './DualPane';
 import Entity from './Entity';
@@ -30,6 +31,7 @@ export {
   CheckboxList,
   Collection,
   Country,
+  Numeric,
   Date,
   DualPane,
   Entity,

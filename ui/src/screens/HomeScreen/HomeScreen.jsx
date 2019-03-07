@@ -1,7 +1,6 @@
 import React, { Component, PureComponent } from 'react';
 import _ from 'lodash';
 import c from 'classnames';
-import numeral from 'numeral';
 import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, FormattedNumber,
@@ -17,7 +16,7 @@ import Screen from 'src/components/Screen/Screen';
 import SearchBox from 'src/components/Navbar/SearchBox';
 import { translatableConnected } from 'src/util/enhancers';
 import {
-  Category, Country, Schema, Count,
+  Category, Country, Schema, Numeric,
   DualPane, SignInCallout, Role,
 } from 'src/components/common';
 
@@ -48,7 +47,7 @@ class Statistics extends PureComponent {
     return (
       <li {...rest}>
         <Name name={name} />
-        <Count count={count} noTag full />
+        <Numeric num={count} />
       </li>
     );
   }
@@ -186,7 +185,7 @@ export class HomeScreen extends Component {
                       id="home.statistics.schemata"
                       defaultMessage="Search {things} entities"
                       values={{
-                        things: numeral(statistics.things).format('0a'),
+                        things: <Numeric num={statistics.things} abbr />,
                       }}
                     />
                   )}
