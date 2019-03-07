@@ -113,6 +113,15 @@ def process(foreign_id=None, index=False, retry=False):
                       failed_only=retry)
 
 
+@manager.command
+# @manager.option('-f', '--foreign_id')
+@manager.option('-e', '--entities', dest='entities')
+def repair(foreign_id=None, entities=False):
+    """Re-index all the collections and entities."""
+    update_roles()
+    index_collections(entities=entities, refresh=True)
+
+
 @manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa
 @manager.option('-f', '--foreign_id', dest='foreign_id', required=True, help='foreign-id of collection to xref')  # noqa
 def xref(foreign_id, against=None):
@@ -192,14 +201,6 @@ def resetindex():
 def resetcache():
     """Clear the redis cache."""
     cache.flush()
-
-
-@manager.command
-@manager.option('-e', '--entities', dest='entities')
-def repair(entities=False):
-    """Re-index all the collections and entities."""
-    index_collections(entities=entities, refresh=True)
-    update_roles()
 
 
 @manager.command

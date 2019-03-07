@@ -24,6 +24,8 @@ class EntitiesQuery(Query):
         if len(schemata):
             return entities_read_index(schema=schemata, expand=False)
         schemata = self.parser.getlist('filter:schemata')
+        if not len(schemata):
+            log.warning("FULLINDEX: Received query without schema filter.")
         return entities_read_index(schema=schemata)
 
 
