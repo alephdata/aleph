@@ -37,7 +37,7 @@ def write_document(zip_archive, entity):
     file_url = entity.context['links'].get('file')
     if file_url:
         stream = requests.get(file_url, stream=True)
-    zip_archive.write_iter(path, stream.iter_content())
+        zip_archive.write_iter(path, stream.iter_content())
 
 
 def export_entity_csv(handlers, entity):
