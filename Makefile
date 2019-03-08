@@ -68,7 +68,7 @@ dev:
 translate: dev
 	pybabel extract -F babel.cfg -k lazy_gettext -o aleph/translations/messages.pot aleph
 	tx push --source
-	tx pull --all
+	tx pull -a -f
 	pybabel compile -d aleph/translations -D aleph -f
 
 .PHONY: build services
