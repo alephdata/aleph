@@ -14,7 +14,6 @@ from aleph.logic.util import entity_url
 from aleph.index.util import unpack_result
 
 # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
-
 blueprint = Blueprint('reconcile_api', __name__)
 log = logging.getLogger(__name__)
 
@@ -144,9 +143,10 @@ def reconcile_op(query, collection=None):
 def suggest_entity():
     """Suggest API, emulates Google Refine API."""
     prefix = request.args.get('prefix', '')
+    types = request.args.getlist('type') or Entity.THING
     args = {
         'prefix': prefix,
-        'filter:schemata': request.args.getlist('type'),
+        'filter:schemata': types,
         'filter:collection_id': request.args.getlist('filter:collection_id')
     }
     parser = SearchQueryParser(args, request.authz)

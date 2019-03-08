@@ -28,14 +28,14 @@ class EntitiesApiTestCase(TestCase):
         index_entity(self.ent)
 
     def test_index(self):
-        res = self.client.get('/api/2/entities?facet=collection_id')
+        url = '/api/2/entities?filter:schemata=Thing'
+        res = self.client.get(url+'&facet=collection_id')
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
         assert len(res.json['facets']['collection_id']['values']) == 0, \
             res.json
         _, headers = self.login(is_admin=True)
-        res = self.client.get('/api/2/entities?facet=collection_id',
-                              headers=headers)
+        res = self.client.get(url+'&facet=collection_id', headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         assert len(res.json['facets']['collection_id']['values']) == 1, \
@@ -44,8 +44,7 @@ class EntitiesApiTestCase(TestCase):
         assert col0['id'] == str(self.col.id), res.json
         assert col0['label'] == self.col.label, res.json
         assert len(res.json['facets']) == 1, res.json
-        res = self.client.get('/api/2/entities?facet=countries',
-                              headers=headers)
+        res = self.client.get(url+'&facet=countries', headers=headers)
         assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['countries'], res.json
 
@@ -289,8 +288,8 @@ class EntitiesApiTestCase(TestCase):
         bulk_load(config)
         _, headers = self.login(is_admin=True)
 
-        res = self.client.get('/api/2/entities?q=Climate',
-                              headers=headers)
+        query = '/api/2/entities?filter:schemata=Thing&q=Climate'
+        res = self.client.get(query, headers=headers)
         assert res.json['total'] == 1, res.json
         grp_id = res.json['results'][0]['id']
 

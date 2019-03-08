@@ -29,8 +29,8 @@ class BulkLoadTestCase(TestCase):
         assert coll.category == 'scrape', coll.category
 
         _, headers = self.login(is_admin=True)
-        res = self.client.get('/api/2/entities?q=friede+springer',
-                              headers=headers)
+        url = '/api/2/entities?filter:schemata=Thing&q=friede+springer'
+        res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         res0 = res.json['results'][0]
@@ -54,7 +54,7 @@ class BulkLoadTestCase(TestCase):
         count = Collection.all().count()
         assert 1 == count, count
 
-        res = self.client.get('/api/2/entities?q=Greenfield',
-                              headers=headers)
+        url = '/api/2/entities?filter:schemata=Thing&q=Greenfield'
+        res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json

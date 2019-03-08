@@ -137,6 +137,14 @@ def handle_not_modified(err):
     return ('', 304)
 
 
+@blueprint.app_errorhandler(400)
+def handle_bad_request(err):
+    return jsonify({
+        'status': 'error',
+        'message': err.description
+    }, status=400)
+
+
 @blueprint.app_errorhandler(403)
 def handle_authz_error(err):
     return jsonify({

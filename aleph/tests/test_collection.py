@@ -11,8 +11,9 @@ class IndexTestCase(TestCase):
 
     def test_delete_collection(self):
         collection = Collection.by_id(1000)
-        res = self.client.get('/api/2/search?q="mention fruit"')
+        url = '/api/2/entities?filter:schemata=Thing&q="mention fruit"'
+        res = self.client.get(url)
         assert res.json['total'] == 1, res.json
         delete_collection(collection)
-        res = self.client.get('/api/2/search?q="mention fruit"')
+        res = self.client.get(url)
         assert res.json['total'] == 0, res.json
