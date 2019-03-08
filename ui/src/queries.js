@@ -5,7 +5,7 @@ export function queryCollectionDocuments(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
     'filter:schemata': 'Document',
-    'empty:parent': true,
+    'empty:properties.parent': true,
   };
   return Query.fromLocation('entities', location, context, 'document');
 }
