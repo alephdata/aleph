@@ -44,8 +44,8 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
-	docker build --cache-from alephdata/aleph -t alephdata/aleph:$(TAG) .
-	docker build --cache-from alephdata/aleph-ui -t alephdata/aleph-ui:$(TAG) ui
+	docker build -t alephdata/aleph:$(TAG) .
+	docker build -t alephdata/aleph-ui:$(TAG) ui
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
