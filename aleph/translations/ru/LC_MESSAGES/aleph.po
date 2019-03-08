@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-07 15:42+0100\n"
+"POT-Creation-Date: 2019-03-08 15:24+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -72,7 +72,7 @@ msgstr "Закупки"
 
 #: aleph/model/collection.py:33
 msgid "Financial records"
-msgstr ""
+msgstr "Финансовые документы"
 
 #: aleph/model/collection.py:34
 msgid "Grey literature"
@@ -135,6 +135,10 @@ msgstr ""
 msgid "{{actor}} removed access to {{collection}} from {{role}}"
 msgstr "{{actor}} удалил права {{role}} для доступа к {{collection}}"
 
+#: aleph/search/__init__.py:30
+msgid "No schema is specified for the query."
+msgstr ""
+
 #: aleph/templates/email/layout.html:45
 #, python-format
 msgid ""
@@ -189,19 +193,19 @@ msgstr ""
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
 
-#: aleph/views/base_api.py:144
+#: aleph/views/base_api.py:152
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:153
+#: aleph/views/base_api.py:161
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:162
+#: aleph/views/base_api.py:170
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:179
+#: aleph/views/base_api.py:187
 msgid "Access token has expired."
 msgstr "Ключ доступа устарел."
 

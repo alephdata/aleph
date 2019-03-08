@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-07 15:42+0100\n"
+"POT-Creation-Date: 2019-03-08 15:24+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -72,7 +72,7 @@ msgstr "Auftragsvergabe"
 
 #: aleph/model/collection.py:33
 msgid "Financial records"
-msgstr ""
+msgstr "Finanzunterlagen"
 
 #: aleph/model/collection.py:34
 msgid "Grey literature"
@@ -112,26 +112,30 @@ msgstr "Anderes Material"
 
 #: aleph/model/event.py:48
 msgid "{{actor}} created {{collection}}"
-msgstr ""
+msgstr "{{actor}} legte {{collection}} an"
 
 #: aleph/model/event.py:55
 msgid "{{actor}} changed the settings of {{collection}}"
-msgstr ""
+msgstr "{{actor}} änderte die Einstellungen von {{collection}}"
 
 #: aleph/model/event.py:62
 msgid "{{actor}} added {{document}} to {{collection}}"
-msgstr ""
+msgstr "{{actor}} fügte {{document}} zu {{collection}} hinzu"
 
 #: aleph/model/event.py:72
 msgid "{{entity}} matches your alert for {{alert}}"
-msgstr ""
+msgstr "{{entity}} erwähnt ihr Abo-Schlagwort {{alert}}"
 
 #: aleph/model/event.py:83
 msgid "{{actor}} gave {{role}} access to {{collection}}"
-msgstr ""
+msgstr "{{actor}} hat {{role}} Zugriff zu {{collection}} erteilt"
 
 #: aleph/model/event.py:100
 msgid "{{actor}} removed access to {{collection}} from {{role}}"
+msgstr "{{actor}} hat {{role}} den Zugriff zu {{collection}} entzogen"
+
+#: aleph/search/__init__.py:30
+msgid "No schema is specified for the query."
 msgstr ""
 
 #: aleph/templates/email/layout.html:45
@@ -141,6 +145,9 @@ msgid ""
 "        Dear %(name)s,\n"
 "      "
 msgstr ""
+"\n"
+"        Hallo %(name)s,\n"
+"      "
 
 #: aleph/templates/email/layout.html:53
 #, python-format
@@ -149,6 +156,9 @@ msgid ""
 "          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>\n"
 "        "
 msgstr ""
+"\n"
+"          Diese E-Mail wurde von <a href=\"%(ui_url)s\">%(app_title)s</a> verschickt\n"
+"        "
 
 #: aleph/templates/email/notifications.html:5
 #, python-format
@@ -158,6 +168,10 @@ msgid ""
 "      updates you may be interested in:\n"
 "    "
 msgstr ""
+"\n"
+"      Sie haben %(total_count)s neue Benachrichtigungen. Anbei die neuesten\n"
+"      Benachrichtigungen die von Interesse sein könnten:\n"
+"    "
 
 #: aleph/templates/email/notifications.html:16
 msgid ""
@@ -165,6 +179,9 @@ msgid ""
 "      Browse and manage all of your notifications here:\n"
 "    "
 msgstr ""
+"\n"
+"      Verwalten sie ihre Themen-Abos hier:\n"
+"    "
 
 #: aleph/templates/email/registration_code.html:5
 #, python-format
@@ -173,43 +190,46 @@ msgid ""
 "      To complete your registration, please visit <a href=\"%(url)s\">our signup page</a>.\n"
 "    "
 msgstr ""
+"\n"
+"      Um ihre Anmeldung fertig zu stellen besuchen sie bitte <a href=\"%(url)s\">die Anmeldeseite</a>.\n"
+"    "
 
 #: aleph/views/base_api.py:131
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ is deprecated, please use /api/2/."
 
-#: aleph/views/base_api.py:144
+#: aleph/views/base_api.py:152
 msgid "You are not authorized to do this."
 msgstr "Sie sind nicht autorisiert, dies zu tun."
 
-#: aleph/views/base_api.py:153
+#: aleph/views/base_api.py:161
 msgid "This path does not exist."
 msgstr "Dieser Pfad existiert nicht."
 
-#: aleph/views/base_api.py:162
+#: aleph/views/base_api.py:170
 msgid "Internal server error."
 msgstr "Interner Server-Fehler"
 
-#: aleph/views/base_api.py:179
+#: aleph/views/base_api.py:187
 msgid "Access token has expired."
 msgstr "Access token ist ausgelaufen."
 
 #: aleph/views/roles_api.py:27
 msgid "prefix filter is too short"
-msgstr ""
+msgstr "prefix-Filter ist zu kurz"
 
 #: aleph/views/roles_api.py:43
 msgid "To proceed, please check your email."
-msgstr ""
+msgstr "Prüfen sie bitte ihren E-Mail-Eingang um fortzufahren."
 
 #: aleph/views/roles_api.py:58
 msgid "Invalid code"
-msgstr ""
+msgstr "Ungültiger Code"
 
 #: aleph/views/roles_api.py:65
 msgid "Email is already registered"
-msgstr ""
+msgstr "Diese E-Mail ist bereits angemeldet"
 
 #: aleph/views/util.py:47
 msgid "Error during data validation"
-msgstr ""
+msgstr "Validierungsfehler"

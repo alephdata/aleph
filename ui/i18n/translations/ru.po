@@ -154,7 +154,7 @@ msgstr "Скрытая копия"
 #. Browse
 #: i18n/messages.json
 msgid "Browse"
-msgstr ""
+msgstr "Просмотр"
 
 #. [email.cc]
 #. defaultMessage is:
@@ -837,6 +837,8 @@ msgid ""
 "Match your own data against the entities in this collection using the free {openrefine}\n"
 "                tool by adding the reconciliation endpoint."
 msgstr ""
+"Сопоставить пользовательские данные с сущностями из этой коллекции с помощью свободного инструмента {openrefine}\n"
+"путём добавления следующих точек совмещения:"
 
 #. [xref.matches]
 #. defaultMessage is:
@@ -949,7 +951,7 @@ msgstr "Ничего не найдено"
 #. No sources were found
 #: i18n/messages.json
 msgid "No sources were found"
-msgstr ""
+msgstr "Подходящие коллекции не найдены"
 
 #. [auth.unauthorized]
 #. defaultMessage is:
@@ -1377,6 +1379,8 @@ msgid ""
 "Some sources are hidden from anonymous users. Sign in to see all results you"
 " are authorised to access."
 msgstr ""
+"Некоторые источники данных недоступны анонимным пользователям — пожалуйста, "
+"авторизуйтесь!"
 
 #. [collection.info.source]
 #. defaultMessage is:
@@ -1708,6 +1712,8 @@ msgstr "Вы не подписаны на оповещения"
 #: i18n/messages.json
 msgid "You are part of {roles} - click to see the associated sources."
 msgstr ""
+"Вы состоите в {roles} — кликните, чтобы посмотреть доступные коллекции "
+"данных."
 
 #. [navbar.alert_remove]
 #. defaultMessage is:
