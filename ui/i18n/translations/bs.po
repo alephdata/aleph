@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-08T18:25:48.242Z\n"
+"POT-Creation-Date: 2019-03-09T16:10:43.856Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -804,6 +804,13 @@ msgstr "Upravljaj pretplatama"
 #: i18n/messages.json
 msgid "Manage your investigations"
 msgstr "Upravljajte svojim istragama"
+
+#. [collection.info.manage_button]
+#. defaultMessage is:
+#. Manage...
+#: i18n/messages.json
+msgid "Manage..."
+msgstr ""
 
 #. [collection.creator]
 #. defaultMessage is:

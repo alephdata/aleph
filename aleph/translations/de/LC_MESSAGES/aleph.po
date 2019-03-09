@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-08 19:26+0100\n"
+"POT-Creation-Date: 2019-03-09 17:14+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -48,7 +48,7 @@ msgstr "Geleakte Daten"
 
 #: aleph/model/collection.py:27
 msgid "Land registry"
-msgstr "Grundbuchämter"
+msgstr "Grundbücher"
 
 #: aleph/model/collection.py:28
 msgid "Gazettes"
@@ -136,7 +136,7 @@ msgstr "{{actor}} hat {{role}} den Zugriff zu {{collection}} entzogen"
 
 #: aleph/search/__init__.py:30
 msgid "No schema is specified for the query."
-msgstr ""
+msgstr "Diese Anfrage muss ein 'schema' bestimmen."
 
 #: aleph/templates/email/layout.html:45
 #, python-format

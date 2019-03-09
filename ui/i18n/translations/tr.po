@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-08T18:25:48.242Z\n"
+"POT-Creation-Date: 2019-03-09T16:10:43.856Z\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -799,6 +799,13 @@ msgstr ""
 #. Manage your investigations
 #: i18n/messages.json
 msgid "Manage your investigations"
+msgstr ""
+
+#. [collection.info.manage_button]
+#. defaultMessage is:
+#. Manage...
+#: i18n/messages.json
+msgid "Manage..."
 msgstr ""
 
 #. [collection.creator]

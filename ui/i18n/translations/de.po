@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-08T18:25:48.242Z\n"
+"POT-Creation-Date: 2019-03-09T16:10:43.856Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -88,7 +88,7 @@ msgstr "Aktivieren sie ihr Nutzerkonto"
 #. Add alert
 #: i18n/messages.json
 msgid "Add alert"
-msgstr "Themen-Abo aktivieren"
+msgstr "Abo aktivieren"
 
 #. [search.facets.facet.addresses]
 #. defaultMessage is:
@@ -154,7 +154,7 @@ msgstr "BCC"
 #. Browse
 #: i18n/messages.json
 msgid "Browse"
-msgstr "Erforschen"
+msgstr "Stöbern"
 
 #. [email.cc]
 #. defaultMessage is:
@@ -813,6 +813,13 @@ msgstr "Verwalten sie sie ihre Themen-Abos"
 msgid "Manage your investigations"
 msgstr "Verwalten sie ihre Fälle"
 
+#. [collection.info.manage_button]
+#. defaultMessage is:
+#. Manage...
+#: i18n/messages.json
+msgid "Manage..."
+msgstr "Verwalten..."
+
 #. [collection.creator]
 #. defaultMessage is:
 #. Manager
@@ -1255,7 +1262,7 @@ msgstr "Nutzersuche"
 #. Search {things} entities
 #: i18n/messages.json
 msgid "Search {things} entities"
-msgstr "Durchsuche {things} Einträge"
+msgstr "{things} Einträge"
 
 #. [search.screen.searching]
 #. defaultMessage is:
@@ -1616,7 +1623,7 @@ msgstr "Unbenannter Fall"
 #. Update
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Update"
-msgstr "Aktualisieren"
+msgstr "Speichern"
 
 #. [collection.last_updated]
 #. defaultMessage is:
@@ -1654,7 +1661,7 @@ msgstr "Lade: {file}..."
 #. Use at least six characters
 #: i18n/messages.json
 msgid "Use at least six characters"
-msgstr "Zumindest sechs Buchstaben"
+msgstr "Mindestens sechs Buchstaben"
 
 #. [profileinfo.api_desc]
 #. defaultMessage is:
@@ -1716,7 +1723,8 @@ msgstr "Sie haben keine Themen-Abos"
 #. You are part of {roles} - click to see the associated sources.
 #: i18n/messages.json
 msgid "You are part of {roles} - click to see the associated sources."
-msgstr "Teil von {roles} - klicken sie um zugehörige Quellen zu sehen."
+msgstr ""
+"Sie sind Mitglied von {roles} - erforschen sie die zugehörigen Quellen."
 
 #. [navbar.alert_remove]
 #. defaultMessage is:
