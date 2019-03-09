@@ -2,11 +2,10 @@ import logging
 from flask_babel import gettext
 from flask import render_template
 
-from aleph.core import db, settings, cache, celery
+from aleph.core import db, settings, cache
 from aleph.authz import Authz
 from aleph.mail import email_role
-from aleph.model import Role, Subscription, Notification
-from aleph.logic.notifications import channel
+from aleph.model import Role
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +21,7 @@ def get_role(role_id):
         if role is None:
             return
         data = role.to_dict()
-        cache.set_complex(key, data, expire=cache.EXPIRE)
+        cache.set_complex(key, data)
     return data
 
 
@@ -51,37 +50,19 @@ def create_system_roles():
 
 def update_role(role):
     """Synchronize denormalised role configuration."""
-    update_subscriptions.delay(role.id)
     refresh_role(role)
 
 
 def refresh_role(role, sync=False):
-    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ, role.id),
-                    cache.key(Authz.PREFIX, Authz.WRITE, role.id),
-                    cache.object_key(Role, role.id))
-
-
-@celery.task(priority=3)
-def update_subscriptions(role_id):
-    role = Role.by_id(role_id, deleted=True)
-    if role is None:
-        return
-    Subscription.unsubscribe(role=role, channel=channel(role))
-    for group in Role.all_groups():
-        Subscription.unsubscribe(role=role, channel=channel(group))
-
-    if role.deleted_at is None and role.type == Role.USER:
-        Subscription.subscribe(role, channel(role))
-        Subscription.subscribe(role, Notification.GLOBAL)
-        for group in role.roles:
-            Subscription.subscribe(role, channel(group))
-    db.session.commit()
+    cache.kv.delete(cache.object_key(Role, role.id),
+                    cache.object_key(Role, role.id, 'channels'),
+                    cache.key(Authz.PREFIX, Authz.READ, role.id),
+                    cache.key(Authz.PREFIX, Authz.WRITE, role.id))
 
 
 def update_roles():
     q = db.session.query(Role)
     for role in q:
-        refresh_role(role)
         update_role(role)
 
 
@@ -96,6 +77,4 @@ def check_visible(role, authz):
 
 def check_editable(role, authz):
     """Check if a role can be edited by the current user."""
-    if authz.is_admin:
-        return True
     return role.id == authz.id

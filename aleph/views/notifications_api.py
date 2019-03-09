@@ -4,9 +4,8 @@ from flask import Blueprint, request
 from aleph.core import db
 from aleph.model import Notification, Role
 from aleph.search import DatabaseQueryResult
-from aleph.logic.notifications import channel
+from aleph.logic.notifications import get_role_channels
 from aleph.views.serializers import NotificationSerializer
-from aleph.views.util import get_db_collection
 from aleph.views.util import jsonify, require
 
 
@@ -17,17 +16,9 @@ blueprint = Blueprint('notifications_api', __name__)
 def index():
     require(request.authz.logged_in)
     role = Role.by_id(request.authz.id)
-    query = Notification.by_role(role)
-    result = DatabaseQueryResult(request, query)
-    return NotificationSerializer.jsonify_result(result)
-
-
-@blueprint.route('/api/2/collections/<id>/notifications', methods=['GET'])
-def collection(id):
-    require(request.authz.logged_in)
-    collection = get_db_collection(id)
-    channel_name = channel(collection)
-    query = Notification.by_channel(channel_name)
+    query = Notification.by_channels(get_role_channels(role),
+                                     since=role.notified_at,
+                                     exclude_actor_id=role.id)
     result = DatabaseQueryResult(request, query)
     return NotificationSerializer.jsonify_result(result)
 

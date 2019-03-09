@@ -15,6 +15,17 @@ def upgrade_system():
     upgrade_search()
 
 
+def cleanup_deleted():
+    from aleph.model import Alert, Entity, Collection
+    from aleph.model import Permission, Role
+    Alert.cleanup_deleted()
+    Permission.cleanup_deleted()
+    Entity.cleanup_deleted()
+    Collection.cleanup_deleted()
+    Role.cleanup_deleted()
+    db.session.commit()
+
+
 def destroy_db():
     metadata = MetaData()
     metadata.bind = db.engine
