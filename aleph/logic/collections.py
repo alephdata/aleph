@@ -46,7 +46,7 @@ def index_collections(entities=False, refresh=False):
         if entities and collection.deleted_at is None:
             index_collection_entities.delay(collection_id=collection.id)
         if refresh:
-            refresh_collection(collection.id, sync=False)
+            refresh_collection(collection.id)
         index.index_collection(collection)
 
 
