@@ -10,7 +10,7 @@ from elasticsearch.helpers import scan
 from aleph.core import es, cache
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
-# from aleph.index.indexes import entities_read_index_list
+from aleph.index.indexes import entities_read_index_list
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import index_safe, authz_query, bulk_actions
 from aleph.index.util import MAX_PAGE
@@ -162,12 +162,7 @@ def _index_updates(collection_id, entities, merge=True):
         for other in indexes.get(entity_id, []):
             if other != index:
                 # log.info("Delete ID [%s] from index: %s", entity_id, other)
-                actions.append({
-                    '_id': entity_id,
-                    '_index': other,
-                    '_type': 'doc',
-                    '_op_type': 'delete'
-                })
+                actions.append(delete_operation(other, entity_id))
         actions.append({
             '_id': entity_id,
             '_index': index,
@@ -187,12 +182,13 @@ def delete_entity(entity_id, exclude=None, sync=False):
     """Delete an entity from the index."""
     if exclude is not None:
         exclude = entities_write_index(exclude)
-    for entity in entities_by_ids(entity_id, excludes='*'):
-        index = entity.get('_index')
-        if index == exclude:
-            continue
-        es.delete(index=index, doc_type='doc', id=entity_id,
-                  refresh=refresh_sync(sync))
+
+    def _generate():
+        for index in entities_read_index_list():
+            if index != exclude:
+                yield delete_operation(index, entity_id)
+
+    bulk_actions(_generate(), sync=sync)
 
 
 def index_operation(data):
@@ -217,3 +213,12 @@ def index_operation(data):
     data.pop('_index', None)
     index = entities_write_index(data.get('schema'))
     return entity_id, index, data
+
+
+def delete_operation(index, entity_id):
+    return {
+        '_id': entity_id,
+        '_index': index,
+        '_type': 'doc',
+        '_op_type': 'delete'
+    }

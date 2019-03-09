@@ -12,6 +12,7 @@ from aleph.logic.documents.result import DocumentResult
 from aleph.logic.entities import refresh_entity
 from aleph.logic.extractors import extract_document_tags
 from aleph.index.documents import index_document
+from aleph.index.entities import delete_entity
 
 log = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ def process_document(document):
     """Perform post-ingest tasks like analysis and indexing."""
     extract_document_tags(document)
     refresh_entity(document)
+    delete_entity(document.id, exclude=document.schema)
     index_document(document)
 
 
