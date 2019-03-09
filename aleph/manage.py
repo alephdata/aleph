@@ -11,7 +11,7 @@ from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, db, cache
 from aleph.model import Collection, Document, Role
-from aleph.migration import upgrade_system, destroy_db
+from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection
@@ -97,6 +97,12 @@ def flushbulk(foreign_id):
     collection = get_collection(foreign_id)
     delete_bulk_entities(collection.id)
     db.session.commit()
+
+
+@manager.command
+def flushdeleted():
+    """Remove soft-deleted database objects."""
+    cleanup_deleted()
 
 
 @manager.command

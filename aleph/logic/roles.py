@@ -96,6 +96,4 @@ def check_visible(role, authz):
 
 def check_editable(role, authz):
     """Check if a role can be edited by the current user."""
-    if authz.is_admin:
-        return True
     return role.id == authz.id
