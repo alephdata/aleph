@@ -19,7 +19,7 @@ ENV C_FORCE_ROOT=true \
     ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
     ALEPH_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph \
     ALEPH_BROKER_URI=amqp://guest:guest@rabbitmq:5672 \
-    ALEPH_ARCHIVE_PATH=/data
+    ARCHIVE_PATH=/data
 
 # Run the green unicorn
 CMD gunicorn -w 5 -b 0.0.0.0:8000 --log-level info --log-file - aleph.manage:app
