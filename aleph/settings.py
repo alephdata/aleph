@@ -43,12 +43,9 @@ CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', separator='|')
 # Data storage
 
 # Archive type (either 's3' or 'file', i.e. local file system):
-ARCHIVE_TYPE = env.get('ALEPH_ARCHIVE_TYPE', 'file')
-ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET')
-ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH')
-ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')
-ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
-ARCHIVE_AWS_REGION = env.get('ARCHIVE_REGION', 'eu-west-1')
+sls.ARCHIVE_TYPE = env.get('ALEPH_ARCHIVE_TYPE', sls.ARCHIVE_TYPE)
+sls.ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET', sls.ARCHIVE_BUCKET)
+sls.ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH', sls.ARCHIVE_PATH)
 
 ##############################################################################
 # Security and authentication.
