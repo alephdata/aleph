@@ -151,7 +151,9 @@ def get_es():
 
 def get_archive():
     if not hasattr(settings, '_aleph_archive'):
-        settings._aleph_archive = init_archive()
+        settings._aleph_archive = init_archive(archive_type=settings.ARCHIVE_TYPE,  # noqa
+                                               bucket=settings.ARCHIVE_BUCKET,
+                                               path=settings.ARCHIVE_PATH)
     return settings._aleph_archive
 
 
