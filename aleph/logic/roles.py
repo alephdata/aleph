@@ -21,7 +21,7 @@ def get_role(role_id):
         if role is None:
             return
         data = role.to_dict()
-        cache.set_complex(key, data)
+        cache.set_complex(key, data, expire=cache.EXPIRE)
     return data
 
 
