@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-09T16:10:43.856Z\n"
+"POT-Creation-Date: 2019-03-11T11:18:47.405Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -306,7 +306,7 @@ msgstr "Sammlung"
 #. Compare entities between collections
 #: i18n/messages.json i18n/messages.json
 msgid "Compare entities between collections"
-msgstr "Rastern von Entitäten in unterschiedlichen Sammlungen"
+msgstr "Querverweis von Entitäten in unterschiedlichen Sammlungen"
 
 #. [password_auth.confirm]
 #. defaultMessage is:
@@ -398,28 +398,28 @@ msgstr "Neuen Fall anlegen"
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json
 msgid "Cross-reference"
-msgstr "Rastern"
+msgstr "Querverweis"
 
 #. [collection.xref.xrefAll]
 #. defaultMessage is:
 #. Cross-reference all sources
 #: i18n/messages.json
 msgid "Cross-reference all sources"
-msgstr "Mit allen Quellen rastern"
+msgstr "Mit allen Quellen vergleichen"
 
 #. [collection.xref.xrefSpecific]
 #. defaultMessage is:
 #. Cross-reference specific sources (faster)
 #: i18n/messages.json
 msgid "Cross-reference specific sources (faster)"
-msgstr "Mit bestimmten Quellen rastern (schneller)"
+msgstr "Mit bestimmten Quellen vergleichen (schneller)"
 
 #. [xref.collection]
 #. defaultMessage is:
 #. Cross-referenced collection
 #: i18n/messages.json
 msgid "Cross-referenced collection"
-msgstr "Gerasterte Sammlung"
+msgstr "Verglichene Sammlung"
 
 #. [collection.xref.alert.text]
 #. defaultMessage is:
@@ -439,7 +439,7 @@ msgstr ""
 #. Cross-referencing started.
 #: i18n/messages.json
 msgid "Cross-referencing started."
-msgstr "Raster gestartet."
+msgstr "Rasterfahndung gestartet."
 
 #. [collection.data_url]
 #. defaultMessage is:

@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-09T16:10:43.856Z\n"
+"POT-Creation-Date: 2019-03-11T11:18:47.405Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -818,7 +818,7 @@ msgstr "Управление расследованиями"
 #. Manage...
 #: i18n/messages.json
 msgid "Manage..."
-msgstr ""
+msgstr "Настройки"
 
 #. [collection.creator]
 #. defaultMessage is:
