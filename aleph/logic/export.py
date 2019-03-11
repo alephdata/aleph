@@ -10,9 +10,11 @@ from followthemoney.export.csv import (
     write_entity as write_entity_csv, write_headers
 )
 from followthemoney.export.excel import (
-    get_workbook, get_sheet, write_entity as write_entity_excel,
+    get_workbook, write_entity as write_entity_excel,
     get_workbook_content,
 )
+
+from aleph.core import archive
 
 
 FORMAT_CSV = 'csv'
@@ -22,9 +24,18 @@ FORMAT_EXCEL = 'excel'
 log = logging.getLogger(__name__)
 
 
+def _read_in_chunks(infile, chunk_size=1024*64):
+    chunk = infile.read(chunk_size)
+    while chunk:
+        yield chunk
+        chunk = infile.read(chunk_size)
+    infile.close()
+
+
 def write_document(zip_archive, entity):
-    parent = entity.context.get('collection')['label']
-    name = entity.context.get('name')
+    collection = entity.context.get('collection')['label']
+    name = entity.first('fileName') or entity.caption
+    name = "{0}-{1}".format(entity.id, name)
     filetypes = entity.context.get('mimetypes')
     # is it a folder?
     if 'inode/directory' in filetypes:
@@ -32,33 +43,60 @@ def write_document(zip_archive, entity):
     ext = mimetypes.guess_extension(filetypes[0], strict=True)
     if ext:
         name = name + ext
-    path = os.path.join(parent, name)
+    path = os.path.join(entity.schema.plural, collection, name)
 
-    file_url = entity.context['links'].get('file')
-    if file_url:
-        stream = requests.get(file_url, stream=True)
-        zip_archive.write_iter(path, stream.iter_content())
+    document = entity.context['document']
+    if document:
+        url = archive.generate_url(document.content_hash,
+                                   file_name=document.safe_file_name,
+                                   mime_type=document.mime_type)
+        if url is not None:
+            stream = requests.get(url, stream=True)
+            zip_archive.write_iter(path, stream.iter_content())
+        else:
+            try:
+                local_path = archive.load_file(
+                    document.content_hash, file_name=document.safe_file_name
+                )
+                if local_path is None:
+                    return
+                stream = open(local_path, 'rb')
+                # _read_in_chunks is evoked only after we start yielding the
+                # contents of the zipfile. So we have to make sure the file
+                # pointer stays open till then.
+                zip_archive.write_iter(path, _read_in_chunks(stream))
+            finally:
+                archive.cleanup_file(document.content_hash)
 
 
 def export_entity_csv(handlers, entity):
     fh = handlers.get(entity.schema.plural)
     if fh is None:
         handlers[entity.schema.plural] = fh = io.StringIO()
-        write_headers(fh, entity.schema, extra_headers=['url'])
+        write_headers(
+            fh, entity.schema, extra_headers=['url', 'collection_url']
+        )
+
     if 'file' in entity.context['links']:
         url = entity.context['links']['file']
     else:
         url = entity.context['links']['ui']
-    write_entity_csv(fh, entity, extra_fields={'url': url})
+    collection_url = entity.context['collection']['links']['ui']
+    write_entity_csv(fh, entity, extra_fields={
+        'url': url, 'collection_url': collection_url
+    })
 
 
 def export_entity_excel(workbook, entity):
-    sheet = get_sheet(entity.schema, workbook, extra_headers=['url'])
     if 'file' in entity.context['links']:
         url = entity.context['links']['file']
     else:
         url = entity.context['links']['ui']
-    write_entity_excel(sheet, entity, extra_fields={'url': url})
+    collection_url = entity.context['collection']['links']['ui']
+    write_entity_excel(
+        workbook, entity, extra_headers=['url', 'collection_url'],
+        extra_fields={'url': url, 'collection_url': collection_url}
+    )
 
 
 def export_entities(entities, format):

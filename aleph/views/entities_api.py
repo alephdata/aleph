@@ -8,7 +8,7 @@ from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db
-from aleph.model import Audit
+from aleph.model import Audit, Document
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
@@ -17,6 +17,7 @@ from aleph.index.entities import entities_by_ids
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
+from aleph.views.util import require
 from aleph.views.cache import enable_cache
 from aleph.views.serializers import EntitySerializer
 from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
@@ -35,13 +36,20 @@ def index():
     return EntitySerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/search/export/<any(csv, excel):format>', methods=['GET'])  # noqa
 @blueprint.route('/api/2/entities/export/<any(csv, excel):format>', methods=['GET'])  # noqa
 def export(format):
+    require(request.authz.logged_in)
     parser = SearchQueryParser(request.args, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
-    results = result.to_dict(serializer=EntitySerializer)['results']
+    results = result.to_dict(serializer=EntitySerializer)['results'][:1000]
     entities = [model.get_proxy(ent) for ent in results]
+    for entity in entities:
+        if 'document_id' in entity.context:
+            entity.context['document'] = Document.by_id(
+                entity.context['document_id']
+            )
+        else:
+            entity.context['document'] = None
     response = Response(
         export_entities(entities, format), mimetype='application/zip'
     )
