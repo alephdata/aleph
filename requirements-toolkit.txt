@@ -2,7 +2,7 @@
 # Dependencies maintained by OCCRP
 banal==0.4.2
 urlnormalizer==1.2.3
-followthemoney==1.9.0
+followthemoney==1.9.1
 fingerprints==0.6.2
 servicelayer[google]==1.0.0
 servicelayer[amazon]==1.0.0
