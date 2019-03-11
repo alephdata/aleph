@@ -11,7 +11,7 @@ from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, db, cache
 from aleph.model import Collection, Document, Role
-from aleph.migration import upgrade_system, destroy_db
+from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection
@@ -100,17 +100,20 @@ def flushbulk(foreign_id):
 
 
 @manager.command
+def flushdeleted():
+    """Remove soft-deleted database objects."""
+    cleanup_deleted()
+
+
+@manager.command
 @manager.option('-f', '--foreign_id')
-@manager.option('-i', '--index', default=False)
 @manager.option('-r', '--retry', default=False)
-def process(foreign_id=None, index=False, retry=False):
+def process(foreign_id=None, retry=False):
     """Re-process documents in the given collection."""
     collection_id = None
     if foreign_id:
         collection_id = get_collection(foreign_id).id
-    process_documents(collection_id=collection_id,
-                      index_only=index,
-                      failed_only=retry)
+    process_documents(collection_id=collection_id, failed_only=retry)
 
 
 @manager.command

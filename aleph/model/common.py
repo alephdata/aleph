@@ -1,8 +1,10 @@
 import uuid
+import logging
 from datetime import datetime
 
 from aleph.core import db
 
+log = logging.getLogger(__name__)
 ENTITY_ID_LEN = 128
 
 
@@ -53,6 +55,16 @@ class DatedModel(object):
 class SoftDeleteModel(DatedModel):
     deleted_at = db.Column(db.DateTime, default=None, nullable=True)
 
+    def delete(self, deleted_at=None):
+        self.deleted_at = deleted_at or datetime.utcnow()
+        db.session.add(self)
+
+    def to_dict_dates(self):
+        data = super(SoftDeleteModel, self).to_dict_dates()
+        if self.deleted_at:
+            data['deleted_at'] = self.deleted_at
+        return data
+
     @classmethod
     def all(cls, deleted=False):
         q = super(SoftDeleteModel, cls).all()
@@ -67,12 +79,9 @@ class SoftDeleteModel(DatedModel):
             q = q.filter(cls.deleted_at == None)  # noqa
         return q
 
-    def delete(self, deleted_at=None):
-        self.deleted_at = deleted_at or datetime.utcnow()
-        db.session.add(self)
-
-    def to_dict_dates(self):
-        data = super(SoftDeleteModel, self).to_dict_dates()
-        if self.deleted_at:
-            data['deleted_at'] = self.deleted_at
-        return data
+    @classmethod
+    def cleanup_deleted(cls):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.deleted_at != None)  # noqa
+        log.info("[%s]: %d deleted objects", cls.__name__, pq.count())
+        pq.delete(synchronize_session=False)

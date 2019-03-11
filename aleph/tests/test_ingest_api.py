@@ -76,7 +76,8 @@ class IngestApiTestCase(TestCase):
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
 
-        res = self.client.get('/api/2/entities', headers=headers)
+        res = self.client.get('/api/2/entities?filter:schemata=Document',
+                              headers=headers)
         assert res.json['total'] == 1, res.json
 
         res = self.client.get('/api/2/entities/1/content',

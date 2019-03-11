@@ -4,7 +4,7 @@ from flask import render_template
 from datetime import datetime, timedelta
 from followthemoney.util import get_entity_id
 
-from aleph.core import db, settings
+from aleph.core import db, cache, settings
 from aleph.mail import email_role
 from aleph.model import Role, Alert, Event, Notification
 from aleph.model import Collection, Entity
@@ -46,6 +46,22 @@ def publish(event, actor_id=None, params=None, channels=None):
 def flush_notifications(obj, clazz=None):
     channel_ = channel(obj, clazz=clazz)
     Notification.delete_by_channel(channel_)
+
+
+def get_role_channels(role):
+    """Generate the set of notification channels that the current
+    user should listen to."""
+    key = cache.object_key(Role, role.id, 'channels')
+    channels = cache.get_list(key)
+    if len(channels):
+        return channels
+    channels = [Notification.GLOBAL]
+    if role.deleted_at is None and role.type == Role.USER:
+        channels.append(channel(role))
+        for group in role.roles:
+            channels.append(channel(group))
+    cache.set_list(key, channels)
+    return channels
 
 
 def render_notification(stub, notification):
@@ -92,7 +108,8 @@ def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
     since = datetime.utcnow() - timedelta(hours=25)
-    q = Notification.by_role(role, since=since)
+    q = Notification.by_channels(get_role_channels(role),
+                                 since=since, exclude_actor_id=role.id)
     total_count = q.count()
     if total_count == 0:
         return

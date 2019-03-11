@@ -73,8 +73,13 @@ export class TableViewer extends Component {
 
   renderCell(rowIndex, colIndex) {
     const { result } = this.props;
-    const loading = rowIndex >= result.results.length;
-    const value = JSON.parse(result.results[rowIndex].getProperty('cells'))[colIndex];
+    const cell = result.results[rowIndex];
+    const loading = !cell;
+    let value;
+    if (cell) {
+      value = JSON.parse(cell.getProperty('cells'))[colIndex];
+    }
+
     return (
       <Cell loading={loading}>
         <TruncatedFormat detectTruncation>
@@ -117,4 +122,4 @@ export class TableViewer extends Component {
   }
 }
 const mapDispatchToProps = { queryEntities };
-export default connectedWithRouter({ mapStateToProps, mapDispatchToProps });
+export default connectedWithRouter({ mapStateToProps, mapDispatchToProps })(TableViewer);

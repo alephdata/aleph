@@ -77,7 +77,7 @@ services:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
       ALEPH_OAUTH: 'false'
-      ALEPH_ARCHIVE_TYPE: 'file'
+      ARCHIVE_TYPE: 'file'
     env_file:
       - aleph.env
 
@@ -105,7 +105,7 @@ services:
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
-      ALEPH_ARCHIVE_TYPE: 'file'
+      ARCHIVE_TYPE: 'file'
     env_file:
       - aleph.env
   

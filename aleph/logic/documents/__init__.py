@@ -10,15 +10,6 @@ from aleph.logic.documents.ingest import ingest, ingest_document  # noqa
 log = logging.getLogger(__name__)
 
 
-@celery.task()
-def index_document_id(document_id):
-    document = Document.by_id(document_id)
-    if document is None:
-        log.info("Could not find document: %r", document_id)
-        return
-    index.index_document(document, shallow=False, sync=False)
-
-
 def update_document(document, shallow=False, sync=False):
     # These are operations that should be executed after each
     # write to a document or its metadata.
@@ -41,7 +32,7 @@ def delete_document(document, deleted_at=None, sync=False):
 
 
 @celery.task(priority=1)
-def process_documents(collection_id=None, failed_only=False, index_only=False):
+def process_documents(collection_id=None, failed_only=False):
     """Re-ingest or re-index all documents. Can be filtered to cover only
     documents which failed to properly import last time, or those which
     are part of a particular collection."""
@@ -49,9 +40,6 @@ def process_documents(collection_id=None, failed_only=False, index_only=False):
                           failed_only=failed_only)
     q = q.all() if settings.EAGER else q.yield_per(5000)
     for idx, (doc_id,) in enumerate(q, 1):
-        if index_only:
-            index_document_id.apply_async([doc_id], priority=1)
-        else:
-            ingest.apply_async([doc_id], {'refresh': True}, priority=1)
+        ingest.apply_async([doc_id], {'refresh': True}, priority=1)
         if idx % 10000 == 0:
             log.info("Process: %s documents...", idx)

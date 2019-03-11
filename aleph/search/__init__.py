@@ -1,4 +1,6 @@
 import logging
+from flask_babel import gettext
+from werkzeug.exceptions import BadRequest
 
 from aleph.index.indexes import entities_read_index
 from aleph.index.indexes import collections_index
@@ -25,7 +27,7 @@ class EntitiesQuery(Query):
             return entities_read_index(schema=schemata, expand=False)
         schemata = self.parser.getlist('filter:schemata')
         if not len(schemata):
-            log.warning("FULLINDEX: Received query without schema filter.")
+            raise BadRequest(gettext("No schema is specified for the query."))
         return entities_read_index(schema=schemata)
 
 

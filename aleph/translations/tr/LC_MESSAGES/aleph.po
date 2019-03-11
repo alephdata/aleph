@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-07 15:42+0100\n"
+"POT-Creation-Date: 2019-03-11 12:18+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Pinar Dag <pinar.dag@dagmedya.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
@@ -34,7 +34,7 @@ msgstr "Telia Sonera"
 msgid "Vladimir Putin"
 msgstr "Vladimir Putin"
 
-#: aleph/logic/roles.py:42
+#: aleph/logic/roles.py:41
 msgid "Registration"
 msgstr "Kaydetme"
 
@@ -134,6 +134,10 @@ msgstr ""
 msgid "{{actor}} removed access to {{collection}} from {{role}}"
 msgstr ""
 
+#: aleph/search/__init__.py:30
+msgid "No schema is specified for the query."
+msgstr ""
+
 #: aleph/templates/email/layout.html:45
 #, python-format
 msgid ""
@@ -187,19 +191,19 @@ msgstr ""
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ kullanımdan kaldırıldı, lütfen bunu kullanın /api/2/."
 
-#: aleph/views/base_api.py:144
+#: aleph/views/base_api.py:152
 msgid "You are not authorized to do this."
 msgstr "Bunu yapmaya yetkili değilsiniz."
 
-#: aleph/views/base_api.py:153
+#: aleph/views/base_api.py:161
 msgid "This path does not exist."
 msgstr "Bu yol mevcut değil."
 
-#: aleph/views/base_api.py:162
+#: aleph/views/base_api.py:170
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:179
+#: aleph/views/base_api.py:187
 msgid "Access token has expired."
 msgstr "Erişim belirtecinin süresi doldu."
 

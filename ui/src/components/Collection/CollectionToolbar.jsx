@@ -106,7 +106,12 @@ class CollectionToolbar extends Component {
 )}
                 position={Position.RIGHT_TOP}
               >
-                <Button icon="cog" text="Manage..." />
+                <Button
+                  icon="cog"
+                  text={
+                    <FormattedMessage id="collection.info.manage_button" defaultMessage="Manage..." />
+                  }
+                />
               </Popover>
             </React.Fragment>
             )

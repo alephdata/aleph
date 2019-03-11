@@ -2,11 +2,11 @@ import os
 import json
 import shutil
 import logging
-from storagelayer import checksum
 from flask import Blueprint, request
 from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
+from servicelayer.archive.util import checksum
 
 from aleph.model import Document
 from aleph.logic.documents import ingest_document, update_document
