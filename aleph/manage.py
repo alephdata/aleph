@@ -107,16 +107,13 @@ def flushdeleted():
 
 @manager.command
 @manager.option('-f', '--foreign_id')
-@manager.option('-i', '--index', default=False)
 @manager.option('-r', '--retry', default=False)
-def process(foreign_id=None, index=False, retry=False):
+def process(foreign_id=None, retry=False):
     """Re-process documents in the given collection."""
     collection_id = None
     if foreign_id:
         collection_id = get_collection(foreign_id).id
-    process_documents(collection_id=collection_id,
-                      index_only=index,
-                      failed_only=retry)
+    process_documents(collection_id=collection_id, failed_only=retry)
 
 
 @manager.command
