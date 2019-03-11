@@ -11,8 +11,6 @@ log = logging.getLogger(__name__)
 
 # This means that text beyond the first 500 MB will not be indexed
 INDEX_MAX_LEN = 1024 * 1024 * 500
-REQUEST_TIMEOUT = 60 * 60 * 6
-TIMEOUT = '%ss' % REQUEST_TIMEOUT
 BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
@@ -129,8 +127,6 @@ def query_delete(index, query, sync=False, **kwargs):
             es.delete_by_query(index=index,
                                body={'query': query},
                                conflicts='proceed',
-                               timeout=TIMEOUT,
-                               request_timeout=REQUEST_TIMEOUT,
                                wait_for_completion=sync,
                                refresh=refresh_sync(sync),
                                **kwargs)
@@ -149,9 +145,7 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
                                 max_chunk_bytes=INDEX_MAX_LEN * 2,
                                 max_retries=10,
                                 initial_backoff=2,
-                                request_timeout=REQUEST_TIMEOUT,
                                 yield_ok=False,
-                                timeout=TIMEOUT,
                                 refresh=refresh_sync(sync))
         for result in stream:
             log.warning("Error during index: %r", result)
