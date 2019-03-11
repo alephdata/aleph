@@ -4,9 +4,9 @@ banal==0.4.2
 urlnormalizer==1.2.3
 followthemoney==1.9.0
 fingerprints==0.6.2
-storagelayer==0.5.2
-servicelayer==0.1.4
-ingestors==0.12.4
+servicelayer[google]==1.0.0
+servicelayer[amazon]==1.0.0
+ingestors==0.13.0
 normality==1.0.0
 pantomime==0.3.3
 pdflib==0.1.7

@@ -6,7 +6,7 @@ from followthemoney import model
 from ingestors import Result
 from ingestors.util import safe_string
 
-from aleph.core import db, archive
+from aleph.core import db
 from aleph.model import Document, DocumentRecord
 from aleph.model import DocumentTag, DocumentTagCollector
 
@@ -41,6 +41,7 @@ class DocumentResult(Result):
         bind = super(DocumentResult, self)
         bind.__init__(id=document.foreign_id,
                       checksum=document.content_hash,
+                      pdf_checksum=document.pdf_version,
                       file_path=file_path,
                       file_name=document.meta.get('file_name'),
                       mime_type=document.meta.get('mime_type'),
@@ -79,10 +80,6 @@ class DocumentResult(Result):
         iterator = self._emit_iterator_rows(iterator)
         DocumentRecord.insert_records(self.document.id, iterator)
 
-    def emit_pdf_alternative(self, file_path):
-        content_hash = archive.archive_file(file_path)
-        self.document.pdf_version = content_hash
-
     def update(self):
         """Apply the outcome of the result to the document."""
         doc = self.document
@@ -101,6 +98,7 @@ class DocumentResult(Result):
         doc.schema = schema.name
         doc.foreign_id = safe_string(self.id)
         doc.content_hash = self.checksum or doc.content_hash
+        doc.pdf_version = self.pdf_checksum
         doc.title = self.title or doc.meta.get('title')
         doc.file_name = self.file_name or doc.meta.get('file_name')
         doc.file_size = self.size or doc.meta.get('file_size')

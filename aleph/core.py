@@ -16,8 +16,8 @@ from celery.schedules import crontab
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
-import storagelayer
 from servicelayer.cache import get_redis
+from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace import config_integration
@@ -151,13 +151,9 @@ def get_es():
 
 def get_archive():
     if not hasattr(settings, '_aleph_archive'):
-        archive = storagelayer.init(settings.ARCHIVE_TYPE,
-                                    path=settings.ARCHIVE_PATH,
-                                    aws_key_id=settings.ARCHIVE_AWS_KEY_ID,  # noqa
-                                    aws_secret=settings.ARCHIVE_AWS_SECRET,  # noqa
-                                    aws_region=settings.ARCHIVE_AWS_REGION,  # noqa
-                                    bucket=settings.ARCHIVE_BUCKET)  # noqa
-        settings._aleph_archive = archive
+        settings._aleph_archive = init_archive(archive_type=settings.ARCHIVE_TYPE,  # noqa
+                                               bucket=settings.ARCHIVE_BUCKET,
+                                               path=settings.ARCHIVE_PATH)
     return settings._aleph_archive
 
 

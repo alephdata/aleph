@@ -20,17 +20,9 @@ log = logging.getLogger(__name__)
 def get_manager():
     """Get an ingestor manager, as a singleton instance."""
     if not hasattr(DocumentManager, '_instance'):
-        DocumentManager._instance = DocumentManager(archive)
+        DocumentManager._instance = DocumentManager(archive=archive)
         log.info("Loaded ingestors: %r", DocumentManager._instance.ingestors)
     return DocumentManager._instance
-
-
-def process_document(document):
-    """Perform post-ingest tasks like analysis and indexing."""
-    extract_document_tags(document)
-    refresh_entity(document)
-    delete_entity(document.id, exclude=document.schema)
-    index_document(document)
 
 
 def ingest_document(document, file_path, role_id=None, content_hash=None):
@@ -96,15 +88,18 @@ def ingest(document_id, file_path=None, refresh=False):
                     params=params)
 
         db.session.commit()
-        process_document(document)
     except Exception:
         db.session.rollback()
         document = Document.by_id(document_id)
         log.exception("Ingest failed [%s]: %s", document.id, document.name)
         document.status = Document.STATUS_FAIL
         db.session.commit()
-        process_document(document)
     finally:
         # Removing the temp_path given to storagelayer makes it redundant
         # to also call cleanup on the archive.
         remove_directory(work_path)
+
+    extract_document_tags(document)
+    delete_entity(document.id, exclude=document.schema)
+    index_document(document)
+    refresh_entity(document)
