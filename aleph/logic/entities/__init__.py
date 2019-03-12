@@ -1,6 +1,5 @@
 import logging
 from banal import is_mapping
-from collections import defaultdict
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -53,7 +52,6 @@ def entity_references(entity, authz):
     entities, grouped by the property where they are used."""
     schema = model.get(entity.get('schema'))
     queries = []
-    aliases = {}
     for prop in model.properties:
         if prop.type != registry.entity:
             continue
@@ -63,14 +61,12 @@ def entity_references(entity, authz):
         index = entities_read_index(prop.schema)
         field = 'properties.%s' % prop.name
         query = {'term': {field: entity.get('id')}}
-        queries.append((index, prop.name, query))
-        aliases[prop.name] = prop
+        queries.append((index, prop.qname, query))
 
     res = _filters_faceted_query(authz, queries)
-    for (alias, prop) in aliases.items():
-        total = res.get(alias, 0)
+    for (qname, total) in res.items():
         if total > 0:
-            yield (prop, total)
+            yield (model.get_qname(qname), total)
 
 
 def entity_tags(entity, authz):
@@ -105,8 +101,9 @@ def entity_tags(entity, authz):
 
 
 def _filters_faceted_query(authz, queries):
-    indexed = defaultdict(dict)
+    indexed = {}
     for (idx, alias, filter_) in queries:
+        indexed[idx] = indexed.get(idx, {})
         indexed[idx][alias] = filter_
 
     queries = []
@@ -126,5 +123,5 @@ def _filters_faceted_query(authz, queries):
     for resp in res.get('responses', []):
         aggs = resp.get('aggregations', {}).get('counters', {})
         for alias, value in aggs.get('buckets', {}).items():
-            results[alias] = value.get('doc_count', 0)
+            results[alias] = value.get('doc_count', results.get(alias, 0))
     return results
