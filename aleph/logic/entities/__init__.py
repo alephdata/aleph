@@ -1,5 +1,6 @@
 import logging
 from banal import is_mapping
+from collections import defaultdict
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -50,43 +51,25 @@ def delete_entity(entity, deleted_at=None, sync=False):
 def entity_references(entity, authz):
     """Given a particular entity, find all the references to it from other
     entities, grouped by the property where they are used."""
-    schema = model[entity.get('schema')]
-
-    # Generate all the possible mention locations.
-    properties = []
+    schema = model.get(entity.get('schema'))
     queries = []
+    aliases = {}
     for prop in model.properties:
         if prop.type != registry.entity:
             continue
         if not schema.is_a(prop.range):
             continue
 
+        index = entities_read_index(prop.schema)
         field = 'properties.%s' % prop.name
-        queries.append({
-            'index': entities_read_index(prop.schema)
-        })
-        queries.append({
-            'size': 0,
-            'query': {
-                'bool': {
-                    'filter': [
-                        authz_query(authz),
-                        {'term': {'schemata': prop.schema.name}},
-                        {'term': {field: entity.get('id')}},
-                    ]
-                }
-            }
-        })
-        properties.append(prop)
+        query = {'term': {field: entity.get('id')}}
+        queries.append((index, prop.name, query))
+        aliases[prop.name] = prop
 
-    if not len(queries):
-        return
-
-    # Run a count search (with schema facet?)
-    res = es.msearch(body=queries)
-    for prop, resp in zip(properties, res.get('responses', [])):
-        total = resp.get('hits', {}).get('total')
-        if total is not None and total > 0:
+    res = _filters_faceted_query(authz, queries)
+    for (alias, prop) in aliases.items():
+        total = res.get(alias, 0)
+        if total > 0:
             yield (prop, total)
 
 
@@ -96,41 +79,52 @@ def entity_tags(entity, authz):
     Thing = model.get(Entity.THING)
     types = [registry.name, registry.email, registry.identifier,
              registry.iban, registry.phone, registry.address]
-    pivots = []
     queries = []
+    aliases = {}
     # Go through all the tags which apply to this entity, and find how
     # often they've been mentioned in other entities.
     for type_ in types:
         if type_.group is None:
             continue
-        for value in proxy.get_type_values(type_):
+        for fidx, value in enumerate(proxy.get_type_values(type_)):
             if type_.specificity(value) < 0.1:
                 continue
             schemata = model.get_type_schemata(type_)
             schemata = [s for s in schemata if s.is_a(Thing)]
             index = entities_read_index(schemata)
-            queries.append({'index': index})
-            queries.append({
-                'size': 0,
-                'query': {
-                    'bool': {
-                        'filter': [
-                            authz_query(authz),
-                            field_filter_query(type_.group, value)
-                        ],
-                        'must_not': [
-                            {'ids': {'values': [entity.get('id')]}},
-                        ]
-                    }
-                }
-            })
-            pivots.append((type_.group, value))
+            alias = '%s_%s' % (type_.name, fidx)
+            query = field_filter_query(type_.group, value)
+            queries.append((index, alias, query))
+            aliases[alias] = (type_.group, value)
 
+    res = _filters_faceted_query(authz, queries)
+    for alias, (field, value) in aliases.items():
+        total = res.get(alias, 0)
+        if total > 1:
+            yield (field, value, total)
+
+
+def _filters_faceted_query(authz, queries):
+    indexed = defaultdict(dict)
+    for (idx, alias, filter_) in queries:
+        indexed[idx][alias] = filter_
+
+    queries = []
+    for (idx, filters) in indexed.items():
+        queries.append({'index': idx})
+        queries.append({
+            'size': 0,
+            'query': {'bool': {'filter': [authz_query(authz)]}},
+            'aggs': {'counters': {'filters': {'filters': filters}}}
+        })
+
+    results = {}
     if not len(queries):
-        return
+        return results
 
     res = es.msearch(body=queries)
-    for (field, value), resp in zip(pivots, res.get('responses', [])):
-        total = resp.get('hits', {}).get('total')
-        if total is not None and total > 0:
-            yield (field, value, total)
+    for resp in res.get('responses', []):
+        aggs = resp.get('aggregations', {}).get('counters', {})
+        for alias, value in aggs.get('buckets', {}).items():
+            results[alias] = value.get('doc_count', 0)
+    return results
