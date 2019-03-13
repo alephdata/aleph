@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-11 12:18+0100\n"
+"POT-Creation-Date: 2019-03-13 08:29+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Tajna Biscevic <tajna@occrp.org>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
@@ -115,31 +115,31 @@ msgstr "Ostali materijal"
 
 #: aleph/model/event.py:48
 msgid "{{actor}} created {{collection}}"
-msgstr ""
+msgstr "{{actor}} je stvorio {{collection}}"
 
 #: aleph/model/event.py:55
 msgid "{{actor}} changed the settings of {{collection}}"
-msgstr ""
+msgstr "{{actor}} je promijenio postavke {{collection}}"
 
 #: aleph/model/event.py:62
 msgid "{{actor}} added {{document}} to {{collection}}"
-msgstr ""
+msgstr "{{actor}} je dodao {{document}} {{collection}}"
 
 #: aleph/model/event.py:72
 msgid "{{entity}} matches your alert for {{alert}}"
-msgstr ""
+msgstr "{{entity}} odgovara vašem upozorenju za {{alert}}"
 
 #: aleph/model/event.py:83
 msgid "{{actor}} gave {{role}} access to {{collection}}"
-msgstr ""
+msgstr "{{actor}} je dodijelio {{role}} pristup {{collection}}"
 
 #: aleph/model/event.py:100
 msgid "{{actor}} removed access to {{collection}} from {{role}}"
-msgstr ""
+msgstr "{{actor}} je uklonio pristup {{collection}} {{role}}"
 
 #: aleph/search/__init__.py:30
 msgid "No schema is specified for the query."
-msgstr ""
+msgstr "Nije navedena shema za upit."
 
 #: aleph/templates/email/layout.html:45
 #, python-format
@@ -158,6 +158,8 @@ msgid ""
 "          This email was sent by <a href=\"%(ui_url)s\">%(app_title)s</a>\n"
 "        "
 msgstr ""
+"\n"
+" Email je poslao <a href=\"%(ui_url)s\">%(app_title)s</a>"
 
 #: aleph/templates/email/notifications.html:5
 #, python-format
@@ -168,7 +170,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"     Imate %(total_count)snotifikaciju. Ovu su najnovija ažuriranja koja vas mogu zanimati:"
+"     Imate %(total_count)snotifikaciju. Ovo su najnovija ažuriranja koja vas mogu zanimati:"
 
 #: aleph/templates/email/notifications.html:16
 msgid ""
@@ -203,7 +205,7 @@ msgstr "Ova putanja ne postoji."
 
 #: aleph/views/base_api.py:170
 msgid "Internal server error."
-msgstr ""
+msgstr "Interna greška servera."
 
 #: aleph/views/base_api.py:187
 msgid "Access token has expired."
@@ -227,4 +229,4 @@ msgstr "Email je već registrovan"
 
 #: aleph/views/util.py:47
 msgid "Error during data validation"
-msgstr ""
+msgstr "Greška tokom validacije podataka"
