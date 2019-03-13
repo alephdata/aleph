@@ -16,17 +16,17 @@ from celery.schedules import crontab
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
-import storagelayer
 from servicelayer.cache import get_redis
+from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
-from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
-from opencensus.trace import config_integration
-from opencensus.trace.exporters import stackdriver_exporter
-from opencensus.trace.samplers import probability
-from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
+# from opencensus.trace.ext.flask.flask_middleware import FlaskMiddleware
+# from opencensus.trace import config_integration
+# from opencensus.trace.exporters import stackdriver_exporter
+# from opencensus.trace.samplers import probability
+# from opencensus.trace.exporters.transports.background_thread import BackgroundThreadTransport  # noqa
 
 from aleph import settings
-from aleph.tracing import TracingTransport, setup_stackdriver_logging
+# from aleph.tracing import TracingTransport, setup_stackdriver_logging
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -101,23 +101,23 @@ def create_app(config={}):
 
     # Set up opencensus tracing and its integrations. Export collected traces
     # to Stackdriver Trace on a background thread.
-    if settings.STACKDRIVER_TRACE_PROJECT_ID:
-        exporter = stackdriver_exporter.StackdriverExporter(
-            project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
-            transport=BackgroundThreadTransport
-        )
-        sampler = probability.ProbabilitySampler(
-            rate=settings.TRACE_SAMPLING_RATE
-        )
-        blacklist_paths = ['/healthz', ]
-        FlaskMiddleware(
-            app, exporter=exporter, sampler=sampler,
-            blacklist_paths=blacklist_paths
-        )
-        integrations = ['postgresql', 'sqlalchemy', 'httplib']
-        config_integration.trace_integrations(integrations)
-        # Set up logging
-        setup_stackdriver_logging()
+    # if settings.STACKDRIVER_TRACE_PROJECT_ID:
+    #     exporter = stackdriver_exporter.StackdriverExporter(
+    #         project_id=settings.STACKDRIVER_TRACE_PROJECT_ID,
+    #         transport=BackgroundThreadTransport
+    #     )
+    #     sampler = probability.ProbabilitySampler(
+    #         rate=settings.TRACE_SAMPLING_RATE
+    #     )
+    #     blacklist_paths = ['/healthz', ]
+    #     FlaskMiddleware(
+    #         app, exporter=exporter, sampler=sampler,
+    #         blacklist_paths=blacklist_paths
+    #     )
+    #     integrations = ['postgresql', 'sqlalchemy', 'httplib']
+    #     config_integration.trace_integrations(integrations)
+    #     # Set up logging
+    #     setup_stackdriver_logging()
     return app
 
 
@@ -141,23 +141,19 @@ def configure_alembic(config):
 
 def get_es():
     if not hasattr(settings, '_es_instance'):
-        url = settings.ELASTICSEARCH_URL
-        timeout = settings.ELASTICSEARCH_TIMEOUT
-        settings._es_instance = Elasticsearch(
-            url, timeout=timeout, transport_class=TracingTransport
-        )
+        es = Elasticsearch(settings.ELASTICSEARCH_URL,
+                           timeout=settings.ELASTICSEARCH_TIMEOUT,
+                           # transport_class=TracingTransport,
+                           sniff_on_start=True)
+        settings._es_instance = es
     return settings._es_instance
 
 
 def get_archive():
     if not hasattr(settings, '_aleph_archive'):
-        archive = storagelayer.init(settings.ARCHIVE_TYPE,
-                                    path=settings.ARCHIVE_PATH,
-                                    aws_key_id=settings.ARCHIVE_AWS_KEY_ID,  # noqa
-                                    aws_secret=settings.ARCHIVE_AWS_SECRET,  # noqa
-                                    aws_region=settings.ARCHIVE_AWS_REGION,  # noqa
-                                    bucket=settings.ARCHIVE_BUCKET)  # noqa
-        settings._aleph_archive = archive
+        settings._aleph_archive = init_archive(archive_type=settings.ARCHIVE_TYPE,  # noqa
+                                               bucket=settings.ARCHIVE_BUCKET,
+                                               path=settings.ARCHIVE_PATH)
     return settings._aleph_archive
 
 

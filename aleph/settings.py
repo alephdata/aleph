@@ -43,12 +43,9 @@ CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', separator='|')
 # Data storage
 
 # Archive type (either 's3' or 'file', i.e. local file system):
-ARCHIVE_TYPE = env.get('ALEPH_ARCHIVE_TYPE', 'file')
-ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET')
-ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH')
-ARCHIVE_AWS_KEY_ID = env.get('AWS_ACCESS_KEY_ID')
-ARCHIVE_AWS_SECRET = env.get('AWS_SECRET_ACCESS_KEY')
-ARCHIVE_AWS_REGION = env.get('ARCHIVE_REGION', 'eu-west-1')
+ARCHIVE_TYPE = env.get('ALEPH_ARCHIVE_TYPE', sls.ARCHIVE_TYPE)
+ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET', sls.ARCHIVE_BUCKET)
+ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH', sls.ARCHIVE_PATH)
 
 ##############################################################################
 # Security and authentication.
@@ -137,8 +134,7 @@ ALEMBIC_DIR = os.path.join(os.path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = os.path.abspath(ALEMBIC_DIR)
 
 ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
-ELASTICSEARCH_SHARDS = env.to_int('ELASTICSEARCH_SHARDS', 5)
-ELASTICSEARCH_TIMEOUT = env.to_int('ELASTICSEARCH_TIMEOUT', 300)
+ELASTICSEARCH_TIMEOUT = env.to_int('ELASTICSEARCH_TIMEOUT', 10)
 
 INDEX_PREFIX = env.get('ALEPH_INDEX_PREFIX', APP_NAME)
 INDEX_WRITE = env.get('ALEPH_INDEX_WRITE', 'v1')

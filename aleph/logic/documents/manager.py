@@ -16,12 +16,7 @@ class DocumentManager(Manager):
     This includes creating and flushing records, setting document state and
     dispatching child ingestors as needed.
     """
-
     RESULT_CLASS = DocumentResult
-
-    def __init__(self, archive):
-        super(DocumentManager, self).__init__({})
-        self.archive = archive
 
     def before(self, result):
         db.session.flush()

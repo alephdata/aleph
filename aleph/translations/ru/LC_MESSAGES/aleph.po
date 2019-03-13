@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-09 17:14+0100\n"
+"POT-Creation-Date: 2019-03-13 08:29+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -34,7 +34,7 @@ msgstr "TeliaSonera"
 msgid "Vladimir Putin"
 msgstr "Владимир Путин"
 
-#: aleph/logic/roles.py:42
+#: aleph/logic/roles.py:41
 msgid "Registration"
 msgstr "Регистрация"
 
@@ -137,7 +137,7 @@ msgstr "{{actor}} удалил права {{role}} для доступа к {{co
 
 #: aleph/search/__init__.py:30
 msgid "No schema is specified for the query."
-msgstr ""
+msgstr "Отсутствует схема данных для запроса."
 
 #: aleph/templates/email/layout.html:45
 #, python-format
