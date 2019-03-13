@@ -1,6 +1,8 @@
 FROM alephdata/aleph-base:8
 
 # Install Python dependencies
+RUN pip3 install spacy-nightly
+RUN python3 -m spacy download xx
 COPY requirements-generic.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-generic.txt
 COPY requirements-toolkit.txt /tmp/

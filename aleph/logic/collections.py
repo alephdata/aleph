@@ -38,16 +38,20 @@ def refresh_collection(collection_id, sync=False):
     cache.kv.delete(cache.object_key(Collection, collection_id))
 
 
+def index_collection(collection, entities=False, refresh=False):
+    log.info("Index [%s]: %s", collection.id, collection.label)
+    if entities and collection.deleted_at is None:
+        index_collection_entities.delay(collection_id=collection.id)
+    if refresh:
+        refresh_collection(collection.id)
+    index.index_collection(collection)
+
+
 def index_collections(entities=False, refresh=False):
     q = Collection.all(deleted=True)
     q = q.order_by(Collection.updated_at.desc())
     for collection in q:
-        log.info("Index [%s]: %s", collection.id, collection.label)
-        if entities and collection.deleted_at is None:
-            index_collection_entities.delay(collection_id=collection.id)
-        if refresh:
-            refresh_collection(collection.id)
-        index.index_collection(collection)
+        index_collection(collection, entities=entities, refresh=refresh)
 
 
 def delete_collection(collection, sync=False):
