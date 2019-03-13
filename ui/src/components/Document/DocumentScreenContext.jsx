@@ -12,7 +12,7 @@ import DocumentHeading from 'src/components/Document/DocumentHeading';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs } from 'src/components/common';
+import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
 import { selectEntity, selectSchemata } from 'src/selectors';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 
@@ -62,15 +62,15 @@ class DocumentScreenContext extends Component {
     }
 
     const title = document.title || document.file_name || document.name;
-    const hasSearch = document.hasSearch();
-    const onSearch = hasSearch ? this.onSearch : undefined;
-    const placeholder = intl.formatMessage(messages.placeholder, { label: title });
-    const breadcrumbs = (
-      <Breadcrumbs
-        onSearch={onSearch}
-        searchPlaceholder={placeholder}
+    const operation = !document.hasSearch() ? undefined : (
+      <SearchBox
+        onSearch={this.onSearch}
+        searchPlaceholder={intl.formatMessage(messages.placeholder, { label: title })}
         searchText={query.getString('q')}
-      >
+      />
+    );
+    const breadcrumbs = (
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection collection={document.collection} />
         <Breadcrumbs.Entity entity={document} />
       </Breadcrumbs>

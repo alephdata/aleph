@@ -11,7 +11,7 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs } from 'src/components/common';
+import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
 import { selectCollection } from 'src/selectors';
 import { enhancer } from 'src/util/enhancers';
 
@@ -71,9 +71,14 @@ export class CollectionScreenContext extends Component {
       );
     }
 
-    const placeholder = intl.formatMessage(messages.placeholder, { label: collection.label });
+    const operation = (
+      <SearchBox
+        onSearch={this.onSearch}
+        searchPlaceholder={intl.formatMessage(messages.placeholder, { label: collection.label })}
+      />
+    );
     const breadcrumbs = (
-      <Breadcrumbs onSearch={this.onSearch} searchPlaceholder={placeholder}>
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection key="collection" collection={collection} />
         {activeMode === 'xref' && (
           <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />

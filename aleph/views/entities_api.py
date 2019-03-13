@@ -7,7 +7,7 @@ from followthemoney.util import merge_data
 from urllib.parse import quote
 from urlnormalizer import query_string
 
-from aleph.core import db
+from aleph.core import db, url_for
 from aleph.model import Audit, Document
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
@@ -25,6 +25,7 @@ from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
+EXPORT_MAX = 1000
 
 
 @blueprint.route('/api/2/search', methods=['GET'])
@@ -33,15 +34,23 @@ def index():
     # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.args, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
-    return EntitySerializer.jsonify_result(result)
+    links = {}
+    if request.authz.logged_in and result.total <= EXPORT_MAX:
+        query = list(request.args.items(multi=True))
+        links['export'] = url_for('entities_api.export',
+                                  format='excel',
+                                  _authorize=True,
+                                  _query=query)
+    return EntitySerializer.jsonify_result(result, extra={'links': links})
 
 
-@blueprint.route('/api/2/entities/export/<any(csv, excel):format>', methods=['GET'])  # noqa
+@blueprint.route('/api/2/export/<any(csv, excel):format>', methods=['GET'])  # noqa
 def export(format):
     require(request.authz.logged_in)
     parser = SearchQueryParser(request.args, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
-    results = result.to_dict(serializer=EntitySerializer)['results'][:1000]
+    results = result.to_dict(serializer=EntitySerializer)
+    results = ['results'][:EXPORT_MAX]
     entities = [model.get_proxy(ent) for ent in results]
     for entity in entities:
         if 'document_id' in entity.context:

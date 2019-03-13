@@ -4,7 +4,7 @@ import {
   defineMessages, FormattedNumber, FormattedMessage,
 } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
-import { Icon } from '@blueprintjs/core';
+import { Icon, ButtonGroup, AnchorButton } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
@@ -231,15 +231,23 @@ export class SearchScreen extends React.Component {
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
+    const exportLink = !result.links ? null : result.links.export;
 
+    const operation = (
+      <ButtonGroup minimal>
+        <AnchorButton icon="download" disabled={!exportLink} href={exportLink}>
+          <FormattedMessage id="search.screen.export" defaultMessage="Export" />
+        </AnchorButton>
+      </ButtonGroup>
+    );
     const breadcrumbs = (
-      <Breadcrumbs hasSearchBar={false}>
+      <Breadcrumbs operation={operation}>
         <li>
           <span className="bp3-breadcrumb bp3-breadcrumb-current">
             {!(result.isLoading || result.total === undefined) && (
             <React.Fragment>
               <FormattedNumber value={result.total} />
-&nbsp;
+              {' '}
               <FormattedMessage id="search.screen.results" defaultMessage="results" />
             </React.Fragment>
             )}
@@ -268,7 +276,6 @@ export class SearchScreen extends React.Component {
           },
         ]}
       >
-
         {breadcrumbs}
         <DualPane className="SearchScreen">
           <DualPane.SidePane className="side-pane-padding">
