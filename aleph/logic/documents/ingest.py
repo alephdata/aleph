@@ -100,6 +100,6 @@ def ingest(document_id, file_path=None, refresh=False):
         remove_directory(work_path)
 
     extract_document_tags(document)
-    delete_entity(document.id, exclude=document.schema)
+    # delete_entity(document.id, exclude=document.schema)
     index_document(document)
     refresh_entity(document)
