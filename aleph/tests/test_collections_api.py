@@ -35,6 +35,15 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
 
+    def test_sitemap(self):
+        self.update_index()
+        res = self.client.get('/api/2/sitemap.xml')
+        assert res.status_code == 200, res
+        assert b'<loc>' not in res.data, res.data
+        self.grant_publish(self.col)
+        res = self.client.get('/api/2/sitemap.xml')
+        assert b'<loc>' in res.data, res.data
+
     def test_view(self):
         res = self.client.get('/api/2/collections/%s' % self.col.id)
         assert res.status_code == 403, res
@@ -44,17 +53,6 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'test_coll' in res.json['foreign_id'], res.json
         assert 'Winnie' not in res.json['label'], res.json
-
-    def test_sitemap(self):
-        self.update_index()
-        url = '/api/2/collections/%s/sitemap.xml' % self.col.id
-        res = self.client.get(url)
-        assert res.status_code == 403, res
-        self.grant_publish(self.col)
-        res = self.client.get(url)
-        assert res.status_code == 200, res
-        data = res.data.decode('utf-8')
-        assert self.ent.id in data, data
 
     def test_update_valid(self):
         _, headers = self.login(is_admin=True)

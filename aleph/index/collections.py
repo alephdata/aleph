@@ -6,8 +6,7 @@ from followthemoney.types import registry
 from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.indexes import collections_index, entities_read_index
-from aleph.index.util import query_delete, index_safe
-from aleph.index.util import refresh_sync, MAX_PAGE
+from aleph.index.util import query_delete, index_safe, refresh_sync
 
 log = logging.getLogger(__name__)
 
@@ -76,29 +75,6 @@ def get_collection_stats(collection_id):
         for bucket in aggregations.get(facet, {}).get('buckets', []):
             data[facet][bucket['key']] = bucket['doc_count']
     return data
-
-
-def get_sitemap_entities(collection_id):
-    filters = [
-        {'term': {'collection_id': collection_id}},
-        {'term': {'schemata': Entity.THING}},
-    ]
-    query = {
-        'query': {
-            'bool': {
-                'filter': filters
-            }
-        },
-        'size': MAX_PAGE,
-        'sort': [{'updated_at': 'desc'}],
-        '_source': {'includes': ['schema', 'updated_at']}
-    }
-    index = entities_read_index(Entity.THING)
-    res = es.search(index=index, body=query)
-    for res in res.get('hits', {}).get('hits', []):
-        source = res.get('_source')
-        source['id'] = res.get('_id')
-        yield source
 
 
 def delete_collection(collection_id, sync=False):

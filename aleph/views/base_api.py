@@ -10,12 +10,11 @@ from jwt import ExpiredSignatureError
 
 from aleph import __version__
 from aleph.core import cache, settings, url_for
-from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.views.serializers import RoleSerializer
 from aleph.views.cache import enable_cache, NotModified
-from aleph.views.util import jsonify, render_xml
+from aleph.views.util import jsonify
 
 blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
@@ -103,20 +102,6 @@ def statistics():
         'groups': groups,
         'things': sum(schemata.values()),
     })
-
-
-@blueprint.route('/api/2/sitemap.xml')
-def sitemap_index():
-    enable_cache(vary_user=False)
-    collections = []
-    for collection in Collection.all_authz(Authz.from_role(None)):
-        updated_at = collection.updated_at.date().isoformat()
-        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
-        collections.append({
-            'url': url_for('collections_api.sitemap', id=collection.id),
-            'updated_at': updated_at
-        })
-    return render_xml('sitemap_index.xml', collections=collections)
 
 
 @blueprint.route('/healthz')
