@@ -39,8 +39,8 @@
       background-color: $button-color-hover !important;
     }
 
-    &:disabled {
-      opacity: 0.5;
+    &:disabled, &.bp3-disabled {
+      opacity: 0.5 !important;
     }
   }
 }

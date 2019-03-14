@@ -1,8 +1,6 @@
 import io
-import logging
 import os
-import mimetypes
-
+import logging
 import requests
 import zipstream
 
@@ -33,40 +31,32 @@ def _read_in_chunks(infile, chunk_size=1024*64):
 
 
 def write_document(zip_archive, entity):
+    if not entity.has('contentHash', quiet=True):
+        return
+    # is it a folder?
+    if 'inode/directory' in entity.get('mimeType', quiet=True):
+        return
     collection = entity.context.get('collection')['label']
     name = entity.first('fileName') or entity.caption
     name = "{0}-{1}".format(entity.id, name)
-    filetypes = entity.context.get('mimetypes')
-    # is it a folder?
-    if 'inode/directory' in filetypes:
-        return
-    ext = mimetypes.guess_extension(filetypes[0], strict=True)
-    if ext:
-        name = name + ext
-    path = os.path.join(entity.schema.plural, collection, name)
-
-    document = entity.context['document']
-    if document:
-        url = archive.generate_url(document.content_hash,
-                                   file_name=document.safe_file_name,
-                                   mime_type=document.mime_type)
-        if url is not None:
-            stream = requests.get(url, stream=True)
-            zip_archive.write_iter(path, stream.iter_content())
-        else:
-            try:
-                local_path = archive.load_file(
-                    document.content_hash, file_name=document.safe_file_name
-                )
-                if local_path is None:
-                    return
-                stream = open(local_path, 'rb')
-                # _read_in_chunks is evoked only after we start yielding the
-                # contents of the zipfile. So we have to make sure the file
-                # pointer stays open till then.
-                zip_archive.write_iter(path, _read_in_chunks(stream))
-            finally:
-                archive.cleanup_file(document.content_hash)
+    path = os.path.join(collection, name)
+    content_hash = entity.first('contentHash')
+    url = archive.generate_url(content_hash)
+    if url is not None:
+        stream = requests.get(url, stream=True)
+        zip_archive.write_iter(path, stream.iter_content())
+    else:
+        try:
+            local_path = archive.load_file(content_hash)
+            if local_path is None:
+                return
+            stream = open(local_path, 'rb')
+            # _read_in_chunks is evoked only after we start yielding the
+            # contents of the zipfile. So we have to make sure the file
+            # pointer stays open till then.
+            zip_archive.write_iter(path, _read_in_chunks(stream))
+        finally:
+            archive.cleanup_file(content_hash)
 
 
 def export_entity_csv(handlers, entity):
@@ -110,7 +100,7 @@ def export_entities(entities, format):
             if entity.schema.is_a('Document'):
                 write_document(zip_archive, entity)
         content = io.BytesIO(get_workbook_content(workbook))
-        zip_archive.write_iter('export.xls', content)
+        zip_archive.write_iter('export.xlsx', content)
     elif format == FORMAT_CSV:
         handlers = {}
         for entity in entities:

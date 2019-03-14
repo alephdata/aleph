@@ -8,7 +8,7 @@ from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
-from aleph.model import Audit, Document
+from aleph.model import Audit
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
@@ -48,21 +48,14 @@ def index():
 def export(format):
     require(request.authz.logged_in)
     parser = SearchQueryParser(request.args, request.authz)
+    parser.limit = EXPORT_MAX
     result = EntitiesQuery.handle(request, parser=parser)
     results = result.to_dict(serializer=EntitySerializer)
-    results = results['results'][:EXPORT_MAX]
-    entities = [model.get_proxy(ent) for ent in results]
-    for entity in entities:
-        if 'document_id' in entity.context:
-            entity.context['document'] = Document.by_id(
-                entity.context['document_id']
-            )
-        else:
-            entity.context['document'] = None
-    response = Response(
-        export_entities(entities, format), mimetype='application/zip'
-    )
-    response.headers['Content-Disposition'] = 'attachment; filename={}'.format('export.zip')  # noqa
+    entities = [model.get_proxy(ent) for ent in results['results']]
+    response = Response(export_entities(entities, format),
+                        mimetype='application/zip')
+    disposition = 'attachment; filename={}'.format('export.zip')
+    response.headers['Content-Disposition'] = disposition
     return response
 
 
