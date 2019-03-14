@@ -50,11 +50,9 @@ def export(format):
     parser = SearchQueryParser(request.args, request.authz)
     parser.limit = EXPORT_MAX
     result = EntitiesQuery.handle(request, parser=parser)
-    results = result.to_dict(serializer=EntitySerializer)
-    entities = [model.get_proxy(ent) for ent in results['results']]
-    response = Response(export_entities(entities, format),
-                        mimetype='application/zip')
-    disposition = 'attachment; filename={}'.format('export.zip')
+    stream = export_entities(request, result, format)
+    response = Response(stream, mimetype='application/zip')
+    disposition = 'attachment; filename={}'.format('Query_export.zip')
     response.headers['Content-Disposition'] = disposition
     return response
 
