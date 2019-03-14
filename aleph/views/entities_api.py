@@ -50,7 +50,7 @@ def export(format):
     parser = SearchQueryParser(request.args, request.authz)
     result = EntitiesQuery.handle(request, parser=parser)
     results = result.to_dict(serializer=EntitySerializer)
-    results = ['results'][:EXPORT_MAX]
+    results = results['results'][:EXPORT_MAX]
     entities = [model.get_proxy(ent) for ent in results]
     for entity in entities:
         if 'document_id' in entity.context:
