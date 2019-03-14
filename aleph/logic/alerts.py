@@ -2,7 +2,7 @@ import logging
 from pprint import pprint  # noqa
 
 from aleph.authz import Authz
-from aleph.core import db, es, cache
+from aleph.core import db, es
 from aleph.model import Alert, Events, Entity
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import unpack_result, authz_query, MAX_PAGE
@@ -13,13 +13,8 @@ log = logging.getLogger(__name__)
 
 def get_alert(alert_id):
     alert = Alert.by_id(alert_id)
-    if alert is None:
-        return
-    return alert.to_dict()
-
-
-def refresh_alert(alert, sync=False):
-    cache.kv.delete(cache.object_key(Alert, alert.id))
+    if alert is not None:
+        return alert.to_dict()
 
 
 def check_alerts():

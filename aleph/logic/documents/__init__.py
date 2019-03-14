@@ -1,6 +1,6 @@
 import logging
 
-from aleph.core import settings, celery
+from aleph.core import celery
 from aleph.model import Document
 from aleph.index import documents as index
 from aleph.logic.entities import refresh_entity
@@ -38,8 +38,7 @@ def process_documents(collection_id=None, failed_only=False):
     are part of a particular collection."""
     q = Document.find_ids(collection_id=collection_id,
                           failed_only=failed_only)
-    q = q.all() if settings.EAGER else q.yield_per(5000)
-    for idx, (doc_id,) in enumerate(q, 1):
+    for idx, (doc_id,) in enumerate(q.yield_per(5000), 1):
         ingest.apply_async([doc_id], {'refresh': True}, priority=1)
         if idx % 10000 == 0:
             log.info("Process: %s documents...", idx)
