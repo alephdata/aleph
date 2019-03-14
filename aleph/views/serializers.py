@@ -90,8 +90,10 @@ class Serializer(object):
         return jsonify(data, **kwargs)
 
     @classmethod
-    def jsonify_result(cls, result, **kwargs):
+    def jsonify_result(cls, result, extra=None, **kwargs):
         data = result.to_dict(serializer=cls)
+        if extra is not None:
+            data.update(extra)
         return jsonify(data, **kwargs)
 
 

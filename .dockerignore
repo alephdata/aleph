@@ -8,3 +8,4 @@ celerybeat-schedul*
 .git
 .vscode
 .travis.yml
+.env

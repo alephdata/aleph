@@ -24,4 +24,23 @@
       color: $light-gray2;
     }
   }
+
+  .bp3-button {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    color: white !important;
+
+    .bp3-icon {
+      color: white !important;
+    }
+
+    &:hover {
+      background-color: $button-color-hover !important;
+    }
+
+    &:disabled, &.bp3-disabled {
+      opacity: 0.5 !important;
+    }
+  }
 }
