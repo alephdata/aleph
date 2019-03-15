@@ -138,21 +138,21 @@ def query_delete(index, query, sync=False, **kwargs):
 
 def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     """Bulk indexing with timeouts, bells and whistles."""
-    try:
-        start_time = time()
-        stream = streaming_bulk(es, actions,
-                                chunk_size=chunk_size,
-                                max_chunk_bytes=INDEX_MAX_LEN * 2,
-                                max_retries=10,
-                                initial_backoff=2,
-                                yield_ok=False,
-                                refresh=refresh_sync(sync))
-        for result in stream:
-            log.warning("Error during index: %r", result)
-        duration = (time() - start_time)
-        log.debug("Bulk write: %.4fs", duration)
-    except BulkIndexError as exc:
-        log.warning('Indexing error: %s', exc)
+    start_time = time()
+    stream = streaming_bulk(es, actions,
+                            chunk_size=chunk_size,
+                            max_chunk_bytes=INDEX_MAX_LEN * 2,
+                            max_retries=10,
+                            initial_backoff=2,
+                            yield_ok=False,
+                            raise_on_error=False,
+                            refresh=refresh_sync(sync))
+    for _, details in stream:
+        if details.get('delete', {}).get('status') == 404:
+            continue
+        log.warning("Error during index: %r", details)
+    duration = (time() - start_time)
+    log.debug("Bulk write: %.4fs", duration)
 
 
 def index_safe(index, id, body, **kwargs):

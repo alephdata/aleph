@@ -79,9 +79,10 @@ def ingest_upload(collection_id):
                         content_hash=content_hash)
     finally:
         shutil.rmtree(upload_dir)
-
-    # Make sure collection counts are always accurate.
-    update_document(document, shallow=True, sync=sync)
+    
+    if document.collection.casefile:
+        # Make sure collection counts are always accurate.
+        update_document(document, sync=sync)
     return jsonify({
         'status': 'ok',
         'id': stringify(document.id)

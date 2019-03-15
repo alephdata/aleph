@@ -100,12 +100,6 @@ def schema_index(schema, version):
     return index_name(name, version=version)
 
 
-def entities_write_index(schema):
-    """Index that us currently written by new queries."""
-    schema = model.get(schema)
-    return schema_index(schema, settings.INDEX_WRITE)
-
-
 def schema_scope(schema, expand=True):
     schemata = set()
     names = ensure_list(schema) or model.schemata.values()
@@ -120,7 +114,7 @@ def schema_scope(schema, expand=True):
             yield schema
 
 
-def entities_read_index_list(schema=None, expand=True):
+def entities_index_list(schema=None, expand=True):
     """Combined index to run all queries against."""
     for schema in schema_scope(schema, expand=expand):
         for version in settings.INDEX_READ:
@@ -128,8 +122,14 @@ def entities_read_index_list(schema=None, expand=True):
 
 
 def entities_read_index(schema=None, expand=True):
-    indexes = entities_read_index_list(schema=schema, expand=expand)
+    indexes = entities_index_list(schema=schema, expand=expand)
     return ','.join(indexes)
+
+
+def entities_write_index(schema):
+    """Index that us currently written by new queries."""
+    schema = model.get(schema)
+    return schema_index(schema, settings.INDEX_WRITE)
 
 
 def configure_entities():
