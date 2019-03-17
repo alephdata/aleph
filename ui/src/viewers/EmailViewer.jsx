@@ -31,9 +31,55 @@ export class EmailViewer extends React.Component {
     );
   }
 
+  renderHeaders(headers = this.props.content.headers) {
+    return (
+      <div className="email-header">
+        <table className="bp3-html-table">
+          <tbody>
+            {headers.date && (
+            <tr>
+              <th><FormattedMessage id="email.date" defaultMessage="Date" /></th>
+              <td>{headers.date}</td>
+            </tr>
+            )}
+            {headers.from && (
+            <tr>
+              <th><FormattedMessage id="email.from" defaultMessage="From" /></th>
+              <td>{headers.from}</td>
+            </tr>
+            )}
+            <tr>
+              <th><FormattedMessage id="email.subject" defaultMessage="Subject" /></th>
+              <td>{headers.subject}</td>
+            </tr>
+            {headers.to && (
+            <tr>
+              <th><FormattedMessage id="email.to" defaultMessage="Recipient" /></th>
+              <td>{headers.to}</td>
+            </tr>
+            )}
+            {headers.cc && (
+            <tr>
+              <th><FormattedMessage id="email.cc" defaultMessage="CC" /></th>
+              <td>{headers.cc}</td>
+            </tr>
+            )}
+            {headers.bcc && (
+            <tr>
+              <th><FormattedMessage id="email.bcc" defaultMessage="BCC" /></th>
+              <td>{headers.bcc}</td>
+            </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+
   render() {
     const { content } = this.props;
-    const { headers = {} } = content;
+    const { headers } = content;
     if (content.shouldLoad || content.isLoading) {
       return <SectionLoading />;
     }
@@ -42,49 +88,8 @@ export class EmailViewer extends React.Component {
       <React.Fragment>
         <div className="outer">
           <div className="inner EmailViewer">
-            <div className="email-header">
-              <table className="bp3-html-table">
-                <tbody>
-                  {headers.date && (
-                    <tr>
-                      <th><FormattedMessage id="email.date" defaultMessage="Date" /></th>
-                      <td>{headers.date}</td>
-                    </tr>
-                  )}
-                  {headers.from && (
-                    <tr>
-                      <th><FormattedMessage id="email.from" defaultMessage="From" /></th>
-                      <td>{headers.from}</td>
-                    </tr>
-                  )}
-                  <tr>
-                    <th><FormattedMessage id="email.subject" defaultMessage="Subject" /></th>
-                    <td>{headers.subject}</td>
-                  </tr>
-                  {headers.to && (
-                    <tr>
-                      <th><FormattedMessage id="email.to" defaultMessage="Recipient" /></th>
-                      <td>{headers.to}</td>
-                    </tr>
-                  )}
-                  {headers.cc && (
-                    <tr>
-                      <th><FormattedMessage id="email.cc" defaultMessage="CC" /></th>
-                      <td>{headers.cc}</td>
-                    </tr>
-                  )}
-                  {headers.bcc && (
-                    <tr>
-                      <th><FormattedMessage id="email.bcc" defaultMessage="BCC" /></th>
-                      <td>{headers.bcc}</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <React.Fragment>
-              {this.renderBody()}
-            </React.Fragment>
+            {headers && this.renderHeaders(headers)}
+            {this.renderBody()}
           </div>
         </div>
       </React.Fragment>
