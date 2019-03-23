@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-13T07:29:04.324Z\n"
+"POT-Creation-Date: 2019-03-23T21:08:08.652Z\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -380,9 +380,6 @@ msgstr "Создать"
 msgid "Create a new casefile"
 msgstr "Создать новый кейс-файл"
 
-#. [collections.xref.title]
-#. defaultMessage is:
-#. Cross-reference
 #. [collection.info.xref]
 #. defaultMessage is:
 #. Cross-reference
@@ -390,6 +387,9 @@ msgstr "Создать новый кейс-файл"
 #. defaultMessage is:
 #. Cross-reference
 #. [collection.xref.title]
+#. defaultMessage is:
+#. Cross-reference
+#. [collections.xref.title]
 #. defaultMessage is:
 #. Cross-reference
 #. [matches.screen.xref]
@@ -597,6 +597,13 @@ msgstr "Типы сущностей"
 #: i18n/messages.json
 msgid "Error"
 msgstr "Ошибка"
+
+#. [search.screen.export]
+#. defaultMessage is:
+#. Export
+#: i18n/messages.json
+msgid "Export"
+msgstr ""
 
 #. [search.facets.facet.mimetypes]
 #. defaultMessage is:

@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-13T07:29:04.324Z\n"
+"POT-Creation-Date: 2019-03-23T21:08:08.652Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -380,9 +380,6 @@ msgstr "Anlegen"
 msgid "Create a new casefile"
 msgstr "Neuen Fall anlegen"
 
-#. [collections.xref.title]
-#. defaultMessage is:
-#. Cross-reference
 #. [collection.info.xref]
 #. defaultMessage is:
 #. Cross-reference
@@ -390,6 +387,9 @@ msgstr "Neuen Fall anlegen"
 #. defaultMessage is:
 #. Cross-reference
 #. [collection.xref.title]
+#. defaultMessage is:
+#. Cross-reference
+#. [collections.xref.title]
 #. defaultMessage is:
 #. Cross-reference
 #. [matches.screen.xref]
@@ -598,6 +598,13 @@ msgstr "Entitätenarten"
 #: i18n/messages.json
 msgid "Error"
 msgstr "Fehler"
+
+#. [search.screen.export]
+#. defaultMessage is:
+#. Export
+#: i18n/messages.json
+msgid "Export"
+msgstr "Export"
 
 #. [search.facets.facet.mimetypes]
 #. defaultMessage is:

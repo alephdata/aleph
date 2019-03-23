@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-13T07:29:04.324Z\n"
+"POT-Creation-Date: 2019-03-23T21:08:08.652Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -378,9 +378,6 @@ msgstr "Kreiraj"
 msgid "Create a new casefile"
 msgstr ""
 
-#. [collections.xref.title]
-#. defaultMessage is:
-#. Cross-reference
 #. [collection.info.xref]
 #. defaultMessage is:
 #. Cross-reference
@@ -388,6 +385,9 @@ msgstr ""
 #. defaultMessage is:
 #. Cross-reference
 #. [collection.xref.title]
+#. defaultMessage is:
+#. Cross-reference
+#. [collections.xref.title]
 #. defaultMessage is:
 #. Cross-reference
 #. [matches.screen.xref]
@@ -593,6 +593,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "Error"
 msgstr "Greška"
+
+#. [search.screen.export]
+#. defaultMessage is:
+#. Export
+#: i18n/messages.json
+msgid "Export"
+msgstr ""
 
 #. [search.facets.facet.mimetypes]
 #. defaultMessage is:

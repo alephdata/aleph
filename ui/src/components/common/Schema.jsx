@@ -21,7 +21,7 @@ class SchemaIcon extends PureComponent {
 
 class SchemaLabel extends Component {
   render() {
-    const { schema, plural, icon } = this.props;
+    const { schema, plural = false, icon } = this.props;
     const label = schema.getLabel({
       forcePlural: plural,
     });
@@ -29,7 +29,6 @@ class SchemaLabel extends Component {
       return (
         <span>
           <Schema.Icon schema={schema} />
-          {' '}
           {label}
         </span>
       );
@@ -72,7 +71,7 @@ const mapStateToProps = state => ({
 });
 
 class Schema extends Component {
-  static Smart= {
+  static Smart = {
     Label: connect(mapStateToProps)(SmartSchemaHOC(SchemaLabel)),
     Icon: connect(mapStateToProps)(SmartSchemaHOC(SchemaIcon)),
     Link: connect(mapStateToProps)(SmartSchemaHOC(SchemaLink)),

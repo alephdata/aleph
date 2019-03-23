@@ -65,7 +65,7 @@ class EntityViews extends React.Component {
                   <FormattedMessage id="entity.info.info" defaultMessage="Info" />
                 </span>
               </React.Fragment>
-)}
+            )}
             panel={
               <EntityInfoMode entity={entity} />
                }
@@ -81,7 +81,7 @@ class EntityViews extends React.Component {
                 <Property.Reverse model={ref.property} />
                 <Count count={ref.count} />
               </React.Fragment>
-)}
+            )}
             panel={
               <EntityReferencesMode entity={entity} mode={activeMode} />
                }
@@ -96,7 +96,7 @@ class EntityViews extends React.Component {
               <FormattedMessage id="entity.info.tags" defaultMessage="Tags" />
               <Count count={tags.total} />
             </TextLoading>
-)}
+          )}
           panel={
             <EntityTagsMode entity={entity} />
              }
@@ -110,7 +110,7 @@ class EntityViews extends React.Component {
               <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
               <Count count={similar.total} />
             </TextLoading>
-)}
+          )}
           panel={
             <EntitySimilarMode entity={entity} />
              }

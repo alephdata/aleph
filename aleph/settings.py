@@ -23,6 +23,7 @@ TESTING = False
 # General instance information
 
 APP_TITLE = env.get('ALEPH_APP_TITLE', lazy_gettext('Aleph'))
+APP_DESCRIPTION = env.get('ALEPH_APP_DESCRIPTION', '')
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
 APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:8080/')
 APP_LOGO = env.get('ALEPH_LOGO', '/static/logo.png')
@@ -134,7 +135,7 @@ ALEMBIC_DIR = os.path.join(os.path.dirname(__file__), 'migrate')
 ALEMBIC_DIR = os.path.abspath(ALEMBIC_DIR)
 
 ELASTICSEARCH_URL = env.get('ALEPH_ELASTICSEARCH_URI', 'http://localhost:9200')
-ELASTICSEARCH_TIMEOUT = env.to_int('ELASTICSEARCH_TIMEOUT', 10)
+ELASTICSEARCH_TIMEOUT = env.to_int('ELASTICSEARCH_TIMEOUT', 30)
 
 INDEX_PREFIX = env.get('ALEPH_INDEX_PREFIX', APP_NAME)
 INDEX_WRITE = env.get('ALEPH_INDEX_WRITE', 'v1')

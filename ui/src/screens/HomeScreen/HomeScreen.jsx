@@ -156,7 +156,11 @@ export class HomeScreen extends Component {
     const { intl, metadata, statistics = {} } = this.props;
     const samples = metadata.app.samples.join(', ');
     return (
-      <Screen isHomepage title={intl.formatMessage(messages.title)}>
+      <Screen
+        isHomepage
+        title={intl.formatMessage(messages.title)}
+        description={metadata.app.description}
+      >
         <HomeScreen.SubNavigation session={this.props.session} statistics={statistics} />
         <section className="HomePage">
           <div className="outer-searchbox">

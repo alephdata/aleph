@@ -1,43 +1,32 @@
+import spacy
 import logging
-import textwrap
-from servicelayer.rpc import ExtractedEntity
-from servicelayer.rpc import EntityExtractService
 
 from aleph import settings
-from aleph.tracing import trace_function
-from aleph.logic.extractors.result import PersonResult, LocationResult
-from aleph.logic.extractors.result import OrganizationResult, LanguageResult
+from aleph.logic.extractors.result import PersonResult
+from aleph.logic.extractors.result import LocationResult
+from aleph.logic.extractors.result import OrganizationResult
 
 log = logging.getLogger(__name__)
-
-
-class NERService(EntityExtractService):
-    MIN_LENGTH = 60
-    MAX_LENGTH = 100000
-    TYPES = {
-        ExtractedEntity.ORGANIZATION: OrganizationResult,
-        ExtractedEntity.PERSON: PersonResult,
-        ExtractedEntity.LOCATION: LocationResult,
-        ExtractedEntity.LANGUAGE: LanguageResult
-    }
-
-    @trace_function(span_name='NER')
-    def extract_all(self, text, languages):
-        if text is None or len(text) < self.MIN_LENGTH:
-            return
-        if len(text) > self.MAX_LENGTH:
-            texts = textwrap.wrap(text, self.MAX_LENGTH)
-        else:
-            texts = [text]
-        for text in texts:
-            for res in self.Extract(text, languages):
-                clazz = self.TYPES.get(res.type)
-                yield (res.text, clazz, res.start, res.end)
+MIN_LENGTH = 60
+MAX_LENGTH = 100000
+# https://spacy.io/api/annotation#named-entities
+SPACY_TYPES = {
+    'PER': PersonResult,
+    'PERSON': PersonResult,
+    'ORG': OrganizationResult,
+    'LOC': LocationResult,
+    'GPE': LocationResult
+}
 
 
 def extract_entities(ctx, text, languages):
-    if not hasattr(settings, '_ner_service'):
-        settings._ner_service = NERService()
-    entities = settings._ner_service.extract_all(text, languages=languages)
-    for (text, clazz, start, end) in entities:
-        yield clazz.create(ctx, text, start, end)
+    if text is None or len(text) < MIN_LENGTH:
+        return
+    if not hasattr(settings, '_nlp'):
+        settings._nlp = spacy.load('xx')
+    doc = settings._nlp(text)
+    for ent in doc.ents:
+        clazz = SPACY_TYPES.get(ent.label_)
+        label = ent.text.strip()
+        if clazz is not None and len(label):
+            yield clazz.create(ctx, label, ent.start, ent.end)

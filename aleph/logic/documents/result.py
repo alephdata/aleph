@@ -116,6 +116,7 @@ class DocumentResult(Result):
         doc.columns = list(self.columns.keys())
         doc.body_raw = self.body_html
         doc.body_text = self.body_text
+        doc.headers = self.headers
 
         for kw in self.keywords:
             doc.add_keyword(safe_string(kw))

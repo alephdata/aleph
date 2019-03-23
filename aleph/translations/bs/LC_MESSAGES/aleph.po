@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-13 08:29+0100\n"
+"POT-Creation-Date: 2019-03-23 22:08+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Tajna Biscevic <tajna@occrp.org>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
@@ -29,11 +29,11 @@ msgstr ""
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/settings.py:35
+#: aleph/settings.py:36
 msgid "TeliaSonera"
 msgstr "TeliaSonera"
 
-#: aleph/settings.py:35
+#: aleph/settings.py:36
 msgid "Vladimir Putin"
 msgstr "Vladimir Putin"
 
@@ -191,25 +191,29 @@ msgstr ""
 "\n"
 "     Da završite registraciju, molimo posjetite <a href=\"%(url)s\">našu registracijsku stranicu</a>."
 
-#: aleph/views/base_api.py:131
+#: aleph/views/base_api.py:117
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ se ne koristi, molimo vas da koristite /api/2"
 
-#: aleph/views/base_api.py:152
+#: aleph/views/base_api.py:138
 msgid "You are not authorized to do this."
 msgstr "Niste ovlašteni da ovo uradite."
 
-#: aleph/views/base_api.py:161
+#: aleph/views/base_api.py:147
 msgid "This path does not exist."
 msgstr "Ova putanja ne postoji."
 
-#: aleph/views/base_api.py:170
+#: aleph/views/base_api.py:156
 msgid "Internal server error."
 msgstr "Interna greška servera."
 
-#: aleph/views/base_api.py:187
+#: aleph/views/base_api.py:173
 msgid "Access token has expired."
 msgstr "Pristupni token je istekao."
+
+#: aleph/views/base_api.py:182
+msgid "There was an error during search"
+msgstr ""
 
 #: aleph/views/roles_api.py:27
 msgid "prefix filter is too short"

@@ -46,12 +46,6 @@ services:
     restart: on-failure
     expose:
       - 50000
-  
-  extract-entities:
-    image: alephdata/extract-entities:1.2.0
-    restart: on-failure
-    expose:
-      - 50000
 
   app:
     image: alephdata/aleph
@@ -63,7 +57,6 @@ services:
       - redis
       - convert-document
       - recognize-text
-      - extract-entities
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -83,7 +76,7 @@ services:
 
   api:
     image: alephdata/aleph
-    command: python3 aleph/manage.py runserver -h 0.0.0.0 -p 5000
+    command: python3 aleph/manage.py runserver -h 0.0.0.0 -p 5000 --threaded
     expose:
       - 5000
     ports:
@@ -96,7 +89,6 @@ services:
       - redis
       - convert-document
       - recognize-text
-      - extract-entities
     tmpfs: /tmp
     volumes:
       - archive-data:/data

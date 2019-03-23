@@ -10,12 +10,11 @@ from jwt import ExpiredSignatureError
 
 from aleph import __version__
 from aleph.core import cache, settings, url_for
-from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.views.serializers import RoleSerializer
 from aleph.views.cache import enable_cache, NotModified
-from aleph.views.util import jsonify, render_xml
+from aleph.views.util import jsonify
 
 blueprint = Blueprint('base_api', __name__)
 log = logging.getLogger(__name__)
@@ -42,6 +41,7 @@ def metadata():
         'maintenance': request.authz.in_maintenance,
         'app': {
             'title': settings.APP_TITLE,
+            'description': settings.APP_DESCRIPTION,
             'version': __version__,
             'ui_uri': settings.APP_UI_URL,
             'samples': settings.SAMPLE_SEARCHES,
@@ -103,20 +103,6 @@ def statistics():
         'groups': groups,
         'things': sum(schemata.values()),
     })
-
-
-@blueprint.route('/api/2/sitemap.xml')
-def sitemap_index():
-    enable_cache(vary_user=False)
-    collections = []
-    for collection in Collection.all_authz(Authz.from_role(None)):
-        updated_at = collection.updated_at.date().isoformat()
-        updated_at = max(settings.SITEMAP_FLOOR, updated_at)
-        collections.append({
-            'url': url_for('collections_api.sitemap', id=collection.id),
-            'updated_at': updated_at
-        })
-    return render_xml('sitemap_index.xml', collections=collections)
 
 
 @blueprint.route('/healthz')
@@ -190,18 +176,9 @@ def handle_jwt_expired(err):
 
 @blueprint.app_errorhandler(TransportError)
 def handle_es_error(err):
-    message = err.error
     log.error("ES [%s]: %r", err.error, err.info)
-    try:
-        status = int(err.status_code)
-    except Exception:
-        status = 500
-    try:
-        for cause in err.info.get('error', {}).get('root_cause', []):
-            message = cause.get('reason', message)
-    except Exception as ex:
-        log.debug(ex)
     return jsonify({
         'status': 'error',
-        'message': message
-    }, status=status)
+        'message': gettext('There was an error during search'),
+        'context': err.error
+    }, status=500)

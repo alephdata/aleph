@@ -44,13 +44,6 @@ services:
     expose:
       - 50000
   
-  extract-entities:
-    image: alephdata/extract-entities:1.2.0
-    restart: on-failure
-    mem_limit: 4g
-    expose:
-      - 50000
-
   worker:
     image: alephdata/aleph
     command: celery -A aleph.queues -B -c 4 -l INFO worker
@@ -62,7 +55,6 @@ services:
       - redis
       - convert-document
       - recognize-text
-      - extract-entities
     tmpfs:
       - /tmp
     volumes:
@@ -81,7 +73,6 @@ services:
       - redis
       - convert-document
       - recognize-text
-      - extract-entities
       - worker
     tmpfs:
       - /tmp
@@ -103,7 +94,6 @@ services:
       - worker
       - convert-document
       - recognize-text
-      - extract-entities
     tmpfs:
       - /tmp
     volumes:
@@ -124,7 +114,6 @@ services:
       - worker
       - convert-document
       - recognize-text
-      - extract-entities
     tmpfs:
       - /tmp
     volumes:

@@ -31,11 +31,3 @@ class BaseApiTestCase(TestCase):
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res
         assert res.json['things'] == 4, res.json
-
-    def test_sitemap(self):
-        self.load_fixtures('docs.yaml')
-        res = self.client.get('/api/2/sitemap.xml')
-        assert res.status_code == 200, res
-        data = res.data.decode('utf-8')
-        assert '<sitemapindex' in data, data
-        assert '<sitemap>' in data, data

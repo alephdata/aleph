@@ -5,6 +5,7 @@ from aleph.authz import Authz
 from aleph.model import Permission, Events
 from aleph.model import Notification
 from aleph.logic.notifications import publish
+from aleph.logic.roles import refresh_role
 
 log = logging.getLogger(__name__)
 
@@ -31,4 +32,5 @@ def update_permission(role, collection, read, write, editor_id=None):
                 params=params)
     db.session.commit()
     Authz.flush()
+    refresh_role(role)
     return post

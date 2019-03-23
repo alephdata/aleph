@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { selectEntity } from 'src/selectors';
 import { fetchEntity } from 'src/actions';
 import { Collection, Entity } from 'src/components/common';
-import SearchBox from './SearchBox';
 import './Breadcrumbs.scss';
 
 
@@ -75,7 +74,7 @@ export default class Breadcrumbs extends Component {
   static Text = TextBreadcrumb;
 
   render() {
-    const { collection, children } = this.props;
+    const { collection, children, operation } = this.props;
 
     const collectionCrumbs = [];
     if (collection) {
@@ -90,7 +89,7 @@ export default class Breadcrumbs extends Component {
           {collectionCrumbs}
           {children}
         </ul>
-        <SearchBox className="BreadcrumbSearch" {...this.props} />
+        {operation}
       </nav>
     );
   }

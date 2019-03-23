@@ -7,8 +7,7 @@ all: build upgrade web
 services:
 	$(COMPOSE) up -d --remove-orphans \
 		rabbitmq postgres elasticsearch \
-		convert-document recognize-text \
-		extract-entities
+		convert-document recognize-text
 
 shell: services    
 	$(DEVDOCKER) /bin/bash

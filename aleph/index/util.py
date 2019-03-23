@@ -2,7 +2,7 @@ import logging
 from time import time
 from banal import ensure_list
 from elasticsearch import TransportError
-from elasticsearch.helpers import streaming_bulk, BulkIndexError
+from elasticsearch.helpers import streaming_bulk
 from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
@@ -110,12 +110,12 @@ def field_filter_query(field, values):
         return {'match_all': {}}
     if field in ['_id', 'id']:
         return {'ids': {'values': values}}
+    if field in ['names']:
+        field = 'fingerprints'
     if len(values) == 1:
-        if field in ['names']:
-            field = 'fingerprints'
-        if field in ['addresses']:
-            field = '%s.text' % field
-            return {'match_phrase': {field: values[0]}}
+        # if field in ['addresses']:
+        #     field = '%s.text' % field
+        #     return {'match_phrase': {field: values[0]}}
         return {'term': {field: values[0]}}
     return {'terms': {field: values}}
 
@@ -138,21 +138,21 @@ def query_delete(index, query, sync=False, **kwargs):
 
 def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     """Bulk indexing with timeouts, bells and whistles."""
-    try:
-        start_time = time()
-        stream = streaming_bulk(es, actions,
-                                chunk_size=chunk_size,
-                                max_chunk_bytes=INDEX_MAX_LEN * 2,
-                                max_retries=10,
-                                initial_backoff=2,
-                                yield_ok=False,
-                                refresh=refresh_sync(sync))
-        for result in stream:
-            log.warning("Error during index: %r", result)
-        duration = (time() - start_time)
-        log.debug("Bulk write: %.4fs", duration)
-    except BulkIndexError as exc:
-        log.warning('Indexing error: %s', exc)
+    start_time = time()
+    stream = streaming_bulk(es, actions,
+                            chunk_size=chunk_size,
+                            max_chunk_bytes=INDEX_MAX_LEN * 2,
+                            max_retries=10,
+                            initial_backoff=2,
+                            yield_ok=False,
+                            raise_on_error=False,
+                            refresh=refresh_sync(sync))
+    for _, details in stream:
+        if details.get('delete', {}).get('status') == 404:
+            continue
+        log.warning("Error during index: %r", details)
+    duration = (time() - start_time)
+    log.debug("Bulk write: %.4fs", duration)
 
 
 def index_safe(index, id, body, **kwargs):

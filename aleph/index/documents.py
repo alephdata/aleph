@@ -5,7 +5,7 @@ from banal import ensure_list
 from aleph.core import db
 from aleph.model import DocumentRecord, Document
 from aleph.index.entities import index_operation
-from aleph.index.indexes import entities_read_index
+from aleph.index.indexes import entities_read_index, entities_index_list
 from aleph.index.util import INDEX_MAX_LEN, BULK_PAGE
 from aleph.index.util import query_delete, bulk_actions
 
@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 
 def index_document(document, shallow=False, sync=False):
     log.info("Index document [%s]: %s", document.id, document.name)
-    bulk_actions(generate_document(document), sync=sync)
+    operations = generate_document(document, shallow=shallow)
+    bulk_actions(operations, sync=sync)
 
 
 def delete_document(document_id, sync=False):
@@ -26,7 +27,7 @@ def delete_document(document_id, sync=False):
     query_delete(entities_read_index(schemata), q, sync=sync)
 
 
-def generate_document(document):
+def generate_document(document, shallow=False):
     """Generate bulk index actions for all records and the main document."""
     data = document.to_dict()
     data['text'] = ensure_list(data.get('text'))
@@ -44,18 +45,28 @@ def generate_document(document):
             record['created_at'] = document.created_at
             record['updated_at'] = document.updated_at
             record['text'] = texts
-            entity_id, index, body = index_operation(record)
-            yield {
-                '_id': entity_id,
-                '_index': index,
-                '_type': 'doc',
-                '_source': body
-            }
+            if not shallow:
+                entity_id, index, body = index_operation(record)
+                yield {
+                    '_id': entity_id,
+                    '_index': index,
+                    '_type': 'doc',
+                    '_source': body
+                }
             if idx > 0 and idx % 1000 == 0:
                 log.info("Indexed [%s]: %s records...", document.id, idx)
 
     # log.debug("Text length [%s]: %s", document.id, total_len)
     entity_id, index, body = index_operation(data)
+    for other in entities_index_list(Document.SCHEMA):
+        if other != index:
+            yield {
+                '_id': entity_id,
+                '_index': other,
+                '_type': 'doc',
+                '_op_type': 'delete'
+            }
+
     yield {
         '_id': entity_id,
         '_index': index,

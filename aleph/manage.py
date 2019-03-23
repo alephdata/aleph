@@ -14,8 +14,8 @@ from aleph.model import Collection, Document, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index
-from aleph.logic.collections import create_collection
-from aleph.logic.collections import update_collection, index_collections
+from aleph.logic.collections import create_collection, update_collection
+from aleph.logic.collections import index_collections, index_collection
 from aleph.logic.collections import delete_collection, delete_bulk_entities
 from aleph.logic.documents import ingest_document
 from aleph.logic.documents import process_documents
@@ -117,12 +117,16 @@ def process(foreign_id=None, retry=False):
 
 
 @manager.command
-# @manager.option('-f', '--foreign_id')
-@manager.option('-e', '--entities', dest='entities')
+@manager.option('-f', '--foreign_id')
+@manager.option('-e', '--entities', default=False)
 def repair(foreign_id=None, entities=False):
     """Re-index all the collections and entities."""
     update_roles()
-    index_collections(entities=entities, refresh=True)
+    if foreign_id:
+        collection = get_collection(foreign_id)
+        index_collection(collection, entities=entities, refresh=True)
+    else:
+        index_collections(entities=entities, refresh=True)
 
 
 @manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa

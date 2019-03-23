@@ -8,7 +8,7 @@ import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
-  Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection,
+  Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection, SearchBox,
 } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
@@ -122,12 +122,15 @@ export class SourcesIndexScreen extends Component {
     const { queryPrefix } = this.state;
 
     const total = <FormattedNumber value={result.total || 0} />;
-    const breadcrumbs = (
-      <Breadcrumbs
+    const operation = (
+      <SearchBox
         onSearch={this.onChangeQueryPrefix}
         searchPlaceholder={intl.formatMessage(messages.placeholder)}
         searchText={queryPrefix}
-      >
+      />
+    );
+    const breadcrumbs = (
+      <Breadcrumbs operation={operation}>
         { !!result.total && (
           <Breadcrumbs.Text text={(
             <FormattedMessage
