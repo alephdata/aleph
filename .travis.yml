@@ -7,7 +7,7 @@ env:
   global:
     - ALEPH_DATABASE_NAME=aleph
     - ALEPH_DATABASE_URI=postgresql://localhost/$ALEPH_DATABASE_NAME
-    - DOCKER_COMPOSE_VERSION=1.23.1
+    - DOCKER_COMPOSE_VERSION=1.23.2
     - DOCKER_IMAGE_NAME=alephdata/aleph
 
 before_install:
@@ -26,7 +26,7 @@ before_install:
 install:
   - echo "${TRAVIS_BRANCH}"
   - make build
-  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch
+  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch redis
   - sleep 4
 
 script:
