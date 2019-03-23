@@ -120,7 +120,6 @@ def _filters_faceted_query(authz, facets):
                 'minimum_should_match': 1
             }
         }
-        log.info('%r', query)
         queries.append({'index': idx})
         queries.append({
             'size': 0,
