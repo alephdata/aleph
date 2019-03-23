@@ -3,7 +3,7 @@ from banal import is_mapping
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.core import es, db, cache
+from aleph.core import es, db, cache, settings
 from aleph.model import Entity, Collection
 from aleph.index import entities as index
 from aleph.index.indexes import entities_read_index
@@ -63,7 +63,8 @@ def entity_references(entity, authz):
         query = {'term': {field: entity.get('id')}}
         queries.append((index, prop.qname, query))
 
-    res = _filters_faceted_query(authz, queries)
+    timeout = settings.ELASTICSEARCH_TIMEOUT / 2.0
+    res = _filters_faceted_query(authz, queries, timeout=timeout)
     for (qname, total) in res.items():
         if total > 0:
             yield (model.get_qname(qname), total)
@@ -93,14 +94,15 @@ def entity_tags(entity, authz):
             queries.append((index, alias, query))
             aliases[alias] = (type_.group, value)
 
-    res = _filters_faceted_query(authz, queries)
+    timeout = settings.ELASTICSEARCH_TIMEOUT / 4.0
+    res = _filters_faceted_query(authz, queries, timeout=timeout)
     for alias, (field, value) in aliases.items():
         total = res.get(alias, 0)
         if total > 1:
             yield (field, value, total)
 
 
-def _filters_faceted_query(authz, queries):
+def _filters_faceted_query(authz, queries, timeout=None):
     indexed = {}
     for (idx, alias, filter_) in queries:
         indexed[idx] = indexed.get(idx, {})
@@ -119,7 +121,7 @@ def _filters_faceted_query(authz, queries):
     if not len(queries):
         return results
 
-    res = es.msearch(body=queries)
+    res = es.msearch(body=queries, timeout=timeout)
     for resp in res.get('responses', []):
         aggs = resp.get('aggregations', {}).get('counters', {})
         for alias, value in aggs.get('buckets', {}).items():
