@@ -41,6 +41,7 @@ def metadata():
         'maintenance': request.authz.in_maintenance,
         'app': {
             'title': settings.APP_TITLE,
+            'description': settings.APP_DESCRIPTION,
             'version': __version__,
             'ui_uri': settings.APP_UI_URL,
             'samples': settings.SAMPLE_SEARCHES,

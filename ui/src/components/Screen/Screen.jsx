@@ -59,7 +59,7 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      isHomepage, requireSession, title, className,
+      isHomepage, requireSession, title, description, className,
     } = this.props;
     const {
       session, metadata, query, updateQuery,
@@ -71,6 +71,9 @@ export class Screen extends React.Component {
       <div className={c('Screen', className)}>
         <Helmet titleTemplate={`%s - ${metadata.app.title}`}>
           <title>{title || metadata.app.title}</title>
+          {description && (
+            <meta name="description" content={description} />
+          )}
           <link rel="shortcut icon" href={metadata.app.favicon} />
         </Helmet>
         <Navbar

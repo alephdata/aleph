@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
-import Helmet from 'react-helmet';
 import queryString from 'query-string';
 
 import Screen from 'src/components/Screen/Screen';
@@ -44,12 +43,10 @@ class EntityScreen extends Component {
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );
+    const description = entity.getProperty('description').toString(' ');
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={entity.name}>
-          <Helmet>
-            <meta name="description" content={entity.getProperty('description').toString(' ')} />
-          </Helmet>
+        <Screen title={entity.name} description={description}>
           {breadcrumbs}
           <DualPane>
             <DualPane.ContentPane className="view-menu-flex-direction">

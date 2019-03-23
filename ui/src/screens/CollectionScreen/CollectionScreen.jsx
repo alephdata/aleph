@@ -92,7 +92,7 @@ export class CollectionScreen extends Component {
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={collection.label}>
+        <Screen title={collection.label} description={collection.summary}>
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.ContentPane className="view-menu-flex-direction">
