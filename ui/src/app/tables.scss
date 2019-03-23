@@ -144,17 +144,15 @@ ul.info-rank {
 ul.info-sheet {
   li {
     flex-direction: row;
-    // padding-top: $aleph-grid-size;
 
     .key {
       color: $aleph-greyed-text;
-      font-size: $pt-font-size-small;
+      // font-size: $pt-font-size-small;
       width: 30%;
     }
 
     .value {
       width: 70%;
-      //padding-top: $aleph-grid-size * 0.5;
     }
   }
 }

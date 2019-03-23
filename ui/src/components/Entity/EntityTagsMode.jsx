@@ -7,9 +7,9 @@ import {
 
 import { Tag, ErrorSection } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
+import { translatableConnected } from 'src/util/enhancers';
 
 import './EntityTagsMode.scss';
-import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   no_tags: {

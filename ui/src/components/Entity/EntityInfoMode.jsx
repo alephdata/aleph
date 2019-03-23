@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 
 import getPath from 'src/util/getPath';
 
+import './EntityInfoMode.scss';
+
 
 function EntityInfoMode(props) {
   const { entity } = props;
@@ -14,7 +16,7 @@ function EntityInfoMode(props) {
     .filter(propValue => !propValue.property.hidden);
 
   return (
-    <ul className="info-sheet">
+    <ul className="EntityInfoMode info-sheet">
       { entityProperties.map(propValue => (
         <li key={propValue.name}>
           <span className="key">
@@ -35,31 +37,29 @@ function EntityInfoMode(props) {
           </span>
         </span>
         <span className="value bp3-running-text">
-          <span>
-            <ul className="info-sheet">
+          <ul className="collection-info">
+            <li>
+              <Link to={getPath(entity.collection.links.ui)}>
+                <b>{entity.collection.label}</b>
+              </Link>
+            </li>
+            {entity.collection.summary && (
               <li>
-                <Link to={getPath(entity.collection.links.ui)}>
-                  <b>{entity.collection.label}</b>
-                </Link>
+                <span className="bp3-text-muted">{entity.collection.summary}</span>
               </li>
-              {entity.collection.summary && (
-                <li>
-                  <span className="bp3-text-muted">{entity.collection.summary}</span>
-                </li>
-              )}
-              <li>
-                <span>
-                  <FormattedMessage
-                    id="infoMode.collection.entries"
-                    defaultMessage="{count} entries"
-                    values={{
-                      count: <Count count={entity.collection.count} />,
-                    }}
-                  />
-                </span>
-              </li>
-            </ul>
-          </span>
+            )}
+            <li>
+              <span>
+                <FormattedMessage
+                  id="infoMode.collection.entries"
+                  defaultMessage="{count} entries"
+                  values={{
+                    count: <Count count={entity.collection.count} />,
+                  }}
+                />
+              </span>
+            </li>
+          </ul>
         </span>
       </li>
     </ul>
