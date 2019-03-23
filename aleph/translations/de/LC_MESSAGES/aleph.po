@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-13 08:29+0100\n"
+"POT-Creation-Date: 2019-03-23 22:08+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -26,11 +26,11 @@ msgstr ""
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/settings.py:35
+#: aleph/settings.py:36
 msgid "TeliaSonera"
 msgstr "GazProm"
 
-#: aleph/settings.py:35
+#: aleph/settings.py:36
 msgid "Vladimir Putin"
 msgstr "Gerhard Schröder"
 
@@ -194,25 +194,29 @@ msgstr ""
 "      Um ihre Anmeldung fertig zu stellen besuchen sie bitte <a href=\"%(url)s\">die Anmeldeseite</a>.\n"
 "    "
 
-#: aleph/views/base_api.py:131
+#: aleph/views/base_api.py:117
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ is deprecated, please use /api/2/."
 
-#: aleph/views/base_api.py:152
+#: aleph/views/base_api.py:138
 msgid "You are not authorized to do this."
 msgstr "Sie sind nicht autorisiert, dies zu tun."
 
-#: aleph/views/base_api.py:161
+#: aleph/views/base_api.py:147
 msgid "This path does not exist."
 msgstr "Dieser Pfad existiert nicht."
 
-#: aleph/views/base_api.py:170
+#: aleph/views/base_api.py:156
 msgid "Internal server error."
 msgstr "Interner Server-Fehler"
 
-#: aleph/views/base_api.py:187
+#: aleph/views/base_api.py:173
 msgid "Access token has expired."
 msgstr "Access token ist ausgelaufen."
+
+#: aleph/views/base_api.py:182
+msgid "There was an error during search"
+msgstr "Während der Suche ist ein Fehler aufgetreten."
 
 #: aleph/views/roles_api.py:27
 msgid "prefix filter is too short"

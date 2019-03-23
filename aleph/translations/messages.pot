@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-13 08:29+0100\n"
+"POT-Creation-Date: 2019-03-23 22:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "Aleph"
 msgstr ""
 
-#: aleph/settings.py:35
+#: aleph/settings.py:36
 msgid "TeliaSonera"
 msgstr ""
 
-#: aleph/settings.py:35
+#: aleph/settings.py:36
 msgid "Vladimir Putin"
 msgstr ""
 
@@ -176,24 +176,28 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:131
+#: aleph/views/base_api.py:117
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:152
+#: aleph/views/base_api.py:138
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:161
+#: aleph/views/base_api.py:147
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:170
+#: aleph/views/base_api.py:156
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:187
+#: aleph/views/base_api.py:173
 msgid "Access token has expired."
+msgstr ""
+
+#: aleph/views/base_api.py:182
+msgid "There was an error during search"
 msgstr ""
 
 #: aleph/views/roles_api.py:27
