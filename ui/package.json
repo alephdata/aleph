@@ -157,6 +157,7 @@
       "react/prop-types": "off",
       "react/no-multi-comp": "off",
       "react/destructuring-assignment": "off",
+      "react/prefer-stateless-function": "off",
       "import/no-extraneous-dependencies": "off",
       "import/no-named-as-default": "off",
       "import/no-relative-parent-imports": "error",
