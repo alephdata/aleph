@@ -2,7 +2,7 @@ import logging
 from time import time
 from banal import ensure_list
 from elasticsearch import TransportError
-from elasticsearch.helpers import streaming_bulk, BulkIndexError
+from elasticsearch.helpers import streaming_bulk
 from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
@@ -110,12 +110,12 @@ def field_filter_query(field, values):
         return {'match_all': {}}
     if field in ['_id', 'id']:
         return {'ids': {'values': values}}
+    if field in ['names']:
+        field = 'fingerprints'
     if len(values) == 1:
-        if field in ['names']:
-            field = 'fingerprints'
-        if field in ['addresses']:
-            field = '%s.text' % field
-            return {'match_phrase': {field: values[0]}}
+        # if field in ['addresses']:
+        #     field = '%s.text' % field
+        #     return {'match_phrase': {field: values[0]}}
         return {'term': {field: values[0]}}
     return {'terms': {field: values}}
 
