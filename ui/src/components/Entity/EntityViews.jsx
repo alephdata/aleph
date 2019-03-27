@@ -8,7 +8,7 @@ import {
 } from 'src/components/common';
 import { queryEntitySimilar } from 'src/queries';
 import {
-  selectEntitiesResult, selectEntityReferences, selectEntityTags, selectSchemata,
+  selectEntitiesResult, selectEntityReferences, selectEntityTags,
 } from 'src/selectors';
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
@@ -78,7 +78,7 @@ class EntityViews extends React.Component {
             title={(
               <React.Fragment>
                 <Schema.Smart.Icon schema={ref.property.range} iconSize="14px" />
-                <Property.Reverse model={ref.property} />
+                <Property.Reverse prop={ref.property} />
                 <Count count={ref.count} />
               </React.Fragment>
             )}
@@ -126,7 +126,6 @@ const mapStateToProps = (state, ownProps) => {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),
     similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
-    schemata: selectSchemata(state),
   };
 };
 

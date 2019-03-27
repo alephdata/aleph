@@ -20,10 +20,10 @@ function EntityInfoMode(props) {
       { entityProperties.map(propValue => (
         <li key={propValue.name}>
           <span className="key">
-            <Property.Name model={propValue.property} />
+            <Property.Name prop={propValue.property} />
           </span>
           <span className="value">
-            <Property.Values model={propValue} />
+            <Property.Values prop={propValue} />
           </span>
         </li>
       ))}

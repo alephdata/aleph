@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
 import { Link } from 'react-router-dom';
@@ -11,8 +10,9 @@ import { Schema } from 'src/components/common';
 import getPath from 'src/util/getPath';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
-import { selectEntity, selectSchemata } from 'src/selectors';
+import { selectEntity, selectModel } from 'src/selectors';
 import { Entity as EntityClass } from 'src/followthemoney/Entity.ts';
+
 import './Entity.scss';
 
 
@@ -126,16 +126,10 @@ class EntityLoad extends Component {
   }
 }
 
-
-EntityLoad.propTypes = {
-  id: PropTypes.string.isRequired,
-  children: PropTypes.func.isRequired,
-  renderWhenLoading: PropTypes.node.isRequired,
-};
 function SmartEntityHOC(InnerComponent) {
   return function SmartEntityComponent(props) {
-    const { schemata, entity: entityPure, ...rest } = props;
-    const schema = schemata.getSchema(entityPure.schema);
+    const { model, entity: entityPure, ...rest } = props;
+    const schema = model.getSchema(entityPure.schema);
     const entity = new EntityClass(schema, entityPure);
     return (
       <InnerComponent
@@ -158,7 +152,7 @@ class Entity {
   static Load = connect(mapStateToProps, { fetchEntity: fetchEntityAction })(EntityLoad);
 
   static Smart = {
-    Link: connect(state => ({ schemata: selectSchemata(state) }))(SmartEntityHOC(Entity.Link)),
+    Link: connect(state => ({ model: selectModel(state) }))(SmartEntityHOC(Entity.Link)),
   };
 }
 

@@ -12,7 +12,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import {
-  selectEntity, selectEntityReference, selectEntityView, selectSchemata,
+  selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
 import { connectedWithRouter } from 'src/util/enhancers';
 
@@ -79,7 +79,6 @@ const mapStateToProps = (state, ownProps) => {
     entityId,
     reference,
     entity: selectEntity(state, entityId),
-    schemata: selectSchemata(state),
     activeMode: selectEntityView(state, entityId, hashQuery.mode, false),
   };
 };

@@ -18,9 +18,10 @@ export async function queryEndpoint({ query, next }) {
 }
 
 export function resultEntity(state, entityDatum) {
-  const { schemata } = state.metadata;
-  return new Entity(schemata.getSchema(entityDatum.schema), entityDatum);
+  const { model } = state.metadata;
+  return new Entity(model.getSchema(entityDatum.schema), entityDatum);
 }
+
 export function resultEntities(state, response) {
   return {
     ...response,

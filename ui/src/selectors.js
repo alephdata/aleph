@@ -49,9 +49,12 @@ export function selectMetadata(state) {
   return metadata;
 }
 
-export function selectSchemata(state) {
-  const metadata = selectMetadata(state);
-  return metadata.schemata || {};
+export function selectModel(state) {
+  return selectMetadata(state).model;
+}
+
+export function selectSchema(state, schemaName) {
+  return selectModel(state).getSchema(schemaName);
 }
 
 export function selectStatistics(state) {

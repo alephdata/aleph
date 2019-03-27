@@ -12,7 +12,7 @@ import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
-import { selectEntity, selectSchemata, selectDocumentView } from 'src/selectors';
+import { selectEntity, selectDocumentView } from 'src/selectors';
 import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
@@ -109,7 +109,6 @@ const mapStateToProps = (state, ownProps) => {
     documentId,
     document: selectEntity(state, documentId),
     query: Query.fromLocation('entities', location, {}, 'document'),
-    schemata: selectSchemata(state),
     activeMode: selectDocumentView(state, documentId, hashQuery.mode),
   };
 };

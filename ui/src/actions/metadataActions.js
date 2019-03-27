@@ -10,7 +10,7 @@ export const fetchMetadata = asyncActionCreator(
     return {
       metadata: {
         ...metadata,
-        schemata: model,
+        model,
       },
     };
   },
