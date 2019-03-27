@@ -49,13 +49,6 @@ class EntityScreen extends Component {
         <Screen title={entity.name} description={description}>
           {breadcrumbs}
           <DualPane>
-            <DualPane.ContentPane className="view-menu-flex-direction">
-              <EntityViews
-                entity={entity}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <EntityToolbar entity={entity} isPreview={false} />
               <EntityHeading entity={entity} isPreview={false} />
@@ -63,6 +56,13 @@ class EntityScreen extends Component {
                 <EntityInfoMode entity={entity} isPreview={false} />
               </div>
             </DualPane.InfoPane>
+            <DualPane.ContentPane>
+              <EntityViews
+                entity={entity}
+                activeMode={activeMode}
+                isPreview={false}
+              />
+            </DualPane.ContentPane>
           </DualPane>
         </Screen>
       </EntityContextLoader>

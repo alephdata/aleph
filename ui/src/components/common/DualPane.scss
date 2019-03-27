@@ -60,6 +60,7 @@
   border-right: 0;
   box-shadow: $pt-elevation-shadow-3;
   background: $aleph-content-background;
+  flex-direction: row !important;
   min-height: 100%;
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-infopane-md-width !important;

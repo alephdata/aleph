@@ -79,13 +79,6 @@ class DocumentScreen extends Component {
         <Screen title={title}>
           {breadcrumbs}
           <DualPane>
-            <DualPane.ContentPane className="view-menu-flex-direction">
-              <DocumentViews
-                document={document}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <DocumentToolbar document={document} isPreview={false} />
               <DocumentHeading document={document} isPreview={false} />
@@ -93,6 +86,13 @@ class DocumentScreen extends Component {
                 <EntityInfoMode entity={document} isPreview={false} />
               </div>
             </DualPane.InfoPane>
+            <DualPane.ContentPane>
+              <DocumentViews
+                document={document}
+                activeMode={activeMode}
+                isPreview={false}
+              />
+            </DualPane.ContentPane>
           </DualPane>
         </Screen>
       </DocumentContextLoader>

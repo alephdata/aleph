@@ -95,13 +95,6 @@ export class CollectionScreen extends Component {
         <Screen title={collection.label} description={collection.summary}>
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
-            <DualPane.ContentPane className="view-menu-flex-direction">
-              <CollectionViews
-                collection={collection}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <CollectionToolbar collection={collection} />
               <CollectionHeading collection={collection} />
@@ -109,6 +102,13 @@ export class CollectionScreen extends Component {
                 <CollectionInfoMode collection={collection} />
               </div>
             </DualPane.InfoPane>
+            <DualPane.ContentPane>
+              <CollectionViews
+                collection={collection}
+                activeMode={activeMode}
+                isPreview={false}
+              />
+            </DualPane.ContentPane>
           </DualPane>
         </Screen>
       </CollectionContextLoader>
