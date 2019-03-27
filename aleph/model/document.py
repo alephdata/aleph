@@ -98,11 +98,18 @@ class Document(db.Model, DatedModel, Metadata):
             return []
         key = cache.key('ancestors', self.id)
         ancestors = cache.get_list(key)
-        if ancestors is not None:
+        if len(ancestors):
             return ancestors
-        ancestors = self.parent.ancestors
+        parent_key = cache.key('ancestors', self.parent_id)
+        ancestors = cache.get_list(parent_key)
+        if not len(ancestors):
+            ancestors = []
+            parent = Document.by_id(self.parent_id)
+            if parent is not None:
+                ancestors = parent.ancestors
         ancestors.append(self.parent_id)
-        cache.set_list(key, ancestors)
+        if self.model.is_a(model.get(self.SCHEMA_FOLDER)):
+            cache.set_list(key, ancestors)
         return ancestors
 
     def update(self, data):
