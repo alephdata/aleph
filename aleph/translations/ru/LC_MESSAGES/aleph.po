@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-23 22:08+0100\n"
+"POT-Creation-Date: 2019-03-27 10:16+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp <jen@occrp.org>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -211,7 +211,7 @@ msgstr "Ключ доступа устарел."
 
 #: aleph/views/base_api.py:182
 msgid "There was an error during search"
-msgstr ""
+msgstr "Во время поиска произошла ошибка"
 
 #: aleph/views/roles_api.py:27
 msgid "prefix filter is too short"

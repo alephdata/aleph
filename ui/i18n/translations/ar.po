@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-23T21:08:08.652Z\n"
+"POT-Creation-Date: 2019-03-27T09:16:38.488Z\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -646,6 +646,16 @@ msgstr ""
 msgid "Folder title"
 msgstr ""
 
+#. [collection.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#. [collection.edit.info.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#: i18n/messages.json i18n/messages.json
+msgid "Foreign ID"
+msgstr ""
+
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -673,13 +683,6 @@ msgstr ""
 #. Help
 #: i18n/messages.json
 msgid "Help"
-msgstr ""
-
-#. [collection.edit.info.import.id]
-#. defaultMessage is:
-#. Import ID
-#: i18n/messages.json
-msgid "Import ID"
 msgstr ""
 
 #. [entity.info.info]

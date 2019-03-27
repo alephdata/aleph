@@ -18,5 +18,7 @@
   .email-body,
   .email-no-body {
     padding: $aleph-grid-size;
+    border: 0;
+    box-shadow: unset;
   }
 }

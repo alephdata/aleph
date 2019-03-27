@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-23T21:08:08.652Z\n"
+"POT-Creation-Date: 2019-03-27T09:16:38.488Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -655,6 +655,16 @@ msgstr "Finde öffentliche Dokumente und Leaks"
 msgid "Folder title"
 msgstr "Ordnertitel"
 
+#. [collection.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#. [collection.edit.info.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#: i18n/messages.json i18n/messages.json
+msgid "Foreign ID"
+msgstr "Fremd-ID"
+
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -685,13 +695,6 @@ msgstr "Gruppen"
 #: i18n/messages.json
 msgid "Help"
 msgstr "Hilfe"
-
-#. [collection.edit.info.import.id]
-#. defaultMessage is:
-#. Import ID
-#: i18n/messages.json
-msgid "Import ID"
-msgstr "Import-Kennung"
 
 #. [entity.info.info]
 #. defaultMessage is:

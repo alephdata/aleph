@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-23T21:08:08.652Z\n"
+"POT-Creation-Date: 2019-03-27T09:16:38.488Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -649,6 +649,16 @@ msgstr ""
 msgid "Folder title"
 msgstr ""
 
+#. [collection.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#. [collection.edit.info.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#: i18n/messages.json i18n/messages.json
+msgid "Foreign ID"
+msgstr ""
+
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -677,13 +687,6 @@ msgstr "Grupos"
 #: i18n/messages.json
 msgid "Help"
 msgstr "Ayuda"
-
-#. [collection.edit.info.import.id]
-#. defaultMessage is:
-#. Import ID
-#: i18n/messages.json
-msgid "Import ID"
-msgstr "Importar ID"
 
 #. [entity.info.info]
 #. defaultMessage is:
