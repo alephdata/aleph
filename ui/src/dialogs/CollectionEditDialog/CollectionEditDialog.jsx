@@ -270,7 +270,7 @@ export class CollectionEditDialog extends Component {
           { !collection.casefile && (
             <div className="bp3-form-group">
               <label className="bp3-label">
-                <FormattedMessage id="collection.edit.info.import.id" defaultMessage="Import ID" />
+                <FormattedMessage id="collection.edit.info.foreign_id" defaultMessage="Foreign ID" />
               </label>
               <div className="bp3-form-content">
                 <input

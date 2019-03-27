@@ -127,8 +127,6 @@ ul.info-rank {
 
   li {
     display: flex;
-    // padding-top: $aleph-grid-size;
-    padding-bottom: $aleph-grid-size * 1.5;
 
     .key, .value {
       overflow: hidden;
@@ -144,6 +142,11 @@ ul.info-rank {
 ul.info-sheet {
   li {
     flex-direction: row;
+    padding-bottom: $aleph-grid-size * 1.5;
+
+    &.tight {
+      padding-bottom: 0;
+    }
 
     .key {
       color: $aleph-greyed-text;
@@ -160,6 +163,7 @@ ul.info-sheet {
 ul.info-rank li {
   flex-flow: row nowrap;
   width: 100%;
+  padding-bottom: $aleph-grid-size;
 
   // Ensure things stay on a single line, truncating the key if needed.
   .category {
