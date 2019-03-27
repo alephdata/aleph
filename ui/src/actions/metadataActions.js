@@ -1,5 +1,5 @@
 import { endpoint } from 'src/app/api';
-import { Model } from '@alephdata/vis2';
+import { Model } from '@alephdata/followthemoney';
 import asyncActionCreator from './asyncActionCreator';
 
 export const fetchMetadata = asyncActionCreator(

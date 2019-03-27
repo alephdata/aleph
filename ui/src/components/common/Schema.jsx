@@ -22,10 +22,7 @@ class SchemaIcon extends PureComponent {
 class SchemaLabel extends Component {
   render() {
     const { schema, plural = false, icon } = this.props;
-    // FIXME: use attributes on schema
-    const label = schema.getLabel({
-      forcePlural: plural,
-    });
+    const label = plural ? schema.plural : schema.label;
     if (icon) {
       return (
         <span>

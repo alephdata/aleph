@@ -152,13 +152,14 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
     return 'info';
   }
   const collection = selectCollection(state, collectionId);
-  let largestSchema = 'Document'; let
-    largestCount = 0;
+  const model = selectModel(state);
+  let largestSchema = 'Document';
+  let largestCount = 0;
   const schemata = {};
 
   Object.keys(collection.schemata || {})
     .forEach((key) => {
-      const norm = state.metadata.schemata.getSchema(key).isDocument() ? 'Document' : key;
+      const norm = model.getSchema(key).isDocument() ? 'Document' : key;
       schemata[norm] = (schemata[norm] || 0) + collection.schemata[key];
       if (schemata[norm] > largestCount) {
         largestCount = schemata[norm];

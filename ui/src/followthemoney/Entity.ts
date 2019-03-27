@@ -1,5 +1,5 @@
-import { Entity as FTMEntity } from '@alephdata/vis2';
-import Schema from '@alephdata/vis2/dist/types/followthemoney/schema'
+import { Entity as FTMEntity } from '@alephdata/followthemoney';
+import { Schema } from '@alephdata/followthemoney'
 
 export class Entity extends FTMEntity {
   private readonly SEARCHABLES = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'];
