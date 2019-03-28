@@ -92,7 +92,6 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
-
 export function selectNotificationsResult(state, query) {
   return selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
 }

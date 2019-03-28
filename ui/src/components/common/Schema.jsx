@@ -7,7 +7,6 @@ import { Icon } from './Icon';
 class SchemaIcon extends PureComponent {
   render() {
     const { schema, ...rest } = this.props;
-
     return (
       <Icon
         className="entity-icon"

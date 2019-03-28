@@ -56,9 +56,9 @@ export class DocumentUploadDialog extends Component {
   async onFormSubmit(event) {
     event.preventDefault();
     const {
-      intl, collection, parent, ingestDocument,
+      intl, collection, parent, ingestDocument, toggleDialog,
     } = this.props;
-    const { files, toggleDialog } = this.state;
+    const { files } = this.state;
     try {
       files.forEach(async (file) => {
         this.setState({ percentCompleted: 0, uploadingFile: file });

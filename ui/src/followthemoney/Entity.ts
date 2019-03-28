@@ -3,6 +3,7 @@ import { Schema } from '@alephdata/followthemoney'
 
 export class Entity extends FTMEntity {
   private readonly SEARCHABLES = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'];
+
   constructor(schema:Schema, specifications){
     super(schema, specifications);
     if(specifications){
