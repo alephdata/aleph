@@ -5,12 +5,11 @@ import asyncActionCreator from './asyncActionCreator';
 export const fetchMetadata = asyncActionCreator(
   () => async () => {
     const response = await endpoint.get('metadata');
-    const { schemata, ...metadata } = response.data;
-    const model = new Model(schemata);
+    const { model, ...metadata } = response.data;
     return {
       metadata: {
         ...metadata,
-        model,
+        model: new Model(model),
       },
     };
   },

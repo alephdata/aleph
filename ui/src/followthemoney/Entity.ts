@@ -12,6 +12,7 @@ export class Entity extends FTMEntity {
         .forEach(specification => Reflect.set(this, specification[0], specification[1]))
     }
   }
+
   hasSearch():boolean{
     return !!~this.SEARCHABLES.indexOf(this.schema.name)
   }

@@ -19,7 +19,7 @@ export async function queryEndpoint({ query, next }) {
 
 export function resultEntity(state, entityDatum) {
   const { model } = state.metadata;
-  return new Entity(model.getSchema(entityDatum.schema), entityDatum);
+  return model.getEntity(entityDatum);
 }
 
 export function resultEntities(state, response) {

@@ -18,19 +18,19 @@ class Value extends PureComponent {
     if (!value) {
       return null;
     }
-    if (prop.type === 'country') {
+    if (prop.type.name === 'country') {
       return <Country.Name code={value} />;
     }
-    if (prop.type === 'url') {
+    if (prop.type.name === 'url') {
       return <URL value={value} />;
     }
-    if (prop.type === 'entity') {
+    if (prop.type.name === 'entity') {
       return <Entity.Smart.Link entity={value} icon />;
     }
-    if (prop.type === 'date') {
+    if (prop.type.name === 'date') {
       return <Date value={value} />;
     }
-    if (prop.type === 'number') {
+    if (prop.type.name === 'number') {
       return <Numeric num={value} />;
     }
     return value;
@@ -58,9 +58,10 @@ class Reverse extends PureComponent {
 
 class Values extends PureComponent {
   render() {
-    const { prop, values = prop.values } = this.props;
-    const vals = ensureArray(values).map(value => (
-      <Value key={value.toString()} prop={prop.property} value={value} />
+    const { prop } = this.props;
+    console.log(prop);
+    const vals = ensureArray(prop.values).map(value => (
+      <Value key={value.id || value.toString()} prop={prop.property} value={value} />
     ));
     if (!vals.length) {
       return (<span className="no-value">—</span>);

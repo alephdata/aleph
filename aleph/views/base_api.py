@@ -53,7 +53,7 @@ def metadata():
         'categories': Collection.CATEGORIES,
         'countries': registry.country.names,
         'languages': registry.language.names,
-        'schemata': model,
+        'model': model,
         'auth': auth
     }
     cache.set_complex(key, data, expire=120)
