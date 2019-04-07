@@ -1,7 +1,6 @@
 import { endpoint } from 'src/app/api';
-import deepSet from 'lodash/set';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint, MAX_RESULTS, resultEntity } from './util';
+import { queryEndpoint, MAX_RESULTS } from './util';
 
 export const queryCollections = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_COLLECTIONS' });
 
@@ -52,13 +51,7 @@ export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async () 
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 
 
-export const queryXrefMatches = asyncActionCreator(query => async (dispatch, getState) => {
-  const payload = await queryEndpoint(query);
-  return deepSet(payload, 'result.results', payload.result.results.map(pair => Object.assign(pair, {
-    match: resultEntity(getState(), pair.match),
-    entity: resultEntity(getState(), pair.entity),
-  })));
-}, { name: 'QUERY_XREF_MATCHES' });
+export const queryXrefMatches = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_XREF_MATCHES' });
 
 
 export const tiggerXrefMatches = asyncActionCreator((id, againstCollectionIds) => async () => {

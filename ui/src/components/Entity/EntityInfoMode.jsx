@@ -10,20 +10,18 @@ import './EntityInfoMode.scss';
 
 function EntityInfoMode(props) {
   const { entity } = props;
-
-  const entityProperties = entity.getProperties()
-    .filter(propValue => !propValue.isEmpty())
-    .filter(propValue => !propValue.property.hidden);
+  const properties = entity.getProperties()
+    .filter(prop => !prop.hidden);
 
   return (
     <ul className="EntityInfoMode info-sheet">
-      { entityProperties.map(propValue => (
-        <li key={propValue.name}>
+      { properties.map(prop => (
+        <li key={prop.name}>
           <span className="key">
-            <Property.Name prop={propValue.property} />
+            <Property.Name prop={prop} />
           </span>
           <span className="value">
-            <Property.Values prop={propValue} />
+            <Property.Values prop={prop} values={entity.getProperty(prop)} />
           </span>
         </li>
       ))}

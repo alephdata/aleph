@@ -32,7 +32,7 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-    if (entity.schemata && entity.schema.isDocument()) {
+    if (entity.schema.isDocument()) {
       return (
         <Redirect to={{ ...location, pathname: `/documents/${entityId}` }} />
       );

@@ -1,23 +1,14 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
-import { queryEndpoint, resultEntities, resultEntity } from './util';
+import { queryEndpoint } from './util';
 
 
-export const queryEntities = asyncActionCreator(query => async (dispatch, getState) => {
-  const payload = await queryEndpoint(query);
-  if (payload.result.results) {
-    return {
-      ...payload,
-      result: resultEntities(getState(), payload.result),
-    };
-  }
-  return payload;
-}, { name: 'QUERY_ENTITIES' });
+export const queryEntities = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_ENTITIES' });
 
 
-export const fetchEntity = asyncActionCreator(({ id }) => async (dispatch, getState) => {
+export const fetchEntity = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`entities/${id}`);
-  return { id, data: resultEntity(getState(), response.data) };
+  return { id, data: response.data };
 }, { name: 'FETCH_ENTITY' });
 
 

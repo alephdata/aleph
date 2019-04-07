@@ -75,10 +75,17 @@ export function selectCollection(state, collectionId) {
 }
 
 export function selectEntity(state, entityId) {
-  // get a collection from the store.
-  return selectObject(state.entities, entityId);
+  const entity = selectObject(state.entities, entityId);
+  const model = selectModel(state);
+  const hasModel = entity.schema !== undefined && model !== undefined;
+  const result = hasModel ? model.getEntity(entity) : {};
+  result.isLoading = !!entity.isLoading;
+  result.isError = !!entity.isError;
+  result.shouldLoad = !!entity.shouldLoad;
+  result.links = entity.links;
+  result.collection = entity.collection;
+  return result;
 }
-
 
 export function selectDocumentContent(state, documentId) {
   return selectObject(state.documentContent, documentId);
@@ -101,7 +108,15 @@ export function selectEntityTags(state, entityId) {
 }
 
 export function selectEntityReferences(state, entityId) {
-  return selectObject(state.entityReferences, entityId);
+  const model = selectModel(state);
+  const references = selectObject(state.entityReferences, entityId);
+  references.results = references.results || [];
+  references.results = references.results.map((ref) => {
+    const schema = model.getSchema(ref.schema);
+    const property = schema.getProperty(ref.property.name);
+    return { schema, property, count: ref.count };
+  });
+  return references;
 }
 
 export function selectEntityReference(state, entityId, qname) {

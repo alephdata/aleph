@@ -114,7 +114,10 @@ class EntityReferencesMode extends React.Component {
               <tr key={entity.id}>
                 {columns.map(prop => (
                   <td key={prop.name} className={prop.type}>
-                    <Property.Values prop={entity.getProperty(prop.name)} />
+                    <Property.Values
+                      prop={prop}
+                      values={entity.getProperty(prop)}
+                    />
                   </td>
                 ))}
                 <td key="details" className="narrow">

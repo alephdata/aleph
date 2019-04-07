@@ -3,7 +3,7 @@ import { Waypoint } from 'react-waypoint';
 import { defineMessages } from 'react-intl';
 
 import Query from 'src/app/Query';
-import { queryEntities as queryEntitiesAction } from 'src/actions';
+import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
@@ -58,16 +58,16 @@ export class EntitySearch extends Component {
   }
 
   getMoreResults() {
-    const { query, result, queryEntities } = this.props;
+    const { query, result } = this.props;
     if (result && result.next && !result.isLoading && !result.isError) {
-      queryEntities({ query, next: result.next });
+      this.props.queryEntities({ query, next: result.next });
     }
   }
 
   fetchIfNeeded() {
-    const { query, result, queryEntities } = this.props;
+    const { query, result } = this.props;
     if (result.shouldLoad) {
-      queryEntities({ query });
+      this.props.queryEntities({ query });
     }
   }
 
@@ -135,5 +135,5 @@ export class EntitySearch extends Component {
 }
 export default enhancer({
   mapStateToProps,
-  mapDispatchToProps: { queryEntities: queryEntitiesAction },
+  mapDispatchToProps: { queryEntities },
 })(EntitySearch);

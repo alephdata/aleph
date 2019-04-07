@@ -24,6 +24,8 @@ const messages = defineMessages({
 
 
 class DocumentScreen extends Component {
+  static SEARCHABLES = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'];
+
   constructor(props) {
     super(props);
     this.onSearch = this.onSearch.bind(this);
@@ -60,7 +62,8 @@ class DocumentScreen extends Component {
     }
 
     const title = document.title || document.file_name || document.name;
-    const operation = !document.hasSearch() ? undefined : (
+    const hasSearch = DocumentScreen.SEARCHABLES.indexOf(document.schema.name) !== -1;
+    const operation = !hasSearch ? undefined : (
       <SearchBox
         onSearch={this.onSearch}
         searchPlaceholder={intl.formatMessage(messages.placeholder, { label: title })}

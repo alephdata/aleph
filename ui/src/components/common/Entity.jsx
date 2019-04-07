@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import truncateText from 'truncate';
+import { head } from 'lodash';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
 
 import { Schema } from 'src/components/common';
-import getPath from 'src/util/getPath';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
-import { selectEntity, selectModel } from 'src/selectors';
-import { Entity as EntityClass } from 'src/followthemoney/Entity.ts';
+import { selectEntity } from 'src/selectors';
 
 import './Entity.scss';
 
@@ -27,42 +26,23 @@ class EntityLabel extends Component {
     const {
       entity, icon = false, documentMode = false, truncate,
     } = this.props;
+
     if (entity === undefined) {
       return null;
     }
-    let { title, name: entityName, file_name: fileName } = entity;
-    // Trim names *before* checking to see which ones look okay to use
-    title = title ? title.trim() : null;
-    entityName = entityName ? entityName.trim() : null;
-    fileName = fileName ? fileName.trim() : null;
-
-    let text = title || entityName || fileName;
-
-    if (truncate) {
-      text = truncateText(text, truncate);
-    }
-
-    if (documentMode) {
-      text = fileName || text;
-    }
-
-    const entityClassName = entity.status === 'pending' ? 'EntityLabel disabled' : 'EntityLabel';
-
-    if (!text || !text.length || text.length < 1) {
-      return (
-        <span className="EntityLabel untitled">
-          {icon && <Schema.Icon schema={entity.schema} />}
-          {icon && ' '}
-          <FormattedMessage id="entity.label.missing" defaultMessage="Untitled" />
-        </span>
-      );
-    }
-
+    const fileName = head(entity.getProperty('fileName'));
+    const caption = truncateText(entity.getCaption(), truncate) || fileName;
+    const title = documentMode ? fileName : caption;
+    const hasTitle = !!title;
+    const className = c('EntityLabel', { untitled: !hasTitle });
     return (
-      <span className={entityClassName} title={title || entityName}>
+      <span className={className} title={caption}>
         {icon && <Schema.Icon schema={entity.schema} />}
         {icon && ' '}
-        {text}
+        { !hasTitle && (
+          <FormattedMessage id="entity.label.missing" defaultMessage="Untitled" />
+        )}
+        {title}
       </span>
     );
   }
@@ -87,11 +67,12 @@ class EntityLink extends Component {
 
   render() {
     const { entity, className } = this.props;
-    if (!entity || !entity.links || !entity.schemata || entity.status === 'pending') {
+    if (!entity || !entity.schema) {
       return <Entity.Label {...this.props} />;
     }
 
-    const link = getPath(entity.links.ui);
+    const isDocument = entity.schema.isDocument();
+    const link = isDocument ? `/documents/${entity.id}` : `/entities/${entity.id}`;
     return (
       <Link to={link} onClick={this.onClick} className={c('EntityLink', className)}>
         <Entity.Label {...this.props} />
@@ -126,20 +107,6 @@ class EntityLoad extends Component {
   }
 }
 
-function SmartEntityHOC(InnerComponent) {
-  return function SmartEntityComponent(props) {
-    const { model, entity: entityPure, ...rest } = props;
-    const schema = model.getSchema(entityPure.schema);
-    const entity = new EntityClass(schema, entityPure);
-    return (
-      <InnerComponent
-        entity={entity}
-        {...rest}
-      />
-    );
-  };
-}
-
 const mapStateToProps = (state, ownProps) => ({
   entity: selectEntity(state, ownProps.id),
 });
@@ -150,10 +117,6 @@ class Entity {
   static Link = withRouter(EntityLink);
 
   static Load = connect(mapStateToProps, { fetchEntity: fetchEntityAction })(EntityLoad);
-
-  static Smart = {
-    Link: connect(state => ({ model: selectModel(state) }))(SmartEntityHOC(Entity.Link)),
-  };
 }
 
 export default Entity;

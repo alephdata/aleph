@@ -11,7 +11,7 @@ import {
 
 class EntityTableRow extends Component {
   render() {
-    const { entity, className, location } = this.props;
+    const { entity, location } = this.props;
     const { hideCollection, documentMode, showPreview } = this.props;
 
     const { updateSelection, selection } = this.props;
@@ -25,16 +25,14 @@ class EntityTableRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
+    const className = c('EntityTableRow', 'nowrap', { active: isActive }, { prefix: isPrefix }); 
     return (
       <React.Fragment>
-        <tr
-          key={entity.id}
-          className={c('EntityTableRow', 'nowrap', className, { active: isActive }, { prefix: isPrefix })}
-        >
+        <tr key={entity.id} className={className}>
           {updateSelection && (
-          <td className="select">
-            <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
-          </td>
+            <td className="select">
+              <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
+            </td>
           )}
           <td className="entity">
             <Entity.Link
@@ -56,15 +54,17 @@ class EntityTableRow extends Component {
           </td>
           {!documentMode && (
             <td className="country">
-              <Country.List codes={entity.countries} />
+              <Country.List codes={entity.getTypeValues('country')} />
             </td>
           )}
           <td className="date">
-            <Date.Earliest values={entity.dates} />
+            <Date.Earliest values={entity.getTypeValues('date', true)} />
           </td>
           {documentMode && (
             <td className="file-size">
-              <FileSize value={entity.file_size} />
+              { entity.getProperty('fileSize').map((fileSize) => 
+                <FileSize value={fileSize} />
+              )}
             </td>
           )}
         </tr>
