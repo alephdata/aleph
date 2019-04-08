@@ -61,7 +61,7 @@ class DocumentScreen extends Component {
       );
     }
 
-    const title = document.title || document.file_name || document.name;
+    const title = document.getFirst('title') || document.getFirst('fileName') || document.getCaption();
     const hasSearch = DocumentScreen.SEARCHABLES.indexOf(document.schema.name) !== -1;
     const operation = !hasSearch ? undefined : (
       <SearchBox

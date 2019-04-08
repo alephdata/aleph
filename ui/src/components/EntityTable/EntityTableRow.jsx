@@ -58,13 +58,11 @@ class EntityTableRow extends Component {
             </td>
           )}
           <td className="date">
-            <Date.Earliest values={entity.getTypeValues('date', true)} />
+            <Date.Earliest values={entity.getTypeValues('date')} />
           </td>
           {documentMode && (
             <td className="file-size">
-              { entity.getProperty('fileSize').map((fileSize) => 
-                <FileSize value={fileSize} />
-              )}
+              <FileSize value={entity.getFirst('fileSize')} />
             </td>
           )}
         </tr>

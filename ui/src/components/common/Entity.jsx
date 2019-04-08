@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import truncateText from 'truncate';
-import { head } from 'lodash';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -24,25 +22,26 @@ class EntityLabel extends Component {
 
   render() {
     const {
-      entity, icon = false, documentMode = false, truncate,
+      entity, icon = false, documentMode = false,
     } = this.props;
 
     if (entity === undefined) {
       return null;
     }
-    const fileName = head(entity.getProperty('fileName'));
-    const caption = truncateText(entity.getCaption(), truncate) || fileName;
-    const title = documentMode ? fileName : caption;
-    const hasTitle = !!title;
-    const className = c('EntityLabel', { untitled: !hasTitle });
+    const title = entity.getFirst('title');
+    const fileName = entity.getFirst('fileName');
+    const caption = title || entity.getCaption() || fileName;
+    const label = documentMode ? fileName : caption;
+    const hasLabel = !!label;
+    const className = c('EntityLabel', { untitled: !hasLabel });
     return (
       <span className={className} title={caption}>
         {icon && <Schema.Icon schema={entity.schema} />}
         {icon && ' '}
-        { !hasTitle && (
+        { !hasLabel && (
           <FormattedMessage id="entity.label.missing" defaultMessage="Untitled" />
         )}
-        {title}
+        {label}
       </span>
     );
   }
