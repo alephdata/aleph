@@ -21,11 +21,6 @@ class DocumentViews extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
   }
 
-  hasSchemata(schemata) {
-    const { document } = this.props;
-    return _.intersection(document.schemata, schemata).length > 0;
-  }
-
   handleTabChange(mode) {
     const { history, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
@@ -46,9 +41,9 @@ class DocumentViews extends React.Component {
     const {
       document, isPreview, activeMode, tags, childrenResult,
     } = this.props;
-    const hasTextMode = this.hasSchemata(['Pages', 'Image']);
-    const hasBrowseMode = this.hasSchemata(['Folder']);
-    const hasViewer = this.hasSchemata(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
+    const hasTextMode = document.schema.isAny(['Pages', 'Image']);
+    const hasBrowseMode = document.schema.isA('Folder');
+    const hasViewer = document.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
 
     return (
@@ -110,7 +105,7 @@ class DocumentViews extends React.Component {
               )}
             panel={
               <DocumentViewMode document={document} activeMode={activeMode} />
-               }
+            }
           />
         )}
         <Tab
@@ -125,7 +120,7 @@ class DocumentViews extends React.Component {
           )}
           panel={
             <EntityTagsMode entity={document} />
-             }
+          }
         />
       </Tabs>
     );
