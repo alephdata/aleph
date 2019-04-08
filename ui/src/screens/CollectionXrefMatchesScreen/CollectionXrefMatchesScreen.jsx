@@ -179,10 +179,10 @@ export class CollectionXrefMatchesScreen extends Component {
                       <Entity.Link entity={match.entity} preview icon />
                     </td>
                     <td className="date">
-                      <Date.Earliest values={match.entity.dates} />
+                      <Date.Earliest values={match.entity.getTypeValues('date')} />
                     </td>
                     <td>
-                      <Country.List codes={match.entity.countries} short />
+                      <Country.List codes={match.entity.getTypeValues('country')} short />
                     </td>
                   </React.Fragment>
                 )}
@@ -197,10 +197,10 @@ export class CollectionXrefMatchesScreen extends Component {
                       <Entity.Link entity={match.match} preview icon />
                     </td>
                     <td className="date">
-                      <Date.Earliest values={match.match.dates} />
+                      <Date.Earliest values={match.match.getTypeValues('date')} />
                     </td>
                     <td>
-                      <Country.List codes={match.match.countries} short />
+                      <Country.List codes={match.match.getTypeValues('country')} short />
                     </td>
                   </React.Fragment>
                 )}

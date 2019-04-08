@@ -57,10 +57,6 @@ export function selectSchema(state, schemaName) {
   return selectModel(state).getSchema(schemaName);
 }
 
-export function selectStatistics(state) {
-  return selectObject(state, 'statistics');
-}
-
 export function selectSession(state) {
   return selectObject(state, 'session');
 }
@@ -69,8 +65,11 @@ export function selectAlerts(state) {
   return selectObject(state, 'alerts');
 }
 
+export function selectStatistics(state) {
+  return selectObject(state, 'statistics');
+}
+
 export function selectCollection(state, collectionId) {
-  // get a collection from the store.
   return selectObject(state.collections, collectionId);
 }
 
@@ -100,7 +99,16 @@ export function selectEntitiesResult(state, query) {
 }
 
 export function selectNotificationsResult(state, query) {
-  return selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
+  const model = selectModel(state);
+  const result = selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
+  result.results.forEach((notif) => {
+    Object.entries(notif.event.params).forEach(([field, type]) => {
+      if (type === 'entity') {
+        notif.params[field] = model.getEntity(notif.params[field]);
+      }
+    });
+  });
+  return result;
 }
 
 export function selectEntityTags(state, entityId) {
@@ -192,7 +200,15 @@ export function selectCollectionXrefIndex(state, collectionId) {
 }
 
 export function selectCollectionXrefMatches(state, query) {
-  return selectObject(state.collectionXrefMatches, query.toKey());
+  const model = selectModel(state);
+  const matches = selectObject(state.collectionXrefMatches, query.toKey());
+  if (matches.results !== undefined) {
+    matches.results.forEach((result) => {
+      result.match = model.getEntity(result.match);
+      result.entity = model.getEntity(result.entity);
+    });
+  }
+  return matches;
 }
 
 export function selectQueryLog(state) {

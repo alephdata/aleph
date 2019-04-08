@@ -3,7 +3,7 @@
   "version": "3.0.3",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "^1.11.9",
+    "@alephdata/followthemoney": "^1.11.10",
     "@blueprintjs/core": "^3.14.1",
     "@blueprintjs/select": "^3.7.0",
     "@blueprintjs/table": "^3.4.1",
@@ -156,6 +156,7 @@
     },
     "parser": "babel-eslint",
     "rules": {
+      "no-param-reassign": "off",
       "react/no-danger": "off",
       "react/prop-types": "off",
       "react/no-multi-comp": "off",

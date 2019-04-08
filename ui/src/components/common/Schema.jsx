@@ -54,11 +54,7 @@ function SmartSchemaHOC(InnerComponent) {
       ...rest
     } = props;
     const schema = model.getSchema(schemaName);
-    return (
-      <InnerComponent
-        schema={schema}
-        {...rest}
-      />
+    return (<InnerComponent schema={schema} {...rest} />
     );
   };
 }

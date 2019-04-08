@@ -63,13 +63,11 @@ class NotificationList extends Component {
           />
           )
         }
-        { result.total !== 0
-          && (
+        { result.total !== 0 && (
           <ul className="NotificationList">
             {result.results.map(notif => <Notification key={notif.id} notification={notif} />)}
           </ul>
-          )
-        }
+        )}
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-300px"
