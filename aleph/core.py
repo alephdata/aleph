@@ -194,7 +194,8 @@ def url_external(path, query, relative=False):
         if relative:
             return path
 
-        api_url = request.url_root
+        # api_url = request.url_root
+        api_url = settings.APP_UI_URL
         if settings.URL_SCHEME is not None:
             parsed = urlparse(api_url)
             parsed = parsed._replace(scheme=settings.URL_SCHEME)
