@@ -25,7 +25,7 @@ const messages = defineMessages({
     id: 'entity.column.countries',
     defaultMessage: 'Countries',
   },
-  column_file_size: {
+  'column_properties.fileSize': {
     id: 'entity.column.file_size',
     defaultMessage: 'Size',
   },
@@ -109,7 +109,7 @@ class EntityTable extends Component {
             )}
             <TH className="header-dates" field="dates" sortable />
             {documentMode && (
-              <TH className="header-size" field="file_size" sortable />
+              <TH className="header-size" field="properties.fileSize" sortable />
             )}
           </tr>
         </thead>
