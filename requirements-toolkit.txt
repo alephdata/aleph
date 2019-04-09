@@ -11,3 +11,4 @@ normality==1.0.0
 pantomime==0.3.3
 pdflib==0.1.7
 alephclient==1.0.2
+balkhash==0.3.1

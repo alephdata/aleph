@@ -1,5 +1,4 @@
 import logging
-
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -13,6 +12,7 @@ from flask_babel import Babel
 from kombu import Queue
 from celery import Celery, Task
 from celery.schedules import crontab
+from balkhash import init as init_balkhash
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
@@ -161,6 +161,11 @@ def get_cache():
     if not hasattr(settings, '_cache') or settings._cache is None:
         settings._cache = Cache(get_redis(), prefix=settings.APP_NAME)
     return settings._cache
+
+
+def get_dataset(dataset):
+    """Connect to a balkhash dataset."""
+    return init_balkhash(dataset)
 
 
 es = LocalProxy(get_es)

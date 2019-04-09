@@ -9,8 +9,8 @@ from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
-from aleph.core import create_app, db, cache
-from aleph.model import Collection, Document, Role
+from aleph.core import create_app, db, cache, get_dataset
+from aleph.model import Collection, Document, DocumentRecord, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.index.admin import delete_index
@@ -170,9 +170,7 @@ def createuser(foreign_id, password=None, name=None, email=None,
 @manager.command
 def publish(foreign_id):
     """Make a collection visible to all users."""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
+    collection = get_collection(foreign_id)
     role = Role.by_foreign_id(Role.SYSTEM_GUEST)
     editor = Role.load_cli_user()
     update_permission(role, collection, True, False, editor_id=editor.id)
@@ -182,13 +180,39 @@ def publish(foreign_id):
 @manager.command
 def rdf(foreign_id):
     """Generate a RDF triples for the given collection."""
-    collection = Collection.by_foreign_id(foreign_id)
-    if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
+    collection = get_collection(foreign_id)
     for line in export_collection(collection):
         line = line.strip().decode('utf-8')
         if len(line):
             print(line)
+
+
+@manager.command
+def exportbalkhash(foreign_id=None):
+    from followthemoney import model
+    collections = Collection.all()
+    if foreign_id is not None:
+        collections = [get_collection(foreign_id)]
+    for collection in collections:
+        dataset = get_dataset(collection.foreign_id)
+        writer = dataset.bulk()
+        q = Document.by_collection(collection.id)
+        q = q.order_by(Document.id.asc())
+        for doc in q.yield_per(5000):
+            log.debug("Export [%s:%s]: %s", doc.id, doc.schema, doc.name)
+            dproxy = doc.to_proxy()
+            writer.put(dproxy)
+            if doc.supports_records:
+                q = db.session.query(DocumentRecord)
+                q = q.filter(DocumentRecord.document_id == doc.id)
+                for record in q.yield_per(10000):
+                    rproxy = record.to_proxy()
+                    writer.put(rproxy)
+                    dpart = model.make_entity(doc.schema)
+                    dpart.id = dproxy.id
+                    dpart.add('indexText', list(record.texts))
+                    writer.put(dpart, fragment=str(record.id))
+        dataset.close()
 
 
 @manager.command
