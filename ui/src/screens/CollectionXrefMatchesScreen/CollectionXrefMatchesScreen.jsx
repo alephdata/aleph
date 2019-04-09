@@ -13,10 +13,10 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import Query from 'src/app/Query';
 import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
-import getPath from 'src/util/getPath';
+import getCollectionLink from 'src/util/getCollectionLink';
+import { enhancer } from 'src/util/enhancers';
 
 import './CollectionXrefMatchesScreen.scss';
-import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   screen_title: {
@@ -61,7 +61,7 @@ export class CollectionXrefMatchesScreen extends Component {
     const { collection, otherId, history } = this.props;
     if (otherId !== target.value) {
       history.push({
-        pathname: `${getPath(collection.links.ui)}/xref/${target.value}`,
+        pathname: `${getCollectionLink(collection)}/xref/${target.value}`,
       });
     }
   }
@@ -237,7 +237,7 @@ export class CollectionXrefMatchesScreen extends Component {
     if (collection.id === undefined || other.id === undefined || index.total === undefined) {
       return <LoadingScreen />;
     }
-    const indexPath = `${getPath(collection.links.ui)}#mode=xref`;
+    const indexPath = `${getCollectionLink(collection)}#mode=xref`;
     return (
       <Screen title={intl.formatMessage(messages.screen_title)}>
         <Breadcrumbs>

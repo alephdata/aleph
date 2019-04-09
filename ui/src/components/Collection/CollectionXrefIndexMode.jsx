@@ -4,7 +4,7 @@ import { Icon } from '@blueprintjs/core';
 import { FormattedNumber, FormattedMessage } from 'react-intl';
 
 import { Collection } from 'src/components/common';
-import getPath from 'src/util/getPath';
+import getCollectionLink from 'src/util/getCollectionLink';
 import { selectCollectionXrefIndex } from 'src/selectors';
 
 import './CollectionXrefIndexMode.scss';
@@ -25,7 +25,7 @@ export class CollectionXrefIndexMode extends React.PureComponent {
       return null;
     }
 
-    const linkPath = `${getPath(collection.links.ui)}/xref/`;
+    const linkPath = `${getCollectionLink(collection)}/xref/`;
     const csvPath = collection.links.xref_csv;
     return (
       <section className="CollectionXrefTable">

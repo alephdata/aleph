@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Count, Property } from 'src/components/common';
 import { Link } from 'react-router-dom';
 
-import getPath from 'src/util/getPath';
+import getCollectionLink from 'src/util/getCollectionLink';
 
 import './EntityInfoMode.scss';
 
@@ -37,7 +37,7 @@ function EntityInfoMode(props) {
         <span className="value bp3-running-text">
           <ul className="collection-info">
             <li>
-              <Link to={getPath(entity.collection.links.ui)}>
+              <Link to={getCollectionLink(entity.collection)}>
                 <b>{entity.collection.label}</b>
               </Link>
             </li>

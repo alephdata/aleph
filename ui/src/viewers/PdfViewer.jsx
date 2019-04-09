@@ -6,7 +6,7 @@ import queryString from 'query-string';
 import classNames from 'classnames';
 
 import Query from 'src/app/Query';
-import getPath from 'src/util/getPath';
+import getEntityLink from 'src/util/getEntityLink';
 import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
 import { queryEntities } from 'src/actions';
@@ -218,7 +218,7 @@ Page
 
   getResultLink(result) {
     const { document, activeMode } = this.props;
-    const path = getPath(document.links.ui);
+    const path = getEntityLink(document);
     return `${path}#page=${result.getProperty('index').toString()}&mode=${activeMode}`;
   }
 

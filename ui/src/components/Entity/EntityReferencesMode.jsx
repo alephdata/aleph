@@ -13,7 +13,7 @@ import {
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
 import { enhancer } from 'src/util/enhancers';
-import getPath from 'src/util/getPath';
+import getEntityLink from 'src/util/getEntityLink';
 
 const messages = defineMessages({
   no_relationships: {
@@ -121,7 +121,7 @@ class EntityReferencesMode extends React.Component {
                   </td>
                 ))}
                 <td key="details" className="narrow">
-                  <a href={getPath(entity.links.ui)} onClick={e => this.onShowDetails(e, entity)}>
+                  <a href={getEntityLink(entity)} onClick={e => this.onShowDetails(e, entity)}>
                     <span>
                       <FormattedMessage id="references.details" defaultMessage="Details" />
                     </span>

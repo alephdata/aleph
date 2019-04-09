@@ -155,12 +155,11 @@ export function selectDocumentView(state, documentId, mode) {
   if (mode) {
     return mode;
   }
-  const document = selectEntity(state, documentId);
-  const has = s => _.intersection(document.schemata, s).length > 0;
-  if (has(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
+  const { schema } = selectEntity(state, documentId);
+  if (schema && schema.isAny(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
     return 'view';
   }
-  if (has(['Folder'])) {
+  if (schema && schema.isA(['Folder'])) {
     return 'browse';
   }
   return 'view';

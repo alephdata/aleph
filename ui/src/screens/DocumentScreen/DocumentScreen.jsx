@@ -4,10 +4,10 @@ import queryString from 'query-string';
 
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
+import EntityToolbar from 'src/components/Entity/EntityToolbar';
+import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
-import DocumentToolbar from 'src/components/Document/DocumentToolbar';
-import DocumentHeading from 'src/components/Document/DocumentHeading';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -83,10 +83,10 @@ class DocumentScreen extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">
-              <DocumentToolbar document={document} isPreview={false} />
-              <DocumentHeading document={document} isPreview={false} />
+              <EntityToolbar entity={document} />
+              <EntityHeading entity={document} />
               <div className="pane-content">
-                <EntityInfoMode entity={document} isPreview={false} />
+                <EntityInfoMode entity={document} />
               </div>
             </DualPane.InfoPane>
             <DualPane.ContentPane>
