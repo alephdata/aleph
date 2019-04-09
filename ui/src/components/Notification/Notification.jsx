@@ -17,7 +17,7 @@ class Notification extends PureComponent {
       return <Collection.Link collection={object} preview icon />;
     }
     if (type === 'document' || type === 'entity') {
-      return <Entity.Smart.Link entity={object} preview icon />;
+      return <Entity.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
       return object ? object.query : null;
@@ -30,12 +30,9 @@ class Notification extends PureComponent {
 
   convertUTCDateToLocalDate = (date) => {
     const newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-
     const offset = date.getTimezoneOffset() / 60;
     const hours = date.getHours();
-
     newDate.setHours(hours - offset);
-
     return newDate;
   }
 
@@ -53,7 +50,7 @@ class Notification extends PureComponent {
         paramActive = false;
       } else if (paramActive) {
         const param = this.getParam(token);
-        message.push((<span className="param">{param}</span>));
+        message.push((<span key={token} className="param">{param}</span>));
       } else {
         message.push(token);
       }
@@ -66,11 +63,7 @@ class Notification extends PureComponent {
         <div className="timestamp">
           <FormattedRelative value={createdDate.toString()} />
         </div>
-        <React.Fragment>
-          {message.map(m => (
-            <span key={m}>{m}</span>
-          ))}
-        </React.Fragment>
+        {message}
       </li>
     );
   }

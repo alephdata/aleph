@@ -3,7 +3,7 @@
   "version": "3.0.3",
   "private": true,
   "dependencies": {
-    "@alephdata/vis2": "~1.0.3-alpha.1",
+    "@alephdata/followthemoney": "^1.11.11",
     "@blueprintjs/core": "^3.14.1",
     "@blueprintjs/select": "^3.7.0",
     "@blueprintjs/table": "^3.4.1",
@@ -18,8 +18,8 @@
     "react-intl": "^2.8.0",
     "react-pdf": "^4.0.5",
     "react-redux": "^6.0.1",
-    "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
     "react-svg": "^8.0.1",
     "react-truncate": "^2.4.0",
     "react-waypoint": "^9.0.1",
@@ -151,9 +151,14 @@
     "extends": [
       "airbnb"
     ],
-    "env": {"browser": true},
+    "env": {
+      "browser": true
+    },
     "parser": "babel-eslint",
     "rules": {
+      "no-param-reassign": "off",
+      "no-class-assign": "off",
+      "react/no-danger": "off",
       "react/prop-types": "off",
       "react/no-multi-comp": "off",
       "react/destructuring-assignment": "off",

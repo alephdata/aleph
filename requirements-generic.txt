@@ -9,33 +9,32 @@ Flask-Mail==0.9.1
 Flask-Migrate==2.2.1
 Flask-Cors==3.0.6
 Flask_Babel==0.11.2
-SQLAlchemy==1.2.10
-alembic==1.0.3
+SQLAlchemy==1.3.1
+alembic==1.0.8
 
-celery==4.2.1
+celery==4.2.2
 elasticsearch==6.3.1
-marshmallow==2.18.0
-psycopg2-binary==2.7.6.1
+marshmallow==2.19.2
+psycopg2-binary==2.7.7
 gunicorn==19.9.0
 blinker==1.4
 Babel==2.6.0
-PyYAML==3.13
-PyICU==2.2.0
+PyYAML==5.1
+PyICU==2.3
 chardet==3.0.4
 cchardet==2.1.4
 regex==2018.8.29
-cryptography==2.5.0
-pylru==1.1.0
+cryptography==2.6.1
+pylru==1.2.0
 pyjwt==1.7.1
 rdflib==4.2.2
-idna==2.7.0
+idna==2.8.0
 requests[security]==2.21.0
 redis==2.10.6
-grpcio==1.17.1
-google-cloud-vision==0.35.2
-google-cloud-storage==1.13.2
+grpcio==1.19.0
+google-cloud-vision==0.36.0
+google-cloud-storage==1.14.0
 networkx==2.2
-msgpack==0.6.0
 zipstream==1.1.4
 
 # Testing dependencies
@@ -48,18 +47,17 @@ coverage
 coveralls
 
 # Duplicative for speed of docker builds
-lxml==4.2.5
-xlrd==1.1.0
-phonenumbers==8.10.5
+lxml==4.3.3
+xlrd==1.2.0
+phonenumbers==8.10.8
 python-levenshtein==0.12.0
-openpyxl==2.5.3
-dbf==0.97.11
+openpyxl==2.6.2
+dbf==0.98.0
 python-dateutil==2.8.0
 python-magic==0.4.15
-odfpy==1.3.6
+odfpy==1.4.0
 olefile==0.46
 -e git://github.com/mailgun/flanker.git@master#egg=flanker
-ply==3.11
 six==1.12.0
 
 # Not entirely sure why this is needed:

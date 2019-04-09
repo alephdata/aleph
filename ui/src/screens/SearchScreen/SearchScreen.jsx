@@ -216,8 +216,7 @@ export class SearchScreen extends React.Component {
 
   showPreview(entity) {
     const { history } = this.props;
-    const isDocument = entity.schemata.indexOf('Document') !== -1;
-    const previewType = isDocument ? 'document' : 'entity';
+    const previewType = entity.schema.isDocument() ? 'document' : 'entity';
     togglePreview(history, entity, previewType);
   }
 

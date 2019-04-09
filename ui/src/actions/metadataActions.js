@@ -1,16 +1,16 @@
+import { Model } from '@alephdata/followthemoney';
+
 import { endpoint } from 'src/app/api';
-import { Model } from '@alephdata/vis2';
-import asyncActionCreator from './asyncActionCreator';
+import asyncActionCreator from 'src/actions/asyncActionCreator';
 
 export const fetchMetadata = asyncActionCreator(
   () => async () => {
     const response = await endpoint.get('metadata');
-    const { schemata, ...metadata } = response.data;
-    const model = new Model(schemata);
+    const { model, ...metadata } = response.data;
     return {
       metadata: {
         ...metadata,
-        schemata: model,
+        model: new Model(model),
       },
     };
   },

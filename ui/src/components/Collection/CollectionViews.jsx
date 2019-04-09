@@ -13,7 +13,7 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
-import { selectCollectionXrefIndex, selectSchemata } from 'src/selectors';
+import { selectCollectionXrefIndex, selectModel } from 'src/selectors';
 
 /* eslint-disable */
 class CollectionViews extends React.Component {
@@ -22,14 +22,14 @@ class CollectionViews extends React.Component {
     this.handleTabChange = this.handleTabChange.bind(this);
   }
 
-  getEntitySchmata() {
-    const { schemata } = this.props.collection;
+  getEntitySchemata() {
+    const { collection, model } = this.props;
     const matching = [];
-    for (const key in schemata) {
-      if (!this.props.schemata.getSchema(key).isDocument()) {
+    for (const key in collection.schemata) {
+      if (!model.getSchema(key).isDocument()) {
         matching.push({
           schema: key,
-          count: schemata[key],
+          count: collection.schemata[key],
         });
       }
     }
@@ -37,11 +37,11 @@ class CollectionViews extends React.Component {
   }
 
   countDocuments() {
-    const { schemata } = this.props.collection;
+    const { collection, model } = this.props;
     let totalCount = 0;
-    for (const key in schemata) {
-      if (this.props.schemata.getSchema(key).isDocument()) {
-        totalCount += schemata[key];
+    for (const key in collection.schemata) {
+      if (model.getSchema(key).isDocument()) {
+        totalCount += collection.schemata[key];
       }
     }
     return totalCount;
@@ -67,7 +67,7 @@ class CollectionViews extends React.Component {
       isPreview, collection, activeMode, xrefIndex,
     } = this.props;
     const numOfDocs = this.countDocuments();
-    const entitySchemata = this.getEntitySchmata();
+    const entitySchemata = this.getEntitySchemata();
     const hasBrowse = (numOfDocs > 0 || collection.casefile);
     return (
       <Tabs
@@ -132,9 +132,8 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
-  const schemata = selectSchemata(state);
   return {
-    schemata,
+    model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
   };
 };

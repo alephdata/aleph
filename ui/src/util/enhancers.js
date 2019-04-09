@@ -1,6 +1,6 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import withRouter from 'react-router/es/withRouter';
+import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
 
 
@@ -12,6 +12,7 @@ export function connectedWithRouter({
     connect(mapStateToProps, mapDispatchToProps, mergeProps, options),
   );
 }
+
 export function translatableConnected({
   mapStateToProps = null, mapDispatchToProps, mergeProps, options,
 }) {

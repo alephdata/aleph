@@ -49,13 +49,12 @@ export function selectMetadata(state) {
   return metadata;
 }
 
-export function selectSchemata(state) {
-  const metadata = selectMetadata(state);
-  return metadata.schemata || {};
+export function selectModel(state) {
+  return selectMetadata(state).model;
 }
 
-export function selectStatistics(state) {
-  return selectObject(state, 'statistics');
+export function selectSchema(state, schemaName) {
+  return selectModel(state).getSchema(schemaName);
 }
 
 export function selectSession(state) {
@@ -66,16 +65,26 @@ export function selectAlerts(state) {
   return selectObject(state, 'alerts');
 }
 
+export function selectStatistics(state) {
+  return selectObject(state, 'statistics');
+}
+
 export function selectCollection(state, collectionId) {
-  // get a collection from the store.
   return selectObject(state.collections, collectionId);
 }
 
 export function selectEntity(state, entityId) {
-  // get a collection from the store.
-  return selectObject(state.entities, entityId);
+  const entity = selectObject(state.entities, entityId);
+  const model = selectModel(state);
+  const hasModel = entity.schema !== undefined && model !== undefined;
+  const result = hasModel ? model.getEntity(entity) : {};
+  result.isLoading = !!entity.isLoading;
+  result.isError = !!entity.isError;
+  result.shouldLoad = !!entity.shouldLoad;
+  result.links = entity.links;
+  result.collection = entity.collection;
+  return result;
 }
-
 
 export function selectDocumentContent(state, documentId) {
   return selectObject(state.documentContent, documentId);
@@ -89,9 +98,17 @@ export function selectEntitiesResult(state, query) {
   return selectResult(state, query, selectEntity);
 }
 
-
 export function selectNotificationsResult(state, query) {
-  return selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
+  const model = selectModel(state);
+  const result = selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
+  result.results.forEach((notif) => {
+    Object.entries(notif.event.params).forEach(([field, type]) => {
+      if (type === 'entity') {
+        notif.params[field] = model.getEntity(notif.params[field]);
+      }
+    });
+  });
+  return result;
 }
 
 export function selectEntityTags(state, entityId) {
@@ -99,7 +116,15 @@ export function selectEntityTags(state, entityId) {
 }
 
 export function selectEntityReferences(state, entityId) {
-  return selectObject(state.entityReferences, entityId);
+  const model = selectModel(state);
+  const references = selectObject(state.entityReferences, entityId);
+  references.results = references.results || [];
+  references.results = references.results.map((ref) => {
+    const schema = model.getSchema(ref.schema);
+    const property = schema.getProperty(ref.property.name);
+    return { schema, property, count: ref.count };
+  });
+  return references;
 }
 
 export function selectEntityReference(state, entityId, qname) {
@@ -130,12 +155,11 @@ export function selectDocumentView(state, documentId, mode) {
   if (mode) {
     return mode;
   }
-  const document = selectEntity(state, documentId);
-  const has = s => _.intersection(document.schemata, s).length > 0;
-  if (has(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
+  const { schema } = selectEntity(state, documentId);
+  if (schema && schema.isAny(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
     return 'view';
   }
-  if (has(['Folder'])) {
+  if (schema && schema.isA(['Folder'])) {
     return 'browse';
   }
   return 'view';
@@ -149,13 +173,14 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
     return 'info';
   }
   const collection = selectCollection(state, collectionId);
-  let largestSchema = 'Document'; let
-    largestCount = 0;
+  const model = selectModel(state);
+  let largestSchema = 'Document';
+  let largestCount = 0;
   const schemata = {};
 
   Object.keys(collection.schemata || {})
     .forEach((key) => {
-      const norm = state.metadata.schemata.getSchema(key).isDocument() ? 'Document' : key;
+      const norm = model.getSchema(key).isDocument() ? 'Document' : key;
       schemata[norm] = (schemata[norm] || 0) + collection.schemata[key];
       if (schemata[norm] > largestCount) {
         largestCount = schemata[norm];
@@ -174,7 +199,15 @@ export function selectCollectionXrefIndex(state, collectionId) {
 }
 
 export function selectCollectionXrefMatches(state, query) {
-  return selectObject(state.collectionXrefMatches, query.toKey());
+  const model = selectModel(state);
+  const matches = selectObject(state.collectionXrefMatches, query.toKey());
+  if (matches.results !== undefined) {
+    matches.results.forEach((result) => {
+      result.match = model.getEntity(result.match);
+      result.entity = model.getEntity(result.entity);
+    });
+  }
+  return matches;
 }
 
 export function selectQueryLog(state) {

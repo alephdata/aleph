@@ -22,7 +22,8 @@ class EntityBreadcrumb extends PureComponent {
   fetchIfNeeded([id, entity]) {
     if (entity.shouldLoad) {
       return !this.props.fetchEntity({ id });
-    } return !entity.isLoading;
+    }
+    return !entity.isLoading;
   }
 
   render() {
@@ -58,7 +59,7 @@ class TextBreadcrumb extends PureComponent {
 const mapStateToProps = (state, { entity, discovery = true }) => {
   let parents = [];
   if (entity.schema.hasProperty('parent') && discovery) {
-    parents = entity.getProperty('parent').values
+    parents = entity.getProperty('parent')
       .map(parent => [parent.id, selectEntity(state, parent.id)]);
   }
   return ({

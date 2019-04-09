@@ -82,7 +82,9 @@ class CreateCaseDialog extends Component {
       const collectionId = response.data.id;
       await updateCollectionPermissions(collectionId, permissions);
       this.setState({ blocking: false });
-      history.push(getCollectionLink(response.data));
+      history.push({
+        pathname: getCollectionLink(response.data)
+      });
     } catch (e) {
       this.setState({ blocking: false });
       showWarningToast(e.message);

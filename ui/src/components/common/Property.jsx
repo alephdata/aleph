@@ -1,12 +1,10 @@
 import React, { Component, PureComponent } from 'react';
-import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
 import {
   Numeric, Country, Date, URL,
 } from 'src/components/common';
-import { selectMetadata } from 'src/selectors';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
 
@@ -14,23 +12,23 @@ import './Property.scss';
 
 class Value extends PureComponent {
   render() {
-    const { value, model } = this.props;
+    const { value, prop } = this.props;
     if (!value) {
       return null;
     }
-    if (model.type === 'country') {
+    if (prop.type.name === 'country') {
       return <Country.Name code={value} />;
     }
-    if (model.type === 'url') {
+    if (prop.type.name === 'url') {
       return <URL value={value} />;
     }
-    if (model.type === 'entity') {
-      return <Entity.Smart.Link entity={value} icon />;
+    if (prop.type.name === 'entity') {
+      return <Entity.Link entity={value} icon />;
     }
-    if (model.type === 'date') {
+    if (prop.type.name === 'date') {
       return <Date value={value} />;
     }
-    if (model.type === 'number') {
+    if (prop.type.name === 'number') {
       return <Numeric num={value} />;
     }
     return value;
@@ -39,28 +37,27 @@ class Value extends PureComponent {
 
 class Name extends PureComponent {
   render() {
-    const { name, model } = this.props;
-    return (<span>{model.label || name}</span>);
+    const { prop } = this.props;
+    return prop.label;
   }
 }
 
 class Reverse extends PureComponent {
   render() {
-    const { model, schemata } = this.props;
-    if (!model.range || !model.reverse) {
-      return <FormattedMessage id="property.inverse" defaultMessage="'{name}' of …" values={model} />;
+    const { prop } = this.props;
+    if (!prop.hasReverse) {
+      return <FormattedMessage id="property.inverse" defaultMessage="'{label}' of …" values={prop} />;
     }
-    const range = schemata.getSchema(model.range);
-    const prop = range.getProperty(model.reverse);
-    return <span>{prop.plural || prop.label}</span>;
+    const reverseProp = prop.getReverse();
+    return reverseProp.label;
   }
 }
 
 class Values extends PureComponent {
   render() {
-    const { model, values = model.values } = this.props;
+    const { prop, values } = this.props;
     const vals = ensureArray(values).map(value => (
-      <Value key={value.toString()} model={model.property} value={value} />
+      <Value key={value.toString()} prop={prop} value={value} />
     ));
     if (!vals.length) {
       return (<span className="no-value">—</span>);
@@ -69,14 +66,10 @@ class Values extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  schemata: selectMetadata(state).schemata,
-});
-
 class Property extends Component {
     static Name = Name;
 
-    static Reverse = connect(mapStateToProps)(Reverse);
+    static Reverse = Reverse;
 
     static Value = Value;
 

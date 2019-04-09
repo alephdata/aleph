@@ -46,11 +46,7 @@ class CollectionLabel extends Component {
     return (
       <span className="CollectionLabel" title={collection.label}>
         { icon && (<Icon icon={iconName} style={style} />)}
-        <span>
-          {' '}
-          { label && text }
-          {' '}
-        </span>
+        <span>{ label && text }</span>
       </span>
     );
   }

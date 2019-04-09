@@ -60,7 +60,7 @@ def resolve(stub):
     for cid, value in cache.get_many_complex(keys):
         clazz, key = cache_keys.get(cid)
         if value is None:
-            log.info("MISS [%s]: %s", clazz.__name__, key)
+            # log.info("MISS [%s]: %s", clazz.__name__, key)
             if clazz == Entity:
                 queries[schemata.get(cid)].append(key)
             loader = LOADERS.get(clazz)

@@ -34,13 +34,11 @@ class Name extends PureComponent {
 
 class List extends Component {
   render() {
-    const {
-      codes, countries, truncate = Infinity, short = false,
-    } = this.props;
+    const { codes, truncate = Infinity, ...props } = this.props;
     if (!codes) return null;
 
     let names = codes.map(code => (
-      <Name countries={countries} code={code} key={code} short={short} />
+      <Name code={code} key={code} {...props} />
     ));
 
     // Truncate if too long
