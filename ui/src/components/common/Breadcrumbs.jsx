@@ -1,8 +1,8 @@
 import React, { PureComponent, Component } from 'react';
-import { connect } from 'react-redux';
-import { selectEntity } from 'src/selectors';
-import { fetchEntity } from 'src/actions';
+import { Icon } from '@blueprintjs/core';
+
 import { Collection, Entity } from 'src/components/common';
+
 import './Breadcrumbs.scss';
 
 
@@ -17,25 +17,28 @@ class CollectionBreadcrumb extends PureComponent {
   }
 }
 
-
 class EntityBreadcrumb extends PureComponent {
-  fetchIfNeeded([id, entity]) {
-    if (entity.shouldLoad) {
-      return !this.props.fetchEntity({ id });
-    }
-    return !entity.isLoading;
-  }
-
   render() {
     const { entity } = this.props;
+    const parent = entity.getFirst('parent');
+    const ancestors = entity.getProperty('ancestors');
+    const hasAncestors = ancestors.length > 1;
     return (
       <React.Fragment>
-        {this.props.parents
-          .filter(parent => this.fetchIfNeeded(parent))
-          .map(parent => <Breadcrumbs.Entity key={parent[0]} entity={parent[1]} />)
-        }
+        { hasAncestors && (
+          <li key="ancestors">
+            <span className="bp3-breadcrumb">
+              <Icon icon="more" />
+            </span>
+          </li>
+        )}
+        { !!parent && (
+          <li key={parent.id}>
+            <Entity.Link entity={parent} className="bp3-breadcrumb" icon truncate={30} />
+          </li>
+        )}
         <li key={entity.id}>
-          <Entity.Link entity={entity} className="bp3-breadcrumb" icon truncate={30} />
+          <Entity.Link entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
         </li>
       </React.Fragment>
     );
@@ -56,21 +59,11 @@ class TextBreadcrumb extends PureComponent {
     );
   }
 }
-const mapStateToProps = (state, { entity, discovery = true }) => {
-  let parents = [];
-  if (entity.schema.hasProperty('parent') && discovery) {
-    parents = entity.getProperty('parent')
-      .map(parent => [parent.id, selectEntity(state, parent.id)]);
-  }
-  return ({
-    parents,
-  });
-};
 
 export default class Breadcrumbs extends Component {
   static Collection = CollectionBreadcrumb;
 
-  static Entity = connect(mapStateToProps, { fetchEntity })(EntityBreadcrumb);
+  static Entity = EntityBreadcrumb;
 
   static Text = TextBreadcrumb;
 

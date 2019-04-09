@@ -2,26 +2,22 @@
 
 .Breadcrumbs {
   z-index: 1;
-
   padding-left: $aleph-grid-size;
   padding-right: $aleph-grid-size;
   padding-top: $aleph-grid-size / 2;
   padding-bottom: $aleph-grid-size / 2;
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2);
-  overflow-x: hidden;
   display: flex;
   justify-content: space-between;
   background-color: $aleph-sidebar-background;
-  color: white;
 
   .bp3-breadcrumbs {
     padding-left: $aleph-grid-size * 2;
+    color: white !important;
+
     .bp3-breadcrumb {
       font-size: $aleph-font-size;
-    }
-
-    a {
-      color: $light-gray2;
+      color: white !important;
     }
   }
 
