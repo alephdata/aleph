@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
@@ -15,13 +15,7 @@ import togglePreview from 'src/util/togglePreview';
 import './Collection.scss';
 
 
-class CollectionLabel extends Component {
-  shouldComponentUpdate(nextProps) {
-    const { collection = {} } = this.props;
-    const { collection: nextCollection = {} } = nextProps;
-    return collection.id !== nextCollection.id;
-  }
-
+class CollectionLabel extends PureComponent {
   render() {
     const {
       collection, icon = true, label = true, truncate,
@@ -116,6 +110,7 @@ class CollectionLoad extends Component {
 const mapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
+
 class Collection {
   static Label = CollectionLabel;
 
