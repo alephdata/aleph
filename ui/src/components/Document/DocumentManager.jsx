@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { Callout } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 
-import { Toolbar } from 'src/components/Toolbar';
 import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
@@ -86,20 +85,18 @@ export class DocumentManager extends Component {
     return (
       <div className="DocumentManager">
         { editable && (
-          <Toolbar>
-            <div className="bp3-button-group">
-              <DocumentUploadButton collection={collection} parent={document} />
-              <DocumentFolderButton collection={collection} parent={document} />
-              <button
-                type="button"
-                className="bp3-button bp3-icon-delete"
-                disabled={!selection.length}
-                onClick={this.toggleDeleteSelection}
-              >
-                <FormattedMessage id="document.viewer.delete" defaultMessage="Delete selected" />
-              </button>
-            </div>
-          </Toolbar>
+          <div className="bp3-button-group">
+            <DocumentUploadButton collection={collection} parent={document} />
+            <DocumentFolderButton collection={collection} parent={document} />
+            <button
+              type="button"
+              className="bp3-button bp3-icon-delete"
+              disabled={!selection.length}
+              onClick={this.toggleDeleteSelection}
+            >
+              <FormattedMessage id="document.viewer.delete" defaultMessage="Delete selected" />
+            </button>
+          </div>
         )}
         { hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">

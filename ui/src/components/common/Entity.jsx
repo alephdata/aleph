@@ -9,6 +9,7 @@ import { Schema } from 'src/components/common';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
 import { selectEntity } from 'src/selectors';
+import getEntityLink from 'src/util/getEntityLink';
 
 import './Entity.scss';
 
@@ -68,11 +69,8 @@ class EntityLink extends Component {
     if (!entity || !entity.schema) {
       return <Entity.Label {...this.props} />;
     }
-
-    const isDocument = entity.schema.isDocument();
-    const link = isDocument ? `/documents/${entity.id}` : `/entities/${entity.id}`;
     return (
-      <Link to={link} onClick={this.onClick} className={c('EntityLink', className)}>
+      <Link to={getEntityLink(entity)} onClick={this.onClick} className={c('EntityLink', className)}>
         <Entity.Label {...this.props} />
       </Link>
     );

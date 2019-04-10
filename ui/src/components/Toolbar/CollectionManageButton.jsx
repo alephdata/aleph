@@ -88,7 +88,7 @@ class CollectionManageButton extends Component {
               />
             </Menu>
         )}
-          position={Position.RIGHT_TOP}
+          position={Position.BOTTOM_LEFT}
         >
           <Button
             icon="cog"

@@ -65,21 +65,15 @@ export class DocumentUploadDialog extends Component {
         const metadata = {
           file_name: file.name,
           mime_type: file.type,
-          parent,
         };
+        if (parent && parent.id) {
+          metadata.parent_id = parent.id;
+        }
         await ingestDocument(collection.id, metadata, file, this.onUploadProgress);
       });
-
-      // showSuccessToast(intl.formatMessage(messages.success));
       toggleDialog();
-      // history.push({
-      //   pathname: history.location.pathname,
-      //   search: history.location.search,
-      //   fragment: history.location.fragment
-      // });
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
-      console.log(e);
     }
     this.setState({ uploadingFile: null });
   }

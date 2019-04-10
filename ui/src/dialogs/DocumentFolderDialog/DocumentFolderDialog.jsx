@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Intent, Dialog, Button } from '@blueprintjs/core';
 import { defineMessages } from 'react-intl';
 
-import { ingestDocument as ingestDocumentAction } from 'src/actions';
+import { ingestDocument } from 'src/actions';
+import { showErrorToast } from 'src/app/toast';
 import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
@@ -18,8 +19,11 @@ const messages = defineMessages({
     id: 'document.folder.untitled',
     defaultMessage: 'Folder title',
   },
+  error: {
+    id: 'document.folder.error',
+    defaultMessage: 'There was an error creating the folder.',
+  },
 });
-
 
 export class DocumentFolderDialog extends Component {
   constructor(props) {
@@ -37,26 +41,26 @@ export class DocumentFolderDialog extends Component {
   async onFormSubmit(event) {
     event.preventDefault();
     const {
-      collection, parent, history, ingestDocument,
+      intl, collection, parent, history,
     } = this.props;
     const { title } = this.state;
     try {
-      let foreignId = title;
-      if (parent) {
-        foreignId = `${parent.foreign_id}/${foreignId}`;
-      }
       const metadata = {
-        title,
-        foreign_id: foreignId,
-        parent,
+        file_name: title,
+        foreign_id: title,
       };
-      const result = await ingestDocument(collection.id, metadata, null, this.onUploadProgress);
-      const document = result.documents[0];
+      if (parent && parent.id) {
+        metadata.foreign_id = `${parent.foreign_id}/${title}`;
+        metadata.parent_id = parent.id;
+      }
+      const ingest = this.props.ingestDocument;
+      const result = await ingest(collection.id, metadata, null, this.onUploadProgress);
+      console.log(result);
       history.push({
-        pathname: `/documents/${document.id}`,
+        pathname: `/documents/${result.id}`,
       });
     } catch (e) {
-      console.log(e);
+      showErrorToast(intl.formatMessage(messages.error));
     }
   }
 
@@ -102,5 +106,5 @@ export class DocumentFolderDialog extends Component {
     );
   }
 }
-const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
+const mapDispatchToProps = { ingestDocument };
 export default enhancer({ mapDispatchToProps })(DocumentFolderDialog);
