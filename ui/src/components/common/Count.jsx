@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 
 import { Numeric } from 'src/components/common';
 
+import './Count.scss';
+
 class Count extends PureComponent {
   render() {
     const { count, full = false } = this.props;
@@ -11,7 +13,7 @@ class Count extends PureComponent {
     }
 
     return (
-      <span className="bp3-tag bp3-round bp3-intent-primary">
+      <span className="Count bp3-tag bp3-round">
         <Numeric num={count} abbr={!full} />
       </span>
     );

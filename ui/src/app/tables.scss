@@ -43,11 +43,11 @@ table {
   }
 
   tr.active {
-    background: $pt-intent-primary;
+    background-color: $aleph-theme-intent;
     color: white;
     
     td {
-      background: $pt-intent-primary;
+      background-color: $aleph-theme-intent;
       color: white;
 
       a,

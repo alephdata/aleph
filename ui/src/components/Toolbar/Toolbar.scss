@@ -4,7 +4,6 @@
   padding: $aleph-grid-size;
   clear: both;
   overflow: visible;
-  background: $aleph-toolbar-background;
   border-bottom: 1px solid $aleph-border-color;
   flex: 1;
   width: 100%;
@@ -19,12 +18,6 @@
   .button-close {
     margin: 0;
     float: right;
-    // border-radius: 0;
-  }
-  
-  .search-box {
-    float: right;
-    margin-right: 0;
   }
 }
 
@@ -36,7 +29,7 @@
     background: transparent !important;
     border-color: transparent !important;
     box-shadow: none !important;
-    color: white !important;
+    color: $aleph-sidebar-foreground !important;
   }
 
   .bp3-input.bp3-disabled,
@@ -50,25 +43,14 @@
   }
 
   .bp3-button:hover {
-    background-color: $button-color-hover !important;
+    background-color: lighten($aleph-sidebar-background, 20%) !important;
   }
 
   .bp3-button.bp3-active {
-    background: #fff !important;
+    background: $aleph-sidebar-foreground !important;
     color: $aleph-sidebar-background !important;
     * {
       color: $aleph-sidebar-background !important;
-    }
-  }
-  
-  .search-box {
-    .bp3-icon {
-     color: $aleph-sidebar-background !important;
-    }
-    
-    .bp3-input {
-      background: white !important;
-      color: $pt-text-color !important;
     }
   }
 }

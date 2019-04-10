@@ -61,10 +61,8 @@
       right: $aleph-grid-size;
       padding-top: 0;
       padding-bottom: 0;
-    }
-    
-    .bp3-tag.bp3-intent-primary {
       font-weight: bold;
+      background-color: $aleph-theme-intent;
     }
   }
 

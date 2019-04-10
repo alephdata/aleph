@@ -134,7 +134,7 @@ class SearchFacet extends Component {
               )}
 
               {facet.total > 0 && (
-                <span className="bp3-tag bp3-small bp3-round bp3-intent-primary">
+                <span className="bp3-tag bp3-small bp3-round">
                   <FormattedNumber value={facet.total} />
                 </span>
               )}

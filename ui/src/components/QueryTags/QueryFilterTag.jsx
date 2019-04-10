@@ -104,7 +104,7 @@ class QueryFilterTag extends PureComponent {
 
     return (
       <TagWidget
-        className="bp3-large bp3-intent-primary QueryFilterTag"
+        className="bp3-large QueryFilterTag"
         onRemove={this.onRemove}
       >
         {this.label(filter, value)}

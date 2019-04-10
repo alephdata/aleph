@@ -13,7 +13,6 @@
     padding: 0 $aleph-grid-size;
     -ms-flex-align: center;
     align-items: center;
-    background: $aleph-facet-background !important;
     height: 3em !important;
   }
 
@@ -38,7 +37,6 @@
 
   .show {
     display: block;
-    background-color: $aleph-facet-background !important;
   }
 
   .SidePane {

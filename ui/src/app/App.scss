@@ -106,14 +106,6 @@ a {
   cursor: pointer;
 }
 
-.opener.clickable,
-li.clickable,
-th.clickable {
-  &:hover {
-    background-color: $aleph-hover-background;
-  }
-}
-
 .info-tabs-padding {
   padding: $aleph-grid-size;
   width: 100%;

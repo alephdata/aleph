@@ -6,9 +6,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: $aleph-grid-size;
-  // margin-bottom: $aleph-grid-size;
-  // margin-top: .8em;
   font-weight: bold;
+
+  &.bp3-tag {
+    background-color: $aleph-theme-intent;
+  }
 
   a, a:hover {
     color: white;
