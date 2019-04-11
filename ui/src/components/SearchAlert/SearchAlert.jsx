@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { defineMessages } from 'react-intl';
 import { Tooltip } from '@blueprintjs/core';
 import c from 'classnames';
@@ -20,7 +20,7 @@ const messages = defineMessages({
 });
 
 
-class SearchAlert extends React.Component {
+class SearchAlert extends Component {
   static doesAlertExist({ queryText, session, alerts }) {
     if (!session.loggedIn || !alerts || !alerts.results || !queryText) {
       return false;

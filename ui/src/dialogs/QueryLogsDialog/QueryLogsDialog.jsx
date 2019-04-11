@@ -19,7 +19,6 @@ const messages = defineMessages({
 class QueryLogsDialog extends PureComponent {
   render() {
     const { intl } = this.props;
-
     return (
       <Dialog
         icon="history"
@@ -28,9 +27,7 @@ class QueryLogsDialog extends PureComponent {
         title={intl.formatMessage(messages.title)}
       >
         <div className="bp3-dialog-body">
-          <QueryLogs
-            closeDialog={this.props.toggleDialog}
-          />
+          <QueryLogs closeDialog={this.props.toggleDialog} />
         </div>
       </Dialog>
     );

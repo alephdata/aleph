@@ -6,7 +6,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: $aleph-grid-size;
+  margin-bottom: $aleph-grid-size;
   font-weight: bold;
+  
 
   &.bp3-tag {
     background-color: $aleph-theme-intent;

@@ -1,8 +1,7 @@
 @import 'src/app/variables.scss';
 
 .HomePage {
-  height: 100vh;
-  min-height: 400px;
+  min-height: 100vh;
   background-color: black;
   background-image: url("../../assets/europe_asia_dark.jpg");
   background-size: cover;
@@ -31,22 +30,8 @@
     vertical-align: middle;
   }
 
-  .search-h1 {
-    color: white !important;
-    margin-bottom: 0.5em;
-    font-size: 4em;
-  }
-
-  .top-three-group {
-    display: inline-flex;
-  }
-
   section {
     min-height: 95.5vh;
-  }
-
-  .browse-collection-label {
-    color: white;
   }
 
   .search-form {
@@ -55,9 +40,10 @@
     // padding-bottom: 2em;
   }
 
-  .statistics-list{
+  .statistics-list {
     color: $aleph-content-background;
-   }
+  }
+
   .statistic{
     display: inline-block;
     &--list{
@@ -73,12 +59,6 @@
       display: flex;
       justify-content: space-between;
       a {color:$aleph-content-background;}
-    }
-  }
-  .calls-to-action {
-    .bp3-button {
-      margin-left: $aleph-grid-size;
-      margin-right: $aleph-grid-size;
     }
   }
 }

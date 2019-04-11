@@ -8,7 +8,7 @@ class InfoPane extends PureComponent {
   render() {
     const { children, className } = this.props;
     return (
-      <aside className={`InfoPane ${className}`} style={this.props.style}>
+      <aside className={c('InfoPane', className)} style={this.props.style}>
         {children}
       </aside>
     );
@@ -19,7 +19,7 @@ class SidePane extends PureComponent {
   render() {
     const { children, className } = this.props;
     return (
-      <aside className={`SidePane ${className}`} style={this.props.style}>
+      <aside className={c('SidePane', className)} style={this.props.style}>
         {children}
       </aside>
     );
@@ -46,7 +46,6 @@ class DualPane extends PureComponent {
 
   render() {
     const { children, className, ...restProps } = this.props;
-
     return (
       <article {...restProps} className={c('DualPane', className)}>
         { children }
