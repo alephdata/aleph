@@ -75,48 +75,48 @@ export class QueryLogs extends PureComponent {
 
   render() {
     const { intl, result } = this.props;
-    return result.page !== undefined && result.results.length > 0 && (
-      <table className="bp3-html-table querylog-table">
-        <tbody>
-          {result.results.map(item => (
-            <tr key={item.text}>
-              <td className="querylog-table--text">
-                <b>{item.text}</b>
-              </td>
-              <td className="narrow">
-                <Tooltip content={intl.formatMessage(messages.search_query, { query: item.text })}>
-                  <Button
-                    minimal
-                    className="bp3-icon-search"
-                    onClick={() => this.onSearch(item.text)}
-                  />
-                </Tooltip>
-              </td>
-              <td className="narrow">
-                <SearchAlert queryText={item.text} />
-              </td>
-              <td className="narrow">
-                <Tooltip content={intl.formatMessage(messages.delete_query)}>
-                  <Button
-                    className="bp3-icon-cross"
-                    minimal
-                    onClick={() => this.props.deleteQueryLog(item)}
-                  />
-                </Tooltip>
-              </td>
-            </tr>
-          ))}
-          <tr>
-            <td colSpan="4">
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-50px"
-              />
-              {result.isLoading && <SectionLoading />}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    return (
+      <React.Fragment>
+        { result.page !== undefined && result.results.length > 0 && (
+          <table className="QueryLogs bp3-html-table">
+            <tbody>
+              {result.results.map(item => (
+                <tr key={item.text}>
+                  <td className="text">
+                    <Tooltip
+                      content={intl.formatMessage(messages.search_query, { query: item.text })}
+                    >
+                      <Button
+                        minimal
+                        icon="search"
+                        onClick={() => this.onSearch(item.text)}
+                        text={item.text}
+                      />
+                    </Tooltip>
+                  </td>
+                  <td className="narrow">
+                    <SearchAlert queryText={item.text} />
+                  </td>
+                  <td className="narrow">
+                    <Tooltip content={intl.formatMessage(messages.delete_query)}>
+                      <Button
+                        className="bp3-icon-cross"
+                        minimal
+                        onClick={() => this.props.deleteQueryLog(item)}
+                      />
+                    </Tooltip>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <Waypoint
+          onEnter={this.getMoreResults}
+          bottomOffset="-50px"
+        />
+        {result.isLoading && <SectionLoading />}
+      </React.Fragment>
     );
   }
 }
