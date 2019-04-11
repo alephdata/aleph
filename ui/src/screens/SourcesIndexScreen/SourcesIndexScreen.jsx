@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import {
   defineMessages, FormattedMessage, FormattedNumber,
 } from 'react-intl';
-import { debounce } from 'lodash';
 import { Waypoint } from 'react-waypoint';
 import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
-  Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection, SearchBox,
+  Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection,
 } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
-import { CollectionListItem } from 'src/components/Collection';
+import CollectionListItem from 'src/components/Collection/CollectionListItem';
+import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
 
 import { translatableConnected } from 'src/util/enhancers';
 import './SourcesIndexScreen.scss';
@@ -57,9 +57,7 @@ export class SourcesIndexScreen extends Component {
   constructor(props) {
     super(props);
     const { intl } = props;
-
     this.state = {
-      queryPrefix: props.query.getString('prefix'),
       facets: [
         {
           field: 'category',
@@ -76,8 +74,7 @@ export class SourcesIndexScreen extends Component {
       ],
     };
 
-    this.updateQuery = debounce(this.updateQuery.bind(this), 200);
-    this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
+    this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
@@ -87,12 +84,6 @@ export class SourcesIndexScreen extends Component {
 
   componentDidUpdate() {
     this.fetchIfNeeded();
-  }
-
-  onChangeQueryPrefix(queryPrefix) {
-    const query = this.props.query.set('prefix', queryPrefix);
-    this.updateQuery(query);
-    this.setState({ queryPrefix });
   }
 
   getMoreResults() {
@@ -119,24 +110,16 @@ export class SourcesIndexScreen extends Component {
 
   render() {
     const { result, query, intl } = this.props;
-    const { queryPrefix } = this.state;
-
-    const total = <FormattedNumber value={result.total || 0} />;
-    const operation = (
-      <SearchBox
-        onSearch={this.onChangeQueryPrefix}
-        searchPlaceholder={intl.formatMessage(messages.placeholder)}
-        searchText={queryPrefix}
-      />
-    );
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs>
         { !!result.total && (
           <Breadcrumbs.Text text={(
             <FormattedMessage
               id="sources.index.total"
               defaultMessage="{total} sources of documents and data"
-              values={{ total }}
+              values={{
+                total: <FormattedNumber value={result.total || 0} />,
+              }}
             />
             )}
           />
@@ -160,7 +143,7 @@ export class SourcesIndexScreen extends Component {
       >
         {breadcrumbs}
         <DualPane>
-          <DualPane.SidePane className="side-pane-padding">
+          <DualPane.SidePane>
             <SearchFacets
               facets={this.state.facets}
               query={query}
@@ -169,6 +152,7 @@ export class SourcesIndexScreen extends Component {
             />
           </DualPane.SidePane>
           <DualPane.ContentPane className="padded">
+            <CollectionIndexSearch query={query} updateQuery={this.updateQuery} />
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery} />
             {result.isError && (

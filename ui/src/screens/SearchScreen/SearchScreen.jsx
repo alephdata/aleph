@@ -277,7 +277,7 @@ export class SearchScreen extends React.Component {
       >
         {breadcrumbs}
         <DualPane className="SearchScreen">
-          <DualPane.SidePane className="side-pane-padding">
+          <DualPane.SidePane>
             <div
               role="switch"
               aria-checked={!hideFacets}

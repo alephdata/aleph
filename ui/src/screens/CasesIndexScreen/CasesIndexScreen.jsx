@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import { Waypoint } from 'react-waypoint';
 import { FormattedMessage, defineMessages } from 'react-intl';
-import { debounce } from 'lodash';
-import { Button, Icon, H1 } from '@blueprintjs/core';
+import { Icon, H1 } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
-import { queryCollections, updateCollectionPermissions, createCollection } from 'src/actions';
+import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import {
   Breadcrumbs, ErrorSection, DualPane, SectionLoading,
 } from 'src/components/common';
-import { CollectionListItem } from 'src/components/Collection';
 import SearchFacets from 'src/components/Facet/SearchFacets';
-import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
+import CollectionListItem from 'src/components/Collection/CollectionListItem';
+import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
 
 import './CasesIndexScreen.scss';
 import { translatableConnected } from 'src/util/enhancers';
@@ -62,8 +61,6 @@ export class CasesIndexScreen extends Component {
     super(props);
     const { intl } = props;
     this.state = {
-      createIsOpen: false,
-      queryPrefix: props.query.getString('prefix'),
       facets: [
         {
           field: 'countries',
@@ -78,9 +75,7 @@ export class CasesIndexScreen extends Component {
         },
       ],
     };
-    this.toggleCreateCase = this.toggleCreateCase.bind(this);
-    this.onChangeQueryPrefix = this.onChangeQueryPrefix.bind(this);
-    this.updateQuery = debounce(this.updateQuery.bind(this), 200);
+    this.updateQuery = this.updateQuery.bind(this);
   }
 
   componentDidMount() {
@@ -91,21 +86,11 @@ export class CasesIndexScreen extends Component {
     this.fetchIfNeeded();
   }
 
-  onChangeQueryPrefix({ target }) {
-    this.setState({ queryPrefix: target.value });
-    const query = this.props.query.set('prefix', target.value);
-    this.updateQuery(query);
-  }
-
   getMoreResults() {
     const { query, result } = this.props;
     if (result && result.next && !result.isLoading && !result.isError) {
       this.props.queryCollections({ query, next: result.next });
     }
-  }
-
-  toggleCreateCase() {
-    this.setState(({ createIsOpen }) => ({ createIsOpen: !createIsOpen }));
   }
 
   updateQuery(newQuery) {
@@ -125,8 +110,6 @@ export class CasesIndexScreen extends Component {
 
   render() {
     const { query, result, intl } = this.props;
-    const { queryPrefix } = this.state;
-
     const breadcrumbs = (
       <Breadcrumbs>
         <li>
@@ -153,17 +136,6 @@ export class CasesIndexScreen extends Component {
                 defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
               />
             </p>
-            <div className="bp3-control-group bp3-large">
-              <div className="bp3-input-group bp3-large case-search">
-                <i className="bp3-icon bp3-icon-search bp3-large" />
-                <input
-                  className="bp3-input "
-                  placeholder={intl.formatMessage(messages.filter)}
-                  onChange={this.onChangeQueryPrefix}
-                  value={queryPrefix}
-                />
-              </div>
-            </div>
           </DualPane.ContentPane>
         </DualPane>
         <DualPane>
@@ -175,27 +147,17 @@ export class CasesIndexScreen extends Component {
               updateQuery={this.updateQuery}
             />
           </DualPane.SidePane>
-          <DualPane.ContentPane className="table-padded">
-            <div className="add-case">
-              <Button
-                onClick={this.toggleCreateCase}
-                icon="plus"
-                className="bp3-intent-primary bp3-large add-case--button"
-              >
-                <FormattedMessage id="case.add" defaultMessage="New casefile" />
-              </Button>
-            </div>
+          <DualPane.ContentPane className="padded">
+            <CollectionIndexSearch query={query} updateQuery={this.updateQuery} casefiles />
             <ul className="results">
               {result.results !== undefined && result.results
                 .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}
             </ul>
             {result.total === 0 && (
-            <div className="error-and-add-button">
               <ErrorSection
                 visual="search"
                 title={intl.formatMessage(messages.no_results_title)}
               />
-            </div>
             )}
             <Waypoint
               onEnter={this.getMoreResults}
@@ -207,10 +169,6 @@ export class CasesIndexScreen extends Component {
             )}
           </DualPane.ContentPane>
         </DualPane>
-        <CreateCaseDialog
-          isOpen={this.state.createIsOpen}
-          toggleDialog={this.toggleCreateCase}
-        />
       </Screen>
     );
   }
@@ -220,7 +178,5 @@ export default translatableConnected({
   mapStateToProps,
   mapDispatchToProps: {
     queryCollections,
-    updateCollectionPermissions,
-    createCollection,
   },
 })(CasesIndexScreen);

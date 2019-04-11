@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
-import EntityToolbar from 'src/components/Entity/EntityToolbar';
+// import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViews from 'src/components/Entity/EntityViews';
@@ -50,7 +50,6 @@ class EntityScreen extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">
-              <EntityToolbar entity={entity} isPreview={false} />
               <EntityHeading entity={entity} isPreview={false} />
               <div className="pane-content">
                 <EntityInfoMode entity={entity} isPreview={false} />
