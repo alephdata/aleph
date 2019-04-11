@@ -28,7 +28,10 @@ const messages = defineMessages({
 export class DocumentFolderDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = { title: '' };
+    this.state = {
+      title: '',
+      blocking: false,
+    };
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
@@ -43,7 +46,9 @@ export class DocumentFolderDialog extends Component {
     const {
       intl, collection, parent, history,
     } = this.props;
-    const { title } = this.state;
+    const { title, blocking } = this.state;
+    if (blocking) return;
+    this.setState({ blocking: true });
     try {
       const metadata = {
         file_name: title,
@@ -55,18 +60,18 @@ export class DocumentFolderDialog extends Component {
       }
       const ingest = this.props.ingestDocument;
       const result = await ingest(collection.id, metadata, null, this.onUploadProgress);
-      console.log(result);
       history.push({
         pathname: `/documents/${result.id}`,
       });
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
+      this.setState({ blocking: false });
     }
   }
 
   render() {
     const { intl, toggleDialog, isOpen } = this.props;
-    const { title } = this.state;
+    const { title, blocking } = this.state;
 
     return (
       <Dialog
@@ -96,6 +101,7 @@ export class DocumentFolderDialog extends Component {
             <div className="bp3-dialog-footer-actions">
               <Button
                 type="submit"
+                disabled={blocking}
                 intent={Intent.PRIMARY}
                 text={intl.formatMessage(messages.save)}
               />

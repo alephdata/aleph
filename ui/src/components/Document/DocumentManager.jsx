@@ -19,8 +19,7 @@ const mapStateToProps = (state, ownProps) => {
     query = query.sortBy('name', 'asc');
   }
 
-  const editable = collection.casefile && collection.writeable;
-  if (editable) {
+  if (collection.writeable) {
     query = query.set('cache', 'false');
   }
 
@@ -28,7 +27,7 @@ const mapStateToProps = (state, ownProps) => {
   const status = _.map(result.results || [], 'status');
   const hasPending = status.indexOf('pending') !== -1;
   return {
-    query, result, hasPending, editable,
+    query, result, hasPending,
   };
 };
 
@@ -77,14 +76,14 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, query, hasPending, editable,
+      collection, document, query, hasPending,
     } = this.props;
     const { selection } = this.state;
-    const updateSelection = editable ? this.updateSelection : undefined;
+    const updateSelection = collection.writeable ? this.updateSelection : undefined;
 
     return (
       <div className="DocumentManager">
-        { editable && (
+        { collection.writeable && (
           <div className="bp3-button-group">
             <DocumentUploadButton collection={collection} parent={document} />
             <DocumentFolderButton collection={collection} parent={document} />
