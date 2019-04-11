@@ -75,7 +75,7 @@ class CreateCaseDialog extends Component {
     const { history, createCollection, updateCollectionPermissions } = this.props;
     const { collection, permissions, blocking } = this.state;
     event.preventDefault();
-    if (blocking) return;
+    if (blocking || !this.checkValid()) return;
     this.setState({ blocking: true });
     try {
       const response = await createCollection(collection);
@@ -103,10 +103,19 @@ class CreateCaseDialog extends Component {
     this.setState({ collection });
   }
 
+  checkValid() {
+    const { collection } = this.state;
+    if (collection.label.trim().length < 3) {
+      return false;
+    }
+    return true;
+  }
+
   render() {
     const { intl, isOpen, toggleDialog } = this.props;
     const { collection, permissions, blocking } = this.state;
     const exclude = permissions.map(perm => parseInt(perm.role.id, 10));
+    const disabled = blocking || !this.checkValid();
 
     return (
       <Dialog
@@ -155,26 +164,13 @@ class CreateCaseDialog extends Component {
               <label className="bp3-label">
                 <FormattedMessage
                   id="case.share.with"
-                  defaultMessage="Share with"
+                  defaultMessage="Share with:"
                 />
-                <div className="bp3-input-group bp3-fill">
-                  <Role.Select onSelect={this.onAddRole} exclude={exclude} />
-                </div>
+                <Role.Select onSelect={this.onAddRole} exclude={exclude} />
               </label>
             </div>
             {permissions.length !== 0 && (
               <table className="settings-table">
-                <thead>
-                  <tr key={0}>
-                    <th>
-                      <FormattedMessage
-                        id="case.name"
-                        defaultMessage="Name"
-                      />
-                    </th>
-                    <th />
-                  </tr>
-                </thead>
                 <tbody>
                   {permissions.map(permission => (
                     <tr key={permission.role.id + 1}>
@@ -200,7 +196,7 @@ class CreateCaseDialog extends Component {
               <Button
                 type="submit"
                 intent={Intent.PRIMARY}
-                disabled={blocking}
+                disabled={disabled}
                 text={intl.formatMessage(messages.save)}
               />
             </div>
