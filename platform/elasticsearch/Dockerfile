@@ -1,4 +1,6 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.4
-RUN bin/elasticsearch-plugin install analysis-icu
-
+FROM elasticsearch:7.0.0
+RUN bin/elasticsearch-plugin install --batch discovery-gce
+RUN bin/elasticsearch-plugin install --batch repository-s3
+RUN bin/elasticsearch-plugin install --batch repository-gcs
+RUN bin/elasticsearch-plugin install --batch analysis-icu
 COPY k8s-entrypoint.sh /k8s-entrypoint.sh

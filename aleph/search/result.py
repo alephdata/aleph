@@ -75,7 +75,7 @@ class SearchQueryResult(QueryResult):
         super(SearchQueryResult, self).__init__(request, parser=parser)
         self.result = result
         hits = self.result.get('hits', {})
-        self.total = hits.get('total')
+        self.total = hits.get('total', {}).get('value')
         for doc in hits.get('hits', []):
             # log.info("Res: %s", pformat(doc))
             doc = unpack_result(doc)

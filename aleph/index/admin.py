@@ -21,7 +21,6 @@ def delete_index():
 
 def clear_index():
     es.delete_by_query(index=all_indexes(),
-                       doc_type='doc',
                        body={'query': {'match_all': {}}},
                        refresh=True,
                        wait_for_completion=True,

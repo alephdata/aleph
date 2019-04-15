@@ -68,7 +68,8 @@ def get_collection_stats(collection_id):
     index = entities_read_index(schema=Entity.THING)
     result = es.search(index=index, body=query)
     aggregations = result.get('aggregations', {})
-    data = {'count': result.get('hits', {}).get('total', 0)}
+    hits = result.get('hits', {})
+    data = {'count': hits.get('total', {}).get('value', 0)}
 
     for facet in ['schemata', 'countries', 'languages']:
         data[facet] = {}
@@ -80,7 +81,6 @@ def get_collection_stats(collection_id):
 def delete_collection(collection_id, sync=False):
     """Delete all documents from a particular collection."""
     es.delete(collections_index(),
-              doc_type='doc',
               id=str(collection_id),
               refresh=refresh_sync(sync),
               ignore=[404])
