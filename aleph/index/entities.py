@@ -42,7 +42,6 @@ def index_collection_entities(collection, sync=False):
             yield {
                 '_id': entity_id,
                 '_index': index,
-                '_type': 'doc',
                 '_source': body
             }
         yield from generate_collection_docs(collection)
@@ -165,7 +164,6 @@ def _index_updates(collection_id, entities, merge=True):
         actions.append({
             '_id': entity_id,
             '_index': index,
-            '_type': 'doc',
             '_source': body
         })
     return actions
@@ -185,7 +183,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get('_index')
         if index == exclude:
             continue
-        es.delete(index=index, doc_type='doc', id=entity_id,
+        es.delete(index=index, id=entity_id,
                   refresh=refresh_sync(sync))
 
 
@@ -217,6 +215,5 @@ def delete_operation(index, entity_id):
     return {
         '_id': entity_id,
         '_index': index,
-        '_type': 'doc',
         '_op_type': 'delete'
     }

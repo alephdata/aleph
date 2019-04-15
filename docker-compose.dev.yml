@@ -3,6 +3,7 @@ version: "3.2"
 services:
   postgres:
     image: postgres:10.0
+    hostname: postgres
     ports:
       - "15432:5432"
     volumes:
@@ -13,8 +14,11 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:6
-    restart: on-failure
+    image: alephdata/aleph-elasticsearch:10
+    hostname: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ports:
       - "19200:9200"
     volumes:
