@@ -4,8 +4,8 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
 # 
 # Translators:
-# Lejla Camdzic <lejla@occrp.org>, 2018
 # pudo <friedrich@pudo.org>, 2018
+# Lejla Camdzic <lejla@occrp.org>, 2018
 # Emina Muratovic <emina@occrp.org>, 2018
 # Tajna Biscevic <tajna@occrp.org>, 2019
 # 
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-03-27 10:16+0100\n"
+"POT-Creation-Date: 2019-04-15 16:29+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Tajna Biscevic <tajna@occrp.org>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"

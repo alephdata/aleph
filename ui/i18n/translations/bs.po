@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-27T09:16:38.488Z\n"
+"POT-Creation-Date: 2019-04-15T14:26:46.859Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -16,10 +16,10 @@ msgstr ""
 
 #. [property.inverse]
 #. defaultMessage is:
-#. '{name}' of …
+#. '{label}' of …
 #: i18n/messages.json
-msgid "'{name}' of …"
-msgstr "'{name}' od ..."
+msgid "'{label}' of …"
+msgstr ""
 
 #. [settings.password_confirm]
 #. defaultMessage is:
@@ -378,10 +378,10 @@ msgstr "Kreiraj"
 msgid "Create a new casefile"
 msgstr ""
 
-#. [collection.info.xref]
+#. [entity.info.xref]
 #. defaultMessage is:
 #. Cross-reference
-#. [entity.info.xref]
+#. [collection.info.xref]
 #. defaultMessage is:
 #. Cross-reference
 #. [collection.xref.title]
@@ -857,16 +857,13 @@ msgstr ""
 #. [entity.column.name]
 #. defaultMessage is:
 #. Name
-#. [case.name]
-#. defaultMessage is:
-#. Name
 #. [settings.name]
 #. defaultMessage is:
 #. Name
 #. [xref.name]
 #. defaultMessage is:
 #. Name
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Name"
 msgstr "Ime"
 
@@ -877,11 +874,11 @@ msgstr "Ime"
 msgid "Names"
 msgstr "Imena"
 
-#. [case.add]
+#. [collection.index.search.create]
 #. defaultMessage is:
-#. New casefile
+#. New case
 #: i18n/messages.json
-msgid "New casefile"
+msgid "New case"
 msgstr ""
 
 #. [document.folder.button]
@@ -900,13 +897,6 @@ msgstr "Nova datoteka"
 #: i18n/messages.json
 msgid "No connections."
 msgstr ""
-
-#. [role.no.results]
-#. defaultMessage is:
-#. No match, keep typing
-#: i18n/messages.json
-msgid "No match, keep typing"
-msgstr "Bez rezultata, nastavi pisati."
 
 #. [email.body.empty]
 #. defaultMessage is:
@@ -989,10 +979,7 @@ msgstr ""
 #. [sidebar.open]
 #. defaultMessage is:
 #. Open
-#. [sidebar.open]
-#. defaultMessage is:
-#. Open
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Open"
 msgstr "Otvori"
 
@@ -1189,12 +1176,12 @@ msgstr "Pretraži"
 msgid "Search by country name"
 msgstr "Pretraži po imenu države"
 
-#. [role.begin.typing]
+#. [collection.index.casefiles.placeholder]
 #. defaultMessage is:
-#. Search by name or email
+#. Search case files used in investigations...
 #: i18n/messages.json
-msgid "Search by name or email"
-msgstr "Pretraži po nazivu ili e-mailu"
+msgid "Search case files used in investigations..."
+msgstr ""
 
 #. [case.search_cases_placeholder]
 #. defaultMessage is:
@@ -1216,6 +1203,13 @@ msgstr "Pretraži kompanije, ljude i ..."
 #: i18n/messages.json
 msgid "Search companies, people and documents."
 msgstr "Pretraži kompanije, osobe ili dokumente"
+
+#. [collection.index.sources.placeholder]
+#. defaultMessage is:
+#. Search curated data sources...
+#: i18n/messages.json
+msgid "Search curated data sources..."
+msgstr ""
 
 #. [alerts.alert.search]
 #. defaultMessage is:
@@ -1304,10 +1298,10 @@ msgstr ""
 
 #. [case.share.with]
 #. defaultMessage is:
-#. Share with
+#. Share with:
 #: i18n/messages.json
-msgid "Share with"
-msgstr "Podijeli sa"
+msgid "Share with:"
+msgstr ""
 
 #. [search.facets.facet.team]
 #. defaultMessage is:
@@ -1516,6 +1510,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "There are no notifications"
 msgstr "Nemate notifikacija"
+
+#. [document.folder.error]
+#. defaultMessage is:
+#. There was an error creating the folder.
+#: i18n/messages.json
+msgid "There was an error creating the folder."
+msgstr ""
 
 #. [document.upload.error]
 #. defaultMessage is:
