@@ -116,9 +116,7 @@ def configure_alembic(config):
 def get_es():
     if not hasattr(settings, '_es_instance'):
         es = Elasticsearch(settings.ELASTICSEARCH_URL,
-                           timeout=settings.ELASTICSEARCH_TIMEOUT,
-                           # transport_class=TracingTransport,
-                           sniff_on_start=True)
+                           timeout=settings.ELASTICSEARCH_TIMEOUT)
         settings._es_instance = es
     return settings._es_instance
 
