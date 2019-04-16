@@ -68,13 +68,13 @@ def get_collection_stats(collection_id):
     index = entities_read_index(schema=Entity.THING)
     result = es.search(index=index, body=query)
     aggregations = result.get('aggregations', {})
-    hits = result.get('hits', {})
-    data = {'count': hits.get('total', {}).get('value', 0)}
-
+    data = {'count': 0}
     for facet in ['schemata', 'countries', 'languages']:
         data[facet] = {}
         for bucket in aggregations.get(facet, {}).get('buckets', []):
             data[facet][bucket['key']] = bucket['doc_count']
+    if len(data['schemata']):
+        data['count'] = sum(data['schemata'].values())
     return data
 
 
