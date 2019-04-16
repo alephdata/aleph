@@ -105,8 +105,14 @@ def bulk(id):
     collection = get_db_collection(id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
     merge = get_flag('merge', default=False)
+
+    # This will disable certain security measures in order to allow bulk
+    # loading of document data.
+    unsafe = get_flag('unsafe', default=False)
+    unsafe = unsafe and request.authz.is_admin
+
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, merge=merge)
+    bulk_write(collection, entities, merge=merge, unsafe=unsafe)
     refresh_collection(id)
     return ('', 204)
 

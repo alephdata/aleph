@@ -87,14 +87,16 @@ export class DocumentManager extends Component {
           <div className="bp3-button-group">
             <DocumentUploadButton collection={collection} parent={document} />
             <DocumentFolderButton collection={collection} parent={document} />
-            <button
-              type="button"
-              className="bp3-button bp3-icon-delete"
-              disabled={!selection.length}
-              onClick={this.toggleDeleteSelection}
-            >
-              <FormattedMessage id="document.viewer.delete" defaultMessage="Delete selected" />
-            </button>
+            { selection.length > 0 && (
+              <button
+                type="button"
+                className="bp3-button bp3-icon-delete"
+                disabled={!selection.length}
+                onClick={this.toggleDeleteSelection}
+              >
+                <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
+              </button>
+            )}
           </div>
         )}
         { hasPending && (

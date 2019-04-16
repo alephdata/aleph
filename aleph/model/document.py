@@ -256,6 +256,8 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('contentHash', self.content_hash)
         proxy.set('parent', self.parent_id)
         proxy.set('ancestors', self.ancestors)
+        proxy.set('processingStatus', self.status)
+        proxy.set('processingError', self.error_message)
         proxy.set('fileSize', meta.get('file_size'))
         proxy.set('fileName', meta.get('file_name'))
         if not proxy.has('fileName'):

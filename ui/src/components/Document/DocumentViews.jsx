@@ -97,7 +97,12 @@ class DocumentViews extends React.Component {
               <TextLoading loading={childrenResult.isLoading}>
                 <React.Fragment>
                   <Icon name="folder" />
-                  <FormattedMessage id="entity.info.browse" defaultMessage="Documents" />
+                  { document.schema.isA('Email') && (
+                    <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
+                  )}
+                  { !document.schema.isA('Email') && (
+                    <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                  )}
                   <Count count={childrenResult.total} />
                 </React.Fragment>
               </TextLoading>

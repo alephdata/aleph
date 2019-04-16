@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
 import {
-  Numeric, Country, Date, URL,
+  Numeric, Country, Language, Date, URL,
 } from 'src/components/common';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
@@ -18,6 +18,9 @@ class Value extends PureComponent {
     }
     if (prop.type.name === 'country') {
       return <Country.Name code={value} />;
+    }
+    if (prop.type.name === 'language') {
+      return <Language.Name code={value} />;
     }
     if (prop.type.name === 'url') {
       return <URL value={value} />;

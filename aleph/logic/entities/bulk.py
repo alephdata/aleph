@@ -2,6 +2,7 @@ import logging
 from banal import is_mapping, keys_values
 from followthemoney import model
 from followthemoney.exc import InvalidData
+from followthemoney.pragma import remove_checksums
 from followthemoney.namespace import Namespace
 
 from aleph.core import celery
@@ -70,7 +71,7 @@ def bulk_load_query(collection_id, query):
     refresh_collection(collection)
 
 
-def bulk_write(collection, items, merge=True):
+def bulk_write(collection, items, merge=True, unsafe=False):
     """Write a set of entities - given as dicts - to the index in bulk
     mode. This will perform validation but is dangerous as it means the
     application has no control over key generation and a few other aspects
@@ -83,7 +84,9 @@ def bulk_write(collection, items, merge=True):
             raise InvalidData("Failed to read input data", errors=item)
 
         entity = model.get_proxy(item)
-        entity = namespace.apply(entity)
+        if not unsafe:
+            entity = namespace.apply(entity)
+            entity = remove_checksums(entity)
         entity.context = {
             'bulk': True,
             'collection_id': collection.id
