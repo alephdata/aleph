@@ -5,6 +5,14 @@
   display: flex;
   flex-flow: column nowrap;
   background: $aleph-page-background;;
+
+  .app-banner {
+    padding-left: $aleph-grid-size * 5;
+
+    &::before {
+      padding-left: $aleph-grid-size;
+    }
+  }
   
   .main-homepage {
     flex-grow: 1;
@@ -22,5 +30,4 @@
   .screen-children {
     width: 100%;
   }
-
 }

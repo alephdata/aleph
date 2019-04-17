@@ -29,6 +29,9 @@ APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:8080/')
 APP_LOGO = env.get('ALEPH_LOGO', '/static/logo.png')
 APP_FAVICON = env.get('ALEPH_FAVICON', '/static/logo.png')
 
+# Show a system-wide banner in the user interface.
+APP_BANNER = env.get('ALEPH_APP_BANNER')
+
 # Force HTTPS here:
 URL_SCHEME = env.get('ALEPH_URL_SCHEME', 'http')
 

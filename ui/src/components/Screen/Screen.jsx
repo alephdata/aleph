@@ -83,6 +83,11 @@ export class Screen extends React.Component {
           updateQuery={updateQuery}
           isHomepage={isHomepage}
         />
+        {!!metadata.app.banner && (
+          <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
+            {metadata.app.banner}
+          </div>
+        )}
         {!forceAuth && (
           <React.Fragment>
             <main className={mainClass}>
