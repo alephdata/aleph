@@ -23,7 +23,7 @@ const mapStateToProps = (state, ownProps) => {
   const page = parseInt(hashQuery.page, 10) || 1;
   let query = Query.fromLocation('entities', location, {}, 'document')
     .setFilter('properties.document', document.id)
-    .setFilter('schemata', 'Page')
+    .setFilter('schema', 'Page')
     .sortBy('properties.index', 'asc');
   if (queryText.length > 0) {
     query = query.setString('q', queryText)

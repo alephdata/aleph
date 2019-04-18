@@ -15,7 +15,7 @@ const mapStateToProps = (state, ownProps) => {
   let query = Query.fromLocation('entities', location, {}, 'document')
     .sortBy('properties.index', 'asc')
     .setFilter('properties.table', document.id)
-    .setFilter('schemata', 'Record');
+    .setFilter('schema', 'Record');
 
   if (queryText) {
     query = query.setString('q', queryText);

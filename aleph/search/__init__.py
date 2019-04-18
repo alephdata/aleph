@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class EntitiesQuery(Query):
-    TEXT_FIELDS = ['name^3', 'text']
+    TEXT_FIELDS = ['text']
     PREFIX_FIELD = 'names.text'
     SKIP_FILTERS = ['schema', 'schemata']
     EXCLUDE_FIELDS = EXCLUDE_DEFAULT

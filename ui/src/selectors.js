@@ -83,6 +83,7 @@ export function selectEntity(state, entityId) {
   result.shouldLoad = !!entity.shouldLoad;
   result.links = entity.links;
   result.collection = entity.collection;
+  result.highlight = entity.highlight;
   return result;
 }
 
