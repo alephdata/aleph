@@ -243,12 +243,23 @@ export class SearchScreen extends React.Component {
       <Breadcrumbs operation={operation}>
         <li>
           <span className="bp3-breadcrumb bp3-breadcrumb-current">
-            {!(result.isLoading || result.total === undefined) && (
-            <React.Fragment>
-              <FormattedNumber value={result.total} />
-              {' '}
-              <FormattedMessage id="search.screen.results" defaultMessage="results" />
-            </React.Fragment>
+            {(result.total_type === 'gte' && !result.isLoading) && (
+              <FormattedMessage
+                id="search.screen.more_results"
+                defaultMessage="More than {total} results"
+                values={{
+                  total: <FormattedNumber value={result.total} />,
+                }}
+              />
+            )}
+            {(result.total_type === 'eq' && !result.isLoading) && (
+              <FormattedMessage
+                id="search.screen.results"
+                defaultMessage="{total} results"
+                values={{
+                  total: <FormattedNumber value={result.total} />,
+                }}
+              />
             )}
             { result.isLoading && (
             <FormattedMessage id="search.screen.searching" defaultMessage="Searching..." />
