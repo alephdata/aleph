@@ -7,6 +7,7 @@ import {
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
+import CollectionPublishAlert from 'src/components/Collection/CollectionPublishAlert';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 
@@ -20,6 +21,7 @@ class CollectionManageButton extends Component {
       xrefIsOpen: false,
       analyzeIsOpen: false,
       deleteIsOpen: false,
+      publishIsOpen: false,
     };
 
     this.toggleSettings = this.toggleSettings.bind(this);
@@ -30,6 +32,8 @@ class CollectionManageButton extends Component {
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   toggleAnalyze = () => this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
+
+  togglePublish = () => this.setState(({ publishIsOpen }) => ({ publishIsOpen: !publishIsOpen }));
 
   toggleXref() {
     this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
@@ -46,9 +50,10 @@ class CollectionManageButton extends Component {
   render() {
     const { collection } = this.props;
     const {
-      settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen, deleteIsOpen,
+      settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen, deleteIsOpen, publishIsOpen,
     } = this.state;
 
+    const isCasefile = collection.casefile;
     if (!collection.writeable) {
       return null;
     }
@@ -68,6 +73,13 @@ class CollectionManageButton extends Component {
                 onClick={this.toggleAccess}
                 text={<FormattedMessage id="collection.info.share" defaultMessage="Share" />}
               />
+              {isCasefile && (
+                <MenuItem
+                  icon="social-media"
+                  onClick={this.togglePublish}
+                  text={<FormattedMessage id="collection.info.publish" defaultMessage="Publish as source" />}
+                />
+              )}
               <MenuDivider />
               <MenuItem
                 icon="search-around"
@@ -116,6 +128,11 @@ class CollectionManageButton extends Component {
           collection={collection}
           isOpen={analyzeIsOpen}
           toggleAlert={this.toggleAnalyze}
+        />
+        <CollectionPublishAlert
+          collection={collection}
+          isOpen={publishIsOpen}
+          togglePublish={this.togglePublish}
         />
         <CollectionDeleteDialog
           isOpen={deleteIsOpen}
