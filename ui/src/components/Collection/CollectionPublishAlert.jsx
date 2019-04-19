@@ -13,11 +13,11 @@ const messages = defineMessages({
     defaultMessage: 'Casefile is published',
   },
   cancel: {
-    id: 'collection.analyze.cancel',
+    id: 'collection.publish.cancel',
     defaultMessage: 'Cancel',
   },
   confirm: {
-    id: 'collection.analyze.confirm',
+    id: 'collection.publish.confirm',
     defaultMessage: 'Publish',
   },
 });
