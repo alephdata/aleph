@@ -2,30 +2,13 @@ import React, { Component } from 'react';
 import {
   Cell, Column, Table, TableLoadingOption, TruncatedFormat,
 } from '@blueprintjs/table';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { queryEntities } from 'src/actions';
 import Query from 'src/app/Query';
 import { selectEntitiesResult } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
 import './TableViewer.scss';
-
-
-const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText } = ownProps;
-  let query = Query.fromLocation('entities', location, {}, 'document')
-    .sortBy('properties.index', 'asc')
-    .setFilter('properties.table', document.id)
-    .setFilter('schema', 'Record');
-
-  if (queryText) {
-    query = query.setString('q', queryText);
-  }
-
-  return {
-    query,
-    result: selectEntitiesResult(state, query),
-  };
-};
 
 
 export class TableViewer extends Component {
@@ -121,5 +104,25 @@ export class TableViewer extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  const { document, location, queryText } = ownProps;
+  let query = Query.fromLocation('entities', location, {}, 'document')
+    .sortBy('properties.index', 'asc')
+    .setFilter('properties.table', document.id)
+    .setFilter('schema', 'Record');
+
+  if (queryText) {
+    query = query.setString('q', queryText);
+  }
+
+  return {
+    query,
+    result: selectEntitiesResult(state, query),
+  };
+};
 const mapDispatchToProps = { queryEntities };
-export default connectedWithRouter({ mapStateToProps, mapDispatchToProps })(TableViewer);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(TableViewer);

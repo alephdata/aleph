@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
@@ -13,7 +15,6 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
 import { selectEntity, selectDocumentView } from 'src/selectors';
-import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   placeholder: {
@@ -116,4 +117,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default enhancer({ mapStateToProps })(DocumentScreen);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  injectIntl,
+)(DocumentScreen);

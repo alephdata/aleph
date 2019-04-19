@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
@@ -12,7 +14,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
-import { enhancer } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   placeholder: {
@@ -116,4 +118,8 @@ export class CollectionScreen extends Component {
   }
 }
 
-export default enhancer({ mapStateToProps })(CollectionScreen);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  injectIntl,
+)(CollectionScreen);

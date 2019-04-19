@@ -2,15 +2,15 @@ import React, { Component, PureComponent } from 'react';
 import {
   Button, Checkbox, Dialog, Intent,
 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
 import { selectCollectionPermissions } from 'src/selectors';
 import { Role } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 import './CollectionAccessDialog.scss';
-import { translatableConnected } from 'src/util/enhancers';
 
 
 const messages = defineMessages({
@@ -257,9 +257,10 @@ const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.collection.id;
   return { permissions: selectCollectionPermissions(state, collectionId) };
 };
+const mapDispatchToProps = { updateCollectionPermissions, fetchCollectionPermissions };
 
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: { updateCollectionPermissions, fetchCollectionPermissions },
-})(CollectionAccessDialog);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(CollectionAccessDialog);

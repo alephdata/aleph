@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import {
   Button, Dialog, Intent, ProgressBar,
 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { ingestDocument as ingestDocumentAction } from 'src/actions';
 import { showErrorToast } from 'src/app/toast';
 import wordList from 'src/util/wordList';
 
 import './DocumentUploadDialog.scss';
-import { enhancer } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   title: {
@@ -158,7 +160,10 @@ export class DocumentUploadDialog extends Component {
     );
   }
 }
+const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
 
-export default enhancer({
-  mapDispatchToProps: { ingestDocument: ingestDocumentAction },
-})(DocumentUploadDialog);
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(DocumentUploadDialog);

@@ -2,34 +2,15 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { Callout } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
-
-
-const mapStateToProps = (state, ownProps) => {
-  let { query } = ownProps;
-  const { collection } = ownProps;
-  if (!query.hasSort()) {
-    query = query.sortBy('name', 'asc');
-  }
-
-  if (collection.writeable) {
-    query = query.set('cache', 'false');
-  }
-
-  const result = selectEntitiesResult(state, query);
-  const status = _.map(result.results || [], 'status');
-  const hasPending = status.indexOf('pending') !== -1;
-  return {
-    query, result, hasPending,
-  };
-};
 
 
 export class DocumentManager extends Component {
@@ -124,8 +105,27 @@ export class DocumentManager extends Component {
     );
   }
 }
+const mapStateToProps = (state, ownProps) => {
+  let { query } = ownProps;
+  const { collection } = ownProps;
+  if (!query.hasSort()) {
+    query = query.sortBy('name', 'asc');
+  }
 
-export default connectedWithRouter({
-  mapStateToProps,
-  mapDispatchToProps: { queryEntities },
-})(DocumentManager);
+  if (collection.writeable) {
+    query = query.set('cache', 'false');
+  }
+
+  const result = selectEntitiesResult(state, query);
+  const status = _.map(result.results || [], 'status');
+  const hasPending = status.indexOf('pending') !== -1;
+  return {
+    query, result, hasPending,
+  };
+};
+
+const mapDispatchToProps = { queryEntities };
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(DocumentManager);

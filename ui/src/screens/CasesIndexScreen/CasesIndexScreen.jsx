@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Waypoint } from 'react-waypoint';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Icon, H1 } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
@@ -15,7 +16,6 @@ import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
 
 import './CasesIndexScreen.scss';
-import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   no_results_title: {
@@ -40,21 +40,6 @@ const messages = defineMessages({
   },
 });
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const context = {
-    facet: ['countries', 'team.name'],
-    'filter:kind': 'casefile',
-  };
-  const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('updated_at', 'desc')
-    .limit(30);
-
-  return {
-    query,
-    result: selectCollectionsResult(state, query),
-  };
-};
 
 export class CasesIndexScreen extends Component {
   constructor(props) {
@@ -174,9 +159,26 @@ export class CasesIndexScreen extends Component {
   }
 }
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: {
-    queryCollections,
-  },
-})(CasesIndexScreen);
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const context = {
+    facet: ['countries', 'team.name'],
+    'filter:kind': 'casefile',
+  };
+  const query = Query.fromLocation('collections', location, context, 'collections')
+    .sortBy('updated_at', 'desc')
+    .limit(30);
+
+  return {
+    query,
+    result: selectCollectionsResult(state, query),
+  };
+};
+
+const mapDispatchToProps = {
+  queryCollections,
+};
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(CasesIndexScreen);

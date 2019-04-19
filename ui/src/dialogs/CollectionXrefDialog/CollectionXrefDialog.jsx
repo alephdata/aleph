@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import {
   RadioGroup, Radio, Callout, Dialog,
 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { tiggerXrefMatches, queryCollections } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
-import { translatableConnected } from 'src/util/enhancers';
+
 import CollectionXrefDialogActions from './CollectionXrefDialogActions';
 import CollectionXrefSelect from './CollectionXrefSelect';
 
@@ -131,7 +133,8 @@ class CollectionXrefDialog extends Component {
   }
 }
 
-
-export default translatableConnected({
-  mapDispatchToProps: { tiggerXrefMatches, queryCollections },
-})(CollectionXrefDialog);
+const mapDispatchToProps = { tiggerXrefMatches, queryCollections };
+export default compose(
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(CollectionXrefDialog);

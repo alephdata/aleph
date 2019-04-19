@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 // import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
@@ -14,7 +16,6 @@ import { DualPane, Breadcrumbs } from 'src/components/common';
 import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class EntityScreen extends Component {
@@ -82,4 +83,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWithRouter({ mapStateToProps })(EntityScreen);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(EntityScreen);

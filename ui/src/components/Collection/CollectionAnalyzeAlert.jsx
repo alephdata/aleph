@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Alert, Intent } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { triggerCollectionAnalyze } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
-import { translatableConnected } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   processing: {
@@ -58,8 +59,10 @@ class CollectionAnalyzeAlert extends Component {
     );
   }
 }
+const mapDispatchToProps = { triggerCollectionAnalyze };
 
 
-export default translatableConnected({
-  mapDispatchToProps: { triggerCollectionAnalyze },
-})(CollectionAnalyzeAlert);
+export default compose(
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(CollectionAnalyzeAlert);

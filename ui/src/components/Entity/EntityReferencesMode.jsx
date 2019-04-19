@@ -1,7 +1,9 @@
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions/index';
 import {
@@ -12,7 +14,6 @@ import {
 } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
-import { enhancer } from 'src/util/enhancers';
 import getEntityLink from 'src/util/getEntityLink';
 
 const messages = defineMessages({
@@ -163,8 +164,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+const mapDispatchToProps = { queryEntities };
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps: { queryEntities },
-})(EntityReferencesMode);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(EntityReferencesMode);

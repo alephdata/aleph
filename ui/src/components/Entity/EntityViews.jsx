@@ -2,7 +2,9 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from '@blueprintjs/core';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {
   Count, Icon, Property, SectionLoading, TextLoading,
 } from 'src/components/common';
@@ -15,7 +17,6 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import Schema from 'src/components/common/Schema';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class EntityViews extends React.Component {
@@ -129,4 +130,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWithRouter({ mapStateToProps })(EntityViews);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(EntityViews);

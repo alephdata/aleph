@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import {
   Callout, Intent, Dialog, MenuDivider, Button,
 } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { endpoint } from 'src/app/api';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import { showErrorToast } from 'src/app/toast';
@@ -15,7 +16,6 @@ import {
 import { selectMetadata } from 'src/selectors';
 
 import './AuthenticationDialog.scss';
-import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -35,7 +35,6 @@ const messages = defineMessages({
     defaultMessage: 'You have entered an invalid username or password',
   },
 });
-const mapStateToProps = state => ({ metadata: selectMetadata(state) });
 
 export class AuthenticationDialog extends Component {
   constructor(props) {
@@ -177,9 +176,11 @@ export class AuthenticationDialog extends Component {
     );
   }
 }
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: {
-    loginWithToken: loginWithTokenAction, loginWithPassword: loginWithPasswordAction,
-  },
-})(AuthenticationDialog);
+const mapStateToProps = state => ({ metadata: selectMetadata(state) });
+const mapDispatchToProps = {
+  loginWithToken: loginWithTokenAction, loginWithPassword: loginWithPasswordAction,
+};
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(AuthenticationDialog);

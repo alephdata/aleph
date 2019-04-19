@@ -1,8 +1,9 @@
 import React from 'react';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class CollectionEntitiesMode extends React.PureComponent {
@@ -28,4 +29,7 @@ const mapStateToProps = (state, ownProps) => {
   return { query };
 };
 
-export default connectedWithRouter({ mapStateToProps })(CollectionEntitiesMode);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(CollectionEntitiesMode);

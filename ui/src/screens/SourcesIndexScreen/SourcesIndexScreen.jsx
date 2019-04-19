@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import {
-  defineMessages, FormattedMessage, FormattedNumber,
+  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
@@ -15,7 +17,7 @@ import Screen from 'src/components/Screen/Screen';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
 
-import { translatableConnected } from 'src/util/enhancers';
+
 import './SourcesIndexScreen.scss';
 
 const messages = defineMessages({
@@ -37,21 +39,6 @@ const messages = defineMessages({
   },
 });
 
-
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const context = {
-    facet: ['category', 'countries'],
-    'filter:kind': 'source',
-  };
-  const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', 'desc')
-    .limit(40);
-  return {
-    query,
-    result: selectCollectionsResult(state, query),
-  };
-};
 
 export class SourcesIndexScreen extends Component {
   constructor(props) {
@@ -177,8 +164,23 @@ export class SourcesIndexScreen extends Component {
     );
   }
 }
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const context = {
+    facet: ['category', 'countries'],
+    'filter:kind': 'source',
+  };
+  const query = Query.fromLocation('collections', location, context, 'collections')
+    .sortBy('count', 'desc')
+    .limit(40);
+  return {
+    query,
+    result: selectCollectionsResult(state, query),
+  };
+};
+const mapDispatchToProps = { queryCollections };
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: { queryCollections },
-})(SourcesIndexScreen);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(SourcesIndexScreen);

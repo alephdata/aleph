@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Dialog, Button, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { Role, Country } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import { updateCollection } from 'src/actions';
 import { selectMetadata } from 'src/selectors';
-import { translatableConnected } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   placeholder_label: {
@@ -320,7 +321,9 @@ const mapStateToProps = state => ({
   categories: selectMetadata(state).categories,
 });
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: { updateCollection },
-})(CollectionEditDialog);
+const mapDispatchToProps = { updateCollection };
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(CollectionEditDialog);

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Icon } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 import { selectSession } from 'src/selectors';
 import SearchBox from 'src/components/Navbar/SearchBox';
-import { enhancer } from 'src/util/enhancers';
-
 import './Navbar.scss';
 
 const messages = defineMessages({
@@ -22,8 +22,6 @@ const messages = defineMessages({
     defaultMessage: 'Search companies, people and ...',
   },
 });
-
-const mapStateToProps = state => ({ session: selectSession(state) });
 
 
 export class Navbar extends React.Component {
@@ -178,4 +176,10 @@ export class Navbar extends React.Component {
     );
   }
 }
-export default enhancer({ mapStateToProps })(Navbar);
+const mapStateToProps = state => ({ session: selectSession(state) });
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  injectIntl,
+)(Navbar);

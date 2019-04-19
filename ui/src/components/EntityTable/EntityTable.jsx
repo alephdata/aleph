@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import c from 'classnames';
 
+import { compose } from 'redux';
+import { withRouter } from 'react-router';
 import { SortableTH, ErrorSection } from 'src/components/common';
 import EntityTableRow from './EntityTableRow';
-/* eslint-disable */
 import './EntityTable.scss';
-import { withRouterTranslation } from 'src/util/enhancers';
 
 const messages = defineMessages({
   column_name: {
@@ -132,5 +132,7 @@ class EntityTable extends Component {
   }
 }
 
-export default withRouterTranslation()(EntityTable);
-
+export default compose(
+  withRouter,
+  injectIntl,
+)(EntityTable);

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Intent, Dialog, Button } from '@blueprintjs/core';
-import { defineMessages } from 'react-intl';
-
+import { defineMessages, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { ingestDocument } from 'src/actions';
 import { showErrorToast } from 'src/app/toast';
-import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   title: {
@@ -113,4 +114,8 @@ export class DocumentFolderDialog extends Component {
   }
 }
 const mapDispatchToProps = { ingestDocument };
-export default enhancer({ mapDispatchToProps })(DocumentFolderDialog);
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(DocumentFolderDialog);

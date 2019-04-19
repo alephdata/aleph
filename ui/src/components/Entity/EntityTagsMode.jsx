@@ -1,13 +1,14 @@
 import React from 'react';
 import queryString from 'query-string';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
-  defineMessages, FormattedNumber, FormattedMessage,
+  defineMessages, FormattedNumber, FormattedMessage, injectIntl,
 } from 'react-intl';
 
 import { Tag, ErrorSection } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
-import { translatableConnected } from 'src/util/enhancers';
 
 import './EntityTagsMode.scss';
 
@@ -89,6 +90,7 @@ const mapStateToProps = (state, ownProps) => ({
   tags: selectEntityTags(state, ownProps.entity.id),
 });
 
-export default translatableConnected({
-  mapStateToProps,
-})(EntityTagsMode);
+export default compose(
+  connect(mapStateToProps),
+  injectIntl,
+)(EntityTagsMode);

@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
 import { Waypoint } from 'react-waypoint';
 import { Button, Tooltip } from '@blueprintjs/core';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
 import SectionLoading from 'src/components/common/SectionLoading';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
-import { enhancer } from 'src/util/enhancers';
 import { selectQueryLog } from 'src/selectors';
 import Query from 'src/app/Query';
 
@@ -134,7 +135,8 @@ const mapDispatchToProps = ({
   deleteQueryLog,
 });
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps,
-})(QueryLogs);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(QueryLogs);

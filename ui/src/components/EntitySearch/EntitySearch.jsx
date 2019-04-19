@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { Waypoint } from 'react-waypoint';
-import { defineMessages } from 'react-intl';
-
+import { defineMessages, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
-import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   no_results_title: {
@@ -24,23 +25,6 @@ const messages = defineMessages({
   },
 });
 
-
-const mapStateToProps = (state, ownProps) => {
-  const {
-    location, context = {}, prefix, query,
-  } = ownProps;
-
-  // We normally only want Things, not Intervals (relations between things).
-  const contextWithDefaults = {
-    'filter:schemata': context['filter:schemata'] || 'Thing',
-    ...context,
-  };
-  const searchQuery = query !== undefined ? query : Query.fromLocation('entities', location, contextWithDefaults, prefix);
-  return {
-    query: searchQuery,
-    result: selectEntitiesResult(state, searchQuery),
-  };
-};
 
 export class EntitySearch extends Component {
   constructor(props) {
@@ -133,7 +117,27 @@ export class EntitySearch extends Component {
     );
   }
 }
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps: { queryEntities },
-})(EntitySearch);
+const mapStateToProps = (state, ownProps) => {
+  const {
+    location, context = {}, prefix, query,
+  } = ownProps;
+
+  // We normally only want Things, not Intervals (relations between things).
+  const contextWithDefaults = {
+    'filter:schemata': context['filter:schemata'] || 'Thing',
+    ...context,
+  };
+  const searchQuery = query !== undefined ? query : Query.fromLocation('entities', location, contextWithDefaults, prefix);
+  return {
+    query: searchQuery,
+    result: selectEntitiesResult(state, searchQuery),
+  };
+};
+
+const mapDispatchToProps = { queryEntities };
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(EntitySearch);

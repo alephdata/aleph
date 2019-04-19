@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Tooltip } from '@blueprintjs/core';
 import c from 'classnames';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { addAlert, deleteAlert, fetchAlerts } from 'src/actions';
 import { selectSession, selectAlerts } from 'src/selectors';
-import { enhancer } from 'src/util/enhancers';
 
 
 const messages = defineMessages({
@@ -105,6 +106,9 @@ const mapStateToProps = state => ({
   session: selectSession(state),
 });
 
-export default enhancer({
-  mapStateToProps, mapDispatchToProps: { addAlert, deleteAlert, fetchAlerts },
-})(SearchAlert);
+const mapDispatchToProps = { addAlert, deleteAlert, fetchAlerts };
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(SearchAlert);

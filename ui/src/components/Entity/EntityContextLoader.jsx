@@ -1,5 +1,7 @@
 import { PureComponent } from 'react';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { queryEntitySimilar } from 'src/queries';
 import {
   fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
@@ -7,7 +9,6 @@ import {
 import {
   selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
 } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class EntityScreenContext extends PureComponent {
@@ -59,9 +60,11 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWithRouter({
-  mapStateToProps,
-  mapDispatchToProps: {
-    fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
-  },
-})(EntityScreenContext);
+const mapDispatchToProps = {
+  fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
+};
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(EntityScreenContext);

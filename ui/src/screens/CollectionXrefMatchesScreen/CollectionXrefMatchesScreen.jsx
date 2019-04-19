@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  defineMessages, FormattedMessage, FormattedNumber,
+  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
 import {
   Entity, Date, Country, SectionLoading, Breadcrumbs,
@@ -14,7 +17,6 @@ import Query from 'src/app/Query';
 import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
-import { enhancer } from 'src/util/enhancers';
 
 import './CollectionXrefMatchesScreen.scss';
 
@@ -25,22 +27,6 @@ const messages = defineMessages({
   },
 });
 
-
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const { collectionId, otherId } = ownProps.match.params;
-  const path = `collections/${collectionId}/xref/${otherId}`;
-  const query = new Query(path, location, {}, 'xref').limit(40);
-  return {
-    collectionId,
-    otherId,
-    query,
-    collection: selectCollection(state, collectionId),
-    other: selectCollection(state, otherId),
-    matches: selectCollectionXrefMatches(state, query),
-    index: selectCollectionXrefIndex(state, collectionId),
-  };
-};
 
 export class CollectionXrefMatchesScreen extends Component {
   constructor(props) {
@@ -113,7 +99,7 @@ export class CollectionXrefMatchesScreen extends Component {
                       <option key={res.collection.id} value={res.collection.id}>
                         {res.collection.label}
                         {' '}
-(
+                        (
                         {res.matches}
 )
                       </option>
@@ -255,11 +241,30 @@ export class CollectionXrefMatchesScreen extends Component {
   }
 }
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps: {
-    fetchCollection,
-    fetchCollectionXrefIndex,
-    queryXrefMatches,
-  },
-})(CollectionXrefMatchesScreen);
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const { collectionId, otherId } = ownProps.match.params;
+  const path = `collections/${collectionId}/xref/${otherId}`;
+  const query = new Query(path, location, {}, 'xref').limit(40);
+  return {
+    collectionId,
+    otherId,
+    query,
+    collection: selectCollection(state, collectionId),
+    other: selectCollection(state, otherId),
+    matches: selectCollectionXrefMatches(state, query),
+    index: selectCollectionXrefIndex(state, collectionId),
+  };
+};
+
+const mapDispatchToProps = {
+  fetchCollection,
+  fetchCollectionXrefIndex,
+  queryXrefMatches,
+};
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(CollectionXrefMatchesScreen);

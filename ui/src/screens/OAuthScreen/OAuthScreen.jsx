@@ -1,10 +1,9 @@
 import { Component } from 'react';
 import queryString from 'query-string';
 import { loginWithToken } from 'src/actions/sessionActions';
-import { connectedWithRouter } from 'src/util/enhancers';
-
-
-const mapStateToProps = ({ session }) => ({ session });
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 
 export class OAuthScreen extends Component {
@@ -27,7 +26,11 @@ export class OAuthScreen extends Component {
   }
 }
 
-export default connectedWithRouter({
-  mapStateToProps,
-  mapDispatchToProps: { loginWithToken },
-})(OAuthScreen);
+const mapStateToProps = ({ session }) => ({ session });
+
+const mapDispatchToProps = { loginWithToken };
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(OAuthScreen);

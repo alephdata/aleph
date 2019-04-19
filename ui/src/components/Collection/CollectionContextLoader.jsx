@@ -1,8 +1,9 @@
 import { PureComponent } from 'react';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { fetchCollection, fetchCollectionXrefIndex } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class CollectionContextLoader extends PureComponent {
@@ -39,7 +40,8 @@ const mapStateToProps = (state, ownProps) => {
     xrefIndex: selectCollectionXrefIndex(state, collectionId),
   };
 };
-
-export default connectedWithRouter({
-  mapStateToProps, mapDispatchToProps: { fetchCollection, fetchCollectionXrefIndex },
-})(CollectionContextLoader);
+const mapDispatchToProps = { fetchCollection, fetchCollectionXrefIndex };
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(CollectionContextLoader);
