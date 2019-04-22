@@ -4,16 +4,8 @@
   flex-grow: 1;
   display: flex;
   flex-flow: column nowrap;
-  background: $aleph-page-background;;
+  background: $aleph-page-background;
 
-  .app-banner {
-    padding-left: $aleph-grid-size * 5;
-
-    &::before {
-      padding-left: $aleph-grid-size;
-    }
-  }
-  
   .main-homepage {
     flex-grow: 1;
     display: flex;
