@@ -25,10 +25,11 @@ class EntityTableRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    const className = c('EntityTableRow', 'nowrap', { active: isActive }, { prefix: isPrefix }); 
+    const resultClass = c('EntityTableRow', 'nowrap', { active: isActive }, { prefix: isPrefix }); 
+    const highlightsClass = c('EntityTableRow', { active: isActive });
     return (
       <React.Fragment>
-        <tr key={entity.id} className={className}>
+        <tr key={entity.id} className={resultClass}>
           {updateSelection && (
             <td className="select">
               <Checkbox checked={isSelected} onChange={() => updateSelection(entity)} />
@@ -68,10 +69,7 @@ class EntityTableRow extends Component {
         </tr>
         {!!highlights.length
           && (
-          <tr
-            key={`${entity.id}-hl`}
-            className={c('EntityTableRow', className, { active: isActive })}
-          >
+          <tr key={`${entity.id}-hl`} className={highlightsClass}>
             <td colSpan="5" className="highlights">
               {highlights.map((phrase, index) => (
                 <span key={index}>
