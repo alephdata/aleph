@@ -60,24 +60,25 @@ export class DocumentManager extends Component {
       collection, document, query, hasPending,
     } = this.props;
     const { selection } = this.state;
-    const updateSelection = collection.writeable ? this.updateSelection : undefined;
+    const mutableCollection = collection !== undefined && collection.writeable;
+    const mutableDocument = document === undefined || (document.schema && document.schema.name === 'Folder');
+    const showActions = mutableCollection && mutableDocument;
+    const updateSelection = showActions ? this.updateSelection : undefined;
 
     return (
       <div className="DocumentManager">
-        { collection.writeable && (
+        { showActions && (
           <div className="bp3-button-group">
             <DocumentUploadButton collection={collection} parent={document} />
             <DocumentFolderButton collection={collection} parent={document} />
-            { selection.length > 0 && (
-              <button
-                type="button"
-                className="bp3-button bp3-icon-delete"
-                disabled={!selection.length}
-                onClick={this.toggleDeleteSelection}
-              >
-                <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
-              </button>
-            )}
+            <button
+              type="button"
+              className="bp3-button bp3-icon-delete"
+              disabled={!selection.length}
+              onClick={this.toggleDeleteSelection}
+            >
+              <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
+            </button>
           </div>
         )}
         { hasPending && (

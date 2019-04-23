@@ -21,7 +21,7 @@ class DocumentUploadButton extends React.Component {
     const { collection, parent } = this.props;
     const parentFolder = parent == null ? true : parent.schema.isA('Folder');
 
-    if (!parentFolder || !collection.writeable || !collection.casefile) {
+    if (!parentFolder || !collection.writeable) {
       return null;
     }
 
