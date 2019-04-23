@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-04-15T14:26:46.859Z\n"
+"POT-Creation-Date: 2019-04-23T14:17:12.710Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -142,6 +142,13 @@ msgstr ""
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
+#. [entity.info.attachments]
+#. defaultMessage is:
+#. Attachments
+#: i18n/messages.json
+msgid "Attachments"
+msgstr ""
+
 #. [email.bcc]
 #. defaultMessage is:
 #. BCC
@@ -166,6 +173,9 @@ msgstr "CC"
 #. [collection.analyze.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [collection.publish.cancel]
+#. defaultMessage is:
+#. Cancel
 #. [collection.edit.cancel_button]
 #. defaultMessage is:
 #. Cancel
@@ -182,7 +192,7 @@ msgstr "CC"
 #. defaultMessage is:
 #. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr ""
 
@@ -210,6 +220,13 @@ msgstr ""
 #. Casefile
 #: i18n/messages.json
 msgid "Casefile"
+msgstr ""
+
+#. [collection.publish.succeed]
+#. defaultMessage is:
+#. Casefile is published
+#: i18n/messages.json
+msgid "Casefile is published"
 msgstr ""
 
 #. [nav.cases]
@@ -462,6 +479,9 @@ msgstr ""
 msgid "Date"
 msgstr "Fecha"
 
+#. [document.viewer.delete]
+#. defaultMessage is:
+#. Delete
 #. [collection.info.delete]
 #. defaultMessage is:
 #. Delete
@@ -475,15 +495,9 @@ msgstr "Fecha"
 #. defaultMessage is:
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Delete"
 msgstr "Borrar"
-
-#. [document.viewer.delete]
-#. defaultMessage is:
-#. Delete selected
-#: i18n/messages.json
-msgid "Delete selected"
-msgstr ""
 
 #. [case.choose.summary]
 #. defaultMessage is:
@@ -502,7 +516,7 @@ msgstr ""
 #. [entity.info.source]
 #. defaultMessage is:
 #. Documents
-#. [entity.info.browse]
+#. [entity.info.documents]
 #. defaultMessage is:
 #. Documents
 #: i18n/messages.json i18n/messages.json
@@ -853,6 +867,13 @@ msgstr ""
 msgid "Matches"
 msgstr ""
 
+#. [search.screen.more_results]
+#. defaultMessage is:
+#. More than {total} results
+#: i18n/messages.json
+msgid "More than {total} results"
+msgstr ""
+
 #. [entity.column.name]
 #. defaultMessage is:
 #. Name
@@ -1030,6 +1051,20 @@ msgstr "Teléfonos"
 #. Profile
 #: i18n/messages.json
 msgid "Profile"
+msgstr ""
+
+#. [collection.publish.confirm]
+#. defaultMessage is:
+#. Publish
+#: i18n/messages.json
+msgid "Publish"
+msgstr ""
+
+#. [collection.info.publish]
+#. defaultMessage is:
+#. Publish as source
+#: i18n/messages.json
+msgid "Publish as source"
 msgstr ""
 
 #. [collection.publisher]
@@ -1701,6 +1736,20 @@ msgstr ""
 "Te enviaremos un correo electrónico, por favor ingresa al enlace para "
 "completar tu registro"
 
+#. [collection.publish.alert.text]
+#. defaultMessage is:
+#. You are converting this case file to a source. Sources are to be seen as
+#. raw evidence and can be made public for every visitor of the system to see.
+#. Please make sure you do not publish material identifying your sources,
+#. directly or through metadata.
+#: i18n/messages.json
+msgid ""
+"You are converting this case file to a source. Sources are to be seen as raw"
+" evidence and can be made public for every visitor of the system to see. "
+"Please make sure you do not publish material identifying your sources, "
+"directly or through metadata."
+msgstr ""
+
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You are not tracking any searches
@@ -1853,13 +1902,6 @@ msgstr "no:"
 msgid "other {count}"
 msgstr ""
 
-#. [search.screen.results]
-#. defaultMessage is:
-#. results
-#: i18n/messages.json
-msgid "results"
-msgstr "resultados"
-
 #. [infoMode.collection.entries]
 #. defaultMessage is:
 #. {count} entries
@@ -1873,6 +1915,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} seleccionado"
+
+#. [search.screen.results]
+#. defaultMessage is:
+#. {total} results
+#: i18n/messages.json
+msgid "{total} results"
+msgstr ""
 
 #. [sources.index.total]
 #. defaultMessage is:
