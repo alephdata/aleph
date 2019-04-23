@@ -34,6 +34,8 @@ class Cache(object):
         self.kv.delete(key)
         if len(values):
             self.kv.rpush(key, *values)
+            if expire is not None:
+                self.kv.expire(key, expire)
 
     def get(self, key):
         return self.kv.get(key)

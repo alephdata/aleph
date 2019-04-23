@@ -109,7 +109,7 @@ class Document(db.Model, DatedModel, Metadata):
                 ancestors = parent.ancestors
         ancestors.append(self.parent_id)
         if self.model.is_a(model.get(self.SCHEMA_FOLDER)):
-            cache.set_list(key, ancestors)
+            cache.set_list(key, ancestors, expire=cache.EXPIRE)
         return ancestors
 
     def update(self, data):
