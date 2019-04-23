@@ -2,15 +2,15 @@ import React, { Component, PureComponent } from 'react';
 import {
   Button, Checkbox, Dialog, Intent,
 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { updateCollectionPermissions, fetchCollectionPermissions } from 'src/actions';
 import { selectCollectionPermissions } from 'src/selectors';
 import { Role } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 import './CollectionAccessDialog.scss';
-import { translatableConnected } from 'src/util/enhancers';
 
 
 const messages = defineMessages({
@@ -147,6 +147,9 @@ class CollectionAccessDialog extends Component {
     }
 
     const exclude = permissions.map(perm => perm.role.id);
+    const systemRoles = this.filterPermissions('system');
+    const groupRoles = this.filterPermissions('group');
+    const userRoles = this.filterPermissions('user');
     return (
       <Dialog
         icon="key"
@@ -176,28 +179,32 @@ class CollectionAccessDialog extends Component {
                 </tr>
               </thead>
               <tbody>
-                {this.filterPermissions('system').map(permission => (
+                {systemRoles.map(permission => (
                   <PermissionRow
                     key={permission.role.id}
                     permission={permission}
                     onToggle={this.onToggle}
                   />
                 ))}
-                <tr key="groups">
-                  <td className="header-topic" colSpan="3">
-                    <FormattedMessage
-                      id="collection.edit.groups"
-                      defaultMessage="Groups"
-                    />
-                  </td>
-                </tr>
-                {this.filterPermissions('group').map(permission => (
-                  <PermissionRow
-                    key={permission.role.id}
-                    permission={permission}
-                    onToggle={this.onToggle}
-                  />
-                ))}
+                {groupRoles.length > 0 && (
+                  <React.Fragment>
+                    <tr key="groups">
+                      <td className="header-topic" colSpan="3">
+                        <FormattedMessage
+                          id="collection.edit.groups"
+                          defaultMessage="Groups"
+                        />
+                      </td>
+                    </tr>
+                    {groupRoles.map(permission => (
+                      <PermissionRow
+                        key={permission.role.id}
+                        permission={permission}
+                        onToggle={this.onToggle}
+                      />
+                    ))}
+                  </React.Fragment>
+                )}
                 <tr key="users">
                   <td className="header-topic" colSpan="3">
                     <FormattedMessage
@@ -206,7 +213,7 @@ class CollectionAccessDialog extends Component {
                     />
                   </td>
                 </tr>
-                {this.filterPermissions('user').map(permission => (
+                {userRoles.map(permission => (
                   <PermissionRow
                     key={permission.role.id}
                     permission={permission}
@@ -250,9 +257,10 @@ const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.collection.id;
   return { permissions: selectCollectionPermissions(state, collectionId) };
 };
+const mapDispatchToProps = { updateCollectionPermissions, fetchCollectionPermissions };
 
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: { updateCollectionPermissions, fetchCollectionPermissions },
-})(CollectionAccessDialog);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(CollectionAccessDialog);

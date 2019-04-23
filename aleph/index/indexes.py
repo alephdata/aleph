@@ -38,6 +38,7 @@ def all_indexes():
 def configure_collections():
     mapping = {
         "date_detection": False,
+        "dynamic": False,
         "dynamic_templates": [
             {
                 "fields": {
@@ -84,7 +85,10 @@ def configure_collections():
             "created_at": {"type": "date"},
             "updated_at": {"type": "date"},
             "count": {"type": "long"},
-            "schemata": {"type": "object"}
+            "schemata": {
+                "dynamic": True,
+                "type": "object"
+            }
         }
     }
     index = collections_index()
@@ -150,6 +154,7 @@ def configure_schema(schema, version):
 
     mapping = {
         "date_detection": False,
+        "dynamic": False,
         "_source": {
             "excludes": ["text", "fingerprints"]
         },
@@ -176,7 +181,9 @@ def configure_schema(schema, version):
             "uploader_id": KEYWORD,
             "fingerprints": {
                 "type": "keyword",
-                "normalizer": "icu_latin"
+                "normalizer": "icu_latin",
+                "copy_to": "text",
+                "fields": {"text": LATIN_TEXT}
             },
             "entities": KEYWORD,
             "languages": KEYWORD,

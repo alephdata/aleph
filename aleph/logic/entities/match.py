@@ -8,14 +8,11 @@ from aleph.index.util import bool_query, none_query
 
 log = logging.getLogger(__name__)
 
+MAX_CLAUSES = 500
 REQUIRED = [registry.name, registry.iban, registry.identifier]
 
 
-def _make_queries(prop, value):
-    specificity = prop.type.specificity(value)
-    if specificity == 0:
-        return
-
+def _make_queries(prop, value, specificity):
     if prop.type == registry.name:
         boost = (1 + specificity) * 2
         yield {
@@ -38,18 +35,14 @@ def _make_queries(prop, value):
                     }
                 }
             }
-        return
-
-    if prop.type.group is None:
-        return
-    yield {
-        'term': {
-            prop.type.group: {
-                'value': value,
-                'boost': specificity
+    elif prop.type.group is not None:
+        yield {
+            'term': {
+                prop.type.group: {
+                    'value': value
+                }
             }
         }
-    }
 
 
 def match_query(proxy, collection_ids=None, query=None):
@@ -69,14 +62,23 @@ def match_query(proxy, collection_ids=None, query=None):
             'terms': {'collection_id': collection_ids}
         })
 
-    required = []
-    scoring = []
+    filters = []
     for (prop, value) in proxy.itervalues():
-        queries = list(_make_queries(prop, value))
-        if prop.type in REQUIRED:
-            required.extend(queries)
-        else:
-            scoring.extend(queries)
+        specificity = prop.specificity(value)
+        if specificity > 0:
+            filters.append((prop, value, specificity))
+
+    filters = sorted(filters, key=lambda p: p[2], reverse=True)
+    required = []
+    for (prop, value, specificity) in filters:
+        if prop.type in REQUIRED and len(required) <= MAX_CLAUSES:
+            required.extend(_make_queries(prop, value, specificity))
+
+    scoring = []
+    for (prop, value, specificity) in filters:
+        clauses = len(required) + len(scoring)
+        if prop.type not in REQUIRED and clauses <= MAX_CLAUSES:
+            scoring.extend(_make_queries(prop, value, specificity))
 
     if not len(required):
         # e.g. a document from which no features have been extracted.

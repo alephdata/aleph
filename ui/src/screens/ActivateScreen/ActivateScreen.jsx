@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
-import { FormattedMessage } from 'react-intl';
-
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import Screen from 'src/components/Screen/Screen';
 import { endpoint } from 'src/app/api';
 import { loginWithPassword } from 'src/actions/sessionActions';
 import { xhrErrorToast } from 'src/components/auth/xhrToast';
 import { PasswordAuthActivate } from 'src/components/auth/PasswordAuth';
-import { translatableConnected } from 'src/util/enhancers';
 
 
 export class ActivateScreen extends Component {
@@ -49,6 +49,7 @@ export class ActivateScreen extends Component {
 }
 const mapStateToProps = ({ session }) => ({ session });
 const mapDispatchToProps = { loginWithPassword };
-export default translatableConnected({
-  mapStateToProps, mapDispatchToProps,
-})(ActivateScreen);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(ActivateScreen);

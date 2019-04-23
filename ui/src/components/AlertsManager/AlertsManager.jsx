@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { Button, Tooltip, H4 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { DualPane, ErrorSection } from 'src/components/common';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
 import './AlertsManager.scss';
-import { enhancer } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   title: {
@@ -167,10 +169,12 @@ class AlertsDialog extends Component {
 const mapStateToProps = state => ({
   alerts: state.alerts,
 });
+const mapDispatchToProps = {
+  fetchAlerts, addAlert, deleteAlert,
+};
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps: {
-    fetchAlerts, addAlert, deleteAlert,
-  },
-})(AlertsDialog);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(AlertsDialog);

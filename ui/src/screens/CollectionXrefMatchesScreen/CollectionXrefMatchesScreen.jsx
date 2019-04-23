@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  defineMessages, FormattedMessage, FormattedNumber,
+  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
 import {
   Entity, Date, Country, SectionLoading, Breadcrumbs,
@@ -13,10 +16,9 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import Query from 'src/app/Query';
 import { fetchCollection, fetchCollectionXrefIndex, queryXrefMatches } from 'src/actions';
 import { selectCollection, selectCollectionXrefIndex, selectCollectionXrefMatches } from 'src/selectors';
-import getPath from 'src/util/getPath';
+import getCollectionLink from 'src/util/getCollectionLink';
 
 import './CollectionXrefMatchesScreen.scss';
-import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   screen_title: {
@@ -25,22 +27,6 @@ const messages = defineMessages({
   },
 });
 
-
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const { collectionId, otherId } = ownProps.match.params;
-  const path = `collections/${collectionId}/xref/${otherId}`;
-  const query = new Query(path, location, {}, 'xref').limit(40);
-  return {
-    collectionId,
-    otherId,
-    query,
-    collection: selectCollection(state, collectionId),
-    other: selectCollection(state, otherId),
-    matches: selectCollectionXrefMatches(state, query),
-    index: selectCollectionXrefIndex(state, collectionId),
-  };
-};
 
 export class CollectionXrefMatchesScreen extends Component {
   constructor(props) {
@@ -61,7 +47,7 @@ export class CollectionXrefMatchesScreen extends Component {
     const { collection, otherId, history } = this.props;
     if (otherId !== target.value) {
       history.push({
-        pathname: `${getPath(collection.links.ui)}/xref/${target.value}`,
+        pathname: `${getCollectionLink(collection)}/xref/${target.value}`,
       });
     }
   }
@@ -113,7 +99,7 @@ export class CollectionXrefMatchesScreen extends Component {
                       <option key={res.collection.id} value={res.collection.id}>
                         {res.collection.label}
                         {' '}
-(
+                        (
                         {res.matches}
 )
                       </option>
@@ -179,10 +165,10 @@ export class CollectionXrefMatchesScreen extends Component {
                       <Entity.Link entity={match.entity} preview icon />
                     </td>
                     <td className="date">
-                      <Date.Earliest values={match.entity.dates} />
+                      <Date.Earliest values={match.entity.getTypeValues('date')} />
                     </td>
                     <td>
-                      <Country.List codes={match.entity.countries} short />
+                      <Country.List codes={match.entity.getTypeValues('country')} short />
                     </td>
                   </React.Fragment>
                 )}
@@ -197,10 +183,10 @@ export class CollectionXrefMatchesScreen extends Component {
                       <Entity.Link entity={match.match} preview icon />
                     </td>
                     <td className="date">
-                      <Date.Earliest values={match.match.dates} />
+                      <Date.Earliest values={match.match.getTypeValues('date')} />
                     </td>
                     <td>
-                      <Country.List codes={match.match.countries} short />
+                      <Country.List codes={match.match.getTypeValues('country')} short />
                     </td>
                   </React.Fragment>
                 )}
@@ -237,7 +223,7 @@ export class CollectionXrefMatchesScreen extends Component {
     if (collection.id === undefined || other.id === undefined || index.total === undefined) {
       return <LoadingScreen />;
     }
-    const indexPath = `${getPath(collection.links.ui)}#mode=xref`;
+    const indexPath = `${getCollectionLink(collection)}#mode=xref`;
     return (
       <Screen title={intl.formatMessage(messages.screen_title)}>
         <Breadcrumbs>
@@ -255,11 +241,30 @@ export class CollectionXrefMatchesScreen extends Component {
   }
 }
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps: {
-    fetchCollection,
-    fetchCollectionXrefIndex,
-    queryXrefMatches,
-  },
-})(CollectionXrefMatchesScreen);
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const { collectionId, otherId } = ownProps.match.params;
+  const path = `collections/${collectionId}/xref/${otherId}`;
+  const query = new Query(path, location, {}, 'xref').limit(40);
+  return {
+    collectionId,
+    otherId,
+    query,
+    collection: selectCollection(state, collectionId),
+    other: selectCollection(state, otherId),
+    matches: selectCollectionXrefMatches(state, query),
+    index: selectCollectionXrefIndex(state, collectionId),
+  };
+};
+
+const mapDispatchToProps = {
+  fetchCollection,
+  fetchCollectionXrefIndex,
+  queryXrefMatches,
+};
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(CollectionXrefMatchesScreen);

@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import {
   Button, Dialog, Intent, ProgressBar,
 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { ingestDocument as ingestDocumentAction } from 'src/actions';
 import { showErrorToast } from 'src/app/toast';
 import wordList from 'src/util/wordList';
 
 import './DocumentUploadDialog.scss';
-import { enhancer } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   title: {
@@ -56,30 +58,24 @@ export class DocumentUploadDialog extends Component {
   async onFormSubmit(event) {
     event.preventDefault();
     const {
-      intl, collection, parent, ingestDocument,
+      intl, collection, parent, ingestDocument, toggleDialog,
     } = this.props;
-    const { files, toggleDialog } = this.state;
+    const { files } = this.state;
     try {
       files.forEach(async (file) => {
         this.setState({ percentCompleted: 0, uploadingFile: file });
         const metadata = {
           file_name: file.name,
           mime_type: file.type,
-          parent,
         };
+        if (parent && parent.id) {
+          metadata.parent_id = parent.id;
+        }
         await ingestDocument(collection.id, metadata, file, this.onUploadProgress);
       });
-
-      // showSuccessToast(intl.formatMessage(messages.success));
       toggleDialog();
-      // history.push({
-      //   pathname: history.location.pathname,
-      //   search: history.location.search,
-      //   fragment: history.location.fragment
-      // });
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
-      console.log(e);
     }
     this.setState({ uploadingFile: null });
   }
@@ -164,7 +160,10 @@ export class DocumentUploadDialog extends Component {
     );
   }
 }
+const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
 
-export default enhancer({
-  mapDispatchToProps: { ingestDocument: ingestDocumentAction },
-})(DocumentUploadDialog);
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(DocumentUploadDialog);

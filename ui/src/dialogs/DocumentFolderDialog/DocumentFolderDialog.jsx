@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Intent, Dialog, Button } from '@blueprintjs/core';
-import { defineMessages } from 'react-intl';
-
-import { ingestDocument as ingestDocumentAction } from 'src/actions';
-import { enhancer } from 'src/util/enhancers';
+import { defineMessages, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { ingestDocument } from 'src/actions';
+import { showErrorToast } from 'src/app/toast';
 
 const messages = defineMessages({
   title: {
@@ -18,13 +20,19 @@ const messages = defineMessages({
     id: 'document.folder.untitled',
     defaultMessage: 'Folder title',
   },
+  error: {
+    id: 'document.folder.error',
+    defaultMessage: 'There was an error creating the folder.',
+  },
 });
-
 
 export class DocumentFolderDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = { title: '' };
+    this.state = {
+      title: '',
+      blocking: false,
+    };
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
@@ -37,32 +45,34 @@ export class DocumentFolderDialog extends Component {
   async onFormSubmit(event) {
     event.preventDefault();
     const {
-      collection, parent, history, ingestDocument,
+      intl, collection, parent, history,
     } = this.props;
-    const { title } = this.state;
+    const { title, blocking } = this.state;
+    if (blocking) return;
+    this.setState({ blocking: true });
     try {
-      let foreignId = title;
-      if (parent) {
-        foreignId = `${parent.foreign_id}/${foreignId}`;
-      }
       const metadata = {
-        title,
-        foreign_id: foreignId,
-        parent,
+        file_name: title,
+        foreign_id: title,
       };
-      const result = await ingestDocument(collection.id, metadata, null, this.onUploadProgress);
-      const document = result.documents[0];
+      if (parent && parent.id) {
+        metadata.foreign_id = `${parent.foreign_id}/${title}`;
+        metadata.parent_id = parent.id;
+      }
+      const ingest = this.props.ingestDocument;
+      const result = await ingest(collection.id, metadata, null, this.onUploadProgress);
       history.push({
-        pathname: `/documents/${document.id}`,
+        pathname: `/documents/${result.id}`,
       });
     } catch (e) {
-      console.log(e);
+      showErrorToast(intl.formatMessage(messages.error));
+      this.setState({ blocking: false });
     }
   }
 
   render() {
     const { intl, toggleDialog, isOpen } = this.props;
-    const { title } = this.state;
+    const { title, blocking } = this.state;
 
     return (
       <Dialog
@@ -92,6 +102,7 @@ export class DocumentFolderDialog extends Component {
             <div className="bp3-dialog-footer-actions">
               <Button
                 type="submit"
+                disabled={blocking}
                 intent={Intent.PRIMARY}
                 text={intl.formatMessage(messages.save)}
               />
@@ -102,5 +113,9 @@ export class DocumentFolderDialog extends Component {
     );
   }
 }
-const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
-export default enhancer({ mapDispatchToProps })(DocumentFolderDialog);
+const mapDispatchToProps = { ingestDocument };
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(DocumentFolderDialog);

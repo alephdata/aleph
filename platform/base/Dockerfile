@@ -52,7 +52,7 @@ ENV LANG='en_US.UTF-8' \
 # Geonames locations parser
 #
 ENV ALEPH_GEONAMES_DATA=/opt/data/geonames.txt
-RUN curl -s -o /tmp/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip \
+RUN curl -s -o /tmp/allCountries.zip https://download.geonames.org/export/dump/allCountries.zip \
     && unzip -p /tmp/allCountries.zip | grep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" >${ALEPH_GEONAMES_DATA} \
     && rm /tmp/allCountries.zip
 

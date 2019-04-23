@@ -11,25 +11,22 @@ $aleph-screen-md-max-width: 980px;
 $aleph-screen-lg-max-width: 1200px;
 
 $aleph-page-background: $light-gray5;
-$aleph-banner-background: $dark-gray3;
-$aleph-sidebar-background: darken($pt-intent-primary, 10%);
-$aleph-toolbar-background: $aleph-page-background;
-$aleph-footer-background: $light-gray4;
+$aleph-link-color: $pt-link-color;
+$aleph-visited-link-color: darken($aleph-link-color, 15%);
+// $aleph-sidebar-background: $dark-gray5;
+$aleph-sidebar-background: $pt-link-color;
+$aleph-sidebar-foreground: white;
 $aleph-facet-background: $light-gray4;
 $aleph-table-heading-background: $light-gray4;
 $aleph-table-border-color: $light-gray2;
-$aleph-hover-background: $light-gray5;
 $aleph-content-background: white;
 $aleph-border-color: $light-gray2;
-$aleph-dark-text-color: $pt-dark-text-color;
 $aleph-greyed-text: $gray3;
+$aleph-theme-intent: $aleph-link-color;
 
 $table-border: $light-gray3;
 $table-header-color: $blue3;
 $table-border-color: rgba(16, 22, 26, 0.15);
-
-$aleph-link-color: $pt-link-color;
-$aleph-visited-link-color: #608;
 
 
 $alpeh-preview-pane-width: 1024px;

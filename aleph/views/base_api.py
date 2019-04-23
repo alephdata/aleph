@@ -43,6 +43,7 @@ def metadata():
             'title': settings.APP_TITLE,
             'description': settings.APP_DESCRIPTION,
             'version': __version__,
+            'banner': settings.APP_BANNER,
             'ui_uri': settings.APP_UI_URL,
             'samples': settings.SAMPLE_SEARCHES,
             'logo': settings.APP_LOGO,
@@ -53,7 +54,7 @@ def metadata():
         'categories': Collection.CATEGORIES,
         'countries': registry.country.names,
         'languages': registry.language.names,
-        'schemata': model,
+        'model': model,
         'auth': auth
     }
     cache.set_complex(key, data, expire=120)

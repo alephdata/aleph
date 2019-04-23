@@ -15,7 +15,9 @@ class Date extends PureComponent {
 
   render() {
     const { value: dateString } = this.props;
-    if (!dateString) return null;
+    if (!dateString) {
+      return null;
+    }
     const availableChunks = dateString.split(/-/);
     const dateObject = Reflect.construct(window.Date, [dateString]);
     return (

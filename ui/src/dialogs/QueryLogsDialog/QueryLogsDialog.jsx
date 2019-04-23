@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import { Dialog } from '@blueprintjs/core/lib/esm/components/dialog/dialog';
-import { defineMessages } from 'react-intl';
-
+import { defineMessages, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { fetchRole, updateRole } from 'src/actions';
 import { selectSession } from 'src/selectors';
 import QueryLogs from 'src/components/QueryLogs/QueryLogs';
-import { translatableConnected } from 'src/util/enhancers';
 
 
 const messages = defineMessages({
@@ -19,7 +19,6 @@ const messages = defineMessages({
 class QueryLogsDialog extends PureComponent {
   render() {
     const { intl } = this.props;
-
     return (
       <Dialog
         icon="history"
@@ -28,9 +27,7 @@ class QueryLogsDialog extends PureComponent {
         title={intl.formatMessage(messages.title)}
       >
         <div className="bp3-dialog-body">
-          <QueryLogs
-            closeDialog={this.props.toggleDialog}
-          />
+          <QueryLogs closeDialog={this.props.toggleDialog} />
         </div>
       </Dialog>
     );
@@ -42,7 +39,9 @@ const mapStateToProps = state => ({
   role: state.session.role,
 });
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: { fetchRole, updateRole },
-})(QueryLogsDialog);
+const mapDispatchToProps = { fetchRole, updateRole };
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(QueryLogsDialog);

@@ -3,27 +3,25 @@ import { FormattedMessage } from 'react-intl';
 import { Count, Property } from 'src/components/common';
 import { Link } from 'react-router-dom';
 
-import getPath from 'src/util/getPath';
+import getCollectionLink from 'src/util/getCollectionLink';
 
 import './EntityInfoMode.scss';
 
 
 function EntityInfoMode(props) {
   const { entity } = props;
-
-  const entityProperties = entity.getProperties()
-    .filter(propValue => !propValue.isEmpty())
-    .filter(propValue => !propValue.property.hidden);
+  const properties = entity.getProperties()
+    .filter(prop => !prop.hidden);
 
   return (
     <ul className="EntityInfoMode info-sheet">
-      { entityProperties.map(propValue => (
-        <li key={propValue.name}>
+      { properties.map(prop => (
+        <li key={prop.name}>
           <span className="key">
-            <Property.Name model={propValue.property} />
+            <Property.Name prop={prop} />
           </span>
           <span className="value">
-            <Property.Values model={propValue} />
+            <Property.Values prop={prop} values={entity.getProperty(prop)} />
           </span>
         </li>
       ))}
@@ -39,7 +37,7 @@ function EntityInfoMode(props) {
         <span className="value bp3-running-text">
           <ul className="collection-info">
             <li>
-              <Link to={getPath(entity.collection.links.ui)}>
+              <Link to={getCollectionLink(entity.collection)}>
                 <b>{entity.collection.label}</b>
               </Link>
             </li>

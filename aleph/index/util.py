@@ -1,5 +1,6 @@
 import logging
 from time import time
+from pprint import pprint  # noqa
 from banal import ensure_list
 from elasticsearch import TransportError
 from elasticsearch.helpers import streaming_bulk
@@ -42,6 +43,8 @@ SHARD_WEIGHTS = {
 
 
 def get_shard_weight(schema):
+    if settings.TESTING:
+        return 1
     return SHARD_WEIGHTS.get(schema.name, SHARDS_DEFAULT)
 
 
@@ -159,7 +162,7 @@ def index_safe(index, id, body, **kwargs):
     """Index a single document and retry until it has been stored."""
     for attempt in service_retries():
         try:
-            es.index(index=index, doc_type='doc', id=id, body=body, **kwargs)
+            es.index(index=index, id=id, body=body, **kwargs)
             body['id'] = str(id)
             body.pop('text', None)
             return body
@@ -175,14 +178,16 @@ def configure_index(index, mapping, settings):
     """
     if es.indices.exists(index=index):
         log.info("Configuring index: %s...", index)
-        res = es.indices.put_mapping(index=index, doc_type='doc',
-                                     body=mapping, ignore=[400])
+        res = es.indices.put_mapping(index=index,
+                                     body=mapping,
+                                     ignore=[400])
         return res.get('status') != 400
     log.info("Creating index: %s...", index)
-    es.indices.create(index, body={
+    res = es.indices.create(index, body={
         'settings': settings,
-        'mappings': {'doc': mapping}
-    })
+        'mappings': mapping
+    }, ignore=[400])
+    log.info("RES: %r", res)
     return True
 
 

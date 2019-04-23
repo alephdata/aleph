@@ -4,8 +4,8 @@ import { withRouter } from 'react-router';
 
 import Preview from 'src/components/Preview/Preview';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
-import DocumentToolbar from 'src/components/Document/DocumentToolbar';
-import DocumentHeading from 'src/components/Document/DocumentHeading';
+import EntityToolbar from 'src/components/Entity/EntityToolbar';
+import EntityHeading from 'src/components/Entity/EntityHeading';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectDocumentView } from 'src/selectors';
@@ -37,11 +37,8 @@ class PreviewDocument extends React.Component {
 
     return (
       <React.Fragment>
-        <DocumentToolbar
-          document={document}
-          isPreview
-        />
-        <DocumentHeading document={document} />
+        <EntityToolbar entity={document} isPreview />
+        <EntityHeading entity={document} />
         <DocumentViews
           document={document}
           activeMode={previewMode}

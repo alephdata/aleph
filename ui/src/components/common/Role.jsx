@@ -18,14 +18,6 @@ const messages = defineMessages({
     id: 'role.select.user',
     defaultMessage: 'Choose a user',
   },
-  suggest_initial: {
-    id: 'role.begin.typing',
-    defaultMessage: 'Search by name or email',
-  },
-  no_results: {
-    id: 'role.no.results',
-    defaultMessage: 'No match, keep typing',
-  },
 });
 
 
@@ -85,7 +77,7 @@ class RoleList extends PureComponent {
 }
 
 
-class Select extends PureComponent {
+class Select extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -125,31 +117,25 @@ class Select extends PureComponent {
     const { intl, role } = this.props;
     const { suggested } = this.state;
     const label = role ? role.label : intl.formatMessage(messages.label);
-
     return (
       <BlueprintSelect
-        initialContent={
-          <MenuItem disabled text={intl.formatMessage(messages.suggest_initial)} />
-              }
-        noResults={
-          <MenuItem disabled text={intl.formatMessage(messages.no_results)} />
-              }
         itemRenderer={this.renderRole}
         items={suggested}
         onItemSelect={this.onSelectRole}
         onQueryChange={this.onSuggest}
         popoverProps={{
+          minimal: true,
           position: Position.BOTTOM_LEFT,
-          className: 'RoleSelect',
-          usePortal: false,
         }}
+        fill
         filterable
+        resetOnQuery
         resetOnClose
         resetOnSelect
       >
         <Button
-          text={label}
           fill
+          text={label}
           alignText={Alignment.LEFT}
           rightIcon="search"
         />
@@ -157,7 +143,6 @@ class Select extends PureComponent {
     );
   }
 }
-
 
 class Role {
   static Label = RoleLabel;

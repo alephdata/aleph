@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class EntitiesQuery(Query):
-    TEXT_FIELDS = ['name^3', 'text']
+    TEXT_FIELDS = ['text']
     PREFIX_FIELD = 'names.text'
     SKIP_FILTERS = ['schema', 'schemata']
     EXCLUDE_FIELDS = EXCLUDE_DEFAULT
@@ -57,7 +57,7 @@ class MatchQuery(EntitiesQuery):
 
 
 class CollectionsQuery(Query):
-    TEXT_FIELDS = ['label^3', 'text']
+    TEXT_FIELDS = ['label^3', 'foreign_id^3', 'text']
     SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
     PREFIX_FIELD = 'label'
 

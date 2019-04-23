@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { toString } from 'lodash';
 import { Dialog, Button, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import c from 'classnames';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { updateRole as updateRoleAction, fetchRole as fetchRoleAction } from 'src/actions';
 import { selectSession } from 'src/selectors';
-import { translatableConnected } from 'src/util/enhancers';
 
 
 const messages = defineMessages({
@@ -20,11 +20,6 @@ const messages = defineMessages({
   },
 });
 
-
-const mapStateToProps = state => ({
-  session: selectSession(state),
-  role: state.session.role,
-});
 
 export class SettingsDialog extends Component {
   constructor(props) {
@@ -245,11 +240,16 @@ export class SettingsDialog extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  session: selectSession(state),
+  role: state.session.role,
+});
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: {
-    fetchRole: fetchRoleAction,
-    updateRole: updateRoleAction,
-  },
-})(SettingsDialog);
+const mapDispatchToProps = {
+  fetchRole: fetchRoleAction,
+  updateRole: updateRoleAction,
+};
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(SettingsDialog);

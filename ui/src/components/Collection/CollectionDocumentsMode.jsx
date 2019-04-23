@@ -1,7 +1,9 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import DocumentManager from 'src/components/Document/DocumentManager';
 import { queryCollectionDocuments } from 'src/queries';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class CollectionDocumentsMode extends React.PureComponent {
@@ -18,4 +20,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWithRouter({ mapStateToProps })(CollectionDocumentsMode);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(CollectionDocumentsMode);

@@ -119,6 +119,39 @@ class CollectionInfoMode extends PureComponent {
               <Date value={collection.updated_at} />
             </span>
           </li>
+          { !!content.length && (
+            <li className="tight">
+              <span className="key">
+                <FormattedMessage id="collection.entity_types" defaultMessage="Entity types" />
+              </span>
+              <span className="value">
+                <ul className="info-rank">
+                  { content.map(item => (
+                    <li key={item.name}>
+                      <span className="category">
+                        <Schema.Smart.Link
+                          schema={item.name}
+                          plural
+                          url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}
+                        />
+                      </span>
+                      <span className="count">
+                        <FormattedNumber value={item.number} />
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </span>
+            </li>
+          )}
+          <li>
+            <span className="key">
+              <FormattedMessage id="collection.foreign_id" defaultMessage="Foreign ID" />
+            </span>
+            <span className="value">
+              <code>{collection.foreign_id}</code>
+            </span>
+          </li>
           <li>
             <span className="key">
               <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
@@ -135,29 +168,6 @@ class CollectionInfoMode extends PureComponent {
                   }}
                 />
               </span>
-            </span>
-          </li>
-          <li>
-            <span className="key">
-              <FormattedMessage id="collection.entity_types" defaultMessage="Entity types" />
-            </span>
-            <span className="value">
-              <ul className="info-rank">
-                { content.map(item => (
-                  <li key={item.name}>
-                    <span className="category">
-                      <Schema.Smart.Link
-                        schema={item.name}
-                        plural
-                        url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}
-                      />
-                    </span>
-                    <span className="count">
-                      <FormattedNumber value={item.number} />
-                    </span>
-                  </li>
-                ))}
-              </ul>
             </span>
           </li>
         </ul>

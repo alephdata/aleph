@@ -1,7 +1,9 @@
 import React from 'react';
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { deleteNotifications as deleteNotificationsAction } from 'src/actions';
 import { DualPane, Breadcrumbs } from 'src/components/common';
@@ -14,7 +16,6 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { selectNotificationsResult } from 'src/selectors';
 
 import './NotificationsScreen.scss';
-import { enhancer } from 'src/util/enhancers';
 
 
 const messages = defineMessages({
@@ -24,13 +25,6 @@ const messages = defineMessages({
   },
 });
 
-
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const query = Query.fromLocation('notifications', location, {}, 'notifications').limit(40);
-  const result = selectNotificationsResult(state, query);
-  return { query, result };
-};
 
 export class NotificationsScreen extends React.Component {
   constructor(props) {
@@ -82,7 +76,18 @@ export class NotificationsScreen extends React.Component {
   }
 }
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps: { deleteNotifications: deleteNotificationsAction },
-})(NotificationsScreen);
+
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const query = Query.fromLocation('notifications', location, {}, 'notifications').limit(40);
+  const result = selectNotificationsResult(state, query);
+  return { query, result };
+};
+
+const mapDispatchToProps = { deleteNotifications: deleteNotificationsAction };
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(NotificationsScreen);

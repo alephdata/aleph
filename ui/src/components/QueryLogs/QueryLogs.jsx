@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
 import { Waypoint } from 'react-waypoint';
 import { Button, Tooltip } from '@blueprintjs/core';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
 import SectionLoading from 'src/components/common/SectionLoading';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
-import { enhancer } from 'src/util/enhancers';
 import { selectQueryLog } from 'src/selectors';
 import Query from 'src/app/Query';
 
@@ -75,48 +76,48 @@ export class QueryLogs extends PureComponent {
 
   render() {
     const { intl, result } = this.props;
-    return result.page !== undefined && result.results.length > 0 && (
-      <table className="bp3-html-table querylog-table">
-        <tbody>
-          {result.results.map(item => (
-            <tr key={item.text}>
-              <td className="querylog-table--text">
-                <b>{item.text}</b>
-              </td>
-              <td className="narrow">
-                <Tooltip content={intl.formatMessage(messages.search_query, { query: item.text })}>
-                  <Button
-                    minimal
-                    className="bp3-icon-search"
-                    onClick={() => this.onSearch(item.text)}
-                  />
-                </Tooltip>
-              </td>
-              <td className="narrow">
-                <SearchAlert queryText={item.text} />
-              </td>
-              <td className="narrow">
-                <Tooltip content={intl.formatMessage(messages.delete_query)}>
-                  <Button
-                    className="bp3-icon-cross"
-                    minimal
-                    onClick={() => this.props.deleteQueryLog(item)}
-                  />
-                </Tooltip>
-              </td>
-            </tr>
-          ))}
-          <tr>
-            <td colSpan="4">
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-50px"
-              />
-              {result.isLoading && <SectionLoading />}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    return (
+      <React.Fragment>
+        { result.page !== undefined && result.results.length > 0 && (
+          <table className="QueryLogs bp3-html-table">
+            <tbody>
+              {result.results.map(item => (
+                <tr key={item.text}>
+                  <td className="text">
+                    <Tooltip
+                      content={intl.formatMessage(messages.search_query, { query: item.text })}
+                    >
+                      <Button
+                        minimal
+                        icon="search"
+                        onClick={() => this.onSearch(item.text)}
+                        text={item.text}
+                      />
+                    </Tooltip>
+                  </td>
+                  <td className="narrow">
+                    <SearchAlert queryText={item.text} />
+                  </td>
+                  <td className="narrow">
+                    <Tooltip content={intl.formatMessage(messages.delete_query)}>
+                      <Button
+                        className="bp3-icon-cross"
+                        minimal
+                        onClick={() => this.props.deleteQueryLog(item)}
+                      />
+                    </Tooltip>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <Waypoint
+          onEnter={this.getMoreResults}
+          bottomOffset="-50px"
+        />
+        {result.isLoading && <SectionLoading />}
+      </React.Fragment>
     );
   }
 }
@@ -134,7 +135,8 @@ const mapDispatchToProps = ({
   deleteQueryLog,
 });
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps,
-})(QueryLogs);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(QueryLogs);

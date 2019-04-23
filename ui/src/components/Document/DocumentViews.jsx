@@ -1,9 +1,10 @@
-import _ from 'lodash';
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Tabs, Tab } from '@blueprintjs/core';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Count } from 'src/components/common';
 import { selectEntityTags, selectEntitiesResult } from 'src/selectors';
 import { queryFolderDocuments } from 'src/queries';
@@ -12,18 +13,12 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import TextLoading from 'src/components/common/TextLoading';
 import Icon from 'src/components/common/Icon';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import { enhancer } from 'src/util/enhancers';
 
 
 class DocumentViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
-  }
-
-  hasSchemata(schemata) {
-    const { document } = this.props;
-    return _.intersection(document.schemata, schemata).length > 0;
   }
 
   handleTabChange(mode) {
@@ -46,9 +41,9 @@ class DocumentViews extends React.Component {
     const {
       document, isPreview, activeMode, tags, childrenResult,
     } = this.props;
-    const hasTextMode = this.hasSchemata(['Pages', 'Image']);
-    const hasBrowseMode = this.hasSchemata(['Folder']);
-    const hasViewer = this.hasSchemata(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
+    const hasTextMode = document.schema.isAny(['Pages', 'Image']);
+    const hasBrowseMode = document.schema.isA('Folder');
+    const hasViewer = document.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
 
     return (
@@ -103,14 +98,19 @@ class DocumentViews extends React.Component {
               <TextLoading loading={childrenResult.isLoading}>
                 <React.Fragment>
                   <Icon name="folder" />
-                  <FormattedMessage id="entity.info.browse" defaultMessage="Documents" />
+                  { document.schema.isA('Email') && (
+                    <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
+                  )}
+                  { !document.schema.isA('Email') && (
+                    <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                  )}
                   <Count count={childrenResult.total} />
                 </React.Fragment>
               </TextLoading>
               )}
             panel={
               <DocumentViewMode document={document} activeMode={activeMode} />
-               }
+            }
           />
         )}
         <Tab
@@ -125,7 +125,7 @@ class DocumentViews extends React.Component {
           )}
           panel={
             <EntityTagsMode entity={document} />
-             }
+          }
         />
       </Tabs>
     );
@@ -141,8 +141,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default enhancer({
-  mapStateToProps,
-  mergeProps: null,
-  options: { pure: false },
-})(DocumentViews);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, null, null, { pure: false }),
+  injectIntl,
+)(DocumentViews);

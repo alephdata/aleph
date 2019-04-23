@@ -1,8 +1,6 @@
 @import "src/app/variables.scss";
 
 .EntityTable {
-  margin-top: $aleph-grid-size;
-
   .schema {
     max-width: 8em;
     @media screen and (max-width: $aleph-screen-md-max-width) {

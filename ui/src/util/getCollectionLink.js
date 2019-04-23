@@ -1,3 +1,6 @@
 export default function getCollectionLink(collection) {
-  return { pathname: `/collections/${collection.id}` };
+  if (collection.id) {
+    return `/collections/${collection.id}`;
+  }
+  return null;
 }

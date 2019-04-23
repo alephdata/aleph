@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import truncateText from 'truncate';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import truncateText from 'truncate';
 import c from 'classnames';
 
 import { Schema } from 'src/components/common';
-import getPath from 'src/util/getPath';
 import togglePreview from 'src/util/togglePreview';
 import { fetchEntity as fetchEntityAction } from 'src/actions';
-import { selectEntity, selectSchemata } from 'src/selectors';
-import { Entity as EntityClass } from 'src/followthemoney/Entity.ts';
+import { selectEntity } from 'src/selectors';
+import getEntityLink from 'src/util/getEntityLink';
+
 import './Entity.scss';
 
 
@@ -27,42 +26,22 @@ class EntityLabel extends Component {
     const {
       entity, icon = false, documentMode = false, truncate,
     } = this.props;
+
     if (entity === undefined) {
       return null;
     }
-    let { title, name: entityName, file_name: fileName } = entity;
-    // Trim names *before* checking to see which ones look okay to use
-    title = title ? title.trim() : null;
-    entityName = entityName ? entityName.trim() : null;
-    fileName = fileName ? fileName.trim() : null;
-
-    let text = title || entityName || fileName;
-
-    if (truncate) {
-      text = truncateText(text, truncate);
-    }
-
-    if (documentMode) {
-      text = fileName || text;
-    }
-
-    const entityClassName = entity.status === 'pending' ? 'EntityLabel disabled' : 'EntityLabel';
-
-    if (!text || !text.length || text.length < 1) {
-      return (
-        <span className="EntityLabel untitled">
-          {icon && <Schema.Icon schema={entity.schema} />}
-          {icon && ' '}
-          <FormattedMessage id="entity.label.missing" defaultMessage="Untitled" />
-        </span>
-      );
-    }
-
+    const title = entity.getFirst('title');
+    const fileName = entity.getFirst('fileName');
+    const caption = title || entity.getCaption() || fileName;
+    const fullLabel = documentMode ? fileName : caption;
+    const label = truncate ? truncateText(fullLabel, truncate) : fullLabel;
     return (
-      <span className={entityClassName} title={title || entityName}>
+      <span className={c('EntityLabel', { untitled: !label })} title={caption}>
         {icon && <Schema.Icon schema={entity.schema} />}
-        {icon && ' '}
-        {text}
+        { !label && (
+          <FormattedMessage id="entity.label.missing" defaultMessage="Untitled" />
+        )}
+        {label}
       </span>
     );
   }
@@ -87,13 +66,11 @@ class EntityLink extends Component {
 
   render() {
     const { entity, className } = this.props;
-    if (!entity || !entity.links || !entity.schemata || entity.status === 'pending') {
+    if (!entity || !entity.schema) {
       return <Entity.Label {...this.props} />;
     }
-
-    const link = getPath(entity.links.ui);
     return (
-      <Link to={link} onClick={this.onClick} className={c('EntityLink', className)}>
+      <Link to={getEntityLink(entity)} onClick={this.onClick} className={c('EntityLink', className)}>
         <Entity.Label {...this.props} />
       </Link>
     );
@@ -126,26 +103,6 @@ class EntityLoad extends Component {
   }
 }
 
-
-EntityLoad.propTypes = {
-  id: PropTypes.string.isRequired,
-  children: PropTypes.func.isRequired,
-  renderWhenLoading: PropTypes.node.isRequired,
-};
-function SmartEntityHOC(InnerComponent) {
-  return function SmartEntityComponent(props) {
-    const { schemata, entity: entityPure, ...rest } = props;
-    const schema = schemata.getSchema(entityPure.schema);
-    const entity = new EntityClass(schema, entityPure);
-    return (
-      <InnerComponent
-        entity={entity}
-        {...rest}
-      />
-    );
-  };
-}
-
 const mapStateToProps = (state, ownProps) => ({
   entity: selectEntity(state, ownProps.id),
 });
@@ -156,10 +113,6 @@ class Entity {
   static Link = withRouter(EntityLink);
 
   static Load = connect(mapStateToProps, { fetchEntity: fetchEntityAction })(EntityLoad);
-
-  static Smart = {
-    Link: connect(state => ({ schemata: selectSchemata(state) }))(SmartEntityHOC(Entity.Link)),
-  };
 }
 
 export default Entity;

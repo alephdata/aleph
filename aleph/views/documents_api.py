@@ -46,7 +46,7 @@ def _serve_archive(content_hash, file_name, mime_type):
         archive.cleanup_file(content_hash)
 
 
-@blueprint.route('/api/2/documents/<int:document_id>/file')
+@blueprint.route('/api/2/documents/<document_id>/file')
 def file(document_id):
     document = get_db_document(document_id)
     record_audit(Audit.ACT_ENTITY, id=document_id)
@@ -56,7 +56,7 @@ def file(document_id):
     return _resp_canonical(resp, document_id)
 
 
-@blueprint.route('/api/2/documents/<int:document_id>/pdf')
+@blueprint.route('/api/2/documents/<document_id>/pdf')
 def pdf(document_id):
     document = get_db_document(document_id)
     record_audit(Audit.ACT_ENTITY, id=document_id)
@@ -69,7 +69,7 @@ def pdf(document_id):
     return _resp_canonical(resp, document_id)
 
 
-@blueprint.route('/api/2/documents/<int:document_id>', methods=['DELETE'])
+@blueprint.route('/api/2/documents/<document_id>', methods=['DELETE'])
 def delete(document_id):
     document = get_db_document(document_id, request.authz.WRITE)
     delete_document(document, sync=True)

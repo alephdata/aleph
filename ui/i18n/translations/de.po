@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-03-23T21:08:08.652Z\n"
+"POT-Creation-Date: 2019-04-23T14:17:12.710Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -15,10 +15,10 @@ msgstr ""
 
 #. [property.inverse]
 #. defaultMessage is:
-#. '{name}' of …
+#. '{label}' of …
 #: i18n/messages.json
-msgid "'{name}' of …"
-msgstr "'{name}' von …"
+msgid "'{label}' of …"
+msgstr "'{label}' von..."
 
 #. [settings.password_confirm]
 #. defaultMessage is:
@@ -142,6 +142,13 @@ msgstr "Sind sie sicher, dass sie alle enthaltenen Objekte löschen wollen?"
 msgid "Are you sure you want to delete this item?"
 msgstr "Sind sie sicher, dass sie dieses Objekt löschen wollen?"
 
+#. [entity.info.attachments]
+#. defaultMessage is:
+#. Attachments
+#: i18n/messages.json
+msgid "Attachments"
+msgstr "Anhänge"
+
 #. [email.bcc]
 #. defaultMessage is:
 #. BCC
@@ -166,6 +173,9 @@ msgstr "CC"
 #. [collection.analyze.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [collection.publish.cancel]
+#. defaultMessage is:
+#. Cancel
 #. [collection.edit.cancel_button]
 #. defaultMessage is:
 #. Cancel
@@ -182,7 +192,7 @@ msgstr "CC"
 #. defaultMessage is:
 #. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -214,6 +224,13 @@ msgstr "Falleinstellungen"
 #: i18n/messages.json
 msgid "Casefile"
 msgstr "Fall"
+
+#. [collection.publish.succeed]
+#. defaultMessage is:
+#. Casefile is published
+#: i18n/messages.json
+msgid "Casefile is published"
+msgstr "Der Fall ist veröffentlicht."
 
 #. [nav.cases]
 #. defaultMessage is:
@@ -380,10 +397,10 @@ msgstr "Anlegen"
 msgid "Create a new casefile"
 msgstr "Neuen Fall anlegen"
 
-#. [collection.info.xref]
+#. [entity.info.xref]
 #. defaultMessage is:
 #. Cross-reference
-#. [entity.info.xref]
+#. [collection.info.xref]
 #. defaultMessage is:
 #. Cross-reference
 #. [collection.xref.title]
@@ -468,6 +485,9 @@ msgstr "Quelldaten-URL"
 msgid "Date"
 msgstr "Datum"
 
+#. [document.viewer.delete]
+#. defaultMessage is:
+#. Delete
 #. [collection.info.delete]
 #. defaultMessage is:
 #. Delete
@@ -481,15 +501,9 @@ msgstr "Datum"
 #. defaultMessage is:
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Delete"
 msgstr "Löschen"
-
-#. [document.viewer.delete]
-#. defaultMessage is:
-#. Delete selected
-#: i18n/messages.json
-msgid "Delete selected"
-msgstr "Auswahl löschen"
 
 #. [case.choose.summary]
 #. defaultMessage is:
@@ -508,7 +522,7 @@ msgstr "Details"
 #. [entity.info.source]
 #. defaultMessage is:
 #. Documents
-#. [entity.info.browse]
+#. [entity.info.documents]
 #. defaultMessage is:
 #. Documents
 #: i18n/messages.json i18n/messages.json
@@ -655,6 +669,16 @@ msgstr "Finde öffentliche Dokumente und Leaks"
 msgid "Folder title"
 msgstr "Ordnertitel"
 
+#. [collection.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#. [collection.edit.info.foreign_id]
+#. defaultMessage is:
+#. Foreign ID
+#: i18n/messages.json i18n/messages.json
+msgid "Foreign ID"
+msgstr "Fremd-ID"
+
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -685,13 +709,6 @@ msgstr "Gruppen"
 #: i18n/messages.json
 msgid "Help"
 msgstr "Hilfe"
-
-#. [collection.edit.info.import.id]
-#. defaultMessage is:
-#. Import ID
-#: i18n/messages.json
-msgid "Import ID"
-msgstr "Import-Kennung"
 
 #. [entity.info.info]
 #. defaultMessage is:
@@ -862,10 +879,14 @@ msgstr ""
 msgid "Matches"
 msgstr "Treffer"
 
-#. [entity.column.name]
+#. [search.screen.more_results]
 #. defaultMessage is:
-#. Name
-#. [case.name]
+#. More than {total} results
+#: i18n/messages.json
+msgid "More than {total} results"
+msgstr "Mehr als {total} Treffer"
+
+#. [entity.column.name]
 #. defaultMessage is:
 #. Name
 #. [settings.name]
@@ -874,7 +895,7 @@ msgstr "Treffer"
 #. [xref.name]
 #. defaultMessage is:
 #. Name
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Name"
 msgstr "Name"
 
@@ -885,11 +906,11 @@ msgstr "Name"
 msgid "Names"
 msgstr "Namen"
 
-#. [case.add]
+#. [collection.index.search.create]
 #. defaultMessage is:
-#. New casefile
+#. New case
 #: i18n/messages.json
-msgid "New casefile"
+msgid "New case"
 msgstr "Neuer Fall"
 
 #. [document.folder.button]
@@ -908,13 +929,6 @@ msgstr "Neuer Ordner"
 #: i18n/messages.json
 msgid "No connections."
 msgstr "Keine Verbindungen."
-
-#. [role.no.results]
-#. defaultMessage is:
-#. No match, keep typing
-#: i18n/messages.json
-msgid "No match, keep typing"
-msgstr "Kein Treffer, versuchen sie es erneut"
 
 #. [email.body.empty]
 #. defaultMessage is:
@@ -997,10 +1011,7 @@ msgstr ""
 #. [sidebar.open]
 #. defaultMessage is:
 #. Open
-#. [sidebar.open]
-#. defaultMessage is:
-#. Open
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Open"
 msgstr "Öffnen"
 
@@ -1055,6 +1066,20 @@ msgstr "Telefone"
 #: i18n/messages.json
 msgid "Profile"
 msgstr "Profil"
+
+#. [collection.publish.confirm]
+#. defaultMessage is:
+#. Publish
+#: i18n/messages.json
+msgid "Publish"
+msgstr "Veröffentlichen"
+
+#. [collection.info.publish]
+#. defaultMessage is:
+#. Publish as source
+#: i18n/messages.json
+msgid "Publish as source"
+msgstr "Als Quelle veröffentlichen"
 
 #. [collection.publisher]
 #. defaultMessage is:
@@ -1199,12 +1224,12 @@ msgstr "Suche"
 msgid "Search by country name"
 msgstr "Nach Ländername suchen"
 
-#. [role.begin.typing]
+#. [collection.index.casefiles.placeholder]
 #. defaultMessage is:
-#. Search by name or email
+#. Search case files used in investigations...
 #: i18n/messages.json
-msgid "Search by name or email"
-msgstr "Nach Name oder E-Mail suchen"
+msgid "Search case files used in investigations..."
+msgstr "Durchsuche Fälle und Recherchen..."
 
 #. [case.search_cases_placeholder]
 #. defaultMessage is:
@@ -1226,6 +1251,13 @@ msgstr "Suche nach Firmen, Personen usw..."
 #: i18n/messages.json
 msgid "Search companies, people and documents."
 msgstr "Suchen sie Firmen, Personen oder Dokumente."
+
+#. [collection.index.sources.placeholder]
+#. defaultMessage is:
+#. Search curated data sources...
+#: i18n/messages.json
+msgid "Search curated data sources..."
+msgstr "Durchsuche die bereitgestellten Quellen..."
 
 #. [alerts.alert.search]
 #. defaultMessage is:
@@ -1314,10 +1346,10 @@ msgstr "Teilen"
 
 #. [case.share.with]
 #. defaultMessage is:
-#. Share with
+#. Share with:
 #: i18n/messages.json
-msgid "Share with"
-msgstr "Teilen mit"
+msgid "Share with:"
+msgstr "Teilen mit:"
 
 #. [search.facets.facet.team]
 #. defaultMessage is:
@@ -1529,6 +1561,13 @@ msgstr ""
 msgid "There are no notifications"
 msgstr "Keine Benachrichtigungen"
 
+#. [document.folder.error]
+#. defaultMessage is:
+#. There was an error creating the folder.
+#: i18n/messages.json
+msgid "There was an error creating the folder."
+msgstr "Beim Anlegen des Ordners trat ein Fehler auf."
+
 #. [document.upload.error]
 #. defaultMessage is:
 #. There was an error while uploading the file.
@@ -1715,6 +1754,25 @@ msgstr ""
 "Wir haben ihnen eine E-Mail geschickt, folgen sie dem enthaltenen Link um "
 "die Anmeldung abzuschliessen"
 
+#. [collection.publish.alert.text]
+#. defaultMessage is:
+#. You are converting this case file to a source. Sources are to be seen as
+#. raw evidence and can be made public for every visitor of the system to see.
+#. Please make sure you do not publish material identifying your sources,
+#. directly or through metadata.
+#: i18n/messages.json
+msgid ""
+"You are converting this case file to a source. Sources are to be seen as raw"
+" evidence and can be made public for every visitor of the system to see. "
+"Please make sure you do not publish material identifying your sources, "
+"directly or through metadata."
+msgstr ""
+"Sie wandeln diesen Fall in eine Quelle um. Quellen werden im System als "
+"Beweismaterial verstanden und können allen Besuchern des Systems sichtbar "
+"gemacht werden. Bitte stellen Sie sicher, dass sie kein Material "
+"veröffentlichen, welches Ihre Quellen - direkt oder durch Metadaten - "
+"identifiziert."
+
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You are not tracking any searches
@@ -1872,13 +1930,6 @@ msgstr "nicht:"
 msgid "other {count}"
 msgstr "{count} andere"
 
-#. [search.screen.results]
-#. defaultMessage is:
-#. results
-#: i18n/messages.json
-msgid "results"
-msgstr "Ergebnisse"
-
 #. [infoMode.collection.entries]
 #. defaultMessage is:
 #. {count} entries
@@ -1892,6 +1943,13 @@ msgstr "{count} Einträge"
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} ausgewählt"
+
+#. [search.screen.results]
+#. defaultMessage is:
+#. {total} results
+#: i18n/messages.json
+msgid "{total} results"
+msgstr "{total} Treffer"
 
 #. [sources.index.total]
 #. defaultMessage is:

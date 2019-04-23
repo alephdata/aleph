@@ -11,7 +11,13 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:6
+    image: alephdata/aleph-elasticsearch:10
+    hostname: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "19200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 

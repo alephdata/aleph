@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
 import Notification from 'src/components/Notification/Notification';
-import { enhancer } from 'src/util/enhancers';
+
 
 import './NotificationList.scss';
 
@@ -63,13 +66,11 @@ class NotificationList extends Component {
           />
           )
         }
-        { result.total !== 0
-          && (
+        { result.total !== 0 && (
           <ul className="NotificationList">
             {result.results.map(notif => <Notification key={notif.id} notification={notif} />)}
           </ul>
-          )
-        }
+        )}
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-300px"
@@ -88,8 +89,10 @@ const mapStateToProps = (state, ownProps) => {
   const result = selectNotificationsResult(state, query);
   return { query, result };
 };
+const mapDispatchToProps = { queryNotifications };
 
-export default enhancer({
-  mapDispatchToProps: { queryNotifications },
-  mapStateToProps,
-})(NotificationList);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(NotificationList);

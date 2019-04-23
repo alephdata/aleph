@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Alert, Intent } from '@blueprintjs/core';
-
-import { defineMessages, FormattedMessage } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { deleteDocument } from 'src/actions';
-import { translatableConnected } from 'src/util/enhancers';
 
 const messages = defineMessages({
   button_confirm: {
@@ -54,7 +54,9 @@ export class DocumentDeleteDialog extends Component {
     );
   }
 }
+const mapDispatchToProps = { deleteDocument };
 
-export default translatableConnected({
-  mapDispatchToProps: { deleteDocument },
-})(DocumentDeleteDialog);
+export default compose(
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(DocumentDeleteDialog);

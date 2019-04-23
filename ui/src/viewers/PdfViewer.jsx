@@ -4,44 +4,18 @@ import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
 import classNames from 'classnames';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import getPath from 'src/util/getPath';
+import getEntityLink from 'src/util/getEntityLink';
 import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
 import TextViewer from 'src/viewers/TextViewer';
 
 import './PdfViewer.scss';
-
-
-const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  const page = parseInt(hashQuery.page, 10) || 1;
-  let query = Query.fromLocation('entities', location, {}, 'document')
-    .setFilter('properties.document', document.id)
-    .setFilter('schemata', 'Page')
-    .sortBy('properties.index', 'asc');
-  if (queryText.length > 0) {
-    query = query.setString('q', queryText)
-      .set('highlight', true)
-      .set('highlight_count', 10)
-      .set('highlight_length', 120)
-      .clearFilter('properties.index')
-      .clear('limit')
-      .clear('offset');
-  }
-
-  return {
-    result: selectEntitiesResult(state, query),
-    isSearch: !!query.getString('q'),
-    page,
-    query,
-  };
-};
 
 
 export class PdfViewer extends Component {
@@ -218,7 +192,7 @@ Page
 
   getResultLink(result) {
     const { document, activeMode } = this.props;
-    const path = getPath(document.links.ui);
+    const path = getEntityLink(document);
     return `${path}#page=${result.getProperty('index').toString()}&mode=${activeMode}`;
   }
 
@@ -288,7 +262,34 @@ Page
   }
 }
 
-export default connectedWithRouter({
-  mapStateToProps,
-  mapDispatchToProps: { queryEntities },
-})(PdfViewer);
+const mapStateToProps = (state, ownProps) => {
+  const { document, location, queryText } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+  const page = parseInt(hashQuery.page, 10) || 1;
+  let query = Query.fromLocation('entities', location, {}, 'document')
+    .setFilter('properties.document', document.id)
+    .setFilter('schema', 'Page')
+    .sortBy('properties.index', 'asc');
+  if (queryText.length > 0) {
+    query = query.setString('q', queryText)
+      .set('highlight', true)
+      .set('highlight_count', 10)
+      .set('highlight_length', 120)
+      .clearFilter('properties.index')
+      .clear('limit')
+      .clear('offset');
+  }
+
+  return {
+    result: selectEntitiesResult(state, query),
+    isSearch: !!query.getString('q'),
+    page,
+    query,
+  };
+};
+const mapDispatchToProps = { queryEntities };
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(PdfViewer);

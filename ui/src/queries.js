@@ -1,6 +1,5 @@
 import Query from 'src/app/Query';
 
-
 export function queryCollectionDocuments(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
@@ -31,7 +30,6 @@ export function queryFolderDocuments(location, documentId, queryText) {
   }
   return query;
 }
-
 
 export function queryEntitySimilar(location, entityId) {
   const path = entityId ? `entities/${entityId}/similar` : undefined;

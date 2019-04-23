@@ -9,36 +9,22 @@ const messages = defineMessages({
   },
 });
 
-/* eslint-disable */
 
 class DownloadButton extends React.Component {
   render() {
     const { intl, document } = this.props;
-
-    const content = (
-      <React.Fragment>
-        <span className="bp3-icon-standard bp3-icon-download" />
-        <span>
-          <FormattedMessage id="document.download" defaultMessage="Download" />
-        </span>
-      </React.Fragment>
-    );
-
-    if (document.links !== undefined && document.links.file !== undefined) {
-      return (
-        <Tooltip content={intl.formatMessage(messages.mode_download)} position={Position.BOTTOM_RIGHT}>
-          <a href={document.links.file} download type="button" target="_blank" className="DownloadButton bp3-button" rel="nofollow noopener noreferrer">
-            {content}
-          </a>
-        </Tooltip>
-      );
+    if (document.links === undefined || document.links.file === undefined) {
+      return null;
     }
-    // Render disabled control
     return (
-      <Tooltip content={intl.formatMessage(messages.mode_download)} position={Position.BOTTOM_RIGHT}>
-        <button type="button" className="DownloadButton bp3-button" disabled>
-          {content}
-        </button>
+      <Tooltip
+        content={intl.formatMessage(messages.mode_download)}
+        position={Position.BOTTOM_RIGHT}
+      >
+        <a href={document.links.file} download type="button" target="_blank" className="DownloadButton bp3-button" rel="nofollow noopener noreferrer">
+          <span className="bp3-icon-standard bp3-icon-download" />
+          <FormattedMessage id="document.download" defaultMessage="Download" />
+        </a>
       </Tooltip>
     );
   }

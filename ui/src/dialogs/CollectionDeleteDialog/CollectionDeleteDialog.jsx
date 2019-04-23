@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { deleteCollection } from 'src/actions';
-import { enhancer } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   button_confirm: {
@@ -55,7 +57,10 @@ class CollectionDeleteDialog extends Component {
   }
 }
 
+const mapDispatchToProps = { deleteCollection };
 
-export default enhancer({
-  mapDispatchToProps: { deleteCollection },
-})(CollectionDeleteDialog);
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps),
+  injectIntl,
+)(CollectionDeleteDialog);

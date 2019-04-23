@@ -18,6 +18,7 @@ class QueryResult(object):
         self.parser = parser or QueryParser(request.args, request.authz)
         self.results = results or []
         self.total = total or 0
+        self.total_type = 'eq'
 
     @property
     def pages(self):
@@ -42,6 +43,7 @@ class QueryResult(object):
             'status': 'ok',
             'results': results,
             'total': self.total,
+            'total_type': self.total_type,
             'page': self.parser.page,
             'limit': self.parser.limit,
             'offset': self.parser.offset,
@@ -75,7 +77,9 @@ class SearchQueryResult(QueryResult):
         super(SearchQueryResult, self).__init__(request, parser=parser)
         self.result = result
         hits = self.result.get('hits', {})
-        self.total = hits.get('total')
+        total = hits.get('total', {})
+        self.total = total.get('value')
+        self.total_type = total.get('relation')
         for doc in hits.get('hits', []):
             # log.info("Res: %s", pformat(doc))
             doc = unpack_result(doc)

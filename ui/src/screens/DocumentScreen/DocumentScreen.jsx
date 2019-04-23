@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
+import EntityToolbar from 'src/components/Entity/EntityToolbar';
+import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
-import DocumentToolbar from 'src/components/Document/DocumentToolbar';
-import DocumentHeading from 'src/components/Document/DocumentHeading';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
-import { selectEntity, selectSchemata, selectDocumentView } from 'src/selectors';
-import { enhancer } from 'src/util/enhancers';
+import { selectEntity, selectDocumentView } from 'src/selectors';
 
 const messages = defineMessages({
   placeholder: {
@@ -24,6 +25,8 @@ const messages = defineMessages({
 
 
 class DocumentScreen extends Component {
+  static SEARCHABLES = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'];
+
   constructor(props) {
     super(props);
     this.onSearch = this.onSearch.bind(this);
@@ -59,8 +62,9 @@ class DocumentScreen extends Component {
       );
     }
 
-    const title = document.title || document.file_name || document.name;
-    const operation = !document.hasSearch() ? undefined : (
+    const title = document.getFirst('title') || document.getFirst('fileName') || document.getCaption();
+    const hasSearch = DocumentScreen.SEARCHABLES.indexOf(document.schema.name) !== -1;
+    const operation = !hasSearch ? undefined : (
       <SearchBox
         onSearch={this.onSearch}
         searchPlaceholder={intl.formatMessage(messages.placeholder, { label: title })}
@@ -79,20 +83,20 @@ class DocumentScreen extends Component {
         <Screen title={title}>
           {breadcrumbs}
           <DualPane>
-            <DualPane.ContentPane className="view-menu-flex-direction">
+            <DualPane.InfoPane className="with-heading">
+              <EntityToolbar entity={document} />
+              <EntityHeading entity={document} />
+              <div className="pane-content">
+                <EntityInfoMode entity={document} />
+              </div>
+            </DualPane.InfoPane>
+            <DualPane.ContentPane>
               <DocumentViews
                 document={document}
                 activeMode={activeMode}
                 isPreview={false}
               />
             </DualPane.ContentPane>
-            <DualPane.InfoPane className="with-heading">
-              <DocumentToolbar document={document} isPreview={false} />
-              <DocumentHeading document={document} isPreview={false} />
-              <div className="pane-content">
-                <EntityInfoMode entity={document} isPreview={false} />
-              </div>
-            </DualPane.InfoPane>
           </DualPane>
         </Screen>
       </DocumentContextLoader>
@@ -109,9 +113,12 @@ const mapStateToProps = (state, ownProps) => {
     documentId,
     document: selectEntity(state, documentId),
     query: Query.fromLocation('entities', location, {}, 'document'),
-    schemata: selectSchemata(state),
     activeMode: selectDocumentView(state, documentId, hashQuery.mode),
   };
 };
 
-export default enhancer({ mapStateToProps })(DocumentScreen);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  injectIntl,
+)(DocumentScreen);

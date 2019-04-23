@@ -1,5 +1,4 @@
 import { endpoint } from 'src/app/api';
-import { Entity } from 'src/followthemoney/Entity.ts';
 
 export const MAX_RESULTS = 9999;
 
@@ -15,15 +14,4 @@ export async function queryEndpoint({ query, next }) {
     params: query.toParams(),
   });
   return { query, result: response.data };
-}
-
-export function resultEntity(state, entityDatum) {
-  const { schemata } = state.metadata;
-  return new Entity(schemata.getSchema(entityDatum.schema), entityDatum);
-}
-export function resultEntities(state, response) {
-  return {
-    ...response,
-    results: response.results.map(entityDatum => resultEntity(state, entityDatum)),
-  };
 }

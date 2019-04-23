@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import {
-  defineMessages, FormattedMessage, FormattedNumber,
+  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {
   Button, Icon, Collapse, Spinner,
 } from '@blueprintjs/core';
@@ -10,7 +13,6 @@ import c from 'classnames';
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.scss';
-import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   clear_filter: {
@@ -134,7 +136,7 @@ class SearchFacet extends Component {
               )}
 
               {facet.total > 0 && (
-                <span className="bp3-tag bp3-small bp3-round bp3-intent-primary">
+                <span className="bp3-tag bp3-small bp3-round">
                   <FormattedNumber value={facet.total} />
                 </span>
               )}
@@ -180,6 +182,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default enhancer({
-  mapStateToProps,
-})(SearchFacet);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  injectIntl,
+)(SearchFacet);

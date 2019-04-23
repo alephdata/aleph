@@ -2,36 +2,15 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { Callout } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
-
-import { Toolbar } from 'src/components/Toolbar';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
-
-
-const mapStateToProps = (state, ownProps) => {
-  let { query } = ownProps;
-  const { collection } = ownProps;
-  if (!query.hasSort()) {
-    query = query.sortBy('name', 'asc');
-  }
-
-  const editable = collection.casefile && collection.writeable;
-  if (editable) {
-    query = query.set('cache', 'false');
-  }
-
-  const result = selectEntitiesResult(state, query);
-  const status = _.map(result.results || [], 'status');
-  const hasPending = status.indexOf('pending') !== -1;
-  return {
-    query, result, hasPending, editable,
-  };
-};
 
 
 export class DocumentManager extends Component {
@@ -78,28 +57,29 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, query, hasPending, editable,
+      collection, document, query, hasPending,
     } = this.props;
     const { selection } = this.state;
-    const updateSelection = editable ? this.updateSelection : undefined;
+    const mutableCollection = collection !== undefined && collection.writeable;
+    const mutableDocument = document === undefined || (document.schema && document.schema.name === 'Folder');
+    const showActions = mutableCollection && mutableDocument;
+    const updateSelection = showActions ? this.updateSelection : undefined;
 
     return (
       <div className="DocumentManager">
-        { editable && (
-          <Toolbar>
-            <div className="bp3-button-group">
-              <DocumentUploadButton collection={collection} parent={document} />
-              <DocumentFolderButton collection={collection} parent={document} />
-              <button
-                type="button"
-                className="bp3-button bp3-icon-delete"
-                disabled={!selection.length}
-                onClick={this.toggleDeleteSelection}
-              >
-                <FormattedMessage id="document.viewer.delete" defaultMessage="Delete selected" />
-              </button>
-            </div>
-          </Toolbar>
+        { showActions && (
+          <div className="bp3-button-group">
+            <DocumentUploadButton collection={collection} parent={document} />
+            <DocumentFolderButton collection={collection} parent={document} />
+            <button
+              type="button"
+              className="bp3-button bp3-icon-delete"
+              disabled={!selection.length}
+              onClick={this.toggleDeleteSelection}
+            >
+              <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
+            </button>
+          </div>
         )}
         { hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">
@@ -126,8 +106,27 @@ export class DocumentManager extends Component {
     );
   }
 }
+const mapStateToProps = (state, ownProps) => {
+  let { query } = ownProps;
+  const { collection } = ownProps;
+  if (!query.hasSort()) {
+    query = query.sortBy('name', 'asc');
+  }
 
-export default connectedWithRouter({
-  mapStateToProps,
-  mapDispatchToProps: { queryEntities },
-})(DocumentManager);
+  if (collection.writeable) {
+    query = query.set('cache', 'false');
+  }
+
+  const result = selectEntitiesResult(state, query);
+  const status = _.map(result.results || [], 'status');
+  const hasPending = status.indexOf('pending') !== -1;
+  return {
+    query, result, hasPending,
+  };
+};
+
+const mapDispatchToProps = { queryEntities };
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(DocumentManager);

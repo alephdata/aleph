@@ -11,6 +11,7 @@ export function mergeResults(previous, current) {
   }
   return previous;
 }
+
 export function objectLoadComplete(state, id, data = {}) {
   /* eslint-disable no-param-reassign */
   data.isLoading = false;
@@ -19,6 +20,7 @@ export function objectLoadComplete(state, id, data = {}) {
   /* eslint-enable no-param-reassign */
   return { ...state, [id]: data };
 }
+
 export function updateResults(state, { query, result }) {
   const key = query.toKey();
   const res = { ...result, results: result.results.map(r => r.id) };
@@ -53,7 +55,6 @@ export function resultLoadError(state, query, error) {
   const key = query ? query.toKey() : undefined;
   return objectLoadError(state, key, error);
 }
-
 
 export function objectDelete(state, id) {
   _.unset(state, id);

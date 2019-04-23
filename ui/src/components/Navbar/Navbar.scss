@@ -3,6 +3,8 @@
 .Navbar {
   .bp3-navbar {
     display: flex;
+    padding-left: $aleph-grid-size * 2;
+    padding-right: $aleph-grid-size * 2;
     justify-content: space-between;
     @media screen and (max-width: $aleph-screen-md-max-width) {
       flex-direction: column;
@@ -33,10 +35,10 @@
     .bp3-navbar-heading {
       font-weight: bold;
       margin-right: 0 !important;
-      margin-left: $aleph-grid-size * 1.5;
     }
 
     .heading-title {
+      margin-left: $aleph-grid-size * 1.5;
       white-space: nowrap;
       padding-right: 18.5em;
       @media screen and (max-width: $aleph-screen-sm-max-width) {

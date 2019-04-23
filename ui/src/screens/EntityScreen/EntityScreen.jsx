@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import queryString from 'query-string';
 
 import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
-import EntityToolbar from 'src/components/Entity/EntityToolbar';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+// import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViews from 'src/components/Entity/EntityViews';
@@ -12,9 +14,8 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs } from 'src/components/common';
 import {
-  selectEntity, selectEntityReference, selectEntityView, selectSchemata,
+  selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class EntityScreen extends Component {
@@ -32,7 +33,7 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-    if (entity.schemata && entity.schema.isDocument()) {
+    if (entity.schema.isDocument()) {
       return (
         <Redirect to={{ ...location, pathname: `/documents/${entityId}` }} />
       );
@@ -49,20 +50,19 @@ class EntityScreen extends Component {
         <Screen title={entity.name} description={description}>
           {breadcrumbs}
           <DualPane>
-            <DualPane.ContentPane className="view-menu-flex-direction">
+            <DualPane.InfoPane className="with-heading">
+              <EntityHeading entity={entity} isPreview={false} />
+              <div className="pane-content">
+                <EntityInfoMode entity={entity} isPreview={false} />
+              </div>
+            </DualPane.InfoPane>
+            <DualPane.ContentPane>
               <EntityViews
                 entity={entity}
                 activeMode={activeMode}
                 isPreview={false}
               />
             </DualPane.ContentPane>
-            <DualPane.InfoPane className="with-heading">
-              <EntityToolbar entity={entity} isPreview={false} />
-              <EntityHeading entity={entity} isPreview={false} />
-              <div className="pane-content">
-                <EntityInfoMode entity={entity} isPreview={false} />
-              </div>
-            </DualPane.InfoPane>
           </DualPane>
         </Screen>
       </EntityContextLoader>
@@ -79,9 +79,11 @@ const mapStateToProps = (state, ownProps) => {
     entityId,
     reference,
     entity: selectEntity(state, entityId),
-    schemata: selectSchemata(state),
     activeMode: selectEntityView(state, entityId, hashQuery.mode, false),
   };
 };
 
-export default connectedWithRouter({ mapStateToProps })(EntityScreen);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(EntityScreen);

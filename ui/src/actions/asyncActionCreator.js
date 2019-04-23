@@ -40,10 +40,8 @@ export default function asyncActionCreator(actionCreator, {
     Object.assign(newActionCreator, { toString: () => name });
   }
   newActionCreator.innerFunc = actionCreator;
-
   newActionCreator.START = START;
   newActionCreator.COMPLETE = COMPLETE;
   newActionCreator.ERROR = ERROR;
-
   return newActionCreator;
 }

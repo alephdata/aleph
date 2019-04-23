@@ -88,7 +88,6 @@ class CollectionXrefSelect extends Component {
       })
       .catch((e) => {
         this.setState({ loading: false });
-        console.error(e);
         showWarningToast(e.message);
       });
   }

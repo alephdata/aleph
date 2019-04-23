@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
@@ -12,7 +14,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
-import { enhancer } from 'src/util/enhancers';
+
 
 const messages = defineMessages({
   placeholder: {
@@ -95,13 +97,6 @@ export class CollectionScreen extends Component {
         <Screen title={collection.label} description={collection.summary}>
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
-            <DualPane.ContentPane className="view-menu-flex-direction">
-              <CollectionViews
-                collection={collection}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </DualPane.ContentPane>
             <DualPane.InfoPane className="with-heading">
               <CollectionToolbar collection={collection} />
               <CollectionHeading collection={collection} />
@@ -109,6 +104,13 @@ export class CollectionScreen extends Component {
                 <CollectionInfoMode collection={collection} />
               </div>
             </DualPane.InfoPane>
+            <DualPane.ContentPane>
+              <CollectionViews
+                collection={collection}
+                activeMode={activeMode}
+                isPreview={false}
+              />
+            </DualPane.ContentPane>
           </DualPane>
         </Screen>
       </CollectionContextLoader>
@@ -116,4 +118,8 @@ export class CollectionScreen extends Component {
   }
 }
 
-export default enhancer({ mapStateToProps })(CollectionScreen);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  injectIntl,
+)(CollectionScreen);

@@ -1,11 +1,13 @@
 import React from 'react';
 import queryString from 'query-string';
 import {
-  defineMessages, FormattedNumber, FormattedMessage,
+  defineMessages, FormattedNumber, FormattedMessage, injectIntl,
 } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
 import { Icon, ButtonGroup, AnchorButton } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
@@ -20,7 +22,6 @@ import Screen from 'src/components/Screen/Screen';
 import togglePreview from 'src/util/togglePreview';
 
 import './SearchScreen.scss';
-import { enhancer } from 'src/util/enhancers';
 
 const messages = defineMessages({
   facet_schema: {
@@ -73,18 +74,6 @@ const messages = defineMessages({
   },
 });
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-
-  // We normally only want Things, not Intervals (relations between things).
-  const context = {
-    highlight: true,
-    'filter:schemata': 'Thing',
-  };
-  const query = Query.fromLocation('entities', location, context, '');
-  const result = selectEntitiesResult(state, query);
-  return { query, result };
-};
 
 export class SearchScreen extends React.Component {
   constructor(props) {
@@ -216,8 +205,7 @@ export class SearchScreen extends React.Component {
 
   showPreview(entity) {
     const { history } = this.props;
-    const isDocument = entity.schemata.indexOf('Document') !== -1;
-    const previewType = isDocument ? 'document' : 'entity';
+    const previewType = entity.schema.isDocument() ? 'document' : 'entity';
     togglePreview(history, entity, previewType);
   }
 
@@ -244,12 +232,23 @@ export class SearchScreen extends React.Component {
       <Breadcrumbs operation={operation}>
         <li>
           <span className="bp3-breadcrumb bp3-breadcrumb-current">
-            {!(result.isLoading || result.total === undefined) && (
-            <React.Fragment>
-              <FormattedNumber value={result.total} />
-              {' '}
-              <FormattedMessage id="search.screen.results" defaultMessage="results" />
-            </React.Fragment>
+            {(result.total_type === 'gte' && !result.isLoading) && (
+              <FormattedMessage
+                id="search.screen.more_results"
+                defaultMessage="More than {total} results"
+                values={{
+                  total: <FormattedNumber value={result.total} />,
+                }}
+              />
+            )}
+            {(result.total_type === 'eq' && !result.isLoading) && (
+              <FormattedMessage
+                id="search.screen.results"
+                defaultMessage="{total} results"
+                values={{
+                  total: <FormattedNumber value={result.total} />,
+                }}
+              />
             )}
             { result.isLoading && (
             <FormattedMessage id="search.screen.searching" defaultMessage="Searching..." />
@@ -278,7 +277,7 @@ export class SearchScreen extends React.Component {
       >
         {breadcrumbs}
         <DualPane className="SearchScreen">
-          <DualPane.SidePane className="side-pane-padding">
+          <DualPane.SidePane>
             <div
               role="switch"
               aria-checked={!hideFacets}
@@ -332,6 +331,23 @@ export class SearchScreen extends React.Component {
     );
   }
 }
-export default enhancer({
-  mapStateToProps, mapDispatchToProps: { queryEntities },
-})(SearchScreen);
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+
+  // We normally only want Things, not Intervals (relations between things).
+  const context = {
+    highlight: true,
+    'filter:schemata': 'Thing',
+  };
+  const query = Query.fromLocation('entities', location, context, '');
+  const result = selectEntitiesResult(state, query);
+  return { query, result };
+};
+
+const mapDispatchToProps = { queryEntities };
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(SearchScreen);

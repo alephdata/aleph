@@ -73,6 +73,11 @@ $pagesWidth: 150px;
       
       .document {
         width: 100%;
+
+        pre {
+          border: unset;
+          box-shadow: unset;
+        }
       }
 
       .page {

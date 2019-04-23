@@ -50,7 +50,6 @@ def generate_document(document, shallow=False):
                 yield {
                     '_id': entity_id,
                     '_index': index,
-                    '_type': 'doc',
                     '_source': body
                 }
             if idx > 0 and idx % 1000 == 0:
@@ -63,14 +62,12 @@ def generate_document(document, shallow=False):
             yield {
                 '_id': entity_id,
                 '_index': other,
-                '_type': 'doc',
                 '_op_type': 'delete'
             }
 
     yield {
         '_id': entity_id,
         '_index': index,
-        '_type': 'doc',
         '_source': body
     }
 

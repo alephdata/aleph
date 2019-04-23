@@ -2,20 +2,21 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Tab, Tabs } from '@blueprintjs/core';
 import queryString from 'query-string';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {
   Count, Icon, Property, SectionLoading, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar } from 'src/queries';
 import {
-  selectEntitiesResult, selectEntityReferences, selectEntityTags, selectSchemata,
+  selectEntitiesResult, selectEntityReferences, selectEntityTags,
 } from 'src/selectors';
 import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import Schema from 'src/components/common/Schema';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class EntityViews extends React.Component {
@@ -77,14 +78,14 @@ class EntityViews extends React.Component {
             key={ref.property.qname}
             title={(
               <React.Fragment>
-                <Schema.Smart.Icon schema={ref.property.range} iconSize="14px" />
-                <Property.Reverse model={ref.property} />
+                <Schema.Icon schema={ref.schema} iconSize="14px" />
+                <Property.Reverse prop={ref.property} />
                 <Count count={ref.count} />
               </React.Fragment>
             )}
             panel={
               <EntityReferencesMode entity={entity} mode={activeMode} />
-               }
+            }
           />
         ))}
         <Tab
@@ -126,8 +127,10 @@ const mapStateToProps = (state, ownProps) => {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),
     similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
-    schemata: selectSchemata(state),
   };
 };
 
-export default connectedWithRouter({ mapStateToProps })(EntityViews);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(EntityViews);

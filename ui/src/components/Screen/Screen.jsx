@@ -2,7 +2,9 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import c from 'classnames';
 import { HotkeysTarget, Hotkeys, Hotkey } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import PreviewManager from 'src/components/Preview/PreviewManager';
 import Navbar from 'src/components/Navbar/Navbar';
@@ -10,7 +12,6 @@ import Footer from 'src/components/Footer/Footer';
 import { selectSession, selectMetadata } from 'src/selectors';
 
 import './Screen.scss';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 const mapStateToProps = state => ({
   metadata: selectMetadata(state),
@@ -83,6 +84,11 @@ export class Screen extends React.Component {
           updateQuery={updateQuery}
           isHomepage={isHomepage}
         />
+        {!!metadata.app.banner && (
+          <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
+            {metadata.app.banner}
+          </div>
+        )}
         {!forceAuth && (
           <React.Fragment>
             <main className={mainClass}>
@@ -106,4 +112,8 @@ export class Screen extends React.Component {
     );
   }
 }
-export default connectedWithRouter({ mapStateToProps })(HotkeysTarget(Screen));
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+  HotkeysTarget,
+)(Screen);

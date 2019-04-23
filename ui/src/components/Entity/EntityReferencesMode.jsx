@@ -1,19 +1,20 @@
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
-import { defineMessages, FormattedMessage } from 'react-intl';
-
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions/index';
 import {
-  selectEntitiesResult, selectEntityReference, selectSchemata,
+  selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'src/selectors';
 import {
   ErrorSection, Property, SectionLoading, SearchBox,
 } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
-import { enhancer } from 'src/util/enhancers';
-import getPath from 'src/util/getPath';
+import getEntityLink from 'src/util/getEntityLink';
 
 const messages = defineMessages({
   no_relationships: {
@@ -78,7 +79,7 @@ class EntityReferencesMode extends React.Component {
 
   render() {
     const {
-      intl, reference, result, model,
+      intl, reference, result, schema,
     } = this.props;
     if (!reference) {
       return <ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />;
@@ -86,7 +87,7 @@ class EntityReferencesMode extends React.Component {
     const { property } = reference;
     const results = ensureArray(result.results);
     const isSearchable = reference.count > result.limit;
-    const columns = model.getFeaturedProperties()
+    const columns = schema.getFeaturedProperties()
       .filter(prop => prop.name !== property.name && !prop.caption);
 
     return (
@@ -103,7 +104,7 @@ class EntityReferencesMode extends React.Component {
             <tr>
               {columns.map(prop => (
                 <th key={prop.name} className={prop.type}>
-                  <Property.Name model={prop} />
+                  <Property.Name prop={prop} />
                 </th>
               ))}
               <th key="details" className="narrow" />
@@ -114,11 +115,14 @@ class EntityReferencesMode extends React.Component {
               <tr key={entity.id}>
                 {columns.map(prop => (
                   <td key={prop.name} className={prop.type}>
-                    <Property.Values model={entity.getProperty(prop.name)} />
+                    <Property.Values
+                      prop={prop}
+                      values={entity.getProperty(prop)}
+                    />
                   </td>
                 ))}
                 <td key="details" className="narrow">
-                  <a href={getPath(entity.links.ui)} onClick={e => this.onShowDetails(e, entity)}>
+                  <a href={getEntityLink(entity)} onClick={e => this.onShowDetails(e, entity)}>
                     <span>
                       <FormattedMessage id="references.details" defaultMessage="Details" />
                     </span>
@@ -156,12 +160,14 @@ const mapStateToProps = (state, ownProps) => {
     reference,
     query,
     result: selectEntitiesResult(state, query),
-    model: selectSchemata(state).getSchema(reference.schema),
+    schema: selectSchema(state, reference.schema),
   };
 };
 
+const mapDispatchToProps = { queryEntities };
 
-export default enhancer({
-  mapStateToProps,
-  mapDispatchToProps: { queryEntities },
-})(EntityReferencesMode);
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(EntityReferencesMode);

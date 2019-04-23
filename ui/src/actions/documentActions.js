@@ -25,7 +25,7 @@ export const ingestDocument = asyncActionCreator(
       },
     };
     const response = await endpoint.post(`collections/${collectionId}/ingest`, formData, config);
-    return { documents: response.data.documents };
+    return { ...response.data };
   }, { name: 'INGEST_DOCUMENT' },
 );
 

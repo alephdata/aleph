@@ -3,18 +3,18 @@ import _ from 'lodash';
 import c from 'classnames';
 import queryString from 'query-string';
 import {
-  defineMessages, FormattedMessage, FormattedNumber,
+  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
 import { Link } from 'react-router-dom';
 import {
   Button, ControlGroup, Intent, Divider, Callout,
 } from '@blueprintjs/core';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import SearchBox from 'src/components/Navbar/SearchBox';
-import { translatableConnected } from 'src/util/enhancers';
 import {
   Category, Country, Schema, Numeric,
   DualPane, SignInCallout, Role,
@@ -95,11 +95,6 @@ class Statistics extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  statistics: selectStatistics(state),
-  session: selectSession(state),
-  metadata: selectMetadata(state),
-});
 
 export class HomeScreen extends Component {
   static SubNavigation = function SubNavigation(props) {
@@ -262,7 +257,14 @@ export class HomeScreen extends Component {
   }
 }
 
-export default translatableConnected({
-  mapStateToProps,
-  mapDispatchToProps: { fetchStatistics },
-})(HomeScreen);
+const mapStateToProps = state => ({
+  statistics: selectStatistics(state),
+  session: selectSession(state),
+  metadata: selectMetadata(state),
+});
+const mapDispatchToProps = { fetchStatistics };
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(HomeScreen);

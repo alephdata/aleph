@@ -1,5 +1,7 @@
 import { Component } from 'react';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {
   fetchEntity, fetchDocumentContent, fetchEntityTags, queryEntities,
 } from 'src/actions';
@@ -7,7 +9,6 @@ import {
   selectEntity, selectEntityTags, selectEntitiesResult, selectDocumentContent,
 } from 'src/selectors';
 import { queryFolderDocuments } from 'src/queries';
-import { connectedWithRouter } from 'src/util/enhancers';
 
 
 class DocumentContextLoader extends Component {
@@ -59,9 +60,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connectedWithRouter({
-  mapStateToProps,
-  mapDispatchToProps: {
-    fetchEntity, fetchEntityTags, queryEntities, fetchDocumentContent,
-  },
-})(DocumentContextLoader);
+const mapDispatchToProps = {
+  fetchEntity, fetchEntityTags, queryEntities, fetchDocumentContent,
+};
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+)(DocumentContextLoader);

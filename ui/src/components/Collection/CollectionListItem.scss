@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
-.CollectionListItem, .CaseListItem {
-    margin-top: $aleph-grid-size;
+.CollectionListItem {
+    // margin-top: $aleph-grid-size;
     margin-bottom: $aleph-grid-size;
     padding-bottom: $aleph-grid-size * 2;
     border-bottom: 1px solid $table-border-color;

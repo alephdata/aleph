@@ -3,26 +3,26 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { triggerCollectionAnalyze } from 'src/actions';
+import { updateCollection } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
 
 
 const messages = defineMessages({
   processing: {
-    id: 'collection.analyze.processing',
-    defaultMessage: 'Re-analyzing started.',
+    id: 'collection.publish.succeed',
+    defaultMessage: 'Casefile is published',
   },
   cancel: {
-    id: 'collection.analyze.cancel',
+    id: 'collection.publish.cancel',
     defaultMessage: 'Cancel',
   },
   confirm: {
-    id: 'collection.analyze.confirm',
-    defaultMessage: 'Start re-analyzing',
+    id: 'collection.publish.confirm',
+    defaultMessage: 'Publish',
   },
 });
 
-class CollectionAnalyzeAlert extends Component {
+class CollectionPublishAlert extends Component {
   constructor(props) {
     super(props);
     this.onConfirm = this.onConfirm.bind(this);
@@ -30,9 +30,13 @@ class CollectionAnalyzeAlert extends Component {
 
   onConfirm() {
     const { collection, intl } = this.props;
-    this.props.triggerCollectionAnalyze(collection.id);
+
+    this.props.updateCollection({
+      ...collection,
+      casefile: false,
+    });
     showSuccessToast(intl.formatMessage(messages.processing));
-    this.props.toggleAlert();
+    this.props.togglePublish();
   }
 
   render() {
@@ -43,26 +47,28 @@ class CollectionAnalyzeAlert extends Component {
         confirmButtonText={intl.formatMessage(messages.confirm)}
         canEscapeKeyCancel
         canOutsideClickCancel
-        icon="automatic-updates"
-        intent={Intent.DANGER}
+        intent={Intent.PRIMARY}
+        icon="social-media"
         isOpen={isOpen}
-        onCancel={this.props.toggleAlert}
+        onCancel={this.props.togglePublish}
         onConfirm={this.onConfirm}
       >
         <p>
           <FormattedMessage
-            id="collection.analyze.alert.text"
-            defaultMessage="Re-analyzing the collection will take some time. Please start the process only once and allow time for it to complete."
+            id="collection.publish.alert.text"
+            defaultMessage="You are converting this case file to a source. Sources are to be seen as raw evidence and can be made public for every visitor of the system to see. Please make sure you do not publish material identifying your sources, directly or through metadata."
           />
         </p>
       </Alert>
     );
   }
 }
-const mapDispatchToProps = { triggerCollectionAnalyze };
+const mapDispatchToProps = {
+  updateCollection,
+};
 
 
 export default compose(
   connect(null, mapDispatchToProps),
   injectIntl,
-)(CollectionAnalyzeAlert);
+)(CollectionPublishAlert);
