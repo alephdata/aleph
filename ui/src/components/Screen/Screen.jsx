@@ -89,7 +89,7 @@ export class Screen extends React.Component {
           updateQuery={updateQuery}
           isHomepage={isHomepage}
         />
-        { hasMetadata && !!metadata.app.banner && (
+        { (hasMetadata && !!metadata.app.banner) && (
           <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
             {metadata.app.banner}
           </div>
