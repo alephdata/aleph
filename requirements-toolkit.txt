@@ -6,7 +6,7 @@ followthemoney==1.11.18
 fingerprints==0.6.5
 servicelayer[google]==1.0.3
 servicelayer[amazon]==1.0.3
-ingestors==0.13.0
+ingestors==0.13.1
 normality==1.0.0
 pantomime==0.3.3
 pdflib==0.1.7
