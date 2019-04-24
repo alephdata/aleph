@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 
 import Preview from 'src/components/Preview/Preview';
-import { PreviewEntity, PreviewCollection, PreviewDocument } from 'src/components/Preview/';
+import { PreviewEntity, PreviewCollection } from 'src/components/Preview/';
 
 function PreviewManager(props) {
   const {
@@ -14,7 +14,7 @@ function PreviewManager(props) {
     return <Preview hidden />;
   }
 
-  if (previewType === 'entity') {
+  if (previewType === 'entity' || previewType === 'document') {
     return (
       <PreviewEntity
         previewId={previewId}
@@ -26,15 +26,6 @@ function PreviewManager(props) {
   if (previewType === 'collection') {
     return (
       <PreviewCollection
-        previewId={previewId}
-        previewMode={previewMode}
-        parsedHash={parsedHash}
-      />
-    );
-  }
-  if (previewType === 'document') {
-    return (
-      <PreviewDocument
         previewId={previewId}
         previewMode={previewMode}
         parsedHash={parsedHash}

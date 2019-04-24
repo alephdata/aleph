@@ -57,10 +57,8 @@ class EntityLink extends Component {
   onClick(event) {
     const { entity, history, preview } = this.props;
     if (preview) {
-      const isDocument = entity.schema.isDocument();
-      const previewType = isDocument ? 'document' : 'entity';
       event.preventDefault();
-      togglePreview(history, entity, previewType);
+      togglePreview(history, entity, 'entity');
     }
   }
 
