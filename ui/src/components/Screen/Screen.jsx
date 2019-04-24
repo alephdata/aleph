@@ -60,22 +60,27 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      isHomepage, requireSession, title, description, className,
+      session, metadata, query, updateQuery, requireSession,
+      isHomepage, title, description, className,
     } = this.props;
-    const {
-      session, metadata, query, updateQuery,
-    } = this.props;
+    const hasMetadata = metadata && metadata.app && metadata.app.title;
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
+    const titleTemplate = hasMetadata ? `%s - ${metadata.app.title}` : '%s';
+    const defaultTitle = hasMetadata ? metadata.app.title : 'Aleph';
 
     return (
       <div className={c('Screen', className)}>
-        <Helmet titleTemplate={`%s - ${metadata.app.title}`}>
-          <title>{title || metadata.app.title}</title>
-          {description && (
+        <Helmet titleTemplate={titleTemplate} defaultTitle={defaultTitle}>
+          { !!title && (
+            <title>{title}</title>
+          )}
+          { !!description && (
             <meta name="description" content={description} />
           )}
-          <link rel="shortcut icon" href={metadata.app.favicon} />
+          { !!metadata.app.favicon && (
+            <link rel="shortcut icon" href={metadata.app.favicon} />
+          )}
         </Helmet>
         <Navbar
           metadata={metadata}
@@ -84,7 +89,7 @@ export class Screen extends React.Component {
           updateQuery={updateQuery}
           isHomepage={isHomepage}
         />
-        {!!metadata.app.banner && (
+        { (hasMetadata && !!metadata.app.banner) && (
           <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
             {metadata.app.banner}
           </div>

@@ -11,7 +11,8 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: $aleph-sidebar-width;
+  width: 50%;
+  max-width: $alpeh-preview-pane-width;
   box-shadow: $pt-elevation-shadow-3;
   padding: 0 !important;
   background: $aleph-content-background;
@@ -19,23 +20,15 @@
   transition: width 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  
-  > * {
-   //min-width: $aleph-sidebar-sm-width;
-  }
-  
+
   &.hidden {
     width: 0;
     overflow: hidden;
     box-shadow: none;
   }
 
-  &.maximised {
-    width: 50%;
-    max-width: $alpeh-preview-pane-width;
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      width: 90%;
-    }
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    width: 90%;
   }
   
   h1, h2 {

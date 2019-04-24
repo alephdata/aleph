@@ -19,7 +19,3 @@ def collection_url(collection_id=None, **query):
 
 def entity_url(entity_id=None, **query):
     return ui_url('entities', id=entity_id, **query)
-
-
-def document_url(document_id=None, **query):
-    return ui_url('documents', id=document_id, **query)

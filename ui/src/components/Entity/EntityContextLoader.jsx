@@ -2,16 +2,17 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { queryEntitySimilar } from 'src/queries';
 import {
-  fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
+  fetchEntity, fetchDocumentContent, fetchEntityTags, fetchEntityReferences, queryEntities,
 } from 'src/actions';
 import {
-  selectEntity, selectEntityTags, selectEntityReferences, selectEntitiesResult,
+  selectEntity, selectEntityTags, selectEntityReferences,
+  selectEntitiesResult, selectDocumentContent,
 } from 'src/selectors';
+import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 
 
-class EntityScreenContext extends PureComponent {
+class EntityContextLoader extends PureComponent {
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -36,9 +37,25 @@ class EntityScreenContext extends PureComponent {
       this.props.fetchEntityReferences({ id: entityId });
     }
 
+    if (entity && entity.schema && entity.schema.name) {
+      this.fetchWithSchema(entityId, entity.schema);
+    }
+  }
+
+  fetchWithSchema(entityId, schema) {
+    const { content } = this.props;
+    if (schema.isDocument() && content.shouldLoad) {
+      this.props.fetchDocumentContent({ id: entityId });
+    }
+
     const { similarQuery, similarResult } = this.props;
-    if (similarResult.shouldLoad) {
+    if (schema.matchable && similarResult.shouldLoad) {
       this.props.queryEntities({ query: similarQuery });
+    }
+
+    const { childrenResult, childrenQuery } = this.props;
+    if (schema.isA('Folder') && childrenResult.shouldLoad) {
+      this.props.queryEntities({ query: childrenQuery });
     }
   }
 
@@ -51,20 +68,28 @@ class EntityScreenContext extends PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const { entityId, location } = ownProps;
   const similarQuery = queryEntitySimilar(location, entityId);
+  const childrenQuery = queryFolderDocuments(location, entityId, undefined);
   return {
     entity: selectEntity(state, entityId),
+    content: selectDocumentContent(state, entityId),
     tagsResult: selectEntityTags(state, entityId),
     referencesResult: selectEntityReferences(state, entityId),
     similarQuery,
     similarResult: selectEntitiesResult(state, similarQuery),
+    childrenQuery,
+    childrenResult: selectEntitiesResult(state, childrenQuery),
   };
 };
 
 const mapDispatchToProps = {
-  fetchEntity, fetchEntityTags, fetchEntityReferences, queryEntities,
+  queryEntities,
+  fetchEntity,
+  fetchEntityTags,
+  fetchEntityReferences,
+  fetchDocumentContent,
 };
 
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-)(EntityScreenContext);
+)(EntityContextLoader);
