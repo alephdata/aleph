@@ -123,7 +123,10 @@ export function selectEntityReferences(state, entityId) {
   references.results = references.results.map((ref) => {
     const schema = model.getSchema(ref.schema);
     const property = schema.getProperty(ref.property.name);
-    return { schema, property, count: ref.count };
+    const reverse = property.getReverse();
+    return {
+      schema, property, reverse, count: ref.count,
+    };
   });
   return references;
 }

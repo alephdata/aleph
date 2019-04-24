@@ -51,7 +51,7 @@ class EntityViews extends React.Component {
     const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
-    const refs = !references.results ? [] : references.results.filter(ref => !ref.property.hidden);
+    const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
 
     return (
       <Tabs
