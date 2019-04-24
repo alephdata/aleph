@@ -8,7 +8,7 @@ import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
-import { selectEntity, selectDocumentView } from 'src/selectors';
+import { selectEntity, selectEntityView } from 'src/selectors';
 /* eslint-disable */
 
 
@@ -54,7 +54,7 @@ const mapStateToProps = (state, ownProps) => {
   const { previewId, previewMode } = ownProps;
   return {
     document: selectEntity(state, previewId),
-    previewMode: selectDocumentView(state, previewId, previewMode),
+    previewMode: selectEntityView(state, previewId, previewMode),
   };
 };
 

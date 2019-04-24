@@ -142,6 +142,16 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   if (mode) {
     return mode;
   }
+  const { schema } = selectEntity(state, entityId);
+  if (schema && schema.isAny(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
+    return 'view';
+  }
+  if (schema && schema.isA('Folder')) {
+    return 'browse';
+  }
+  if (schema && schema.isDocument()) {
+    return 'view';
+  }
   if (isPreview) {
     return 'info';
   }
@@ -150,20 +160,6 @@ export function selectEntityView(state, entityId, mode, isPreview) {
     return references.results[0].property.qname;
   }
   return undefined;
-}
-
-export function selectDocumentView(state, documentId, mode) {
-  if (mode) {
-    return mode;
-  }
-  const { schema } = selectEntity(state, documentId);
-  if (schema && schema.isAny(['Email', 'HyperText', 'Image', 'Pages', 'Table'])) {
-    return 'view';
-  }
-  if (schema && schema.isA(['Folder'])) {
-    return 'browse';
-  }
-  return 'view';
 }
 
 export function selectCollectionView(state, collectionId, mode, isPreview) {
