@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Count, Icon, Property, SectionLoading, TextLoading,
+  Count, Icon, Property, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar } from 'src/queries';
 import {
@@ -44,9 +44,7 @@ class EntityViews extends React.Component {
     const {
       isPreview, activeMode, entity, references, tags, similar,
     } = this.props;
-    if (references.shouldLoad || references.isLoading) {
-      return <SectionLoading />;
-    }
+    const isMatchable = entity && entity.schema && entity.schema.matchable;
 
     return (
       <Tabs
@@ -102,20 +100,22 @@ class EntityViews extends React.Component {
             <EntityTagsMode entity={entity} />
              }
         />
-        <Tab
-          id="similar"
-          disabled={similar.total < 1}
-          title={(
-            <TextLoading loading={similar.shouldLoad || similar.isLoading}>
-              <Icon name="similar" iconSize="14px" className="entity-icon" />
-              <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
-              <Count count={similar.total} />
-            </TextLoading>
-          )}
-          panel={
-            <EntitySimilarMode entity={entity} />
-             }
-        />
+        { isMatchable && (
+          <Tab
+            id="similar"
+            disabled={similar.total < 1}
+            title={(
+              <TextLoading loading={similar.shouldLoad || similar.isLoading}>
+                <Icon name="similar" iconSize="14px" className="entity-icon" />
+                <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
+                <Count count={similar.total} />
+              </TextLoading>
+            )}
+            panel={
+              <EntitySimilarMode entity={entity} />
+              }
+          />
+        )}
       </Tabs>
     );
   }

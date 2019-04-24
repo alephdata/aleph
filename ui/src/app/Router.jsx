@@ -21,7 +21,7 @@ const CollectionScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/s
 const CollectionDocumentsScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen'));
 const CollectionXrefMatchesScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
 const EntityScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/EntityScreen/EntityScreen'));
-const DocumentScreen = lazy(() => import(/* webpackChunkName: 'document' */ 'src/screens/DocumentScreen/DocumentScreen'));
+const DocumentScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/DocumentScreen/DocumentScreen'));
 
 
 class Router extends Component {

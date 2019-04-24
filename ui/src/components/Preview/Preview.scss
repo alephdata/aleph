@@ -19,11 +19,7 @@
   transition: width 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  
-  > * {
-   //min-width: $aleph-sidebar-sm-width;
-  }
-  
+
   &.hidden {
     width: 0;
     overflow: hidden;

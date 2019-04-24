@@ -9,7 +9,7 @@ import Screen from 'src/components/Screen/Screen';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
-import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
+import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -56,9 +56,9 @@ class DocumentScreen extends Component {
     }
     if (document.shouldLoad || document.isLoading) {
       return (
-        <DocumentContextLoader documentId={documentId}>
+        <EntityContextLoader entityId={documentId}>
           <LoadingScreen />
-        </DocumentContextLoader>
+        </EntityContextLoader>
       );
     }
 
@@ -79,7 +79,7 @@ class DocumentScreen extends Component {
     );
 
     return (
-      <DocumentContextLoader documentId={documentId}>
+      <EntityContextLoader entityId={documentId}>
         <Screen title={title}>
           {breadcrumbs}
           <DualPane>
@@ -99,7 +99,7 @@ class DocumentScreen extends Component {
             </DualPane.ContentPane>
           </DualPane>
         </Screen>
-      </DocumentContextLoader>
+      </EntityContextLoader>
     );
   }
 }

@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import Preview from 'src/components/Preview/Preview';
-import DocumentContextLoader from 'src/components/Document/DocumentContextLoader';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
+import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import DocumentViews from 'src/components/Document/DocumentViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectDocumentView } from 'src/selectors';
@@ -16,13 +16,13 @@ class PreviewDocument extends React.Component {
   render() {
     const { previewId } = this.props;
     return (
-      <DocumentContextLoader documentId={previewId}>
+      <EntityContextLoader entityId={previewId}>
         <Preview maximised>
           <DualPane.InfoPane className="with-heading">
             {this.renderContext()}
           </DualPane.InfoPane>
         </Preview>
-      </DocumentContextLoader>
+      </EntityContextLoader>
     );
   }
 

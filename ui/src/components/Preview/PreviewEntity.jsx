@@ -7,15 +7,13 @@ import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityViews from 'src/components/Entity/EntityViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
-import { selectEntity, selectEntityView, selectEntityReferences } from 'src/selectors';
+import { selectEntity, selectEntityView } from 'src/selectors';
 
 
 const mapStateToProps = (state, ownProps) => {
   const { previewId, previewMode } = ownProps;
-  const entity = selectEntity(state, previewId);
   return {
-    entity,
-    references: selectEntityReferences(state, previewId),
+    entity: selectEntity(state, previewId),
     previewMode: selectEntityView(state, previewId, previewMode, true),
   };
 };
@@ -23,11 +21,11 @@ const mapStateToProps = (state, ownProps) => {
 
 export class PreviewEntity extends React.Component {
   renderContext() {
-    const { entity, references, previewMode } = this.props;
+    const { entity, previewMode } = this.props;
     if (entity.isError) {
       return <ErrorSection error={entity.error} />;
     }
-    if (entity.shouldLoad || entity.isLoading || references.shouldLoad || references.isLoading) {
+    if (entity.shouldLoad || entity.isLoading) {
       return <SectionLoading />;
     }
     return (
