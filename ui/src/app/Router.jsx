@@ -21,7 +21,6 @@ const CollectionScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/s
 const CollectionDocumentsScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionDocumentsScreen/CollectionDocumentsScreen'));
 const CollectionXrefMatchesScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
 const EntityScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/EntityScreen/EntityScreen'));
-const DocumentScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/DocumentScreen/DocumentScreen'));
 
 
 class Router extends Component {
@@ -52,9 +51,9 @@ class Router extends Component {
           <Route path="/logout" exact component={LogoutScreen} />
           <Route path="/activate/:code" exact component={ActivateScreen} />
           <Route path="/entities/:entityId" exact component={EntityScreen} />
-          <Redirect from="/text/:documentId" to="/documents/:documentId" />
-          <Redirect from="/tabular/:documentId/:sheet" to="/documents/:documentId" />
-          <Route path="/documents/:documentId" exact component={DocumentScreen} />
+          <Redirect from="/text/:documentId" to="/entities/:documentId" />
+          <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
+          <Redirect from="/documents/:documentId" to="/entities/:documentId" />
           <Route path="/sources" exact component={SourcesIndexScreen} />
           <Route path="/cases" exact component={CasesIndexScreen} />
           <Route path="/collections/:collectionId/documents" exact component={CollectionDocumentsScreen} />

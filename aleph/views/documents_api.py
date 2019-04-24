@@ -7,7 +7,7 @@ from pantomime.types import PDF
 from aleph.core import archive
 from aleph.model import Audit
 from aleph.logic.documents import delete_document
-from aleph.logic.util import document_url
+from aleph.logic.util import entity_url
 from aleph.logic.audit import record_audit
 from aleph.views.util import get_db_document
 
@@ -19,7 +19,7 @@ def _resp_canonical(resp, document_id):
     # EXPERIMENTAL HACK
     # the idea here is to tell search engines that they should not index
     # source documents, but instead go for the UI version of the site.
-    link_header = '<%s>; rel="canonical"' % document_url(document_id)
+    link_header = '<%s>; rel="canonical"' % entity_url(document_id)
     resp.headers['Link'] = link_header
     return resp
 
