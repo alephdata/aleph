@@ -6,7 +6,6 @@ import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityViews from 'src/components/Entity/EntityViews';
-import DocumentViews from 'src/components/Document/DocumentViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectEntityView } from 'src/selectors';
 
@@ -33,12 +32,7 @@ export class PreviewEntity extends React.Component {
       <React.Fragment>
         <EntityToolbar entity={entity} isPreview />
         <EntityHeading entity={entity} isPreview />
-        { !entity.schema.isDocument() && (
-          <EntityViews entity={entity} activeMode={previewMode} isPreview />
-        )}
-        { entity.schema.isDocument() && (
-          <DocumentViews document={entity} activeMode={previewMode} isPreview />
-        )}
+        <EntityViews entity={entity} activeMode={previewMode} isPreview />
       </React.Fragment>
     );
   }

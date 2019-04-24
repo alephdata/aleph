@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import {
   Count, Icon, Property, TextLoading,
 } from 'src/components/common';
-import { queryEntitySimilar } from 'src/queries';
+import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 import {
   selectEntitiesResult, selectEntityReferences, selectEntityTags,
 } from 'src/selectors';
@@ -16,6 +16,7 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
+import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import Schema from 'src/components/common/Schema';
 
 
@@ -42,9 +43,15 @@ class EntityViews extends React.Component {
 
   render() {
     const {
-      isPreview, activeMode, entity, references, tags, similar,
+      isPreview, activeMode, entity, references, tags, similar, children,
     } = this.props;
     const isMatchable = entity && entity.schema && entity.schema.matchable;
+    const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
+    const hasBrowseMode = entity.schema.isA('Folder');
+    const hasViewer = entity.schema.isAny(['Pages', 'Email', 'Image', 'HyperText', 'Table', 'PlainText']);
+    const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
+    const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
+    const refs = !references.results ? [] : references.results.filter(ref => !ref.property.hidden);
 
     return (
       <Tabs
@@ -70,7 +77,54 @@ class EntityViews extends React.Component {
                }
           />
         )}
-        {references.results !== undefined && references.results.map(ref => (
+        {hasViewMode && (
+          <Tab
+            id="view"
+            title={(
+              <React.Fragment>
+                <Icon name="showdocuments" />
+                <FormattedMessage id="entity.info.view" defaultMessage="View" />
+              </React.Fragment>
+            )}
+            panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
+          />
+        )}
+        {hasTextMode && (
+          <Tab
+            id="text"
+            title={(
+              <React.Fragment>
+                <Icon name="plaintext" />
+                <FormattedMessage id="entity.info.text" defaultMessage="Text" />
+              </React.Fragment>
+            )}
+            panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
+          />
+        )}
+        {hasBrowseMode && (
+          <Tab
+            id="browse"
+            disabled={children.total < 1}
+            title={(
+              <TextLoading loading={children.isLoading}>
+                <React.Fragment>
+                  <Icon name="folder" />
+                  { entity.schema.isA('Email') && (
+                    <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
+                  )}
+                  { !entity.schema.isA('Email') && (
+                    <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                  )}
+                  <Count count={children.total} />
+                </React.Fragment>
+              </TextLoading>
+              )}
+            panel={
+              <DocumentViewMode document={entity} activeMode={activeMode} />
+            }
+          />
+        )}
+        {refs.map(ref => (
           <Tab
             id={ref.property.qname}
             key={ref.property.qname}
@@ -123,10 +177,12 @@ class EntityViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
+  const childrenQuery = queryFolderDocuments(location, document.id, undefined);
   return {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),
     similar: selectEntitiesResult(state, queryEntitySimilar(location, entity.id)),
+    children: selectEntitiesResult(state, childrenQuery),
   };
 };
 

@@ -10,7 +10,7 @@ import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
-import DocumentViews from 'src/components/Document/DocumentViews';
+import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
@@ -91,11 +91,7 @@ class DocumentScreen extends Component {
               </div>
             </DualPane.InfoPane>
             <DualPane.ContentPane>
-              <DocumentViews
-                document={document}
-                activeMode={activeMode}
-                isPreview={false}
-              />
+              <EntityViews entity={document} activeMode={activeMode} />
             </DualPane.ContentPane>
           </DualPane>
         </Screen>
