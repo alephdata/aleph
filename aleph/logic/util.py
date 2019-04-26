@@ -1,7 +1,8 @@
+import jwt
 from urllib.parse import urljoin
 from urlnormalizer import query_string
 
-from aleph.core import settings
+from aleph.core import settings, url_for
 
 
 def ui_url(resource, id=None, _relative=False, **query):
@@ -19,3 +20,19 @@ def collection_url(collection_id=None, **query):
 
 def entity_url(entity_id=None, **query):
     return ui_url('entities', id=entity_id, **query)
+
+
+def archive_url(role_id, content_hash, file_name=None, mime_type=None):
+    """Create an access authorization link for an archive blob."""
+    if content_hash is None:
+        return None
+    payload = dict(r=role_id, h=content_hash, f=file_name, t=mime_type)
+    claim = jwt.encode(payload, settings.SECRET_KEY).decode('utf-8')
+    return url_for('archive_api.retrieve', _authorize=True,
+                   _query=[('claim', claim)])
+
+
+def archive_claim(claim):
+    """Unpack an access authorization token for an archive blob."""
+    data = jwt.decode(claim, key=settings.SECRET_KEY, verify=True)
+    return data.get('r'), data.get('h'), data.get('f'), data.get('t')

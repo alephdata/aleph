@@ -43,9 +43,7 @@ class IngestApiTestCase(TestCase):
             'meta': json.dumps(meta),
             'foo': open(self.csv_path, 'rb'),
         }
-        res = self.client.post(self.url,
-                               data=data,
-                               headers=headers)
+        res = self.client.post(self.url, data=data, headers=headers)
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
 
@@ -55,8 +53,8 @@ class IngestApiTestCase(TestCase):
         res = self.client.get('/api/2/entities/1', headers=headers)
         assert 'de' in res.json['countries'], res.json
         assert 'us' in res.json['countries'], res.json
-        res = self.client.get('/api/2/documents/1/file',
-                              headers=headers)
+        file_url = res.json['links']['file']
+        res = self.client.get(file_url, headers=headers)
         assert b'Klaus Trutzel' in res.data
         assert 'text/csv' in res.content_type, res.content_type
 
@@ -80,13 +78,17 @@ class IngestApiTestCase(TestCase):
                               headers=headers)
         assert res.json['total'] == 1, res.json
 
-        res = self.client.get('/api/2/entities/1/content',
-                              headers=headers)
-        assert 'html' in res.json, res.json
-        assert 'Wikipedia, the free encyclopedia' in res.json['html'], \
-            res.json['html']
+        res = self.client.get('/api/2/entities/1', headers=headers)
+        assert 'file' in res.json['links'], res.json
+        file_url = res.json['links']['file']
 
-        res = self.client.get('/api/2/documents/1/file', headers=headers)
+        con = self.client.get('/api/2/entities/1/content',
+                              headers=headers)
+        assert 'html' in con.json, res.con
+        assert 'Wikipedia, the free encyclopedia' in con.json['html'], \
+            con.json['html']
+
+        res = self.client.get(file_url, headers=headers)
         assert b'KDE2' in res.data
         assert 'text/html' in res.content_type, res.content_type
 
