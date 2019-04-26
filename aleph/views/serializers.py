@@ -130,7 +130,7 @@ class AlertSerializer(Serializer):
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['links'] = {
-            'self': url_for('alerts_api.view', id=pk)
+            'self': url_for('alerts_api.view', alert_id=pk)
         }
         role_id = obj.pop('role_id', None)
         obj['writeable'] = role_id == stringify(request.authz.id)
@@ -148,9 +148,9 @@ class CollectionSerializer(Serializer):
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['links'] = {
-            'self': url_for('collections_api.view', id=pk),
-            'xref': url_for('xref_api.index', id=pk),
-            'xref_csv': url_for('xref_api.csv_export', id=pk,
+            'self': url_for('collections_api.view', collection_id=pk),
+            'xref': url_for('xref_api.index', collection_id=pk),
+            'xref_csv': url_for('xref_api.csv_export', collection_id=pk,
                                 _authorize=obj.get('secret')),
             'reconcile': url_for('reconcile_api.reconcile',
                                  collection_id=pk,

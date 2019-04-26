@@ -1,9 +1,11 @@
 import time
 import logging
 from banal import hash_data
+from datetime import datetime
 from flask_babel import get_locale
 from flask import request, Response, Blueprint
 
+from aleph import signals, __version__
 from aleph.core import settings
 
 log = logging.getLogger(__name__)
@@ -17,27 +19,6 @@ class NotModified(Exception):
 
 def handle_not_modified(exc):
     return Response(status=304)
-
-
-@blueprint.before_app_request
-def setup_request():
-    """Set some request attributes at the beginning of the request.
-    By default, caching will be disabled."""
-    request._begin_time = time.time()
-
-    locale = get_locale()
-    request._app_locale = str(locale)
-
-    request.session_id = request.headers.get('X-Aleph-Session')
-    if request.session_id is None:
-        request.session_id = hash_data((request.remote_addr,
-                                        request.accept_languages,
-                                        request.user_agent))
-
-    request._http_cache = False
-    request._http_private = False
-    request._http_revalidate = False
-    request._http_etag = None
 
 
 def enable_cache(vary_user=True, vary=None):
@@ -64,9 +45,37 @@ def enable_cache(vary_user=True, vary=None):
         raise NotModified()
 
 
+def tag_request(**kwargs):
+    """Store metadata for structured log output."""
+    for tag, value in kwargs.items():
+        if value is not None:
+            request._log_tags[tag] = value
+
+
+@blueprint.before_app_request
+def setup_request():
+    """Set some request attributes at the beginning of the request.
+    By default, caching will be disabled."""
+    request._begin_time = time.time()
+    request._app_locale = str(get_locale())
+
+    request.session_id = request.headers.get('X-Aleph-Session')
+    if request.session_id is None:
+        request.session_id = hash_data((request.remote_addr,
+                                        request.accept_languages,
+                                        request.user_agent))
+
+    request._http_cache = False
+    request._http_private = False
+    request._http_revalidate = False
+    request._http_etag = None
+    request._log_tags = {}
+
+
 @blueprint.after_app_request
-def cache_response(resp):
+def finalize_response(resp):
     """Post-request processing to set cache parameters."""
+    generate_request_log(resp)
     resp.headers['X-Aleph-Session'] = request.session_id
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
@@ -97,3 +106,31 @@ def cache_response(resp):
         resp.cache_control.public = None
         resp.cache_control.private = True
     return resp
+
+
+def generate_request_log(resp):
+    """Collect data about the request for analytical purposes."""
+    payload = {
+        'v': __version__,
+        'session_id': request.session_id,
+        'role_id': request.authz.id,
+        'method': request.method,
+        'endpoint': request.endpoint,
+        'referrer': request.referrer,
+        'ip': request.remote_addr,
+        'ua': str(request.user_agent),
+        'time': datetime.utcnow().isoformat(),
+        'url': request.url,
+        'path': request.full_path,
+        'status': resp.status_code,
+        'locale': request._app_locale
+    }
+    tags = dict(request.view_args or ())
+    tags.update(request._log_tags)
+    for tag, value in tags.items():
+        if value is not None and tag not in payload:
+            payload[tag] = value
+
+    # from pprint import pformat
+    # log.info('%s', pformat(payload))
+    signals.handle_request_log.send(payload=payload)

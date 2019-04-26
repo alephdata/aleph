@@ -20,7 +20,7 @@ from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 
-from aleph import settings
+from aleph import settings, signals
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -105,6 +105,28 @@ def determine_locale():
         locale = str(babel.default_locale)
     set_model_locale(locale)
     return locale
+
+
+def has_google_credentials():
+    """Check if a Google credentials JSON is available."""
+    try:
+        import google.auth
+        google.auth.default()
+        return True
+    except Exception:
+        return False
+
+
+@signals.handle_request_log.connect
+def stackdriver_log(sender, payload={}):
+    from google.cloud import logging
+    if not has_google_credentials():
+        return
+    if not hasattr(settings, '_gcp_logger'):
+        client = logging.Client()
+        settings._gcp_logger = client.logger('%s-requests' % settings.APP_NAME)
+        log.debug("Enabling GCP Stackdriver request logging...")
+    settings._gcp_logger.log_struct(payload)
 
 
 @migrate.configure

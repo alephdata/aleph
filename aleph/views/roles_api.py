@@ -11,6 +11,7 @@ from aleph.views.forms import RoleSchema
 from aleph.views.forms import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
+from aleph.views.context import tag_request
 
 blueprint = Blueprint('roles_api', __name__)
 log = logging.getLogger(__name__)
@@ -77,6 +78,7 @@ def create():
     update_role(role)
     # Let the serializer return more info about this user
     request.authz.id = role.id
+    tag_request(role_id=role.id)
     return RoleSerializer.jsonify(role, status=201)
 
 

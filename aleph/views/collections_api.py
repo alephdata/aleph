@@ -14,7 +14,7 @@ from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
 from aleph.logic.audit import record_audit
 from aleph.logic.util import collection_url
-from aleph.views.cache import enable_cache
+from aleph.views.context import enable_cache
 from aleph.views.forms import CollectionCreateSchema, CollectionUpdateSchema
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import get_db_collection, get_index_collection
@@ -54,16 +54,16 @@ def create():
     return CollectionSerializer.jsonify(collection)
 
 
-@blueprint.route('/api/2/collections/<int:id>', methods=['GET'])
-def view(id):
-    collection = get_index_collection(id)
-    record_audit(Audit.ACT_COLLECTION, id=id)
+@blueprint.route('/api/2/collections/<int:collection_id>', methods=['GET'])
+def view(collection_id):
+    collection = get_index_collection(collection_id)
+    record_audit(Audit.ACT_COLLECTION, id=collection_id)
     return CollectionSerializer.jsonify(collection)
 
 
-@blueprint.route('/api/2/collections/<int:id>', methods=['POST', 'PUT'])
-def update(id):
-    collection = get_db_collection(id, request.authz.WRITE)
+@blueprint.route('/api/2/collections/<int:collection_id>', methods=['POST', 'PUT'])  # noqa
+def update(collection_id):
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request(CollectionUpdateSchema)
     sync = get_flag('sync')
     collection.update(data)
@@ -72,17 +72,17 @@ def update(id):
     return CollectionSerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/collections/<int:id>/process', methods=['POST', 'PUT'])  # noqa
-def process(id):
-    collection = get_db_collection(id, request.authz.WRITE)
+@blueprint.route('/api/2/collections/<int:collection_id>/process', methods=['POST', 'PUT'])  # noqa
+def process(collection_id):
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
     process_documents.delay(collection_id=collection.id)
     return ('', 204)
 
 
-@blueprint.route('/api/2/collections/<int:id>/mapping', methods=['POST', 'PUT'])  # noqa
-def mapping_process(id):
-    collection = get_db_collection(id, request.authz.WRITE)
+@blueprint.route('/api/2/collections/<int:collection_id>/mapping', methods=['POST', 'PUT'])  # noqa
+def mapping_process(collection_id):
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
     # TODO: we need to look into possible abuse of mapping load path for local
     # path access on the machine running the mapping. Until then, this action
@@ -100,9 +100,9 @@ def mapping_process(id):
     return ('', 204)
 
 
-@blueprint.route('/api/2/collections/<int:id>/_bulk', methods=['POST'])
-def bulk(id):
-    collection = get_db_collection(id, request.authz.WRITE)
+@blueprint.route('/api/2/collections/<int:collection_id>/_bulk', methods=['POST'])  # noqa
+def bulk(collection_id):
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
     merge = get_flag('merge', default=False)
 
@@ -117,9 +117,9 @@ def bulk(id):
     return ('', 204)
 
 
-@blueprint.route('/api/2/collections/<int:id>', methods=['DELETE'])
-def delete(id):
-    collection = get_db_collection(id, request.authz.WRITE)
+@blueprint.route('/api/2/collections/<int:collection_id>', methods=['DELETE'])
+def delete(collection_id):
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     sync = get_flag('sync', default=True)
     delete_collection(collection, sync=sync)
     return ('', 204)

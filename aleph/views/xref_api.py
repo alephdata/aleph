@@ -13,9 +13,9 @@ from aleph.views.util import parse_request
 blueprint = Blueprint('xref_api', __name__)
 
 
-@blueprint.route('/api/2/collections/<int:id>/xref', methods=['GET'])
-def index(id):
-    collection = get_db_collection(id)
+@blueprint.route('/api/2/collections/<int:collection_id>/xref', methods=['GET'])
+def index(collection_id):
+    collection = get_db_collection(collection_id)
     record_audit(Audit.ACT_COLLECTION, id=collection.id)
     parser = QueryParser(request.args, request.authz)
     q = Match.group_by_collection(collection.id, authz=request.authz)
@@ -23,10 +23,10 @@ def index(id):
     return MatchCollectionsSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/collections/<int:id>/xref/<int:other_id>',
+@blueprint.route('/api/2/collections/<int:collection_id>/xref/<int:other_id>',
                  methods=['GET'])
-def matches(id, other_id):
-    collection = get_db_collection(id)
+def matches(collection_id, other_id):
+    collection = get_db_collection(collection_id)
     record_audit(Audit.ACT_COLLECTION, id=collection.id)
     other = get_db_collection(other_id)
     record_audit(Audit.ACT_COLLECTION, id=other.id)
@@ -36,10 +36,10 @@ def matches(id, other_id):
     return MatchSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/collections/<int:id>/xref', methods=['POST'])
-def generate(id):
+@blueprint.route('/api/2/collections/<int:collection_id>/xref', methods=['POST'])
+def generate(collection_id):
     data = parse_request(XrefSchema)
-    collection = get_db_collection(id, request.authz.WRITE)
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     args = {
         "against_collection_ids": data.get("against_collection_ids")
     }
@@ -47,9 +47,9 @@ def generate(id):
     return jsonify({'status': 'accepted'}, status=202)
 
 
-@blueprint.route('/api/2/collections/<int:id>/xref.csv')
-def csv_export(id):
-    collection = get_db_collection(id, request.authz.READ)
-    record_audit(Audit.ACT_COLLECTION, id=id)
+@blueprint.route('/api/2/collections/<int:collection_id>/xref.csv')
+def csv_export(collection_id):
+    collection = get_db_collection(collection_id, request.authz.READ)
+    record_audit(Audit.ACT_COLLECTION, id=collection.id)
     matches = export_matches_csv(collection.id, request.authz)
     return stream_csv(stream_with_context(matches))

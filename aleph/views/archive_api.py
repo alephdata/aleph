@@ -7,6 +7,7 @@ from aleph.model import Audit
 from aleph.logic.audit import record_audit
 from aleph.logic.util import archive_claim
 from aleph.views.util import require
+from aleph.views.context import tag_request
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('archive_api', __name__)
@@ -18,6 +19,7 @@ def retrieve():
     role_id, content_hash, file_name, mime_type = archive_claim(claim)
     require(request.authz.id == role_id)
     record_audit(Audit.ACT_ARCHIVE, content_hash=content_hash)
+    tag_request(content_hash=content_hash, file_name=file_name)
     url = archive.generate_url(content_hash,
                                file_name=file_name,
                                mime_type=mime_type)
