@@ -49,6 +49,7 @@ class TestCase(FlaskTestCase):
         settings.INDEX_WRITE = 'yolo'
         settings.INDEX_READ = [settings.INDEX_WRITE]
         settings.REDIS_URL = None
+        settings._gcp_logger = None
         app = create_app({})
         mount_app_blueprints(app)
         return app

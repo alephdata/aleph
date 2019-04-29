@@ -184,7 +184,7 @@ def update(entity_id):
 
 @blueprint.route('/api/2/entities/<entity_id>/merge/<other_id>', methods=['DELETE'])  # noqa
 def merge(entity_id, other_id):
-    entity = get_db_entity(id, request.authz.WRITE)
+    entity = get_db_entity(entity_id, request.authz.WRITE)
     other = get_db_entity(other_id, request.authz.WRITE)
     tag_request(collection_id=entity.collection_id)
 

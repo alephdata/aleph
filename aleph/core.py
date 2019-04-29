@@ -112,9 +112,9 @@ def determine_locale():
 def stackdriver_log(sender, payload={}):
     if not hasattr(settings, '_gcp_logger'):
         try:
-            from google.cloud import logging as gcpLogging
+            from google.cloud import logging
             google.auth.default()
-            client = gcpLogging.Client()
+            client = logging.Client()
             logger_name = '%s-api' % settings.APP_NAME
             settings._gcp_logger = client.logger(logger_name)
             log.debug("Enabled Stackdriver request logging.")
