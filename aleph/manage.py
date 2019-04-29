@@ -214,7 +214,7 @@ def _export_balkhash_collection(collection, retries=0, backoff=30, offset=0):
                     writer.put(dpart, fragment=str(record.id))
             offset += 1
         dataset.close()
-    except (DBAPIError, Exception) as exc:
+    except DBAPIError as exc:
         if retries < MAX_RETRIES:
             log.debug("Error occurred: %s", exc)
             log.debug("Retrying in %s seconds", backoff)
