@@ -1,4 +1,5 @@
 import logging
+import google.auth
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -20,7 +21,7 @@ from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 
-from aleph import settings
+from aleph import settings, signals
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -105,6 +106,23 @@ def determine_locale():
         locale = str(babel.default_locale)
     set_model_locale(locale)
     return locale
+
+
+@signals.handle_request_log.connect
+def stackdriver_log(sender, payload={}):
+    if not hasattr(settings, '_gcp_logger'):
+        try:
+            from google.cloud import logging as gcpLogging
+            google.auth.default()
+            client = gcpLogging.Client()
+            logger_name = '%s-api' % settings.APP_NAME
+            settings._gcp_logger = client.logger(logger_name)
+            log.debug("Enabled Stackdriver request logging.")
+        except Exception as exc:
+            log.debug("Disable Stackdriver: %s", exc)
+            settings._gcp_logger = None
+    if settings._gcp_logger is not None:
+        settings._gcp_logger.log_struct(payload)
 
 
 @migrate.configure

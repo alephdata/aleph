@@ -13,7 +13,7 @@ from aleph.core import cache, settings, url_for
 from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.views.serializers import RoleSerializer
-from aleph.views.cache import enable_cache, NotModified
+from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
 
 blueprint = Blueprint('base_api', __name__)

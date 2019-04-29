@@ -18,7 +18,7 @@ from aleph.logic.audit import record_audit
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
 from aleph.views.util import require
-from aleph.views.cache import enable_cache
+from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
 from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
 
@@ -33,6 +33,7 @@ EXPORT_MAX = 1000
 def index():
     # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.args, request.authz)
+    tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
     links = {}
     if request.authz.logged_in and result.total <= EXPORT_MAX:
@@ -49,6 +50,7 @@ def export(format):
     require(request.authz.logged_in)
     parser = SearchQueryParser(request.args, request.authz)
     parser.limit = EXPORT_MAX
+    tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
     stream = export_entities(request, result, format)
     response = Response(stream, mimetype='application/zip')
@@ -62,6 +64,7 @@ def match():
     entity = parse_request(EntityUpdateSchema)
     record_audit(Audit.ACT_MATCH, entity=entity)
     entity = model.get_proxy(entity)
+    tag_request(schema=entity.schema.name, caption=entity.caption)
     collection_ids = request.args.getlist('collection_ids')
     result = MatchQuery.handle(request, entity=entity,
                                collection_ids=collection_ids)
@@ -73,6 +76,7 @@ def create():
     data = parse_request(EntityCreateSchema)
     collection = get_db_collection(data['collection_id'], request.authz.WRITE)
     data = create_entity(data, collection, sync=get_flag('sync', True))
+    tag_request(entity_id=data.get('id'), collection_id=str(collection.id))
     return EntitySerializer.jsonify(data)
 
 
@@ -82,6 +86,7 @@ def view(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     record_audit(Audit.ACT_ENTITY, id=entity_id)
+    tag_request(collection_id=entity.get('collection_id'))
     return EntitySerializer.jsonify(entity)
 
 
@@ -89,6 +94,7 @@ def view(entity_id):
 def content(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
+    tag_request(collection_id=entity.get('collection_id'))
     for entity in entities_by_ids([entity_id],
                                   schemata=entity.get('schema'),
                                   excludes=['text']):
@@ -110,6 +116,7 @@ def content(entity_id):
 def similar(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
+    tag_request(collection_id=entity.get('collection_id'))
     entity = model.get_proxy(entity)
     record_audit(Audit.ACT_ENTITY, id=entity_id)
     result = MatchQuery.handle(request, entity=entity)
@@ -120,6 +127,7 @@ def similar(entity_id):
 def references(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
+    tag_request(collection_id=entity.get('collection_id'))
     record_audit(Audit.ACT_ENTITY, id=entity_id)
     results = []
     for prop, total in entity_references(entity, request.authz):
@@ -139,6 +147,7 @@ def references(entity_id):
 def tags(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
+    tag_request(collection_id=entity.get('collection_id'))
     record_audit(Audit.ACT_ENTITY, id=entity_id)
     results = []
     for (field, value, total) in entity_tags(entity, request.authz):
@@ -162,6 +171,7 @@ def tags(entity_id):
 @blueprint.route('/api/2/entities/<entity_id>', methods=['POST', 'PUT'])
 def update(entity_id):
     entity = get_db_entity(entity_id, request.authz.WRITE)
+    tag_request(collection_id=entity.collection_id)
     data = parse_request(EntityUpdateSchema)
     if get_flag('merge'):
         props = merge_data(data.get('properties'), entity.data)
@@ -172,10 +182,11 @@ def update(entity_id):
     return EntitySerializer.jsonify(data)
 
 
-@blueprint.route('/api/2/entities/<id>/merge/<other_id>', methods=['DELETE'])
-def merge(id, other_id):
+@blueprint.route('/api/2/entities/<entity_id>/merge/<other_id>', methods=['DELETE'])  # noqa
+def merge(entity_id, other_id):
     entity = get_db_entity(id, request.authz.WRITE)
     other = get_db_entity(other_id, request.authz.WRITE)
+    tag_request(collection_id=entity.collection_id)
 
     try:
         entity.merge(other)
@@ -192,6 +203,7 @@ def merge(id, other_id):
 @blueprint.route('/api/2/entities/<entity_id>', methods=['DELETE'])
 def delete(entity_id):
     entity = get_db_entity(entity_id, request.authz.WRITE)
+    tag_request(collection_id=entity.collection_id)
     delete_entity(entity, sync=True)
     db.session.commit()
     return ('', 204)

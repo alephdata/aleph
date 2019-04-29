@@ -1,5 +1,5 @@
 from aleph import signals
-from aleph.views.cache import blueprint as cache
+from aleph.views.context import blueprint as cache
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.documents_api import blueprint as documents_api
 from aleph.views.sessions_api import blueprint as sessions_api
