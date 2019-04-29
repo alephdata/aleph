@@ -58,13 +58,7 @@ def setup_request():
     By default, caching will be disabled."""
     request._begin_time = time.time()
     request._app_locale = str(get_locale())
-
     request.session_id = request.headers.get('X-Aleph-Session')
-    if request.session_id is None:
-        request.session_id = hash_data((request.remote_addr,
-                                        request.accept_languages,
-                                        request.user_agent))
-
     request._http_cache = False
     request._http_private = False
     request._http_revalidate = False
@@ -76,7 +70,6 @@ def setup_request():
 def finalize_response(resp):
     """Post-request processing to set cache parameters."""
     generate_request_log(resp)
-    resp.headers['X-Aleph-Session'] = request.session_id
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
@@ -113,7 +106,6 @@ def generate_request_log(resp):
     payload = {
         'v': __version__,
         'session_id': request.session_id,
-        'role_id': request.authz.id,
         'method': request.method,
         'endpoint': request.endpoint,
         'referrer': request.referrer,
@@ -125,12 +117,15 @@ def generate_request_log(resp):
         'status': resp.status_code,
         'locale': request._app_locale
     }
+    if hasattr(request, 'authz'):
+        payload['role_id'] = request.authz.id
+    if hasattr(request, '_begin_time'):
+        took = time.time() - request._begin_time
+        payload['took'] = int(took * 1000)
     tags = dict(request.view_args or ())
     tags.update(request._log_tags)
     for tag, value in tags.items():
         if value is not None and tag not in payload:
             payload[tag] = value
 
-    # from pprint import pformat
-    # log.info('%s', pformat(payload))
     signals.handle_request_log.send(payload=payload)

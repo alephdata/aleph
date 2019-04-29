@@ -1,4 +1,5 @@
 import logging
+import google.auth
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -107,26 +108,21 @@ def determine_locale():
     return locale
 
 
-def has_google_credentials():
-    """Check if a Google credentials JSON is available."""
-    try:
-        import google.auth
-        google.auth.default()
-        return True
-    except Exception:
-        return False
-
-
 @signals.handle_request_log.connect
 def stackdriver_log(sender, payload={}):
-    from google.cloud import logging
-    if not has_google_credentials():
-        return
     if not hasattr(settings, '_gcp_logger'):
-        client = logging.Client()
-        settings._gcp_logger = client.logger('%s-requests' % settings.APP_NAME)
-        log.debug("Enabling GCP Stackdriver request logging...")
-    settings._gcp_logger.log_struct(payload)
+        try:
+            from google.cloud import logging as gcpLogging
+            google.auth.default()
+            client = gcpLogging.Client()
+            logger_name = '%s-api' % settings.APP_NAME
+            settings._gcp_logger = client.logger(logger_name)
+            log.debug("Enabled Stackdriver request logging.")
+        except Exception as exc:
+            log.debug("Disable Stackdriver: %s", exc)
+            settings._gcp_logger = None
+    if settings._gcp_logger is not None:
+        settings._gcp_logger.log_struct(payload)
 
 
 @migrate.configure
