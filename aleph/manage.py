@@ -205,7 +205,7 @@ def _export_balkhash_collection(collection, retries=0, backoff=30, offset=0):
             if doc.supports_records:
                 q = db.session.query(DocumentRecord)
                 q = q.filter(DocumentRecord.document_id == doc.id)
-                for record in q.yield_per(10000):
+                for record in q.yield_per(100):
                     rproxy = record.to_proxy()
                     writer.put(rproxy)
                     dpart = model.make_entity(doc.schema)
