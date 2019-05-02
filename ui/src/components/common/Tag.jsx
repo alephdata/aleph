@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Icon as IconBlueprint } from '@blueprintjs/core/lib/esm/components/icon/icon';
-import { Icon } from './Icon';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
 import './Tag.scss';
 
@@ -14,9 +13,9 @@ class TagIcon extends PureComponent {
     names: <Icon icon="tags" className={this.className} />,
     identifiers: <Icon icon="license" className={this.className} />,
     emails: <Icon icon="email" className={this.className} />,
-    phones: <IconBlueprint icon="phone" className={this.className} />,
-    addresses: <IconBlueprint icon="home" className={this.className} />,
-    link: <IconBlueprint icon="link" className={this.className} />,
+    phones: <Icon icon="phone" className={this.className} />,
+    addresses: <Icon icon="home" className={this.className} />,
+    link: <Icon icon="link" className={this.className} />,
   };
 
   render() {

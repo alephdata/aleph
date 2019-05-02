@@ -3,11 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import {
-  Count, TextLoading, Schema, Icon,
+  Count, TextLoading, Schema,
 } from 'src/components/common';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';

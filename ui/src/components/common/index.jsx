@@ -21,8 +21,9 @@ import SortableTH from './SortableTH';
 import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
-import { Icon } from './Icon';
 import SearchBox from './SearchBox';
+
+import './Icon';
 
 export {
   Breadcrumbs,
@@ -49,5 +50,4 @@ export {
   Tag,
   URL,
   SearchBox,
-  Icon,
 };

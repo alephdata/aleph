@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectModel } from 'src/selectors';
-import { Icon } from './Icon';
+import { Icon } from '@blueprintjs/core';
 
 class SchemaIcon extends PureComponent {
   render() {
