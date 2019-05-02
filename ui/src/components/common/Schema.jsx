@@ -12,7 +12,7 @@ class SchemaIcon extends PureComponent {
         className="entity-icon"
         iconSize="16px"
         {...rest}
-        name={schema.name.toLowerCase()}
+        icon={schema.name.toLowerCase()}
       />
     );
   }
