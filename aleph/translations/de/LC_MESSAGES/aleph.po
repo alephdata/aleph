@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-04-23 16:17+0200\n"
+"POT-Creation-Date: 2019-05-06 14:13+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -210,27 +210,27 @@ msgstr "Dieser Pfad existiert nicht."
 msgid "Internal server error."
 msgstr "Interner Server-Fehler"
 
-#: aleph/views/base_api.py:174
-msgid "Access token has expired."
-msgstr "Access token ist ausgelaufen."
+#: aleph/views/base_api.py:175
+msgid "Access token is invalid."
+msgstr "Ungültiger Zugriffstoken"
 
-#: aleph/views/base_api.py:183
+#: aleph/views/base_api.py:184
 msgid "There was an error during search"
 msgstr "Während der Suche ist ein Fehler aufgetreten."
 
-#: aleph/views/roles_api.py:27
+#: aleph/views/roles_api.py:28
 msgid "prefix filter is too short"
 msgstr "prefix-Filter ist zu kurz"
 
-#: aleph/views/roles_api.py:43
+#: aleph/views/roles_api.py:44
 msgid "To proceed, please check your email."
 msgstr "Prüfen sie bitte ihren E-Mail-Eingang um fortzufahren."
 
-#: aleph/views/roles_api.py:58
+#: aleph/views/roles_api.py:59
 msgid "Invalid code"
 msgstr "Ungültiger Code"
 
-#: aleph/views/roles_api.py:65
+#: aleph/views/roles_api.py:66
 msgid "Email is already registered"
 msgstr "Diese E-Mail ist bereits angemeldet"
 
