@@ -157,11 +157,7 @@ def normalize_href(href, base_url):
 def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
     """Serialize to JSON and also dump from the given schema."""
     data = encoder().encode(obj)
-    if 'callback' in request.args:
-        cb = request.args.get('callback')
-        data = '%s && %s(%s)' % (cb, cb, data)
-    return Response(data, headers=headers,
-                    status=status,
+    return Response(data, headers=headers, status=status,
                     mimetype='application/json')
 
 

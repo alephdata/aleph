@@ -67,7 +67,10 @@ class DocumentRecord(db.Model):
             proxy.set('table', self.document_id)
             proxy.set('index', self.index)
             if self.data is not None:
-                values = [v for (k, v) in sorted(self.data.items())]
+                # sort values by columns
+                values = [
+                    self.data.get(k) for k in self.document.meta.get('columns')
+                ]
                 proxy.set('cells', registry.json.pack(values))
             return proxy
 

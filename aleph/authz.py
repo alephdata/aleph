@@ -23,7 +23,7 @@ class Authz(object):
     def __init__(self, role_id, roles, is_admin=False):
         self.id = role_id
         self.logged_in = role_id is not None
-        self.roles = set(roles)
+        self.roles = set(ensure_list(roles))
         self.is_admin = is_admin
         self.in_maintenance = settings.MAINTENANCE
         self.session_write = not self.in_maintenance and self.logged_in
@@ -95,13 +95,13 @@ class Authz(object):
     def to_token(self, scope=None, role=None):
         exp = datetime.utcnow() + timedelta(days=1)
         payload = {
-            'id': self.id,
+            'u': self.id,
             'exp': exp,
-            'roles': list(self.roles),
-            'is_admin': self.is_admin
+            'r': list(self.roles),
+            'a': self.is_admin
         }
         if scope is not None:
-            payload['scope'] = scope
+            payload['s'] = scope
         if role is not None:
             role = role.to_dict()
             role.pop('created_at', None)
@@ -129,11 +129,11 @@ class Authz(object):
             return
         try:
             data = jwt.decode(token, key=settings.SECRET_KEY, verify=True)
-            if 'scope' in data and data.get('scope') != scope:
+            if 's' in data and data.get('s') != scope:
                 raise Unauthorized()
-            return cls(data.get('id'),
-                       data.get('roles'),
-                       data.get('is_admin', False))
+            return cls(data.get('u'),
+                       data.get('r'),
+                       data.get('a', False))
         except jwt.DecodeError:
             return
 

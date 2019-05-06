@@ -27,7 +27,7 @@ class EntityLabel extends Component {
       entity, icon = false, documentMode = false, truncate,
     } = this.props;
 
-    if (entity === undefined) {
+    if (!entity) {
       return null;
     }
     const title = entity.getFirst('title') || entity.getCaption();

@@ -104,7 +104,7 @@ export function selectNotificationsResult(state, query) {
   const result = selectResult(state, query, (stateInner, id) => stateInner.notifications[id]);
   result.results.forEach((notif) => {
     Object.entries(notif.event.params).forEach(([field, type]) => {
-      if (type === 'entity') {
+      if (type === 'entity' && notif.params[field]) {
         notif.params[field] = model.getEntity(notif.params[field]);
       }
     });

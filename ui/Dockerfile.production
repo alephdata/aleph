@@ -1,4 +1,4 @@
-FROM node:alpine AS builder
+FROM node:12 AS builder
 
 RUN mkdir /alephui
 WORKDIR /alephui

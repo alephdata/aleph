@@ -12,6 +12,7 @@ from aleph.search import EntitiesQuery, MatchQuery
 from aleph.views.util import jsonify, get_index_collection
 from aleph.logic.util import entity_url
 from aleph.index.util import unpack_result
+from aleph.views.context import tag_request
 
 # See: https://github.com/OpenRefine/OpenRefine/wiki/Reconciliation-Service-API
 blueprint = Blueprint('reconcile_api', __name__)
@@ -143,6 +144,7 @@ def reconcile_op(query, collection=None):
 def suggest_entity():
     """Suggest API, emulates Google Refine API."""
     prefix = request.args.get('prefix', '')
+    tag_request(prefix=prefix)
     types = request.args.getlist('type') or Entity.THING
     args = {
         'prefix': prefix,
@@ -164,6 +166,7 @@ def suggest_entity():
 @blueprint.route('/api/freebase/property', methods=['GET', 'POST'])
 def suggest_property():
     prefix = request.args.get('prefix', '').lower().strip()
+    tag_request(prefix=prefix)
     schema = request.args.get('schema', Entity.THING)
     matches = []
     for prop in model.get(schema).properties.values():
@@ -192,6 +195,7 @@ def suggest_property():
 @blueprint.route('/api/freebase/type', methods=['GET', 'POST'])
 def suggest_type():
     prefix = request.args.get('prefix', '').lower().strip()
+    tag_request(prefix=prefix)
     matches = []
     for schema in model:
         match = not len(prefix)

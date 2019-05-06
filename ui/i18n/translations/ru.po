@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-04-23T14:17:12.710Z\n"
+"POT-Creation-Date: 2019-05-06T12:12:14.195Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -561,7 +561,7 @@ msgstr "Скачать"
 #. Download matches as CSV
 #: i18n/messages.json
 msgid "Download matches as CSV"
-msgstr "Скачать результаты в формате CSV"
+msgstr "Сохранить в CSV"
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -575,7 +575,7 @@ msgstr "Скачать оригинальный документ"
 #. E-Mails
 #: i18n/messages.json
 msgid "E-Mails"
-msgstr "Эл. письма"
+msgstr "Эл. адреса"
 
 #. [settings.email]
 #. defaultMessage is:
@@ -645,7 +645,7 @@ msgstr "Выбрать коллекции"
 #. Filter the sources…
 #: i18n/messages.json
 msgid "Filter the sources…"
-msgstr "Отфильтровать источники"
+msgstr "Отфильтровать коллекции"
 
 #. [search.screen.filters]
 #. defaultMessage is:
@@ -715,10 +715,7 @@ msgstr "Помощь"
 #. [entity.info.info]
 #. defaultMessage is:
 #. Info
-#. [entity.info.info]
-#. defaultMessage is:
-#. Info
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Info"
 msgstr "Информация"
 
@@ -1256,7 +1253,7 @@ msgstr "Искать людей, компании или документы."
 #. Search curated data sources...
 #: i18n/messages.json
 msgid "Search curated data sources..."
-msgstr "Поиск готовых источников данных..."
+msgstr "Поиск коллекций данных..."
 
 #. [alerts.alert.search]
 #. defaultMessage is:
@@ -1362,7 +1359,7 @@ msgstr "Доступ предоставлен"
 #. Show more…
 #: i18n/messages.json
 msgid "Show more…"
-msgstr "Показать ещё…"
+msgstr "Ещё..."
 
 #. [password_auth.signin]
 #. defaultMessage is:
@@ -1425,7 +1422,7 @@ msgid ""
 "Some sources are hidden from anonymous users. Sign in to see all results you"
 " are authorised to access."
 msgstr ""
-"Некоторые источники данных недоступны анонимным пользователям — пожалуйста, "
+"Некоторые коллекции данных недоступны анонимным пользователям — пожалуйста, "
 "авторизуйтесь!"
 
 #. [collection.info.source]
@@ -1436,7 +1433,7 @@ msgstr ""
 #. Source
 #: i18n/messages.json i18n/messages.json
 msgid "Source"
-msgstr "Источник"
+msgstr "Коллекция"
 
 #. [collection.edit.title.source]
 #. defaultMessage is:
@@ -1456,7 +1453,7 @@ msgstr "Настройки"
 #. Sources
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sources"
-msgstr "Источники данных"
+msgstr "Коллекции"
 
 #. [collection.xref.confirm_button]
 #. defaultMessage is:
@@ -1513,10 +1510,7 @@ msgstr "Тег"
 #. [entity.info.tags]
 #. defaultMessage is:
 #. Tags
-#. [entity.info.tags]
-#. defaultMessage is:
-#. Tags
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Tags"
 msgstr "Теги"
 
@@ -1953,4 +1947,4 @@ msgstr "Всего результатов: {}"
 #. {total} sources of documents and data
 #: i18n/messages.json
 msgid "{total} sources of documents and data"
-msgstr "{total} источников документов и данных"
+msgstr "{total} коллекци документов и данных"

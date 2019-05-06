@@ -31,11 +31,12 @@ rdflib==4.2.2
 idna==2.8.0
 requests[security]==2.21.0
 redis==2.10.6
-grpcio==1.19.0
-google-cloud-vision==0.36.0
-google-cloud-storage==1.14.0
-networkx==2.2
+networkx==2.3
 zipstream==1.1.4
+grpcio==1.20.1
+google-cloud-vision==0.36.0
+google-cloud-storage==1.15.0
+google-cloud-logging==1.10.0
 
 # Testing dependencies
 factory-boy==2.10.0

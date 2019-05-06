@@ -1,6 +1,7 @@
 import logging
 from flask import request
-from normality import stringify
+from normality import stringify, safe_filename
+from pantomime.types import PDF
 from banal import ensure_list, is_listish, is_mapping
 from followthemoney import model
 from followthemoney.types import registry
@@ -8,10 +9,15 @@ from followthemoney.types import registry
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events, Alert
 from aleph.logic import resolver
-from aleph.logic.util import collection_url, entity_url
+from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
 
 log = logging.getLogger(__name__)
+
+
+def first(values):
+    for value in ensure_list(values):
+        return value
 
 
 class Serializer(object):
@@ -124,7 +130,7 @@ class AlertSerializer(Serializer):
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['links'] = {
-            'self': url_for('alerts_api.view', id=pk)
+            'self': url_for('alerts_api.view', alert_id=pk)
         }
         role_id = obj.pop('role_id', None)
         obj['writeable'] = role_id == stringify(request.authz.id)
@@ -142,9 +148,9 @@ class CollectionSerializer(Serializer):
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['links'] = {
-            'self': url_for('collections_api.view', id=pk),
-            'xref': url_for('xref_api.index', id=pk),
-            'xref_csv': url_for('xref_api.csv_export', id=pk,
+            'self': url_for('collections_api.view', collection_id=pk),
+            'xref': url_for('xref_api.index', collection_id=pk),
+            'xref_csv': url_for('xref_api.csv_export', collection_id=pk,
                                 _authorize=obj.get('secret')),
             'reconcile': url_for('reconcile_api.reconcile',
                                  collection_id=pk,
@@ -219,16 +225,20 @@ class EntitySerializer(Serializer):
         }
         if schema.is_a(Document.SCHEMA):
             links['content'] = url_for('entities_api.content', entity_id=pk)
+            file_name = first(properties.get('fileName'))
+            content_hash = first(properties.get('contentHash'))
+            if content_hash:
+                mime_type = first(properties.get('mimeType'))
+                name = safe_filename(file_name, default=pk)
+                links['file'] = archive_url(request.authz.id, content_hash,
+                                            file_name=name,
+                                            mime_type=mime_type)
 
-        for content_hash in ensure_list(properties.get('contentHash')):
-            links['file'] = url_for('documents_api.file',
-                                    document_id=pk,
-                                    _authorize=True)
-
-        for pdf_hash in ensure_list(properties.get('pdfHash')):
-            links['pdf'] = url_for('documents_api.pdf',
-                                   document_id=pk,
-                                   _authorize=True)
+            pdf_hash = first(properties.get('pdfHash'))
+            if pdf_hash:
+                name = safe_filename(file_name, default=pk, extension='.pdf')
+                links['pdf'] = archive_url(request.authz.id, pdf_hash,
+                                           file_name=name, mime_type=PDF)
 
         obj['links'] = links
         obj['writeable'] = authz.can(collection_id, authz.WRITE)

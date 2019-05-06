@@ -1,4 +1,5 @@
 import logging
+import google.auth
 from banal import ensure_list
 from urllib.parse import urlparse, urljoin
 from werkzeug.local import LocalProxy
@@ -20,7 +21,7 @@ from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 
-from aleph import settings
+from aleph import settings, signals
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
@@ -107,6 +108,23 @@ def determine_locale():
     return locale
 
 
+@signals.handle_request_log.connect
+def stackdriver_log(sender, payload={}):
+    if not hasattr(settings, '_gcp_logger'):
+        try:
+            from google.cloud import logging
+            google.auth.default()
+            client = logging.Client()
+            logger_name = '%s-api' % settings.APP_NAME
+            settings._gcp_logger = client.logger(logger_name)
+            log.debug("Enabled Stackdriver request logging.")
+        except Exception as exc:
+            log.debug("Disable Stackdriver: %s", exc)
+            settings._gcp_logger = None
+    if settings._gcp_logger is not None:
+        settings._gcp_logger.log_struct(payload)
+
+
 @migrate.configure
 def configure_alembic(config):
     config.set_main_option('sqlalchemy.url', settings.DATABASE_URI)
@@ -154,7 +172,7 @@ def url_for(*a, **kw):
         authorize = kw.pop('_authorize', False)
         relative = kw.pop('_relative', False)
         path = flask_url_for(*a, **kw)
-        if authorize is True:
+        if authorize is True and hasattr(request, 'authz'):
             token = request.authz.to_token(scope=path)
             query = list(ensure_list(query))
             query.append(('api_key', token))

@@ -21,6 +21,7 @@ class Audit(db.Model, DatedModel):
     ACT_SEARCH = 'SEARCH'
     ACT_ENTITY = 'VIEW_ENITTY'
     ACT_COLLECTION = 'VIEW_COLLECTION'
+    ACT_ARCHIVE = 'ARCHIVE'
 
     id = db.Column(db.String(40), primary_key=True)
     activity = db.Column(db.Unicode, nullable=True)

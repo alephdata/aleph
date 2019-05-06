@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-04-23T14:17:12.710Z\n"
+"POT-Creation-Date: 2019-05-06T12:12:14.195Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -716,10 +716,7 @@ msgstr "Hilfe"
 #. [entity.info.info]
 #. defaultMessage is:
 #. Info
-#. [entity.info.info]
-#. defaultMessage is:
-#. Info
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Info"
 msgstr "Info"
 
@@ -1514,10 +1511,7 @@ msgstr "Schlagwort"
 #. [entity.info.tags]
 #. defaultMessage is:
 #. Tags
-#. [entity.info.tags]
-#. defaultMessage is:
-#. Tags
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Tags"
 msgstr "Schlagworte"
 

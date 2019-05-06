@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-04-23T14:17:12.710Z\n"
+"POT-Creation-Date: 2019-05-06T12:12:14.195Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -708,10 +708,7 @@ msgstr "Ayuda"
 #. [entity.info.info]
 #. defaultMessage is:
 #. Info
-#. [entity.info.info]
-#. defaultMessage is:
-#. Info
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Info"
 msgstr ""
 
@@ -1496,10 +1493,7 @@ msgstr ""
 #. [entity.info.tags]
 #. defaultMessage is:
 #. Tags
-#. [entity.info.tags]
-#. defaultMessage is:
-#. Tags
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Tags"
 msgstr "Etiquetas"
 

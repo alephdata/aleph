@@ -6,14 +6,14 @@ from elasticsearch import TransportError
 from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.types import registry
-from jwt import ExpiredSignatureError
+from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
 from aleph.core import cache, settings, url_for
 from aleph.model import Collection, Role
 from aleph.logic import resolver
 from aleph.views.serializers import RoleSerializer
-from aleph.views.cache import enable_cache, NotModified
+from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
 
 blueprint = Blueprint('base_api', __name__)
@@ -167,11 +167,12 @@ def handle_invalid_data(err):
     }, status=400)
 
 
+@blueprint.app_errorhandler(DecodeError)
 @blueprint.app_errorhandler(ExpiredSignatureError)
 def handle_jwt_expired(err):
     return jsonify({
         'status': 'error',
-        'errors': gettext('Access token has expired.')
+        'errors': gettext('Access token is invalid.')
     }, status=401)
 
 
