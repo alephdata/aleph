@@ -58,32 +58,15 @@ def delete_collection(collection, sync=False):
     flush_notifications(collection)
     collection.delete()
     db.session.commit()
+    deleted_at = collection.deleted_at or datetime.utcnow()
+    Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
+    Match.delete_by_collection(collection.id, deleted_at=deleted_at)
+    Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
+    collection.delete(deleted_at=deleted_at)
     index.delete_collection(collection.id, sync=sync)
-    delete_collection_content.apply_async([collection.id], priority=7)
+    index.delete_entities(collection.id, sync=False)
     refresh_collection(collection.id)
     Authz.flush()
-
-
-@celery.task()
-def delete_collection_content(collection_id):
-    # Deleting a collection affects many associated objects and requires
-    # checks, so this is done manually and in detail here.
-    q = db.session.query(Collection)
-    q = q.filter(Collection.id == collection_id)
-    collection = q.first()
-    if collection is None:
-        log.error("No collection with ID: %r", collection_id)
-        return
-
-    log.info("Deleting collection [%r]: %r", collection.id, collection.label)
-    deleted_at = collection.deleted_at or datetime.utcnow()
-    Entity.delete_by_collection(collection_id, deleted_at=deleted_at)
-    Match.delete_by_collection(collection_id, deleted_at=deleted_at)
-    Permission.delete_by_collection(collection_id, deleted_at=deleted_at)
-    index.delete_collection(collection_id)
-    index.delete_entities(collection_id)
-    collection.delete(deleted_at=deleted_at)
-    db.session.commit()
 
 
 @celery.task(priority=1)
