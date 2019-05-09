@@ -11,4 +11,4 @@ from aleph.model.document_tag import DocumentTag, DocumentTagCollector  # noqa
 from aleph.model.metadata import Metadata  # noqa
 from aleph.model.event import Event, Events  # noqa
 from aleph.model.notification import Notification  # noqa
-from aleph.model.audit import Audit  # noqa
+from aleph.model.query_log import QueryLog  # noqa

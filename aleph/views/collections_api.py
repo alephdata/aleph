@@ -6,13 +6,12 @@ from followthemoney.exc import InvalidMapping
 
 from aleph.core import db, settings
 from aleph.authz import Authz
-from aleph.model import Role, Audit, Collection
+from aleph.model import Role, Collection
 from aleph.search import CollectionsQuery
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.documents import process_documents
 from aleph.logic.entities import bulk_load_query, bulk_write
-from aleph.logic.audit import record_audit
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
 from aleph.views.forms import CollectionCreateSchema, CollectionUpdateSchema
@@ -57,7 +56,6 @@ def create():
 @blueprint.route('/api/2/collections/<int:collection_id>', methods=['GET'])
 def view(collection_id):
     collection = get_index_collection(collection_id)
-    record_audit(Audit.ACT_COLLECTION, id=collection_id)
     return CollectionSerializer.jsonify(collection)
 
 

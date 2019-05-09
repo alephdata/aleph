@@ -2,11 +2,9 @@ import logging
 from pprint import pprint, pformat  # noqa
 
 from aleph.core import es
-from aleph.model import Audit
 from aleph.index.util import authz_query, field_filter_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
-from aleph.logic.audit import record_audit
 
 log = logging.getLogger(__name__)
 
@@ -205,8 +203,5 @@ class Query(object):
     def handle(cls, request, parser=None, **kwargs):
         if parser is None:
             parser = SearchQueryParser(request.args, request.authz)
-        # Log the search
-        keys = ['prefix', 'text', 'filters']
-        record_audit(Audit.ACT_SEARCH, keys=keys, **parser.to_dict())
         result = cls(parser, **kwargs).search()
         return cls.RESULT_CLASS(request, parser, result)

@@ -8,13 +8,12 @@ from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
-from aleph.model import Audit
+from aleph.model import QueryLog
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.export import export_entities
 from aleph.index.entities import entities_by_ids
-from aleph.logic.audit import record_audit
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
 from aleph.views.util import require
@@ -33,6 +32,11 @@ EXPORT_MAX = 1000
 def index():
     # enable_cache(vary_user=True)
     parser = SearchQueryParser(request.args, request.authz)
+    if parser.text:
+        QueryLog.save(request.authz.id,
+                      request.session_id,
+                      parser.text)
+        db.session.commit()
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
     links = {}
@@ -62,7 +66,6 @@ def export(format):
 @blueprint.route('/api/2/match', methods=['POST'])
 def match():
     entity = parse_request(EntityUpdateSchema)
-    record_audit(Audit.ACT_MATCH, entity=entity)
     entity = model.get_proxy(entity)
     tag_request(schema=entity.schema.name, caption=entity.caption)
     collection_ids = request.args.getlist('collection_ids')
@@ -85,7 +88,6 @@ def create():
 def view(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
-    record_audit(Audit.ACT_ENTITY, id=entity_id)
     tag_request(collection_id=entity.get('collection_id'))
     return EntitySerializer.jsonify(entity)
 
@@ -99,7 +101,6 @@ def content(entity_id):
                                   schemata=entity.get('schema'),
                                   excludes=['text']):
         proxy = model.get_proxy(entity)
-        record_audit(Audit.ACT_ENTITY, id=entity_id)
         html = sanitize_html(proxy.first('bodyHtml', quiet=True),
                              proxy.first('sourceUrl', quiet=True))
         headers = proxy.first('headers', quiet=True)
@@ -118,7 +119,6 @@ def similar(entity_id):
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get('collection_id'))
     entity = model.get_proxy(entity)
-    record_audit(Audit.ACT_ENTITY, id=entity_id)
     result = MatchQuery.handle(request, entity=entity)
     return EntitySerializer.jsonify_result(result)
 
@@ -128,7 +128,6 @@ def references(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get('collection_id'))
-    record_audit(Audit.ACT_ENTITY, id=entity_id)
     results = []
     for prop, total in entity_references(entity, request.authz):
         results.append({
@@ -148,7 +147,6 @@ def tags(entity_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     tag_request(collection_id=entity.get('collection_id'))
-    record_audit(Audit.ACT_ENTITY, id=entity_id)
     results = []
     for (field, value, total) in entity_tags(entity, request.authz):
         qvalue = quote(value.encode('utf-8'))

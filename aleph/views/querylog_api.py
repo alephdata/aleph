@@ -2,20 +2,20 @@ import logging
 from flask import Blueprint, request
 
 from aleph.core import db
-from aleph.model import Audit
+from aleph.model import QueryLog
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import QueryLogSerializer
 from aleph.views.util import require
 
-blueprint = Blueprint('audit_api', __name__)
+blueprint = Blueprint('querylog_api', __name__)
 log = logging.getLogger(__name__)
 
 
 @blueprint.route('/api/2/querylog', methods=['GET'])
 def index():
+    require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz)
-    q = Audit.query_log(role_id=request.authz.id,
-                        session_id=request.session_id)
+    q = QueryLog.query_log(role_id=request.authz.id)
     result = DatabaseQueryResult(request, q, parser=parser)
     return QueryLogSerializer.jsonify_result(result)
 
@@ -27,10 +27,6 @@ def delete():
     query = request.args.get('query')
     if not query:
         return ('', 404)
-    audit_logs = Audit.by_query_text(query, role_id=request.authz.id)
-    if not audit_logs.count():
-        return ('', 404)
-    for audit in audit_logs:
-        audit.delete()
+    QueryLog.delete_query(request.authz.id, query)
     db.session.commit()
     return ('', 204)
