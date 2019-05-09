@@ -28,14 +28,14 @@ class QueryLog(db.Model, IdModel):
 
     @classmethod
     def query_log(cls, role_id=None):
-        created_at = func.min(cls.created_at).label('created_at')
-        updated_at = func.max(cls.created_at).label('updated_at')
+        first = func.min(cls.created_at).label('first')
+        last = func.max(cls.created_at).label('last')
         count = func.count(cls.id).label('count')
-        q = db.session.query(cls.query, created_at, updated_at, count)
+        q = db.session.query(cls.query, first, last, count)
         q = q.filter(cls.role_id == role_id)
         q = q.filter(cls.query != None)  # noqa
         q = q.group_by(cls.query)
-        q = q.order_by(updated_at.desc())
+        q = q.order_by(last.desc())
         return q
 
     @classmethod
