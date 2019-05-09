@@ -86,7 +86,7 @@ def delete_collection(collection_id, sync=False):
               ignore=[404])
 
 
-def delete_entities(collection_id, schema=None, bulk_only=False):
+def delete_entities(collection_id, schema=None, bulk_only=False, sync=False):
     """Delete entities from a collection."""
     filters = [{'term': {'collection_id': collection_id}}]
     if bulk_only:
@@ -94,4 +94,4 @@ def delete_entities(collection_id, schema=None, bulk_only=False):
     if schema is not None:
         filters.append({'term': {'schemata': schema.name}})
     query = {'bool': {'filter': filters}}
-    query_delete(entities_read_index(schema), query)
+    query_delete(entities_read_index(schema), query, sync=sync)
