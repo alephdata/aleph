@@ -8,10 +8,11 @@ from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.model import Role, Collection
 from aleph.search import CollectionsQuery
+from aleph.queue import get_queue, OP_BULKLOAD
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.documents import process_documents
-from aleph.logic.entities import bulk_load_query, bulk_write
+from aleph.logic.entities import bulk_write
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
 from aleph.views.forms import CollectionCreateSchema, CollectionUpdateSchema
@@ -79,22 +80,19 @@ def process(collection_id):
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mapping', methods=['POST', 'PUT'])  # noqa
-def mapping_process(collection_id):
+def mapping(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
-    # TODO: we need to look into possible abuse of mapping load path for local
-    # path access on the machine running the mapping. Until then, this action
-    # must be restricted to admins:
-    require(request.authz.is_admin)
     if not request.is_json:
         raise BadRequest()
     data = request.get_json().get(collection.foreign_id)
     for query in keys_values(data, 'queries', 'query'):
         try:
             model.make_mapping(query)
-            bulk_load_query.apply_async([collection.id, query], priority=6)
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
+    queue = get_queue(collection, OP_BULKLOAD)
+    queue.queue_task(data, {})
     return ('', 204)
 
 

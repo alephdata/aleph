@@ -1,6 +1,7 @@
 # coding: utf-8
 import os
 import logging
+from pprint import pprint  # noqa
 from banal import ensure_list
 from normality import slugify
 from ingestors.util import decode_path
@@ -13,16 +14,16 @@ from aleph.core import create_app, db, cache
 from aleph.model import Collection, Document, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
+from aleph.worker import queue_worker, sync_worker
+from aleph.queue import get_queue, get_status, OP_BULKLOAD
 from aleph.index.admin import delete_index
-from aleph.logic.landing import export_balkhash_collection
+from aleph.logic.aggregator import export_balkhash_collection
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
-from aleph.logic.collections import delete_collection, delete_bulk_entities
-from aleph.logic.documents import ingest_document
-from aleph.logic.documents import process_documents
+from aleph.logic.collections import delete_collection
+from aleph.logic.documents import ingest_document, process_documents
 from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
-from aleph.logic.entities import bulk_load
 from aleph.logic.entities.xref import xref_collection
 from aleph.logic.entities.rdf import export_collection
 from aleph.logic.permissions import update_permission
@@ -59,6 +60,12 @@ def scheduled():
 
 
 @manager.command
+def worker():
+    """Run the queue-based worker service."""
+    queue_worker()
+
+
+@manager.command
 @manager.option('-l', '--language', dest='language', nargs='*')
 @manager.option('-f', '--foreign_id', dest='foreign_id')
 def crawldir(path, language=None, foreign_id=None):
@@ -90,14 +97,6 @@ def flush(foreign_id):
     """Reset the crawler state for a given collecton."""
     collection = get_collection(foreign_id)
     delete_collection(collection)
-
-
-@manager.command
-def flushbulk(foreign_id):
-    """Delete all entities from given collection."""
-    collection = get_collection(foreign_id)
-    delete_bulk_entities(collection.id)
-    db.session.commit()
 
 
 @manager.command
@@ -145,7 +144,21 @@ def bulkload(file_name):
     """Index all the entities in a given dataset."""
     log.info("Loading bulk data from: %s", file_name)
     config = load_config_file(file_name)
-    bulk_load(config)
+    for foreign_id, data in config.items():
+        data['foreign_id'] = foreign_id
+        data['label'] = data.get('label', foreign_id)
+        create_collection(data)
+        collection = Collection.by_foreign_id(foreign_id)
+        queue = get_queue(collection, OP_BULKLOAD)
+        queue.queue_task(data, {})
+        sync_worker()
+
+
+@manager.command
+def status(foreign_id):
+    collection = get_collection(foreign_id)
+    status = get_status(collection)
+    pprint(status)
 
 
 @manager.command

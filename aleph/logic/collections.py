@@ -76,10 +76,3 @@ def index_collection_entities(collection_id):
     if collection is not None:
         entities.index_collection_entities(collection)
     refresh_collection(collection_id)
-
-
-def delete_bulk_entities(collection_id, deleted_at=None):
-    deleted_at = deleted_at or datetime.utcnow()
-    log.info("Deleting entities...")
-    index.delete_entities(collection_id, bulk_only=True)
-    Match.delete_by_collection(collection_id, deleted_at=deleted_at)

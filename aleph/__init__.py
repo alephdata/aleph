@@ -6,6 +6,9 @@ from marshmallow.warnings import ChangedInMarshmallow3Warning
 
 __version__ = get_distribution('aleph').version
 
+from yaml import YAMLLoadWarning
+warnings.filterwarnings("ignore", category=YAMLLoadWarning)
+
 # shut up useless SA warning:
 warnings.filterwarnings('ignore', 'Unicode type received non-unicode bind param value.')  # noqa
 warnings.filterwarnings('ignore', category=SAWarning)

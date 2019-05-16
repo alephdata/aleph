@@ -1,27 +1,33 @@
 import time
 import logging
+import balkhash
 from sqlalchemy.exc import DBAPIError
+from followthemoney import model
 
-from aleph.core import db, get_dataset
+from aleph.core import db
 from aleph.model import Document, DocumentRecord
 from aleph.index.entities import index_bulk
 
 log = logging.getLogger(__name__)
 
 
+def get_aggregator(collection):
+    """Connect to a balkhash dataset."""
+    return balkhash.init(collection.foreign_id)
+
+
 def index_collection_from_staging(collection):
-    dataset = get_dataset(collection)
+    dataset = get_aggregator(collection)
     # TODO: run NLP here
     index_bulk(collection.id, dataset.iterate(), merge=False)
 
 
-def _export_balkhash_collection(collection, retries=0, backoff=30, offset=0):
+def export_balkhash_collection(collection, retries=0, backoff=30, offset=0):
     MAX_RETRIES = 5
     RETRY_BACKOFF_FACTOR = 2
     try:
-        from followthemoney import model
-        dataset = get_dataset(collection)
-        writer = dataset.bulk()
+        aggregator = get_aggregator(collection)
+        writer = aggregator.bulk()
         q = Document.by_collection(collection.id)
         q = q.order_by(Document.id.asc()).offset(offset)
         for doc in q.yield_per(5000):
@@ -39,17 +45,17 @@ def _export_balkhash_collection(collection, retries=0, backoff=30, offset=0):
                     dpart.add('indexText', list(record.texts))
                     writer.put(dpart, fragment=str(record.id))
             offset += 1
-        dataset.close()
+        aggregator.close()
     except DBAPIError as exc:
         if retries < MAX_RETRIES:
             log.debug("Error occurred: %s", exc)
             log.debug("Retrying in %s seconds", backoff)
             db.session.close()
-            dataset.close()
+            aggregator.close()
             time.sleep(backoff)
             retries = retries + 1
             backoff = backoff * RETRY_BACKOFF_FACTOR
-            return _export_balkhash_collection(
+            return export_balkhash_collection(
                 collection, retries, backoff, offset
             )
         else:
