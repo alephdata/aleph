@@ -7,6 +7,7 @@ from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
 from aleph.logic.notifications import publish, flush_notifications
+from aleph.logic.aggregator import drop_aggregator
 
 log = logging.getLogger(__name__)
 
@@ -56,6 +57,7 @@ def index_collections(entities=False, refresh=False):
 
 def delete_collection(collection, sync=False):
     flush_notifications(collection)
+    drop_aggregator(collection)
     collection.delete()
     db.session.commit()
     deleted_at = collection.deleted_at or datetime.utcnow()

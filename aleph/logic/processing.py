@@ -14,9 +14,12 @@ log = logging.getLogger(__name__)
 
 
 def index_aggregate(collection, unsafe=False):
-    dataset = get_aggregator(collection)
+    aggregator = get_aggregator(collection)
     # TODO: run NLP here
-    index_entities(collection, dataset.iterate(), unsafe=unsafe)
+    try:
+        index_entities(collection, aggregator.iterate(), unsafe=unsafe)
+    finally:
+        aggregator.close()
 
 
 def index_entities(collection, iterable, unsafe=False):

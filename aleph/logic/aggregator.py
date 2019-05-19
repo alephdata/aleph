@@ -15,6 +15,13 @@ def get_aggregator(collection):
     return balkhash.init(collection.foreign_id)
 
 
+def drop_aggregator(collection):
+    """Clear all the documents from the balkhash dataset."""
+    aggregator = get_aggregator(collection)
+    aggregator.delete()
+    aggregator.close()
+
+
 def export_balkhash_collection(collection, retries=0, backoff=30, offset=0):
     MAX_RETRIES = 5
     RETRY_BACKOFF_FACTOR = 2
