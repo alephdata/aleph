@@ -14,7 +14,7 @@ from aleph.core import create_app, db, cache
 from aleph.model import Collection, Document, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
-from aleph.worker import queue_worker, sync_worker
+from aleph.worker import queue_worker, sync_worker, hourly_tasks, daily_tasks
 from aleph.queue import get_queue, get_status, OP_BULKLOAD
 from aleph.index.admin import delete_index
 from aleph.logic.aggregator import export_balkhash_collection
@@ -22,7 +22,6 @@ from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
 from aleph.logic.collections import delete_collection
 from aleph.logic.documents import ingest_document, process_documents
-from aleph.logic.scheduled import daily, hourly
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities.xref import xref_collection
 from aleph.logic.entities.rdf import export_collection
@@ -55,8 +54,8 @@ def collections():
 @manager.command
 def scheduled():
     """Run scheduled clean-up and notification operations."""
-    hourly()
-    daily()
+    hourly_tasks()
+    daily_tasks()
 
 
 @manager.command
