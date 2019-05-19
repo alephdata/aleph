@@ -6,7 +6,6 @@ from followthemoney import model
 
 from aleph.core import db
 from aleph.model import Document, DocumentRecord
-from aleph.index.entities import index_bulk
 
 log = logging.getLogger(__name__)
 
@@ -14,12 +13,6 @@ log = logging.getLogger(__name__)
 def get_aggregator(collection):
     """Connect to a balkhash dataset."""
     return balkhash.init(collection.foreign_id)
-
-
-def index_collection_from_staging(collection):
-    dataset = get_aggregator(collection)
-    # TODO: run NLP here
-    index_bulk(collection.id, dataset.iterate(), merge=False)
 
 
 def export_balkhash_collection(collection, retries=0, backoff=30, offset=0):

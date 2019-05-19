@@ -40,7 +40,7 @@ google-cloud-logging==1.10.0
 
 # Testing dependencies
 factory-boy==2.10.0
-fakeredis>=0.13.0.1
+fakeredis==1.0.3
 Faker==0.8.13
 nose
 flexmock==0.10.2

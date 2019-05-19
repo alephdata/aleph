@@ -9,7 +9,6 @@ from aleph.index import entities as index
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
 from aleph.logic.notifications import flush_notifications
-from aleph.logic.entities.bulk import bulk_load, bulk_load_query, bulk_write  # noqa
 
 log = logging.getLogger(__name__)
 

@@ -12,7 +12,7 @@ from aleph.queue import get_queue, OP_BULKLOAD
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.documents import process_documents
-from aleph.logic.entities import bulk_write
+from aleph.logic.processing import bulk_write
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
 from aleph.views.forms import CollectionCreateSchema, CollectionUpdateSchema
@@ -100,7 +100,6 @@ def mapping(collection_id):
 def bulk(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
-    merge = get_flag('merge', default=False)
 
     # This will disable certain security measures in order to allow bulk
     # loading of document data.
@@ -108,7 +107,7 @@ def bulk(collection_id):
     unsafe = unsafe and request.authz.is_admin
 
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, merge=merge, unsafe=unsafe)
+    bulk_write(collection, entities, unsafe=unsafe)
     refresh_collection(id)
     return ('', 204)
 
