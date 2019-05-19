@@ -51,6 +51,15 @@ services:
     expose:
       - 50000
 
+  ingest-file:
+    image: alephdata/ingest-file:latest
+    links:
+      - postgres
+      - redis
+      - convert-document
+      - recognize-text
+    restart: on-failure
+
   app:
     image: alephdata/aleph
     command: /bin/bash
@@ -59,8 +68,7 @@ services:
       - elasticsearch
       - rabbitmq
       - redis
-      - convert-document
-      - recognize-text
+      - ingest-file
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -91,8 +99,7 @@ services:
       - elasticsearch
       - rabbitmq
       - redis
-      - convert-document
-      - recognize-text
+      - ingest-file
     tmpfs: /tmp
     volumes:
       - archive-data:/data

@@ -43,6 +43,7 @@ def delete_entity(entity, deleted_at=None, sync=False):
     flush_notifications(entity)
     entity.delete(deleted_at=deleted_at)
     index.delete_entity(entity.id, sync=sync)
+    # TODO: implement recursion?
     refresh_entity(entity)
 
 

@@ -311,7 +311,6 @@ class Document(db.Model, DatedModel, Metadata):
             'collection_id': self.collection_id,
             'error_message': self.error_message,
             'uploader_id': self.uploader_id,
-            'bulk': False,
         })
         return data
 

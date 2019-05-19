@@ -79,7 +79,6 @@ class DocumentRecord(db.Model):
         data = proxy.to_full_dict()
         data.update({
             'document_id': self.document_id,
-            'bulk': False,
         })
         return data
 
