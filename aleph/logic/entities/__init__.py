@@ -42,8 +42,8 @@ def refresh_entity(entity, sync=False):
 def delete_entity(entity, deleted_at=None, sync=False):
     flush_notifications(entity)
     entity.delete(deleted_at=deleted_at)
-    refresh_entity(entity)
     index.delete_entity(entity.id, sync=sync)
+    refresh_entity(entity)
 
 
 def entity_references(entity, authz):

@@ -168,7 +168,6 @@ def configure_schema(schema, version):
             },
             "schema": KEYWORD,
             "schemata": KEYWORD,
-            "bulk": {"type": "boolean"},
             "status": KEYWORD,
             "error_message": {
                 "type": "text",

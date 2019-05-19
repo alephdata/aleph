@@ -19,7 +19,7 @@ def bulk_load(queue, collection, config):
     for query_id, query in enumerate(queries):
         bulk_load_query(queue, collection, query_id, query)
     index = get_queue(collection, OP_INDEX)
-    index.queue_task({}, {})
+    index.queue_task({'unsafe': False}, {})
     queue.remove()
 
 

@@ -146,24 +146,8 @@ def index_bulk(collection, entities, sync=False):
     bulk_actions(actions, sync=sync)
 
 
-def delete_entity(entity_id, exclude=None, sync=False):
-    """Delete an entity from the index."""
-    if exclude is not None:
-        exclude = entities_write_index(exclude)
-    for entity in entities_by_ids(entity_id, excludes='*'):
-        index = entity.get('_index')
-        if index == exclude:
-            continue
-        es.delete(index=index, id=entity_id,
-                  refresh=refresh_sync(sync))
-
-    q = {'term': {'entities': entity_id}}
-    query_delete(entities_read_index(), q, sync=sync)
-
-
 def index_operation(data):
     """Apply final denormalisations to the index."""
-    data['bulk'] = data.get('bulk', False)
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
@@ -183,6 +167,21 @@ def index_operation(data):
     data.pop('_index', None)
     index = entities_write_index(data.get('schema'))
     return entity_id, index, data
+
+
+def delete_entity(entity_id, exclude=None, sync=False):
+    """Delete an entity from the index."""
+    if exclude is not None:
+        exclude = entities_write_index(exclude)
+    for entity in entities_by_ids(entity_id, excludes='*'):
+        index = entity.get('_index')
+        if index == exclude:
+            continue
+        es.delete(index=index, id=entity_id,
+                  refresh=refresh_sync(sync))
+
+    q = {'term': {'entities': entity_id}}
+    query_delete(entities_read_index(), q, sync=sync)
 
 
 def delete_operation(index, entity_id):
