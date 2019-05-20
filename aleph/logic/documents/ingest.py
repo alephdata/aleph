@@ -9,7 +9,6 @@ from aleph.logic.notifications import publish
 from aleph.logic.documents.manager import DocumentManager
 from aleph.logic.documents.result import DocumentResult
 from aleph.logic.entities import refresh_entity
-from aleph.logic.extractors import extract_document_tags
 from aleph.index.documents import index_document
 
 log = logging.getLogger(__name__)
@@ -96,7 +95,6 @@ def ingest(document_id, file_path=None, refresh=False):
         # to also call cleanup on the archive.
         remove_directory(work_path)
 
-    extract_document_tags(document)
     # delete_entity(document.id, exclude=document.schema)
     index_document(document)
     refresh_entity(document)

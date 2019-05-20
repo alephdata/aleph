@@ -17,7 +17,6 @@ RUN pip install -e /aleph
 
 # Configure some docker defaults:
 ENV C_FORCE_ROOT=true \
-    UNOSERVICE_URL=http://convert-document:3000/convert \
     ALEPH_ELASTICSEARCH_URI=http://elasticsearch:9200/ \
     ALEPH_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph \
     ALEPH_BROKER_URI=amqp://guest:guest@rabbitmq:5672 \

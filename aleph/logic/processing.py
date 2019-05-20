@@ -5,10 +5,11 @@ from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
 from followthemoney.namespace import Namespace
 
-from aleph.index.util import BULK_PAGE
+from aleph.analysis import tag_entity
 from aleph.index import entities as index
 from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
+from aleph.index.util import BULK_PAGE
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ def index_entities(collection, iterable, unsafe=False):
         if not unsafe:
             entity = remove_checksums(entity)
 
+        tag_entity(entity)
         entities.append(entity)
         if len(entities) >= BULK_PAGE:
             index.index_bulk(collection, entities)

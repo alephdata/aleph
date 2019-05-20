@@ -8,7 +8,6 @@ from ingestors.util import safe_string
 
 from aleph.core import db
 from aleph.model import Document, DocumentRecord
-from aleph.model import DocumentTag, DocumentTagCollector
 
 log = logging.getLogger(__name__)
 
@@ -124,10 +123,3 @@ class DocumentResult(Result):
             doc.add_language(safe_string(lang))
 
         db.session.flush()
-
-        collector = DocumentTagCollector(doc, 'ingestors')
-        for entity in self.entities:
-            collector.emit(entity, DocumentTag.TYPE_PERSON)
-        for email in self.emails:
-            collector.emit(email, DocumentTag.TYPE_EMAIL)
-        collector.save()

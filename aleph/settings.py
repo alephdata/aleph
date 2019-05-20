@@ -87,14 +87,6 @@ PASSWORD_LOGIN = env.to_bool('ALEPH_PASSWORD_LOGIN', not OAUTH)
 
 DEFAULT_LANGUAGE = env.get('ALEPH_DEFAULT_LANGUAGE', 'en')
 
-# Microservice for tesseract
-OCR_SERVICE = 'recognize-text:50000'
-sls.OCR_SERVICE = env.get('ALEPH_OCR_SERVICE', OCR_SERVICE)
-
-# Entity extraction service
-NER_SERVICE = 'extract-entities:50000'
-sls.NER_SERVICE = env.get('ALEPH_NER_SERVICE', NER_SERVICE)
-
 # Language whitelist
 LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
              'el', 'lt', 'uk', 'zh', 'be', 'bg', 'bs', 'ja', 'cs', 'lv', 'pt',
@@ -115,7 +107,7 @@ GEONAMES_DATA = env.get('ALEPH_GEONAMES_DATA')
 RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)
 
 # Minimum update date for sitemap.xml
-SITEMAP_FLOOR = '2018-12-09'
+SITEMAP_FLOOR = '2019-05-22'
 
 
 ##############################################################################

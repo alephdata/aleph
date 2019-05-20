@@ -53,12 +53,24 @@ services:
 
   ingest-file:
     image: alephdata/ingest-file:latest
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+    environment:
+      ARCHIVE_TYPE: 'file'
+      REDIS_URL: 'redis://redis:6379/0'
+      BALKHASH_BACKEND: 'postgresql'
+      BALKHASH_DATABASE_URI: 'postgresql://aleph:aleph@postgres/aleph'
+      OCR_SERVICE: 'recognize-text:50000'
+      UNOSERVICE_URL: 'http://convert-document:3000/convert'
     links:
       - postgres
       - redis
       - convert-document
       - recognize-text
     restart: on-failure
+    env_file:
+      - aleph.env
 
   app:
     image: alephdata/aleph
@@ -83,6 +95,9 @@ services:
       ALEPH_SECRET_KEY: 'development'
       ALEPH_OAUTH: 'false'
       ARCHIVE_TYPE: 'file'
+      BALKHASH_BACKEND: 'postgresql'
+      BALKHASH_DATABASE_URI: 'postgresql://aleph:aleph@postgres/aleph'
+      ALEPH_DATABASE_URI: 'postgresql://aleph:aleph@postgres/aleph'
     env_file:
       - aleph.env
 
@@ -109,6 +124,8 @@ services:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
       ARCHIVE_TYPE: 'file'
+      BALKHASH_BACKEND: 'postgresql'
+      BALKHASH_DATABASE_URI: 'postgresql://aleph:aleph@postgres/aleph'
     env_file:
       - aleph.env
   

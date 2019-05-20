@@ -10,20 +10,12 @@ log = logging.getLogger(__name__)
 PLACE_KEY = 'ner*gns'
 
 
-def overlaps(a, b):
-    rec_a, start_a, end_a = a
-    rec_b, start_b, end_b = b
-    if rec_a != rec_b:
-        return False
-    if None in (start_a, start_b, end_a, end_b):
-        return False
-    max_start = max(start_a, start_b)
-    min_end = min(end_a, end_b)
-    return (min_end - max_start) > 0
-
-
-def normalize_label(label):
+def tag_key(label):
     return normalize(label, lowercase=True, ascii=True)
+
+
+def place_key(name):
+    return make_key(PLACE_KEY, name)
 
 
 def load_places():
@@ -41,14 +33,10 @@ def load_places():
             names.add(row[1])
             names.add(row[2])
             for name in names:
-                name = normalize_label(name)
+                name = tag_key(name)
                 if name is not None:
                     total += 1
                     pipe.lpush(place_key(name), country)
     pipe.set(PLACE_KEY, total)
     pipe.execute()
     log.debug("Loaded %s geonames.", total)
-
-
-def place_key(name):
-    return make_key(PLACE_KEY, name)
