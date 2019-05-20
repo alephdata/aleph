@@ -77,22 +77,6 @@ class Document(db.Model, DatedModel, Metadata):
         return self.schema in [self.SCHEMA_PDF, self.SCHEMA_TABLE]
 
     @property
-    def supports_pages(self):
-        return self.schema == self.SCHEMA_PDF
-
-    @property
-    def supports_nlp(self):
-        structural = [
-            Document.SCHEMA,
-            Document.SCHEMA_PACKAGE,
-            Document.SCHEMA_FOLDER,
-            Document.SCHEMA_WORKBOOK,
-            Document.SCHEMA_VIDEO,
-            Document.SCHEMA_AUDIO,
-        ]
-        return self.schema not in structural
-
-    @property
     def ancestors(self):
         if self.parent_id is None:
             return []
@@ -313,6 +297,36 @@ class Document(db.Model, DatedModel, Metadata):
             'uploader_id': self.uploader_id,
         })
         return data
+
+    def to_stub(self):
+        proxy = model.get_proxy({
+            'id': str(self.id),
+            'schema': self.model,
+            'properties': {}
+        })
+        meta = dict(self.meta)
+        headers = meta.pop('headers', {})
+        headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        proxy.set('contentHash', self.content_hash)
+        proxy.set('parent', self.parent_id)
+        proxy.set('ancestors', self.ancestors)
+        proxy.set('sourceUrl', meta.get('source_url'))
+        proxy.set('title', meta.get('title'))
+        proxy.set('fileName', meta.get('file_name'))
+        if not proxy.has('fileName'):
+            disposition = headers.get('content_disposition')
+            if disposition is not None:
+                _, attrs = cgi.parse_header(disposition)
+                proxy.set('fileName', attrs.get('filename'))
+        proxy.set('mimeType', meta.get('mime_type'))
+        if not proxy.has('mimeType'):
+            proxy.set('mimeType', headers.get('content_type'))
+        proxy.set('language', meta.get('languages'))
+        proxy.set('country', meta.get('countries'))
+        proxy.set('headers', registry.json.pack(headers), quiet=True)
+        proxy.set('publishedAt', meta.get('published_at'))
+        proxy.set('retrievedAt', meta.get('retrieved_at'))
+        return proxy
 
     def __repr__(self):
         return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)

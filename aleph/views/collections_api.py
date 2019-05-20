@@ -8,10 +8,9 @@ from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.model import Role, Collection
 from aleph.search import CollectionsQuery
-from aleph.queue import get_queue, OP_BULKLOAD
+from aleph.queue import get_queue, OP_BULKLOAD, OP_PROCESS
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
-from aleph.logic.documents import process_documents
 from aleph.logic.processing import bulk_write
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
@@ -75,7 +74,8 @@ def update(collection_id):
 def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
-    process_documents.delay(collection_id=collection.id)
+    queue = get_queue(collection, OP_PROCESS)
+    queue.queue_task({}, {})
     return ('', 204)
 
 

@@ -18,10 +18,11 @@ from aleph.worker import queue_worker, sync_worker, hourly_tasks, daily_tasks
 from aleph.queue import get_queue, get_status, OP_BULKLOAD
 from aleph.index.admin import delete_index
 from aleph.logic.aggregator import export_balkhash_collection
+from aleph.logic.processing import process_collection
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
 from aleph.logic.collections import delete_collection
-from aleph.logic.documents import ingest_document, process_documents
+from aleph.logic.documents import ingest_document
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities.xref import xref_collection
 from aleph.logic.entities.rdf import export_collection
@@ -105,14 +106,10 @@ def flushdeleted():
 
 
 @manager.command
-@manager.option('-f', '--foreign_id')
-@manager.option('-r', '--retry', default=False)
-def process(foreign_id=None, retry=False):
+def process(foreign_id):
     """Re-process documents in the given collection."""
-    collection_id = None
-    if foreign_id:
-        collection_id = get_collection(foreign_id).id
-    process_documents(collection_id=collection_id, failed_only=retry)
+    collection = get_collection(foreign_id)
+    process_collection(collection)
 
 
 @manager.command

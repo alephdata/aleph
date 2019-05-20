@@ -5,8 +5,10 @@ from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
 from followthemoney.namespace import Namespace
 
+from aleph.queue import ingest_entity
 from aleph.analysis import tag_entity
 from aleph.index import entities as index
+from aleph.model import Entity, Document
 from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.util import BULK_PAGE
@@ -14,9 +16,25 @@ from aleph.index.util import BULK_PAGE
 log = logging.getLogger(__name__)
 
 
-def index_aggregate(collection, unsafe=False):
+def process_collection(collection):
+    """Trigger a full re-parse of all documents and re-build the
+    search index from the aggregator."""
     aggregator = get_aggregator(collection)
-    # TODO: run NLP here
+    try:
+        writer = aggregator.bulk()
+        for entity in Entity.by_collection(collection.id):
+            writer.put(entity.to_proxy())
+        for document in Document.by_collection(collection.id):
+            ingest_entity(collection, document.to_stub())
+        writer.flush()
+        index_entities(collection, aggregator.iterate())
+    finally:
+        aggregator.close()
+
+
+def index_aggregate(collection, unsafe=False):
+    """Project the contents of the collections aggregator into the index."""
+    aggregator = get_aggregator(collection)
     try:
         index_entities(collection, aggregator.iterate(), unsafe=unsafe)
     finally:
