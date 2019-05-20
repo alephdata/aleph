@@ -10,9 +10,6 @@ from aleph.core import db, cache
 from aleph.model.metadata import Metadata
 from aleph.model.collection import Collection
 from aleph.model.common import DatedModel
-from aleph.model.document_record import DocumentRecord
-from aleph.model.document_tag import DocumentTag
-from aleph.util import filter_texts
 
 log = logging.getLogger(__name__)
 
@@ -62,21 +59,6 @@ class Document(db.Model, DatedModel, Metadata):
         return model.get(self.schema)
 
     @property
-    def name(self):
-        if self.title is not None:
-            return self.title
-        if self.file_name is not None:
-            return self.file_name
-        if self.source_url is not None:
-            return self.source_url
-
-    @property
-    def supports_records(self):
-        # Slightly unintuitive naming: this just checks the document type,
-        # not if there actually are any records.
-        return self.schema in [self.SCHEMA_PDF, self.SCHEMA_TABLE]
-
-    @property
     def ancestors(self):
         if self.parent_id is None:
             return []
@@ -102,24 +84,8 @@ class Document(db.Model, DatedModel, Metadata):
                  'modified_at', 'published_at', 'retrieved_at', 'languages',
                  'countries', 'keywords')
         for prop in props:
-            value = data.get(prop, self.meta.get(prop))
-            setattr(self, prop, value)
-        db.session.add(self)
-
-    def update_meta(self):
+            self.meta[prop] = data.get(prop, self.meta.get(prop))
         flag_modified(self, 'meta')
-
-    def delete_records(self):
-        pq = db.session.query(DocumentRecord)
-        pq = pq.filter(DocumentRecord.document_id == self.id)
-        pq.delete()
-        db.session.flush()
-
-    def delete_tags(self):
-        pq = db.session.query(DocumentTag)
-        pq = pq.filter(DocumentTag.document_id == self.id)
-        pq.delete()
-        db.session.flush()
 
     def delete(self, deleted_at=None):
         self.delete_records()
@@ -128,44 +94,9 @@ class Document(db.Model, DatedModel, Metadata):
 
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at=None):
-        documents = db.session.query(cls.id)
-        documents = documents.filter(cls.collection_id == collection_id)
-        documents = documents.subquery()
-
-        pq = db.session.query(DocumentRecord)
-        pq = pq.filter(DocumentRecord.document_id.in_(documents))
-        pq.delete(synchronize_session=False)
-
-        pq = db.session.query(DocumentTag)
-        pq = pq.filter(DocumentTag.document_id.in_(documents))
-        pq.delete(synchronize_session=False)
-
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)
-
-    def raw_texts(self):
-        yield self.title
-        yield self.file_name
-        yield self.source_url
-        yield self.summary
-        yield self.author
-
-        if self.status != self.STATUS_SUCCESS:
-            return
-
-        yield self.body_text
-        if self.supports_records:
-            # iterate over all the associated records.
-            pq = db.session.query(DocumentRecord)
-            pq = pq.filter(DocumentRecord.document_id == self.id)
-            pq = pq.order_by(DocumentRecord.index.asc())
-            for record in pq.yield_per(10000):
-                yield from record.raw_texts()
-
-    @property
-    def texts(self):
-        yield from filter_texts(self.raw_texts())
 
     @classmethod
     def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
@@ -218,87 +149,7 @@ class Document(db.Model, DatedModel, Metadata):
         q = q.filter(cls.collection_id == collection_id)
         return q
 
-    @classmethod
-    def find_ids(cls, collection_id=None, failed_only=False):
-        q = cls.all_ids()
-        if collection_id is not None:
-            q = q.filter(cls.collection_id == collection_id)
-        if failed_only:
-            q = q.filter(cls.status != cls.STATUS_SUCCESS)
-        q = q.order_by(cls.id.asc())
-        return q
-
     def to_proxy(self):
-        meta = dict(self.meta)
-        headers = meta.pop('headers', {})
-        headers = {slugify(k, sep='_'): v for k, v in headers.items()}
-        proxy = model.get_proxy({
-            'id': str(self.id),
-            'schema': self.model,
-            'properties': meta
-        })
-        proxy.set('contentHash', self.content_hash)
-        proxy.set('parent', self.parent_id)
-        proxy.set('ancestors', self.ancestors)
-        proxy.set('processingStatus', self.status)
-        proxy.set('processingError', self.error_message)
-        proxy.set('fileSize', meta.get('file_size'))
-        proxy.set('fileName', meta.get('file_name'))
-        if not proxy.has('fileName'):
-            disposition = headers.get('content_disposition')
-            if disposition is not None:
-                _, attrs = cgi.parse_header(disposition)
-                proxy.set('fileName', attrs.get('filename'))
-        proxy.set('mimeType', meta.get('mime_type'))
-        if not proxy.has('mimeType'):
-            proxy.set('mimeType', headers.get('content_type'))
-        proxy.set('language', meta.get('languages'))
-        proxy.set('country', meta.get('countries'))
-        proxy.set('authoredAt', meta.get('authored_at'))
-        proxy.set('modifiedAt', meta.get('modified_at'))
-        proxy.set('publishedAt', meta.get('published_at'))
-        proxy.set('retrievedAt', meta.get('retrieved_at'))
-        proxy.set('sourceUrl', meta.get('source_url'))
-        proxy.set('messageId', meta.get('message_id'), quiet=True)
-        proxy.set('inReplyTo', meta.get('in_reply_to'), quiet=True)
-        proxy.set('bodyText', self.body_text, quiet=True)
-        proxy.set('bodyHtml', self.body_raw, quiet=True)
-        columns = meta.get('columns')
-        proxy.set('columns', registry.json.pack(columns), quiet=True)
-        proxy.set('headers', registry.json.pack(headers), quiet=True)
-
-        pdf = 'application/pdf'
-        if meta.get('extension') == 'pdf' or proxy.first('mimeType') == pdf:
-            proxy.set('pdfHash', self.content_hash, quiet=True)
-        proxy.add('pdfHash', meta.get('pdf_version'), quiet=True)
-
-        q = db.session.query(DocumentTag)
-        q = q.filter(DocumentTag.document_id == self.id)
-        q = q.filter(DocumentTag.type.in_(DocumentTag.MAPPING.keys()))
-        q = q.order_by(DocumentTag.weight.desc())
-        q = q.limit(Document.MAX_TAGS)
-        for tag in q.all():
-            prop = DocumentTag.MAPPING.get(tag.type)
-            if prop is not None:
-                proxy.add(prop, tag.text)
-        return proxy
-
-    def to_dict(self):
-        proxy = self.to_proxy()
-        data = proxy.to_full_dict()
-        data.update(self.to_dict_dates())
-        data.update({
-            'name': self.name,
-            'status': self.status,
-            'foreign_id': self.foreign_id,
-            'document_id': self.id,
-            'collection_id': self.collection_id,
-            'error_message': self.error_message,
-            'uploader_id': self.uploader_id,
-        })
-        return data
-
-    def to_stub(self):
         proxy = model.get_proxy({
             'id': str(self.id),
             'schema': self.model,
@@ -324,9 +175,12 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('language', meta.get('languages'))
         proxy.set('country', meta.get('countries'))
         proxy.set('headers', registry.json.pack(headers), quiet=True)
+        proxy.set('authoredAt', meta.get('authored_at'))
+        proxy.set('modifiedAt', meta.get('modified_at'))
         proxy.set('publishedAt', meta.get('published_at'))
         proxy.set('retrievedAt', meta.get('retrieved_at'))
+        proxy.set('sourceUrl', meta.get('source_url'))
         return proxy
 
     def __repr__(self):
-        return '<Document(%r,%r,%r)>' % (self.id, self.schema, self.title)
+        return '<Document(%r,%r)>' % (self.id, self.schema)

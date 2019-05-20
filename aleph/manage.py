@@ -15,14 +15,12 @@ from aleph.model import Collection, Document, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import queue_worker, sync_worker, hourly_tasks, daily_tasks
-from aleph.queue import get_queue, get_status, OP_BULKLOAD
+from aleph.queue import get_queue, get_status, OP_BULKLOAD, OP_PROCESS
 from aleph.index.admin import delete_index
-from aleph.logic.aggregator import export_balkhash_collection
 from aleph.logic.processing import process_collection
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
 from aleph.logic.collections import delete_collection
-from aleph.logic.documents import ingest_document
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.entities.xref import xref_collection
 from aleph.logic.entities.rdf import export_collection
@@ -65,36 +63,36 @@ def worker():
     queue_worker()
 
 
+# @manager.command
+# @manager.option('-l', '--language', dest='language', nargs='*')
+# @manager.option('-f', '--foreign_id', dest='foreign_id')
+# def crawldir(path, language=None, foreign_id=None):
+#     """Crawl the given directory."""
+#     path = decode_path(os.path.abspath(os.path.normpath(path)))
+#     if path is None or not os.path.exists(path):
+#         log.error("Invalid path: %r", path)
+#         return
+#     path_name = os.path.basename(path)
+
+#     if foreign_id is None:
+#         foreign_id = 'directory:%s' % slugify(path)
+
+#     collection = create_collection({
+#         'foreign_id': foreign_id,
+#         'label': path_name,
+#         'languages': language
+#     })
+#     collection_id = collection.get('id')
+#     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection_id)
+#     document = Document.by_keys(collection_id=collection_id, foreign_id=path)
+#     document.file_name = path_name
+#     db.session.commit()
+#     ingest_document(document, path)
+
+
 @manager.command
-@manager.option('-l', '--language', dest='language', nargs='*')
-@manager.option('-f', '--foreign_id', dest='foreign_id')
-def crawldir(path, language=None, foreign_id=None):
-    """Crawl the given directory."""
-    path = decode_path(os.path.abspath(os.path.normpath(path)))
-    if path is None or not os.path.exists(path):
-        log.error("Invalid path: %r", path)
-        return
-    path_name = os.path.basename(path)
-
-    if foreign_id is None:
-        foreign_id = 'directory:%s' % slugify(path)
-
-    collection = create_collection({
-        'foreign_id': foreign_id,
-        'label': path_name,
-        'languages': language
-    })
-    collection_id = collection.get('id')
-    log.info('Crawling %s to %s (%s)...', path, foreign_id, collection_id)
-    document = Document.by_keys(collection_id=collection_id, foreign_id=path)
-    document.file_name = path_name
-    db.session.commit()
-    ingest_document(document, path)
-
-
-@manager.command
-def flush(foreign_id):
-    """Reset the crawler state for a given collecton."""
+def delete(foreign_id):
+    """Delete all the contents for a given collecton."""
     collection = get_collection(foreign_id)
     delete_collection(collection)
 
@@ -109,7 +107,9 @@ def flushdeleted():
 def process(foreign_id):
     """Re-process documents in the given collection."""
     collection = get_collection(foreign_id)
-    process_collection(collection)
+    queue = get_queue(collection, OP_PROCESS)
+    queue.queue_task({}, {})
+    sync_worker()
 
 
 @manager.command
@@ -195,15 +195,6 @@ def rdf(foreign_id):
         line = line.strip().decode('utf-8')
         if len(line):
             print(line)
-
-
-@manager.command
-def exportbalkhash(foreign_id=None):
-    collections = Collection.all()
-    if foreign_id is not None:
-        collections = [get_collection(foreign_id)]
-    for collection in collections:
-        export_balkhash_collection(collection)
 
 
 @manager.command

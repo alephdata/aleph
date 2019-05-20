@@ -8,9 +8,10 @@ from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
 from servicelayer.archive.util import checksum
 
+from aleph.core import db
 from aleph.model import Document
-from aleph.logic.documents import ingest_document, update_document
-from aleph.views.util import require, get_flag
+from aleph.queue import ingest_entity
+from aleph.views.util import get_db_collection
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema
 
@@ -53,8 +54,7 @@ def _load_metadata():
 @blueprint.route('/api/2/collections/<int:collection_id>/ingest',
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
-    require(request.authz.can(collection_id, request.authz.WRITE))
-    sync = get_flag('sync')
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     meta, foreign_id = _load_metadata()
     parent_id = _load_parent(collection_id, meta)
     upload_dir = mkdtemp(prefix='aleph.upload.')
@@ -74,15 +74,11 @@ def ingest_upload(collection_id):
         document.schema = Document.SCHEMA
         if content_hash is None:
             document.schema = Document.SCHEMA_FOLDER
-        ingest_document(document, path,
-                        role_id=request.authz.id,
-                        content_hash=content_hash)
+        db.session.commit()
+        ingest_entity(collection, document.to_proxy())
     finally:
         shutil.rmtree(upload_dir)
 
-    if document.collection.casefile:
-        # Make sure collection counts are always accurate.
-        update_document(document, sync=sync)
     return jsonify({
         'status': 'ok',
         'id': stringify(document.id)
