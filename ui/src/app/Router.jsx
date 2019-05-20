@@ -20,7 +20,7 @@ const CasesIndexScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/s
 const CollectionScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionScreen/CollectionScreen'));
 const CollectionXrefMatchesScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
 const EntityScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/EntityScreen/EntityScreen'));
-
+const ExploreScreen = lazy(() => import(/* webpackChunkName: 'base' */'src/screens/ExploreScreen/ExploreScreen'));
 
 class Router extends Component {
   componentWillMount() {
@@ -55,6 +55,7 @@ class Router extends Component {
           <Redirect from="/documents/:documentId" to="/entities/:documentId" />
           <Route path="/sources" exact component={SourcesIndexScreen} />
           <Route path="/cases" exact component={CasesIndexScreen} />
+          <Route path="/explore/:entityId" exact component={ExploreScreen} />
           <Redirect from="/collections/:collectionId/documents" to="/collections/:collectionId" />
           <Route path="/collections/:collectionId" exact component={CollectionScreen} />
           <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />

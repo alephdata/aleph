@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { ButtonGroup } from '@blueprintjs/core';
+import { ButtonGroup, Icon } from '@blueprintjs/core';
 
 import { Toolbar, CloseButton, DownloadButton } from 'src/components/Toolbar';
 import getEntityLink from 'src/util/getEntityLink';
@@ -24,6 +24,12 @@ class EntityToolbar extends React.Component {
           {entity.schema.isDocument() && (
             <DownloadButton document={entity} />
           )}
+          <ButtonGroup>
+            <Link to={`/explore/${entity.id}`} className="bp3-button button-link">
+              <Icon icon="search-around" />
+              <FormattedMessage id="sidebar..browse" defaultMessage="Explore" />
+            </Link>
+          </ButtonGroup>
         </ButtonGroup>
         { isPreview && (
           <CloseButton />

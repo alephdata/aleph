@@ -3,9 +3,11 @@
   "version": "3.1.2",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "^1.11.18",
+    "@alephdata/followthemoney": "^1.12.2",
+    "@alephdata/vislib": "^0.0.1",
     "@blueprintjs/core": "^3.15.0",
     "@blueprintjs/select": "^3.8.0",
+    "@blueprintjs/datetime": "^3.9.0",
     "@blueprintjs/table": "^3.5.0",
     "classnames": "^2.2.6",
     "filesize": "^4.1.2",
