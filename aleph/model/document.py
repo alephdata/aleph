@@ -7,28 +7,15 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
 from aleph.core import db, cache
-from aleph.model.metadata import Metadata
 from aleph.model.collection import Collection
 from aleph.model.common import DatedModel
 
 log = logging.getLogger(__name__)
 
 
-class Document(db.Model, DatedModel, Metadata):
-    MAX_TAGS = 10000
-
+class Document(db.Model, DatedModel):
     SCHEMA = 'Document'
     SCHEMA_FOLDER = 'Folder'
-    SCHEMA_PACKAGE = 'Package'
-    SCHEMA_WORKBOOK = 'Workbook'
-    SCHEMA_TEXT = 'PlainText'
-    SCHEMA_HTML = 'HyperText'
-    SCHEMA_PDF = 'Pages'
-    SCHEMA_IMAGE = 'Image'
-    SCHEMA_AUDIO = 'Audio'
-    SCHEMA_VIDEO = 'Video'
-    SCHEMA_TABLE = 'Table'
-    SCHEMA_EMAIL = 'Email'
 
     STATUS_PENDING = 'pending'
     STATUS_SUCCESS = 'success'
@@ -38,15 +25,10 @@ class Document(db.Model, DatedModel, Metadata):
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True, index=True)
     schema = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.Unicode(10), nullable=True)
     meta = db.Column(JSONB, default={})
-    error_message = db.Column(db.Unicode(), nullable=True)
-    body_text = db.Column(db.Unicode(), nullable=True)
-    body_raw = db.Column(db.Unicode(), nullable=True)
 
     uploader_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
     parent_id = db.Column(db.BigInteger, db.ForeignKey('document.id'), nullable=True, index=True)  # noqa
-    children = db.relationship('Document', lazy='dynamic', backref=db.backref('parent', uselist=False, remote_side=[id]))   # noqa
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
 
@@ -88,8 +70,6 @@ class Document(db.Model, DatedModel, Metadata):
         flag_modified(self, 'meta')
 
     def delete(self, deleted_at=None):
-        self.delete_records()
-        self.delete_tags()
         db.session.delete(self)
 
     @classmethod
@@ -180,6 +160,7 @@ class Document(db.Model, DatedModel, Metadata):
         proxy.set('publishedAt', meta.get('published_at'))
         proxy.set('retrievedAt', meta.get('retrieved_at'))
         proxy.set('sourceUrl', meta.get('source_url'))
+        # TODO: crawler, ....
         return proxy
 
     def __repr__(self):
