@@ -30,10 +30,10 @@ class EntityLabel extends Component {
     if (!entity) {
       return null;
     }
-    const title = entity.getFirst('title') || entity.getCaption();
-    const fileName = entity.getFirst('fileName') || title;
+    const title = entity.getCaption();
+    const fileName = entity.getFirst('fileName') || entity.getFirst('title') || title;
     const caption = title || fileName;
-    const fullLabel = documentMode ? fileName : caption;
+    const fullLabel = (documentMode || entity.schema.isDocument()) ? fileName : caption;
     const label = truncate ? truncateText(fullLabel, truncate) : fullLabel;
     return (
       <span className={c('EntityLabel', { untitled: !label })} title={caption}>
