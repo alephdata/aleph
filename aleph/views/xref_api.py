@@ -2,7 +2,7 @@ from flask import Blueprint, request, stream_with_context
 
 from aleph.model import Match
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.logic.entities.xref import xref_collection, export_matches_csv
+from aleph.logic.xref import xref_collection, export_matches_csv
 from aleph.views.serializers import MatchSerializer, MatchCollectionsSerializer
 from aleph.views.forms import XrefSchema
 from aleph.views.util import get_db_collection, jsonify, stream_csv

@@ -4,7 +4,7 @@ from flask.wrappers import Response
 from flask import Blueprint, request
 
 from aleph.index.entities import iter_entities
-from aleph.logic.entities.rdf import export_collection
+from aleph.logic.rdf import export_collection
 from aleph.views.util import get_db_collection
 from aleph.views.util import require, stream_ijson
 

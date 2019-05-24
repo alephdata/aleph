@@ -4,14 +4,14 @@ from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.compare import compare
 
-from aleph.core import db, es, celery
+from aleph.core import db, es
 from aleph.model import Match
 from aleph.index.indexes import entities_read_index
 from aleph.index.entities import iter_proxies, entities_by_ids
-from aleph.logic.entities.match import match_query
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
 from aleph.index.collections import get_collection
+from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
 
 log = logging.getLogger(__name__)
@@ -42,11 +42,10 @@ def xref_item(proxy, collection_ids=None):
                 yield score, result.get('collection_id'), other
 
 
-@celery.task()
-def xref_collection(collection_id, against_collection_ids=None):
+def xref_collection(queue, collection, against_collection_ids=None):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
-    entities = iter_proxies(collection_id=collection_id, schemata=matchable)
+    entities = iter_proxies(collection_id=collection.id, schemata=matchable)
     for entity in entities:
         proxy = model.get_proxy(entity)
         dq = db.session.query(Match)
@@ -57,12 +56,14 @@ def xref_collection(collection_id, against_collection_ids=None):
             log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
             obj = Match()
             obj.entity_id = proxy.id
-            obj.collection_id = collection_id
+            obj.collection_id = collection.id
             obj.match_id = other.id
             obj.match_collection_id = other_id
             obj.score = score
             db.session.add(obj)
         db.session.commit()
+        queue.progress.put_finished()
+    queue.remove()
 
 
 def _format_date(proxy):

@@ -2,7 +2,7 @@ from aleph.core import db
 from aleph.model import Entity
 from aleph.index import index_entity
 from aleph.tests.util import TestCase
-from aleph.logic.entities.xref import xref_collection
+from aleph.logic.xref import xref_collection
 
 
 class XrefApiTestCase(TestCase):
