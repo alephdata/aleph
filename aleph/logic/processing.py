@@ -16,16 +16,19 @@ from aleph.index.util import BULK_PAGE
 log = logging.getLogger(__name__)
 
 
-def process_collection(collection):
+def process_collection(collection, ingest=True):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     aggregator = get_aggregator(collection)
     try:
         writer = aggregator.bulk()
-        for entity in Entity.by_collection(collection.id):
-            writer.put(entity.to_proxy())
-        for document in Document.by_collection(collection.id):
-            ingest_entity(collection, document.to_stub())
+        for entity in Entity.by_collection(collection.id).yield_per(1000):
+            writer.put(entity.to_proxy(), fragment='db')
+        for document in Document.by_collection(collection.id).yield_per(1000):
+            proxy = document.to_proxy()
+            writer.put(proxy, fragment='db')
+            if ingest:
+                ingest_entity(collection, proxy)
         writer.flush()
         index_entities(collection, aggregator.iterate())
     finally:

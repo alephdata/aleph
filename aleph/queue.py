@@ -3,6 +3,7 @@ from servicelayer.queue import RateLimit, Progress
 from servicelayer.queue import ServiceQueue as Queue
 
 from aleph.core import kv
+from aleph.model import Document
 
 log = logging.getLogger(__name__)
 
@@ -33,6 +34,8 @@ def get_status(collection):
 
 
 def ingest_entity(collection, proxy):
+    if not proxy.is_a(Document.SCHEMA):
+        return
     queue = get_queue(collection, OP_INGEST)
     context = {'languages': collection.languages}
     queue.queue_task(proxy.to_dict(), context)

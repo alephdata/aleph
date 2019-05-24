@@ -36,7 +36,8 @@ class Entity(db.Model, SoftDeleteModel):
         pq = db.session.query(Match)
         pq = pq.filter(or_(
             Match.entity_id == self.id,
-            Match.match_id == self.id))
+            Match.match_id == self.id
+        ))
         pq.delete(synchronize_session=False)
         db.session.refresh(self)
 
@@ -116,7 +117,6 @@ class Entity(db.Model, SoftDeleteModel):
         data.update({
             'foreign_id': self.foreign_id,
             'collection_id': stringify(self.collection_id),
-            'bulk': False
         })
         return data
 
