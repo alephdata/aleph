@@ -23,7 +23,6 @@ PyYAML==5.1
 PyICU==2.3
 chardet==3.0.4
 cchardet==2.1.4
-regex==2018.8.29
 cryptography==2.6.1
 pylru==1.2.0
 pyjwt==1.7.1
@@ -34,7 +33,6 @@ redis==2.10.6
 networkx==2.3
 zipstream==1.1.4
 grpcio==1.20.1
-google-cloud-vision==0.36.0
 google-cloud-storage==1.15.0
 google-cloud-logging==1.10.0
 
@@ -46,20 +44,6 @@ nose
 flexmock==0.10.2
 coverage
 coveralls
-
-# Duplicative for speed of docker builds
-lxml==4.3.3
-xlrd==1.2.0
-phonenumbers==8.10.8
-python-levenshtein==0.12.0
-openpyxl==2.6.2
-dbf==0.98.0
-python-dateutil==2.8.0
-python-magic==0.4.15
-odfpy==1.4.0
-olefile==0.46
--e git://github.com/mailgun/flanker.git@master#egg=flanker
-six==1.12.0
 
 # Not entirely sure why this is needed:
 # urllib3==1.23

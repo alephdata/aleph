@@ -6,9 +6,7 @@ followthemoney==1.13.1
 fingerprints==0.6.5
 servicelayer[google]==1.2.2
 servicelayer[amazon]==1.2.2
-ingestors==0.13.1
 normality==1.0.0
 pantomime==0.3.3
-pdflib==0.1.7
 alephclient==1.1.5
 balkhash==0.4.1
