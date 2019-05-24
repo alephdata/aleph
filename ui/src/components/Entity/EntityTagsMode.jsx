@@ -15,7 +15,7 @@ import './EntityTagsMode.scss';
 const messages = defineMessages({
   no_tags: {
     id: 'entity.tags.no_tags',
-    defaultMessage: 'No connections.',
+    defaultMessage: 'No tags found for this entity.',
   },
 });
 
@@ -32,6 +32,7 @@ class EntityTagsMode extends React.Component {
 
   render() {
     const { intl, entity, tags } = this.props;
+
 
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (

@@ -24,19 +24,16 @@ class EntityLabel extends Component {
 
   render() {
     const {
-      entity, icon = false, documentMode = false, truncate,
+      entity, icon = false, truncate,
     } = this.props;
 
     if (!entity) {
       return null;
     }
-    const title = entity.getFirst('title') || entity.getCaption();
-    const fileName = entity.getFirst('fileName') || title;
-    const caption = title || fileName;
-    const fullLabel = documentMode ? fileName : caption;
+    const fullLabel = entity.getFirst('fileName') || entity.getCaption();
     const label = truncate ? truncateText(fullLabel, truncate) : fullLabel;
     return (
-      <span className={c('EntityLabel', { untitled: !label })} title={caption}>
+      <span className={c('EntityLabel', { untitled: !label })} title={fullLabel}>
         {icon && <Schema.Icon schema={entity.schema} />}
         { !label && (
           <FormattedMessage id="entity.label.missing" defaultMessage="Untitled" />

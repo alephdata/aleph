@@ -4,7 +4,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
-import { Role, Country } from 'src/components/common';
+import { Role, Country, Language } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import { updateCollection } from 'src/actions';
 import { selectMetadata } from 'src/selectors';
@@ -74,6 +74,7 @@ export class CollectionEditDialog extends Component {
 
     this.onSave = this.onSave.bind(this);
     this.onSelectCountries = this.onSelectCountries.bind(this);
+    this.onSelectLanguages = this.onSelectLanguages.bind(this);
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
     this.toggleDeleteCollection = this.toggleDeleteCollection.bind(this);
@@ -92,6 +93,12 @@ export class CollectionEditDialog extends Component {
   onSelectCountries(countries) {
     const { collection } = this.props;
     collection.countries = countries;
+    this.setState({ collection });
+  }
+
+  onSelectLanguages(languages) {
+    const { collection } = this.props;
+    collection.languages = languages;
     this.setState({ collection });
   }
 
@@ -266,6 +273,15 @@ export class CollectionEditDialog extends Component {
             <Country.MultiSelect
               onChange={this.onSelectCountries}
               codes={collection.countries}
+            />
+          </div>
+          <div className="bp3-form-group">
+            <label className="bp3-label">
+              <FormattedMessage id="collection.edit.info.languages" defaultMessage="Languages" />
+            </label>
+            <Language.MultiSelect
+              onChange={this.onSelectLanguages}
+              codes={collection.languages || []}
             />
           </div>
           { !collection.casefile && (
