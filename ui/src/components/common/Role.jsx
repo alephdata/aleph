@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import {
-  Button, MenuItem, Position, Classes, Alignment,
+  Button, MenuItem, Position, Classes, Alignment, Icon,
 } from '@blueprintjs/core';
 import { Select as BlueprintSelect } from '@blueprintjs/select';
 
 import wordList from 'src/util/wordList';
 import { suggestRoles } from 'src/actions';
-import { Icon } from './Icon';
 
 import './Role.scss';
 
@@ -36,7 +35,7 @@ class RoleLabel extends Component {
       <React.Fragment>
         { icon && (
           <React.Fragment>
-            <Icon name="person" />
+            <Icon icon="person" iconSize={16} />
           </React.Fragment>
         )}
         { long ? role.label : role.name }

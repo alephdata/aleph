@@ -21,7 +21,6 @@ import SortableTH from './SortableTH';
 import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
-import { Icon } from './Icon';
 import SearchBox from './SearchBox';
 
 export {
@@ -49,5 +48,4 @@ export {
   Tag,
   URL,
   SearchBox,
-  Icon,
 };
