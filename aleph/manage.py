@@ -15,15 +15,13 @@ from aleph.model import Collection, Document, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import queue_worker, sync_worker, hourly_tasks, daily_tasks
-from aleph.queue import get_queue, get_status, OP_BULKLOAD, OP_PROCESS
+from aleph.queue import get_queue, get_status, OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
-from aleph.logic.processing import process_collection
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
 from aleph.logic.collections import delete_collection
 from aleph.logic.roles import update_role, update_roles
-from aleph.logic.entities.xref import xref_collection
-from aleph.logic.entities.rdf import export_collection
+from aleph.logic.rdf import export_collection
 from aleph.logic.permissions import update_permission
 
 log = logging.getLogger('aleph')
@@ -132,7 +130,9 @@ def xref(foreign_id, against=None):
     collection = get_collection(foreign_id)
     against = ensure_list(against)
     against = [get_collection(c).id for c in against]
-    xref_collection(collection.id, against_collection_ids=against)
+    queue = get_queue(collection, OP_XREF)
+    queue.queue_task({'against_collection_ids': against}, {})
+    sync_worker()
 
 
 @manager.command

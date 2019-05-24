@@ -12,7 +12,6 @@ Flask_Babel==0.11.2
 SQLAlchemy==1.3.3
 alembic==1.0.8
 
-celery==4.2.2
 elasticsearch==7.0.0
 marshmallow==2.19.2
 psycopg2-binary==2.7.7
@@ -21,13 +20,9 @@ blinker==1.4
 Babel==2.6.0
 PyYAML==5.1
 PyICU==2.3
-chardet==3.0.4
-cchardet==2.1.4
 cryptography==2.6.1
-pylru==1.2.0
 pyjwt==1.7.1
 rdflib==4.2.2
-idna==2.8.0
 requests[security]==2.21.0
 redis==2.10.6
 networkx==2.3

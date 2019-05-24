@@ -3,10 +3,11 @@
 banal==0.4.2
 urlnormalizer==1.2.3
 followthemoney==1.13.1
+followthemoney-util==1.13.1
 fingerprints==0.6.5
 servicelayer[google]==1.2.2
 servicelayer[amazon]==1.2.2
 normality==1.0.0
 pantomime==0.3.3
 alephclient==1.1.5
-balkhash==0.4.1
+balkhash[sql]==0.4.1

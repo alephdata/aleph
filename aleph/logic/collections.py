@@ -1,7 +1,8 @@
 import logging
 from datetime import datetime
 
-from aleph.core import db, cache, celery
+from aleph.core import db, cache
+from aleph.queue import get_queue, OP_INDEX
 from aleph.authz import Authz
 from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events
@@ -42,7 +43,8 @@ def refresh_collection(collection_id, sync=False):
 def index_collection(collection, entities=False, refresh=False):
     log.info("Index [%s]: %s", collection.id, collection.label)
     if entities and collection.deleted_at is None:
-        index_collection_entities.delay(collection_id=collection.id)
+        queue = get_queue(collection, OP_INDEX)
+        queue.queue_task({}, {})
     if refresh:
         refresh_collection(collection.id)
     index.index_collection(collection)
@@ -69,12 +71,3 @@ def delete_collection(collection, sync=False):
     index.delete_entities(collection.id, sync=False)
     refresh_collection(collection.id)
     Authz.flush()
-
-
-@celery.task(priority=1)
-def index_collection_entities(collection_id):
-    from aleph.index import entities
-    collection = Collection.by_id(collection_id)
-    if collection is not None:
-        entities.index_collection_entities(collection)
-    refresh_collection(collection_id)

@@ -10,13 +10,12 @@ log = logging.getLogger(__name__)
 OP_INGEST = Queue.OP_INGEST
 OP_INDEX = Queue.OP_INDEX
 OP_XREF = 'xref'
-OP_XREFITEM = 'xrefitem'
 OP_PROCESS = 'process'
 OP_BULKLOAD = 'bulkload'
 
 # All operations that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = (OP_INDEX, OP_XREF, OP_XREFITEM, OP_PROCESS, OP_BULKLOAD)
+OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_BULKLOAD)
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
