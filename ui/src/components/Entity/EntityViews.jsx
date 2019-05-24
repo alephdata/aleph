@@ -45,7 +45,7 @@ class EntityViews extends React.Component {
     const {
       isPreview, activeMode, entity, references, tags, similar, children,
     } = this.props;
-    if (!references.shouldLoad && references.isLoading) {
+    if (references.shouldLoad || references.isLoading) {
       return <SectionLoading />;
     }
     const isMatchable = entity && entity.schema && entity.schema.matchable;
