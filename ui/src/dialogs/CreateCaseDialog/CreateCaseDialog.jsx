@@ -150,15 +150,6 @@ class CreateCaseDialog extends Component {
               </label>
             </div>
             <div className="bp3-form-group">
-              <label className="bp3-label">
-                <FormattedMessage id="case.chose.languages" defaultMessage="Languages" />
-              </label>
-              <Language.MultiSelect
-                onChange={this.onSelectLanguages}
-                codes={collection.languages}
-              />
-            </div>
-            <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="summary">
                 <FormattedMessage
                   id="case.choose.summary"
@@ -174,6 +165,21 @@ class CreateCaseDialog extends Component {
                   />
                 </div>
               </label>
+            </div>
+            <div className="bp3-form-group">
+              <label className="bp3-label">
+                <FormattedMessage id="case.chose.languages" defaultMessage="Languages" />
+              </label>
+              <Language.MultiSelect
+                onChange={this.onSelectLanguages}
+                codes={collection.languages}
+              />
+              <div className="bp3-form-helper-text">
+                <FormattedMessage
+                  id="case.languages.helper"
+                  defaultMessage="Used for optical text recognition in non-Latin alphabets."
+                />
+              </div>
             </div>
             <div className="bp3-form-group">
               <label className="bp3-label">

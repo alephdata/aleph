@@ -110,16 +110,14 @@ class EntityViews extends React.Component {
             disabled={children.total < 1}
             title={(
               <TextLoading loading={children.isLoading}>
-                <React.Fragment>
-                  <Icon name="folder" />
-                  { entity.schema.isA('Email') && (
-                    <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
-                  )}
-                  { !entity.schema.isA('Email') && (
-                    <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                  )}
-                  <Count count={children.total} />
-                </React.Fragment>
+                <Icon name="folder" />
+                { entity.schema.isA('Email') && (
+                  <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
+                )}
+                { !entity.schema.isA('Email') && (
+                  <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                )}
+                <Count count={children.total} />
               </TextLoading>
               )}
             panel={
@@ -176,7 +174,7 @@ class EntityViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
-  const childrenQuery = queryFolderDocuments(location, document.id, undefined);
+  const childrenQuery = queryFolderDocuments(location, entity.id, undefined);
   return {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),

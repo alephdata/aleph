@@ -283,6 +283,12 @@ export class CollectionEditDialog extends Component {
               onChange={this.onSelectLanguages}
               codes={collection.languages || []}
             />
+            <div className="bp3-form-helper-text">
+              <FormattedMessage
+                id="case.languages.helper"
+                defaultMessage="Used for optical text recognition in non-Latin alphabets."
+              />
+            </div>
           </div>
           { !collection.casefile && (
             <div className="bp3-form-group">
