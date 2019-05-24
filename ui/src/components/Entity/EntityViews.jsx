@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Count, Icon, Property, TextLoading,
+  Count, Icon, Property, SectionLoading, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 import {
@@ -45,6 +45,9 @@ class EntityViews extends React.Component {
     const {
       isPreview, activeMode, entity, references, tags, similar, children,
     } = this.props;
+    if (!references.shouldLoad && references.isLoading) {
+      return <SectionLoading />;
+    }
     const isMatchable = entity && entity.schema && entity.schema.matchable;
     const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
     const hasBrowseMode = entity.schema.isA('Folder');
@@ -150,9 +153,7 @@ class EntityViews extends React.Component {
               <Count count={tags.total} />
             </TextLoading>
           )}
-          panel={
-            <EntityTagsMode entity={entity} />
-             }
+          panel={<EntityTagsMode entity={entity} />}
         />
         { isMatchable && (
           <Tab
@@ -165,9 +166,7 @@ class EntityViews extends React.Component {
                 <Count count={similar.total} />
               </TextLoading>
             )}
-            panel={
-              <EntitySimilarMode entity={entity} />
-              }
+            panel={<EntitySimilarMode entity={entity} />}
           />
         )}
       </Tabs>

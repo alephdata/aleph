@@ -95,11 +95,11 @@ class MultiSelect extends Component {
     return (
       <BlueprintMultiSelect
         initialContent={
-          <MenuItem disabled text="asd" />
+          <MenuItem disabled text={<FormattedMessage id="language.multiselect.select" defaultMessage="Select" />} />
         }
         itemPredicate={this.itemFilter}
         noResults={
-          <MenuItem disabled text="sd" />
+          <MenuItem disabled text={<FormattedMessage id="language.multiselect.no.result" defaultMessage="No Result" />} />
         }
         items={items}
         itemRenderer={this.itemRenderer}

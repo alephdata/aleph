@@ -7,7 +7,7 @@ import {
   defineMessages, FormattedNumber, FormattedMessage, injectIntl,
 } from 'react-intl';
 
-import { Tag, ErrorSection, SectionLoading } from 'src/components/common';
+import { Tag, ErrorSection } from 'src/components/common';
 import { selectEntityTags } from 'src/selectors';
 
 import './EntityTagsMode.scss';
@@ -33,11 +33,6 @@ class EntityTagsMode extends React.Component {
   render() {
     const { intl, entity, tags } = this.props;
 
-    if (tags.shouldLoad || tags.isLoading) {
-      return (
-        <SectionLoading />
-      );
-    }
 
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (
