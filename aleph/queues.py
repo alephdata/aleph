@@ -33,7 +33,7 @@ def get_status(collection):
 
 
 def ingest_entity(collection, proxy):
-    if not proxy.is_a(Document.SCHEMA):
+    if not proxy.schema.is_a(Document.SCHEMA):
         return
     queue = get_queue(collection, OP_INGEST)
     context = {'languages': collection.languages}

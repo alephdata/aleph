@@ -11,8 +11,9 @@ from aleph.core import create_app, db, cache
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
-from aleph.worker import queue_worker, sync_worker, hourly_tasks, daily_tasks
-from aleph.queues import get_queue, get_status, OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.worker import queue_worker, sync_worker
+from aleph.queues import get_queue, get_status
+from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
@@ -43,13 +44,6 @@ def collections():
     """List all collections."""
     for collection in Collection.all():
         print(collection.id, collection.foreign_id, collection.label)
-
-
-@manager.command
-def scheduled():
-    """Run scheduled clean-up and notification operations."""
-    hourly_tasks()
-    daily_tasks()
 
 
 @manager.command
