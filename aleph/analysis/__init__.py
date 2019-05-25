@@ -23,14 +23,16 @@ MAPPING = {
 
 
 def tag_entity(entity):
+    # TODO: should we have a schema called "Taggable" with
+    # the XXmentioned properties?
     if not entity.schema.is_a(Document.SCHEMA):
-        # TODO: should we have a schema called "Taggable" with
-        # the XXmentioned properties?
         return
-    if 'failure' in entity.get('processingStatus'):
+    # HACK: Tables will be mapped, don't try to tag them here.
+    if entity.schema.is_a(Document.SCHEMA_TABLE):
         return
-    load_places()
+
     log.info("Tagging [%s]: %s", entity.id, entity.caption)
+    load_places()
 
     aggregator = TagAggregator()
     countries = entity.get_type_values(registry.country)
@@ -43,4 +45,5 @@ def tag_entity(entity):
     for (label, type_) in aggregator.entities:
         prop = MAPPING.get(type_)
         entity.add(prop, label, quiet=True, cleaned=True)
-    log.info("Extracted tags: %s", len(aggregator))
+
+    log.info("Extracted tags [%s]: %s", entity.id, len(aggregator))

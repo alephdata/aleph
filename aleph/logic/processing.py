@@ -35,24 +35,21 @@ def process_collection(collection, ingest=True):
         aggregator.close()
 
 
-def index_aggregate(collection, unsafe=False):
+def index_aggregate(collection):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
-        index_entities(collection, aggregator.iterate(), unsafe=unsafe)
+        index_entities(collection, aggregator.iterate())
+        log.info("Aggregate indexed: %r", collection)
     finally:
         aggregator.close()
 
 
-def index_entities(collection, iterable, unsafe=False):
-    namespace = Namespace(collection.foreign_id)
+def index_entities(collection, iterable):
     entities = []
     for entity in iterable:
         if entity.id is None:
             raise InvalidData("No ID for entity", errors=entity.to_dict())
-        entity = namespace.apply(entity)
-        if not unsafe:
-            entity = remove_checksums(entity)
 
         tag_entity(entity)
         entities.append(entity)
@@ -62,7 +59,6 @@ def index_entities(collection, iterable, unsafe=False):
 
     if len(entities):
         index.index_bulk(collection, entities)
-
     refresh_collection(collection)
 
 
@@ -72,9 +68,15 @@ def bulk_write(collection, iterable, unsafe=False):
     application has no control over key generation and a few other aspects
     of building the entity.
     """
+    namespace = Namespace(collection.foreign_id)
     entities = []
     for item in iterable:
         if not is_mapping(item):
             raise InvalidData("Failed to read input data", errors=item)
-        entities.append(model.get_proxy(item))
-    index_entities(collection, entities, unsafe=unsafe)
+        entity = model.get_proxy(item)
+        entity = namespace.apply(entity)
+        if not unsafe:
+            entity = remove_checksums(entity)
+
+        entities.append(entity)
+    index_entities(collection, entities)

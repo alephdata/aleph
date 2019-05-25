@@ -153,6 +153,7 @@ class DocumentCreateSchema(Schema):
     file_name = String(allow_none=True)
     author = String(allow_none=True)
     generator = String(allow_none=True)
+    crawler = String(allow_none=True)
     mime_type = String(allow_none=True)
     source_url = String(allow_none=True)
     parent_id = String(allow_none=True)

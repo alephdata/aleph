@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 class Document(db.Model, DatedModel):
     SCHEMA = 'Document'
     SCHEMA_FOLDER = 'Folder'
+    SCHEMA_TABLE = 'Table'
 
     STATUS_PENDING = 'pending'
     STATUS_SUCCESS = 'success'
@@ -79,15 +80,14 @@ class Document(db.Model, DatedModel):
         pq.delete(synchronize_session=False)
 
     @classmethod
-    def by_keys(cls, parent_id=None, collection_id=None, foreign_id=None,
-                content_hash=None):
+    def save(cls, collection, parent=None, foreign_id=None,
+             content_hash=None, meta=None):
         """Try and find a document by various criteria."""
         q = cls.all()
-        q = q.filter(Document.collection_id == collection_id)
+        q = q.filter(Document.collection_id == collection.id)
 
-        if parent_id is not None:
-            q = q.filter(Document.parent_id == parent_id)
-
+        if parent is not None:
+            q = q.filter(Document.parent_id == parent.id)
         if foreign_id is not None:
             q = q.filter(Document.foreign_id == foreign_id)
         elif content_hash is not None:
@@ -99,16 +99,20 @@ class Document(db.Model, DatedModel):
         if document is None:
             document = cls()
             document.schema = cls.SCHEMA
-            document.collection_id = collection_id
+            document.collection_id = collection.id
 
-        if parent_id is not None:
-            document.parent_id = parent_id
+        if parent is not None:
+            document.parent_id = parent.id
 
         if foreign_id is not None:
             document.foreign_id = foreign_id
 
-        if content_hash is not None:
-            document.content_hash = content_hash
+        document.content_hash = content_hash
+        if content_hash is None:
+            document.schema = cls.SCHEMA_FOLDER
+
+        if meta is not None:
+            document.meta = meta
 
         db.session.add(document)
         return document

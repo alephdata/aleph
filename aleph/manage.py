@@ -1,7 +1,9 @@
 # coding: utf-8
 import logging
+from pathlib import Path
 from pprint import pprint  # noqa
 from banal import ensure_list
+from normality import slugify
 from alephclient.util import load_config_file
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
@@ -12,12 +14,13 @@ from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import queue_worker, sync_worker
-from aleph.queues import get_queue, get_status
+from aleph.queues import get_queue, get_status, cancel_queue
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
 from aleph.logic.collections import delete_collection
+from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.rdf import export_collection
 from aleph.logic.permissions import update_permission
@@ -52,31 +55,19 @@ def worker():
     queue_worker()
 
 
-# @manager.command
-# @manager.option('-l', '--language', dest='language', nargs='*')
-# @manager.option('-f', '--foreign_id', dest='foreign_id')
-# def crawldir(path, language=None, foreign_id=None):
-#     """Crawl the given directory."""
-#     path = decode_path(os.path.abspath(os.path.normpath(path)))
-#     if path is None or not os.path.exists(path):
-#         log.error("Invalid path: %r", path)
-#         return
-#     path_name = os.path.basename(path)
-
-#     if foreign_id is None:
-#         foreign_id = 'directory:%s' % slugify(path)
-
-#     collection = create_collection({
-#         'foreign_id': foreign_id,
-#         'label': path_name,
-#         'languages': language
-#     })
-#     collection_id = collection.get('id')
-#     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection_id)
-#     document = Document.by_keys(collection_id=collection_id, foreign_id=path)
-#     document.file_name = path_name
-#     db.session.commit()
-#     ingest_document(document, path)
+@manager.command
+@manager.option('-l', '--language', dest='language', nargs='*')
+@manager.option('-f', '--foreign_id', dest='foreign_id')
+def crawldir(path, language=None, foreign_id=None):
+    """Crawl the given directory."""
+    path = Path(path)
+    if foreign_id is None:
+        foreign_id = 'directory:%s' % slugify(path)
+    data = {'foreign_id': foreign_id}
+    create_collection(data)
+    collection = Collection.by_foreign_id(foreign_id)
+    log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
+    crawl_directory(collection, path)
 
 
 @manager.command
@@ -144,9 +135,17 @@ def bulkload(file_name):
 
 @manager.command
 def status(foreign_id):
+    """Get the queue status (pending and finished tasks.)"""
     collection = get_collection(foreign_id)
     status = get_status(collection)
     pprint(status)
+
+
+@manager.command
+def cancel(foreign_id):
+    """Cancel all queued tasks."""
+    collection = get_collection(foreign_id)
+    cancel_queue(collection)
 
 
 @manager.command

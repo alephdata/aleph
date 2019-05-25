@@ -46,10 +46,13 @@ def extract_entities(text):
     if text is None or len(text) < TEXT_MIN_LENGTH:
         return
     if not hasattr(settings, '_nlp'):
+        log.info("Loading spaCy model: xx...")
         settings._nlp = spacy.load('xx')
     doc = settings._nlp(text)
     for ent in doc.ents:
         tag_type = SPACY_TYPES.get(ent.label_)
+        if tag_type is None:
+            continue
         if tag_type == registry.name:
             name = clean_name(ent.text)
             yield (registry.name, name)

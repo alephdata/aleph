@@ -23,7 +23,7 @@ def load_places():
         return
     total = 0
     pipe = kv.pipeline(transaction=False)
-    log.debug("Loading geonames...")
+    log.info("Loading geonames...")
     with io.open(settings.GEONAMES_DATA, 'r', encoding='utf-8') as fh:
         for row in csv.reader(fh, delimiter='\t'):
             country = row[8].lower().strip()
@@ -39,4 +39,4 @@ def load_places():
                     pipe.lpush(place_key(name), country)
     pipe.set(PLACE_KEY, total)
     pipe.execute()
-    log.debug("Loaded %s geonames.", total)
+    log.info("Loaded %s geonames.", total)

@@ -22,8 +22,9 @@ def extract_patterns(text, countries):
     for pattern, tag_type in REGEX_TYPES.items():
         for match in pattern.finditer(text):
             match_text = match.group(0)
-            text = tag_type.clean(match_text, countries=countries)
-            if text is not None:
-                yield (tag_type, text)
-            for country in ensure_list(tag_type.country_hint(text)):
+            cleaned_text = tag_type.clean(match_text, countries=countries)
+            if cleaned_text is not None:
+                yield (tag_type, cleaned_text)
+            hints = tag_type.country_hint(cleaned_text)
+            for country in ensure_list(hints):
                 yield (registry.country, country)

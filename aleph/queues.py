@@ -32,6 +32,10 @@ def get_status(collection):
     return Progress.get_dataset_status(kv, collection.foreign_id)
 
 
+def cancel_queue(collection):
+    Queue.remove_dataset(kv, collection.foreign_id)
+
+
 def ingest_entity(collection, proxy):
     if not proxy.schema.is_a(Document.SCHEMA):
         return
