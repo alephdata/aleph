@@ -6,7 +6,7 @@ all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		postgres elasticsearch \
+		postgres elasticsearch ingest-file \
 		convert-document recognize-text
 
 shell: services    
