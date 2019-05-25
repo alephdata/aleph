@@ -10,7 +10,7 @@ from servicelayer.archive.util import checksum
 
 from aleph.core import db
 from aleph.model import Document
-from aleph.queue import ingest_entity
+from aleph.queues import ingest_entity
 from aleph.views.util import get_db_collection
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema

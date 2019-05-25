@@ -6,6 +6,7 @@ __pycache__
 
 .env
 .vscode/*
+TODO.md
 
 build*
 

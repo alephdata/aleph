@@ -1,21 +1,18 @@
 # coding: utf-8
-import os
 import logging
 from pprint import pprint  # noqa
 from banal import ensure_list
-from normality import slugify
-from ingestors.util import decode_path
 from alephclient.util import load_config_file
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
 
 from aleph.core import create_app, db, cache
-from aleph.model import Collection, Document, Role
+from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import queue_worker, sync_worker, hourly_tasks, daily_tasks
-from aleph.queue import get_queue, get_status, OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.queues import get_queue, get_status, OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import index_collections, index_collection
@@ -121,6 +118,7 @@ def repair(foreign_id=None, entities=False):
         index_collection(collection, entities=entities, refresh=True)
     else:
         index_collections(entities=entities, refresh=True)
+    sync_worker()
 
 
 @manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa

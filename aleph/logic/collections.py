@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 
 from aleph.core import db, cache
-from aleph.queue import get_queue, OP_INDEX
+from aleph.queues import get_queue, OP_INDEX
 from aleph.authz import Authz
 from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events

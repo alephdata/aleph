@@ -1,6 +1,6 @@
 import logging
-from servicelayer.queue import RateLimit, Progress
-from servicelayer.queue import ServiceQueue as Queue
+from servicelayer.process import RateLimit, Progress
+from servicelayer.process import ServiceQueue as Queue
 
 from aleph.core import kv
 from aleph.model import Document

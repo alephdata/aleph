@@ -8,7 +8,7 @@ from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.model import Role, Collection
 from aleph.search import CollectionsQuery
-from aleph.queue import get_queue, OP_BULKLOAD, OP_PROCESS
+from aleph.queues import get_queue, OP_BULKLOAD, OP_PROCESS
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.processing import bulk_write

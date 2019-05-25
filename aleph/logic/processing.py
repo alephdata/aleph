@@ -5,7 +5,7 @@ from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
 from followthemoney.namespace import Namespace
 
-from aleph.queue import ingest_entity
+from aleph.queues import ingest_entity
 from aleph.analysis import tag_entity
 from aleph.index import entities as index
 from aleph.model import Entity, Document

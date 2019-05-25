@@ -21,12 +21,6 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
-  rabbitmq:
-    image: rabbitmq
-    hostname: queue
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-
   redis:
     image: redis:alpine
     command: ["redis-server", "--appendonly", "yes"]
@@ -78,7 +72,6 @@ services:
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
       - ingest-file
     tmpfs:
@@ -99,7 +92,6 @@ services:
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
       - ingest-file
       - worker
@@ -124,7 +116,6 @@ services:
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
       - worker
       - ingest-file

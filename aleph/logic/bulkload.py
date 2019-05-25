@@ -4,7 +4,7 @@ from followthemoney import model
 from followthemoney.namespace import Namespace
 
 from aleph.logic.aggregator import get_aggregator
-from aleph.queue import get_queue, OP_INDEX
+from aleph.queues import get_queue, OP_INDEX
 
 log = logging.getLogger(__name__)
 

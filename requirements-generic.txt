@@ -24,16 +24,16 @@ cryptography==2.6.1
 pyjwt==1.7.1
 rdflib==4.2.2
 requests[security]==2.21.0
-redis==2.10.6
+redis==3.2.1
+fakeredis==1.0.3
 networkx==2.3
 zipstream==1.1.4
-grpcio==1.20.1
-google-cloud-storage==1.15.0
-google-cloud-logging==1.10.0
+grpcio==1.21.1
+google-cloud-storage==1.16.0
+google-cloud-logging==1.11.0
 
 # Testing dependencies
 factory-boy==2.10.0
-fakeredis==1.0.3
 Faker==0.8.13
 nose
 flexmock==0.10.2

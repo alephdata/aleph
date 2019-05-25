@@ -2,8 +2,8 @@ import logging
 
 from aleph.core import db, settings
 from aleph.model import Collection
-from aleph.queue import get_next_task, get_rate_limit
-from aleph.queue import OP_INDEX, OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.queues import get_next_task, get_rate_limit
+from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import index_collections
 from aleph.logic.notifications import generate_digest

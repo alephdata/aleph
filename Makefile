@@ -6,7 +6,7 @@ all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		rabbitmq postgres elasticsearch \
+		postgres elasticsearch \
 		convert-document recognize-text
 
 shell: services    

@@ -24,12 +24,6 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
-  rabbitmq:
-    image: rabbitmq
-    hostname: queue
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-
   redis:
       image: redis:alpine
       command: ["redis-server", "--appendonly", "yes"]
@@ -78,7 +72,6 @@ services:
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
       - ingest-file
     tmpfs: /tmp
@@ -103,7 +96,7 @@ services:
 
   api:
     image: alephdata/aleph
-    command: python3 aleph/manage.py runserver -h 0.0.0.0 -p 5000 --threaded
+    command: aleph runserver -h 0.0.0.0 -p 5000 --threaded
     expose:
       - 5000
     ports:
@@ -112,7 +105,6 @@ services:
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
       - ingest-file
     tmpfs: /tmp

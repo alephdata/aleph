@@ -4,7 +4,7 @@ from alephclient.util import load_config_file
 
 from aleph.logic.bulkload import bulk_load
 from aleph.model import Collection
-from aleph.queue import get_queue, OP_BULKLOAD
+from aleph.queues import get_queue, OP_BULKLOAD
 from aleph.worker import sync_worker
 from aleph.tests.util import TestCase
 
