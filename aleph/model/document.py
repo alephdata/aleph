@@ -112,7 +112,7 @@ class Document(db.Model, DatedModel):
             document.schema = cls.SCHEMA_FOLDER
 
         if meta is not None:
-            document.meta = meta
+            document.update(meta)
 
         db.session.add(document)
         return document
@@ -163,6 +163,7 @@ class Document(db.Model, DatedModel):
         proxy.set('modifiedAt', meta.get('modified_at'))
         proxy.set('publishedAt', meta.get('published_at'))
         proxy.set('retrievedAt', meta.get('retrieved_at'))
+        proxy.set('indexUpdatedAt', self.created_at)
         proxy.set('sourceUrl', meta.get('source_url'))
         # TODO: crawler, ....
         return proxy

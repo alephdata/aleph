@@ -108,6 +108,7 @@ class Entity(db.Model, SoftDeleteModel):
             'properties': self.data
         })
         proxy.add('name', self.name)
+        proxy.set('indexUpdatedAt', self.created_at)
         return proxy
 
     def to_dict(self):
