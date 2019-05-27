@@ -34,7 +34,8 @@ def process_collection(collection, ingest=True):
             if ingest:
                 ingest_entity(collection, proxy)
         writer.flush()
-        index_entities(collection, aggregator.iterate())
+        if not ingest:
+            index_entities(collection, aggregator.iterate())
     finally:
         aggregator.close()
 

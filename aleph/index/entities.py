@@ -2,7 +2,6 @@ import logging
 import fingerprints
 from pprint import pprint  # noqa
 from banal import ensure_list
-from datetime import datetime
 from followthemoney import model
 from elasticsearch.helpers import scan
 
@@ -10,8 +9,7 @@ from aleph.core import es, cache
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
-from aleph.index.util import index_safe, authz_query
-from aleph.index.util import query_delete, bulk_actions
+from aleph.index.util import authz_query, query_delete, bulk_actions
 from aleph.index.util import MAX_PAGE
 
 log = logging.getLogger(__name__)
@@ -102,35 +100,23 @@ def index_entity(entity, sync=False):
     if entity.deleted_at is not None:
         return delete_entity(entity.id)
 
-    entity_id, index, data = index_operation(entity.to_dict())
-    refresh = refresh_sync(sync)
-    # This is required if an entity changes its type:
-    # delete_entity(entity_id, exclude=proxy.schema, sync=False)
-    return index_safe(index, entity_id, data, refresh=refresh)
+    proxy = entity.to_proxy()
+    delete_entity(proxy.id, exclude=proxy.schema, sync=False)
+    return index_bulk(entity.collection, [proxy], sync=sync)
 
 
 def index_bulk(collection, entities, sync=False):
     """Index a set of entities."""
     actions = []
-    timestamp = datetime.utcnow()
     for entity in entities:
-        body = entity.to_full_dict()
-        body.update({
-            'collection_id': collection.id,
-            'modified_at': timestamp.isoformat(),
-            'created_at': timestamp.isoformat(),
-        })
-        _, index, body = index_operation(body)
-        actions.append({
-            '_id': entity.id,
-            '_index': index,
-            '_source': body
-        })
+        actions.append(index_proxy(entity, collection))
     bulk_actions(actions, sync=sync)
 
 
-def index_operation(data):
+def index_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
+    data = proxy.to_full_dict()
+    data['collection_id'] = collection.id
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
@@ -138,18 +124,22 @@ def index_operation(data):
 
     # Slight hack: a magic property in followthemoney that gets taken out
     # of the properties and added straight to the index text.
-    texts = data.pop('text', [])
-    texts.extend(data.get('properties', {}).pop('indexText', []))
-    texts.extend(fps)
-    data['text'] = texts
+    properties = data.get('properties')
+    text = properties.pop('indexText', [])
+    text.extend(fps)
+    text.append(collection.label)
+    data['text'] = text
 
-    if not data.get('created_at'):
-        data['created_at'] = data.get('updated_at')
+    data['updated_at'] = collection.updated_at
+    for updated_at in properties.pop('indexUpdatedAt', []):
+        data['updated_at'] = updated_at
 
-    entity_id = str(data.pop('id'))
-    data.pop('_index', None)
-    index = entities_write_index(data.get('schema'))
-    return entity_id, index, data
+    entity_id = data.pop('id')
+    return {
+        '_id': entity_id,
+        '_index': entities_write_index(data.get('schema')),
+        '_source': data
+    }
 
 
 def delete_entity(entity_id, exclude=None, sync=False):
@@ -162,14 +152,5 @@ def delete_entity(entity_id, exclude=None, sync=False):
             continue
         es.delete(index=index, id=entity_id,
                   refresh=refresh_sync(sync))
-
-    q = {'term': {'entities': entity_id}}
-    query_delete(entities_read_index(), q, sync=sync)
-
-
-def delete_operation(index, entity_id):
-    return {
-        '_id': entity_id,
-        '_index': index,
-        '_op_type': 'delete'
-    }
+        q = {'term': {'entities': entity_id}}
+        query_delete(entities_read_index(), q, sync=sync)
