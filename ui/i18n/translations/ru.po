@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-05-28T07:28:38.731Z\n"
+"POT-Creation-Date: 2019-05-28T16:03:07.142Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -930,7 +930,7 @@ msgstr "Новая папка"
 #. No Result
 #: i18n/messages.json
 msgid "No Result"
-msgstr ""
+msgstr "Не найдено"
 
 #. [email.body.empty]
 #. defaultMessage is:
@@ -989,7 +989,7 @@ msgstr "Подходящие коллекции не найдены"
 #. No tags found for this entity.
 #: i18n/messages.json
 msgid "No tags found for this entity."
-msgstr ""
+msgstr "Теги не найдены"
 
 #. [auth.unauthorized]
 #. defaultMessage is:
@@ -1331,7 +1331,7 @@ msgstr "Искать..."
 #. Select
 #: i18n/messages.json
 msgid "Select"
-msgstr ""
+msgstr "Выбрать"
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -1737,7 +1737,7 @@ msgstr "API-ключ для редактирования данных через
 #. Used for optical text recognition in non-Latin alphabets.
 #: i18n/messages.json i18n/messages.json
 msgid "Used for optical text recognition in non-Latin alphabets."
-msgstr ""
+msgstr "Для распознавания текстов нелатинских алфавитов."
 
 #. [collection.edit.users]
 #. defaultMessage is:
