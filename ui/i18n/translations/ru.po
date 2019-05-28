@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-05-06T12:12:14.195Z\n"
+"POT-Creation-Date: 2019-05-28T07:28:38.731Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -749,10 +749,16 @@ msgstr "Название"
 #. [nav.languages]
 #. defaultMessage is:
 #. Languages
+#. [collection.edit.info.languages]
+#. defaultMessage is:
+#. Languages
+#. [case.chose.languages]
+#. defaultMessage is:
+#. Languages
 #. [search.facets.facet.languages]
 #. defaultMessage is:
 #. Languages
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Languages"
 msgstr "Языки"
 
@@ -919,12 +925,12 @@ msgstr "Новый кейс"
 msgid "New folder"
 msgstr "Новая папка"
 
-#. [entity.tags.no_tags]
+#. [language.multiselect.no.result]
 #. defaultMessage is:
-#. No connections.
+#. No Result
 #: i18n/messages.json
-msgid "No connections."
-msgstr "Связи отсутствуют."
+msgid "No Result"
+msgstr ""
 
 #. [email.body.empty]
 #. defaultMessage is:
@@ -977,6 +983,13 @@ msgstr "Ничего не найдено"
 #: i18n/messages.json
 msgid "No sources were found"
 msgstr "Подходящие коллекции не найдены"
+
+#. [entity.tags.no_tags]
+#. defaultMessage is:
+#. No tags found for this entity.
+#: i18n/messages.json
+msgid "No tags found for this entity."
+msgstr ""
 
 #. [auth.unauthorized]
 #. defaultMessage is:
@@ -1312,6 +1325,13 @@ msgstr "Поиск..."
 #: i18n/messages.json
 msgid "Search…"
 msgstr "Искать..."
+
+#. [language.multiselect.select]
+#. defaultMessage is:
+#. Select
+#: i18n/messages.json
+msgid "Select"
+msgstr ""
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -1708,6 +1728,16 @@ msgstr "Минимум 6 символов"
 #: i18n/messages.json
 msgid "Use the API key to read and write data via remote applications."
 msgstr "API-ключ для редактирования данных через сторонние приложения"
+
+#. [case.languages.helper]
+#. defaultMessage is:
+#. Used for optical text recognition in non-Latin alphabets.
+#. [case.languages.helper]
+#. defaultMessage is:
+#. Used for optical text recognition in non-Latin alphabets.
+#: i18n/messages.json i18n/messages.json
+msgid "Used for optical text recognition in non-Latin alphabets."
+msgstr ""
 
 #. [collection.edit.users]
 #. defaultMessage is:
