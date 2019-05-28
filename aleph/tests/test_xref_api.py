@@ -1,6 +1,6 @@
 from aleph.core import db
 from aleph.model import Entity
-from aleph.index import index_entity
+from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
 

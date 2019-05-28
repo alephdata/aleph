@@ -6,7 +6,7 @@ from alephclient.util import load_config_file
 from aleph.core import db
 from aleph.model import Entity
 from aleph.logic.entities import bulk_load
-from aleph.index import index_entity
+from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 
 
