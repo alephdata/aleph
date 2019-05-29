@@ -7,6 +7,7 @@
     "@blueprintjs/core": "^3.15.0",
     "@blueprintjs/select": "^3.8.0",
     "@blueprintjs/table": "^3.5.0",
+    "@blueprintjs/icons": "3.8.0",
     "classnames": "^2.2.6",
     "filesize": "^4.1.2",
     "uuid": "^3.3.2",
