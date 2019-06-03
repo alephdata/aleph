@@ -42,7 +42,6 @@ def handle_task(queue, payload, context):
         log.info("Task done: %s -> %s", queue.dataset, queue.operation)
     finally:
         queue.task_done()
-        db.session.remove()
 
 
 def queue_worker(timeout=5):
@@ -61,6 +60,7 @@ def queue_worker(timeout=5):
         if queue is None:
             continue
         handle_task(queue, payload, context)
+        db.session.remove()
 
 
 def sync_worker(timeout=1):

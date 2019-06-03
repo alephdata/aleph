@@ -5,10 +5,11 @@ from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
 from followthemoney.namespace import Namespace
 
+from aleph.model import Entity, Document
 from aleph.queues import ingest_entity
 from aleph.analysis import tag_entity
-from aleph.index import entities as index
-from aleph.model import Entity, Document
+from aleph.index.entities import index_bulk
+from aleph.index.collections import index_collection
 from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.util import BULK_PAGE
@@ -40,17 +41,18 @@ def process_collection(collection, ingest=True):
         aggregator.close()
 
 
-def index_aggregate(collection):
+def index_aggregate(collection, sync=False):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
-        index_entities(collection, aggregator.iterate())
+        index_entities(collection, aggregator.iterate(), sync=sync)
+        index_collection(collection, sync=sync)
         log.info("Aggregate indexed: %r", collection)
     finally:
         aggregator.close()
 
 
-def index_entities(collection, iterable):
+def index_entities(collection, iterable, sync=False):
     entities = []
     for entity in iterable:
         if entity.id is None:
@@ -59,11 +61,11 @@ def index_entities(collection, iterable):
         tag_entity(entity)
         entities.append(entity)
         if len(entities) >= BULK_PAGE:
-            index.index_bulk(collection, entities)
+            index_bulk(collection, entities, sync=sync)
             entities = []
 
     if len(entities):
-        index.index_bulk(collection, entities)
+        index_bulk(collection, entities, sync=sync)
     refresh_collection(collection)
 
 
