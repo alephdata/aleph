@@ -34,9 +34,9 @@ def bulk_load_query(queue, collection, query_id, query):
     entities_count = 0
     for idx, record in enumerate(mapping.source.records, 1):
         for entity in mapping.map(record).values():
-            fragment = '%s-%s' % (query_id, idx)
             entity = namespace.apply(entity)
             entities_count += 1
+            fragment = '%s-%s' % (query_id, idx)
             writer.put(entity, fragment=fragment)
 
         if idx > 0 and idx % 1000 == 0:
@@ -48,3 +48,5 @@ def bulk_load_query(queue, collection, query_id, query):
                      entities_count)
     writer.flush()
     aggregator.close()
+    log.info("[%s] Query done (%s entities)",
+             collection.foreign_id, entities_count)

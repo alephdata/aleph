@@ -115,6 +115,7 @@ def index_bulk(collection, entities, sync=False):
 
 def index_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
+    proxy.context = {}
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
     names = ensure_list(data.get('names'))

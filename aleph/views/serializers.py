@@ -242,8 +242,6 @@ class EntitySerializer(Serializer):
 
         obj['links'] = links
         obj['writeable'] = authz.can(collection_id, authz.WRITE)
-        if obj.get('bulk'):
-            obj['writeable'] = False
         obj.pop('_index', None)
         return self._clean_response(obj)
 

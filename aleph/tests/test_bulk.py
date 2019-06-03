@@ -3,7 +3,6 @@ from unittest import skip  # noqa
 from alephclient.util import load_config_file
 
 from aleph.logic.bulkload import bulk_load
-from aleph.model import Collection
 from aleph.queues import get_queue, OP_BULKLOAD
 from aleph.worker import sync_worker
 from aleph.tests.util import TestCase
@@ -22,7 +21,7 @@ class BulkLoadTestCase(TestCase):
         yml_path = self.get_fixture_path('kek.yml')
         config = load_config_file(yml_path)
         bulk_load(self.queue, self.coll, config.get('kek'))
-        # sync_worker()
+        sync_worker()
 
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities?filter:schemata=Thing&q=friede+springer'
@@ -30,20 +29,18 @@ class BulkLoadTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
         res0 = res.json['results'][0]
-        key = '9895ccc1b3d6444ccc6371ae239a7d55c748a714'
-        assert res0['id'].startswith(key), res0
+        name = 'Springer, Friede'
+        assert res0['name'].startswith(name), res0
 
     def test_load_csv(self):
         db_uri = 'file://' + self.get_fixture_path('experts.csv')
         os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
         yml_path = self.get_fixture_path('experts.yml')
         config = load_config_file(yml_path)
-        bulk_load(self.queue, self.coll, config.get('kek'))
-        # sync_worker()
+        bulk_load(self.queue, self.coll, config.get('experts'))
+        sync_worker()
 
         _, headers = self.login(is_admin=True)
-        count = Collection.all().count()
-        assert 1 == count, count
         url = '/api/2/entities?filter:schemata=Thing&q=Greenfield'
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
