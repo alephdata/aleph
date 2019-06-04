@@ -37,12 +37,12 @@ class Query(object):
         query = []
         if self.parser.text:
             query.append({
-                "simple_query_string": {
+                "query_string": {
                     "query": self.parser.text,
                     "fields": self.TEXT_FIELDS,
                     "analyzer": "icu_latin",
                     "default_operator": "AND",
-                    "minimum_should_match": "70%",
+                    "minimum_should_match": "3<80%",
                     "lenient": True
                 }
             })
