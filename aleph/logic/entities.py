@@ -16,9 +16,9 @@ log = logging.getLogger(__name__)
 def create_entity(data, collection, role=None, sync=False):
     entity = Entity.create(data, collection)
     db.session.commit()
-    data = index.index_entity(entity, sync=sync)
+    index.index_entity(entity, sync=sync)
     refresh_entity(entity)
-    return data
+    return entity.id
 
 
 def update_entity(entity, sync=False):

@@ -78,9 +78,10 @@ def match():
 def create():
     data = parse_request(EntityCreateSchema)
     collection = get_db_collection(data['collection_id'], request.authz.WRITE)
-    data = create_entity(data, collection, sync=get_flag('sync', True))
-    tag_request(entity_id=data.get('id'), collection_id=str(collection.id))
-    return EntitySerializer.jsonify(data)
+    entity_id = create_entity(data, collection, sync=True)
+    tag_request(entity_id=entity_id, collection_id=str(collection.id))
+    entity = get_index_entity(entity_id, request.authz.READ)
+    return EntitySerializer.jsonify(entity)
 
 
 @blueprint.route('/api/2/documents/<entity_id>', methods=['GET'])
