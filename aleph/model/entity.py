@@ -73,6 +73,11 @@ class Entity(db.Model, SoftDeleteModel):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
+    def apply_proxy(self, proxy):
+        self.schema = proxy.schema.name
+        self.name = proxy.caption
+        self.data = proxy.properties
+
     def to_proxy(self):
         proxy = model.get_proxy({
             'id': self.id,
@@ -82,11 +87,6 @@ class Entity(db.Model, SoftDeleteModel):
         proxy.add('name', self.name)
         proxy.set('indexUpdatedAt', self.created_at)
         return proxy
-
-    def apply_proxy(self, proxy):
-        self.schema = proxy.schema.name
-        self.name = proxy.caption
-        self.data = proxy.properties
 
     @classmethod
     def create(cls, data, collection):

@@ -19,8 +19,6 @@ def get_alert(alert_id):
 
 def check_alerts():
     """Go through all alerts."""
-    Alert.dedupe()
-    db.session.commit()
     for alert_id in Alert.all_ids():
         check_alert(alert_id)
 
@@ -31,6 +29,7 @@ def check_alert(alert_id):
         return
     if not alert.role.is_alertable:
         return
+    log.info("Check alert [%s]: %s", alert.id, alert.query)
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
     index = entities_read_index(schema=Entity.THING)
@@ -69,7 +68,7 @@ def alert_query(alert, authz):
         }
     }
     filters = [
-        {'range': {'created_at': {'gt': alert.notified_at}}},
+        {'range': {'updated_at': {'gt': alert.notified_at}}},
         {'term': {'schemata': Entity.THING}},
         authz_query(authz)
     ]

@@ -26,7 +26,7 @@ def daily_tasks():
 
 
 def handle_task(queue, payload, context):
-    log.info("Task: %s -> %s", queue.dataset, queue.operation)
+    log.info("Task [%s]: %s (begin)", queue.dataset, queue.operation)
     try:
         collection = Collection.by_foreign_id(queue.dataset)
         if queue.operation == OP_INDEX:
@@ -39,12 +39,13 @@ def handle_task(queue, payload, context):
             against = payload.get('against_collection_ids')
             xref_collection(queue, collection,
                             against_collection_ids=against)
-        log.info("Task done: %s -> %s", queue.dataset, queue.operation)
+        log.info("Task [%s]: %s (done)", queue.dataset, queue.operation)
     finally:
         queue.task_done()
 
 
 def queue_worker(timeout=5):
+    """The main event loop for the Aleph backend."""
     hourly = get_rate_limit('hourly', unit=3600, interval=1, limit=1)
     daily = get_rate_limit('daily', unit=3600, interval=24, limit=1)
     log.info("Worker: %s", kv)
@@ -63,9 +64,10 @@ def queue_worker(timeout=5):
         db.session.remove()
 
 
-def sync_worker(timeout=1):
+def sync_worker():
+    log.debug("Eagerly processing queue events...")
     while True:
-        queue, payload, context = get_next_task(timeout=timeout)
+        queue, payload, context = get_next_task(timeout=None)
         if queue is None:
-            return
+            break
         handle_task(queue, payload, context)

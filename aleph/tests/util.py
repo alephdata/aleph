@@ -2,6 +2,7 @@ import os
 import shutil
 from pathlib import Path
 from tempfile import mkdtemp
+from servicelayer import settings as sls
 from flask_testing import TestCase as FlaskTestCase
 from followthemoney_util.util import read_object
 from faker import Factory
@@ -43,6 +44,7 @@ class TestCase(FlaskTestCase):
         # The testing configuration is inferred from the production
         # settings, but it can only be derived after the config files
         # have actually been evaluated.
+        sls.REDIS_URL = None
         settings.APP_NAME = APP_NAME
         settings.TESTING = True
         settings.DEBUG = True
@@ -55,11 +57,9 @@ class TestCase(FlaskTestCase):
         settings.DATABASE_URI = DB_URI
         settings.ALEPH_PASSWORD_LOGIN = True
         settings.MAIL_SERVER = None
-        settings.ENTITIES_SERVICE = None
         settings.INDEX_PREFIX = APP_NAME
         settings.INDEX_WRITE = 'yolo'
         settings.INDEX_READ = [settings.INDEX_WRITE]
-        settings.REDIS_URL = None
         settings._gcp_logger = None
         app = create_app({})
         mount_app_blueprints(app)
@@ -114,6 +114,8 @@ class TestCase(FlaskTestCase):
                 'name': ['Banana'],
             }
         }, self.private_coll)
+        user = Role.by_foreign_id(Role.SYSTEM_USER)
+        Permission.grant(self.private_coll, user, True, False)
         self.public_coll = Collection.create({
             'foreign_id': 'test_public',
             'label': "Public Collection",

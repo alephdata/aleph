@@ -5,7 +5,6 @@
 # defaults.
 import os
 from servicelayer import env
-from servicelayer import settings as sls
 from flask_babel import lazy_gettext
 
 
@@ -42,14 +41,6 @@ SAMPLE_SEARCHES = env.to_list('ALEPH_SAMPLE_SEARCHES', SAMPLE_SEARCHES)
 # Cross-origin resource sharing
 CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', separator='|')
 
-
-###############################################################################
-# Data storage
-
-# Archive type (either 's3' or 'file', i.e. local file system):
-ARCHIVE_TYPE = env.get('ALEPH_ARCHIVE_TYPE', sls.ARCHIVE_TYPE)
-ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET', sls.ARCHIVE_BUCKET)
-ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH', sls.ARCHIVE_PATH)
 
 ##############################################################################
 # Security and authentication.
@@ -138,5 +129,3 @@ INDEX_READ = env.to_list('ALEPH_INDEX_READ', [INDEX_WRITE])
 
 # Disable delayed processing via queue
 EAGER = env.to_bool('ALEPH_EAGER', DEBUG)
-
-sls.REDIS_URL = sls.REDIS_URL or 'redis://redis:6379/0'

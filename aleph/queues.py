@@ -68,6 +68,6 @@ def ingest_entity(collection, proxy):
     context = {'languages': collection.languages}
     queue.queue_task(proxy.to_dict(), context)
     if settings.EAGER:
-        ingest_wait(collection)
+        # ingest_wait(collection)
         from aleph.worker import sync_worker
         sync_worker()

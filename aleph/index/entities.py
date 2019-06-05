@@ -135,6 +135,7 @@ def index_proxy(proxy, collection):
     for updated_at in properties.pop('indexUpdatedAt', []):
         data['updated_at'] = updated_at
 
+    # pprint(data)
     entity_id = data.pop('id')
     return {
         '_id': entity_id,

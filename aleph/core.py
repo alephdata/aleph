@@ -93,18 +93,16 @@ def configure_alembic(config):
 
 def get_es():
     if not hasattr(settings, '_es_instance'):
-        es = Elasticsearch(settings.ELASTICSEARCH_URL,
-                           timeout=settings.ELASTICSEARCH_TIMEOUT)
+        timeout = settings.ELASTICSEARCH_TIMEOUT
+        es = Elasticsearch(settings.ELASTICSEARCH_URL, timeout=timeout)
         settings._es_instance = es
     return settings._es_instance
 
 
 def get_archive():
-    if not hasattr(settings, '_aleph_archive'):
-        settings._aleph_archive = init_archive(archive_type=settings.ARCHIVE_TYPE,  # noqa
-                                               bucket=settings.ARCHIVE_BUCKET,
-                                               path=settings.ARCHIVE_PATH)
-    return settings._aleph_archive
+    if not hasattr(settings, '_archive'):
+        settings._archive = init_archive()
+    return settings._archive
 
 
 def get_cache():
