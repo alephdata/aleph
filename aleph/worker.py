@@ -65,7 +65,7 @@ def queue_worker(timeout=5):
 
 
 def sync_worker():
-    log.debug("Eagerly processing queue events...")
+    log.debug("Processing queue events...")
     while True:
         queue, payload, context = get_next_task(timeout=None)
         if queue is None:

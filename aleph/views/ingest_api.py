@@ -10,6 +10,7 @@ from normality import safe_filename, stringify
 from aleph.core import db, archive
 from aleph.model import Document
 from aleph.queues import ingest_entity
+# from aleph.index.entities import index_bulk
 from aleph.views.util import get_db_collection
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema
@@ -21,9 +22,10 @@ blueprint = Blueprint('ingest_api', __name__)
 def _load_parent(collection, meta):
     """Determine the parent document for the document that is to be
     ingested."""
-    if meta.get('parent_id') is None:
+    parent_id = meta.get('parent_id')
+    if parent_id is None:
         return
-    parent = Document.by_id(meta.get('parent_id'), collection_id=collection.id)
+    parent = Document.by_id(parent_id, collection_id=collection.id)
     if parent is None:
         raise BadRequest(response=jsonify({
             'status': 'error',
@@ -69,7 +71,10 @@ def ingest_upload(collection_id):
                                  content_hash=content_hash,
                                  meta=meta)
         db.session.commit()
-        ingest_entity(collection, document.to_proxy())
+        proxy = document.to_proxy()
+        ingest_entity(collection, proxy)
+        # if proxy.schema.is_a(Document.SCHEMA_FOLDER):
+        #     index_bulk(collection, [proxy], sync=True)
     finally:
         shutil.rmtree(upload_dir)
 

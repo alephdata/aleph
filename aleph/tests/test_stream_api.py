@@ -17,7 +17,7 @@ class StreamApiTestCase(TestCase):
         res = self.client.get('/api/2/entities/_stream', headers=headers)
         assert res.status_code == 200, res
         lines = len(res.data.split(b'\n'))
-        assert 17 == lines, lines
+        assert 19 == lines, lines
 
     def test_rdf(self):
         coll = self.create_collection(

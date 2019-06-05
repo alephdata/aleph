@@ -75,7 +75,6 @@ class Entity(db.Model, SoftDeleteModel):
 
     def apply_proxy(self, proxy):
         self.schema = proxy.schema.name
-        self.name = proxy.caption
         self.data = proxy.properties
 
     def to_proxy(self):
@@ -85,7 +84,7 @@ class Entity(db.Model, SoftDeleteModel):
             'properties': self.data
         })
         proxy.add('name', self.name)
-        proxy.set('indexUpdatedAt', self.created_at)
+        proxy.set('indexUpdatedAt', self.updated_at)
         return proxy
 
     @classmethod
