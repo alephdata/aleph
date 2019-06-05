@@ -195,9 +195,10 @@ def merge(entity_id, other_id):
 
     db.session.commit()
     sync = get_flag('sync', True)
-    data = update_entity(entity, sync=sync)
+    update_entity(entity, sync=sync)
     update_entity(other, sync=sync)
-    return EntitySerializer.jsonify(data)
+    entity = get_index_entity(entity_id, request.authz.READ)
+    return EntitySerializer.jsonify(entity)
 
 
 @blueprint.route('/api/2/entities/<entity_id>', methods=['DELETE'])

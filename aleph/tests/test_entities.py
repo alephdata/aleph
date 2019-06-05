@@ -56,7 +56,8 @@ class EntitiesTestCase(TestCase):
         res = self.client.delete(url, content_type='application/json')
         assert res.status_code == 403, res.status_code
         _, headers = self.login(is_admin=True)
-        res = self.client.delete(url, headers=headers,
+        res = self.client.delete(url,
+                                 headers=headers,
                                  content_type='application/json')
         data = res.json['properties']
         assert 'bear' in data['description'][0], data
