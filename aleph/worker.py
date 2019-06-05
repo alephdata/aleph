@@ -1,6 +1,6 @@
 import logging
 
-from aleph.core import kv, db, settings
+from aleph.core import kv, db
 from aleph.model import Collection
 from aleph.queues import get_next_task, get_rate_limit
 from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS, OP_XREF

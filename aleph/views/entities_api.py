@@ -177,8 +177,9 @@ def update(entity_id):
         data['properties'] = props
     entity.update(data)
     db.session.commit()
-    data = update_entity(entity, sync=get_flag('sync', True))
-    return EntitySerializer.jsonify(data)
+    update_entity(entity, sync=get_flag('sync', True))
+    entity = get_index_entity(entity_id, request.authz.READ)
+    return EntitySerializer.jsonify(entity)
 
 
 @blueprint.route('/api/2/entities/<entity_id>/merge/<other_id>', methods=['DELETE'])  # noqa

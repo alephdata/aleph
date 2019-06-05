@@ -22,10 +22,8 @@ def create_entity(data, collection, role=None, sync=False):
 
 
 def update_entity(entity, sync=False):
-    # TODO: delete from index upon type change.
-    data = index.index_entity(entity, sync=sync)
+    index.index_entity(entity, sync=sync)
     refresh_entity(entity)
-    return data
 
 
 def refresh_entity(entity, sync=False):
