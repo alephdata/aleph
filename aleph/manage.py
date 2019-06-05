@@ -25,6 +25,7 @@ from aleph.logic.roles import update_role, update_roles
 from aleph.logic.rdf import export_collection
 from aleph.logic.permissions import update_permission
 
+
 log = logging.getLogger('aleph')
 flask_script_commands.text_type = str
 

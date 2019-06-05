@@ -1,7 +1,7 @@
 FROM alephdata/aleph-base:10
 
 # Install Python dependencies
-RUN pip3 install spacy==2.1.3
+RUN pip3 install spacy==2.1.4
 RUN python3 -m spacy download xx
 COPY requirements-generic.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-generic.txt

@@ -53,6 +53,7 @@ def queue_worker(timeout=5):
         if hourly.check():
             hourly_tasks()
             hourly.update()
+
         if daily.check():
             daily_tasks()
             daily.update()
