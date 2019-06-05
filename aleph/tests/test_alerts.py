@@ -10,7 +10,7 @@ class AlertsTestCase(TestCase):
 
     def setUp(self):
         super(AlertsTestCase, self).setUp()
-        self.load_fixtures('docs.yaml')
+        self.load_fixtures()
         self.email = 'test@pudo.org'
         self.role_email = self.create_user('with_email', email=self.email)
         self.role_no_email = self.create_user('without_email')

@@ -157,7 +157,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return cls._apply_authz(q, authz)
 
     @classmethod
-    def create(cls, data, role=None, created_at=None):
+    def create(cls, data, creator=None, created_at=None):
         foreign_id = data.get('foreign_id') or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
         if collection is None:
@@ -166,7 +166,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection.foreign_id = foreign_id
             collection.category = cls.DEFAULT
             collection.casefile = False
-        collection.update(data, creator=role)
+        collection.update(data, creator=creator)
         collection.deleted_at = None
         return collection
 

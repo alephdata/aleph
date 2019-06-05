@@ -7,7 +7,7 @@ class IndexTestCase(TestCase):
 
     def setUp(self):
         super(IndexTestCase, self).setUp()
-        self.load_fixtures('docs.yaml')
+        self.load_fixtures()
 
     def test_delete_collection(self):
         collection = Collection.by_id(1000)

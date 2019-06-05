@@ -187,7 +187,6 @@ def configure_index(index, mapping, settings):
         'settings': settings,
         'mappings': mapping
     }, ignore=[400])
-    log.info("RES: %r", res)
     return True
 
 

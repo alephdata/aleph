@@ -16,7 +16,9 @@ log = logging.getLogger(__name__)
 def create_collection(data, role=None, sync=False):
     role = role or Role.load_cli_user()
     created_at = datetime.utcnow()
-    collection = Collection.create(data, role=role, created_at=created_at)
+    collection = Collection.create(data,
+                                   creator=role,
+                                   created_at=created_at)
     if collection.created_at == created_at:
         publish(Events.CREATE_COLLECTION,
                 actor_id=role.id,

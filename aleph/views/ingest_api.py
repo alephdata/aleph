@@ -63,8 +63,8 @@ def ingest_upload(collection_id):
             path = os.path.join(upload_dir, path)
             storage.save(path)
             content_hash = archive.archive_file(path)
-        document = Document.save(collection_id=collection_id,
-                                 parent_id=parent.id,
+        document = Document.save(collection=collection,
+                                 parent=parent,
                                  foreign_id=foreign_id,
                                  content_hash=content_hash,
                                  meta=meta)

@@ -8,7 +8,7 @@ class SearchApiTestCase(TestCase):
 
     def setUp(self):
         super(SearchApiTestCase, self).setUp()
-        self.load_fixtures('docs.yaml')
+        self.load_fixtures()
         self.url = '/api/2/entities?filter:schemata=Thing'
 
     def test_simplest_search(self):

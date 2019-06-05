@@ -1,9 +1,9 @@
 import json
 from io import BytesIO
 
-from aleph.core import db
-from aleph.model import Collection
 from aleph.tests.util import TestCase
+from aleph.queues import ingest_wait
+from aleph.worker import sync_worker
 
 
 class IngestApiTestCase(TestCase):
@@ -11,13 +11,8 @@ class IngestApiTestCase(TestCase):
     def setUp(self):
         super(IngestApiTestCase, self).setUp()
         self.rolex = self.create_user(foreign_id='user_3')
-        self.col = Collection()
-        self.col.label = 'Test Collection'
-        self.col.foreign_id = 'test_coll_entities_api'
-        db.session.add(self.col)
-        db.session.commit()
+        self.col = self.create_collection()
         self.url = '/api/2/collections/%s/ingest' % self.col.id
-        self.csv_path = self.get_fixture_path('experts.csv')
 
     def test_upload_logged_out(self):
         data = {'meta': json.dumps({})}
@@ -39,13 +34,16 @@ class IngestApiTestCase(TestCase):
             'mime_type': 'text/csv',
             'source_url': 'http://pudo.org/experts.csv'
         }
+        csv_path = self.get_fixture_path('experts.csv')
         data = {
             'meta': json.dumps(meta),
-            'foo': open(self.csv_path, 'rb'),
+            'foo': open(csv_path, 'rb'),
         }
         res = self.client.post(self.url, data=data, headers=headers)
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
+        ingest_wait(self.col)
+        sync_worker()
 
         res = self.client.get('/api/2/entities?filter:schemata=Document',
                               headers=headers)
@@ -73,6 +71,8 @@ class IngestApiTestCase(TestCase):
         res = self.client.post(self.url, data=data, headers=headers)
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
+        ingest_wait(self.col)
+        sync_worker()
 
         res = self.client.get('/api/2/entities?filter:schemata=Document',
                               headers=headers)
@@ -118,6 +118,7 @@ class IngestApiTestCase(TestCase):
         }
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)
+        sync_worker()
         assert res.status_code == 201, res
         assert 'id' in res.json, res.json
         directory = res.json['id']
@@ -129,6 +130,7 @@ class IngestApiTestCase(TestCase):
         }
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)
+        sync_worker()
         assert res.status_code == 201, res
         assert 'id' in res.json, res.json
         url = '/api/2/entities/%s' % res.json['id']

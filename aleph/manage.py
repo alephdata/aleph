@@ -14,7 +14,7 @@ from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import queue_worker, sync_worker
-from aleph.queues import get_queue, get_status, cancel_queue
+from aleph.queues import get_queue, get_status, cancel_queue, ingest_wait
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
@@ -58,18 +58,22 @@ def worker():
 @manager.command
 @manager.option('-l', '--language', dest='language', nargs='*')
 @manager.option('-f', '--foreign_id', dest='foreign_id')
-def crawldir(path, language=None, foreign_id=None):
+@manager.option('-w', '--wait', default=False)
+def crawldir(path, language=None, foreign_id=None, wait=False):
     """Crawl the given directory."""
     path = Path(path)
     if foreign_id is None:
         foreign_id = 'directory:%s' % slugify(path)
     create_collection({
         'foreign_id': foreign_id,
-        'label': str(path)
+        'label': path.name
     })
     collection = Collection.by_foreign_id(foreign_id)
     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
     crawl_directory(collection, path)
+    if wait:
+        ingest_wait(collection, progress=True)
+        sync_worker()
 
 
 @manager.command

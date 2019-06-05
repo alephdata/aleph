@@ -9,7 +9,7 @@ class StreamApiTestCase(TestCase):
         super(StreamApiTestCase, self).setUp()
 
     def test_entities(self):
-        self.load_fixtures('docs.yaml')
+        self.load_fixtures()
         res = self.client.get('/api/2/entities/_stream')
         assert res.status_code == 403, res
 
