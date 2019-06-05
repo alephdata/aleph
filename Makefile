@@ -63,6 +63,10 @@ docker-push:
 dev: 
 	pip install -q transifex-client bumpversion babel jinja2
 
+fixtures:
+	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
+	balkhash iterate -d fixtures >aleph/tests/fixtures/samples.ijson
+
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev
 	pybabel extract -F babel.cfg -k lazy_gettext -o aleph/translations/messages.pot aleph
