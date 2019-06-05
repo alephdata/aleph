@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 
 from aleph.core import db, cache
-from aleph.queues import get_queue, OP_INDEX
+from aleph.queues import queue_task, OP_INDEX
 from aleph.authz import Authz
 from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events
@@ -45,8 +45,7 @@ def refresh_collection(collection_id, sync=False):
 def index_collection(collection, entities=False, refresh=False):
     log.info("Index [%s]: %s", collection.id, collection.label)
     if entities and collection.deleted_at is None:
-        queue = get_queue(collection, OP_INDEX)
-        queue.queue_task({}, {})
+        queue_task(collection, OP_INDEX)
     if refresh:
         refresh_collection(collection.id)
     index.index_collection(collection)

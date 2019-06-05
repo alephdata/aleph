@@ -4,7 +4,7 @@ from followthemoney import model
 from followthemoney.namespace import Namespace
 
 from aleph.logic.aggregator import get_aggregator
-from aleph.queues import get_queue, OP_INDEX
+from aleph.queues import queue_task, OP_INDEX
 
 log = logging.getLogger(__name__)
 
@@ -18,8 +18,7 @@ def bulk_load(queue, collection, config):
     queries = keys_values(config, 'queries', 'query')
     for query in queries:
         bulk_load_query(queue, collection, hash_data(query), query)
-    index = get_queue(collection, OP_INDEX)
-    index.queue_task({}, {})
+    queue_task(collection, OP_INDEX)
     queue.remove()
 
 

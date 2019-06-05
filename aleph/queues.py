@@ -3,7 +3,7 @@ import logging
 from servicelayer.process import RateLimit, Progress
 from servicelayer.process import ServiceQueue as Queue
 
-from aleph.core import kv
+from aleph.core import kv, settings
 from aleph.model import Document
 
 log = logging.getLogger(__name__)
@@ -23,10 +23,18 @@ def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
 
 
-def get_queue(collection, operation, priority=Queue.PRIO_LOW):
+def get_queue(collection, operation):
     dataset = collection.foreign_id
     priority = Queue.PRIO_MEDIUM if collection.casefile else Queue.PRIO_LOW
     return Queue(kv, operation, dataset, priority=priority)
+
+
+def queue_task(collection, operation, payload=None, context=None):
+    queue = get_queue(collection, operation)
+    queue.queue_task(payload or {}, context or {})
+    if settings.EAGER:
+        from aleph.worker import sync_worker
+        sync_worker()
 
 
 def get_next_task(timeout=5):
@@ -42,6 +50,16 @@ def cancel_queue(collection):
     Queue.remove_dataset(kv, collection.foreign_id)
 
 
+def ingest_wait(collection):
+    """Poll redis to see if processing on the collection is complete."""
+    queue = get_queue(collection, OP_INGEST)
+    log.info("Waiting for document ingest...")
+    while True:
+        if queue.is_done():
+            break
+        time.sleep(.1)
+
+
 def ingest_entity(collection, proxy):
     """Send the given FtM entity proxy to the ingest-file service."""
     if not proxy.schema.is_a(Document.SCHEMA):
@@ -49,18 +67,7 @@ def ingest_entity(collection, proxy):
     queue = get_queue(collection, OP_INGEST)
     context = {'languages': collection.languages}
     queue.queue_task(proxy.to_dict(), context)
-
-
-def ingest_wait(collection, progress=False):
-    """Poll redis to see if processing on the collection is complete."""
-    queue = get_queue(collection, OP_INGEST)
-    while True:
-        time.sleep(.2)
-        if queue.is_done():
-            break
-
-        if progress:
-            status = queue.progress.get()
-            pending = status.get('pending')
-            total = pending + status.get('finished')
-            log.debug("Waiting for document ingest: %d/%d", pending, total)
+    if settings.EAGER:
+        ingest_wait(collection)
+        from aleph.worker import sync_worker
+        sync_worker()

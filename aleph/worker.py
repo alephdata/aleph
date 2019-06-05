@@ -64,9 +64,8 @@ def queue_worker(timeout=5):
 
 
 def sync_worker(timeout=1):
-    if settings.EAGER:
-        while True:
-            queue, payload, context = get_next_task(timeout=timeout)
-            if queue is None:
-                return
-            handle_task(queue, payload, context)
+    while True:
+        queue, payload, context = get_next_task(timeout=timeout)
+        if queue is None:
+            return
+        handle_task(queue, payload, context)

@@ -8,7 +8,7 @@ from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.model import Role, Collection
 from aleph.search import CollectionsQuery
-from aleph.queues import get_queue, OP_BULKLOAD, OP_PROCESS
+from aleph.queues import queue_task, OP_BULKLOAD, OP_PROCESS
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.processing import bulk_write
@@ -74,8 +74,7 @@ def update(collection_id):
 def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
-    queue = get_queue(collection, OP_PROCESS)
-    queue.queue_task({}, {})
+    queue_task(collection, OP_PROCESS)
     return ('', 204)
 
 
@@ -91,8 +90,7 @@ def mapping(collection_id):
             model.make_mapping(query)
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
-    queue = get_queue(collection, OP_BULKLOAD)
-    queue.queue_task(data, {})
+    queue_task(collection, OP_BULKLOAD, payload=data)
     return ('', 204)
 
 

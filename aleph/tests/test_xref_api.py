@@ -1,6 +1,5 @@
 from aleph.core import db
 from aleph.model import Entity
-from aleph.worker import sync_worker
 from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
@@ -147,7 +146,6 @@ class XrefApiTestCase(TestCase):
 
     def test_matches(self):
         xref_collection(self.queue, self.residents)
-        sync_worker()
         # Not logged in
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
                                      (self.residents.id, self.dabo.id))
@@ -217,7 +215,6 @@ class XrefApiTestCase(TestCase):
         res = self.client.post('/api/2/collections/%s/xref' %
                                self.residents.id, headers=headers)
         assert res.status_code == 202, res
-        sync_worker()
 
         url = '/api/2/collections/%s/xref' % self.residents.id
         summary = self.client.get(url, headers=headers)

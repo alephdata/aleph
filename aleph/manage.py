@@ -13,8 +13,8 @@ from aleph.core import create_app, db, cache
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
-from aleph.worker import queue_worker, sync_worker
-from aleph.queues import get_queue, get_status, cancel_queue, ingest_wait
+from aleph.worker import queue_worker
+from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
@@ -58,8 +58,7 @@ def worker():
 @manager.command
 @manager.option('-l', '--language', dest='language', nargs='*')
 @manager.option('-f', '--foreign_id', dest='foreign_id')
-@manager.option('-w', '--wait', default=False)
-def crawldir(path, language=None, foreign_id=None, wait=False):
+def crawldir(path, language=None, foreign_id=None):
     """Crawl the given directory."""
     path = Path(path)
     if foreign_id is None:
@@ -71,9 +70,6 @@ def crawldir(path, language=None, foreign_id=None, wait=False):
     collection = Collection.by_foreign_id(foreign_id)
     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
     crawl_directory(collection, path)
-    if wait:
-        ingest_wait(collection, progress=True)
-        sync_worker()
 
 
 @manager.command
@@ -93,9 +89,7 @@ def flushdeleted():
 def process(foreign_id):
     """Re-process documents in the given collection."""
     collection = get_collection(foreign_id)
-    queue = get_queue(collection, OP_PROCESS)
-    queue.queue_task({}, {})
-    sync_worker()
+    queue_task(collection, OP_PROCESS)
 
 
 @manager.command
@@ -109,7 +103,6 @@ def repair(foreign_id=None, entities=False):
         index_collection(collection, entities=entities, refresh=True)
     else:
         index_collections(entities=entities, refresh=True)
-    sync_worker()
 
 
 @manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa
@@ -119,9 +112,8 @@ def xref(foreign_id, against=None):
     collection = get_collection(foreign_id)
     against = ensure_list(against)
     against = [get_collection(c).id for c in against]
-    queue = get_queue(collection, OP_XREF)
-    queue.queue_task({'against_collection_ids': against}, {})
-    sync_worker()
+    queue_task(collection, OP_XREF,
+               payload={'against_collection_ids': against})
 
 
 @manager.command
@@ -134,9 +126,7 @@ def bulkload(file_name):
         data['label'] = data.get('label', foreign_id)
         create_collection(data)
         collection = Collection.by_foreign_id(foreign_id)
-        queue = get_queue(collection, OP_BULKLOAD)
-        queue.queue_task(data, {})
-        sync_worker()
+        queue_task(collection, OP_BULKLOAD, payload=data)
 
 
 @manager.command
