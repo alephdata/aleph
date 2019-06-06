@@ -45,27 +45,6 @@ class Entity(db.Model, SoftDeleteModel):
         deleted_at = deleted_at or datetime.utcnow()
         super(Entity, self).delete(deleted_at=deleted_at)
 
-    def merge(self, other):
-        if self.id == other.id:
-            raise ValueError("Cannot merge an entity with itself.")
-        if self.collection_id != other.collection_id:
-            raise ValueError("Cannot merge entities from different collections.")  # noqa
-
-        proxy = self.to_proxy()
-        other_proxy = other.to_proxy()
-        proxy.merge(other_proxy)
-        if proxy.caption != other_proxy.caption:
-            proxy.add('alias', other_proxy.caption)
-        self.apply_proxy(proxy)
-        self.created_at = min((self.created_at, other.created_at))
-        self.updated_at = datetime.utcnow()
-
-        # delete source entities
-        other.delete()
-        db.session.add(self)
-        db.session.commit()
-        db.session.refresh(other)
-
     def update(self, entity):
         proxy = model.get_proxy(entity)
         proxy.schema.validate(entity)

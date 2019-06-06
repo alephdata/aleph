@@ -1,6 +1,5 @@
 import logging
 from flask import Blueprint, request, Response
-from werkzeug.exceptions import BadRequest
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.util import merge_data
@@ -178,25 +177,6 @@ def update(entity_id):
     entity.update(data)
     db.session.commit()
     update_entity(entity, sync=get_flag('sync', True))
-    entity = get_index_entity(entity_id, request.authz.READ)
-    return EntitySerializer.jsonify(entity)
-
-
-@blueprint.route('/api/2/entities/<entity_id>/merge/<other_id>', methods=['DELETE'])  # noqa
-def merge(entity_id, other_id):
-    entity = get_db_entity(entity_id, request.authz.WRITE)
-    other = get_db_entity(other_id, request.authz.WRITE)
-    tag_request(collection_id=entity.collection_id)
-
-    try:
-        entity.merge(other)
-    except ValueError as ve:
-        raise BadRequest(ve.message)
-
-    db.session.commit()
-    sync = get_flag('sync', True)
-    update_entity(entity, sync=sync)
-    update_entity(other, sync=sync)
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
 
