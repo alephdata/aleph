@@ -13,8 +13,8 @@ class QueryLog(db.Model, IdModel):
     __tablename__ = 'query_log'
 
     id = db.Column(db.BigInteger, primary_key=True)
-    query = db.Column(db.Unicode(), nullable=True)
-    session_id = db.Column(db.String(128), nullable=True)
+    query = db.Column(db.Unicode, nullable=True)
+    session_id = db.Column(db.Unicode, nullable=True)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'),
                         index=True, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

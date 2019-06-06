@@ -12,6 +12,8 @@ from flask_babel import lazy_gettext
 DEBUG = env.to_bool('ALEPH_DEBUG', False)
 # Propose HTTP caching to the user agents.
 CACHE = env.to_bool('ALEPH_CACHE', not DEBUG)
+# Disable delayed processing via queue
+EAGER = env.to_bool('ALEPH_EAGER', DEBUG)
 # Puts the system into read-only mode and displays a warning.
 MAINTENANCE = env.to_bool('ALEPH_MAINTENANCE', False)
 # Unit test context.
@@ -126,6 +128,3 @@ ELASTICSEARCH_TIMEOUT = env.to_int('ELASTICSEARCH_TIMEOUT', 30)
 INDEX_PREFIX = env.get('ALEPH_INDEX_PREFIX', APP_NAME)
 INDEX_WRITE = env.get('ALEPH_INDEX_WRITE', 'v1')
 INDEX_READ = env.to_list('ALEPH_INDEX_READ', [INDEX_WRITE])
-
-# Disable delayed processing via queue
-EAGER = env.to_bool('ALEPH_EAGER', DEBUG)

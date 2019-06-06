@@ -1,4 +1,3 @@
-import logging
 from flask import Blueprint, request
 
 from aleph.model import Role, Permission
@@ -10,7 +9,6 @@ from aleph.views.serializers import PermissionSerializer
 from aleph.views.util import get_db_collection, jsonify, parse_request
 
 blueprint = Blueprint('permissions_api', __name__)
-log = logging.getLogger(__name__)
 
 
 @blueprint.route('/api/2/collections/<int:id>/permissions')

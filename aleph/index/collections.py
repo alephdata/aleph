@@ -18,7 +18,8 @@ def index_collection(collection, sync=False):
 
     data = get_collection(collection.id)
     data.pop('id', None)
-    return index_safe(collections_index(), collection.id, data,
+    return index_safe(collections_index(),
+                      collection.id, data,
                       refresh=refresh_sync(sync))
 
 

@@ -1,4 +1,3 @@
-import logging
 from flask import Blueprint, request
 
 from aleph.core import db
@@ -8,7 +7,6 @@ from aleph.views.serializers import QueryLogSerializer
 from aleph.views.util import require
 
 blueprint = Blueprint('querylog_api', __name__)
-log = logging.getLogger(__name__)
 
 
 @blueprint.route('/api/2/querylog', methods=['GET'])
