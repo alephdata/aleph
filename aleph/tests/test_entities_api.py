@@ -49,6 +49,17 @@ class EntitiesApiTestCase(TestCase):
         assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['countries'], res.json
 
+    def test_export(self):
+        self.load_fixtures()
+        url = '/api/2/search/export?filter:schemata=Thing&q=pakistan'
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+
+        _, headers = self.login(is_admin=True)
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res
+        assert 'application/zip' in res.headers.get('Content-Type')
+
     def test_view(self):
         res = self.client.get('/api/2/entities/%s' % self.ent.id)
         assert res.status_code == 403, res
