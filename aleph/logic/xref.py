@@ -78,7 +78,7 @@ def _format_country(proxy):
     return ', '.join(countries)
 
 
-def _iter_match_batch(batch, authz):
+def _iter_match_batch(batch):
     matchable = [s.name for s in model if s.matchable]
     entities = set()
     for match in batch:
@@ -88,8 +88,6 @@ def _iter_match_batch(batch, authz):
     entities = entities_by_ids(list(entities), schemata=matchable)
     entities = {e.get('id'): e for e in entities}
     for obj in batch:
-        if not authz.can(obj.match_collection_id, authz.READ):
-            continue
         entity = entities.get(str(obj.entity_id))
         match = entities.get(str(obj.match_id))
         collection = get_collection(obj.match_collection_id)
@@ -98,7 +96,7 @@ def _iter_match_batch(batch, authz):
         eproxy = model.get_proxy(entity)
         mproxy = model.get_proxy(match)
         yield (
-            int(obj.score * 100),
+            obj.score,
             eproxy.caption,
             _format_date(eproxy),
             _format_country(eproxy),
@@ -113,27 +111,29 @@ def _iter_match_batch(batch, authz):
 
 def export_matches_csv(collection_id, authz):
     """Export the top N matches of cross-referencing for the given collection
-    to an Excel 2010 formatted export."""
+    to an Excel formatted export."""
+    collections = authz.collections(authz.READ)
     dq = db.session.query(Match)
     dq = dq.filter(Match.collection_id == collection_id)
+    dq = dq.filter(Match.match_collection_id.in_(collections))
     dq = dq.order_by(Match.score.desc())
     yield [
         'Score',
-        'EntityName',
-        'EntityDate',
-        'EntityCountries',
-        'MatchCollection',
-        'MatchName',
-        'MatchDate',
-        'MatchCountries',
-        'EntityLink',
-        'MatchLink',
+        'Entity Name',
+        'Entity Date',
+        'Entity Countries',
+        'Candidate Collection',
+        'Candidate Name',
+        'Candidate Date',
+        'Candidate Countries',
+        'Entity Link',
+        'Candidate Link',
     ]
     batch = []
     for match in dq.yield_per(BULK_PAGE):
         batch.append(match)
         if len(batch) >= BULK_PAGE:
-            yield from _iter_match_batch(batch, authz)
+            yield from _iter_match_batch(batch)
             batch = []
     if len(batch):
-        yield from _iter_match_batch(batch, authz)
+        yield from _iter_match_batch(batch)
