@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-05-28T16:03:07.142Z\n"
+"POT-Creation-Date: 2019-06-06T14:31:07.187Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1657,13 +1657,6 @@ msgstr "Typen"
 #: i18n/messages.json i18n/messages.json
 msgid "Unknown"
 msgstr "Unbekannt"
-
-#. [entity.label.missing]
-#. defaultMessage is:
-#. Untitled
-#: i18n/messages.json
-msgid "Untitled"
-msgstr "Unbenannt"
 
 #. [case.untitled_label]
 #. defaultMessage is:

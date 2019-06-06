@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-05-28T16:03:07.142Z\n"
+"POT-Creation-Date: 2019-06-06T14:31:07.187Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -1657,13 +1657,6 @@ msgstr "Типы"
 msgid "Unknown"
 msgstr "Что-то неизвестное"
 
-#. [entity.label.missing]
-#. defaultMessage is:
-#. Untitled
-#: i18n/messages.json
-msgid "Untitled"
-msgstr "Без названия"
-
 #. [case.untitled_label]
 #. defaultMessage is:
 #. Untitled case file
@@ -1977,4 +1970,4 @@ msgstr "Всего результатов: {}"
 #. {total} sources of documents and data
 #: i18n/messages.json
 msgid "{total} sources of documents and data"
-msgstr "{total} коллекци документов и данных"
+msgstr "Коллекций документов и данных: {total}"

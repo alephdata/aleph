@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-05-28T16:03:07.142Z\n"
+"POT-Creation-Date: 2019-06-06T14:31:07.187Z\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1633,13 +1633,6 @@ msgstr ""
 #. Unknown
 #: i18n/messages.json i18n/messages.json
 msgid "Unknown"
-msgstr ""
-
-#. [entity.label.missing]
-#. defaultMessage is:
-#. Untitled
-#: i18n/messages.json
-msgid "Untitled"
 msgstr ""
 
 #. [case.untitled_label]
