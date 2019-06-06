@@ -12,6 +12,7 @@ from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.logic.export import export_entities
+from aleph.index.util import MAX_PAGE
 from aleph.index.entities import entities_by_ids
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
@@ -23,7 +24,6 @@ from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)
-EXPORT_MAX = 1000
 
 
 @blueprint.route('/api/2/search', methods=['GET'])
@@ -39,23 +39,22 @@ def index():
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
     links = {}
-    if request.authz.logged_in and result.total <= EXPORT_MAX:
+    if request.authz.logged_in and result.total <= MAX_PAGE:
         query = list(request.args.items(multi=True))
         links['export'] = url_for('entities_api.export',
-                                  format='excel',
                                   _authorize=True,
                                   _query=query)
     return EntitySerializer.jsonify_result(result, extra={'links': links})
 
 
-@blueprint.route('/api/2/export/<any(csv, excel):format>', methods=['GET'])  # noqa
-def export(format):
+@blueprint.route('/api/2/search/export', methods=['GET'])  # noqa
+def export():
     require(request.authz.logged_in)
     parser = SearchQueryParser(request.args, request.authz)
-    parser.limit = EXPORT_MAX
+    parser.limit = MAX_PAGE
     tag_request(query=parser.text, prefix=parser.prefix)
     result = EntitiesQuery.handle(request, parser=parser)
-    stream = export_entities(request, result, format)
+    stream = export_entities(request, result)
     response = Response(stream, mimetype='application/zip')
     disposition = 'attachment; filename={}'.format('Query_export.zip')
     response.headers['Content-Disposition'] = disposition
@@ -185,6 +184,6 @@ def update(entity_id):
 def delete(entity_id):
     entity = get_db_entity(entity_id, request.authz.WRITE)
     tag_request(collection_id=entity.collection_id)
-    delete_entity(entity, sync=True)
+    delete_entity(entity, sync=get_flag('sync', True))
     db.session.commit()
     return ('', 204)
