@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Count, Icon, Property, TextLoading,
+  Count, Icon, Property, SectionLoading, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 import {
@@ -45,6 +45,9 @@ class EntityViews extends React.Component {
     const {
       isPreview, activeMode, entity, references, tags, similar, children,
     } = this.props;
+    if (references.shouldLoad || references.isLoading) {
+      return <SectionLoading />;
+    }
     const isMatchable = entity && entity.schema && entity.schema.matchable;
     const hasTextMode = entity.schema.isAny(['Pages', 'Image']);
     const hasBrowseMode = entity.schema.isA('Folder');
@@ -107,16 +110,14 @@ class EntityViews extends React.Component {
             disabled={children.total < 1}
             title={(
               <TextLoading loading={children.isLoading}>
-                <React.Fragment>
-                  <Icon name="folder" />
-                  { entity.schema.isA('Email') && (
-                    <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
-                  )}
-                  { !entity.schema.isA('Email') && (
-                    <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                  )}
-                  <Count count={children.total} />
-                </React.Fragment>
+                <Icon name="folder" />
+                { entity.schema.isA('Email') && (
+                  <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
+                )}
+                { !entity.schema.isA('Email') && (
+                  <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
+                )}
+                <Count count={children.total} />
               </TextLoading>
               )}
             panel={
@@ -150,9 +151,7 @@ class EntityViews extends React.Component {
               <Count count={tags.total} />
             </TextLoading>
           )}
-          panel={
-            <EntityTagsMode entity={entity} />
-             }
+          panel={<EntityTagsMode entity={entity} />}
         />
         { isMatchable && (
           <Tab
@@ -165,9 +164,7 @@ class EntityViews extends React.Component {
                 <Count count={similar.total} />
               </TextLoading>
             )}
-            panel={
-              <EntitySimilarMode entity={entity} />
-              }
+            panel={<EntitySimilarMode entity={entity} />}
           />
         )}
       </Tabs>
@@ -177,7 +174,7 @@ class EntityViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, location } = ownProps;
-  const childrenQuery = queryFolderDocuments(location, document.id, undefined);
+  const childrenQuery = queryFolderDocuments(location, entity.id, undefined);
   return {
     references: selectEntityReferences(state, entity.id),
     tags: selectEntityTags(state, entity.id),

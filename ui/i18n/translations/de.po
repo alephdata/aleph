@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-05-06T12:12:14.195Z\n"
+"POT-Creation-Date: 2019-06-06T14:31:07.187Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -750,10 +750,16 @@ msgstr "Titel"
 #. [nav.languages]
 #. defaultMessage is:
 #. Languages
+#. [collection.edit.info.languages]
+#. defaultMessage is:
+#. Languages
+#. [case.chose.languages]
+#. defaultMessage is:
+#. Languages
 #. [search.facets.facet.languages]
 #. defaultMessage is:
 #. Languages
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Languages"
 msgstr "Sprachen"
 
@@ -920,12 +926,12 @@ msgstr "Neuer Fall"
 msgid "New folder"
 msgstr "Neuer Ordner"
 
-#. [entity.tags.no_tags]
+#. [language.multiselect.no.result]
 #. defaultMessage is:
-#. No connections.
+#. No Result
 #: i18n/messages.json
-msgid "No connections."
-msgstr "Keine Verbindungen."
+msgid "No Result"
+msgstr "Kein Resultat"
 
 #. [email.body.empty]
 #. defaultMessage is:
@@ -978,6 +984,13 @@ msgstr "Keine Suchergebnisse"
 #: i18n/messages.json
 msgid "No sources were found"
 msgstr "Keine Quellen gefunden"
+
+#. [entity.tags.no_tags]
+#. defaultMessage is:
+#. No tags found for this entity.
+#: i18n/messages.json
+msgid "No tags found for this entity."
+msgstr "Keine Tags gefunden."
 
 #. [auth.unauthorized]
 #. defaultMessage is:
@@ -1314,6 +1327,13 @@ msgstr "Suche..."
 msgid "Search…"
 msgstr "Suche..."
 
+#. [language.multiselect.select]
+#. defaultMessage is:
+#. Select
+#: i18n/messages.json
+msgid "Select"
+msgstr "Auswahl"
+
 #. [auth.server_error]
 #. defaultMessage is:
 #. Server error
@@ -1638,13 +1658,6 @@ msgstr "Typen"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#. [entity.label.missing]
-#. defaultMessage is:
-#. Untitled
-#: i18n/messages.json
-msgid "Untitled"
-msgstr "Unbenannt"
-
 #. [case.untitled_label]
 #. defaultMessage is:
 #. Untitled case file
@@ -1711,6 +1724,16 @@ msgid "Use the API key to read and write data via remote applications."
 msgstr ""
 "Nutzen sie den API-Schlüssel um Daten aus anderen Programmen zu lesen oder "
 "schreiben."
+
+#. [case.languages.helper]
+#. defaultMessage is:
+#. Used for optical text recognition in non-Latin alphabets.
+#. [case.languages.helper]
+#. defaultMessage is:
+#. Used for optical text recognition in non-Latin alphabets.
+#: i18n/messages.json i18n/messages.json
+msgid "Used for optical text recognition in non-Latin alphabets."
+msgstr "Wir zur optischen Erkennung von Schrift in Dokumenten verwendet."
 
 #. [collection.edit.users]
 #. defaultMessage is:

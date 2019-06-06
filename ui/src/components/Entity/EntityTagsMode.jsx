@@ -15,7 +15,7 @@ import './EntityTagsMode.scss';
 const messages = defineMessages({
   no_tags: {
     id: 'entity.tags.no_tags',
-    defaultMessage: 'No connections.',
+    defaultMessage: 'No tags found for this entity.',
   },
 });
 
