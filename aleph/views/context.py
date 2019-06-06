@@ -70,6 +70,8 @@ def setup_request():
 def finalize_response(resp):
     """Post-request processing to set cache parameters."""
     generate_request_log(resp)
+    # set X-Content-Type-Options: "nosniff"
+    resp.headers['X-Content-Type-Options'] = 'nosniff'
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
