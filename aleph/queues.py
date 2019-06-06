@@ -52,22 +52,25 @@ def cancel_queue(collection):
 
 def ingest_wait(collection):
     """Poll redis to see if processing on the collection is complete."""
+    if settings.TESTING or not settings.EAGER:
+        # Tests run against fakeredis and cannot use the actual ingestor
+        # service, so for now we're bailing on the eager behaviour there.
+        return
     queue = get_queue(collection, OP_INGEST)
     log.info("Waiting for document ingest...")
     while True:
         if queue.is_done():
             break
         time.sleep(.1)
+    from aleph.worker import sync_worker
+    sync_worker()
 
 
 def ingest_entity(collection, proxy):
     """Send the given FtM entity proxy to the ingest-file service."""
     if not proxy.schema.is_a(Document.SCHEMA):
         return
+    log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     queue = get_queue(collection, OP_INGEST)
     context = {'languages': collection.languages}
     queue.queue_task(proxy.to_dict(), context)
-    if settings.EAGER and not settings.TESTING:
-        ingest_wait(collection)
-        from aleph.worker import sync_worker
-        sync_worker()

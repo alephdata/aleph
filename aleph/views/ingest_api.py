@@ -10,7 +10,6 @@ from normality import safe_filename, stringify
 from aleph.core import db, archive
 from aleph.model import Document
 from aleph.queues import ingest_entity
-# from aleph.index.entities import index_bulk
 from aleph.views.util import get_db_collection
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema
@@ -73,8 +72,6 @@ def ingest_upload(collection_id):
         db.session.commit()
         proxy = document.to_proxy()
         ingest_entity(collection, proxy)
-        # if proxy.schema.is_a(Document.SCHEMA_FOLDER):
-        #     index_bulk(collection, [proxy], sync=True)
     finally:
         shutil.rmtree(upload_dir)
 

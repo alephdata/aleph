@@ -140,7 +140,7 @@ class Document(db.Model, DatedModel):
             'properties': {}
         })
         meta = dict(self.meta)
-        headers = meta.pop('headers') or {}
+        headers = meta.pop('headers', {}) or {}
         headers = {slugify(k, sep='_'): v for k, v in headers.items()}
         proxy.set('contentHash', self.content_hash)
         proxy.set('parent', self.parent_id)

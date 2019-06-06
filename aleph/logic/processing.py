@@ -6,7 +6,7 @@ from followthemoney.pragma import remove_checksums
 from followthemoney.namespace import Namespace
 
 from aleph.model import Entity, Document
-from aleph.queues import ingest_entity
+from aleph.queues import ingest_entity, ingest_wait
 from aleph.analysis import tag_entity
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
@@ -28,6 +28,7 @@ def process_collection(collection, ingest=True):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     aggregator = get_aggregator(collection)
+    aggregator.delete()
     try:
         writer = aggregator.bulk()
         for proxy in _collection_proxies(collection):
@@ -37,6 +38,8 @@ def process_collection(collection, ingest=True):
         writer.flush()
         if not ingest:
             index_entities(collection, aggregator.iterate())
+        else:
+            ingest_wait(collection)
     finally:
         aggregator.close()
 
