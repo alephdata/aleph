@@ -5,8 +5,9 @@ from alephclient.util import load_config_file
 
 from aleph.core import db
 from aleph.model import Entity
-from aleph.logic.entities import bulk_load
-from aleph.index import index_entity
+from aleph.queues import get_queue, OP_BULKLOAD
+from aleph.logic.bulkload import bulk_load
+from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 
 
@@ -47,6 +48,17 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url+'&facet=countries', headers=headers)
         assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['countries'], res.json
+
+    def test_export(self):
+        self.load_fixtures()
+        url = '/api/2/search/export?filter:schemata=Thing&q=pakistan'
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+
+        _, headers = self.login(is_admin=True)
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res
+        assert 'application/zip' in res.headers.get('Content-Type')
 
     def test_view(self):
         res = self.client.get('/api/2/entities/%s' % self.ent.id)
@@ -281,11 +293,13 @@ class EntitiesApiTestCase(TestCase):
         assert b'Pooh' not in res.data, res.data
 
     def test_entity_references(self):
-        db_uri = 'file://' + self.get_fixture_path('experts.csv')
+        db_uri = self.get_fixture_path('experts.csv').as_uri()
         os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
         yml_path = self.get_fixture_path('experts.yml')
         config = load_config_file(yml_path)
-        bulk_load(config)
+        coll = self.create_collection()
+        queue = get_queue(coll, OP_BULKLOAD)
+        bulk_load(queue, coll, config.get('experts'))
         _, headers = self.login(is_admin=True)
 
         query = '/api/2/entities?filter:schemata=Thing&q=Climate'

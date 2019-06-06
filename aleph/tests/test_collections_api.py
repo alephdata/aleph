@@ -36,7 +36,6 @@ class CollectionsApiTestCase(TestCase):
         assert res.json['total'] == 1, res.json
 
     def test_sitemap(self):
-        self.update_index()
         res = self.client.get('/api/2/sitemap.xml')
         assert res.status_code == 200, res
         assert b'<loc>' not in res.data, res.data

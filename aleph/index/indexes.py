@@ -31,10 +31,6 @@ def collections_index():
     return index_name('collection', settings.INDEX_WRITE)
 
 
-def all_indexes():
-    return ','.join((collections_index(), entities_read_index()))
-
-
 def configure_collections():
     mapping = {
         "date_detection": False,
@@ -168,23 +164,10 @@ def configure_schema(schema, version):
             },
             "schema": KEYWORD,
             "schemata": KEYWORD,
-            "bulk": {"type": "boolean"},
-            "status": KEYWORD,
-            "error_message": {
-                "type": "text",
-                "copy_to": "text",
-                "index": False
-            },
             "foreign_id": KEYWORD,
             "document_id": KEYWORD,
             "collection_id": KEYWORD,
             "uploader_id": KEYWORD,
-            "fingerprints": {
-                "type": "keyword",
-                "normalizer": "icu_latin",
-                "copy_to": "text",
-                "fields": {"text": LATIN_TEXT}
-            },
             "entities": KEYWORD,
             "languages": KEYWORD,
             "countries": KEYWORD,
@@ -197,17 +180,22 @@ def configure_schema(schema, version):
             "phones": KEYWORD,
             "mimetypes": KEYWORD,
             "identifiers": KEYWORD,
+            "dates": PARTIAL_DATE,
             "addresses": {
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT}
             },
-            "dates": PARTIAL_DATE,
             "names": {
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT},
                 "copy_to": "text"
             },
-            "created_at": {"type": "date"},
+            "fingerprints": {
+                "type": "keyword",
+                "normalizer": "icu_latin",
+                "copy_to": "text",
+                "fields": {"text": LATIN_TEXT}
+            },
             "updated_at": {"type": "date"},
             "text": {
                 "type": "text",

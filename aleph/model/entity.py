@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from normality import stringify
 from followthemoney import model
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
@@ -36,7 +35,8 @@ class Entity(db.Model, SoftDeleteModel):
         pq = db.session.query(Match)
         pq = pq.filter(or_(
             Match.entity_id == self.id,
-            Match.match_id == self.id))
+            Match.match_id == self.id
+        ))
         pq.delete(synchronize_session=False)
         db.session.refresh(self)
 
@@ -44,49 +44,6 @@ class Entity(db.Model, SoftDeleteModel):
         self.delete_matches()
         deleted_at = deleted_at or datetime.utcnow()
         super(Entity, self).delete(deleted_at=deleted_at)
-
-    @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at=None):
-        deleted_at = deleted_at or datetime.utcnow()
-
-        entities = db.session.query(cls.id)
-        entities = entities.filter(cls.collection_id == collection_id)
-        entities = entities.subquery()
-
-        pq = db.session.query(Match)
-        pq = pq.filter(Match.entity_id.in_(entities))
-        pq.delete(synchronize_session=False)
-
-        pq = db.session.query(Match)
-        pq = pq.filter(Match.match_id.in_(entities))
-        pq.delete(synchronize_session=False)
-
-        pq = db.session.query(cls)
-        pq = pq.filter(cls.collection_id == collection_id)
-        pq = pq.filter(cls.deleted_at == None)  # noqa
-        pq.update({cls.deleted_at: deleted_at},
-                  synchronize_session=False)
-
-    def merge(self, other):
-        if self.id == other.id:
-            raise ValueError("Cannot merge an entity with itself.")
-        if self.collection_id != other.collection_id:
-            raise ValueError("Cannot merge entities from different collections.")  # noqa
-
-        proxy = self.to_proxy()
-        other_proxy = other.to_proxy()
-        proxy.merge(other_proxy)
-        if proxy.caption != other_proxy.caption:
-            proxy.add('alias', other_proxy.caption)
-        self.apply_proxy(proxy)
-        self.created_at = min((self.created_at, other.created_at))
-        self.updated_at = datetime.utcnow()
-
-        # delete source entities
-        other.delete()
-        db.session.add(self)
-        db.session.commit()
-        db.session.refresh(other)
 
     def update(self, entity):
         proxy = model.get_proxy(entity)
@@ -97,7 +54,6 @@ class Entity(db.Model, SoftDeleteModel):
 
     def apply_proxy(self, proxy):
         self.schema = proxy.schema.name
-        self.name = proxy.caption
         self.data = proxy.properties
 
     def to_proxy(self):
@@ -107,18 +63,8 @@ class Entity(db.Model, SoftDeleteModel):
             'properties': self.data
         })
         proxy.add('name', self.name)
+        proxy.set('indexUpdatedAt', self.updated_at)
         return proxy
-
-    def to_dict(self):
-        proxy = self.to_proxy()
-        data = proxy.to_full_dict()
-        data.update(self.to_dict_dates())
-        data.update({
-            'foreign_id': self.foreign_id,
-            'collection_id': stringify(self.collection_id),
-            'bulk': False
-        })
-        return data
 
     @classmethod
     def create(cls, data, collection):
@@ -146,6 +92,28 @@ class Entity(db.Model, SoftDeleteModel):
     @classmethod
     def by_collection(cls, collection_id):
         return cls.all().filter(Entity.collection_id == collection_id)
+
+    @classmethod
+    def delete_by_collection(cls, collection_id, deleted_at=None):
+        deleted_at = deleted_at or datetime.utcnow()
+
+        entities = db.session.query(cls.id)
+        entities = entities.filter(cls.collection_id == collection_id)
+        entities = entities.subquery()
+
+        pq = db.session.query(Match)
+        pq = pq.filter(Match.entity_id.in_(entities))
+        pq.delete(synchronize_session=False)
+
+        pq = db.session.query(Match)
+        pq = pq.filter(Match.match_id.in_(entities))
+        pq.delete(synchronize_session=False)
+
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq = pq.filter(cls.deleted_at == None)  # noqa
+        pq.update({cls.deleted_at: deleted_at},
+                  synchronize_session=False)
 
     def __repr__(self):
         return '<Entity(%r, %r)>' % (self.id, self.name)

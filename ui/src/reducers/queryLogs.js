@@ -11,32 +11,36 @@ const initialState = {
   offset: 0,
 };
 
+const deriveQueryLog = (state, { query }) => {
+  const queryText = query.state.q;
+  const currentDate = new Date();
+  let { results } = state;
+  if (queryText && results) {
+    const itemIndex = results.findIndex(({ text }) => queryText === text);
+    results = [...results];
+    let item = {
+      count: 1,
+      query: queryText,
+      last: currentDate.toISOString(),
+      first: currentDate.toISOString(),
+    };
+    if (itemIndex + 1) {
+      [item] = results.splice(itemIndex, 1);
+      item = {
+        ...item,
+        count: 1 + item.count,
+      };
+    }
+    results.unshift(item);
+    return {
+      ...state,
+      results,
+    };
+  } return state;
+};
+
 export default createReducer({
-  [queryEntities.START]: (state, { query }) => {
-    const queryText = query.state.q;
-    let { results } = state;
-    if (queryText && results) {
-      const itemIndex = results.findIndex(({ text }) => queryText === text);
-      results = [...results];
-      let item = {
-        count: 1,
-        text: queryText,
-        created_at: Reflect.construct(Date, []).toISOString(),
-      };
-      if (itemIndex + 1) {
-        [item] = results.splice(itemIndex, 1);
-        item = {
-          ...item,
-          count: 1 + item.count,
-        };
-      }
-      results.unshift(item);
-      return {
-        ...state,
-        results,
-      };
-    } return state;
-  },
+  [queryEntities.START]: deriveQueryLog,
   [fetchQueryLogs.START]: state => ({
     ...state,
     isLoading: true,

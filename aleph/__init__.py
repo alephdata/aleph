@@ -6,6 +6,9 @@ from marshmallow.warnings import ChangedInMarshmallow3Warning
 
 __version__ = get_distribution('aleph').version
 
+from yaml import YAMLLoadWarning
+warnings.filterwarnings("ignore", category=YAMLLoadWarning)
+
 # shut up useless SA warning:
 warnings.filterwarnings('ignore', 'Unicode type received non-unicode bind param value.')  # noqa
 warnings.filterwarnings('ignore', category=SAWarning)
@@ -21,7 +24,7 @@ logging.getLogger('langid').setLevel(logging.WARNING)
 logging.getLogger('rdflib').setLevel(logging.WARNING)
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.ERROR)
-logging.getLogger('elasticsearch').setLevel(logging.INFO)
+logging.getLogger('elasticsearch').setLevel(logging.WARNING)
 logging.getLogger('redis').setLevel(logging.DEBUG)
 logging.getLogger('s3transfer').setLevel(logging.WARNING)
 logging.getLogger('amqp').setLevel(logging.INFO)

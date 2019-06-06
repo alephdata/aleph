@@ -2,9 +2,8 @@ import logging
 from pprint import pprint, pformat  # noqa
 
 from aleph.core import es
-from aleph.index.indexes import all_indexes
-from aleph.index.indexes import configure_collections
-from aleph.index.indexes import configure_entities
+from aleph.index.indexes import collections_index, configure_collections
+from aleph.index.indexes import entities_read_index, configure_entities
 
 log = logging.getLogger(__name__)
 
@@ -13,6 +12,10 @@ def upgrade_search():
     """Add any missing properties to the index mappings."""
     configure_collections()
     configure_entities()
+
+
+def all_indexes():
+    return ','.join((collections_index(), entities_read_index()))
 
 
 def delete_index():

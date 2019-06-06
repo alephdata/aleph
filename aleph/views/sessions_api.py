@@ -9,9 +9,8 @@ from aleph import signals, settings
 from aleph.core import db, url_for
 from aleph.authz import Authz
 from aleph.oauth import oauth
-from aleph.model import Role, Audit
+from aleph.model import Role
 from aleph.logic.roles import update_role
-from aleph.logic.audit import record_audit
 from aleph.views.forms import LoginSchema
 from aleph.views.util import get_best_next_url, parse_request, jsonify
 
@@ -63,7 +62,6 @@ def password_login():
     update_role(role)
     authz = Authz.from_role(role)
     request.authz = authz
-    record_audit(Audit.ACT_LOGIN)
     return jsonify({
         'status': 'ok',
         'token': authz.to_token(role=role)
@@ -99,7 +97,6 @@ def oauth_callback():
         update_role(role)
         log.info("Logged in: %r", role)
         request.authz = Authz.from_role(role)
-        record_audit(Audit.ACT_LOGIN)
         token = request.authz.to_token(role=role)
         token = token.decode('utf-8')
         state = request.args.get('state')

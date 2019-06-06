@@ -6,13 +6,12 @@ from followthemoney.exc import InvalidMapping
 
 from aleph.core import db, settings
 from aleph.authz import Authz
-from aleph.model import Role, Audit, Collection
+from aleph.model import Role, Collection
 from aleph.search import CollectionsQuery
+from aleph.queues import queue_task, OP_BULKLOAD, OP_PROCESS
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
-from aleph.logic.documents import process_documents
-from aleph.logic.entities import bulk_load_query, bulk_write
-from aleph.logic.audit import record_audit
+from aleph.logic.processing import bulk_write
 from aleph.logic.util import collection_url
 from aleph.views.context import enable_cache
 from aleph.views.forms import CollectionCreateSchema, CollectionUpdateSchema
@@ -57,7 +56,6 @@ def create():
 @blueprint.route('/api/2/collections/<int:collection_id>', methods=['GET'])
 def view(collection_id):
     collection = get_index_collection(collection_id)
-    record_audit(Audit.ACT_COLLECTION, id=collection_id)
     return CollectionSerializer.jsonify(collection)
 
 
@@ -76,27 +74,23 @@ def update(collection_id):
 def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
-    process_documents.delay(collection_id=collection.id)
+    queue_task(collection, OP_PROCESS)
     return ('', 204)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mapping', methods=['POST', 'PUT'])  # noqa
-def mapping_process(collection_id):
+def mapping(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
-    # TODO: we need to look into possible abuse of mapping load path for local
-    # path access on the machine running the mapping. Until then, this action
-    # must be restricted to admins:
-    require(request.authz.is_admin)
     if not request.is_json:
         raise BadRequest()
     data = request.get_json().get(collection.foreign_id)
     for query in keys_values(data, 'queries', 'query'):
         try:
             model.make_mapping(query)
-            bulk_load_query.apply_async([collection.id, query], priority=6)
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
+    queue_task(collection, OP_BULKLOAD, payload=data)
     return ('', 204)
 
 
@@ -104,7 +98,6 @@ def mapping_process(collection_id):
 def bulk(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
-    merge = get_flag('merge', default=False)
 
     # This will disable certain security measures in order to allow bulk
     # loading of document data.
@@ -112,7 +105,7 @@ def bulk(collection_id):
     unsafe = unsafe and request.authz.is_admin
 
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, merge=merge, unsafe=unsafe)
+    bulk_write(collection, entities, unsafe=unsafe)
     refresh_collection(id)
     return ('', 204)
 

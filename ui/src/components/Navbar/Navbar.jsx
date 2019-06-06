@@ -53,7 +53,6 @@ export class Navbar extends React.Component {
     this.setState({ searchValue: target.value });
   }
 
-
   onSubmit = event => event.preventDefault();
 
   onOpenMenu(event) {

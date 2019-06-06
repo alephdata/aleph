@@ -1,4 +1,3 @@
-from aleph.core import kv
 from aleph.tests.util import TestCase
 
 
@@ -26,8 +25,9 @@ class BaseApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'things' in res.json, res.json
         assert res.json['things'] == 0, res.json
-        self.load_fixtures('docs.yaml')
-        kv.flushall()
-        res = self.client.get('/api/2/statistics')
+        self.load_fixtures()
+        _, headers = self.login(is_admin=True)
+        res = self.client.get('/api/2/statistics', headers=headers)
         assert res.status_code == 200, res
-        assert res.json['things'] == 4, res.json
+        assert res.json['collections'] == 2, res.json
+        assert res.json['things'] == 10, res.json
