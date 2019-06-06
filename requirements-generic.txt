@@ -13,16 +13,13 @@ alembic==1.0.10
 
 elasticsearch==7.0.0
 marshmallow==2.19.2
-psycopg2-binary==2.7.7
-gunicorn==19.9.0
 blinker==1.4
 Babel==2.6.0
 PyYAML==5.1
-PyICU==2.3
-cryptography==2.6.1
 pyjwt==1.7.1
 rdflib==4.2.2
 requests[security]==2.21.0
+urllib3==1.23
 redis==3.2.1
 fakeredis==1.0.3
 networkx==2.3
@@ -37,9 +34,6 @@ Faker==0.8.13
 nose
 coverage
 coveralls
-
-# Not entirely sure why this is needed:
-# urllib3==1.23
 
 # Tracing and logging libraries
 python-json-logger==0.1.10
