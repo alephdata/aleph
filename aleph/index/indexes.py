@@ -210,6 +210,5 @@ def configure_schema(schema, version):
         }
     }
     index = schema_index(model.get(schema), version)
-    return configure_index(
-        index, mapping, index_settings(shards=get_shard_weight(schema))
-    )
+    settings = index_settings(shards=get_shard_weight(schema))
+    return configure_index(index, mapping, settings)

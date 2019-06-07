@@ -10,7 +10,7 @@ from aleph.analysis.util import tag_key, place_key
 
 log = logging.getLogger(__name__)
 TEXT_MIN_LENGTH = 60
-TEXT_MAX_LENGTH = 100000
+TEXT_MAX_LENGTH = 900000
 NAME_MAX_LENGTH = 100
 NAME_MIN_LENGTH = 4
 # https://spacy.io/api/annotation#named-entities
@@ -28,7 +28,7 @@ def clean_name(text):
         return
     text = clean_entity_name(text)
     text = collapse_spaces(text)
-    if text is None or len(text) < NAME_MIN_LENGTH or ' ' not in text:
+    if text is None or len(text) <= NAME_MIN_LENGTH or ' ' not in text:
         return
     return text
 
@@ -43,7 +43,7 @@ def location_country(location):
 
 
 def extract_entities(text):
-    if text is None or len(text) < TEXT_MIN_LENGTH:
+    if len(text) < TEXT_MIN_LENGTH or len(text) > TEXT_MAX_LENGTH:
         return
     if not hasattr(settings, '_nlp'):
         log.info("Loading spaCy model: xx...")

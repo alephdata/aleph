@@ -15,11 +15,11 @@ from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import queue_worker
 from aleph.queues import get_status, queue_task, cancel_queue, ingest_wait
-from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF, OP_INDEX
 from aleph.index.admin import delete_index
+from aleph.index.collections import index_collection
 from aleph.logic.collections import create_collection, update_collection
-from aleph.logic.collections import index_collections, index_collection
-from aleph.logic.collections import delete_collection
+from aleph.logic.collections import refresh_collection, delete_collection
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.rdf import export_collection
@@ -100,11 +100,14 @@ def process(foreign_id):
 def repair(foreign_id=None, entities=False):
     """Re-index all the collections and entities."""
     update_roles()
-    if foreign_id:
-        collection = get_collection(foreign_id)
-        index_collection(collection, entities=entities, refresh=True)
-    else:
-        index_collections(entities=entities, refresh=True)
+    q = Collection.all(deleted=True)
+    if foreign_id is not None:
+        q = [get_collection(foreign_id)]
+    for collection in q:
+        refresh_collection(collection.id)
+        index_collection(collection)
+        if entities and collection.deleted_at is None:
+            queue_task(collection, OP_INDEX)
 
 
 @manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa
@@ -112,10 +115,9 @@ def repair(foreign_id=None, entities=False):
 def xref(foreign_id, against=None):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
-    against = ensure_list(against)
-    against = [get_collection(c).id for c in against]
-    queue_task(collection, OP_XREF,
-               payload={'against_collection_ids': against})
+    against = [get_collection(c).id for c in ensure_list(against)]
+    against = {'against_collection_ids': against}
+    queue_task(collection, OP_XREF, payload=against)
 
 
 @manager.command

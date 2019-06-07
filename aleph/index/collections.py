@@ -16,6 +16,7 @@ def index_collection(collection, sync=False):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
+    log.info("Index [%s]: %s", collection.id, collection.label)
     data = get_collection(collection.id)
     data.pop('id', None)
     return index_safe(collections_index(),

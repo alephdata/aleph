@@ -31,9 +31,7 @@ def tag_entity(entity):
     if entity.schema.is_a(Document.SCHEMA_TABLE):
         return
 
-    log.info("Tagging [%s]: %s", entity.id, entity.caption)
     load_places()
-
     aggregator = TagAggregator()
     countries = entity.get_type_values(registry.country)
     for text in entity.get_type_values(registry.text):
@@ -46,4 +44,6 @@ def tag_entity(entity):
         prop = MAPPING.get(type_)
         entity.add(prop, label, quiet=True, cleaned=True)
 
-    log.info("Extracted tags [%s]: %s", entity.id, len(aggregator))
+    if len(aggregator):
+        log.info("Extracted %d tags [%s]: %s", len(aggregator),
+                 entity.id, entity.caption)
