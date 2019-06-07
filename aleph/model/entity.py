@@ -1,8 +1,9 @@
 import logging
 from datetime import datetime
-from followthemoney import model
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
+from followthemoney import model
+from followthemoney.types import registry
 
 from aleph.core import db
 from aleph.model.collection import Collection
@@ -46,15 +47,18 @@ class Entity(db.Model, SoftDeleteModel):
         super(Entity, self).delete(deleted_at=deleted_at)
 
     def update(self, entity):
+        previous = self.to_proxy()
         proxy = model.get_proxy(entity)
         proxy.schema.validate(entity)
-        self.apply_proxy(proxy)
-        self.updated_at = datetime.utcnow()
-        db.session.add(self)
-
-    def apply_proxy(self, proxy):
+        for prop in proxy.iterprops():
+            # Do not allow the user to overwrite hashes because this could
+            # lead to a user accessing random objects.
+            if prop.type == registry.checksum:
+                proxy.set(prop, previous.get(prop), cleaned=True, quiet=True)
         self.schema = proxy.schema.name
         self.data = proxy.properties
+        self.updated_at = datetime.utcnow()
+        db.session.add(self)
 
     def to_proxy(self):
         proxy = model.get_proxy({
@@ -75,6 +79,7 @@ class Entity(db.Model, SoftDeleteModel):
             ent.id = make_textid()
             ent.collection = collection
             ent.foreign_id = foreign_id
+            ent.data = {}
         ent.deleted_at = None
         ent.update(data)
         return ent
