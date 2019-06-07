@@ -196,7 +196,6 @@ def configure_schema(schema, version):
                 "copy_to": "text",
                 "fields": {"text": LATIN_TEXT}
             },
-            "updated_at": {"type": "date"},
             "text": {
                 "type": "text",
                 "analyzer": "icu_latin",
@@ -206,7 +205,8 @@ def configure_schema(schema, version):
             "properties": {
                 "type": "object",
                 "properties": schema_mapping
-            }
+            },
+            "updated_at": {"type": "date"},
         }
     }
     index = schema_index(model.get(schema), version)

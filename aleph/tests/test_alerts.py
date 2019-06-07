@@ -18,6 +18,9 @@ class AlertsTestCase(TestCase):
 
     def test_notify(self):
         data = {'query': 'Kashmir'}
+        failed_alert = Alert.create(data, self.role_no_email.id)
+        failed_alert.notified_at = datetime.utcnow() - timedelta(hours=72)
+
         alert = Alert.create(data, self.role_email.id)
         alert.notified_at = datetime.utcnow() + timedelta(hours=72)
         db.session.commit()

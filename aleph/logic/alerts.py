@@ -59,24 +59,23 @@ def alert_query(alert, authz):
     latest known result."""
     # Many users have bookmarked complex queries, otherwise we'd use a
     # precise match query.
-    query = {
-        'simple_query_string': {
+    queries = [{
+        'query_string': {
             'query': alert.query,
             'fields': ['fingerprints.text^3', 'text'],
             'default_operator': 'AND',
             'minimum_should_match': '90%'
         }
-    }
+    }]
     filters = [
         {'range': {'updated_at': {'gt': alert.notified_at}}},
-        {'term': {'schemata': Entity.THING}},
         authz_query(authz)
     ]
     return {
         'size': MAX_PAGE,
         'query': {
             'bool': {
-                'should': [query],
+                'should': queries,
                 'filter': filters,
                 'minimum_should_match': 1
             }

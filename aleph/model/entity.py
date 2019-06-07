@@ -47,15 +47,15 @@ class Entity(db.Model, SoftDeleteModel):
         super(Entity, self).delete(deleted_at=deleted_at)
 
     def update(self, entity):
-        previous = self.to_proxy()
         proxy = model.get_proxy(entity)
         proxy.schema.validate(entity)
+        self.schema = proxy.schema.name
+        previous = self.to_proxy()
         for prop in proxy.iterprops():
             # Do not allow the user to overwrite hashes because this could
             # lead to a user accessing random objects.
             if prop.type == registry.checksum:
                 proxy.set(prop, previous.get(prop), cleaned=True, quiet=True)
-        self.schema = proxy.schema.name
         self.data = proxy.properties
         self.updated_at = datetime.utcnow()
         db.session.add(self)
