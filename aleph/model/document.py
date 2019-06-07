@@ -18,10 +18,6 @@ class Document(db.Model, DatedModel):
     SCHEMA_FOLDER = 'Folder'
     SCHEMA_TABLE = 'Table'
 
-    STATUS_PENDING = 'pending'
-    STATUS_SUCCESS = 'success'
-    STATUS_FAIL = 'fail'
-
     id = db.Column(db.BigInteger, primary_key=True)
     content_hash = db.Column(db.Unicode(65), nullable=True, index=True)
     foreign_id = db.Column(db.Unicode, unique=False, nullable=True, index=True)
@@ -81,7 +77,7 @@ class Document(db.Model, DatedModel):
 
     @classmethod
     def save(cls, collection, parent=None, foreign_id=None,
-             content_hash=None, meta=None):
+             content_hash=None, meta=None, uploader_id=None):
         """Try and find a document by various criteria."""
         q = cls.all()
         q = q.filter(Document.collection_id == collection.id)
@@ -100,6 +96,7 @@ class Document(db.Model, DatedModel):
             document = cls()
             document.schema = cls.SCHEMA
             document.collection_id = collection.id
+            document.uploader_id = uploader_id
 
         if parent is not None:
             document.parent_id = parent.id
