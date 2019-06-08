@@ -44,18 +44,20 @@ def process_collection(collection, ingest=True):
         aggregator.close()
 
 
-def index_aggregate(collection, sync=False):
+def index_aggregate(queue, collection, sync=False):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
-        index_entities(collection, aggregator.iterate(), sync=sync)
+        index_entities(collection, aggregator.iterate(),
+                       sync=sync, queue=queue)
         index_collection(collection, sync=sync)
         log.info("Aggregate indexed: %r", collection)
+        queue.remove()
     finally:
         aggregator.close()
 
 
-def index_entities(collection, iterable, sync=False):
+def index_entities(collection, iterable, sync=False, queue=None):
     entities = []
     for entity in iterable:
         if entity.id is None:
@@ -64,10 +66,14 @@ def index_entities(collection, iterable, sync=False):
         tag_entity(entity)
         entities.append(entity)
         if len(entities) >= BULK_PAGE:
+            if queue:
+                queue.progress.mark_finished(len(entities))
             index_bulk(collection, entities, sync=sync)
             entities = []
 
     if len(entities):
+        if queue:
+            queue.progress.mark_finished(len(entities))
         index_bulk(collection, entities, sync=sync)
     refresh_collection(collection)
 

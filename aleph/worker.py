@@ -30,7 +30,7 @@ def handle_task(queue, payload, context):
     try:
         collection = Collection.by_foreign_id(queue.dataset)
         if queue.operation == OP_INDEX:
-            index_aggregate(collection)
+            index_aggregate(queue, collection)
         if queue.operation == OP_BULKLOAD:
             bulk_load(queue, collection, payload)
         if queue.operation == OP_PROCESS:
