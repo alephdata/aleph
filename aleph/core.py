@@ -88,6 +88,7 @@ def create_app(config={}):
     db.init_app(app)
     babel.init_app(app)
     CORS(app, origins=settings.CORS_ORIGINS)
+    Talisman(app)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
