@@ -10,7 +10,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
 from flask_babel import Babel
-form flask_talisman import Talisman
+from flask_talisman import Talisman
 from kombu import Queue
 from celery import Celery, Task
 from celery.schedules import crontab
