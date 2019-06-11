@@ -71,7 +71,8 @@ def finalize_response(resp):
     """Post-request processing to set cache parameters."""
     generate_request_log(resp)
     # set X-Content-Type-Options: "nosniff"
-    resp.headers['X-Content-Type-Options'] = 'nosniff'
+    resp.headers['X-Content-Type-Options'] = "nosniff"
+    resp.headers['Feature-Policy'] = "accelerometer 'none'; camera 'none'; geolocation 'none'; gyroscope 'none'; magnetometer 'none'; microphone 'none'; payment 'none'; usb 'none'" 
     if resp.is_streamed:
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
