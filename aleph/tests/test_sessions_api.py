@@ -46,10 +46,12 @@ class SessionsApiTestCase(TestCase):
         assert res.status_code == 405, res
 
     def test_password_login_post_no_data(self):
+        settings.PASSWORD_LOGIN = True
         res = self.client.post('/api/2/sessions/login')
         assert res.status_code == 400, res
 
     def test_password_login_post_good_email_and_password(self):
+        settings.PASSWORD_LOGIN = True
         secret = self.fake.password()
         self.role.set_password(secret)
         data = dict(email=self.role.email, password=secret)

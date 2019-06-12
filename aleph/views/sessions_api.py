@@ -1,7 +1,7 @@
 import logging
 from urllib.parse import urldefrag
 
-from flask import Blueprint, redirect, request, abort
+from flask import Blueprint, redirect, request
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
 
@@ -12,7 +12,8 @@ from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.roles import update_role
 from aleph.views.forms import LoginSchema
-from aleph.views.util import get_best_next_url, parse_request, jsonify
+from aleph.views.util import get_best_next_url, parse_request
+from aleph.views.util import require, jsonify
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)
@@ -50,6 +51,7 @@ def decode_authz():
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
 def password_login():
     """Provides email and password authentication."""
+    require(settings.PASSWORD_LOGIN)
     data = parse_request(LoginSchema)
     role = Role.by_email(data.get('email'))
     if role is None or not role.has_password:
@@ -70,9 +72,7 @@ def password_login():
 
 @blueprint.route('/api/2/sessions/oauth')
 def oauth_init():
-    if not settings.OAUTH:
-        abort(404)
-
+    require(settings.OAUTH)
     callback_url = url_for('.oauth_callback')
     state = get_best_next_url(request.args.get('next'), request.referrer)
     return oauth.provider.authorize(callback=callback_url, state=state)
@@ -80,9 +80,7 @@ def oauth_init():
 
 @blueprint.route('/api/2/sessions/callback')
 def oauth_callback():
-    if not settings.OAUTH:
-        abort(404)
-
+    require(settings.OAUTH)
     resp = oauth.provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)

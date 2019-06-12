@@ -37,6 +37,7 @@ def suggest():
 
 @blueprint.route('/api/2/roles/code', methods=['POST'])
 def create_code():
+    require(not request.authz.in_maintenance, settings.PASSWORD_LOGIN)
     data = parse_request(RoleCodeCreateSchema)
     challenge_role(data)
     return jsonify({
