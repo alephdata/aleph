@@ -10,6 +10,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
 from flask_babel import Babel
+from flask_talisman import Talisman
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
@@ -48,6 +49,7 @@ def create_app(config={}):
     db.init_app(app)
     babel.init_app(app)
     CORS(app, origins=settings.CORS_ORIGINS)
+    Talisman(app)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
