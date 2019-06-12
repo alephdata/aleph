@@ -142,6 +142,7 @@ class Document(db.Model, DatedModel):
         proxy.set('contentHash', self.content_hash)
         proxy.set('parent', self.parent_id)
         proxy.set('ancestors', self.ancestors)
+        proxy.set('crawler', meta.get('crawler'))
         proxy.set('sourceUrl', meta.get('source_url'))
         proxy.set('title', meta.get('title'))
         proxy.set('fileName', meta.get('file_name'))
@@ -155,6 +156,7 @@ class Document(db.Model, DatedModel):
             proxy.set('mimeType', headers.get('content_type'))
         proxy.set('language', meta.get('languages'))
         proxy.set('country', meta.get('countries'))
+        proxy.set('keywords', meta.get('keywords'))
         proxy.set('headers', registry.json.pack(headers), quiet=True)
         proxy.set('authoredAt', meta.get('authored_at'))
         proxy.set('modifiedAt', meta.get('modified_at'))
@@ -162,7 +164,6 @@ class Document(db.Model, DatedModel):
         proxy.set('retrievedAt', meta.get('retrieved_at'))
         proxy.set('indexUpdatedAt', self.created_at)
         proxy.set('sourceUrl', meta.get('source_url'))
-        # TODO: crawler, ....
         return proxy
 
     def __repr__(self):
