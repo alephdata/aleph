@@ -3,8 +3,9 @@ from unittest import skip  # noqa
 
 from aleph.core import db
 from aleph.tests.util import TestCase
-from aleph.logic.entities.xref import xref_collection
+from aleph.logic.xref import xref_collection
 from aleph.model import Match
+from aleph.queues import get_queue, OP_XREF
 
 
 class XrefTestCase(TestCase):
@@ -16,8 +17,8 @@ class XrefTestCase(TestCase):
         self.coll_b = self.create_collection(creator=self.user, casefile=False)
         self.coll_c = self.create_collection(creator=self.user, casefile=False)
         db.session.commit()
+        self.queue = get_queue(self.coll_a, OP_XREF)
 
-    def setup_entities(self):
         _, headers = self.login(foreign_id=self.user.foreign_id)
         url = '/api/2/entities'
 
@@ -79,18 +80,16 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
 
     def test_xref(self):
-        self.setup_entities()
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
-        xref_collection(self.coll_a.id)
+        xref_collection(self.queue, self.coll_a)
         q = db.session.query(Match)
         assert 3 == q.count(), q.count()
 
     def test_xref_specific_collections(self):
-        self.setup_entities()
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
-        xref_collection(self.coll_a.id,
+        xref_collection(self.queue, self.coll_a,
                         against_collection_ids=[self.coll_c.id])
         q = db.session.query(Match)
         assert 1 == q.count(), q.count()

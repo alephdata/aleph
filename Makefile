@@ -6,7 +6,7 @@ all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		rabbitmq postgres elasticsearch \
+		postgres elasticsearch ingest-file \
 		convert-document recognize-text
 
 shell: services    
@@ -62,6 +62,16 @@ docker-push:
 
 dev: 
 	pip install -q transifex-client bumpversion babel jinja2
+
+fixtures:
+	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
+	balkhash iterate -d fixtures >aleph/tests/fixtures/samples.ijson
+
+contrib/allCountries.zip:
+	curl -s -o contrib/allCountries.zip https://download.geonames.org/export/dump/allCountries.zip
+
+geonames: contrib/allCountries.zip
+	unzip -p contrib/allCountries.zip | grep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" >contrib/geonames.txt
 
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev

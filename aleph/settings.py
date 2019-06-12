@@ -5,7 +5,6 @@
 # defaults.
 import os
 from servicelayer import env
-from servicelayer import settings as sls
 from flask_babel import lazy_gettext
 
 
@@ -13,6 +12,8 @@ from flask_babel import lazy_gettext
 DEBUG = env.to_bool('ALEPH_DEBUG', False)
 # Propose HTTP caching to the user agents.
 CACHE = env.to_bool('ALEPH_CACHE', not DEBUG)
+# Disable delayed processing via queue
+EAGER = env.to_bool('ALEPH_EAGER', DEBUG)
 # Puts the system into read-only mode and displays a warning.
 MAINTENANCE = env.to_bool('ALEPH_MAINTENANCE', False)
 # Unit test context.
@@ -42,14 +43,6 @@ SAMPLE_SEARCHES = env.to_list('ALEPH_SAMPLE_SEARCHES', SAMPLE_SEARCHES)
 # Cross-origin resource sharing
 CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', separator='|')
 
-
-###############################################################################
-# Data storage
-
-# Archive type (either 's3' or 'file', i.e. local file system):
-ARCHIVE_TYPE = env.get('ALEPH_ARCHIVE_TYPE', sls.ARCHIVE_TYPE)
-ARCHIVE_BUCKET = env.get('ALEPH_ARCHIVE_BUCKET', sls.ARCHIVE_BUCKET)
-ARCHIVE_PATH = env.get('ALEPH_ARCHIVE_PATH', sls.ARCHIVE_PATH)
 
 ##############################################################################
 # Security and authentication.
@@ -87,14 +80,6 @@ PASSWORD_LOGIN = env.to_bool('ALEPH_PASSWORD_LOGIN', not OAUTH)
 
 DEFAULT_LANGUAGE = env.get('ALEPH_DEFAULT_LANGUAGE', 'en')
 
-# Microservice for tesseract
-OCR_SERVICE = 'recognize-text:50000'
-sls.OCR_SERVICE = env.get('ALEPH_OCR_SERVICE', OCR_SERVICE)
-
-# Entity extraction service
-NER_SERVICE = 'extract-entities:50000'
-sls.NER_SERVICE = env.get('ALEPH_NER_SERVICE', NER_SERVICE)
-
 # Language whitelist
 LANGUAGES = ['en', 'fr', 'de', 'ru', 'es', 'nl', 'ro', 'ka', 'ar', 'tr', 'lb',
              'el', 'lt', 'uk', 'zh', 'be', 'bg', 'bs', 'ja', 'cs', 'lv', 'pt',
@@ -115,7 +100,7 @@ GEONAMES_DATA = env.get('ALEPH_GEONAMES_DATA')
 RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)
 
 # Minimum update date for sitemap.xml
-SITEMAP_FLOOR = '2018-12-09'
+SITEMAP_FLOOR = '2019-05-22'
 
 
 ##############################################################################
@@ -143,19 +128,3 @@ ELASTICSEARCH_TIMEOUT = env.to_int('ELASTICSEARCH_TIMEOUT', 30)
 INDEX_PREFIX = env.get('ALEPH_INDEX_PREFIX', APP_NAME)
 INDEX_WRITE = env.get('ALEPH_INDEX_WRITE', 'v1')
 INDEX_READ = env.to_list('ALEPH_INDEX_READ', [INDEX_WRITE])
-
-# Disable delayed processing via queue
-EAGER = env.to_bool('ALEPH_EAGER', DEBUG)
-QUEUE_PREFIX = env.get('ALEPH_QUEUE_PREFIX', APP_NAME)
-QUEUE_NAME = '%s_worker' % QUEUE_PREFIX
-QUEUE_ROUTING_KEY = 'worker.process'
-
-BROKER_URI = 'amqp://guest:guest@localhost:5672//'
-BROKER_URI = env.get('ALEPH_BROKER_URI', BROKER_URI)
-
-sls.REDIS_URL = sls.REDIS_URL or 'redis://redis:6379/0'
-
-STACKDRIVER_TRACE_PROJECT_ID = env.get('ALEPH_STACKDRIVER_TRACE_PROJECT_ID')
-TRACE_SAMPLING_RATE = float(env.get('ALEPH_TRACE_SAMPLING_RATE', 0.10))
-CELERY_TRACE_SAMPLING_RATE = env.get('ALEPH_CELERY_TRACE_SAMPLING_RATE', 0.01)
-CELERY_TRACE_SAMPLING_RATE = float(CELERY_TRACE_SAMPLING_RATE)

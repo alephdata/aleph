@@ -9,6 +9,7 @@ import entityReferences from './entityReferences';
 import entityTags from './entityTags';
 import documentContent from './documentContent';
 import collections from './collections';
+import collectionStatus from './collectionStatus';
 import collectionPermissions from './collectionPermissions';
 import collectionXrefIndex from './collectionXrefIndex';
 import collectionXrefMatches from './collectionXrefMatches';
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   notifications,
   entityTags,
   collections,
+  collectionStatus,
   collectionPermissions,
   collectionXrefIndex,
   collectionXrefMatches,

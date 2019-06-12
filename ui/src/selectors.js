@@ -190,6 +190,10 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
   return largestSchema; // yay.
 }
 
+export function selectCollectionStatus(state, collectionId) {
+  return selectObject(state.collectionStatus, collectionId);
+}
+
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state.collectionPermissions, collectionId);
 }

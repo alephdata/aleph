@@ -1,9 +1,11 @@
 import json
 from io import BytesIO
+from pprint import pprint  # noqa
 
-from aleph.core import db
-from aleph.model import Collection
+from aleph.model import Document
 from aleph.tests.util import TestCase
+from aleph.queues import get_status, OP_INGEST
+from aleph.logic.processing import process_collection
 
 
 class IngestApiTestCase(TestCase):
@@ -11,13 +13,8 @@ class IngestApiTestCase(TestCase):
     def setUp(self):
         super(IngestApiTestCase, self).setUp()
         self.rolex = self.create_user(foreign_id='user_3')
-        self.col = Collection()
-        self.col.label = 'Test Collection'
-        self.col.foreign_id = 'test_coll_entities_api'
-        db.session.add(self.col)
-        db.session.commit()
+        self.col = self.create_collection()
         self.url = '/api/2/collections/%s/ingest' % self.col.id
-        self.csv_path = self.get_fixture_path('experts.csv')
 
     def test_upload_logged_out(self):
         data = {'meta': json.dumps({})}
@@ -39,58 +36,23 @@ class IngestApiTestCase(TestCase):
             'mime_type': 'text/csv',
             'source_url': 'http://pudo.org/experts.csv'
         }
+        csv_path = self.get_fixture_path('experts.csv')
         data = {
             'meta': json.dumps(meta),
-            'foo': open(self.csv_path, 'rb'),
+            'foo': open(csv_path, 'rb'),
         }
         res = self.client.post(self.url, data=data, headers=headers)
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
 
-        res = self.client.get('/api/2/entities?filter:schemata=Document',
-                              headers=headers)
-        assert res.json['total'] == 1, res.json
-        res = self.client.get('/api/2/entities/1', headers=headers)
-        assert 'de' in res.json['countries'], res.json
-        assert 'us' in res.json['countries'], res.json
-        file_url = res.json['links']['file']
-        res = self.client.get(file_url, headers=headers)
-        assert b'Klaus Trutzel' in res.data
-        assert 'text/csv' in res.content_type, res.content_type
+        doc = Document.by_id(res.json.get('id'))
+        assert doc.schema == Document.SCHEMA, doc.schema
 
-    def test_upload_html_doc(self):
-        html_path = self.get_fixture_path('samples/website.html')
-        _, headers = self.login(is_admin=True)
-        meta = {
-            'countries': ['ru', 'us'],
-            'languages': ['en'],
-            'source_url': 'https://en.wikipedia.org/wiki/How_does_one_patch_KDE2_under_FreeBSD%3F'  # noqa
-        }
-        data = {
-            'meta': json.dumps(meta),
-            'foo': open(html_path, 'rb')
-        }
-        res = self.client.post(self.url, data=data, headers=headers)
-        assert res.status_code == 201, (res, res.data)
-        assert 'id' in res.json, res.json
-
-        res = self.client.get('/api/2/entities?filter:schemata=Document',
-                              headers=headers)
-        assert res.json['total'] == 1, res.json
-
-        res = self.client.get('/api/2/entities/1', headers=headers)
-        assert 'file' in res.json['links'], res.json
-        file_url = res.json['links']['file']
-
-        con = self.client.get('/api/2/entities/1/content',
-                              headers=headers)
-        assert 'html' in con.json, res.con
-        assert 'Wikipedia, the free encyclopedia' in con.json['html'], \
-            con.json['html']
-
-        res = self.client.get(file_url, headers=headers)
-        assert b'KDE2' in res.data
-        assert 'text/html' in res.content_type, res.content_type
+        status = get_status(self.col)
+        assert status.get('pending') == 1, status
+        op = status.get('operations')[0]
+        assert op.get('pending') == 1, op
+        assert op.get('operation') == OP_INGEST, op
 
     def test_invalid_meta(self):
         _, headers = self.login(is_admin=True)
@@ -130,6 +92,7 @@ class IngestApiTestCase(TestCase):
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)
         assert res.status_code == 201, res
+        process_collection(self.col, ingest=False)
         assert 'id' in res.json, res.json
         url = '/api/2/entities/%s' % res.json['id']
         res = self.client.get(url, headers=headers)

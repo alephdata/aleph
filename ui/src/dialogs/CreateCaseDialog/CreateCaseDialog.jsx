@@ -9,7 +9,7 @@ import {
   updateCollectionPermissions,
 } from 'src/actions';
 import { showWarningToast } from 'src/app/toast';
-import { Role } from 'src/components/common';
+import { Language, Role } from 'src/components/common';
 import getCollectionLink from 'src/util/getCollectionLink';
 
 import './CreateCaseDialog.scss';
@@ -47,6 +47,7 @@ class CreateCaseDialog extends Component {
         label: '',
         summary: '',
         casefile: true,
+        languages: []
       },
       permissions: [],
       blocking: false,
@@ -57,6 +58,7 @@ class CreateCaseDialog extends Component {
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onAddRole = this.onAddRole.bind(this);
     this.onDeleteRole = this.onDeleteRole.bind(this);
+    this.onSelectLanguages = this.onSelectLanguages.bind(this);
   }
 
   onAddRole(role) {
@@ -70,6 +72,13 @@ class CreateCaseDialog extends Component {
     const newPermissions = permissions.filter(permission => permission.role.id !== role.role.id);
     this.setState({ permissions: newPermissions });
   }
+
+  onSelectLanguages(languages) {
+    const { collection } = this.state;
+    collection.languages = languages;
+    this.setState({ collection });
+  }
+
 
   async onAddCase(event) {
     const { history, createCollection, updateCollectionPermissions } = this.props;
@@ -105,10 +114,7 @@ class CreateCaseDialog extends Component {
 
   checkValid() {
     const { collection } = this.state;
-    if (collection.label.trim().length < 3) {
-      return false;
-    }
-    return true;
+    return collection.label.trim().length >= 3;
   }
 
   render() {
@@ -159,6 +165,21 @@ class CreateCaseDialog extends Component {
                   />
                 </div>
               </label>
+            </div>
+            <div className="bp3-form-group">
+              <label className="bp3-label">
+                <FormattedMessage id="case.chose.languages" defaultMessage="Languages" />
+              </label>
+              <Language.MultiSelect
+                onChange={this.onSelectLanguages}
+                codes={collection.languages}
+              />
+              <div className="bp3-form-helper-text">
+                <FormattedMessage
+                  id="case.languages.helper"
+                  defaultMessage="Used for optical text recognition in non-Latin alphabets."
+                />
+              </div>
             </div>
             <div className="bp3-form-group">
               <label className="bp3-label">

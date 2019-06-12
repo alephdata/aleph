@@ -6,11 +6,11 @@ from flask import Blueprint, request
 from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
-from servicelayer.archive.util import checksum
 
+from aleph.core import db, archive
 from aleph.model import Document
-from aleph.logic.documents import ingest_document, update_document
-from aleph.views.util import require, get_flag
+from aleph.queues import ingest_entity
+from aleph.views.util import get_db_collection
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema
 
@@ -18,19 +18,19 @@ log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
 
 
-def _load_parent(collection_id, meta):
+def _load_parent(collection, meta):
     """Determine the parent document for the document that is to be
     ingested."""
     parent_id = meta.get('parent_id')
     if parent_id is None:
         return
-    parent = Document.by_id(parent_id, collection_id=collection_id)
+    parent = Document.by_id(parent_id, collection_id=collection.id)
     if parent is None:
         raise BadRequest(response=jsonify({
             'status': 'error',
             'message': 'Cannot load parent document'
         }, status=400))
-    return parent_id
+    return parent
 
 
 def _load_metadata():
@@ -53,36 +53,29 @@ def _load_metadata():
 @blueprint.route('/api/2/collections/<int:collection_id>/ingest',
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
-    require(request.authz.can(collection_id, request.authz.WRITE))
-    sync = get_flag('sync')
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     meta, foreign_id = _load_metadata()
-    parent_id = _load_parent(collection_id, meta)
+    parent = _load_parent(collection, meta)
     upload_dir = mkdtemp(prefix='aleph.upload.')
     try:
-        path = None
         content_hash = None
         for storage in request.files.values():
             path = safe_filename(storage.filename, default='upload')
             path = os.path.join(upload_dir, path)
             storage.save(path)
-            content_hash = checksum(path)
-        document = Document.by_keys(collection_id=collection_id,
-                                    parent_id=parent_id,
-                                    foreign_id=foreign_id,
-                                    content_hash=content_hash)
-        document.update(meta)
-        document.schema = Document.SCHEMA
-        if content_hash is None:
-            document.schema = Document.SCHEMA_FOLDER
-        ingest_document(document, path,
-                        role_id=request.authz.id,
-                        content_hash=content_hash)
+            content_hash = archive.archive_file(path)
+        document = Document.save(collection=collection,
+                                 parent=parent,
+                                 foreign_id=foreign_id,
+                                 content_hash=content_hash,
+                                 meta=meta,
+                                 uploader_id=request.authz.id)
+        db.session.commit()
+        proxy = document.to_proxy()
+        ingest_entity(collection, proxy)
     finally:
         shutil.rmtree(upload_dir)
 
-    if document.collection.casefile:
-        # Make sure collection counts are always accurate.
-        update_document(document, sync=sync)
     return jsonify({
         'status': 'ok',
         'id': stringify(document.id)

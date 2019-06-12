@@ -6,6 +6,7 @@ __pycache__
 
 .env
 .vscode/*
+TODO.md
 
 build*
 
@@ -14,6 +15,8 @@ ui/build
 ui/i18n/messages.json
 ui/i18n/messages.pot
 ui/**/*.css
+
+contrib/allCountries.zip
 
 celerybeat-schedule*
 aleph.env

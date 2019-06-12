@@ -10,13 +10,11 @@ export const fetchCollection = asyncActionCreator(({ id }) => async () => {
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION' });
 
-
 export const createCollection = asyncActionCreator(collection => async () => {
   const config = { params: { sync: true } };
   const response = await endpoint.post('collections', collection, config);
   return { id: response.id, data: response.data };
 }, { name: 'CREATE_COLLECTION' });
-
 
 export const updateCollection = asyncActionCreator(collection => async () => {
   const config = { params: { sync: true } };
@@ -24,12 +22,10 @@ export const updateCollection = asyncActionCreator(collection => async () => {
   return { id: collection.id, data: response.data };
 }, { name: 'UPDATE_COLLECTION' });
 
-
 export const deleteCollection = asyncActionCreator(collection => async () => {
   await endpoint.delete(`collections/${collection.id}`, collection);
   return { id: collection.id };
 }, { name: 'DELETE_COLLECTION' });
-
 
 export const fetchCollectionPermissions = asyncActionCreator(id => async () => {
   const response = await endpoint.get(`collections/${id}/permissions`);
@@ -37,6 +33,10 @@ export const fetchCollectionPermissions = asyncActionCreator(id => async () => {
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
+export const fetchCollectionStatus = asyncActionCreator(({ id }) => async () => {
+  const response = await endpoint.get(`collections/${id}/status`);
+  return { id, data: response.data };
+}, { name: 'FETCH_COLLECTION_STATUS' });
 
 export const updateCollectionPermissions = asyncActionCreator((id, permissions) => async () => {
   const config = { params: { sync: true } };
@@ -44,16 +44,13 @@ export const updateCollectionPermissions = asyncActionCreator((id, permissions) 
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_PERMISSIONS' });
 
-
 export const fetchCollectionXrefIndex = asyncActionCreator(({ id }) => async () => {
   const config = { params: { limit: MAX_RESULTS } };
   const response = await endpoint.get(`collections/${id}/xref`, config);
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_XREF_INDEX' });
 
-
 export const queryXrefMatches = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_XREF_MATCHES' });
-
 
 export const tiggerXrefMatches = asyncActionCreator((id, againstCollectionIds) => async () => {
   let data = null;
@@ -68,3 +65,8 @@ export const triggerCollectionAnalyze = asyncActionCreator(id => async () => {
   const response = await endpoint.post(`collections/${id}/process`);
   return { data: response.data };
 }, { name: 'TRIGGER_COLLECTION_ANALYZE' });
+
+export const triggerCollectionCancel = asyncActionCreator(id => async () => {
+  const response = await endpoint.delete(`collections/${id}/status`);
+  return { id, data: response.data };
+}, { name: 'TRIGGER_COLLECTION_CANCEL' });

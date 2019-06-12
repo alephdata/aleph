@@ -3,8 +3,6 @@ from flask.wrappers import Response
 from flask import Blueprint, redirect, send_file, request
 
 from aleph.core import archive
-from aleph.model import Audit
-from aleph.logic.audit import record_audit
 from aleph.logic.util import archive_claim
 from aleph.views.util import require
 from aleph.views.context import tag_request
@@ -18,7 +16,6 @@ def retrieve():
     claim = request.args.get('claim')
     role_id, content_hash, file_name, mime_type = archive_claim(claim)
     require(request.authz.id == role_id)
-    record_audit(Audit.ACT_ARCHIVE, content_hash=content_hash)
     tag_request(content_hash=content_hash, file_name=file_name)
     url = archive.generate_url(content_hash,
                                file_name=file_name,

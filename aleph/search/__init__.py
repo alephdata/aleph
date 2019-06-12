@@ -5,7 +5,7 @@ from werkzeug.exceptions import BadRequest
 from aleph.index.indexes import entities_read_index
 from aleph.index.indexes import collections_index
 from aleph.index.entities import EXCLUDE_DEFAULT
-from aleph.logic.entities.match import match_query
+from aleph.logic.matching import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
 from aleph.search.result import QueryResult, DatabaseQueryResult  # noqa
 from aleph.search.result import SearchQueryResult  # noqa
@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class EntitiesQuery(Query):
-    TEXT_FIELDS = ['text']
+    TEXT_FIELDS = ['fingerprints.text^3', 'text']
     PREFIX_FIELD = 'names.text'
     SKIP_FILTERS = ['schema', 'schemata']
     EXCLUDE_FIELDS = EXCLUDE_DEFAULT

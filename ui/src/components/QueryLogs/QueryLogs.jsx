@@ -85,18 +85,18 @@ export class QueryLogs extends PureComponent {
                 <tr key={item.text}>
                   <td className="text">
                     <Tooltip
-                      content={intl.formatMessage(messages.search_query, { query: item.text })}
+                      content={intl.formatMessage(messages.search_query, { query: item.query })}
                     >
                       <Button
                         minimal
                         icon="search"
-                        onClick={() => this.onSearch(item.text)}
+                        onClick={() => this.onSearch(item.query)}
                         text={item.text}
                       />
                     </Tooltip>
                   </td>
                   <td className="narrow">
-                    <SearchAlert queryText={item.text} />
+                    <SearchAlert queryText={item.query} />
                   </td>
                   <td className="narrow">
                     <Tooltip content={intl.formatMessage(messages.delete_query)}>

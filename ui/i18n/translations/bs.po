@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-05-06T12:12:14.195Z\n"
+"POT-Creation-Date: 2019-06-06T14:31:07.187Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -743,10 +743,16 @@ msgstr "Oznaka"
 #. [nav.languages]
 #. defaultMessage is:
 #. Languages
+#. [collection.edit.info.languages]
+#. defaultMessage is:
+#. Languages
+#. [case.chose.languages]
+#. defaultMessage is:
+#. Languages
 #. [search.facets.facet.languages]
 #. defaultMessage is:
 #. Languages
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Languages"
 msgstr "Jezici"
 
@@ -909,11 +915,11 @@ msgstr ""
 msgid "New folder"
 msgstr "Nova datoteka"
 
-#. [entity.tags.no_tags]
+#. [language.multiselect.no.result]
 #. defaultMessage is:
-#. No connections.
+#. No Result
 #: i18n/messages.json
-msgid "No connections."
+msgid "No Result"
 msgstr ""
 
 #. [email.body.empty]
@@ -966,6 +972,13 @@ msgstr "Nema rezultata pretrage"
 #. No sources were found
 #: i18n/messages.json
 msgid "No sources were found"
+msgstr ""
+
+#. [entity.tags.no_tags]
+#. defaultMessage is:
+#. No tags found for this entity.
+#: i18n/messages.json
+msgid "No tags found for this entity."
 msgstr ""
 
 #. [auth.unauthorized]
@@ -1301,6 +1314,13 @@ msgstr "Traženje..."
 msgid "Search…"
 msgstr "Pretraži..."
 
+#. [language.multiselect.select]
+#. defaultMessage is:
+#. Select
+#: i18n/messages.json
+msgid "Select"
+msgstr ""
+
 #. [auth.server_error]
 #. defaultMessage is:
 #. Server error
@@ -1623,13 +1643,6 @@ msgstr "Tipovi"
 msgid "Unknown"
 msgstr "Nepoznato"
 
-#. [entity.label.missing]
-#. defaultMessage is:
-#. Untitled
-#: i18n/messages.json
-msgid "Untitled"
-msgstr "Bez naslova"
-
 #. [case.untitled_label]
 #. defaultMessage is:
 #. Untitled case file
@@ -1695,6 +1708,16 @@ msgstr "Koristi najmaje šest karaktera"
 msgid "Use the API key to read and write data via remote applications."
 msgstr ""
 "Koristi API ključ za čitanje i pisanje podataka pomoću udaljene aplikacije."
+
+#. [case.languages.helper]
+#. defaultMessage is:
+#. Used for optical text recognition in non-Latin alphabets.
+#. [case.languages.helper]
+#. defaultMessage is:
+#. Used for optical text recognition in non-Latin alphabets.
+#: i18n/messages.json i18n/messages.json
+msgid "Used for optical text recognition in non-Latin alphabets."
+msgstr ""
 
 #. [collection.edit.users]
 #. defaultMessage is:
