@@ -4,12 +4,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='ingestors',
-    version='0.13.0',
+    name='ingest',
+    version='3.1.2',
     description="Ingestors extract useful information in a structured standard format.",  # noqa
     author="Organized Crime and Corruption Reporting Project",
     author_email='data@occrp.org',
-    url='https://github.com/alephdata/ingestors',
     packages=find_packages(exclude=['tests']),
     package_dir={'ingestors': 'ingestors'},
     include_package_data=True,
