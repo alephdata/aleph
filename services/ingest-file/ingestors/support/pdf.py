@@ -1,18 +1,15 @@
 import uuid
-import pathlib
 
 from followthemoney import model
 from normality import collapse_spaces  # noqa
 from pdflib import Document
 from normality import stringify
 
-from ingestors.services import get_ocr, get_convert
-from ingestors.support.temp import TempFileSupport
-from ingestors.support.shell import ShellSupport
-from ingestors.exc import ProcessingException
+from ingestors.services import get_ocr
+from ingestors.support.convert import DocumentConvertSupport
 
 
-class PDFSupport(TempFileSupport, ShellSupport):
+class PDFSupport(DocumentConvertSupport):
     """Provides helpers for PDF file context extraction."""
 
     def pdf_extract(self, entity, pdf):
@@ -27,17 +24,6 @@ class PDFSupport(TempFileSupport, ShellSupport):
         entity.set('pdfHash', checksum)
         pdf = Document(bytes(pdf_path))
         self.pdf_extract(entity, pdf)
-
-    def document_to_pdf(self, file_path, entity):
-        """Convert an office document into a PDF file."""
-        converter = get_convert()
-        pdf_path = converter.document_to_pdf(file_path,
-                                             entity,
-                                             self.manager.work_path,
-                                             self.manager.archive)
-        if pdf_path is not None:
-            return pathlib.Path(pdf_path)
-        raise ProcessingException("Failed to convert to PDF.")
 
     def pdf_extract_page(self, document, temp_dir, page):
         """Extract the contents of a single PDF page, using OCR if need be."""

@@ -3,12 +3,13 @@ from followthemoney import model
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.pdf import PDFSupport
+from ingestors.support.shell import ShellSupport
 from ingestors.support.temp import TempFileSupport
 
 log = logging.getLogger(__name__)
 
 
-class TIFFIngestor(Ingestor, PDFSupport, TempFileSupport):
+class TIFFIngestor(Ingestor, PDFSupport, TempFileSupport, ShellSupport):
     """TIFF appears to not really be an image format. Who knew?"""
 
     MIME_TYPES = [

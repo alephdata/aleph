@@ -10,7 +10,6 @@ log = logging.getLogger(__name__)
 class EncodingSupport(object):
     """Decode the contents of the given file as plain text by guessing its
     encoding."""
-
     DEFAULT_ENCODING = 'utf-8'
 
     def detect_stream_encoding(self, fh, default=DEFAULT_ENCODING):
