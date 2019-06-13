@@ -1,15 +1,13 @@
 import uuid
-
+from pdflib import Document
 from followthemoney import model
 from normality import collapse_spaces  # noqa
-from pdflib import Document
-from normality import stringify
 
-from ingestors.services import get_ocr
+from ingestors.support.ocr import OCRSupport
 from ingestors.support.convert import DocumentConvertSupport
 
 
-class PDFSupport(DocumentConvertSupport):
+class PDFSupport(DocumentConvertSupport, OCRSupport):
     """Provides helpers for PDF file context extraction."""
 
     def pdf_extract(self, entity, pdf):
@@ -30,13 +28,11 @@ class PDFSupport(DocumentConvertSupport):
         texts = page.lines
         image_path = temp_dir.joinpath(str(uuid.uuid4()))
         page.extract_images(path=bytes(image_path), prefix=b'img')
-        ocr = get_ocr()
         languages = self.manager.context.get('languages')
         for image_file in image_path.glob("*.png"):
             with open(image_file, 'rb') as fh:
                 data = fh.read()
-                text = ocr.extract_text(data, languages=languages)
-                text = stringify(text)
+                text = self.extract_ocr_text(data, languages=languages)
                 # text = collapse_spaces(text)
                 if text is not None:
                     texts.append(text)

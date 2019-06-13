@@ -1,39 +1,35 @@
 import logging
 import requests
-from normality import stringify
 from pantomime.types import DEFAULT
 from requests import RequestException, HTTPError
-from servicelayer.cache import get_redis, make_key
 from servicelayer.util import backoff, service_retries
-from servicelayer.settings import REDIS_LONG
 
 from ingestors.settings import UNOSERVICE_URL
+from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class DocumentConvertSupport(TempFileSupport):
+class DocumentConvertSupport(CacheSupport, TempFileSupport):
     """Provides helpers for UNO document conversion via HTTP."""
 
     def document_to_pdf(self, file_path, entity):
-        conn = get_redis()
-        key = make_key('pdf', entity.first('contentHash'))
-        if conn.exists(key):
+        key = self.cache_key('pdf', entity.first('contentHash'))
+        pdf_hash = self.get_cache_value(key)
+        if pdf_hash is not None:
             log.info("Using [%s] PDF from cache", entity.first('fileName'))
-            pdf_hash = stringify(conn.get(key))
             entity.set('pdfHash', pdf_hash)
-            if pdf_hash is not None:
-                work_path = self.manager.work_path
-                return self.manager.archive.load_file(pdf_hash,
-                                                      temp_path=work_path)
+            work_path = self.manager.work_path
+            return self.manager.archive.load_file(pdf_hash,
+                                                  temp_path=work_path)
 
         pdf_file = self._document_to_pdf(file_path, entity)
         if pdf_file is not None:
             content_hash = self.manager.archive.archive_file(pdf_file)
             entity.set('pdfHash', content_hash)
-            conn.set(key, content_hash, ex=REDIS_LONG)
+            self.set_cache_value(key, content_hash)
             return pdf_file
 
     def _document_to_pdf(self, file_path, entity):
