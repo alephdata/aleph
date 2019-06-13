@@ -23,7 +23,7 @@ class OCRSupport(CacheSupport):
         text = self.get_cache_value(key)
         if text is not None:
             log.info('OCR: %s chars cached', len(text))
-            return text
+            return stringify(text)
 
         if not hasattr(settings, '_ocr_service'):
             if GoogleOCRService.is_available():
@@ -32,12 +32,11 @@ class OCRSupport(CacheSupport):
                 settings._ocr_service = AlephOCRService()
 
         text = settings._ocr_service.extract_text(data, languages=languages)
-        text = stringify(text)
+        self.set_cache_value(key, text)
         if text is not None:
-            self.set_cache_value(key, text)
             log.info('OCR: %s chars (from %s bytes)',
                      len(text), len(data))
-        return text
+        return stringify(text)
 
 
 class AlephOCRService(TextRecognizerService):
@@ -47,8 +46,9 @@ class AlephOCRService(TextRecognizerService):
         if self.SERVICE is None:
             raise RuntimeError("No OCR service configured.")
         text = self.Recognize(data, languages=languages)
-        if text is not None:
-            return text.text or ''
+        if text is None:
+            return ''
+        return text.text or ''
 
 
 class GoogleOCRService(object):
@@ -69,7 +69,7 @@ class GoogleOCRService(object):
         from google.cloud.vision import types
         image = types.Image(content=data)
         res = self.client.document_text_detection(image)
-        return res.full_text_annotation.text
+        return res.full_text_annotation.text or ''
 
     @classmethod
     def is_available(cls):

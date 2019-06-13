@@ -33,7 +33,6 @@ class PDFSupport(DocumentConvertSupport, OCRSupport):
             with open(image_file, 'rb') as fh:
                 data = fh.read()
                 text = self.extract_ocr_text(data, languages=languages)
-                # text = collapse_spaces(text)
                 if text is not None:
                     texts.append(text)
 

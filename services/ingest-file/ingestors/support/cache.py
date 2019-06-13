@@ -1,5 +1,4 @@
 import logging
-from normality import stringify
 
 from servicelayer.cache import make_key
 from servicelayer.settings import REDIS_LONG
@@ -16,9 +15,9 @@ class CacheSupport(object):
         return self.manager.queue.conn
 
     def get_cache_value(self, key):
-        return stringify(self.manager.queue.conn.get(key))
+        return self.manager.queue.conn.get(key)
 
     def set_cache_value(self, key, value):
         if value is None:
-            return
+            value = ''
         return self.manager.queue.conn.set(key, value, ex=REDIS_LONG)
