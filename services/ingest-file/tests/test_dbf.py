@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ..support import TestCase
+from .support import TestCase
 
 
 class DBFIngestorTest(TestCase):

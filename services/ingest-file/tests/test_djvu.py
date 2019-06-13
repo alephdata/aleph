@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from unittest import skip
-from ..support import TestCase
+from .support import TestCase
 
 
 class DejaVuIngestorTest(TestCase):

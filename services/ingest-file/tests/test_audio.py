@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from ..support import TestCase
+from .support import TestCase
 
 
 class AudioIngestorTest(TestCase):

@@ -2,7 +2,7 @@
 from normality.cleaning import decompose_nfkd
 from followthemoney.proxy import EntityProxy
 
-from ..support import TestCase
+from .support import TestCase
 
 
 class TextIngestorTest(TestCase):

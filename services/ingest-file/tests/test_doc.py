@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from ..support import TestCase
+from .support import TestCase
 
 
 class DocumentIngestorTest(TestCase):

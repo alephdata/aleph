@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pprint import pprint  # noqa
 
-from ..support import TestCase
+from .support import TestCase
 
 
 class DirectoryTest(TestCase):
