@@ -84,6 +84,7 @@ services:
       cache_from:
         - alephdata/aleph:latest
     image: alephdata/aleph:latest
+    hostname: aleph
     command: /bin/bash
     links:
       - postgres
