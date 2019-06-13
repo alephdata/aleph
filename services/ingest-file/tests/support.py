@@ -3,15 +3,14 @@ from __future__ import absolute_import
 import unittest
 import types
 import pathlib
+from tempfile import mkdtemp
 
 from servicelayer.cache import get_fakeredis
 from servicelayer.archive import init_archive
 from servicelayer.process import ServiceQueue
-from servicelayer import settings
+from servicelayer import settings as service_settings
+from balkhash import settings as balkhash_settings
 from ingestors.manager import Manager
-
-# Force tests to use fake-redis
-settings.REDIS_URL = None
 
 
 def emit_entity(self, entity, fragment=None):
@@ -20,11 +19,20 @@ def emit_entity(self, entity, fragment=None):
 
 
 class TestCase(unittest.TestCase):
-    queue = ServiceQueue(get_fakeredis(), ServiceQueue.OP_INGEST, 'test')
-    manager = Manager(queue, {})
-    manager.entities = []
-    manager.emit_entity = types.MethodType(emit_entity, manager)
-    archive = init_archive(archive_type='file', path='build/test/archive')
+
+    def setUp(self):
+        # Force tests to use fake configuration
+        service_settings.REDIS_URL = None
+        service_settings.ARCHIVE_TYPE = 'file'
+        service_settings.ARCHIVE_PATH = mkdtemp()
+        balkhash_settings.BACKEND = 'LEVELDB'
+        balkhash_settings.LEVELDB_PATH = mkdtemp()
+        conn = get_fakeredis()
+        self.queue = ServiceQueue(conn, ServiceQueue.OP_INGEST, 'test')
+        self.manager = Manager(self.queue, {})
+        self.manager.entities = []
+        self.manager.emit_entity = types.MethodType(emit_entity, self.manager)
+        self.archive = init_archive()
 
     def fixture(self, fixture_path):
         """Returns a fixture path and a dummy entity"""

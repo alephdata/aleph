@@ -1,5 +1,6 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml 
-DEVDOCKER=$(COMPOSE) run --rm app
+APPDOCKER=$(COMPOSE) run --rm app
+INGESTDOCKER=$(COMPOSE) run --rm ingest-file
 TAG=latest
 
 all: build upgrade web
@@ -9,17 +10,23 @@ services:
 		postgres elasticsearch ingest-file \
 		convert-document recognize-text
 
-shell: services    
-	$(DEVDOCKER) /bin/bash
+ingest-shell: services    
+	$(INGESTDOCKER) /bin/bash
+
+shell: services
+	$(APPDOCKER) /bin/bash
+
+ingest-test:
+	$(INGESTDOCKER) nosetests --with-coverage --cover-package=ingestors
 
 test:
-	$(DEVDOCKER) contrib/test.sh
+	$(APPDOCKER) contrib/test.sh
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
 	sleep 10
-	$(DEVDOCKER) aleph upgrade
-	$(DEVDOCKER) celery purge -f -A aleph.queues
+	$(APPDOCKER) aleph upgrade
+	$(APPDOCKER) celery purge -f -A aleph.queues
 
 web: services
 	$(COMPOSE) up api ui
@@ -28,7 +35,7 @@ worker: services
 	$(COMPOSE) run --rm -e ALEPH_EAGER=false app celery -A aleph.queues -B -c 4 -l INFO worker
 
 purge:
-	$(DEVDOCKER) celery purge -f -A aleph.queues
+	$(APPDOCKER) celery purge -f -A aleph.queues
 
 stop:
 	$(COMPOSE) down --remove-orphans
@@ -43,8 +50,7 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
-	docker build -t alephdata/aleph:$(TAG) .
-	docker build -t alephdata/aleph-ui:$(TAG) ui
+	$(COMPOSE) build
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui

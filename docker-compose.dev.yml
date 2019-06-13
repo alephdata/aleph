@@ -58,10 +58,17 @@ services:
       - 50000
 
   ingest-file:
+    build:
+      context: services/ingest-file
+      cache_from:
+        - alephdata/ingest-file:latest
     image: alephdata/ingest-file:latest
+    hostname: ingest
     tmpfs: /tmp
     volumes:
       - archive-data:/data
+      - "./services/ingest-file/ingestors:/ingestors/ingestors"
+      - "./services/ingest-file/tests:/ingestors/tests"
     environment:
       ARCHIVE_TYPE: 'file'
       REDIS_URL: 'redis://redis:6379/0'
