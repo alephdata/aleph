@@ -1,0 +1,137 @@
+From - Tue Feb 21 10:04:06 2017
+Received: from mxfront6m.mail.yandex.net ([127.0.0.1])
+	by mxfront6m.mail.yandex.net with LMTP id 6QO1kfql;
+	Tue, 21 Feb 2017 09:55:10 +0300
+Received: from mail-wm0-x22a.google.com (mail-wm0-x22a.google.com [2a00:1450:400c:c09::22a])
+	by mxfront6m.mail.yandex.net (nwsmtp/Yandex) with ESMTPS id 3r4pUjHPO0-tAee04hH;
+	Tue, 21 Feb 2017 09:55:10 +0300
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client certificate not present)
+X-Yandex-Front: mxfront6m.mail.yandex.net
+X-Yandex-TimeMark: 1487660110
+Authentication-Results: mxfront6m.mail.yandex.net; spf=pass (mxfront6m.mail.yandex.net: domain of gmail.com designates 2a00:1450:400c:c09::22a as permitted sender) smtp.mail=dzmitry.lahoda@gmail.com; dkim=pass header.i=@gmail.com
+X-Yandex-Spam: 1
+Received: by mail-wm0-x22a.google.com with SMTP id c85so100482039wmi.1;
+        Mon, 20 Feb 2017 22:55:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=CboiCoWi3JC0RJiqWkz4YWS+urq7LUCqGqdGCD3urLU=;
+        b=foGJi8AvJj6+GXhlRYseeBv2HTDiWt/suAYeSgg2CCu0/BEY67rKUCIhnxBvo/O0QH
+         dVetkTKJLQb8PpVIryUZUlV/5aOKWe/Z+34FHJ/YimbLLVdUDD3FDzQJDEyagA4RiPq7
+         f6Wu5+vseP3weNvDAMQS619it6o06uqe0yRTzlZ7eXbzp9GNS45kFIDFZzCc7NlnaTvg
+         cUouVuo7lDAX1cSqVlaA9G4wURr81olxqxT1Aoeb21uliYqxbDqMg9UHESRba51Iccgf
+         0k+TODEiVllhbjuaKR2lbwyFeev403hPndDBHpoPwiAwbE1AVqt7dmHVwN8PSF3tsK7R
+         DsqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=CboiCoWi3JC0RJiqWkz4YWS+urq7LUCqGqdGCD3urLU=;
+        b=SsZTq/Z4uvxYsuaVot6DGBIzxbym1vCUOLc/HAkbE4paD+VRxQGhNboF+fr9W+k+GH
+         GlCEWB6Gr3loWKooFQOG9db0V7tiWfVnvODm4lYKzr0wHy1YPsmrXz46hEbpkHWCRPPX
+         5Ugq1knqL9pGPPiYPy2NfvdlugZnMQZOBRSNhbrZ2Sa3uSw3v0s4mwbwdkgeXO6OKl5+
+         jQzGfVISB0TcE+ogA6rLbhYnUG4DLGyOB0UeFLRuFMKqvw94X9fNiov3VpirtficiYiL
+         YLNlAFWfDUrXghWKBWggNewDb3K3CeYzrzxCq7NlrapcgdNTDtGBoUD6bGmg8I2KHRFH
+         Fm5w==
+X-Gm-Message-State: AMke39n/XHZ5CscXGIZYyXPHYekw4v7WxcQt7S2QlXGCWJz2VmZAodzBUhmr/pddiHISpmTdna9UESbjqKPl+g==
+X-Received: by 10.28.71.133 with SMTP id m5mr12564387wmi.132.1487660110002;
+ Mon, 20 Feb 2017 22:55:10 -0800 (PST)
+MIME-Version: 1.0
+Received: by 10.80.153.86 with HTTP; Mon, 20 Feb 2017 22:55:09 -0800 (PST)
+In-Reply-To: <addabb85-2416-7e2d-e555-6a65d2dfce5d@yandex.ru>
+References: <09590219-c48f-f034-46f6-36e29f685b95@yandex.ru> <addabb85-2416-7e2d-e555-6a65d2dfce5d@yandex.ru>
+From: Dzmitry Lahoda <dzmitry.lahoda@gmail.com>
+Date: Tue, 21 Feb 2017 09:55:09 +0300
+Message-ID: <CAJDzDxEsAH3+-H=vECfFZNeZuYRtYeQZhyvWC=_sr2SFfg1pCA@mail.gmail.com>
+Subject: Re: Our friends has a good plan
+To: "Marduk.Mesopotamian" <Marduk.Mesopotamian@yandex.ru>
+Cc: Tiamat.Mesopotamian@yandex.ru
+Content-Type: multipart/alternative; boundary=94eb2c074e7e6741d5054904dcb3
+Return-Path: dzmitry.lahoda@gmail.com
+X-Yandex-Forward: 33cf05e2f45c00548ec0347fa596c44b
+X-Yandex-Forward: 603bed84f9ac4055b90210bb722e6d4b
+
+--94eb2c074e7e6741d5054904dcb3
+Content-Type: text/plain; charset=UTF-8
+
+I do not know you and do not understand you. Please do not write me such
+things. I will have to go to police then.
+
+On Tue, Feb 21, 2017 at 9:54 AM, Marduk.Mesopotamian <
+Marduk.Mesopotamian@yandex.ru> wrote:
+
+> I do think we should try to do what our friends propose.
+>
+> -------- Forwarded Message --------
+> Subject: Our friends has a good plan
+> Date: Tue, 21 Feb 2017 09:52:34 +0300
+> From: Tiamat.Mesopotamian <Tiamat.Mesopotamian@yandex.ru>
+> <Tiamat.Mesopotamian@yandex.ru>
+> To: Marduk.Mesopotamian@yandex.ru
+>
+> Our friends do propose to draw graffiti in and on Trump tower. An act of vandalism.
+>
+>
+>
+
+--94eb2c074e7e6741d5054904dcb3
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">I do not know you and do not understand you. Please do not=
+ write me such things. I will have to go to police then.<br></div><div clas=
+s=3D"gmail_extra"><br><div class=3D"gmail_quote">On Tue, Feb 21, 2017 at 9:=
+54 AM, Marduk.Mesopotamian <span dir=3D"ltr">&lt;<a href=3D"mailto:Marduk.M=
+esopotamian@yandex.ru" target=3D"_blank">Marduk.Mesopotamian@yandex.ru</a>&=
+gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 =
+0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+ =20
+
+   =20
+ =20
+  <div bgcolor=3D"#FFFFFF" text=3D"#000000">
+    <p>You should look at what they propose<br>
+    </p>
+    <div class=3D"m_-2487137769015060633moz-forward-container"><br>
+      -------- Forwarded Message --------
+      <table class=3D"m_-2487137769015060633moz-email-headers-table" cellsp=
+acing=3D"0" cellpadding=3D"0" border=3D"0">
+        <tbody>
+          <tr>
+            <th nowrap valign=3D"BASELINE" align=3D"RIGHT">Subject:
+            </th>
+            <td>Our friends has a good plan</td>
+          </tr>
+          <tr>
+            <th nowrap valign=3D"BASELINE" align=3D"RIGHT">Date: </th>
+            <td>Tue, 21 Feb 2017 09:52:34 +0300</td>
+          </tr>
+          <tr>
+            <th nowrap valign=3D"BASELINE" align=3D"RIGHT">From: </th>
+            <td>Tiamat.Mesopotamian
+              <a class=3D"m_-2487137769015060633moz-txt-link-rfc2396E" href=
+=3D"mailto:Tiamat.Mesopotamian@yandex.ru" target=3D"_blank">&lt;Tiamat.Meso=
+potamian@yandex.<wbr>ru&gt;</a></td>
+          </tr>
+          <tr>
+            <th nowrap valign=3D"BASELINE" align=3D"RIGHT">To: </th>
+            <td><a class=3D"m_-2487137769015060633moz-txt-link-abbreviated"=
+ href=3D"mailto:Marduk.Mesopotamian@yandex.ru" target=3D"_blank">Marduk.Mes=
+opotamian@yandex.ru</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <pre>Our friends do propose to draw graffiti in and on Trump tower. An act of vandalism.
+
+</pre>
+    </div>
+  </div>
+
+</blockquote></div><br></div>
+
+--94eb2c074e7e6741d5054904dcb3--
+

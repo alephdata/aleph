@@ -1,0 +1,60 @@
+version: "3.2"
+
+services:
+  redis:
+      image: redis:alpine
+      command: ["redis-server", "--appendonly", "yes"]
+      volumes:
+        - ./build/redis-data:/data
+
+  convert-document:
+    image: alephdata/convert-document:1.4.0
+    restart: on-failure
+    tmpfs:
+      - /tmp
+      - /root/.config
+    expose:
+      - 3000
+
+  recognize-text:
+    image: alephdata/recognize-text:1.2.0
+    restart: on-failure
+    expose:
+      - 50000
+
+  worker:
+    build: .
+    image: alephdata/ingest-file:latest
+    command: ingestors process
+    links:
+      - redis
+      - recognize-text
+      - convert-document
+    volumes:
+      - "./build/data:/data"
+      - ".:/ingestors"
+    tmpfs:
+      - "/tmp"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      OCR_SERVICE: recognize-text:50000
+      UNOSERVICE_URL: http://convert-document:3000/convert
+
+  shell:
+    build: .
+    image: alephdata/ingest-file:latest
+    command: /bin/bash
+    links:
+      - redis
+      - recognize-text
+      - convert-document
+    volumes:
+      - "./build/data:/data"
+      - ".:/ingestors"
+      - "/:/host"
+    tmpfs:
+      - "/tmp"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      OCR_SERVICE: recognize-text:50000
+      UNOSERVICE_URL: http://convert-document:3000/convert
