@@ -15,11 +15,11 @@ library, but the protocol can also be used independently.
 
 Check out the following client code to see how `recognize-text` is used:
 
-https://github.com/alephdata/servicelayer/blob/master/servicelayer/rpc/__init__.py
+`https://github.com/alephdata/servicelayer/blob/master/servicelayer/rpc/__init__.py`
 
 You can also inspect the protocol buffer files directly here:
 
-https://github.com/alephdata/servicelayer/tree/master/protos/servicelayer/rpc
+`https://github.com/alephdata/servicelayer/tree/master/protos/servicelayer/rpc`
 
 The container itself can be pulled from the DockerHub and will expose a service on port
 `50000`:

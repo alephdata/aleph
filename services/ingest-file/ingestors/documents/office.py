@@ -46,17 +46,17 @@ class DocumentIngestor(Ingestor, OLESupport, PDFSupport):
         'application/vnd.corel-draw',  # Corel Draw Document
         'application/vnd.lotus-wordpro',  # LotusWordPro
         'application/vnd.ms-powerpoint',  # MS PowerPoint 97 Vorlage
-        'application/vnd.ms-powerpoint.presentation.macroEnabled.main+xml',  # Impress MS PowerPoint 2007 XML VBA
+        'application/vnd.ms-powerpoint.presentation.macroEnabled.main+xml',  # Impress MS PowerPoint 2007 XML VBA  # noqa
         'application/vnd.ms-works',  # Mac_Works
         'application/vnd.palm',  # Palm_Text_Document
         'application/vnd.sun.xml.draw',  # StarOffice XML (Draw)
-        'application/vnd.sun.xml.draw.template',  # draw_StarOffice_XML_Draw_Template
+        'application/vnd.sun.xml.draw.template',  # draw_StarOffice_XML_Draw_Template  # noqa
         'application/vnd.sun.xml.impress',  # StarOffice XML (Impress)
-        'application/vnd.sun.xml.impress.template',  # impress_StarOffice_XML_Impress_Template
+        'application/vnd.sun.xml.impress.template',  # impress_StarOffice_XML_Impress_Template  # noqa
         'application/vnd.sun.xml.writer',  # StarOffice XML (Writer)
-        'application/vnd.sun.xml.writer.global',  # writer_globaldocument_StarOffice_XML_Writer_GlobalDocument
-        'application/vnd.sun.xml.writer.template',  # writer_StarOffice_XML_Writer_Template
-        'application/vnd.sun.xml.writer.web',  # writer_web_StarOffice_XML_Writer_Web_Template
+        'application/vnd.sun.xml.writer.global',  # writer_globaldocument_StarOffice_XML_Writer_GlobalDocument  # noqa
+        'application/vnd.sun.xml.writer.template',  # writer_StarOffice_XML_Writer_Template  # noqa
+        'application/vnd.sun.xml.writer.web',  # writer_web_StarOffice_XML_Writer_Web_Template  # noqa
         'application/vnd.visio',  # Visio Document
         'application/vnd.wordperfect',  # WordPerfect
         'application/x-abiword',  # AbiWord

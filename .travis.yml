@@ -26,10 +26,11 @@ before_install:
 install:
   - echo "${TRAVIS_BRANCH}"
   - make build
-  - docker-compose -f docker-compose.dev.yml up -d postgres elasticsearch redis
-  - sleep 4
+  - make services
+  - sleep 5
 
 script:
+  - make ingest-test
   - make test
 
 after_success:
