@@ -150,6 +150,10 @@ services:
       - aleph.env
   
   ui:
+    build:
+      context: ui
+      cache_from:
+        - alephdata/aleph-ui:latest
     image: alephdata/aleph-ui
     links:
       - api

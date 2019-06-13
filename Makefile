@@ -50,7 +50,7 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
-	$(COMPOSE) build
+	$(COMPOSE) build --parallel
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
@@ -58,8 +58,7 @@ build-ui:
 build-full: build build-ui
 
 docker-pull:
-	docker pull alephdata/aleph
-	docker pull alephdata/aleph-ui
+	$(COMPOSE) pull --include-deps --ignore-pull-failures
 
 docker-push:
 	docker push alephdata/aleph:$(TAG)
