@@ -14,7 +14,11 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:10
+    build:
+      context: services/elasticsearch
+      cache_from:
+        - alephdata/aleph-elasticsearch:latest
+    image: alephdata/aleph-elasticsearch:latest
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -31,7 +35,11 @@ services:
         - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:1.4.0
+    build:
+      context: services/convert-document
+      cache_from:
+        - alephdata/convert-document:latest
+    image: alephdata/convert-document:latest
     restart: on-failure
     tmpfs:
       - /tmp
@@ -40,7 +48,11 @@ services:
       - 3000
 
   recognize-text:
-    image: alephdata/recognize-text:1.2.0
+    build:
+      context: services/recognize-text
+      cache_from:
+        - alephdata/recognize-text:latest
+    image: alephdata/recognize-text:latest
     restart: on-failure
     expose:
       - 50000
@@ -67,7 +79,11 @@ services:
       - aleph.env
 
   app:
-    image: alephdata/aleph
+    build:
+      context: .
+      cache_from:
+        - alephdata/aleph:latest
+    image: alephdata/aleph:latest
     command: /bin/bash
     links:
       - postgres
@@ -95,7 +111,11 @@ services:
       - aleph.env
 
   api:
-    image: alephdata/aleph
+    build:
+      context: .
+      cache_from:
+        - alephdata/aleph:latest
+    image: alephdata/aleph:latest
     command: aleph runserver -h 0.0.0.0 -p 5000 --threaded
     expose:
       - 5000

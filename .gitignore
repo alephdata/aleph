@@ -1,5 +1,6 @@
 *.pyc
 *.DS_Store
+.DS_Store
 *.egg-info
 *.sqlite3
 __pycache__
@@ -17,6 +18,7 @@ ui/i18n/messages.pot
 ui/**/*.css
 
 contrib/allCountries.zip
+services/elasticsearch/secrets
 
 celerybeat-schedule*
 aleph.env
