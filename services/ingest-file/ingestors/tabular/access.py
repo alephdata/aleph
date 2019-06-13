@@ -7,7 +7,7 @@ from collections import OrderedDict
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
-from ingestors.services.util import ShellCommand
+from ingestors.support.shell import ShellSupport
 from ingestors.support.table import TableSupport
 from ingestors.exc import ProcessingException
 from ingestors.util import safe_string
@@ -16,7 +16,7 @@ from ingestors.util import safe_string
 log = logging.getLogger(__name__)
 
 
-class AccessIngestor(Ingestor, TableSupport, ShellCommand):
+class AccessIngestor(Ingestor, TableSupport, ShellSupport):
     MIME_TYPES = [
         'application/msaccess',
         'application/x-msaccess',

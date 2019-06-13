@@ -1,15 +1,12 @@
 import os
-import logging
 import subprocess
 from servicelayer import env
 from distutils.spawn import find_executable
 
 from ingestors.exc import ProcessingException
 
-log = logging.getLogger(__name__)
 
-
-class ShellCommand(object):
+class ShellSupport(object):
     """Provides helpers for shell commands."""
 
     #: Convertion time before the job gets cancelled.

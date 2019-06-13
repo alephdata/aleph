@@ -10,8 +10,7 @@ from servicelayer.util import backoff, service_retries
 from servicelayer.settings import REDIS_LONG
 
 from ingestors.exc import ProcessingException
-from ingestors.services.util import ShellCommand
-from ingestors.util import join_path, make_directory
+from ingestors.util import join_path
 
 log = logging.getLogger(__name__)
 
@@ -42,39 +41,6 @@ class DocumentConverter(ABC):
     @abstractmethod
     def _document_to_pdf(self, file_path, entity, work_path):
         pass
-
-
-class LocalDocumentConverter(DocumentConverter, ShellCommand):
-    """Provides helpers for Libre/Open Office tools."""
-
-    @classmethod
-    def is_available(cls):
-        return cls.find_command('soffice') is not None
-
-    def _document_to_pdf(self, file_path, entity, work_path):
-        """Converts an office document to PDF."""
-        instance_dir = make_directory(work_path, 'soffice_instance')
-        out_dir = make_directory(work_path, 'soffice_output')
-        log.info('Converting [%s] to PDF...', entity.first('fileName'))
-        instance_dir = '-env:UserInstallation=file://{}'.format(instance_dir)
-        self.exec_command('soffice',
-                          instance_dir,
-                          '--nofirststartwizard',
-                          '--norestore',
-                          '--nologo',
-                          '--nodefault',
-                          '--nolockcheck',
-                          '--invisible',
-                          '--headless',
-                          '--convert-to', 'pdf',
-                          '--outdir', out_dir,
-                          file_path)
-
-        for out_file in out_dir.iterdir():
-            return out_file
-
-        msg = "Failed to convert to PDF: {}".format(file_path)
-        raise ProcessingException(msg)
 
 
 class ServiceDocumentConverter(DocumentConverter):

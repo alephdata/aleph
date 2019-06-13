@@ -3,14 +3,14 @@ from followthemoney import model
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.temp import TempFileSupport
-from ingestors.services.util import ShellCommand
+from ingestors.support.shell import ShellSupport
 from ingestors.support.ole import OLESupport
 from ingestors.directory import DirectoryIngestor
 
 log = logging.getLogger(__name__)
 
 
-class OutlookPSTIngestor(Ingestor, TempFileSupport, OLESupport, ShellCommand):
+class OutlookPSTIngestor(Ingestor, TempFileSupport, OLESupport, ShellSupport):
     MIME_DEFAULT = 'application/vnd.ms-outlook'
     MIME_TYPES = [MIME_DEFAULT]
     EXTENSIONS = ['pst', 'ost', 'pab']
