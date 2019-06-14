@@ -3,7 +3,6 @@ from pdflib import Document
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.pdf import PDFSupport
-from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
@@ -44,13 +43,13 @@ class PDFIngestor(Ingestor, PDFSupport):
 
     def ingest(self, file_path, entity):
         """Ingestor implementation."""
-        try:
-            pdf = Document(bytes(file_path))
-            self.extract_metadata(pdf, entity)
-            self.extract_xmp_metadata(pdf, entity)
-            self.pdf_extract(entity, pdf)
-        except Exception as ex:
-            raise ProcessingException("Could not extract PDF file: %r", ex)
+        # try:
+        pdf = Document(bytes(file_path))
+        self.extract_metadata(pdf, entity)
+        self.extract_xmp_metadata(pdf, entity)
+        self.pdf_extract(entity, pdf)
+        # except Exception as ex:
+        #     raise ProcessingException("Could not extract PDF file: %r", ex)
 
     @classmethod
     def match(cls, file_path, entity):

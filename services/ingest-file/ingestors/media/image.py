@@ -12,10 +12,7 @@ log = logging.getLogger(__name__)
 
 
 class ImageIngestor(Ingestor, OCRSupport):
-    """Image file ingestor class.
-
-    Extracts the text from images using OCR.
-    """
+    """Image file ingestor class. Extracts the text from images using OCR."""
 
     MIME_TYPES = [
         'image/x-portable-graymap',
@@ -47,7 +44,7 @@ class ImageIngestor(Ingestor, OCRSupport):
         except Exception:
             return None
 
-    def extract_exif(self, img):
+    def extract_exif(self, img, entity):
         if not hasattr(img, '_getexif'):
             return
 
@@ -55,7 +52,6 @@ class ImageIngestor(Ingestor, OCRSupport):
         if exif is None:
             return
 
-        make, model = '', ''
         for num, value in exif.items():
             try:
                 tag = ExifTags.TAGS[num]
@@ -63,16 +59,13 @@ class ImageIngestor(Ingestor, OCRSupport):
                 log.warning("Unknown EXIF code: %s", num)
                 continue
             if tag == 'DateTimeOriginal':
-                self.update('created_at', self.parse_exif_date(value))
+                entity.add('authoredAt', self.parse_exif_date(value))
             if tag == 'DateTime':
-                self.update('date', self.parse_exif_date(value))
+                entity.add('date', self.parse_exif_date(value))
             if tag == 'Make':
-                make = value
+                entity.add('generator', value)
             if tag == 'Model':
-                model = value
-
-        generator = ' '.join((make, model))
-        self.update('generator', generator.strip())
+                entity.add('generator', value)
 
     def ingest(self, file_path, entity):
         entity.schema = model.get('Image')
@@ -82,7 +75,7 @@ class ImageIngestor(Ingestor, OCRSupport):
         try:
             image = Image.open(BytesIO(data))
             image.load()
-            self.extract_exif(image)
+            self.extract_exif(image, entity)
 
             languages = self.manager.context.get('languages')
             text = self.extract_ocr_text(data, languages=languages)
