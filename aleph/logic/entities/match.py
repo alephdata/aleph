@@ -17,7 +17,7 @@ def _make_queries(prop, value, specificity):
         boost = (1 + specificity) * 2
         yield {
             'match': {
-                'names.text': {
+                'fingerprints.text': {
                     'query': value,
                     'operator': 'and',
                     'minimum_should_match': '60%',
@@ -26,11 +26,13 @@ def _make_queries(prop, value, specificity):
             }
         }
         fp = fingerprints.generate(value)
-        if fp is not None:
+        if fp is not None and fp != value:
             yield {
-                'term': {
-                    'fingerprints': {
-                        'value': fp,
+                'match': {
+                    'fingerprints.text': {
+                        'query': value,
+                        'operator': 'and',
+                        'minimum_should_match': '60%',
                         'boost': boost
                     }
                 }
