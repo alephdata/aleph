@@ -69,6 +69,7 @@ services:
       - archive-data:/data
       - "./services/ingest-file/ingestors:/ingestors/ingestors"
       - "./services/ingest-file/tests:/ingestors/tests"
+      - "/:/host"
     environment:
       ARCHIVE_TYPE: 'file'
       REDIS_URL: 'redis://redis:6379/0'

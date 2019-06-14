@@ -1,5 +1,6 @@
 import logging
 import requests
+from pathlib import Path
 from pantomime.types import DEFAULT
 from requests import RequestException, HTTPError
 from servicelayer.util import backoff, service_retries
@@ -22,15 +23,16 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
             log.info("Using [%s] PDF from cache", entity.first('fileName'))
             entity.set('pdfHash', pdf_hash)
             work_path = self.manager.work_path
-            return self.manager.archive.load_file(pdf_hash,
+            path = self.manager.archive.load_file(pdf_hash,
                                                   temp_path=work_path)
+            return Path(path).resolve()
 
         pdf_file = self._document_to_pdf(file_path, entity)
         if pdf_file is not None:
             content_hash = self.manager.archive.archive_file(pdf_file)
             entity.set('pdfHash', content_hash)
             self.set_cache_value(key, content_hash)
-            return pdf_file
+            return Path(pdf_file).resolve()
 
     def _document_to_pdf(self, file_path, entity):
         """Converts an office document to PDF."""
