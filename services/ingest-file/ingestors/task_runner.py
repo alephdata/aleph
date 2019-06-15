@@ -14,6 +14,14 @@ class TaskRunner(object):
     """A long running task runner that uses Redis as a task queue"""
 
     @classmethod
+    def handle_retry(cls, queue, payload, context):
+        retries = int(context.get('retries', 0))
+        if retries < settings.MAX_RETRIES:
+            log.info("Queueing failed task for re-try...")
+            context['retries'] = retries + 1
+            queue.queue_task(payload, context)
+
+    @classmethod
     def handle_task(cls, queue, payload, context):
         try:
             manager = Manager(queue, context)
@@ -21,7 +29,11 @@ class TaskRunner(object):
             log.debug("Ingest: %r", entity)
             manager.ingest_entity(entity)
             manager.close()
+        except (KeyboardInterrupt, SystemExit, RuntimeError):
+            cls.handle_retry(queue, payload, context)
+            raise
         except Exception:
+            cls.handle_retry(queue, payload, context)
             log.exception("Processing failed.")
 
         queue.task_done()
@@ -48,9 +60,9 @@ class TaskRunner(object):
 
     @classmethod
     def run(cls):
-        log.info("Processing queue (%s threads)", settings.INGESTOR_THREADS)
+        log.info("Processing queue (%s threads)", settings.NUM_THREADS)
         threads = []
-        for _ in range(settings.INGESTOR_THREADS):
+        for _ in range(settings.NUM_THREADS):
             t = threading.Thread(target=cls.process)
             t.daemon = True
             t.start()

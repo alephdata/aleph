@@ -47,7 +47,8 @@ class Manager(object):
     @property
     def dataset(self):
         if self._dataset is None:
-            self._dataset = balkhash.init(self.queue.dataset)
+            name = self.context.get('balkhash_name', self.queue.dataset)
+            self._dataset = balkhash.init(name)
         return self._dataset
 
     @property
