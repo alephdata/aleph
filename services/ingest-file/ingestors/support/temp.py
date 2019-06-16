@@ -1,13 +1,26 @@
 from uuid import uuid4
+from pathlib import Path
 
-from ingestors.util import join_path, make_directory
+from ingestors.exc import ProcessingException
 
 
 class TempFileSupport(object):
     """Provides helpers for file system related tasks."""
 
     def make_empty_directory(self):
-        return make_directory(self.manager.work_path, uuid4().hex)
+        directory_path = self.manager.work_path.joinpath(uuid4().hex)
+        directory_path.mkdir()
+        return directory_path
 
-    def make_work_file(self, file_name):
-        return join_path(self.manager.work_path, file_name)
+    def make_work_file(self, file_name, prefix=None):
+        if prefix is not None:
+            prefix = Path(prefix).resolve()
+            if self.manager.work_path not in prefix.parents:
+                raise ProcessingException("Path escalation: %r" % prefix)
+        prefix = prefix or self.manager.work_path
+        work_file = prefix.joinpath(file_name).resolve()
+        if prefix not in work_file.parents:
+            raise ProcessingException("Path escalation: %r" % file_name)
+        if not work_file.parent.exists():
+            work_file.parent.mkdir(parents=True, exist_ok=True)
+        return work_file

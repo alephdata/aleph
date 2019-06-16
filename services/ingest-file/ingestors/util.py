@@ -1,6 +1,4 @@
 import shutil
-import pathlib
-from banal import decode_path
 from normality import stringify
 from normality.cleaning import remove_unsafe_chars
 
@@ -35,21 +33,6 @@ def safe_dict(data):
         return safe
 
 
-def join_path(*args):
-    args = [decode_path(part) for part in args if part is not None]
-    return pathlib.Path(*args)
-
-
-def make_directory(*parts):
-    """Create a directory, be quiet if it already exists."""
-    file_path = join_path(*parts)
-    try:
-        file_path.mkdir(parents=True)
-    except Exception:
-        pass
-    return file_path
-
-
 def remove_directory(file_path):
     """Delete a directory, ignore errors."""
     try:
@@ -58,18 +41,19 @@ def remove_directory(file_path):
         pass
 
 
-def filter_texts(texts):
+def filter_text(text):
     """Remove text strings not worth indexing for full-text search."""
-    for text in texts:
-        if not isinstance(text, str):
-            continue
-        if not len(text.strip()):
-            continue
-        try:
-            # try to exclude numeric data from
-            # spreadsheets
-            float(text)
-            continue
-        except Exception:
-            pass
-        yield text
+    text = stringify(text)
+    if text is None:
+        return False
+    if not len(text.strip()):
+        return False
+    try:
+        # try to exclude numeric data from spreadsheets
+        float(text)
+        return False
+    except Exception:
+        pass
+    # TODO: should we check there's any alphabetic characters in the
+    # text to avoid snippets entirely comprised of non-text chars?
+    return True

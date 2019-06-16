@@ -7,7 +7,6 @@ from ingestors.ingestor import Ingestor
 from ingestors.support.package import PackageSupport
 from ingestors.support.shell import ShellSupport
 from ingestors.exc import ProcessingException
-from ingestors.util import join_path
 
 
 class SevenZipIngestor(PackageSupport, Ingestor, ShellSupport):
@@ -40,7 +39,7 @@ class SingleFilePackageIngestor(PackageSupport, Ingestor):
             ext = '.' + ext
             if file_name.endswith(ext):
                 file_name = file_name[:len(file_name) - len(ext)]
-        temp_file = join_path(temp_dir, file_name)
+        temp_file = self.make_work_file(file_name, prefix=temp_dir)
         self.unpack_file(file_path, temp_file)
 
     @classmethod
