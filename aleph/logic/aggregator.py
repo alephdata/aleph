@@ -12,5 +12,7 @@ def get_aggregator(collection):
 def drop_aggregator(collection):
     """Clear all the documents from the balkhash dataset."""
     aggregator = get_aggregator(collection)
-    aggregator.delete()
-    aggregator.close()
+    try:
+        aggregator.delete()
+    finally:
+        aggregator.close()
