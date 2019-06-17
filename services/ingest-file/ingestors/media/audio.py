@@ -3,13 +3,13 @@ from followthemoney import model
 from pymediainfo import MediaInfo
 
 from ingestors.ingestor import Ingestor
-from ingestors.media.util import MediaInfoDateMixIn
+from ingestors.support.timestamp import TimestampSupport
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class AudioIngestor(Ingestor, MediaInfoDateMixIn):
+class AudioIngestor(Ingestor, TimestampSupport):
     MIME_TYPES = [
         'audio/mpeg',
         'audio/mp3',
@@ -46,10 +46,10 @@ class AudioIngestor(Ingestor, MediaInfoDateMixIn):
                 entity.add('generator', track.writing_application)
                 entity.add('generator', track.writing_library)
                 entity.add('generator', track.publisher)
-                entity.add('authoredAt', self.parse_date(track.recorded_date))
-                entity.add('authoredAt', self.parse_date(track.tagged_date))
-                entity.add('authoredAt', self.parse_date(track.encoded_date))
-                modified_at = self.parse_date(track.file_last_modification_date)  # noqa
+                entity.add('authoredAt', self.parse_timestamp(track.recorded_date))  # noqa
+                entity.add('authoredAt', self.parse_timestamp(track.tagged_date))  # noqa
+                entity.add('authoredAt', self.parse_timestamp(track.encoded_date))  # noqa
+                modified_at = self.parse_timestamp(track.file_last_modification_date)  # noqa
                 entity.add('modifiedAt', modified_at)
                 if track.sampling_rate:
                     entity.add('samplingRate', track.sampling_rate)

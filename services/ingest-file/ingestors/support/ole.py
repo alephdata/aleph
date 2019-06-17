@@ -1,10 +1,12 @@
 import logging
 from olefile import isOleFile, OleFileIO
 
+from ingestors.support.timestamp import TimestampSupport
+
 log = logging.getLogger(__name__)
 
 
-class OLESupport(object):
+class OLESupport(TimestampSupport):
     """Provides helpers for Microsoft OLE files."""
 
     def extract_ole_metadata(self, file_path, entity):
@@ -24,11 +26,11 @@ class OLESupport(object):
 
     def extract_olefileio_metadata(self, ole, entity):
         try:
-            entity.add('authoredAt', ole.root.getctime())
+            entity.add('authoredAt', self.parse_timestamp(ole.root.getctime()))
         except Exception:
             log.warning("Failed to parse OLE ctime.")
         try:
-            entity.add('modifiedAt', ole.root.getmtime())
+            entity.add('modifiedAt', self.parse_timestamp(ole.root.getmtime()))
         except Exception:
             log.warning("Failed to parse OLE mtime.")
 
@@ -37,12 +39,12 @@ class OLESupport(object):
             entity.add('title', meta.title)
             entity.add('author', meta.author)
             entity.add('author', meta.last_saved_by)
+            entity.add('author', meta.company)
             entity.add('summary', meta.notes)
             entity.add('generator', meta.creating_application)
-            entity.add('authoredAt', meta.create_time)
-            entity.add('modifiedAt', meta.last_saved_time)
+            entity.add('authoredAt', self.parse_timestamp(meta.create_time))
+            entity.add('modifiedAt', self.parse_timestamp(meta.last_saved_time))  # noqa
             entity.add('language', meta.language)
-            # self.result.emit_name(meta.company)
 
         except Exception:
             log.exception("OLE parsing error.")

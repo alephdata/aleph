@@ -28,8 +28,9 @@ class SQLiteIngestor(Ingestor, TableSupport):
 
     def generate_rows(self, conn, table):
         cur = conn.cursor()
-        # FIXME make this a parameter somehow.
         try:
+            # FIXME make this a parameter somehow.
+            # see https://stackoverflow.com/questions/39196462
             cur.execute("SELECT * FROM %s;" % table)
         except sqlite3.OperationalError as oe:
             log.warning("SQLite error: %s", oe)

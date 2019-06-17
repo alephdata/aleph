@@ -1,20 +1,14 @@
 import logging
-from datetime import datetime
 from odf.opendocument import load
 
+from ingestors.support.timestamp import TimestampSupport
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class OpenDocumentSupport(object):
+class OpenDocumentSupport(TimestampSupport):
     """Provides helpers for Libre/Open Office tools."""
-
-    def parse_odf_date(self, date):
-        try:
-            return datetime.strptime(date, '%Y-%m-%dT%H:%M:%S')
-        except ValueError:
-            return None
 
     def parse_opendocument(self, file_path, entity):
         try:
@@ -31,9 +25,9 @@ class OpenDocumentSupport(object):
             if child.tagName == 'dc:creator':
                 entity.add('author', value)
             if child.tagName == 'dc:date':
-                entity.add('date', self.parse_odf_date(value))
+                entity.add('date', self.parse_timestamp(value))
             if child.tagName == 'meta:creation-date':
-                entity.add('authoredAt', self.parse_odf_date(value))
+                entity.add('authoredAt', self.parse_timestamp(value))
             if child.tagName == 'meta:generator':
                 entity.add('generator', value)
 

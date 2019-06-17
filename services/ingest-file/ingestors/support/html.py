@@ -1,15 +1,14 @@
-from __future__ import unicode_literals
-
 import re
 from lxml import html
 from lxml.etree import ParseError, ParserError
 from lxml.html.clean import Cleaner
 from normality import collapse_spaces
 
+from ingestors.support.timestamp import TimestampSupport
 from ingestors.exc import ProcessingException
 
 
-class HTMLSupport(object):
+class HTMLSupport(TimestampSupport):
     """Provides helpers for HTML file context extraction."""
     # this is from lxml/apihelpers.pxi
     RE_XML_ENCODING = re.compile(r'^(<\?xml[^>]+)\s+encoding\s*=\s*["\'][^"\']*["\'](\s*\?>|)', re.U)  # noqa
@@ -43,8 +42,10 @@ class HTMLSupport(object):
         entity.add('summary', self.get_meta(doc, 'description'))
         entity.add('author', self.get_meta(doc, 'author'))
         entity.add('author', self.get_meta(doc, 'og:site_name'))
-        entity.add('publishedAt', self.get_meta(doc, 'artcile:published_time'))  # noqa
-        entity.add('modifiedAt', self.get_meta(doc, 'artcile:modified_time'))
+        published_at = self.get_meta(doc, 'artcile:published_time')
+        entity.add('publishedAt', self.parse_timestamp(published_at))
+        modified_at = self.get_meta(doc, 'artcile:modified_time')
+        entity.add('modifiedAt', self.parse_timestamp(modified_at))
 
         for field in ['keywords', 'news_keywords']:
             content = self.get_meta(doc, field)
