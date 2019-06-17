@@ -19,7 +19,9 @@ class OCRSupport(CacheSupport):
             log.info('OCR: file size out of range (%d)', len(data))
             return None
 
-        key = self.cache_key('ocr', sha1(data).hexdigest())
+        languages = sorted(set(languages))
+        data_key = sha1(data).hexdigest()
+        key = self.cache_key('ocr', data_key, *languages)
         text = self.get_cache_value(key)
         if text is not None:
             log.info('OCR: %s chars cached', len(text))
