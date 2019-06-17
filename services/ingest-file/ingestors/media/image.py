@@ -1,17 +1,17 @@
 import logging
 from io import BytesIO
-from datetime import datetime
 from PIL import Image, ExifTags
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.ocr import OCRSupport
+from ingestors.support.timestamp import TimestampSupport
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class ImageIngestor(Ingestor, OCRSupport):
+class ImageIngestor(Ingestor, OCRSupport, TimestampSupport):
     """Image file ingestor class. Extracts the text from images using OCR."""
 
     MIME_TYPES = [
@@ -38,12 +38,6 @@ class ImageIngestor(Ingestor, OCRSupport):
     ]
     SCORE = 10
 
-    def parse_exif_date(self, date):
-        try:
-            return datetime.strptime(date, '%Y:%m:%d %H:%M:%S')
-        except Exception:
-            return None
-
     def extract_exif(self, img, entity):
         if not hasattr(img, '_getexif'):
             return
@@ -59,9 +53,9 @@ class ImageIngestor(Ingestor, OCRSupport):
                 log.warning("Unknown EXIF code: %s", num)
                 continue
             if tag == 'DateTimeOriginal':
-                entity.add('authoredAt', self.parse_exif_date(value))
+                entity.add('authoredAt', self.parse_timestamp(value))
             if tag == 'DateTime':
-                entity.add('date', self.parse_exif_date(value))
+                entity.add('date', self.parse_timestamp(value))
             if tag == 'Make':
                 entity.add('generator', value)
             if tag == 'Model':
@@ -81,7 +75,7 @@ class ImageIngestor(Ingestor, OCRSupport):
             text = self.extract_ocr_text(data, languages=languages)
             entity.add('bodyText', text)
         except Exception as err:
-            raise ProcessingException("Failed to load image: %r" % err)
+            raise ProcessingException("Failed to open image: %s" % err)
 
     @classmethod
     def match(cls, file_path, entity):

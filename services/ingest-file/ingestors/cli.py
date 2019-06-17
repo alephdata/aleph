@@ -17,7 +17,7 @@ def cli():
 
 
 @cli.command()
-@click.option('-s', '--sync', default=False, help='Run without threads')
+@click.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
 def process(sync):
     """Start the queue and process tasks as they come. Blocks while waiting"""
     if sync:
@@ -42,6 +42,7 @@ def killthekitten():
               help="foreign_id of the collection")
 @click.argument('path', type=click.Path(exists=True))
 def ingest(path, dataset, languages=None):
+    """Queue a set of files for ingest."""
     context = {'languages': languages}
     conn = get_redis()
     queue = ServiceQueue(conn, ServiceQueue.OP_INGEST, dataset)

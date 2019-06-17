@@ -27,6 +27,7 @@ class MboxFileIngestor(RFC822Ingestor, TempFileSupport):
                 with open(msg_path, 'wb') as fh:
                     fh.write(msg.as_bytes())
                 checksum = self.manager.archive_store(msg_path)
+                msg_path.unlink()
                 child = self.manager.make_entity('Email', parent=entity)
                 child.make_id(checksum)
                 child.add('contentHash', checksum)

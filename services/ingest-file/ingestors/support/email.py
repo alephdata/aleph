@@ -1,10 +1,6 @@
-from __future__ import unicode_literals
-
 import re
 import logging
-from time import mktime
-from datetime import datetime
-from email import utils as email_utils
+from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename
 from followthemoney.types import registry
 
@@ -13,7 +9,6 @@ from ingestors.support.temp import TempFileSupport
 from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
-
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 
 
@@ -34,10 +29,9 @@ class EmailSupport(TempFileSupport, HTMLSupport):
             if body is not None:
                 fh.write(body)
 
-        if isinstance(mime_type, bytes):
-            mime_type = mime_type.decode('utf-8')
-
         checksum = self.manager.archive_store(file_path)
+        file_path.unlink()
+
         child = self.manager.make_entity('Document', parent=entity)
         child.make_id(name, checksum)
         child.add('contentHash', checksum)
@@ -59,7 +53,7 @@ class EmailSupport(TempFileSupport, HTMLSupport):
         values = []
         text = safe_string(text)
         if text:
-            parsed = email_utils.getaddresses([text])
+            parsed = getaddresses([text])
             # If the snippet didn't parse, assume it is just a name.
             if not len(parsed):
                 return [(text, None, None)]
@@ -99,18 +93,16 @@ class EmailSupport(TempFileSupport, HTMLSupport):
 
             if field == 'in-reply-to':
                 entity.add('inReplyTo', value)
+
             if field == 'references':
                 for email_addr in value.split():
                     entity.add('inReplyTo', email_addr)
 
             if field == 'date':
-                date = value
                 try:
-                    date = email_utils.parsedate(date)
-                    date = datetime.fromtimestamp(mktime(date))
-                    entity.add('authoredAt', date)
-                except Exception as ex:
-                    log.warning("Failed to parse [%s]: %s", date, ex)
+                    entity.add('authoredAt', parsedate_to_datetime(value))
+                except Exception:
+                    log.exception("Failed to parse: %s", value)
 
             if field == 'from':
                 for (name, _, sender) in self.parse_emails(value, entity):
