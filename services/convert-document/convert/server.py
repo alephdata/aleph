@@ -45,7 +45,7 @@ async def convert(request):
                                timeout=timeout)
         out_size = os.path.getsize(out_file)
         if out_size == 0:
-            raise ConversionFailure("Could not convert.")
+            raise ConversionFailure("No PDF version was generated.")
         await asyncio.sleep(0)
 
         response = web.StreamResponse()

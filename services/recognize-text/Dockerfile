@@ -76,6 +76,8 @@ RUN apk add --no-cache --virtual=build_deps python3-dev g++ tesseract-ocr-dev cy
     pip3 install --no-cache-dir tesserocr normality grpcio protobuf && \
     apk del build_deps
 
+RUN addgroup -g 1000 -S app \
+    && adduser -u 1000 -G app -s /bin/false -S app
 ENV LANG=C
 ENV LC_ALL=C
 ENV OMP_THREAD_LIMIT=1
@@ -85,6 +87,6 @@ COPY setup.py /service/
 RUN pip3 install --no-cache-dir -q -e /service
 COPY . /service/
 
-# USER nobody:nogroup
+USER app
 EXPOSE 50000
 CMD ["python3", "/service/textrecognizer/service.py"]

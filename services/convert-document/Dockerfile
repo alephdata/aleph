@@ -13,11 +13,15 @@ RUN apt-get -qq -y update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN pip3 install --no-cache-dir -q aiohttp pantomime>=0.3.2 pyicu>=2.0.6
+RUN groupadd -r app \
+    && useradd -r -s /bin/false -g app app \
+    && mkdir -p /home/app \
+    && chown -R app:app /home/app
 RUN mkdir -p /convert
 COPY setup.py /convert
 COPY convert /convert/convert
 WORKDIR /convert
 RUN pip3 install -q -e .
 
-# USER nobody:nogroup
+USER app
 CMD ["python3", "convert/server.py"]

@@ -6,9 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name='ingest',
     version='3.1.2',
-    description="Ingestors extract useful information in a structured standard format.",  # noqa
     author="Organized Crime and Corruption Reporting Project",
-    author_email='data@occrp.org',
     packages=find_packages(exclude=['tests']),
     package_dir={'ingestors': 'ingestors'},
     include_package_data=True,
@@ -16,15 +14,6 @@ setup(
     license="MIT",
     zip_safe=False,
     keywords='ingestors',
-    classifiers=[
-        'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-    ],
     test_suite='tests',
     tests_require=[],
     entry_points={

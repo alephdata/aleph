@@ -6,16 +6,16 @@ import time
 import logging
 import subprocess
 from threading import Timer
+from tempfile import mkdtemp
 from com.sun.star.beans import PropertyValue
 from com.sun.star.connection import NoConnectException
 
 from convert.formats import Formats
 
-CONNECTION_STRING = "socket,host=localhost,port=%s,tcpNoDelay=1;urp;StarOffice.ComponentContext"  # noqa
-COMMAND = 'soffice --nologo --headless --nocrashreport --nodefault --nofirststartwizard --norestore --invisible --accept="%s"'  # noqa
+CONNECTION_STRING = "socket,host=localhost,port=6519,tcpNoDelay=1;urp;StarOffice.ComponentContext"  # noqa
+COMMAND = 'soffice "-env:UserInstallation=file:///%(path)s" --nologo --headless --nocrashreport --nodefault --nofirststartwizard --norestore --invisible --accept="%(conn)s"'  # noqa
 RESOLVER_CLASS = 'com.sun.star.bridge.UnoUrlResolver'
 DESKTOP_CLASS = 'com.sun.star.frame.Desktop'
-DEFAULT_PORT = 6519
 FORMATS = Formats()
 
 log = logging.getLogger(__name__)
@@ -38,9 +38,8 @@ class PdfConverter(object):
         ("com.sun.star.drawing.DrawingDocument", "draw_pdf_Export"),
     )
 
-    def __init__(self, host=None, port=None):
-        self.port = port or DEFAULT_PORT
-        self.connection = CONNECTION_STRING % self.port
+    def __init__(self):
+        self.connection = CONNECTION_STRING
         self.local_context = uno.getComponentContext()
         self.resolver = self._svc_create(self.local_context, RESOLVER_CLASS)
         self.process = None
@@ -59,14 +58,17 @@ class PdfConverter(object):
         # Check if the LibreOffice process has an exit code
         if self.process is None or self.process.poll() is not None:
             log.info("Starting headless LibreOffice...")
-            command = COMMAND % self.connection
+            command = COMMAND % {
+                'conn': self.connection,
+                'path': mkdtemp()
+            }
             self.process = subprocess.Popen(command,
                                             shell=True,
                                             stdin=None,
                                             stdout=None,
                                             stderr=None)
 
-        while True:
+        for attempt in range(10):
             try:
                 context = self.resolver.resolve("uno:%s" % self.connection)
                 return self._svc_create(context, DESKTOP_CLASS)
