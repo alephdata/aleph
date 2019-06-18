@@ -1,16 +1,16 @@
 import magic
 import logging
+import balkhash
 from pathlib import Path
 from tempfile import mkdtemp
-
-import balkhash
+from banal import ensure_list
 from followthemoney import model
 from servicelayer.archive import init_archive
 from servicelayer.extensions import get_extensions
 
 from ingestors.directory import DirectoryIngestor
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string
+from ingestors.util import safe_string, filter_text
 from ingestors.util import remove_directory
 from ingestors import settings
 
@@ -75,11 +75,13 @@ class Manager(object):
         self.writer.put(entity.to_dict(), fragment)
         self._emit_count += 1
 
-    def emit_text_fragment(self, entity, text, fragment):
-        doc = self.make_entity(entity.schema)
-        doc.id = entity.id
-        doc.add('indexText', text)
-        self.emit_entity(doc, fragment=str(fragment))
+    def emit_text_fragment(self, entity, texts, fragment):
+        texts = [t for t in ensure_list(texts) if filter_text(t)]
+        if len(texts):
+            doc = self.make_entity(entity.schema)
+            doc.id = entity.id
+            doc.add('indexText', texts)
+            self.emit_entity(doc, fragment=str(fragment))
 
     def auction(self, file_path, entity):
         if not entity.has('mimeType'):

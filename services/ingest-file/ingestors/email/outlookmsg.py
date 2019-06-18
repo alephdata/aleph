@@ -67,6 +67,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         bccs = self.get_identities(msg.getField('0E02'))
         self.apply_identities(entity, bccs, 'recipients', 'bcc')
 
+        self.resolve_message_ids(entity)
         for attachment in msg.attachments:
             name = safe_string(attachment.longFilename)
             name = name or safe_string(attachment.shortFilename)

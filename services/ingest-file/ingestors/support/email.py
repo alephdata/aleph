@@ -7,6 +7,7 @@ from normality import safe_filename, stringify, ascii_text
 from followthemoney.types import registry
 
 from ingestors.support.html import HTMLSupport
+from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.util import safe_string
 
@@ -34,7 +35,7 @@ class EmailIdentity(object):
             manager.emit_entity(self.entity)
 
 
-class EmailSupport(TempFileSupport, HTMLSupport):
+class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
     """Extract metadata from email messages."""
 
     def ingest_attachment(self, entity, name, mime_type, body):
@@ -96,19 +97,40 @@ class EmailSupport(TempFileSupport, HTMLSupport):
             entity.add('namesMentioned', identity.name)
             entity.add('emailMentioned', identity.email)
 
+    def resolve_message_ids(self, entity):
+        for message_id in entity.get('messageId'):
+            if len(message_id) <= 5:
+                continue
+            key = self.cache_key('msid', message_id)
+            self.set_cache_value(key, entity.id)
+            rev_key = self.cache_key('mrid', message_id)
+            for entity_id in self.get_cache_set(rev_key):
+                email = self.manager.make_entity('Email')
+                email.id = entity_id
+                email.add('inReplyToEmail', message_id)
+                self.manager.emit_entity(email, fragment=message_id)
+
+        for message_id in entity.get('inReplyTo'):
+            if len(message_id) <= 5:
+                continue
+            key = self.cache_key('msid', message_id)
+            entity.add('inReplyToEmail', self.get_cache_value(key))
+            rev_key = self.cache_key('mrid', message_id)
+            self.add_cache_set(rev_key, entity.id)
+
     def extract_msg_headers(self, entity, msg):
         """Parse E-Mail headers into FtM properties."""
         entity.add('indexText', msg.values())
         entity.add('subject', self.get_header(msg, 'Subject'))
         entity.add('date', self.get_dates(msg, 'Date'))
-        entity.add('messageId', self.get_header(msg, 'Message-ID'))
-        entity.add('inReplyTo', self.get_header(msg, 'In-Reply-To'))
         entity.add('mimeType', self.get_header(msg, 'Content-Type'))
         entity.add('threadTopic', self.get_header(msg, 'Thread-Topic'))
         entity.add('generator', self.get_header(msg, 'X-Mailer'))
         entity.add('language', self.get_header(msg, 'Content-Language'))
         entity.add('keywords', self.get_header(msg, 'Keywords'))
         entity.add('summary', self.get_header(msg, 'Comments'))
+        entity.add('messageId', self.get_header(msg, 'Message-ID'))
+        entity.add('inReplyTo', self.get_header(msg, 'In-Reply-To'))
 
         return_path = self.get_header_identities(msg, 'Return-Path')
         self.apply_identities(entity, return_path, 'emitters')

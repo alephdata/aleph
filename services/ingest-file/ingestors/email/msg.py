@@ -51,6 +51,7 @@ class RFC822Ingestor(Ingestor, EmailSupport):
 
         self.extract_msg_headers(entity, msg)
         self.extract_msg_body(entity, msg)
+        self.resolve_message_ids(entity)
 
         for part in msg.walk():
             self.extract_msg_body(entity, part)
