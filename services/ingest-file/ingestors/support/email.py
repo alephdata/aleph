@@ -1,7 +1,8 @@
-import re
 import logging
-from email.utils import parsedate_to_datetime, getaddresses
-from normality import safe_filename
+from banal import ensure_list
+from email.utils import parsedate_to_datetime
+from email.utils import getaddresses, formataddr
+from normality import safe_filename, stringify, ascii_text
 from followthemoney.types import registry
 
 from ingestors.support.html import HTMLSupport
@@ -9,7 +10,27 @@ from ingestors.support.temp import TempFileSupport
 from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
-EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
+
+
+class EmailIdentity(object):
+
+    def __init__(self, manager, name, email):
+        self.email = ascii_text(stringify(email))
+        self.name = stringify(name)
+        if not registry.email.validate(self.email):
+            self.email = None
+        if registry.email.validate(self.name):
+            self.email = self.email or ascii_text(self.name)
+            self.name = None
+        self.label = stringify(formataddr((self.name or '', self.email or '')))
+        self.entity = None
+        if self.email is not None:
+            key = self.email.lower().strip()
+            self.entity = manager.make_entity('LegalEntity')
+            self.entity.make_id(key)
+            self.entity.add('name', self.name)
+            self.entity.add('email', self.email)
+            manager.emit_entity(self.entity)
 
 
 class EmailSupport(TempFileSupport, HTMLSupport):
@@ -39,79 +60,70 @@ class EmailSupport(TempFileSupport, HTMLSupport):
         child.add('mimeType', mime_type)
         self.manager.queue_entity(child)
 
-    def check_email(self, text):
-        """Does it roughly look like an email?"""
-        if text is None:
-            return False
-        if EMAIL_REGEX.match(text):
-            return True
-        return False
-
-    def parse_emails(self, text, entity):
-        """Parse an email list with the side effect of adding them to the
-        relevant result lists."""
+    def get_header(self, msg, *headers):
         values = []
-        text = safe_string(text)
-        if text:
-            parsed = getaddresses([text])
-            # If the snippet didn't parse, assume it is just a name.
-            if not len(parsed):
-                return [(text, None, None)]
-            for name, email in parsed:
-                if not self.check_email(email):
-                    email = None
-
-                if self.check_email(name):
-                    email = email or name
-                    name = None
-
-                if email:
-                    legal_entity = self.manager.make_entity('LegalEntity')
-                    legal_entity.make_id(email)
-                    legal_entity.add('name', name)
-                    legal_entity.add('email', email)
-                    self.manager.emit_entity(legal_entity)
-
-                    entity.add('emailMentioned', email)
-                    entity.add('namesMentioned', name)
-                    values.append((name, email, legal_entity))
+        for header in headers:
+            for value in ensure_list(msg.get_all(header)):
+                values.append(value)
         return values
 
-    def extract_headers_metadata(self, entity, headers):
-        headers = dict(headers)
-        entity.add('headers', registry.json.pack(dict(headers)))
-        headers = [(safe_string(k), safe_string(v)) for k, v in headers.items()]  # noqa
-        for field, value in headers:
-            field = field.lower()
+    def get_dates(self, msg, *headers):
+        dates = []
+        for value in self.get_header(msg, *headers):
+            try:
+                dates.append(parsedate_to_datetime(value))
+            except Exception:
+                log.debug("Failed to parse: %s", value)
+        return dates
 
-            if field == 'subject':
-                entity.add('title', value)
-                entity.add('subject', value)
+    def get_identities(self, values):
+        values = [v for v in ensure_list(values) if v is not None]
+        for (name, email) in getaddresses(values):
+            yield EmailIdentity(self.manager, name, email)
 
-            if field == 'message-id':
-                entity.add('messageId', value)
+    def get_header_identities(self, msg, *headers):
+        yield from self.get_identities(self.get_header(msg, *headers))
 
-            if field == 'in-reply-to':
-                entity.add('inReplyTo', value)
+    def apply_identities(self, entity, identities, eprop=None, lprop=None):
+        for identity in ensure_list(identities):
+            if eprop is not None:
+                entity.add(eprop, identity.entity)
+            if lprop is not None:
+                entity.add(lprop, identity.label)
+            entity.add('namesMentioned', identity.name)
+            entity.add('emailMentioned', identity.email)
 
-            if field == 'references':
-                for email_addr in value.split():
-                    entity.add('inReplyTo', email_addr)
+    def extract_msg_headers(self, entity, msg):
+        """Parse E-Mail headers into FtM properties."""
+        entity.add('indexText', msg.values())
+        entity.add('subject', self.get_header(msg, 'Subject'))
+        entity.add('date', self.get_dates(msg, 'Date'))
+        entity.add('messageId', self.get_header(msg, 'Message-ID'))
+        entity.add('inReplyTo', self.get_header(msg, 'In-Reply-To'))
+        entity.add('mimeType', self.get_header(msg, 'Content-Type'))
+        entity.add('threadTopic', self.get_header(msg, 'Thread-Topic'))
+        entity.add('generator', self.get_header(msg, 'X-Mailer'))
+        entity.add('language', self.get_header(msg, 'Content-Language'))
+        entity.add('keywords', self.get_header(msg, 'Keywords'))
+        entity.add('summary', self.get_header(msg, 'Comments'))
 
-            if field == 'date':
-                try:
-                    entity.add('authoredAt', parsedate_to_datetime(value))
-                except Exception:
-                    log.exception("Failed to parse: %s", value)
+        return_path = self.get_header_identities(msg, 'Return-Path')
+        self.apply_identities(entity, return_path, 'emitters')
 
-            if field == 'from':
-                for (name, _, sender) in self.parse_emails(value, entity):
-                    entity.add('author', name)
-                    if sender:
-                        entity.add('sender', sender)
+        reply_to = self.get_header_identities(msg, 'Reply-To')
+        self.apply_identities(entity, reply_to, 'emitters')
 
-            if field in ['to', 'cc', 'bcc']:
-                entity.add(field, value)
-                for (_, _, receipient) in self.parse_emails(value, entity):
-                    if receipient:
-                        entity.add('recipients', receipient)
+        sender = self.get_header_identities(msg, 'Sender', 'X-Sender')
+        self.apply_identities(entity, sender, 'emitters', 'sender')
+
+        froms = self.get_header_identities(msg, 'From', 'X-From')
+        self.apply_identities(entity, froms, 'emitters', 'from')
+
+        tos = self.get_header_identities(msg, 'To', 'Resent-To')
+        self.apply_identities(entity, tos, 'recipients', 'to')
+
+        ccs = self.get_header_identities(msg, 'CC', 'Cc', 'Resent-Cc')
+        self.apply_identities(entity, ccs, 'recipients', 'cc')
+
+        bccs = self.get_header_identities(msg, 'Bcc', 'BCC', 'Resent-Bcc')
+        self.apply_identities(entity, bccs, 'recipients', 'bcc')

@@ -6,10 +6,10 @@ from email.parser import Parser
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
-from ingestors.support.email import EmailSupport
+from ingestors.support.email import EmailSupport, EmailIdentity
 from ingestors.support.ole import OLESupport
 from ingestors.email.outlookmsg_lib import Message
-from ingestors.util import safe_string, safe_dict
+from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -18,51 +18,56 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
     MIME_TYPES = [
         'appliation/msg',
         'appliation/x-msg',
-        'message/rfc822'
+        'msg/rfc822'
     ]
     EXTENSIONS = ['msg']
     SCORE = 10
 
-    def _parse_headers(self, entity, message):
-        headers = message.getField('007D')
-        if headers is not None:
-            try:
-                msg = Parser().parsestr(headers, headersonly=True)
-                self.extract_headers_metadata(entity, msg.items())
-                return
-            except Exception:
-                log.warning("Cannot parse headers: %s" % headers)
-
-        headers = safe_dict({
-            'Subject': message.getField('0037'),
-            'BCC': message.getField('0E02'),
-            'CC': message.getField('0E03'),
-            'To': message.getField('0E04'),
-            'From': message.getField('1046'),
-            'Message-ID': message.getField('1035'),
-        })
-        self.extract_headers_metadata(entity, headers)
+    def get_identity(self, name, email):
+        return EmailIdentity(self.manager, name, email)
 
     def ingest(self, file_path, entity):
         entity.schema = model.get('Email')
-        message = Message(file_path)
-        self._parse_headers(entity, message)
-        entity.add('bodyText', message.getField('1000'))
-        entity.add('messageId', message.getField('1035'))
+        msg = Message(file_path)
+        self.extract_olefileio_metadata(msg, entity)
 
-        # all associated person names, i.e. sender, recipient etc.
-        NAME_FIELDS = ['0C1A', '0E04', '0040', '004D']
-        EMAIL_FIELDS = ['0C1F', '0076', '0078', '1046', '3003',
-                        '0065', '3FFC', '403E']
-        for field in NAME_FIELDS + EMAIL_FIELDS:
-            self.parse_emails(message.getField(field), entity)
+        # This property information was sourced from
+        # http://www.fileformat.info/format/outlookmsg/index.htm
+        # on 2013-07-22.
+        headers = msg.getField('007D')
+        if headers is not None:
+            try:
+                msg_headers = Parser().parsestr(headers, headersonly=True)
+                self.extract_msg_headers(entity, msg_headers)
+            except Exception:
+                log.exception("Cannot parse Outlook-stored headers")
 
-        entity.add('subject', message.getField('0037'))
-        entity.add('summary', message.getField('0070'))
-        entity.add('author', message.getField('0C1A'))
+        entity.add('bodyText', msg.getField('1000'))
+        entity.add('messageId', msg.getField('1035'))
+        entity.add('subject', msg.getField('0037'))
+        entity.add('threadTopic', msg.getField('0070'))
 
-        self.extract_olefileio_metadata(message, entity)
-        for attachment in message.attachments:
+        # sender name and email
+        sender = self.get_identity(msg.getField('0C1A'), msg.getField('0C1F'))
+        self.apply_identities(entity, sender, 'emitters', 'sender')
+
+        # received by
+        sender = self.get_identity(msg.getField('0040'), msg.getField('0076'))
+        self.apply_identities(entity, sender, 'recipients')
+
+        froms = self.get_identities(msg.getField('1046'))
+        self.apply_identities(entity, froms, 'emitters', 'from')
+
+        tos = self.get_identities(msg.getField('0E04'))
+        self.apply_identities(entity, tos, 'recipients', 'to')
+
+        ccs = self.get_identities(msg.getField('0E03'))
+        self.apply_identities(entity, ccs, 'recipients', 'cc')
+
+        bccs = self.get_identities(msg.getField('0E02'))
+        self.apply_identities(entity, bccs, 'recipients', 'bcc')
+
+        for attachment in msg.attachments:
             name = safe_string(attachment.longFilename)
             name = name or safe_string(attachment.shortFilename)
             self.ingest_attachment(entity, name,

@@ -16,23 +16,6 @@ def safe_string(data, encoding_default='utf-8', encoding=None):
     return data
 
 
-def safe_dict(data):
-    """Clean a dictionary to make sure it contains only valid,
-    non-null keys and values."""
-    if data is None:
-        return
-
-    safe = {}
-    for key, value in data.items():
-        key = safe_string(key)
-        value = safe_string(value)
-        if key is not None and value is not None:
-            safe[key] = value
-
-    if len(safe):
-        return safe
-
-
 def remove_directory(file_path):
     """Delete a directory, ignore errors."""
     try:

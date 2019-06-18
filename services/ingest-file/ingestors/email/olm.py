@@ -1,20 +1,16 @@
-from __future__ import unicode_literals
-
-import time
 import shutil
 import logging
 import zipfile
 import pathlib
 from lxml import etree
-from email import utils
-from datetime import datetime
+from pprint import pprint  # noqa
 from normality import safe_filename
 from followthemoney import model
-from followthemoney.types import registry
 
 from ingestors.ingestor import Ingestor
-from ingestors.support.email import EmailSupport
 from ingestors.support.temp import TempFileSupport
+from ingestors.support.timestamp import TimestampSupport
+from ingestors.support.email import EmailSupport, EmailIdentity
 from ingestors.exc import ProcessingException
 from ingestors.util import safe_string
 
@@ -110,41 +106,20 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
             raise ProcessingException('Invalid OLM file.')
 
 
-class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport):
+class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupport):  # noqa
     MIME_TYPES = [MIME]
     EXTENSIONS = []
     SCORE = 15
 
-    def get_email_addresses(self, doc, tag):
+    def get_contacts(self, doc, tag):
         path = './%s/emailAddress' % tag
         for address in doc.findall(path):
-            email = safe_string(address.get('OPFContactEmailAddressAddress'))
-            if not registry.email.validate(email):
-                email = None
-            self.result.emit_email(email)
-            name = safe_string(address.get('OPFContactEmailAddressName'))
-            if registry.email.validate(name):
-                name = None
-            if name or email:
-                yield (name, email)
+            name = address.get('OPFContactEmailAddressName')
+            email = address.get('OPFContactEmailAddressAddress')
+            yield EmailIdentity(self.manager, name, email)
 
-    def get_contacts(self, doc, tag, display=False):
-        emails = []
-        for (name, email) in self.get_email_addresses(doc, tag):
-            if name is None:
-                emails.append(email)
-            elif email is None:
-                emails.append(name)
-            else:
-                emails.append('%s <%s>' % (name, email))
-
-        if len(emails):
-            return '; '.join(emails)
-
-    def get_contact_name(self, doc, tag):
-        for (name, email) in self.get_email_addresses(doc, tag):
-            if name is not None:
-                return name
+    def get_date(self, props, tag):
+        return self.parse_timestamp(props.pop(tag, None))
 
     def ingest(self, file_path, entity):
         entity.schema = model.get('Email')
@@ -159,38 +134,33 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport):
         email = doc.find('//email')
         props = email.getchildren()
         props = {c.tag: safe_string(c.text) for c in props if c.text}
-        headers = {
-            'Subject': props.get('OPFMessageCopySubject'),
-            'Message-ID': props.pop('OPFMessageCopyMessageID', None),
-            'From': self.get_contacts(email, 'OPFMessageCopyFromAddresses'),
-            'Sender': self.get_contacts(email, 'OPFMessageCopySenderAddress'),
-            'To': self.get_contacts(email, 'OPFMessageCopyToAddresses'),
-            'CC': self.get_contacts(email, 'OPFMessageCopyCCAddresses'),
-            'BCC': self.get_contacts(email, 'OPFMessageCopyBCCAddresses'),
-        }
-        date = props.get('OPFMessageCopySentTime')
-        if date is not None:
-            date = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S')
-            date = time.mktime(date.timetuple())
-            headers['Date'] = utils.formatdate(date)
 
-        self.extract_headers_metadata(entity, headers)
-
-        entity.add('title', props.pop('OPFMessageCopySubject', None))
-        entity.add('title', props.pop('OPFMessageCopyThreadTopic', None))
-        for tag in ('OPFMessageCopyFromAddresses',
-                    'OPFMessageCopySenderAddress'):
-            entity.add('author', self.get_contact_name(email, tag))
-
+        entity.add('subject', props.pop('OPFMessageCopySubject', None))
+        entity.add('threadTopic', props.pop('OPFMessageCopyThreadTopic', None))
         entity.add('summary', props.pop('OPFMessageCopyPreview', None))
-        entity.add('authoredAt', props.pop('OPFMessageCopySentTime', None))
-        entity.add('modifiedAt', props.pop('OPFMessageCopyModDate', None))
+        entity.add('messageId', props.pop('OPFMessageCopyMessageID', None))
+        entity.add('date', self.get_date(props, 'OPFMessageCopySentTime'))
+        entity.add('modifiedAt', self.get_date(props, 'OPFMessageCopyModDate'))
 
-        body = props.pop('OPFMessageCopyBody', None)
+        senders = self.get_contacts(email, 'OPFMessageCopySenderAddress')
+        self.apply_identities(entity, senders, 'emitters', 'sender')
+
+        froms = self.get_contacts(email, 'OPFMessageCopyFromAddresses')
+        self.apply_identities(entity, froms, 'emitters', 'from')
+
+        tos = self.get_contacts(email, 'OPFMessageCopyToAddresses')
+        self.apply_identities(entity, tos, 'recipients', 'to')
+
+        ccs = self.get_contacts(email, 'OPFMessageCopyCCAddresses')
+        self.apply_identities(entity, ccs, 'recipients', 'cc')
+
+        bccs = self.get_contacts(email, 'OPFMessageCopyBCCAddresses')
+        self.apply_identities(entity, bccs, 'recipients', 'bcc')
+
+        entity.add('bodyText', props.pop('OPFMessageCopyBody', None))
         html = props.pop('OPFMessageCopyHTMLBody', None)
-
         has_html = '1E0' == props.pop('OPFMessageGetHasHTML', None)
         if has_html and safe_string(html):
             self.extract_html_content(entity, html)
-        else:
-            entity.add('bodyText', body)
+
+        pprint(props)
