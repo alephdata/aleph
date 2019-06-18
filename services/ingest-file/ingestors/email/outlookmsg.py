@@ -20,9 +20,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         'appliation/x-msg',
         'message/rfc822'
     ]
-    EXTENSIONS = [
-        'msg'
-    ]
+    EXTENSIONS = ['msg']
     SCORE = 10
 
     def _parse_headers(self, entity, message):
@@ -59,8 +57,8 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         for field in NAME_FIELDS + EMAIL_FIELDS:
             self.parse_emails(message.getField(field), entity)
 
-        entity.add('title', message.getField('0037'))
-        entity.add('title', message.getField('0070'))
+        entity.add('subject', message.getField('0037'))
+        entity.add('summary', message.getField('0070'))
         entity.add('author', message.getField('0C1A'))
 
         self.extract_olefileio_metadata(message, entity)

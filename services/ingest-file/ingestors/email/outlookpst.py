@@ -11,8 +11,7 @@ log = logging.getLogger(__name__)
 
 
 class OutlookPSTIngestor(Ingestor, TempFileSupport, OLESupport, ShellSupport):
-    MIME_DEFAULT = 'application/vnd.ms-outlook'
-    MIME_TYPES = [MIME_DEFAULT]
+    MIME_TYPES = ['application/vnd.ms-outlook']
     EXTENSIONS = ['pst', 'ost', 'pab']
     BASE_SCORE = 5
     COMMAND_TIMEOUT = 12 * 60 * 60

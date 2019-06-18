@@ -4,13 +4,13 @@ import time
 import shutil
 import logging
 import zipfile
+import pathlib
 from lxml import etree
 from email import utils
 from datetime import datetime
-import pathlib
-
 from normality import safe_filename
 from followthemoney import model
+from followthemoney.types import registry
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.email import EmailSupport
@@ -119,11 +119,11 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport):
         path = './%s/emailAddress' % tag
         for address in doc.findall(path):
             email = safe_string(address.get('OPFContactEmailAddressAddress'))
-            if not self.check_email(email):
+            if not registry.email.validate(email):
                 email = None
             self.result.emit_email(email)
             name = safe_string(address.get('OPFContactEmailAddressName'))
-            if self.check_email(name):
+            if registry.email.validate(name):
                 name = None
             if name or email:
                 yield (name, email)
