@@ -1,3 +1,4 @@
+import types
 import logging
 from banal import ensure_list
 from email.utils import parsedate_to_datetime
@@ -85,6 +86,8 @@ class EmailSupport(TempFileSupport, HTMLSupport):
         yield from self.get_identities(self.get_header(msg, *headers))
 
     def apply_identities(self, entity, identities, eprop=None, lprop=None):
+        if isinstance(identities, types.GeneratorType):
+            identities = list(identities)
         for identity in ensure_list(identities):
             if eprop is not None:
                 entity.add(eprop, identity.entity)

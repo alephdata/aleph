@@ -29,6 +29,9 @@ def handle_task(queue, payload, context):
     log.info("Task [%s]: %s (begin)", queue.dataset, queue.operation)
     try:
         collection = Collection.by_foreign_id(queue.dataset)
+        if collection is None:
+            log.error("Collection not found: %s", queue.dataset)
+            return
         if queue.operation == OP_INDEX:
             index_aggregate(queue, collection)
         if queue.operation == OP_BULKLOAD:
