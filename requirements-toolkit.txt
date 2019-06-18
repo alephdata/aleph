@@ -3,7 +3,7 @@
 banal==0.4.2
 urlnormalizer==1.2.3
 followthemoney==1.13.2
-followthemoney-util==1.13.2
+followthemoney-util==1.13.3
 fingerprints==0.6.5
 servicelayer[google]==1.3.2
 servicelayer[amazon]==1.3.2

@@ -57,11 +57,11 @@ class PdfConverter(object):
     def connect(self):
         # Check if the LibreOffice process has an exit code
         if self.process is None or self.process.poll() is not None:
-            log.info("Starting headless LibreOffice...")
             command = COMMAND % {
                 'conn': self.connection,
                 'path': mkdtemp()
             }
+            log.info("Running: %s", command)
             self.process = subprocess.Popen(command,
                                             shell=True,
                                             stdin=None,

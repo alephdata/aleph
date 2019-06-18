@@ -16,6 +16,7 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('aiohttp').setLevel(logging.WARNING)
 log = logging.getLogger('convert')
 converter = PdfConverter()
+converter.connect()
 
 
 async def info(request):
@@ -32,6 +33,7 @@ async def convert(request):
     os.close(fd)
     fd, out_file = mkstemp(suffix='.pdf')
     os.close(fd)
+    log.info('Source: %s, target: %s', upload_file, out_file)
 
     try:
         with open(upload_file, 'wb') as fh:
