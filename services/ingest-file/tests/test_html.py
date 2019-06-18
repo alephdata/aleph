@@ -15,7 +15,7 @@ class HTMLIngestorTest(TestCase):
         self.manager.ingest(fixture_path, entity)
 
         self.assertEqual(
-            entity.first('bodyText'),
+            entity.first('indexText'),
             'Ingestors Test web page. The GitHub page.'  # noqa
         )
         self.assertEqual(entity.first('title'), u'Ingestors Title')
@@ -29,7 +29,7 @@ class HTMLIngestorTest(TestCase):
 
         self.assertIn(
             'Creating Practical Resources to Improve E-Discovery',
-            entity.first('bodyText'),
+            entity.first('indexText'),
         )
         self.assertEqual(entity.first('title'),
                          u'EDRM Micro Datasets \xab EDRM')
@@ -42,7 +42,7 @@ class HTMLIngestorTest(TestCase):
         fixture_path, entity = self.fixture(u'empty_5_doc_pages.html')
         self.manager.ingest(fixture_path, entity)
 
-        self.assertEqual(entity.first('bodyText'), None)
+        self.assertEqual(entity.first('indexText'), None)
         self.assertIsNone(entity.first('title'))
         self.assertEqual(entity.get('keywords'), [])
         self.assertEqual(entity.first('processingStatus'),

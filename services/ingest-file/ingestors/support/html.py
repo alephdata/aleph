@@ -67,7 +67,7 @@ class HTMLSupport(TimestampSupport):
                 yield text
         yield el.tail or ' '
 
-    def extract_html_content(self, entity, html_body, fix_html=True):
+    def extract_html_content(self, entity, html_body, extract_metadata=True):
         """Ingestor implementation."""
         if html_body is None:
             return
@@ -82,8 +82,10 @@ class HTMLSupport(TimestampSupport):
         except (ParserError, ParseError, ValueError):
             raise ProcessingException("HTML could not be parsed.")
 
-        self.extract_html_header(entity, doc)
+        if extract_metadata:
+            self.extract_html_header(entity, doc)
         self.cleaner(doc)
+        entity.add('bodyHtml', html_body)
         text = self.extract_html_text(doc)
-        entity.set('bodyText', text)
-        entity.set('bodyHtml', html_body)
+        entity.add('indexText', text)
+        return text

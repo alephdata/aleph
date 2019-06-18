@@ -25,6 +25,21 @@ class RFC822Ingestor(Ingestor, EmailSupport):
     ]
     SCORE = 7
 
+    def extract_msg_body(self, entity, part):
+        if part.is_attachment() or part.is_multipart():
+            return
+        mime_type = normalize_mimetype(part.get_content_type())
+        payload = part.get_payload(decode=True)
+        charset = part.get_content_charset()
+        if charset is not None:
+            # TODO: do we want to do chardet after decoding fails?
+            payload = payload.decode(charset, 'replace')
+
+        if 'text/html' in mime_type:
+            self.extract_html_content(entity, payload, extract_metadata=False)
+        if 'text/plain' in mime_type:
+            entity.add('bodyText', payload)
+
     def ingest(self, file_path, entity):
         entity.schema = model.get('Email')
         try:
@@ -35,23 +50,15 @@ class RFC822Ingestor(Ingestor, EmailSupport):
             raise ProcessingException('Cannot parse email: %s' % err)
 
         self.extract_msg_headers(entity, msg)
+        self.extract_msg_body(entity, msg)
 
         for part in msg.walk():
-            mime_type = normalize_mimetype(part.get_content_type())
-            payload = part.get_payload(decode=True)
+            self.extract_msg_body(entity, part)
             if part.is_attachment():
+                mime_type = normalize_mimetype(part.get_content_type())
+                payload = part.get_payload(decode=True)
                 file_name = part.get_filename()
                 self.ingest_attachment(entity,
                                        file_name,
                                        mime_type,
                                        payload)
-            if not part.is_attachment() and not part.is_multipart():
-                charset = part.get_content_charset()
-                if charset is not None:
-                    # TODO: do we want to do chardet after decoding fails?
-                    payload = payload.decode(charset, 'replace')
-
-                if 'text/html' in mime_type:
-                    entity.set('bodyHtml', payload)
-                if 'text/plain' in mime_type:
-                    entity.set('bodyText', payload)

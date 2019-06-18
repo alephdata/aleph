@@ -161,6 +161,4 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
         html = props.pop('OPFMessageCopyHTMLBody', None)
         has_html = '1E0' == props.pop('OPFMessageGetHasHTML', None)
         if has_html and safe_string(html):
-            self.extract_html_content(entity, html)
-
-        pprint(props)
+            self.extract_html_content(entity, html, extract_metadata=False)

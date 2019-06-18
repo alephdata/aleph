@@ -10,7 +10,7 @@ class OutlookMsgTest(TestCase):
         fixture_path, entity = self.fixture('piste.msg')
         self.manager.ingest(fixture_path, entity)
 
-        self.assertEqual(entity.first('title'), 'Ab auf die Piste!')
+        self.assertEqual(entity.first('subject'), 'Ab auf die Piste!')
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
