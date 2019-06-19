@@ -72,5 +72,9 @@ def ingest_entity(collection, proxy):
         return
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     queue = get_queue(collection, OP_INGEST)
-    context = {'languages': collection.languages}
+    from aleph.logic.aggregator import get_aggregator_name
+    context = {
+        'languages': collection.languages,
+        'balkhash_name': get_aggregator_name(collection)
+    }
     queue.queue_task(proxy.to_dict(), context)

@@ -99,7 +99,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
 
     def resolve_message_ids(self, entity):
         for message_id in entity.get('messageId'):
-            if len(message_id) <= 5:
+            if len(message_id) <= 4:
                 continue
             key = self.cache_key('msid', message_id)
             self.set_cache_value(key, entity.id)
@@ -111,7 +111,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 self.manager.emit_entity(email, fragment=message_id)
 
         for message_id in entity.get('inReplyTo'):
-            if len(message_id) <= 5:
+            if len(message_id) <= 4:
                 continue
             key = self.cache_key('msid', message_id)
             entity.add('inReplyToEmail', self.get_cache_value(key))

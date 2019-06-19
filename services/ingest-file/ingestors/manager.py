@@ -143,7 +143,7 @@ class Manager(object):
     def finalize(self, entity):
         self.emit_entity(entity)
         self.writer.flush()
-        log.debug("Emitted %d entities", self._emit_count)
+        log.debug("Emitted %d entities to %r", self._emit_count, self.dataset)
         self._emit_count = 0
 
     def delegate(self, ingestor_class, file_path, entity):

@@ -22,20 +22,7 @@ class TaskRunner(object):
             queue.queue_task(payload, context)
 
     @classmethod
-    def handle_task(cls, queue, payload, context):
-        try:
-            manager = Manager(queue, context)
-            entity = model.get_proxy(payload)
-            log.debug("Ingest: %r", entity)
-            manager.ingest_entity(entity)
-            manager.close()
-        except (KeyboardInterrupt, SystemExit, RuntimeError):
-            cls.handle_retry(queue, payload, context)
-            raise
-        except Exception:
-            cls.handle_retry(queue, payload, context)
-            log.exception("Processing failed.")
-
+    def handle_done(cls, queue):
         queue.task_done()
         if queue.is_done():
             log.info("Ingest %r finished, queue index...", queue.dataset)
@@ -45,6 +32,24 @@ class TaskRunner(object):
                                  priority=queue.priority)
             index.queue_task({}, {})
             queue.remove()
+
+    @classmethod
+    def handle_task(cls, queue, payload, context):
+        try:
+            manager = Manager(queue, context)
+            entity = model.get_proxy(payload)
+            log.debug("Ingest: %r", entity)
+            manager.ingest_entity(entity)
+            manager.close()
+            cls.handle_done(queue)
+        except (KeyboardInterrupt, SystemExit, RuntimeError):
+            cls.handle_retry(queue, payload, context)
+            cls.handle_done(queue)
+            raise
+        except Exception:
+            cls.handle_retry(queue, payload, context)
+            cls.handle_done(queue)
+            log.exception("Processing failed.")
 
     @classmethod
     def process(cls, timeout=5):

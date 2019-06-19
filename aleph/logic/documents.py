@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 def crawl_directory(collection, path, parent=None):
     """Crawl the contents of the given path."""
     content_hash = None
-    if path.is_file():
+    if not path.is_dir():
         content_hash = archive.archive_file(path)
     foreign_id = path.name
     if parent is not None:
