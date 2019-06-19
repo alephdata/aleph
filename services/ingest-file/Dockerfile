@@ -40,6 +40,12 @@ COPY . /ingestors
 WORKDIR /ingestors
 RUN pip3 install --no-cache-dir -e /ingestors
 
-ENV ARCHIVE_PATH=/data
+ENV ARCHIVE_TYPE=file \
+    ARCHIVE_PATH=/data \
+    BALKHASH_BACKEND=postgresql \
+    BALKHASH_DATABASE_URI=postgresql://aleph:aleph@postgres/aleph \
+    REDIS_URL=redis://redis:6379/0 \
+    OCR_SERVICE=recognize-text:50000 \
+    UNOSERVICE_URL=http://convert-document:3000/convert
 
 CMD ingestors process
