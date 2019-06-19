@@ -45,7 +45,7 @@ class PDFIngestorTest(TestCase):
         fixture_path, entity = self.fixture('very_complex_math_book.pdf')
         self.manager.ingest(fixture_path, entity)
 
-        self.assertEqual(len(self.manager.entities), 588*2 + 1)
+        self.assertEqual(len(self.manager.entities), 1176)
         self.assertIn(
             'ALGEBRA \nABSTRACT AND CONCRETE \nE DITION 2.6',
             self.manager.entities[0].first('bodyText')

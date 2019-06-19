@@ -79,4 +79,4 @@ class DocumentIngestorTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-        self.assertEqual(len(self.manager.entities), 2 * 1 + 1)
+        self.assertEqual(len(self.manager.entities), 2)
