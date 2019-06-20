@@ -91,6 +91,7 @@ class EmailViewer extends React.Component {
                 <td>{headers.bcc}</td>
               </tr>
             )}
+            {this.headerProperty('inReplyToEmail')}
           </tbody>
         </table>
       </div>
