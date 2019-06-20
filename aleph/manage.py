@@ -15,7 +15,7 @@ from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import queue_worker
 from aleph.queues import get_status, queue_task, cancel_queue, ingest_wait
-from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF, OP_INDEX
+from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.collections import index_collection
 from aleph.logic.collections import create_collection, update_collection
@@ -88,16 +88,10 @@ def flushdeleted():
 
 
 @manager.command
-def process(foreign_id):
-    """Re-process documents in the given collection."""
-    collection = get_collection(foreign_id)
-    queue_task(collection, OP_PROCESS)
-
-
-@manager.command
-@manager.option('-f', '--foreign_id')
-@manager.option('-e', '--entities', default=False)
-def repair(foreign_id=None, entities=False):
+@manager.option('-f', '--foreign-id')
+@manager.option('-p', '--process', is_flag=True, default=False)
+@manager.option('-i', '--ingest', is_flag=True, default=False)
+def update(foreign_id=None, process=False, ingest=False):
     """Re-index all the collections and entities."""
     update_roles()
     q = Collection.all(deleted=True)
@@ -106,8 +100,11 @@ def repair(foreign_id=None, entities=False):
     for collection in q:
         refresh_collection(collection.id)
         index_collection(collection)
-        if entities and collection.deleted_at is None:
-            queue_task(collection, OP_INDEX)
+        if collection.deleted_at is not None:
+            continue
+        if process or ingest:
+            payload = {'ingest': ingest}
+            queue_task(collection, OP_PROCESS, payload=payload)
 
 
 @manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa

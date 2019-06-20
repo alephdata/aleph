@@ -48,8 +48,10 @@ def index_aggregate(queue, collection, sync=False):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
-        index_entities(collection, aggregator.iterate(),
+        index_entities(collection,
+                       aggregator.iterate(),
                        sync=sync, queue=queue)
+        refresh_collection(collection.id, sync=sync)
         index_collection(collection, sync=sync)
         log.info("Aggregate indexed: %r", collection)
         queue.remove()

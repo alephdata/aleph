@@ -37,7 +37,8 @@ def handle_task(queue, payload, context):
         if queue.operation == OP_BULKLOAD:
             bulk_load(queue, collection, payload)
         if queue.operation == OP_PROCESS:
-            process_collection(collection)
+            ingest = payload.get('ingest', False)
+            process_collection(collection, ingest=ingest)
         if queue.operation == OP_XREF:
             against = payload.get('against_collection_ids')
             xref_collection(queue, collection,
