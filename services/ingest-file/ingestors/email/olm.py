@@ -50,7 +50,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
     def extract_hierarchy(self, entity, name):
         foreign_id = pathlib.PurePath(entity.id)
         path = pathlib.Path(name)
-        for name in path.as_posix().split('/'):
+        for name in path.as_posix().split('/')[:-1]:
             foreign_id = foreign_id.joinpath(name)
             if name in self.EXCLUDE:
                 continue
