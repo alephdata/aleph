@@ -1,8 +1,7 @@
 import types
 import logging
 from banal import ensure_list
-from email.utils import parsedate_to_datetime
-from email.utils import getaddresses, formataddr
+from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename, stringify, ascii_text
 from followthemoney.types import registry
 
@@ -24,7 +23,6 @@ class EmailIdentity(object):
         if registry.email.validate(self.name):
             self.email = self.email or ascii_text(self.name)
             self.name = None
-        self.label = stringify(formataddr((self.name or '', self.email or '')))
         self.entity = None
         if self.email is not None:
             key = self.email.lower().strip()
@@ -33,6 +31,16 @@ class EmailIdentity(object):
             self.entity.add('name', self.name)
             self.entity.add('email', self.email)
             manager.emit_entity(self.entity)
+
+        # This should be using formataddr, but I cannot figure out how
+        # to use that without encoding the name.
+        self.label = None
+        if self.name is not None and self.email is not None:
+            self.label = '%s <%s>' % (self.name, self.email)
+        elif self.name is None and self.email is not None:
+            self.label = self.email
+        elif self.email is None and self.name is not None:
+            self.label = self.name
 
 
 class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):

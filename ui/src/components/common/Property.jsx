@@ -58,14 +58,14 @@ class Reverse extends PureComponent {
 
 class Values extends PureComponent {
   render() {
-    const { prop, values } = this.props;
+    const { prop, values, separator = ' · ' } = this.props;
     const vals = ensureArray(values).map(value => (
       <Value key={value.id || value} prop={prop} value={value} />
     ));
     if (!vals.length) {
       return (<span className="no-value">—</span>);
     }
-    return (<span>{ wordList(vals, ' · ') }</span>);
+    return (<span>{ wordList(vals, separator) }</span>);
   }
 }
 

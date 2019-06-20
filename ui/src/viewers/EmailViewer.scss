@@ -11,13 +11,16 @@
     } 
   }
 
-  pre {
-    padding: 0 0 $aleph-grid-size 0;
-  }
-
   .email-body {
     padding: $aleph-grid-size;
     border: 0;
     box-shadow: unset;
+
+    pre {
+      padding: 0;
+      border: 0;
+      box-shadow: unset;
+    }
+  
   }
 }
