@@ -31,7 +31,8 @@
     "query-string": "^6.2.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
-    "numeral": "^2.0.6"
+    "numeral": "^2.0.6",
+    "caniuse-lite": "1.0.30000974"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.3.0",
