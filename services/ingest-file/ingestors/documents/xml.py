@@ -61,7 +61,7 @@ class XMLIngestor(Ingestor, EncodingSupport, HTMLSupport):
                 raise ProcessingException("XML file is too large.")
 
         try:
-            doc = etree.parse(file_path)
+            doc = etree.parse(file_path.as_posix())
         except (ParserError, ParseError):
             raise ProcessingException("XML could not be parsed.")
 

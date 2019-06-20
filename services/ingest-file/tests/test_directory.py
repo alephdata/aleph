@@ -12,5 +12,5 @@ class DirectoryTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-        self.assertEqual(len(self.manager.entities), 1)
+        self.assertEqual(len(self.get_emitted()), 2)
         self.assertEqual(entity.schema, 'Folder')

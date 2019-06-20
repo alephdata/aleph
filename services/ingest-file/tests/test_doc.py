@@ -19,7 +19,7 @@ class DocumentIngestorTest(TestCase):
         fixture_path, entity = self.fixture('doc.doc')
         self.manager.ingest(fixture_path, entity)
 
-        self.assertEqual(len(self.manager.entities), 2 * 2 + 1)
+        self.assertEqual(len(self.get_emitted()), 3)
         self.assertEqual(
             len(list(self.manager.dataset.iterate(entity_id=entity.id))),
             1
@@ -45,7 +45,7 @@ class DocumentIngestorTest(TestCase):
 
         today = datetime.now()
 
-        self.assertEqual(len(self.manager.entities), 1 * 2 + 1)
+        self.assertEqual(len(self.get_emitted()), 2)
         self.assertIn(u'Now', self.manager.entities[0].first('bodyText'))
         self.assertEqual(entity.schema, 'Pages')
         self.assertIn(
@@ -64,7 +64,7 @@ class DocumentIngestorTest(TestCase):
     def test_ingest_noisy_doc(self):
         fixture_path, entity = self.fixture('Plan.odt')
         self.manager.ingest(fixture_path, entity)
-        self.assertEqual(len(self.manager.entities), 2 * 1 + 1)
+        self.assertEqual(len(self.get_emitted()), 2)
         self.assertIn(
             'We should paint graffiti on all corners',
             self.manager.entities[0].first('bodyText')
@@ -79,4 +79,4 @@ class DocumentIngestorTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-        self.assertEqual(len(self.manager.entities), 2)
+        self.assertEqual(len(self.get_emitted()), 2)

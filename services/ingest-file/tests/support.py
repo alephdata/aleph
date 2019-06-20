@@ -18,6 +18,10 @@ def emit_entity(self, entity, fragment=None):
     self.writer.put(entity.to_dict(), fragment=fragment)
 
 
+def queue_entity(self, entity):
+    self.ingest_entity(entity)
+
+
 class TestCase(unittest.TestCase):
 
     def setUp(self):
@@ -32,6 +36,7 @@ class TestCase(unittest.TestCase):
         self.manager = Manager(self.queue, {})
         self.manager.entities = []
         self.manager.emit_entity = types.MethodType(emit_entity, self.manager)
+        self.manager.queue_entity = types.MethodType(queue_entity, self.manager)  # noqa
         self.archive = init_archive()
 
     def fixture(self, fixture_path):

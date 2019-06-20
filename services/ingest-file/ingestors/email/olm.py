@@ -23,7 +23,7 @@ class OPFParser(object):
     def parse_xml(self, file_path):
         parser = etree.XMLParser(huge_tree=True)
         try:
-            return etree.parse(file_path, parser)
+            return etree.parse(file_path.as_posix(), parser)
         except etree.XMLSyntaxError:
             # probably corrupt
             raise TypeError()
@@ -134,6 +134,8 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
         email = doc.find('//email')
         props = email.getchildren()
         props = {c.tag: safe_string(c.text) for c in props if c.text}
+        # from pprint import pformat
+        # log.info(pformat(props))
 
         entity.add('subject', props.pop('OPFMessageCopySubject', None))
         entity.add('threadTopic', props.pop('OPFMessageCopyThreadTopic', None))

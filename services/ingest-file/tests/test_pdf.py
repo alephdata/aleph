@@ -20,7 +20,7 @@ class PDFIngestorTest(TestCase):
         self.manager.ingest(fixture_path, entity)
 
         # 2 doc fragments, 1 page
-        self.assertEqual(len(self.manager.entities), 3)
+        self.assertEqual(len(self.get_emitted()), 2)
         self.assertIn(
             'Ingestors extract useful information'
             ' in a structured standard format',
@@ -34,7 +34,7 @@ class PDFIngestorTest(TestCase):
     def test_ingest_noisy_fixture(self):
         fixture_path, entity = self.fixture('500 pages.pdf')
         self.manager.ingest(fixture_path, entity)
-        self.assertEqual(len(self.manager.entities), 500*2 + 1)
+        self.assertEqual(len(self.get_emitted()), 501)
         self.assertEqual(
             self.manager.entities[0].first('bodyText'),
             'Hello, World! \nHello, World!'
@@ -45,7 +45,7 @@ class PDFIngestorTest(TestCase):
         fixture_path, entity = self.fixture('very_complex_math_book.pdf')
         self.manager.ingest(fixture_path, entity)
 
-        self.assertEqual(len(self.manager.entities), 1176)
+        self.assertEqual(len(self.get_emitted()), 589)
         self.assertIn(
             'ALGEBRA \nABSTRACT AND CONCRETE \nE DITION 2.6',
             self.manager.entities[0].first('bodyText')
@@ -59,7 +59,7 @@ class PDFIngestorTest(TestCase):
         fixture_path, entity = self.fixture('udhr_ger.pdf')
         self.manager.ingest(fixture_path, entity)
 
-        self.assertEqual(len(self.manager.entities), 6*2 + 1)
+        self.assertEqual(len(self.get_emitted()), 7)
         self.assertIn(
             u'Würde und der gleichen und unveräußerlichen',
             self.manager.entities[0].first('bodyText')
