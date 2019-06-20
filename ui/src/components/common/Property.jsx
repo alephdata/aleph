@@ -60,7 +60,7 @@ class Values extends PureComponent {
   render() {
     const { prop, values } = this.props;
     const vals = ensureArray(values).map(value => (
-      <Value key={value.toString()} prop={prop} value={value} />
+      <Value key={value.id || value} prop={prop} value={value} />
     ));
     if (!vals.length) {
       return (<span className="no-value">—</span>);

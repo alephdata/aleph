@@ -19,13 +19,13 @@ export class EmailViewer extends React.Component {
   renderBody() {
     const { content } = this.props;
     if (content.html && content.html.length) {
-      return <span className="email-body" dangerouslySetInnerHTML={{ __html: content.html }} />;
+      return <span dangerouslySetInnerHTML={{ __html: content.html }} />;
     }
     if (content.text && content.text.length > 0) {
-      return <Pre className="email-body">{content.text}</Pre>;
+      return <Pre>{content.text}</Pre>;
     }
     return (
-      <p className="email-no-body bp3-text-muted">
+      <p className="bp3-text-muted">
         <FormattedMessage id="email.body.empty" defaultMessage="No message body." />
       </p>
     );
@@ -89,7 +89,9 @@ export class EmailViewer extends React.Component {
         <div className="outer">
           <div className="inner EmailViewer">
             {headers && this.renderHeaders(headers)}
-            {this.renderBody()}
+            <div className="email-body">
+              {this.renderBody()}
+            </div>
           </div>
         </div>
       </React.Fragment>

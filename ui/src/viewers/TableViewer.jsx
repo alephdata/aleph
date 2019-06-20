@@ -81,6 +81,8 @@ export class TableViewer extends Component {
     if (result.total === undefined) {
       loadingOptions.push(TableLoadingOption.CELLS);
     }
+    const columnsJson = document.getProperty('columns').toString();
+    const columns = columnsJson ? JSON.parse(columnsJson) : [];
     return (
       <div className="TableViewer">
         <Table
@@ -90,15 +92,14 @@ export class TableViewer extends Component {
           loadingOptions={loadingOptions}
           onVisibleCellsChange={this.onVisibleCellsChange}
         >
-          {JSON.parse(document.getProperty('columns').toString())
-            .map((column, i) => (
-              <Column
-                key={column}
-                id={i}
-                name={column}
-                cellRenderer={this.renderCell}
-              />
-            ))}
+          {columns.map((column, i) => (
+            <Column
+              key={column}
+              id={i}
+              name={column}
+              cellRenderer={this.renderCell}
+            />
+          ))}
         </Table>
       </div>
     );

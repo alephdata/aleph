@@ -162,6 +162,7 @@
     "rules": {
       "no-param-reassign": "off",
       "no-class-assign": "off",
+      "object-curly-newline": "off",
       "react/no-danger": "off",
       "react/prop-types": "off",
       "react/no-multi-comp": "off",
