@@ -55,6 +55,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
             if name in self.EXCLUDE:
                 continue
             entity = self.manager.make_entity('Folder', parent=entity)
+            entity.add('fileName', name)
             entity.make_id(foreign_id.as_posix())
             self.manager.emit_entity(entity)
         return entity
