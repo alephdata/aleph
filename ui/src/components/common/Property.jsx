@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
 import {
-  Numeric, Country, Language, Date, URL,
+  Numeric, Country, Language, Date, FileSize, URL,
 } from 'src/components/common';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
@@ -15,6 +15,9 @@ class Value extends PureComponent {
     const { value, prop } = this.props;
     if (!value) {
       return null;
+    }
+    if (prop.name === 'fileSize') {
+      return <FileSize value={value} />;
     }
     if (prop.type.name === 'country') {
       return <Country.Name code={value} />;

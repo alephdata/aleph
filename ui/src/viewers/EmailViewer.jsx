@@ -6,24 +6,37 @@ import { Pre } from '@blueprintjs/core';
 import Property from 'src/components/common/Property';
 import SectionLoading from 'src/components/common/SectionLoading';
 import { selectDocumentContent } from 'src/selectors';
+import wordList from 'src/util/wordList';
 
 import './EmailViewer.scss';
 
 
 class EmailViewer extends React.Component {
-  headerProperty(name) {
+  headerProperty(name, entitiesProp) {
     const { document } = this.props;
     const prop = document.schema.getProperty(name);
-    const values = document.getProperty(prop);
+    const values = document.getProperty(prop).map((value) => {
+      let result = <Property.Value key={value.id || value} prop={prop} value={value} />;
+      if (entitiesProp) {
+        const normValue = value.toLowerCase().trim();
+        const eprop = document.schema.getProperty(entitiesProp);
+        document.getProperty(eprop).forEach((entity) => {
+          entity.getProperty('email').forEach((email) => {
+            if (normValue.indexOf(email.toLowerCase().trim()) !== -1) {
+              result = <Property.Value key={entity.id} prop={eprop} value={entity} />;
+            }
+          });
+        });
+      }
+      return result;
+    });
     if (values.length === 0) {
       return null;
     }
     return (
       <tr key={prop.name}>
         <th>{prop.label}</th>
-        <td>
-          <Property.Values prop={prop} values={values} separator=", " />
-        </td>
+        <td>{wordList(values, ', ')}</td>
       </tr>
     );
   }
@@ -35,14 +48,14 @@ class EmailViewer extends React.Component {
       <div className="email-header">
         <table className="bp3-html-table">
           <tbody>
-            {this.headerProperty('from')}
+            {this.headerProperty('from', 'emitters')}
             {headers.from && (
               <tr>
                 <th><FormattedMessage id="email.from" defaultMessage="From" /></th>
                 <td>{headers.from}</td>
               </tr>
             )}
-            {this.headerProperty('sender')}
+            {this.headerProperty('sender', 'emitters')}
             {this.headerProperty('date')}
             {headers.date && (
               <tr>
@@ -57,29 +70,27 @@ class EmailViewer extends React.Component {
                 <td>{headers.subject}</td>
               </tr>
             )}
-            {this.headerProperty('to')}
+            {this.headerProperty('to', 'recipients')}
             {headers.to && (
               <tr>
                 <th><FormattedMessage id="email.to" defaultMessage="Recipient" /></th>
                 <td>{headers.to}</td>
               </tr>
             )}
-            {this.headerProperty('cc')}
+            {this.headerProperty('cc', 'recipients')}
             {headers.cc && (
               <tr>
                 <th><FormattedMessage id="email.cc" defaultMessage="CC" /></th>
                 <td>{headers.cc}</td>
               </tr>
             )}
-            {this.headerProperty('bcc')}
+            {this.headerProperty('bcc', 'recipients')}
             {headers.bcc && (
               <tr>
                 <th><FormattedMessage id="email.bcc" defaultMessage="BCC" /></th>
                 <td>{headers.bcc}</td>
               </tr>
             )}
-            {this.headerProperty('emitters')}
-            {this.headerProperty('recipients')}
           </tbody>
         </table>
       </div>
