@@ -1,7 +1,7 @@
 import logging
 from flask import request
 from normality import stringify, safe_filename
-from pantomime.types import PDF
+from pantomime.types import PDF, CSV
 from banal import ensure_list, is_listish, is_mapping
 from followthemoney import model
 from followthemoney.types import registry
@@ -239,6 +239,11 @@ class EntitySerializer(Serializer):
                 name = safe_filename(file_name, default=pk, extension='.pdf')
                 links['pdf'] = archive_url(request.authz.id, pdf_hash,
                                            file_name=name, mime_type=PDF)
+            csv_hash = first(properties.get('csvHash'))
+            if csv_hash:
+                name = safe_filename(file_name, default=pk, extension='.csv')
+                links['csv'] = archive_url(request.authz.id, csv_hash,
+                                           file_name=name, mime_type=CSV)
 
         obj['links'] = links
         obj['writeable'] = authz.can(collection_id, authz.WRITE)
