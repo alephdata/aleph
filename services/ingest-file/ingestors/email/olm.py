@@ -36,6 +36,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
     EXCLUDE = ['com.microsoft.__Messages']
 
     def extract_file(self, zipf, name):
+        """Extract a message file from the OLM zip archive"""
         path = pathlib.Path(name)
         base_name = safe_filename(path.name)
         out_file = self.make_work_file(base_name)
@@ -48,6 +49,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         return out_file
 
     def extract_hierarchy(self, entity, name):
+        """Given a file path, create all its ancestor folders as entities"""
         foreign_id = pathlib.PurePath(entity.id)
         path = pathlib.Path(name)
         for name in path.as_posix().split('/')[:-1]:
@@ -61,6 +63,8 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         return entity
 
     def extract_attachment(self, zipf, message, attachment):
+        """Create an entity for an attachment; assign its parent and put it
+        on the task queue to be processed"""
         url = attachment.get('OPFAttachmentURL')
         name = attachment.get('OPFAttachmentName')
         name = name or attachment.get('OPFAttachmentContentID')
@@ -76,9 +80,14 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
             self.manager.queue_entity(child)
 
     def extract_message(self, root, zipf, name):
+        # Individual messages are stored as message_xxx.xml files. We want to
+        # process these files and skip the others
         if 'message_' not in name or not name.endswith('.xml'):
             return
+        # Create the parent folders as entities with proper hierarchy
         parent = self.extract_hierarchy(root, name)
+        # Extract the xml file itself and put it on the task queue to be
+        # ingested by OutlookOLMMessageIngestor as an individual message
         xml_path = self.extract_file(zipf, name)
         checksum = self.manager.archive_store(xml_path)
         child = self.manager.make_entity('Document', parent=parent)
@@ -88,15 +97,18 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         self.manager.queue_entity(child)
         try:
             doc = self.parse_xml(xml_path)
+            # find all attachments mentioned in the current xml file, assign
+            # them their parent and put them on the queue to be processed
             for el in doc.findall('.//messageAttachment'):
                 self.extract_attachment(zipf, child, el)
         except TypeError:
-            pass  # this will be reported for the individual file.
+            pass
 
     def ingest(self, file_path, entity):
         entity.schema = model.get('Package')
         self._hierarchy = {}
         try:
+            # OLM files are zip archives with emails stored as xml files
             with zipfile.ZipFile(file_path, 'r') as zipf:
                 for name in zipf.namelist():
                     try:
