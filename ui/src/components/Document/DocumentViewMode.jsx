@@ -30,18 +30,11 @@ export class DocumentViewMode extends React.Component {
     if (document.schema.isA('Email')) {
       if (activeMode === 'browse') {
         return (
-          <FolderViewer
-            document={document}
-            queryText={queryText}
-          />
+          <FolderViewer document={document} queryText={queryText} />
         );
       }
       return (
-        <EmailViewer
-          document={document}
-          queryText={queryText}
-          activeMode={activeMode}
-        />
+        <EmailViewer document={document} queryText={queryText} activeMode={activeMode} />
       );
     }
     if (document.schema.isA('Image')) {
