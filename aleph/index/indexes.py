@@ -17,6 +17,7 @@ KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 TYPE_MAPPINGS = {
     registry.text: {"type": "text", "index": False},
+    registry.html: {"type": "text", "index": False},
     registry.json: {"type": "text", "index": False},
     registry.date: PARTIAL_DATE,
 }

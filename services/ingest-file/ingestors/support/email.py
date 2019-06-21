@@ -3,7 +3,7 @@ import logging
 from hashlib import sha1
 from banal import ensure_list
 from email.utils import parsedate_to_datetime, getaddresses
-from normality import safe_filename, stringify, ascii_text
+from normality import safe_filename, ascii_text
 from followthemoney.types import registry
 
 from ingestors.support.html import HTMLSupport
@@ -17,8 +17,8 @@ log = logging.getLogger(__name__)
 class EmailIdentity(object):
 
     def __init__(self, manager, name, email):
-        self.email = ascii_text(stringify(email))
-        self.name = stringify(name)
+        self.email = ascii_text(safe_string(email))
+        self.name = safe_string(name)
         if not registry.email.validate(self.email):
             self.email = None
         if registry.email.validate(self.name):

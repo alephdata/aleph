@@ -69,7 +69,7 @@ class HTMLSupport(TimestampSupport):
 
     def extract_html_content(self, entity, html_body, extract_metadata=True):
         """Ingestor implementation."""
-        if html_body is None:
+        if html_body is None or not len(html_body.strip()):
             return
         try:
             try:
@@ -79,8 +79,8 @@ class HTMLSupport(TimestampSupport):
                 # https://stackoverflow.com/questions/3402520
                 html_body = self.RE_XML_ENCODING.sub('', html_body, count=1)
                 doc = html.fromstring(html_body)
-        except (ParserError, ParseError, ValueError):
-            raise ProcessingException("HTML could not be parsed.")
+        except (ParserError, ParseError, ValueError) as exc:
+            raise ProcessingException("HTML could not be parsed (%s)." % exc)
 
         if extract_metadata:
             self.extract_html_header(entity, doc)
