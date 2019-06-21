@@ -1,5 +1,6 @@
 import types
 import logging
+from hashlib import sha1
 from banal import ensure_list
 from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename, stringify, ascii_text
@@ -23,14 +24,6 @@ class EmailIdentity(object):
         if registry.email.validate(self.name):
             self.email = self.email or ascii_text(self.name)
             self.name = None
-        self.entity = None
-        if self.email is not None:
-            key = self.email.lower().strip()
-            self.entity = manager.make_entity('LegalEntity')
-            self.entity.make_id(key)
-            self.entity.add('name', self.name)
-            self.entity.add('email', self.email)
-            manager.emit_entity(self.entity)
 
         # This should be using formataddr, but I cannot figure out how
         # to use that without encoding the name.
@@ -41,6 +34,16 @@ class EmailIdentity(object):
             self.label = self.email
         elif self.email is None and self.name is not None:
             self.label = self.name
+
+        self.entity = None
+        if self.email is not None:
+            key = self.email.lower().strip()
+            fragment = sha1(self.label.encode('utf-8')).hexdigest()
+            self.entity = manager.make_entity('LegalEntity')
+            self.entity.make_id(key)
+            self.entity.add('name', self.name)
+            self.entity.add('email', self.email)
+            manager.emit_entity(self.entity, fragment=fragment)
 
 
 class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
