@@ -130,6 +130,15 @@ class Document(db.Model, DatedModel):
         q = q.filter(cls.collection_id == collection_id)
         return q
 
+    @classmethod
+    def cleanup_deleted(cls):
+        q = db.session.query(Collection.id)
+        q = q.filter(Collection.deleted_at != None)  # noqa
+        collection_ids = [c for (c,) in q.all()]
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id.in_(collection_ids))
+        pq.delete(synchronize_session=False)
+
     def to_proxy(self):
         proxy = model.get_proxy({
             'id': str(self.id),
