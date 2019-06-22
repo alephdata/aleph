@@ -25,11 +25,10 @@ RUN apt-get -qq -y update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set up the locale and make sure the system uses unicode for the file system.
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    sed -i -e 's/# en_GB.ISO-8859-15 ISO-8859-15/en_GB.ISO-8859-15 ISO-8859-15/' /etc/locale.gen && \
-    locale-gen
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && update-locale LANG=en_US.UTF-8
 ENV LANG='en_US.UTF-8' \
-    LANGUAGE='en_US:en' \
     LC_ALL='en_US.UTF-8'
 
 RUN pip3 install --no-cache-dir -q -U pip setuptools six wheel nose coverage

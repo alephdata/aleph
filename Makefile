@@ -50,7 +50,8 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
-	$(COMPOSE) build --parallel
+	# $(COMPOSE) build app
+	$(COMPOSE) build
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
@@ -61,6 +62,10 @@ docker-pull:
 	$(COMPOSE) pull --include-deps --ignore-pull-failures
 
 docker-push:
+	docker push alephdata/aleph-elasticsearch:$(TAG)
+	docker push alephdata/convert-document:$(TAG)
+	docker push alephdata/recognize-text:$(TAG)
+	docker push alephdata/ingest-file:$(TAG)
 	docker push alephdata/aleph:$(TAG)
 	docker push alephdata/aleph-ui:$(TAG)
 	docker push alephdata/aleph-ui-production:$(TAG)

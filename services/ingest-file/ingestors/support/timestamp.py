@@ -12,6 +12,7 @@ class TimestampSupport(object):
     TIMESTAMP_FORMATS = (
         '%Y-%m-%dT%H:%M:%S',
         '%Y-%m-%dT%H:%M:%SZ',
+        '%Y:%m:%d %H:%M:%SZ',  # exif
         '%Z %Y-%m-%d %H:%M:%S',
         '%Y-%m-%d',
         '%Y%m%d',

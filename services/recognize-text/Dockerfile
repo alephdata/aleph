@@ -1,83 +1,85 @@
-FROM alpine:3.9
+FROM ubuntu:19.04
+ENV DEBIAN_FRONTEND noninteractive
 
-# Not using Python image because this is smaller
-RUN apk update && apk upgrade && \
-    apk add --no-cache tesseract-ocr
+RUN apt-get -qq -y update \
+    && apt-get -q -y install locales python3-pip tesseract-ocr-eng python3-tesserocr python3-grpcio python3-icu \
+    && apt-get -qq -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apk add --no-cache tesseract-ocr-data-swa \
-    tesseract-ocr-data-swe \
-    # tesseract-ocr-data-tam \
-    # tesseract-ocr-data-tel \
-    # tesseract-ocr-data-tgl \
-    # tesseract-ocr-data-tha \
-    tesseract-ocr-data-tur \
-    tesseract-ocr-data-ukr \
-    # tesseract-ocr-data-vie \
-    tesseract-ocr-data-nld \
-    tesseract-ocr-data-nor \
-    tesseract-ocr-data-pol \
-    tesseract-ocr-data-por \
-    tesseract-ocr-data-ron \
-    tesseract-ocr-data-rus \
-    tesseract-ocr-data-slk \
-    tesseract-ocr-data-slv \
-    tesseract-ocr-data-spa \
-    # tesseract-ocr-data-spa_old \
-    tesseract-ocr-data-sqi \
-    tesseract-ocr-data-srp \
-    tesseract-ocr-data-ind \
-    tesseract-ocr-data-isl \
-    tesseract-ocr-data-ita \
-    # tesseract-ocr-data-ita_old \
-    # tesseract-ocr-data-jpn \
-    tesseract-ocr-data-kan \
-    # tesseract-ocr-data-kor \
-    tesseract-ocr-data-lav \
-    tesseract-ocr-data-lit \
-    # tesseract-ocr-data-mal \
-    tesseract-ocr-data-mkd \
-    tesseract-ocr-data-mlt \
-    tesseract-ocr-data-msa \
-    tesseract-ocr-data-est \
-    # tesseract-ocr-data-eus \
-    tesseract-ocr-data-fin \
-    tesseract-ocr-data-fra \
-    tesseract-ocr-data-frk \
-    tesseract-ocr-data-frm \
-    # tesseract-ocr-data-glg \
-    # tesseract-ocr-data-grc \
-    tesseract-ocr-data-heb \
-    tesseract-ocr-data-hin \
-    tesseract-ocr-data-hrv \
-    tesseract-ocr-data-hun \
-    # tesseract-ocr-data-ben \
-    tesseract-ocr-data-bul \
-    tesseract-ocr-data-cat \
-    tesseract-ocr-data-ces \
-    # tesseract-ocr-data-chi_sim \
-    # tesseract-ocr-data-chi_tra \
-    # tesseract-ocr-data-chr \
-    tesseract-ocr-data-dan \
-    tesseract-ocr-data-deu \
-    tesseract-ocr-data-ell \
-    # tesseract-ocr-data-enm \
-    # tesseract-ocr-data-epo \
-    tesseract-ocr-data-equ \
-    tesseract-ocr-data-afr \
-    tesseract-ocr-data-ara \
-    tesseract-ocr-data-aze \
-    tesseract-ocr-data-bel
+RUN apt-get -qq -y update \
+    && apt-get -q -y install \
+        tesseract-ocr-swa \
+        tesseract-ocr-swe \
+        # tesseract-ocr-tam \
+        # tesseract-ocr-tel \
+        # tesseract-ocr-tgl \
+        # tesseract-ocr-tha \
+        tesseract-ocr-tur \
+        tesseract-ocr-ukr \
+        # tesseract-ocr-vie \
+        tesseract-ocr-nld \
+        tesseract-ocr-nor \
+        tesseract-ocr-pol \
+        tesseract-ocr-por \
+        tesseract-ocr-ron \
+        tesseract-ocr-rus \
+        tesseract-ocr-slk \
+        tesseract-ocr-slv \
+        tesseract-ocr-spa \
+        # tesseract-ocr-spa_old \
+        tesseract-ocr-sqi \
+        tesseract-ocr-srp \
+        tesseract-ocr-ind \
+        tesseract-ocr-isl \
+        tesseract-ocr-ita \
+        # tesseract-ocr-ita_old \
+        # tesseract-ocr-jpn \
+        tesseract-ocr-kan \
+        # tesseract-ocr-kor \
+        tesseract-ocr-lav \
+        tesseract-ocr-lit \
+        # tesseract-ocr-mal \
+        tesseract-ocr-mkd \
+        tesseract-ocr-mlt \
+        tesseract-ocr-msa \
+        tesseract-ocr-est \
+        # tesseract-ocr-eus \
+        tesseract-ocr-fin \
+        tesseract-ocr-fra \
+        tesseract-ocr-frk \
+        tesseract-ocr-frm \
+        # tesseract-ocr-glg \
+        # tesseract-ocr-grc \
+        tesseract-ocr-heb \
+        tesseract-ocr-hin \
+        tesseract-ocr-hrv \
+        tesseract-ocr-hun \
+        # tesseract-ocr-ben \
+        tesseract-ocr-bul \
+        tesseract-ocr-cat \
+        tesseract-ocr-ces \
+        # tesseract-ocr-chi_sim \
+        # tesseract-ocr-chi_tra \
+        # tesseract-ocr-chr \
+        tesseract-ocr-dan \
+        tesseract-ocr-deu \
+        tesseract-ocr-ell \
+        # tesseract-ocr-enm \
+        # tesseract-ocr-epo \
+        # tesseract-ocr-equ \
+        tesseract-ocr-afr \
+        tesseract-ocr-ara \
+        tesseract-ocr-aze \
+        tesseract-ocr-bel \
+    && apt-get -qq -y autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apk add --no-cache python3 py3-pillow py3-icu libstdc++
-RUN pip3 install --no-cache-dir --upgrade pip
-
-# Install Python binary builds
-RUN apk add --no-cache --virtual=build_deps python3-dev g++ tesseract-ocr-dev cython-dev ca-certificates && \
-    pip3 install --no-cache-dir tesserocr normality grpcio protobuf && \
-    apk del build_deps
-
-RUN addgroup -g 1000 -S app \
-    && adduser -u 1000 -G app -s /bin/false -S app
+RUN groupadd -r app \
+    && useradd -r -s /bin/false -g app app \
+    && mkdir -p /home/app \
+    && chown -R app:app /home/app
 ENV LANG=C
 ENV LC_ALL=C
 ENV OMP_THREAD_LIMIT=1
