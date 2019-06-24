@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@alephdata/followthemoney": "^1.13.5",
-    "@blueprintjs/core": "3.15.0",
+    "@blueprintjs/core": "^3.16.2",
     "@blueprintjs/select": "^3.8.0",
     "@blueprintjs/table": "^3.5.0",
     "@blueprintjs/icons": "3.8.0",
@@ -31,8 +31,7 @@
     "query-string": "^6.2.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.11",
-    "numeral": "^2.0.6",
-    "caniuse-lite": "1.0.30000974"
+    "numeral": "^2.0.6"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.3.0",
@@ -53,7 +52,7 @@
     "eslint-loader": "^2.1.2",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react": "~7.13.0",
     "file-loader": "^3.0.1",
     "fork-ts-checker-webpack-plugin-alt": "^0.4.14",
     "fs-extra": "^7.0.1",
