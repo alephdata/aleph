@@ -38,6 +38,7 @@ setup(
             'opfmsg = ingestors.email.olm:OutlookOLMMessageIngestor',
             'olemsg = ingestors.email.outlookmsg:OutlookMsgIngestor',
             'msg = ingestors.email.msg:RFC822Ingestor',
+            'vcard = ingestors.email.vcard:VCardIngestor',
             'csv = ingestors.tabular.csv:CSVIngestor',
             'access = ingestors.tabular.access:AccessIngestor',
             'sqlite = ingestors.tabular.sqlite:SQLiteIngestor',
