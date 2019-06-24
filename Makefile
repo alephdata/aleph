@@ -50,7 +50,6 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
-	# $(COMPOSE) build app
 	$(COMPOSE) build
 
 build-ui:
