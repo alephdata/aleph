@@ -1,4 +1,4 @@
-version: "2"
+version: "3.2"
 
 services:
   postgres:
@@ -6,12 +6,12 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER:     aleph
+      POSTGRES_USER: aleph
       POSTGRES_PASSWORD: aleph
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:10
+    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-3.1.2}
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -28,7 +28,7 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:1.4.0
+    image: alephdata/convert-document:${ALEPH_TAG:-3.1.2}
     restart: on-failure
     tmpfs:
       - /tmp
@@ -38,14 +38,14 @@ services:
       - 3000
 
   recognize-text:
-    image: alephdata/recognize-text:1.2.0
+    image: alephdata/recognize-text:${ALEPH_TAG:-3.1.2}
     restart: on-failure
     mem_limit: 2g
     expose:
       - 50000
   
   ingest-file:
-    image: alephdata/ingest-file:latest
+    image: alephdata/ingest-file:${ALEPH_TAG:-3.1.2}
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -59,7 +59,7 @@ services:
       - aleph.env
 
   worker:
-    image: alephdata/aleph
+    image: alephdata/aleph:${ALEPH_TAG:-3.1.2}
     command: aleph worker
     restart: on-failure
     links:
@@ -75,7 +75,7 @@ services:
       - aleph.env
   
   shell:
-    image: alephdata/aleph
+    image: alephdata/aleph:${ALEPH_TAG:-3.1.2}
     command: /bin/bash
     links:
       - postgres
@@ -93,7 +93,7 @@ services:
       - aleph.env
 
   api:
-    image: alephdata/aleph
+    image: alephdata/aleph:${ALEPH_TAG:-3.1.2}
     command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
     expose:
       - 8000
@@ -111,7 +111,7 @@ services:
       - aleph.env
 
   ui:
-    image: alephdata/aleph-ui-production
+    image: alephdata/aleph-ui-production:${ALEPH_TAG:-3.1.2}
     links:
       - api
     ports:
