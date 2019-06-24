@@ -1,6 +1,6 @@
 import logging
 
-from aleph.core import kv, db
+from aleph.core import kv, db, settings
 from aleph.model import Collection
 from aleph.queues import get_next_task, get_rate_limit
 from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS, OP_XREF
@@ -44,6 +44,13 @@ def handle_task(queue, payload, context):
             xref_collection(queue, collection,
                             against_collection_ids=against)
         log.info("Task [%s]: %s (done)", queue.dataset, queue.operation)
+    except (SystemExit, KeyboardInterrupt, Exception):
+        retries = int(context.get('retries', 0))
+        if retries < settings.QUEUE_RETRY:
+            log.info("Queueing failed task for re-try...")
+            context['retries'] = retries + 1
+            queue.queue_task(payload, context)
+        raise
     finally:
         queue.task_done()
 

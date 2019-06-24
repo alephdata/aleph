@@ -7,6 +7,7 @@ from followthemoney.namespace import Namespace
 
 from aleph.model import Entity, Document
 from aleph.queues import ingest_entity, ingest_wait
+from aleph.queues import get_queue, OP_INDEX
 from aleph.analysis import tag_entity
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
@@ -38,7 +39,7 @@ def process_collection(collection, ingest=True):
         if ingest:
             ingest_wait(collection)
         else:
-            index_entities(collection, aggregator.iterate())
+            index_entities(collection, aggregator)
     finally:
         aggregator.close()
 
@@ -47,18 +48,18 @@ def index_aggregate(queue, collection, sync=False):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
-        index_entities(collection,
-                       aggregator.iterate(),
-                       sync=sync, queue=queue)
+        index_entities(collection, aggregator, sync=sync)
         refresh_collection(collection.id, sync=sync)
         index_collection(collection, sync=sync)
         log.info("Aggregate indexed: %r", collection)
-        queue.remove()
     finally:
         aggregator.close()
+        queue.remove()
 
 
-def index_entities(collection, iterable, sync=False, queue=None):
+def index_entities(collection, iterable, sync=False):
+    queue = get_queue(collection, OP_INDEX)
+    queue.progress.mark_pending(len(iterable))
     entities = []
     for entity in iterable:
         if entity.id is None:
@@ -67,14 +68,12 @@ def index_entities(collection, iterable, sync=False, queue=None):
         tag_entity(entity)
         entities.append(entity)
         if len(entities) >= BULK_PAGE:
-            if queue:
-                queue.progress.mark_finished(len(entities))
+            queue.progress.mark_finished(len(entities))
             index_bulk(collection, entities, sync=sync)
             entities = []
 
     if len(entities):
-        if queue:
-            queue.progress.mark_finished(len(entities))
+        queue.progress.mark_finished(len(entities))
         index_bulk(collection, entities, sync=sync)
     refresh_collection(collection)
 
