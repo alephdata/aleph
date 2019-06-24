@@ -26,9 +26,7 @@ def _source_spec(includes, excludes):
     return {'includes': includes, 'excludes': excludes}
 
 
-def iter_entities(authz=None, collection_id=None, schemata=None,
-                  includes=None, excludes=None):
-    """Scan all entities matching the given criteria."""
+def _entities_query(authz, collection_id, schemata):
     filters = []
     if authz is not None:
         filters.append(authz_query(authz))
@@ -36,8 +34,14 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         filters.append({'term': {'collection_id': collection_id}})
     if ensure_list(schemata):
         filters.append({'terms': {'schemata': ensure_list(schemata)}})
+    return {'bool': {'filter': filters}}
+
+
+def iter_entities(authz=None, collection_id=None, schemata=None,
+                  includes=None, excludes=None):
+    """Scan all entities matching the given criteria."""
     query = {
-        'query': {'bool': {'filter': filters}},
+        'query': _entities_query(authz, collection_id, schemata),
         '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
@@ -45,6 +49,13 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         entity = unpack_result(res)
         if entity is not None:
             yield entity
+
+
+def count_entities(authz=None, collection_id=None, schemata=None):
+    """Scan all entities matching the given criteria."""
+    query = _entities_query(authz, collection_id, schemata)
+    index = entities_read_index(schema=schemata)
+    return es.count(index=index, body={'query': query}).get('count', 0)
 
 
 def iter_proxies(**kw):

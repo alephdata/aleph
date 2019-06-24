@@ -28,8 +28,6 @@ def process_collection(collection, ingest=True):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     aggregator = get_aggregator(collection)
-    if ingest:
-        aggregator.delete()
     try:
         writer = aggregator.bulk()
         for proxy in _collection_proxies(collection):
