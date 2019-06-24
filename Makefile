@@ -1,7 +1,7 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml 
 APPDOCKER=$(COMPOSE) run --rm app
 INGESTDOCKER=$(COMPOSE) run --rm ingest-file
-TAG=latest
+ALEPH_TAG=latest
 
 all: build upgrade web
 
@@ -54,7 +54,7 @@ build:
 	$(COMPOSE) build
 
 build-ui:
-	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
+	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
 build-full: build build-ui
 
@@ -62,13 +62,13 @@ docker-pull:
 	$(COMPOSE) pull --include-deps --ignore-pull-failures
 
 docker-push:
-	docker push alephdata/aleph-elasticsearch:$(TAG)
-	docker push alephdata/convert-document:$(TAG)
-	docker push alephdata/recognize-text:$(TAG)
-	docker push alephdata/ingest-file:$(TAG)
-	docker push alephdata/aleph:$(TAG)
-	docker push alephdata/aleph-ui:$(TAG)
-	docker push alephdata/aleph-ui-production:$(TAG)
+	docker push alephdata/aleph-elasticsearch:$(ALEPH_TAG)
+	docker push alephdata/convert-document:$(ALEPH_TAG)
+	docker push alephdata/recognize-text:$(ALEPH_TAG)
+	docker push alephdata/ingest-file:$(ALEPH_TAG)
+	docker push alephdata/aleph:$(ALEPH_TAG)
+	docker push alephdata/aleph-ui:$(ALEPH_TAG)
+	docker push alephdata/aleph-ui-production:$(ALEPH_TAG)
 
 dev: 
 	pip install -q transifex-client bumpversion babel jinja2

@@ -18,7 +18,7 @@ services:
       context: services/elasticsearch
       cache_from:
         - alephdata/aleph-elasticsearch:latest
-    image: alephdata/aleph-elasticsearch:latest
+    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -39,7 +39,7 @@ services:
       context: services/convert-document
       cache_from:
         - alephdata/convert-document:latest
-    image: alephdata/convert-document:latest
+    image: alephdata/convert-document:${ALEPH_TAG:-latest}
     restart: on-failure
     tmpfs:
       - /tmp
@@ -52,7 +52,7 @@ services:
       context: services/recognize-text
       cache_from:
         - alephdata/recognize-text:latest
-    image: alephdata/recognize-text:latest
+    image: alephdata/recognize-text:${ALEPH_TAG:-latest}
     restart: on-failure
     expose:
       - 50000
@@ -62,7 +62,7 @@ services:
       context: services/ingest-file
       cache_from:
         - alephdata/ingest-file:latest
-    image: alephdata/ingest-file:latest
+    image: alephdata/ingest-file:${ALEPH_TAG:-latest}
     hostname: ingest
     tmpfs: /tmp
     volumes:
@@ -84,7 +84,7 @@ services:
       context: .
       cache_from:
         - alephdata/aleph:latest
-    image: alephdata/aleph:latest
+    image: alephdata/aleph:${ALEPH_TAG:-latest}
     hostname: aleph
     command: /bin/bash
     links:
@@ -112,7 +112,7 @@ services:
       context: .
       cache_from:
         - alephdata/aleph:latest
-    image: alephdata/aleph:latest
+    image: alephdata/aleph:${ALEPH_TAG:-latest}
     command: aleph runserver -h 0.0.0.0 -p 5000 --threaded
     expose:
       - 5000
@@ -139,7 +139,7 @@ services:
       context: ui
       cache_from:
         - alephdata/aleph-ui:latest
-    image: alephdata/aleph-ui
+    image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
     links:
       - api
     command: npm run start
