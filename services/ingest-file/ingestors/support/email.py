@@ -109,12 +109,13 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             entity.add('emailMentioned', identity.email)
 
     def resolve_message_ids(self, entity):
+        ctx = self.manager.queue.dataset
         for message_id in entity.get('messageId'):
             if len(message_id) <= 4:
                 continue
-            key = self.cache_key('msid', message_id)
+            key = self.cache_key('msid', ctx, message_id)
             self.set_cache_value(key, entity.id)
-            rev_key = self.cache_key('mrid', message_id)
+            rev_key = self.cache_key('mrid', ctx, message_id)
             for entity_id in self.get_cache_set(rev_key):
                 email = self.manager.make_entity('Email')
                 email.id = entity_id
@@ -124,9 +125,9 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
         for message_id in entity.get('inReplyTo'):
             if len(message_id) <= 4:
                 continue
-            key = self.cache_key('msid', message_id)
+            key = self.cache_key('msid', ctx, message_id)
             entity.add('inReplyToEmail', self.get_cache_value(key))
-            rev_key = self.cache_key('mrid', message_id)
+            rev_key = self.cache_key('mrid', ctx, message_id)
             self.add_cache_set(rev_key, entity.id)
 
     def extract_msg_headers(self, entity, msg):
