@@ -28,13 +28,15 @@ DB_URI = settings.DATABASE_URI + '_test'
 
 def read_entities(file_name):
     now = datetime.utcnow()
+    entities = []
     with open(file_name) as fh:
         while True:
             entity = read_object(fh)
             if entity is None:
                 break
             entity.set('indexUpdatedAt', now, quiet=True)
-            yield entity
+            entities.append(entity)
+    return entities
 
 
 class TestCase(FlaskTestCase):
