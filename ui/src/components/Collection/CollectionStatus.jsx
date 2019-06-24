@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { ProgressBar, Intent } from '@blueprintjs/core';
 
-// import { Toolbar, CloseButton, CollectionManageButton } from 'src/components/Toolbar';
+import { Numeric } from 'src/components/common';
 import { triggerCollectionCancel, fetchCollectionStatus } from 'src/actions';
 import { selectCollectionStatus } from 'src/selectors';
 // import wordList from 'src/util/wordList';
@@ -50,13 +50,13 @@ class CollectionStatus extends Component {
         <FormattedMessage
           id="collection.status.done"
           defaultMessage="{count} tasks done"
-          values={{ count: finished }}
+          values={{ count: <Numeric num={finished} /> }}
         />
         {pending > 5 && (
           <FormattedMessage
             id="collection.status.pending"
             defaultMessage=" ({count} pending)"
-            values={{ count: pending }}
+            values={{ count: <Numeric num={pending} /> }}
           />
         )}
       </div>
