@@ -89,9 +89,9 @@ def flushdeleted():
 
 @manager.command
 @manager.option('-f', '--foreign-id')
-@manager.option('-p', '--process', is_flag=True, default=False)
-@manager.option('-i', '--ingest', is_flag=True, default=False)
-def update(foreign_id=None, process=False, ingest=False):
+@manager.option('--index', is_flag=True, default=False)
+@manager.option('--process', is_flag=True, default=False)
+def update(foreign_id=None, index=False, process=False):
     """Re-index all the collections and entities."""
     update_roles()
     q = Collection.all(deleted=True)
@@ -102,8 +102,8 @@ def update(foreign_id=None, process=False, ingest=False):
         index_collection(collection)
         if collection.deleted_at is not None:
             continue
-        if process or ingest:
-            payload = {'ingest': ingest}
+        if index or process:
+            payload = {'ingest': process}
             queue_task(collection, OP_PROCESS, payload=payload)
 
 
@@ -119,7 +119,7 @@ def xref(foreign_id, against=None):
 
 @manager.command
 def bulkload(file_name):
-    """Index all the entities in a given dataset."""
+    """Load entities from the specified mapping file."""
     log.info("Loading bulk data from: %s", file_name)
     config = load_config_file(file_name)
     for foreign_id, data in config.items():
@@ -140,7 +140,7 @@ def status(foreign_id):
 
 @manager.command
 def cancel(foreign_id):
-    """Cancel all queued tasks."""
+    """Cancel all queued tasks for the dataset."""
     collection = get_collection(foreign_id)
     cancel_queue(collection)
 

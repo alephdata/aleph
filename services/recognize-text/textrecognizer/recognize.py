@@ -1,5 +1,6 @@
 import time
 import logging
+import threading
 from PIL import Image
 from io import BytesIO
 from languagecodes import list_to_alpha3 as alpha3
@@ -16,6 +17,7 @@ class OCR(object):
     def __init__(self):
         # Tesseract language types:
         _, self.supported = get_languages()
+        self.tl = threading.local()
 
     def language_list(self, languages):
         models = [c for c in alpha3(languages) if c in self.supported]
@@ -27,21 +29,21 @@ class OCR(object):
 
     def configure_engine(self, languages, mode):
         # log.info("Configuring OCR engine (%s)", languages)
-        if not hasattr(self, 'api') or self.api is None:
-            self.api = PyTessBaseAPI(lang=languages, oem=OEM.LSTM_ONLY)
-        if languages != self.api.GetInitLanguagesAsString():
-            self.api.Init(lang=languages, oem=OEM.LSTM_ONLY)
-        if mode != self.api.GetPageSegMode():
-            self.api.SetPageSegMode(mode)
-        return self.api
+        if not hasattr(self.tl, 'api') or self.tl.api is None:
+            self.tl.api = PyTessBaseAPI(lang=languages, oem=OEM.LSTM_ONLY)
+        if languages != self.tl.api.GetInitLanguagesAsString():
+            self.tl.api.Init(lang=languages, oem=OEM.LSTM_ONLY)
+        if mode != self.tl.api.GetPageSegMode():
+            self.tl.api.SetPageSegMode(mode)
+        return self.tl.api
 
     def clear_engine(self):
         """Shut down tesseract and clear all memory."""
         try:
-            self.api.End()
+            self.tl.api.End()
         except Exception:
             log.exception("Failed to shut down tesseract")
-        self.api = None
+        self.tl.api = None
 
     def extract_text(self, data, languages=None, mode=DEFAULT_MODE):
         """Extract text from a binary string of data."""
