@@ -62,12 +62,12 @@ def queue_worker(timeout=5):
     log.info("Worker: %s", kv)
     while True:
         if hourly.check():
-            hourly_tasks()
             hourly.update()
+            hourly_tasks()
 
         if daily.check():
-            daily_tasks()
             daily.update()
+            daily_tasks()
 
         queue, payload, context = get_next_task(timeout=timeout)
         if queue is None:
