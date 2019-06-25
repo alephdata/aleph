@@ -19,7 +19,7 @@ def get_alert(alert_id):
 
 def check_alerts():
     """Go through all alerts."""
-    for alert_id in Alert.all_ids():
+    for alert_id in list(Alert.all_ids()):
         check_alert(alert_id)
 
 
@@ -47,6 +47,7 @@ def check_alert(alert_id):
         publish(Events.MATCH_ALERT,
                 actor_id=entity.get('uploader_id'),
                 params=params)
+        db.session.flush()
 
     alert.update()
     db.session.commit()

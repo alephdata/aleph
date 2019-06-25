@@ -24,7 +24,7 @@ def upgrade():
     )
     op.create_index(op.f('ix_query_log_role_id'), 'query_log',
                     ['role_id'], unique=False)
-    op.drop_index('ix_audit_role_id', table_name='audit')
+    # op.drop_index('ix_audit_role_id', table_name='audit')
 
 
 def downgrade():
