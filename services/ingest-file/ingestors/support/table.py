@@ -30,6 +30,7 @@ class TableSupport(object):
                 self.manager.emit_entity(entity)
                 self.manager.emit_text_fragment(table, values, entity.id)
             self.set_column_headers(table, headers)
+            table.set('rowCount', index + 1)
         csv_hash = self.manager.archive_store(csv_path)
         table.set("csvHash", csv_hash)
 
@@ -51,5 +52,6 @@ class TableSupport(object):
                 self.manager.emit_entity(entity)
                 self.manager.emit_text_fragment(table, row, entity.id)
             self.set_column_headers(table, headers)
+            table.set('rowCount', index + 1)
         csv_hash = self.manager.archive_store(csv_path)
         table.set("csvHash", csv_hash)
