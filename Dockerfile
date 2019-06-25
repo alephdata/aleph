@@ -5,7 +5,7 @@ RUN apt-get -qq -y update \
     && apt-get -qq -y install build-essential locales \
         ca-certificates postgresql-client \
         python3-pip python3-dev python3-icu python3-psycopg2 \
-        python3-lxml python3-crypto python3-gunicorn \
+        python3-lxml python3-crypto \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
