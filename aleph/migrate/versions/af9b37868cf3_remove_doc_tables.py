@@ -12,18 +12,17 @@ down_revision = '284a9ec16306'
 
 
 def upgrade():
-    op.drop_index('ix_document_tag_document_id', table_name='document_tag')
-    op.drop_index('ix_document_tag_origin', table_name='document_tag')
-    op.drop_table('document_tag')
-    op.drop_table('balkhash_df643aa36820436e85679170e1f6832f')
-    op.drop_index('ix_subscription_channel', table_name='subscription')
-    op.drop_index('ix_subscription_role_id', table_name='subscription')
+    # op.drop_index('ix_document_tag_document_id', table_name='document_tag')
+    # op.drop_index('ix_document_tag_origin', table_name='document_tag')
+    # op.drop_index('ix_subscription_channel', table_name='subscription')
+    # op.drop_index('ix_subscription_role_id', table_name='subscription')
+    # op.drop_index('ix_document_record_document_id',
+    #               table_name='document_record')
+    # op.drop_index('ix_document_record_index',
+    #               table_name='document_record')
     op.drop_table('subscription')
     op.drop_table('audit')
-    op.drop_index('ix_document_record_document_id',
-                  table_name='document_record')
-    op.drop_index('ix_document_record_index',
-                  table_name='document_record')
+    op.drop_table('document_tag')
     op.drop_table('document_record')
     op.drop_column('document', 'status')
     op.drop_column('document', 'error_message')
