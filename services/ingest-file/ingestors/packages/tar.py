@@ -20,7 +20,7 @@ class TarIngestor(PackageSupport, Ingestor):
     ]
     SCORE = 4
 
-    def unpack(self, file_path, temp_dir):
+    def unpack(self, file_path, entity, temp_dir):
         try:
             with tarfile.open(name=file_path, mode='r:*') as tf:
                 names = tf.getnames()

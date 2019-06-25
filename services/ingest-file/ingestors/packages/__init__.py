@@ -33,8 +33,8 @@ class SevenZipIngestor(PackageSupport, Ingestor, ShellSupport):
 class SingleFilePackageIngestor(PackageSupport, Ingestor):
     SCORE = 2
 
-    def unpack(self, file_path, temp_dir):
-        file_name = self.result.file_name or 'extracted'
+    def unpack(self, file_path, entity, temp_dir):
+        file_name = entity.first('fileName') or 'extracted'
         for ext in self.EXTENSIONS:
             ext = '.' + ext
             if file_name.endswith(ext):

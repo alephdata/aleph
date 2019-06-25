@@ -31,8 +31,8 @@ class PackageSupport(TempFileSupport, EncodingSupport):
     def ingest(self, file_path, entity):
         entity.schema = model.get('Package')
         temp_dir = self.make_empty_directory()
-        self.unpack(file_path, temp_dir)
+        self.unpack(file_path, entity, temp_dir)
         self.manager.delegate(DirectoryIngestor, temp_dir, entity)
 
-    def unpack(self, file_path, temp_dir):
+    def unpack(self, file_path, entity, temp_dir):
         pass

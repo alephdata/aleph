@@ -18,7 +18,7 @@ class RARIngestor(PackageSupport, Ingestor):
     ]
     SCORE = 4
 
-    def unpack(self, file_path, temp_dir):
+    def unpack(self, file_path, entity, temp_dir):
         # FIXME: need to figure out how to unpack multi-part files.
         try:
             with rarfile.RarFile(file_path.as_posix()) as rf:

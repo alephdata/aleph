@@ -21,7 +21,7 @@ class ZipIngestor(PackageSupport, Ingestor):
     ]
     SCORE = 3
 
-    def unpack(self, file_path, temp_dir):
+    def unpack(self, file_path, entity, temp_dir):
         try:
             with zipfile.ZipFile(file_path) as zf:
                 names = zf.namelist()
