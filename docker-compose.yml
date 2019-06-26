@@ -118,6 +118,5 @@ services:
 volumes:
   archive-data: {}
   postgres-data: {}
-  rabbitmq-data: {}
   redis-data: {}
   elasticsearch-data: {}
