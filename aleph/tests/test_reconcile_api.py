@@ -14,7 +14,7 @@ class ReconcileApiTestCase(TestCase):
         assert 'schemaSpace' in res.json, res.json
 
     def test_recon(self):
-        self.load_fixtures('docs.yaml')
+        self.load_fixtures()
         res = self.client.get('/api/freebase/reconcile?query=kwazulu')
         assert res.status_code == 200, res.json
         assert res.json['num'] == 1, res.json
@@ -27,7 +27,7 @@ class ReconcileApiTestCase(TestCase):
         assert res.json['result'][0]['name'] == 'KwaZulu', res.json
 
     def test_suggest(self):
-        self.load_fixtures('docs.yaml')
+        self.load_fixtures()
         res = self.client.get('/api/freebase/suggest')
         assert res.status_code == 200, res
         assert 'result' in res.json, res.json

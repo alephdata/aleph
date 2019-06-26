@@ -1,5 +1,6 @@
 import time
 import logging
+from pprint import pformat  # noqa
 from banal import hash_data
 from datetime import datetime
 from flask_babel import get_locale
@@ -58,7 +59,7 @@ def setup_request():
     By default, caching will be disabled."""
     request._begin_time = time.time()
     request._app_locale = str(get_locale())
-    request.session_id = request.headers.get('X-Aleph-Session')
+    request._session_id = request.headers.get('X-Aleph-Session')
     request._http_cache = False
     request._http_private = False
     request._http_revalidate = False
@@ -74,7 +75,7 @@ def finalize_response(resp):
         # http://wiki.nginx.org/X-accel#X-Accel-Buffering
         resp.headers['X-Accel-Buffering'] = 'no'
 
-    if not request._http_cache:
+    if not hasattr(request, '_http_cache') or not request._http_cache:
         resp.cache_control.no_cache = True
         return resp
 
@@ -105,7 +106,6 @@ def generate_request_log(resp):
     """Collect data about the request for analytical purposes."""
     payload = {
         'v': __version__,
-        'session_id': request.session_id,
         'method': request.method,
         'endpoint': request.endpoint,
         'referrer': request.referrer,
@@ -114,18 +114,23 @@ def generate_request_log(resp):
         'time': datetime.utcnow().isoformat(),
         'url': request.url,
         'path': request.full_path,
-        'status': resp.status_code,
-        'locale': request._app_locale
+        'status': resp.status_code
     }
+    if hasattr(request, '_session_id'):
+        payload['session_id'] = request._session_id
     if hasattr(request, 'authz'):
         payload['role_id'] = request.authz.id
     if hasattr(request, '_begin_time'):
         took = time.time() - request._begin_time
         payload['took'] = int(took * 1000)
+    if hasattr(request, '_app_locale'):
+        payload['locale'] = request._app_locale
     tags = dict(request.view_args or ())
-    tags.update(request._log_tags)
+    if hasattr(request, '_log_tags'):
+        tags.update(request._log_tags)
     for tag, value in tags.items():
         if value is not None and tag not in payload:
             payload[tag] = value
 
+    # log.info("Log: %s", pformat(payload))
     signals.handle_request_log.send(payload=payload)

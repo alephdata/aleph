@@ -1,4 +1,4 @@
-version: "2"
+version: "3.2"
 
 services:
   postgres:
@@ -6,12 +6,12 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER:     aleph
+      POSTGRES_USER: aleph
       POSTGRES_PASSWORD: aleph
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:10
+    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-3.1.2}
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -21,12 +21,6 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
-  rabbitmq:
-    image: rabbitmq
-    hostname: queue
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-
   redis:
     image: redis:alpine
     command: ["redis-server", "--appendonly", "yes"]
@@ -34,51 +28,58 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:1.4.0
+    image: alephdata/convert-document:${ALEPH_TAG:-3.1.2}
     restart: on-failure
     tmpfs:
       - /tmp
-      - /root/.config
-    mem_limit: 2g
+      - /home/app/.config
     expose:
       - 3000
 
   recognize-text:
-    image: alephdata/recognize-text:1.2.0
+    image: alephdata/recognize-text:${ALEPH_TAG:-3.1.2}
     restart: on-failure
-    mem_limit: 2g
     expose:
       - 50000
   
+  ingest-file:
+    image: alephdata/ingest-file:${ALEPH_TAG:-3.1.2}
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+    links:
+      - postgres
+      - redis
+      - convert-document
+      - recognize-text
+    restart: on-failure
+    env_file:
+      - aleph.env
+
   worker:
-    image: alephdata/aleph
-    command: celery -A aleph.queues -B -c 4 -l INFO worker
+    image: alephdata/aleph:${ALEPH_TAG:-3.1.2}
+    command: aleph worker
     restart: on-failure
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
-      - convert-document
-      - recognize-text
+      - ingest-file
     tmpfs:
       - /tmp
     volumes:
       - archive-data:/data
-      - "/:/host"
     env_file:
       - aleph.env
   
   shell:
-    image: alephdata/aleph
+    image: alephdata/aleph:${ALEPH_TAG:-3.1.2}
     command: /bin/bash
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
-      - convert-document
-      - recognize-text
+      - ingest-file
       - worker
     tmpfs:
       - /tmp
@@ -89,37 +90,17 @@ services:
     env_file:
       - aleph.env
 
-  beat:
-    image: alephdata/aleph
-    command: celery -A aleph.queues beat -s /var/lib/celerybeat-schedule.db
-    links:
-      - postgres
-      - elasticsearch
-      - rabbitmq
-      - redis
-      - worker
-      - convert-document
-      - recognize-text
-    tmpfs:
-      - /tmp
-    volumes:
-      - archive-data:/data
-    env_file:
-      - aleph.env
-
   api:
-    image: alephdata/aleph
-    command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+    image: alephdata/aleph:${ALEPH_TAG:-3.1.2}
+    command: gunicorn -w 6 -b 0.0.0.0:8000 --log-level debug --log-file - aleph.manage:app
     expose:
       - 8000
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
       - worker
-      - convert-document
-      - recognize-text
+      - ingest-file
     tmpfs:
       - /tmp
     volumes:
@@ -128,7 +109,7 @@ services:
       - aleph.env
 
   ui:
-    image: alephdata/aleph-ui-production
+    image: alephdata/aleph-ui-production:${ALEPH_TAG:-3.1.2}
     links:
       - api
     ports:
@@ -137,6 +118,5 @@ services:
 volumes:
   archive-data: {}
   postgres-data: {}
-  rabbitmq-data: {}
   redis-data: {}
   elasticsearch-data: {}

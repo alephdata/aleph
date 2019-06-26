@@ -40,9 +40,11 @@ class FolderViewer extends Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText } = ownProps;
+  const { document, location } = ownProps;
+  // note: this is not currently conducting a search for queryText
+  // because the semantics of doing so are confusing.
   return {
-    query: queryFolderDocuments(location, document.id, queryText),
+    query: queryFolderDocuments(location, document.id),
   };
 };
 

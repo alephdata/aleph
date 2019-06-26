@@ -16,9 +16,11 @@ def index_collection(collection, sync=False):
     if collection.deleted_at is not None:
         return delete_collection(collection.id)
 
+    log.info("Index [%s]: %s", collection.id, collection.label)
     data = get_collection(collection.id)
     data.pop('id', None)
-    return index_safe(collections_index(), collection.id, data,
+    return index_safe(collections_index(),
+                      collection.id, data,
                       refresh=refresh_sync(sync))
 
 
@@ -86,12 +88,8 @@ def delete_collection(collection_id, sync=False):
               ignore=[404])
 
 
-def delete_entities(collection_id, schema=None, bulk_only=False):
+def delete_entities(collection_id, schema=None, sync=False):
     """Delete entities from a collection."""
     filters = [{'term': {'collection_id': collection_id}}]
-    if bulk_only:
-        filters.append({'term': {'bulk': True}})
-    if schema is not None:
-        filters.append({'term': {'schemata': schema.name}})
     query = {'bool': {'filter': filters}}
-    query_delete(entities_read_index(schema), query)
+    query_delete(entities_read_index(schema), query, sync=sync)

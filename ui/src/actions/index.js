@@ -11,12 +11,14 @@ import {
   createCollection,
   deleteCollection,
   fetchCollection,
+  fetchCollectionStatus,
   fetchCollectionPermissions,
   fetchCollectionXrefIndex,
   queryCollections,
   queryXrefMatches,
   tiggerXrefMatches,
   triggerCollectionAnalyze,
+  triggerCollectionCancel,
   updateCollection,
   updateCollectionPermissions,
 } from './collectionActions';
@@ -39,6 +41,7 @@ export {
   queryCollections,
   fetchCollection,
   updateCollection,
+  fetchCollectionStatus,
   fetchCollectionPermissions,
   updateCollectionPermissions,
   fetchCollectionXrefIndex,
@@ -50,6 +53,7 @@ export {
   ingestDocument,
   deleteDocument,
   triggerCollectionAnalyze,
+  triggerCollectionCancel,
   tiggerXrefMatches,
 };
 

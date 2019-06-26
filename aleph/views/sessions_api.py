@@ -1,7 +1,7 @@
 import logging
 from urllib.parse import urldefrag
 
-from flask import Blueprint, redirect, request, abort
+from flask import Blueprint, redirect, request
 from flask_oauthlib.client import OAuthException
 from werkzeug.exceptions import Unauthorized
 
@@ -9,11 +9,11 @@ from aleph import signals, settings
 from aleph.core import db, url_for
 from aleph.authz import Authz
 from aleph.oauth import oauth
-from aleph.model import Role, Audit
+from aleph.model import Role
 from aleph.logic.roles import update_role
-from aleph.logic.audit import record_audit
 from aleph.views.forms import LoginSchema
-from aleph.views.util import get_best_next_url, parse_request, jsonify
+from aleph.views.util import get_best_next_url, parse_request
+from aleph.views.util import require, jsonify
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('sessions_api', __name__)
@@ -51,6 +51,7 @@ def decode_authz():
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
 def password_login():
     """Provides email and password authentication."""
+    require(settings.PASSWORD_LOGIN)
     data = parse_request(LoginSchema)
     role = Role.by_email(data.get('email'))
     if role is None or not role.has_password:
@@ -63,7 +64,6 @@ def password_login():
     update_role(role)
     authz = Authz.from_role(role)
     request.authz = authz
-    record_audit(Audit.ACT_LOGIN)
     return jsonify({
         'status': 'ok',
         'token': authz.to_token(role=role)
@@ -72,9 +72,7 @@ def password_login():
 
 @blueprint.route('/api/2/sessions/oauth')
 def oauth_init():
-    if not settings.OAUTH:
-        abort(404)
-
+    require(settings.OAUTH)
     callback_url = url_for('.oauth_callback')
     state = get_best_next_url(request.args.get('next'), request.referrer)
     return oauth.provider.authorize(callback=callback_url, state=state)
@@ -82,9 +80,7 @@ def oauth_init():
 
 @blueprint.route('/api/2/sessions/callback')
 def oauth_callback():
-    if not settings.OAUTH:
-        abort(404)
-
+    require(settings.OAUTH)
     resp = oauth.provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
@@ -99,7 +95,6 @@ def oauth_callback():
         update_role(role)
         log.info("Logged in: %r", role)
         request.authz = Authz.from_role(role)
-        record_audit(Audit.ACT_LOGIN)
         token = request.authz.to_token(role=role)
         token = token.decode('utf-8')
         state = request.args.get('state')

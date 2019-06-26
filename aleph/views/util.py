@@ -13,7 +13,7 @@ from lxml.html.clean import Cleaner
 
 from aleph.core import settings
 from aleph.authz import Authz
-from aleph.model import Document, Collection, Entity
+from aleph.model import Collection, Entity
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
@@ -71,12 +71,6 @@ def get_index_entity(entity_id, action=Authz.READ):
     entity = obj_or_404(_get_index_entity(entity_id))
     require(request.authz.can(entity['collection_id'], action))
     return entity
-
-
-def get_db_document(document_id, action=Authz.READ):
-    document = obj_or_404(Document.by_id(document_id))
-    require(request.authz.can(document.collection_id, action))
-    return document
 
 
 def get_db_collection(collection_id, action=Authz.READ):

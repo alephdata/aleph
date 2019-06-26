@@ -43,7 +43,7 @@ class QueryTestCase(TestCase):
     def test_has_text(self):
         q = query([('q', 'search text')])
         text_q = q.get_text_query()
-        self.assertEqual(text_q[0]['simple_query_string']['query'],
+        self.assertEqual(text_q[0]['query_string']['query'],
                          'search text')
 
     def test_has_prefix(self):

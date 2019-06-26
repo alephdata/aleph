@@ -87,7 +87,7 @@ Page
         <div>
           <Document
             renderAnnotations
-            file={document.links.pdf}
+            file={document.links.pdf || document.links.file}
             loading={<SectionLoading />}
             onLoadSuccess={onDocumentLoad}
           >

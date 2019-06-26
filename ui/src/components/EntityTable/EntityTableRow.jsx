@@ -5,7 +5,7 @@ import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
 import {
-  Country, Schema, Collection, Entity, FileSize, Date,
+  Country, Collection, Entity, FileSize, Date,
 } from 'src/components/common';
 /* eslint-disable */
 
@@ -50,9 +50,6 @@ class EntityTableRow extends Component {
             </td>
             )
           }
-          <td className="schema">
-            <Schema.Label schema={entity.schema} />
-          </td>
           {!documentMode && (
             <td className="country">
               <Country.List codes={entity.getTypeValues('country')} />

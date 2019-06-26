@@ -1,34 +1,40 @@
 COMPOSE=docker-compose -f docker-compose.dev.yml 
-DEVDOCKER=$(COMPOSE) run --rm app
-TAG=latest
+APPDOCKER=$(COMPOSE) run --rm app
+INGESTDOCKER=$(COMPOSE) run --rm ingest-file
+ALEPH_TAG=latest
 
 all: build upgrade web
 
 services:
 	$(COMPOSE) up -d --remove-orphans \
-		rabbitmq postgres elasticsearch \
+		postgres elasticsearch ingest-file \
 		convert-document recognize-text
 
-shell: services    
-	$(DEVDOCKER) /bin/bash
+ingest-shell: services    
+	$(INGESTDOCKER) /bin/bash
+
+shell: services
+	$(APPDOCKER) /bin/bash
+
+ingest-test:
+	$(INGESTDOCKER) nosetests --with-coverage --cover-package=ingestors
 
 test:
-	$(DEVDOCKER) contrib/test.sh
+	$(APPDOCKER) contrib/test.sh
 
 upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
 	sleep 10
-	$(DEVDOCKER) aleph upgrade
-	$(DEVDOCKER) celery purge -f -A aleph.queues
+	$(APPDOCKER) aleph upgrade
 
 web: services
 	$(COMPOSE) up api ui
 
 worker: services
-	$(COMPOSE) run --rm -e ALEPH_EAGER=false app celery -A aleph.queues -B -c 4 -l INFO worker
+	$(COMPOSE) run --rm -e ALEPH_EAGER=false app aleph worker
 
 purge:
-	$(DEVDOCKER) celery purge -f -A aleph.queues
+	$(APPDOCKER) celery purge -f -A aleph.queues
 
 stop:
 	$(COMPOSE) down --remove-orphans
@@ -43,25 +49,37 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
-	docker build -t alephdata/aleph:$(TAG) .
-	docker build -t alephdata/aleph-ui:$(TAG) ui
+	$(COMPOSE) build
 
 build-ui:
-	docker build -t alephdata/aleph-ui-production:$(TAG) -f ui/Dockerfile.production ui
+	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
 
 build-full: build build-ui
 
 docker-pull:
-	docker pull alephdata/aleph
-	docker pull alephdata/aleph-ui
+	$(COMPOSE) pull --include-deps --ignore-pull-failures
 
 docker-push:
-	docker push alephdata/aleph:$(TAG)
-	docker push alephdata/aleph-ui:$(TAG)
-	docker push alephdata/aleph-ui-production:$(TAG)
+	docker push alephdata/aleph-elasticsearch:$(ALEPH_TAG)
+	docker push alephdata/convert-document:$(ALEPH_TAG)
+	docker push alephdata/recognize-text:$(ALEPH_TAG)
+	docker push alephdata/ingest-file:$(ALEPH_TAG)
+	docker push alephdata/aleph:$(ALEPH_TAG)
+	docker push alephdata/aleph-ui:$(ALEPH_TAG)
+	docker push alephdata/aleph-ui-production:$(ALEPH_TAG)
 
 dev: 
 	pip install -q transifex-client bumpversion babel jinja2
+
+fixtures:
+	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
+	balkhash iterate -d fixtures >aleph/tests/fixtures/samples.ijson
+
+contrib/allCountries.zip:
+	curl -s -o contrib/allCountries.zip https://download.geonames.org/export/dump/allCountries.zip
+
+geonames: contrib/allCountries.zip
+	unzip -p contrib/allCountries.zip | grep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" >contrib/geonames.txt
 
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev

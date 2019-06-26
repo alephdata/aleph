@@ -19,9 +19,7 @@ def get_alert(alert_id):
 
 def check_alerts():
     """Go through all alerts."""
-    Alert.dedupe()
-    db.session.commit()
-    for alert_id in Alert.all_ids():
+    for alert_id in list(Alert.all_ids()):
         check_alert(alert_id)
 
 
@@ -31,6 +29,7 @@ def check_alert(alert_id):
         return
     if not alert.role.is_alertable:
         return
+    log.info("Check alert [%s]: %s", alert.id, alert.query)
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
     index = entities_read_index(schema=Entity.THING)
@@ -48,6 +47,7 @@ def check_alert(alert_id):
         publish(Events.MATCH_ALERT,
                 actor_id=entity.get('uploader_id'),
                 params=params)
+        db.session.flush()
 
     alert.update()
     db.session.commit()
@@ -60,24 +60,23 @@ def alert_query(alert, authz):
     latest known result."""
     # Many users have bookmarked complex queries, otherwise we'd use a
     # precise match query.
-    query = {
-        'simple_query_string': {
+    queries = [{
+        'query_string': {
             'query': alert.query,
-            'fields': ['fingerprints^3', 'text'],
+            'fields': ['fingerprints.text^3', 'text'],
             'default_operator': 'AND',
             'minimum_should_match': '90%'
         }
-    }
+    }]
     filters = [
-        {'range': {'created_at': {'gt': alert.notified_at}}},
-        {'term': {'schemata': Entity.THING}},
+        {'range': {'updated_at': {'gt': alert.notified_at}}},
         authz_query(authz)
     ]
     return {
         'size': MAX_PAGE,
         'query': {
             'bool': {
-                'should': [query],
+                'should': queries,
                 'filter': filters,
                 'minimum_should_match': 1
             }

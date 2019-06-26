@@ -28,9 +28,9 @@ class SearchBox extends PureComponent {
 
   onChange = newSearchValue => this.props.updateSearchValue(newSearchValue);
 
-  onItemSelect = ({ text }) => {
-    this.props.updateSearchValue(text);
-    this.props.doSearch(text);
+  onItemSelect = ({ query }) => {
+    this.props.updateSearchValue(query);
+    this.props.doSearch(query);
   };
 
   deleteQueryLog = queryLogItem => (event) => {
@@ -57,21 +57,17 @@ class SearchBox extends PureComponent {
     const props = {
       active: modifiers.active,
       className: 'navbar-search-item',
-      key: queryItem.text,
+      key: queryItem.query,
       onClick: handleClick,
-      text: queryItem.text,
+      text: queryItem.query,
       labelElement: <this.RemoveQueryLog queryItem={queryItem} />,
       icon,
     };
-    return (
-      <MenuItem
-        {...props}
-      />
-    );
+    return <MenuItem {...props} />;
   };
 
-  itemListPredicate = (text, queryList) => (
-    text ? [{ text, isVirtual: true }] : [{ text: '' }, ...queryList]
+  itemListPredicate = (query, queryList) => (
+    query ? [{ query, isVirtual: true }] : [{ query: '' }, ...queryList]
   )
 
   render() {
@@ -127,6 +123,7 @@ const mapStateToProps = state => ({
   query: Query.fromLocation('querylog', window.location, {}, 'querylog')
     .limit(20),
 });
+
 const mapDispatchToProps = ({
   fetchQueryLogs,
   deleteQueryLog,

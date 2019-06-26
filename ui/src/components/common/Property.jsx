@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Entity from 'src/components/common/Entity';
 import {
-  Numeric, Country, Language, Date, URL,
+  Numeric, Country, Language, Date, FileSize, URL,
 } from 'src/components/common';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
@@ -15,6 +15,9 @@ class Value extends PureComponent {
     const { value, prop } = this.props;
     if (!value) {
       return null;
+    }
+    if (prop.name === 'fileSize') {
+      return <FileSize value={value} />;
     }
     if (prop.type.name === 'country') {
       return <Country.Name code={value} />;
@@ -58,14 +61,14 @@ class Reverse extends PureComponent {
 
 class Values extends PureComponent {
   render() {
-    const { prop, values } = this.props;
+    const { prop, values, separator = ' · ' } = this.props;
     const vals = ensureArray(values).map(value => (
-      <Value key={value.toString()} prop={prop} value={value} />
+      <Value key={value.id || value} prop={prop} value={value} />
     ));
     if (!vals.length) {
       return (<span className="no-value">—</span>);
     }
-    return (<span>{ wordList(vals, ' · ') }</span>);
+    return (<span>{ wordList(vals, separator) }</span>);
   }
 }
 

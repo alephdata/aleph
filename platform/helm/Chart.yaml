@@ -1,4 +1,0 @@
-apiVersion: v1
-description: Aleph data search
-name: aleph
-version: 3.1.3

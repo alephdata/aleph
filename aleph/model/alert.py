@@ -1,5 +1,4 @@
 from datetime import datetime
-from itertools import permutations
 from normality import stringify, normalize
 
 from aleph.core import db
@@ -72,15 +71,6 @@ class Alert(db.Model, SoftDeleteModel):
         alert.query = stringify(data.get('query'))
         alert.update()
         return alert
-
-    @classmethod
-    def dedupe(cls):
-        alerts = cls.all()
-        for (left, right) in permutations(alerts, 2):
-            if left.id >= right.id:
-                continue
-            if left.is_same(right):
-                left.delete()
 
     def __repr__(self):
         return '<Alert(%r, %r)>' % (self.id, self.query)

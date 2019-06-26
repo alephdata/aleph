@@ -190,6 +190,10 @@ export function selectCollectionView(state, collectionId, mode, isPreview) {
   return largestSchema; // yay.
 }
 
+export function selectCollectionStatus(state, collectionId) {
+  return selectObject(state.collectionStatus, collectionId);
+}
+
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state.collectionPermissions, collectionId);
 }
@@ -217,7 +221,7 @@ export function selectQueryLog(state) {
 export function selectQueryLogsLimited(state, limit = 9) {
   const queryLogs = selectQueryLog(state);
   let results = [];
-  if (queryLogs.results) {
+  if (queryLogs && !!queryLogs.results) {
     results = queryLogs.results.slice(0, limit);
   }
   return {

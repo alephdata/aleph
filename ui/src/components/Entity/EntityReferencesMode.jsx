@@ -87,9 +87,7 @@ class EntityReferencesMode extends React.Component {
     const { property } = reference;
     const results = ensureArray(result.results);
     const isSearchable = reference.count > result.limit;
-    const columns = schema.getFeaturedProperties()
-      .filter(prop => prop.name !== property.name && !prop.caption);
-
+    const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
     return (
       <section className="EntityReferencesTable">
         {isSearchable && (

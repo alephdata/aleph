@@ -36,7 +36,6 @@ class CollectionsApiTestCase(TestCase):
         assert res.json['total'] == 1, res.json
 
     def test_sitemap(self):
-        self.update_index()
         res = self.client.get('/api/2/sitemap.xml')
         assert res.status_code == 200, res
         assert b'<loc>' not in res.data, res.data
@@ -151,3 +150,38 @@ class CollectionsApiTestCase(TestCase):
         ]
         res = self.client.post(url, headers=headers, data=json.dumps(data))
         assert res.status_code == 400, res
+
+    def test_status(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/collections/%s/status' % self.col.id
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res
+        assert 0 == res.json['pending'], res.json
+
+        meta = {
+            'countries': ['de', 'us'],
+            'languages': ['en'],
+            'mime_type': 'text/csv',
+            'source_url': 'http://pudo.org/experts.csv'
+        }
+        csv_path = self.get_fixture_path('experts.csv')
+        data = {
+            'meta': json.dumps(meta),
+            'foo': open(csv_path, 'rb'),
+        }
+        ingest_url = '/api/2/collections/%s/ingest' % self.col.id
+        self.client.post(ingest_url, data=data, headers=headers)
+
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res
+        assert 1 == res.json['pending'], res.json
+
+        res = self.client.delete(url)
+        assert res.status_code == 403, res
+
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 200, res
+        assert 0 == res.json['pending'], res.json

@@ -10,10 +10,7 @@ from flask_migrate import Migrate
 from flask_mail import Mail
 from flask_cors import CORS
 from flask_babel import Babel
-from kombu import Queue
-from celery import Celery, Task
-from celery.schedules import crontab
-from balkhash import init as init_balkhash
+from flask_talisman import Talisman
 from followthemoney import set_model_locale
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
@@ -25,20 +22,12 @@ from aleph import settings, signals
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
+NONE = '\'none\''
 log = logging.getLogger(__name__)
 
 db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
-
-
-class SessionTask(Task):
-
-    def on_failure(self, exc, task_id, args, kwargs, einfo):
-        db.session.remove()
-
-
-celery = Celery('aleph', task_cls=SessionTask)
 babel = Babel()
 
 
@@ -55,39 +44,27 @@ def create_app(config={}):
         'BABEL_DOMAIN': 'aleph'
     })
 
-    queue = Queue(settings.QUEUE_NAME,
-                  routing_key=settings.QUEUE_ROUTING_KEY,
-                  queue_arguments={'x-max-priority': 9})
-    celery.conf.update(
-        imports=('aleph.queues'),
-        broker_url=settings.BROKER_URI,
-        task_always_eager=settings.EAGER,
-        task_eager_propagates=True,
-        task_ignore_result=True,
-        task_acks_late=True,
-        task_queues=(queue,),
-        task_default_queue=settings.QUEUE_NAME,
-        task_default_routing_key=settings.QUEUE_ROUTING_KEY,
-        worker_max_tasks_per_child=1000,
-        result_persistent=False,
-        beat_schedule={
-            'hourly': {
-                'task': 'aleph.logic.scheduled.hourly',
-                'schedule': crontab(hour='*', minute=0)
-            },
-            'daily': {
-                'task': 'aleph.logic.scheduled.daily',
-                'schedule': crontab(hour=5, minute=0)
-            }
-        },
-    )
-
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
     configure_oauth(app)
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
     CORS(app, origins=settings.CORS_ORIGINS)
+    feature_policy = {
+        'accelerometer': NONE,
+        'camera': NONE,
+        'geolocation': NONE,
+        'gyroscope': NONE,
+        'magnetometer': NONE,
+        'microphone': NONE,
+        'payment': NONE,
+        'usb': NONE
+    }
+    Talisman(app,
+             force_https=settings.FORCE_HTTPS,
+             strict_transport_security=settings.FORCE_HTTPS,
+             feature_policy=feature_policy,
+             content_security_policy=settings.CONTENT_POLICY)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
@@ -133,29 +110,22 @@ def configure_alembic(config):
 
 def get_es():
     if not hasattr(settings, '_es_instance'):
-        es = Elasticsearch(settings.ELASTICSEARCH_URL,
-                           timeout=settings.ELASTICSEARCH_TIMEOUT)
+        timeout = settings.ELASTICSEARCH_TIMEOUT
+        es = Elasticsearch(settings.ELASTICSEARCH_URL, timeout=timeout)
         settings._es_instance = es
     return settings._es_instance
 
 
 def get_archive():
-    if not hasattr(settings, '_aleph_archive'):
-        settings._aleph_archive = init_archive(archive_type=settings.ARCHIVE_TYPE,  # noqa
-                                               bucket=settings.ARCHIVE_BUCKET,
-                                               path=settings.ARCHIVE_PATH)
-    return settings._aleph_archive
+    if not hasattr(settings, '_archive'):
+        settings._archive = init_archive()
+    return settings._archive
 
 
 def get_cache():
     if not hasattr(settings, '_cache') or settings._cache is None:
         settings._cache = Cache(get_redis(), prefix=settings.APP_NAME)
     return settings._cache
-
-
-def get_dataset(dataset):
-    """Connect to a balkhash dataset."""
-    return init_balkhash(dataset)
 
 
 es = LocalProxy(get_es)
@@ -191,9 +161,9 @@ def url_external(path, query, relative=False):
 
         # api_url = request.url_root
         api_url = settings.APP_UI_URL
-        if settings.URL_SCHEME is not None:
+        if settings.FORCE_HTTPS is not None:
             parsed = urlparse(api_url)
-            parsed = parsed._replace(scheme=settings.URL_SCHEME)
+            parsed = parsed._replace(scheme='https')
             api_url = parsed.geturl()
         return urljoin(api_url, path)
     except RuntimeError:

@@ -3,10 +3,8 @@ from banal import ensure_list
 from flask.wrappers import Response
 from flask import Blueprint, request
 
-from aleph.model import Audit
-from aleph.logic.audit import record_audit
 from aleph.index.entities import iter_entities
-from aleph.logic.entities.rdf import export_collection
+from aleph.logic.rdf import export_collection
 from aleph.views.util import get_db_collection
 from aleph.views.util import require, stream_ijson
 
@@ -26,7 +24,6 @@ def entities(collection_id=None):
     includes = [f for f in includes if f not in excludes]
     if collection_id is not None:
         get_db_collection(collection_id, request.authz.READ)
-        record_audit(Audit.ACT_COLLECTION, id=collection_id)
     entities = iter_entities(authz=request.authz,
                              collection_id=collection_id,
                              schemata=schemata,
@@ -41,5 +38,4 @@ def triples(collection_id):
     log.debug("Stream triples [%r] begins... (coll: %s)",
               request.authz, collection_id)
     collection = get_db_collection(collection_id, request.authz.READ)
-    record_audit(Audit.ACT_COLLECTION, id=collection_id)
     return Response(export_collection(collection), mimetype='text/plain')

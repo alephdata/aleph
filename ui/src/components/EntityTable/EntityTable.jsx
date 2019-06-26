@@ -101,9 +101,8 @@ class EntityTable extends Component {
             {updateSelection && (<th className="select" />)}
             <TH field="name" className="wide" sortable />
             {!hideCollection
-              && <TH field="collection_id" />
+              && <TH field="collection_id" className="wide" />
             }
-            <TH className="header-schema visible-md-none" field="schema" sortable />
             {!documentMode && (
               <TH className="header-country" field="countries" sortable />
             )}

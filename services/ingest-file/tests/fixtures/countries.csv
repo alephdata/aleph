@@ -1,0 +1,256 @@
+euname,modified,linked_country,iso3,iso2,grc,isonum,country,imperitive
+,,Georgia,,,ABK,,Abkhazia,De Facto; Currency
+AFGHANISTAN,,,AFG,AF,AFG,004,Afganistan,
+,Added 26th October 2010,Finland,ALA,AX,ALA,248,Åland Islands,Postal
+Albania,,,ALB,AL,ALB,008,Albania,
+ALGERIA,,,DZA,DZ,ALG,012,Algeria,
+,,United States of America,ASM,AS,AMS,016,American Samoa,Geographical
+ANDORRA,,,AND,AD,AND,020,Andorra,
+ANGOLA,,,AGO,AO,ANG,024,Angola,
+,,United Kingdom,AIA,AI,ANU,660,Anguilla,Geographical; Postal; Currency; Telephone
+ANTIGUA AND BARBUDA,,,ATG,AG,ANT,028,Antigua & Barbuda,
+Argentina,,,ARG,AR,ARG,032,Argentina,
+Armenia,,,ARM,AM,ARM,051,Armenia,
+ARUBA,,Netherlands,ABW,AW,ARU,533,Aruba,Geographical; Postal; Currency; Telephone
+Australia,,,AUS,AU,AST,036,Australia,
+Austria,,,AUT,AT,AUS,040,Austria,
+AZERBAIJAN,,,AZE,AZ,AZE,031,Azerbaijan,
+BAHAMAS,,,BHS,BS,BAH,044,Bahamas,
+BAHRAIN,,,BHR,BH,BAR,048,Bahrain,
+BANGLADESH,,,BGD,BD,BAN,050,Bangladesh,
+Barbados,,,BRB,BB,BAB,052,Barbados,
+BELARUS,,,BLR,BY,BEO,112,Belarus,
+Belgium,,,BEL,BE,BEL,056,Belgium,
+BELIZE,,,BLZ,BZ,BEI,084,Belize,
+Benin,,,BEN,BJ,BEN,204,Benin,
+BERMUDA,,United Kingdom,BMU,BM,BER,060,Bermuda,Geographical; Postal; Currency; Telephone
+BHUTAN,,,BTN,BT,BHU,064,Bhutan,
+BOLIVIA,,,BOL,BO,BOL,068,Bolivia,
+,ISO codes added 28th Dec. 2010,Netherlands,BES,BQ,BON,535,Bonaire,Geographical; Postal; Currency; Telephone
+Bosnia-Herzegovina,,,BIH,BA,BOS,070,Bosnia-Herzegovina,
+BOTSWANA,,,BWA,BW,BOT,072,Botswana,
+Brazil,,,BRA,BR,BRA,076,Brazil,
+,,"United Kingdom, United States of America",IOT,IO,BIO,086,British Indian Ocean Territory,Geographical; Postal; Telephone
+British Virgin Islands,,United Kingdom,VGB,VG,BVI,092,British Virgin Islands,Geographical; Postal; Currency; Telephone
+BRUNEI,,,BRN,BN,BRU,096,Brunei Darussalam,
+Bulgaria,,,BGR,BG,BUL,100,Bulgaria,
+BURKINA FASO,,,BFA,BF,BUK,854,Burkina Faso,
+BURUNDI,,,BDI,BI,BUU,108,Burundi,
+Cambodia,,,KHM,KH,CAM,116,Cambodia,
+Cameroon,,,CMR,CM,CAE,120,Cameroon,
+Canada,,,CAN,CA,CAN,124,Canada,
+CAPE VERDE,,,CPV,CV,CAP,132,Cape Verde Islands,
+,,United Kingdom,CYM,KY,CAY,136,Cayman Islands,Geographical; Postal; Currency; Telephone
+"CENTRAL AFRICAN, REPUBLIC",,,CAF,CF,CEN,140,Central African Republic,
+Chad,,,TCD,TD,CHA,148,Chad,
+CHILE,,,CHL,CL,CHI,152,Chile,
+CHINA,,,CHN,CN,CHN,156,China,
+,,Australia,CXR,CX,CHR,162,Christmas Island,Geographical
+,,Australia,CCK,CC,COC,166,Cocos (Keeling) Islands,Geographical
+Colombia,,,COL,CO,CLO,170,Colombia,
+COMOROS,,,COM,KM,COM,174,Comoros,
+CONGO,,,COG,CG,CNG,178,Congo (Brazzaville),
+"CONGO, DEMOCRATIC REPUBLIC OF",,,ZAR,CD,ZAI,180,Congo (Kinshasa),
+COOK ISLANDS,,New Zealand,COK,CK,COO,184,Cook Islands,Geographical; Postal; Telephone
+Costa Rica,,,CRI,CR,COS,188,Costa Rica,
+Croatia,,,HRV,HR,CRO,191,Croatia,
+CUBA,,,CUB,CU,CUB,192,Cuba,
+,ISO codes added 28th Dec. 2010,Netherlands,CUW,CW,CUR,531,Curaçao,Geographical; Postal; Currency; Telephone
+Cyprus,,,CYP,CY,CYP,196,Cyprus,
+Czech Republic,,,CZE,CZ,CZE,203,Czech Republic,
+Denmark,,,DNK,DK,DEN,208,Denmark,
+DJIBOUTI,,,DJI,DJ,DJI,262,Djibouti,
+DOMINIQUE,,,DMA,DM,DOI,212,Dominica,
+Dominican Republic,,,DOM,DO,DOM,214,Dominican Republic,
+EAST TIMOR,,,TLS,TL,ETI,626,East Timor,
+Ecuador,,,ECU,EC,ECU,218,Ecuador,
+EGYPT,,,EGY,EG,EGY,818,Egypt,
+El Salvador,,,SLV,SV,ELS,222,El Salvador,
+EQUATORIAL GUINEA,,,GNQ,GQ,EQA,226,Equatorial Guinea,
+ERITREA,,,ERI,ER,ERI,232,Eritrea,
+Estonia,,,EST,EE,EST,233,Estonia,
+ETHIOPIA,,,ETH,ET,ETH,231,Ethiopia,
+FAROE ISLANDS,,,FRO,FO,FAE,234,Faeroe Islands,
+,,United Kingdom,FLK,FK,FAL,238,Falkland Islands,Geographical; Postal; Currency; Telephone
+FIJI,,,FJI,FJ,FIJ,242,Fiji,
+Finland,,,FIN,FI,FIN,246,Finland,
+France,,,FRA,FR,FRA,250,France,
+FRENCH GUYANA,,France,GUF,GF,FGU,254,French Guiana,Geographical; Telephone
+FRENCH POLYNESIA,Corrected 13th November 2010,France,PYF,PF,FPO,258,French Polynesia,Geographical; Currency; Telephone
+,,France,ATF,TF,FST,260,French Southern Territories,Geographical; Postal; Telephone
+GABON,,,GAB,GA,GAB,266,Gabon,
+GAMBIA,,,GMB,GM,GAM,270,Gambia,
+GEORGIA,,,GEO,GE,GEO,268,Georgia,
+Germany,,,DEU,DE,GER,276,Germany,
+Ghana,,,GHA,GH,GHA,288,Ghana,
+GIBRALTAR,,United Kingdom,GIB,GI,GIB,292,Gibralter,Geographical; Postal; Currency; Telephone
+Greece,,,GRC,GR,GRE,300,Greece,
+GREENLAND,,Denmark,GRL,GL,GRN,304,Greenland,Geographical; Postal; Telephone
+GRENADA,,,GRD,GD,GRA,308,Grenada,
+GUADELOUPE,,France,GLP,GP,GUD,312,Guadeloupe,Geographical; Postal; Telephone
+,,United States of America,GUM,GU,GUM,316,Guam,Geographical
+Guatemala,,,GTM,GT,GUA,320,Guatemala,
+,,United Kingdom,GGY,GG,GUE,831,Guernsey,Postal
+Guinea,,,GIN,GN,GUI,324,Guinea,
+GUINEA BISSAU,,,GNB,GW,GUB,624,Guinea-Bissau,
+GUYANA,,,GUY,GY,GUY,328,Guyana,
+HAITI,,,HTI,HT,HAI,332,Haiti,
+HOLY SEE (VATICAN CITY STATE),,,VAT,VA,VAT,336,Holy See,
+Honduras,,,HND,HN,HON,340,Honduras,
+Hong Kong,,China,HKG,HK,HOK,344,Hong Kong,Postal; Currency; Telephone
+Hungary,,,HUN,HU,HUN,348,Hungary,
+Iceland,,,ISL,IS,ICE,352,Iceland,
+India,,,IND,IN,IND,356,India,
+INDONESIA,,,IDN,ID,INO,360,Indonesia,
+"IRAN, ISLAMIC REPUBLIC OF",,,IRN,IR,IRA,364,Iran,
+IRAQ,,,IRQ,IQ,IRQ,368,Iraq,
+Ireland,,,IRL,IE,IRE,372,Ireland,
+ISLE OF MAN,,United Kingdom,IMN,IM,ISL,833,Isle of Man,Postal
+Israel,,,ISR,IL,ISR,376,Israel,
+Italy,,,ITA,IT,ITA,380,Italy,
+COTE D'IVOIRE,,,CIV,CI,IVO,384,Ivory Coast,
+Jamaica,,,JAM,JM,JAM,388,Jamaica,
+Japan,,,JPN,JP,JAP,392,Japan,
+JERSEY,,United Kingdom,JEY,JE,JER,832,Jersey,Postal
+JORDAN,,,JOR,JO,JOR,400,Jordan,
+KAZAKHSTAN,,,KAZ,KZ,KAZ,398,Kazakhstan,
+Kenya,,,KEN,KE,KEN,404,Kenya,
+KIRIBATI,,,KIR,KI,KII,296,Kiribati,
+,,Serbia,,,KOS,,Kosovo,Postal; Currency; Telephone
+KUWAIT,,,KWT,KW,KUW,414,Kuwait,
+KYRGYZSTAN,,,KGZ,KG,KIR,417,Kyrgyzstan,
+"LAOS, PEOPLE'S DEMOCRATIC REPUBLIC",,,LAO,LA,LAO,418,Laos,
+Latvia,,,LVA,LV,LAT,428,Latvia,
+LEBANON,,,LBN,LB,LEB,422,Lebanon,
+LESOTHO,,,LSO,LS,LES,426,Lesotho,
+LIBERIA,,,LBR,LR,LIR,430,Liberia,
+LIBYA,,,LBY,LY,LIB,434,Libya,
+LIECHTENSTEIN,,,LIE,LI,LIE,438,Liechtenstein,
+LITUANIA,,,LTU,LT,LIT,440,Lithuania,
+Luxembourg,,,LUX,LU,LUX,442,Luxembourg,
+MACAO,,China,MAC,MO,MCA,446,Macau,Postal; Currency; Telephone
+"MACEDONIA, FORMER YUGOSLAV REPUBLIC OF",,,MKD,MK,MCE,807,Macedonia,
+MADAGASCAR,,,MDG,MG,MAD,450,Madagascar,
+MALAWI,,,MWI,MW,MAW,454,Malawi,
+Malaysia,,,MYS,MY,MAA,458,Malaysia,
+MALDIVES,,,MDV,MV,MAV,462,Maldives,
+MALI,,,MLI,ML,MAI,466,Mali,
+Malta,,,MLT,MT,MAL,470,Malta,
+MARSHALL ISLANDS,,,MHL,MH,MAR,584,Marshall Islands,
+MARTINIQUE,,France,MTQ,MQ,MAN,474,Martinique,Geographical; Postal; Telephone
+Mauritania,,,MRT,MR,MAU,478,Mauritania,
+MAURITIUS,,,MUS,MU,MAT,480,Mauritius,
+MAYOTTE,,France,MYT,YT,MAY,175,Mayotte,Geographical; Postal; Telephone
+Mexico,,,MEX,MX,MEX,484,Mexico,
+"MICRONESIA, FEDERATED STATES OF",,,FSM,FM,MIC,583,Micronesia,
+"MOLDOVA, REPUBLIC OF",,,MDA,MD,MOL,498,Moldova,
+Monaco,,,MCO,MC,MON,492,Monaco,
+MONGOLIA,,,MNG,MN,MOG,496,Mongolia,
+Montenegro,,,MNE,ME,MOE,499,Montenegro,
+,,United Kingdom,MSR,MS,MOT,500,Montserrat,Geographical; Postal; Currency; Telephone
+Morocco,,,MAR,MA,MOR,504,Morocco,
+Mozambique,,,MOZ,MZ,MOZ,508,Mozambique,
+Myanmar,,,MMR,MM,BUR,104,Myanmar,
+,,Azerbaijan,,,NAG,,Nagorno-Karabakh,De Facto
+NAMIBIA,,,NAM,NA,NAM,516,Namibia,
+NAURU,,,NRU,NR,NAU,520,Nauru,
+NEPAL,,,NPL,NP,NEP,524,Nepal,
+Netherlands Antilles,,,ANT,AN,NAN,530,Netherlands Antilles,Legacy
+Netherlands,,,NLD,NL,NET,528,Netherlands,
+NEW CALEDONIA,,France,NCL,NC,NCA,540,New Caledonia,Geographical; Postal; Currency; Telephone
+NEW ZEALAND,,,NZL,NZ,NEW,554,New Zealand,
+Nicaragua,,,NIC,NI,NIC,558,Nicaragua,
+Niger,,,NER,NE,NIE,562,Niger,
+Nigeria,,,NGA,NG,NIG,566,Nigeria,
+NIUE,,,NIU,NU,NIU,570,Niue,
+,,Australia,NFK,NF,NOF,574,Norfolk Island,Geographical; Telephone
+"KOREA, PEOPLE'S DEMOCRATIC REPUBLIC OF",,,PRK,KP,NKO,408,North Korea,
+,,Cyprus,,,NCY,,Northern Cyprus,De Facto; Postal; Currency; Telephone
+,,United States of America,MNP,MP,NMI,580,Northern Mariana Islands,Geographical
+Norway,,,NOR,NO,NOR,578,Norway,
+OMAN,,,OMN,OM,OMA,512,Oman,
+Pakistan,,,PAK,PK,PAK,586,Pakistan,
+PALAU,,,PLW,PW,PAL,585,Palau,
+PALESTINIAN OCCUPIED TERRITORY,,Israel,PSE,PS,PLA,275,Palestinian Territories,
+PANAMA,,,PAN,PA,PAN,591,Panama,
+PAPUA NEW GUINEA,,,PNG,PG,PAP,598,Papua New Guinea,
+PARAGUAY,,,PRY,PY,PAR,600,Paraguay,
+PERU,,,PER,PE,PER,604,Peru,
+Philippines,,,PHL,PH,PHI,608,Philippines,
+,,United Kingdom,PCN,PN,PIT,612,Pitcairn Islands,Geographical; Postal; Currency; Telephone
+Poland,,,POL,PL,POL,616,Poland,
+Portugal,,,PRT,PT,POR,620,Portugal,
+PUERTO RICO,,United States,PRI,PR,PUE,630,Puerto Rico,Geographical
+,,Somalia,,,PUN,,Puntland,De Facto
+QATAR,,,QAT,QA,QAT,634,Qatar,
+Romania,,,ROU,RO,ROM,642,Romania,
+"RUSSIA, FEDERATION OF",,,RUS,RU,RUS,643,Russia,
+RUANDA,,,RWA,RW,RWA,646,Rwanda,
+REUNION,,France,REU,RE,REU,638,Réunion,Geographical; Postal; Currency; Telephone
+,ISO codes added 28th Dec. 2010,The Netherlands,BES,BQ,SAB,535,Saba,Geographical; Postal; Currency; Telephone
+,,France,BLM,BL,STB,652,Saint Barthélemy,Geographical; Postal; Currency; Telephone
+SAINT KITTS AND NEVIS,,,KNA,KN,STC,659,Saint Christopher & Nevis,
+,,United Kingdom,SHN,SH,STH,654,Saint Helena,Geographical; Postal; Currency; Telephone
+SAINT LUCIA,,,LCA,LC,STL,662,Saint Lucia,
+,,France,MAF,MF,STM,663,Saint Martin,Geographical; Postal; Currency; Telephone
+,,France,SPM,PM,SPM,666,Saint Pierre & Miquelon,Geographical; Postal; Currency; Telephone
+SAINT VINCENT AND THE GRENADINES,,,VCT,VC,STV,670,Saint Vincent & The Grenadines,
+SAMOA,,,WSM,WS,WSM,882,Samoa,
+SAINT MARINO,,,SMR,SM,SAN,674,San Marino,
+SAO TOME AND PRINCIPE,,,STP,ST,SAO,678,Sao Tome & Principe,
+SUADI ARABIA,,,SAU,SA,SAU,682,Saudi Arabia,
+Senegal,,,SEN,SN,SEN,686,Senegal,
+Serbia,,,SRB,RS,YUG,688,Serbia,
+SEYCHELLES,,,SYC,SC,SEY,690,Seychelles,
+SIERRA LEONE,,,SLE,SL,SIE,694,Sierra Leone,
+SINGAPORE,,,SGP,SG,SIN,702,Singapore,
+,ISO codes added 28th Dec. 2010,The Netherlands,BES,BQ,STE,535,Sint Eustatius,Geographical; Postal; Currency; Telephone
+,ISO codes added 28th Dec. 2010,The Netherlands,SXM,SX,SMA,534,Sint Maarten,Geographical; Postal; Currency; Telephone
+Slovakia,,,SVK,SK,SLO,703,Slovakia,
+Slovenia,,,SVN,SI,SLV,705,Slovenia,
+SOLOMON ISLANDS,,,SLB,SB,SOL,090,Solomon Islands,
+SOMALIA,,,SOM,SO,SOM,706,Somalia,
+,,Somalia,SOM,SO,SOA,706,Somaliland,De Facto
+South Africa,,,ZAF,ZA,SAF,710,South Africa,
+,,United Kingdom,SGS,GS,SGE,239,South Georgia & The South Sandwish Islands,Geographical; Postal; Currency; Telephone
+"KOREA, REPUBLIC OF",,,KOR,KR,SKO,418,South Korea,
+,,Georgia,,,SOS,,South Ossetia,De Facto; Currency
+SOUTH SUDAN,Added 22nd February 2011. ISO codes added 18th August 2011.,,SSD,SS,SSU,,South Sudan,
+Spain,,,ESP,ES,SPA,724,Spain,
+SRI LANKA,,,LKA,LK,SRI,144,Sri Lanka,
+Sudan,,,SDN,SD,SUD,736,Sudan,
+SURINAM,,,SUR,SR,SUR,740,Suriname,
+SWAZILAND,,,SWZ,SZ,SWA,748,Swaziland,
+Sweden,,,SWE,SE,SWE,752,Sweden,
+Switzerland,,,CHE,CH,SWI,756,Switzerland,
+"SYRIA, ARAB REPUBLIC",,,SYR,SY,SYR,760,Syria,
+TAIWAN,,China,TWN,TW,TAI,158,Taiwan,
+TAJIKISTAN,,,TJK,TJ,TAJ,762,Tajikistan,
+"TANZANIA, UNITED RE UBLIC OF",,,TZA,TZ,TAN,834,Tanzania,
+THAILAND,,,THA,TH,THA,764,Thailand,
+TOGO,,,TGO,TG,TOG,768,Togo,
+,,New Zealand,TKL,TK,TOK,772,Tokelau,Geographical; Postal; Telephone
+TONGA,,,TON,TO,TON,776,Tonga,
+,,Moldova,,,TRA,,Transdniestria,De Facto
+TRINIDAD AND TOBAGO,,,TTO,TT,TRI,780,Trinidad & Tobago,
+Tunisia,,,TUN,TN,TUN,788,Tunisia,
+Turkey,,,TUR,TR,TUR,792,Turkey,
+TURKMENISTAN,,,TKM,TM,TUK,795,Turkmenistan,
+,,United Kingdom,TCA,TC,TUC,796,Turks & Caicos Islands,Geographical; Postal; Currency; Telephone
+TUVALU,,,TUV,TV,TUV,798,Tuvalu,
+Uganda,,,UGA,UG,UGA,800,Uganda,
+Ukraine,,,UKR,UA,UKR,804,Ukraine,
+United Arab Emirates,,,ARE,AE,UAE,784,United Arab Emirates,
+United Kingdom,,,GBR,GB,UNI,826,United Kingdom,
+United States,,,USA,US,USA,840,United States,
+US VIRGIN ISLANDS,,United States of America,VIR,VI,VIR,850,United States Virgin Islands,Geographical
+URUGUAY,,,URY,UY,URU,858,Uruguay,
+UZBEKISTAN,,,UZB,UZ,UZB,860,Uzbekistan,
+VANUATU,,,VUT,VU,VAN,548,Vanuatu,
+VENEZUELA,,,VEN,VE,VEN,862,Venezuela,
+VIETNAM,,,VNM,VN,VIE,704,Vietnam,
+,,France,WLF,WF,WAL,876,Wallis & Futuna,Geographical; Postal; Currency; Telephone
+WESTERN SAHARA,,Morocco,ESH,EH,WSA,732,Western Sahara,Political
+Yemen,,,YEM,YE,YEM,887,Yemen,
+ZAMBIA,,,ZMB,ZM,ZAM,894,Zambia,
+ZIMBABWE,,,ZWE,ZW,ZIM,716,Zimbabwe,

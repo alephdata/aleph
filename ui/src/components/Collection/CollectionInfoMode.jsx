@@ -2,14 +2,15 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import {
-  Category, Country, Role, Date, Collection, URL, Schema,
+  Category, Country, Role, Date, URL, Schema,
 } from 'src/components/common';
 import ClipboardInput from 'src/components/common/ClipboardInput';
+import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 
 class CollectionInfoMode extends PureComponent {
   render() {
-    const { collection, hasHeader = false } = this.props;
+    const { collection } = this.props;
     if (!collection) {
       return null;
     }
@@ -24,11 +25,7 @@ class CollectionInfoMode extends PureComponent {
 
     return (
       <div className="CollectionOverview">
-        {hasHeader && (
-          <h4>
-            <Collection.Link collection={collection} />
-          </h4>
-        )}
+        <CollectionStatus collection={collection} />
         <p itemProp="description">{collection.summary}</p>
         <ul className="info-sheet">
           { !collection.casefile && (

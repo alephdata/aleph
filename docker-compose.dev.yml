@@ -14,7 +14,11 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:10
+    build:
+      context: services/elasticsearch
+      cache_from:
+        - alephdata/aleph-elasticsearch:latest
+    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-latest}
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -24,12 +28,6 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
-  rabbitmq:
-    image: rabbitmq
-    hostname: queue
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
-
   redis:
       image: redis:alpine
       command: ["redis-server", "--appendonly", "yes"]
@@ -37,7 +35,11 @@ services:
         - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:1.4.0
+    build:
+      context: services/convert-document
+      cache_from:
+        - alephdata/convert-document:latest
+    image: alephdata/convert-document:${ALEPH_TAG:-latest}
     restart: on-failure
     tmpfs:
       - /tmp
@@ -46,21 +48,50 @@ services:
       - 3000
 
   recognize-text:
-    image: alephdata/recognize-text:1.2.0
+    build:
+      context: services/recognize-text
+      cache_from:
+        - alephdata/recognize-text:latest
+    image: alephdata/recognize-text:${ALEPH_TAG:-latest}
     restart: on-failure
     expose:
       - 50000
 
+  ingest-file:
+    build:
+      context: services/ingest-file
+      cache_from:
+        - alephdata/ingest-file:latest
+    image: alephdata/ingest-file:${ALEPH_TAG:-latest}
+    hostname: ingest
+    tmpfs: /tmp
+    volumes:
+      - archive-data:/data
+      - "./services/ingest-file/ingestors:/ingestors/ingestors"
+      - "./services/ingest-file/tests:/ingestors/tests"
+      - "/:/host"
+    links:
+      - postgres
+      - redis
+      - convert-document
+      - recognize-text
+    restart: on-failure
+    env_file:
+      - aleph.env
+
   app:
-    image: alephdata/aleph
+    build:
+      context: .
+      cache_from:
+        - alephdata/aleph:latest
+    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    hostname: aleph
     command: /bin/bash
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
-      - convert-document
-      - recognize-text
+      - ingest-file
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -73,14 +104,16 @@ services:
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
-      ALEPH_OAUTH: 'false'
-      ARCHIVE_TYPE: 'file'
     env_file:
       - aleph.env
 
   api:
-    image: alephdata/aleph
-    command: python3 aleph/manage.py runserver -h 0.0.0.0 -p 5000 --threaded
+    build:
+      context: .
+      cache_from:
+        - alephdata/aleph:latest
+    image: alephdata/aleph:${ALEPH_TAG:-latest}
+    command: aleph runserver -h 0.0.0.0 -p 5000 --threaded
     expose:
       - 5000
     ports:
@@ -89,24 +122,24 @@ services:
     links:
       - postgres
       - elasticsearch
-      - rabbitmq
       - redis
-      - convert-document
-      - recognize-text
+      - ingest-file
     tmpfs: /tmp
     volumes:
       - archive-data:/data
       - "./aleph:/aleph/aleph"
-      - "/:/host"
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
-      ARCHIVE_TYPE: 'file'
     env_file:
       - aleph.env
-  
+
   ui:
-    image: alephdata/aleph-ui
+    build:
+      context: ui
+      cache_from:
+        - alephdata/aleph-ui:latest
+    image: alephdata/aleph-ui:${ALEPH_TAG:-latest}
     links:
       - api
     command: npm run start
@@ -126,5 +159,4 @@ volumes:
   archive-data: {}
   elasticsearch-data: {}
   postgres-data: {}
-  rabbitmq-data: {}
   redis-data: {}
