@@ -63,7 +63,8 @@ def create_app(config={}):
     Talisman(app,
              force_https=settings.FORCE_HTTPS,
              strict_transport_security=settings.FORCE_HTTPS,
-             feature_policy=feature_policy)
+             feature_policy=feature_policy,
+             content_security_policy=settings.CONTENT_POLICY)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.

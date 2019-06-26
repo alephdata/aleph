@@ -34,15 +34,19 @@ APP_FAVICON = env.get('ALEPH_FAVICON', '/static/logo.png')
 # Show a system-wide banner in the user interface.
 APP_BANNER = env.get('ALEPH_APP_BANNER')
 
-# Force HTTPS here:
-FORCE_HTTPS = env.to_bool('ALEPH_FORCE_HTTPS', False)
-
 # Shown on the home page as a few sample queries:
 SAMPLE_SEARCHES = [lazy_gettext('TeliaSonera'), lazy_gettext('Vladimir Putin')]
 SAMPLE_SEARCHES = env.to_list('ALEPH_SAMPLE_SEARCHES', SAMPLE_SEARCHES)
 
+# Force HTTPS here:
+FORCE_HTTPS = env.to_bool('ALEPH_FORCE_HTTPS', False)
+
+# Content security policy:
+CONTENT_POLICY = 'default-src: \'self\' \'unsafe-inline\' \'unsafe-eval\' data: *'  # noqa
+CONTENT_POLICY = env.get('ALEPH_CONTENT_POLICY', CONTENT_POLICY)
+
 # Cross-origin resource sharing
-CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', separator='|')
+CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', ['*'], separator='|')
 
 
 ##############################################################################
