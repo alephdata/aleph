@@ -33,14 +33,12 @@ services:
     tmpfs:
       - /tmp
       - /root/.config
-    mem_limit: 2g
     expose:
       - 3000
 
   recognize-text:
     image: alephdata/recognize-text:${ALEPH_TAG:-3.1.2}
     restart: on-failure
-    mem_limit: 2g
     expose:
       - 50000
   

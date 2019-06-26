@@ -26,13 +26,12 @@ upgrade: build
 	$(COMPOSE) up -d postgres elasticsearch
 	sleep 10
 	$(APPDOCKER) aleph upgrade
-	$(APPDOCKER) celery purge -f -A aleph.queues
 
 web: services
 	$(COMPOSE) up api ui
 
 worker: services
-	$(COMPOSE) run --rm -e ALEPH_EAGER=false app celery -A aleph.queues -B -c 4 -l INFO worker
+	$(COMPOSE) run --rm -e ALEPH_EAGER=false app aleph worker
 
 purge:
 	$(APPDOCKER) celery purge -f -A aleph.queues

@@ -133,7 +133,7 @@ services:
       ALEPH_SECRET_KEY: 'development'
     env_file:
       - aleph.env
-  
+
   ui:
     build:
       context: ui
