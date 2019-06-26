@@ -25,7 +25,8 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
             work_path = self.manager.work_path
             path = self.manager.archive.load_file(pdf_hash,
                                                   temp_path=work_path)
-            return Path(path).resolve()
+            if path is not None:
+                return Path(path).resolve()
 
         pdf_file = self._document_to_pdf(file_path, entity)
         if pdf_file is not None:

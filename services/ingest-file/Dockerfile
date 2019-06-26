@@ -41,6 +41,7 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 COPY . /ingestors
 WORKDIR /ingestors
 RUN pip3 install --no-cache-dir -e /ingestors
+RUN chown -R app:app /ingestors
 
 ENV ARCHIVE_TYPE=file \
     ARCHIVE_PATH=/data \
