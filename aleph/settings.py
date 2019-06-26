@@ -4,6 +4,7 @@
 # setup. Wherever possible use environment variables to override the
 # defaults.
 import os
+import uuid
 from servicelayer import env
 from flask_babel import lazy_gettext
 
@@ -34,7 +35,7 @@ APP_FAVICON = env.get('ALEPH_FAVICON', '/static/logo.png')
 APP_BANNER = env.get('ALEPH_APP_BANNER')
 
 # Force HTTPS here:
-URL_SCHEME = env.get('ALEPH_URL_SCHEME', 'http')
+FORCE_HTTPS = env.to_bool('ALEPH_FORCE_HTTPS', False)
 
 # Shown on the home page as a few sample queries:
 SAMPLE_SEARCHES = [lazy_gettext('TeliaSonera'), lazy_gettext('Vladimir Putin')]
@@ -49,6 +50,9 @@ CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', separator='|')
 
 # Required: set a secret key
 SECRET_KEY = env.get('ALEPH_SECRET_KEY')
+
+# A process identifier
+PROCESS_ID = uuid.uuid4().hex
 
 # Designate users with the given email as admins automatically:
 # Assumes a comma-separated list.
@@ -100,7 +104,7 @@ GEONAMES_DATA = env.get('ALEPH_GEONAMES_DATA')
 RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)
 
 # Minimum update date for sitemap.xml
-SITEMAP_FLOOR = '2019-05-22'
+SITEMAP_FLOOR = '2019-06-22'
 
 
 ##############################################################################

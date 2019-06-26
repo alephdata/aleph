@@ -159,5 +159,4 @@ volumes:
   archive-data: {}
   elasticsearch-data: {}
   postgres-data: {}
-  rabbitmq-data: {}
   redis-data: {}

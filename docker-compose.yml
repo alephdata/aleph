@@ -32,7 +32,7 @@ services:
     restart: on-failure
     tmpfs:
       - /tmp
-      - /root/.config
+      - /home/app/.config
     expose:
       - 3000
 
@@ -92,7 +92,7 @@ services:
 
   api:
     image: alephdata/aleph:${ALEPH_TAG:-3.1.2}
-    command: gunicorn -w 8 -b 0.0.0.0:8000 --log-level info --log-file /var/log/gunicorn.log aleph.manage:app
+    command: gunicorn -w 6 -b 0.0.0.0:8000 --log-level debug --log-file - aleph.manage:app
     expose:
       - 8000
     links:
@@ -118,6 +118,5 @@ services:
 volumes:
   archive-data: {}
   postgres-data: {}
-  rabbitmq-data: {}
   redis-data: {}
   elasticsearch-data: {}

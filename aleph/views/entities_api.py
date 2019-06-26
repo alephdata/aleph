@@ -33,7 +33,7 @@ def index():
     parser = SearchQueryParser(request.args, request.authz)
     if parser.text:
         QueryLog.save(request.authz.id,
-                      request.session_id,
+                      request._session_id,
                       parser.text)
         db.session.commit()
     tag_request(query=parser.text, prefix=parser.prefix)

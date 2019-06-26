@@ -22,6 +22,7 @@ from aleph import settings, signals
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
+NONE = '\'none\''
 log = logging.getLogger(__name__)
 
 db = SQLAlchemy()
@@ -49,7 +50,20 @@ def create_app(config={}):
     db.init_app(app)
     babel.init_app(app)
     CORS(app, origins=settings.CORS_ORIGINS)
-    Talisman(app)
+    feature_policy = {
+        'accelerometer': NONE,
+        'camera': NONE,
+        'geolocation': NONE,
+        'gyroscope': NONE,
+        'magnetometer': NONE,
+        'microphone': NONE,
+        'payment': NONE,
+        'usb': NONE
+    }
+    Talisman(app,
+             force_https=settings.FORCE_HTTPS,
+             strict_transport_security=settings.FORCE_HTTPS,
+             feature_policy=feature_policy)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
@@ -146,9 +160,9 @@ def url_external(path, query, relative=False):
 
         # api_url = request.url_root
         api_url = settings.APP_UI_URL
-        if settings.URL_SCHEME is not None:
+        if settings.FORCE_HTTPS is not None:
             parsed = urlparse(api_url)
-            parsed = parsed._replace(scheme=settings.URL_SCHEME)
+            parsed = parsed._replace(scheme='https')
             api_url = parsed.geturl()
         return urljoin(api_url, path)
     except RuntimeError:
