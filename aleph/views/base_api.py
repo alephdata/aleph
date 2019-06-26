@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 def metadata():
     locale = get_locale()
     enable_cache(vary_user=False, vary=str(locale))
-    key = cache.key('metadata', locale)
+    key = cache.key('metadata', settings.PROCESS_ID, locale)
     data = cache.get_complex(key)
     if data is not None:
         return jsonify(data)
