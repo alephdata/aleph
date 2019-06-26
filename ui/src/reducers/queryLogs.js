@@ -51,7 +51,7 @@ export default createReducer({
     isLoading: false,
     shouldLoad: false,
     isError: true,
-    results: new Map(),
+    results: [],
     error,
   }),
   [fetchQueryLogs.COMPLETE]: (state, {
