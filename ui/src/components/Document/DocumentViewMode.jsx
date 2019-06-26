@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import DefaultViewer from 'src/viewers/DefaultViewer';
-import TableViewer from 'src/viewers/TableViewer';
+import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import TextViewer from 'src/viewers/TextViewer';
 import HtmlViewer from 'src/viewers/HtmlViewer';
 import PdfViewer from 'src/viewers/PdfViewer';
@@ -56,7 +56,7 @@ export class DocumentViewMode extends React.Component {
     }
     if (document.schema.isA('Table')) {
       return (
-        <TableViewer
+        <CSVStreamViewer
           document={document}
           queryText={queryText}
         />
