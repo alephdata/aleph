@@ -22,6 +22,7 @@ from aleph import settings, signals
 from aleph.cache import Cache
 from aleph.oauth import configure_oauth
 
+NONE = '\'none\''
 log = logging.getLogger(__name__)
 
 db = SQLAlchemy()
@@ -49,20 +50,20 @@ def create_app(config={}):
     db.init_app(app)
     babel.init_app(app)
     CORS(app, origins=settings.CORS_ORIGINS)
-    NONE = '\'none\''
+    feature_policy = {
+        'accelerometer': NONE,
+        'camera': NONE,
+        'geolocation': NONE,
+        'gyroscope': NONE,
+        'magnetometer': NONE,
+        'microphone': NONE,
+        'payment': NONE,
+        'usb': NONE
+    }
     Talisman(app,
              force_https=settings.FORCE_HTTPS,
              strict_transport_security=settings.FORCE_HTTPS,
-             feature_policy={
-                'accelerometer': NONE,
-                'camera': NONE,
-                'geolocation': NONE,
-                'gyroscope': NONE,
-                'magnetometer': NONE,
-                'microphone': NONE,
-                'payment': NONE,
-                'usb': NONE
-             })
+             feature_policy=feature_policy)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
