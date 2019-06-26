@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-06-06T14:31:07.187Z\n"
+"POT-Creation-Date: 2019-06-26T14:06:04.127Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,13 @@ msgstr "(подтверждение)"
 #: i18n/messages.json
 msgid "(missing)"
 msgstr "(отсутствует)"
+
+#. [collection.status.pending]
+#. defaultMessage is:
+#. ({count} pending)
+#: i18n/messages.json
+msgid "({count} pending)"
+msgstr ""
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
@@ -1957,6 +1964,13 @@ msgstr "{count} записей"
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} выбрано"
+
+#. [collection.status.done]
+#. defaultMessage is:
+#. {count} tasks done
+#: i18n/messages.json
+msgid "{count} tasks done"
+msgstr ""
 
 #. [search.screen.results]
 #. defaultMessage is:

@@ -31,6 +31,9 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
 ENV LANG='en_US.UTF-8' \
     LC_ALL='en_US.UTF-8'
 
+RUN groupadd -g 1000 -r app \
+    && useradd -m -u 1000 -s /bin/false -g app app
+
 RUN pip3 install --no-cache-dir -q -U pip setuptools six wheel nose coverage
 COPY requirements.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
@@ -47,4 +50,5 @@ ENV ARCHIVE_TYPE=file \
     OCR_SERVICE=recognize-text:50000 \
     UNOSERVICE_URL=http://convert-document:3000/convert
 
+USER app
 CMD ingestors process

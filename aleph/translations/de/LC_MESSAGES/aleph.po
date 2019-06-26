@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-06-06 16:31+0200\n"
+"POT-Creation-Date: 2019-06-26 16:07+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -22,15 +22,15 @@ msgstr ""
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: aleph/settings.py:25
+#: aleph/settings.py:27
 msgid "Aleph"
 msgstr "Aleph"
 
-#: aleph/settings.py:39
+#: aleph/settings.py:38
 msgid "TeliaSonera"
 msgstr "GazProm"
 
-#: aleph/settings.py:39
+#: aleph/settings.py:38
 msgid "Vladimir Putin"
 msgstr "Gerhard Schröder"
 
@@ -222,15 +222,15 @@ msgstr "Während der Suche ist ein Fehler aufgetreten."
 msgid "prefix filter is too short"
 msgstr "prefix-Filter ist zu kurz"
 
-#: aleph/views/roles_api.py:44
+#: aleph/views/roles_api.py:45
 msgid "To proceed, please check your email."
 msgstr "Prüfen sie bitte ihren E-Mail-Eingang um fortzufahren."
 
-#: aleph/views/roles_api.py:59
+#: aleph/views/roles_api.py:60
 msgid "Invalid code"
 msgstr "Ungültiger Code"
 
-#: aleph/views/roles_api.py:66
+#: aleph/views/roles_api.py:67
 msgid "Email is already registered"
 msgstr "Diese E-Mail ist bereits angemeldet"
 
