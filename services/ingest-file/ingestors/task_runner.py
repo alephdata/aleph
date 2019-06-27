@@ -23,7 +23,6 @@ class TaskRunner(object):
 
     @classmethod
     def handle_done(cls, queue):
-        queue.task_done()
         if queue.is_done():
             log.info("Ingest %r finished, queue index...", queue.dataset)
             index = ServiceQueue(queue.conn,
@@ -35,6 +34,7 @@ class TaskRunner(object):
 
     @classmethod
     def handle_task(cls, queue, payload, context):
+        queue.task_done()
         try:
             manager = Manager(queue, context)
             entity = model.get_proxy(payload)
