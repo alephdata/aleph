@@ -27,6 +27,7 @@ def daily_tasks():
 
 def handle_task(queue, payload, context):
     log.info("Task [%s]: %s (begin)", queue.dataset, queue.operation)
+    queue.task_done()
     try:
         collection = Collection.by_foreign_id(queue.dataset)
         if collection is None:
@@ -51,8 +52,6 @@ def handle_task(queue, payload, context):
             context['retries'] = retries + 1
             queue.queue_task(payload, context)
         raise
-    finally:
-        queue.task_done()
 
 
 def queue_worker(timeout=5):
