@@ -10,10 +10,9 @@ log = logging.getLogger(__name__)
 class TableSupport(TempFileSupport):
     """Handle creating rows from an ingestor."""
 
-    def emit_row_dicts(self, table, rows):
+    def emit_row_dicts(self, table, rows, headers=None):
         csv_path = self.make_work_file(table.id)
         row_count = 0
-        headers = None
         with open(csv_path, 'w', encoding='utf-8') as fp:
             csv_writer = csv.writer(fp)
             for row in rows:

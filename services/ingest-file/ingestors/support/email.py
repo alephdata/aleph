@@ -132,7 +132,10 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
 
     def extract_msg_headers(self, entity, msg):
         """Parse E-Mail headers into FtM properties."""
-        entity.add('indexText', msg.values())
+        try:
+            entity.add('indexText', msg.values())
+        except Exception as ex:
+            log.warning("Cannot parse all headers: %r", ex)
         entity.add('subject', self.get_header(msg, 'Subject'))
         entity.add('date', self.get_dates(msg, 'Date'))
         entity.add('mimeType', self.get_header(msg, 'Content-Type'))

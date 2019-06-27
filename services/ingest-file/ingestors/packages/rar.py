@@ -34,10 +34,12 @@ class RARIngestor(PackageSupport, Ingestor):
                     except Exception:
                         # TODO: should this be a fatal error?
                         log.exception("Failed to unpack: %r", name)
-        except rarfile.NeedFirstVolume:
-            raise ProcessingException('Cannot load splitted RAR files')
-        except rarfile.Error as err:
-            raise ProcessingException('Invalid RAR file: %s' % err)
+        except rarfile.NeedFirstVolume as nfv:
+            raise ProcessingException('Cannot load RAR partials') from nfv
+        except rarfile.PasswordRequired as pr:
+            raise ProcessingException(str(pr)) from pr
+        except (rarfile.Error, TypeError) as err:
+            raise ProcessingException('Invalid RAR file: %s' % err) from err
 
     @classmethod
     def match(cls, file_path, entity):

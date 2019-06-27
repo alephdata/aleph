@@ -70,11 +70,10 @@ class ImageIngestor(Ingestor, OCRSupport, TimestampSupport):
             image = Image.open(BytesIO(data))
             image.load()
             self.extract_exif(image, entity)
-
             languages = self.manager.context.get('languages')
             text = self.extract_ocr_text(data, languages=languages)
             entity.add('bodyText', text)
-        except Exception as err:
+        except (OSError, IOError, Exception) as err:
             raise ProcessingException("Failed to open image: %s" % err)
 
     @classmethod
