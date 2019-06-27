@@ -1,13 +1,13 @@
 from __future__ import absolute_import
 
-import unittest
 import types
-import pathlib
+import unittest
 from tempfile import mkdtemp
 
 from servicelayer.cache import get_fakeredis
 from servicelayer.archive import init_archive
 from servicelayer.process import ServiceQueue
+from servicelayer.archive.util import ensure_path
 from servicelayer import settings as service_settings
 from balkhash import settings as balkhash_settings
 from ingestors.manager import Manager
@@ -38,18 +38,19 @@ class TestCase(unittest.TestCase):
         self.manager.emit_entity = types.MethodType(emit_entity, self.manager)
         self.manager.queue_entity = types.MethodType(queue_entity, self.manager)  # noqa
         self.archive = init_archive()
+        self.manager._archive = self.archive
 
     def fixture(self, fixture_path):
         """Returns a fixture path and a dummy entity"""
         # clear out entities
         self.manager.entities = []
         self.manager.dataset.delete()
-        cur_path = pathlib.Path(__file__).parent
+        cur_path = ensure_path(__file__).parent
         cur_path = cur_path.joinpath('fixtures')
         path = cur_path.joinpath(fixture_path)
         entity = self.manager.make_entity('Document')
         if path.is_file():
-            checksum = self.archive.archive_file(path)
+            checksum = self.manager.archive.archive_file(path)
             entity.make_id(path.name, checksum)
             entity.set('contentHash', checksum)
             entity.set('fileSize', path.stat().st_size)

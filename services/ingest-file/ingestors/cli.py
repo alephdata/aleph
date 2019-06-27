@@ -1,8 +1,8 @@
 import click
 import logging
-import pathlib
 from servicelayer.cache import get_redis
 from servicelayer.process import ServiceQueue
+from servicelayer.archive.util import ensure_path
 
 from ingestors.manager import Manager
 from ingestors.directory import DirectoryIngestor
@@ -47,16 +47,17 @@ def ingest(path, dataset, languages=None):
     conn = get_redis()
     queue = ServiceQueue(conn, ServiceQueue.OP_INGEST, dataset)
     manager = Manager(queue, context)
-    path = pathlib.Path(path)
-    if path.is_file():
-        entity = manager.make_entity('Document')
-        checksum = manager.archive.archive_file(path)
-        entity.set('contentHash', checksum)
-        entity.make_id(checksum)
-        entity.set('fileName', path.name)
-        manager.queue_entity(entity)
-    if path.is_dir():
-        DirectoryIngestor.crawl(manager, path)
+    path = ensure_path(path)
+    if path is not None:
+        if path.is_file():
+            entity = manager.make_entity('Document')
+            checksum = manager.archive.archive_file(path)
+            entity.set('contentHash', checksum)
+            entity.make_id(checksum)
+            entity.set('fileName', path.name)
+            manager.queue_entity(entity)
+        if path.is_dir():
+            DirectoryIngestor.crawl(manager, path)
     manager.close()
 
 

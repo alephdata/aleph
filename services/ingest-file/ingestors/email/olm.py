@@ -6,6 +6,7 @@ from lxml import etree
 from pprint import pprint  # noqa
 from normality import safe_filename
 from followthemoney import model
+from servicelayer.archive.util import ensure_path
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.temp import TempFileSupport
@@ -51,7 +52,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
     def extract_hierarchy(self, entity, name):
         """Given a file path, create all its ancestor folders as entities"""
         foreign_id = pathlib.PurePath(entity.id)
-        path = pathlib.Path(name)
+        path = ensure_path(name)
         for name in path.as_posix().split('/')[:-1]:
             foreign_id = foreign_id.joinpath(name)
             if name in self.EXCLUDE:

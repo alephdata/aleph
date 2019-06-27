@@ -1,11 +1,11 @@
 import magic
 import logging
 import balkhash
-from pathlib import Path
 from tempfile import mkdtemp
 from banal import ensure_list
 from followthemoney import model
 from servicelayer.archive import init_archive
+from servicelayer.archive.util import ensure_path
 from servicelayer.extensions import get_extensions
 
 from ingestors.directory import DirectoryIngestor
@@ -33,7 +33,7 @@ class Manager(object):
         # TODO: Probably a good idea to make context readonly since we are
         # reusing it in child ingestors
         self.context = context
-        self.work_path = Path(mkdtemp(prefix='ingestor-'))
+        self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self._emit_count = 0
         self._writer = None
         self._dataset = None
@@ -105,14 +105,16 @@ class Manager(object):
         log.debug("Queue: %r", entity)
         self.queue.queue_task(entity.to_dict(), self.context)
 
+    def store(self, file_path, mime_type=None):
+        file_path = ensure_path(file_path)
+        if file_path is not None and file_path.is_file():
+            return self.archive.archive_file(file_path, mime_type=mime_type)
+
     def ingest_entity(self, entity):
         for content_hash in entity.get('contentHash'):
             file_path = self.archive.load_file(content_hash,
                                                temp_path=self.work_path)
-            if file_path is None:
-                continue
-            file_path = Path(file_path).resolve()
-            if not file_path.exists():
+            if file_path is None or not file_path.exists():
                 continue
             self.ingest(file_path, entity)
             return
@@ -120,7 +122,7 @@ class Manager(object):
 
     def ingest(self, file_path, entity, **kwargs):
         """Main execution step of an ingestor."""
-        file_path = Path(file_path).resolve()
+        file_path = ensure_path(file_path)
         if file_path.is_file() and not entity.has('fileSize'):
             entity.add('fileSize', file_path.stat().st_size)
 
