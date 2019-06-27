@@ -86,7 +86,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             try:
                 dates.append(parsedate_to_datetime(value))
             except Exception:
-                log.debug("Failed to parse: %s", value)
+                log.warning("Failed to parse: %s", value)
         return dates
 
     def get_identities(self, values):

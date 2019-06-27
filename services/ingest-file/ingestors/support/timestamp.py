@@ -30,5 +30,5 @@ class TimestampSupport(object):
                 return datetime.strptime(text, fmt)
             except Exception:
                 pass
-        log.debug("Could not parse timestamp: %r", raw)
+        log.warning("Could not parse timestamp: %r", raw)
         return raw
