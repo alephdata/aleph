@@ -23,14 +23,16 @@ class TaskRunner(object):
 
     @classmethod
     def handle_done(cls, queue):
-        if queue.is_done():
+        if not queue.is_done():
+            return
+        index = ServiceQueue(queue.conn,
+                             ServiceQueue.OP_INDEX,
+                             queue.dataset,
+                             priority=queue.priority)
+        if index.is_done():
             log.info("Ingest %r finished, queue index...", queue.dataset)
-            index = ServiceQueue(queue.conn,
-                                 ServiceQueue.OP_INDEX,
-                                 queue.dataset,
-                                 priority=queue.priority)
             index.queue_task({}, {})
-            queue.remove()
+        queue.remove()
 
     @classmethod
     def handle_task(cls, queue, payload, context):
