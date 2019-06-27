@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import DefaultViewer from 'src/viewers/DefaultViewer';
+import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import TableViewer from 'src/viewers/TableViewer';
 import TextViewer from 'src/viewers/TextViewer';
 import HtmlViewer from 'src/viewers/HtmlViewer';
@@ -55,8 +56,16 @@ export class DocumentViewMode extends React.Component {
       );
     }
     if (document.schema.isA('Table')) {
+      if (document.links.csv === undefined) {
+        return (
+          <TableViewer
+            document={document}
+            queryText={queryText}
+          />
+        );
+      }
       return (
-        <TableViewer
+        <CSVStreamViewer
           document={document}
           queryText={queryText}
         />
