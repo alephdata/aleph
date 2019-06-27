@@ -18,7 +18,7 @@ class PDFSupport(DocumentConvertSupport, OCRSupport):
             self.pdf_extract_page(entity, temp_dir, page)
 
     def pdf_alternative_extract(self, entity, pdf_path):
-        checksum = self.manager.archive.archive_file(pdf_path)
+        checksum = self.manager.store(pdf_path)
         entity.set('pdfHash', checksum)
         pdf = Document(bytes(pdf_path))
         self.pdf_extract(entity, pdf)

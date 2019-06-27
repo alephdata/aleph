@@ -27,8 +27,7 @@ class MboxFileIngestor(RFC822Ingestor, TempFileSupport):
                 msg_path = self.make_work_file('%s.eml' % i)
                 with open(msg_path, 'wb') as fh:
                     fh.write(msg.as_bytes())
-                checksum = self.manager.archive.archive_file(msg_path,
-                                                             mime_type=RFC822)
+                checksum = self.manager.store(msg_path, mime_type=RFC822)
                 msg_path.unlink()
                 child = self.manager.make_entity('Email', parent=entity)
                 child.make_id(checksum)

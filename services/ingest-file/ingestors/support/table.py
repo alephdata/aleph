@@ -31,7 +31,7 @@ class TableSupport(TempFileSupport):
                 # End remove.
                 self.manager.emit_text_fragment(table, values, entity.id)
                 row_count += 1
-        csv_hash = self.manager.archive.archive_file(csv_path, mime_type=CSV)
+        csv_hash = self.manager.store(csv_path, mime_type=CSV)
         table.set('csvHash', csv_hash)
         table.set('rowCount', row_count + 1)
         table.set('columns', registry.json.pack(headers))

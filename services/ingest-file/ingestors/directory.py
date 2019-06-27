@@ -43,7 +43,7 @@ class DirectoryIngestor(Ingestor):
                 manager.emit_entity(child)
                 cls.crawl(manager, sub_path, parent=child)
             else:
-                checksum = manager.archive.archive_file(sub_path)
+                checksum = manager.store(sub_path)
                 child.make_id(name, checksum)
                 child.set('contentHash', checksum)
                 manager.queue_entity(child)

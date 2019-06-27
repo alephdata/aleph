@@ -50,7 +50,7 @@ class TestCase(unittest.TestCase):
         path = cur_path.joinpath(fixture_path)
         entity = self.manager.make_entity('Document')
         if path.is_file():
-            checksum = self.manager.archive.archive_file(path)
+            checksum = self.manager.store(path)
             entity.make_id(path.name, checksum)
             entity.set('contentHash', checksum)
             entity.set('fileSize', path.stat().st_size)

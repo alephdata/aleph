@@ -29,7 +29,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
 
         pdf_file = self._document_to_pdf(file_path, entity)
         if pdf_file is not None:
-            content_hash = self.manager.archive.archive_file(pdf_file)
+            content_hash = self.manager.store(pdf_file)
             entity.set('pdfHash', content_hash)
             self.set_cache_value(key, content_hash)
         return pdf_file

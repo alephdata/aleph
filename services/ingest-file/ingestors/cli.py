@@ -51,7 +51,7 @@ def ingest(path, dataset, languages=None):
     if path is not None:
         if path.is_file():
             entity = manager.make_entity('Document')
-            checksum = manager.archive.archive_file(path)
+            checksum = manager.store(path)
             entity.set('contentHash', checksum)
             entity.make_id(checksum)
             entity.set('fileName', path.name)
