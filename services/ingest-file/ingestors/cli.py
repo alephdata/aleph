@@ -50,7 +50,7 @@ def ingest(path, dataset, languages=None):
     path = pathlib.Path(path)
     if path.is_file():
         entity = manager.make_entity('Document')
-        checksum = manager.archive_store(path)
+        checksum = manager.archive.archive_file(path)
         entity.set('contentHash', checksum)
         entity.make_id(checksum)
         entity.set('fileName', path.name)

@@ -63,7 +63,8 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             if body is not None:
                 fh.write(body)
 
-        checksum = self.manager.archive_store(file_path)
+        checksum = self.manager.archive.archive_file(file_path,
+                                                     mime_type=mime_type)
         file_path.unlink()
 
         child = self.manager.make_entity('Document', parent=entity)

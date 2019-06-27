@@ -105,10 +105,6 @@ class Manager(object):
         log.debug("Queue: %r", entity)
         self.queue.queue_task(entity.to_dict(), self.context)
 
-    def archive_store(self, file_path):
-        if file_path.is_file():
-            return self.archive.archive_file(file_path)
-
     def ingest_entity(self, entity):
         for content_hash in entity.get('contentHash'):
             file_path = self.archive.load_file(content_hash,

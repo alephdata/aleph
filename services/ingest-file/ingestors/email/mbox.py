@@ -1,5 +1,6 @@
 import logging
 import mailbox
+from pantomime.types import RFC822
 from followthemoney import model
 
 from ingestors.email.msg import RFC822Ingestor
@@ -26,12 +27,13 @@ class MboxFileIngestor(RFC822Ingestor, TempFileSupport):
                 msg_path = self.make_work_file('%s.eml' % i)
                 with open(msg_path, 'wb') as fh:
                     fh.write(msg.as_bytes())
-                checksum = self.manager.archive_store(msg_path)
+                checksum = self.manager.archive.archive_file(msg_path,
+                                                             mime_type=RFC822)
                 msg_path.unlink()
                 child = self.manager.make_entity('Email', parent=entity)
                 child.make_id(checksum)
                 child.add('contentHash', checksum)
-                child.add('mimeType', 'message/rfc822')
+                child.add('mimeType', RFC822)
                 self.manager.queue_entity(child)
             except Exception:
                 log.exception("[%r] Cannot extract message %s", entity, i)

@@ -5,8 +5,8 @@ urlnormalizer==1.2.3
 followthemoney==1.13.5
 followthemoney-util==1.13.5
 fingerprints==0.6.5
-servicelayer[google]==1.3.3
-servicelayer[amazon]==1.3.3
+servicelayer[google]==1.4.0
+servicelayer[amazon]==1.4.0
 normality==1.0.0
 pantomime==0.3.3
 alephclient==1.1.5

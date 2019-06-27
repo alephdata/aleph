@@ -71,11 +71,13 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         child = self.manager.make_entity('Document', parent=message)
         if url is not None:
             file_path = self.extract_file(zipf, url)
-            checksum = self.manager.archive_store(file_path)
+            mime_type = attachment.get('OPFAttachmentContentType')
+            checksum = self.manager.archive.archive_file(file_path,
+                                                         mime_type=mime_type)
             child.make_id(name, checksum)
             child.add('fileName', attachment.get('OPFAttachmentName'))
             child.add('fileName', attachment.get('OPFAttachmentContentID'))
-            child.add('mimeType', attachment.get('OPFAttachmentContentType'))
+            child.add('mimeType', mime_type)
             child.add('contentHash', checksum)
             self.manager.queue_entity(child)
 
@@ -89,7 +91,8 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         # Extract the xml file itself and put it on the task queue to be
         # ingested by OutlookOLMMessageIngestor as an individual message
         xml_path = self.extract_file(zipf, name)
-        checksum = self.manager.archive_store(xml_path)
+        checksum = self.manager.archive.archive_file(xml_path,
+                                                     mime_tye=MIME)
         child = self.manager.make_entity('Document', parent=parent)
         child.make_id(checksum)
         child.add('contentHash', checksum)
