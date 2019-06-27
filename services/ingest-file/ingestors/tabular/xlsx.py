@@ -48,7 +48,7 @@ class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
                 self.emit_row_tuples(table, self.generate_rows(book[name]))
                 self.manager.emit_entity(table)
         except Exception as err:
-            raise ProcessingException('Cannot read Excel file: %s' % err)
+            raise ProcessingException('Cannot read Excel file: %s' % err) from err  # noqa
         finally:
             book.close()
 

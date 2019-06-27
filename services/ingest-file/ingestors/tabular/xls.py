@@ -56,7 +56,7 @@ class ExcelIngestor(Ingestor, TableSupport, OLESupport):
         try:
             book = xlrd.open_workbook(file_path, formatting_info=False)
         except Exception as err:
-            raise ProcessingException('Invalid Excel file: %s' % err)
+            raise ProcessingException('Invalid Excel file: %s' % err) from err
 
         try:
             for sheet in book.sheets():
@@ -66,6 +66,6 @@ class ExcelIngestor(Ingestor, TableSupport, OLESupport):
                 self.emit_row_tuples(table, self.generate_csv(sheet))
                 self.manager.emit_entity(table)
         except XLRDError as err:
-            raise ProcessingException('Invalid Excel file: %s' % err)
+            raise ProcessingException('Invalid Excel file: %s' % err) from err
         finally:
             book.release_resources()

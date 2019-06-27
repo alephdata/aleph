@@ -56,11 +56,11 @@ class CSVIngestor(Ingestor, EncodingSupport, TableSupport):
             reader = csv.reader(fh, dialect=dialect)
             rows = self.generate_rows(reader, has_header=has_header)
             self.emit_row_dicts(entity, rows)
-        except UnicodeDecodeError:
+        except UnicodeDecodeError as ude:
             log.warning("Encoding error: %r", entity)
-            raise ProcessingException("Could not decode CSV (%s)" % encoding)
+            raise ProcessingException("Could not decode CSV (%s)" % encoding) from ude  # noqa
         except Exception as err:
             log.exception("CSV error: %s", err)
-            raise ProcessingException("Invalid CSV: %s" % err)
+            raise ProcessingException("Invalid CSV: %s" % err) from err
         finally:
             fh.close()

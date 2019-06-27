@@ -43,7 +43,7 @@ class VideoIngestor(Ingestor, TimestampSupport):
                 entity.add('modifiedAt', modified_at)
                 entity.add('duration', track.duration)
         except Exception as ex:
-            raise ProcessingException("Could not process Audio file: %r", ex)
+            raise ProcessingException("Could not read video: %r", ex) from ex
 
     @classmethod
     def match(cls, file_path, entity):

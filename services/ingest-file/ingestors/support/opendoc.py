@@ -13,8 +13,8 @@ class OpenDocumentSupport(TimestampSupport):
     def parse_opendocument(self, file_path, entity):
         try:
             doc = load(file_path)
-        except Exception:
-            raise ProcessingException("Cannot open document.")
+        except Exception as exc:
+            raise ProcessingException("Cannot open document.") from exc
 
         for child in doc.meta.childNodes:
             value = str(child)

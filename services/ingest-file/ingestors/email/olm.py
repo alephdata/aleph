@@ -138,8 +138,8 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
         entity.schema = model.get('Email')
         try:
             doc = self.parse_xml(file_path)
-        except TypeError:
-            raise ProcessingException("Cannot parse OPF XML file.")
+        except TypeError as te:
+            raise ProcessingException("Cannot parse OPF XML file.") from te
 
         if len(doc.findall('//email')) != 1:
             raise ProcessingException("More than one email in file.")

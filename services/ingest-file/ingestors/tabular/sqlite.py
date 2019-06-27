@@ -34,7 +34,7 @@ class SQLiteIngestor(Ingestor, TableSupport):
             cur.execute("SELECT * FROM %s;" % table)
         except sqlite3.OperationalError as oe:
             log.warning("SQLite error: %s", oe)
-            raise ProcessingException("Cannot query table: %s" % table)
+            raise ProcessingException("Cannot query table: %s" % table) from oe
 
         headers = [i[0] for i in cur.description]
         while True:

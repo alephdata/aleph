@@ -40,7 +40,7 @@ class AccessIngestor(Ingestor, TableSupport, ShellSupport):
             ]
         except subprocess.CalledProcessError as cpe:
             log.warning("Failed to open MDB: %s", cpe)
-            raise ProcessingException("Failed to extract Access database.")
+            raise ProcessingException("Failed to extract Access DB.") from cpe
 
     def generate_rows(self, file_path, table_name):
         mdb_export = self.find_command('mdb-export')

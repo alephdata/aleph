@@ -43,4 +43,4 @@ class EncodingSupport(object):
                 return body
             except UnicodeDecodeError as ude:
                 raise ProcessingException('Error decoding file as %s: %s' %
-                                          (encoding, ude))
+                                          (encoding, ude)) from ude

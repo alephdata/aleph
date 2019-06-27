@@ -38,4 +38,4 @@ class DBFIngestor(Ingestor, TableSupport):
             table = Table(file_path.as_posix()).open()
             self.emit_row_dicts(entity, self.generate_rows(table))
         except DbfError as err:
-            raise ProcessingException('Cannot open DBF file: %s' % err)
+            raise ProcessingException('Cannot open DBF file: %s' % err) from err  # noqa

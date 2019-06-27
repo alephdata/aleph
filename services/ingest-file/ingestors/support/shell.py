@@ -28,9 +28,9 @@ class ShellSupport(object):
             code = subprocess.call(cmd, timeout=self.COMMAND_TIMEOUT,
                                    stdout=open(os.devnull, 'wb'))
         except (IOError, OSError) as ose:
-            raise ProcessingException('Error: %s' % ose)
-        except subprocess.TimeoutExpired:
-            raise ProcessingException('Processing timed out.')
+            raise ProcessingException('Error: %s' % ose) from ose
+        except subprocess.TimeoutExpired as timeout:
+            raise ProcessingException('Processing timed out.') from timeout
 
         if code != 0:
             raise ProcessingException('Failed: %s' % ' '.join(cmd))
