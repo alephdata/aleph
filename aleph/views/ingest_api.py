@@ -62,7 +62,7 @@ def ingest_upload(collection_id):
         for storage in request.files.values():
             path = safe_filename(storage.filename, default='upload')
             path = upload_dir.joinpath(path)
-            storage.save(path)
+            storage.save(str(path))
             content_hash = archive.archive_file(path)
         document = Document.save(collection=collection,
                                  parent=parent,

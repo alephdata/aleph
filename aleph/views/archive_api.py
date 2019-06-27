@@ -26,7 +26,7 @@ def retrieve():
         local_path = archive.load_file(content_hash)
         if local_path is None:
             return Response(status=404)
-        return send_file(local_path,
+        return send_file(str(local_path),
                          as_attachment=True,
                          conditional=True,
                          attachment_filename=file_name,
