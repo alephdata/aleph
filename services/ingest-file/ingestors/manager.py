@@ -5,6 +5,7 @@ from tempfile import mkdtemp
 from banal import ensure_list
 from normality import stringify
 from followthemoney import model
+from balkhash.utils import safe_fragment
 from servicelayer.archive import init_archive
 from servicelayer.archive.util import ensure_path
 from servicelayer.extensions import get_extensions
@@ -81,7 +82,7 @@ class Manager(object):
             doc = self.make_entity(entity.schema)
             doc.id = entity.id
             doc.add('indexText', texts)
-            self.emit_entity(doc, fragment=str(fragment))
+            self.emit_entity(doc, fragment=safe_fragment(fragment))
 
     def auction(self, file_path, entity):
         if not entity.has('mimeType'):

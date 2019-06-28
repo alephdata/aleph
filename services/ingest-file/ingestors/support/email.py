@@ -1,8 +1,8 @@
 import types
 import logging
-from hashlib import sha1
 from banal import ensure_list
 from normality import stringify
+from balkhash.utils import safe_fragment
 from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename, ascii_text
 from followthemoney.types import registry
@@ -38,7 +38,7 @@ class EmailIdentity(object):
         self.entity = None
         if self.email is not None:
             key = self.email.lower().strip()
-            fragment = sha1(self.label.encode('utf-8')).hexdigest()
+            fragment = safe_fragment(self.label)
             self.entity = manager.make_entity('LegalEntity')
             self.entity.make_id(key)
             self.entity.add('name', self.name)
@@ -131,7 +131,8 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 email = self.manager.make_entity('Email')
                 email.id = entity_id
                 email.add('inReplyToEmail', message_id)
-                self.manager.emit_entity(email, fragment=message_id)
+                fragment = safe_fragment(message_id)
+                self.manager.emit_entity(email, fragment=fragment)
 
         for message_id in entity.get('inReplyTo'):
             message_id = self._clean_message_id(message_id)
