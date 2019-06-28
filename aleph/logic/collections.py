@@ -3,6 +3,7 @@ from datetime import datetime
 
 from aleph.core import db, cache
 from aleph.authz import Authz
+from aleph.queues import cancel_queue
 from aleph.model import Collection, Entity, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
@@ -46,6 +47,7 @@ def reset_collection(collection):
     drop_aggregator(collection)
     Match.delete_by_collection(collection.id)
     db.session.commit()
+    cancel_queue(collection)
     refresh_collection(collection.id)
 
 
