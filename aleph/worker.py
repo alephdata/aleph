@@ -38,12 +38,9 @@ def handle_task(queue, payload, context):
         if queue.operation == OP_BULKLOAD:
             bulk_load(queue, collection, payload)
         if queue.operation == OP_PROCESS:
-            ingest = payload.get('ingest', False)
-            process_collection(collection, ingest=ingest)
+            process_collection(collection, **payload)
         if queue.operation == OP_XREF:
-            against = payload.get('against_collection_ids')
-            xref_collection(queue, collection,
-                            against_collection_ids=against)
+            xref_collection(queue, collection, **payload)
         log.info("Task [%s]: %s (done)", queue.dataset, queue.operation)
     except (SystemExit, KeyboardInterrupt, Exception):
         retries = int(context.get('retries', 0))

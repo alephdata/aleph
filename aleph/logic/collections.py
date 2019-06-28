@@ -41,6 +41,14 @@ def refresh_collection(collection_id, sync=False):
     cache.kv.delete(cache.object_key(Collection, collection_id))
 
 
+def reset_collection(collection):
+    """Reset the collection by deleting any derived data."""
+    drop_aggregator(collection)
+    Match.delete_by_collection(collection.id)
+    db.session.commit()
+    refresh_collection(collection.id)
+
+
 def index_collections():
     for collection in Collection.all(deleted=True):
         index.index_collection(collection)
@@ -49,13 +57,12 @@ def index_collections():
 def delete_collection(collection, sync=False):
     flush_notifications(collection)
     drop_aggregator(collection)
-    collection.delete()
-    db.session.commit()
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
     Match.delete_by_collection(collection.id, deleted_at=deleted_at)
     Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
     collection.delete(deleted_at=deleted_at)
+    db.session.commit()
     index.delete_collection(collection.id, sync=sync)
     index.delete_entities(collection.id, sync=False)
     refresh_collection(collection.id)
