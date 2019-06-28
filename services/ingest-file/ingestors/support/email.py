@@ -76,8 +76,11 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
     def get_header(self, msg, *headers):
         values = []
         for header in headers:
-            for value in ensure_list(msg.get_all(header)):
-                values.append(value)
+            try:
+                for value in ensure_list(msg.get_all(header)):
+                    values.append(value)
+            except TypeError as te:
+                log.warning("Failed to parse [%s]: %s", header, te)
         return values
 
     def get_dates(self, msg, *headers):
@@ -108,10 +111,18 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             entity.add('namesMentioned', identity.name)
             entity.add('emailMentioned', identity.email)
 
+    def _clean_message_id(self, message_id):
+        message_id = stringify(message_id)
+        if message_id is not None:
+            message_id = message_id.strip()
+            if len(message_id) > 4:
+                return message_id
+
     def resolve_message_ids(self, entity):
         ctx = self.manager.queue.dataset
         for message_id in entity.get('messageId'):
-            if len(message_id) <= 4:
+            message_id = self._clean_message_id(message_id)
+            if message_id is None:
                 continue
             key = self.cache_key('msid', ctx, message_id)
             self.set_cache_value(key, entity.id)
@@ -123,7 +134,8 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 self.manager.emit_entity(email, fragment=message_id)
 
         for message_id in entity.get('inReplyTo'):
-            if len(message_id) <= 4:
+            message_id = self._clean_message_id(message_id)
+            if message_id is None:
                 continue
             key = self.cache_key('msid', ctx, message_id)
             entity.add('inReplyToEmail', self.get_cache_value(key))
