@@ -2,12 +2,10 @@
 # Dependencies maintained by OCCRP
 banal==0.4.2
 urlnormalizer==1.2.3
-followthemoney==1.13.5
-followthemoney-util==1.13.5
+followthemoney==1.14.0
 fingerprints==0.6.5
 servicelayer[google]==1.4.0
 servicelayer[amazon]==1.4.0
 normality==1.0.0
 pantomime==0.3.3
-alephclient==1.1.5
 balkhash[sql]==0.6.1

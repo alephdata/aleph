@@ -1,7 +1,7 @@
 import os
 import json
 # from pprint import pprint
-from alephclient.util import load_config_file
+from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import db
 from aleph.model import Entity
@@ -296,7 +296,7 @@ class EntitiesApiTestCase(TestCase):
         db_uri = self.get_fixture_path('experts.csv').as_uri()
         os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
         yml_path = self.get_fixture_path('experts.yml')
-        config = load_config_file(yml_path)
+        config = load_mapping_file(yml_path)
         coll = self.create_collection()
         queue = get_queue(coll, OP_BULKLOAD)
         bulk_load(queue, coll, config.get('experts'))

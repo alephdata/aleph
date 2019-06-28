@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
 from flask_testing import TestCase as FlaskTestCase
-from followthemoney_util.util import read_object
+from followthemoney.cli.util import read_entity
 from faker import Factory
 
 from aleph import settings
@@ -31,7 +31,7 @@ def read_entities(file_name):
     entities = []
     with open(file_name) as fh:
         while True:
-            entity = read_object(fh)
+            entity = read_entity(fh)
             if entity is None:
                 break
             entity.set('indexUpdatedAt', now, quiet=True)

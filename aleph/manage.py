@@ -4,10 +4,10 @@ from pathlib import Path
 from pprint import pprint  # noqa
 from banal import ensure_list
 from normality import slugify
-from alephclient.util import load_config_file
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
+from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import create_app, db, cache
 from aleph.model import Collection, Role
@@ -121,7 +121,7 @@ def xref(foreign_id, against=None):
 def bulkload(file_name):
     """Load entities from the specified mapping file."""
     log.info("Loading bulk data from: %s", file_name)
-    config = load_config_file(file_name)
+    config = load_mapping_file(file_name)
     for foreign_id, data in config.items():
         data['foreign_id'] = foreign_id
         data['label'] = data.get('label', foreign_id)

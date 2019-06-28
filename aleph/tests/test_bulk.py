@@ -1,6 +1,6 @@
 import os
 from unittest import skip  # noqa
-from alephclient.util import load_config_file
+from followthemoney.cli.util import load_mapping_file
 
 from aleph.logic.bulkload import bulk_load
 from aleph.queues import get_queue, OP_BULKLOAD
@@ -19,7 +19,7 @@ class BulkLoadTestCase(TestCase):
         db_uri = db_uri.replace('file:', 'sqlite:/')
         os.environ['ALEPH_TEST_BULK_DATABASE_URI'] = db_uri
         yml_path = self.get_fixture_path('kek.yml')
-        config = load_config_file(yml_path)
+        config = load_mapping_file(yml_path)
         bulk_load(self.queue, self.coll, config.get('kek'))
 
         _, headers = self.login(is_admin=True)
@@ -35,7 +35,7 @@ class BulkLoadTestCase(TestCase):
         db_uri = self.get_fixture_path('experts.csv').as_uri()
         os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
         yml_path = self.get_fixture_path('experts.yml')
-        config = load_config_file(yml_path)
+        config = load_mapping_file(yml_path)
         bulk_load(self.queue, self.coll, config.get('experts'))
 
         _, headers = self.login(is_admin=True)

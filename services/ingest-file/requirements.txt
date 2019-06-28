@@ -5,7 +5,7 @@ servicelayer[google]==1.4.0
 servicelayer[amazon]==1.4.0
 balkhash[leveldb]==0.6.1
 balkhash[sql]==0.6.1
-followthemoney>=1.13.5
+followthemoney==1.14.0
 psycopg2-binary
 
 grpcio>=1.21.1
