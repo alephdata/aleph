@@ -1,8 +1,7 @@
 import logging
-from datetime import datetime, date
 from banal import ensure_list
-
-from ingestors.util import safe_string
+from normality import stringify
+from datetime import datetime, date
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ class TimestampSupport(object):
     def parse_timestamp(self, raw, fmt=None):
         if isinstance(raw, (datetime, date)):
             return raw
-        text = safe_string(raw)
+        text = stringify(raw)
         if text is None:
             return
         formats = ensure_list(fmt) or self.TIMESTAMP_FORMATS

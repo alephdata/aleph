@@ -2,6 +2,7 @@ import xlrd
 import logging
 from time import time
 from datetime import datetime
+from normality import stringify
 from xlrd.biffh import XLRDError
 from followthemoney import model
 
@@ -9,7 +10,6 @@ from ingestors.ingestor import Ingestor
 from ingestors.support.table import TableSupport
 from ingestors.support.ole import OLESupport
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class ExcelIngestor(Ingestor, TableSupport, OLESupport):
                     return value.isoformat()
         except Exception:
             pass
-        return safe_string(value)
+        return stringify(value)
 
     def generate_csv(self, sheet):
         for row_index in range(0, sheet.nrows):

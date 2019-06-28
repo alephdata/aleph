@@ -3,12 +3,12 @@ from odf.teletype import extractText
 from odf.table import TableRow, TableCell, Table
 from odf.text import P
 from odf.namespaces import OFFICENS
+from normality import stringify
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.table import TableSupport
 from ingestors.support.opendoc import OpenDocumentSupport
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport,
             for cell in row.getElementsByType(TableCell):
                 repeat = cell.getAttribute("numbercolumnsrepeated") or 1
                 value = self.convert_cell(cell)
-                value = safe_string(value)
+                value = stringify(value)
                 for i in range(int(repeat)):
                     values.append(value)
             yield values

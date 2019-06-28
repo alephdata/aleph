@@ -2,6 +2,7 @@ import types
 import logging
 from hashlib import sha1
 from banal import ensure_list
+from normality import stringify
 from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename, ascii_text
 from followthemoney.types import registry
@@ -9,7 +10,6 @@ from followthemoney.types import registry
 from ingestors.support.html import HTMLSupport
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -17,8 +17,8 @@ log = logging.getLogger(__name__)
 class EmailIdentity(object):
 
     def __init__(self, manager, name, email):
-        self.email = ascii_text(safe_string(email))
-        self.name = safe_string(name)
+        self.email = ascii_text(stringify(email))
+        self.name = stringify(name)
         if not registry.email.validate(self.email):
             self.email = None
         if registry.email.validate(self.name):
@@ -51,7 +51,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
 
     def ingest_attachment(self, entity, name, mime_type, body):
         has_body = body is not None and len(body)
-        if safe_string(name) is None and not has_body:
+        if stringify(name) is None and not has_body:
             # Hello, Outlook.
             return
 

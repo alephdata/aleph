@@ -4,7 +4,7 @@ import zipfile
 import pathlib
 from lxml import etree
 from pprint import pprint  # noqa
-from normality import safe_filename
+from normality import safe_filename, stringify
 from followthemoney import model
 from servicelayer.archive.util import ensure_path
 
@@ -13,7 +13,6 @@ from ingestors.support.temp import TempFileSupport
 from ingestors.support.timestamp import TimestampSupport
 from ingestors.support.email import EmailSupport, EmailIdentity
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 MIME = 'application/xml+opfmessage'
@@ -148,7 +147,7 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
 
         email = doc.find('//email')
         props = email.getchildren()
-        props = {c.tag: safe_string(c.text) for c in props if c.text}
+        props = {c.tag: stringify(c.text) for c in props if c.text}
         # from pprint import pformat
         # log.info(pformat(props))
 
@@ -177,7 +176,7 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
         entity.add('bodyText', props.pop('OPFMessageCopyBody', None))
         html = props.pop('OPFMessageCopyHTMLBody', None)
         has_html = '1E0' == props.pop('OPFMessageGetHasHTML', None)
-        if has_html and safe_string(html):
+        if has_html and stringify(html):
             self.extract_html_content(entity, html, extract_metadata=False)
 
         self.resolve_message_ids(entity)

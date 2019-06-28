@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 import logging
 from olefile import isOleFile
 from email.parser import Parser
+from normality import stringify
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.email import EmailSupport, EmailIdentity
 from ingestors.support.ole import OLESupport
 from ingestors.email.outlookmsg_lib import Message
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -69,8 +69,8 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
 
         self.resolve_message_ids(entity)
         for attachment in msg.attachments:
-            name = safe_string(attachment.longFilename)
-            name = name or safe_string(attachment.shortFilename)
+            name = stringify(attachment.longFilename)
+            name = name or stringify(attachment.shortFilename)
             self.ingest_attachment(entity, name,
                                    attachment.mimeType,
                                    attachment.data)

@@ -1,10 +1,10 @@
 import logging
 from dbf import Table, DbfError
 from collections import OrderedDict
+from normality import stringify
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
-from ingestors.util import safe_string
 from ingestors.exc import ProcessingException
 from ingestors.support.table import TableSupport
 
@@ -22,12 +22,12 @@ class DBFIngestor(Ingestor, TableSupport):
     BASE_SCORE = 8
 
     def generate_rows(self, table):
-        headers = [safe_string(h) for h in table.field_names]
+        headers = [stringify(h) for h in table.field_names]
         for row in table:
             try:
                 data = OrderedDict()
                 for header, value in zip(headers, row):
-                    data[header] = safe_string(value)
+                    data[header] = stringify(value)
                 yield data
             except Exception as ex:
                 log.warning("Cannot decode DBF row: %s", ex)

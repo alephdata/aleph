@@ -1,4 +1,5 @@
 import logging
+from normality import stringify
 from followthemoney import model
 from openpyxl import load_workbook
 from xml.etree.ElementTree import ParseError
@@ -7,7 +8,6 @@ from ingestors.ingestor import Ingestor
 from ingestors.support.table import TableSupport
 from ingestors.support.ooxml import OOXMLSupport
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
     def generate_rows(self, sheet):
         for row in sheet.rows:
             try:
-                yield [safe_string(c.value) for c in row]
+                yield [stringify(c.value) for c in row]
             except (ValueError, OverflowError, ParseError) as ve:
                 log.warning("Failed to read Excel row: %s", ve)
 

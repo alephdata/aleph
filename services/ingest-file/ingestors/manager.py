@@ -3,6 +3,7 @@ import logging
 import balkhash
 from tempfile import mkdtemp
 from banal import ensure_list
+from normality import stringify
 from followthemoney import model
 from servicelayer.archive import init_archive
 from servicelayer.archive.util import ensure_path
@@ -10,8 +11,7 @@ from servicelayer.extensions import get_extensions
 
 from ingestors.directory import DirectoryIngestor
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string, filter_text
-from ingestors.util import remove_directory
+from ingestors.util import filter_text, remove_directory
 from ingestors import settings
 
 log = logging.getLogger(__name__)
@@ -133,7 +133,7 @@ class Manager(object):
             entity.set('processingStatus', self.STATUS_SUCCESS)
         except ProcessingException as pexc:
             entity.set('processingStatus', self.STATUS_FAILURE)
-            entity.set('processingError', safe_string(pexc))
+            entity.set('processingError', stringify(pexc))
             log.error("[%r] Failed to process: %s", entity, pexc)
         finally:
             self.finalize(entity)

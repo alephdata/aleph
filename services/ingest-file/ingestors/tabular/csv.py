@@ -1,6 +1,7 @@
 import io
 import csv
 import logging
+from normality import stringify
 from collections import OrderedDict
 from followthemoney import model
 
@@ -8,7 +9,6 @@ from ingestors.ingestor import Ingestor
 from ingestors.support.encoding import EncodingSupport
 from ingestors.support.table import TableSupport
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -28,14 +28,14 @@ class CSVIngestor(Ingestor, EncodingSupport, TableSupport):
 
     def generate_rows(self, reader, has_header=False):
         headers = next(reader) if has_header else []
-        headers = [safe_string(h) for h in headers]
+        headers = [stringify(h) for h in headers]
         for row in reader:
             while len(headers) < len(row):
                 next_col = len(headers) + 1
                 headers.append('Column %s' % next_col)
             data = OrderedDict()
             for header, value in zip(headers, row):
-                data[header] = safe_string(value)
+                data[header] = stringify(value)
             yield data
 
     def ingest(self, file_path, entity):
