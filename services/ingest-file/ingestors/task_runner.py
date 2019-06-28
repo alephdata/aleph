@@ -3,6 +3,7 @@ import threading
 from followthemoney import model
 from servicelayer.cache import get_redis
 from servicelayer.process import ServiceQueue
+from servicelayer.util import backoff
 
 from ingestors.manager import Manager
 from ingestors import settings
@@ -25,6 +26,9 @@ class TaskRunner(object):
     def handle_done(cls, queue):
         if not queue.is_done():
             return
+        # HACK: randomly wait a little to avoid double-triggering the
+        # index process.
+        backoff()
         index = ServiceQueue(queue.conn,
                              ServiceQueue.OP_INDEX,
                              queue.dataset,
