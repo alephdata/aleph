@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:12-alpine
 
 RUN mkdir /alephui
 WORKDIR /alephui
@@ -12,4 +12,5 @@ COPY scripts /alephui/scripts
 COPY config /alephui/config
 COPY src /alephui/src
 
+ENV REACT_APP_API_ENDPOINT /api/2/
 # RUN npm run build
