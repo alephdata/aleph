@@ -1,11 +1,11 @@
 banal>=0.4.2
 normality>=1.0.0
 pantomime>=0.3.3
-servicelayer[google]==1.4.1
-servicelayer[amazon]==1.4.1
+servicelayer[google]==1.4.2
+servicelayer[amazon]==1.4.2
 balkhash[leveldb]==0.6.2
 balkhash[sql]==0.6.2
-followthemoney==1.14.0
+followthemoney==1.14.1
 psycopg2-binary
 
 grpcio>=1.21.1

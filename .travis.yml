@@ -5,7 +5,6 @@ services:
 
 env:
   global:
-    - ALEPH_DATABASE_URI=postgresql://localhost/aleph
     - DOCKER_COMPOSE_VERSION=1.23.2
 
 before_install:
@@ -16,7 +15,6 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - sudo echo "ALEPH_DATABASE_URI=$ALEPH_DATABASE_URI\nOAUTH_KEY=$OAUTH_KEY\nOAUTH_SECRET=$OAUTH_SECRET" >> aleph.env
   - docker --version
   - docker-compose --version
   - make docker-pull
