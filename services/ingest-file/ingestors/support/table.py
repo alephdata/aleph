@@ -1,5 +1,6 @@
 import csv
 import logging
+from pantomime.types import CSV
 from followthemoney.types import registry
 
 from ingestors.support.temp import TempFileSupport
@@ -10,10 +11,9 @@ log = logging.getLogger(__name__)
 class TableSupport(TempFileSupport):
     """Handle creating rows from an ingestor."""
 
-    def emit_row_dicts(self, table, rows):
+    def emit_row_dicts(self, table, rows, headers=None):
         csv_path = self.make_work_file(table.id)
         row_count = 0
-        headers = None
         with open(csv_path, 'w', encoding='utf-8') as fp:
             csv_writer = csv.writer(fp)
             for row in rows:
@@ -31,7 +31,7 @@ class TableSupport(TempFileSupport):
                 # End remove.
                 self.manager.emit_text_fragment(table, values, entity.id)
                 row_count += 1
-        csv_hash = self.manager.archive_store(csv_path)
+        csv_hash = self.manager.store(csv_path, mime_type=CSV)
         table.set('csvHash', csv_hash)
         table.set('rowCount', row_count + 1)
         table.set('columns', registry.json.pack(headers))

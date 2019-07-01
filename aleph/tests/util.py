@@ -5,7 +5,7 @@ from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
 from flask_testing import TestCase as FlaskTestCase
-from followthemoney_util.util import read_object
+from followthemoney.cli.util import read_entity
 from faker import Factory
 
 from aleph import settings
@@ -13,7 +13,6 @@ from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
 from aleph.logic.collections import update_collection
 from aleph.logic.processing import index_entities, process_collection
-from aleph.logic.aggregator import drop_aggregator
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
@@ -31,7 +30,7 @@ def read_entities(file_name):
     entities = []
     with open(file_name) as fh:
         while True:
-            entity = read_object(fh)
+            entity = read_entity(fh)
             if entity is None:
                 break
             entity.set('indexUpdatedAt', now, quiet=True)
@@ -140,10 +139,8 @@ class TestCase(FlaskTestCase):
         db.session.commit()
         samples = read_entities(self.get_fixture_path('samples.ijson'))
         index_entities(self.private_coll, samples)
-        drop_aggregator(self.public_coll)
-        process_collection(self.public_coll, ingest=False)
-        drop_aggregator(self.private_coll)
-        process_collection(self.private_coll, ingest=False)
+        process_collection(self.public_coll, ingest=False, reset=True)
+        process_collection(self.private_coll, ingest=False, reset=True)
 
     def setUp(self):
         if not hasattr(settings, '_global_test_state'):

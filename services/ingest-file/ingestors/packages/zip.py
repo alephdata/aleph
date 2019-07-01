@@ -36,7 +36,7 @@ class ZipIngestor(PackageSupport, Ingestor):
                         # TODO: should this be a fatal error?
                         log.debug("Failed to unpack [%r]: %s", name, ex)
         except (zipfile.BadZipfile, OSError) as bzfe:
-            raise ProcessingException('Invalid ZIP file: %s' % bzfe)
+            raise ProcessingException('Invalid ZIP file: %s' % bzfe) from bzfe
 
     @classmethod
     def match(cls, file_path, entity):

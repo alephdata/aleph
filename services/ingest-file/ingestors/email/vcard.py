@@ -24,6 +24,7 @@ class VCardIngestor(Ingestor, EncodingSupport):
         entity.set('bodyText', text)
         for card in vobject.readComponents(text):
             person = self.manager.make_entity('Person')
+            person.add('proof', entity.id)
             person.add('name', self.get_field(card, 'n'))
             person.add('name', self.get_field(card, 'fn'))
             person.add('gender', self.get_field(card, 'gender'))

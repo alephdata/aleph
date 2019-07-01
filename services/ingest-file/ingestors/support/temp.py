@@ -1,5 +1,5 @@
 from uuid import uuid4
-from pathlib import Path
+from servicelayer.archive.util import ensure_path
 
 from ingestors.exc import ProcessingException
 
@@ -14,11 +14,11 @@ class TempFileSupport(object):
 
     def make_work_file(self, file_name, prefix=None):
         if prefix is not None:
-            prefix = Path(prefix).resolve()
+            prefix = ensure_path(prefix)
             if self.manager.work_path not in prefix.parents:
                 raise ProcessingException("Path escalation: %r" % prefix)
         prefix = prefix or self.manager.work_path
-        work_file = prefix.joinpath(file_name).resolve()
+        work_file = prefix.joinpath(file_name)
         if prefix not in work_file.parents:
             raise ProcessingException("Path escalation: %r" % file_name)
         if not work_file.parent.exists():

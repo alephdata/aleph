@@ -1,4 +1,3 @@
-import os
 import json
 import shutil
 import logging
@@ -6,6 +5,7 @@ from flask import Blueprint, request
 from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
 from normality import safe_filename, stringify
+from servicelayer.archive.util import ensure_path
 
 from aleph.core import db, archive
 from aleph.model import Document
@@ -56,13 +56,13 @@ def ingest_upload(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     meta, foreign_id = _load_metadata()
     parent = _load_parent(collection, meta)
-    upload_dir = mkdtemp(prefix='aleph.upload.')
+    upload_dir = ensure_path(mkdtemp(prefix='aleph.upload.'))
     try:
         content_hash = None
         for storage in request.files.values():
             path = safe_filename(storage.filename, default='upload')
-            path = os.path.join(upload_dir, path)
-            storage.save(path)
+            path = upload_dir.joinpath(path)
+            storage.save(str(path))
             content_hash = archive.archive_file(path)
         document = Document.save(collection=collection,
                                  parent=parent,

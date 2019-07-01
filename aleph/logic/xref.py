@@ -65,7 +65,7 @@ def xref_collection(queue, collection, against_collection_ids=None):
             obj.score = score
             db.session.add(obj)
         db.session.commit()
-        queue.progress.put_finished()
+        queue.progress.mark_finished()
     queue.remove()
 
 

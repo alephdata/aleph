@@ -1,17 +1,18 @@
 import magic
 import logging
 import balkhash
-from pathlib import Path
 from tempfile import mkdtemp
 from banal import ensure_list
+from normality import stringify
 from followthemoney import model
+from balkhash.utils import safe_fragment
 from servicelayer.archive import init_archive
+from servicelayer.archive.util import ensure_path
 from servicelayer.extensions import get_extensions
 
 from ingestors.directory import DirectoryIngestor
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string, filter_text
-from ingestors.util import remove_directory
+from ingestors.util import filter_text, remove_directory
 from ingestors import settings
 
 log = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ class Manager(object):
         # TODO: Probably a good idea to make context readonly since we are
         # reusing it in child ingestors
         self.context = context
-        self.work_path = Path(mkdtemp(prefix='ingestor-'))
+        self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self._emit_count = 0
         self._writer = None
         self._dataset = None
@@ -81,7 +82,7 @@ class Manager(object):
             doc = self.make_entity(entity.schema)
             doc.id = entity.id
             doc.add('indexText', texts)
-            self.emit_entity(doc, fragment=str(fragment))
+            self.emit_entity(doc, fragment=safe_fragment(fragment))
 
     def auction(self, file_path, entity):
         if not entity.has('mimeType'):
@@ -105,18 +106,16 @@ class Manager(object):
         log.debug("Queue: %r", entity)
         self.queue.queue_task(entity.to_dict(), self.context)
 
-    def archive_store(self, file_path):
-        if file_path.is_file():
-            return self.archive.archive_file(file_path)
+    def store(self, file_path, mime_type=None):
+        file_path = ensure_path(file_path)
+        if file_path is not None and file_path.is_file():
+            return self.archive.archive_file(file_path, mime_type=mime_type)
 
     def ingest_entity(self, entity):
         for content_hash in entity.get('contentHash'):
             file_path = self.archive.load_file(content_hash,
                                                temp_path=self.work_path)
-            if file_path is None:
-                continue
-            file_path = Path(file_path).resolve()
-            if not file_path.exists():
+            if file_path is None or not file_path.exists():
                 continue
             self.ingest(file_path, entity)
             return
@@ -124,7 +123,7 @@ class Manager(object):
 
     def ingest(self, file_path, entity, **kwargs):
         """Main execution step of an ingestor."""
-        file_path = Path(file_path).resolve()
+        file_path = ensure_path(file_path)
         if file_path.is_file() and not entity.has('fileSize'):
             entity.add('fileSize', file_path.stat().st_size)
 
@@ -135,8 +134,8 @@ class Manager(object):
             entity.set('processingStatus', self.STATUS_SUCCESS)
         except ProcessingException as pexc:
             entity.set('processingStatus', self.STATUS_FAILURE)
-            entity.set('processingError', safe_string(pexc))
-            log.exception("Failed to process: %r", entity)
+            entity.set('processingError', stringify(pexc))
+            log.error("[%r] Failed to process: %s", entity, pexc)
         finally:
             self.finalize(entity)
 

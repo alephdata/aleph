@@ -4,15 +4,15 @@ import zipfile
 import pathlib
 from lxml import etree
 from pprint import pprint  # noqa
-from normality import safe_filename
+from normality import safe_filename, stringify
 from followthemoney import model
+from servicelayer.archive.util import ensure_path
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.temp import TempFileSupport
 from ingestors.support.timestamp import TimestampSupport
 from ingestors.support.email import EmailSupport, EmailIdentity
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 MIME = 'application/xml+opfmessage'
@@ -51,7 +51,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
     def extract_hierarchy(self, entity, name):
         """Given a file path, create all its ancestor folders as entities"""
         foreign_id = pathlib.PurePath(entity.id)
-        path = pathlib.Path(name)
+        path = ensure_path(name)
         for name in path.as_posix().split('/')[:-1]:
             foreign_id = foreign_id.joinpath(name)
             if name in self.EXCLUDE:
@@ -71,11 +71,12 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         child = self.manager.make_entity('Document', parent=message)
         if url is not None:
             file_path = self.extract_file(zipf, url)
-            checksum = self.manager.archive_store(file_path)
+            mime_type = attachment.get('OPFAttachmentContentType')
+            checksum = self.manager.store(file_path, mime_type=mime_type)
             child.make_id(name, checksum)
             child.add('fileName', attachment.get('OPFAttachmentName'))
             child.add('fileName', attachment.get('OPFAttachmentContentID'))
-            child.add('mimeType', attachment.get('OPFAttachmentContentType'))
+            child.add('mimeType', mime_type)
             child.add('contentHash', checksum)
             self.manager.queue_entity(child)
 
@@ -89,7 +90,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         # Extract the xml file itself and put it on the task queue to be
         # ingested by OutlookOLMMessageIngestor as an individual message
         xml_path = self.extract_file(zipf, name)
-        checksum = self.manager.archive_store(xml_path)
+        checksum = self.manager.store(xml_path, mime_tye=MIME)
         child = self.manager.make_entity('Document', parent=parent)
         child.make_id(checksum)
         child.add('contentHash', checksum)
@@ -138,15 +139,15 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
         entity.schema = model.get('Email')
         try:
             doc = self.parse_xml(file_path)
-        except TypeError:
-            raise ProcessingException("Cannot parse OPF XML file.")
+        except TypeError as te:
+            raise ProcessingException("Cannot parse OPF XML file.") from te
 
         if len(doc.findall('//email')) != 1:
             raise ProcessingException("More than one email in file.")
 
         email = doc.find('//email')
         props = email.getchildren()
-        props = {c.tag: safe_string(c.text) for c in props if c.text}
+        props = {c.tag: stringify(c.text) for c in props if c.text}
         # from pprint import pformat
         # log.info(pformat(props))
 
@@ -175,7 +176,7 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
         entity.add('bodyText', props.pop('OPFMessageCopyBody', None))
         html = props.pop('OPFMessageCopyHTMLBody', None)
         has_html = '1E0' == props.pop('OPFMessageGetHasHTML', None)
-        if has_html and safe_string(html):
+        if has_html and stringify(html):
             self.extract_html_content(entity, html, extract_metadata=False)
 
         self.resolve_message_ids(entity)

@@ -42,8 +42,9 @@ class EmailViewer extends React.Component {
   }
 
   renderHeaders() {
-    let { headers } = this.props.content;
-    headers = headers || {};
+    const { document, content } = this.props;
+    const newFormat = document.hasProperty('subject') || document.hasProperty('to');
+    const headers = newFormat || !content.headers ? {} : content.headers;
     return (
       <div className="email-header">
         <table className="bp3-html-table">

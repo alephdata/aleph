@@ -21,7 +21,7 @@ class OLESupport(TimestampSupport):
             except Exception:
                 return value.decode('utf-8', 'ignore')
         except Exception:
-            log.exception("Could not read metadata: %s", prop)
+            log.warning("Could not read metadata: %s", prop)
 
     def extract_ole_metadata(self, file_path, entity):
         with open(file_path, 'rb') as fh:

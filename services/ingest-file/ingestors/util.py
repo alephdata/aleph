@@ -1,19 +1,5 @@
 import shutil
 from normality import stringify
-from normality.cleaning import remove_unsafe_chars
-
-
-def safe_string(data, encoding_default='utf-8', encoding=None):
-    """Stringify and round-trip through encoding."""
-    data = stringify(data,
-                     encoding_default=encoding_default,
-                     encoding=encoding)
-    data = remove_unsafe_chars(data)
-    if data is None:
-        return
-    data = data.encode(encoding_default, 'replace')
-    data = data.decode(encoding_default, 'strict')
-    return data
 
 
 def remove_directory(file_path):

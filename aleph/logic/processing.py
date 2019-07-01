@@ -11,7 +11,7 @@ from aleph.queues import get_queue, OP_INDEX
 from aleph.analysis import tag_entity
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
-from aleph.logic.collections import refresh_collection
+from aleph.logic.collections import refresh_collection, reset_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.util import BULK_PAGE
 
@@ -25,9 +25,11 @@ def _collection_proxies(collection):
         yield document.to_proxy()
 
 
-def process_collection(collection, ingest=True):
+def process_collection(collection, ingest=True, reset=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
+    if reset:
+        reset_collection(collection)
     aggregator = get_aggregator(collection)
     try:
         writer = aggregator.bulk()

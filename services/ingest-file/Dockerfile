@@ -51,5 +51,5 @@ ENV ARCHIVE_TYPE=file \
     OCR_SERVICE=recognize-text:50000 \
     UNOSERVICE_URL=http://convert-document:3000/convert
 
-USER app
+# USER app
 CMD ingestors process

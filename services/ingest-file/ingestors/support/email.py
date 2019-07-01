@@ -1,7 +1,8 @@
 import types
 import logging
-from hashlib import sha1
 from banal import ensure_list
+from normality import stringify
+from balkhash.utils import safe_fragment
 from email.utils import parsedate_to_datetime, getaddresses
 from normality import safe_filename, ascii_text
 from followthemoney.types import registry
@@ -9,7 +10,6 @@ from followthemoney.types import registry
 from ingestors.support.html import HTMLSupport
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
-from ingestors.util import safe_string
 
 log = logging.getLogger(__name__)
 
@@ -17,8 +17,8 @@ log = logging.getLogger(__name__)
 class EmailIdentity(object):
 
     def __init__(self, manager, name, email):
-        self.email = ascii_text(safe_string(email))
-        self.name = safe_string(name)
+        self.email = ascii_text(stringify(email))
+        self.name = stringify(name)
         if not registry.email.validate(self.email):
             self.email = None
         if registry.email.validate(self.name):
@@ -38,7 +38,7 @@ class EmailIdentity(object):
         self.entity = None
         if self.email is not None:
             key = self.email.lower().strip()
-            fragment = sha1(self.label.encode('utf-8')).hexdigest()
+            fragment = safe_fragment(self.label)
             self.entity = manager.make_entity('LegalEntity')
             self.entity.make_id(key)
             self.entity.add('name', self.name)
@@ -51,7 +51,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
 
     def ingest_attachment(self, entity, name, mime_type, body):
         has_body = body is not None and len(body)
-        if safe_string(name) is None and not has_body:
+        if stringify(name) is None and not has_body:
             # Hello, Outlook.
             return
 
@@ -63,7 +63,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             if body is not None:
                 fh.write(body)
 
-        checksum = self.manager.archive_store(file_path)
+        checksum = self.manager.store(file_path, mime_type=mime_type)
         file_path.unlink()
 
         child = self.manager.make_entity('Document', parent=entity)
@@ -76,8 +76,11 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
     def get_header(self, msg, *headers):
         values = []
         for header in headers:
-            for value in ensure_list(msg.get_all(header)):
-                values.append(value)
+            try:
+                for value in ensure_list(msg.get_all(header)):
+                    values.append(value)
+            except TypeError as te:
+                log.warning("Failed to parse [%s]: %s", header, te)
         return values
 
     def get_dates(self, msg, *headers):
@@ -86,7 +89,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             try:
                 dates.append(parsedate_to_datetime(value))
             except Exception:
-                log.debug("Failed to parse: %s", value)
+                log.warning("Failed to parse: %s", value)
         return dates
 
     def get_identities(self, values):
@@ -108,10 +111,18 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             entity.add('namesMentioned', identity.name)
             entity.add('emailMentioned', identity.email)
 
+    def _clean_message_id(self, message_id):
+        message_id = stringify(message_id)
+        if message_id is not None:
+            message_id = message_id.strip()
+            if len(message_id) > 4:
+                return message_id
+
     def resolve_message_ids(self, entity):
         ctx = self.manager.queue.dataset
         for message_id in entity.get('messageId'):
-            if len(message_id) <= 4:
+            message_id = self._clean_message_id(message_id)
+            if message_id is None:
                 continue
             key = self.cache_key('msid', ctx, message_id)
             self.set_cache_value(key, entity.id)
@@ -120,10 +131,12 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 email = self.manager.make_entity('Email')
                 email.id = entity_id
                 email.add('inReplyToEmail', message_id)
-                self.manager.emit_entity(email, fragment=message_id)
+                fragment = safe_fragment(message_id)
+                self.manager.emit_entity(email, fragment=fragment)
 
         for message_id in entity.get('inReplyTo'):
-            if len(message_id) <= 4:
+            message_id = self._clean_message_id(message_id)
+            if message_id is None:
                 continue
             key = self.cache_key('msid', ctx, message_id)
             entity.add('inReplyToEmail', self.get_cache_value(key))
@@ -132,7 +145,10 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
 
     def extract_msg_headers(self, entity, msg):
         """Parse E-Mail headers into FtM properties."""
-        entity.add('indexText', msg.values())
+        try:
+            entity.add('indexText', msg.values())
+        except Exception as ex:
+            log.warning("Cannot parse all headers: %r", ex)
         entity.add('subject', self.get_header(msg, 'Subject'))
         entity.add('date', self.get_dates(msg, 'Date'))
         entity.add('mimeType', self.get_header(msg, 'Content-Type'))

@@ -37,7 +37,7 @@ class TarIngestor(PackageSupport, Ingestor):
                         # TODO: should this be a fatal error?
                         log.debug("Failed to unpack [%r]: %s", name, ex)
         except (tarfile.TarError, IOError, EOFError) as err:
-            raise ProcessingException('Invalid Tar file: %s' % err)
+            raise ProcessingException('Invalid Tar file: %s' % err) from err
 
     @classmethod
     def match(cls, file_path, entity):

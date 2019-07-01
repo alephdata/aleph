@@ -4,10 +4,10 @@ from pathlib import Path
 from pprint import pprint  # noqa
 from banal import ensure_list
 from normality import slugify
-from alephclient.util import load_config_file
 from flask_script import Manager, commands as flask_script_commands
 from flask_script.commands import ShowUrls
 from flask_migrate import MigrateCommand
+from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import create_app, db, cache
 from aleph.model import Collection, Role
@@ -19,7 +19,8 @@ from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.collections import index_collection
 from aleph.logic.collections import create_collection, update_collection
-from aleph.logic.collections import refresh_collection, delete_collection
+from aleph.logic.collections import reset_collection, delete_collection
+from aleph.logic.collections import refresh_collection
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.rdf import export_collection
@@ -91,13 +92,16 @@ def flushdeleted():
 @manager.option('-f', '--foreign-id')
 @manager.option('--index', is_flag=True, default=False)
 @manager.option('--process', is_flag=True, default=False)
-def update(foreign_id=None, index=False, process=False):
+@manager.option('--reset', is_flag=True, default=False)
+def update(foreign_id=None, index=False, process=False, reset=False):
     """Re-index all the collections and entities."""
     update_roles()
     q = Collection.all(deleted=True)
     if foreign_id is not None:
         q = [get_collection(foreign_id)]
     for collection in q:
+        if reset:
+            reset_collection(collection)
         refresh_collection(collection.id)
         index_collection(collection)
         if collection.deleted_at is not None:
@@ -121,7 +125,7 @@ def xref(foreign_id, against=None):
 def bulkload(file_name):
     """Load entities from the specified mapping file."""
     log.info("Loading bulk data from: %s", file_name)
-    config = load_config_file(file_name)
+    config = load_mapping_file(file_name)
     for foreign_id, data in config.items():
         data['foreign_id'] = foreign_id
         data['label'] = data.get('label', foreign_id)

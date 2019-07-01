@@ -75,7 +75,10 @@ def update(collection_id):
 def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
-    payload = {'ingest': get_flag('ingest', True)}
+    payload = {
+        'ingest': get_flag('ingest', True),
+        'reset': get_flag('reset', True)
+    }
     queue_task(collection, OP_PROCESS, payload=payload)
     return ('', 202)
 

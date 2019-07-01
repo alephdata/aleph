@@ -80,7 +80,7 @@ class HTMLSupport(TimestampSupport):
                 html_body = self.RE_XML_ENCODING.sub('', html_body, count=1)
                 doc = html.fromstring(html_body)
         except (ParserError, ParseError, ValueError) as exc:
-            raise ProcessingException("HTML could not be parsed (%s)." % exc)
+            raise ProcessingException("Couldn't parse HTML: %s" % exc) from exc
 
         if extract_metadata:
             self.extract_html_header(entity, doc)

@@ -3,6 +3,7 @@ import io
 import csv
 import logging
 import subprocess
+from normality import stringify
 from collections import OrderedDict
 from followthemoney import model
 
@@ -10,8 +11,6 @@ from ingestors.ingestor import Ingestor
 from ingestors.support.shell import ShellSupport
 from ingestors.support.table import TableSupport
 from ingestors.exc import ProcessingException
-from ingestors.util import safe_string
-
 
 log = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class AccessIngestor(Ingestor, TableSupport, ShellSupport):
             ]
         except subprocess.CalledProcessError as cpe:
             log.warning("Failed to open MDB: %s", cpe)
-            raise ProcessingException("Failed to extract Access database.")
+            raise ProcessingException("Failed to extract Access DB.") from cpe
 
     def generate_rows(self, file_path, table_name):
         mdb_export = self.find_command('mdb-export')
@@ -57,7 +56,7 @@ class AccessIngestor(Ingestor, TableSupport, ShellSupport):
                 continue
             data = OrderedDict()
             for header, value in zip(headers, row):
-                data[header] = safe_string(value)
+                data[header] = stringify(value)
             yield data
 
     def ingest(self, file_path, entity):
