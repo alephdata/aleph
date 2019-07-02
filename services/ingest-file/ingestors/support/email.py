@@ -79,8 +79,8 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             try:
                 for value in ensure_list(msg.get_all(header)):
                     values.append(value)
-            except TypeError as te:
-                log.warning("Failed to parse [%s]: %s", header, te)
+            except (TypeError, IndexError) as exc:
+                log.warning("Failed to parse [%s]: %s", header, exc)
         return values
 
     def get_dates(self, msg, *headers):
