@@ -127,10 +127,10 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             key = self.cache_key('msid', ctx, message_id)
             self.set_cache_value(key, entity.id)
             rev_key = self.cache_key('mrid', ctx, message_id)
-            for entity_id in self.get_cache_set(rev_key):
+            for response_id in self.get_cache_set(rev_key):
                 email = self.manager.make_entity('Email')
-                email.id = entity_id
-                email.add('inReplyToEmail', message_id)
+                email.id = response_id
+                email.add('inReplyToEmail', entity.id)
                 fragment = safe_fragment(message_id)
                 self.manager.emit_entity(email, fragment=fragment)
 
