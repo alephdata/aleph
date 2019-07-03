@@ -1,6 +1,7 @@
 import logging
 from followthemoney.types import registry
 
+from aleph.core import settings
 from aleph.model import Document
 from aleph.analysis.aggregate import TagAggregator
 from aleph.analysis.extract import extract_entities
@@ -23,6 +24,8 @@ MAPPING = {
 
 
 def tag_entity(entity):
+    if not settings.TAG_ENTITIES:
+        return
     # TODO: should we have a schema called "Taggable" with
     # the XXmentioned properties?
     if not entity.schema.is_a(Document.SCHEMA):
