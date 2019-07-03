@@ -4,7 +4,7 @@ from datetime import datetime
 from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue
-from aleph.model import Collection, Entity, Match
+from aleph.model import Collection, Entity, Document, Match
 from aleph.model import Role, Permission, Events
 from aleph.index import collections as index
 from aleph.logic.notifications import publish, flush_notifications
@@ -57,15 +57,14 @@ def index_collections():
 
 
 def delete_collection(collection, sync=False):
+    reset_collection(collection)
     flush_notifications(collection)
-    drop_aggregator(collection)
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
-    Match.delete_by_collection(collection.id, deleted_at=deleted_at)
+    Document.delete_by_collection(collection.id, deleted_at=deleted_at)
     Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
     index.delete_collection(collection.id, sync=sync)
     index.delete_entities(collection.id, sync=False)
-    refresh_collection(collection.id)
     Authz.flush()

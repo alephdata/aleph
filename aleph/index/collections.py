@@ -1,6 +1,7 @@
 import logging
 from pprint import pprint  # noqa
 from banal import ensure_list
+from normality import normalize
 from followthemoney.types import registry
 
 from aleph.core import es, cache
@@ -18,6 +19,11 @@ def index_collection(collection, sync=False):
 
     log.info("Index [%s]: %s", collection.id, collection.label)
     data = get_collection(collection.id)
+    text = [data.get('label')]
+    text.append(normalize(data.get('label')))
+    text.append(normalize(data.get('foreign_id')))
+    text.append(normalize(data.get('summary')))
+    data['text'] = text
     data.pop('id', None)
     return index_safe(collections_index(),
                       collection.id, data,

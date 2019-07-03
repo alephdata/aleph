@@ -57,7 +57,7 @@ class MatchQuery(EntitiesQuery):
 
 
 class CollectionsQuery(Query):
-    TEXT_FIELDS = ['label^3', 'foreign_id^3', 'text']
+    TEXT_FIELDS = ['label^3', 'text']
     SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
     PREFIX_FIELD = 'label'
 
