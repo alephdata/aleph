@@ -48,7 +48,7 @@ class OCRServicer(RecognizeTextServicer):
 
 def serve(port):
     options = [('grpc.max_receive_message_length', 20 * 1024 * 1024)]
-    executor = futures.ThreadPoolExecutor(max_workers=4)
+    executor = futures.ThreadPoolExecutor(max_workers=2)
     server = grpc.server(executor, options=options)
     add_RecognizeTextServicer_to_server(OCRServicer(), server)
     server.add_insecure_port(port)

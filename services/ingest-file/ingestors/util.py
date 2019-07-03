@@ -1,4 +1,5 @@
 import shutil
+from pathlib import Path
 from normality import stringify
 
 
@@ -26,3 +27,10 @@ def filter_text(text):
     # TODO: should we check there's any alphabetic characters in the
     # text to avoid snippets entirely comprised of non-text chars?
     return True
+
+
+def path_string(path):
+    """Convert possible path objects to strings."""
+    if isinstance(path, Path):
+        return path.as_posix()
+    return path

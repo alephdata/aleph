@@ -11,7 +11,7 @@ import {
   createCollection,
   deleteCollection,
   ingestDocument,
-  deleteDocument,
+  deleteEntity,
 } from 'src/actions';
 
 const initialState = {};
@@ -47,6 +47,6 @@ export default createReducer({
   [createCollection.COMPLETE]: invalidateResults,
   [deleteCollection.COMPLETE]: invalidateResults,
   [ingestDocument.COMPLETE]: invalidateResults,
-  [deleteDocument.COMPLETE]: invalidateResults,
+  [deleteEntity.COMPLETE]: invalidateResults,
 
 }, initialState);

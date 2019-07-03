@@ -61,7 +61,7 @@ class ExcelIngestor(Ingestor, TableSupport, OLESupport):
         try:
             for sheet in book.sheets():
                 table = self.manager.make_entity('Table', parent=entity)
-                table.make_id(entity, sheet.name)
+                table.make_id(entity.id, sheet.name)
                 table.set('title', sheet.name)
                 self.emit_row_tuples(table, self.generate_csv(sheet))
                 self.manager.emit_entity(table)

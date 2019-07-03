@@ -31,9 +31,9 @@ class RARIngestor(PackageSupport, Ingestor):
                         fh = rf.open(name)
                         self.extract_member(temp_dir, name, fh,
                                             encoding=encoding)
-                    except Exception:
+                    except Exception as exc:
                         # TODO: should this be a fatal error?
-                        log.exception("Failed to unpack: %r", name)
+                        log.warning("Failed to unpack [%r]: %s", name, exc)
         except rarfile.NeedFirstVolume as nfv:
             raise ProcessingException('Cannot load RAR partials') from nfv
         except rarfile.PasswordRequired as pr:

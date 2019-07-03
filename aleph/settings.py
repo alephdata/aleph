@@ -104,6 +104,9 @@ UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
 # Geonames data file
 GEONAMES_DATA = env.get('ALEPH_GEONAMES_DATA')
 
+# Disable entity extraction
+TAG_ENTITIES = env.to_bool('ALEPH_TAG_ENTITIES', True)
+
 # Result high-lighting
 RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)
 

@@ -116,7 +116,9 @@ class Document(db.Model, DatedModel):
 
     @classmethod
     def by_id(cls, id, collection_id=None):
-        if id is None:
+        try:
+            id = int(id)
+        except Exception:
             return
         q = cls.all()
         q = q.filter(cls.id == id)

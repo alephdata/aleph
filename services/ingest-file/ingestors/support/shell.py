@@ -3,6 +3,7 @@ import subprocess
 from servicelayer import env
 from distutils.spawn import find_executable
 
+from ingestors.util import path_string
 from ingestors.exc import ProcessingException
 
 
@@ -23,7 +24,7 @@ class ShellSupport(object):
         if binary is None:
             raise RuntimeError("Program not found: %s" % command)
         cmd = [binary]
-        cmd.extend(args)
+        cmd.extend([path_string(a) for a in args])
         try:
             code = subprocess.call(cmd, timeout=self.COMMAND_TIMEOUT,
                                    stdout=open(os.devnull, 'wb'))

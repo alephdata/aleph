@@ -79,8 +79,8 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             try:
                 for value in ensure_list(msg.get_all(header)):
                     values.append(value)
-            except TypeError as te:
-                log.warning("Failed to parse [%s]: %s", header, te)
+            except (TypeError, IndexError) as exc:
+                log.warning("Failed to parse [%s]: %s", header, exc)
         return values
 
     def get_dates(self, msg, *headers):
@@ -124,13 +124,15 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             message_id = self._clean_message_id(message_id)
             if message_id is None:
                 continue
-            key = self.cache_key('msid', ctx, message_id)
-            self.set_cache_value(key, entity.id)
-            rev_key = self.cache_key('mrid', ctx, message_id)
-            for entity_id in self.get_cache_set(rev_key):
+            key = self.cache_key('mid-ent', ctx, message_id)
+            self.add_cache_set(key, entity.id)
+            rev_key = self.cache_key('ent-mid', ctx, message_id)
+            for response_id in self.get_cache_set(rev_key):
+                if response_id == entity.id:
+                    continue
                 email = self.manager.make_entity('Email')
-                email.id = entity_id
-                email.add('inReplyToEmail', message_id)
+                email.id = response_id
+                email.add('inReplyToEmail', entity.id)
                 fragment = safe_fragment(message_id)
                 self.manager.emit_entity(email, fragment=fragment)
 
@@ -138,9 +140,15 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             message_id = self._clean_message_id(message_id)
             if message_id is None:
                 continue
-            key = self.cache_key('msid', ctx, message_id)
-            entity.add('inReplyToEmail', self.get_cache_value(key))
-            rev_key = self.cache_key('mrid', ctx, message_id)
+
+            # forward linking: from message ID to entity ID
+            key = self.cache_key('mid-ent', ctx, message_id)
+            for email_id in self.get_cache_set(key):
+                if email_id != entity.id:
+                    entity.add('inReplyToEmail', email_id)
+
+            # backward linking: prepare entity ID for message to come
+            rev_key = self.cache_key('ent-mid', ctx, message_id)
             self.add_cache_set(rev_key, entity.id)
 
     def extract_msg_headers(self, entity, msg):

@@ -64,8 +64,8 @@ class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport,
             yield values
 
     def ingest(self, file_path, entity):
-        doc = self.parse_opendocument(file_path, entity)
         entity.schema = model.get('Workbook')
+        doc = self.parse_opendocument(file_path, entity)
         for sheet in doc.spreadsheet.getElementsByType(Table):
             name = sheet.getAttribute('name')
             table = self.manager.make_entity('Table', parent=entity)

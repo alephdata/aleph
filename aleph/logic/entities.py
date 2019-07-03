@@ -1,10 +1,9 @@
 import logging
-from banal import is_mapping
 from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.core import es, db, cache
-from aleph.model import Entity, Collection
+from aleph.model import Entity, Document, Collection
 from aleph.index import entities as index
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
@@ -27,20 +26,25 @@ def update_entity(entity, sync=False):
 
 
 def refresh_entity(entity, sync=False):
-    if is_mapping(entity):
-        entity_id = entity.get('id')
-        collection_id = entity.get('collection_id')
-    else:
+    if isinstance(entity, (Document, Entity)):
         entity_id = entity.id
         collection_id = entity.collection_id
+    else:
+        entity_id = entity.get('id')
+        collection_id = entity.get('collection_id')
     cache.kv.delete(cache.object_key(Entity, entity_id),
                     cache.object_key(Collection, collection_id))
 
 
 def delete_entity(entity, deleted_at=None, sync=False):
-    flush_notifications(entity)
-    entity.delete(deleted_at=deleted_at)
-    index.delete_entity(entity.id, sync=sync)
+    flush_notifications(entity.get('id'), clazz=Entity)
+    obj = Entity.by_id(entity.get('id'))
+    if obj is not None:
+        obj.delete(deleted_at=deleted_at)
+    doc = Document.by_id(entity.get('id'))
+    if doc is not None:
+        doc.delete(deleted_at=deleted_at)
+    index.delete_entity(entity.get('id'), sync=sync)
     # TODO: implement recursion?
     refresh_entity(entity)
 
