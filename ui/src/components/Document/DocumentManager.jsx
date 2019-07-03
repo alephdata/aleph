@@ -49,10 +49,11 @@ export class DocumentManager extends Component {
   }
 
   toggleDeleteSelection() {
-    if (this.state.deleteIsOpen) {
+    const { deleteIsOpen } = this.state;
+    if (deleteIsOpen) {
       this.setState({ selection: [] });
     }
-    this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
+    this.setState(({ deleteIsOpen: !deleteIsOpen }));
   }
 
   render() {

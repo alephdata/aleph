@@ -1,13 +1,10 @@
 import { createAction } from 'redux-act';
-import { fetchRole, suggestRoles, updateRole } from './roleActions';
-import { addAlert, deleteAlert, fetchAlerts } from './alertActions';
-import { deleteNotifications, queryNotifications } from './notificationActions';
-import {
-  deleteDocument,
-  fetchDocumentContent,
-  ingestDocument,
-} from './documentActions';
-import {
+
+export { fetchRole, suggestRoles, updateRole } from './roleActions';
+export { addAlert, deleteAlert, fetchAlerts } from './alertActions';
+export { deleteNotifications, queryNotifications } from './notificationActions';
+export { fetchDocumentContent, ingestDocument } from './documentActions';
+export {
   createCollection,
   deleteCollection,
   fetchCollection,
@@ -22,41 +19,10 @@ import {
   updateCollection,
   updateCollectionPermissions,
 } from './collectionActions';
-import {
-  fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities,
-} from './entityActions';
-
 export {
-  suggestRoles,
-  fetchRole,
-  updateRole,
-  fetchAlerts,
-  addAlert,
-  deleteAlert,
-  queryEntities,
-  fetchEntity,
-  fetchEntityReferences,
-  fetchEntityTags,
-  fetchDocumentContent,
-  queryCollections,
-  fetchCollection,
-  updateCollection,
-  fetchCollectionStatus,
-  fetchCollectionPermissions,
-  updateCollectionPermissions,
-  fetchCollectionXrefIndex,
-  queryXrefMatches,
-  queryNotifications,
-  createCollection,
-  deleteCollection,
-  deleteNotifications,
-  ingestDocument,
-  deleteDocument,
-  triggerCollectionAnalyze,
-  triggerCollectionCancel,
-  tiggerXrefMatches,
-};
-
+  fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,
+} from './entityActions';
 export { fetchMetadata, fetchStatistics } from './metadataActions';
 
+export { createAction };
 export const setLocale = createAction('SET_LOCALE');

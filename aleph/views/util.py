@@ -63,7 +63,7 @@ def get_db_entity(entity_id, action=Authz.READ):
     get_index_entity(entity_id, action=action)
     entity = Entity.by_id(entity_id)
     if entity is None:
-        raise MethodNotAllowed("Cannot write this entity")
+        raise MethodNotAllowed(description="Cannot write this entity")
     return entity
 
 

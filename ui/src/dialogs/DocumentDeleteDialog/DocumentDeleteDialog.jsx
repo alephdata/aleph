@@ -3,7 +3,7 @@ import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { deleteDocument } from 'src/actions';
+import { deleteEntity } from 'src/actions';
 
 const messages = defineMessages({
   button_confirm: {
@@ -28,9 +28,8 @@ export class DocumentDeleteDialog extends Component {
   async onDelete() {
     const { documents } = this.props;
     await Promise.all(
-      documents.map(async document => this.props.deleteDocument({ document })),
+      documents.map(async document => this.props.deleteEntity(document)),
     );
-    // this.props.toggleDialog();
   }
 
   render() {
@@ -54,9 +53,5 @@ export class DocumentDeleteDialog extends Component {
     );
   }
 }
-const mapDispatchToProps = { deleteDocument };
 
-export default compose(
-  connect(null, mapDispatchToProps),
-  injectIntl,
-)(DocumentDeleteDialog);
+export default compose(connect(null, { deleteEntity }), injectIntl)(DocumentDeleteDialog);

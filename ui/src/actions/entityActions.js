@@ -22,3 +22,10 @@ export const fetchEntityTags = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`entities/${id}/tags`);
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY_TAGS' });
+
+
+export const deleteEntity = asyncActionCreator(({ id }) => async () => {
+  const config = { params: { sync: true } };
+  await endpoint.delete(`entities/${id}`, config);
+  return { id };
+}, { name: 'DELETE_ENTITY' });

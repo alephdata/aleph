@@ -182,8 +182,8 @@ def update(entity_id):
 
 @blueprint.route('/api/2/entities/<entity_id>', methods=['DELETE'])
 def delete(entity_id):
-    entity = get_db_entity(entity_id, request.authz.WRITE)
-    tag_request(collection_id=entity.collection_id)
+    entity = get_index_entity(entity_id, request.authz.WRITE)
+    tag_request(collection_id=entity.get('collection_id'))
     delete_entity(entity, sync=get_flag('sync', True))
     db.session.commit()
     return ('', 204)
