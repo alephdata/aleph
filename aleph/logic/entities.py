@@ -26,7 +26,6 @@ def update_entity(entity, sync=False):
 
 
 def refresh_entity(entity, sync=False):
-    print(type(entity))
     if isinstance(entity, (Document, Entity)):
         entity_id = entity.id
         collection_id = entity.collection_id

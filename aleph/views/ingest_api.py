@@ -73,7 +73,7 @@ def ingest_upload(collection_id):
         db.session.commit()
         proxy = document.to_proxy()
         ingest_entity(collection, proxy)
-        ingest_wait()
+        ingest_wait(collection)
     finally:
         shutil.rmtree(upload_dir)
 
