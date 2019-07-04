@@ -1,0 +1,18 @@
+@import "src/app/variables.scss";
+
+.CollectionStatus {
+    background-color: $light-gray4 !important;
+    color: black;
+
+    .progress-area {
+        flex-grow: 1;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+
+        .bp3-progress-bar {
+            flex-grow: 10;
+            margin-right: $aleph-grid-size;
+        }
+    }    
+}

@@ -5,7 +5,6 @@ import {
   Category, Country, Role, Date, URL, Schema,
 } from 'src/components/common';
 import ClipboardInput from 'src/components/common/ClipboardInput';
-import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 
 class CollectionInfoMode extends PureComponent {
@@ -25,7 +24,6 @@ class CollectionInfoMode extends PureComponent {
 
     return (
       <div className="CollectionOverview">
-        <CollectionStatus collection={collection} />
         <p itemProp="description">{collection.summary}</p>
         <ul className="info-sheet">
           { !collection.casefile && (
