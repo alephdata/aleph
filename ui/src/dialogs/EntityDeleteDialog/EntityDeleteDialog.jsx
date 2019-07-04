@@ -7,28 +7,30 @@ import { deleteEntity } from 'src/actions';
 
 const messages = defineMessages({
   button_confirm: {
-    id: 'document.delete.confirm',
+    id: 'entity.delete.confirm',
     defaultMessage: 'Delete',
   },
   button_cancel: {
-    id: 'document.delete.cancel',
+    id: 'entity.delete.cancel',
     defaultMessage: 'Cancel',
   },
   delete_error: {
-    id: 'document.delete.error',
-    defaultMessage: 'An error occured while attempting to delete this case.',
+    id: 'entity.delete.error',
+    defaultMessage: 'An error occured while attempting to delete this entity.',
   },
 });
-export class DocumentDeleteDialog extends Component {
+
+export class EntityDeleteDialog extends Component {
   constructor(props) {
     super(props);
+    // this.state = { blocking: false };
     this.onDelete = this.onDelete.bind(this);
   }
 
   async onDelete() {
-    const { documents } = this.props;
+    const { entities } = this.props;
     await Promise.all(
-      documents.map(async document => this.props.deleteEntity(document)),
+      entities.map(async entity => this.props.deleteEntity(entity)),
     );
   }
 
@@ -46,12 +48,12 @@ export class DocumentDeleteDialog extends Component {
         onConfirm={this.onDelete}
       >
         <FormattedMessage
-          id="document.delete.question"
-          defaultMessage="Are you sure you want to delete this item?"
+          id="entity.delete.question"
+          defaultMessage="Are you sure you want to delete this entity?"
         />
       </Alert>
     );
   }
 }
 
-export default compose(connect(null, { deleteEntity }), injectIntl)(DocumentDeleteDialog);
+export default compose(connect(null, { deleteEntity }), injectIntl)(EntityDeleteDialog);
