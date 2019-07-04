@@ -137,10 +137,10 @@ class TestCase(FlaskTestCase):
         visitor = Role.by_foreign_id(Role.SYSTEM_GUEST)
         Permission.grant(self.public_coll, visitor, True, False)
         db.session.commit()
-        samples = read_entities(self.get_fixture_path('samples.ijson'))
-        index_entities(self.private_coll, samples)
         process_collection(self.public_coll, ingest=False, reset=True)
         process_collection(self.private_coll, ingest=False, reset=True)
+        samples = read_entities(self.get_fixture_path('samples.ijson'))
+        index_entities(self.private_coll, samples)
 
     def setUp(self):
         if not hasattr(settings, '_global_test_state'):

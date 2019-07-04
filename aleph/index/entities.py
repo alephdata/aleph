@@ -53,7 +53,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
 
 def count_entities(authz=None, collection_id=None, schemata=None):
     """Scan all entities matching the given criteria."""
-    query = _entities_query(authz, collection_id, schemata)
+    query = _entities_query(None, authz, collection_id, schemata)
     index = entities_read_index(schema=schemata)
     return es.count(index=index, body={'query': query}).get('count', 0)
 
