@@ -26,18 +26,20 @@ def daily_tasks():
 
 
 def handle_task(queue, payload, context):
-    log.info("Task [%s]: %s (begin)", queue.dataset, queue.operation)
+    # log.info("Task [%s]: %s (begin)", queue.dataset, queue.operation)
     try:
+        # log.info("Args [%s]: %r %r", queue.dataset, payload, context)
         collection = Collection.by_foreign_id(queue.dataset)
         if collection is None:
             log.error("Collection not found: %s", queue.dataset)
             return
+        sync = context.get('sync', False)
         if queue.operation == OP_INDEX:
-            index_aggregate(queue, collection)
+            index_aggregate(queue, collection, sync=sync, **payload)
         if queue.operation == OP_BULKLOAD:
             bulk_load(queue, collection, payload)
         if queue.operation == OP_PROCESS:
-            process_collection(collection, **payload)
+            process_collection(collection, sync=sync, **payload)
         if queue.operation == OP_XREF:
             xref_collection(queue, collection, **payload)
         log.info("Task [%s]: %s (done)", queue.dataset, queue.operation)
@@ -74,7 +76,7 @@ def queue_worker(timeout=5):
 
 
 def sync_worker():
-    log.debug("Processing queue events...")
+    # log.debug("Processing queue events...")
     while True:
         queue, payload, context = get_next_task(timeout=None)
         if queue is None:

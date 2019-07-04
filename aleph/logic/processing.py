@@ -6,9 +6,9 @@ from followthemoney.pragma import remove_checksums
 from followthemoney.namespace import Namespace
 
 from aleph.model import Entity, Document
-from aleph.queues import ingest_entity, ingest_wait
-from aleph.queues import get_queue, OP_INDEX
+from aleph.queues import ingest_entity
 from aleph.analysis import tag_entity
+from aleph.queues import get_queue, OP_INDEX
 from aleph.index.entities import index_bulk
 from aleph.index.collections import index_collection
 from aleph.logic.collections import refresh_collection, reset_collection
@@ -25,7 +25,7 @@ def _collection_proxies(collection):
         yield document.to_proxy()
 
 
-def process_collection(collection, ingest=True, reset=False):
+def process_collection(collection, ingest=True, reset=False, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     if reset:
@@ -38,29 +38,29 @@ def process_collection(collection, ingest=True, reset=False):
             if ingest:
                 ingest_entity(collection, proxy)
         writer.flush()
-        if ingest:
-            ingest_wait(collection)
-        else:
-            index_entities(collection, aggregator)
+        index = get_queue(collection, OP_INDEX)
+        index.progress.mark_pending(len(aggregator))
+        index_entities(index, collection, aggregator, sync=sync)
+        index_collection(collection, sync=sync)
     finally:
         aggregator.close()
 
 
-def index_aggregate(queue, collection, sync=False):
+def index_aggregate(queue, collection, entity_id=None, sync=False):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
-        index_entities(collection, aggregator, sync=sync)
-        index_collection(collection, sync=sync)
-        log.info("Aggregate indexed: %r", collection)
+        entities = aggregator
+        if entity_id is not None:
+            entities = aggregator.iterate(entity_id=entity_id)
+        else:
+            queue.progress.mark_pending(len(entities) - 1)
+        index_entities(queue, collection, entities, sync=sync)
     finally:
         aggregator.close()
-        queue.remove()
 
 
-def index_entities(collection, iterable, sync=False):
-    queue = get_queue(collection, OP_INDEX)
-    queue.progress.mark_pending(len(iterable))
+def index_entities(queue, collection, iterable, sync=False):
     entities = []
     for entity in iterable:
         if entity.id is None:
@@ -86,6 +86,7 @@ def bulk_write(collection, iterable, unsafe=False):
     of building the entity.
     """
     namespace = Namespace(collection.foreign_id)
+    queue = get_queue(collection, OP_INDEX)
     entities = []
     for item in iterable:
         if not is_mapping(item):
@@ -94,6 +95,6 @@ def bulk_write(collection, iterable, unsafe=False):
         entity = namespace.apply(entity)
         if not unsafe:
             entity = remove_checksums(entity)
-
         entities.append(entity)
-    index_entities(collection, entities)
+    queue.progress.mark_pending(len(entities))
+    index_entities(queue, collection, entities)

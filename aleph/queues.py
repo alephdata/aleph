@@ -23,9 +23,10 @@ def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
 
 
-def get_queue(collection, operation):
+def get_queue(collection, operation, priority=None):
     dataset = collection.foreign_id
-    priority = Queue.PRIO_MEDIUM if collection.casefile else Queue.PRIO_LOW
+    if priority is None:
+        priority = Queue.PRIO_MEDIUM if collection.casefile else Queue.PRIO_LOW
     return Queue(kv, operation, dataset, priority=priority)
 
 
@@ -52,6 +53,7 @@ def cancel_queue(collection):
 
 def ingest_wait(collection):
     """Poll redis to see if processing on the collection is complete."""
+    from aleph.worker import sync_worker
     if settings.TESTING or not settings.EAGER:
         # Tests run against fakeredis and cannot use the actual ingestor
         # service, so for now we're bailing on the eager behaviour there.
@@ -59,22 +61,26 @@ def ingest_wait(collection):
     queue = get_queue(collection, OP_INGEST)
     log.info("Waiting for document ingest...")
     while True:
+        sync_worker()
         if queue.is_done():
             break
         time.sleep(.1)
-    from aleph.worker import sync_worker
-    sync_worker()
+    # sync_worker()
 
 
-def ingest_entity(collection, proxy):
+def ingest_entity(collection, proxy, index=True, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
+    priority = Queue.PRIO_HIGH if sync else None
     if not proxy.schema.is_a(Document.SCHEMA):
         return
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
-    queue = get_queue(collection, OP_INGEST)
+    queue = get_queue(collection, OP_INGEST, priority=priority)
     from aleph.logic.aggregator import get_aggregator_name
     context = {
         'languages': collection.languages,
-        'balkhash_name': get_aggregator_name(collection)
+        'balkhash_name': get_aggregator_name(collection),
     }
+    if index:
+        context['next_operation'] = OP_INDEX
+        context['sync'] = sync
     queue.queue_task(proxy.to_dict(), context)
