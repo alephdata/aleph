@@ -37,6 +37,13 @@ def refresh_entity(entity, sync=False):
 
 
 def delete_entity(entity, deleted_at=None, sync=False):
+    # This is recursive and will also delete any entities which
+    # reference the given entity. Usually this is going to be child
+    # documents, or directoships referencing a person. It's a pretty
+    # dangerous operation, though.
+    for adjacent in index.iter_adjacent(entity):
+        log.warning("Recursive delete: %r", adjacent)
+        delete_entity(adjacent, deleted_at=deleted_at, sync=sync)
     flush_notifications(entity.get('id'), clazz=Entity)
     obj = Entity.by_id(entity.get('id'))
     if obj is not None:
@@ -45,7 +52,6 @@ def delete_entity(entity, deleted_at=None, sync=False):
     if doc is not None:
         doc.delete(deleted_at=deleted_at)
     index.delete_entity(entity.get('id'), sync=sync)
-    # TODO: implement recursion?
     refresh_entity(entity)
 
 
