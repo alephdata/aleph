@@ -101,7 +101,7 @@ def update(foreign_id=None, index=False, process=False, reset=False):
         q = [get_collection(foreign_id)]
     for collection in q:
         if reset:
-            reset_collection(collection)
+            reset_collection(collection, sync=True)
         refresh_collection(collection.id)
         index_collection(collection)
         if collection.deleted_at is not None:

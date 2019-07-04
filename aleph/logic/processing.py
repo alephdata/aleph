@@ -29,7 +29,7 @@ def process_collection(collection, ingest=True, reset=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     if reset:
-        reset_collection(collection)
+        reset_collection(collection, sync=True)
     aggregator = get_aggregator(collection)
     try:
         writer = aggregator.bulk()
@@ -51,7 +51,6 @@ def index_aggregate(queue, collection, sync=False):
     aggregator = get_aggregator(collection)
     try:
         index_entities(collection, aggregator, sync=sync)
-        refresh_collection(collection.id, sync=sync)
         index_collection(collection, sync=sync)
         log.info("Aggregate indexed: %r", collection)
     finally:

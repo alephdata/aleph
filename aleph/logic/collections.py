@@ -42,13 +42,14 @@ def refresh_collection(collection_id, sync=False):
     cache.kv.delete(cache.object_key(Collection, collection_id))
 
 
-def reset_collection(collection):
+def reset_collection(collection, sync=False):
     """Reset the collection by deleting any derived data."""
     drop_aggregator(collection)
     Match.delete_by_collection(collection.id)
-    db.session.commit()
     cancel_queue(collection)
+    index.delete_entities(collection.id, sync=sync)
     refresh_collection(collection.id)
+    db.session.commit()
 
 
 def index_collections():
@@ -57,14 +58,13 @@ def index_collections():
 
 
 def delete_collection(collection, sync=False):
-    reset_collection(collection)
+    reset_collection(collection, sync=False)
     flush_notifications(collection)
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
-    Document.delete_by_collection(collection.id, deleted_at=deleted_at)
+    Document.delete_by_collection(collection.id)
     Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
     collection.delete(deleted_at=deleted_at)
     db.session.commit()
     index.delete_collection(collection.id, sync=sync)
-    index.delete_entities(collection.id, sync=False)
     Authz.flush()
