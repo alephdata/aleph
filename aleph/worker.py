@@ -4,6 +4,7 @@ from aleph.core import kv, db, settings
 from aleph.model import Collection
 from aleph.queues import get_next_task, get_rate_limit
 from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.index.collections import index_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import index_collections
 from aleph.logic.notifications import generate_digest
@@ -26,14 +27,12 @@ def daily_tasks():
 
 
 def handle_task(queue, payload, context):
-    # log.info("Task [%s]: %s (begin)", queue.dataset, queue.operation)
+    collection = Collection.by_foreign_id(queue.dataset)
+    if collection is None:
+        log.error("Collection not found: %s", queue.dataset)
+        return
+    sync = context.get('sync', False)
     try:
-        # log.info("Args [%s]: %r %r", queue.dataset, payload, context)
-        collection = Collection.by_foreign_id(queue.dataset)
-        if collection is None:
-            log.error("Collection not found: %s", queue.dataset)
-            return
-        sync = context.get('sync', False)
         if queue.operation == OP_INDEX:
             index_aggregate(queue, collection, sync=sync, **payload)
         if queue.operation == OP_BULKLOAD:
@@ -54,6 +53,7 @@ def handle_task(queue, payload, context):
         queue.task_done()
         if queue.is_done():
             queue.remove()
+            index_collection(collection, sync=sync)
 
 
 def queue_worker(timeout=5):

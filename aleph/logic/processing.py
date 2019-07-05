@@ -8,9 +8,8 @@ from followthemoney.namespace import Namespace
 from aleph.model import Entity, Document
 from aleph.queues import ingest_entity
 from aleph.analysis import tag_entity
-from aleph.queues import get_queue, OP_INDEX
+from aleph.queues import get_queue, queue_task, OP_INDEX
 from aleph.index.entities import index_bulk
-# from aleph.index.collections import index_collection
 from aleph.logic.collections import refresh_collection, reset_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.util import BULK_PAGE
@@ -41,8 +40,7 @@ def process_collection(collection, ingest=True, reset=False, sync=False):
             for proxy in aggregator:
                 ingest_entity(collection, proxy)
         else:
-            index = get_queue(collection, OP_INDEX)
-            index.queue_task({}, {'sync': sync})
+            queue_task(collection, OP_INDEX, context={'sync': sync})
     finally:
         aggregator.close()
 

@@ -68,6 +68,7 @@ class TestCase(FlaskTestCase):
         settings.INDEX_PREFIX = APP_NAME
         settings.INDEX_WRITE = 'yolo'
         settings.INDEX_READ = [settings.INDEX_WRITE]
+        settings.TAG_ENTITIES = True
         settings._gcp_logger = None
         app = create_app({})
         mount_app_blueprints(app)
@@ -140,12 +141,12 @@ class TestCase(FlaskTestCase):
         Permission.grant(self.public_coll, visitor, True, False)
         db.session.commit()
         drop_aggregator(self.public_coll)
-        process_collection(self.public_coll, ingest=False)
+        process_collection(self.public_coll, ingest=False, sync=True)
         queue = get_queue(self.private_coll, OP_INDEX)
         samples = read_entities(self.get_fixture_path('samples.ijson'))
         drop_aggregator(self.private_coll)
         index_entities(queue, self.private_coll, samples, sync=True)
-        process_collection(self.private_coll, ingest=False)
+        process_collection(self.private_coll, ingest=False, sync=True)
 
     def setUp(self):
         if not hasattr(settings, '_global_test_state'):
