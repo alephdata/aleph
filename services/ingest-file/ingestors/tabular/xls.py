@@ -2,7 +2,6 @@ import xlrd
 import logging
 from time import time
 from datetime import datetime
-from normality import stringify
 from xlrd.biffh import XLRDError
 from followthemoney import model
 
@@ -42,9 +41,9 @@ class ExcelIngestor(Ingestor, TableSupport, OLESupport):
                 else:
                     value = datetime(year, month, day, hour, minute, second)
                     return value.isoformat()
-        except Exception:
-            pass
-        return stringify(value)
+        except Exception as exc:
+            log.warning("Error in Excel value [%s]: %s", cell, exc)
+        return value
 
     def generate_csv(self, sheet):
         for row_index in range(0, sheet.nrows):
@@ -64,7 +63,8 @@ class ExcelIngestor(Ingestor, TableSupport, OLESupport):
                 table.make_id(entity.id, sheet.name)
                 table.set('title', sheet.name)
                 self.emit_row_tuples(table, self.generate_csv(sheet))
-                self.manager.emit_entity(table)
+                if table.has('csvHash'):
+                    self.manager.emit_entity(table)
         except XLRDError as err:
             raise ProcessingException('Invalid Excel file: %s' % err) from err
         finally:

@@ -3,7 +3,6 @@ from odf.teletype import extractText
 from odf.table import TableRow, TableCell, Table
 from odf.text import P
 from odf.namespaces import OFFICENS
-from normality import stringify
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
@@ -58,7 +57,6 @@ class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport,
             for cell in row.getElementsByType(TableCell):
                 repeat = cell.getAttribute("numbercolumnsrepeated") or 1
                 value = self.convert_cell(cell)
-                value = stringify(value)
                 for i in range(int(repeat)):
                     values.append(value)
             yield values
@@ -72,4 +70,5 @@ class OpenOfficeSpreadsheetIngestor(Ingestor, TableSupport,
             table.make_id(entity, name)
             table.set('title', name)
             self.emit_row_tuples(table, self.generate_csv(sheet))
-            self.manager.emit_entity(table)
+            if table.has('csvHash'):
+                self.manager.emit_entity(table)

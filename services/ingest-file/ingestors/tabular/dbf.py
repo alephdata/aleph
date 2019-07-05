@@ -25,10 +25,7 @@ class DBFIngestor(Ingestor, TableSupport):
         headers = [stringify(h) for h in table.field_names]
         for row in table:
             try:
-                data = OrderedDict()
-                for header, value in zip(headers, row):
-                    data[header] = stringify(value)
-                yield data
+                yield OrderedDict(zip(headers, row))
             except Exception as ex:
                 log.warning("Cannot decode DBF row: %s", ex)
 

@@ -1,8 +1,6 @@
 import io
 import csv
 import logging
-from normality import stringify
-from collections import OrderedDict
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
@@ -26,18 +24,6 @@ class CSVIngestor(Ingestor, EncodingSupport, TableSupport):
     EXTENSIONS = ['csv', 'tsv']
     SCORE = 7
 
-    def generate_rows(self, reader, has_header=False):
-        headers = next(reader) if has_header else []
-        headers = [stringify(h) for h in headers]
-        for row in reader:
-            while len(headers) < len(row):
-                next_col = len(headers) + 1
-                headers.append('Column %s' % next_col)
-            data = OrderedDict()
-            for header, value in zip(headers, row):
-                data[header] = stringify(value)
-            yield data
-
     def ingest(self, file_path, entity):
         entity.schema = model.get('Table')
         with io.open(file_path, 'rb') as fh:
@@ -48,14 +34,9 @@ class CSVIngestor(Ingestor, EncodingSupport, TableSupport):
         try:
             sample = fh.read(4096 * 10)
             fh.seek(0)
-
             dialect = csv.Sniffer().sniff(sample)
-            # dialect.delimiter = dialect.delimiter[0]
-            has_header = csv.Sniffer().has_header(sample)
-
             reader = csv.reader(fh, dialect=dialect)
-            rows = self.generate_rows(reader, has_header=has_header)
-            self.emit_row_dicts(entity, rows)
+            self.emit_row_tuples(entity, reader)
         except UnicodeDecodeError as ude:
             log.warning("Encoding error: %r", entity)
             raise ProcessingException("Could not decode CSV (%s)" % encoding) from ude  # noqa

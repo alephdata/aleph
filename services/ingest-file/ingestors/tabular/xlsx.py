@@ -1,5 +1,4 @@
 import logging
-from normality import stringify
 from followthemoney import model
 from openpyxl import load_workbook
 from xml.etree.ElementTree import ParseError
@@ -28,7 +27,7 @@ class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
     def generate_rows(self, sheet):
         for row in sheet.rows:
             try:
-                yield [stringify(c.value) for c in row]
+                yield [c.value for c in row]
             except (ValueError, OverflowError, ParseError) as ve:
                 log.warning("Failed to read Excel row: %s", ve)
 
@@ -46,7 +45,8 @@ class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
                 table.make_id(entity.id, name)
                 table.set('title', name)
                 self.emit_row_tuples(table, self.generate_rows(book[name]))
-                self.manager.emit_entity(table)
+                if table.has('csvHash'):
+                    self.manager.emit_entity(table)
         except Exception as err:
             raise ProcessingException('Cannot read Excel file: %s' % err) from err  # noqa
         finally:

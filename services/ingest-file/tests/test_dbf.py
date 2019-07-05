@@ -10,11 +10,11 @@ class DBFIngestorTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-        # 8 rows + 1 table
         entities = self.get_emitted()
-        self.assertEqual(len(entities), 8+1)
+        table = entities[0]
+        self.assertEqual(len(entities), 1)
         self.assertEqual(entity.schema, 'Table')
-        rows = self.get_emitted('Row')
-        cells = ''.join([e.first('cells') for e in rows])
-        self.assertIn('Azad Kashmir', cells)
-        self.assertIn('Pakistan', cells)
+        self.assertTrue(entity.has('csvHash'))
+        self.assertEqual(int(entity.first('rowCount')), 9)
+        self.assertIn('Azad Kashmir', table.get('indexText'))
+        self.assertIn('Pakistan', table.get('indexText'))
