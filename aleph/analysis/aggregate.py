@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class TagAggregator(object):
+    MAX_TAGS = 60000
     CUTOFFS = {
         registry.country: .2,
         registry.language: .3,
@@ -30,6 +31,8 @@ class TagAggregator(object):
         self.tags[(key, type_)].append(tag)
 
         if type_ not in self.types:
+            if len(self.types) > self.MAX_TAGS:
+                return
             self.types[type_] = 0
         self.types[type_] += 1
 
