@@ -52,6 +52,8 @@ def handle_task(queue, payload, context):
         raise
     finally:
         queue.task_done()
+        if queue.is_done():
+            queue.remove()
 
 
 def queue_worker(timeout=5):

@@ -10,7 +10,7 @@ from aleph.queues import ingest_entity
 from aleph.analysis import tag_entity
 from aleph.queues import get_queue, OP_INDEX
 from aleph.index.entities import index_bulk
-from aleph.index.collections import index_collection
+# from aleph.index.collections import index_collection
 from aleph.logic.collections import refresh_collection, reset_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.util import BULK_PAGE
@@ -28,6 +28,7 @@ def _collection_proxies(collection):
 def process_collection(collection, ingest=True, reset=False, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
+    ingest = ingest or reset
     if reset:
         reset_collection(collection, sync=True)
     aggregator = get_aggregator(collection)
@@ -35,13 +36,13 @@ def process_collection(collection, ingest=True, reset=False, sync=False):
         writer = aggregator.bulk()
         for proxy in _collection_proxies(collection):
             writer.put(proxy, fragment='db')
-            if ingest:
-                ingest_entity(collection, proxy)
         writer.flush()
-        index = get_queue(collection, OP_INDEX)
-        index.progress.mark_pending(len(aggregator))
-        index_entities(index, collection, aggregator, sync=sync)
-        index_collection(collection, sync=sync)
+        if ingest:
+            for proxy in aggregator:
+                ingest_entity(collection, proxy)
+        else:
+            index = get_queue(collection, OP_INDEX)
+            index.queue_task({}, {'sync': sync})
     finally:
         aggregator.close()
 

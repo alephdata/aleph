@@ -4,7 +4,6 @@ from servicelayer.process import RateLimit, Progress
 from servicelayer.process import ServiceQueue as Queue
 
 from aleph.core import kv, settings
-from aleph.model import Document
 
 log = logging.getLogger(__name__)
 
@@ -65,14 +64,12 @@ def ingest_wait(collection):
         if queue.is_done():
             break
         time.sleep(.1)
-    # sync_worker()
+    sync_worker()
 
 
 def ingest_entity(collection, proxy, index=True, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
     priority = Queue.PRIO_HIGH if sync else None
-    if not proxy.schema.is_a(Document.SCHEMA):
-        return
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     queue = get_queue(collection, OP_INGEST, priority=priority)
     from aleph.logic.aggregator import get_aggregator_name
