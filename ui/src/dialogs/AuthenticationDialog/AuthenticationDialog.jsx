@@ -6,8 +6,7 @@ import {
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { endpoint } from 'src/app/api';
-import { xhrErrorToast } from 'src/components/auth/xhrToast';
-import { showErrorToast } from 'src/app/toast';
+import { showResponseToast } from 'src/app/toast';
 import { PasswordAuthLogin, PasswordAuthSignup } from 'src/components/auth/PasswordAuth';
 import {
   loginWithPassword as loginWithPasswordAction,
@@ -69,8 +68,7 @@ export class AuthenticationDialog extends Component {
     endpoint.post('/roles/code', data).then(() => {
       this.setState({ submitted: true });
     }).catch((e) => {
-      console.log(e);
-      xhrErrorToast(e.response, intl);
+      showResponseToast(e.response, intl);
     });
   }
 
@@ -80,12 +78,7 @@ export class AuthenticationDialog extends Component {
       await loginWithPassword(data.email, data.password);
       window.location.replace(nextPath || '/');
     } catch (e) {
-      console.error(e);
-      if (e.response && e.response.status === 401) {
-        showErrorToast(intl.formatMessage(messages.pw_wrong_credentials));
-      } else {
-        xhrErrorToast(e.response, intl);
-      }
+      showResponseToast(e.response, intl);
     }
   }
 

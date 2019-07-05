@@ -5,6 +5,6 @@ export const loginWithToken = createAction('LOGIN');
 export const logout = createAction('LOGOUT');
 
 export const loginWithPassword = (email, password) => async (dispatch) => {
-  const response = await endpoint.post('/sessions/login', { email, password }, { isAuthRequest: true });
+  const response = await endpoint.post('/sessions/login', { email, password });
   dispatch(loginWithToken(response.data.token));
 };

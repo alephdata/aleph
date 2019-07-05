@@ -50,9 +50,7 @@ endpoint.interceptors.request.use((config) => {
 endpoint.interceptors.response.use(
   response => response,
   (error) => {
-    // isAuthRequest: e.g. used for username / password login request,
-    // error will be handled individually
-    if (error.response && error.response.status === 401 && !error.response.config.isAuthRequest) {
+    if (error.response && error.response.status === 401) {
       store.dispatch(logout());
       window.location.reload();
     }

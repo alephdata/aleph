@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Screen from 'src/components/Screen/Screen';
 import { endpoint } from 'src/app/api';
 import { loginWithPassword } from 'src/actions/sessionActions';
-import { xhrErrorToast } from 'src/components/auth/xhrToast';
+import { showResponseToast } from 'src/app/toast';
 import { PasswordAuthActivate } from 'src/components/auth/PasswordAuth';
 
 
@@ -22,7 +22,7 @@ export class ActivateScreen extends Component {
     endpoint.post('/roles', { code: params.code, ...data })
       .then(res => this.props.loginWithPassword(res.data.email, data.password))
       .catch((e) => {
-        xhrErrorToast(e.response, intl);
+        showResponseToast(e.response, intl);
       });
   }
 
