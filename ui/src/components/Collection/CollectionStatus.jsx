@@ -82,7 +82,7 @@ class CollectionStatus extends Component {
         </div>
         <FormattedMessage
           id="collection.status.message"
-          defaultMessage="Continue to frollick about while data is being processed."
+          defaultMessage="Continue to frolic about while data is being processed."
         />
       </div>
     );

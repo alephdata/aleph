@@ -10,7 +10,7 @@ from servicelayer.archive.util import ensure_path
 from aleph.core import db, archive
 from aleph.model import Document
 from aleph.queues import ingest_entity, ingest_wait
-from aleph.views.util import get_db_collection
+from aleph.views.util import get_db_collection, get_flag
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema
 
@@ -54,6 +54,7 @@ def _load_metadata():
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
+    sync = get_flag('sync', default=False)
     meta, foreign_id = _load_metadata()
     parent = _load_parent(collection, meta)
     upload_dir = ensure_path(mkdtemp(prefix='aleph.upload.'))
@@ -72,7 +73,7 @@ def ingest_upload(collection_id):
                                  uploader_id=request.authz.id)
         db.session.commit()
         proxy = document.to_proxy()
-        ingest_entity(collection, proxy)
+        ingest_entity(collection, proxy, sync=sync)
         ingest_wait(collection)
     finally:
         shutil.rmtree(upload_dir)
