@@ -29,7 +29,7 @@ const messages = defineMessages({
 
 
 class EntityScreen extends Component {
-  static SEARCHABLES = ['Pages', 'Table', 'Folder', 'Package', 'Workbook'];
+  static SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
 
   constructor(props) {
     super(props);
