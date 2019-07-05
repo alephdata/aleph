@@ -10,10 +10,8 @@ class CSVIngestorTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-        # 256 rows + 1 table
-        entities = self.get_emitted()
-        self.assertEqual(len(entities), 256+1)
-        self.assertEqual(entity.schema, 'Table')
+        self.assertTrue(entity.has('csvHash'))
+        self.assertEqual(int(entity.first('rowCount')), 257)
 
     def test_nonutf_csv(self):
         fixture_path, entity = self.fixture('countries_nonutf.csv')
@@ -21,7 +19,5 @@ class CSVIngestorTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-        # 20 rows + 1 table
-        entities = self.get_emitted()
-        self.assertEqual(len(entities), 20+1)
-        self.assertEqual(entity.schema, 'Table')
+        self.assertTrue(entity.has('csvHash'))
+        self.assertEqual(int(entity.first('rowCount')), 22)

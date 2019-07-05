@@ -3,7 +3,6 @@ import io
 import csv
 import logging
 import subprocess
-from normality import stringify
 from collections import OrderedDict
 from followthemoney import model
 
@@ -48,16 +47,12 @@ class AccessIngestor(Ingestor, TableSupport, ShellSupport):
         args = [mdb_export, '-b', 'strip', file_path, table_name]
         proc = subprocess.Popen(args, stdout=subprocess.PIPE)
         output = io.TextIOWrapper(proc.stdout, newline=os.linesep)
-        rows = csv.reader((line for line in output), delimiter=",")
         headers = None
-        for row in rows:
+        for row in csv.reader((line for line in output), delimiter=","):
             if headers is None:
                 headers = row
                 continue
-            data = OrderedDict()
-            for header, value in zip(headers, row):
-                data[header] = stringify(value)
-            yield data
+            yield OrderedDict(zip(headers, row))
 
     def ingest(self, file_path, entity):
         entity.schema = model.get('Workbook')

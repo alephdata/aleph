@@ -42,7 +42,7 @@ class Match(db.Model, IdModel, DatedModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at=None):
+    def delete_by_collection(cls, collection_id):
         q = db.session.query(cls)
         q = q.filter(or_(
             cls.collection_id == collection_id,

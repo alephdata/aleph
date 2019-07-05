@@ -42,10 +42,7 @@ class SQLiteIngestor(Ingestor, TableSupport):
                 row = cur.fetchone()
                 if row is None:
                     return
-                data = OrderedDict()
-                for header, value in zip(headers, row):
-                    data[header] = value
-                yield data
+                yield OrderedDict(zip(headers, row))
             except sqlite3.OperationalError as oe:
                 log.warning("SQLite error: %s", oe)
 

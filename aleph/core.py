@@ -161,7 +161,7 @@ def url_external(path, query, relative=False):
 
         # api_url = request.url_root
         api_url = settings.APP_UI_URL
-        if settings.FORCE_HTTPS is not None:
+        if settings.FORCE_HTTPS:
             parsed = urlparse(api_url)
             parsed = parsed._replace(scheme='https')
             api_url = parsed.geturl()

@@ -10,16 +10,15 @@ class TabularIngestorTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-        entities = self.get_emitted('Row')
-        assert len(entities) == 5, len(entities)
-        cells = ''.join([e.first('cells') for e in entities])
-        self.assertIn('Mihai Viteazul', cells)
-
+        self.assertEqual(entity.schema, 'Workbook')
         tables = self.get_emitted('Table')
-        assert len(tables) == 2, tables
+        self.assertEqual(len(tables), 2)
         titles = [t.first('title') for t in tables]
         self.assertIn('Sheet1', titles)
-        self.assertEqual(entity.schema, 'Workbook')
+        table = [t for t in tables if '1' in t.first('title')][0]
+        self.assertTrue(table.has('csvHash'))
+        self.assertEqual(int(table.first('rowCount')), 4)
+        self.assertIn('Mihai Viteazul', table.get('indexText'))
 
     def test_unicode_xls(self):
         fixture_path, entity = self.fixture('rom.xls')

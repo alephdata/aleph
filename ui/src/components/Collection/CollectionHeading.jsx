@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { Collection } from 'src/components/common';
-
+import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 class CollectionHeading extends PureComponent {
   render() {
@@ -23,6 +23,7 @@ class CollectionHeading extends PureComponent {
           <h1 itemProp="name">
             {collection.label}
           </h1>
+          <CollectionStatus collection={collection} />
         </div>
       </React.Fragment>
     );

@@ -30,7 +30,7 @@ class CSVStreamViewer extends React.Component {
       // If we are scrolling to the end. Time to load more rows.
       if ((row.rowIndexEnd + 50) > this.state.requestedRow) {
         const { document } = this.props;
-        const rowCount = parseInt(document.getProperty('rowCount')[0], 10);
+        const rowCount = parseInt(document.getFirst('rowCount'), 10);
         // Max row count should not exceed the number of rows in the csv file
         let requestedRow = Math.min(rowCount, this.state.requestedRow + 100);
         if (requestedRow !== this.state.requestedRow) {
@@ -54,6 +54,10 @@ class CSVStreamViewer extends React.Component {
         Papa.RemoteChunkSize = 1024 * 500;
         Papa.parse(url, {
           download: true,
+          delimiter: ',',
+          newline: '\n',
+          encoding: 'utf-8',
+          // header: true,
           chunk: (results, parser) => {
             this.parser = parser;
             this.setState((previousState) => {
@@ -92,12 +96,12 @@ class CSVStreamViewer extends React.Component {
     if (document.id === undefined) {
       return null;
     }
-    const columnsJson = document.getProperty('columns').toString();
+    const columnsJson = document.getFirst('columns');
     const columns = columnsJson ? JSON.parse(columnsJson) : [];
     return (
       <div className="TableViewer">
         <Table
-          numRows={this.state.requestedRow}
+          numRows={document.getFirst('rowCount')}
           enableGhostCells
           enableRowHeader
           onVisibleCellsChange={this.onVisibleCellsChange}

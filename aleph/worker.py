@@ -4,6 +4,7 @@ from aleph.core import kv, db, settings
 from aleph.model import Collection
 from aleph.queues import get_next_task, get_rate_limit
 from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.index.collections import index_collection
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import index_collections
 from aleph.logic.notifications import generate_digest
@@ -26,18 +27,18 @@ def daily_tasks():
 
 
 def handle_task(queue, payload, context):
-    log.info("Task [%s]: %s (begin)", queue.dataset, queue.operation)
+    collection = Collection.by_foreign_id(queue.dataset)
+    if collection is None:
+        log.error("Collection not found: %s", queue.dataset)
+        return
+    sync = context.get('sync', False)
     try:
-        collection = Collection.by_foreign_id(queue.dataset)
-        if collection is None:
-            log.error("Collection not found: %s", queue.dataset)
-            return
         if queue.operation == OP_INDEX:
-            index_aggregate(queue, collection)
+            index_aggregate(queue, collection, sync=sync, **payload)
         if queue.operation == OP_BULKLOAD:
             bulk_load(queue, collection, payload)
         if queue.operation == OP_PROCESS:
-            process_collection(collection, **payload)
+            process_collection(collection, sync=sync, **payload)
         if queue.operation == OP_XREF:
             xref_collection(queue, collection, **payload)
         log.info("Task [%s]: %s (done)", queue.dataset, queue.operation)
@@ -50,6 +51,9 @@ def handle_task(queue, payload, context):
         raise
     finally:
         queue.task_done()
+        if queue.is_done():
+            queue.remove()
+            index_collection(collection, sync=sync)
 
 
 def queue_worker(timeout=5):
@@ -74,7 +78,7 @@ def queue_worker(timeout=5):
 
 
 def sync_worker():
-    log.debug("Processing queue events...")
+    # log.debug("Processing queue events...")
     while True:
         queue, payload, context = get_next_task(timeout=None)
         if queue is None:

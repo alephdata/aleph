@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import DocumentDeleteDialog from 'src/dialogs/DocumentDeleteDialog/DocumentDeleteDialog';
+import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
@@ -98,8 +98,8 @@ export class DocumentManager extends Component {
           selection={selection}
           updateSelection={updateSelection}
         />
-        <DocumentDeleteDialog
-          documents={selection}
+        <EntityDeleteDialog
+          entities={selection}
           isOpen={this.state.deleteIsOpen}
           toggleDialog={this.toggleDeleteSelection}
         />

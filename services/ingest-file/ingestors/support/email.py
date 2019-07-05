@@ -120,12 +120,15 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
 
     def resolve_message_ids(self, entity):
         ctx = self.manager.queue.dataset
+
         for message_id in entity.get('messageId'):
             message_id = self._clean_message_id(message_id)
             if message_id is None:
                 continue
+
             key = self.cache_key('mid-ent', ctx, message_id)
             self.add_cache_set(key, entity.id)
+
             rev_key = self.cache_key('ent-mid', ctx, message_id)
             for response_id in self.get_cache_set(rev_key):
                 if response_id == entity.id:

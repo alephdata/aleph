@@ -26,8 +26,8 @@ def _source_spec(includes, excludes):
     return {'includes': includes, 'excludes': excludes}
 
 
-def _entities_query(authz, collection_id, schemata):
-    filters = []
+def _entities_query(filters, authz, collection_id, schemata):
+    filters = filters or []
     if authz is not None:
         filters.append(authz_query(authz))
     if collection_id is not None:
@@ -38,10 +38,10 @@ def _entities_query(authz, collection_id, schemata):
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
-                  includes=None, excludes=None):
+                  includes=None, excludes=None, filters=None):
     """Scan all entities matching the given criteria."""
     query = {
-        'query': _entities_query(authz, collection_id, schemata),
+        'query': _entities_query(filters, authz, collection_id, schemata),
         '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
@@ -53,7 +53,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
 
 def count_entities(authz=None, collection_id=None, schemata=None):
     """Scan all entities matching the given criteria."""
-    query = _entities_query(authz, collection_id, schemata)
+    query = _entities_query(None, authz, collection_id, schemata)
     index = entities_read_index(schema=schemata)
     return es.count(index=index, body={'query': query}).get('count', 0)
 
@@ -65,6 +65,14 @@ def iter_proxies(**kw):
         if schema is None:
             continue
         yield model.get_proxy(data)
+
+
+def iter_adjacent(entity):
+    """Used for recursively deleting entities and their linked associations."""
+    query = {'term': {'entities': entity.get('id')}}
+    yield from iter_entities(includes=['collection_id'],
+                             collection_id=entity.get('collection_id'),
+                             filters=[query])
 
 
 def entities_by_ids(ids, schemata=None, cached=False,

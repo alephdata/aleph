@@ -35,7 +35,7 @@ class Manager(object):
         # reusing it in child ingestors
         self.context = context
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
-        self._emit_count = 0
+        self.emitted = set()
         self._writer = None
         self._dataset = None
 
@@ -74,7 +74,7 @@ class Manager(object):
         # from pprint import pprint
         # pprint(entity.to_dict())
         self.writer.put(entity.to_dict(), fragment)
-        self._emit_count += 1
+        self.emitted.add(entity.id)
 
     def emit_text_fragment(self, entity, texts, fragment):
         texts = [t for t in ensure_list(texts) if filter_text(t)]
@@ -142,8 +142,6 @@ class Manager(object):
     def finalize(self, entity):
         self.emit_entity(entity)
         self.writer.flush()
-        log.debug("Emitted %d entities to %r", self._emit_count, self.dataset)
-        self._emit_count = 0
 
     def delegate(self, ingestor_class, file_path, entity):
         ingestor_class(self).ingest(file_path, entity)

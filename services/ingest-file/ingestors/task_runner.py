@@ -3,7 +3,6 @@ import threading
 from followthemoney import model
 from servicelayer.cache import get_redis
 from servicelayer.process import ServiceQueue
-from servicelayer.util import backoff
 
 from ingestors.manager import Manager
 from ingestors import settings
@@ -23,39 +22,37 @@ class TaskRunner(object):
             queue.queue_task(payload, context)
 
     @classmethod
-    def handle_done(cls, queue):
-        if not queue.is_done():
+    def handle_done(cls, queue, context, entities):
+        next_operation = context.get('next_operation')
+        if next_operation is None:
             return
-        # HACK: randomly wait a little to avoid double-triggering the
-        # index process.
-        backoff()
-        index = ServiceQueue(queue.conn,
-                             ServiceQueue.OP_INDEX,
-                             queue.dataset,
-                             priority=queue.priority)
-        if index.is_done():
-            log.info("Ingest %r finished, queue index...", queue.dataset)
-            index.queue_task({}, {})
-        queue.remove()
+        next_queue = ServiceQueue(queue.conn,
+                                  next_operation,
+                                  queue.dataset,
+                                  priority=queue.priority)
+        log.info("Sending %s entities to: %s", len(entities), next_operation)
+        for entity_id in entities:
+            next_queue.queue_task({'entity_id': entity_id}, context)
 
     @classmethod
     def handle_task(cls, queue, payload, context):
-        queue.task_done()
+        manager = Manager(queue, context)
         try:
-            manager = Manager(queue, context)
             entity = model.get_proxy(payload)
             log.debug("Ingest: %r", entity)
             manager.ingest_entity(entity)
             manager.close()
-            cls.handle_done(queue)
+            cls.handle_done(queue, context, manager.emitted)
         except (KeyboardInterrupt, SystemExit, RuntimeError):
             cls.handle_retry(queue, payload, context)
-            cls.handle_done(queue)
             raise
         except Exception:
             cls.handle_retry(queue, payload, context)
-            cls.handle_done(queue)
             log.exception("Processing failed.")
+        finally:
+            queue.task_done()
+            if queue.is_done():
+                queue.remove()
 
     @classmethod
     def process(cls, timeout=5):
@@ -74,9 +71,9 @@ class TaskRunner(object):
         log.info("Processing queue (%s threads)", settings.NUM_THREADS)
         threads = []
         for _ in range(settings.NUM_THREADS):
-            t = threading.Thread(target=cls.process)
-            t.daemon = True
-            t.start()
-            threads.append(t)
-        for t in threads:
-            t.join()
+            thread = threading.Thread(target=cls.process)
+            thread.daemon = True
+            thread.start()
+            threads.append(thread)
+        for thread in threads:
+            thread.join()

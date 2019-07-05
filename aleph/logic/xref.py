@@ -66,7 +66,6 @@ def xref_collection(queue, collection, against_collection_ids=None):
             db.session.add(obj)
         db.session.commit()
         queue.progress.mark_finished()
-    queue.remove()
 
 
 def _format_date(proxy):

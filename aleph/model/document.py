@@ -70,7 +70,7 @@ class Document(db.Model, DatedModel):
         db.session.delete(self)
 
     @classmethod
-    def delete_by_collection(cls, collection_id, deleted_at=None):
+    def delete_by_collection(cls, collection_id):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)

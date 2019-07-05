@@ -1,9 +1,9 @@
 import logging
 from urllib.parse import urldefrag
-
+from flask_babel import gettext
 from flask import Blueprint, redirect, request
 from flask_oauthlib.client import OAuthException
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Unauthorized, BadRequest
 
 from aleph import signals, settings
 from aleph.core import db, url_for
@@ -55,10 +55,10 @@ def password_login():
     data = parse_request(LoginSchema)
     role = Role.by_email(data.get('email'))
     if role is None or not role.has_password:
-        return Unauthorized("Authentication has failed.")
+        raise BadRequest(gettext("Invalid user or password."))
 
     if not role.check_password(data.get('password')):
-        return Unauthorized("Authentication has failed.")
+        raise BadRequest(gettext("Invalid user or password."))
 
     db.session.commit()
     update_role(role)
@@ -84,7 +84,7 @@ def oauth_callback():
     resp = oauth.provider.authorized_response()
     if resp is None or isinstance(resp, OAuthException):
         log.warning("Failed OAuth: %r", resp)
-        return Unauthorized("Authentication has failed.")
+        raise Unauthorized(gettext("Authentication has failed."))
 
     response = signals.handle_oauth_session.send(provider=oauth.provider,
                                                  oauth=resp)
@@ -104,4 +104,4 @@ def oauth_callback():
         return redirect(next_url)
 
     log.error("No OAuth handler for %r was installed.", oauth.provider.name)
-    return Unauthorized("Authentication has failed.")
+    raise Unauthorized(gettext("Authentication has failed."))
