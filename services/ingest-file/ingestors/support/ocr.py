@@ -89,9 +89,9 @@ class LocalOCRService(object):
             return ''
 
         with temp_locale(TESSERACT_LOCALE):
+            languages = self.language_list(languages)
             api = self.configure_engine(languages)
             try:
-                languages = self.language_list(languages)
                 # TODO: play with contrast and sharpening the images.
                 start_time = time.time()
                 api.SetImage(image)
