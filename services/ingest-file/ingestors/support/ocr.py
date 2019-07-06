@@ -1,18 +1,23 @@
+import time
 import logging
+import threading
 from hashlib import sha1
 from normality import stringify
-from servicelayer import env
-from servicelayer.rpc import TextRecognizerService
+from PIL import Image
+from io import BytesIO
+from languagecodes import list_to_alpha3 as alpha3
 
 from ingestors import settings
 from ingestors.support.cache import CacheSupport
+from ingestors.util import temp_locale
 
 log = logging.getLogger(__name__)
+TESSERACT_LOCALE = 'C'
 
 
 class OCRSupport(CacheSupport):
     MIN_SIZE = 1024 * 2
-    MAX_SIZE = (1024 * 1024 * 4) - 1024
+    MAX_SIZE = (1024 * 1024 * 30) - 1024
 
     def extract_ocr_text(self, data, languages=None):
         if not self.MIN_SIZE < len(data) < self.MAX_SIZE:
@@ -28,10 +33,10 @@ class OCRSupport(CacheSupport):
             return stringify(text)
 
         if not hasattr(settings, '_ocr_service'):
-            if GoogleOCRService.is_available():
+            if settings.OCR_VISION_API:
                 settings._ocr_service = GoogleOCRService()
             else:
-                settings._ocr_service = AlephOCRService()
+                settings._ocr_service = LocalOCRService()
 
         text = settings._ocr_service.extract_text(data, languages=languages)
         self.set_cache_value(key, text)
@@ -41,16 +46,68 @@ class OCRSupport(CacheSupport):
         return stringify(text)
 
 
-class AlephOCRService(TextRecognizerService):
+class LocalOCRService(object):
     """Perform OCR using an RPC-based service."""
+    MAX_MODELS = 4
+
+    def __init__(self):
+        self.tl = threading.local()
+
+    def language_list(self, languages):
+        if not hasattr(settings, 'ocr_supported'):
+            with temp_locale(TESSERACT_LOCALE):
+                # Tesseract language types:
+                from tesserocr import get_languages
+                _, settings.ocr_supported = get_languages()
+                # log.info("OCR languages: %r", settings.ocr_supported)
+        models = [c for c in alpha3(languages) if c in settings.ocr_supported]
+        if len(models) > self.MAX_MODELS:
+            log.warning("Too many models, limit: %s", self.MAX_MODELS)
+            models = models[:self.MAX_MODELS]
+        models.append('eng')
+        return '+'.join(sorted(set(models)))
+
+    def configure_engine(self, languages):
+        from tesserocr import PyTessBaseAPI, PSM, OEM
+        if not hasattr(self.tl, 'api') or self.tl.api is None:
+            log.info("Configuring OCR engine (%s)", languages)
+            self.tl.api = PyTessBaseAPI(lang=languages,
+                                        oem=OEM.LSTM_ONLY,
+                                        psm=PSM.AUTO_OSD)
+        if languages != self.tl.api.GetInitLanguagesAsString():
+            log.info("Re-initialising OCR engine (%s)", languages)
+            self.tl.api.Init(lang=languages, oem=OEM.LSTM_ONLY)
+        return self.tl.api
 
     def extract_text(self, data, languages=None):
-        if self.SERVICE is None:
-            raise RuntimeError("No OCR service configured.")
-        text = self.Recognize(data, languages=languages)
-        if text is None:
+        """Extract text from a binary string of data."""
+        try:
+            image = Image.open(BytesIO(data))
+            image.load()
+        except Exception:
+            log.exception("Cannot open image data using Pillow")
             return ''
-        return text.text or ''
+
+        with temp_locale(TESSERACT_LOCALE):
+            languages = self.language_list(languages)
+            api = self.configure_engine(languages)
+            try:
+                # TODO: play with contrast and sharpening the images.
+                start_time = time.time()
+                api.SetImage(image)
+                text = api.GetUTF8Text()
+                confidence = api.MeanTextConf()
+                end_time = time.time()
+                duration = end_time - start_time
+                log.info("w: %s, h: %s, l: %s, c: %s, took: %.5f",
+                         image.width, image.height, languages,
+                         confidence, duration)
+                return text
+            except Exception as exc:
+                log.warning("OCR error: %s", exc)
+                return ''
+            finally:
+                api.Clear()
 
 
 class GoogleOCRService(object):
@@ -72,11 +129,3 @@ class GoogleOCRService(object):
         image = types.Image(content=data)
         res = self.client.document_text_detection(image)
         return res.full_text_annotation.text or ''
-
-    @classmethod
-    def is_available(cls):
-        try:
-            from google.cloud.vision import ImageAnnotatorClient  # noqa
-        except ImportError:
-            return False
-        return env.to_bool('OCR_VISION_API', False)

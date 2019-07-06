@@ -47,16 +47,6 @@ services:
     expose:
       - 3000
 
-  recognize-text:
-    build:
-      context: services/recognize-text
-      cache_from:
-        - alephdata/recognize-text:latest
-    image: alephdata/recognize-text:${ALEPH_TAG:-latest}
-    restart: on-failure
-    expose:
-      - 50000
-
   ingest-file:
     build:
       context: services/ingest-file
@@ -74,7 +64,6 @@ services:
       - postgres
       - redis
       - convert-document
-      - recognize-text
     restart: on-failure
     env_file:
       - aleph.env

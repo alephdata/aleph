@@ -1,6 +1,8 @@
 import shutil
+import locale
 from pathlib import Path
 from normality import stringify
+from contextlib import contextmanager
 
 
 def remove_directory(file_path):
@@ -34,3 +36,14 @@ def path_string(path):
     if isinstance(path, Path):
         return path.as_posix()
     return path
+
+
+@contextmanager
+def temp_locale(temp):
+    try:
+        currlocale = locale.getlocale()
+    except ValueError:
+        currlocale = ('en_US', 'UTF-8')
+    locale.setlocale(locale.LC_CTYPE, temp)
+    yield
+    locale.setlocale(locale.LC_CTYPE, currlocale)
