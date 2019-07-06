@@ -68,8 +68,8 @@ class LocalOCRService(object):
         return '+'.join(sorted(set(models)))
 
     def configure_engine(self, languages):
+        from tesserocr import PyTessBaseAPI, PSM, OEM
         if not hasattr(self.tl, 'api') or self.tl.api is None:
-            from tesserocr import PyTessBaseAPI, PSM, OEM
             log.info("Configuring OCR engine (%s)", languages)
             self.tl.api = PyTessBaseAPI(lang=languages,
                                         oem=OEM.LSTM_ONLY,
