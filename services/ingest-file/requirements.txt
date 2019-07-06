@@ -3,8 +3,8 @@ normality>=1.0.0
 pantomime>=0.3.3
 servicelayer[google]==1.4.4
 servicelayer[amazon]==1.4.4
-balkhash[leveldb]==0.6.2
-balkhash[sql]==0.6.2
+balkhash[leveldb]==1.0.0
+balkhash[sql]==1.0.0
 followthemoney==1.14.1
 psycopg2-binary
 
