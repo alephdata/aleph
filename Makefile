@@ -8,7 +8,7 @@ all: build upgrade web
 services:
 	$(COMPOSE) up -d --remove-orphans \
 		postgres elasticsearch ingest-file \
-		convert-document recognize-text
+		convert-document
 
 ingest-shell: services    
 	$(INGESTDOCKER) /bin/bash
@@ -18,6 +18,9 @@ shell: services
 
 ingest-test:
 	$(INGESTDOCKER) nosetests --with-coverage --cover-package=ingestors
+
+ingest-restart: build
+	$(COMPOSE) up --force-recreate --no-deps --detach convert-document ingest-file
 
 test:
 	$(APPDOCKER) contrib/test.sh
@@ -33,8 +36,8 @@ web: services
 worker: services
 	$(COMPOSE) run --rm -e ALEPH_EAGER=false app aleph worker
 
-purge:
-	$(APPDOCKER) celery purge -f -A aleph.queues
+tail:
+	$(COMPOSE) logs -f
 
 stop:
 	$(COMPOSE) down --remove-orphans
@@ -62,7 +65,6 @@ docker-pull:
 docker-push:
 	docker push alephdata/aleph-elasticsearch:$(ALEPH_TAG)
 	docker push alephdata/convert-document:$(ALEPH_TAG)
-	docker push alephdata/recognize-text:$(ALEPH_TAG)
 	docker push alephdata/ingest-file:$(ALEPH_TAG)
 	docker push alephdata/aleph:$(ALEPH_TAG)
 	docker push alephdata/aleph-ui:$(ALEPH_TAG)
