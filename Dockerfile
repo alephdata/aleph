@@ -17,10 +17,8 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
 ENV LANG='en_US.UTF-8' \
     LC_ALL='en_US.UTF-8'
 
-RUN groupadd -r app \
-    && useradd -r -s /bin/false -g app app \
-    && mkdir -p /home/app \
-    && chown -R app:app /home/app
+RUN groupadd -g 1000 -r app \
+    && useradd -m -u 1000 -s /bin/false -g app app
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -q -U pip setuptools six
