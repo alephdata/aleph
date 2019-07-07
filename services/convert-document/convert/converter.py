@@ -29,6 +29,7 @@ class PdfConverter(object):
     """Launch a background instance of LibreOffice and convert documents
     to PDF using it's filters.
     """
+    TIMEOUT = 240
 
     PDF_FILTERS = (
         ("com.sun.star.text.GenericTextDocument", "writer_pdf_Export"),
@@ -39,7 +40,6 @@ class PdfConverter(object):
     )
 
     def __init__(self):
-        self.connection = CONNECTION_STRING
         self.local_context = uno.getComponentContext()
         self.resolver = self._svc_create(self.local_context, RESOLVER_CLASS)
         self.process = None
@@ -58,7 +58,7 @@ class PdfConverter(object):
         # Check if the LibreOffice process has an exit code
         if self.process is None or self.process.poll() is not None:
             command = COMMAND % {
-                'conn': self.connection,
+                'conn': CONNECTION_STRING,
                 'path': mkdtemp()
             }
             log.info("Running: %s", command)
@@ -70,13 +70,13 @@ class PdfConverter(object):
 
         for attempt in range(10):
             try:
-                context = self.resolver.resolve("uno:%s" % self.connection)
+                context = self.resolver.resolve("uno:%s" % CONNECTION_STRING)
                 return self._svc_create(context, DESKTOP_CLASS)
             except NoConnectException:
                 time.sleep(1)
 
-    def convert_file(self, file_name, out_file, filters, timeout=300):
-        timer = Timer(timeout, self.terminate)
+    def convert_file(self, file_name, out_file, filters):
+        timer = Timer(self.TIMEOUT, self.terminate)
         timer.start()
         try:
             desktop = self.connect()

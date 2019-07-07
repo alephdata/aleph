@@ -40,11 +40,9 @@ async def convert(request):
             shutil.copyfileobj(upload.file, fh, BUFFER_SIZE)
 
         filters = list(FORMATS.get_filters(extension, mime_type))
-        timeout = int(request.query.get('timeout', 300))
 
         await asyncio.sleep(0)
-        converter.convert_file(upload_file, out_file, filters,
-                               timeout=timeout)
+        converter.convert_file(upload_file, out_file, filters)
         out_size = os.path.getsize(out_file)
         if out_size == 0:
             raise ConversionFailure("No PDF version was generated.")
