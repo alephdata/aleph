@@ -131,7 +131,8 @@ def query_delete(index, query, sync=False, **kwargs):
                                conflicts='proceed',
                                wait_for_completion=sync,
                                refresh=refresh_sync(sync),
-                               timeout=84600,
+                               request_timeout=84600,
+                               timeout='3500m',
                                **kwargs)
             return
         except TransportError as exc:
