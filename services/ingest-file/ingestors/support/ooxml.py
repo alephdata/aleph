@@ -1,15 +1,15 @@
 import logging
 import zipfile
-from lxml import etree
 from zipfile import ZipFile, BadZipfile
 
+from ingestors.support.xml import XMLSupport
 from ingestors.support.timestamp import TimestampSupport
 # from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class OOXMLSupport(TimestampSupport):
+class OOXMLSupport(TimestampSupport, XMLSupport):
     """Provides helpers for Office Open XML format metadata."""
     PROP_FILE = 'docProps/core.xml'
     CP_NS = '{http://schemas.openxmlformats.org/package/2006/metadata/core-properties}'  # noqa
@@ -21,7 +21,7 @@ class OOXMLSupport(TimestampSupport):
             with ZipFile(file_path) as zf:
                 zf.getinfo(self.PROP_FILE)
                 with zf.open(self.PROP_FILE, 'r') as xml:
-                    return etree.parse(xml)
+                    return self.parse_xml_path(xml)
         except KeyError:  # missing the PROP_FILE
             return None
         except (BadZipfile, IOError):

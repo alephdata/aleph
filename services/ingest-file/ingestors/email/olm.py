@@ -2,13 +2,13 @@ import shutil
 import logging
 import zipfile
 import pathlib
-from lxml import etree
 from pprint import pprint  # noqa
 from normality import safe_filename, stringify
 from followthemoney import model
 from servicelayer.archive.util import ensure_path
 
 from ingestors.ingestor import Ingestor
+from ingestors.support.xml import XMLSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.support.timestamp import TimestampSupport
 from ingestors.support.email import EmailSupport, EmailIdentity
@@ -18,18 +18,7 @@ log = logging.getLogger(__name__)
 MIME = 'application/xml+opfmessage'
 
 
-class OPFParser(object):
-
-    def parse_xml(self, file_path):
-        parser = etree.XMLParser(huge_tree=True)
-        try:
-            return etree.parse(file_path.as_posix(), parser)
-        except etree.XMLSyntaxError:
-            # probably corrupt
-            raise TypeError()
-
-
-class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
+class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, XMLSupport):
     MIME_TYPES = []
     EXTENSIONS = ['olm']
     SCORE = 10
@@ -90,19 +79,19 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
         # Extract the xml file itself and put it on the task queue to be
         # ingested by OutlookOLMMessageIngestor as an individual message
         xml_path = self.extract_file(zipf, name)
-        checksum = self.manager.store(xml_path, mime_tye=MIME)
+        checksum = self.manager.store(xml_path, mime_type=MIME)
         child = self.manager.make_entity('Document', parent=parent)
         child.make_id(checksum)
         child.add('contentHash', checksum)
         child.add('mimeType', MIME)
         self.manager.queue_entity(child)
         try:
-            doc = self.parse_xml(xml_path)
+            doc = self.parse_xml_path(xml_path)
             # find all attachments mentioned in the current xml file, assign
             # them their parent and put them on the queue to be processed
             for el in doc.findall('.//messageAttachment'):
                 self.extract_attachment(zipf, child, el)
-        except TypeError:
+        except ProcessingException:
             pass
 
     def ingest(self, file_path, entity):
@@ -120,7 +109,7 @@ class OutlookOLMArchiveIngestor(Ingestor, TempFileSupport, OPFParser):
             raise ProcessingException('Invalid OLM file.')
 
 
-class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupport):  # noqa
+class OutlookOLMMessageIngestor(Ingestor, XMLSupport, EmailSupport, TimestampSupport):  # noqa
     MIME_TYPES = [MIME]
     EXTENSIONS = []
     SCORE = 15
@@ -138,7 +127,7 @@ class OutlookOLMMessageIngestor(Ingestor, OPFParser, EmailSupport, TimestampSupp
     def ingest(self, file_path, entity):
         entity.schema = model.get('Email')
         try:
-            doc = self.parse_xml(file_path)
+            doc = self.parse_xml_path(file_path)
         except TypeError as te:
             raise ProcessingException("Cannot parse OPF XML file.") from te
 
