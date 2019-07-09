@@ -59,7 +59,6 @@ def handle_task(queue, payload, context):
     finally:
         queue.task_done()
         if queue.is_done():
-            queue.remove()
             index_collection(collection, sync=sync)
 
 
