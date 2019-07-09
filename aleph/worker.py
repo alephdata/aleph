@@ -1,3 +1,4 @@
+import signal
 import logging
 
 from aleph.core import kv, db, settings
@@ -13,6 +14,12 @@ from aleph.logic.xref import xref_collection
 from aleph.logic.processing import index_aggregate, process_collection
 
 log = logging.getLogger(__name__)
+
+
+def soft_shutdown(sig, frame):
+    log.warning("Shutting down aleph worker.")
+    settings._worker_shutdown = True
+    raise SystemExit()
 
 
 def hourly_tasks():
@@ -58,6 +65,9 @@ def handle_task(queue, payload, context):
 
 def queue_worker(timeout=5):
     """The main event loop for the Aleph backend."""
+    settings._worker_shutdown = False
+    signal.signal(signal.SIGINT, soft_shutdown)
+    signal.signal(signal.SIGTERM, soft_shutdown)
     hourly = get_rate_limit('hourly', unit=3600, interval=1, limit=1)
     daily = get_rate_limit('daily', unit=3600, interval=24, limit=1)
     log.info("Worker: %s", kv)
@@ -75,6 +85,8 @@ def queue_worker(timeout=5):
             continue
         handle_task(queue, payload, context)
         db.session.remove()
+        if settings._worker_shutdown:
+            return
 
 
 def sync_worker():
