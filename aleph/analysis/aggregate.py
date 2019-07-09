@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 class TagAggregator(object):
-    MAX_TAGS = 60000
+    MAX_TAGS = 10000
     CUTOFFS = {
         registry.country: .2,
         registry.language: .3,
