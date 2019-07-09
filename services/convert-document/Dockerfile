@@ -2,11 +2,12 @@ FROM ubuntu:19.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
-    && apt-get -q -y install locales libreoffice-writer libreoffice-impress \
-        fonts-opensymbol hyphen-fr hyphen-de hyphen-en-us hyphen-ru \
-        fonts-dejavu fonts-droid-fallback fonts-dustin fonts-f500 fonts-fanwood \
-        fonts-freefont-ttf fonts-liberation2 fonts-lmodern fonts-lyx fonts-sil-gentium \
-        fonts-texgyre fonts-tlwg-purisa python3-pip python3-uno python3-icu python3-lxml \
+    && apt-get -qq -y install locales libreoffice libreoffice-writers \
+        libreoffice-impress libreoffice-common fonts-opensymbol hyphen-fr hyphen-de \
+        hyphen-en-us hyphen-it hyphen-ru fonts-dejavu fonts-dejavu-core fonts-dejavu-extra \
+        fonts-droid-fallback fonts-dustin fonts-f500 fonts-fanwood fonts-freefont-ttf \
+        fonts-liberation fonts-lmodern fonts-lyx fonts-sil-gentium fonts-texgyre \
+        fonts-tlwg-purisa python3-pip python3-uno python3-lxml python3-icu \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
