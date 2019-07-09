@@ -1,14 +1,14 @@
 from lxml import etree, html
-from lxml.etree import ParseError, ParserError
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
+from ingestors.support.xml import XMLSupport
 from ingestors.support.html import HTMLSupport
 from ingestors.support.encoding import EncodingSupport
 from ingestors.exc import ProcessingException
 
 
-class XMLIngestor(Ingestor, EncodingSupport, HTMLSupport):
+class XMLIngestor(Ingestor, EncodingSupport, XMLSupport, HTMLSupport):
     "XML file ingestor class. Generates a tabular HTML representation."
 
     MIME_TYPES = ['text/xml']
@@ -60,11 +60,7 @@ class XMLIngestor(Ingestor, EncodingSupport, HTMLSupport):
             if int(file_size) > self.MAX_SIZE:
                 raise ProcessingException("XML file is too large.")
 
-        try:
-            doc = etree.parse(file_path.as_posix())
-        except (ParserError, ParseError):
-            raise ProcessingException("XML could not be parsed.")
-
+        doc = self.parse_xml_path(file_path)
         text = self.extract_html_text(doc.getroot())
         entity.set('bodyText', text)
         transform = etree.XSLT(self.XSLT)
