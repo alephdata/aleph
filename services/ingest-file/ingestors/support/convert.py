@@ -17,15 +17,15 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
 
     def document_to_pdf(self, file_path, entity):
         key = self.cache_key('pdf', entity.first('contentHash'))
-        # pdf_hash = self.get_cache_value(key)
-        # if pdf_hash is not None:
-        #     log.info("Using [%s] PDF from cache", entity.first('fileName'))
-        #     entity.set('pdfHash', pdf_hash)
-        #     work_path = self.manager.work_path
-        #     path = self.manager.archive.load_file(pdf_hash,
-        #                                           temp_path=work_path)
-        #     if path is not None:
-        #         return path
+        pdf_hash = self.get_cache_value(key)
+        if pdf_hash is not None:
+            log.info("Using [%s] PDF from cache", entity.first('fileName'))
+            entity.set('pdfHash', pdf_hash)
+            work_path = self.manager.work_path
+            path = self.manager.archive.load_file(pdf_hash,
+                                                  temp_path=work_path)
+            if path is not None:
+                return path
 
         pdf_file = self._document_to_pdf(file_path, entity)
         if pdf_file is not None:
