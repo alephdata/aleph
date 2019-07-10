@@ -49,11 +49,12 @@ class CollectionStatus extends Component {
     const { collection, status, intl } = this.props;
     const pending = status.pending || 0;
     const finished = status.finished || 0;
+    const total = pending + finished;
     if (!collection || status.shouldLoad || !pending) {
       return null;
     }
     const determinate = pending > 6;
-    const progress = finished / (pending + finished);
+    const progress = finished / total;
     const percent = Math.round(progress * 100);
     return (
       <div className="CollectionStatus bp3-callout bp3-intent-primary">
@@ -70,6 +71,13 @@ class CollectionStatus extends Component {
             />
           )}
         </h4>
+        <h6 className="bp3-heading total-count">
+          <FormattedMessage
+            id="collection.status.remaining"
+            defaultMessage="{finished} of {total} completed"
+            values={{ finished: <Numeric num={finished} />, total: <Numeric num={total} /> }}
+          />
+        </h6>
         <div className="progress-area">
           <ProgressBar
             animate
