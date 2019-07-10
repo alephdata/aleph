@@ -20,7 +20,7 @@ export class OAuthScreen extends Component {
   render() {
     const { location } = this.props;
     const query = queryString.parse(location.search);
-    const nextPath = query.path || '/';
+    const nextPath = query.next || '/';
     window.location.replace(nextPath);
     return null;
   }

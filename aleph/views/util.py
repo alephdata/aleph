@@ -4,14 +4,13 @@ from banal import as_bool
 from normality import stringify
 from flask import Response, request, render_template
 from flask_babel import gettext
-from urllib.parse import urlparse, urljoin
+from werkzeug.urls import url_parse, url_join
 from werkzeug.exceptions import MethodNotAllowed, Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
 from lxml.etree import tostring
 from lxml.html import document_fromstring
 from lxml.html.clean import Cleaner
 
-from aleph.core import settings
 from aleph.authz import Authz
 from aleph.model import Collection, Entity
 from aleph.index.entities import get_entity as _get_index_entity
@@ -85,20 +84,8 @@ def get_index_collection(collection_id, action=Authz.READ):
     return collection
 
 
-def is_safe_url(target):
-    """Check if the forward URL is on the same host as the site."""
-    test_url = urlparse(target)
-    return test_url.scheme in ('http', 'https') and \
-        urlparse(settings.APP_UI_URL).hostname == test_url.hostname
-
-
-def get_best_next_url(*urls):
-    """Returns the safest URL to redirect to from a given list."""
-    for url in urls:
-        url = urljoin(settings.APP_UI_URL, url)
-        if url and is_safe_url(url):
-            return url
-    return settings.APP_UI_URL
+def get_url_path(url):
+    return url_parse(url).replace(netloc='', scheme='').to_url()
 
 
 CLEANER = Cleaner(
@@ -138,9 +125,9 @@ def normalize_href(href, base_url):
     if href is None:
         return
     if base_url is not None:
-        return urljoin(base_url, href)
+        return url_join(base_url, href)
     try:
-        parsed = urlparse(href)
+        parsed = url_parse(href)
         if not parsed.netloc:
             return None
         return href
