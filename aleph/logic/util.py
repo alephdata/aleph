@@ -1,5 +1,5 @@
 import jwt
-from urllib.parse import urljoin
+from werkzeug.urls import url_join
 from urlnormalizer import query_string
 
 from aleph.core import settings, url_for
@@ -10,7 +10,7 @@ def ui_url(resource, id=None, _relative=False, **query):
     if id is not None:
         resource = '%s/%s' % (resource, id)
     url = '/' if _relative else settings.APP_UI_URL
-    url = urljoin(url, resource)
+    url = url_join(url, resource)
     return url + query_string(list(query.items()))
 
 

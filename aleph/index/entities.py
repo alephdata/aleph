@@ -118,21 +118,24 @@ def index_entity(entity, sync=False):
     """Index an entity."""
     if entity.deleted_at is not None:
         return delete_entity(entity.id)
-
     proxy = entity.to_proxy()
+    return index_proxy(entity.collection, proxy, sync=sync)
+
+
+def index_proxy(collection, proxy, sync=False):
     delete_entity(proxy.id, exclude=proxy.schema, sync=False)
-    return index_bulk(entity.collection, [proxy], sync=sync)
+    return index_bulk(collection, [proxy], sync=sync)
 
 
 def index_bulk(collection, entities, sync=False):
     """Index a set of entities."""
     actions = []
     for entity in entities:
-        actions.append(index_proxy(entity, collection))
+        actions.append(format_proxy(entity, collection))
     bulk_actions(actions, sync=sync)
 
 
-def index_proxy(proxy, collection):
+def format_proxy(proxy, collection):
     """Apply final denormalisations to the index."""
     proxy.context = {}
     data = proxy.to_full_dict()

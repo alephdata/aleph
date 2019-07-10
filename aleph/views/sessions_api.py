@@ -1,5 +1,4 @@
 import logging
-from urllib.parse import urldefrag
 from flask_babel import gettext
 from flask import Blueprint, redirect, request
 from flask_oauthlib.client import OAuthException
@@ -10,9 +9,10 @@ from aleph.core import db, url_for
 from aleph.authz import Authz
 from aleph.oauth import oauth
 from aleph.model import Role
+from aleph.logic.util import ui_url
 from aleph.logic.roles import update_role
 from aleph.views.forms import LoginSchema
-from aleph.views.util import get_best_next_url, parse_request
+from aleph.views.util import get_url_path, parse_request
 from aleph.views.util import require, jsonify
 
 log = logging.getLogger(__name__)
@@ -74,7 +74,7 @@ def password_login():
 def oauth_init():
     require(settings.OAUTH)
     callback_url = url_for('.oauth_callback')
-    state = get_best_next_url(request.args.get('next'), request.referrer)
+    state = request.args.get('next', request.referrer)
     return oauth.provider.authorize(callback=callback_url, state=state)
 
 
@@ -97,9 +97,8 @@ def oauth_callback():
         request.authz = Authz.from_role(role)
         token = request.authz.to_token(role=role)
         token = token.decode('utf-8')
-        state = request.args.get('state')
-        next_url = get_best_next_url(state, request.referrer)
-        next_url, _ = urldefrag(next_url)
+        next_path = get_url_path(request.args.get('state'))
+        next_url = ui_url(settings.OAUTH_UI_CALLBACK, next=next_path)
         next_url = '%s#token=%s' % (next_url, token)
         return redirect(next_url)
 

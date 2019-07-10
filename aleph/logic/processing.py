@@ -10,6 +10,7 @@ from aleph.queues import ingest_entity
 from aleph.analysis import tag_entity
 from aleph.queues import get_queue, queue_task, OP_INDEX
 from aleph.index.entities import index_bulk
+from aleph.logic.entities import refresh_entity_id
 from aleph.logic.collections import refresh_collection, reset_collection
 from aleph.logic.aggregator import get_aggregator
 from aleph.index.util import BULK_PAGE
@@ -51,7 +52,10 @@ def index_aggregate(queue, collection, entity_id=None, sync=False):
     try:
         entities = aggregator
         if entity_id is not None:
-            entities = aggregator.iterate(entity_id=entity_id)
+            entities = list(aggregator.iterate(entity_id=entity_id))
+            for entity in entities:
+                log.debug("Index: %r", entity)
+            refresh_entity_id(entity_id)
         else:
             queue.progress.mark_pending(len(entities) - 1)
         index_entities(queue, collection, entities, sync=sync)

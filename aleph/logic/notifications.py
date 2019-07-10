@@ -113,7 +113,7 @@ def generate_role_digest(role):
     total_count = q.count()
     if total_count == 0:
         return
-    notifications = [render_notification(role, n) for n in q.limit(30)]
+    notifications = [render_notification(role, n) for n in q.limit(20)]
     notifications = [n for n in notifications if n is not None]
     params = dict(notifications=notifications,
                   role=role,
