@@ -112,7 +112,7 @@ class Manager(object):
             return self.archive.archive_file(file_path, mime_type=mime_type)
 
     def ingest_entity(self, entity):
-        for content_hash in entity.get('contentHash'):
+        for content_hash in entity.get('contentHash', quiet=True):
             file_path = self.archive.load_file(content_hash,
                                                temp_path=self.work_path)
             if file_path is None or not file_path.exists():
