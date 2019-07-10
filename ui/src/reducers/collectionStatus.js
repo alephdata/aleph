@@ -19,6 +19,6 @@ export default createReducer({
     (state, { id, data }) => objectLoadComplete(state, id, data),
 
   [ingestDocument.COMPLETE]:
-    (state, { id, data }) => {},
+    () => {},
 
 }, initialState);
