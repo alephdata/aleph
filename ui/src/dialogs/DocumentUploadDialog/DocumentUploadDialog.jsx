@@ -62,7 +62,8 @@ export class DocumentUploadDialog extends Component {
     } = this.props;
     const { files } = this.state;
     try {
-      files.forEach(async (file) => {
+      const ingestPromises = [];
+      files.forEach((file) => {
         this.setState({ percentCompleted: 0, uploadingFile: file });
         const metadata = {
           file_name: file.name,
@@ -71,8 +72,9 @@ export class DocumentUploadDialog extends Component {
         if (parent && parent.id) {
           metadata.parent_id = parent.id;
         }
-        await ingestDocument(collection.id, metadata, file, this.onUploadProgress);
+        ingestPromises.push(ingestDocument(collection.id, metadata, file, this.onUploadProgress));
       });
+      await Promise.all(ingestPromises);
       toggleDialog();
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
