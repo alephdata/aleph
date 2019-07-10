@@ -85,7 +85,10 @@ def get_index_collection(collection_id, action=Authz.READ):
 
 
 def get_url_path(url):
-    return url_parse(url).replace(netloc='', scheme='').to_url()
+    try:
+        return url_parse(url).replace(netloc='', scheme='').to_url() or '/'
+    except Exception:
+        return '/'
 
 
 CLEANER = Cleaner(
