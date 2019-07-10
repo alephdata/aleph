@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-06-26T14:06:04.127Z\n"
+"POT-Creation-Date: 2019-07-09T20:47:35.305Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -36,9 +36,9 @@ msgstr "(отсутствует)"
 
 #. [collection.status.pending]
 #. defaultMessage is:
-#. ({count} pending)
+#. ({percent}%)
 #: i18n/messages.json
-msgid "({count} pending)"
+msgid "({percent}%)"
 msgstr ""
 
 #. [collection.edit.info.placeholder_summary]
@@ -121,12 +121,16 @@ msgstr "Вы уже зарегистрированы? Авторизуйтесь
 #. [collection.delete.error]
 #. defaultMessage is:
 #. An error occured while attempting to delete this case.
-#. [document.delete.error]
-#. defaultMessage is:
-#. An error occured while attempting to delete this case.
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "An error occured while attempting to delete this case."
 msgstr "При удалении кейса произошла ошибка."
+
+#. [entity.delete.error]
+#. defaultMessage is:
+#. An error occured while attempting to delete this entity.
+#: i18n/messages.json
+msgid "An error occured while attempting to delete this entity."
+msgstr ""
 
 #. [auth.unknown_error]
 #. defaultMessage is:
@@ -142,12 +146,12 @@ msgstr "Произошла ошибка"
 msgid "Are you sure you want to delete all contained items?"
 msgstr "Вы уверены, что хотите удалить всё содержимое?"
 
-#. [document.delete.question]
+#. [entity.delete.question]
 #. defaultMessage is:
-#. Are you sure you want to delete this item?
+#. Are you sure you want to delete this entity?
 #: i18n/messages.json
-msgid "Are you sure you want to delete this item?"
-msgstr "Вы уверены, что хотите удалить этот документ?"
+msgid "Are you sure you want to delete this entity?"
+msgstr ""
 
 #. [entity.info.attachments]
 #. defaultMessage is:
@@ -195,13 +199,20 @@ msgstr "Копия"
 #. [collection.xref.cancel_button]
 #. defaultMessage is:
 #. Cancel
-#. [document.delete.cancel]
+#. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "Отменить"
+
+#. [collection.status.cancel_button]
+#. defaultMessage is:
+#. Cancel the process
+#: i18n/messages.json
+msgid "Cancel the process"
+msgstr ""
 
 #. [case.description]
 #. defaultMessage is:
@@ -345,6 +356,13 @@ msgstr "Подтвердить пароль"
 #: i18n/messages.json
 msgid "Contact"
 msgstr "Контакт"
+
+#. [collection.status.message]
+#. defaultMessage is:
+#. Continue to frolic about while data is being processed.
+#: i18n/messages.json
+msgid "Continue to frolic about while data is being processed."
+msgstr ""
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -503,7 +521,7 @@ msgstr "Дата"
 #. [collection.edit.info.delete]
 #. defaultMessage is:
 #. Delete
-#. [document.delete.confirm]
+#. [entity.delete.confirm]
 #. defaultMessage is:
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
@@ -1684,6 +1702,13 @@ msgstr "Безымянный кейс-файл"
 msgid "Update"
 msgstr "Обновить"
 
+#. [collection.status.title]
+#. defaultMessage is:
+#. Update in progress
+#: i18n/messages.json
+msgid "Update in progress"
+msgstr ""
+
 #. [collection.last_updated]
 #. defaultMessage is:
 #. Updated {date}
@@ -1964,13 +1989,6 @@ msgstr "{count} записей"
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} выбрано"
-
-#. [collection.status.done]
-#. defaultMessage is:
-#. {count} tasks done
-#: i18n/messages.json
-msgid "{count} tasks done"
-msgstr ""
 
 #. [search.screen.results]
 #. defaultMessage is:
