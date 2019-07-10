@@ -55,7 +55,6 @@ export class AuthenticationDialog extends Component {
   onOAuthLogin() {
     const { nextPath, metadata: { auth } } = this.props;
     if (auth.oauth_uri) {
-      const { location } = window;
       const nextPathEnc = encodeURIComponent(nextPath || '/');
       window.location.replace(`/api/2/sessions/oauth?next=${nextPathEnc}`);
     }
