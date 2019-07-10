@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-07-09T20:47:35.305Z\n"
+"POT-Creation-Date: 2019-07-10T15:29:58.976Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "(отсутствует)"
 #. ({percent}%)
 #: i18n/messages.json
 msgid "({percent}%)"
-msgstr ""
+msgstr "({percent}%)"
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
@@ -130,7 +130,7 @@ msgstr "При удалении кейса произошла ошибка."
 #. An error occured while attempting to delete this entity.
 #: i18n/messages.json
 msgid "An error occured while attempting to delete this entity."
-msgstr ""
+msgstr "При удалении сущности возникла ошибка."
 
 #. [auth.unknown_error]
 #. defaultMessage is:
@@ -151,7 +151,7 @@ msgstr "Вы уверены, что хотите удалить всё соде�
 #. Are you sure you want to delete this entity?
 #: i18n/messages.json
 msgid "Are you sure you want to delete this entity?"
-msgstr ""
+msgstr "Вы уверены, что хотите удалить эту сущность?"
 
 #. [entity.info.attachments]
 #. defaultMessage is:
@@ -212,7 +212,7 @@ msgstr "Отменить"
 #. Cancel the process
 #: i18n/messages.json
 msgid "Cancel the process"
-msgstr ""
+msgstr "Отменить процесс"
 
 #. [case.description]
 #. defaultMessage is:
@@ -362,7 +362,7 @@ msgstr "Контакт"
 #. Continue to frolic about while data is being processed.
 #: i18n/messages.json
 msgid "Continue to frolic about while data is being processed."
-msgstr ""
+msgstr "Данные загружаются."
 
 #. [clipboard.copy.after]
 #. defaultMessage is:
@@ -1707,7 +1707,7 @@ msgstr "Обновить"
 #. Update in progress
 #: i18n/messages.json
 msgid "Update in progress"
-msgstr ""
+msgstr "Ждите обновления"
 
 #. [collection.last_updated]
 #. defaultMessage is:
