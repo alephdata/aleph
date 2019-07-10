@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { fetchCollectionStatus, triggerCollectionCancel } from 'src/actions';
+import { fetchCollectionStatus, triggerCollectionCancel, ingestDocument } from 'src/actions';
 import { objectLoadStart, objectLoadError, objectLoadComplete } from 'src/reducers/util';
 
 const initialState = {};
@@ -17,5 +17,8 @@ export default createReducer({
 
   [triggerCollectionCancel.COMPLETE]:
     (state, { id, data }) => objectLoadComplete(state, id, data),
+
+  [ingestDocument.COMPLETE]:
+    (state, { id, data }) => {},
 
 }, initialState);
