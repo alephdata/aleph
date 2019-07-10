@@ -11,6 +11,12 @@ class EntityToolbar extends React.Component {
   render() {
     const { entity, isPreview } = this.props;
     const isThing = entity && entity.schema.isThing();
+    const isDocument = entity && entity.schema.isDocument();
+    const showDownloadButton = isDocument && entity.links && entity.links.file;
+
+    if (!isPreview && !showDownloadButton) {
+      return null;
+    }
 
     return (
       <Toolbar className="toolbar-preview">
@@ -21,7 +27,7 @@ class EntityToolbar extends React.Component {
               <FormattedMessage id="sidebar.open" defaultMessage="Open" />
             </Link>
           )}
-          {entity.schema.isDocument() && (
+          {showDownloadButton && (
             <DownloadButton document={entity} />
           )}
         </ButtonGroup>
