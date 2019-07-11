@@ -36,6 +36,10 @@ def refresh_entity(entity, sync=False):
                     cache.object_key(Collection, collection_id))
 
 
+def refresh_entity_id(entity_id, sync=False):
+    cache.kv.delete(cache.object_key(Entity, entity_id))
+
+
 def delete_entity(entity, deleted_at=None, sync=False):
     # This is recursive and will also delete any entities which
     # reference the given entity. Usually this is going to be child

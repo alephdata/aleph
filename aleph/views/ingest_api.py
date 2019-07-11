@@ -9,7 +9,7 @@ from servicelayer.archive.util import ensure_path
 
 from aleph.core import db, archive
 from aleph.model import Document
-from aleph.queues import ingest_entity, ingest_wait
+from aleph.queues import ingest_entity
 from aleph.views.util import get_db_collection, get_flag
 from aleph.views.util import jsonify, validate_data
 from aleph.views.forms import DocumentCreateSchema
@@ -74,7 +74,6 @@ def ingest_upload(collection_id):
         db.session.commit()
         proxy = document.to_proxy()
         ingest_entity(collection, proxy, sync=sync)
-        ingest_wait(collection)
     finally:
         shutil.rmtree(upload_dir)
 

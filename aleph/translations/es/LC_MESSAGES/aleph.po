@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-06-26 16:07+0200\n"
+"POT-Creation-Date: 2019-07-10 17:30+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
@@ -216,6 +216,14 @@ msgstr ""
 
 #: aleph/views/roles_api.py:67
 msgid "Email is already registered"
+msgstr ""
+
+#: aleph/views/sessions_api.py:58 aleph/views/sessions_api.py:61
+msgid "Invalid user or password."
+msgstr ""
+
+#: aleph/views/sessions_api.py:87 aleph/views/sessions_api.py:107
+msgid "Authentication has failed."
 msgstr ""
 
 #: aleph/views/util.py:47
