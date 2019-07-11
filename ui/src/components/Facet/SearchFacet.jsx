@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
 import {
-  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
+  FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Button, Icon, Collapse, Spinner,
+  Icon, Collapse, Spinner,
 } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.scss';
-
-const messages = defineMessages({
-  clear_filter: {
-    id: 'search.facets.clear_filter',
-    defaultMessage: 'Clear this filter',
-  },
-});
 
 const defaultFacet = {};
 
@@ -120,16 +113,10 @@ class SearchFacet extends Component {
                   values={{ count: intl.formatNumber(count) }}
                 />
               </span>
-              <Button
-                onClick={this.onClear}
-                className="ClearButton bp3-minimal bp3-small"
-                title={intl.formatMessage(messages.clear_filter)}
-                icon="cross"
-              />
             </React.Fragment>
           )}
 
-          {isOpen && !isFiltered && (
+          {isOpen && (
             <React.Fragment>
               {facet.total === 0 && (
                 <span className="bp3-tag bp3-small bp3-round bp3-minimal">0</span>
