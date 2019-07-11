@@ -23,17 +23,21 @@
       line-height: $aleph-line-height;
 
       &::before {
-        content: $pt-icon-tick;
+        content: $pt-icon-circle;
       }
 
       opacity: 0.1;
-      transition: opacity 0.2s ease-out;
+      transition: opacity 0.2s ease-out, color .2s ease-out;
     }
 
     &.active {
       .Tick {
         opacity: 1;
         color: $pt-intent-primary;
+
+        &::before {
+          content: $pt-icon-tick-circle;
+        }
       }
 
       .label {
@@ -46,7 +50,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-  
+
     & > span {
       margin: ($aleph-grid-size / 2);
     }
