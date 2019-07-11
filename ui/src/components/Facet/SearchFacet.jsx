@@ -78,7 +78,7 @@ class SearchFacet extends Component {
 
   render() {
     const {
-      query, facetSize, isOpen, result, field, label, icon, intl,
+      query, facetSize, isOpen, result, field, label, icon, intl, isCollapsible,
     } = this.props;
     const { facet, isExpanding } = this.state;
     const current = query.getFilter(field);
@@ -90,7 +90,7 @@ class SearchFacet extends Component {
     return (
       <div className="SearchFacet">
         <div
-          className={c('opener clickable', { active: !isUpdating && isFiltered })}
+          className={c('opener', { clickable: isCollapsible, active: !isUpdating && isFiltered })}
           onClick={this.onToggleOpen}
           onKeyPress={this.onToggleOpen}
           tabIndex={0}
@@ -98,7 +98,9 @@ class SearchFacet extends Component {
           role="switch"
           aria-checked={isOpen}
         >
-          <Icon icon="caret-right" className={c('caret', { rotate: isOpen })} />
+          {isCollapsible && (
+            <Icon icon="caret-right" className={c('caret', { rotate: isOpen })} />
+          )}
           <span className="FacetName">
             <span className={`FacetIcon bp3-icon bp3-icon-${icon}`} />
             {label}

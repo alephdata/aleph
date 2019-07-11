@@ -297,6 +297,7 @@ export class SearchScreen extends React.Component {
                 result={result}
                 updateQuery={this.updateQuery}
                 facets={this.state.facets}
+                isCollapsible
               />
             </div>
           </DualPane.SidePane>

@@ -15,7 +15,7 @@
     }
 
     &:not(.clickable) {
-      color: $aleph-greyed-text;
+      pointer-events: none;
     }
 
     & > .caret {
@@ -30,32 +30,29 @@
     .FacetName {
       padding: $aleph-grid-size 0;
       font-size: 1.1em;
-    }
-    
-    &.clickable .FacetName {
       font-weight: bold;
     }
-    
+
     .FilterCount {
       padding-left: $aleph-grid-size;
       font-weight: normal;
     }
-    
+
     .FacetIcon {
       margin-right: $aleph-grid-size;
     }
-    
+
     & > .ClearButton {
       position: absolute;
       top: $aleph-grid-size/2;
       right: $aleph-grid-size/2;
-      
+
       &a:hover {
         // Element is on a background (set by .clickable), so invert its own background.
         background: $aleph-content-background;
       }
     }
-    
+
     .bp3-tag {
       position: absolute;
       right: $aleph-grid-size;
@@ -69,11 +66,11 @@
   .CheckboxList {
     padding-top: $aleph-grid-size;
   }
-  
+
   p {
     text-align: center;
   }
-  
+
   .spinner {
     margin: $aleph-grid-size auto $aleph-grid-size auto !important;
   }
@@ -82,7 +79,7 @@
     margin-top: $aleph-grid-size;
     font-weight: bold;
   }
-  
+
   .updating {
     opacity: 0.5;
   }
