@@ -74,13 +74,12 @@ def update(collection_id):
 @blueprint.route('/api/2/collections/<int:collection_id>/process', methods=['POST', 'PUT'])  # noqa
 def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    job_id = get_session_id()
     # re-process the documents
-    payload = {
+    data = {
         'ingest': get_flag('ingest', True),
         'reset': get_flag('reset', True)
     }
-    queue_task(collection, OP_PROCESS, job_id=job_id, payload=payload)
+    queue_task(collection, OP_PROCESS, job_id=get_session_id(), payload=data)
     return ('', 202)
 
 
@@ -90,14 +89,13 @@ def mapping(collection_id):
     require(request.authz.can_bulk_import())
     if not request.is_json:
         raise BadRequest()
-    job_id = get_session_id()
     data = request.get_json().get(collection.foreign_id)
     for query in keys_values(data, 'queries', 'query'):
         try:
             model.make_mapping(query)
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
-    queue_task(collection, OP_BULKLOAD, job_id=job_id, payload=data)
+    queue_task(collection, OP_BULKLOAD, job_id=get_session_id(), payload=data)
     return ('', 202)
 
 
