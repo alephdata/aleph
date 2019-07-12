@@ -168,6 +168,7 @@ def configure_schema(schema, version):
             "foreign_id": KEYWORD,
             "document_id": KEYWORD,
             "collection_id": KEYWORD,
+            "job_id": KEYWORD,
             "uploader_id": KEYWORD,
             "entities": KEYWORD,
             "languages": KEYWORD,
