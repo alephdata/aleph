@@ -2,7 +2,7 @@ import logging
 import threading
 from followthemoney import model
 from servicelayer.cache import get_redis
-from servicelayer.stages import JobStage as Stage
+from servicelayer.jobs import JobStage as Stage
 
 from ingestors.manager import Manager
 from ingestors import settings

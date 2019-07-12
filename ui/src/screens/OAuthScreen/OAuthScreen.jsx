@@ -1,12 +1,13 @@
-import { Component } from 'react';
+import React from 'react';
 import queryString from 'query-string';
+import { Redirect } from 'react-router-dom';
 import { loginWithToken } from 'src/actions/sessionActions';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 
-export class OAuthScreen extends Component {
+class OAuthScreen extends React.Component {
   componentDidMount() {
     const { location } = this.props;
     const parsedHash = queryString.parse(location.hash);
@@ -21,8 +22,7 @@ export class OAuthScreen extends Component {
     const { location } = this.props;
     const query = queryString.parse(location.search);
     const nextPath = query.next || '/';
-    window.location.replace(nextPath);
-    return null;
+    return <Redirect to={nextPath} />;
   }
 }
 
