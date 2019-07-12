@@ -59,6 +59,13 @@
       display: flex;
       justify-content: space-between;
       a {color:$aleph-content-background;}
+
+      .bp3-button {
+        box-shadow: none;
+        background: none;
+        color: $aleph-content-background;
+        padding: 0;
+      }
     }
   }
 }
