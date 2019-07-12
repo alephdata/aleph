@@ -43,11 +43,11 @@ def xref_item(proxy, collection_ids=None):
                 yield score, result.get('collection_id'), other
 
 
-def xref_collection(queue, collection, against_collection_ids=None):
+def xref_collection(stage, collection, against_collection_ids=None):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
     count = count_entities(collection_id=collection.id, schemata=matchable)
-    queue.progress.mark_pending(count)
+    stage.progress.mark_pending(count)
     entities = iter_proxies(collection_id=collection.id, schemata=matchable)
     for entity in entities:
         proxy = model.get_proxy(entity)
@@ -65,7 +65,7 @@ def xref_collection(queue, collection, against_collection_ids=None):
             obj.score = score
             db.session.add(obj)
         db.session.commit()
-        queue.progress.mark_finished()
+        stage.progress.mark_finished()
 
 
 def _format_date(proxy):

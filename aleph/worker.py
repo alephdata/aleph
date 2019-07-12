@@ -33,32 +33,33 @@ def daily_tasks():
     generate_digest()
 
 
-def handle_task(queue, payload, context):
-    collection = Collection.by_foreign_id(queue.dataset)
+def handle_task(stage, payload, context):
+    collection = Collection.by_foreign_id(stage.dataset)
     if collection is None:
-        log.error("Collection not found: %s", queue.dataset)
+        log.error("Collection not found: %s", stage.dataset)
         return
     sync = context.get('sync', False)
     try:
-        if queue.operation == OP_INDEX:
-            index_aggregate(queue, collection, sync=sync, **payload)
-        if queue.operation == OP_BULKLOAD:
-            bulk_load(queue, collection, payload)
-        if queue.operation == OP_PROCESS:
+        if stage.stage == OP_INDEX:
+            index_aggregate(stage, collection, sync=sync, **payload)
+        if stage.stage == OP_BULKLOAD:
+            bulk_load(stage, collection, payload)
+        if stage.stage == OP_PROCESS:
             process_collection(collection, sync=sync, **payload)
-        if queue.operation == OP_XREF:
-            xref_collection(queue, collection, **payload)
-        log.info("Task [%s]: %s (done)", queue.dataset, queue.operation)
+        if stage.stage == OP_XREF:
+            xref_collection(stage, collection, **payload)
+        log.info("Task [%s]: %s (done)", stage.dataset, stage.stage)
     except (SystemExit, KeyboardInterrupt, Exception):
         retries = int(context.get('retries', 0))
         if retries < settings.QUEUE_RETRY:
             log.info("Queueing failed task for re-try...")
             context['retries'] = retries + 1
-            queue.queue_task(payload, context)
+            stage.queue_task(payload, context)
         raise
     finally:
-        queue.task_done()
-        if queue.is_done():
+        stage.task_done()
+        if stage.job.is_done():
+            stage.sync()
             index_collection(collection, sync=sync)
 
 
@@ -79,10 +80,10 @@ def queue_worker(timeout=5):
             daily.update()
             daily_tasks()
 
-        queue, payload, context = get_next_task(timeout=timeout)
-        if queue is None:
+        stage, payload, context = get_next_task(timeout=timeout)
+        if stage is None:
             continue
-        handle_task(queue, payload, context)
+        handle_task(stage, payload, context)
         db.session.remove()
         if settings._worker_shutdown:
             return
@@ -91,7 +92,7 @@ def queue_worker(timeout=5):
 def sync_worker():
     # log.debug("Processing queue events...")
     while True:
-        queue, payload, context = get_next_task(timeout=None)
-        if queue is None:
+        stage, payload, context = get_next_task(timeout=None)
+        if stage is None:
             break
-        handle_task(queue, payload, context)
+        handle_task(stage, payload, context)

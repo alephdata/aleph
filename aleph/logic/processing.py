@@ -46,7 +46,7 @@ def process_collection(collection, ingest=True, reset=False, sync=False):
         aggregator.close()
 
 
-def index_aggregate(queue, collection, entity_id=None, sync=False):
+def index_aggregate(stage, collection, entity_id=None, sync=False):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
@@ -57,13 +57,13 @@ def index_aggregate(queue, collection, entity_id=None, sync=False):
                 log.debug("Index: %r", entity)
             refresh_entity_id(entity_id)
         else:
-            queue.progress.mark_pending(len(entities) - 1)
-        index_entities(queue, collection, entities, sync=sync)
+            stage.progress.mark_pending(len(entities) - 1)
+        index_entities(stage, collection, entities, sync=sync)
     finally:
         aggregator.close()
 
 
-def index_entities(queue, collection, iterable, sync=False):
+def index_entities(stage, collection, iterable, sync=False):
     entities = []
     for entity in iterable:
         if entity.id is None:
@@ -72,24 +72,24 @@ def index_entities(queue, collection, iterable, sync=False):
         tag_entity(entity)
         entities.append(entity)
         if len(entities) >= BULK_PAGE:
-            queue.progress.mark_finished(len(entities))
-            index_bulk(collection, entities, sync=sync)
+            stage.progress.mark_finished(len(entities))
+            index_bulk(collection, entities, job_id=stage.job.id, sync=sync)
             entities = []
 
     if len(entities):
-        queue.progress.mark_finished(len(entities))
-        index_bulk(collection, entities, sync=sync)
+        stage.progress.mark_finished(len(entities))
+        index_bulk(collection, entities, job_id=stage.job.id, sync=sync)
     refresh_collection(collection)
 
 
-def bulk_write(collection, iterable, unsafe=False):
+def bulk_write(collection, iterable, job_id=None, unsafe=False):
     """Write a set of entities - given as dicts - to the index in bulk
     mode. This will perform validation but is dangerous as it means the
     application has no control over key generation and a few other aspects
     of building the entity.
     """
     namespace = Namespace(collection.foreign_id)
-    queue = get_queue(collection, OP_INDEX)
+    stage = get_queue(collection, OP_INDEX, job_id=job_id)
     entities = []
     for item in iterable:
         if not is_mapping(item):
@@ -99,5 +99,5 @@ def bulk_write(collection, iterable, unsafe=False):
         if not unsafe:
             entity = remove_checksums(entity)
         entities.append(entity)
-    queue.progress.mark_pending(len(entities))
-    index_entities(queue, collection, entities)
+    stage.progress.mark_pending(len(entities))
+    index_entities(stage, collection, entities)
