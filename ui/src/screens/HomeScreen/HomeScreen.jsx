@@ -58,37 +58,51 @@ class Statistics extends PureComponent {
 
   static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
 
+  constructor(props) {
+    super(props);
+    this.state = { listLen: 15 };
+    this.onExpand = this.onExpand.bind(this);
+  }
+
+  onExpand() {
+    const expandIncrement = 30;
+    this.setState(prevState => ({ listLen: prevState.listLen + expandIncrement }));
+  }
+
   render() {
     const {
       statistic,
+      seeMoreButtonText,
       headline,
       isLoading,
       children = isLoading ? Statistics.Noop : Statistics.Item,
-      Others = isLoading ? Statistics.Noop : Statistics.Item,
       Name = Statistics.Name,
     } = this.props;
+    const {
+      listLen,
+    } = this.state;
     const list = isLoading ? Array.from(
       { length: 40 }, (i, ii) => ([ii]),
     ) : Object.entries(statistic);
-    const rest = list.length - 15;
+    const rest = list.length - listLen;
     return (
       <div className="statistic bp3-callout">
         <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
         <ul className="statistic--list">
-          {_.sortBy(list, [1]).splice(-15).reverse().map(item => children({
+          {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
             key: item[0],
             item,
             Name,
           }))}
-          {rest > 0 && Others({
-            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
-            item: [<FormattedMessage
-              id="home.statistics.other"
-              values={{ count: rest }}
-              defaultMessage="other {count}"
-            />],
-          })}
+          {rest > 0 && !isLoading && (
+            <li className={c('statistic--list-item', { 'bp3-skeleton': isLoading })}>
+              <Button
+                onClick={this.onExpand}
+                text={seeMoreButtonText(rest)}
+              />
+            </li>
+          )}
         </ul>
       </div>
     );
@@ -188,6 +202,15 @@ export class HomeScreen extends Component {
                       }}
                     />
                   )}
+                  seeMoreButtonText={restCount => (
+                    <FormattedMessage
+                      id="home.statistics.other"
+                      defaultMessage="{count} more entity types"
+                      values={{
+                        count: restCount,
+                      }}
+                    />
+                  )}
                   statistic={statistics.schemata}
                   isLoading={!statistics.schemata}
                   Name={props => (
@@ -198,9 +221,6 @@ export class HomeScreen extends Component {
                         {...props}
                       />
                     </span>
-                  )}
-                  Others={props => (
-                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)} />
                   )}
                 />
                 <Statistics
@@ -213,6 +233,15 @@ export class HomeScreen extends Component {
                       }}
                     />
                   )}
+                  seeMoreButtonText={restCount => (
+                    <FormattedMessage
+                      id="home.statistics.other"
+                      defaultMessage="{count} more sources"
+                      values={{
+                        count: restCount,
+                      }}
+                    />
+                  )}
                   statistic={statistics.categories}
                   isLoading={!statistics.categories}
                   Name={props => (
@@ -221,9 +250,6 @@ export class HomeScreen extends Component {
                     >
                       <Category category={props.name} />
                     </Link>
-                  )}
-                  Others={props => (
-                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
                 <Statistics
@@ -236,15 +262,21 @@ export class HomeScreen extends Component {
                       }}
                     />
                   )}
+                  seeMoreButtonText={restCount => (
+                    <FormattedMessage
+                      id="home.statistics.other"
+                      defaultMessage="{count} more countries & territories"
+                      values={{
+                        count: restCount,
+                      }}
+                    />
+                  )}
                   statistic={statistics.countries}
                   isLoading={!statistics.countries}
                   Name={props => (
                     <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
                       <Country.Name {...props} code={props.name} />
                     </Link>
-                  )}
-                  Others={props => (
-                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
               </DualPane>
