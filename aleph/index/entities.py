@@ -127,19 +127,20 @@ def index_proxy(collection, proxy, sync=False):
     return index_bulk(collection, [proxy], sync=sync)
 
 
-def index_bulk(collection, entities, sync=False):
+def index_bulk(collection, entities, job_id=None, sync=False):
     """Index a set of entities."""
     actions = []
     for entity in entities:
-        actions.append(format_proxy(entity, collection))
+        actions.append(format_proxy(entity, collection, job_id=job_id))
     bulk_actions(actions, sync=sync)
 
 
-def format_proxy(proxy, collection):
+def format_proxy(proxy, collection, job_id=None):
     """Apply final denormalisations to the index."""
     proxy.context = {}
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
+    data['job_id'] = job_id
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
