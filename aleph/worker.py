@@ -22,6 +22,7 @@ class AlephWorker(Worker):
         self.daily = get_rate_limit('daily', unit=3600, interval=24, limit=1)
 
     def periodic(self):
+        db.session.remove()
         if self.hourly.check():
             self.hourly.update()
             log.info("Running hourly tasks...")
@@ -39,18 +40,15 @@ class AlephWorker(Worker):
             log.error("Collection not found: %s", stage.dataset)
             return
         sync = context.get('sync', False)
-        try:
-            if stage.stage == OP_INDEX:
-                index_aggregate(stage, collection, sync=sync, **payload)
-            if stage.stage == OP_BULKLOAD:
-                bulk_load(stage, collection, payload)
-            if stage.stage == OP_PROCESS:
-                process_collection(collection, sync=sync, **payload)
-            if stage.stage == OP_XREF:
-                xref_collection(stage, collection, **payload)
-            log.info("Task [%s]: %s (done)", stage.dataset, stage.stage)
-        finally:
-            db.session.remove()
+        if stage.stage == OP_INDEX:
+            index_aggregate(stage, collection, sync=sync, **payload)
+        if stage.stage == OP_BULKLOAD:
+            bulk_load(stage, collection, payload)
+        if stage.stage == OP_PROCESS:
+            process_collection(collection, sync=sync, **payload)
+        if stage.stage == OP_XREF:
+            xref_collection(stage, collection, **payload)
+        log.info("Task [%s]: %s (done)", stage.dataset, stage.stage)
 
 
 def get_worker():
