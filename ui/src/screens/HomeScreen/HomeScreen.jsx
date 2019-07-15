@@ -40,20 +40,15 @@ const messages = defineMessages({
 
 class Statistics extends PureComponent {
   static Item({
-    Name = Statistics.Name,
+    ItemContentContainer = Statistics.ItemContentContainer,
     item: [name, count],
     ...rest
   }) {
     return (
       <li {...rest}>
-        <Name name={name} />
-        <Numeric num={count} />
+        <ItemContentContainer name={name} count={count} />
       </li>
     );
-  }
-
-  static Name({ name }) {
-    return <span>{name}</span>;
   }
 
   static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
@@ -76,7 +71,7 @@ class Statistics extends PureComponent {
       headline,
       isLoading,
       children = isLoading ? Statistics.Noop : Statistics.Item,
-      Name = Statistics.Name,
+      ItemContentContainer = Statistics.ItemContentContainer,
     } = this.props;
     const {
       listLen,
@@ -93,7 +88,7 @@ class Statistics extends PureComponent {
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
             key: item[0],
             item,
-            Name,
+            ItemContentContainer,
           }))}
           {rest > 0 && !isLoading && (
             <li className={c('statistic--list-item', { 'bp3-skeleton': isLoading })}>
@@ -213,14 +208,10 @@ export class HomeScreen extends Component {
                   )}
                   statistic={statistics.schemata}
                   isLoading={!statistics.schemata}
-                  Name={props => (
-                    <span>
-                      <Schema.Smart.Link
-                        url={`/search?filter:schema=${props.name}`}
-                        schema={props.name}
-                        {...props}
-                      />
-                    </span>
+                  ItemContentContainer={props => (
+                    <Schema.Smart.Link url={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
+                      <Numeric num={props.count} />
+                    </Schema.Smart.Link>
                   )}
                 />
                 <Statistics
@@ -244,11 +235,12 @@ export class HomeScreen extends Component {
                   )}
                   statistic={statistics.categories}
                   isLoading={!statistics.categories}
-                  Name={props => (
+                  ItemContentContainer={props => (
                     <Link
                       to={`/sources?collectionsfilter:category=${props.name}`}
                     >
                       <Category category={props.name} />
+                      <Numeric num={props.count} />
                     </Link>
                   )}
                 />
@@ -273,9 +265,10 @@ export class HomeScreen extends Component {
                   )}
                   statistic={statistics.countries}
                   isLoading={!statistics.countries}
-                  Name={props => (
+                  ItemContentContainer={props => (
                     <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
                       <Country.Name {...props} code={props.name} />
+                      <Numeric num={props.count} />
                     </Link>
                   )}
                 />
