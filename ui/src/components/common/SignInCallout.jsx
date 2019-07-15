@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Callout } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import { selectSession, selectMetadata } from 'src/selectors';
@@ -37,10 +39,25 @@ export class SignInCallout extends React.Component {
     return (
       <React.Fragment>
         <AuthenticationDialog auth={metadata.auth} isOpen={isOpen} toggleDialog={this.onSignIn} />
-        <Callout onClick={this.onSignIn} className="SignInCallout clickable bp3-icon-info-sign bp3-intent-warning">
+        <Callout className="SignInCallout bp3-icon-info-sign bp3-intent-warning">
           <FormattedMessage
             id="search.callout_message"
-            defaultMessage="Some sources are hidden from anonymous users. Sign in to see all results you are authorised to access."
+            defaultMessage="Some sources are hidden from anonymous users. {signInButton} to see all results you are authorised to access."
+            values={{
+              signInButton: (
+                <Button
+                  className="sign-in-button"
+                  minimal
+                  small
+                  onClick={this.onSignIn}
+                >
+                  <FormattedMessage
+                    id="search.callout_message.button_text"
+                    defaultMessage="Sign in"
+                  />
+                </Button>
+              ),
+            }}
           />
         </Callout>
       </React.Fragment>
