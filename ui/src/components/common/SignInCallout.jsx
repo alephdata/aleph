@@ -20,25 +20,34 @@ const mapStateToProps = state => ({
 export class SignInCallout extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isOpen: false };
+    this.state = { isAuthOpen: false, isCalloutShown: true };
     this.onSignIn = this.onSignIn.bind(this);
+    this.onHideCallout = this.onHideCallout.bind(this);
   }
 
   onSignIn() {
-    this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
+    this.setState(({ isAuthOpen }) => ({ isAuthOpen: !isAuthOpen }));
+  }
+
+  onHideCallout() {
+    this.setState(({ isCalloutShown }) => ({ isCalloutShown: !isCalloutShown }));
   }
 
   render() {
     const { metadata, session } = this.props;
-    const { isOpen } = this.state;
+    const { isAuthOpen, isCalloutShown } = this.state;
 
-    if (session.loggedIn) {
+    if (session.loggedIn || !isCalloutShown) {
       return null;
     }
 
     return (
       <React.Fragment>
-        <AuthenticationDialog auth={metadata.auth} isOpen={isOpen} toggleDialog={this.onSignIn} />
+        <AuthenticationDialog
+          auth={metadata.auth}
+          isOpen={isAuthOpen}
+          toggleDialog={this.onSignIn}
+        />
         <Callout className="SignInCallout bp3-icon-info-sign bp3-intent-warning">
           <FormattedMessage
             id="search.callout_message"
@@ -59,6 +68,7 @@ export class SignInCallout extends React.Component {
               ),
             }}
           />
+          <Button className="bp3-minimal button-close" icon="cross" onClick={this.onHideCallout} />
         </Callout>
       </React.Fragment>
     );
