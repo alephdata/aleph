@@ -4,7 +4,7 @@ import {
   defineMessages, FormattedNumber, FormattedMessage, injectIntl,
 } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
-import { Icon, ButtonGroup, AnchorButton } from '@blueprintjs/core';
+import { Icon, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -71,6 +71,10 @@ const messages = defineMessages({
   page_title: {
     id: 'search.title',
     defaultMessage: 'Search',
+  },
+  alert_export_disabled: {
+    id: 'search.screen.export_disabled',
+    defaultMessage: 'Cannot export more than 10,000 results at a time',
   },
 });
 
@@ -220,12 +224,15 @@ export class SearchScreen extends React.Component {
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
     const exportLink = !result.links ? null : result.links.export;
+    const tooltip = intl.formatMessage(messages.alert_export_disabled);
 
     const operation = (
       <ButtonGroup minimal>
-        <AnchorButton icon="download" disabled={!exportLink} href={exportLink}>
-          <FormattedMessage id="search.screen.export" defaultMessage="Export" />
-        </AnchorButton>
+        <Tooltip content={tooltip} disabled={exportLink}>
+          <AnchorButton icon="download" disabled={!exportLink} href={exportLink}>
+            <FormattedMessage id="search.screen.export" defaultMessage="Export" />
+          </AnchorButton>
+        </Tooltip>
       </ButtonGroup>
     );
     const breadcrumbs = (
