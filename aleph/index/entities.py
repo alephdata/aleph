@@ -26,6 +26,12 @@ def _source_spec(includes, excludes):
     return {'includes': includes, 'excludes': excludes}
 
 
+def _cache_entity(entity):
+    # Cache entities only briefly to avoid filling up redis
+    key = cache.object_key(Entity, entity.get('id'))
+    cache.set_complex(key, entity, expire=60 * 60 * 2)
+
+
 def _entities_query(filters, authz, collection_id, schemata):
     filters = filters or []
     if authz is not None:
@@ -38,7 +44,7 @@ def _entities_query(filters, authz, collection_id, schemata):
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
-                  includes=None, excludes=None, filters=None):
+                  includes=None, excludes=None, filters=None, cached=False):
     """Scan all entities matching the given criteria."""
     query = {
         'query': _entities_query(filters, authz, collection_id, schemata),
@@ -48,6 +54,8 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
     for res in scan(es, index=index, query=query, scroll='1410m'):
         entity = unpack_result(res)
         if entity is not None:
+            if cached:
+                _cache_entity(entity)        
             yield entity
 
 
@@ -94,10 +102,8 @@ def entities_by_ids(ids, schemata=None, cached=False,
     for doc in result.get('hits', {}).get('hits', []):
         entity = unpack_result(doc)
         if entity is not None:
-            # Cache entities only briefly to avoid filling up the cache:
             if cached:
-                key = cache.object_key(Entity, entity.get('id'))
-                cache.set_complex(key, entity, expire=60 * 60)
+                _cache_entity(entity)
             yield entity
 
 

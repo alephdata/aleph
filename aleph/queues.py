@@ -11,12 +11,13 @@ log = logging.getLogger(__name__)
 OP_INGEST = Stage.INGEST
 OP_INDEX = 'index'
 OP_XREF = 'xref'
+OP_XREF_ITEM = 'xitem'
 OP_PROCESS = 'process'
 OP_BULKLOAD = 'bulkload'
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_BULKLOAD)
+OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_BULKLOAD, OP_XREF_ITEM,)
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
@@ -38,11 +39,6 @@ def queue_task(collection, stage, job_id=None, payload=None, context=None):
         from aleph.worker import get_worker
         worker = get_worker()
         worker.sync()
-
-
-def get_next_task(timeout=5):
-    """Get a queue task which aleph is capable of processing."""
-    return Stage.get_stage_task(kv, OPERATIONS, timeout=timeout)
 
 
 def get_status(collection):
