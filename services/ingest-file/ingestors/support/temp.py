@@ -19,6 +19,7 @@ class TempFileSupport(object):
                 raise ProcessingException("Path escalation: %r" % prefix)
         prefix = prefix or self.manager.work_path
         work_file = prefix.joinpath(file_name)
+        work_file = work_file.resolve()
         if prefix not in work_file.parents:
             raise ProcessingException("Path escalation: %r" % file_name)
         if not work_file.parent.exists():

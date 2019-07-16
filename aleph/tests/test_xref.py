@@ -17,7 +17,7 @@ class XrefTestCase(TestCase):
         self.coll_b = self.create_collection(creator=self.user, casefile=False)
         self.coll_c = self.create_collection(creator=self.user, casefile=False)
         db.session.commit()
-        self.queue = get_queue(self.coll_a, OP_XREF)
+        self.stage = get_queue(self.coll_a, OP_XREF, job_id='unit_test')
 
         _, headers = self.login(foreign_id=self.user.foreign_id)
         url = '/api/2/entities'
@@ -82,14 +82,14 @@ class XrefTestCase(TestCase):
     def test_xref(self):
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
-        xref_collection(self.queue, self.coll_a)
+        xref_collection(self.stage, self.coll_a)
         q = db.session.query(Match)
         assert 3 == q.count(), q.count()
 
     def test_xref_specific_collections(self):
         q = db.session.query(Match)
         assert 0 == q.count(), q.count()
-        xref_collection(self.queue, self.coll_a,
+        xref_collection(self.stage, self.coll_a,
                         against_collection_ids=[self.coll_c.id])
         q = db.session.query(Match)
         assert 1 == q.count(), q.count()

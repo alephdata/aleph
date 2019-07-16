@@ -20,7 +20,7 @@ class SevenZipIngestor(PackageSupport, Ingestor, ShellSupport):
     ]
     SCORE = 4
 
-    def unpack(self, file_path, temp_dir):
+    def unpack(self, file_path, entity, temp_dir):
         self.exec_command('7z',
                           'x', file_path,
                           '-y',

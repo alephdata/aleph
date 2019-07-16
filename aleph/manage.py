@@ -13,8 +13,8 @@ from aleph.core import create_app, db, cache
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
-from aleph.worker import queue_worker
-from aleph.queues import get_status, queue_task, cancel_queue, ingest_wait
+from aleph.worker import get_worker
+from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.collections import index_collection
@@ -54,7 +54,8 @@ def collections():
 @manager.command
 def worker():
     """Run the queue-based worker service."""
-    queue_worker()
+    worker = get_worker()
+    worker.run()
 
 
 @manager.command
@@ -72,7 +73,7 @@ def crawldir(path, language=None, foreign_id=None):
     collection = Collection.by_foreign_id(foreign_id)
     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
     crawl_directory(collection, path)
-    ingest_wait(collection)
+    log.info('Complete. Make sure a worker is running :)')
 
 
 @manager.command

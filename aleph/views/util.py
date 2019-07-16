@@ -10,6 +10,7 @@ from werkzeug.exceptions import BadRequest, NotFound
 from lxml.etree import tostring
 from lxml.html import document_fromstring
 from lxml.html.clean import Cleaner
+from servicelayer.jobs import Job
 
 from aleph.authz import Authz
 from aleph.model import Collection, Entity
@@ -34,6 +35,15 @@ def obj_or_404(obj):
 
 def get_flag(name, default=False):
     return as_bool(request.args.get(name), default=default)
+
+
+def get_session_id():
+    role_id = stringify(request.authz.id) or 'anonymous'
+    session_id = None
+    if hasattr(request, '_session_id'):
+        session_id = stringify(request._session_id)
+    session_id = session_id or Job.random_id()
+    return '%s:%s' % (role_id, session_id)
 
 
 def validate_data(data, schema, many=None):

@@ -6,7 +6,8 @@ from followthemoney.compare import compare
 
 from aleph.core import db, es
 from aleph.model import Match
-from aleph.index.entities import iter_proxies, entities_by_ids
+from aleph.queues import queue_task, OP_XREF_ITEM
+from aleph.index.entities import get_entity, iter_entities, entities_by_ids
 from aleph.index.entities import count_entities
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import unpack_result, none_query
@@ -19,7 +20,7 @@ log = logging.getLogger(__name__)
 SCORE_CUTOFF = 0.05
 
 
-def xref_item(proxy, collection_ids=None):
+def xref_query_item(proxy, collection_ids=None):
     """Cross-reference an entity or document, given as an indexed document."""
     query = match_query(proxy, collection_ids=collection_ids)
     if query == none_query():
@@ -43,29 +44,39 @@ def xref_item(proxy, collection_ids=None):
                 yield score, result.get('collection_id'), other
 
 
-def xref_collection(queue, collection, against_collection_ids=None):
+def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
+    entity = get_entity(entity_id)
+    proxy = model.get_proxy(entity)
+    dq = db.session.query(Match)
+    dq = dq.filter(Match.entity_id == proxy.id)
+    dq.delete()
+    matches = xref_query_item(proxy, collection_ids=against_collection_ids)
+    for (score, other_id, other) in matches:
+        log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
+        obj = Match()
+        obj.entity_id = proxy.id
+        obj.collection_id = collection.id
+        obj.match_id = other.id
+        obj.match_collection_id = other_id
+        obj.score = score
+        db.session.add(obj)
+    db.session.commit()
+
+
+def xref_collection(stage, collection, against_collection_ids=None):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
-    count = count_entities(collection_id=collection.id, schemata=matchable)
-    queue.progress.mark_pending(count)
-    entities = iter_proxies(collection_id=collection.id, schemata=matchable)
+    entities = iter_entities(collection_id=collection.id,
+                             schemata=matchable,
+                             cached=True)
     for entity in entities:
-        proxy = model.get_proxy(entity)
-        dq = db.session.query(Match)
-        dq = dq.filter(Match.entity_id == proxy.id)
-        dq.delete()
-        matches = xref_item(proxy, collection_ids=against_collection_ids)
-        for (score, other_id, other) in matches:
-            log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
-            obj = Match()
-            obj.entity_id = proxy.id
-            obj.collection_id = collection.id
-            obj.match_id = other.id
-            obj.match_collection_id = other_id
-            obj.score = score
-            db.session.add(obj)
-        db.session.commit()
-        queue.progress.mark_finished()
+        payload = {
+            'entity_id': entity.get('id'),
+            'against_collection_ids': against_collection_ids
+        }
+        queue_task(collection, OP_XREF_ITEM,
+                   job_id=stage.job.id,
+                   payload=payload)
 
 
 def _format_date(proxy):
