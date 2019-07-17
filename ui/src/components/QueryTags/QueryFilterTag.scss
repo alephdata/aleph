@@ -8,10 +8,19 @@
   margin-right: $aleph-grid-size;
   margin-bottom: $aleph-grid-size;
   font-weight: bold;
-  
+
 
   &.bp3-tag {
     background-color: $aleph-theme-intent;
+  }
+
+  &.filter-clear-tag {
+    box-shadow: none !important;
+    background: none !important;
+    vertical-align: initial;
+    font-weight: normal !important;
+    border: 1px solid $aleph-link-color;
+    color: $aleph-link-color !important;
   }
 
   a, a:hover {
