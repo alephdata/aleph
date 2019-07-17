@@ -22,8 +22,14 @@
       left: ($aleph-grid-size / 2);
       line-height: $aleph-line-height;
 
+
+
       &::before {
         content: $pt-icon-circle;
+
+        .multi-select & {
+          content: $pt-icon-square;
+        }
       }
 
       opacity: 0.1;
@@ -36,7 +42,11 @@
         color: $pt-intent-primary;
 
         &::before {
-          content: $pt-icon-tick-circle;
+          content: $pt-icon-symbol-circle;
+
+          .multi-select & {
+            content: $pt-icon-symbol-square;
+          }
         }
       }
 

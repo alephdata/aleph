@@ -86,9 +86,10 @@ class SearchFacet extends Component {
     const isFiltered = query.getFilter(field).length > 0;
     const hasMoreValues = facetSize < facet.total;
     const isUpdating = result.total === undefined;
+    const isMultiSelect = field !== 'schema';
 
     return (
-      <div className="SearchFacet">
+      <div className={c('SearchFacet', { 'multi-select': isMultiSelect })}>
         <div
           className={c('opener', { clickable: isCollapsible, active: !isUpdating && isFiltered })}
           onClick={this.onToggleOpen}
