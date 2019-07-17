@@ -52,6 +52,7 @@ class TestCase(FlaskTestCase):
         # settings, but it can only be derived after the config files
         # have actually been evaluated.
         sls.REDIS_URL = None
+        sls.WORKER_THREADS = None
         settings.APP_NAME = APP_NAME
         settings.TESTING = True
         settings.DEBUG = True

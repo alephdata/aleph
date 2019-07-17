@@ -19,7 +19,7 @@ from aleph.views.forms import CollectionCreateSchema, CollectionUpdateSchema
 from aleph.views.serializers import CollectionSerializer
 from aleph.views.util import get_db_collection, get_index_collection
 from aleph.views.util import require, parse_request, jsonify
-from aleph.views.util import render_xml, get_flag
+from aleph.views.util import render_xml, get_flag, get_session_id
 
 blueprint = Blueprint('collections_api', __name__)
 
@@ -75,11 +75,11 @@ def update(collection_id):
 def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
-    payload = {
+    data = {
         'ingest': get_flag('ingest', True),
         'reset': get_flag('reset', True)
     }
-    queue_task(collection, OP_PROCESS, payload=payload)
+    queue_task(collection, OP_PROCESS, job_id=get_session_id(), payload=data)
     return ('', 202)
 
 
@@ -95,7 +95,7 @@ def mapping(collection_id):
             model.make_mapping(query)
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
-    queue_task(collection, OP_BULKLOAD, payload=data)
+    queue_task(collection, OP_BULKLOAD, job_id=get_session_id(), payload=data)
     return ('', 202)
 
 
@@ -104,6 +104,7 @@ def mapping(collection_id):
 def bulk(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
+    job_id = get_session_id()
 
     # This will disable checksum security measures in order to allow bulk
     # loading of document data.
@@ -111,7 +112,7 @@ def bulk(collection_id):
     unsafe = unsafe and request.authz.is_admin
 
     entities = ensure_list(request.get_json(force=True))
-    bulk_write(collection, entities, unsafe=unsafe)
+    bulk_write(collection, entities, job_id=job_id, unsafe=unsafe)
     refresh_collection(id)
     return ('', 204)
 

@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 
 from servicelayer.cache import get_fakeredis
 from servicelayer.archive import init_archive
-from servicelayer.process import ServiceQueue
+from servicelayer.jobs import Job, JobStage
 from servicelayer.archive.util import ensure_path
 from servicelayer import settings as service_settings
 from balkhash import settings as balkhash_settings
@@ -32,7 +32,8 @@ class TestCase(unittest.TestCase):
         balkhash_settings.BACKEND = 'LEVELDB'
         balkhash_settings.LEVELDB_PATH = mkdtemp()
         conn = get_fakeredis()
-        self.queue = ServiceQueue(conn, ServiceQueue.OP_INGEST, 'test')
+        job_id = Job.random_id()
+        self.queue = JobStage(conn, JobStage.INGEST, job_id, 'test')
         self.manager = Manager(self.queue, {})
         self.manager.entities = []
         self.manager.emit_entity = types.MethodType(emit_entity, self.manager)

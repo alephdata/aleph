@@ -191,8 +191,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if len(exclude):
             q = q.filter(not_(Role.id.in_(exclude)))
         q = q.filter(or_(
-            cls.foreign_id.ilike('%' + prefix + '%'),
-            cls.email.ilike('%' + prefix + '%'),
+            func.lower(cls.email) == prefix.lower(),
             cls.name.ilike('%' + prefix + '%')
         ))
         q = q.order_by(Role.id.asc())
