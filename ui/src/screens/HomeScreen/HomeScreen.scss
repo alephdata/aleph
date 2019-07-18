@@ -55,10 +55,33 @@
       text-align: left;
     }
     &--list-item{
-      margin:3px;
       display: flex;
       justify-content: space-between;
-      a {color:$aleph-content-background;}
+
+      a, .bp3-button{
+        color:$aleph-content-background;
+        width: 100%;
+        text-align: left;
+        padding: 3px;
+        transition: background-color .1s ease-out;
+
+        &:hover {
+          text-decoration: none;
+          background-color: #ffffff38;
+        }
+      }
+
+      .bp3-button {
+        box-shadow: none;
+        background: none;
+        border-radius: 0;
+        min-height: 25px;
+        justify-content: left;
+      }
+
+      a > .Numeric{
+        float: right;
+      }
     }
   }
 }

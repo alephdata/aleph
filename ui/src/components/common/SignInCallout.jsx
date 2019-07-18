@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Callout } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
+
 
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import { selectSession, selectMetadata } from 'src/selectors';
@@ -18,30 +20,55 @@ const mapStateToProps = state => ({
 export class SignInCallout extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isOpen: false };
+    this.state = { isAuthOpen: false, isCalloutShown: true };
     this.onSignIn = this.onSignIn.bind(this);
+    this.onHideCallout = this.onHideCallout.bind(this);
   }
 
   onSignIn() {
-    this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
+    this.setState(({ isAuthOpen }) => ({ isAuthOpen: !isAuthOpen }));
+  }
+
+  onHideCallout() {
+    this.setState(({ isCalloutShown }) => ({ isCalloutShown: !isCalloutShown }));
   }
 
   render() {
     const { metadata, session } = this.props;
-    const { isOpen } = this.state;
+    const { isAuthOpen, isCalloutShown } = this.state;
 
-    if (session.loggedIn) {
+    if (session.loggedIn || !isCalloutShown) {
       return null;
     }
 
     return (
       <React.Fragment>
-        <AuthenticationDialog auth={metadata.auth} isOpen={isOpen} toggleDialog={this.onSignIn} />
-        <Callout onClick={this.onSignIn} className="SignInCallout clickable bp3-icon-info-sign bp3-intent-warning">
+        <AuthenticationDialog
+          auth={metadata.auth}
+          isOpen={isAuthOpen}
+          toggleDialog={this.onSignIn}
+        />
+        <Callout className="SignInCallout bp3-icon-info-sign bp3-intent-warning">
           <FormattedMessage
             id="search.callout_message"
-            defaultMessage="Some sources are hidden from anonymous users. Sign in to see all results you are authorised to access."
+            defaultMessage="Some sources are hidden from anonymous users. {signInButton} to see all results you are authorised to access."
+            values={{
+              signInButton: (
+                <Button
+                  className="sign-in-button"
+                  minimal
+                  small
+                  onClick={this.onSignIn}
+                >
+                  <FormattedMessage
+                    id="search.callout_message.button_text"
+                    defaultMessage="Sign in"
+                  />
+                </Button>
+              ),
+            }}
           />
+          <Button className="bp3-minimal button-close" icon="cross" onClick={this.onHideCallout} />
         </Callout>
       </React.Fragment>
     );

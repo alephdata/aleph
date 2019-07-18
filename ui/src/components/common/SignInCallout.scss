@@ -1,2 +1,28 @@
+@import "src/app/variables.scss";
+
 .SignInCallout {
+  padding-right: 40px;
+
+  .bp3-button.sign-in-button {
+    min-height: unset;
+    min-width: unset;
+    padding: 0;
+    vertical-align: text-top;
+    font-weight: bold;
+    text-decoration: underline !important;
+
+    &:hover {
+      background: none;
+      color: $aleph-link-color;
+    }
+  }
+
+  .button-close {
+    min-height: unset;
+    min-width: unset;
+    position: absolute;
+    right: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }

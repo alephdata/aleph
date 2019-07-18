@@ -40,55 +40,64 @@ const messages = defineMessages({
 
 class Statistics extends PureComponent {
   static Item({
-    Name = Statistics.Name,
+    ItemContentContainer = Statistics.ItemContentContainer,
     item: [name, count],
     ...rest
   }) {
     return (
       <li {...rest}>
-        <Name name={name} />
-        <Numeric num={count} />
+        <ItemContentContainer name={name} count={count} />
       </li>
     );
   }
 
-  static Name({ name }) {
-    return <span>{name}</span>;
+  static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
+
+  constructor(props) {
+    super(props);
+    this.state = { listLen: 15 };
+    this.onExpand = this.onExpand.bind(this);
   }
 
-  static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
+  onExpand() {
+    const expandIncrement = 30;
+    this.setState(prevState => ({ listLen: prevState.listLen + expandIncrement }));
+  }
 
   render() {
     const {
       statistic,
+      seeMoreButtonText,
       headline,
       isLoading,
       children = isLoading ? Statistics.Noop : Statistics.Item,
-      Others = isLoading ? Statistics.Noop : Statistics.Item,
-      Name = Statistics.Name,
+      ItemContentContainer = Statistics.ItemContentContainer,
     } = this.props;
+    const {
+      listLen,
+    } = this.state;
     const list = isLoading ? Array.from(
       { length: 40 }, (i, ii) => ([ii]),
     ) : Object.entries(statistic);
-    const rest = list.length - 15;
+    const rest = list.length - listLen;
     return (
       <div className="statistic bp3-callout">
         <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
         <ul className="statistic--list">
-          {_.sortBy(list, [1]).splice(-15).reverse().map(item => children({
+          {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({
             className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
             key: item[0],
             item,
-            Name,
+            ItemContentContainer,
           }))}
-          {rest > 0 && Others({
-            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
-            item: [<FormattedMessage
-              id="home.statistics.other"
-              values={{ count: rest }}
-              defaultMessage="other {count}"
-            />],
-          })}
+          {rest > 0 && !isLoading && (
+            <li className={c('statistic--list-item', { 'bp3-skeleton': isLoading })}>
+              <Button
+                onClick={this.onExpand}
+                text={seeMoreButtonText(rest)}
+              />
+            </li>
+          )}
         </ul>
       </div>
     );
@@ -188,19 +197,21 @@ export class HomeScreen extends Component {
                       }}
                     />
                   )}
+                  seeMoreButtonText={restCount => (
+                    <FormattedMessage
+                      id="home.statistics.other"
+                      defaultMessage="{count} more entity types"
+                      values={{
+                        count: restCount,
+                      }}
+                    />
+                  )}
                   statistic={statistics.schemata}
                   isLoading={!statistics.schemata}
-                  Name={props => (
-                    <span>
-                      <Schema.Smart.Link
-                        url={`/search?filter:schema=${props.name}`}
-                        schema={props.name}
-                        {...props}
-                      />
-                    </span>
-                  )}
-                  Others={props => (
-                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/search?facet=schema">{name}</Link>)} />
+                  ItemContentContainer={props => (
+                    <Schema.Smart.Link url={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
+                      <Numeric num={props.count} />
+                    </Schema.Smart.Link>
                   )}
                 />
                 <Statistics
@@ -213,17 +224,24 @@ export class HomeScreen extends Component {
                       }}
                     />
                   )}
+                  seeMoreButtonText={restCount => (
+                    <FormattedMessage
+                      id="home.statistics.other"
+                      defaultMessage="{count} more sources"
+                      values={{
+                        count: restCount,
+                      }}
+                    />
+                  )}
                   statistic={statistics.categories}
                   isLoading={!statistics.categories}
-                  Name={props => (
+                  ItemContentContainer={props => (
                     <Link
                       to={`/sources?collectionsfilter:category=${props.name}`}
                     >
                       <Category category={props.name} />
+                      <Numeric num={props.count} />
                     </Link>
-                  )}
-                  Others={props => (
-                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
                 <Statistics
@@ -236,15 +254,22 @@ export class HomeScreen extends Component {
                       }}
                     />
                   )}
+                  seeMoreButtonText={restCount => (
+                    <FormattedMessage
+                      id="home.statistics.other"
+                      defaultMessage="{count} more countries & territories"
+                      values={{
+                        count: restCount,
+                      }}
+                    />
+                  )}
                   statistic={statistics.countries}
                   isLoading={!statistics.countries}
-                  Name={props => (
+                  ItemContentContainer={props => (
                     <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
                       <Country.Name {...props} code={props.name} />
+                      <Numeric num={props.count} />
                     </Link>
-                  )}
-                  Others={props => (
-                    <Statistics.Item {...props} Name={({ name }) => (<Link to="/sources">{name}</Link>)} />
                   )}
                 />
               </DualPane>
