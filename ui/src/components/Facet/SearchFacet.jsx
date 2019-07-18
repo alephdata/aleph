@@ -1,25 +1,18 @@
 import React, { Component } from 'react';
 import {
-  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
+  FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Button, Icon, Collapse, Spinner,
+  Icon, Collapse, Spinner,
 } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { CheckboxList } from 'src/components/common';
 
 import './SearchFacet.scss';
-
-const messages = defineMessages({
-  clear_filter: {
-    id: 'search.facets.clear_filter',
-    defaultMessage: 'Clear this filter',
-  },
-});
 
 const defaultFacet = {};
 
@@ -85,7 +78,7 @@ class SearchFacet extends Component {
 
   render() {
     const {
-      query, facetSize, isOpen, result, field, label, icon, intl,
+      query, facetSize, isOpen, result, field, label, icon, intl, isCollapsible,
     } = this.props;
     const { facet, isExpanding } = this.state;
     const current = query.getFilter(field);
@@ -93,11 +86,12 @@ class SearchFacet extends Component {
     const isFiltered = query.getFilter(field).length > 0;
     const hasMoreValues = facetSize < facet.total;
     const isUpdating = result.total === undefined;
+    const isMultiSelect = field !== 'schema';
 
     return (
-      <div className="SearchFacet">
+      <div className={c('SearchFacet', { 'multi-select': isMultiSelect })}>
         <div
-          className={c('opener clickable', { active: !isUpdating && isFiltered })}
+          className={c('opener', { clickable: isCollapsible, active: !isUpdating && isFiltered })}
           onClick={this.onToggleOpen}
           onKeyPress={this.onToggleOpen}
           tabIndex={0}
@@ -105,7 +99,9 @@ class SearchFacet extends Component {
           role="switch"
           aria-checked={isOpen}
         >
-          <Icon icon="caret-right" className={c('caret', { rotate: isOpen })} />
+          {isCollapsible && (
+            <Icon icon="caret-right" className={c('caret', { rotate: isOpen })} />
+          )}
           <span className="FacetName">
             <span className={`FacetIcon bp3-icon bp3-icon-${icon}`} />
             {label}
@@ -120,16 +116,10 @@ class SearchFacet extends Component {
                   values={{ count: intl.formatNumber(count) }}
                 />
               </span>
-              <Button
-                onClick={this.onClear}
-                className="ClearButton bp3-minimal bp3-small"
-                title={intl.formatMessage(messages.clear_filter)}
-                icon="cross"
-              />
             </React.Fragment>
           )}
 
-          {isOpen && !isFiltered && (
+          {isOpen && (
             <React.Fragment>
               {facet.total === 0 && (
                 <span className="bp3-tag bp3-small bp3-round bp3-minimal">0</span>
