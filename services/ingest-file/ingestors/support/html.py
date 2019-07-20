@@ -1,31 +1,19 @@
 import re
+import logging
 from lxml import html
 from lxml.etree import ParseError, ParserError
-from lxml.html.clean import Cleaner
 from normality import collapse_spaces
 
 from ingestors.support.timestamp import TimestampSupport
 from ingestors.exc import ProcessingException
+
+log = logging.getLogger(__name__)
 
 
 class HTMLSupport(TimestampSupport):
     """Provides helpers for HTML file context extraction."""
     # this is from lxml/apihelpers.pxi
     RE_XML_ENCODING = re.compile(r'^(<\?xml[^>]+)\s+encoding\s*=\s*["\'][^"\']*["\'](\s*\?>|)', re.U)  # noqa
-
-    cleaner = Cleaner(
-        page_structure=True,
-        scripts=True,
-        javascript=True,
-        style=True,
-        links=True,
-        embedded=True,
-        forms=True,
-        frames=True,
-        meta=True,
-        # remove_tags=['a'],
-        kill_tags=['head']
-    )
 
     def get_meta(self, doc, field):
         for field_attr in ('property', 'name'):
@@ -61,16 +49,21 @@ class HTMLSupport(TimestampSupport):
             return text
 
     def extract_html_elements(self, el):
-        yield el.text or ' '
-        for child in el:
-            for text in self.extract_html_elements(child):
-                yield text
-        yield el.tail or ' '
+        try:
+            if el.tag in ['script', 'style', 'head']:
+                return
+            yield el.text or ' '
+            for child in el:
+                yield from self.extract_html_elements(child)
+            yield el.tail or ' '
+        except Exception as exc:
+            log.warning("HTML node error: %r", exc)
 
     def extract_html_content(self, entity, html_body, extract_metadata=True):
         """Ingestor implementation."""
         if html_body is None or not len(html_body.strip()):
             return
+        entity.add('bodyHtml', html_body)
         try:
             try:
                 doc = html.fromstring(html_body)
@@ -84,8 +77,9 @@ class HTMLSupport(TimestampSupport):
 
         if extract_metadata:
             self.extract_html_header(entity, doc)
-        self.cleaner(doc)
-        entity.add('bodyHtml', html_body)
-        text = self.extract_html_text(doc)
-        entity.add('indexText', text)
-        return text
+        try:
+            text = self.extract_html_text(doc)
+            entity.add('indexText', text)
+            return text
+        except Exception as exc:
+            log.exception("Error extracting text from HTML.")

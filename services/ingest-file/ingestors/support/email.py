@@ -79,7 +79,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             try:
                 for value in ensure_list(msg.get_all(header)):
                     values.append(value)
-            except (TypeError, IndexError) as exc:
+            except (TypeError, IndexError, AttributeError, ValueError) as exc:
                 log.warning("Failed to parse [%s]: %s", header, exc)
         return values
 
