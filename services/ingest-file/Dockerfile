@@ -102,7 +102,7 @@ ENV LANG='en_US.UTF-8' \
     LC_ALL='en_US.UTF-8' \
     LC_CTYPE='en_US.UTF-8' \
     TZ='UTC' \
-    OMP_THREAD_LIMIT: '1'
+    OMP_THREAD_LIMIT='1'
 
 RUN groupadd -g 1000 -r app \
     && useradd -m -u 1000 -s /bin/false -g app app
