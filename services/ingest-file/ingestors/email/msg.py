@@ -7,12 +7,13 @@ from followthemoney import model
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.email import EmailSupport
+from ingestors.support.encoding import EncodingSupport
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class RFC822Ingestor(Ingestor, EmailSupport):
+class RFC822Ingestor(Ingestor, EmailSupport, EncodingSupport):
     MIME_TYPES = [
         'multipart/mixed',
         'message/rfc822'
@@ -31,9 +32,7 @@ class RFC822Ingestor(Ingestor, EmailSupport):
         mime_type = normalize_mimetype(part.get_content_type())
         payload = part.get_payload(decode=True)
         charset = part.get_content_charset()
-        if charset is not None:
-            # TODO: do we want to do chardet after decoding fails?
-            payload = payload.decode(charset, 'replace')
+        payload = self.decode_string(payload, charset)
 
         if 'text/html' in mime_type:
             self.extract_html_content(entity, payload, extract_metadata=False)
