@@ -100,9 +100,9 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && update-locale LANG=en_US.UTF-8
 ENV LANG='en_US.UTF-8' \
     LC_ALL='en_US.UTF-8' \
-    LC_CTYPE='en_US.UTF-8'
-
-ENV OMP_THREAD_LIMIT=1
+    LC_CTYPE='en_US.UTF-8' \
+    TZ='UTC' \
+    OMP_THREAD_LIMIT: '1'
 
 RUN groupadd -g 1000 -r app \
     && useradd -m -u 1000 -s /bin/false -g app app

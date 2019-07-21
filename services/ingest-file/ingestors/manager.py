@@ -1,6 +1,7 @@
 import magic
 import logging
 import balkhash
+from pprint import pprint  # noqa
 from tempfile import mkdtemp
 from banal import ensure_list
 from normality import stringify
@@ -71,7 +72,6 @@ class Manager(object):
             child.add('ancestors', parent.id)
 
     def emit_entity(self, entity, fragment=None):
-        # from pprint import pprint
         # pprint(entity.to_dict())
         self.writer.put(entity.to_dict(), fragment)
         self.emitted.add(entity.id)

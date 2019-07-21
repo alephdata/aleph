@@ -9,15 +9,21 @@ from followthemoney import model
 from ingestors.ingestor import Ingestor
 from ingestors.support.email import EmailSupport, EmailIdentity
 from ingestors.support.ole import OLESupport
-from ingestors.email.outlookmsg_lib import Message
+from extract_msg import Message
 
 log = logging.getLogger(__name__)
 
 
+class FieldMessage(Message):
+
+    def getField(self, name):
+        return self._getStringStream('__substg1.0_%s' % name)
+
+
 class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
     MIME_TYPES = [
-        'appliation/msg',
-        'appliation/x-msg',
+        'application/msg',
+        'application/x-msg',
         'msg/rfc822'
     ]
     EXTENSIONS = ['msg']
@@ -28,40 +34,37 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
 
     def ingest(self, file_path, entity):
         entity.schema = model.get('Email')
-        msg = Message(file_path)
+        msg = FieldMessage(file_path)
         self.extract_olefileio_metadata(msg, entity)
 
-        # This property information was sourced from
-        # http://www.fileformat.info/format/outlookmsg/index.htm
-        # on 2013-07-22.
-        headers = msg.getField('007D')
-        if headers is not None:
-            try:
-                msg_headers = Parser().parsestr(headers, headersonly=True)
-                self.extract_msg_headers(entity, msg_headers)
-            except Exception:
-                log.exception("Cannot parse Outlook-stored headers")
+        try:
+            self.extract_msg_headers(entity, msg.header)
+        except Exception:
+            log.exception("Cannot parse Outlook-stored headers")
 
-        entity.add('bodyText', msg.getField('1000'))
-        entity.add('messageId', msg.getField('1035'))
-        entity.add('subject', msg.getField('0037'))
+        entity.add('bodyText', msg.body)
+        entity.add('bodyHtml', msg.htmlBody)
+        entity.add('messageId', msg.message_id)
+        entity.add('inReplyTo', msg.reply_to)
+        entity.add('subject', msg.subject)
         entity.add('threadTopic', msg.getField('0070'))
+        entity.add('date', msg.parsedDate)
 
         # sender name and email
-        sender = self.get_identity(msg.getField('0C1A'), msg.getField('0C1F'))
+        sender = self.get_identities(msg.sender)
         self.apply_identities(entity, sender, 'emitters', 'sender')
 
         # received by
         sender = self.get_identity(msg.getField('0040'), msg.getField('0076'))
-        self.apply_identities(entity, sender, 'recipients')
+        self.apply_identities(entity, sender, 'emitters')
 
         froms = self.get_identities(msg.getField('1046'))
         self.apply_identities(entity, froms, 'emitters', 'from')
 
-        tos = self.get_identities(msg.getField('0E04'))
+        tos = self.get_identities(msg.to)
         self.apply_identities(entity, tos, 'recipients', 'to')
 
-        ccs = self.get_identities(msg.getField('0E03'))
+        ccs = self.get_identities(msg.cc)
         self.apply_identities(entity, ccs, 'recipients', 'cc')
 
         bccs = self.get_identities(msg.getField('0E02'))
@@ -72,7 +75,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
             name = stringify(attachment.longFilename)
             name = name or stringify(attachment.shortFilename)
             self.ingest_attachment(entity, name,
-                                   attachment.mimeType,
+                                   attachment.type,
                                    attachment.data)
 
     @classmethod
