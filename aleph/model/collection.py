@@ -63,8 +63,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     creator_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)
     creator = db.relationship(Role)
 
-    def update(self, data, creator=None):
+    def touch(self):
+        # https://www.youtube.com/watch?v=wv-34w8kGPM
         self.updated_at = datetime.utcnow()
+        db.session.add(self)
+
+    def update(self, data, creator=None):
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
         self.summary = data.get('summary', self.summary)
@@ -80,7 +84,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             creator = Role.by_id(data.get('creator_id'))
         if creator is not None:
             self.creator = creator
-        db.session.add(self)
+        self.touch()
         db.session.flush()
         if self.creator is not None:
             Permission.grant(self, self.creator, True, True)
