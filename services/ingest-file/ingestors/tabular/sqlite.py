@@ -1,3 +1,4 @@
+import re
 import logging
 import sqlite3
 from followthemoney import model
@@ -11,6 +12,7 @@ log = logging.getLogger(__name__)
 
 
 class SQLiteIngestor(Ingestor, TableSupport):
+    VALID_TABLE = re.compile(r'[\w\d\_\-]{2,4096}')
     MIME_TYPES = [
         'application/x-sqlite3',
         'application/x-sqlite',
@@ -24,7 +26,8 @@ class SQLiteIngestor(Ingestor, TableSupport):
         c = conn.cursor()
         c.execute("SELECT name FROM sqlite_master WHERE type = 'table';")
         for (name,) in c.fetchall():
-            yield name
+            if self.VALID_TABLE.match(name):
+                yield name
 
     def generate_rows(self, conn, table):
         cur = conn.cursor()
