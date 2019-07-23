@@ -44,7 +44,7 @@ class RFC822Ingestor(Ingestor, EmailSupport, EncodingSupport):
         try:
             with open(file_path, 'rb') as fh:
                 msg = email.message_from_binary_file(fh, policy=default)
-        except MessageError as err:
+        except (MessageError, ValueError, IndexError) as err:
             raise ProcessingException('Cannot parse email: %s' % err) from err
 
         self.extract_msg_headers(entity, msg)

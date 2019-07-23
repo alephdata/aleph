@@ -45,7 +45,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         entity.add('bodyText', msg.body)
         entity.add('bodyHtml', msg.htmlBody)
         entity.add('messageId', msg.message_id)
-        entity.add('inReplyTo', msg.reply_to)
+        # entity.add('inReplyTo', msg.reply_to)
         entity.add('subject', msg.subject)
         entity.add('threadTopic', msg.getField('0070'))
         entity.add('date', msg.parsedDate)
