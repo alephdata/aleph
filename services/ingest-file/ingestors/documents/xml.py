@@ -63,7 +63,10 @@ class XMLIngestor(Ingestor, EncodingSupport, XMLSupport, HTMLSupport):
         doc = self.parse_xml_path(file_path)
         text = self.extract_html_text(doc.getroot())
         entity.set('bodyText', text)
-        transform = etree.XSLT(self.XSLT)
-        html_doc = transform(doc)
-        html_body = html.tostring(html_doc, encoding=str, pretty_print=True)
-        entity.set('bodyHtml', html_body)
+        try:
+            transform = etree.XSLT(self.XSLT)
+            html_doc = transform(doc)
+            html_body = html.tostring(html_doc, encoding=str, pretty_print=True)
+            entity.set('bodyHtml', html_body)
+        except ValueError as ve:
+            raise ProcessingException("Error converting XML file: %s" % ve) from ve
