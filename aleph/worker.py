@@ -47,7 +47,7 @@ class AlephWorker(Worker):
         if stage.stage == OP_BULKLOAD:
             bulk_load(stage, collection, payload)
         if stage.stage == OP_PROCESS:
-            process_collection(collection, sync=sync, **payload)
+            process_collection(stage, collection, sync=sync, **payload)
         if stage.stage == OP_XREF:
             xref_collection(stage, collection, **payload)
         if stage.stage == OP_XREF_ITEM:

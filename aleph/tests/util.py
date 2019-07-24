@@ -9,7 +9,7 @@ from followthemoney.cli.util import read_entity
 from faker import Factory
 
 from aleph import settings
-from aleph.queues import get_stage, OP_INDEX
+from aleph.queues import get_stage, OP_INDEX, OP_PROCESS
 from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
 from aleph.logic.aggregator import drop_aggregator
@@ -142,12 +142,14 @@ class TestCase(FlaskTestCase):
         Permission.grant(self.public_coll, visitor, True, False)
         db.session.commit()
         drop_aggregator(self.public_coll)
-        process_collection(self.public_coll, ingest=False, sync=True)
+        stage = get_stage(self.private_coll, OP_PROCESS)
+        process_collection(stage, self.public_coll, ingest=False, sync=True)
         stage = get_stage(self.private_coll, OP_INDEX)
         samples = read_entities(self.get_fixture_path('samples.ijson'))
         drop_aggregator(self.private_coll)
         index_entities(stage, self.private_coll, samples, sync=True)
-        process_collection(self.private_coll, ingest=False, sync=True)
+        stage = get_stage(self.private_coll, OP_PROCESS)
+        process_collection(stage, self.private_coll, ingest=False, sync=True)
 
     def setUp(self):
         if not hasattr(settings, '_global_test_state'):

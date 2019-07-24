@@ -25,7 +25,7 @@ def _collection_proxies(collection):
         yield document.to_proxy()
 
 
-def process_collection(collection, ingest=True, reset=False, sync=False):
+def process_collection(stage, collection, ingest=True, reset=False, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     ingest = ingest or reset
@@ -39,9 +39,11 @@ def process_collection(collection, ingest=True, reset=False, sync=False):
         writer.flush()
         if ingest:
             for proxy in aggregator:
-                ingest_entity(collection, proxy)
+                ingest_entity(collection, proxy, job_id=stage.job.id)
         else:
-            queue_task(collection, OP_INDEX, context={'sync': sync})
+            queue_task(collection, OP_INDEX,
+                       job_id=stage.job.id,
+                       context={'sync': sync})
     finally:
         aggregator.close()
 
