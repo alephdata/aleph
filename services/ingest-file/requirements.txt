@@ -33,7 +33,7 @@ lxml>=4.2.1
 olefile>=0.44
 pillow>=5.1.0
 vobject==0.9.6.1
-extract-msg==0.23.2
+msglite>=0.24.1
 
 # Get rid of:
 # Used for LibreOffice converter service
