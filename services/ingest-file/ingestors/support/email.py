@@ -119,6 +119,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 return message_id
 
     def resolve_message_ids(self, entity):
+        # https://cr.yp.to/immhf/thread.html
         ctx = self.manager.queue.dataset
 
         for message_id in entity.get('messageId'):
