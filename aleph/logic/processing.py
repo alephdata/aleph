@@ -8,7 +8,7 @@ from followthemoney.namespace import Namespace
 from aleph.model import Entity, Document
 from aleph.queues import ingest_entity
 from aleph.analysis import tag_entity
-from aleph.queues import get_queue, queue_task, OP_INDEX
+from aleph.queues import get_stage, queue_task, OP_INDEX
 from aleph.index.entities import index_bulk
 from aleph.logic.entities import refresh_entity_id
 from aleph.logic.collections import refresh_collection, reset_collection
@@ -98,7 +98,7 @@ def bulk_write(collection, iterable, job_id=None, unsafe=False):
     of building the entity.
     """
     namespace = Namespace(collection.foreign_id)
-    stage = get_queue(collection, OP_INDEX, job_id=job_id)
+    stage = get_stage(collection, OP_INDEX, job_id=job_id)
     entities = []
     for item in iterable:
         if not is_mapping(item):
