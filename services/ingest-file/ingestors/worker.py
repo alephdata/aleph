@@ -24,10 +24,10 @@ class IngestWorker(Worker):
         for entity_id in entities:
             next_queue.queue_task({'entity_id': entity_id}, context)
 
-    def handle(self, stage, payload, context):
-        manager = Manager(stage, context)
-        entity = model.get_proxy(payload)
+    def handle(self, task):
+        manager = Manager(task.stage, task.context)
+        entity = model.get_proxy(task.payload)
         log.debug("Ingest: %r", entity)
         manager.ingest_entity(entity)
         manager.close()
-        self.dispatch_next(stage, context, manager.emitted)
+        self.dispatch_next(task.stage, task.context, manager.emitted)

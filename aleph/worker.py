@@ -36,7 +36,10 @@ class AlephWorker(Worker):
             check_alerts()
             generate_digest()
 
-    def handle(self, stage, payload, context):
+    def handle(self, task):
+        stage = task.stage
+        payload = task.payload
+        context = task.context
         collection = Collection.by_foreign_id(stage.dataset)
         if collection is None:
             log.error("Collection not found: %s", stage.dataset)
@@ -53,6 +56,11 @@ class AlephWorker(Worker):
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
         log.info("Task [%s]: %s (done)", stage.dataset, stage.stage)
+
+    def after_task(self, task):
+        def remove_job(task):
+            task.job.remove()
+        task.job.execute_if_done(remove_job, task)
 
 
 def get_worker():
