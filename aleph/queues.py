@@ -1,6 +1,6 @@
 import logging
 from servicelayer.jobs import RateLimit, Progress
-from servicelayer.jobs import Job, JobStage as Stage
+from servicelayer.jobs import Job, JobStage as Stage, Task
 
 from aleph.core import kv, settings
 from aleph.model import Document
@@ -34,7 +34,8 @@ def get_stage(collection, stage, job_id=None, priority=None):
 
 def queue_task(collection, stage, job_id=None, payload=None, context=None):
     stage = get_stage(collection, stage, job_id=job_id)
-    stage.queue_task(payload or {}, context or {})
+    task = Task(stage, payload or {}, context or {})
+    task.queue()
     if settings.EAGER:
         from aleph.worker import get_worker
         worker = get_worker()
@@ -63,4 +64,5 @@ def ingest_entity(collection, proxy, job_id=None, sync=False):
         'next_stage': OP_INDEX,
         'sync': sync
     }
-    stage.queue_task(proxy.to_dict(), context)
+    task = Task(stage, payload=proxy.to_dict(), context=context)
+    task.queue()
