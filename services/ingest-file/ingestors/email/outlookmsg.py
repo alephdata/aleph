@@ -31,7 +31,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         try:
             msg = Message(file_path)
         except Exception as exc:
-            raise ProcessingException("Cannot open message file.") from msg
+            raise ProcessingException("Cannot open message file.") from exc
         
         self.extract_olefileio_metadata(msg, entity)
 
