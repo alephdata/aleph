@@ -36,6 +36,7 @@ def process_collection(stage, collection, ingest=True, reset=False, sync=False):
         writer = aggregator.bulk()
         for proxy in _collection_proxies(collection):
             writer.put(proxy, fragment='db')
+            stage.report_finished(1)
         writer.flush()
         if ingest:
             for proxy in aggregator:
