@@ -11,8 +11,8 @@ from ingestors.support.email import EmailSupport, EmailIdentity
 from ingestors.support.ole import OLESupport
 from ingestors.exc import ProcessingException
 
-
 log = logging.getLogger(__name__)
+
 
 class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
     MIME_TYPES = [
@@ -82,8 +82,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
             name = name or stringify(attachment.shortFilename)
             self.ingest_attachment(entity, name,
                                    attachment.type,
-                                   attachment.data)
-            
+                                   attachment.data) 
 
     @classmethod
     def match(cls, file_path, entity):
