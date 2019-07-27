@@ -56,19 +56,16 @@ def index_aggregate(stage, collection, entity_id=None, sync=False):
         if entity_id is not None:
             entities = list(aggregator.iterate(entity_id=entity_id))
 
-            # EXPERIMENT: Instead of indexing a single entity, this will
-            # try pull a whole batch of them off the queue and do it at
-            # once.
-            for (_, payload, _) in stage.get_tasks(limit=50):
-                entity_id = payload.get('entity_id')
+            # WEIRD: Instead of indexing a single entity, this will try
+            # pull a whole batch of them off the queue and do it at once.
+            for task in stage.get_tasks(limit=50):
+                entity_id = task.payload.get('entity_id')
                 entities.extend(aggregator.iterate(entity_id=entity_id))
-            # End
+            stage.mark_done(len(entities) - 1)
 
             for entity in entities:
                 log.debug("Index: %r", entity)
                 refresh_entity_id(entity.id)
-        else:
-            stage.progress.mark_pending(len(entities) - 1)
         index_entities(stage, collection, entities, sync=sync)
     finally:
         aggregator.close()
@@ -83,12 +80,12 @@ def index_entities(stage, collection, iterable, sync=False):
         tag_entity(entity)
         entities.append(entity)
         if len(entities) >= BULK_PAGE:
-            stage.progress.mark_finished(len(entities))
+            stage.report_finished(len(entities))
             index_bulk(collection, entities, job_id=stage.job.id, sync=sync)
             entities = []
 
     if len(entities):
-        stage.progress.mark_finished(len(entities))
+        stage.report_finished(len(entities))
         index_bulk(collection, entities, job_id=stage.job.id, sync=sync)
     refresh_collection(collection)
 
@@ -110,5 +107,4 @@ def bulk_write(collection, iterable, job_id=None, unsafe=False):
         if not unsafe:
             entity = remove_checksums(entity)
         entities.append(entity)
-    stage.progress.mark_pending(len(entities))
     index_entities(stage, collection, entities)

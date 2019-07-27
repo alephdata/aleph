@@ -1,7 +1,7 @@
 import click
 import logging
 from servicelayer.cache import get_redis
-from servicelayer.jobs import Job, JobStage as Stage
+from servicelayer.jobs import Job, Stage
 from servicelayer.archive.util import ensure_path
 
 from ingestors.manager import Manager
@@ -46,9 +46,9 @@ def ingest(path, dataset, languages=None):
     """Queue a set of files for ingest."""
     context = {'languages': languages}
     conn = get_redis()
-    job_id = Job.random_id()
-    queue = Stage(conn, Stage.INGEST, job_id, dataset)
-    manager = Manager(queue, context)
+    job = Job.create(conn, dataset)
+    stage = job.get_stage(Stage.INGEST)
+    manager = Manager(stage, context)
     path = ensure_path(path)
     if path is not None:
         if path.is_file():

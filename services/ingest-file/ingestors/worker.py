@@ -1,7 +1,6 @@
 import logging
 from followthemoney import model
 from servicelayer.worker import Worker
-from servicelayer.jobs import JobStage as Stage, Task
 
 from ingestors.manager import Manager
 

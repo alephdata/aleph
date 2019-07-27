@@ -120,7 +120,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
 
     def resolve_message_ids(self, entity):
         # https://cr.yp.to/immhf/thread.html
-        ctx = self.manager.queue.job.dataset.name
+        ctx = self.manager.stage.job.dataset.name
 
         for message_id in entity.get('messageId'):
             message_id = self._clean_message_id(message_id)

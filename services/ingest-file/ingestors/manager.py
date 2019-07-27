@@ -30,8 +30,8 @@ class Manager(object):
 
     MAGIC = magic.Magic(mime=True)
 
-    def __init__(self, queue, context):
-        self.queue = queue
+    def __init__(self, stage, context):
+        self.stage = stage
         self.context = context
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self.emitted = set()
@@ -47,7 +47,7 @@ class Manager(object):
     @property
     def dataset(self):
         if self._dataset is None:
-            dataset = self.queue.job.dataset.name
+            dataset = self.stage.job.dataset.name
             name = self.context.get('balkhash_name', dataset)
             self._dataset = balkhash.init(name)
         return self._dataset
@@ -60,7 +60,7 @@ class Manager(object):
 
     def make_entity(self, schema, parent=None):
         schema = model.get(schema)
-        prefix = self.queue.job.dataset.name
+        prefix = self.stage.job.dataset.name
         entity = model.make_entity(schema, key_prefix=prefix)
         self.make_child(parent, entity)
         return entity
@@ -104,7 +104,7 @@ class Manager(object):
 
     def queue_entity(self, entity):
         log.debug("Queue: %r", entity)
-        self.queue.queue_task(entity.to_dict(), self.context)
+        self.stage.queue(entity.to_dict(), self.context)
 
     def store(self, file_path, mime_type=None):
         file_path = ensure_path(file_path)
