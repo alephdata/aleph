@@ -11,19 +11,14 @@ log = logging.getLogger(__name__)
 class IngestWorker(Worker):
     """A long running task runner that uses Redis as a task queue"""
 
-    def dispatch_next(self, stage, context, entities):
-        next_stage = context.get('next_stage')
+    def dispatch_next(self, task, entities):
+        next_stage = task.context.get('next_stage')
         if next_stage is None:
             return
-        next_queue = Stage(stage.conn,
-                           next_stage,
-                           stage.job.id,
-                           stage.dataset,
-                           priority=stage.priority)
+        stage = task.job.get_stage(next_stage)
         log.info("Sending %s entities to: %s", len(entities), next_stage)
         for entity_id in entities:
-            task = Task(next_queue, {'entity_id': entity_id}, context)
-            task.queue()
+            stage.queue({'entity_id': entity_id}, task.context)
 
     def handle(self, task):
         manager = Manager(task.stage, task.context)
@@ -31,9 +26,4 @@ class IngestWorker(Worker):
         log.debug("Ingest: %r", entity)
         manager.ingest_entity(entity)
         manager.close()
-        self.dispatch_next(task.stage, task.context, manager.emitted)
-
-    def after_task(self, task):
-        def remove_job(task):
-            task.job.remove()
-        task.job.execute_if_done(remove_job, task)
+        self.dispatch_next(task, manager.emitted)

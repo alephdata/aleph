@@ -32,8 +32,6 @@ class Manager(object):
 
     def __init__(self, queue, context):
         self.queue = queue
-        # TODO: Probably a good idea to make context readonly since we are
-        # reusing it in child ingestors
         self.context = context
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self.emitted = set()
@@ -49,7 +47,8 @@ class Manager(object):
     @property
     def dataset(self):
         if self._dataset is None:
-            name = self.context.get('balkhash_name', self.queue.dataset)
+            dataset = self.queue.job.dataset.name
+            name = self.context.get('balkhash_name', dataset)
             self._dataset = balkhash.init(name)
         return self._dataset
 
@@ -61,7 +60,8 @@ class Manager(object):
 
     def make_entity(self, schema, parent=None):
         schema = model.get(schema)
-        entity = model.make_entity(schema, key_prefix=self.queue.dataset)
+        prefix = self.queue.job.dataset.name
+        entity = model.make_entity(schema, key_prefix=prefix)
         self.make_child(parent, entity)
         return entity
 
