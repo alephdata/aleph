@@ -1,7 +1,7 @@
 import logging
 from followthemoney import model
 from servicelayer.worker import Worker
-from servicelayer.jobs import JobStage as Stage
+from servicelayer.jobs import JobStage as Stage, Task
 
 from ingestors.manager import Manager
 
@@ -22,12 +22,18 @@ class IngestWorker(Worker):
                            priority=stage.priority)
         log.info("Sending %s entities to: %s", len(entities), next_stage)
         for entity_id in entities:
-            next_queue.queue_task({'entity_id': entity_id}, context)
+            task = Task(next_queue, {'entity_id': entity_id}, context)
+            task.queue()
 
-    def handle(self, stage, payload, context):
-        manager = Manager(stage, context)
-        entity = model.get_proxy(payload)
+    def handle(self, task):
+        manager = Manager(task.stage, task.context)
+        entity = model.get_proxy(task.payload)
         log.debug("Ingest: %r", entity)
         manager.ingest_entity(entity)
         manager.close()
-        self.dispatch_next(stage, context, manager.emitted)
+        self.dispatch_next(task.stage, task.context, manager.emitted)
+
+    def after_task(self, task):
+        def remove_job(task):
+            task.job.remove()
+        task.job.execute_if_done(remove_job, task)
