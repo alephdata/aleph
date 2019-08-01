@@ -5,7 +5,7 @@ from aleph.core import db
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
 from aleph.model import Match
-from aleph.queues import get_queue, OP_XREF
+from aleph.queues import get_stage, OP_XREF
 
 
 class XrefTestCase(TestCase):
@@ -17,7 +17,7 @@ class XrefTestCase(TestCase):
         self.coll_b = self.create_collection(creator=self.user, casefile=False)
         self.coll_c = self.create_collection(creator=self.user, casefile=False)
         db.session.commit()
-        self.stage = get_queue(self.coll_a, OP_XREF, job_id='unit_test')
+        self.stage = get_stage(self.coll_a, OP_XREF, job_id='unit_test')
 
         _, headers = self.login(foreign_id=self.user.foreign_id)
         url = '/api/2/entities'

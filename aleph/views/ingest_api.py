@@ -72,6 +72,7 @@ def ingest_upload(collection_id):
                                  content_hash=content_hash,
                                  meta=meta,
                                  uploader_id=request.authz.id)
+        collection.touch()
         db.session.commit()
         proxy = document.to_proxy()
         ingest_entity(collection, proxy, job_id=job_id, sync=sync)

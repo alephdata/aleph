@@ -1,6 +1,6 @@
 import logging
-from servicelayer.jobs import RateLimit, Progress
-from servicelayer.jobs import Job, JobStage as Stage
+from servicelayer.rate_limit import RateLimit
+from servicelayer.jobs import Job, Stage, Dataset
 
 from aleph.core import kv, settings
 from aleph.model import Document
@@ -24,17 +24,15 @@ def get_rate_limit(resource, limit=100, interval=60, unit=1):
     return RateLimit(kv, resource, limit=limit, interval=interval, unit=unit)
 
 
-def get_queue(collection, stage, job_id=None, priority=None):
-    dataset = collection.foreign_id
-    if priority is None:
-        priority = Stage.PRIO_MEDIUM if collection.casefile else Stage.PRIO_LOW
+def get_stage(collection, stage, job_id=None):
     job_id = job_id or Job.random_id()
-    return Stage(kv, stage, job_id, dataset, priority=priority)
+    job = Job(kv, collection.foreign_id, job_id)
+    return job.get_stage(stage)
 
 
 def queue_task(collection, stage, job_id=None, payload=None, context=None):
-    queue = get_queue(collection, stage, job_id=job_id)
-    queue.queue_task(payload or {}, context or {})
+    stage = get_stage(collection, stage, job_id=job_id)
+    stage.queue(payload or {}, context or {})
     if settings.EAGER:
         from aleph.worker import get_worker
         worker = get_worker()
@@ -42,20 +40,19 @@ def queue_task(collection, stage, job_id=None, payload=None, context=None):
 
 
 def get_status(collection):
-    return Progress.get_dataset_status(kv, collection.foreign_id)
+    return Dataset(kv, collection.foreign_id).get_status()
 
 
 def cancel_queue(collection):
-    Job.remove_dataset(kv, collection.foreign_id)
+    Dataset(kv, collection.foreign_id).cancel()
 
 
 def ingest_entity(collection, proxy, job_id=None, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
     if proxy.schema.is_a(Document.SCHEMA_FOLDER):
         index_proxy(collection, proxy, sync=sync)
-    priority = Stage.PRIO_HIGH if sync else None
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
-    queue = get_queue(collection, OP_INGEST, job_id=job_id, priority=priority)
+    stage = get_stage(collection, OP_INGEST, job_id=job_id)
     from aleph.logic.aggregator import get_aggregator_name
     context = {
         'languages': collection.languages,
@@ -63,4 +60,4 @@ def ingest_entity(collection, proxy, job_id=None, sync=False):
         'next_stage': OP_INDEX,
         'sync': sync
     }
-    queue.queue_task(proxy.to_dict(), context)
+    stage.queue(proxy.to_dict(), context)

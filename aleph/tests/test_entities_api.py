@@ -5,7 +5,7 @@ from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import db
 from aleph.model import Entity
-from aleph.queues import get_queue, OP_BULKLOAD
+from aleph.queues import get_stage, OP_BULKLOAD
 from aleph.logic.bulkload import bulk_load
 from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
@@ -298,8 +298,8 @@ class EntitiesApiTestCase(TestCase):
         yml_path = self.get_fixture_path('experts.yml')
         config = load_mapping_file(yml_path)
         coll = self.create_collection()
-        queue = get_queue(coll, OP_BULKLOAD)
-        bulk_load(queue, coll, config.get('experts'))
+        stage = get_stage(coll, OP_BULKLOAD)
+        bulk_load(stage, coll, config.get('experts'))
         _, headers = self.login(is_admin=True)
 
         query = '/api/2/entities?filter:schemata=Thing&q=Climate'

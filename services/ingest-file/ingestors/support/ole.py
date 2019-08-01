@@ -3,11 +3,12 @@ from pprint import pprint  # noqa
 from olefile import isOleFile, OleFileIO
 
 from ingestors.support.timestamp import TimestampSupport
+from ingestors.support.encoding import EncodingSupport
 
 log = logging.getLogger(__name__)
 
 
-class OLESupport(TimestampSupport):
+class OLESupport(TimestampSupport, EncodingSupport):
     """Provides helpers for Microsoft OLE files."""
 
     def decode_meta(self, meta, prop):
@@ -15,11 +16,8 @@ class OLESupport(TimestampSupport):
             value = getattr(meta, prop, None)
             if not isinstance(value, bytes):
                 return
-            try:
-                encoding = 'cp%s' % meta.codepage
-                return value.decode(encoding, 'replace')
-            except Exception:
-                return value.decode('utf-8', 'ignore')
+            encoding = 'cp%s' % meta.codepage
+            return self.decode_string(value, encoding)
         except Exception:
             log.warning("Could not read metadata: %s", prop)
 

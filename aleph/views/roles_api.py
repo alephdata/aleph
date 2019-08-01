@@ -37,7 +37,8 @@ def suggest():
 
 @blueprint.route('/api/2/roles/code', methods=['POST'])
 def create_code():
-    require(not request.authz.in_maintenance, settings.PASSWORD_LOGIN)
+    require(settings.PASSWORD_LOGIN)
+    require(not request.authz.in_maintenance)
     data = parse_request(RoleCodeCreateSchema)
     challenge_role(data)
     return jsonify({
@@ -48,9 +49,9 @@ def create_code():
 
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
-    require(not request.authz.in_maintenance, settings.PASSWORD_LOGIN)
+    require(settings.PASSWORD_LOGIN)
+    require(not request.authz.in_maintenance)
     data = parse_request(RoleCreateSchema)
-
     try:
         email = Role.SIGNATURE.loads(data.get('code'),
                                      max_age=Role.SIGNATURE_MAX_AGE)

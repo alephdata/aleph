@@ -79,7 +79,7 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             try:
                 for value in ensure_list(msg.get_all(header)):
                     values.append(value)
-            except (TypeError, IndexError) as exc:
+            except (TypeError, IndexError, AttributeError, ValueError) as exc:
                 log.warning("Failed to parse [%s]: %s", header, exc)
         return values
 
@@ -119,7 +119,8 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 return message_id
 
     def resolve_message_ids(self, entity):
-        ctx = self.manager.queue.dataset
+        # https://cr.yp.to/immhf/thread.html
+        ctx = self.manager.stage.job.dataset.name
 
         for message_id in entity.get('messageId'):
             message_id = self._clean_message_id(message_id)

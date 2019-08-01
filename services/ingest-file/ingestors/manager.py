@@ -1,6 +1,7 @@
 import magic
 import logging
 import balkhash
+from pprint import pprint  # noqa
 from tempfile import mkdtemp
 from banal import ensure_list
 from normality import stringify
@@ -29,10 +30,8 @@ class Manager(object):
 
     MAGIC = magic.Magic(mime=True)
 
-    def __init__(self, queue, context):
-        self.queue = queue
-        # TODO: Probably a good idea to make context readonly since we are
-        # reusing it in child ingestors
+    def __init__(self, stage, context):
+        self.stage = stage
         self.context = context
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self.emitted = set()
@@ -48,7 +47,8 @@ class Manager(object):
     @property
     def dataset(self):
         if self._dataset is None:
-            name = self.context.get('balkhash_name', self.queue.dataset)
+            dataset = self.stage.job.dataset.name
+            name = self.context.get('balkhash_name', dataset)
             self._dataset = balkhash.init(name)
         return self._dataset
 
@@ -60,7 +60,8 @@ class Manager(object):
 
     def make_entity(self, schema, parent=None):
         schema = model.get(schema)
-        entity = model.make_entity(schema, key_prefix=self.queue.dataset)
+        prefix = self.stage.job.dataset.name
+        entity = model.make_entity(schema, key_prefix=prefix)
         self.make_child(parent, entity)
         return entity
 
@@ -71,7 +72,6 @@ class Manager(object):
             child.add('ancestors', parent.id)
 
     def emit_entity(self, entity, fragment=None):
-        # from pprint import pprint
         # pprint(entity.to_dict())
         self.writer.put(entity.to_dict(), fragment)
         self.emitted.add(entity.id)
@@ -104,7 +104,7 @@ class Manager(object):
 
     def queue_entity(self, entity):
         log.debug("Queue: %r", entity)
-        self.queue.queue_task(entity.to_dict(), self.context)
+        self.stage.queue(entity.to_dict(), self.context)
 
     def store(self, file_path, mime_type=None):
         file_path = ensure_path(file_path)

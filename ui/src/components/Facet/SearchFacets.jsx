@@ -7,7 +7,7 @@ import './SearchFacets.scss';
 
 function SearchFacets(props) {
   const {
-    facets, query, result, updateQuery,
+    facets, query, result, updateQuery, isCollapsible,
   } = props;
   return (
     <ul className="SearchFacets bp3-large">
@@ -21,6 +21,7 @@ function SearchFacets(props) {
             label={facet.label}
             icon={facet.icon}
             defaultSize={facet.defaultSize}
+            isCollapsible={isCollapsible}
           />
         </li>
       ))}

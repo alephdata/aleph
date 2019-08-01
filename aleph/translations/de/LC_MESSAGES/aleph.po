@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-07-10 17:30+0200\n"
+"POT-Creation-Date: 2019-08-01 09:17+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.6.0\n"
+"Generated-By: Babel 2.7.0\n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -222,26 +222,26 @@ msgstr "Während der Suche ist ein Fehler aufgetreten."
 msgid "prefix filter is too short"
 msgstr "prefix-Filter ist zu kurz"
 
-#: aleph/views/roles_api.py:45
+#: aleph/views/roles_api.py:46
 msgid "To proceed, please check your email."
 msgstr "Prüfen sie bitte ihren E-Mail-Eingang um fortzufahren."
 
-#: aleph/views/roles_api.py:60
+#: aleph/views/roles_api.py:61
 msgid "Invalid code"
 msgstr "Ungültiger Code"
 
-#: aleph/views/roles_api.py:67
+#: aleph/views/roles_api.py:68
 msgid "Email is already registered"
 msgstr "Diese E-Mail ist bereits angemeldet"
 
 #: aleph/views/sessions_api.py:58 aleph/views/sessions_api.py:61
 msgid "Invalid user or password."
-msgstr ""
+msgstr "Der Nutzername oder das Passwort ist falsch."
 
-#: aleph/views/sessions_api.py:87 aleph/views/sessions_api.py:107
+#: aleph/views/sessions_api.py:87 aleph/views/sessions_api.py:106
 msgid "Authentication has failed."
-msgstr ""
+msgstr "Die Anmeldung ist fehlgeschlagen."
 
-#: aleph/views/util.py:47
+#: aleph/views/util.py:56
 msgid "Error during data validation"
 msgstr "Validierungsfehler"

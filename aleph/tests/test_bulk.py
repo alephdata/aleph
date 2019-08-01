@@ -3,7 +3,7 @@ from unittest import skip  # noqa
 from followthemoney.cli.util import load_mapping_file
 
 from aleph.logic.bulkload import bulk_load
-from aleph.queues import get_queue, OP_BULKLOAD
+from aleph.queues import get_stage, OP_BULKLOAD
 from aleph.tests.util import TestCase
 
 
@@ -12,7 +12,7 @@ class BulkLoadTestCase(TestCase):
     def setUp(self):
         super(BulkLoadTestCase, self).setUp()
         self.coll = self.create_collection()
-        self.queue = get_queue(self.coll, OP_BULKLOAD)
+        self.stage = get_stage(self.coll, OP_BULKLOAD)
 
     def test_load_sqlite(self):
         db_uri = self.get_fixture_path('kek.sqlite').as_uri()
@@ -20,7 +20,7 @@ class BulkLoadTestCase(TestCase):
         os.environ['ALEPH_TEST_BULK_DATABASE_URI'] = db_uri
         yml_path = self.get_fixture_path('kek.yml')
         config = load_mapping_file(yml_path)
-        bulk_load(self.queue, self.coll, config.get('kek'))
+        bulk_load(self.stage, self.coll, config.get('kek'))
 
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities?filter:schemata=Thing&q=friede+springer'
@@ -36,7 +36,7 @@ class BulkLoadTestCase(TestCase):
         os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
         yml_path = self.get_fixture_path('experts.yml')
         config = load_mapping_file(yml_path)
-        bulk_load(self.queue, self.coll, config.get('experts'))
+        bulk_load(self.stage, self.coll, config.get('experts'))
 
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities?filter:schemata=Thing&q=Greenfield'

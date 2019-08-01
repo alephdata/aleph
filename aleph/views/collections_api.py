@@ -80,6 +80,9 @@ def process(collection_id):
         'reset': get_flag('reset', True)
     }
     queue_task(collection, OP_PROCESS, job_id=get_session_id(), payload=data)
+    collection.touch()
+    db.session.commit()
+    refresh_collection(collection_id)
     return ('', 202)
 
 
@@ -96,6 +99,9 @@ def mapping(collection_id):
         except InvalidMapping as invalid:
             raise BadRequest(invalid)
     queue_task(collection, OP_BULKLOAD, job_id=get_session_id(), payload=data)
+    collection.touch()
+    db.session.commit()
+    refresh_collection(collection_id)
     return ('', 202)
 
 
@@ -113,7 +119,9 @@ def bulk(collection_id):
 
     entities = ensure_list(request.get_json(force=True))
     bulk_write(collection, entities, job_id=job_id, unsafe=unsafe)
-    refresh_collection(id)
+    collection.touch()
+    db.session.commit()
+    refresh_collection(collection_id)
     return ('', 204)
 
 

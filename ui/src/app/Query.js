@@ -139,6 +139,15 @@ class Query {
     return this.remove(`filter:${name}`, value);
   }
 
+  removeAllFilters() {
+    const state = _.cloneDeep(this.state);
+    const filters = this.filters();
+
+    filters.forEach((filterName) => { state[`filter:${filterName}`] = []; });
+
+    return new Query(this.path, state, this.context, this.queryName);
+  }
+
   clearFilter(name) {
     return this.clear(`filter:${name}`);
   }

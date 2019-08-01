@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-07-10T15:29:58.976Z\n"
+"POT-Creation-Date: 2019-08-01T07:17:44.991Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -214,6 +214,13 @@ msgstr "Abbrechen"
 msgid "Cancel the process"
 msgstr "Vorgang abbrechen"
 
+#. [search.screen.export_disabled]
+#. defaultMessage is:
+#. Cannot export more than 10,000 results at a time
+#: i18n/messages.json
+msgid "Cannot export more than 10,000 results at a time"
+msgstr "Es können jeweils nur 10,000 Resultate auf einmal exportiert werden"
+
 #. [case.description]
 #. defaultMessage is:
 #. Case files help you group and share the documents and data which belong to
@@ -312,12 +319,12 @@ msgstr "Wählen sie einen Nutzer"
 msgid "Choose files to upload..."
 msgstr "Wählen sie Dateien für den Upload"
 
-#. [search.facets.clear_filter]
+#. [queryFilters.clearAll]
 #. defaultMessage is:
-#. Clear this filter
+#. Clear all
 #: i18n/messages.json
-msgid "Clear this filter"
-msgstr "Filter entfernen"
+msgid "Clear all"
+msgstr "Alle entfernen"
 
 #. [footer.code]
 #. defaultMessage is:
@@ -1410,10 +1417,13 @@ msgstr "Mehr zeigen..."
 #. [password_auth.signin]
 #. defaultMessage is:
 #. Sign in
+#. [search.callout_message.button_text]
+#. defaultMessage is:
+#. Sign in
 #. [signup.title]
 #. defaultMessage is:
 #. Sign in
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sign in"
 msgstr "Anmelden"
 
@@ -1461,15 +1471,15 @@ msgstr "Größe"
 
 #. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users. Sign in to see all results
-#. you are authorised to access.
+#. Some sources are hidden from anonymous users. {signInButton} to see all
+#. results you are authorised to access.
 #: i18n/messages.json
 msgid ""
-"Some sources are hidden from anonymous users. Sign in to see all results you"
-" are authorised to access."
+"Some sources are hidden from anonymous users. {signInButton} to see all "
+"results you are authorised to access."
 msgstr ""
-"Manche Quellen sind anonymen Nutzern nicht zugänglich. Melden sie sich an um"
-" alle Daten zu sehen, zu denen sie Zugriff haben."
+"Einige Quellen sind anonymen Nutzern nicht zugänglich. {signInButton} um "
+"alle Resultate zu sehen, zu denen sie Zugang haben."
 
 #. [collection.info.source]
 #. defaultMessage is:
@@ -1972,13 +1982,6 @@ msgstr "keine Optionen"
 msgid "not:"
 msgstr "nicht:"
 
-#. [home.statistics.other]
-#. defaultMessage is:
-#. other {count}
-#: i18n/messages.json
-msgid "other {count}"
-msgstr "{count} andere"
-
 #. [infoMode.collection.entries]
 #. defaultMessage is:
 #. {count} entries
@@ -1986,12 +1989,40 @@ msgstr "{count} andere"
 msgid "{count} entries"
 msgstr "{count} Einträge"
 
+#. [home.statistics.territories]
+#. defaultMessage is:
+#. {count} more countries & territories
+#: i18n/messages.json
+msgid "{count} more countries & territories"
+msgstr "{count} weitere Länder und Regionen"
+
+#. [home.statistics.othertypes]
+#. defaultMessage is:
+#. {count} more entity types
+#: i18n/messages.json
+msgid "{count} more entity types"
+msgstr "{count} weitere Typen"
+
+#. [home.statistics.other]
+#. defaultMessage is:
+#. {count} more sources
+#: i18n/messages.json
+msgid "{count} more sources"
+msgstr "{count} weitere Quellen"
+
 #. [search.facets.filtersSelected]
 #. defaultMessage is:
 #. {count} selected
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} ausgewählt"
+
+#. [collection.status.remaining]
+#. defaultMessage is:
+#. {finished} of {total} completed
+#: i18n/messages.json
+msgid "{finished} of {total} completed"
+msgstr "{finished} von {total} erledigt"
 
 #. [search.screen.results]
 #. defaultMessage is:

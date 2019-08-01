@@ -19,16 +19,11 @@ def bulk_load(stage, collection, config):
     for query in queries:
         bulk_load_query(stage, collection, hash_data(query), query)
     queue_task(collection, OP_INDEX, job_id=stage.job.id)
-    stage.remove()
-    stage.sync()
 
 
 def bulk_load_query(stage, collection, query_id, query):
     namespace = Namespace(collection.foreign_id)
     mapping = model.make_mapping(query, key_prefix=collection.foreign_id)
-    records_total = len(mapping.source)
-    if records_total:
-        stage.progress.mark_pending(records_total)
     aggregator = get_aggregator(collection)
     writer = aggregator.bulk()
     entities_count = 0
@@ -40,12 +35,10 @@ def bulk_load_query(stage, collection, query_id, query):
             writer.put(entity, fragment=fragment)
 
         if idx > 0 and idx % 1000 == 0:
-            stage.progress.mark_finished(1000)
-            log.info("[%s] Loaded %s records (%s), %s entities...",
+            stage.report_finished(1000)
+            log.info("[%s] Loaded %s records, %s entities...",
                      collection.foreign_id,
-                     idx,
-                     records_total or 'streaming',
-                     entities_count)
+                     idx, entities_count)
     writer.flush()
     aggregator.close()
     log.info("[%s] Query done (%s entities)",

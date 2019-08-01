@@ -3,7 +3,7 @@ from aleph.model import Entity
 from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
-from aleph.queues import get_queue, OP_XREF
+from aleph.queues import get_stage, OP_XREF
 
 
 class XrefApiTestCase(TestCase):
@@ -100,10 +100,10 @@ class XrefApiTestCase(TestCase):
         index_entity(self.ent5)
         index_entity(self.ent6)
         index_entity(self.ent7)
-        self.queue = get_queue(self.residents, OP_XREF)
+        self.stage = get_stage(self.residents, OP_XREF)
 
     def test_summary(self):
-        xref_collection(self.queue, self.residents)
+        xref_collection(self.stage, self.residents)
         res = self.client.get('/api/2/collections/%s/xref' % self.obsidian.id)
         assert res.status_code == 403, res
 
@@ -135,7 +135,7 @@ class XrefApiTestCase(TestCase):
         assert 'Dabo Girls' in labels, res.json
 
     def test_csv(self):
-        xref_collection(self.queue, self.residents)
+        xref_collection(self.stage, self.residents)
         url = '/api/2/collections/%s/xref.csv' % self.obsidian.id
         res = self.client.get(url)
         assert res.status_code == 403, res
@@ -145,7 +145,7 @@ class XrefApiTestCase(TestCase):
         # assert res.status_code == 200, res
 
     def test_matches(self):
-        xref_collection(self.queue, self.residents)
+        xref_collection(self.stage, self.residents)
         # Not logged in
         match_dabo = self.client.get('/api/2/collections/%s/xref/%s' %
                                      (self.residents.id, self.dabo.id))
