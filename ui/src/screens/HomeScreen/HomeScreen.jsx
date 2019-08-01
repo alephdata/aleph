@@ -199,7 +199,7 @@ export class HomeScreen extends Component {
                   )}
                   seeMoreButtonText={restCount => (
                     <FormattedMessage
-                      id="home.statistics.other"
+                      id="home.statistics.othertypes"
                       defaultMessage="{count} more entity types"
                       values={{
                         count: restCount,
@@ -256,7 +256,7 @@ export class HomeScreen extends Component {
                   )}
                   seeMoreButtonText={restCount => (
                     <FormattedMessage
-                      id="home.statistics.other"
+                      id="home.statistics.territories"
                       defaultMessage="{count} more countries & territories"
                       values={{
                         count: restCount,

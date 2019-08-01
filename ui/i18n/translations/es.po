@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-07-10T15:29:58.976Z\n"
+"POT-Creation-Date: 2019-08-01T07:17:44.991Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -214,6 +214,13 @@ msgstr ""
 msgid "Cancel the process"
 msgstr ""
 
+#. [search.screen.export_disabled]
+#. defaultMessage is:
+#. Cannot export more than 10,000 results at a time
+#: i18n/messages.json
+msgid "Cannot export more than 10,000 results at a time"
+msgstr ""
+
 #. [case.description]
 #. defaultMessage is:
 #. Case files help you group and share the documents and data which belong to
@@ -309,12 +316,12 @@ msgstr "Elige un usuario"
 msgid "Choose files to upload..."
 msgstr ""
 
-#. [search.facets.clear_filter]
+#. [queryFilters.clearAll]
 #. defaultMessage is:
-#. Clear this filter
+#. Clear all
 #: i18n/messages.json
-msgid "Clear this filter"
-msgstr "Borrar este filtro"
+msgid "Clear all"
+msgstr ""
 
 #. [footer.code]
 #. defaultMessage is:
@@ -1394,10 +1401,13 @@ msgstr "Mostras más..."
 #. [password_auth.signin]
 #. defaultMessage is:
 #. Sign in
+#. [search.callout_message.button_text]
+#. defaultMessage is:
+#. Sign in
 #. [signup.title]
 #. defaultMessage is:
 #. Sign in
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sign in"
 msgstr "Iniciar sesión"
 
@@ -1445,12 +1455,12 @@ msgstr "Tamaño"
 
 #. [search.callout_message]
 #. defaultMessage is:
-#. Some sources are hidden from anonymous users. Sign in to see all results
-#. you are authorised to access.
+#. Some sources are hidden from anonymous users. {signInButton} to see all
+#. results you are authorised to access.
 #: i18n/messages.json
 msgid ""
-"Some sources are hidden from anonymous users. Sign in to see all results you"
-" are authorised to access."
+"Some sources are hidden from anonymous users. {signInButton} to see all "
+"results you are authorised to access."
 msgstr ""
 
 #. [collection.info.source]
@@ -1944,18 +1954,32 @@ msgstr ""
 msgid "not:"
 msgstr "no:"
 
-#. [home.statistics.other]
-#. defaultMessage is:
-#. other {count}
-#: i18n/messages.json
-msgid "other {count}"
-msgstr ""
-
 #. [infoMode.collection.entries]
 #. defaultMessage is:
 #. {count} entries
 #: i18n/messages.json
 msgid "{count} entries"
+msgstr ""
+
+#. [home.statistics.territories]
+#. defaultMessage is:
+#. {count} more countries & territories
+#: i18n/messages.json
+msgid "{count} more countries & territories"
+msgstr ""
+
+#. [home.statistics.othertypes]
+#. defaultMessage is:
+#. {count} more entity types
+#: i18n/messages.json
+msgid "{count} more entity types"
+msgstr ""
+
+#. [home.statistics.other]
+#. defaultMessage is:
+#. {count} more sources
+#: i18n/messages.json
+msgid "{count} more sources"
 msgstr ""
 
 #. [search.facets.filtersSelected]
@@ -1964,6 +1988,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} seleccionado"
+
+#. [collection.status.remaining]
+#. defaultMessage is:
+#. {finished} of {total} completed
+#: i18n/messages.json
+msgid "{finished} of {total} completed"
+msgstr ""
 
 #. [search.screen.results]
 #. defaultMessage is:
