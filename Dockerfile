@@ -28,6 +28,16 @@ COPY requirements-generic.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-generic.txt
 COPY requirements-toolkit.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-toolkit.txt
+RUN pip3 install --no-cache-dir Cython
+RUN pip3 install --no-cache-dir pyfasttext==0.4.6
+RUN python3 -m spacy download en \
+    && python3 -m spacy download es \
+    && python3 -m spacy download de \
+    && python3 -m spacy download fr \
+    && python3 -m spacy download pt \
+    && python3 -m spacy download it \
+    && python3 -m spacy download el \
+    && python3 -m spacy download nl
 
 # Install aleph
 COPY . /aleph
