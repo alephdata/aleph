@@ -19,9 +19,10 @@ def create_collection(data, role=None, sync=False):
     collection = Collection.create(data,
                                    creator=role,
                                    created_at=created_at)
-    publish(Events.CREATE_COLLECTION,
-        params={'collection': collection},
-        actor_id=role.id)
+    if collection.created_at == created_at:
+        publish(Events.CREATE_COLLECTION,
+            params={'collection': collection},
+            actor_id=role.id)
     db.session.commit()
     Authz.flush()
     refresh_collection(collection.id)
