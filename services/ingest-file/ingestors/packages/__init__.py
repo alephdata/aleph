@@ -42,6 +42,9 @@ class SingleFilePackageIngestor(PackageSupport, Ingestor):
         temp_file = self.make_work_file(file_name, prefix=temp_dir)
         self.unpack_file(file_path, temp_file)
 
+    def unpack_file(self, file_path, temp_file):
+        raise NotImplementedError
+
     @classmethod
     def match(cls, file_path, entity):
         if tarfile.is_tarfile(file_path):

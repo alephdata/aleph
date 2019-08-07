@@ -29,9 +29,13 @@ class ZipIngestor(PackageSupport, Ingestor):
                 log.debug('Detected filename encoding: %s', encoding)
                 for name in names:
                     try:
-                        fh = zf.open(name)
-                        self.extract_member(temp_dir, name, fh,
-                                            encoding=encoding)
+                        info = zf.getinfo(name)
+                        if info.is_dir():
+                            continue
+
+                        with zf.open(name) as fh:
+                            self.extract_member(temp_dir, name, fh,
+                                                encoding=encoding)
                     except Exception as ex:
                         # TODO: should this be a fatal error?
                         log.debug("Failed to unpack [%r]: %s", name, ex)
