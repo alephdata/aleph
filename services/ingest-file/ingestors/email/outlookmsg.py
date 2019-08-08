@@ -40,13 +40,15 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         except Exception:
             log.exception("Cannot parse Outlook-stored headers")
 
+        entity.add('subject', msg.subject)
+        entity.add('threadTopic', msg.getStringField('0070'))
         entity.add('encoding', msg.encoding)
         entity.add('bodyText', msg.body)
         entity.add('bodyHtml', msg.htmlBody)
-        entity.add('messageId', msg.message_id)
-        # entity.add('inReplyTo', msg.reply_to)
-        entity.add('subject', msg.subject)
-        entity.add('threadTopic', msg.getStringField('0070'))
+        entity.add('messageId', self.parse_message_ids(msg.message_id))
+        
+        if not entity.has('inReplyTo'):
+            entity.add('inReplyTo', self.parse_references(msg.references, []))
 
         try:
             date = parsedate_to_datetime(msg.date).isoformat()
