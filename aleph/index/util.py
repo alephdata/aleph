@@ -73,6 +73,11 @@ def unpack_result(res):
         data['highlight'] = []
         for key, value in res.get('highlight', {}).items():
             data['highlight'].extend(value)
+
+    properties = data.get('properties', [])
+    props_to_del = [prop for prop in properties if ':' in prop]
+    for prop in props_to_del:
+        properties.pop(prop)
     return data
 
 

@@ -27,6 +27,7 @@ class Query(object):
         'label': 'label.kw',
         'name': 'name.kw',
         'score': '_score',
+        'properties.index': 'properties.index:num',
     }
     SORT_DEFAULT = ['_score']
 

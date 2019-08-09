@@ -3,6 +3,7 @@ import fingerprints
 from pprint import pprint  # noqa
 from banal import ensure_list
 from followthemoney import model
+from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es, cache
@@ -156,6 +157,17 @@ def format_proxy(proxy, collection, job_id=None):
     data['updated_at'] = collection.updated_at
     for updated_at in properties.pop('indexUpdatedAt', []):
         data['updated_at'] = updated_at
+
+    # integer casting
+    extra_props = {}
+    for prop in properties:
+        prop = proxy._get_prop(prop)
+        if prop.type in (registry.number, registry.date):
+            num_sub_prop = "%s:num" % prop.name
+            vals = ensure_list(properties.get(prop.name, []))
+            num_vals = [prop.type._cast_num(v) for v in vals]
+            extra_props[num_sub_prop] = num_vals
+    data['properties'].update(extra_props)
 
     # pprint(data)
     entity_id = data.pop('id')
