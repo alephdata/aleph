@@ -1,5 +1,5 @@
 banal>=0.4.2
-normality>=1.0.0
+normality>=1.0.1
 pantomime>=0.3.3
 servicelayer[google]==1.8.1
 servicelayer[amazon]==1.8.1

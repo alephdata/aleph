@@ -46,6 +46,6 @@ class MboxFileIngestor(RFC822Ingestor, TempFileSupport):
             with open(file_path, 'rb') as fh:
                 if fh.read(len(cls.MAGIC)) == cls.MAGIC:
                     mbox = mailbox.mbox(file_path)
-                    for msg in mbox:
+                    for _ in mbox:
                         return cls.SCORE
         return score
