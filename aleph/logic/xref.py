@@ -8,7 +8,6 @@ from aleph.core import db, es
 from aleph.model import Match
 from aleph.queues import queue_task, OP_XREF_ITEM
 from aleph.index.entities import get_entity, iter_entities, entities_by_ids
-from aleph.index.entities import count_entities
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
