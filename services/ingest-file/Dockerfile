@@ -73,7 +73,8 @@ RUN apt-get -qq -y update \
 
 # Enable non-free archive for `unrar`.
 # RUN echo "deb http://http.us.debian.org/debian stretch non-free" >/etc/apt/sources.list.d/nonfree.list
-RUN apt-get -q -y install build-essential locales ca-certificates \
+RUN apt-get -qq -y update \
+    && apt-get -q -y install build-essential locales ca-certificates \
         # python deps (mostly to install their dependencies)
         python3-pip python3-dev python3-pil python3-tesserocr \
         # libraries
