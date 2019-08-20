@@ -1,118 +1,25 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
 import { throttle } from 'lodash';
 import queryString from 'query-string';
-import classNames from 'classnames';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import getEntityLink from 'src/util/getEntityLink';
 import { PagingButtons } from 'src/components/Toolbar';
 import { SectionLoading } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
-import TextViewer from 'src/viewers/TextViewer';
+import PdfViewerSearch from 'src/viewers/PdfViewerSearch';
+import PdfViewerPage from 'src/viewers/PdfViewerPage';
 
 import './PdfViewer.scss';
 
 
 export class PdfViewer extends Component {
-  static TextMode(props) {
-    const { document, result, page } = props;
-    return result.total > 0 && (
-    <React.Fragment>
-      <PagingButtons document={document} numberOfPages={result.total} />
-      <TextViewer document={result.results[page - 1]} noStyle />
-    </React.Fragment>
-    );
-  }
-
-  static SearchMode(props) {
-    const { result, getResultLink, page } = props;
-    return (
-
-      <div className="pages">
-        {result.total === 0 && (
-          <div className="bp3-callout bp3-intent-warning bp3-icon-search">
-            <FormattedMessage
-              id="document.search.no_match"
-              defaultMessage="No page within this document matches your search."
-            />
-          </div>
-        )}
-        <ul>
-          {result.results.map(res => (
-            <li key={`page-${res.id}`}>
-              <p>
-                <Link
-                  to={getResultLink(res)}
-                  className={classNames({ active: page === res.index })}
-                >
-                  <span className="bp3-icon-document" />
-                  {' '}
-                  {' '}
-Page
-                  {res.getProperty('index').toString()}
-                </Link>
-              </p>
-              <p>
-                {res.highlight !== undefined && (
-                  <span dangerouslySetInnerHTML={{ __html: res.highlight.join('  …  ') }} />
-                )}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
-  static PDFMode(props) {
-    const {
-      document, page,
-      onDocumentLoad,
-      width, numPages, components: {
-        Document,
-        Page,
-      },
-    } = props;
-
-    return (
-      <React.Fragment>
-        {numPages !== null && numPages > 0 && (
-        <PagingButtons document={document} numberOfPages={numPages} />
-        )}
-        <div>
-          <Document
-            renderAnnotations
-            file={document.links.pdf || document.links.file}
-            loading={<SectionLoading />}
-            onLoadSuccess={onDocumentLoad}
-          >
-            {/*
-                  Only render Page when width has been set and numPages has been figured out.
-                  This limits flashing / visible resizing when displaying page for the first time.
-              */}
-            {width !== null && numPages > 0 && (
-            <Page
-              pageNumber={page}
-              className="page"
-              width={width}
-            />
-            )}
-          </Document>
-        </div>
-      </React.Fragment>
-    );
-  }
-
   constructor(props) {
     super(props);
     this.state = {
       width: null,
-      numPages: 0,
       components: {
         Document: SectionLoading,
         Page: SectionLoading,
@@ -120,7 +27,6 @@ Page
     };
     this.onDocumentLoad = this.onDocumentLoad.bind(this);
     this.onResize = this.onResize.bind(this);
-    this.getResultLink = this.getResultLink.bind(this);
   }
 
   componentDidMount() {
@@ -131,7 +37,7 @@ Page
   }
 
   componentDidUpdate(prevProps) {
-    const { document, page, query } = this.props;
+    const { countQuery } = this.props;
     if (this.state.width === null) {
       this.onResize();
     }
@@ -141,10 +47,7 @@ Page
         this.onResize();
       }, 350);
     }
-    if (!query.sameAs(prevProps.query)) {
-      this.fetchPage();
-    }
-    if (document.id !== prevProps.document.id || page !== prevProps.page) {
+    if (!countQuery.sameAs(prevProps.countQuery)) {
       this.fetchPage();
     }
   }
@@ -154,8 +57,7 @@ Page
     window.removeEventListener('resize', throttle(this.onResize, 500));
   }
 
-  onDocumentLoad(pdfInfo) {
-    this.setState({ numPages: pdfInfo.numPages });
+  onDocumentLoad() {
     // Handle a resize event (to check document width) after loading
     // Note: onDocumentLoad actualy happens *before* rendering, but the
     // rendering calls happen a bit too often as we don't have sophisticated
@@ -190,16 +92,10 @@ Page
     }
   }
 
-  getResultLink(result) {
-    const { document, activeMode } = this.props;
-    const path = getEntityLink(document);
-    return `${path}#page=${result.getProperty('index').toString()}&mode=${activeMode}`;
-  }
-
   fetchPage() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryEntities({ query });
+    const { countQuery, countResult } = this.props;
+    if (countResult.shouldLoad) {
+      this.props.queryEntities({ query: countQuery });
     }
   }
 
@@ -208,19 +104,49 @@ Page
       .then(components => this.setState({ components }));
   }
 
+  renderPdf() {
+    const {
+      document, page, numPages,
+    } = this.props;
+    const { width } = this.state;
+    const { Document, Page } = this.state.components;
+    return (
+      <React.Fragment>
+        {numPages !== null && numPages > 0 && (
+          <PagingButtons document={document} numberOfPages={numPages} />
+        )}
+        <div>
+          <Document
+            renderAnnotations
+            file={document.links.pdf || document.links.file}
+            loading={<SectionLoading />}
+            onLoadSuccess={this.onDocumentLoad}
+          >
+            {/*
+                  Only render Page when width has been set and numPages has been figured out.
+                  This limits flashing / visible resizing when displaying page for the first time.
+              */}
+            {width !== null && numPages > 0 && (
+            <Page
+              pageNumber={page}
+              className="page"
+              width={width}
+            />
+            )}
+          </Document>
+        </div>
+      </React.Fragment>
+    );
+  }
 
   render() {
     const {
-      document, activeMode, page, result, isSearch,
+      document, activeMode, baseQuery, page, queryText, numPages,
     } = this.props;
-    const { numPages } = this.state;
-    const isLoading = (result.isLoading || result.shouldLoad)
-      || (isSearch && result.total === undefined);
     if (document.id === undefined) {
       return null;
     }
-
-    if (isLoading) {
+    if (numPages === undefined || numPages === null) {
       return <SectionLoading />;
     }
     return (
@@ -228,32 +154,22 @@ Page
         <div className="outer">
           <div id="PdfViewer" className="inner">
             <div className="document">
-              {isSearch ? (
-                <PdfViewer.SearchMode
-                  result={result}
-                  page={page}
-                  getResultLink={this.getResultLink}
-                />
-              )
-                : ((activeMode === 'text' && (
-                <PdfViewer.TextMode
-                  result={result}
-                  document={document}
-                  page={page}
-                />
-                ))
-                  || (activeMode === 'view' && (
-                    <PdfViewer.PDFMode
-                      document={document}
-                      page={page}
-                      onDocumentLoad={this.onDocumentLoad}
-                      width={this.state.width}
-                      numPages={numPages}
-                      components={this.state.components}
-                    />
-                  ))
-                )
-              }
+              <PdfViewerSearch
+                document={document}
+                activeMode={activeMode}
+                queryText={queryText}
+                baseQuery={baseQuery}
+              >
+                {activeMode === 'text' && (
+                  <PdfViewerPage
+                    document={document}
+                    page={page}
+                    numPages={numPages}
+                    baseQuery={baseQuery}
+                  />
+                )}
+                {activeMode === 'view' && this.renderPdf()}
+              </PdfViewerSearch>
             </div>
           </div>
         </div>
@@ -263,33 +179,28 @@ Page
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { document, location, queryText } = ownProps;
+  const { document, location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
-  let query = Query.fromLocation('entities', location, {}, 'document')
+  const baseQuery = Query.fromLocation('entities', location, {}, 'document')
     .setFilter('properties.document', document.id)
-    .setFilter('schema', 'Page')
-    .sortBy('properties.index', 'asc');
-  if (queryText.length > 0) {
-    query = query.setString('q', queryText)
-      .set('highlight', true)
-      .set('highlight_count', 10)
-      .set('highlight_length', 120)
-      .clearFilter('properties.index')
-      .clear('limit')
-      .clear('offset');
-  }
-
+    .setFilter('schema', 'Page');
+  const countQuery = baseQuery
+    .setString('q', undefined)
+    .offset(0)
+    .limit(0);
+  const countResult = selectEntitiesResult(state, countQuery);
+  const numPages = countResult.total;
   return {
-    result: selectEntitiesResult(state, query),
-    isSearch: !!query.getString('q'),
     page,
-    query,
+    numPages,
+    baseQuery,
+    countQuery,
+    countResult,
   };
 };
-const mapDispatchToProps = { queryEntities };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
 )(PdfViewer);

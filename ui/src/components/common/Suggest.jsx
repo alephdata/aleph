@@ -12,7 +12,6 @@ import { QueryList } from '@blueprintjs/select/lib/esm/components/query-list/que
 export class Suggest extends React.PureComponent {
   static displayName = `${DISPLAYNAME_PREFIX}.Suggest`;
 
-
   static defaultProps = {
     closeOnSelect: true,
     openOnKeyDown: false,
