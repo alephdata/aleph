@@ -2,7 +2,7 @@ FROM ubuntu:19.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
-    && apt-get -qq -y install build-essential locales \
+    && apt-get -q -y install build-essential locales \
         ca-certificates postgresql-client \
         python3-pip python3-dev python3-icu python3-psycopg2 \
         python3-lxml python3-crypto \
