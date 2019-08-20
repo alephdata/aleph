@@ -165,7 +165,7 @@ def format_proxy(proxy, collection, job_id=None):
         if prop.type in (registry.number, registry.date):
             num_sub_prop = "%s:num" % prop.name
             vals = ensure_list(properties.get(prop.name, []))
-            num_vals = [prop.type._cast_num(v) for v in vals]
+            num_vals = [prop.type.to_number(v) for v in vals]
             extra_props[num_sub_prop] = num_vals
     data['properties'].update(extra_props)
 
