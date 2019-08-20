@@ -1,13 +1,10 @@
-import io
 import os
 import logging
 import requests
 import zipstream
+from io import BytesIO
 from followthemoney import model
-from followthemoney.export.excel import (
-    get_workbook, write_entity as write_entity_excel,
-    get_workbook_content,
-)
+from followthemoney.export.excel import ExcelExporter
 
 from aleph.core import archive
 from aleph.logic import resolver
@@ -42,19 +39,14 @@ def export_entities(request, result):
         entities.append(model.get_proxy(entity))
     resolver.resolve(result)
     zip_archive = zipstream.ZipFile()
-    workbook = get_workbook()
+    exporter = ExcelExporter(None, extra=EXTRA_HEADERS)
     for entity in entities:
         collection_id = entity.context.get('collection_id')
         collection = resolver.get(result, Collection, collection_id)
-        fields = {
-            'url': entity_url(entity.id),
-            'collection': collection.get('label'),
-        }
-        write_entity_excel(workbook, entity,
-                           extra_fields=fields,
-                           extra_headers=EXTRA_HEADERS)
+        extra = [entity_url(entity.id), collection.get('label')]
+        exporter.write(entity, extra=extra)
         write_document(zip_archive, collection, entity)
-    content = io.BytesIO(get_workbook_content(workbook))
-    zip_archive.write_iter('export.xlsx', content)
+    content = exporter.get_bytes()
+    zip_archive.write_iter('Export.xlsx', BytesIO(content))
     for chunk in zip_archive:
         yield chunk
