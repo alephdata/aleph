@@ -29,6 +29,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 babel = Babel()
+talisman = Talisman()
 
 
 def create_app(config={}):
@@ -60,11 +61,11 @@ def create_app(config={}):
         'payment': NONE,
         'usb': NONE
     }
-    Talisman(app,
-             force_https=settings.FORCE_HTTPS,
-             strict_transport_security=settings.FORCE_HTTPS,
-             feature_policy=feature_policy,
-             content_security_policy=settings.CONTENT_POLICY)
+    talisman.init_app(app,
+                      force_https=settings.FORCE_HTTPS,
+                      strict_transport_security=settings.FORCE_HTTPS,
+                      feature_policy=feature_policy,
+                      content_security_policy=settings.CONTENT_POLICY)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
