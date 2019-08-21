@@ -1,7 +1,6 @@
 import logging
 from msglite import Message
 from olefile import isOleFile
-from email.parser import Parser
 from normality import stringify
 from followthemoney import model
 from email.utils import parsedate_to_datetime
@@ -32,7 +31,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
             msg = Message(file_path)
         except Exception as exc:
             raise ProcessingException("Cannot open message file.") from exc
-        
+
         self.extract_olefileio_metadata(msg, entity)
 
         try:
@@ -46,14 +45,14 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         entity.add('bodyText', msg.body)
         entity.add('bodyHtml', msg.htmlBody)
         entity.add('messageId', self.parse_message_ids(msg.message_id))
-        
+
         if not entity.has('inReplyTo'):
             entity.add('inReplyTo', self.parse_references(msg.references, []))
 
         try:
             date = parsedate_to_datetime(msg.date).isoformat()
             entity.add('date', date)
-        except Exception as exc:
+        except Exception:
             log.warning("Could not parse date: %s", msg.date)
 
         # sender name and email
@@ -61,7 +60,8 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         self.apply_identities(entity, sender, 'emitters', 'sender')
 
         # received by
-        sender = self.get_identity(msg.getStringField('0040'), msg.getStringField('0076'))
+        sender = self.get_identity(msg.getStringField('0040'),
+                                   msg.getStringField('0076'))
         self.apply_identities(entity, sender, 'emitters')
 
         froms = self.get_identities(msg.getStringField('1046'))
@@ -73,7 +73,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
         ccs = self.get_identities(msg.cc)
         self.apply_identities(entity, ccs, 'recipients', 'cc')
 
-        bccs = self.get_identities(msg.getStringField('0E02'))
+        bccs = self.get_identities(msg.bcc)
         self.apply_identities(entity, bccs, 'recipients', 'bcc')
 
         self.resolve_message_ids(entity)
