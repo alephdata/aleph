@@ -1,12 +1,8 @@
 from servicelayer.jobs import Dataset
 
-from aleph.core import kv, cache
+from aleph.core import kv
 
 
 def get_active_collection_status():
-    key = cache.key('dashboard', 'collection', 'status')
-    data = cache.get_complex(key)
-    if data is None:
-        data = Dataset.get_active_dataset_status(kv)
-        cache.set_complex(key, data, expire=120)
+    data = Dataset.get_active_dataset_status(kv)
     return data

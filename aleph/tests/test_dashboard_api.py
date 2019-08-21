@@ -12,7 +12,8 @@ class DashboardApiTestCase(TestCase):
         _, headers = self.login()
         res = self.client.get('/api/2/dashboard',
                               headers=headers)
-        assert res.status_code == 403, res
+        assert res.status_code == 200, res
+        assert res.json.get('total') == 0, res.json
         _, headers = self.login(is_admin=True)
         res = self.client.get('/api/2/dashboard',
                               headers=headers)
