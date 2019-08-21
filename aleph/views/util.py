@@ -151,11 +151,16 @@ def normalize_href(href, base_url):
 def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
     """Serialize to JSON and also dump from the given schema."""
     data = encoder().encode(obj)
+    mimetype = 'application/json'
     if 'callback' in request.args:
         cb = request.args.get('callback')
         data = '%s && %s(%s)' % (cb, cb, data)
-    return Response(data, headers=headers, status=status,
-                    mimetype='application/json')
+        # mime cf. https://stackoverflow.com/questions/24528211/
+        mimetype = 'application/javascript'
+    return Response(data,
+                    headers=headers,
+                    status=status,
+                    mimetype=mimetype)
 
 
 def stream_ijson(iterable, encoder=JSONEncoder):
