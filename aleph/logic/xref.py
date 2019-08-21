@@ -3,15 +3,16 @@ from pprint import pprint  # noqa
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.compare import compare
+from followthemoney.export.excel import ExcelWriter
 
 from aleph.core import db, es
-from aleph.model import Match
+from aleph.model import Match, Collection
+from aleph.logic import resolver
 from aleph.queues import queue_task, OP_XREF_ITEM
 from aleph.index.entities import get_entity, iter_entities, entities_by_ids
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
-from aleph.index.collections import get_collection
 from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
 
@@ -90,24 +91,27 @@ def _format_country(proxy):
     return ', '.join(countries)
 
 
-def _iter_match_batch(batch):
+def _iter_match_batch(stub, sheet, batch):
     matchable = [s.name for s in model if s.matchable]
     entities = set()
     for match in batch:
         entities.add(match.entity_id)
         entities.add(match.match_id)
+        resolver.queue(stub, Collection, match.match_collection_id)
 
+    resolver.resolve(stub)
     entities = entities_by_ids(list(entities), schemata=matchable)
     entities = {e.get('id'): e for e in entities}
+
     for obj in batch:
         entity = entities.get(str(obj.entity_id))
         match = entities.get(str(obj.match_id))
-        collection = get_collection(obj.match_collection_id)
+        collection = resolver.get(stub, Collection, obj.match_collection_id)
         if entity is None or match is None or collection is None:
             continue
         eproxy = model.get_proxy(entity)
         mproxy = model.get_proxy(match)
-        yield (
+        sheet.append([
             obj.score,
             eproxy.caption,
             _format_date(eproxy),
@@ -118,10 +122,10 @@ def _iter_match_batch(batch):
             _format_country(mproxy),
             entity_url(eproxy.id),
             entity_url(mproxy.id),
-        )
+        ])
 
 
-def export_matches_csv(collection_id, authz):
+def export_matches(collection_id, authz):
     """Export the top N matches of cross-referencing for the given collection
     to an Excel formatted export."""
     collections = authz.collections(authz.READ)
@@ -129,7 +133,8 @@ def export_matches_csv(collection_id, authz):
     dq = dq.filter(Match.collection_id == collection_id)
     dq = dq.filter(Match.match_collection_id.in_(collections))
     dq = dq.order_by(Match.score.desc())
-    yield [
+    excel = ExcelWriter()
+    headers = [
         'Score',
         'Entity Name',
         'Entity Date',
@@ -141,11 +146,13 @@ def export_matches_csv(collection_id, authz):
         'Entity Link',
         'Candidate Link',
     ]
+    sheet = excel.make_sheet('Cross-reference', headers)
     batch = []
-    for match in dq.yield_per(BULK_PAGE):
+    for match in dq.yield_per(BULK_PAGE * 10):
         batch.append(match)
         if len(batch) >= BULK_PAGE:
-            yield from _iter_match_batch(batch)
+            _iter_match_batch(excel, sheet, batch)
             batch = []
     if len(batch):
-        yield from _iter_match_batch(batch)
+        _iter_match_batch(excel, sheet, batch)
+    return excel.get_bytesio()

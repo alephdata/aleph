@@ -2,7 +2,6 @@ import os
 import logging
 import requests
 import zipstream
-from io import BytesIO
 from followthemoney import model
 from followthemoney.export.excel import ExcelExporter
 
@@ -46,7 +45,7 @@ def export_entities(request, result):
         extra = [entity_url(entity.id), collection.get('label')]
         exporter.write(entity, extra=extra)
         write_document(zip_archive, collection, entity)
-    content = exporter.get_bytes()
-    zip_archive.write_iter('Export.xlsx', BytesIO(content))
+    content = exporter.get_bytesio()
+    zip_archive.write_iter('Export.xlsx', content)
     for chunk in zip_archive:
         yield chunk

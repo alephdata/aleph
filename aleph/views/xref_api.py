@@ -1,16 +1,16 @@
 from banal import ensure_list
-from flask import Blueprint, request, stream_with_context
+from flask import Blueprint, request, send_file
 
 from aleph.model import Match
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.logic.xref import export_matches_csv
+from aleph.logic.xref import export_matches
 from aleph.views.serializers import MatchSerializer, MatchCollectionsSerializer
 from aleph.views.forms import XrefSchema
 from aleph.queues import queue_task, OP_XREF
-from aleph.views.util import get_db_collection, jsonify, stream_csv
+from aleph.views.util import get_db_collection, jsonify
 from aleph.views.util import parse_request
 
-
+XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'  # noqa
 blueprint = Blueprint('xref_api', __name__)
 
 
@@ -44,8 +44,12 @@ def generate(collection_id):
     return jsonify({'status': 'accepted'}, status=202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/xref.csv')
-def csv_export(collection_id):
+@blueprint.route('/api/2/collections/<int:collection_id>/xref/export')
+def export(collection_id):
     collection = get_db_collection(collection_id, request.authz.READ)
-    matches = export_matches_csv(collection.id, request.authz)
-    return stream_csv(stream_with_context(matches))
+    buffer = export_matches(collection.id, request.authz)
+    file_name = '%s - Crossreference.xlsx' % collection.label
+    return send_file(buffer,
+                     mimetype=XLSX_MIME,
+                     as_attachment=True,
+                     attachment_filename=file_name)
