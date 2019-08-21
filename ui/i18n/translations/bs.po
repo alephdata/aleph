@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-08-01T07:17:44.991Z\n"
+"POT-Creation-Date: 2019-08-21T08:11:22.914Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -586,9 +586,9 @@ msgstr "Preuzmi"
 
 #. [xref.download]
 #. defaultMessage is:
-#. Download matches as CSV
+#. Download matches
 #: i18n/messages.json
-msgid "Download matches as CSV"
+msgid "Download matches"
 msgstr ""
 
 #. [document.download.tooltip]
@@ -968,13 +968,6 @@ msgstr "Nema sadržaja."
 msgid "No options"
 msgstr "Nema opcija"
 
-#. [document.search.no_match]
-#. defaultMessage is:
-#. No page within this document matches your search.
-#: i18n/messages.json
-msgid "No page within this document matches your search."
-msgstr "Nijedna stranica unutar ovog dokumenta ne odgovara Vašoj pretrazi."
-
 #. [document.viewer.no_viewer]
 #. defaultMessage is:
 #. No preview is available for this document
@@ -998,6 +991,13 @@ msgstr "Nema rezultata."
 #: i18n/messages.json i18n/messages.json
 msgid "No search results"
 msgstr "Nema rezultata pretrage"
+
+#. [document.search.no_match]
+#. defaultMessage is:
+#. No single page within this document matches all your search terms.
+#: i18n/messages.json
+msgid "No single page within this document matches all your search terms."
+msgstr ""
 
 #. [sources.index.none]
 #. defaultMessage is:
@@ -1066,6 +1066,13 @@ msgstr "Drugo"
 #: i18n/messages.json
 msgid "Page {currentPage} of {numberOfPages}"
 msgstr "Stranica {currentPage} od {numberOfPages}"
+
+#. [document.pdf.search.page]
+#. defaultMessage is:
+#. Page {page}
+#: i18n/messages.json
+msgid "Page {page}"
+msgstr ""
 
 #. [password_auth.password]
 #. defaultMessage is:
