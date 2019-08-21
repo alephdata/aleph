@@ -9,7 +9,7 @@ class TempFileSupport(object):
 
     def make_empty_directory(self):
         directory_path = self.manager.work_path.joinpath(uuid4().hex)
-        directory_path.mkdir()
+        directory_path.mkdir(parents=True, exist_ok=True)
         return directory_path
 
     def make_work_file(self, file_name, prefix=None):

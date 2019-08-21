@@ -29,7 +29,7 @@ export class CollectionXrefIndexMode extends React.PureComponent {
     }
 
     const linkPath = `${getCollectionLink(collection)}/xref/`;
-    const csvPath = collection.links.xref_csv;
+    const exportPath = collection.links.xref_export;
     return (
       <section className="CollectionXrefTable">
         <table className="data-table">
@@ -55,11 +55,11 @@ export class CollectionXrefIndexMode extends React.PureComponent {
             <tr>
               <th colSpan={2}>
                 {xrefIndex.total && (
-                  <a href={csvPath} download>
+                  <a href={exportPath} download>
                     <Icon icon="download" />
                     <FormattedMessage
                       id="xref.download"
-                      defaultMessage="Download matches as CSV"
+                      defaultMessage="Download matches"
                     />
                   </a>
                 )}

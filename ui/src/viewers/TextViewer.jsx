@@ -9,7 +9,7 @@ import { fetchDocumentContent } from 'src/actions';
 import './TextViewer.scss';
 
 class TextViewer extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     this.fetchIfNeeded();
   }
 

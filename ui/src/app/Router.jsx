@@ -23,7 +23,7 @@ const EntityScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/scree
 
 
 class Router extends Component {
-  componentWillMount() {
+  componentDidMount() {
     const { metadata, fetchMetadata } = this.props;
     if (!metadata.app) {
       fetchMetadata();

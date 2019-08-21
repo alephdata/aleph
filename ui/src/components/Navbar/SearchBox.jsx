@@ -17,7 +17,7 @@ const ICON_EXISTING_SUGGEST = undefined;
 
 
 class SearchBox extends PureComponent {
-  componentWillMount() {
+  componentDidMount() {
     const {
       queryLogs, session, query,
     } = this.props;

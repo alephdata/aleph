@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-08-01T07:17:44.991Z\n"
+"POT-Creation-Date: 2019-08-21T08:11:22.914Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -219,7 +219,7 @@ msgstr "Отменить процесс"
 #. Cannot export more than 10,000 results at a time
 #: i18n/messages.json
 msgid "Cannot export more than 10,000 results at a time"
-msgstr ""
+msgstr "За один раз можно экспортировать не более 10.000 записей"
 
 #. [case.description]
 #. defaultMessage is:
@@ -324,7 +324,7 @@ msgstr "Выберите файлы для загрузки"
 #. Clear all
 #: i18n/messages.json
 msgid "Clear all"
-msgstr ""
+msgstr "Очистить все"
 
 #. [footer.code]
 #. defaultMessage is:
@@ -590,10 +590,10 @@ msgstr "Скачать"
 
 #. [xref.download]
 #. defaultMessage is:
-#. Download matches as CSV
+#. Download matches
 #: i18n/messages.json
-msgid "Download matches as CSV"
-msgstr "Сохранить в CSV"
+msgid "Download matches"
+msgstr ""
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -978,13 +978,6 @@ msgstr "Текст письма отсутствует"
 msgid "No options"
 msgstr "Варианты отсутствуют"
 
-#. [document.search.no_match]
-#. defaultMessage is:
-#. No page within this document matches your search.
-#: i18n/messages.json
-msgid "No page within this document matches your search."
-msgstr "На страницах документа совпадений не найдено."
-
 #. [document.viewer.no_viewer]
 #. defaultMessage is:
 #. No preview is available for this document
@@ -1008,6 +1001,13 @@ msgstr "Результатов нет."
 #: i18n/messages.json i18n/messages.json
 msgid "No search results"
 msgstr "Ничего не найдено"
+
+#. [document.search.no_match]
+#. defaultMessage is:
+#. No single page within this document matches all your search terms.
+#: i18n/messages.json
+msgid "No single page within this document matches all your search terms."
+msgstr ""
 
 #. [sources.index.none]
 #. defaultMessage is:
@@ -1076,6 +1076,13 @@ msgstr "Прочее"
 #: i18n/messages.json
 msgid "Page {currentPage} of {numberOfPages}"
 msgstr "Страница {currentPage} из {numberOfPages}"
+
+#. [document.pdf.search.page]
+#. defaultMessage is:
+#. Page {page}
+#: i18n/messages.json
+msgid "Page {page}"
+msgstr ""
 
 #. [password_auth.password]
 #. defaultMessage is:
@@ -1477,6 +1484,8 @@ msgid ""
 "Some sources are hidden from anonymous users. {signInButton} to see all "
 "results you are authorised to access."
 msgstr ""
+"Некоторые коллекции данных недоступны анонимным пользователям — нажмите "
+"{signInButton}, чтобы авторизоваться!"
 
 #. [collection.info.source]
 #. defaultMessage is:
@@ -1989,21 +1998,21 @@ msgstr "{count} записей"
 #. {count} more countries & territories
 #: i18n/messages.json
 msgid "{count} more countries & territories"
-msgstr ""
+msgstr "Остальные страны и территории: {count}"
 
 #. [home.statistics.othertypes]
 #. defaultMessage is:
 #. {count} more entity types
 #: i18n/messages.json
 msgid "{count} more entity types"
-msgstr ""
+msgstr "Прочих записей: {count}"
 
 #. [home.statistics.other]
 #. defaultMessage is:
 #. {count} more sources
 #: i18n/messages.json
 msgid "{count} more sources"
-msgstr ""
+msgstr "Прочие источники данных: {count}"
 
 #. [search.facets.filtersSelected]
 #. defaultMessage is:
@@ -2017,7 +2026,7 @@ msgstr "{count} выбрано"
 #. {finished} of {total} completed
 #: i18n/messages.json
 msgid "{finished} of {total} completed"
-msgstr ""
+msgstr "Завершено {finished} из {total}"
 
 #. [search.screen.results]
 #. defaultMessage is:

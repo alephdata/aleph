@@ -1,3 +1,4 @@
+import re
 import types
 import logging
 from banal import ensure_list
@@ -48,6 +49,7 @@ class EmailIdentity(object):
 
 class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
     """Extract metadata from email messages."""
+    MID_RE = re.compile(r'<([^>]*)>')
 
     def ingest_attachment(self, entity, name, mime_type, body):
         has_body = body is not None and len(body)
@@ -111,22 +113,32 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
             entity.add('namesMentioned', identity.name)
             entity.add('emailMentioned', identity.email)
 
-    def _clean_message_id(self, message_id):
-        message_id = stringify(message_id)
-        if message_id is not None:
-            message_id = message_id.strip()
-            if len(message_id) > 4:
-                return message_id
+    def parse_message_ids(self, values):
+        message_ids = []
+        for value in ensure_list(values):
+            value = stringify(value)
+            if value is None:
+                continue
+            for message_id in self.MID_RE.findall(value):
+                message_id = message_id.strip()
+                if len(message_id) <= 4:
+                    continue
+                message_ids.append(message_id)
+        return message_ids
 
+    def parse_references(self, references, in_reply_to):
+        references = self.parse_message_ids(references)
+        if len(references):
+            return references[-1]
+        in_reply_to = self.parse_message_ids(in_reply_to)
+        if len(in_reply_to):
+            return in_reply_to[0]
+        
     def resolve_message_ids(self, entity):
         # https://cr.yp.to/immhf/thread.html
         ctx = self.manager.stage.job.dataset.name
 
         for message_id in entity.get('messageId'):
-            message_id = self._clean_message_id(message_id)
-            if message_id is None:
-                continue
-
             key = self.cache_key('mid-ent', ctx, message_id)
             self.add_cache_set(key, entity.id)
 
@@ -141,10 +153,6 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
                 self.manager.emit_entity(email, fragment=fragment)
 
         for message_id in entity.get('inReplyTo'):
-            message_id = self._clean_message_id(message_id)
-            if message_id is None:
-                continue
-
             # forward linking: from message ID to entity ID
             key = self.cache_key('mid-ent', ctx, message_id)
             for email_id in self.get_cache_set(key):
@@ -169,14 +177,17 @@ class EmailSupport(TempFileSupport, HTMLSupport, CacheSupport):
         entity.add('language', self.get_header(msg, 'Content-Language'))
         entity.add('keywords', self.get_header(msg, 'Keywords'))
         entity.add('summary', self.get_header(msg, 'Comments'))
-        entity.add('messageId', self.get_header(msg, 'Message-ID'))
-        entity.add('inReplyTo', self.get_header(msg, 'In-Reply-To'))
+        message_id = self.get_header(msg, 'Message-ID')
+        entity.add('messageId', self.parse_message_ids(message_id))
+        references = self.get_header(msg, 'References')
+        in_reply_to = self.get_header(msg, 'In-Reply-To')
+        entity.add('inReplyTo', self.parse_references(references, in_reply_to))
 
         return_path = self.get_header_identities(msg, 'Return-Path')
-        self.apply_identities(entity, return_path, 'emitters')
+        self.apply_identities(entity, return_path)
 
         reply_to = self.get_header_identities(msg, 'Reply-To')
-        self.apply_identities(entity, reply_to, 'emitters')
+        self.apply_identities(entity, reply_to)
 
         sender = self.get_header_identities(msg, 'Sender', 'X-Sender')
         self.apply_identities(entity, sender, 'emitters', 'sender')

@@ -1,7 +1,7 @@
 import click
 import logging
 from servicelayer.cache import get_redis
-from servicelayer.jobs import Job, Stage
+from servicelayer.jobs import Job, Stage, Dataset
 from servicelayer.archive.util import ensure_path
 
 from ingestors.manager import Manager
@@ -28,6 +28,14 @@ def process(sync):
 
 
 @cli.command()
+@click.argument('dataset')
+def cancel(dataset):
+    """Delete scheduled tasks for given dataset"""
+    conn = get_redis()
+    Dataset(conn, dataset).cancel()
+
+
+@cli.command()
 def killthekitten():
     """Completely kill redis contents."""
     conn = get_redis()
@@ -40,7 +48,7 @@ def killthekitten():
               help="language hint: 2-letter language code (ISO 639)")
 @click.option('--dataset',
               required=True,
-              help="foreign_id of the collection")
+              help="Name of the dataset")
 @click.argument('path', type=click.Path(exists=True))
 def ingest(path, dataset, languages=None):
     """Queue a set of files for ingest."""

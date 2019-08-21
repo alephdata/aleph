@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from followthemoney.util import get_entity_id
 
 from aleph.core import db, cache, settings
+from aleph.authz import Authz
 from aleph.mail import email_role
 from aleph.model import Role, Alert, Event, Notification
 from aleph.model import Collection, Entity
@@ -57,10 +58,12 @@ def get_role_channels(role):
         return channels
     channels = [Notification.GLOBAL]
     if role.deleted_at is None and role.type == Role.USER:
-        channels.append(channel(role))
-        for group in role.roles:
-            channels.append(channel(group))
-    cache.set_list(key, channels)
+        authz = Authz.from_role(role)
+        for role_id in authz.roles:
+            channels.append(channel(role_id, Role))
+        for coll_id in authz.collections(authz.READ):
+            channels.append(channel(coll_id, Collection))
+    cache.set_list(key, channels, expire=cache.EXPIRE)
     return channels
 
 

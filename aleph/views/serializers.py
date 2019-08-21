@@ -150,8 +150,8 @@ class CollectionSerializer(Serializer):
         obj['links'] = {
             'self': url_for('collections_api.view', collection_id=pk),
             'xref': url_for('xref_api.index', collection_id=pk),
-            'xref_csv': url_for('xref_api.csv_export', collection_id=pk,
-                                _authorize=obj.get('secret')),
+            'xref_export': url_for('xref_api.export', collection_id=pk,
+                                   _authorize=obj.get('secret')),
             'reconcile': url_for('reconcile_api.reconcile',
                                  collection_id=pk,
                                  _authorize=obj.get('secret')),

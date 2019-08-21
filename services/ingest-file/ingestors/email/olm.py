@@ -143,6 +143,7 @@ class OutlookOLMMessageIngestor(Ingestor, XMLSupport, EmailSupport, TimestampSup
         entity.add('subject', props.pop('OPFMessageCopySubject', None))
         entity.add('threadTopic', props.pop('OPFMessageCopyThreadTopic', None))
         entity.add('summary', props.pop('OPFMessageCopyPreview', None))
+        # message IDs are already parsed, no need to clean prior:
         entity.add('messageId', props.pop('OPFMessageCopyMessageID', None))
         entity.add('date', self.get_date(props, 'OPFMessageCopySentTime'))
         entity.add('modifiedAt', self.get_date(props, 'OPFMessageCopyModDate'))

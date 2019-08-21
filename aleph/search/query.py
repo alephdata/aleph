@@ -75,7 +75,7 @@ class Query(object):
     def get_negative_filters(self):
         """Apply negative filters."""
         filters = []
-        for field, values in self.parser.empties.items():
+        for field, _ in self.parser.empties.items():
             filters.append({'exists': {'field': field}})
 
         if len(self.parser.exclude):
@@ -189,6 +189,9 @@ class Query(object):
         }
         # log.info("Query: %s", pformat(body))
         return body
+
+    def get_index(self):
+        raise NotImplementedError
 
     def search(self):
         """Execute the query as assmbled."""

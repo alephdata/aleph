@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-08-01T07:17:44.991Z\n"
+"POT-Creation-Date: 2019-08-21T08:11:22.914Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -591,10 +591,10 @@ msgstr "Herunterladen"
 
 #. [xref.download]
 #. defaultMessage is:
-#. Download matches as CSV
+#. Download matches
 #: i18n/messages.json
-msgid "Download matches as CSV"
-msgstr "Ergebnisse als CSV-Datei herunterladen"
+msgid "Download matches"
+msgstr "Treffer herunterladen"
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -979,13 +979,6 @@ msgstr "Kein Nachrichtentext"
 msgid "No options"
 msgstr "Keine Optionen"
 
-#. [document.search.no_match]
-#. defaultMessage is:
-#. No page within this document matches your search.
-#: i18n/messages.json
-msgid "No page within this document matches your search."
-msgstr "Keine Seite in diesem Dokument enthält alle Suchbegriffe"
-
 #. [document.viewer.no_viewer]
 #. defaultMessage is:
 #. No preview is available for this document
@@ -1009,6 +1002,13 @@ msgstr "Keine Resultate."
 #: i18n/messages.json i18n/messages.json
 msgid "No search results"
 msgstr "Keine Suchergebnisse"
+
+#. [document.search.no_match]
+#. defaultMessage is:
+#. No single page within this document matches all your search terms.
+#: i18n/messages.json
+msgid "No single page within this document matches all your search terms."
+msgstr "Keine einzelne Seite in diesem Dokument enthält alle Suchbegriffe."
 
 #. [sources.index.none]
 #. defaultMessage is:
@@ -1077,6 +1077,13 @@ msgstr "Andere"
 #: i18n/messages.json
 msgid "Page {currentPage} of {numberOfPages}"
 msgstr "Seite {currentPage} von {numberOfPages}"
+
+#. [document.pdf.search.page]
+#. defaultMessage is:
+#. Page {page}
+#: i18n/messages.json
+msgid "Page {page}"
+msgstr "Seite {page}"
 
 #. [password_auth.password]
 #. defaultMessage is:
