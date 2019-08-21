@@ -16,17 +16,21 @@ blueprint = Blueprint('dashboard_api', __name__)
 def dashboard():
     require(request.authz.logged_in)
     status = get_active_collection_status()
-    active_collections = status['datasets']
+    active_collections = status.pop('datasets')
     active_foreign_ids = set(active_collections.keys())
     collections = request.authz.collections(request.authz.READ)
     for collection_id in collections:
         resolver.queue(request, Collection, collection_id)
     resolver.resolve(request)
+    results = []
     for collection_id in collections:
         data = resolver.get(request, Collection, collection_id)
         if data is None:
             continue
         fid = data['foreign_id']
         if fid in active_foreign_ids:
-            active_collections[fid]['collection'] = data
+            result = active_collections[fid]
+            result['collection'] = data
+            results.append(result)
+    status['results'] = results
     return jsonify(status)
