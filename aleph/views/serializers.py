@@ -160,11 +160,13 @@ class CollectionSerializer(Serializer):
         obj['writeable'] = request.authz.can(pk, request.authz.WRITE)
         creator_id = obj.pop('creator_id', None)
         obj['creator'] = self.resolve(Role, creator_id, RoleSerializer)
-        obj['team'] = []
-        for role_id in ensure_list(obj.get('team_id')):
-            role = self.resolve(Role, role_id, RoleSerializer)
-            if role is not None:
-                obj['team'].append(role)
+        team_id = ensure_list(obj.pop('team_id', []))
+        if obj['writeable']:
+            obj['team'] = []
+            for role_id in team_id:
+                role = self.resolve(Role, role_id, RoleSerializer)
+                if role is not None:
+                    obj['team'].append(role)
         obj.pop('_index', None)
         return self._clean_response(obj)
 
