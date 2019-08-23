@@ -84,7 +84,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
             name = name or stringify(attachment.shortFilename)
             self.ingest_attachment(entity, name,
                                    attachment.type,
-                                   attachment.data) 
+                                   attachment.data)
 
     @classmethod
     def match(cls, file_path, entity):
