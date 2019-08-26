@@ -6,6 +6,10 @@
 mkdir -p /secrets
 echo "create keystore"
 /usr/share/elasticsearch/bin/elasticsearch-keystore create
+
+# Do not run the following for-loop if /secrets is empty
+shopt -s nullglob
+
 for SECRETFILE in /secrets/*; do
     KEYNAME=$(basename $SECRETFILE);
     echo "$KEYNAME from $SECRETFILE";
