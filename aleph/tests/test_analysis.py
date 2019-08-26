@@ -29,7 +29,16 @@ class TestAnalysis(TestCase):
         tag_entity(entity)
         names = entity.get_type_values(registry.name)
         assert 'Angela Merkel' in names, names
-        assert 'Emmanuel Macron' in names, names
+        assert "d'Emmanuel Macron" in names, names
+
+    def test_language_tagging(self):
+        text = "C'est le caniche d'Emmanuel Macron. " * 2
+        entity = model.make_entity('PlainText')
+        entity.add('bodyText', text)
+        tag_entity(entity)
+        names = entity.get_type_values(registry.name)
+        assert "d'Emmanuel Macron" in names, names
+        assert entity.get('detectedLanguage') == ['fr'], entity.get('detectedLanguage')  # noqa
 
     def test_pattern_extract(self):
         text = "Mr. Flubby Flubber called the number tel:+919988111222 twice"
