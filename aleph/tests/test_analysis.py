@@ -26,7 +26,7 @@ class TestAnalysis(TestCase):
         tag_entity(entity)
         names = entity.get_type_values(registry.name)
         assert "d'Emmanuel Macron" in names, names
-        assert entity.get('detectedLanguage') == ['fr'], entity.get('detectedLanguage')  # noqa
+        assert entity.get('detectedLanguage') == ['fra'], entity.get('detectedLanguage')  # noqa
 
     def test_pattern_extract(self):
         text = "Mr. Flubby Flubber called the number tel:+919988111222 twice"
