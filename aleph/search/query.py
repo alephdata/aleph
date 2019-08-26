@@ -109,7 +109,8 @@ class Query(object):
         for facet_name in self.parser.facet_names:
             facet_aggregations = {}
             if self.parser.get_facet_values(facet_name):
-                facet_aggregations[facet_name] = {
+                agg_name = '%s.values' % facet_name
+                facet_aggregations[agg_name] = {
                     'terms': {
                         'field': facet_name,
                         'size': self.parser.get_facet_size(facet_name)

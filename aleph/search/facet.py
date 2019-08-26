@@ -10,15 +10,16 @@ class Facet(object):
     def __init__(self, name, aggregations, parser):
         self.name = name
         self.parser = parser
-        self.data = self.extract(aggregations, name)
-        self.cardinality = self.extract(aggregations, '%s.cardinality' % name)
+        self.data = self.extract(aggregations, name, 'values')
+        self.cardinality = self.extract(aggregations, name, 'cardinality')
 
-    def extract(self, aggregations, name):
+    def extract(self, aggregations, name, sub):
         if aggregations is None:
             return {}
         aggregations = aggregations.get('%s.filtered' % name, aggregations)
         data = aggregations.get('scoped', {}).get(name, {}).get(name)
-        return data or aggregations.get(name, {})
+        field = '%s.%s' % (name, sub)
+        return data or aggregations.get(field, {})
 
     def expand(self, keys):
         pass
