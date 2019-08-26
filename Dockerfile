@@ -23,11 +23,14 @@ RUN groupadd -g 1000 -r app \
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -q -U pip setuptools six
 RUN pip3 install --no-cache-dir -q spacy==2.1.4
-RUN python3 -m spacy download xx
+RUN python3 -m spacy download en \
+    && python3 -m spacy download xx
 COPY requirements-generic.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-generic.txt
 COPY requirements-toolkit.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-toolkit.txt
+RUN pip3 install --no-cache-dir Cython
+RUN pip3 install --no-cache-dir pyfasttext==0.4.6
 
 # Install aleph
 COPY . /aleph

@@ -105,6 +105,9 @@ UI_LANGUAGES = [l.lower().strip() for l in UI_LANGUAGES]
 # Geonames data file
 GEONAMES_DATA = env.get('ALEPH_GEONAMES_DATA')
 
+# FastText lid model file
+LID_MODEL_PATH = env.get('ALEPH_LID_MODEL_PATH', '/aleph/contrib/lid.176.ftz')
+
 # Disable entity extraction
 TAG_ENTITIES = env.to_bool('ALEPH_TAG_ENTITIES', True)
 

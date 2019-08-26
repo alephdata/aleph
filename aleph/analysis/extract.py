@@ -1,5 +1,7 @@
-import spacy
 import logging
+
+import spacy
+from pyfasttext import FastText
 from banal import ensure_list
 from normality import collapse_spaces
 from fingerprints import clean_entity_name
@@ -42,13 +44,30 @@ def location_country(location):
         return []
 
 
-def extract_entities(text):
+def get_language(text):
+    """Given a list of lines, return a list of (line, lang)"""
+    if not hasattr(settings, '_lang_detector'):
+        lid_model = FastText()
+        lid_model.load_model(settings.LID_MODEL_PATH)
+        settings._lang_detector = lid_model
+    langs = settings._lang_detector.predict([text])
+    return langs[0]
+
+
+def extract_entities(entity, text):
     if len(text) < TEXT_MIN_LENGTH or len(text) > TEXT_MAX_LENGTH:
         return
-    if not hasattr(settings, '_nlp'):
-        log.info("Loading spaCy model: xx...")
-        settings._nlp = spacy.load('xx')
-    doc = settings._nlp(text)
+    langs = get_language(text)
+    entity.add('detectedLanguage', langs)
+    if langs == ['en']:
+        lang = 'en'
+    else:
+        lang = 'xx'
+    attr_name = '_nlp_' + lang
+    if not hasattr(settings, attr_name):
+        log.info("Loading spaCy model: %s..." % lang)
+        setattr(settings, attr_name, spacy.load(lang))
+    doc = getattr(settings, attr_name)(text)
     for ent in doc.ents:
         tag_type = SPACY_TYPES.get(ent.label_)
         if tag_type is None:

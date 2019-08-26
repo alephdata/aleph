@@ -38,7 +38,7 @@ def tag_entity(entity):
     aggregator = TagAggregator()
     countries = entity.get_type_values(registry.country)
     for text in entity.get_type_values(registry.text):
-        for (type_, tag) in extract_entities(text):
+        for (type_, tag) in extract_entities(entity, text):
             aggregator.add(type_, tag)
         for (type_, tag) in extract_patterns(text, countries):
             aggregator.add(type_, tag)
