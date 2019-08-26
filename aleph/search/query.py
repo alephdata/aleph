@@ -1,10 +1,13 @@
 import logging
 from pprint import pprint, pformat  # noqa
 
+from followthemoney.types import registry
+
 from aleph.core import es
 from aleph.index.util import authz_query, field_filter_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
+from aleph.index.entities import get_field_type
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +30,6 @@ class Query(object):
         'label': 'label.kw',
         'name': 'name.kw',
         'score': '_score',
-        'properties.index': 'properties.index:num',
     }
     SORT_DEFAULT = ['_score']
 
@@ -153,6 +155,9 @@ class Query(object):
         sort_fields = ['_score']
         for (field, direction) in self.parser.sorts:
             field = self.SORT_FIELDS.get(field, field)
+            if (field.startswith('properties.') and
+                    get_field_type(field) in (registry.number, registry.date)):
+                field = field.replace('properties', 'typed_properties')
             sort_fields.append({field: direction})
         return list(reversed(sort_fields))
 

@@ -144,13 +144,13 @@ def configure_schema(schema, version):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
+    typed_properties = {}
     for prop in schema.properties.values():
         config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
         config['copy_to'] = ['text']
         schema_mapping[prop.name] = config
         if prop.type in (registry.number, registry.date):
-            num_sub_prop = "%s:num" % prop.name
-            schema_mapping[num_sub_prop] = {"type": "double"}
+            typed_properties[prop.name] = {"type": "double"}
 
     mapping = {
         "date_detection": False,
@@ -210,6 +210,10 @@ def configure_schema(schema, version):
             "properties": {
                 "type": "object",
                 "properties": schema_mapping
+            },
+            "typed_properties": {
+                "type": "object",
+                "properties": typed_properties
             },
             "updated_at": {"type": "date"},
         }

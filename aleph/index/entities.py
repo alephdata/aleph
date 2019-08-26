@@ -44,15 +44,15 @@ def _entities_query(filters, authz, collection_id, schemata):
     return {'bool': {'filter': filters}}
 
 
-def _get_field_type(field):
+def get_field_type(field):
     field = field.split('.')[-1]
     if field in registry.groups:
         return registry.groups[field]
-    if not hasattr(_get_field_type, 'fields'):
-        _get_field_type.fields = {
+    if not hasattr(get_field_type, 'fields'):
+        get_field_type.fields = {
             field.split(':')[-1]: prop for field, prop in model.qnames.items()
         }
-    prop = _get_field_type.fields.get(field)
+    prop = get_field_type.fields.get(field)
     if prop:
         return prop.type
 
@@ -172,15 +172,14 @@ def format_proxy(proxy, collection, job_id=None):
         data['updated_at'] = updated_at
 
     # integer casting
-    extra_props = {}
+    typed_props = {}
     for prop in properties:
         prop = proxy._get_prop(prop)
         if prop.type in (registry.number, registry.date):
-            num_sub_prop = "%s:num" % prop.name
             vals = ensure_list(properties.get(prop.name, []))
             num_vals = [prop.type.to_number(v) for v in vals]
-            extra_props[num_sub_prop] = num_vals
-    data['properties'].update(extra_props)
+            typed_props[prop.name] = num_vals
+    data['typed_properties'] = typed_props
 
     # pprint(data)
     entity_id = data.pop('id')
