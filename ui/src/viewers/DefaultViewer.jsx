@@ -18,7 +18,8 @@ const messages = defineMessages({
 export class DefaultViewer extends React.PureComponent {
   render() {
     const { intl, document } = this.props;
-    const message = document.error_message || intl.formatMessage(messages.ignored_file);
+    const backendMessage = document.getProperty('processingError').join(', ');
+    const message = backendMessage || intl.formatMessage(messages.ignored_file);
     return (
       <ErrorSection
         visual="issue"

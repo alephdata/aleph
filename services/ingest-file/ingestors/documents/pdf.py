@@ -47,7 +47,7 @@ class PDFIngestor(Ingestor, PDFSupport):
         try:
             pdf = Document(bytes(file_path))
         except Exception as ex:
-            raise ProcessingException("Could not extract PDF file: %r", ex) from ex  # noqa
+            raise ProcessingException("Could not extract PDF file: %r" % ex) from ex  # noqa
         self.extract_metadata(pdf, entity)
         self.extract_xmp_metadata(pdf, entity)
         self.pdf_extract(entity, pdf)
