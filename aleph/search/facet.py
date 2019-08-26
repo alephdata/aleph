@@ -94,7 +94,8 @@ class CollectionFacet(Facet):
 
     def expand(self, keys):
         for key in keys:
-            resolver.queue(self.parser, Collection, key)
+            if self.parser.authz.can(key, self.parser.authz.READ):
+                resolver.queue(self.parser, Collection, key)
         resolver.resolve(self.parser)
 
     def update(self, result, key):
