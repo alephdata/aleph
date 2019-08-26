@@ -5,7 +5,7 @@ RUN apt-get -qq -y update \
     && apt-get -q -y install build-essential locales \
         ca-certificates postgresql-client \
         python3-pip python3-dev python3-icu python3-psycopg2 \
-        python3-lxml python3-crypto \
+        python3-lxml python3-crypto cython3 \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -23,14 +23,11 @@ RUN groupadd -g 1000 -r app \
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -q -U pip setuptools six
 RUN pip3 install --no-cache-dir -q spacy==2.1.4
-RUN python3 -m spacy download en \
-    && python3 -m spacy download xx
+RUN python3 -m spacy download en && python3 -m spacy download xx
 COPY requirements-generic.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-generic.txt
 COPY requirements-toolkit.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-toolkit.txt
-RUN pip3 install --no-cache-dir Cython
-RUN pip3 install --no-cache-dir pyfasttext==0.4.6
 
 # Install aleph
 COPY . /aleph
