@@ -61,7 +61,7 @@ export class Screen extends React.Component {
   render() {
     const {
       session, metadata, query, updateQuery, requireSession,
-      isHomepage, title, description, className,
+      isHomepage, title, description, className, searchScopes,
     } = this.props;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
     const forceAuth = requireSession && !session.loggedIn;
@@ -88,6 +88,7 @@ export class Screen extends React.Component {
           query={query}
           updateQuery={updateQuery}
           isHomepage={isHomepage}
+          searchScopes={searchScopes}
         />
         { (hasMetadata && !!metadata.app.banner) && (
           <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">

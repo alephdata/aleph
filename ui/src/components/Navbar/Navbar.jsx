@@ -17,20 +17,22 @@ const messages = defineMessages({
     id: 'navbar.search_placeholder',
     defaultMessage: 'Search companies, people and documents.',
   },
-  mobile_search_placeholder: {
-    id: 'navbar.mobile_search_placeholder',
-    defaultMessage: 'Search companies, people and ...',
-  },
 });
 
 
 export class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { searchValue: '', isMenuOpen: false, searchOpen: false };
+
+    this.state = {
+      searchValue: props.query ? props.query.getString('q') : '',
+      isMenuOpen: false,
+      searchOpen: false,
+    };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onDefaultSearch = this.onDefaultSearch.bind(this);
     this.onOpenMenu = this.onOpenMenu.bind(this);
     this.onToggleSearch = this.onToggleSearch.bind(this);
   }
@@ -65,6 +67,17 @@ export class Navbar extends React.Component {
     this.setState(({ searchOpen }) => ({ searchOpen: !searchOpen }));
   }
 
+  onDefaultSearch(queryText) {
+    const { history } = this.props;
+
+    history.push({
+      pathname: '/search',
+      search: queryString.stringify({
+        q: queryText,
+      }),
+    });
+  }
+
   getSnapshotBeforeUpdate(prevProps) {
     if (this.props.query && (prevProps.query.state.q !== this.props.query.state.q)) {
       if (this.props.query.state.q !== this.state.searchValue) {
@@ -83,26 +96,29 @@ export class Navbar extends React.Component {
 
   updateSearchValue = searchValue => this.setState({ searchValue });
 
-  doSearch = (searchValue = this.state.searchValue) => {
-    const { query, updateQuery, history } = this.props;
+  doSearch = (searchValue = this.state.searchValue, searchScope) => {
+    const { query, updateQuery } = this.props;
+
+    console.log(searchScope);
     if (updateQuery !== undefined) {
       updateQuery(query.set('q', searchValue));
     } else {
-      history.push({
-        pathname: '/search',
-        search: queryString.stringify({
-          q: searchValue,
-        }),
-      });
+      searchScope.onSearch(searchValue);
     }
   };
 
 
   render() {
     const {
-      metadata, session, intl, isHomepage,
+      metadata, session, intl, isHomepage, searchScopes,
     } = this.props;
     const { isMenuOpen, searchOpen } = this.state;
+
+    const defaultScope = {
+      label: 'OCCRP Aleph',
+      placeholder: intl.formatMessage(messages.search_placeholder),
+      onSearch: this.onDefaultSearch,
+    };
 
     return (
       <div id="Navbar" className="Navbar">
@@ -125,11 +141,10 @@ export class Navbar extends React.Component {
               <form onSubmit={this.onSubmit} autoComplete="off" className="navbar-search-form">
                 <SearchBox
                   doSearch={this.doSearch}
-                  placeholder={intl.formatMessage(
-                    searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder,
-                  )}
                   updateSearchValue={this.updateSearchValue}
                   searchValue={this.state.searchValue}
+                  searchScopes={searchScopes
+                    ? [...searchScopes, ...[defaultScope]] : [defaultScope]}
                 />
               </form>
               )}

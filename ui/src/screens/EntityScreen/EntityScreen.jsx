@@ -33,7 +33,20 @@ class EntityScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
+  }
+
+  onCollectionSearch(queryText) {
+    const { history, entity } = this.props;
+    const query = {
+      q: queryText,
+      'filter:collection_id': entity.collection.id,
+    };
+    history.push({
+      pathname: '/search',
+      search: queryString.stringify(query),
+    });
   }
 
   onSearch(queryText) {
@@ -51,6 +64,35 @@ class EntityScreen extends Component {
     });
   }
 
+  getEntityTitle() {
+    const { entity } = this.props;
+    return entity.getFirst('title') || entity.getFirst('fileName') || entity.getCaption();
+  }
+
+  getSearchScopes() {
+    const {
+      entity, intl,
+    } = this.props;
+    const collectionScope = {
+      label: entity.collection.label,
+      placeholder: intl.formatMessage(messages.placeholder, { label: entity.collection.label }),
+      onSearch: this.onCollectionSearch,
+    };
+
+    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
+    if (!hasSearch) {
+      return [collectionScope];
+    }
+    const entityTitle = this.getEntityTitle();
+    const entityScope = {
+      label: entityTitle,
+      placeholder: intl.formatMessage(messages.placeholder, { label: entityTitle }),
+      onSearch: this.onSearch,
+    };
+
+    return [entityScope, collectionScope];
+  }
+
   render() {
     const {
       entity, entityId, activeMode, intl, query,
@@ -66,8 +108,9 @@ class EntityScreen extends Component {
       );
     }
 
-    const title = entity.getFirst('title') || entity.getFirst('fileName') || entity.getCaption();
+    const title = this.getEntityTitle();
     const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
+
     const operation = !hasSearch ? undefined : (
       <SearchBox
         onSearch={this.onSearch}
@@ -82,9 +125,10 @@ class EntityScreen extends Component {
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );
+
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={title}>
+        <Screen title={title} searchScopes={this.getSearchScopes()}>
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">

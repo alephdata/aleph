@@ -12,7 +12,7 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
+import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
 
 
@@ -41,11 +41,6 @@ const mapStateToProps = (state, ownProps) => {
 
 
 export class CollectionScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.onSearch = this.onSearch.bind(this);
-  }
-
   onSearch(queryText) {
     const { history, collection } = this.props;
     const query = {
@@ -76,14 +71,14 @@ export class CollectionScreen extends Component {
       );
     }
 
-    const operation = (
-      <SearchBox
-        onSearch={this.onSearch}
-        searchPlaceholder={intl.formatMessage(messages.placeholder, { label: collection.label })}
-      />
-    );
+    const searchScope = {
+      label: collection.label,
+      placeholder: intl.formatMessage(messages.placeholder, { label: collection.label }),
+      onSearch: this.onSearch,
+    };
+
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs>
         <Breadcrumbs.Collection key="collection" collection={collection} />
         {activeMode === 'xref' && (
           <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />
@@ -94,7 +89,11 @@ export class CollectionScreen extends Component {
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={collection.label} description={collection.summary}>
+        <Screen
+          title={collection.label}
+          description={collection.summary}
+          searchScopes={[searchScope]}
+        >
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.InfoPane className="with-heading">

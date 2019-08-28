@@ -159,6 +159,13 @@ export class HomeScreen extends Component {
   render() {
     const { intl, metadata, statistics = {} } = this.props;
     const samples = metadata.app.samples.join(', ');
+
+    const searchScope = {
+      label: 'OCCRP Aleph',
+      placeholder: intl.formatMessage(messages.search_placeholder, { samples }),
+      filter: '',
+    };
+
     return (
       <Screen
         isHomepage
@@ -176,7 +183,7 @@ export class HomeScreen extends Component {
                     doSearch={this.doSearch}
                     updateSearchValue={this.updateSearchValue}
                     searchValue={this.state.value}
-                    placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
+                    searchScopes={[searchScope]}
                   />
                   <Button
                     className="bp3-large bp3-fixed"

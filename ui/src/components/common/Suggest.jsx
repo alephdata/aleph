@@ -3,8 +3,9 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import {
-  DISPLAYNAME_PREFIX, InputGroup, Keys, Popover, Position, Utils,
+  DISPLAYNAME_PREFIX, Button, ControlGroup, InputGroup, Keys, MenuItem, Popover, Position, Utils,
 } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 import { Classes } from '@blueprintjs/select/lib/esm/common';
 import { QueryList } from '@blueprintjs/select/lib/esm/components/query-list/queryList';
 
@@ -34,7 +35,10 @@ export class Suggest extends React.PureComponent {
     this.state = {
       isOpen: (props.popoverProps && props.popoverProps.isOpen) || false,
       selectedItem: this.getInitialSelectedItem(),
+      currScope: props.searchScopes[0],
     };
+
+    this.changeSearchScope = this.changeSearchScope.bind(this)
   }
 
   render() {
@@ -64,11 +68,23 @@ export class Suggest extends React.PureComponent {
     }
   }
 
+  changeSearchScope(newScope) {
+    this.setState({currScope: newScope})
+  }
+
+  renderScopeItem = (scope, { handleClick, modifiers }) => (
+    <MenuItem
+      key={scope.label}
+      onClick={() => this.changeSearchScope(scope)}
+      text={scope.label}
+    />
+  )
+
   renderQueryList = (listProps) => {
-    const { inputProps = {}, popoverProps = {} } = this.props;
-    const { isOpen, selectedItem } = this.state;
+    const { inputProps = {}, popoverProps = {}, searchScopes} = this.props;
+    const { isOpen, selectedItem, currScope } = this.state;
     const { handleKeyDown, handleKeyUp } = listProps;
-    const { placeholder = 'Search...' } = inputProps;
+
 
     const selectedItemText = selectedItem ? this.props.inputValueRenderer(selectedItem) : '';
     return (
@@ -76,23 +92,38 @@ export class Suggest extends React.PureComponent {
         autoFocus={false}
         enforceFocus={false}
         isOpen={isOpen}
-        position={Position.BOTTOM_LEFT}
+        position={Position.BOTTOM_RIGHT}
         {...popoverProps}
         className={classNames(listProps.className, popoverProps.className)}
         onInteraction={this.handlePopoverInteraction}
         popoverClassName={classNames(Classes.SELECT_POPOVER, popoverProps.popoverClassName)}
         onOpened={this.handlePopoverOpened}
       >
-        <InputGroup
-          {...inputProps}
-          placeholder={isOpen && selectedItemText ? selectedItemText : placeholder}
-          inputRef={this.refHandlers.input}
-          onChange={listProps.handleQueryChange}
-          onFocus={this.handleInputFocus}
-          onKeyDown={this.getTargetKeyDownHandler(handleKeyDown)}
-          onKeyUp={this.getTargetKeyUpHandler(handleKeyUp)}
-          value={listProps.query}
-        />
+        <ControlGroup fill={true} vertical={false}>
+          {searchScopes.length > 1 &&
+            <Select
+              filterable={false}
+              items={searchScopes}
+              itemRenderer={this.renderScopeItem}
+            >
+            <Button
+              text={currScope.label}
+              rightIcon="double-caret-vertical"
+            />
+            </Select>
+          }
+
+          <InputGroup
+            {...inputProps}
+            placeholder={isOpen && selectedItemText ? selectedItemText : currScope.placeholder}
+            inputRef={this.refHandlers.input}
+            onChange={listProps.handleQueryChange}
+            onFocus={this.handleInputFocus}
+            onKeyDown={this.getTargetKeyDownHandler(handleKeyDown)}
+            onKeyUp={this.getTargetKeyUpHandler(handleKeyUp)}
+            value={listProps.query}
+          />
+        </ControlGroup>
         <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
           {listProps.itemList}
         </div>
@@ -147,7 +178,7 @@ export class Suggest extends React.PureComponent {
       this.setState({ isOpen: nextOpenState });
     }
 
-    Utils.safeInvoke(this.props.onItemSelect, item, event);
+    Utils.safeInvoke(this.props.onItemSelect, item, this.state.currScope, event);
   };
 
   getInitialSelectedItem() {

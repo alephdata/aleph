@@ -28,9 +28,9 @@ class SearchBox extends PureComponent {
 
   onChange = newSearchValue => this.props.updateSearchValue(newSearchValue);
 
-  onItemSelect = ({ query }) => {
+  onItemSelect = ({ query }, searchScope) => {
     this.props.updateSearchValue(query);
-    this.props.doSearch(query);
+    this.props.doSearch(query, searchScope);
   };
 
   deleteQueryLog = queryLogItem => (event) => {
@@ -72,17 +72,17 @@ class SearchBox extends PureComponent {
 
   render() {
     const {
-      props: { placeholder, searchValue },
+      props: { searchValue, searchScopes },
       itemRenderer, onChange,
       itemListPredicate,
       onItemSelect,
     } = this;
+
     const inputProps = {
       type: 'text',
       leftIcon: 'search',
       className: 'bp3-large',
       rightElement: <SearchAlert queryText={searchValue} />,
-      placeholder,
       value: searchValue,
       id: 'search-box',
     };
@@ -103,6 +103,7 @@ class SearchBox extends PureComponent {
       <Suggest
         inputProps={inputProps}
         popoverProps={popoverProps}
+        searchScopes={searchScopes}
         items={this.props.queryLogs.results}
         itemRenderer={itemRenderer}
         inputValueRenderer={({ text }) => text}
