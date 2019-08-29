@@ -13,8 +13,9 @@ import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
+import { Collection, DualPane, Entity, Breadcrumbs, SearchBox } from 'src/components/common';
 import Query from 'src/app/Query';
+import getEntityLink from 'src/util/getEntityLink';
 import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
@@ -27,6 +28,7 @@ const messages = defineMessages({
   },
 });
 
+const getEntityTitle = entity => entity.getFirst('title') || entity.getFirst('fileName') || entity.getCaption();
 
 class EntityScreen extends Component {
   static SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
@@ -49,48 +51,76 @@ class EntityScreen extends Component {
     });
   }
 
-  onSearch(queryText) {
+  onSearch(queryText, entityLink) {
     const { history, location, query } = this.props;
     const parsedHash = queryString.parse(location.hash);
+    console.log('entity link', entityLink);
+    console.log('parsedhash', parsedHash);
+
     const newQuery = query.setString('q', queryText);
+    console.log('query', newQuery);
+    console.log('query location', newQuery.toLocation());
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
     parsedHash.page = undefined;
     history.push({
-      pathname: location.pathname,
+      pathname: entityLink,
       search: newQuery.toLocation(),
       hash: queryString.stringify(parsedHash),
     });
   }
 
-  getEntityTitle() {
-    const { entity } = this.props;
-    return entity.getFirst('title') || entity.getFirst('fileName') || entity.getCaption();
+  getEntitySearchScope(entity) {
+    const { intl } = this.props;
+    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
+    if (!hasSearch) {
+      return null;
+    }
+    const entityTitle = getEntityTitle(entity);
+    console.log(entityTitle);
+    const entityLink = getEntityLink(entity);
+    return {
+      listItem: <Entity.Label entity={entity} icon truncate={30} />,
+      placeholder: intl.formatMessage(messages.placeholder, { label: entityTitle }),
+      onSearch: queryText => this.onSearch(queryText, entityLink), // eslint-disable-line
+    };
   }
 
   getSearchScopes() {
     const {
       entity, intl,
     } = this.props;
-    const collectionScope = {
-      label: entity.collection.label,
+    const scopes = [];
+
+    let currEntity = entity;
+
+    while (currEntity) {
+      const entityScope = this.getEntitySearchScope(currEntity);
+      if (entityScope) {
+        scopes.push(entityScope);
+      }
+      console.log(getEntityTitle(currEntity), currEntity.getProperty('parent'));
+      currEntity = currEntity.getFirst('parent');
+    }
+
+    // const ancestors = entity.getProperty('ancestors');
+    //
+    // console.log(ancestors);
+    // ancestors.forEach((ancestor) => {
+    //   const scope = this.getEntitySearchScope(ancestor);
+    //   if (scope) {
+    //     scopes.push(scope);
+    //   }
+    // });
+
+    scopes.push({
+      listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
       placeholder: intl.formatMessage(messages.placeholder, { label: entity.collection.label }),
       onSearch: this.onCollectionSearch,
-    };
+    });
 
-    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
-    if (!hasSearch) {
-      return [collectionScope];
-    }
-    const entityTitle = this.getEntityTitle();
-    const entityScope = {
-      label: entityTitle,
-      placeholder: intl.formatMessage(messages.placeholder, { label: entityTitle }),
-      onSearch: this.onSearch,
-    };
-
-    return [entityScope, collectionScope];
+    return scopes.reverse();
   }
 
   render() {
@@ -108,7 +138,7 @@ class EntityScreen extends Component {
       );
     }
 
-    const title = this.getEntityTitle();
+    const title = getEntityTitle(entity);
     const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
 
     const operation = !hasSearch ? undefined : (

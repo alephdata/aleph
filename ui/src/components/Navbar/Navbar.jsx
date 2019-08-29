@@ -115,7 +115,7 @@ export class Navbar extends React.Component {
     const { isMenuOpen, searchOpen } = this.state;
 
     const defaultScope = {
-      label: 'OCCRP Aleph',
+      listItem: 'OCCRP Aleph',
       placeholder: intl.formatMessage(messages.search_placeholder),
       onSearch: this.onDefaultSearch,
     };
@@ -144,7 +144,7 @@ export class Navbar extends React.Component {
                   updateSearchValue={this.updateSearchValue}
                   searchValue={this.state.searchValue}
                   searchScopes={searchScopes
-                    ? [...searchScopes, ...[defaultScope]] : [defaultScope]}
+                    ? [...[defaultScope], ...searchScopes] : [defaultScope]}
                 />
               </form>
               )}

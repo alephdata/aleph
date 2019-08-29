@@ -35,7 +35,7 @@ export class Suggest extends React.PureComponent {
     this.state = {
       isOpen: (props.popoverProps && props.popoverProps.isOpen) || false,
       selectedItem: this.getInitialSelectedItem(),
-      currScope: props.searchScopes[0],
+      currScope: props.searchScopes[props.searchScopes.length - 1],
     };
 
     this.changeSearchScope = this.changeSearchScope.bind(this)
@@ -72,12 +72,13 @@ export class Suggest extends React.PureComponent {
     this.setState({currScope: newScope})
   }
 
-  renderScopeItem = (scope, { handleClick, modifiers }) => (
+  renderScopeItem = (scope, { index }) => (
     <MenuItem
-      key={scope.label}
+      key={index}
       onClick={() => this.changeSearchScope(scope)}
-      text={scope.label}
+      text={scope.listItem}
     />
+
   )
 
   renderQueryList = (listProps) => {
@@ -104,10 +105,10 @@ export class Suggest extends React.PureComponent {
             <Select
               filterable={false}
               items={searchScopes}
-              itemRenderer={this.renderScopeItem}
+              itemRenderer={(a, b, c) => this.renderScopeItem(a, b, c)}
             >
             <Button
-              text={currScope.label}
+              text={currScope.listItem}
               rightIcon="double-caret-vertical"
             />
             </Select>

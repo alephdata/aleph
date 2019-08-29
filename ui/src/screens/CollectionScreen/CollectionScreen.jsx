@@ -12,7 +12,7 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs } from 'src/components/common';
+import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
 
 
@@ -72,7 +72,7 @@ export class CollectionScreen extends Component {
     }
 
     const searchScope = {
-      label: collection.label,
+      listItem: <Collection.Label collection={collection} icon truncate={30} />,
       placeholder: intl.formatMessage(messages.placeholder, { label: collection.label }),
       onSearch: this.onSearch,
     };
