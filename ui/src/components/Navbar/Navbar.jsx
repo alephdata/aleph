@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Icon } from '@blueprintjs/core';
 import { compose } from 'redux';
@@ -11,14 +11,6 @@ import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 import { selectSession } from 'src/selectors';
 import SearchBox from 'src/components/Navbar/SearchBox';
 import './Navbar.scss';
-
-const messages = defineMessages({
-  search_placeholder: {
-    id: 'navbar.search_placeholder',
-    defaultMessage: 'Search companies, people and documents.',
-  },
-});
-
 
 export class Navbar extends React.Component {
   constructor(props) {
@@ -110,13 +102,13 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, session, intl, isHomepage, searchScopes,
+      metadata, session, isHomepage, searchScopes,
     } = this.props;
     const { isMenuOpen, searchOpen } = this.state;
 
     const defaultScope = {
       listItem: 'OCCRP Aleph',
-      placeholder: intl.formatMessage(messages.search_placeholder),
+      label: 'OCCRP Aleph',
       onSearch: this.onDefaultSearch,
     };
 

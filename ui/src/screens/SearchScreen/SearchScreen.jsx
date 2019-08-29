@@ -12,7 +12,7 @@ import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs,
+  Collection, DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs,
 } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
@@ -171,6 +171,41 @@ export class SearchScreen extends React.Component {
     );
   }
 
+  getSearchScopes() {
+    const { facets } = this.props.result;
+    // const { facets } = this.state;
+
+
+    if (facets && facets.collection_id) {
+      console.log(facets.collection_id);
+      const values = facets.collection_id.values.filter(val => val.active);
+      console.log(values);
+      console.log(Collection);
+
+      if (values.length === 1) {
+        return [{
+          listItem: <Collection.Label collection={values[0]} icon truncate={30} />,
+          label: values[0].label,
+          onSearch: this.updateQuery,
+        }];
+      }
+    }
+
+    // const activeCollectionFacets = query.getFilter('collection_id');
+    //
+    // if (activeCollectionFacets.length === 1) {
+    //   const collection = activeCollectionFacets[0];
+    //   return [{
+    //     listItem: <Collection.Label collection={collection} icon truncate={30} />,
+    //     placeholder: 'test',
+    //     onSearch: this.onSearch,
+    //   }];
+    // // } else if (activeCollectionFacets.length > 1) {
+    // //   return [{}];
+    // }
+    return null;
+  }
+
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (result.shouldLoad) {
@@ -268,11 +303,14 @@ export class SearchScreen extends React.Component {
       </Breadcrumbs>
     );
 
+    const searchScopes = this.getSearchScopes();
+
     return (
       <Screen
         query={query}
         updateQuery={this.updateQuery}
         title={title}
+        searchScopes={searchScopes}
         hotKeys={[
           {
             combo: 'j', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,

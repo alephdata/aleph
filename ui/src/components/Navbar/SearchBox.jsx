@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 
 import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
-import { Suggest } from 'src/components/common/Suggest';
+import Suggest from 'src/components/common/Suggest';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import Query from 'src/app/Query';
 import { selectQueryLogsLimited, selectSession } from 'src/selectors';

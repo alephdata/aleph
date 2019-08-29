@@ -1,16 +1,25 @@
 /* eslint-disable */
 import classNames from 'classnames';
 import * as React from 'react';
+import { compose } from 'redux';
 
 import {
   DISPLAYNAME_PREFIX, Button, ControlGroup, InputGroup, Keys, MenuItem, Popover, Position, Utils,
 } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+
 import { Select } from '@blueprintjs/select';
 import { Classes } from '@blueprintjs/select/lib/esm/common';
 import { QueryList } from '@blueprintjs/select/lib/esm/components/query-list/queryList';
 
+const messages = defineMessages({
+  placeholder: {
+    id: 'search.placeholder',
+    defaultMessage: 'Search in {label}',
+  },
+});
 
-export class Suggest extends React.PureComponent {
+class Suggest extends React.PureComponent {
   static displayName = `${DISPLAYNAME_PREFIX}.Suggest`;
 
   static defaultProps = {
@@ -62,7 +71,14 @@ export class Suggest extends React.PureComponent {
     }
   }
 
-  componentDidUpdate(_prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
+    const { searchScopes } = this.props;
+
+    if (searchScopes !== prevProps.searchScopes) {
+      this.setState({
+        currScope: searchScopes[searchScopes.length - 1],
+      });
+    }
     if (this.state.isOpen && !prevState.isOpen && this.queryList != null) {
       this.queryList.scrollActiveItemIntoView();
     }
@@ -82,10 +98,11 @@ export class Suggest extends React.PureComponent {
   )
 
   renderQueryList = (listProps) => {
-    const { inputProps = {}, popoverProps = {}, searchScopes} = this.props;
+    const { inputProps = {}, popoverProps = {}, searchScopes, intl} = this.props;
     const { isOpen, selectedItem, currScope } = this.state;
     const { handleKeyDown, handleKeyUp } = listProps;
 
+    const placeholder = intl.formatMessage(messages.placeholder, { label: currScope.label });
 
     const selectedItemText = selectedItem ? this.props.inputValueRenderer(selectedItem) : '';
     return (
@@ -109,14 +126,14 @@ export class Suggest extends React.PureComponent {
             >
             <Button
               text={currScope.listItem}
-              rightIcon="double-caret-vertical"
+              rightIcon="caret-down"
             />
             </Select>
           }
 
           <InputGroup
             {...inputProps}
-            placeholder={isOpen && selectedItemText ? selectedItemText : currScope.placeholder}
+            placeholder={isOpen && selectedItemText ? selectedItemText : placeholder}
             inputRef={this.refHandlers.input}
             onChange={listProps.handleQueryChange}
             onFocus={this.handleInputFocus}
@@ -250,4 +267,7 @@ export class Suggest extends React.PureComponent {
   };
 }
 
+export default compose(
+  injectIntl
+)(Suggest);
 /* eslint-enable */

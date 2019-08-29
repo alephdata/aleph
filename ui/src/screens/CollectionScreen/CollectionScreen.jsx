@@ -73,7 +73,7 @@ export class CollectionScreen extends Component {
 
     const searchScope = {
       listItem: <Collection.Label collection={collection} icon truncate={30} />,
-      placeholder: intl.formatMessage(messages.placeholder, { label: collection.label }),
+      label: collection.label,
       onSearch: this.onSearch,
     };
 
