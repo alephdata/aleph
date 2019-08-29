@@ -74,7 +74,7 @@ export class CollectionScreen extends Component {
     const searchScope = {
       listItem: <Collection.Label collection={collection} icon truncate={30} />,
       label: collection.label,
-      onSearch: this.onSearch,
+      onSearch: this.onSearch.bind(this),
     };
 
     const breadcrumbs = (

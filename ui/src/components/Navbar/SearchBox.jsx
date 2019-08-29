@@ -1,22 +1,44 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withRouter } from 'react-router';
 
 import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
-import Suggest from 'src/components/common/Suggest';
+import {
+  ControlGroup, Icon,
+} from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
+
+import { Suggest } from 'src/components/common/Suggest';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import Query from 'src/app/Query';
 import { selectQueryLogsLimited, selectSession } from 'src/selectors';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+
 import './SearchBox.scss';
 
 const ICON_VIRTUAL_SUGGEST = 'edit';
 const ICON_EXISTING_SUGGEST = undefined;
 
+const messages = defineMessages({
+  placeholder: {
+    id: 'search.placeholder',
+    defaultMessage: 'Search in {label}',
+  },
+});
 
-class SearchBox extends PureComponent {
+class SearchBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currScope: props.searchScopes[props.searchScopes.length - 1],
+    };
+
+    this.changeSearchScope = this.changeSearchScope.bind(this);
+  }
+
   componentDidMount() {
     const {
       queryLogs, session, query,
@@ -26,11 +48,21 @@ class SearchBox extends PureComponent {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { searchScopes } = this.props;
+
+    if (searchScopes !== nextProps.searchScopes) {
+      this.setState({
+        currScope: nextProps.searchScopes[nextProps.searchScopes.length - 1],
+      });
+    }
+  }
+
   onChange = newSearchValue => this.props.updateSearchValue(newSearchValue);
 
-  onItemSelect = ({ query }, searchScope) => {
+  onItemSelect = ({ query }) => {
     this.props.updateSearchValue(query);
-    this.props.doSearch(query, searchScope);
+    this.props.doSearch(query, this.state.currScope);
   };
 
   deleteQueryLog = queryLogItem => (event) => {
@@ -52,6 +84,14 @@ class SearchBox extends PureComponent {
     </Button>
   )
 
+  renderScopeItem = (scope, { index }) => (
+    <MenuItem
+      key={index}
+      onClick={() => this.changeSearchScope(scope)}
+      text={scope.listItem}
+    />
+  )
+
   itemRenderer = (queryItem, { handleClick, modifiers }) => {
     const icon = queryItem.isVirtual ? ICON_VIRTUAL_SUGGEST : ICON_EXISTING_SUGGEST;
     const props = {
@@ -70,9 +110,14 @@ class SearchBox extends PureComponent {
     query ? [{ query, isVirtual: true }] : [{ query: '' }, ...queryList]
   )
 
+  changeSearchScope(newScope) {
+    this.setState({ currScope: newScope });
+  }
+
   render() {
     const {
-      props: { searchValue, searchScopes },
+      props: { searchValue, searchScopes, intl },
+      state: { currScope },
       itemRenderer, onChange,
       itemListPredicate,
       onItemSelect,
@@ -80,8 +125,8 @@ class SearchBox extends PureComponent {
 
     const inputProps = {
       type: 'text',
-      leftIcon: 'search',
       className: 'bp3-fill',
+      placeholder: intl.formatMessage(messages.placeholder, { label: currScope.label }),
       rightElement: <SearchAlert queryText={searchValue} />,
       value: searchValue,
       id: 'search-box',
@@ -90,6 +135,7 @@ class SearchBox extends PureComponent {
     const popoverProps = {
       popoverClassName: 'search-popover',
       targetTagName: 'div',
+      fill: true,
       modifiers: {
         arrow: { enabled: false },
       },
@@ -100,20 +146,37 @@ class SearchBox extends PureComponent {
     }
 
     return (
-      <Suggest
-        inputProps={inputProps}
-        popoverProps={popoverProps}
-        searchScopes={searchScopes}
-        items={this.props.queryLogs.results}
-        itemRenderer={itemRenderer}
-        inputValueRenderer={({ text }) => text}
-        onQueryChange={onChange}
-        query={searchValue}
-        itemListPredicate={itemListPredicate}
-        className="navbar-search-input"
-        onItemSelect={onItemSelect}
-        resetOnQuery
-      />
+      <ControlGroup vertical={false} fill>
+        <Icon className="SearchBox__icon" icon="search" />
+        {searchScopes.length > 1 && (
+          <Select
+            filterable={false}
+            items={searchScopes}
+            itemRenderer={this.renderScopeItem}
+            popoverProps={{ minimal: true }}
+          >
+            <Button
+              className="SearchBox__scoped-input__scope-button"
+              text={currScope.listItem}
+              rightIcon="caret-down"
+            />
+          </Select>
+        )}
+        <Suggest
+          inputProps={inputProps}
+          popoverProps={popoverProps}
+          searchScopes={searchScopes}
+          items={this.props.queryLogs.results}
+          itemRenderer={itemRenderer}
+          inputValueRenderer={({ text }) => text}
+          onQueryChange={onChange}
+          query={searchValue}
+          itemListPredicate={itemListPredicate}
+          className="navbar-search-input"
+          onItemSelect={onItemSelect}
+          resetOnQuery
+        />
+      </ControlGroup>
     );
   }
 }
@@ -130,9 +193,9 @@ const mapDispatchToProps = ({
   deleteQueryLog,
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(
-  withRouter(SearchBox),
-);
+
+export default compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
+)(SearchBox);

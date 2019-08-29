@@ -130,19 +130,15 @@ export class Navbar extends React.Component {
             <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'search-container hide'}>
               <button type="button" className="back-button visible-sm-block bp3-button bp3-large bp3-minimal bp3-icon-arrow-left" onClick={this.onToggleSearch} />
               {!isHomepage && (
-                <React.Fragment>
-                  <Icon icon="more" />
-                  <form onSubmit={this.onSubmit} autoComplete="off" className="navbar-search-form">
-
-                    <SearchBox
-                      doSearch={this.doSearch}
-                      updateSearchValue={this.updateSearchValue}
-                      searchValue={this.state.searchValue}
-                      searchScopes={searchScopes
-                        ? [...[defaultScope], ...searchScopes] : [defaultScope]}
-                    />
-                  </form>
-                </React.Fragment>
+                <form onSubmit={this.onSubmit} autoComplete="off" className="navbar-search-form">
+                  <SearchBox
+                    doSearch={this.doSearch}
+                    updateSearchValue={this.updateSearchValue}
+                    searchValue={this.state.searchValue}
+                    searchScopes={searchScopes
+                      ? [...[defaultScope], ...searchScopes] : [defaultScope]}
+                  />
+                </form>
               )}
             </div>
 

@@ -1,4 +1,17 @@
 @import "src/app/variables.scss";
+
+.SearchBox {
+  &__icon {
+    display: flex;
+    align-items: center;
+    margin-right: 15px !important;
+  }
+
+  &__scoped-input__scope-button {
+    white-space: nowrap;
+  }
+}
+
 .search-popover{
   ul.bp3-menu > li {
     .navbar-search-item {
