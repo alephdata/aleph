@@ -81,7 +81,7 @@ class SearchBox extends PureComponent {
     const inputProps = {
       type: 'text',
       leftIcon: 'search',
-      className: 'bp3-large',
+      className: 'bp3-fill',
       rightElement: <SearchAlert queryText={searchValue} />,
       value: searchValue,
       id: 'search-box',

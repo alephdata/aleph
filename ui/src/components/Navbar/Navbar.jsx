@@ -114,7 +114,7 @@ export class Navbar extends React.Component {
 
     return (
       <div id="Navbar" className="Navbar">
-        <nav className="bp3-navbar">
+        <nav className="bp3-navbar bp3-dark">
           <div className="navbar-header-search">
             <div className="bp3-navbar-group">
               <div className="bp3-navbar-heading">
@@ -127,18 +127,22 @@ export class Navbar extends React.Component {
               </div>
             </div>
 
-            <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'hide'}>
+            <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'search-container hide'}>
               <button type="button" className="back-button visible-sm-block bp3-button bp3-large bp3-minimal bp3-icon-arrow-left" onClick={this.onToggleSearch} />
               {!isHomepage && (
-              <form onSubmit={this.onSubmit} autoComplete="off" className="navbar-search-form">
-                <SearchBox
-                  doSearch={this.doSearch}
-                  updateSearchValue={this.updateSearchValue}
-                  searchValue={this.state.searchValue}
-                  searchScopes={searchScopes
-                    ? [...[defaultScope], ...searchScopes] : [defaultScope]}
-                />
-              </form>
+                <React.Fragment>
+                  <Icon icon="more" />
+                  <form onSubmit={this.onSubmit} autoComplete="off" className="navbar-search-form">
+
+                    <SearchBox
+                      doSearch={this.doSearch}
+                      updateSearchValue={this.updateSearchValue}
+                      searchValue={this.state.searchValue}
+                      searchScopes={searchScopes
+                        ? [...[defaultScope], ...searchScopes] : [defaultScope]}
+                    />
+                  </form>
+                </React.Fragment>
               )}
             </div>
 

@@ -6,8 +6,15 @@
     padding-left: $aleph-grid-size * 2;
     padding-right: $aleph-grid-size * 2;
     justify-content: space-between;
+    background-color: $dark-gray1;
     @media screen and (max-width: $aleph-screen-md-max-width) {
       flex-direction: column;
+    }
+
+    .search-container {
+      background-color: $dark-gray3;
+      padding: 10px;
+      max-width: 650px;
     }
 
     .navbar-header-search {
@@ -40,12 +47,9 @@
     .heading-title {
       margin-left: $aleph-grid-size * 1.5;
       white-space: nowrap;
-      padding-right: 18.5em;
+      padding-right: 1em;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
         display: none;
-      }
-      @media screen and (max-width: $aleph-screen-md-max-width) {
-        padding-right: 1em;
       }
     }
 
@@ -87,7 +91,6 @@
 
     .hide {
       flex: 2.5;
-      margin-top: 0.3em;
       @media screen and (max-width: $aleph-screen-sm-max-width) {
         display: none;
       }

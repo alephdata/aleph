@@ -12,6 +12,8 @@ import { Select } from '@blueprintjs/select';
 import { Classes } from '@blueprintjs/select/lib/esm/common';
 import { QueryList } from '@blueprintjs/select/lib/esm/components/query-list/queryList';
 
+import './Suggest.scss';
+
 const messages = defineMessages({
   placeholder: {
     id: 'search.placeholder',
@@ -117,14 +119,16 @@ class Suggest extends React.PureComponent {
         popoverClassName={classNames(Classes.SELECT_POPOVER, popoverProps.popoverClassName)}
         onOpened={this.handlePopoverOpened}
       >
-        <ControlGroup fill={true} vertical={false}>
+        <ControlGroup vertical={false} fill={true}>
           {searchScopes.length > 1 &&
             <Select
               filterable={false}
               items={searchScopes}
               itemRenderer={(a, b, c) => this.renderScopeItem(a, b, c)}
+              popoverProps={{minimal:true}}
             >
             <Button
+              className={'Suggest__scoped-input__scope-button'}
               text={currScope.listItem}
               rightIcon="caret-down"
             />

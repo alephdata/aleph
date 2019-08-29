@@ -192,7 +192,7 @@ export class SearchScreen extends React.Component {
       }
       if (values.length > 1) {
         return [{
-          listItem: `Searching ${values.length} Datasets`,
+          listItem: `Search ${values.length} Datasets`,
           label: `${values.length} Datasets`,
           onSearch: this.updateQuery,
         }];
