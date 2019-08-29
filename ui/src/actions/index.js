@@ -18,6 +18,7 @@ export {
   triggerCollectionCancel,
   updateCollection,
   updateCollectionPermissions,
+  makeMapping,
 } from './collectionActions';
 export {
   fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,
