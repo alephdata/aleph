@@ -37,6 +37,7 @@ class SearchBox extends React.Component {
     };
 
     this.changeSearchScope = this.changeSearchScope.bind(this);
+    this.onSearchSubmitClick = this.onSearchSubmitClick.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +65,12 @@ class SearchBox extends React.Component {
     this.props.updateSearchValue(query);
     this.props.doSearch(query, this.state.currScope);
   };
+
+  onSearchSubmitClick() {
+    const { searchValue, doSearch } = this.props;
+    console.log('submitting', searchValue);
+    doSearch(searchValue, this.state.currScope);
+  }
 
   deleteQueryLog = queryLogItem => (event) => {
     event.stopPropagation();
@@ -179,6 +186,7 @@ class SearchBox extends React.Component {
         <Button
           className="SearchBox__submit bp3-fixed"
           text="Search"
+          onClick={this.onSearchSubmitClick}
           minimal
         />
         <Button
