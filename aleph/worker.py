@@ -63,6 +63,7 @@ class AlephWorker(Worker):
                 update_collection(collection)
             task.job.remove()
 
+
 def get_worker():
     log.info("Listen: %s, stages: %s", kv, OPERATIONS)
     return AlephWorker(conn=kv, stages=OPERATIONS, num_threads=None)

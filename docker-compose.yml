@@ -16,8 +16,6 @@ services:
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-    ports:
-      - "19200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
@@ -33,9 +31,7 @@ services:
     tmpfs:
       - /tmp
       - /home/app/.config
-    expose:
-      - 3000
-  
+
   ingest-file:
     image: alephdata/ingest-file:${ALEPH_TAG:-3.2.8}
     tmpfs: /tmp

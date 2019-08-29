@@ -5,7 +5,7 @@ services:
     image: postgres:10.0
     hostname: postgres
     ports:
-      - "15432:5432"
+      - "127.0.0.1:15432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
@@ -24,7 +24,7 @@ services:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ports:
-      - "19200:9200"
+      - "127.0.0.1:19200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
@@ -44,8 +44,6 @@ services:
     tmpfs:
       - /tmp
       - /root/.config
-    expose:
-      - 3000
 
   ingest-file:
     build:
@@ -103,10 +101,8 @@ services:
         - alephdata/aleph:latest
     image: alephdata/aleph:${ALEPH_TAG:-latest}
     command: aleph runserver -h 0.0.0.0 -p 5000 --threaded
-    expose:
-      - 5000
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     restart: on-failure
     links:
       - postgres
@@ -133,7 +129,7 @@ services:
       - api
     command: npm run start
     ports:
-      - "8080:3000"
+      - "127.0.0.1:8080:3000"
     volumes:
       - "./ui/src:/alephui/src"
       - "./ui/public:/alephui/public"

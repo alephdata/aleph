@@ -35,6 +35,9 @@ class Category(String):
 class Language(String):
     """A valid language code."""
 
+    def _deserialize(self, value, attr, data):
+        return registry.language.clean(value)
+
     def _validate(self, value):
         if not registry.language.validate(value):
             raise ValidationError('Invalid language code.')
@@ -42,6 +45,9 @@ class Language(String):
 
 class Country(String):
     """A valid country code."""
+
+    def _deserialize(self, value, attr, data):
+        return registry.country.clean(value)
 
     def _validate(self, value):
         if not registry.country.validate(value):

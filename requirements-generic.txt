@@ -29,6 +29,7 @@ zipstream==1.1.4
 grpcio==1.21.1
 google-cloud-storage==1.16.0
 google-cloud-logging==1.11.0
+pyfasttext==0.4.6
 
 # Testing dependencies
 factory-boy==2.10.0

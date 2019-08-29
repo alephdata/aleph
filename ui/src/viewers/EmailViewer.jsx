@@ -56,7 +56,6 @@ class EmailViewer extends React.Component {
                 <td>{headers.from}</td>
               </tr>
             )}
-            {this.headerProperty('sender', 'emitters')}
             {this.headerProperty('date')}
             {headers.date && (
               <tr>
