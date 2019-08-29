@@ -91,6 +91,7 @@ export class Suggest extends React.PureComponent {
           onKeyUp={this.getTargetKeyUpHandler(handleKeyUp)}
           value={listProps.query}
         />
+
         <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
           {listProps.itemList}
         </div>

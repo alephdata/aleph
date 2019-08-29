@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
 import {
-  ControlGroup, Icon,
+  ControlGroup,
 } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
@@ -126,6 +126,7 @@ class SearchBox extends React.Component {
     const inputProps = {
       type: 'text',
       className: 'bp3-fill',
+      leftIcon: 'search',
       placeholder: intl.formatMessage(messages.placeholder, { label: currScope.label }),
       rightElement: <SearchAlert queryText={searchValue} />,
       value: searchValue,
@@ -147,7 +148,6 @@ class SearchBox extends React.Component {
 
     return (
       <ControlGroup vertical={false} fill>
-        <Icon className="SearchBox__icon" icon="search" />
         {searchScopes.length > 1 && (
           <Select
             filterable={false}
@@ -175,6 +175,18 @@ class SearchBox extends React.Component {
           className="navbar-search-input"
           onItemSelect={onItemSelect}
           resetOnQuery
+        />
+        <Button
+          className="SearchBox__submit bp3-fixed"
+          text="Search"
+          minimal
+        />
+        <Button
+          className="SearchBox__search-tips bp3-fixed"
+          text="Tips"
+          icon="lightbulb"
+          rightIcon="caret-down"
+          minimal
         />
       </ControlGroup>
     );

@@ -7,7 +7,7 @@
     margin-right: 15px !important;
   }
 
-  &__scoped-input__scope-button.bp3-button {
+  &__scoped-input__scope-button {
     white-space: nowrap;
     background: $gray1 !important;
     box-shadow: none !important;
@@ -21,6 +21,14 @@
     .bp3-icon {
       color: white !important;
     }
+  }
+
+  &__submit, &__search-tips {
+  }
+
+  &__submit {
+    background-color: $blue3 !important;
+    border: none !important;
   }
 
 
