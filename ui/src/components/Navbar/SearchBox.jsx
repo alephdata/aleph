@@ -153,7 +153,7 @@ class SearchBox extends React.Component {
             filterable={false}
             items={searchScopes}
             itemRenderer={this.renderScopeItem}
-            popoverProps={{ minimal: true }}
+            popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover' }}
           >
             <Button
               className="SearchBox__scoped-input__scope-button"
