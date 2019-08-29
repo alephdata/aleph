@@ -183,9 +183,17 @@ export class SearchScreen extends React.Component {
       console.log(Collection);
 
       if (values.length === 1) {
+        const collection = values[0];
         return [{
-          listItem: <Collection.Label collection={values[0]} icon truncate={30} />,
-          label: values[0].label,
+          listItem: <Collection.Label collection={collection} icon truncate={30} />,
+          label: collection.label,
+          onSearch: this.updateQuery,
+        }];
+      }
+      if (values.length > 1) {
+        return [{
+          listItem: `Searching ${values.length} Datasets`,
+          label: `${values.length} Datasets`,
           onSearch: this.updateQuery,
         }];
       }
