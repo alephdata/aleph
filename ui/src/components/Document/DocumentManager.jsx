@@ -26,18 +26,23 @@ export class DocumentManager extends Component {
 
   componentDidMount() {
     this.refreshPending();
-    this.interval = setInterval(() => this.refreshPending(), 2000);
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    clearTimeout(this.timeout);
+  }
+
+  scheduleNextRefresh() {
+    this.timeout = setTimeout(() => this.refreshPending(), 2000);
   }
 
   refreshPending() {
     const { hasPending, query, result } = this.props;
     if (!result.isLoading && result.total !== undefined && hasPending) {
       const updateQuery = query.limit(result.results.length);
-      this.props.queryEntities({ query: updateQuery });
+      this.props.queryEntities({ query: updateQuery }).finally(() => this.scheduleNextRefresh());
+    } else {
+      this.scheduleNextRefresh();
     }
   }
 
