@@ -1,6 +1,11 @@
 @import "src/app/variables.scss";
 
 .Navbar {
+  &__middle-group {
+    flex: 4 1 auto;
+    // justify-content: center;
+  }
+
   .bp3-navbar {
     display: flex;
     padding-left: $aleph-grid-size * 2;
@@ -15,11 +20,6 @@
       background-color: $dark-gray3;
       padding: 10px 15px;
       max-width: 650px;
-    }
-
-    .navbar-header-search {
-      width: 100%;
-      display: flex;
     }
 
     .navbar-option-title {
