@@ -37,7 +37,6 @@ class SearchBox extends React.Component {
     };
 
     this.changeSearchScope = this.changeSearchScope.bind(this);
-    this.onSearchSubmitClick = this.onSearchSubmitClick.bind(this);
   }
 
   componentDidMount() {
@@ -49,12 +48,13 @@ class SearchBox extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  /* eslint-disable react/no-did-update-set-state */
+  componentDidUpdate(prevProps) {
     const { searchScopes } = this.props;
 
-    if (searchScopes !== nextProps.searchScopes) {
+    if (searchScopes !== prevProps.searchScopes) {
       this.setState({
-        currScope: nextProps.searchScopes[nextProps.searchScopes.length - 1],
+        currScope: searchScopes[searchScopes.length - 1],
       });
     }
   }
@@ -66,9 +66,10 @@ class SearchBox extends React.Component {
     this.props.doSearch(query, this.state.currScope);
   };
 
-  onSearchSubmitClick() {
+  onSearchSubmitClick = () => {
     const { searchValue, doSearch } = this.props;
-    console.log('submitting', searchValue);
+    console.log('submitting', searchValue, this.state.currScope);
+    this.props.updateSearchValue(searchValue);
     doSearch(searchValue, this.state.currScope);
   }
 
@@ -118,6 +119,7 @@ class SearchBox extends React.Component {
   )
 
   changeSearchScope(newScope) {
+    console.log('changing scope to ', newScope);
     this.setState({ currScope: newScope });
   }
 

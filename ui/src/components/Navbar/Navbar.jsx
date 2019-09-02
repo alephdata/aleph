@@ -90,7 +90,7 @@ export class Navbar extends React.Component {
   doSearch = (searchValue = this.state.searchValue, searchScope) => {
     const { query, updateQuery } = this.props;
 
-    console.log(searchScope);
+    console.log('scope is', searchScope);
     if (updateQuery !== undefined) {
       updateQuery(query.set('q', searchValue));
     } else {

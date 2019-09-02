@@ -1,6 +1,11 @@
 @import "src/app/variables.scss";
 
 .Navbar {
+  &__left-group {
+    background-color: $dark-gray3;
+    padding-left: $aleph-grid-size * 2;
+  }
+
   &__middle-group {
     flex: 4 1 auto;
     // justify-content: center;
@@ -8,7 +13,7 @@
 
   .bp3-navbar {
     display: flex;
-    padding-left: $aleph-grid-size * 2;
+    padding-left: 0;
     padding-right: $aleph-grid-size * 2;
     justify-content: space-between;
     background-color: $dark-gray1;
@@ -17,7 +22,7 @@
     }
 
     .search-container {
-      background-color: $dark-gray3;
+      // background-color: $dark-gray3;
       padding: 10px 15px;
       max-width: 650px;
     }

@@ -173,7 +173,6 @@ export class SearchScreen extends React.Component {
 
   getSearchScopes() {
     const { facets } = this.props.result;
-    // const { facets } = this.state;
 
 
     if (facets && facets.collection_id) {
