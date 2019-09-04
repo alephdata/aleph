@@ -25,7 +25,8 @@ def _collection_proxies(collection):
         yield document.to_proxy()
 
 
-def process_collection(stage, collection, ingest=True, reset=False, sync=False):
+def process_collection(stage, collection, ingest=True,
+                       reset=False, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     ingest = ingest or reset

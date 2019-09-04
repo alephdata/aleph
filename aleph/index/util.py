@@ -31,8 +31,6 @@ SHARD_WEIGHTS = {
     'Family': SHARDS_LIGHT,
     'Passport': SHARDS_LIGHT,
     'Document': SHARDS_LIGHT,
-
-    'Row': SHARDS_HEAVY,
     'Page': SHARDS_HEAVY,
     'Email': SHARDS_HEAVY,
     'PlainText': SHARDS_HEAVY,
