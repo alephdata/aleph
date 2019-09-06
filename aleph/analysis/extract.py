@@ -1,7 +1,7 @@
 import logging
 
 import spacy
-from pyfasttext import FastText
+import fasttext
 from banal import ensure_list
 from normality import collapse_spaces
 from fingerprints import clean_entity_name
@@ -47,10 +47,11 @@ def location_country(location):
 def get_language(text):
     """Given a list of lines, return a list of (line, lang)"""
     if not hasattr(settings, '_lang_detector'):
-        lid_model = FastText()
-        lid_model.load_model(settings.LID_MODEL_PATH)
+        lid_model = fasttext.load_model(settings.LID_MODEL_PATH)
         settings._lang_detector = lid_model
-    langs = settings._lang_detector.predict([text])
+    langs = settings._lang_detector.predict(text.replace('\n', ' '))
+    # fasttext labels are prefixed, with '__label__' by default
+    langs = [lang.replace('__label__', '') for lang in langs[0]]
     return langs[0]
 
 
