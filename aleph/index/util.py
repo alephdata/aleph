@@ -10,8 +10,6 @@ from aleph.core import es, settings
 
 log = logging.getLogger(__name__)
 
-# This means that text beyond the first 500 MB will not be indexed
-INDEX_MAX_LEN = 1024 * 1024 * 90
 BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
@@ -143,7 +141,6 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     start_time = time()
     stream = streaming_bulk(es, actions,
                             chunk_size=chunk_size,
-                            max_chunk_bytes=INDEX_MAX_LEN,
                             max_retries=10,
                             initial_backoff=2,
                             yield_ok=False,
