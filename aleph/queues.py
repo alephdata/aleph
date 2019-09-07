@@ -49,7 +49,7 @@ def cancel_queue(collection):
 
 def ingest_entity(collection, proxy, job_id=None, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
-    if proxy.schema.is_a(Document.SCHEMA_FOLDER):
+    if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync:
         index_proxy(collection, proxy, sync=sync)
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     stage = get_stage(collection, OP_INGEST, job_id=job_id)

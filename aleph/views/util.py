@@ -7,7 +7,6 @@ from flask_babel import gettext
 from werkzeug.urls import url_parse, url_join
 from werkzeug.exceptions import MethodNotAllowed, Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
-from followthemoney.namespace import Namespace
 from lxml.etree import tostring
 from lxml.html import document_fromstring
 from lxml.html.clean import Cleaner
@@ -71,7 +70,6 @@ def parse_request(schema, many=None):
 
 def get_db_entity(entity_id, action=Authz.READ):
     get_index_entity(entity_id, action=action)
-    entity_id, _ = Namespace.parse(entity_id)
     entity = Entity.by_id(entity_id)
     if entity is None:
         raise MethodNotAllowed(description="Cannot write this entity")
