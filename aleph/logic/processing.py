@@ -105,8 +105,8 @@ def bulk_write(collection, iterable, job_id=None, unsafe=False):
         if not is_mapping(item):
             raise InvalidData("Failed to read input data", errors=item)
         entity = model.get_proxy(item)
-        entity = namespace.apply(entity)
         if not unsafe:
+            entity = namespace.apply(entity)
             entity = remove_checksums(entity)
         entities.append(entity)
     index_entities(stage, collection, entities)
