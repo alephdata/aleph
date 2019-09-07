@@ -81,5 +81,5 @@ def ingest_upload(collection_id):
 
     return jsonify({
         'status': 'ok',
-        'id': stringify(document.id)
+        'id': collection.ns.sign(document.id)
     }, status=201)

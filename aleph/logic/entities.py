@@ -18,7 +18,7 @@ def create_entity(data, collection, role=None, sync=False):
     db.session.commit()
     index.index_entity(entity, sync=sync)
     refresh_entity(entity)
-    return entity.id
+    return collection.ns.sign(entity.id)
 
 
 def update_entity(entity, sync=False):
@@ -28,7 +28,7 @@ def update_entity(entity, sync=False):
 
 def refresh_entity(entity, sync=False):
     if isinstance(entity, (Document, Entity)):
-        entity_id = entity.id
+        entity_id = entity.collection.ns.sign(entity.id)
         collection_id = entity.collection_id
     else:
         entity_id = entity.get('id')

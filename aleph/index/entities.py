@@ -137,6 +137,7 @@ def index_bulk(collection, entities, job_id=None, sync=False):
 def format_proxy(proxy, collection, job_id=None):
     """Apply final denormalisations to the index."""
     proxy.context = {}
+    proxy = collection.ns.apply(proxy)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
     data['job_id'] = job_id

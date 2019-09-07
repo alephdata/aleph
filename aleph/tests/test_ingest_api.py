@@ -45,7 +45,8 @@ class IngestApiTestCase(TestCase):
         assert res.status_code == 201, (res, res.data)
         assert 'id' in res.json, res.json
 
-        doc = Document.by_id(res.json.get('id'))
+        db_id, _ = res.json.get('id').split('.', 1)
+        doc = Document.by_id(db_id)
         assert doc.schema == Document.SCHEMA, doc.schema
 
         status = get_status(self.col)

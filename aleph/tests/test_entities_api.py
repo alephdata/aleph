@@ -25,6 +25,7 @@ class EntitiesApiTestCase(TestCase):
             }
         }
         self.ent = Entity.create(self.data, self.col)
+        self.id = self.col.ns.sign(self.ent.id)
         db.session.commit()
         index_entity(self.ent)
 
@@ -61,18 +62,18 @@ class EntitiesApiTestCase(TestCase):
         assert 'application/zip' in res.headers.get('Content-Type')
 
     def test_view(self):
-        res = self.client.get('/api/2/entities/%s' % self.ent.id)
+        url = '/api/2/entities/%s' % self.id
+        res = self.client.get(url)
         assert res.status_code == 403, res
         _, headers = self.login(is_admin=True)
-        res = self.client.get('/api/2/entities/%s' % self.ent.id,
-                              headers=headers)
+        res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert 'LegalEntity' in res.json['schema'], res.json
         assert 'Winnie' in res.json['name'], res.json
 
     def test_update(self):
         _, headers = self.login(is_admin=True)
-        url = '/api/2/entities/%s' % self.ent.id
+        url = '/api/2/entities/%s' % self.id
         res = self.client.get(url,
                               headers=headers)
         assert res.status_code == 200, res

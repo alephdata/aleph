@@ -3,7 +3,6 @@ from banal import is_mapping
 from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
-from followthemoney.namespace import Namespace
 
 from aleph.model import Entity, Document
 from aleph.queues import ingest_entity
@@ -98,7 +97,6 @@ def bulk_write(collection, iterable, job_id=None, unsafe=False):
     application has no control over key generation and a few other aspects
     of building the entity.
     """
-    namespace = Namespace(collection.foreign_id)
     stage = get_stage(collection, OP_INDEX, job_id=job_id)
     entities = []
     for item in iterable:
@@ -106,7 +104,6 @@ def bulk_write(collection, iterable, job_id=None, unsafe=False):
             raise InvalidData("Failed to read input data", errors=item)
         entity = model.get_proxy(item)
         if not unsafe:
-            entity = namespace.apply(entity)
             entity = remove_checksums(entity)
         entities.append(entity)
     index_entities(stage, collection, entities)

@@ -5,6 +5,7 @@ from flask_babel import lazy_gettext
 from sqlalchemy.orm import aliased
 from banal import as_bool, ensure_list
 from sqlalchemy.dialects.postgresql import ARRAY
+from followthemoney.namespace import Namespace
 
 from aleph.core import db
 from aleph.model.role import Role
@@ -110,6 +111,12 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         q = q.filter(Permission.read == True)  # noqa
         q = q.filter(Permission.deleted_at == None)  # noqa
         return q.count() < 1
+
+    @property
+    def ns(self):
+        if not hasattr(self, '_ns'):
+            self._ns = Namespace(self.foreign_id)
+        return self._ns
 
     def to_dict(self):
         data = self.to_dict_dates()
