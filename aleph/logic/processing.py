@@ -62,7 +62,7 @@ def index_aggregate(stage, collection, entity_id=None, sync=False, batch=100):
             for task in stage.get_tasks(limit=batch):
                 entity_id = task.payload.get('entity_id')
                 entities.extend(aggregator.iterate(entity_id=entity_id))
-            stage.mark_done(batch)
+            stage.mark_done(len(entities) - 1)
 
             for entity in entities:
                 log.debug("Index: %r", entity)

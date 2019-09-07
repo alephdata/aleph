@@ -21,8 +21,8 @@ def create_collection(data, role=None, sync=False):
                                    created_at=created_at)
     if collection.created_at == created_at:
         publish(Events.CREATE_COLLECTION,
-            params={'collection': collection},
-            actor_id=role.id)
+                params={'collection': collection},
+                actor_id=role.id)
     db.session.commit()
     Authz.flush()
     refresh_collection(collection.id)
