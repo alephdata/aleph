@@ -103,16 +103,18 @@ def render_notification(stub, notification):
 
 def generate_digest():
     """Generate notification digest emails for all users."""
-    for role in Role.all_users(has_email=True):
-        generate_role_digest(role)
+    for role in Role.all_users():
+        if role.is_alertable:
+            generate_role_digest(role)
 
 
 def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
-    since = datetime.utcnow() - timedelta(hours=25)
+    since = datetime.utcnow() - timedelta(hours=26)
     q = Notification.by_channels(get_role_channels(role),
-                                 since=since, exclude_actor_id=role.id)
+                                 since=since,
+                                 exclude_actor_id=role.id)
     total_count = q.count()
     if total_count == 0:
         return

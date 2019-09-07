@@ -49,7 +49,7 @@ def process_collection(stage, collection, ingest=True,
         aggregator.close()
 
 
-def index_aggregate(stage, collection, entity_id=None, sync=False):
+def index_aggregate(stage, collection, entity_id=None, sync=False, batch=100):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
@@ -59,10 +59,10 @@ def index_aggregate(stage, collection, entity_id=None, sync=False):
 
             # WEIRD: Instead of indexing a single entity, this will try
             # pull a whole batch of them off the queue and do it at once.
-            for task in stage.get_tasks(limit=50):
+            for task in stage.get_tasks(limit=batch):
                 entity_id = task.payload.get('entity_id')
                 entities.extend(aggregator.iterate(entity_id=entity_id))
-            stage.mark_done(len(entities) - 1)
+            stage.mark_done(batch)
 
             for entity in entities:
                 log.debug("Index: %r", entity)
