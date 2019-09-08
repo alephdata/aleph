@@ -126,6 +126,8 @@ def handle_not_modified(err):
 
 @blueprint.app_errorhandler(400)
 def handle_bad_request(err):
+    if hasattr(err, 'response') and err.response.is_json:
+        return err.response
     return jsonify({
         'status': 'error',
         'message': err.description
