@@ -35,8 +35,8 @@ class AlertsTestCase(TestCase):
 
         check_alerts()
         notcount = Notification.all().count()
-        assert notcount == 1, notcount
+        assert notcount == 2, notcount
 
         check_alerts()
         notcount = Notification.all().count()
-        assert notcount == 1, notcount
+        assert notcount == 2, notcount
