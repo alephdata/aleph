@@ -116,6 +116,7 @@ def generate_role_digest(role):
                                  since=since,
                                  exclude_actor_id=role.id)
     total_count = q.count()
+    log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:
         return
     notifications = [render_notification(role, n) for n in q.limit(20)]
