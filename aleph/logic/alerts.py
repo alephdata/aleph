@@ -42,7 +42,7 @@ def check_alert(alert_id):
             'role': alert.role,
             'entity': entity.get('id')
         }
-        publish(Events.MATCH_ALERT, params=params)
+        publish(Events.MATCH_ALERT, params=params, channels=[alert.role])
         db.session.flush()
 
     alert.update()

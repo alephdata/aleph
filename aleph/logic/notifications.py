@@ -31,12 +31,10 @@ def publish(event, actor_id=None, params=None, channels=None):
     assert isinstance(event, Event), event
     params = params or {}
     outparams = {}
-    channels = ensure_list(channels)
-    channels.append(channel(actor_id, clazz=Role))
+    channels = [channel(c) for c in ensure_list(channels)]
     for name, clazz in event.params.items():
         obj = params.get(name)
         outparams[name] = get_entity_id(obj)
-        channels.append(channel(obj, clazz=clazz))
     Notification.publish(event,
                          actor_id=actor_id,
                          params=outparams,
