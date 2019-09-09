@@ -68,5 +68,6 @@ def delete_collection(collection, keep_metadata=False, sync=False):
         Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
         collection.delete(deleted_at=deleted_at)
     db.session.commit()
-    index.delete_collection(collection.id, sync=sync)
-    Authz.flush()
+    if not keep_metadata:
+        index.delete_collection(collection.id, sync=sync)
+        Authz.flush()
