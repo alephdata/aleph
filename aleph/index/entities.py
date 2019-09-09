@@ -48,13 +48,9 @@ def get_field_type(field):
     field = field.split('.')[-1]
     if field in registry.groups:
         return registry.groups[field]
-    if not hasattr(get_field_type, 'fields'):
-        get_field_type.fields = {
-            field.split(':')[-1]: prop for field, prop in model.qnames.items()
-        }
-    prop = get_field_type.fields.get(field)
-    if prop:
-        return prop.type
+    for prop in model.properties:
+        if prop.name == field:
+            return prop.type
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,

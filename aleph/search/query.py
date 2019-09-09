@@ -1,10 +1,8 @@
 import logging
 from pprint import pprint, pformat  # noqa
 
-from followthemoney.types import registry
-
 from aleph.core import es
-from aleph.index.util import authz_query, field_filter_query
+from aleph.index.util import NUMERIC_TYPES, authz_query, field_filter_query
 from aleph.search.result import SearchQueryResult
 from aleph.search.parser import SearchQueryParser
 from aleph.index.entities import get_field_type
@@ -156,7 +154,7 @@ class Query(object):
         for (field, direction) in self.parser.sorts:
             field = self.SORT_FIELDS.get(field, field)
             if (field.startswith('properties.') and
-                    get_field_type(field) in (registry.number, registry.date)):
+                    get_field_type(field) in NUMERIC_TYPES):
                 field = field.replace('properties', 'typed_properties')
             sort_fields.append({field: direction})
         return list(reversed(sort_fields))

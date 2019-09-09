@@ -6,6 +6,7 @@ from followthemoney.exc import InvalidData
 
 from aleph.core import settings
 from aleph.index.util import index_settings, configure_index, get_shard_weight
+from aleph.index.util import NUMERIC_TYPES
 
 log = logging.getLogger(__name__)
 
@@ -44,9 +45,7 @@ def configure_collections():
                 }
             }
         ],
-        "_source": {
-            "excludes": ["text"]
-        },
+        "_source": {"excludes": ["text"]},
         "properties": {
             "label": {
                 "type": "text",
@@ -149,15 +148,13 @@ def configure_schema(schema, version):
         config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
         config['copy_to'] = ['text']
         schema_mapping[prop.name] = config
-        if prop.type in (registry.number, registry.date):
+        if prop.type in NUMERIC_TYPES:
             typed_properties[prop.name] = {"type": "double"}
 
     mapping = {
         "date_detection": False,
         "dynamic": False,
-        "_source": {
-            "excludes": ["text", "fingerprints"]
-        },
+        "_source": {"excludes": ["text", "fingerprints"]},
         "properties": {
             "name": {
                 "type": "text",
