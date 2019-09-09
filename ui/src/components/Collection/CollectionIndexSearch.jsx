@@ -26,7 +26,7 @@ export class CollectionIndexSearch extends Component {
     super(props);
     this.state = {
       createIsOpen: false,
-      queryPrefix: props.query.getString('prefix'),
+      queryText: props.query.getString('q'),
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleCreateCase = this.toggleCreateCase.bind(this);
@@ -34,13 +34,13 @@ export class CollectionIndexSearch extends Component {
   }
 
   onChangeQueryPrefix({ target }) {
-    this.setState({ queryPrefix: target.value });
+    this.setState({ queryText: target.value });
   }
 
   onSubmit(event) {
     event.preventDefault();
-    const { queryPrefix } = this.state;
-    const query = this.props.query.set('prefix', queryPrefix);
+    const { queryText } = this.state;
+    const query = this.props.query.set('q', queryText);
     this.props.updateQuery(query);
   }
 
@@ -50,7 +50,7 @@ export class CollectionIndexSearch extends Component {
 
   render() {
     const { intl, casefiles = false } = this.props;
-    const { queryPrefix } = this.state;
+    const { queryText } = this.state;
     const placeholder = casefiles ? messages.place_casefiles : messages.place_sources;
     return (
       <form onSubmit={this.onSubmit} className="CollectionIndexSearch">
@@ -61,7 +61,7 @@ export class CollectionIndexSearch extends Component {
             leftIcon="search"
             onChange={this.onChangeQueryPrefix}
             placeholder={intl.formatMessage(placeholder)}
-            value={queryPrefix}
+            value={queryText}
           />
           { casefiles && (
             <Button
