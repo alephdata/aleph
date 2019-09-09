@@ -58,14 +58,15 @@ def index_collections():
         index.index_collection(collection)
 
 
-def delete_collection(collection, sync=False):
+def delete_collection(collection, keep_metadata=False, sync=False):
     reset_collection(collection, sync=False)
     flush_notifications(collection)
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
     Document.delete_by_collection(collection.id)
-    Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
-    collection.delete(deleted_at=deleted_at)
+    if not keep_metadata:
+        Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
+        collection.delete(deleted_at=deleted_at)
     db.session.commit()
     index.delete_collection(collection.id, sync=sync)
     Authz.flush()
