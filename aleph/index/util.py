@@ -75,8 +75,6 @@ def unpack_result(res):
         data['highlight'] = []
         for key, value in res.get('highlight', {}).items():
             data['highlight'].extend(value)
-
-    data.pop('typed_properties', None)
     return data
 
 

@@ -11,12 +11,12 @@ from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, query_delete, bulk_actions
-from aleph.index.util import MAX_PAGE
+from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
                    'identifiers', 'addresses', 'properties.bodyText',
-                   'properties.bodyHtml', 'properties.headers']
+                   'properties.bodyHtml', 'properties.headers', 'numeric.*']
 
 
 def _source_spec(includes, excludes):
@@ -51,6 +51,7 @@ def get_field_type(field):
     for prop in model.properties:
         if prop.name == field:
             return prop.type
+    return registry.string
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
@@ -168,14 +169,13 @@ def format_proxy(proxy, collection, job_id=None):
         data['updated_at'] = updated_at
 
     # integer casting
-    typed_props = {}
-    for prop in properties:
-        prop = proxy._get_prop(prop)
-        if prop.type in (registry.number, registry.date):
-            vals = ensure_list(properties.get(prop.name, []))
-            num_vals = [prop.type.to_number(v) for v in vals]
-            typed_props[prop.name] = num_vals
-    data['typed_properties'] = typed_props
+    numeric = {}
+    for prop, values in properties.items():
+        prop = proxy.schema.get(prop)
+        if prop.type in NUMERIC_TYPES:
+            values = [prop.type.to_number(v) for v in values]
+            numeric[prop.name] = values
+    data['numeric'] = numeric
 
     # pprint(data)
     entity_id = data.pop('id')

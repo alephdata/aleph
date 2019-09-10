@@ -153,9 +153,8 @@ class Query(object):
         sort_fields = ['_score']
         for (field, direction) in self.parser.sorts:
             field = self.SORT_FIELDS.get(field, field)
-            if (field.startswith('properties.') and
-                    get_field_type(field) in NUMERIC_TYPES):
-                field = field.replace('properties', 'typed_properties')
+            if get_field_type(field) in NUMERIC_TYPES:
+                field = field.replace('properties.', 'numeric.')
             sort_fields.append({field: direction})
         return list(reversed(sort_fields))
 

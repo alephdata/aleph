@@ -143,13 +143,13 @@ def configure_schema(schema, version):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
-    typed_properties = {}
+    numeric_mapping = {}
     for prop in schema.properties.values():
         config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
         config['copy_to'] = ['text']
         schema_mapping[prop.name] = config
         if prop.type in NUMERIC_TYPES:
-            typed_properties[prop.name] = {"type": "double"}
+            numeric_mapping[prop.name] = {"type": "double"}
 
     mapping = {
         "date_detection": False,
@@ -208,9 +208,9 @@ def configure_schema(schema, version):
                 "type": "object",
                 "properties": schema_mapping
             },
-            "typed_properties": {
+            "numeric": {
                 "type": "object",
-                "properties": typed_properties
+                "properties": numeric_mapping
             },
             "updated_at": {"type": "date"},
         }
