@@ -3,6 +3,7 @@ import fingerprints
 from pprint import pprint  # noqa
 from banal import ensure_list
 from followthemoney import model
+from followthemoney.types import registry
 from elasticsearch.helpers import scan
 
 from aleph.core import es, cache
@@ -10,12 +11,12 @@ from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, query_delete, bulk_actions
-from aleph.index.util import MAX_PAGE
+from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
                    'identifiers', 'addresses', 'properties.bodyText',
-                   'properties.bodyHtml', 'properties.headers']
+                   'properties.bodyHtml', 'properties.headers', 'numeric.*']
 
 
 def _source_spec(includes, excludes):
@@ -41,6 +42,16 @@ def _entities_query(filters, authz, collection_id, schemata):
     if ensure_list(schemata):
         filters.append({'terms': {'schemata': ensure_list(schemata)}})
     return {'bool': {'filter': filters}}
+
+
+def get_field_type(field):
+    field = field.split('.')[-1]
+    if field in registry.groups:
+        return registry.groups[field]
+    for prop in model.properties:
+        if prop.name == field:
+            return prop.type
+    return registry.string
 
 
 def iter_entities(authz=None, collection_id=None, schemata=None,
@@ -134,6 +145,11 @@ def index_bulk(collection, entities, job_id=None, sync=False):
     bulk_actions(actions, sync=sync)
 
 
+def _numeric_values(type_, values):
+    values = [type_.to_number(v) for v in ensure_list(values)]
+    return [v for v in values if v is not None]
+
+
 def format_proxy(proxy, collection, job_id=None):
     """Apply final denormalisations to the index."""
     proxy.context = {}
@@ -157,6 +173,16 @@ def format_proxy(proxy, collection, job_id=None):
     data['updated_at'] = collection.updated_at
     for updated_at in properties.pop('indexUpdatedAt', []):
         data['updated_at'] = updated_at
+
+    # integer casting
+    numeric = {}
+    for prop, values in properties.items():
+        prop = proxy.schema.get(prop)
+        if prop.type in NUMERIC_TYPES:
+            numeric[prop.name] = _numeric_values(prop.type, values)
+    # also cast group field for dates
+    numeric['dates'] = _numeric_values(registry.date, data.get('dates'))
+    data['numeric'] = numeric
 
     # pprint(data)
     entity_id = data.pop('id')

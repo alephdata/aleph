@@ -4,6 +4,7 @@ from pprint import pprint  # noqa
 from banal import ensure_list
 from elasticsearch import TransportError
 from elasticsearch.helpers import streaming_bulk
+from followthemoney.types import registry
 from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
@@ -13,6 +14,7 @@ log = logging.getLogger(__name__)
 BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
+NUMERIC_TYPES = (registry.number, registry.date,)
 
 SHARDS_LIGHT = 1
 SHARDS_DEFAULT = 5
