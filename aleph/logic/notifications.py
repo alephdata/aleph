@@ -31,12 +31,10 @@ def publish(event, actor_id=None, params=None, channels=None):
     assert isinstance(event, Event), event
     params = params or {}
     outparams = {}
-    channels = ensure_list(channels)
-    channels.append(channel(actor_id, clazz=Role))
+    channels = [channel(c) for c in ensure_list(channels)]
     for name, clazz in event.params.items():
         obj = params.get(name)
         outparams[name] = get_entity_id(obj)
-        channels.append(channel(obj, clazz=clazz))
     Notification.publish(event,
                          actor_id=actor_id,
                          params=outparams,
@@ -103,17 +101,20 @@ def render_notification(stub, notification):
 
 def generate_digest():
     """Generate notification digest emails for all users."""
-    for role in Role.all_users(has_email=True):
-        generate_role_digest(role)
+    for role in Role.all_users():
+        if role.is_alertable:
+            generate_role_digest(role)
 
 
 def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
-    since = datetime.utcnow() - timedelta(hours=25)
+    since = datetime.utcnow() - timedelta(hours=26)
     q = Notification.by_channels(get_role_channels(role),
-                                 since=since, exclude_actor_id=role.id)
+                                 since=since,
+                                 exclude_actor_id=role.id)
     total_count = q.count()
+    log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:
         return
     notifications = [render_notification(role, n) for n in q.limit(20)]

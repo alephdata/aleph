@@ -77,10 +77,10 @@ def crawldir(path, language=None, foreign_id=None):
 
 
 @manager.command
-def delete(foreign_id):
+def delete(foreign_id, keep_metadata=False):
     """Delete all the contents for a given collecton."""
     collection = get_collection(foreign_id)
-    delete_collection(collection)
+    delete_collection(collection, keep_metadata=keep_metadata)
 
 
 @manager.command
@@ -94,6 +94,7 @@ def flushdeleted():
 @manager.option('--index', is_flag=True, default=False)
 @manager.option('--process', is_flag=True, default=False)
 @manager.option('--reset', is_flag=True, default=False)
+@manager.option('--keep-metadata', is_flag=True, default=False)
 def update(foreign_id=None, index=False, process=False, reset=False):
     """Re-index all the collections and entities."""
     update_roles()

@@ -39,10 +39,13 @@ class CollectionStatus extends Component {
   }
 
   fetchStatus() {
-    const { collection, status } = this.props;
-    this.props.fetchCollectionStatus(collection);
-    const duration = status.pending === 0 ? 6000 : 2000;
-    this.timeout = setTimeout(this.fetchStatus, duration);
+    const { collection } = this.props;
+    this.props.fetchCollectionStatus(collection)
+      .finally(() => {
+        const { status } = this.props;
+        const duration = status.pending === 0 ? 6000 : 2000;
+        this.timeout = setTimeout(this.fetchStatus, duration);
+      });
   }
 
   render() {

@@ -22,12 +22,13 @@ class OutlookPSTIngestor(Ingestor, TempFileSupport, OLESupport, ShellSupport):
         temp_dir = self.make_empty_directory()
         try:
             self.exec_command('readpst',
-                              '-e',  # make subfolders, files per message
-                              '-D',  # include deleted
-                              '-r',  # recursive structure
-                              '-8',  # utf-8 where possible
-                              '-b',
-                              '-q',  # quiet
+                              '-e',   # make subfolders, files per message
+                              '-S',   # single files
+                              '-D',   # include deleted
+                              # '-r',   # recursive structure
+                              '-8',   # utf-8 where possible
+                              '-cv',  # export vcards
+                              # '-q',   # quiet
                               '-o', temp_dir,
                               file_path)
             self.manager.delegate(DirectoryIngestor, temp_dir, entity)

@@ -3,6 +3,7 @@ import logging
 from normality import slugify
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.namespace import Namespace
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -115,13 +116,14 @@ class Document(db.Model, DatedModel):
         return document
 
     @classmethod
-    def by_id(cls, id, collection_id=None):
+    def by_id(cls, document_id, collection_id=None):
         try:
-            id = int(id)
+            document_id, _ = Namespace.parse(document_id)
+            document_id = int(document_id)
         except Exception:
             return
         q = cls.all()
-        q = q.filter(cls.id == id)
+        q = q.filter(cls.id == document_id)
         if collection_id is not None:
             q = q.filter(cls.collection_id == collection_id)
         return q.first()

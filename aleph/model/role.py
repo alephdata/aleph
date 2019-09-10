@@ -62,7 +62,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def is_alertable(self):
         if self.email is None:
             return False
-        if self.is_muted:
+        if self.is_muted is True:
             return False
         # TODO: ignore people that have not logged in for a certain time?
         return True
@@ -202,11 +202,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return cls.all().filter(Role.type != Role.USER)
 
     @classmethod
-    def all_users(cls, has_email=False):
-        q = cls.all().filter(Role.type == Role.USER)
-        if has_email:
-            q = q.filter(Role.email != None)  # noqa
-        return q
+    def all_users(cls):
+        return cls.all().filter(Role.type == Role.USER)
 
     def set_password(self, secret):
         """Hashes and sets the role password.
