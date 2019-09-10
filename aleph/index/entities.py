@@ -145,6 +145,11 @@ def index_bulk(collection, entities, job_id=None, sync=False):
     bulk_actions(actions, sync=sync)
 
 
+def _numeric_values(type_, values):
+    values = [type_.to_number(v) for v in ensure_list(values)]
+    return [v for v in values if v is not None]
+
+
 def format_proxy(proxy, collection, job_id=None):
     """Apply final denormalisations to the index."""
     proxy.context = {}
@@ -173,8 +178,9 @@ def format_proxy(proxy, collection, job_id=None):
     for prop, values in properties.items():
         prop = proxy.schema.get(prop)
         if prop.type in NUMERIC_TYPES:
-            values = [prop.type.to_number(v) for v in values]
-            numeric[prop.name] = values
+            numeric[prop.name] = _numeric_values(prop.type, values)
+    # also cast group field for dates
+    numeric['dates'] = _numeric_values(registry.date, data.get('dates'))
     data['numeric'] = numeric
 
     # pprint(data)

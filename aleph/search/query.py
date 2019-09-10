@@ -1,5 +1,6 @@
 import logging
 from pprint import pprint, pformat  # noqa
+from followthemoney.types import registry
 
 from aleph.core import es
 from aleph.index.util import NUMERIC_TYPES, authz_query, field_filter_query
@@ -153,9 +154,13 @@ class Query(object):
         sort_fields = ['_score']
         for (field, direction) in self.parser.sorts:
             field = self.SORT_FIELDS.get(field, field)
-            if get_field_type(field) in NUMERIC_TYPES:
+            type_ = get_field_type(field)
+            config = {'order': direction, 'missing': '_last'}
+            if field == registry.date.group:
+                field = 'numeric.dates'
+            if type_ in NUMERIC_TYPES:
                 field = field.replace('properties.', 'numeric.')
-            sort_fields.append({field: direction})
+            sort_fields.append({field: config})
         return list(reversed(sort_fields))
 
     def get_highlight(self):
