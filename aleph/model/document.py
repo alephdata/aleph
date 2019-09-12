@@ -4,6 +4,7 @@ from normality import slugify
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.namespace import Namespace
+from followthemoney.util import sanitize_text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -64,7 +65,9 @@ class Document(db.Model, DatedModel):
                  'modified_at', 'published_at', 'retrieved_at', 'languages',
                  'countries', 'keywords')
         for prop in props:
-            self.meta[prop] = data.get(prop, self.meta.get(prop))
+            text = data.get(prop, self.meta.get(prop))
+            self.meta[prop] = sanitize_text(text)
+
         flag_modified(self, 'meta')
 
     def delete(self, deleted_at=None):
@@ -80,6 +83,8 @@ class Document(db.Model, DatedModel):
     def save(cls, collection, parent=None, foreign_id=None,
              content_hash=None, meta=None, uploader_id=None):
         """Try and find a document by various criteria."""
+        foreign_id = sanitize_text(foreign_id)
+
         q = cls.all()
         q = q.filter(Document.collection_id == collection.id)
 
