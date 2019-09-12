@@ -41,6 +41,11 @@ def get_status(collection):
     return Dataset(kv, collection.foreign_id).get_status()
 
 
+def get_active_collection_status():
+    data = Dataset.get_active_dataset_status(kv)
+    return data
+
+
 def cancel_queue(collection):
     Dataset(kv, collection.foreign_id).cancel()
 

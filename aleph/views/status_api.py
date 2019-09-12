@@ -2,7 +2,7 @@ import logging
 from flask import Blueprint, request
 
 from aleph.model import Collection
-from aleph.logic.status import get_active_collection_status
+from aleph.queues import get_active_collection_status
 from aleph.views.util import jsonify
 from aleph.logic import resolver
 from aleph.views.util import require
