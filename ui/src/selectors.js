@@ -112,6 +112,11 @@ export function selectNotificationsResult(state, query) {
   return result;
 }
 
+export function selectDashboardResult(state, query) {
+  const result = selectResult(state, query, (stateInner, id) => stateInner.dashboard[id]);
+  return result;
+}
+
 export function selectEntityTags(state, entityId) {
   return selectObject(state.entityTags, entityId);
 }

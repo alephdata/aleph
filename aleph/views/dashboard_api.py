@@ -31,6 +31,7 @@ def dashboard():
         if fid in active_foreign_ids:
             result = active_collections[fid]
             result['collection'] = data
+            result['id'] = fid
             results.append(result)
     status['results'] = results
     return jsonify(status)

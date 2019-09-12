@@ -17,6 +17,7 @@ import results from './results';
 import alerts from './alerts';
 import notifications from './notifications';
 import queryLogs from './queryLogs';
+import dashboard from './dashboard';
 
 const rootReducer = combineReducers({
   metadata,
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   collectionXrefMatches,
   queryLogs,
   results,
+  dashboard,
 });
 
 export default rootReducer;

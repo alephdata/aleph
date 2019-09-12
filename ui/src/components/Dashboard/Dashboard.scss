@@ -1,0 +1,13 @@
+@import "~src/app/tables";
+
+.Dashboard {
+  @extend .settings-table;
+
+  td.text {
+    padding-left: 0;
+  }
+
+  td.narrow {
+    padding-right: 0;
+  }
+}
