@@ -1,7 +1,7 @@
 import logging
 import requests
 from pantomime.types import DEFAULT
-from requests import RequestException
+from requests import RequestException, HTTPError
 from servicelayer.util import backoff, service_retries
 
 from ingestors.settings import UNOSERVICE_URL
@@ -50,8 +50,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                                     files=files,
                                     timeout=(5, 305),
                                     stream=True)
-                if res.status_code > 399:
-                    raise ProcessingException(res.text)
+                res.raise_for_status()
                 out_path = self.make_work_file('out.pdf')
                 with open(out_path, 'wb') as fh:
                     bytes_written = 0
@@ -61,6 +60,9 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                     if bytes_written > 50:
                         return out_path
             except RequestException as exc:
+                if isinstance(exc, HTTPError) and \
+                        exc.response.status_code == 400:
+                    raise ProcessingException(res.text)
                 log.error("Conversion failed: %s", exc)
                 backoff(failures=attempt)
             finally:

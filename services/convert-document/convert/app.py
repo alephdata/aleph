@@ -84,12 +84,12 @@ def convert():
                 upload_file]
         err = subprocess.call(args, timeout=TIMEOUT)
         if err != 0 or not os.path.exists(OUT_PATH):
-            return ('', 400)
+            return ('The document could not be converted to PDF.', 400)
         return send_file(OUT_PATH)
     except subprocess.TimeoutExpired:
         log.error("Timeout exceeded: %s", upload.filename)
         app.is_dead = True
-        return ('', 400)
+        return ('Processing the document timed out.', 400)
     finally:
         lock.release()
 
