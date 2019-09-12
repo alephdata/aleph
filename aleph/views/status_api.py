@@ -2,18 +2,18 @@ import logging
 from flask import Blueprint, request
 
 from aleph.model import Collection
-from aleph.logic.dashboard import get_active_collection_status
+from aleph.logic.status import get_active_collection_status
 from aleph.views.util import jsonify
 from aleph.logic import resolver
 from aleph.views.util import require
 
 
 log = logging.getLogger(__name__)
-blueprint = Blueprint('dashboard_api', __name__)
+blueprint = Blueprint('status_api', __name__)
 
 
-@blueprint.route('/api/2/dashboard', methods=['GET'])
-def dashboard():
+@blueprint.route('/api/2/status', methods=['GET'])
+def status():
     require(request.authz.logged_in)
     status = get_active_collection_status()
     active_collections = status.pop('datasets')

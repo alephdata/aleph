@@ -53,7 +53,7 @@ export class SystemStatusScreen extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('dashboard', location, {}, 'dashbaord');
+  const query = Query.fromLocation('status', location, {}, 'status');
   const result = {};
   return { query, result };
 };
