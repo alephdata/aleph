@@ -36,9 +36,14 @@ const messages = defineMessages({
 
 
 export class SystemStatusScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.fetchIfNeeded = this.fetchIfNeeded.bind(this);
+    this.cancelCollection = this.cancelCollection.bind(this);
+  }
+
   componentDidMount() {
     this.fetchIfNeeded();
-    this.interval = setInterval(() => this.fetchIfNeeded(), 10000);
   }
 
   componentDidUpdate(prevProps) {
@@ -48,14 +53,20 @@ export class SystemStatusScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    clearTimeout(this.timeout);
   }
 
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (!result.isLoading) {
-      this.props.queryDashboard({ query });
+      this.props.queryDashboard({ query }).finally(() => {
+        this.timeout = setTimeout(this.fetchIfNeeded, 10000);
+      });
     }
+  }
+
+  cancelCollection(collection) {
+    this.props.triggerCollectionCancel(collection.id);
   }
 
   render() {
@@ -87,14 +98,22 @@ export class SystemStatusScreen extends React.Component {
                 )
               }
               {result.total !== 0 && (
-                <table className="Dashboard">
+                <table className="StatusTable">
                   <thead>
                     <tr>
-                      <th><FormattedMessage id="infoMode.collection" defaultMessage="Collection" /></th>
-                      <th><FormattedMessage id="collection.status.jobs" defaultMessage="Number of Jobs" /></th>
-                      <th><FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished Tasks" /></th>
-                      <th><FormattedMessage id="collection.status.pending_tasks" defaultMessage="Pending Tasks" /></th>
-                      <th />
+                      <th>
+                        <FormattedMessage id="infoMode.collection" defaultMessage="Collection" />
+                      </th>
+                      <th className="numeric narrow">
+                        <FormattedMessage id="collection.status.jobs" defaultMessage="Number of Jobs" />
+                      </th>
+                      <th className="numeric narrow">
+                        <FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished Tasks" />
+                      </th>
+                      <th className="numeric narrow">
+                        <FormattedMessage id="collection.status.pending_tasks" defaultMessage="Pending Tasks" />
+                      </th>
+                      <th className="numeric narrow" />
                     </tr>
                   </thead>
                   <tbody>
@@ -106,12 +125,12 @@ export class SystemStatusScreen extends React.Component {
                               <Collection.Label collection={res.collection} />
                             </Link>
                           </td>
-                          <td>{res.jobs.length}</td>
-                          <td>{res.finished}</td>
-                          <td>{res.pending}</td>
-                          <td>
+                          <td className="numeric narrow">{res.jobs.length}</td>
+                          <td className="numeric narrow">{res.finished}</td>
+                          <td className="numeric narrow">{res.pending}</td>
+                          <td className="numeric narrow">
                             <Tooltip content={intl.formatMessage(messages.cancel_button)}>
-                              <Button onClick={() => this.props.triggerCollectionCancel(res.collection.id)} icon="delete">
+                              <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
                                 <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
                               </Button>
                             </Tooltip>
@@ -122,7 +141,7 @@ export class SystemStatusScreen extends React.Component {
                   </tbody>
                 </table>
               )}
-              {result.isLoading && (
+              {!result.total && result.isLoading && (
                 <SectionLoading />
               )}
             </React.Fragment>

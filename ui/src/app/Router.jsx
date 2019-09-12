@@ -61,7 +61,7 @@ class Router extends Component {
           <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
-          <Route path="/dashboard" exact component={SystemStatusScreen} />
+          <Route path="/status" exact component={SystemStatusScreen} />
           <Route path="/" exact component={HomeScreen} />
           <Route component={NotFoundScreen} />
         </Switch>

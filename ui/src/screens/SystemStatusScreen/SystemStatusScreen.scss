@@ -1,7 +1,11 @@
 @import "~src/app/tables";
 
-.Dashboard {
+.StatusTable {
   @extend .settings-table;
+
+  tr td, tr th {
+    vertical-align: middle;
+  }
 
   td.text {
     padding-left: 0;
