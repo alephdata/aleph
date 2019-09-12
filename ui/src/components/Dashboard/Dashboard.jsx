@@ -20,12 +20,17 @@ const messages = defineMessages({
 class Dashboard extends Component {
   componentDidMount() {
     this.fetchIfNeeded();
+    this.interval = setInterval(() => this.fetchIfNeeded(), 10000);
   }
 
   componentDidUpdate(prevProps) {
     if (!this.props.query.sameAs(prevProps.query)) {
       this.fetchIfNeeded();
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   fetchIfNeeded() {
