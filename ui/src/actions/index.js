@@ -23,6 +23,7 @@ export {
   fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,
 } from './entityActions';
 export { fetchMetadata, fetchStatistics } from './metadataActions';
+export { queryDashboard } from './dashboardActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

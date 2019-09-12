@@ -9,6 +9,7 @@ export function mergeResults(previous, current) {
   if (current.offset === expectedOffset) {
     return { ...current, results: [...previous.results, ...current.results] };
   }
+  if (Number.isNaN(expectedOffset)) return current;
   return previous;
 }
 
