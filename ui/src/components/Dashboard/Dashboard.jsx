@@ -3,9 +3,11 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import { Collection, SectionLoading, ErrorSection } from 'src/components/common';
 import { queryDashboard } from 'src/actions';
 import { selectDashboardResult } from 'src/selectors';
+import { Link } from 'react-router-dom';
+import getCollectionLink from 'src/util/getCollectionLink';
 
 import './Dashboard.scss';
 
@@ -65,7 +67,11 @@ class Dashboard extends Component {
               {result.results.map(res => (
                 (
                   <tr key={res.id}>
-                    <td>{res.collection.label}</td>
+                    <td className="entity">
+                      <Link to={getCollectionLink(res.collection)}>
+                        <Collection.Label collection={res.collection} />
+                      </Link>
+                    </td>
                     <td>{res.finished}</td>
                     <td>{res.pending}</td>
                   </tr>
