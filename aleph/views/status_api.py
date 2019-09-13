@@ -4,7 +4,6 @@ from flask import Blueprint, request
 from aleph.model import Collection
 from aleph.queues import get_active_collection_status
 from aleph.views.util import jsonify
-from aleph.logic import resolver
 from aleph.views.util import require
 
 
@@ -19,18 +18,14 @@ def status():
     active_collections = status.pop('datasets')
     active_foreign_ids = set(active_collections.keys())
     collections = request.authz.collections(request.authz.READ)
-    for collection_id in collections:
-        resolver.queue(request, Collection, collection_id)
-    resolver.resolve(request)
     results = []
-    for collection_id in collections:
-        data = resolver.get(request, Collection, collection_id)
-        if data is None:
+    for fid in active_foreign_ids:
+        collection = Collection.by_foreign_id(fid)
+        if collection is None:
             continue
-        fid = data['foreign_id']
-        if fid in active_foreign_ids:
+        if collection.id in collections:
             result = active_collections[fid]
-            result['collection'] = data
+            result['collection'] = collection.to_dict()
             result['id'] = fid
             results.append(result)
     status['results'] = results
