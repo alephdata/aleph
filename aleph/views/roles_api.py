@@ -1,6 +1,7 @@
 import logging
 from flask_babel import gettext
 from flask import Blueprint, request
+from itsdangerous import BadSignature
 from werkzeug.exceptions import BadRequest
 
 from aleph.core import db, settings
