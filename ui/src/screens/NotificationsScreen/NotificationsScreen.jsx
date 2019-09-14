@@ -6,12 +6,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { deleteNotifications as deleteNotificationsAction } from 'src/actions';
-import { DualPane, Breadcrumbs } from 'src/components/common';
 import Toolbar from 'src/components/Toolbar/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
-import AlertsManager from 'src/components/AlertsManager/AlertsManager';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import Dashboard from 'src/components/Dashboard/Dashboard';
 
 import { selectNotificationsResult } from 'src/selectors';
 
@@ -51,26 +50,17 @@ export class NotificationsScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
-        <Breadcrumbs>
-          <Breadcrumbs.Text text={intl.formatMessage(messages.title)} />
-        </Breadcrumbs>
-        <DualPane className="NotificationsScreen">
-          <DualPane.ContentPane className="padded">
-            <Toolbar>
-              <h1>
-                <FormattedMessage id="notifications.heading" defaultMessage="Your notifications" />
-              </h1>
-              <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
-                <FormattedMessage
-                  id="notifications.mark_read"
-                  defaultMessage="Mark as seen"
-                />
-              </Button>
-            </Toolbar>
-            <NotificationList query={query} />
-          </DualPane.ContentPane>
-          <AlertsManager />
-        </DualPane>
+        <Dashboard>
+          <Toolbar>
+            <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
+              <FormattedMessage
+                id="notifications.mark_read"
+                defaultMessage="Mark as seen"
+              />
+            </Button>
+          </Toolbar>
+          <NotificationList query={query} />
+        </Dashboard>
       </Screen>
     );
   }
