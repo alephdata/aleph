@@ -12,7 +12,7 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
+import { DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
 
 
@@ -28,36 +28,7 @@ const messages = defineMessages({
 });
 
 
-const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.match.params;
-  const { location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  return {
-    collectionId,
-    collection: selectCollection(state, collectionId),
-    activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
-  };
-};
-
-
 export class CollectionScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.onSearch = this.onSearch.bind(this);
-  }
-
-  onSearch(queryText) {
-    const { history, collection } = this.props;
-    const query = {
-      q: queryText,
-      'filter:collection_id': collection.id,
-    };
-    history.push({
-      pathname: '/search',
-      search: queryString.stringify(query),
-    });
-  }
-
   render() {
     const {
       intl, collection, collectionId, activeMode,
@@ -76,14 +47,8 @@ export class CollectionScreen extends Component {
       );
     }
 
-    const operation = (
-      <SearchBox
-        onSearch={this.onSearch}
-        searchPlaceholder={intl.formatMessage(messages.placeholder, { label: collection.label })}
-      />
-    );
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs>
         <Breadcrumbs.Collection key="collection" collection={collection} />
         {activeMode === 'xref' && (
           <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />
@@ -117,6 +82,19 @@ export class CollectionScreen extends Component {
     );
   }
 }
+
+
+const mapStateToProps = (state, ownProps) => {
+  const { collectionId } = ownProps.match.params;
+  const { location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+  return {
+    collectionId,
+    collection: selectCollection(state, collectionId),
+    activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
+  };
+};
+
 
 export default compose(
   withRouter,
