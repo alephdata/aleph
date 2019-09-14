@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import { deleteNotifications as deleteNotificationsAction } from 'src/actions';
+import { deleteNotifications } from 'src/actions';
 import Toolbar from 'src/components/Toolbar/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
@@ -33,10 +33,9 @@ export class NotificationsScreen extends React.Component {
   }
 
   async onMarkRead(event) {
-    const { deleteNotifications } = this.props;
     event.preventDefault();
     this.setState({ isMarkedRead: true });
-    await deleteNotifications();
+    await this.props.deleteNotifications();
   }
 
   render() {
@@ -74,10 +73,8 @@ const mapStateToProps = (state, ownProps) => {
   return { query, result };
 };
 
-const mapDispatchToProps = { deleteNotifications: deleteNotificationsAction };
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { deleteNotifications }),
   injectIntl,
 )(NotificationsScreen);

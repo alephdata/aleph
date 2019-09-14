@@ -1,12 +1,17 @@
-import React, { Component } from 'react';
-import { toString } from 'lodash';
-import { Dialog, Button, Intent } from '@blueprintjs/core';
+import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import c from 'classnames';
+import { Button, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { updateRole as updateRoleAction, fetchRole as fetchRoleAction } from 'src/actions';
+import { withRouter } from 'react-router';
+import c from 'classnames';
+import Screen from 'src/components/Screen/Screen';
+import Dashboard from 'src/components/Dashboard/Dashboard';
+
+import { updateRole, fetchRole } from 'src/actions';
 import { selectSession } from 'src/selectors';
+
+import './SettingsScreen.scss';
 
 
 const messages = defineMessages({
@@ -21,7 +26,7 @@ const messages = defineMessages({
 });
 
 
-export class SettingsDialog extends Component {
+export class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,21 +41,19 @@ export class SettingsDialog extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { role, isOpen, fetchRole } = this.props;
+    const { role, isOpen } = this.props;
     if (!prevProps.isOpen && isOpen) {
-      fetchRole(role.id);
+      this.props.fetchRole(role.id);
     }
   }
 
   async onSave() {
     const { role } = this.state;
-    const { toggleDialog, updateRole } = this.props;
     if (this.valid()) {
       if (role.password === null || role.password === '') {
         delete role.password;
       }
-      await updateRole(role);
-      toggleDialog();
+      await this.props.updateRole(role);
     }
   }
 
@@ -84,17 +87,12 @@ export class SettingsDialog extends Component {
   }
 
   render() {
-    const { intl, isOpen, toggleDialog } = this.props;
+    const { intl } = this.props;
     const { role } = this.state;
 
     return (
-      <Dialog
-        icon="cog"
-        isOpen={isOpen}
-        onClose={toggleDialog}
-        title={intl.formatMessage(messages.title)}
-      >
-        <div className="bp3-dialog-body">
+      <Screen title={intl.formatMessage(messages.title)} requireSession>
+        <Dashboard>
           <div className="bp3-form-group">
             <label className="bp3-label" htmlFor="name">
               <FormattedMessage
@@ -223,33 +221,27 @@ export class SettingsDialog extends Component {
                 </div>
               </div>
             </label>
-
           </div>
-        </div>
-        <div className="bp3-dialog-footer">
-          <div className="bp3-dialog-footer-actions">
-            <Button
-              intent={Intent.PRIMARY}
-              onClick={this.onSave}
-              disabled={!this.valid()}
-              text={intl.formatMessage(messages.save_button)}
-            />
-          </div>
-        </div>
-      </Dialog>
+          <Button
+            intent={Intent.PRIMARY}
+            onClick={this.onSave}
+            disabled={!this.valid()}
+            text={intl.formatMessage(messages.save_button)}
+          />
+        </Dashboard>
+      </Screen>
     );
   }
 }
+
+
 const mapStateToProps = state => ({
   session: selectSession(state),
   role: state.session.role,
 });
 
-const mapDispatchToProps = {
-  fetchRole: fetchRoleAction,
-  updateRole: updateRoleAction,
-};
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  withRouter,
+  connect(mapStateToProps, { fetchRole, updateRole }),
   injectIntl,
-)(SettingsDialog);
+)(SettingsScreen);

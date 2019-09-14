@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import { Menu, MenuItem, Card, Elevation } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
@@ -9,20 +10,27 @@ const messages = defineMessages({
     id: 'dashboard.notifications',
     defaultMessage: 'Notifications',
   },
-  no_results_description: {
-    id: 'entity.search.no_results_description',
-    defaultMessage: 'Try making your search more general',
-  },
-  empty_title: {
-    id: 'entity.search.empty_title',
-    defaultMessage: 'This folder is empty',
+  settings: {
+    id: 'dashboard.settings',
+    defaultMessage: 'Settings',
   },
 });
 
 
 class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.navigate = this.navigate.bind(this);
+  }
+
+  navigate(path) {
+    const { history } = this.props;
+    history.push(path);
+  }
+
   render() {
-    const { intl } = this.props;
+    const { intl, location } = this.props;
+    const current = location.pathname;
     return (
       <div className="Dashboard">
         <div className="dashboard-menu">
@@ -35,15 +43,22 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="notifications"
               text={intl.formatMessage(messages.notifications)}
-              href="/notifications"
-              active
+              onClick={() => this.navigate('/notifications')}
+              active={current === '/notifications'}
             />
             <MenuItem text="Searches &amp; alerts" href="/history" />
             <MenuItem text="My datasets" href="/collections" />
             <li className="bp3-menu-header">
-              <h6 className="bp3-heading">Settings</h6>
+              <h6 className="bp3-heading">
+                <FormattedMessage id="dashboard.system" defaultMessage="System" />
+              </h6>
             </li>
-            <MenuItem text="Profile" href="/settings" />
+            <MenuItem
+              icon="cog"
+              text={intl.formatMessage(messages.settings)}
+              onClick={() => this.navigate('/settings')}
+              active={current === '/settings'}
+            />
           </Menu>
         </div>
         <Card className="dashboard-body" elevation={Elevation.ONE}>
@@ -55,4 +70,5 @@ class Dashboard extends React.Component {
 }
 
 Dashboard = injectIntl(Dashboard);
+Dashboard = withRouter(Dashboard);
 export default Dashboard;

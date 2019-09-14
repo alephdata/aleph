@@ -10,7 +10,8 @@
     .dashboard-menu {
         flex: flex;
         flex-direction: column;
-        flex-grow: 1;
+        flex-grow: 0;
+        width: 20%;
 
         .bp3-menu {
             background-color: inherit !important;

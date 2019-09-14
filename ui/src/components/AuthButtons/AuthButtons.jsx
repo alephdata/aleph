@@ -5,7 +5,6 @@ import {
   Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position,
 } from '@blueprintjs/core';
 
-import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import QueryLogsDialog from 'src/dialogs/QueryLogsDialog/QueryLogsDialog';
 
@@ -38,12 +37,9 @@ export class AuthButtons extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settingsIsOpen: false,
       queryLogsIsOpen: false,
       isSignupOpen: false,
     };
-
-    this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
@@ -51,11 +47,6 @@ export class AuthButtons extends Component {
 
   toggleAuthentication() {
     this.setState(({ isSignupOpen }) => ({ isSignupOpen: !isSignupOpen }));
-  }
-
-
-  toggleSettings() {
-    this.setState(({ settingsIsOpen }) => ({ settingsIsOpen: !settingsIsOpen }));
   }
 
   render() {
@@ -76,7 +67,14 @@ export class AuthButtons extends Component {
                   </div>
                 </Link>
                 <MenuItem icon="history" onClick={this.toggleQueryLogs} text={intl.formatMessage(messages.queryLogs)} />
-                <MenuItem icon="cog" onClick={this.toggleSettings} text={`${intl.formatMessage(messages.settings)}…`} />
+                <Link to="/settings" className="bp3-menu-item">
+                  <Icon icon="cog" />
+                  {' '}
+                  {' '}
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.settings)}
+                  </div>
+                </Link>
                 <MenuDivider />
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
@@ -87,7 +85,6 @@ export class AuthButtons extends Component {
               <FormattedMessage id="nav.profile" defaultMessage="Profile" />
             </Button>
           </Popover>
-          <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
           <QueryLogsDialog
             isOpen={this.state.queryLogsIsOpen}
             toggleDialog={this.toggleQueryLogs}
