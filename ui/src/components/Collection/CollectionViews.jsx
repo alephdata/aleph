@@ -9,7 +9,6 @@ import queryString from 'query-string';
 import {
   Count, TextLoading, Schema, Icon,
 } from 'src/components/common';
-import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
@@ -64,7 +63,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      isPreview, collection, activeMode, xrefIndex,
+      collection, activeMode, xrefIndex,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
@@ -77,17 +76,6 @@ class CollectionViews extends React.Component {
         renderActiveTabPanelOnly
         className="info-tabs-padding"
       >
-        {isPreview && (
-          <Tab
-            id="info"
-            title={
-              <React.Fragment>
-                <Icon name="info" />
-                <FormattedMessage id="entity.info.info" defaultMessage="Info" />
-              </React.Fragment>}
-            panel={<CollectionInfoMode collection={collection} />}
-          />
-        )}
         {hasBrowse && (
           <Tab
             id="Document"

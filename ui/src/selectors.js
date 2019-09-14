@@ -170,12 +170,9 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   return undefined;
 }
 
-export function selectCollectionView(state, collectionId, mode, isPreview) {
+export function selectCollectionView(state, collectionId, mode) {
   if (mode) {
     return mode;
-  }
-  if (isPreview) {
-    return 'info';
   }
   const collection = selectCollection(state, collectionId);
   const model = selectModel(state);

@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
-import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
@@ -63,7 +62,6 @@ export class CollectionScreen extends Component {
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.InfoPane className="with-heading">
-              <CollectionToolbar collection={collection} />
               <CollectionHeading collection={collection} />
               <div className="pane-content">
                 <CollectionInfoMode collection={collection} />
