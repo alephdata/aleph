@@ -135,6 +135,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.name = name or email
             role.type = type
             role.is_admin = False
+            role.is_muted = False
             role.notified_at = datetime.utcnow()
 
         if role.api_key is None:

@@ -82,9 +82,10 @@ class SchemaName(String):
 
 
 class RoleSchema(Schema):
-    name = String(validate=Length(min=3))
+    name = String(validate=Length(min=4))
     is_muted = Boolean(missing=None)
     password = String(validate=MIN_PASSWORD, missing=None, load_only=True)
+    current_password = String(missing=None, load_only=True)
 
 
 class RoleCodeCreateSchema(Schema):
@@ -92,7 +93,7 @@ class RoleCodeCreateSchema(Schema):
 
 
 class RoleCreateSchema(Schema):
-    name = String()
+    name = String(validate=Length(min=4))
     password = String(validate=MIN_PASSWORD, required=True)
     code = String(required=True)
 

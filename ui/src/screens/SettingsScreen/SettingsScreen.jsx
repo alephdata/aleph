@@ -1,15 +1,15 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Intent } from '@blueprintjs/core';
-import { compose } from 'redux';
+import { Button, Intent, FormGroup, InputGroup, Checkbox } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import c from 'classnames';
+
+import { showSuccessToast } from 'src/app/toast';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-
+import ClipboardInput from 'src/components/common/ClipboardInput';
 import { updateRole, fetchRole } from 'src/actions';
-import { selectSession } from 'src/selectors';
+import { selectSession, selectMetadata } from 'src/selectors';
 
 import './SettingsScreen.scss';
 
@@ -23,6 +23,58 @@ const messages = defineMessages({
     id: 'settings.save',
     defaultMessage: 'Update',
   },
+  name: {
+    id: 'settings.name',
+    defaultMessage: 'Name',
+  },
+  api_key: {
+    id: 'settings.api_key',
+    defaultMessage: 'API Secret Access Key',
+  },
+  api_key_help: {
+    id: 'profileinfo.api_desc',
+    defaultMessage: 'Use the API key to read and write data via remote applications.',
+  },
+  email: {
+    id: 'settings.email',
+    defaultMessage: 'E-mail Address',
+  },
+  email_no_change: {
+    id: 'settings.email.no_change',
+    defaultMessage: 'Your e-mail address cannot be changed',
+  },
+  email_muted: {
+    id: 'settings.email.muted',
+    defaultMessage: 'Receive daily notification e-mails',
+  },
+  current_password: {
+    id: 'settings.current_password',
+    defaultMessage: 'Current password',
+  },
+  current_explain: {
+    id: 'settings.current_explain',
+    defaultMessage: 'Enter your current password to set a new one.',
+  },
+  new_password: {
+    id: 'settings.new_password',
+    defaultMessage: 'New password',
+  },
+  confirm: {
+    id: 'settings.confirm',
+    defaultMessage: '(confirm)',
+  },
+  password_rules: {
+    id: 'settings.password.rules',
+    defaultMessage: 'Use at least six characters',
+  },
+  password_mismatch: {
+    id: 'settings.password.missmatch',
+    defaultMessage: 'Passwords do not match',
+  },
+  saved: {
+    id: 'settings.saved',
+    defaultMessage: 'It\'s official, your profile is updated.',
+  },
 });
 
 
@@ -34,6 +86,7 @@ export class SettingsScreen extends React.Component {
     };
     this.onSave = this.onSave.bind(this);
     this.onChangeInput = this.onChangeInput.bind(this);
+    this.onToggleMuted = this.onToggleMuted.bind(this);
   }
 
   static getDerivedStateFromProps(props) {
@@ -48,12 +101,14 @@ export class SettingsScreen extends React.Component {
   }
 
   async onSave() {
+    const { intl } = this.props;
     const { role } = this.state;
     if (this.valid()) {
       if (role.password === null || role.password === '') {
         delete role.password;
       }
       await this.props.updateRole(role);
+      showSuccessToast(intl.formatMessage(messages.saved));
     }
   }
 
@@ -63,9 +118,15 @@ export class SettingsScreen extends React.Component {
     this.setState({ role });
   }
 
+  onToggleMuted() {
+    const { role } = this.state;
+    role.is_muted = !role.is_muted;
+    this.setState({ role });
+  }
+
   validName() {
     const { role: { name } } = this.state;
-    return name !== undefined && name !== null && name.length > 2;
+    return name !== undefined && name !== null && name.length > 4;
   }
 
   validPassword() {
@@ -79,169 +140,143 @@ export class SettingsScreen extends React.Component {
 
   validPasswordConfirm() {
     const { role: { password, passwordConfirm } } = this.state;
-    return toString(password) === toString(passwordConfirm);
+    return password === passwordConfirm;
   }
 
   valid() {
     return this.validName() && this.validPassword() && this.validPasswordConfirm();
   }
 
+  renderPassword() {
+    const { intl, metadata } = this.props;
+    const { role } = this.state;
+
+    if (!metadata.auth.password_login_uri) {
+      return null;
+    }
+    const passwordIntent = this.validPassword() ? undefined : Intent.DANGER;
+    const confirm = this.validPasswordConfirm();
+    const confirmIntent = confirm ? undefined : Intent.DANGER;
+    const confirmHelper = confirm ? undefined : intl.formatMessage(messages.password_mismatch);
+    return (
+      <React.Fragment>
+        <h3>
+          <FormattedMessage
+            id="settings.password.title"
+            defaultMessage="Change your password"
+          />
+        </h3>
+        <FormGroup
+          label={intl.formatMessage(messages.current_password)}
+          labelFor="current_password"
+          helperText={intl.formatMessage(messages.current_explain)}
+        >
+          <InputGroup
+            id="current_password"
+            value={role.current_password || ''}
+            onChange={this.onChangeInput}
+            type="password"
+          />
+        </FormGroup>
+        <FormGroup
+          label={intl.formatMessage(messages.new_password)}
+          labelFor="password"
+          helperText={intl.formatMessage(messages.password_rules)}
+          intent={passwordIntent}
+        >
+          <InputGroup
+            id="password"
+            value={role.password || ''}
+            onChange={this.onChangeInput}
+            intent={passwordIntent}
+            type="password"
+          />
+        </FormGroup>
+        <FormGroup
+          label={intl.formatMessage(messages.new_password)}
+          labelInfo={intl.formatMessage(messages.confirm)}
+          labelFor="password"
+          helperText={confirmHelper}
+          intent={confirmIntent}
+        >
+          <InputGroup
+            id="passwordConfirm"
+            value={role.passwordConfirm || ''}
+            onChange={this.onChangeInput}
+            intent={confirmIntent}
+            type="password"
+          />
+        </FormGroup>
+      </React.Fragment>
+    );
+  }
+
   render() {
     const { intl } = this.props;
     const { role } = this.state;
-
+    const nameIntent = this.validName() ? undefined : Intent.DANGER;
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
-          <div className="bp3-form-group">
-            <label className="bp3-label" htmlFor="name">
-              <FormattedMessage
-                id="settings.name"
-                defaultMessage="Name"
-              />
-              <div className="bp3-form-content">
-                <input
-                  id="name"
-                  className={c('bp3-input bp3-fill bp3-large', { 'bp3-intent-danger': !this.validName() })}
-                  type="text"
-                  dir="auto"
-                  value={role.name}
-                  onChange={this.onChangeInput}
-                />
-              </div>
-            </label>
-
-          </div>
-          <div className={c('bp3-form-group', { 'bp3-intent-danger': !this.validPassword() })}>
-            <label className="bp3-label" htmlFor="password">
-              <FormattedMessage
-                id="settings.password"
-                defaultMessage="Password"
-              />
-              <div className="bp3-form-content">
-                <input
-                  id="password"
-                  className={c('bp3-input bp3-fill', { 'bp3-intent-danger': !this.validPassword() })}
-                  type="password"
-                  dir="auto"
-                  value={role.password || ''}
-                  onChange={this.onChangeInput}
-                />
-                <div className="bp3-form-helper-text">
-                  <FormattedMessage
-                    id="settings.password.rules"
-                    defaultMessage="Use at least six characters"
-                  />
-                </div>
-              </div>
-            </label>
-
-          </div>
-          <div className={c('bp3-form-group', { 'bp3-intent-danger': !this.validPasswordConfirm() })}>
-            <label className="bp3-label" htmlFor="passwordConfirm">
-              <FormattedMessage
-                id="settings.password"
-                defaultMessage="Password"
-              />
-              {' '}
-              <span className="bp3-text-muted">
-                <FormattedMessage
-                  id="settings.password_confirm"
-                  defaultMessage="(confirm)"
-                />
-              </span>
-              <div className="bp3-form-content">
-                <input
-                  id="passwordConfirm"
-                  className={c('bp3-input bp3-fill', { 'bp3-intent-danger': !this.validPasswordConfirm() })}
-                  type="password"
-                  dir="auto"
-                  value={role.passwordConfirm || ''}
-                  onChange={this.onChangeInput}
-                />
-                { !this.validPasswordConfirm() && (
-                  <div className="bp3-form-helper-text">
-                    <FormattedMessage
-                      id="settings.password.missmatch"
-                      defaultMessage="Passwords do not match"
-                    />
-                  </div>
-                )}
-              </div>
-            </label>
-
-          </div>
-          <div className="bp3-form-group">
-            <label className="bp3-label" htmlFor="email">
-              <FormattedMessage
-                id="settings.email"
-                defaultMessage="E-mail Address"
-              />
-              <div className="bp3-form-content">
-                <input
-                  id="email"
-                  className="bp3-input bp3-fill"
-                  type="text"
-                  dir="auto"
-                  value={role.email}
-                  readOnly
-                />
-                <div className="bp3-form-helper-text">
-                  <FormattedMessage
-                    id="settings.email.no_change"
-                    defaultMessage="Your e-mail address cannot be changed"
-                  />
-                </div>
-              </div>
-            </label>
-          </div>
-          <div className="bp3-form-group">
-            <label className="bp3-label" htmlFor="api_key">
-              <FormattedMessage
-                id="settings.api_key"
-                defaultMessage="API Secret Access Key"
-              />
-              <div className="bp3-form-content">
-                <div className="bp3-input-group bp3-fill">
-                  <span className="bp3-icon bp3-icon-key" />
-                  <input
-                    className="bp3-input"
-                    id="api_key"
-                    readOnly
-                    type="text"
-                    dir="auto"
-                    value={role.api_key}
-                  />
-                </div>
-                <div className="bp3-form-helper-text">
-                  <FormattedMessage
-                    id="profileinfo.api_desc"
-                    defaultMessage="Use the API key to read and write data via remote applications."
-                  />
-                </div>
-              </div>
-            </label>
-          </div>
-          <Button
-            intent={Intent.PRIMARY}
-            onClick={this.onSave}
-            disabled={!this.valid()}
-            text={intl.formatMessage(messages.save_button)}
+          <FormGroup
+            label={intl.formatMessage(messages.name)}
+            labelFor="name"
+            intent={nameIntent}
+          >
+            <InputGroup
+              id="name"
+              value={role.name}
+              onChange={this.onChangeInput}
+              intent={nameIntent}
+              large
+            />
+          </FormGroup>
+          <FormGroup
+            label={intl.formatMessage(messages.api_key)}
+            labelFor="api_key"
+            helperText={intl.formatMessage(messages.api_key_help)}
+          >
+            <ClipboardInput id="api_key" icon="key" value={role.api_key} />
+          </FormGroup>
+          <FormGroup
+            label={intl.formatMessage(messages.email)}
+            labelFor="email"
+            helperText={intl.formatMessage(messages.email_no_change)}
+          >
+            <InputGroup
+              id="email"
+              readOnly
+              value={role.email}
+            />
+          </FormGroup>
+          <Checkbox
+            checked={!role.is_muted}
+            label={intl.formatMessage(messages.email_muted)}
+            onChange={this.onToggleMuted}
           />
+          {this.renderPassword()}
+          <FormGroup>
+            <Button
+              intent={Intent.PRIMARY}
+              onClick={this.onSave}
+              disabled={!this.valid()}
+              text={intl.formatMessage(messages.save_button)}
+              large
+            />
+          </FormGroup>
         </Dashboard>
       </Screen>
     );
   }
 }
 
-
 const mapStateToProps = state => ({
   session: selectSession(state),
+  metadata: selectMetadata(state),
   role: state.session.role,
 });
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps, { fetchRole, updateRole }),
-  injectIntl,
-)(SettingsScreen);
+SettingsScreen = withRouter(SettingsScreen);
+SettingsScreen = connect(mapStateToProps, { fetchRole, updateRole })(SettingsScreen);
+SettingsScreen = injectIntl(SettingsScreen);
+export default SettingsScreen;
