@@ -14,6 +14,10 @@ const messages = defineMessages({
     id: 'dashboard.settings',
     defaultMessage: 'Settings',
   },
+  status: {
+    id: 'dashboard.status',
+    defaultMessage: 'Status',
+  },
 });
 
 
@@ -58,6 +62,12 @@ class Dashboard extends React.Component {
               text={intl.formatMessage(messages.settings)}
               onClick={() => this.navigate('/settings')}
               active={current === '/settings'}
+            />
+            <MenuItem
+              icon="dashboard"
+              text={intl.formatMessage(messages.status)}
+              onClick={() => this.navigate('/status')}
+              active={current === '/status'}
             />
           </Menu>
         </div>

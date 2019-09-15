@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 import { Button, Tooltip } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
-import { DualPane, Breadcrumbs, Collection, SectionLoading, ErrorSection } from 'src/components/common';
-import Toolbar from 'src/components/Toolbar/Toolbar';
+import { Collection, SectionLoading, ErrorSection } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
+import Dashboard from 'src/components/Dashboard/Dashboard';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { triggerCollectionCancel, queryDashboard } from 'src/actions';
 import { selectDashboardResult } from 'src/selectors';
@@ -78,75 +78,65 @@ export class SystemStatusScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
-        <Breadcrumbs>
-          <Breadcrumbs.Text text={intl.formatMessage(messages.title)} />
-        </Breadcrumbs>
-        <DualPane className="SystemStatusScreen">
-          <DualPane.ContentPane className="padded">
-            <Toolbar>
-              <h1>
-                <FormattedMessage id="notifications.heading" defaultMessage="Active Collections" />
-              </h1>
-            </Toolbar>
-            <React.Fragment>
-              {result.total === 0
-                && (
-                  <ErrorSection
-                    visual="dashboard"
-                    title={intl.formatMessage(messages.no_active_collection)}
-                  />
-                )
-              }
-              {result.total !== 0 && (
-                <table className="StatusTable">
-                  <thead>
-                    <tr>
-                      <th>
-                        <FormattedMessage id="infoMode.collection" defaultMessage="Collection" />
-                      </th>
-                      <th className="numeric narrow">
-                        <FormattedMessage id="collection.status.jobs" defaultMessage="Number of Jobs" />
-                      </th>
-                      <th className="numeric narrow">
-                        <FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished Tasks" />
-                      </th>
-                      <th className="numeric narrow">
-                        <FormattedMessage id="collection.status.pending_tasks" defaultMessage="Pending Tasks" />
-                      </th>
-                      <th className="numeric narrow" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.results.map(res => (
-                      (
-                        <tr key={res.id}>
-                          <td className="entity">
-                            <Link to={getCollectionLink(res.collection)}>
-                              <Collection.Label collection={res.collection} />
-                            </Link>
-                          </td>
-                          <td className="numeric narrow">{res.jobs.length}</td>
-                          <td className="numeric narrow">{res.finished}</td>
-                          <td className="numeric narrow">{res.pending}</td>
-                          <td className="numeric narrow">
-                            <Tooltip content={intl.formatMessage(messages.cancel_button)}>
-                              <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
-                                <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
-                              </Button>
-                            </Tooltip>
-                          </td>
-                        </tr>
-                      )
-                    ))}
-                  </tbody>
-                </table>
-              )}
-              {!result.total && result.isLoading && (
-                <SectionLoading />
-              )}
-            </React.Fragment>
-          </DualPane.ContentPane>
-        </DualPane>
+        <Dashboard>
+          <React.Fragment>
+            {result.total === 0
+              && (
+                <ErrorSection
+                  visual="dashboard"
+                  title={intl.formatMessage(messages.no_active_collection)}
+                />
+              )
+            }
+            {result.total !== 0 && (
+              <table className="StatusTable">
+                <thead>
+                  <tr>
+                    <th>
+                      <FormattedMessage id="infoMode.collection" defaultMessage="Collection" />
+                    </th>
+                    <th className="numeric narrow">
+                      <FormattedMessage id="collection.status.jobs" defaultMessage="Number of Jobs" />
+                    </th>
+                    <th className="numeric narrow">
+                      <FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished Tasks" />
+                    </th>
+                    <th className="numeric narrow">
+                      <FormattedMessage id="collection.status.pending_tasks" defaultMessage="Pending Tasks" />
+                    </th>
+                    <th className="numeric narrow" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.results.map(res => (
+                    (
+                      <tr key={res.id}>
+                        <td className="entity">
+                          <Link to={getCollectionLink(res.collection)}>
+                            <Collection.Label collection={res.collection} />
+                          </Link>
+                        </td>
+                        <td className="numeric narrow">{res.jobs.length}</td>
+                        <td className="numeric narrow">{res.finished}</td>
+                        <td className="numeric narrow">{res.pending}</td>
+                        <td className="numeric narrow">
+                          <Tooltip content={intl.formatMessage(messages.cancel_button)}>
+                            <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
+                              <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
+                            </Button>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    )
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {!result.total && result.isLoading && (
+              <SectionLoading />
+            )}
+          </React.Fragment>
+        </Dashboard>
       </Screen>
     );
   }
