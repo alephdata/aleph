@@ -16,3 +16,8 @@ export const updateRole = asyncActionCreator(role => async () => {
   const response = await endpoint.post(`roles/${role.id}`, role);
   return { role: response.data };
 }, { name: 'UPDATE_ROLE' });
+
+export const fetchGroups = asyncActionCreator(() => async () => {
+  const response = await endpoint.get('groups');
+  return { data: response.data };
+}, { name: 'FETCH_GROUPS' });

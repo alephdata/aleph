@@ -1,7 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Menu, MenuItem, Card, Elevation } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+
+import { fetchGroups } from 'src/actions';
+import { selectGroups } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -27,13 +31,28 @@ class Dashboard extends React.Component {
     this.navigate = this.navigate.bind(this);
   }
 
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { groups } = this.props;
+    if (groups.shouldLoad) {
+      this.props.fetchGroups();
+    }
+  }
+
   navigate(path) {
     const { history } = this.props;
     history.push(path);
   }
 
   render() {
-    const { intl, location } = this.props;
+    const { intl, location, groups } = this.props;
     const current = location.pathname;
     return (
       <div className="Dashboard">
@@ -52,6 +71,18 @@ class Dashboard extends React.Component {
             />
             <MenuItem text="Searches &amp; alerts" href="/history" />
             <MenuItem text="My datasets" href="/collections" />
+            { groups.total !== undefined && (
+              <React.Fragment>
+                <li className="bp3-menu-header">
+                  <h6 className="bp3-heading">
+                    <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
+                  </h6>
+                </li>
+                { groups.results.map(group => (
+                  <MenuItem key={group.id} icon="shield" text={group.label} href="/sources" />
+                ))}
+              </React.Fragment>
+            )}
             <li className="bp3-menu-header">
               <h6 className="bp3-heading">
                 <FormattedMessage id="dashboard.system" defaultMessage="System" />
@@ -79,6 +110,12 @@ class Dashboard extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  const groups = selectGroups(state);
+  return { groups };
+};
+
 Dashboard = injectIntl(Dashboard);
 Dashboard = withRouter(Dashboard);
+Dashboard = connect(mapStateToProps, { fetchGroups })(Dashboard);
 export default Dashboard;

@@ -68,8 +68,6 @@ def statistics():
     collections = request.authz.collections(request.authz.READ)
     for collection_id in collections:
         resolver.queue(request, Collection, collection_id)
-    for role_id in request.authz.roles:
-        resolver.queue(request, Role, role_id)
     resolver.resolve(request)
 
     # Summarise stats. This is meant for display, so the counting is a bit
@@ -88,20 +86,11 @@ def statistics():
         for country in data.get('countries', []):
             countries[country] += 1
 
-    # Add a users roles to the home page:
-    groups = []
-    for role_id in request.authz.roles:
-        data = resolver.get(request, Role, role_id)
-        if data is None or data.get('type') != Role.GROUP:
-            continue
-        groups.append(RoleSerializer().serialize(data))
-
     return jsonify({
         'collections': len(collections),
         'schemata': dict(schemata),
         'countries': dict(countries),
         'categories': dict(categories),
-        'groups': groups,
         'things': sum(schemata.values()),
     })
 

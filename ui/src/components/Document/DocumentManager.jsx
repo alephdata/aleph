@@ -112,6 +112,7 @@ export class DocumentManager extends Component {
     );
   }
 }
+
 const mapStateToProps = (state, ownProps) => {
   let { query } = ownProps;
   const { collection } = ownProps;
@@ -131,8 +132,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = { queryEntities };
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
 )(DocumentManager);

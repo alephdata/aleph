@@ -65,6 +65,10 @@ export function selectAlerts(state) {
   return selectObject(state, 'alerts');
 }
 
+export function selectGroups(state) {
+  return state.groups;
+}
+
 export function selectStatistics(state) {
   return selectObject(state, 'statistics');
 }
