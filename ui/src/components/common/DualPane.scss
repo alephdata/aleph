@@ -52,7 +52,7 @@
 .DualPane .InfoPane {
   @extend %SidePane;
   border-right: 0;
-  box-shadow: $pt-elevation-shadow-3;
+  box-shadow: $pt-elevation-shadow-2;
   background: $aleph-content-background;
   flex-direction: row !important;
   min-height: 100%;
