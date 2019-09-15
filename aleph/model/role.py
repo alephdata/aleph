@@ -199,12 +199,20 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return q
 
     @classmethod
-    def all_groups(cls):
-        return cls.all().filter(Role.type != Role.USER)
+    def all_groups(cls, authz):
+        q = cls.all()
+        q = q.filter(Role.type == Role.GROUP)
+        if not authz.is_admin:
+            q = q.filter(Role.id.in_(authz.roles))
+        return q
 
     @classmethod
     def all_users(cls):
         return cls.all().filter(Role.type == Role.USER)
+
+    @classmethod
+    def all_system(cls):
+        return cls.all().filter(Role.type == Role.SYSTEM)
 
     def set_password(self, secret):
         """Hashes and sets the role password.
@@ -219,7 +227,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         :param str secret: The password to be checked.
         :rtype: bool
         """
-        return check_password_hash(self.password_digest or '', secret)
+        digest = self.password_digest or ''
+        return check_password_hash(digest, secret)
 
     def __repr__(self):
         return '<Role(%r,%r)>' % (self.id, self.foreign_id)

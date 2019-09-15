@@ -14,7 +14,9 @@ blueprint = Blueprint('permissions_api', __name__)
 @blueprint.route('/api/2/collections/<int:id>/permissions')
 def index(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
+    roles = Role.all_groups(request.authz).all()
+    if request.authz.is_admin:
+        roles.extend(Role.all_system())
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection.id)
     permissions = []
