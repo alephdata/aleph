@@ -20,6 +20,7 @@ class RFC822Ingestor(Ingestor, EmailSupport, EncodingSupport):
     ]
     EXTENSIONS = [
         'eml',
+        'emlx',
         'rfc822',
         'email',
         'msg'

@@ -10,22 +10,20 @@ export default function Footer(props) {
   return (
     <footer id="Footer" className="Footer">
       <div className="info">
-        <strong>ℵ</strong>
-        {' '}
         <FormattedMessage
           id="footer.aleph"
-          defaultMessage="aleph {version}"
+          defaultMessage="Aleph {version}"
           values={{
             version: metadata.app.version,
           }}
         />
         <span className="bp3-text-muted"> • </span>
         <span>
-          <a href="https://github.com/alephdata/aleph/wiki/User-manual">
+          <a href="https://docs.alephdata.org/guide/getting-started">
             <Icon icon="help" iconSize={14} />
           </a>
           {' '}
-          <a href="https://github.com/alephdata/aleph/wiki/User-manual">
+          <a href="https://docs.alephdata.org/guide/getting-started">
             <FormattedMessage
               id="footer.help"
               defaultMessage="Help"

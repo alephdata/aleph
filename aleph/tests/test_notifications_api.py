@@ -24,7 +24,7 @@ class NotificationsApiTestCase(TestCase):
         publish(event, self.admin.id, params={
             'collection': self.col,
             'role': self.rolex
-        })
+        }, channels=[self.col, self.rolex])
         db.session.commit()
 
     def test_anonymous(self):

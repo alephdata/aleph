@@ -50,7 +50,7 @@ class Events(object, metaclass=EventsRegistry):
         link_to='collection'
     )
 
-    # UPDATE COLLECTION (collection)
+    # # UPDATE COLLECTION (collection)
     UPDATE_COLLECTION = Event(
         template=lazy_gettext('{{actor}} changed the settings of {{collection}}'),  # noqa
         params={'collection': Collection},
@@ -92,15 +92,5 @@ class Events(object, metaclass=EventsRegistry):
     PUBLISH_COLLECTION = Event(
         template='{{actor}} published {{collection}}',
         params={'collection': Collection},
-        link_to='collection'
-    )
-
-    # REVOKE COLLECTION (collection, role)
-    REVOKE_COLLECTION = Event(
-        template=lazy_gettext('{{actor}} removed access to {{collection}} from {{role}}'),  # noqa
-        params={
-            'collection': Collection,
-            'role': Role
-        },
         link_to='collection'
     )

@@ -3,7 +3,6 @@ from banal import is_mapping
 from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
-from followthemoney.namespace import Namespace
 
 from aleph.model import Entity, Document
 from aleph.queues import ingest_entity
@@ -25,7 +24,8 @@ def _collection_proxies(collection):
         yield document.to_proxy()
 
 
-def process_collection(stage, collection, ingest=True, reset=False, sync=False):
+def process_collection(stage, collection, ingest=True,
+                       reset=False, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
     ingest = ingest or reset
@@ -49,7 +49,7 @@ def process_collection(stage, collection, ingest=True, reset=False, sync=False):
         aggregator.close()
 
 
-def index_aggregate(stage, collection, entity_id=None, sync=False):
+def index_aggregate(stage, collection, entity_id=None, sync=False, batch=100):
     """Project the contents of the collections aggregator into the index."""
     aggregator = get_aggregator(collection)
     try:
@@ -59,7 +59,7 @@ def index_aggregate(stage, collection, entity_id=None, sync=False):
 
             # WEIRD: Instead of indexing a single entity, this will try
             # pull a whole batch of them off the queue and do it at once.
-            for task in stage.get_tasks(limit=50):
+            for task in stage.get_tasks(limit=batch):
                 entity_id = task.payload.get('entity_id')
                 entities.extend(aggregator.iterate(entity_id=entity_id))
             stage.mark_done(len(entities) - 1)
@@ -97,14 +97,12 @@ def bulk_write(collection, iterable, job_id=None, unsafe=False):
     application has no control over key generation and a few other aspects
     of building the entity.
     """
-    namespace = Namespace(collection.foreign_id)
     stage = get_stage(collection, OP_INDEX, job_id=job_id)
     entities = []
     for item in iterable:
         if not is_mapping(item):
             raise InvalidData("Failed to read input data", errors=item)
         entity = model.get_proxy(item)
-        entity = namespace.apply(entity)
         if not unsafe:
             entity = remove_checksums(entity)
         entities.append(entity)

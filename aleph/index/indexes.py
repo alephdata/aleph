@@ -6,6 +6,7 @@ from followthemoney.exc import InvalidData
 
 from aleph.core import settings
 from aleph.index.util import index_settings, configure_index, get_shard_weight
+from aleph.index.util import NUMERIC_TYPES
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
 LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
 KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
+NUMERIC = {"type": "double"}
 TYPE_MAPPINGS = {
     registry.text: {"type": "text", "index": False},
     registry.html: {"type": "text", "index": False},
@@ -44,9 +46,7 @@ def configure_collections():
                 }
             }
         ],
-        "_source": {
-            "excludes": ["text"]
-        },
+        "_source": {"excludes": ["text"]},
         "properties": {
             "label": {
                 "type": "text",
@@ -144,17 +144,18 @@ def configure_schema(schema, version):
     # Generate relevant type mappings for entity properties so that
     # we can do correct searches on each.
     schema_mapping = {}
+    numeric_mapping = {registry.date.group: NUMERIC}
     for prop in schema.properties.values():
         config = dict(TYPE_MAPPINGS.get(prop.type, KEYWORD))
         config['copy_to'] = ['text']
         schema_mapping[prop.name] = config
+        if prop.type in NUMERIC_TYPES:
+            numeric_mapping[prop.name] = NUMERIC
 
     mapping = {
         "date_detection": False,
         "dynamic": False,
-        "_source": {
-            "excludes": ["text", "fingerprints"]
-        },
+        "_source": {"excludes": ["text", "fingerprints"]},
         "properties": {
             "name": {
                 "type": "text",
@@ -170,24 +171,24 @@ def configure_schema(schema, version):
             "collection_id": KEYWORD,
             "job_id": KEYWORD,
             "uploader_id": KEYWORD,
-            "entities": KEYWORD,
-            "languages": KEYWORD,
-            "countries": KEYWORD,
-            "checksums": KEYWORD,
             "keywords": KEYWORD,
-            "ips": KEYWORD,
-            "urls": KEYWORD,
-            "ibans": KEYWORD,
-            "emails": KEYWORD,
-            "phones": KEYWORD,
-            "mimetypes": KEYWORD,
-            "identifiers": KEYWORD,
-            "dates": PARTIAL_DATE,
-            "addresses": {
+            registry.entity.group: KEYWORD,
+            registry.language.group: KEYWORD,
+            registry.country.group: KEYWORD,
+            registry.checksum.group: KEYWORD,
+            registry.ip.group: KEYWORD,
+            registry.url.group: KEYWORD,
+            registry.iban.group: KEYWORD,
+            registry.email.group: KEYWORD,
+            registry.phone.group: KEYWORD,
+            registry.mimetype.group: KEYWORD,
+            registry.identifier.group: KEYWORD,
+            registry.date.group: PARTIAL_DATE,
+            registry.address.group: {
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT}
             },
-            "names": {
+            registry.name.group: {
                 "type": "keyword",
                 "fields": {"text": LATIN_TEXT},
                 "copy_to": "text"
@@ -207,6 +208,10 @@ def configure_schema(schema, version):
             "properties": {
                 "type": "object",
                 "properties": schema_mapping
+            },
+            "numeric": {
+                "type": "object",
+                "properties": numeric_mapping
             },
             "updated_at": {"type": "date"},
         }

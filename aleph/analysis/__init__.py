@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 MAPPING = {
     registry.name: 'namesMentioned',
-    registry.language: 'language',
+    registry.language: 'detectedLanguage',
     registry.country: 'country',
     registry.ip: 'ipMentioned',
     registry.email: 'emailMentioned',

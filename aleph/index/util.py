@@ -4,17 +4,17 @@ from pprint import pprint  # noqa
 from banal import ensure_list
 from elasticsearch import TransportError
 from elasticsearch.helpers import streaming_bulk
+from followthemoney.types import registry
 from servicelayer.util import backoff, service_retries
 
 from aleph.core import es, settings
 
 log = logging.getLogger(__name__)
 
-# This means that text beyond the first 500 MB will not be indexed
-INDEX_MAX_LEN = 1024 * 1024 * 90
 BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
+NUMERIC_TYPES = (registry.number, registry.date,)
 
 SHARDS_LIGHT = 1
 SHARDS_DEFAULT = 5
@@ -31,8 +31,6 @@ SHARD_WEIGHTS = {
     'Family': SHARDS_LIGHT,
     'Passport': SHARDS_LIGHT,
     'Document': SHARDS_LIGHT,
-
-    'Row': SHARDS_HEAVY,
     'Page': SHARDS_HEAVY,
     'Email': SHARDS_HEAVY,
     'PlainText': SHARDS_HEAVY,
@@ -145,7 +143,6 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     start_time = time()
     stream = streaming_bulk(es, actions,
                             chunk_size=chunk_size,
-                            max_chunk_bytes=INDEX_MAX_LEN,
                             max_retries=10,
                             initial_backoff=2,
                             yield_ok=False,

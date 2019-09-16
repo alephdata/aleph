@@ -1,10 +1,11 @@
 from banal import ensure_dict
 from normality import stringify
+from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
 from marshmallow import Schema, pre_load
 from marshmallow.fields import List, Integer
-from marshmallow.fields import Url, Dict, String, Boolean
+from marshmallow.fields import Dict, String, Boolean
 from marshmallow.validate import Email, Length
 from marshmallow.exceptions import ValidationError
 
@@ -30,6 +31,16 @@ class Category(String):
     def _validate(self, value):
         if value not in Collection.CATEGORIES.keys():
             raise ValidationError('Invalid category.')
+
+
+class Url(String):
+
+    def _deserialize(self, value, attr, data):
+        return stringify(value)
+
+    def _validate(self, value):
+        if value is not None and normalize_url(value) is None:
+            raise ValidationError('Invalid URL.')
 
 
 class Language(String):
@@ -113,11 +124,11 @@ class CollectionCreateSchema(Schema):
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String(missing=None)
     casefile = Boolean(missing=None)
-    summary = String(allow_none=True)
-    publisher = String(allow_none=True)
-    publisher_url = Url(allow_none=True)
-    data_url = Url(allow_none=True)
-    info_url = Url(allow_none=True)
+    summary = String(allow_none=True, missing=None)
+    publisher = String(allow_none=True, missing=None)
+    publisher_url = Url(allow_none=True, missing=None)
+    data_url = Url(allow_none=True, missing=None)
+    info_url = Url(allow_none=True, missing=None)
     countries = List(Country())
     languages = List(Language())
     category = Category(missing=None)

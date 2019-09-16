@@ -4,6 +4,7 @@ from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.namespace import Namespace
 
 from aleph.core import db
 from aleph.model.collection import Collection
@@ -83,6 +84,13 @@ class Entity(db.Model, SoftDeleteModel):
         ent.deleted_at = None
         ent.update(data)
         return ent
+
+    @classmethod
+    def by_id(cls, entity_id, collection_id=None):
+        entity_id, _ = Namespace.parse(entity_id)
+        q = cls.all()
+        q = q.filter(cls.id == entity_id)
+        return q.first()
 
     @classmethod
     def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
