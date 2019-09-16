@@ -3,7 +3,7 @@
 .Navbar {
   &__left-group {
     background-color: $dark-gray3;
-    padding-left: $aleph-grid-size * 2;
+    padding-left: $aleph-grid-size;
   }
 
   &__middle-group {
@@ -14,7 +14,7 @@
   .bp3-navbar {
     display: flex;
     padding-left: 0;
-    padding-right: $aleph-grid-size * 2;
+    padding-right: $aleph-grid-size;
     justify-content: space-between;
     background-color: $dark-gray1;
     @media screen and (max-width: $aleph-screen-md-max-width) {
@@ -41,7 +41,7 @@
     }
 
     img {
-      height: 32px;
+      height: 28px;
     }
 
     .bp3-navbar-heading {
@@ -50,7 +50,7 @@
     }
 
     .heading-title {
-      margin-left: $aleph-grid-size * 1.5;
+      margin-left: $aleph-grid-size;
       white-space: nowrap;
       padding-right: 1em;
       @media screen and (max-width: $aleph-screen-sm-max-width) {

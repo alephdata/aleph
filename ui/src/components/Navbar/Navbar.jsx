@@ -114,18 +114,16 @@ export class Navbar extends React.Component {
     return (
       <div id="Navbar" className="Navbar">
         <Bp3Navbar className="bp3-dark">
-          <Bp3Navbar.Group align={Alignment.LEFT} className="Navbar__left-group">
-            <Bp3Navbar.Heading>
-              <Link to="/">
-                <img src={metadata.app.logo} alt={metadata.app.title} />
-              </Link>
-            </Bp3Navbar.Heading>
-            <Bp3Navbar.Heading>
-              <div className="heading-title">
-                <Link to="/">{metadata.app.title}</Link>
-              </div>
-            </Bp3Navbar.Heading>
-          </Bp3Navbar.Group>
+          <Link to="/">
+            <Bp3Navbar.Group align={Alignment.LEFT} className="Navbar__left-group">
+              <img src={metadata.app.logo} alt={metadata.app.title} />
+              <Bp3Navbar.Heading>
+                <div className="heading-title">
+                  <Link to="/">{metadata.app.title}</Link>
+                </div>
+              </Bp3Navbar.Heading>
+            </Bp3Navbar.Group>
+          </Link>
           <Bp3Navbar.Group align={Alignment.CENTER} className="Navbar__middle-group">
             <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'search-container hide'}>
               <button type="button" className="back-button visible-sm-block bp3-button bp3-large bp3-minimal bp3-icon-arrow-left" onClick={this.onToggleSearch} />
