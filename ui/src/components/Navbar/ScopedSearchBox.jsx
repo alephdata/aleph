@@ -159,25 +159,19 @@ class SearchBox extends React.Component {
 
     return (
       <ControlGroup className="SearchBox" vertical={false} fill>
-        {!multipleScopes && (
-          <span className="SearchBox__scoped-input__single-scope-text">
-            {currScope.listItem}
-          </span>
-        )}
-        {multipleScopes && (
-          <Select
-            filterable={false}
-            items={searchScopes}
-            itemRenderer={this.renderScopeItem}
-            popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover' }}
-          >
-            <Button
-              className="SearchBox__scoped-input__scope-button"
-              text={currScope.listItem}
-              rightIcon="caret-down"
-            />
-          </Select>
-        )}
+        <Select
+          filterable={false}
+          items={searchScopes}
+          itemRenderer={this.renderScopeItem}
+          popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover' }}
+          disabled={!multipleScopes}
+        >
+          <Button
+            className="SearchBox__scoped-input__scope-button"
+            text={currScope.listItem}
+            rightIcon={multipleScopes ? 'caret-down' : null}
+          />
+        </Select>
         <Suggest
           inputProps={inputProps}
           popoverProps={popoverProps}

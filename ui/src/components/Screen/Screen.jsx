@@ -60,7 +60,7 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      session, metadata, query, updateQuery, requireSession,
+      session, metadata, query, requireSession,
       isHomepage, title, description, className, searchScopes,
     } = this.props;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
@@ -86,7 +86,6 @@ export class Screen extends React.Component {
           metadata={metadata}
           session={session}
           query={query}
-          updateQuery={updateQuery}
           isHomepage={isHomepage}
           searchScopes={searchScopes}
         />

@@ -172,45 +172,33 @@ export class SearchScreen extends React.Component {
   }
 
   getSearchScopes() {
-    const { facets } = this.props.result;
+    const { query } = this.props;
+    const activeSources = query ? query.getFilter('collection_id') : [];
 
-
-    if (facets && facets.collection_id) {
-      console.log(facets.collection_id);
-      const values = facets.collection_id.values.filter(val => val.active);
-      console.log(values);
-      console.log(Collection);
-
-      if (values.length === 1) {
-        const collection = values[0];
-        return [{
-          listItem: <Collection.Label collection={collection} icon truncate={30} />,
-          label: collection.label,
-          onSearch: this.updateQuery,
-        }];
+    const collectionScopeList = activeSources.map(sourceId => (
+      {
+        listItem: (
+          <Collection.Load id={sourceId} renderWhenLoading="...">
+            {collection => (
+              <Collection.Label collection={collection} icon truncate={30} />
+            )}
+          </Collection.Load>
+        ),
+        onSearch: (queryText) => {
+          const newQuery = query.set('q', queryText).setFilter('collection_id', sourceId);
+          this.updateQuery(newQuery);
+        },
       }
-      if (values.length > 1) {
-        return [{
-          listItem: `Search ${values.length} Datasets`,
-          label: `${values.length} Datasets`,
-          onSearch: this.updateQuery,
-        }];
-      }
+    ));
+
+    if (activeSources.length > 1) {
+      collectionScopeList.push({
+        listItem: `Search ${activeSources.length} Datasets`,
+        onSearch: queryText => this.updateQuery(query.set('q', queryText)),
+      });
     }
 
-    // const activeCollectionFacets = query.getFilter('collection_id');
-    //
-    // if (activeCollectionFacets.length === 1) {
-    //   const collection = activeCollectionFacets[0];
-    //   return [{
-    //     listItem: <Collection.Label collection={collection} icon truncate={30} />,
-    //     placeholder: 'test',
-    //     onSearch: this.onSearch,
-    //   }];
-    // // } else if (activeCollectionFacets.length > 1) {
-    // //   return [{}];
-    // }
-    return null;
+    return collectionScopeList;
   }
 
   fetchIfNeeded() {
@@ -226,6 +214,7 @@ export class SearchScreen extends React.Component {
     const parsedHash = queryString.parse(location.hash);
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
+
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -315,7 +304,6 @@ export class SearchScreen extends React.Component {
     return (
       <Screen
         query={query}
-        updateQuery={this.updateQuery}
         title={title}
         searchScopes={searchScopes}
         hotKeys={[
