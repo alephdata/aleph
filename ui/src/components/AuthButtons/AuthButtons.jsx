@@ -94,7 +94,7 @@ export class AuthButtons extends Component {
             position={Position.BOTTOM_LEFT}
             minimal
           >
-            <Button icon="user" className="bp3-minimal navbar-option-title" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
+            <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
           </Popover>
           <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
           <QueryLogsDialog

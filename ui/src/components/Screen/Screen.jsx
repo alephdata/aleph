@@ -67,7 +67,7 @@ export class Screen extends React.Component {
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
     const titleTemplate = hasMetadata ? `%s - ${metadata.app.title}` : '%s';
-    const defaultTitle = hasMetadata ? metadata.app.title : 'Aleph';
+    const defaultTitle = hasMetadata ? metadata.app.title : 'OCCRP Aleph';
 
     return (
       <div className={c('Screen', className)}>

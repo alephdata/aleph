@@ -2,13 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { Alignment, Button, Icon, Navbar as Bp3Navbar } from '@blueprintjs/core';
+import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
 import { selectSession } from 'src/selectors';
-import SearchBox from 'src/components/Navbar/SearchBox';
+import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
+import c from 'classnames';
+
 import './Navbar.scss';
 
 export class Navbar extends React.Component {
@@ -17,15 +19,13 @@ export class Navbar extends React.Component {
 
     this.state = {
       searchValue: props.query ? props.query.getString('q') : '',
-      isMenuOpen: false,
-      searchOpen: false,
+      mobileSearchOpen: false,
     };
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onDefaultSearch = this.onDefaultSearch.bind(this);
-    this.onOpenMenu = this.onOpenMenu.bind(this);
-    this.onToggleSearch = this.onToggleSearch.bind(this);
+    this.onToggleMobileSearch = this.onToggleMobileSearch.bind(this);
   }
 
 
@@ -48,14 +48,9 @@ export class Navbar extends React.Component {
 
   onSubmit = event => event.preventDefault();
 
-  onOpenMenu(event) {
+  onToggleMobileSearch(event) {
     event.preventDefault();
-    this.setState(({ isMenuOpen }) => ({ isMenuOpen: !isMenuOpen }));
-  }
-
-  onToggleSearch(event) {
-    event.preventDefault();
-    this.setState(({ searchOpen }) => ({ searchOpen: !searchOpen }));
+    this.setState(({ mobileSearchOpen }) => ({ mobileSearchOpen: !mobileSearchOpen }));
   }
 
   onDefaultSearch(queryText) {
@@ -103,7 +98,7 @@ export class Navbar extends React.Component {
     const {
       metadata, session, isHomepage, searchScopes, role,
     } = this.props;
-    const { isMenuOpen, searchOpen } = this.state;
+    const { mobileSearchOpen } = this.state;
 
     const defaultScope = {
       listItem: 'OCCRP Aleph',
@@ -112,61 +107,58 @@ export class Navbar extends React.Component {
     };
 
     return (
-      <div id="Navbar" className="Navbar">
-        <Bp3Navbar className="bp3-dark">
+      <Bp3Navbar id="Navbar" className="Navbar bp3-dark">
+        <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
           <Link to="/">
-            <Bp3Navbar.Group align={Alignment.LEFT} className="Navbar__left-group">
-              <img src={metadata.app.logo} alt={metadata.app.title} />
+            <img src={metadata.app.logo} alt={metadata.app.title} />
+            {isHomepage && (
               <Bp3Navbar.Heading>
                 <div className="heading-title">
                   <Link to="/">{metadata.app.title}</Link>
                 </div>
               </Bp3Navbar.Heading>
-            </Bp3Navbar.Group>
-          </Link>
-          <Bp3Navbar.Group align={Alignment.CENTER} className="Navbar__middle-group">
-            <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'search-container hide'}>
-              <button type="button" className="back-button visible-sm-block bp3-button bp3-large bp3-minimal bp3-icon-arrow-left" onClick={this.onToggleSearch} />
-              {!isHomepage && (
-                <form onSubmit={this.onSubmit} autoComplete="off" className="navbar-search-form">
-                  <SearchBox
-                    doSearch={this.doSearch}
-                    updateSearchValue={this.updateSearchValue}
-                    searchValue={this.state.searchValue}
-                    searchScopes={searchScopes
-                      ? [...[defaultScope], ...searchScopes] : [defaultScope]}
-                  />
-                </form>
-              )}
-            </div>
-
-          </Bp3Navbar.Group>
-
-          <div className={`search-and-burger-icons ${isHomepage && 'burger-fixed'}`}>
-            {!isHomepage && (
-              <a className="search-icon icon visible-sm-block" href="/" onClick={this.onToggleSearch}>
-                <Icon icon="search" />
-              </a>
             )}
-            <a className={`menu-icon icon visible-sm-block ${isMenuOpen && 'transform'}`} href="/" onClick={this.onOpenMenu}>
-              <div className="bar1" />
-              <div className="bar2" />
-              <div className="bar3" />
-            </a>
+          </Link>
+
+        </Bp3Navbar.Group>
+        <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
+          <div className="Navbar__search-container">
+            <form onSubmit={this.onSubmit} autoComplete="off">
+              <ScopedSearchBox
+                doSearch={this.doSearch}
+                updateSearchValue={this.updateSearchValue}
+                searchValue={this.state.searchValue}
+                searchScopes={searchScopes
+                  ? [...[defaultScope], ...searchScopes] : [defaultScope]}
+              />
+            </form>
           </div>
-          <Bp3Navbar.Group align={Alignment.RIGHT} className={`navbar-options bp3-navbar-group ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
-            <div className="menu-items">
-              <Link to="/sources">
-                <Button icon="database" className="bp3-minimal">
-                  <FormattedMessage id="nav.sources" defaultMessage="Datasets" />
-                </Button>
-              </Link>
-              <Bp3Navbar.Divider />
-              <AuthButtons session={session} auth={metadata.auth} role={role} />
-            </div>
-          </Bp3Navbar.Group>
-        </Bp3Navbar>
-      </div>
+        </Bp3Navbar.Group>
+        <Bp3Navbar.Group align={Alignment.RIGHT} className="Navbar__right-group" id="navbarSupportedContent">
+          <Link to="/sources">
+            <Button icon="database" className="Navbar__sources-button bp3-minimal">
+              <FormattedMessage id="nav.sources" defaultMessage="Sources" />
+            </Button>
+          </Link>
+          <div className="Navbar__mobile-search-toggle">
+            {!mobileSearchOpen && (
+              <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+            )}
+            {mobileSearchOpen && (
+              <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+            )}
+          </div>
+          <Bp3Navbar.Divider className={c({ 'mobile-hidden': mobileSearchOpen })} />
+          <div className={c({ 'mobile-hidden': mobileSearchOpen })}>
+            <AuthButtons
+              session={session}
+              auth={metadata.auth}
+              role={role}
+              className={c({ hide: mobileSearchOpen })}
+            />
+          </div>
+        </Bp3Navbar.Group>
+      </Bp3Navbar>
     );
   }
 }

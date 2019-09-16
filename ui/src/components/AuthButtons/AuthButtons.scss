@@ -2,7 +2,6 @@
 
 .AuthButtons {
   display: inline-flex;
-  margin-left: $aleph-grid-size;
   @media screen and (max-width: $aleph-screen-md-max-width) {
     margin-left: 0;
   }

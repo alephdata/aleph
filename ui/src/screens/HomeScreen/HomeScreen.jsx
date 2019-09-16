@@ -7,14 +7,14 @@ import {
 } from 'react-intl';
 import { Link } from 'react-router-dom';
 import {
-  Button, ControlGroup, Intent, Divider, Callout,
+  Button, ControlGroup, Divider, Callout,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import SearchBox from 'src/components/Navbar/SearchBox';
+import SearchBox from 'src/components/common/SearchBox';
 import {
   Category, Country, Schema, Numeric,
   DualPane, SignInCallout, Role,
@@ -184,12 +184,7 @@ export class HomeScreen extends Component {
                     updateSearchValue={this.updateSearchValue}
                     searchValue={this.state.value}
                     searchScopes={[searchScope]}
-                  />
-                  <Button
-                    className="bp3-large bp3-fixed"
-                    intent={Intent.PRIMARY}
-                    onClick={this.handleSearchBtn}
-                    text={intl.formatMessage(messages.home_search)}
+                    inputClasses="bp3-large"
                   />
                 </ControlGroup>
               </form>

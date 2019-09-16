@@ -17,7 +17,7 @@ import { selectQueryLogsLimited, selectSession } from 'src/selectors';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
-import './SearchBox.scss';
+import './ScopedSearchBox.scss';
 
 const ICON_VIRTUAL_SUGGEST = 'edit';
 const ICON_EXISTING_SUGGEST = undefined;
@@ -125,16 +125,18 @@ class SearchBox extends React.Component {
 
   render() {
     const {
-      props: { searchValue, searchScopes, intl },
+      props: { searchValue, searchScopes, inputClasses, intl },
       state: { currScope },
       itemRenderer, onChange,
       itemListPredicate,
       onItemSelect,
     } = this;
 
+    const multipleScopes = searchScopes.length > 1;
+
     const inputProps = {
       type: 'text',
-      className: 'bp3-fill',
+      className: `bp3-fill ${inputClasses}`,
       leftIcon: 'search',
       placeholder: intl.formatMessage(messages.placeholder, { label: currScope.label }),
       rightElement: <SearchAlert queryText={searchValue} />,
@@ -156,8 +158,13 @@ class SearchBox extends React.Component {
     }
 
     return (
-      <ControlGroup vertical={false} fill>
-        {searchScopes.length > 1 && (
+      <ControlGroup className="SearchBox" vertical={false} fill>
+        {!multipleScopes && (
+          <span className="SearchBox__scoped-input__single-scope-text">
+            {currScope.listItem}
+          </span>
+        )}
+        {multipleScopes && (
           <Select
             filterable={false}
             items={searchScopes}
@@ -186,16 +193,8 @@ class SearchBox extends React.Component {
           resetOnQuery
         />
         <Button
-          className="SearchBox__submit bp3-fixed"
-          text="Search"
-          onClick={this.onSearchSubmitClick}
-          minimal
-        />
-        <Button
           className="SearchBox__search-tips bp3-fixed"
-          text="Tips"
-          icon="lightbulb"
-          rightIcon="caret-down"
+          icon="help"
           minimal
         />
       </ControlGroup>

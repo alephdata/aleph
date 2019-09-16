@@ -24,7 +24,7 @@ TESTING = False
 ###############################################################################
 # General instance information
 
-APP_TITLE = env.get('ALEPH_APP_TITLE', lazy_gettext('Aleph'))
+APP_TITLE = env.get('ALEPH_APP_TITLE', lazy_gettext('OCCRP Aleph'))
 APP_DESCRIPTION = env.get('ALEPH_APP_DESCRIPTION', '')
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
 APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:8080/')
