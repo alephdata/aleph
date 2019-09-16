@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
+import c from 'classnames';
 
 import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
 import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
@@ -125,7 +126,7 @@ class SearchBox extends React.Component {
 
   render() {
     const {
-      props: { searchValue, searchScopes, inputClasses, intl },
+      props: { searchValue, searchScopes, inputClasses, intl, hideScopeMenu },
       state: { currScope },
       itemRenderer, onChange,
       itemListPredicate,
@@ -159,19 +160,21 @@ class SearchBox extends React.Component {
 
     return (
       <ControlGroup className="SearchBox" vertical={false} fill>
-        <Select
-          filterable={false}
-          items={searchScopes}
-          itemRenderer={this.renderScopeItem}
-          popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover' }}
-          disabled={!multipleScopes}
-        >
-          <Button
-            className="SearchBox__scoped-input__scope-button"
-            text={currScope.listItem}
-            rightIcon={multipleScopes ? 'caret-down' : null}
-          />
-        </Select>
+        {!hideScopeMenu && (
+          <Select
+            filterable={false}
+            items={searchScopes}
+            itemRenderer={this.renderScopeItem}
+            popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover' }}
+            disabled={!multipleScopes}
+          >
+            <Button
+              className={c('SearchBox__scoped-input__scope-button', { unclickable: !multipleScopes })}
+              text={currScope.listItem}
+              rightIcon={multipleScopes ? 'caret-down' : null}
+            />
+          </Select>
+        )}
         <Suggest
           inputProps={inputProps}
           popoverProps={popoverProps}
@@ -186,11 +189,13 @@ class SearchBox extends React.Component {
           onItemSelect={onItemSelect}
           resetOnQuery
         />
-        <Button
-          className="SearchBox__search-tips bp3-fixed"
-          icon="help"
-          minimal
-        />
+        {!hideScopeMenu && (
+          <Button
+            className="SearchBox__search-tips bp3-fixed"
+            icon="help"
+            minimal
+          />
+        )}
       </ControlGroup>
     );
   }

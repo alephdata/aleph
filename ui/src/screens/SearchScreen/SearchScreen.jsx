@@ -193,7 +193,7 @@ export class SearchScreen extends React.Component {
 
     if (activeSources.length > 1) {
       collectionScopeList.push({
-        listItem: `Search ${activeSources.length} Datasets`,
+        listItem: <span>{`Search ${activeSources.length} Datasets`}</span>,
         onSearch: queryText => this.updateQuery(query.set('q', queryText)),
       });
     }

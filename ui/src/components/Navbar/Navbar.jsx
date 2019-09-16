@@ -96,7 +96,7 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, session, isHomepage, searchScopes, role,
+      metadata, session, searchScopes, role,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
@@ -111,13 +111,6 @@ export class Navbar extends React.Component {
         <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
           <Link to="/">
             <img src={metadata.app.logo} alt={metadata.app.title} />
-            {isHomepage && (
-              <Bp3Navbar.Heading>
-                <div className="heading-title">
-                  <Link to="/">{metadata.app.title}</Link>
-                </div>
-              </Bp3Navbar.Heading>
-            )}
           </Link>
 
         </Bp3Navbar.Group>

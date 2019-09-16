@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import SearchBox from 'src/components/common/SearchBox';
+import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
 import {
   Category, Country, Schema, Numeric,
   DualPane, SignInCallout, Role,
@@ -158,12 +158,11 @@ export class HomeScreen extends Component {
 
   render() {
     const { intl, metadata, statistics = {} } = this.props;
-    const samples = metadata.app.samples.join(', ');
 
     const searchScope = {
+      listItem: 'OCCRP Aleph',
       label: 'OCCRP Aleph',
-      placeholder: intl.formatMessage(messages.search_placeholder, { samples }),
-      filter: '',
+      onSearch: this.doSearch,
     };
 
     return (
@@ -178,13 +177,14 @@ export class HomeScreen extends Component {
             <div className="inner-searchbox">
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill>
-                  <SearchBox
+                  <ScopedSearchBox
                     id="search-box"
                     doSearch={this.doSearch}
                     updateSearchValue={this.updateSearchValue}
                     searchValue={this.state.value}
                     searchScopes={[searchScope]}
                     inputClasses="bp3-large"
+                    hideScopeMenu
                   />
                 </ControlGroup>
               </form>

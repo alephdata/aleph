@@ -14,22 +14,18 @@
   }
 
   &__scoped-input {
-    &__single-scope-text, &__scope-button {
+    &__scope-button {
       white-space: nowrap;
       color: white !important;
     }
 
-    &__single-scope-text {
-      font-weight: bold;
-      padding: 5px 15px 5px 0;
-    }
 
     &__scope-button {
       background: $gray1 !important;
       box-shadow: none !important;
       padding: 5px 10px;
 
-      &.disabled {
+      &.unclickable {
         cursor: auto;
       }
 
