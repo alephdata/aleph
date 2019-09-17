@@ -1,5 +1,4 @@
 import React from 'react';
-// import { FormattedMessage } from 'react-intl';
 import { Drawer, Position, Card } from '@blueprintjs/core';
 
 import './SearchTips.scss';

@@ -57,14 +57,14 @@ export class Suggest extends React.PureComponent {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps, prevState) {
     if (this.state.isOpen && !prevState.isOpen && this.queryList != null) {
       this.queryList.scrollActiveItemIntoView();
     }
   }
 
   renderQueryList = (listProps) => {
-    const { inputProps = {}, popoverProps = {}, intl} = this.props;
+    const { inputProps = {}, popoverProps = {}} = this.props;
     const { isOpen, selectedItem } = this.state;
     const { handleKeyDown, handleKeyUp } = listProps;
 

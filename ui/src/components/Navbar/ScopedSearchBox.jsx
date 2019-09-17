@@ -24,6 +24,10 @@ const ICON_VIRTUAL_SUGGEST = 'edit';
 const ICON_EXISTING_SUGGEST = undefined;
 
 const messages = defineMessages({
+  nolabel_placeholder: {
+    id: 'search.nolabel_placeholder',
+    defaultMessage: 'Search companies, people and documents',
+  },
   placeholder: {
     id: 'search.placeholder',
     defaultMessage: 'Search in {label}',
@@ -133,7 +137,9 @@ class SearchBox extends React.Component {
       type: 'text',
       className: `bp3-fill ${inputClasses}`,
       leftIcon: 'search',
-      placeholder: intl.formatMessage(messages.placeholder, { label: currScope.label }),
+      placeholder: currScope.label
+        ? intl.formatMessage(messages.placeholder, { label: currScope.label })
+        : intl.formatMessage(messages.nolabel_placeholder),
       rightElement: <SearchAlert queryText={searchValue} />,
       value: searchValue,
       id: 'search-box',
@@ -143,7 +149,6 @@ class SearchBox extends React.Component {
       popoverClassName: 'search-popover',
       targetTagName: 'div',
       fill: true,
-      // usePortal: false,
       modifiers: {
         arrow: { enabled: false },
       },

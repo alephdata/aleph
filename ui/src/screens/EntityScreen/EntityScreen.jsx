@@ -70,7 +70,7 @@ class EntityScreen extends Component {
     return {
       listItem: <Entity.Label entity={entity} icon truncate={30} />,
       label: entityTitle,
-      onSearch: queryText => this.onSearch(queryText, entityLink), // eslint-disable-line
+      onSearch: queryText => this.onSearch(queryText, entityLink),
     };
   }
 
