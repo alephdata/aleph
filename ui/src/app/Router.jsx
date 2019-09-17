@@ -15,6 +15,7 @@ const ActivateScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/scr
 const HomeScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/HomeScreen/HomeScreen'));
 const SearchScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SearchScreen/SearchScreen'));
 const NotificationsScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/NotificationsScreen/NotificationsScreen'));
+const HistoryScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/HistoryScreen/HistoryScreen'));
 const SettingsScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SettingsScreen/SettingsScreen'));
 const SystemStatusScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SystemStatusScreen/SystemStatusScreen'));
 const SourcesIndexScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SourcesIndexScreen/SourcesIndexScreen'));
@@ -62,6 +63,7 @@ class Router extends Component {
           <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
+          <Route path="/history" exact component={HistoryScreen} />
           <Route path="/settings" exact component={SettingsScreen} />
           <Route path="/status" exact component={SystemStatusScreen} />
           <Route path="/" exact component={HomeScreen} />

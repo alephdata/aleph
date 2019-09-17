@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Menu, MenuItem, Card, Elevation } from '@blueprintjs/core';
+import { Menu, MenuItem, Card, Elevation, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
 import { fetchGroups } from 'src/actions';
@@ -13,6 +13,14 @@ const messages = defineMessages({
   notifications: {
     id: 'dashboard.notifications',
     defaultMessage: 'Notifications',
+  },
+  history: {
+    id: 'dashboard.history',
+    defaultMessage: 'Searches & alerts',
+  },
+  cases: {
+    id: 'dashboard.cases',
+    defaultMessage: 'Case files',
   },
   settings: {
     id: 'dashboard.settings',
@@ -69,8 +77,18 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/notifications')}
               active={current === '/notifications'}
             />
-            <MenuItem text="Searches &amp; alerts" href="/history" />
-            <MenuItem text="My datasets" href="/collections" />
+            <MenuItem
+              icon="history"
+              text={intl.formatMessage(messages.history)}
+              onClick={() => this.navigate('/history')}
+              active={current === '/history'}
+            />
+            <MenuItem
+              icon="briefcase"
+              text={intl.formatMessage(messages.cases)}
+              onClick={() => this.navigate('/cases')}
+              active={current === '/cases'}
+            />
             { groups.total !== undefined && (
               <React.Fragment>
                 <li className="bp3-menu-header">
@@ -83,11 +101,7 @@ class Dashboard extends React.Component {
                 ))}
               </React.Fragment>
             )}
-            <li className="bp3-menu-header">
-              <h6 className="bp3-heading">
-                <FormattedMessage id="dashboard.system" defaultMessage="System" />
-              </h6>
-            </li>
+            <MenuDivider />
             <MenuItem
               icon="cog"
               text={intl.formatMessage(messages.settings)}
