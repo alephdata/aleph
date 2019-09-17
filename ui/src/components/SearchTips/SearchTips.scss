@@ -1,0 +1,50 @@
+@import "src/app/variables.scss";
+
+.SearchTips {
+  .bp3-overlay.bp3-overlay-container {
+    position: static;
+    // overflow: visible;
+  }
+
+  .bp3-portal {
+    z-index: 1;
+    top: 50px !important;
+  }
+  .bp3-drawer {
+    background-color: $light-gray4;
+    position: static;
+    overflow-x: scroll;
+    padding: 10px;
+    margin-bottom: 50px;
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
+      0 2px 4px rgba(16, 22, 26, 0.2),
+      0 8px 24px rgba(16, 22, 26, 0.2);
+  }
+  &__content {
+    min-width: 2500px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  &__section {
+    flex: 1 1 auto;
+    margin: 10px;
+
+    &__title {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    &__content {
+      p {
+        margin: 20px 0;
+      }
+      .example {
+        background-color: $light-gray4;
+        padding: 20px;
+        width: 100%;
+        font-family: "Source Code Pro", Menlo, monospace;
+      }
+    }
+  }
+}

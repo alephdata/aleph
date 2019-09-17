@@ -7,14 +7,14 @@ import {
 } from 'react-intl';
 import { Link, Redirect } from 'react-router-dom';
 import {
-  Button, ControlGroup, Intent, Divider,
+  Button, ControlGroup, Intent, Divider, Callout,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import SearchBox from 'src/components/Navbar/SearchBox';
+import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
 import {
   Category, Country, Schema, Numeric, DualPane,
 } from 'src/components/common';
@@ -139,11 +139,16 @@ export class HomeScreen extends Component {
 
   render() {
     const { intl, metadata, session, statistics = {} } = this.props;
-    const samples = metadata.app.samples.join(', ');
 
     if (session.loggedIn) {
       return <Redirect to="/notifications" />;
     }
+
+    const searchScope = {
+      listItem: 'OCCRP Aleph',
+      label: 'OCCRP Aleph',
+      onSearch: this.doSearch,
+    };
 
     return (
       <Screen
@@ -156,18 +161,14 @@ export class HomeScreen extends Component {
             <div className="inner-searchbox">
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill>
-                  <SearchBox
+                  <ScopedSearchBox
                     id="search-box"
                     doSearch={this.doSearch}
                     updateSearchValue={this.updateSearchValue}
                     searchValue={this.state.value}
-                    placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
-                  />
-                  <Button
-                    className="bp3-large bp3-fixed"
-                    intent={Intent.PRIMARY}
-                    onClick={this.handleSearchBtn}
-                    text={intl.formatMessage(messages.home_search)}
+                    searchScopes={[searchScope]}
+                    inputClasses="bp3-large"
+                    hideScopeMenu
                   />
                 </ControlGroup>
               </form>

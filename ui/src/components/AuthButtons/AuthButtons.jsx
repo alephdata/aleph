@@ -16,9 +16,13 @@ const messages = defineMessages({
     id: 'nav.view_notifications',
     defaultMessage: 'Notifications',
   },
+  myDatasets: {
+    id: 'nav.my_datasets',
+    defaultMessage: 'My datasets',
+  },
   settings: {
     id: 'nav.settings',
-    defaultMessage: 'Settings',
+    defaultMessage: 'Profile settings',
   },
   signout: {
     id: 'nav.signout',
@@ -50,14 +54,20 @@ export class AuthButtons extends Component {
   }
 
   render() {
-    const { session, auth, intl } = this.props;
+    const { session, role, auth, intl } = this.props;
 
     if (session.loggedIn) {
       return (
         <span className="AuthButtons">
           <Popover
             content={(
-              <Menu>
+              <Menu className="AuthButtons__popover">
+                <Link to="/cases" className="bp3-menu-item">
+                  <Icon icon="briefcase" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.myDatasets)}
+                  </div>
+                </Link>
                 <Link to="/notifications" className="bp3-menu-item">
                   <Icon icon="notifications" />
                   {' '}
@@ -76,14 +86,14 @@ export class AuthButtons extends Component {
                   </div>
                 </Link>
                 <MenuDivider />
+                <MenuItem icon="cog" onClick={this.toggleSettings} text={`${intl.formatMessage(messages.settings)}`} />
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
 )}
-            position={Position.BOTTOM_LEFT}
+            position={Position.BOTTOM_RIGHT}
+            minimal
           >
-            <Button icon="user" className="bp3-minimal navbar-option-title">
-              <FormattedMessage id="nav.profile" defaultMessage="Profile" />
-            </Button>
+            <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
           </Popover>
           <QueryLogsDialog
             isOpen={this.state.queryLogsIsOpen}
@@ -102,7 +112,7 @@ export class AuthButtons extends Component {
             toggleDialog={this.toggleAuthentication}
           />
           <Button icon="log-in" className="bp3-minimal" onClick={this.toggleAuthentication}>
-            <FormattedMessage id="nav.signin" defaultMessage="Sign in / Register" />
+            <FormattedMessage id="nav.signin" defaultMessage="Sign in" />
           </Button>
         </span>
       );

@@ -9,6 +9,7 @@ import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/Authenticatio
 import PreviewManager from 'src/components/Preview/PreviewManager';
 import Navbar from 'src/components/Navbar/Navbar';
 import Footer from 'src/components/Footer/Footer';
+import SearchTips from 'src/components/SearchTips/SearchTips';
 import { selectSession, selectMetadata } from 'src/selectors';
 
 import './Screen.scss';
@@ -22,6 +23,12 @@ export class Screen extends React.Component {
   constructor(props) {
     super(props);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
+
+    this.state = {
+      searchTipsOpen: false,
+    };
+
+    this.onToggleSearchTips = this.onToggleSearchTips.bind(this);
   }
 
   componentDidMount() {
@@ -32,6 +39,10 @@ export class Screen extends React.Component {
     if (this.props.location && (this.props.location.pathname !== prevProps.location.pathname)) {
       window.scrollTo(0, 0);
     }
+  }
+
+  onToggleSearchTips() {
+    this.setState(({ searchTipsOpen }) => ({ searchTipsOpen: !searchTipsOpen }));
   }
 
   toggleAuthentication = event => event.preventDefault();
@@ -60,14 +71,15 @@ export class Screen extends React.Component {
 
   render() {
     const {
-      session, metadata, query, updateQuery, requireSession,
-      isHomepage, title, description, className,
+      session, metadata, query, requireSession,
+      isHomepage, title, description, className, searchScopes,
     } = this.props;
+    const { searchTipsOpen } = this.state;
     const hasMetadata = metadata && metadata.app && metadata.app.title;
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
     const titleTemplate = hasMetadata ? `%s - ${metadata.app.title}` : '%s';
-    const defaultTitle = hasMetadata ? metadata.app.title : 'Aleph';
+    const defaultTitle = hasMetadata ? metadata.app.title : 'OCCRP Aleph';
 
     return (
       <div className={c('Screen', className)}>
@@ -86,8 +98,9 @@ export class Screen extends React.Component {
           metadata={metadata}
           session={session}
           query={query}
-          updateQuery={updateQuery}
           isHomepage={isHomepage}
+          searchScopes={searchScopes}
+          onToggleSearchTips={this.onToggleSearchTips}
         />
         { (hasMetadata && !!metadata.app.banner) && (
           <div className="app-banner bp3-callout bp3-intent-warning bp3-icon-warning-sign">
@@ -109,6 +122,7 @@ export class Screen extends React.Component {
             toggleDialog={this.toggleAuthentication}
           />
         )}
+        <SearchTips isOpen={searchTipsOpen} />
         <Footer
           isHomepage={isHomepage}
           metadata={metadata}

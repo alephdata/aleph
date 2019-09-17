@@ -3,11 +3,11 @@ import classNames from 'classnames';
 import * as React from 'react';
 
 import {
-  DISPLAYNAME_PREFIX, InputGroup, Keys, Popover, Position, Utils,
+  DISPLAYNAME_PREFIX, Button, ControlGroup, InputGroup, Keys, MenuItem, Popover, Position, Utils,
 } from '@blueprintjs/core';
+
 import { Classes } from '@blueprintjs/select/lib/esm/common';
 import { QueryList } from '@blueprintjs/select/lib/esm/components/query-list/queryList';
-
 
 export class Suggest extends React.PureComponent {
   static displayName = `${DISPLAYNAME_PREFIX}.Suggest`;
@@ -16,7 +16,6 @@ export class Suggest extends React.PureComponent {
     closeOnSelect: true,
     openOnKeyDown: false,
   };
-
 
   TypedQueryList = QueryList.ofType();
 
@@ -65,10 +64,9 @@ export class Suggest extends React.PureComponent {
   }
 
   renderQueryList = (listProps) => {
-    const { inputProps = {}, popoverProps = {} } = this.props;
+    const { inputProps = {}, popoverProps = {}} = this.props;
     const { isOpen, selectedItem } = this.state;
     const { handleKeyDown, handleKeyUp } = listProps;
-    const { placeholder = 'Search...' } = inputProps;
 
     const selectedItemText = selectedItem ? this.props.inputValueRenderer(selectedItem) : '';
     return (
@@ -82,17 +80,21 @@ export class Suggest extends React.PureComponent {
         onInteraction={this.handlePopoverInteraction}
         popoverClassName={classNames(Classes.SELECT_POPOVER, popoverProps.popoverClassName)}
         onOpened={this.handlePopoverOpened}
+        targetTagName="div"
+        fill
       >
         <InputGroup
           {...inputProps}
-          placeholder={isOpen && selectedItemText ? selectedItemText : placeholder}
+          placeholder={isOpen && selectedItemText ? selectedItemText : inputProps.placeholder}
           inputRef={this.refHandlers.input}
           onChange={listProps.handleQueryChange}
           onFocus={this.handleInputFocus}
           onKeyDown={this.getTargetKeyDownHandler(handleKeyDown)}
           onKeyUp={this.getTargetKeyUpHandler(handleKeyUp)}
           value={listProps.query}
+          fill
         />
+
         <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>
           {listProps.itemList}
         </div>

@@ -11,7 +11,7 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs } from 'src/components/common';
+import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
 
 
@@ -28,6 +28,18 @@ const messages = defineMessages({
 
 
 export class CollectionScreen extends Component {
+  onSearch(queryText) {
+    const { history, collection } = this.props;
+    const query = {
+      q: queryText,
+      'filter:collection_id': collection.id,
+    };
+    history.push({
+      pathname: '/search',
+      search: queryString.stringify(query),
+    });
+  }
+
   render() {
     const {
       intl, collection, collectionId, activeMode,
@@ -46,6 +58,12 @@ export class CollectionScreen extends Component {
       );
     }
 
+    const searchScope = {
+      listItem: <Collection.Label collection={collection} icon truncate={30} />,
+      label: collection.label,
+      onSearch: this.onSearch.bind(this),
+    };
+
     const breadcrumbs = (
       <Breadcrumbs>
         <Breadcrumbs.Collection key="collection" collection={collection} />
@@ -58,7 +76,11 @@ export class CollectionScreen extends Component {
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={collection.label} description={collection.summary}>
+        <Screen
+          title={collection.label}
+          description={collection.summary}
+          searchScopes={[searchScope]}
+        >
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.InfoPane className="with-heading">
