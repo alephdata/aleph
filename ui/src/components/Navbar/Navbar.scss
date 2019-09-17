@@ -3,8 +3,7 @@
 .Navbar {
   &.bp3-navbar {
     display: flex;
-    padding: 0;
-    z-index: 100;
+    padding: 0 10px 0 0;
     justify-content: space-between;
     background-color: $dark-gray1;
 
@@ -12,9 +11,6 @@
       display: none;
     }
 
-    img {
-      height: 28px;
-    }
 
     a {
       color: inherit;
@@ -45,6 +41,12 @@
     }
   }
 
+  .bp3-navbar-heading {
+    vertical-align: middle;
+    font-weight: bold;
+    margin: 0 $aleph-grid-size;
+  }
+
   &__left-group {
     padding: 0 $aleph-grid-size;
 
@@ -65,19 +67,17 @@
     }
   }
 
-  &__right-group {
-
+  &__home-link {
+    height: 28px;
+    img {
+      height: 28px;
+    }
   }
 
   &__search-container {
     flex: 4 1 auto;
     padding: 10px 5px;
     max-width: 600px;
-
-    .bp3-menu {
-      // padding-top: 0;
-      // padding-bottom: 0;
-    }
   }
 
   &__sources-button {
@@ -97,6 +97,11 @@
       display: none;
     }
   }
+
+  .bp3-button, .bp3-menu {
+    border-radius: 0;
+  }
+
 
   .bp3-button-text {
     @media screen and (max-width: $aleph-screen-md-max-width) {
@@ -120,111 +125,3 @@
     }
   }
 }
-
-// //small screen
-// @media screen and (max-width: $aleph-screen-sm-max-width) {
-//   .Navbar {
-//     a.search-icon {
-//       margin-right: 1em;
-//     }
-//
-//     .full-length-input {
-//       position: fixed;
-//       top: 0;
-//       left: 0;
-//       right: 0;
-//       padding: $aleph-grid-size * 0.5;
-//       height: $aleph-grid-size * 5;
-//       background-color: white;
-//     }
-//
-//     .search-and-burger-icons {
-//       width: 100%;
-//     }
-//   }
-// }
-
-// //medium screen
-// @media screen and (max-width: $aleph-screen-md-max-width) {
-//   .Navbar {
-//     .bp3-navbar {
-//       .transform {
-//         .bar1 {
-//           -webkit-transform: rotate(-45deg) translate(0, 6px);
-//           transform: rotate(-45deg) translate(0, 6px);
-//         }
-//
-//         .bar2 {
-//           opacity: 0;
-//         }
-//
-//         .bar3 {
-//           -webkit-transform: rotate(45deg) translate(-1px, -8px);
-//           transform: rotate(45deg) translate(-1px, -8px);
-//         }
-//       }
-//
-//       .bar1, .bar2, .bar3 {
-//         width: 20px;
-//         height: 2px;
-//         background-color: #333;
-//         margin: 3px 0;
-//         transition: 0.4s;
-//       }
-//
-//       /*.navbar-header-search {
-//         display: flex;
-//       }*/
-//
-//       .navbar-options {
-//         a, div, span {
-//           background-color: white;
-//           position: relative;
-//         }
-//
-//         .bp3-popover-wrapper {
-//           span {
-//             display: block;
-//           }
-//         }
-//       }
-//
-//       .show-menu-dropdown {
-//         position: relative;
-//         display: flex;
-//
-//         a, div, span {
-//           float: left;
-//           text-align: left;
-//         }
-//
-//         ul {
-//           width: 100%;
-//         }
-//
-//         .bp3-button {
-//           align-items: left;
-//           justify-content: left;
-//           background-color: white;
-//         }
-//       }
-//
-//       a.menu-icon {
-//         float: right;
-//         display: block;
-//         margin-top: 1em;
-//       }
-//
-//       .search-and-burger-icons {
-//         display: flex;
-//         justify-content: flex-end;
-//         padding-left: 1em;
-//       }
-//
-//       .burger-fixed {
-//         position: fixed;
-//         right: 2em;
-//       }
-//     }
-//   }
-// }

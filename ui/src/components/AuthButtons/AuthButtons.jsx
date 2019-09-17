@@ -70,7 +70,7 @@ export class AuthButtons extends Component {
         <span className="AuthButtons">
           <Popover
             content={(
-              <Menu>
+              <Menu className="AuthButtons__popover">
                 <Link to="/cases" className="bp3-menu-item">
                   <Icon icon="briefcase" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
@@ -91,7 +91,7 @@ export class AuthButtons extends Component {
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
 )}
-            position={Position.BOTTOM_LEFT}
+            position={Position.BOTTOM_RIGHT}
             minimal
           >
             <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
@@ -114,7 +114,7 @@ export class AuthButtons extends Component {
             toggleDialog={this.toggleAuthentication}
           />
           <Button icon="log-in" className="bp3-minimal" onClick={this.toggleAuthentication}>
-            <FormattedMessage id="nav.signin" defaultMessage="Sign in / Register" />
+            <FormattedMessage id="nav.signin" defaultMessage="Sign in" />
           </Button>
         </span>
       );

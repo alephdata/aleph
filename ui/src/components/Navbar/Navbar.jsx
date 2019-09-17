@@ -95,7 +95,7 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, session, searchScopes, role, onToggleSearchTips,
+      metadata, session, searchScopes, role, onToggleSearchTips, isHomepage,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
@@ -108,24 +108,30 @@ export class Navbar extends React.Component {
     return (
       <Bp3Navbar id="Navbar" className="Navbar bp3-dark">
         <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
-          <Link to="/">
+          <Link to="/" className="Navbar__home-link">
             <img src={metadata.app.logo} alt={metadata.app.title} />
           </Link>
-
+          {isHomepage && (
+            <Bp3Navbar.Heading>
+              {metadata.app.title}
+            </Bp3Navbar.Heading>
+          )}
         </Bp3Navbar.Group>
         <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
-          <div className="Navbar__search-container">
-            <form onSubmit={this.onSubmit} autoComplete="off">
-              <ScopedSearchBox
-                doSearch={this.doSearch}
-                updateSearchValue={this.updateSearchValue}
-                searchValue={this.state.searchValue}
-                searchScopes={searchScopes
-                  ? [...[defaultScope], ...searchScopes] : [defaultScope]}
-                toggleSearchTips={onToggleSearchTips}
-              />
-            </form>
-          </div>
+          {!isHomepage && (
+            <div className="Navbar__search-container">
+              <form onSubmit={this.onSubmit} autoComplete="off">
+                <ScopedSearchBox
+                  doSearch={this.doSearch}
+                  updateSearchValue={this.updateSearchValue}
+                  searchValue={this.state.searchValue}
+                  searchScopes={searchScopes
+                    ? [...[defaultScope], ...searchScopes] : [defaultScope]}
+                  toggleSearchTips={onToggleSearchTips}
+                />
+              </form>
+            </div>
+          )}
         </Bp3Navbar.Group>
         <Bp3Navbar.Group align={Alignment.RIGHT} className="Navbar__right-group" id="navbarSupportedContent">
           <Link to="/sources">
@@ -133,14 +139,16 @@ export class Navbar extends React.Component {
               <FormattedMessage id="nav.sources" defaultMessage="Sources" />
             </Button>
           </Link>
-          <div className="Navbar__mobile-search-toggle">
-            {!mobileSearchOpen && (
-              <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
-            )}
-            {mobileSearchOpen && (
-              <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
-            )}
-          </div>
+          {!isHomepage && (
+            <div className="Navbar__mobile-search-toggle">
+              {!mobileSearchOpen && (
+                <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+              )}
+              {mobileSearchOpen && (
+                <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+              )}
+            </div>
+          )}
           <Bp3Navbar.Divider className={c({ 'mobile-hidden': mobileSearchOpen })} />
           <div className={c({ 'mobile-hidden': mobileSearchOpen })}>
             <AuthButtons

@@ -9,4 +9,9 @@
   .menu-item-width {
     min-width: 0 !important;
   }
+
+  &__popover {
+    border-radius: 0;
+    background-color: #3a454d !important;
+  }
 }

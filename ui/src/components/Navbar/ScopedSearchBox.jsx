@@ -84,7 +84,7 @@ class SearchBox extends React.Component {
       minimal
       small
       onClick={this.deleteQueryLog(queryItem)}
-      rightIcon="cross"
+      icon="cross"
     />
   )
 
@@ -143,6 +143,7 @@ class SearchBox extends React.Component {
       popoverClassName: 'search-popover',
       targetTagName: 'div',
       fill: true,
+      // usePortal: false,
       modifiers: {
         arrow: { enabled: false },
       },
@@ -159,7 +160,7 @@ class SearchBox extends React.Component {
             filterable={false}
             items={searchScopes}
             itemRenderer={this.renderScopeItem}
-            popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover' }}
+            popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover', usePortal: false }}
             disabled={!multipleScopes}
           >
             <Button

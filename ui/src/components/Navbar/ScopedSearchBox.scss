@@ -35,7 +35,6 @@
         background: $gray1;
         border-radius: 0;
         box-shadow: none;
-        z-index: 100;
       }
     }
   }
@@ -68,8 +67,11 @@
           background: unset;
           font-size: $aleph-font-size * .9;
           padding:unset;
-          &:hover{
-            text-decoration: underline;
+
+          &:hover {
+            svg {
+              fill: $dark-gray2 !important;
+            }
           }
         }
       }
