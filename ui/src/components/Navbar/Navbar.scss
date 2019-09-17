@@ -4,6 +4,7 @@
   &.bp3-navbar {
     display: flex;
     padding: 0;
+    z-index: 100;
     // padding-right: $aleph-grid-size;
     justify-content: space-between;
     background-color: $dark-gray1;
@@ -55,6 +56,8 @@
   &__left-group {
     // background-color: $dark-gray3;
     padding: 0 $aleph-grid-size;
+    // border-right: 1px solid $gray1;
+    // margin-right: 7px;
 
     @media screen and (max-width: $aleph-screen-sm-max-width) {
       &.hide {

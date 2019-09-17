@@ -80,6 +80,9 @@ export class Suggest extends React.PureComponent {
         onInteraction={this.handlePopoverInteraction}
         popoverClassName={classNames(Classes.SELECT_POPOVER, popoverProps.popoverClassName)}
         onOpened={this.handlePopoverOpened}
+        targetTagName="div"
+        // usePortal={false}
+        fill
       >
         <InputGroup
           {...inputProps}
@@ -90,6 +93,7 @@ export class Suggest extends React.PureComponent {
           onKeyDown={this.getTargetKeyDownHandler(handleKeyDown)}
           onKeyUp={this.getTargetKeyUpHandler(handleKeyUp)}
           value={listProps.query}
+          fill
         />
 
         <div onKeyDown={handleKeyDown} onKeyUp={handleKeyUp}>

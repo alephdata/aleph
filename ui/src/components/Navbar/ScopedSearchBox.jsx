@@ -16,7 +16,7 @@ import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import Query from 'src/app/Query';
 import { selectQueryLogsLimited, selectSession } from 'src/selectors';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import './ScopedSearchBox.scss';
 
@@ -85,12 +85,8 @@ class SearchBox extends React.Component {
       minimal
       small
       onClick={this.deleteQueryLog(queryItem)}
-    >
-      <FormattedMessage
-        id="queryLogs.query.delete"
-        defaultMessage="Remove"
-      />
-    </Button>
+      rightIcon="cross"
+    />
   )
 
   renderScopeItem = (scope, { index }) => (
@@ -126,7 +122,7 @@ class SearchBox extends React.Component {
 
   render() {
     const {
-      props: { searchValue, searchScopes, inputClasses, intl, hideScopeMenu },
+      props: { searchValue, searchScopes, inputClasses, intl, hideScopeMenu, toggleSearchTips },
       state: { currScope },
       itemRenderer, onChange,
       itemListPredicate,
@@ -194,6 +190,7 @@ class SearchBox extends React.Component {
             className="SearchBox__search-tips bp3-fixed"
             icon="help"
             minimal
+            onClick={toggleSearchTips}
           />
         )}
       </ControlGroup>

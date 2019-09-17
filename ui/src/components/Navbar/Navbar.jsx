@@ -96,7 +96,7 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, session, searchScopes, role,
+      metadata, session, searchScopes, role, onToggleSearchTips,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
@@ -123,6 +123,7 @@ export class Navbar extends React.Component {
                 searchValue={this.state.searchValue}
                 searchScopes={searchScopes
                   ? [...[defaultScope], ...searchScopes] : [defaultScope]}
+                toggleSearchTips={onToggleSearchTips}
               />
             </form>
           </div>

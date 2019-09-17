@@ -47,8 +47,9 @@
   }
 }
 
-.search-popover{
+.search-popover {
   ul.bp3-menu {
+    border-radius: 0;
     background-color: white;
     & > li {
       background-color: white;
