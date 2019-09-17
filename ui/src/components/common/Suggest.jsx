@@ -81,7 +81,6 @@ export class Suggest extends React.PureComponent {
         popoverClassName={classNames(Classes.SELECT_POPOVER, popoverProps.popoverClassName)}
         onOpened={this.handlePopoverOpened}
         targetTagName="div"
-        // usePortal={false}
         fill
       >
         <InputGroup
