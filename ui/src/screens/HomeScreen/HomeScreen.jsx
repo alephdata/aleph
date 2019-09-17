@@ -7,7 +7,7 @@ import {
 } from 'react-intl';
 import { Link, Redirect } from 'react-router-dom';
 import {
-  Button, ControlGroup, Intent, Divider, Callout,
+  Button, ControlGroup, Divider,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';

@@ -18,11 +18,11 @@ const messages = defineMessages({
   },
   myDatasets: {
     id: 'nav.my_datasets',
-    defaultMessage: 'My datasets',
+    defaultMessage: 'Case files',
   },
   settings: {
     id: 'nav.settings',
-    defaultMessage: 'Profile settings',
+    defaultMessage: 'Settings',
   },
   signout: {
     id: 'nav.signout',
@@ -34,7 +34,7 @@ const messages = defineMessages({
   },
   queryLogs: {
     id: 'nav.queryLogs',
-    defaultMessage: 'Search history',
+    defaultMessage: 'Searches & alerts',
   },
 });
 export class AuthButtons extends Component {
@@ -62,12 +62,6 @@ export class AuthButtons extends Component {
           <Popover
             content={(
               <Menu className="AuthButtons__popover">
-                <Link to="/cases" className="bp3-menu-item">
-                  <Icon icon="briefcase" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.myDatasets)}
-                  </div>
-                </Link>
                 <Link to="/notifications" className="bp3-menu-item">
                   <Icon icon="notifications" />
                   {' '}
@@ -77,6 +71,13 @@ export class AuthButtons extends Component {
                   </div>
                 </Link>
                 <MenuItem icon="history" onClick={this.toggleQueryLogs} text={intl.formatMessage(messages.queryLogs)} />
+                <Link to="/cases" className="bp3-menu-item">
+                  <Icon icon="briefcase" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.myDatasets)}
+                  </div>
+                </Link>
+                <MenuDivider />
                 <Link to="/settings" className="bp3-menu-item">
                   <Icon icon="cog" />
                   {' '}
@@ -85,8 +86,6 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.settings)}
                   </div>
                 </Link>
-                <MenuDivider />
-                <MenuItem icon="cog" onClick={this.toggleSettings} text={`${intl.formatMessage(messages.settings)}`} />
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
 )}

@@ -79,6 +79,7 @@ export class SystemStatusScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
+          <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
           <React.Fragment>
             {result.total === 0
               && (

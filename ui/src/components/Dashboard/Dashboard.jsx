@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Menu, MenuItem, Card, Elevation, MenuDivider } from '@blueprintjs/core';
+import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
 import { fetchGroups } from 'src/actions';
@@ -64,13 +64,14 @@ class Dashboard extends React.Component {
     const current = location.pathname;
     return (
       <div className="Dashboard">
-        <div className="dashboard-menu">
+        <div className="Dashboard__menu">
           <Menu>
             <li className="bp3-menu-header">
               <h6 className="bp3-heading">
                 <FormattedMessage id="dashboard.activity" defaultMessage="Activity" />
               </h6>
             </li>
+            <MenuDivider />
             <MenuItem
               icon="notifications"
               text={intl.formatMessage(messages.notifications)}
@@ -116,9 +117,9 @@ class Dashboard extends React.Component {
             />
           </Menu>
         </div>
-        <Card className="dashboard-body" elevation={Elevation.ONE}>
+        <div className="dashboard-body">
           {this.props.children}
-        </Card>
+        </div>
       </div>
     );
   }

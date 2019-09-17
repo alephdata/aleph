@@ -7,15 +7,28 @@
     align-items: stretch;
     padding: $aleph-grid-size * 2;
 
-    .dashboard-menu {
+    &__menu {
         flex: flex;
         flex-direction: column;
         flex-grow: 0;
         width: 20%;
+        border-right: 1px solid rgba(16, 22, 26, 0.15);
+        margin-right: 20px;
+        padding-right: 20px;
+        min-width: 200px;
 
         .bp3-menu {
-            background-color: inherit !important;
+          background-color: inherit !important;
+          padding: 0;
         }
+
+        .bp3-menu-header {
+          border: none;
+        }
+    }
+
+    &__title {
+      font-size: 22px;
     }
 
     .dashboard-body {

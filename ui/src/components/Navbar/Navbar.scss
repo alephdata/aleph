@@ -5,7 +5,7 @@
     display: flex;
     padding: 0 10px 0 0;
     justify-content: space-between;
-    background-color: $dark-gray1;
+    background-color: $dark-gray1 !important;
 
     .back-button {
       display: none;
