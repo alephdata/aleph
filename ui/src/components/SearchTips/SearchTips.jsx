@@ -46,7 +46,7 @@ export default class SearchTips extends React.Component {
         >
           <div className="SearchTips__content">
             {tips.map(tip => (
-              <Card className="SearchTips__section">
+              <Card key={tip.title} className="SearchTips__section">
                 <h5 className="SearchTips__section__title">{tip.title}</h5>
                 <div className="SearchTips__section__content" dangerouslySetInnerHTML={{ __html: tip.content }} />
               </Card>

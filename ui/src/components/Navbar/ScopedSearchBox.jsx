@@ -53,7 +53,7 @@ class SearchBox extends React.Component {
   componentDidUpdate(prevProps) {
     const { searchScopes } = this.props;
 
-    if (searchScopes !== prevProps.searchScopes) {
+    if (searchScopes.length !== prevProps.searchScopes.length) {
       this.setState({
         currScope: searchScopes[searchScopes.length - 1],
       });
@@ -69,7 +69,6 @@ class SearchBox extends React.Component {
 
   onSearchSubmitClick = () => {
     const { searchValue, doSearch } = this.props;
-    console.log('submitting', searchValue, this.state.currScope);
     this.props.updateSearchValue(searchValue);
     doSearch(searchValue, this.state.currScope);
   }
@@ -116,7 +115,6 @@ class SearchBox extends React.Component {
   )
 
   changeSearchScope(newScope) {
-    console.log('changing scope to ', newScope);
     this.setState({ currScope: newScope });
   }
 
