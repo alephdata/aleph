@@ -89,7 +89,8 @@ class SearchAlert extends Component {
     const className = c('bp3-button',
       'bp3-minimal',
       'bp3-icon-notifications',
-      { 'bp3-intent-success': alertExists },
+      'bp3-small',
+      { 'bp3-intent-primary': alertExists },
       { 'bp3-disabled': this.state.updating });
     const tooltip = alertExists ? intl.formatMessage(messages.alert_remove)
       : intl.formatMessage(messages.alert_add);

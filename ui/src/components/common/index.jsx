@@ -23,6 +23,7 @@ import Tag from './Tag';
 import URL from './URL';
 import { Icon } from './Icon';
 import SearchBox from './SearchBox';
+import SearchListings from './SearchListings';
 
 export {
   Breadcrumbs,
@@ -49,5 +50,6 @@ export {
   Tag,
   URL,
   SearchBox,
+  SearchListings,
   Icon,
 };

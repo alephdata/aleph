@@ -1,16 +1,17 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 // import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-// import { Button, Intent, FormGroup, InputGroup, Checkbox } from '@blueprintjs/core';
+import { Tab, Tabs } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 
-// import { showSuccessToast } from 'src/app/toast';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-// import ClipboardInput from 'src/components/common/ClipboardInput';
-// import { updateRole, fetchRole } from 'src/actions';
-// import { selectSession, selectMetadata } from 'src/selectors';
+import AlertsManager from 'src/components/AlertsManager/AlertsManager';
+import QueryLogs from 'src/components/QueryLogs/QueryLogs';
+// import { DualPane } from 'src/components/common';
+
 
 import './HistoryScreen.scss';
 
@@ -20,31 +21,75 @@ const messages = defineMessages({
     id: 'settings.title',
     defaultMessage: 'Searches & alerts',
   },
+  searches: {
+    id: 'settings.searchTitle',
+    defaultMessage: 'Search History',
+  },
+  alerts: {
+    id: 'settings.alertsTitls',
+    defaultMessage: 'Alerts',
+  },
 });
 
 
 export class HistoryScreen extends React.Component {
-  //   constructor(props) {
-  //     super(props);
-  //   }
-  //   componentDidUpdate(prevProps) {
-  //   }
+  constructor(props) {
+    super(props);
+
+    this.handleTabChange = this.handleTabChange.bind(this);
+  }
+
+  handleTabChange() {
+    const { activeTab, history } = this.props;
+
+    const nextTabId = activeTab === 'searches' ? 'alerts' : 'searches';
+
+    history.push({
+      hash: nextTabId,
+    });
+  }
 
   render() {
-    const { intl } = this.props;
+    const { activeTab, intl } = this.props;
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
-          {'I am a banana!'}
+          <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+          <Tabs id="TabsExample" onChange={this.handleTabChange} selectedTabId={activeTab}>
+            <Tab
+              id="searches"
+              title={intl.formatMessage(messages.searches)}
+              panel={<QueryLogs />}
+              panelClassName="ember-panel"
+            />
+            <Tab
+              id="alerts"
+              title={intl.formatMessage(messages.alerts)}
+              panel={<AlertsManager />}
+              panelClassName="ember-panel"
+            />
+          </Tabs>
         </Dashboard>
       </Screen>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  ...state,
-});
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const parsedHash = queryString.parse(location.hash);
+  let activeTab;
+  if (parsedHash.alerts !== undefined) {
+    activeTab = 'alerts';
+  }
+  if (parsedHash.searches !== undefined) {
+    activeTab = 'searches';
+  }
+  return {
+    activeTab,
+    ...state,
+  };
+};
 
 HistoryScreen = withRouter(HistoryScreen);
 HistoryScreen = connect(mapStateToProps, { })(HistoryScreen);

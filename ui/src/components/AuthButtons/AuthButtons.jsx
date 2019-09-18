@@ -70,7 +70,12 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.view_notifications)}
                   </div>
                 </Link>
-                <MenuItem icon="history" onClick={this.toggleQueryLogs} text={intl.formatMessage(messages.queryLogs)} />
+                <Link to="/history" className="bp3-menu-item">
+                  <Icon icon="history" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.queryLogs)}
+                  </div>
+                </Link>
                 <Link to="/cases" className="bp3-menu-item">
                   <Icon icon="briefcase" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
