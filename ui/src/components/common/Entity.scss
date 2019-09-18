@@ -11,6 +11,10 @@
   &.disabled {
     color: $aleph-greyed-text;
   }
+
+  .entity-icon {
+    padding-right: .5em;
+  }
 }
 
 .EntityLink {

@@ -55,7 +55,9 @@
   box-shadow: $pt-elevation-shadow-2;
   background: $aleph-content-background;
   flex-direction: row !important;
-  min-height: 100%;
+  min-height: unset;
+  border-radius: $aleph-border-radius;
+  margin: 0 $aleph-grid-size $aleph-grid-size;
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-infopane-md-width !important;
   }
@@ -63,7 +65,7 @@
     width: 100% !important;
     margin-bottom: 1em;
   }
-  
+
   h1, h2 {
     // Show a subtle line below headings
     margin-bottom: $aleph-grid-size;
