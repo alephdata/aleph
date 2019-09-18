@@ -15,6 +15,7 @@ from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
+from aleph.queues import get_active_collection_status
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.collections import index_collection
@@ -137,10 +138,13 @@ def bulkload(file_name):
 
 
 @manager.command
-def status(foreign_id):
+def status(foreign_id=None):
     """Get the queue status (pending and finished tasks.)"""
-    collection = get_collection(foreign_id)
-    status = get_status(collection)
+    if foreign_id is not None:
+        collection = get_collection(foreign_id)
+        status = get_status(collection)
+    else:
+        status = get_active_collection_status()
     pprint(status)
 
 

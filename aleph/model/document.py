@@ -1,5 +1,6 @@
 import cgi
 import logging
+from banal import is_mapping
 from normality import slugify
 from followthemoney import model
 from followthemoney.types import registry
@@ -155,8 +156,11 @@ class Document(db.Model, DatedModel):
             'properties': {}
         })
         meta = dict(self.meta)
-        headers = meta.pop('headers', {}) or {}
-        headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        headers = meta.pop('headers', {})
+        if is_mapping(headers):
+            headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        else:
+            headers = {}
         proxy.set('contentHash', self.content_hash)
         proxy.set('parent', self.parent_id)
         proxy.set('ancestors', self.ancestors)
