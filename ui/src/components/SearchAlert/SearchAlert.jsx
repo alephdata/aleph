@@ -12,7 +12,7 @@ import { selectSession, selectAlerts } from 'src/selectors';
 const messages = defineMessages({
   alert_add: {
     id: 'navbar.alert_add',
-    defaultMessage: 'You will receive alerts for new results.',
+    defaultMessage: 'Click to receive alerts about new results for this search.',
   },
   alert_remove: {
     id: 'navbar.alert_remove',
@@ -42,7 +42,11 @@ class SearchAlert extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.updating !== nextState.updating) {
+      return true;
+    }
+
     return !this.props.alerts
       || this.props.alerts.total !== nextProps.alerts.total
       || this.props.queryText !== nextProps.queryText;
@@ -72,6 +76,7 @@ class SearchAlert extends Component {
       await this.props.addAlert({ query: queryText.trim() });
       await this.props.fetchAlerts();
     }
+
     this.setState({ updating: false });
     return undefined;
   }
@@ -86,6 +91,7 @@ class SearchAlert extends Component {
       return null;
     }
     const alertExists = this.alertExists();
+    console.log('state updating is', this.state.updating);
     const className = c('bp3-button',
       'bp3-minimal',
       'bp3-icon-notifications',
