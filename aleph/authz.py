@@ -85,12 +85,28 @@ class Authz(object):
             return False
         return self.logged_in
 
+    def can_write_role(self, role_id):
+        if not self.session_write:
+            return False
+        # if self.is_admin:
+        #     return True
+        return self.id == role_id
+
+    def can_read_role(self, role_id):
+        if self.is_admin:
+            return True
+        return role_id in self.roles
+
     def match(self, roles):
         """See if there's overlap in roles."""
         roles = ensure_list(roles)
         if not len(roles):
             return False
         return self.roles.intersection(roles) > 0
+
+    @property
+    def role(self):
+        return Role.by_id(self.id)
 
     def to_token(self, scope=None, role=None):
         exp = datetime.utcnow() + timedelta(days=1)
