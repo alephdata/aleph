@@ -36,6 +36,7 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
             db.session.add(permission)
         permission.read = read or write
         permission.write = write
+        permission.deleted_at = None
         if not permission.read:
             permission.deleted_at = datetime.utcnow()
         db.session.flush()
@@ -46,8 +47,7 @@ class Permission(db.Model, IdModel, SoftDeleteModel):
         q = cls.all()
         q = q.filter(Permission.role_id == role.id)
         q = q.filter(Permission.collection_id == collection.id)
-        permission = q.first()
-        return permission
+        return q.first()
 
     @classmethod
     def delete_by_collection(cls, collection_id, deleted_at=None):
