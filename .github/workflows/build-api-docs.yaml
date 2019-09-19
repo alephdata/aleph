@@ -1,0 +1,15 @@
+name: Build API docs
+on:
+  push:
+    paths:
+      - 'api-spec.yml'
+
+jobs:
+  build:
+    name: Build-API-Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+      - run: npm install -g redoc-cli
+      - run: redoc-cli bundle api-spec.yml
