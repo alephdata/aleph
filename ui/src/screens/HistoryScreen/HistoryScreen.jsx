@@ -1,6 +1,6 @@
 import React from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
-// import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedNumber } from 'react-intl';
+import c from 'classnames';
 import { Tab, Tabs } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -10,7 +10,6 @@ import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import AlertsManager from 'src/components/AlertsManager/AlertsManager';
 import QueryLogs from 'src/components/QueryLogs/QueryLogs';
-// import { DualPane } from 'src/components/common';
 
 
 import './HistoryScreen.scss';
@@ -50,9 +49,9 @@ export class HistoryScreen extends React.Component {
   }
 
   render() {
-    const { activeTab, intl } = this.props;
+    const { activeTab, intl, alerts } = this.props;
     return (
-      <Screen title={intl.formatMessage(messages.title)} requireSession>
+      <Screen title={intl.formatMessage(messages.title)} className="HistoryScreen" requireSession>
         <Dashboard>
           <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
           <Tabs id="TabsExample" onChange={this.handleTabChange} selectedTabId={activeTab}>
@@ -64,7 +63,17 @@ export class HistoryScreen extends React.Component {
             />
             <Tab
               id="alerts"
-              title={intl.formatMessage(messages.alerts)}
+              title={(
+                <React.Fragment>
+                  <span>{intl.formatMessage(messages.alerts)}</span>
+                  {alerts.total && (
+                    <span className={c('bp3-tag', 'bp3-small', 'bp3-round', { 'bp3-minimal': activeTab !== 'alerts', 'bp3-intent-primary': activeTab === 'alerts' })}>
+                      <FormattedNumber value={alerts.total} />
+                    </span>
+                  )}
+                </React.Fragment>
+              )}
+              className={activeTab === 'alerts' ? 'active' : ''}
               panel={<AlertsManager />}
               panelClassName="ember-panel"
             />
