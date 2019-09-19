@@ -34,7 +34,6 @@ class Authz(object):
             return self._collections.get(action)
         prefix_key = cache.key(self.PREFIX)
         key = cache.key(self.PREFIX, action, self.id)
-        cache.kv.sadd(prefix_key, key)
         collections = cache.get_list(key)
         if len(collections):
             collections = [int(c) for c in collections]
@@ -56,7 +55,7 @@ class Authz(object):
             # log.info("Query: %s - roles: %s", q, self.roles)
         collections = [c for (c,) in q.all()]
         log.debug("Authz: %s (%s): %s", self, action, collections)
-
+        cache.kv.sadd(prefix_key, key)
         cache.set_list(key, collections)
         self._collections[action] = collections
         return collections
