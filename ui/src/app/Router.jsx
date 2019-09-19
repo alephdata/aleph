@@ -19,6 +19,7 @@ const HistoryScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/scre
 const SettingsScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SettingsScreen/SettingsScreen'));
 const SystemStatusScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SystemStatusScreen/SystemStatusScreen'));
 const SourcesIndexScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SourcesIndexScreen/SourcesIndexScreen'));
+const GroupSourcesScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/GroupSourcesScreen/GroupSourcesScreen'));
 const CasesIndexScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CasesIndexScreen/CasesIndexScreen'));
 const CollectionScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionScreen/CollectionScreen'));
 const CollectionXrefMatchesScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
@@ -57,6 +58,7 @@ class Router extends Component {
           <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
           <Redirect from="/documents/:documentId" to="/entities/:documentId" />
           <Route path="/sources" exact component={SourcesIndexScreen} />
+          <Route path="/group/:groupId" exact component={GroupSourcesScreen} />
           <Route path="/cases" exact component={CasesIndexScreen} />
           <Redirect from="/collections/:collectionId/documents" to="/collections/:collectionId" />
           <Route path="/collections/:collectionId" exact component={CollectionScreen} />

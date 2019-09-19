@@ -22,8 +22,35 @@
           padding: 0;
         }
 
+        .bp3-menu-item {
+          padding: 6px 7px;
+          // font-weight: bold;
+
+          .bp3-icon {
+            margin-right: 12px;
+            // color: rgb(24, 32, 38);
+          }
+        }
+
         .bp3-menu-header {
           border: none;
+          margin-left: 0;
+          margin-bottom: 10px;
+
+          .bp3-heading {
+            color: $blue1;
+          }
+        }
+
+        .bp3-menu-divider {
+          margin: 15px 0;
+
+        }
+
+        .bp3-heading {
+          // text-transform: uppercase;
+          // color: $gray1;
+          // font-size: 12px;
         }
     }
 

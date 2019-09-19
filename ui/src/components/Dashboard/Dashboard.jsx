@@ -73,7 +73,6 @@ class Dashboard extends React.Component {
                 <FormattedMessage id="dashboard.activity" defaultMessage="Activity" />
               </h6>
             </li>
-            <MenuDivider />
             <MenuItem
               icon="notifications"
               text={intl.formatMessage(messages.notifications)}
@@ -87,26 +86,34 @@ class Dashboard extends React.Component {
               active={current === '/history'}
             />
             <MenuItem
-              icon="briefcase"
-              text={intl.formatMessage(messages.cases)}
-              onClick={() => this.navigate('/cases')}
-              active={current === '/cases'}
-            />
-            <MenuItem
               icon="dashboard"
               text={intl.formatMessage(messages.status)}
               onClick={() => this.navigate('/status')}
               active={current === '/status'}
             />
+            <MenuItem
+              icon="briefcase"
+              text={intl.formatMessage(messages.cases)}
+              onClick={() => this.navigate('/cases')}
+              active={current === '/cases'}
+            />
+
             { groups.total !== undefined && (
               <React.Fragment>
+                <MenuDivider />
                 <li className="bp3-menu-header">
                   <h6 className="bp3-heading">
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>
                 </li>
                 { groups.results.map(group => (
-                  <MenuItem key={group.id} icon="shield" text={group.label} href="/sources" />
+                  <MenuItem
+                    key={group.id}
+                    icon="shield"
+                    text={group.label}
+                    href={`/group/${group.id}`}
+                    active={current === `/group/${group.id}`}
+                  />
                 ))}
               </React.Fragment>
             )}
@@ -117,7 +124,6 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/settings')}
               active={current === '/settings'}
             />
-
           </Menu>
         </div>
         <div className="dashboard-body">
