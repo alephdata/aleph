@@ -39,8 +39,7 @@ class ExcelIngestor(Ingestor, TableSupport, OLESupport):
                     value = time(hour, minute, second)
                     return value.isoformat()
                 else:
-                    value = datetime(year, month, day, hour, minute, second)
-                    return value.isoformat()
+                    return datetime(year, month, day, hour, minute, second)
         except Exception as exc:
             log.warning("Error in Excel value [%s]: %s", cell, exc)
         return value
