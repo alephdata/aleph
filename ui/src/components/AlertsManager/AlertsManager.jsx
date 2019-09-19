@@ -82,8 +82,6 @@ class AlertsDialog extends Component {
     const { alerts, intl } = this.props;
     const { newAlert } = this.state;
 
-    console.log('alerts', alerts);
-
     return (
       <div className="AlertsManager">
         <div className="bp3-callout bp3-intent-primary">
