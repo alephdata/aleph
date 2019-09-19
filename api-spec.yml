@@ -1,0 +1,612 @@
+swagger: "2.0"
+info:
+  title: Aleph API
+  description: |
+    The Aleph web interface is powered by a Flask HTTP API. 
+
+    # Authentication and Authorization
+
+    By default, any Aleph search will return only public documents in responses to API requests.
+    If you want to access documents which are not marked public, you will need to sign into the tool. This can be
+    done through the use on an **API key**.
+
+    The API key for any account can be found by clicking on the "Profile" menu item in the navigation menu.
+
+    The API key must be sent on all queries using the `Authorization` HTTP header:
+
+    ```Authorization: ApiKey 363af1e2b03b41c6b3adc604956e2f66```
+
+    Alternatively, the API key can also be sent as a query parameter under the `api_key` key.
+
+    # Endpoints
+  version: 3.2.10
+host: data.occrp.org
+basePath: /api/2
+schemes:
+  - https
+paths:
+  /alerts:
+    get:
+      summary: List alerts
+      description: Returns a list of alerts for the user.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/AlertsResponse'
+    post:
+      summary: Create an alert
+      description: Creates an alert for a given query string.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          schema:
+            type: object
+            properties:
+              query:
+                type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Alert'
+  /alerts/{alert_id}:
+    get:
+      summary: Fetch an alert
+      description: Return the alert with id `alert_id`
+      parameters:
+        - in: path
+          name: alert_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The alert ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Alert'
+    delete:
+      summary: Delete an alert
+      description: Delete the alert with id `alert_id`
+      parameters:
+        - in: path
+          name: alert_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The alert ID.
+  /archive:
+    get:
+      summary: Download a blob from the archive
+      description: Downloads a binary blob from the blob storage archive.
+      parameters:
+        - in: query
+          name: claim
+          type: integer
+          description: authorization token for an archive blob
+      responses:
+        200:
+          description: OK
+          schema:
+            type: file
+  /collections:
+    get:
+      summary: List collections
+      description: Returns a list of collections matching a given query. Returns all the collections
+               accessible by a user if no query is given.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionsResponse'
+  /collections/{collection_id}:
+    get:
+      summary: Get a collection
+      description: Return the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The collection ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Collection'
+    delete:
+      summary: Delete a collection
+      description: Delete the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The collection ID.
+      responses:
+        204:
+          description: ''
+  /collections/{collection_id}/process:
+    post:
+      summary: Process a collection
+      description: Start processing the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The collection ID.
+        - in: query
+          name: ingest
+          type: boolean
+        - in: query
+          name: reset
+          type: boolean
+  /collections/{collection_id}/mapping:
+    post:
+      summary: Load mappings for a collection
+      description: Load the mapping for the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The collection ID.
+        - in: body
+          name: mapping
+          required: true
+          type: object
+          description: The mapping to apply.
+  /collections/{collection_id}/bulk:
+    post:
+      summary: Load entities into a collection
+      description: Bulk load entities into the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The collection ID.
+        - in: query
+          name: unsafe
+          type: boolean
+          description: This will disable checksum security measures in order to allow bulk
+                        loading of document data.
+        - in: body
+          type: array
+          items:
+            type: object
+            properties:
+              schema:
+                type: string
+              properties:
+                type: object
+          description: Entities to be loaded.
+      responses:
+        204:
+          description: ''
+  /collections/{collection_id}/status:
+    get:
+      summary: Check processing status of a collection
+      description: Return the task queue status for the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The collection ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              finished:
+                type: integer
+              pending:
+                type: integer
+              running:
+                type: integer
+              jobs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    finished:
+                      type: integer
+                    pending:
+                      type: integer
+                    running:
+                      type: integer
+                    stages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          finished:
+                            type: integer
+                          pending:
+                            type: integer
+                          running:
+                            type: integer
+                          job_id:
+                            type: string
+                          stage:
+                            type: string
+    delete:
+      summary: Cancel processing of a collection
+      description: Cancel all queued tasks for the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+          minimum: 1
+          description: The collection ID.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              finished:
+                type: integer
+              pending:
+                type: integer
+              running:
+                type: integer
+              jobs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    finished:
+                      type: integer
+                    pending:
+                      type: integer
+                    running:
+                      type: integer
+                    stages:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          finished:
+                            type: integer
+                          pending:
+                            type: integer
+                          running:
+                            type: integer
+                          job_id:
+                            type: string
+                          stage:
+                            type: string
+  /search:
+    get:
+      summary: Search entities
+      description: |
+        Returns a list of entities matching the given search criteria.
+
+        By default, all queries will return a facet of the collections for which matching documents/entities have been found.
+        A filter can be applied to show only results from a particular collection: `?filter:collection_id={collection_id}`.
+
+        If you know you only want to search documents (unstructured, ingested data) or entities (structured data which may
+        have been extracted from a dataset, or entered by a human) you can use these arguments with the `/documents`
+        or `/entities` endpoints.
+      parameters:
+        - in: query
+          name: q
+          type: string
+          description: A query string in ElasticSearch query syntax. Can include field searches, such as `title:penguin`
+        - in: query
+          name: facet
+          type: string
+          description: Return facet values for the given metadata field, such as `languages`, `countries`, `mime_type` or
+                       `extension`. This can be specified multiple times for more than one facet to be added.
+        - in: query
+          name: filter:{field_name}
+          type: string
+          description: |
+            Filter the results by the given field. This is useful when used in conjunction with facet to create a drill-down mechanism. Useful fields are:
+            - `collection_id`, documents belonging to a particular collection.
+            - `title`, of the document.
+            - `file_name`, of the source file.
+            - `source_url`, URL of the source file.
+            - `extension`, file extension of the source file.
+            - `languages`, in the document.
+            - `countries`, associated with the document.
+            - `keywords`, from the document.
+            - `emails`, email addresses mentioned in the document.
+            - `domains`, websites mentioned in the document.
+            - `phone_numbers`, mentioned in the document.
+            - `dates`, in any of the following formats: yyyy-MM-dd, yyyy-MM, yyyy-MM-d, yyyy-M, yyyy
+            - `mime_type`, of the source file.
+            - `author`, according to the source file's metadata.
+            - `summary`, of the document.
+            - `text`, entire text extracted from the document.
+            - `created_at`, when the document was added to aleph (yyyy-mm -ddThh:ii:ss.uuuuuu).
+            - `updated_at`, when the document was modified in aleph (yyyy -mm-ddThh:ii:ss.uuuuuu).
+        - in: query
+          name: limit
+          type: integer
+          description: The number of results to return, max. 10,000.
+        - in: query
+          name: offset
+          type: integer
+          description: The number of results to skip at the beginning of the result set.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Resturns a list of entities in result
+          schema:
+            $ref: '#/definitions/EntitiesResponse'
+  /search/export:
+    get:
+      summary: Download the results of a search
+      description:
+        Downloads all the results of a search as a zip archive; upto a max of 10,000 results.
+        Supports the same query parameters as [`/search`](#/paths/~1search/get).
+      parameters:
+        - in: body
+          name: entitty
+      produces:
+        - application/zip
+      responses:
+        200:
+          description: OK
+
+  /match:
+    post:
+      summary: Query for similar entities
+      description:
+        Query for similar entities matching a given entity inside a given list of collections.
+      parameters:
+        - in: body
+          schema:
+            type: object
+            properties:
+              schema:
+                type: string
+                required: true
+              properties:
+                type: object
+        - in: query
+          name: collection_ids
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: Resturns a list of entities in result
+          schema:
+            $ref: '#/definitions/EntitiesResponse'
+
+  /entities:
+    post:
+      summary: Create an entity in a collection
+      description: Create an entity in a collection with a given schema and a set of given properties.
+      parameters:
+        - in: body
+          schema:
+            type: object
+            properties:
+              schema:
+                type: string
+                required: true
+              properties:
+                type: object
+              collection_id:
+                type: string
+                required: true
+              foreign_id:
+                type: string
+      responses:
+        200:
+          description: Resturns the created entity
+          schema:
+            $ref: '#/definitions/Entity'
+              
+
+
+definitions:
+  QueryResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        description: ok
+      total:
+        type: integer
+      total_type:
+        type: string
+      page:
+        type: integer
+        description: Current page number
+      limit:
+        type: integer
+      offset:
+        type: integer
+      pages:
+        type: integer
+        description: Total number of pages
+      next:
+        type: ["string", "null"]
+        description: URL of the next set of results or null
+      previous:
+        type: ["string", "null"]
+        description: URL of the previous set of results or null
+
+  Alert:
+    type: object
+    properties:
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      id:
+        type: integer
+      query:
+        type: string
+        description: query string for the alert
+      normalized:
+        type: string
+      writable:
+        type: boolean
+      links:
+        type: object
+        properties:
+          self:
+            type: string
+
+  AlertsResponse:
+    allOf:
+          - $ref: '#/definitions/QueryResponse'
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Alert'
+
+  Collection:
+    type: object
+    properties:
+      casefile:
+        type: boolean
+      schemata:
+        type: object
+      kind:
+        type: string
+      count:
+        type: integer
+      created_at:
+        type: string
+      label:
+        type: string
+      secret:
+        type: boolean
+      countries:
+        type: array
+        items:
+          type: string
+      collection_id:
+        type: integer
+      foreign_id:
+        type: string
+      updated_at:
+        type: string
+      category:
+        type: string
+      id:
+        type: integer
+      links:
+        type: object
+        properties:
+          self:
+            type: string
+          xref:
+            type: string
+          xref_export:
+            type: string
+          reconcile:
+            type: string
+          ui:
+            type: string
+      writable:
+        type: boolean
+      creator:
+        type: object
+      team:
+        type: object
+
+  CollectionsResponse:
+    allOf:
+      - $ref: '#/definitions/QueryResponse'
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Collection'
+      facets:
+        type: object
+  
+  Entity:
+    type: object
+    properties:
+      schema:
+        type: string
+      schemata:
+        type: array
+        items:
+          type: string
+      updated_at:
+        type: string
+      job_id:
+        type: string
+      name:
+        type: string
+      dates:
+        type: array
+        items:
+          type: string
+      countries:
+        type: array
+        items:
+          type: string
+      properties:
+        type: object
+      id:
+        type: string
+      score:
+        type: float
+      highlight:
+        type: array
+        items:
+          type: string
+      collection:
+        $ref: '#/definitions/Collection'
+      links:
+        type: object
+        properties:
+          self:
+            type: string
+          reference:
+            type: string
+          tags:
+            type: string
+          ui:
+            type: string
+          pdf:
+            type: string
+          file:
+            type: string
+          csv:
+            type: string
+      writable:
+        type: boolean
+
+  EntitiesResponse:
+    allOf:
+      - $ref: '#/definitions/QueryResponse'
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Entity'
+      links:
+        type: object
+        properties:
+          export:
+            type: string
