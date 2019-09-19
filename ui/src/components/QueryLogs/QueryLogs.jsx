@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
+import { H4 } from '@blueprintjs/core';
 import { Waypoint } from 'react-waypoint';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -49,7 +50,16 @@ export class QueryLogs extends PureComponent {
     const { result } = this.props;
 
     return (
-      <React.Fragment>
+      <div className="QueryLogs">
+        <div className="bp3-callout bp3-intent-primary">
+          <H4 className="bp3-callout-title">
+            <FormattedMessage id="queryLogs.title" defaultMessage="Search history" />
+          </H4>
+          <FormattedMessage
+            id="queryLogs.description"
+            defaultMessage="For your convenience, as well as for security and statistical purposes, we record which searches are performed in Aleph.  Due to the sensitive nature of our work, you have the option below to delete specific searches so they do not show up in our records."
+          />
+        </div>
         { result.page !== undefined && result.results.length > 0 && (
           <SearchListings
             listType="search history"
@@ -64,7 +74,7 @@ export class QueryLogs extends PureComponent {
           scrollableAncestor={window}
         />
         {result.isLoading && <SectionLoading />}
-      </React.Fragment>
+      </div>
     );
   }
 }

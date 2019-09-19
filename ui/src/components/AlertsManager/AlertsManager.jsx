@@ -22,7 +22,7 @@ const messages = defineMessages({
   },
   add_placeholder: {
     id: 'alerts.add_placeholder',
-    defaultMessage: 'Keep track of searches...',
+    defaultMessage: 'Create a new tracking alert...',
   },
   no_alerts: {
     id: 'alerts.no_alerts',
@@ -88,7 +88,7 @@ class AlertsDialog extends Component {
           <H4 className="bp3-callout-title">
             <FormattedMessage id="alert.manager.title" defaultMessage="Tracking alerts" />
           </H4>
-          <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity matches any of the alerts you have set up below." />
+          <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity is added that matches any of the alerts you have set up below." />
         </div>
         <form onSubmit={this.onAddAlert} className="add-form">
           <div className="bp3-control-group bp3-fill">

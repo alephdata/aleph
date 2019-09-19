@@ -23,11 +23,11 @@ const messages = defineMessages({
   },
   searches: {
     id: 'settings.searchTitle',
-    defaultMessage: 'Search History',
+    defaultMessage: 'Search history',
   },
   alerts: {
     id: 'settings.alertsTitls',
-    defaultMessage: 'Alerts',
+    defaultMessage: 'Tracking alerts',
   },
 });
 
