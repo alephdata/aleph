@@ -31,6 +31,8 @@ export class Navbar extends React.Component {
 
   componentDidMount() {
     const { query } = this.props;
+
+    console.log('query is', query);
     if (query !== undefined) {
       this.setState({ searchValue: query.getString('q') });
     }

@@ -101,7 +101,7 @@ class EntityScreen extends Component {
 
   render() {
     const {
-      entity, entityId, activeMode,
+      entity, entityId, activeMode, query,
     } = this.props;
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
@@ -113,7 +113,6 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-
     const title = getEntityTitle(entity);
 
     const breadcrumbs = (
@@ -125,7 +124,7 @@ class EntityScreen extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={title} searchScopes={this.getSearchScopes()}>
+        <Screen title={title} searchScopes={this.getSearchScopes()} query={query}>
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">

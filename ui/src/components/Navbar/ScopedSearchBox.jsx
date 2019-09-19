@@ -57,7 +57,7 @@ class SearchBox extends React.Component {
   componentDidUpdate(prevProps) {
     const { searchScopes } = this.props;
 
-    if (searchScopes.length !== prevProps.searchScopes.length) {
+    if (prevProps.location !== this.props.location) {
       this.setState({
         currScope: searchScopes[searchScopes.length - 1],
       });

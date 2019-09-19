@@ -81,6 +81,8 @@ export class Screen extends React.Component {
     const titleTemplate = hasMetadata ? `%s - ${metadata.app.title}` : '%s';
     const defaultTitle = hasMetadata ? metadata.app.title : 'OCCRP Aleph';
 
+    console.log('in screen', query);
+
     return (
       <div className={c('Screen', className)}>
         <Helmet titleTemplate={titleTemplate} defaultTitle={defaultTitle}>

@@ -28,7 +28,7 @@ const messages = defineMessages({
   },
   status: {
     id: 'dashboard.status',
-    defaultMessage: 'Status',
+    defaultMessage: 'System status',
   },
 });
 
@@ -62,6 +62,8 @@ class Dashboard extends React.Component {
   render() {
     const { intl, location, groups } = this.props;
     const current = location.pathname;
+
+    console.log('groups are', groups);
     return (
       <div className="Dashboard">
         <div className="Dashboard__menu">
@@ -90,6 +92,12 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
             />
+            <MenuItem
+              icon="dashboard"
+              text={intl.formatMessage(messages.status)}
+              onClick={() => this.navigate('/status')}
+              active={current === '/status'}
+            />
             { groups.total !== undefined && (
               <React.Fragment>
                 <li className="bp3-menu-header">
@@ -109,12 +117,7 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/settings')}
               active={current === '/settings'}
             />
-            <MenuItem
-              icon="dashboard"
-              text={intl.formatMessage(messages.status)}
-              onClick={() => this.navigate('/status')}
-              active={current === '/status'}
-            />
+
           </Menu>
         </div>
         <div className="dashboard-body">
