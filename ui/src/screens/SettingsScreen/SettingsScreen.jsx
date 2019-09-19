@@ -218,7 +218,9 @@ export class SettingsScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
-          <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+          <div className="Dashboard__title-container">
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+          </div>
           <FormGroup
             label={intl.formatMessage(messages.name)}
             labelFor="name"

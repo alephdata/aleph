@@ -79,7 +79,15 @@ export class SystemStatusScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
-          <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+          <div className="Dashboard__title-container">
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <p className="Dashboard__subheading">
+              <FormattedMessage
+                id="case.description"
+                defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+              />
+            </p>
+          </div>
           <React.Fragment>
             {result.total === 0
               && (

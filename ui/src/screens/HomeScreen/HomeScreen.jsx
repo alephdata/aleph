@@ -141,7 +141,14 @@ export class HomeScreen extends Component {
     const { intl, metadata, session, statistics = {} } = this.props;
 
     if (session.loggedIn) {
-      return <Redirect to="/notifications" />;
+      return (
+        <Redirect
+          to={{
+            pathname: '/notifications',
+            state: { referrer: '/' },
+          }}
+        />
+      );
     }
 
     const searchScope = {

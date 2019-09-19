@@ -82,7 +82,7 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="history"
               text={intl.formatMessage(messages.history)}
-              onClick={() => this.navigate('/history')}
+              onClick={() => this.navigate('/history#searches')}
               active={current === '/history'}
             />
             <MenuItem

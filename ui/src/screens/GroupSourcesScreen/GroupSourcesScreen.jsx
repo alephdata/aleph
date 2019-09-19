@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  defineMessages, injectIntl, FormattedNumber, FormattedMessage,
+  defineMessages, injectIntl, FormattedMessage,
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -10,7 +10,7 @@ import Dashboard from 'src/components/Dashboard/Dashboard';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
-  Breadcrumbs, SectionLoading, ErrorSection,
+  SectionLoading, ErrorSection,
 } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
@@ -77,34 +77,9 @@ export class GroupSourcesScreen extends Component {
   }
 
   render() {
-    const { result, intl } = this.props;
+    const { result, group, intl } = this.props;
 
-    const breadcrumbs = (
-      <Breadcrumbs>
-        { !!result.total && (
-          <Breadcrumbs.Text text={(
-            <FormattedMessage
-              id="sources.index.total"
-              defaultMessage="{total} sources of documents and data"
-              values={{
-                total: <FormattedNumber value={result.total || 0} />,
-              }}
-            />
-            )}
-          />
-        )}
-        { !result.total && (
-          <Breadcrumbs.Text text={(
-            <FormattedMessage
-              id="sources.index.none"
-              defaultMessage="No sources were found"
-            />
-            )}
-          />
-        )}
-      </Breadcrumbs>
-    );
-
+    const title = group ? group.label : '';
 
     return (
       <Screen
@@ -112,11 +87,18 @@ export class GroupSourcesScreen extends Component {
         title={intl.formatMessage(messages.title)}
       >
         <Dashboard>
-          <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+          <div className="Dashboard__title-container">
+            <h5 className="Dashboard__title">{title}</h5>
+            <p className="Dashboard__subheading">
+              <FormattedMessage
+                id="groupSourcePage.description"
+                defaultMessage="The list below shows all datasets that belong to this group."
+              />
+            </p>
+          </div>
           {result.isError && (
             <ErrorSection error={result.error} />
           )}
-          {breadcrumbs}
           <ul className="results">
             {result.results !== undefined && result.results.map(
               res => <CollectionListItem key={res.id} collection={res} />,
@@ -137,17 +119,23 @@ export class GroupSourcesScreen extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { groupId } = ownProps.match.params;
-  console.log(ownProps);
-  // ?collectionsfilter:team_id=5
-  console.log(groupId, `collectionsfilter:team_id=${groupId}`);
+
+  console.log(state, ownProps);
+
   const context = {
     'filter:kind': 'source',
   };
   const query = Query.fromLocation('collections', { search: `collectionsfilter:team_id=${groupId}` }, context, 'collections')
     .sortBy('count', 'desc')
     .limit(40);
+
+  const group = state.groups.results && state.groups.results.find(accessGroup => (
+    accessGroup.id === groupId
+  ));
+
   return {
     query,
+    group,
     result: selectCollectionsResult(state, query),
   };
 };

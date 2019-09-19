@@ -17,6 +17,10 @@ import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSear
 import './CasesIndexScreen.scss';
 
 const messages = defineMessages({
+  title: {
+    id: 'cases.title',
+    defaultMessage: 'Case files',
+  },
   no_results_title: {
     id: 'cases.no_results_title',
     defaultMessage: 'You do not have any case files yet',
@@ -90,15 +94,17 @@ export class CasesIndexScreen extends Component {
       </Breadcrumbs>
     );
     return (
-      <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs} requireSession>
+      <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs} title={intl.formatMessage(messages.title)} equireSession>
         <Dashboard>
-          <h5 className="Dashboard__title"><FormattedMessage id="case.question" defaultMessage="Manage your investigations" /></h5>
-          <p className="description-explanation">
-            <FormattedMessage
-              id="case.description"
-              defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
-            />
-          </p>
+          <div className="Dashboard__title-container">
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <p className="Dashboard__subheading">
+              <FormattedMessage
+                id="case.description"
+                defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+              />
+            </p>
+          </div>
 
           <CollectionIndexSearch query={query} updateQuery={this.updateQuery} casefiles />
           <ul className="results">

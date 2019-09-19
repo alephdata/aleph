@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, injectIntl, FormattedNumber } from 'react-intl';
+import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
 import c from 'classnames';
 import { Tab, Tabs } from '@blueprintjs/core';
 import { connect } from 'react-redux';
@@ -53,7 +53,15 @@ export class HistoryScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} className="HistoryScreen" requireSession>
         <Dashboard>
-          <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+          <div className="Dashboard__title-container">
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <p className="Dashboard__subheading">
+              <FormattedMessage
+                id="case.description"
+                defaultMessage="Manage your search history and set up alerts to track search terms you'd like to follow."
+              />
+            </p>
+          </div>
           <Tabs id="TabsExample" onChange={this.handleTabChange} selectedTabId={activeTab}>
             <Tab
               id="searches"

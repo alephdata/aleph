@@ -11,6 +11,8 @@ import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
+import { WelcomeMessage } from 'src/components/common';
+
 
 import { selectNotificationsResult } from 'src/selectors';
 
@@ -39,7 +41,7 @@ export class NotificationsScreen extends React.Component {
   }
 
   render() {
-    const { query, result, intl } = this.props;
+    const { query, result, intl, location, role } = this.props;
     const { isMarkedRead } = this.state;
     const canMarkRead = !isMarkedRead && result.total !== undefined && result.total > 0;
 
@@ -49,8 +51,20 @@ export class NotificationsScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
+
         <Dashboard>
-          <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+          {location.state && location.state.referrer === '/' && (
+            <WelcomeMessage name={role.name} />
+          )}
+          <div className="Dashboard__title-container">
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <p className="Dashboard__subheading">
+              <FormattedMessage
+                id="notification.description"
+                defaultMessage="View the latest updates to datasets and groups you follow."
+              />
+            </p>
+          </div>
           <Toolbar>
             <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
               <FormattedMessage
@@ -71,7 +85,12 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('notifications', location, {}, 'notifications').limit(40);
   const result = selectNotificationsResult(state, query);
-  return { query, result };
+
+  return {
+    query,
+    result,
+    role: state.session ? state.session.role : null,
+  };
 };
 
 export default compose(
