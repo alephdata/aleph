@@ -1,5 +1,9 @@
 @import "src/app/variables.scss";
 
 .WelcomeMessage {
-  padding: $aleph-grid-size*2 0 0;
+  padding: $aleph-grid-size*2 0;
+
+  .bp3-callout {
+    padding: $aleph-grid-size*3 $aleph-grid-size*2;
+  }
 }

@@ -63,7 +63,6 @@ class Dashboard extends React.Component {
     const { intl, location, groups } = this.props;
     const current = location.pathname;
 
-    console.log('groups are', groups);
     return (
       <div className="Dashboard">
         <div className="Dashboard__menu">

@@ -13,6 +13,7 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
+import { CollectionManageButton } from 'src/components/Toolbar';
 
 
 const messages = defineMessages({
@@ -64,8 +65,12 @@ export class CollectionScreen extends Component {
       onSearch: this.onSearch.bind(this),
     };
 
+    const operation = (
+      <CollectionManageButton collection={collection} />
+    );
+
     const breadcrumbs = (
-      <Breadcrumbs>
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection key="collection" collection={collection} />
         {activeMode === 'xref' && (
           <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />

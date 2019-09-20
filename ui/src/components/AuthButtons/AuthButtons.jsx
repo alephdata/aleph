@@ -17,8 +17,12 @@ const messages = defineMessages({
     defaultMessage: 'Notifications',
   },
   myDatasets: {
-    id: 'nav.my_datasets',
+    id: 'nav.myDatasets',
     defaultMessage: 'Case files',
+  },
+  systemStatus: {
+    id: 'nav.systemStatus',
+    defaultMessage: 'System status',
   },
   settings: {
     id: 'nav.settings',
@@ -74,6 +78,12 @@ export class AuthButtons extends Component {
                   <Icon icon="history" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.queryLogs)}
+                  </div>
+                </Link>
+                <Link to="/status" className="bp3-menu-item">
+                  <Icon icon="dashboard" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.systemStatus)}
                   </div>
                 </Link>
                 <Link to="/cases" className="bp3-menu-item">

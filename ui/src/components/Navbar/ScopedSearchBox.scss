@@ -22,6 +22,7 @@
       background: $gray1 !important;
       box-shadow: none !important;
       padding: 5px 10px;
+      font-weight: 500;
 
       &.unclickable {
         cursor: auto;
@@ -34,7 +35,7 @@
 
     &__popover {
       .bp3-menu {
-        background: $gray1;
+        background: $gray1 !important;
         border-radius: 0;
         box-shadow: none;
       }

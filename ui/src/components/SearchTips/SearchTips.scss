@@ -3,11 +3,10 @@
 .SearchTips {
   .bp3-overlay.bp3-overlay-container {
     position: static;
-    // overflow: visible;
   }
 
   .bp3-portal {
-    z-index: 1;
+    z-index: 101;
     top: 50px !important;
   }
   .bp3-drawer {
@@ -27,16 +26,10 @@
     @media screen and (max-width: $aleph-screen-sm-max-width) {
       columns: 1;
     }
-    // min-width: 2500px;
-    // display: flex;
-    // flex-direction: row;
-    // flex-wrap: nowrap;
   }
   &__section {
      break-inside: avoid-column;
      margin: 0 $aleph-grid-size $aleph-grid-size*2;
-    // flex: 1 1 auto;
-    // margin: 10px;
 
     &__title {
       font-size: 14px;

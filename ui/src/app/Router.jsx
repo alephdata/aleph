@@ -37,6 +37,8 @@ class Router extends Component {
     const { metadata, session } = this.props;
     const isLoaded = metadata && metadata.app && session;
 
+    console.log('in router', isLoaded);
+
     const Loading = (
       <div className="RouterLoading">
         <div className="spinner"><Spinner className="bp3-large" /></div>
@@ -49,6 +51,7 @@ class Router extends Component {
     return (
       <Suspense fallback={Loading}>
         <Switch>
+          <Route path="/" exact component={HomeScreen} />
           <Route path="/oauth" exact component={OAuthScreen} />
           <Route path="/logout" exact component={LogoutScreen} />
           <Route path="/activate/:code" exact component={ActivateScreen} />
@@ -57,7 +60,6 @@ class Router extends Component {
           <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
           <Redirect from="/documents/:documentId" to="/entities/:documentId" />
           <Route path="/sources" exact component={SourcesIndexScreen} />
-          <Route path="/group/:groupId" exact component={GroupSourcesScreen} />
           <Route path="/cases" exact component={CasesIndexScreen} />
           <Redirect from="/collections/:collectionId/documents" to="/collections/:collectionId" />
           <Route path="/collections/:collectionId" exact component={CollectionScreen} />
@@ -67,7 +69,7 @@ class Router extends Component {
           <Route path="/history" exact component={HistoryScreen} />
           <Route path="/settings" exact component={SettingsScreen} />
           <Route path="/status" exact component={SystemStatusScreen} />
-          <Route path="/" exact component={HomeScreen} />
+          <Route path="/group/:groupId" exact component={GroupSourcesScreen} />
           <Route component={NotFoundScreen} />
         </Switch>
       </Suspense>
