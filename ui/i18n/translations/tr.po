@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-08-21T08:11:22.914Z\n"
+"POT-Creation-Date: 2019-09-20T15:27:48.218Z\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +87,13 @@ msgstr ""
 msgid "Activate your account"
 msgstr ""
 
+#. [notifications.heading]
+#. defaultMessage is:
+#. Active Collections
+#: i18n/messages.json
+msgid "Active Collections"
+msgstr ""
+
 #. [alerts.add]
 #. defaultMessage is:
 #. Add alert
@@ -99,6 +106,13 @@ msgstr ""
 #. Addresses
 #: i18n/messages.json
 msgid "Addresses"
+msgstr ""
+
+#. [footer.aleph]
+#. defaultMessage is:
+#. Aleph {version}
+#: i18n/messages.json
+msgid "Aleph {version}"
 msgstr ""
 
 #. [collection.xref.filter.allCategories]
@@ -199,15 +213,21 @@ msgstr ""
 #. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [collection.cancel.button]
+#. defaultMessage is:
+#. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr ""
 
 #. [collection.status.cancel_button]
 #. defaultMessage is:
 #. Cancel the process
-#: i18n/messages.json
+#. [collection.status.cancel_button]
+#. defaultMessage is:
+#. Cancel the process
+#: i18n/messages.json i18n/messages.json
 msgid "Cancel the process"
 msgstr ""
 
@@ -330,7 +350,10 @@ msgstr ""
 #. [infoMode.collection]
 #. defaultMessage is:
 #. Collection
-#: i18n/messages.json
+#. [infoMode.collection]
+#. defaultMessage is:
+#. Collection
+#: i18n/messages.json i18n/messages.json
 msgid "Collection"
 msgstr ""
 
@@ -685,6 +708,13 @@ msgstr ""
 msgid "Find public records and leaks"
 msgstr ""
 
+#. [collection.status.finished_tasks]
+#. defaultMessage is:
+#. Finished Tasks
+#: i18n/messages.json
+msgid "Finished Tasks"
+msgstr ""
+
 #. [document.folder.untitled]
 #. defaultMessage is:
 #. Folder title
@@ -1023,6 +1053,13 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
+#. [collection.status.jobs]
+#. defaultMessage is:
+#. Number of Jobs
+#: i18n/messages.json
+msgid "Number of Jobs"
+msgstr ""
+
 #. [document.upload.notice]
 #. defaultMessage is:
 #. Once the upload is complete, it will take a few moments for the document to
@@ -1083,6 +1120,13 @@ msgstr ""
 #. Passwords do not match
 #: i18n/messages.json
 msgid "Passwords do not match"
+msgstr ""
+
+#. [collection.status.pending_tasks]
+#. defaultMessage is:
+#. Pending Tasks
+#: i18n/messages.json
+msgid "Pending Tasks"
 msgstr ""
 
 #. [search.facets.facet.phones]
@@ -1542,6 +1586,13 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
+#. [dashboard.title]
+#. defaultMessage is:
+#. System Status
+#: i18n/messages.json
+msgid "System Status"
+msgstr ""
+
 #. [tags.title]
 #. defaultMessage is:
 #. Tag
@@ -1585,6 +1636,13 @@ msgstr ""
 msgid ""
 "The system does not work with these types of files. Please download it so "
 "you’ll be able to see it."
+msgstr ""
+
+#. [dashboard.no_active_collection]
+#. defaultMessage is:
+#. There are no active collections
+#: i18n/messages.json
+msgid "There are no active collections"
 msgstr ""
 
 #. [notifications.no_notifications]
@@ -1908,13 +1966,6 @@ msgstr ""
 #. Your passwords are not the same!
 #: i18n/messages.json
 msgid "Your passwords are not the same!"
-msgstr ""
-
-#. [footer.aleph]
-#. defaultMessage is:
-#. aleph {version}
-#: i18n/messages.json
-msgid "aleph {version}"
 msgstr ""
 
 #. [home.statistics.categories]

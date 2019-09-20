@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-08-21T08:11:22.914Z\n"
+"POT-Creation-Date: 2019-09-20T15:27:48.218Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -90,6 +90,13 @@ msgstr "Aktivieren"
 msgid "Activate your account"
 msgstr "Aktivieren sie ihr Nutzerkonto"
 
+#. [notifications.heading]
+#. defaultMessage is:
+#. Active Collections
+#: i18n/messages.json
+msgid "Active Collections"
+msgstr "Aktive Datensätze"
+
 #. [alerts.add]
 #. defaultMessage is:
 #. Add alert
@@ -103,6 +110,13 @@ msgstr "Abo aktivieren"
 #: i18n/messages.json
 msgid "Addresses"
 msgstr "Adressen"
+
+#. [footer.aleph]
+#. defaultMessage is:
+#. Aleph {version}
+#: i18n/messages.json
+msgid "Aleph {version}"
+msgstr "Aleph {version}"
 
 #. [collection.xref.filter.allCategories]
 #. defaultMessage is:
@@ -202,15 +216,21 @@ msgstr "CC"
 #. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [collection.cancel.button]
+#. defaultMessage is:
+#. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #. [collection.status.cancel_button]
 #. defaultMessage is:
 #. Cancel the process
-#: i18n/messages.json
+#. [collection.status.cancel_button]
+#. defaultMessage is:
+#. Cancel the process
+#: i18n/messages.json i18n/messages.json
 msgid "Cancel the process"
 msgstr "Vorgang abbrechen"
 
@@ -336,7 +356,10 @@ msgstr "Code"
 #. [infoMode.collection]
 #. defaultMessage is:
 #. Collection
-#: i18n/messages.json
+#. [infoMode.collection]
+#. defaultMessage is:
+#. Collection
+#: i18n/messages.json i18n/messages.json
 msgid "Collection"
 msgstr "Sammlung"
 
@@ -694,6 +717,13 @@ msgstr "Filter"
 msgid "Find public records and leaks"
 msgstr "Finde öffentliche Dokumente und Leaks"
 
+#. [collection.status.finished_tasks]
+#. defaultMessage is:
+#. Finished Tasks
+#: i18n/messages.json
+msgid "Finished Tasks"
+msgstr "Fertige Aufgaben"
+
 #. [document.folder.untitled]
 #. defaultMessage is:
 #. Folder title
@@ -1038,6 +1068,13 @@ msgstr "Erlaubnis verweigert"
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
+#. [collection.status.jobs]
+#. defaultMessage is:
+#. Number of Jobs
+#: i18n/messages.json
+msgid "Number of Jobs"
+msgstr "Zahl der Vorgänge"
+
 #. [document.upload.notice]
 #. defaultMessage is:
 #. Once the upload is complete, it will take a few moments for the document to
@@ -1101,6 +1138,13 @@ msgstr "Passwort"
 #: i18n/messages.json
 msgid "Passwords do not match"
 msgstr "Passwörter stimmen nicht überein!"
+
+#. [collection.status.pending_tasks]
+#. defaultMessage is:
+#. Pending Tasks
+#: i18n/messages.json
+msgid "Pending Tasks"
+msgstr "Geplante Aufgaben"
 
 #. [search.facets.facet.phones]
 #. defaultMessage is:
@@ -1563,6 +1607,13 @@ msgstr "Erfolg"
 msgid "Summary"
 msgstr "Zusammenfassung"
 
+#. [dashboard.title]
+#. defaultMessage is:
+#. System Status
+#: i18n/messages.json
+msgid "System Status"
+msgstr "Systemstatus"
+
 #. [tags.title]
 #. defaultMessage is:
 #. Tag
@@ -1609,6 +1660,13 @@ msgid ""
 msgstr ""
 "Das System kann mit diesem Dateityp nicht umgehen. Bitte laden sie die Datei"
 " herunter um den Inhalt zu sehen."
+
+#. [dashboard.no_active_collection]
+#. defaultMessage is:
+#. There are no active collections
+#: i18n/messages.json
+msgid "There are no active collections"
+msgstr "Es werden keine Datensätze verarbeitet."
 
 #. [notifications.no_notifications]
 #. defaultMessage is:
@@ -1946,13 +2004,6 @@ msgstr "Ihre Benachrichtigungen"
 #: i18n/messages.json
 msgid "Your passwords are not the same!"
 msgstr "Die Passwörter stimmen nicht überein!"
-
-#. [footer.aleph]
-#. defaultMessage is:
-#. aleph {version}
-#: i18n/messages.json
-msgid "aleph {version}"
-msgstr "aleph {version}"
 
 #. [home.statistics.categories]
 #. defaultMessage is:

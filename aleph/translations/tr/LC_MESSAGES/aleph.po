@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-08-21 10:11+0200\n"
+"POT-Creation-Date: 2019-09-20 17:27+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Pinar Dag <pinar.dag@dagmedya.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/aleph/teams/76591/tr/)\n"
@@ -38,75 +38,75 @@ msgstr "Vladimir Putin"
 msgid "Registration"
 msgstr "Kaydetme"
 
-#: aleph/model/collection.py:25
+#: aleph/model/collection.py:26
 msgid "News archives"
 msgstr "Haber arşivleri"
 
-#: aleph/model/collection.py:26
+#: aleph/model/collection.py:27
 msgid "Leaks"
 msgstr "Sızıntılar"
 
-#: aleph/model/collection.py:27
+#: aleph/model/collection.py:28
 msgid "Land registry"
 msgstr "Tapu"
 
-#: aleph/model/collection.py:28
+#: aleph/model/collection.py:29
 msgid "Gazettes"
 msgstr "Resmi Gazete"
 
-#: aleph/model/collection.py:29
+#: aleph/model/collection.py:30
 msgid "Court archives"
 msgstr "Mahkeme Arşivleri"
 
-#: aleph/model/collection.py:30
+#: aleph/model/collection.py:31
 msgid "Company registries"
 msgstr "Şirket sicilleri"
 
-#: aleph/model/collection.py:31
+#: aleph/model/collection.py:32
 msgid "Sanctions lists"
 msgstr "Yaptırımlar listesi"
 
-#: aleph/model/collection.py:32
+#: aleph/model/collection.py:33
 msgid "Procurement"
 msgstr "Tedarik"
 
-#: aleph/model/collection.py:33
+#: aleph/model/collection.py:34
 msgid "Financial records"
 msgstr ""
 
-#: aleph/model/collection.py:34
+#: aleph/model/collection.py:35
 msgid "Grey literature"
 msgstr "Gri yayınlar"
 
-#: aleph/model/collection.py:35
+#: aleph/model/collection.py:36
 msgid "Document libraries"
 msgstr ""
 
-#: aleph/model/collection.py:36
+#: aleph/model/collection.py:37
 msgid "Licenses and concessions"
 msgstr "Lisasnlar ve imtiyazlar"
 
-#: aleph/model/collection.py:37
+#: aleph/model/collection.py:38
 msgid "Regulatory filings"
 msgstr "Yasal Düzenleme"
 
-#: aleph/model/collection.py:38
+#: aleph/model/collection.py:39
 msgid "Persons of interest"
 msgstr ""
 
-#: aleph/model/collection.py:39
+#: aleph/model/collection.py:40
 msgid "Customs declarations"
 msgstr ""
 
-#: aleph/model/collection.py:40
+#: aleph/model/collection.py:41
 msgid "Population census"
 msgstr ""
 
-#: aleph/model/collection.py:41
+#: aleph/model/collection.py:42
 msgid "Air and maritime registers"
 msgstr ""
 
-#: aleph/model/collection.py:42
+#: aleph/model/collection.py:43
 msgid "Other material"
 msgstr "Diğer materyaller"
 
@@ -130,11 +130,7 @@ msgstr ""
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:100
-msgid "{{actor}} removed access to {{collection}} from {{role}}"
-msgstr ""
-
-#: aleph/search/__init__.py:30
+#: aleph/search/__init__.py:39
 msgid "No schema is specified for the query."
 msgstr ""
 
@@ -191,24 +187,55 @@ msgstr ""
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ kullanımdan kaldırıldı, lütfen bunu kullanın /api/2/."
 
-#: aleph/views/base_api.py:139
+#: aleph/views/base_api.py:141
 msgid "You are not authorized to do this."
 msgstr "Bunu yapmaya yetkili değilsiniz."
 
-#: aleph/views/base_api.py:148
+#: aleph/views/base_api.py:150
 msgid "This path does not exist."
 msgstr "Bu yol mevcut değil."
 
-#: aleph/views/base_api.py:157
+#: aleph/views/base_api.py:159
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:175
+#: aleph/views/base_api.py:177
 msgid "Access token is invalid."
 msgstr ""
 
-#: aleph/views/base_api.py:184
+#: aleph/views/base_api.py:186
 msgid "There was an error during search"
+msgstr ""
+
+#: aleph/views/forms.py:35
+msgid "Invalid category."
+msgstr ""
+
+#: aleph/views/forms.py:45
+msgid "Invalid URL."
+msgstr ""
+
+#: aleph/views/forms.py:56
+msgid "Invalid language code."
+msgstr ""
+
+#: aleph/views/forms.py:67
+msgid "Invalid user locale."
+msgstr ""
+
+#: aleph/views/forms.py:78
+#, python-format
+msgid "Invalid country code: %s"
+msgstr ""
+
+#: aleph/views/forms.py:87
+#, python-format
+msgid "Invalid date: %s"
+msgstr ""
+
+#: aleph/views/forms.py:95
+#, python-format
+msgid "Invalid schema name: %s"
 msgstr ""
 
 #: aleph/views/roles_api.py:28
@@ -235,6 +262,10 @@ msgstr ""
 msgid "Authentication has failed."
 msgstr ""
 
-#: aleph/views/util.py:56
+#: aleph/views/util.py:59
 msgid "Error during data validation"
+msgstr ""
+
+#: aleph/views/util.py:139
+msgid "[HTML removed: could not be sanitized]"
 msgstr ""
