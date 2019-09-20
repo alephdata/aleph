@@ -38,7 +38,7 @@ class SearchBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currScope: props.searchScopes[props.searchScopes.length - 1],
+      activeScope: props.searchScopes[props.searchScopes.length - 1],
     };
 
     this.changeSearchScope = this.changeSearchScope.bind(this);
@@ -59,7 +59,7 @@ class SearchBox extends React.Component {
 
     if (prevProps.location !== this.props.location) {
       this.setState({
-        currScope: searchScopes[searchScopes.length - 1],
+        activeScope: searchScopes[searchScopes.length - 1],
       });
     }
   }
@@ -67,14 +67,15 @@ class SearchBox extends React.Component {
   onChange = newSearchValue => this.props.updateSearchValue(newSearchValue);
 
   onItemSelect = ({ query }) => {
-    this.props.updateSearchValue(query);
-    this.props.doSearch(query, this.state.currScope);
+    const { doSearch, updateSearchValue } = this.props;
+    updateSearchValue(query);
+    doSearch(query, this.state.activeScope);
   };
 
-  onSearchSubmitClick = () => {
-    const { searchValue, doSearch } = this.props;
-    this.props.updateSearchValue(searchValue);
-    doSearch(searchValue, this.state.currScope);
+  onSearchSubmit = (scope) => {
+    const { searchValue, doSearch, updateSearchValue } = this.props;
+    updateSearchValue(searchValue);
+    doSearch(searchValue, scope || this.state.activeScope);
   }
 
   deleteQueryLog = queryLogItem => (event) => {
@@ -119,13 +120,13 @@ class SearchBox extends React.Component {
   )
 
   changeSearchScope(newScope) {
-    this.setState({ currScope: newScope });
+    this.onSearchSubmit(newScope);
   }
 
   render() {
     const {
       props: { searchValue, searchScopes, inputClasses, intl, hideScopeMenu, toggleSearchTips },
-      state: { currScope },
+      state: { activeScope },
       itemRenderer, onChange,
       itemListPredicate,
       onItemSelect,
@@ -137,8 +138,8 @@ class SearchBox extends React.Component {
       type: 'text',
       className: `bp3-fill ${inputClasses}`,
       leftIcon: 'search',
-      placeholder: currScope.label
-        ? intl.formatMessage(messages.placeholder, { label: currScope.label })
+      placeholder: activeScope.label
+        ? intl.formatMessage(messages.placeholder, { label: activeScope.label })
         : intl.formatMessage(messages.nolabel_placeholder),
       rightElement: <SearchAlert queryText={searchValue} />,
       value: searchValue,
@@ -170,7 +171,7 @@ class SearchBox extends React.Component {
           >
             <Button
               className={c('SearchBox__scoped-input__scope-button', { unclickable: !multipleScopes })}
-              text={currScope.listItem}
+              text={activeScope.listItem}
               rightIcon={multipleScopes ? 'caret-down' : null}
             />
           </Select>
