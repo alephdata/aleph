@@ -4,6 +4,7 @@ from flask import Blueprint, request
 from itsdangerous import BadSignature
 
 from aleph.core import db, settings
+from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role
@@ -79,7 +80,7 @@ def create():
     db.session.commit()
     update_role(role)
     # Let the serializer return more info about this user
-    request.authz.id = role.id
+    request.authz = Authz.from_role(role)
     tag_request(role_id=role.id)
     return RoleSerializer.jsonify(role, status=201)
 
