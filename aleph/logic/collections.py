@@ -5,7 +5,7 @@ from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue
 from aleph.model import Collection, Entity, Document, Match
-from aleph.model import Role, Permission, Events
+from aleph.model import Permission, Events
 from aleph.index import collections as index
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.aggregator import drop_aggregator
@@ -13,21 +13,16 @@ from aleph.logic.aggregator import drop_aggregator
 log = logging.getLogger(__name__)
 
 
-def create_collection(data, role=None, sync=False):
-    role = role or Role.load_cli_user()
-    created_at = datetime.utcnow()
-    collection = Collection.create(data,
-                                   creator=role,
-                                   created_at=created_at)
-    if collection.created_at == created_at:
+def create_collection(data, authz, sync=False):
+    now = datetime.utcnow()
+    collection = Collection.create(data, authz, created_at=now)
+    if collection.created_at == now:
         publish(Events.CREATE_COLLECTION,
                 params={'collection': collection},
-                channels=[collection, role],
-                actor_id=role.id)
+                channels=[collection, authz.role],
+                actor_id=authz.id)
     db.session.commit()
-    Authz.flush()
-    refresh_collection(collection.id)
-    return index.index_collection(collection, sync=sync)
+    return update_collection(collection, sync=sync)
 
 
 def update_collection(collection, sync=False):

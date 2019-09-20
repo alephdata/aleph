@@ -9,6 +9,7 @@ from followthemoney.cli.util import read_entity
 from faker import Factory
 
 from aleph import settings
+from aleph.authz import Authz
 from aleph.queues import get_stage, OP_INDEX, OP_PROCESS
 from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
@@ -94,10 +95,11 @@ class TestCase(FlaskTestCase):
         return role, headers
 
     def create_collection(self, creator=None, **kwargs):
-        collection = Collection.create(kwargs, creator=creator)
+        authz = Authz.from_role(creator)
+        collection = Collection.create(kwargs, authz)
         db.session.add(collection)
         db.session.commit()
-        update_collection(collection)
+        update_collection(collection, sync=True)
         return collection
 
     def grant(self, collection, role, read, write):
@@ -113,11 +115,14 @@ class TestCase(FlaskTestCase):
         return Path(os.path.abspath(os.path.join(FIXTURES, file_name)))
 
     def load_fixtures(self):
-        self.private_coll = Collection.create({
-            'foreign_id': 'test_private',
-            'label': "Private Collection",
-            'category': 'grey'
-        })
+        self.admin = self.create_user(foreign_id='admin', is_admin=True)
+        self.private_coll = self.create_collection(
+            foreign_id='test_private',
+            label="Private Collection",
+            category='grey',
+            casefile=False,
+            creator=self.admin
+        )
         self._banana = Entity.create({
             'schema': 'Person',
             'properties': {
@@ -126,11 +131,13 @@ class TestCase(FlaskTestCase):
         }, self.private_coll)
         user = Role.by_foreign_id(Role.SYSTEM_USER)
         Permission.grant(self.private_coll, user, True, False)
-        self.public_coll = Collection.create({
-            'foreign_id': 'test_public',
-            'label': "Public Collection",
-            'category': 'news'
-        })
+        self.public_coll = self.create_collection(
+            foreign_id='test_public',
+            label="Public Collection",
+            category='news',
+            casefile=False,
+            creator=self.admin
+        )
         self._kwazulu = Entity.create({
             'schema': 'Company',
             'properties': {
@@ -141,12 +148,14 @@ class TestCase(FlaskTestCase):
         visitor = Role.by_foreign_id(Role.SYSTEM_GUEST)
         Permission.grant(self.public_coll, visitor, True, False)
         db.session.commit()
+
         drop_aggregator(self.public_coll)
-        stage = get_stage(self.private_coll, OP_PROCESS)
+        stage = get_stage(self.public_coll, OP_PROCESS)
         process_collection(stage, self.public_coll, ingest=False, sync=True)
-        stage = get_stage(self.private_coll, OP_INDEX)
+
         samples = read_entities(self.get_fixture_path('samples.ijson'))
         drop_aggregator(self.private_coll)
+        stage = get_stage(self.private_coll, OP_INDEX)
         index_entities(stage, self.private_coll, samples, sync=True)
         stage = get_stage(self.private_coll, OP_PROCESS)
         process_collection(stage, self.private_coll, ingest=False, sync=True)
