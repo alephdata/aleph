@@ -19,7 +19,8 @@ shell: services
 ingest-test:
 	$(INGESTDOCKER) nosetests --with-coverage --cover-package=ingestors
 
-ingest-restart: build
+ingest-restart:
+	$(COMPOSE) build ingest-file convert-document
 	$(COMPOSE) up --force-recreate --no-deps --detach convert-document ingest-file
 
 test:
