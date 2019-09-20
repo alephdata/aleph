@@ -126,7 +126,7 @@ export class SettingsScreen extends React.Component {
 
   validName() {
     const { role: { name } } = this.state;
-    return name !== undefined && name !== null && name.length > 4;
+    return name !== undefined && name !== null && name.length > 2;
   }
 
   validPassword() {

@@ -83,8 +83,8 @@ export class SystemStatusScreen extends React.Component {
               <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
               <p className="Dashboard__subheading">
                 <FormattedMessage
-                  id="case.description"
-                  defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+                  id="dashboard.subheading"
+                  defaultMessage="Check the status of dataset uploads and updates"
                 />
               </p>
             </div>

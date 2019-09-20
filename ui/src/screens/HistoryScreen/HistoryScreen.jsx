@@ -58,6 +58,7 @@ export class HistoryScreen extends React.Component {
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="case.description"
+                className="bp3-running-text bp3-muted-text"
                 defaultMessage="Manage your search history and set up alerts to track search terms you'd like to follow."
               />
             </p>
