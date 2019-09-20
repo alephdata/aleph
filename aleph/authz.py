@@ -89,12 +89,12 @@ class Authz(object):
             return False
         # if self.is_admin:
         #     return True
-        return self.id == role_id
+        return self.id == int(role_id)
 
     def can_read_role(self, role_id):
         if self.is_admin:
             return True
-        return role_id in self.roles
+        return int(role_id) in self.roles
 
     def match(self, roles):
         """See if there's overlap in roles."""
