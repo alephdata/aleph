@@ -25,8 +25,8 @@ class Date extends PureComponent {
         <FormattedDate
           value={dateObject}
           year="numeric"
-          month={availableChunks[1] && 'long'}
-          day={availableChunks[2] && 'numeric'}
+          month={availableChunks[1] && '2-digit'}
+          day={availableChunks[2] && '2-digit'}
         />
         {showTime && <FormattedTime value={dateObject} />}
       </React.Fragment>
