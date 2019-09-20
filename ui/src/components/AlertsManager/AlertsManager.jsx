@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { H4 } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
@@ -85,9 +84,6 @@ class AlertsDialog extends Component {
     return (
       <div className="AlertsManager">
         <div className="bp3-callout bp3-intent-primary">
-          <H4 className="bp3-callout-title">
-            <FormattedMessage id="alert.manager.title" defaultMessage="Tracking alerts" />
-          </H4>
           <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity is added that matches any of the alerts you have set up below." />
         </div>
         <form onSubmit={this.onAddAlert} className="add-form">

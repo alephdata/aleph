@@ -17,15 +17,15 @@ import './HistoryScreen.scss';
 
 const messages = defineMessages({
   title: {
-    id: 'settings.title',
+    id: 'history.title',
     defaultMessage: 'Searches & alerts',
   },
   searches: {
-    id: 'settings.searchTitle',
+    id: 'history.search.title',
     defaultMessage: 'Search history',
   },
   alerts: {
-    id: 'settings.alertsTitls',
+    id: 'history.alerts.title',
     defaultMessage: 'Tracking alerts',
   },
 });
@@ -57,7 +57,7 @@ export class HistoryScreen extends React.Component {
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
-                id="case.description"
+                id="history.description"
                 className="bp3-running-text bp3-muted-text"
                 defaultMessage="Manage your search history and set up alerts to track search terms you'd like to follow."
               />
