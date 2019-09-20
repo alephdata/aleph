@@ -104,6 +104,7 @@ class CollectionManageButton extends Component {
         >
           <Button
             icon="cog"
+            className="bp3-intent-primary"
             text={
               <FormattedMessage id="collection.info.manage_button" defaultMessage="Manage..." />
             }

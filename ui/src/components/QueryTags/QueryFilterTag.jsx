@@ -36,7 +36,7 @@ class QueryFilterTag extends PureComponent {
         );
       case 'category':
         return (
-          <Category category={value} />
+          <Category.Label category={value} />
         );
       case 'collection_id':
         return (

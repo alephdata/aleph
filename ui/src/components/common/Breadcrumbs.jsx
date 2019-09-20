@@ -1,18 +1,26 @@
 import React, { PureComponent, Component } from 'react';
 import { Icon } from '@blueprintjs/core';
 
-import { Collection, Entity } from 'src/components/common';
+import { Category, Collection, Entity } from 'src/components/common';
 
 import './Breadcrumbs.scss';
 
 
 class CollectionBreadcrumb extends PureComponent {
   render() {
-    const { collection } = this.props;
+    const { collection, showCategory } = this.props;
+
     return (
-      <li key={collection.id}>
-        <Collection.Link collection={collection} className="bp3-breadcrumb" icon truncate={30} />
-      </li>
+      <React.Fragment>
+        {showCategory && (
+          <li key={collection.category}>
+            <Category.Link collection={collection} className="bp3-breadcrumb" />
+          </li>
+        )}
+        <li key={collection.id}>
+          <Collection.Link collection={collection} className="bp3-breadcrumb" icon truncate={30} />
+        </li>
+      </React.Fragment>
     );
   }
 }

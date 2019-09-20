@@ -10,10 +10,7 @@ class CollectionHeading extends PureComponent {
     return (
       <React.Fragment>
         <div className="pane-heading">
-          <h1 itemProp="name">
-            {collection.label}
-          </h1>
-          <span>
+          <span className="bp3-text-muted">
             <Collection.Label collection={collection} label={false} />
             { collection.casefile && (
               <FormattedMessage id="collection.info.case" defaultMessage="Casefile" />
@@ -22,7 +19,11 @@ class CollectionHeading extends PureComponent {
               <FormattedMessage id="collection.info.source" defaultMessage="Source" />
             )}
           </span>
+          <h1 itemProp="name">
+            {collection.label}
+          </h1>
           <CollectionStatus collection={collection} />
+          <p className="bp3-text-muted" itemProp="description">{collection.summary}</p>
         </div>
       </React.Fragment>
     );

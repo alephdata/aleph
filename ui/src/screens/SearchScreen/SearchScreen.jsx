@@ -258,9 +258,9 @@ export class SearchScreen extends React.Component {
     const tooltip = intl.formatMessage(messages.alert_export_disabled);
 
     const operation = (
-      <ButtonGroup minimal>
+      <ButtonGroup>
         <Tooltip content={tooltip} disabled={exportLink}>
-          <AnchorButton icon="download" disabled={!exportLink} href={exportLink}>
+          <AnchorButton className="bp3-intent-primary" icon="download" disabled={!exportLink} href={exportLink}>
             <FormattedMessage id="search.screen.export" defaultMessage="Export" />
           </AnchorButton>
         </Tooltip>

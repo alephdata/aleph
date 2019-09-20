@@ -232,7 +232,7 @@ export class HomeScreen extends Component {
                     <Link
                       to={`/sources?collectionsfilter:category=${props.name}`}
                     >
-                      <Category category={props.name} />
+                      <Category.Label category={props.name} />
                       <Numeric num={props.count} />
                     </Link>
                   )}

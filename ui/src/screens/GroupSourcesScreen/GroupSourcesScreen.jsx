@@ -127,7 +127,7 @@ const mapStateToProps = (state, ownProps) => {
   };
   const query = Query.fromLocation('collections', { search: `collectionsfilter:team_id=${groupId}` }, context, 'collections')
     .sortBy('count', 'desc')
-    .limit(40);
+    .limit(20);
 
   const group = state.groups.results && state.groups.results.find(accessGroup => (
     accessGroup.id === groupId

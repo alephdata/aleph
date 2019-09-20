@@ -71,7 +71,7 @@ export class CollectionScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={collection} />
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory />
         {activeMode === 'xref' && (
           <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />
         )}

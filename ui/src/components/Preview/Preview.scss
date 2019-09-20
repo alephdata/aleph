@@ -30,7 +30,7 @@
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     width: 90%;
   }
-  
+
   h1, h2 {
     // Show a subtle line below headings
     margin-bottom: $aleph-grid-size;
@@ -43,7 +43,7 @@
   .pane-heading {
     background: $aleph-sidebar-background;
     padding: $aleph-grid-size*2 $aleph-grid-size*2 $aleph-grid-size*4 $aleph-grid-size*2;
-    color: white;
+    color: white !important;
   }
 
   .pane-heading h1 {
@@ -51,6 +51,10 @@
     margin: 0;
     color: white;
     font-weight: 300;
+  }
+
+  .pane-heading span {
+    color: white;
   }
 
   .pane-content {
@@ -67,5 +71,5 @@
       }
     }
   }
-  
+
 }
