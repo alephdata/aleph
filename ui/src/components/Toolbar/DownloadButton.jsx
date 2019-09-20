@@ -21,7 +21,7 @@ class DownloadButton extends React.Component {
         content={intl.formatMessage(messages.mode_download)}
         position={Position.BOTTOM_RIGHT}
       >
-        <a href={document.links.file} download type="button" target="_blank" className="DownloadButton bp3-button" rel="nofollow noopener noreferrer">
+        <a href={document.links.file} download type="button" target="_blank" className="DownloadButton bp3-button bp3-intent-primary" rel="nofollow noopener noreferrer">
           <span className="bp3-icon-standard bp3-icon-download" />
           <FormattedMessage id="document.download" defaultMessage="Download" />
         </a>

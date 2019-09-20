@@ -14,4 +14,9 @@
   .bp3-breadcrumb {
     font-size: $aleph-font-size;
   }
+
+  .bp3-breadcrumb-current {
+    pointer-events: none;
+    color: $blue1;
+  }
 }

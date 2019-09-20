@@ -7,13 +7,13 @@ import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, DualPane, Entity, Breadcrumbs } from 'src/components/common';
+import { DownloadButton } from 'src/components/Toolbar';
 import Query from 'src/app/Query';
 import getEntityLink from 'src/util/getEntityLink';
 import {
@@ -114,9 +114,15 @@ class EntityScreen extends Component {
       );
     }
     const title = getEntityTitle(entity);
+    const isDocument = entity && entity.schema.isDocument();
+    const showDownloadButton = isDocument && entity.links && entity.links.file;
+
+    const operation = showDownloadButton && (
+      <DownloadButton document={entity} />
+    );
 
     const breadcrumbs = (
-      <Breadcrumbs>
+      <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection collection={entity.collection} />
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
@@ -128,7 +134,6 @@ class EntityScreen extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">
-              <EntityToolbar entity={entity} isPreview={false} />
               <EntityHeading entity={entity} isPreview={false} />
               <div className="pane-content">
                 <EntityInfoMode entity={entity} isPreview={false} />
