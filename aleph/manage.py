@@ -10,11 +10,13 @@ from flask_migrate import MigrateCommand
 from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import create_app, db, cache
+from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
+from aleph.queues import get_active_collection_status
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.index.collections import index_collection
@@ -66,10 +68,13 @@ def crawldir(path, language=None, foreign_id=None):
     path = Path(path)
     if foreign_id is None:
         foreign_id = 'directory:%s' % slugify(path)
-    create_collection({
+    authz = Authz.from_role(Role.load_cli_user())
+    config = {
         'foreign_id': foreign_id,
-        'label': path.name
-    })
+        'label': path.name,
+        'casefile': False
+    }
+    create_collection(config, authz)
     collection = Collection.by_foreign_id(foreign_id)
     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
     crawl_directory(collection, path)
@@ -137,10 +142,13 @@ def bulkload(file_name):
 
 
 @manager.command
-def status(foreign_id):
+def status(foreign_id=None):
     """Get the queue status (pending and finished tasks.)"""
-    collection = get_collection(foreign_id)
-    status = get_status(collection)
+    if foreign_id is not None:
+        collection = get_collection(foreign_id)
+        status = get_status(collection)
+    else:
+        status = get_active_collection_status()
     pprint(status)
 
 

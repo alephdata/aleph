@@ -3,6 +3,7 @@ import logging
 from pantomime.types import CSV
 from collections import OrderedDict
 from followthemoney.types import registry
+from followthemoney.util import sanitize_text
 
 from ingestors.support.temp import TempFileSupport
 
@@ -20,7 +21,7 @@ class TableSupport(TempFileSupport):
             for row in rows:
                 if headers is None:
                     headers = list(row.keys())
-                values = [row.get(h) for h in headers]
+                values = [sanitize_text(row.get(h)) for h in headers]
                 csv_writer.writerow(values)
                 self.manager.emit_text_fragment(table, values, row_count)
                 row_count += 1

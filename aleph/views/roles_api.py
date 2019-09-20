@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequest
 from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
-from aleph.logic.roles import check_editable, challenge_role, update_role
+from aleph.logic.roles import challenge_role, update_role
 from aleph.views.forms import RoleSchema
 from aleph.views.forms import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.serializers import RoleSerializer
@@ -88,15 +88,14 @@ def create():
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
     role = obj_or_404(Role.by_id(id))
-    require(check_editable(role, request.authz))
+    require(request.authz.can_read_role(role.id))
     return RoleSerializer.jsonify(role)
 
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
     role = obj_or_404(Role.by_id(id))
-    require(request.authz.session_write)
-    require(check_editable(role, request.authz))
+    require(request.authz.can_write_role(role.id))
     data = parse_request(RoleSchema)
 
     # When changing passwords, check the old password first.

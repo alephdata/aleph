@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-08-21T08:11:22.914Z\n"
+"POT-Creation-Date: 2019-09-20T15:27:48.218Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -90,6 +90,13 @@ msgstr "Активировать"
 msgid "Activate your account"
 msgstr "Активирируйте аккаунт"
 
+#. [notifications.heading]
+#. defaultMessage is:
+#. Active Collections
+#: i18n/messages.json
+msgid "Active Collections"
+msgstr ""
+
 #. [alerts.add]
 #. defaultMessage is:
 #. Add alert
@@ -103,6 +110,13 @@ msgstr "Добавить оповещение"
 #: i18n/messages.json
 msgid "Addresses"
 msgstr "Адреса"
+
+#. [footer.aleph]
+#. defaultMessage is:
+#. Aleph {version}
+#: i18n/messages.json
+msgid "Aleph {version}"
+msgstr ""
 
 #. [collection.xref.filter.allCategories]
 #. defaultMessage is:
@@ -202,15 +216,21 @@ msgstr "Копия"
 #. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [collection.cancel.button]
+#. defaultMessage is:
+#. Cancel
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cancel"
 msgstr "Отменить"
 
 #. [collection.status.cancel_button]
 #. defaultMessage is:
 #. Cancel the process
-#: i18n/messages.json
+#. [collection.status.cancel_button]
+#. defaultMessage is:
+#. Cancel the process
+#: i18n/messages.json i18n/messages.json
 msgid "Cancel the process"
 msgstr "Отменить процесс"
 
@@ -336,7 +356,10 @@ msgstr "Исходный код"
 #. [infoMode.collection]
 #. defaultMessage is:
 #. Collection
-#: i18n/messages.json
+#. [infoMode.collection]
+#. defaultMessage is:
+#. Collection
+#: i18n/messages.json i18n/messages.json
 msgid "Collection"
 msgstr "Коллекция"
 
@@ -593,7 +616,7 @@ msgstr "Скачать"
 #. Download matches
 #: i18n/messages.json
 msgid "Download matches"
-msgstr ""
+msgstr "Скачать"
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -692,6 +715,13 @@ msgstr "Фильтры"
 #: i18n/messages.json
 msgid "Find public records and leaks"
 msgstr "Искать публичные записи и секретные документы"
+
+#. [collection.status.finished_tasks]
+#. defaultMessage is:
+#. Finished Tasks
+#: i18n/messages.json
+msgid "Finished Tasks"
+msgstr ""
 
 #. [document.folder.untitled]
 #. defaultMessage is:
@@ -1007,7 +1037,7 @@ msgstr "Ничего не найдено"
 #. No single page within this document matches all your search terms.
 #: i18n/messages.json
 msgid "No single page within this document matches all your search terms."
-msgstr ""
+msgstr "Искомых слов в документе не найдено."
 
 #. [sources.index.none]
 #. defaultMessage is:
@@ -1036,6 +1066,13 @@ msgstr "Требуется авторизация"
 #: i18n/messages.json
 msgid "Notifications"
 msgstr "Оповещения"
+
+#. [collection.status.jobs]
+#. defaultMessage is:
+#. Number of Jobs
+#: i18n/messages.json
+msgid "Number of Jobs"
+msgstr ""
 
 #. [document.upload.notice]
 #. defaultMessage is:
@@ -1082,7 +1119,7 @@ msgstr "Страница {currentPage} из {numberOfPages}"
 #. Page {page}
 #: i18n/messages.json
 msgid "Page {page}"
-msgstr ""
+msgstr "Страница {page}"
 
 #. [password_auth.password]
 #. defaultMessage is:
@@ -1100,6 +1137,13 @@ msgstr "Пароль"
 #: i18n/messages.json
 msgid "Passwords do not match"
 msgstr "Пароли не совпадают"
+
+#. [collection.status.pending_tasks]
+#. defaultMessage is:
+#. Pending Tasks
+#: i18n/messages.json
+msgid "Pending Tasks"
+msgstr ""
 
 #. [search.facets.facet.phones]
 #. defaultMessage is:
@@ -1562,6 +1606,13 @@ msgstr "Вы успешно авторизованы"
 msgid "Summary"
 msgstr "Краткое описание"
 
+#. [dashboard.title]
+#. defaultMessage is:
+#. System Status
+#: i18n/messages.json
+msgid "System Status"
+msgstr ""
+
 #. [tags.title]
 #. defaultMessage is:
 #. Tag
@@ -1608,6 +1659,13 @@ msgid ""
 msgstr ""
 "Работа с данным типом файлов не поддерживается. Для просмотра попробуйте "
 "скачать файл."
+
+#. [dashboard.no_active_collection]
+#. defaultMessage is:
+#. There are no active collections
+#: i18n/messages.json
+msgid "There are no active collections"
+msgstr ""
 
 #. [notifications.no_notifications]
 #. defaultMessage is:
@@ -1943,13 +2001,6 @@ msgstr "Оповещения"
 #: i18n/messages.json
 msgid "Your passwords are not the same!"
 msgstr "Пароли не совпадают!"
-
-#. [footer.aleph]
-#. defaultMessage is:
-#. aleph {version}
-#: i18n/messages.json
-msgid "aleph {version}"
-msgstr "алеф {version}"
 
 #. [home.statistics.categories]
 #. defaultMessage is:

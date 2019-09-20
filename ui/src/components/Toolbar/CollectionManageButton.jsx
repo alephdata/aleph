@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import {
   Button, Menu, MenuItem, MenuDivider, Position, Popover,
@@ -10,6 +11,7 @@ import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeA
 import CollectionPublishAlert from 'src/components/Collection/CollectionPublishAlert';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
+import { selectSession } from 'src/selectors';
 
 
 class CollectionManageButton extends Component {
@@ -48,15 +50,15 @@ class CollectionManageButton extends Component {
   }
 
   render() {
-    const { collection } = this.props;
+    const { collection, session } = this.props;
     const {
       settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen, deleteIsOpen, publishIsOpen,
     } = this.state;
 
-    const isCasefile = collection.casefile;
     if (!collection.writeable) {
       return null;
     }
+    const canPublish = collection.casefile && session.isAdmin;
 
     return (
       <React.Fragment>
@@ -73,7 +75,7 @@ class CollectionManageButton extends Component {
                 onClick={this.toggleAccess}
                 text={<FormattedMessage id="collection.info.share" defaultMessage="Share" />}
               />
-              {isCasefile && (
+              {canPublish && (
                 <MenuItem
                   icon="social-media"
                   onClick={this.togglePublish}
@@ -145,4 +147,7 @@ class CollectionManageButton extends Component {
   }
 }
 
+const mapStateToProps = state => ({ session: selectSession(state) });
+
+CollectionManageButton = connect(mapStateToProps)(CollectionManageButton);
 export default CollectionManageButton;

@@ -52,8 +52,7 @@ def index(id):
 def update(id):
     collection = get_db_collection(id, request.authz.WRITE)
     for permission in parse_request(PermissionSchema, many=True):
-        role_id = permission.get('role_id')
-        role = Role.by_id(role_id)
+        role = Role.by_id(permission.get('role_id'))
         if not check_visible(role, request.authz):
             continue
         if role.is_public:
