@@ -1,20 +1,13 @@
 @import "src/app/variables.scss";
 
 .AlertsManager {
-    .add-form {
-        padding-top: $aleph-grid-size;
-        padding-bottom: $aleph-grid-size;
-        width: 100%;
-    }
-
-    .alerts-table {
-        td {
-            padding: $aleph-grid-size;
-        }
-    }
-
-    .alert-label {
-        font-weight: bold;
-        vertical-align: middle;
-    }
+  .bp3-callout {
+    max-width: 700px;
+  }
+  .add-form {
+    padding-top: $aleph-grid-size;
+    padding-bottom: $aleph-grid-size*2;
+    width: 100%;
+    max-width: 700px;
+  }
 }

@@ -29,7 +29,7 @@ APP_DESCRIPTION = env.get('ALEPH_APP_DESCRIPTION', '')
 APP_NAME = env.get('ALEPH_APP_NAME', 'aleph')
 APP_UI_URL = env.get('ALEPH_UI_URL', 'http://localhost:8080/')
 APP_LOGO = env.get('ALEPH_LOGO', '/static/logo.png')
-APP_FAVICON = env.get('ALEPH_FAVICON', '/static/logo.png')
+APP_FAVICON = env.get('ALEPH_FAVICON', '/static/favicon.png')
 
 # Show a system-wide banner in the user interface.
 APP_BANNER = env.get('ALEPH_APP_BANNER')

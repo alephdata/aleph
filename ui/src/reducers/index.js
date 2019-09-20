@@ -15,6 +15,7 @@ import collectionXrefIndex from './collectionXrefIndex';
 import collectionXrefMatches from './collectionXrefMatches';
 import results from './results';
 import alerts from './alerts';
+import groups from './groups';
 import notifications from './notifications';
 import queryLogs from './queryLogs';
 import dashboard from './dashboard';
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   entityReferences,
   documentContent,
   alerts,
+  groups,
   notifications,
   entityTags,
   collections,

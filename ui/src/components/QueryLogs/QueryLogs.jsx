@@ -1,46 +1,18 @@
 import React, { PureComponent } from 'react';
+import { H4 } from '@blueprintjs/core';
 import { Waypoint } from 'react-waypoint';
-import { Button, Tooltip } from '@blueprintjs/core';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
-import SectionLoading from 'src/components/common/SectionLoading';
-import SearchAlert from 'src/components/SearchAlert/SearchAlert';
+import { SectionLoading, SearchListings } from 'src/components/common';
 import { selectQueryLog } from 'src/selectors';
 import Query from 'src/app/Query';
 
 import './QueryLogs.scss';
 
-
-const messages = defineMessages({
-  title: {
-    id: 'queryLogs.heading',
-    defaultMessage: 'Manage your alerts',
-  },
-  save_button: {
-    id: 'queryLogs.save',
-    defaultMessage: 'Update',
-  },
-  add_placeholder: {
-    id: 'queryLogs.add_placeholder',
-    defaultMessage: 'Keep track of searches...',
-  },
-  no_alerts: {
-    id: 'queryLogs.no_alerts',
-    defaultMessage: 'You are not tracking any searches',
-  },
-  search_query: {
-    id: 'queryLogs.query.search',
-    defaultMessage: 'Search for {query}',
-  },
-  delete_query: {
-    id: 'queryLogs.query.delete.tooltip',
-    defaultMessage: 'Remove from search history',
-  },
-});
 
 export class QueryLogs extends PureComponent {
   componentDidMount() {
@@ -75,49 +47,34 @@ export class QueryLogs extends PureComponent {
   }
 
   render() {
-    const { intl, result } = this.props;
+    const { result } = this.props;
+
     return (
-      <React.Fragment>
+      <div className="QueryLogs">
+        <div className="bp3-callout bp3-intent-primary">
+          <H4 className="bp3-callout-title">
+            <FormattedMessage id="queryLogs.title" defaultMessage="Search history" />
+          </H4>
+          <FormattedMessage
+            id="queryLogs.description"
+            defaultMessage="For your convenience, as well as for security and statistical purposes, we record which searches are performed in Aleph.  Due to the sensitive nature of our work, you have the option below to delete specific searches so they do not show up in our records."
+          />
+        </div>
         { result.page !== undefined && result.results.length > 0 && (
-          <table className="QueryLogs bp3-html-table">
-            <tbody>
-              {result.results.map(item => (
-                <tr key={item.text}>
-                  <td className="text">
-                    <Tooltip
-                      content={intl.formatMessage(messages.search_query, { query: item.query })}
-                    >
-                      <Button
-                        minimal
-                        icon="search"
-                        onClick={() => this.onSearch(item.query)}
-                        text={item.text}
-                      />
-                    </Tooltip>
-                  </td>
-                  <td className="narrow">
-                    <SearchAlert queryText={item.query} />
-                  </td>
-                  <td className="narrow">
-                    <Tooltip content={intl.formatMessage(messages.delete_query)}>
-                      <Button
-                        className="bp3-icon-cross"
-                        minimal
-                        onClick={() => this.props.deleteQueryLog(item)}
-                      />
-                    </Tooltip>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <SearchListings
+            listType="search history"
+            items={result.results}
+            onDelete={item => this.props.deleteQueryLog(item)}
+            onSearch={item => this.onSearch(item.query)}
+          />
         )}
         <Waypoint
           onEnter={this.getMoreResults}
-          bottomOffset="-50px"
+          bottomOffset="-30px"
+          scrollableAncestor={window}
         />
         {result.isLoading && <SectionLoading />}
-      </React.Fragment>
+      </div>
     );
   }
 }

@@ -7,11 +7,10 @@ import CollectionStatus from 'src/components/Collection/CollectionStatus';
 class CollectionHeading extends PureComponent {
   render() {
     const { collection } = this.props;
-
     return (
       <React.Fragment>
         <div className="pane-heading">
-          <span>
+          <span className="bp3-text-muted">
             <Collection.Label collection={collection} label={false} />
             { collection.casefile && (
               <FormattedMessage id="collection.info.case" defaultMessage="Casefile" />
@@ -24,6 +23,7 @@ class CollectionHeading extends PureComponent {
             {collection.label}
           </h1>
           <CollectionStatus collection={collection} />
+          <p className="bp3-text-muted" itemProp="description">{collection.summary}</p>
         </div>
       </React.Fragment>
     );

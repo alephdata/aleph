@@ -65,6 +65,10 @@ export function selectAlerts(state) {
   return selectObject(state, 'alerts');
 }
 
+export function selectGroups(state) {
+  return state.groups;
+}
+
 export function selectStatistics(state) {
   return selectObject(state, 'statistics');
 }
@@ -170,12 +174,9 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   return undefined;
 }
 
-export function selectCollectionView(state, collectionId, mode, isPreview) {
+export function selectCollectionView(state, collectionId, mode) {
   if (mode) {
     return mode;
-  }
-  if (isPreview) {
-    return 'info';
   }
   const collection = selectCollection(state, collectionId);
   const model = selectModel(state);

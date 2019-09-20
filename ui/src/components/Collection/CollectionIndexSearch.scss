@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
 .CollectionIndexSearch {
-    margin-bottom: $aleph-grid-size;
+    margin-bottom: $aleph-grid-size*2;
 
     .bp3-input-group {
         flex-grow: 10 !important;

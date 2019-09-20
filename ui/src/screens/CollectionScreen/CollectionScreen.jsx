@@ -6,14 +6,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Screen from 'src/components/Screen/Screen';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
-import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs } from 'src/components/common';
+import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
+import { CollectionManageButton } from 'src/components/Toolbar';
 
 
 const messages = defineMessages({
@@ -29,6 +29,18 @@ const messages = defineMessages({
 
 
 export class CollectionScreen extends Component {
+  onSearch(queryText) {
+    const { history, collection } = this.props;
+    const query = {
+      q: queryText,
+      'filter:collection_id': collection.id,
+    };
+    history.push({
+      pathname: '/search',
+      search: queryString.stringify(query),
+    });
+  }
+
   render() {
     const {
       intl, collection, collectionId, activeMode,
@@ -47,9 +59,19 @@ export class CollectionScreen extends Component {
       );
     }
 
+    const searchScope = {
+      listItem: <Collection.Label collection={collection} icon truncate={30} />,
+      label: collection.label,
+      onSearch: this.onSearch.bind(this),
+    };
+
+    const operation = (
+      <CollectionManageButton collection={collection} />
+    );
+
     const breadcrumbs = (
-      <Breadcrumbs>
-        <Breadcrumbs.Collection key="collection" collection={collection} />
+      <Breadcrumbs operation={operation}>
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory />
         {activeMode === 'xref' && (
           <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />
         )}
@@ -59,11 +81,14 @@ export class CollectionScreen extends Component {
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={collection.label} description={collection.summary}>
+        <Screen
+          title={collection.label}
+          description={collection.summary}
+          searchScopes={[searchScope]}
+        >
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.InfoPane className="with-heading">
-              <CollectionToolbar collection={collection} />
               <CollectionHeading collection={collection} />
               <div className="pane-content">
                 <CollectionInfoMode collection={collection} />

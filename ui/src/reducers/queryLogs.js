@@ -57,8 +57,8 @@ export default createReducer({
   [fetchQueryLogs.COMPLETE]: (state, {
     result: queryLogs,
   }) => mergeResults(state, queryLogs),
-  [deleteQueryLog.START]: (state, { text: query }) => ({
+  [deleteQueryLog.START]: (state, props) => ({
     ...state,
-    results: state.results.filter(({ text }) => text !== query),
+    results: state.results.filter(({ query }) => query !== props.query),
   }),
 }, initialState);

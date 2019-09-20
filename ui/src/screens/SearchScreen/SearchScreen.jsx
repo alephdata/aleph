@@ -12,7 +12,7 @@ import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs,
+  Collection, DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs,
 } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
@@ -171,6 +171,36 @@ export class SearchScreen extends React.Component {
     );
   }
 
+  getSearchScopes() {
+    const { query } = this.props;
+    const activeSources = query ? query.getFilter('collection_id') : [];
+
+    const collectionScopeList = activeSources.map(sourceId => (
+      {
+        listItem: (
+          <Collection.Load id={sourceId} renderWhenLoading="...">
+            {collection => (
+              <Collection.Label collection={collection} icon truncate={30} />
+            )}
+          </Collection.Load>
+        ),
+        onSearch: (queryText) => {
+          const newQuery = query.set('q', queryText).setFilter('collection_id', sourceId);
+          this.updateQuery(newQuery);
+        },
+      }
+    ));
+
+    if (activeSources.length > 1) {
+      collectionScopeList.push({
+        listItem: <span>{`Search ${activeSources.length} Datasets`}</span>,
+        onSearch: queryText => this.updateQuery(query.set('q', queryText)),
+      });
+    }
+
+    return collectionScopeList;
+  }
+
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (result.shouldLoad) {
@@ -184,6 +214,7 @@ export class SearchScreen extends React.Component {
     const parsedHash = queryString.parse(location.hash);
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
+
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -227,9 +258,9 @@ export class SearchScreen extends React.Component {
     const tooltip = intl.formatMessage(messages.alert_export_disabled);
 
     const operation = (
-      <ButtonGroup minimal>
+      <ButtonGroup>
         <Tooltip content={tooltip} disabled={exportLink}>
-          <AnchorButton icon="download" disabled={!exportLink} href={exportLink}>
+          <AnchorButton className="bp3-intent-primary" icon="download" disabled={!exportLink} href={exportLink}>
             <FormattedMessage id="search.screen.export" defaultMessage="Export" />
           </AnchorButton>
         </Tooltip>
@@ -268,11 +299,13 @@ export class SearchScreen extends React.Component {
       </Breadcrumbs>
     );
 
+    const searchScopes = this.getSearchScopes();
+
     return (
       <Screen
         query={query}
-        updateQuery={this.updateQuery}
         title={title}
+        searchScopes={searchScopes}
         hotKeys={[
           {
             combo: 'j', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,

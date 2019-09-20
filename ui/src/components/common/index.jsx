@@ -18,11 +18,13 @@ import TextLoading from './TextLoading';
 import ErrorSection from './ErrorSection';
 import SinglePane from './SinglePane';
 import SortableTH from './SortableTH';
+import WelcomeMessage from './WelcomeMessage';
 import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
 import { Icon } from './Icon';
 import SearchBox from './SearchBox';
+import SearchListings from './SearchListings';
 
 export {
   Breadcrumbs,
@@ -49,5 +51,7 @@ export {
   Tag,
   URL,
   SearchBox,
+  SearchListings,
   Icon,
+  WelcomeMessage,
 };

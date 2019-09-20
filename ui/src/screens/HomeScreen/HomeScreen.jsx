@@ -5,19 +5,18 @@ import queryString from 'query-string';
 import {
   defineMessages, FormattedMessage, FormattedNumber, injectIntl,
 } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import {
-  Button, ControlGroup, Intent, Divider, Callout,
+  Button, ControlGroup, Divider,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import SearchBox from 'src/components/Navbar/SearchBox';
+import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
 import {
-  Category, Country, Schema, Numeric,
-  DualPane, SignInCallout, Role,
+  Category, Country, Schema, Numeric, DualPane,
 } from 'src/components/common';
 
 import './HomeScreen.scss';
@@ -106,24 +105,6 @@ class Statistics extends PureComponent {
 
 
 export class HomeScreen extends Component {
-  static SubNavigation = function SubNavigation(props) {
-    const { session, statistics } = props;
-    if (session.loggedIn && statistics.groups && statistics.groups.length) {
-      return (
-        <React.Fragment>
-          <Callout className="SignInCallout bp3-icon-path-search bp3-intent-primary">
-            <FormattedMessage
-              id="search.callout_message.signedIn"
-              defaultMessage="You are part of {roles} - click to see the associated sources."
-              values={{ roles: <Role.List roles={statistics.groups} /> }}
-            />
-          </Callout>
-        </React.Fragment>
-      );
-    }
-    return <SignInCallout />;
-  }
-
   constructor(props) {
     super(props);
     this.state = { value: '' };
@@ -157,32 +138,44 @@ export class HomeScreen extends Component {
   };
 
   render() {
-    const { intl, metadata, statistics = {} } = this.props;
-    const samples = metadata.app.samples.join(', ');
+    const { intl, metadata, session, statistics = {} } = this.props;
+
+    if (session.loggedIn) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/notifications',
+            state: { referrer: '/' },
+          }}
+        />
+      );
+    }
+
+    const searchScope = {
+      listItem: 'OCCRP Aleph',
+      label: 'OCCRP Aleph',
+      onSearch: this.doSearch,
+    };
+
     return (
       <Screen
         isHomepage
         title={intl.formatMessage(messages.title)}
         description={metadata.app.description}
       >
-        <HomeScreen.SubNavigation session={this.props.session} statistics={statistics} />
         <section className="HomePage">
           <div className="outer-searchbox">
             <div className="inner-searchbox">
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill>
-                  <SearchBox
+                  <ScopedSearchBox
                     id="search-box"
                     doSearch={this.doSearch}
                     updateSearchValue={this.updateSearchValue}
                     searchValue={this.state.value}
-                    placeholder={intl.formatMessage(messages.search_placeholder, { samples })}
-                  />
-                  <Button
-                    className="bp3-large bp3-fixed"
-                    intent={Intent.PRIMARY}
-                    onClick={this.handleSearchBtn}
-                    text={intl.formatMessage(messages.home_search)}
+                    searchScopes={[searchScope]}
+                    inputClasses="bp3-large"
+                    hideScopeMenu
                   />
                 </ControlGroup>
               </form>
@@ -239,7 +232,7 @@ export class HomeScreen extends Component {
                     <Link
                       to={`/sources?collectionsfilter:category=${props.name}`}
                     >
-                      <Category category={props.name} />
+                      <Category.Label category={props.name} />
                       <Numeric num={props.count} />
                     </Link>
                   )}

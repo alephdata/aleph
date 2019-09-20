@@ -35,7 +35,7 @@ class CollectionListItem extends PureComponent {
           { !collection.casefile && (
             <span className="details-item">
               <Icon icon="list" />
-              <Category collection={collection} />
+              <Category.Label collection={collection} />
             </span>
           )}
 

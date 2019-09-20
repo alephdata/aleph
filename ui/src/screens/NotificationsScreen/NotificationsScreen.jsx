@@ -5,13 +5,14 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import { deleteNotifications as deleteNotificationsAction } from 'src/actions';
-import { DualPane, Breadcrumbs } from 'src/components/common';
+import { deleteNotifications } from 'src/actions';
 import Toolbar from 'src/components/Toolbar/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
-import AlertsManager from 'src/components/AlertsManager/AlertsManager';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import Dashboard from 'src/components/Dashboard/Dashboard';
+import { WelcomeMessage } from 'src/components/common';
+
 
 import { selectNotificationsResult } from 'src/selectors';
 
@@ -34,14 +35,13 @@ export class NotificationsScreen extends React.Component {
   }
 
   async onMarkRead(event) {
-    const { deleteNotifications } = this.props;
     event.preventDefault();
     this.setState({ isMarkedRead: true });
-    await deleteNotifications();
+    await this.props.deleteNotifications();
   }
 
   render() {
-    const { query, result, intl } = this.props;
+    const { query, result, intl, location, role } = this.props;
     const { isMarkedRead } = this.state;
     const canMarkRead = !isMarkedRead && result.total !== undefined && result.total > 0;
 
@@ -51,26 +51,30 @@ export class NotificationsScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
-        <Breadcrumbs>
-          <Breadcrumbs.Text text={intl.formatMessage(messages.title)} />
-        </Breadcrumbs>
-        <DualPane className="NotificationsScreen">
-          <DualPane.ContentPane className="padded">
-            <Toolbar>
-              <h1>
-                <FormattedMessage id="notifications.heading" defaultMessage="Your notifications" />
-              </h1>
-              <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
-                <FormattedMessage
-                  id="notifications.mark_read"
-                  defaultMessage="Mark as seen"
-                />
-              </Button>
-            </Toolbar>
-            <NotificationList query={query} />
-          </DualPane.ContentPane>
-          <AlertsManager />
-        </DualPane>
+
+        <Dashboard>
+          {location.state && location.state.referrer === '/' && (
+            <WelcomeMessage name={role.name} />
+          )}
+          <div className="Dashboard__title-container">
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <p className="Dashboard__subheading">
+              <FormattedMessage
+                id="notification.description"
+                defaultMessage="View the latest updates to datasets and groups you follow."
+              />
+            </p>
+          </div>
+          <Toolbar>
+            <Button icon="tick" className="mark-read bp3-intent-primary" onClick={this.onMarkRead} disabled={!canMarkRead}>
+              <FormattedMessage
+                id="notifications.mark_read"
+                defaultMessage="Mark all as seen"
+              />
+            </Button>
+          </Toolbar>
+          <NotificationList query={query} />
+        </Dashboard>
       </Screen>
     );
   }
@@ -81,13 +85,16 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('notifications', location, {}, 'notifications').limit(40);
   const result = selectNotificationsResult(state, query);
-  return { query, result };
-};
 
-const mapDispatchToProps = { deleteNotifications: deleteNotificationsAction };
+  return {
+    query,
+    result,
+    role: state.session ? state.session.role : null,
+  };
+};
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { deleteNotifications }),
   injectIntl,
 )(NotificationsScreen);

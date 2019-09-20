@@ -1,11 +1,14 @@
 @import "src/app/variables.scss";
 
+$dual-pane-padding: $aleph-grid-size * 3;
+
 .DualPane {
   flex-grow: 1;
   display: flex;
   flex-flow: row nowrap;
   align-content: stretch;
   align-items: stretch;
+  padding: $dual-pane-padding;
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     flex-flow: column;
   }
@@ -20,9 +23,10 @@
   flex-direction: column;
   flex-grow: 1;
   overflow-x: auto;
+  padding: 0 0 0 $dual-pane-padding;
 
-  &.padded {
-    padding: $aleph-grid-size * 2;
+  .info-tabs-padding {
+    padding: 0;
   }
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
@@ -40,7 +44,8 @@
 
 .DualPane .SidePane {
   @extend %SidePane;
-  padding: $aleph-grid-size * 2;
+  padding-right: $dual-pane-padding;
+  border-right: 1px solid $light-gray2;
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-sidepane-md-width;
   }
@@ -51,11 +56,13 @@
 
 .DualPane .InfoPane {
   @extend %SidePane;
-  border-right: 0;
-  box-shadow: $pt-elevation-shadow-3;
-  background: $aleph-content-background;
   flex-direction: row !important;
-  min-height: 100%;
+  min-height: unset;
+  margin: 0 0 $aleph-grid-size;
+  overflow: visible;
+  border-right: 1px solid $light-gray2;
+  padding-right: $dual-pane-padding;
+
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-infopane-md-width !important;
   }
@@ -63,31 +70,39 @@
     width: 100% !important;
     margin-bottom: 1em;
   }
-  
+
+  &__inner-container {
+    // border-right: 1px solid $aleph-border-color;
+    // border-radius: $aleph-border-radius;
+    // box-shadow: $pt-elevation-shadow-2;
+    // background: $aleph-content-background;
+  }
+
   h1, h2 {
     // Show a subtle line below headings
     margin-bottom: $aleph-grid-size;
-    padding-bottom: $aleph-grid-size;
+    padding: $aleph-grid-size 0;
     line-height: 1.5;
     border-bottom: 1px solid $aleph-border-color;
     overflow-wrap: break-word;
   }
 
   .pane-heading {
-    background: $aleph-sidebar-background;
-    padding: $aleph-grid-size*4 $aleph-grid-size*2;
-    color: white;
+    // background: #ebf1f5;
+    border-bottom: 1px solid $aleph-border-color;
+    padding: $aleph-grid-size*4 0;
+    // color: white;
   }
 
   .pane-heading h1 {
     border: 0;
     margin: 0;
-    color: white;
-    font-weight: 300;
+    // color: white;
+    font-weight: bold;
   }
 
   .pane-content {
-    padding: $aleph-grid-size $aleph-grid-size*2;
+    padding: $aleph-grid-size*4 0;
   }
 
   .collection-content {

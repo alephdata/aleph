@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -8,12 +8,13 @@ import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import TableViewer from 'src/viewers/TableViewer';
 import TextViewer from 'src/viewers/TextViewer';
 import HtmlViewer from 'src/viewers/HtmlViewer';
-import PdfViewer from 'src/viewers/PdfViewer';
 import ImageViewer from 'src/viewers/ImageViewer';
 import FolderViewer from 'src/viewers/FolderViewer';
 import EmailViewer from 'src/viewers/EmailViewer';
 
 import './DocumentViewMode.scss';
+
+const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer'));
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -23,7 +24,6 @@ const mapStateToProps = (state, ownProps) => {
     queryText: query.getString('q'),
   };
 };
-
 
 export class DocumentViewMode extends React.Component {
   renderContent() {

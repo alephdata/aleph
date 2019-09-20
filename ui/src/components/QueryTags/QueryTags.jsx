@@ -23,7 +23,9 @@ class QueryTags extends Component {
 
   render() {
     const { query } = this.props;
-    const activeFilters = query ? query.filters() : [];
+    let activeFilters = query ? query.filters() : [];
+    activeFilters = activeFilters.filter(filterName => filterName !== 'collection_id');
+
     if (activeFilters.length === 0) {
       return null;
     }

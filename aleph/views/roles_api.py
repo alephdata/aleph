@@ -2,6 +2,7 @@ import logging
 from flask_babel import gettext
 from flask import Blueprint, request
 from itsdangerous import BadSignature
+from werkzeug.exceptions import BadRequest
 
 from aleph.core import db, settings
 from aleph.search import QueryParser, DatabaseQueryResult
@@ -96,6 +97,14 @@ def update(id):
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_write_role(role.id))
     data = parse_request(RoleSchema)
+
+    # When changing passwords, check the old password first.
+    # cf. https://github.com/alephdata/aleph/issues/718
+    if data.get('password'):
+        current_password = data.get('current_password')
+        if not role.check_password(current_password):
+            raise BadRequest(gettext('Incorrect password.'))
+
     role.update(data)
     db.session.add(role)
     db.session.commit()

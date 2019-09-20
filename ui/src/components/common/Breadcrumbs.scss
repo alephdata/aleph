@@ -2,41 +2,21 @@
 
 .Breadcrumbs {
   z-index: 1;
-  padding-left: $aleph-grid-size * 2;
-  padding-right: $aleph-grid-size * 2;
-  padding-top: $aleph-grid-size / 2;
-  padding-bottom: $aleph-grid-size / 2;
-  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0), 0 1px 1px rgba(16, 22, 26, 0.2);
+  padding: $aleph-grid-size/2 $aleph-grid-size*3;
   display: flex;
   justify-content: space-between;
-  background-color: $aleph-sidebar-background;
+  background-color: $light-gray4;
 
-  .bp3-breadcrumbs {
-    // padding-left: $aleph-grid-size * 2;
-    color: $aleph-sidebar-foreground !important;
-
-    .bp3-breadcrumb {
-      font-size: $aleph-font-size;
-      color: $aleph-sidebar-foreground !important;
-    }
+  .bp3-breadcrumbs > li::after {
+    margin: 0 10px;
   }
 
-  .bp3-button {
-    background: transparent !important;
-    border-color: transparent !important;
-    box-shadow: none !important;
-    color: $aleph-sidebar-foreground !important;
+  .bp3-breadcrumb {
+    font-size: $aleph-font-size;
+  }
 
-    .bp3-icon {
-      color: $aleph-sidebar-foreground !important;
-    }
-
-    &:hover {
-      background-color: lighten($aleph-sidebar-background, 20%) !important;
-    }
-
-    &:disabled, &.bp3-disabled {
-      opacity: 0.5 !important;
-    }
+  .bp3-breadcrumb-current {
+    pointer-events: none;
+    color: $blue1;
   }
 }
