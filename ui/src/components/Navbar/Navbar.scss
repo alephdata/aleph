@@ -11,7 +11,6 @@
       display: none;
     }
 
-
     a {
       color: inherit;
 
@@ -60,10 +59,10 @@
   &__middle-group {
     flex: 4 1 auto;
     @media screen and (max-width: $aleph-screen-sm-max-width) {
-      display: none;
+      display: none !important;
     }
     &.mobile-force-open {
-      display: block;
+      display: block !important;
     }
   }
 
@@ -82,7 +81,7 @@
 
   &__sources-button {
     @media screen and (max-width: $aleph-screen-sm-max-width) {
-      display: none;
+      display: none !important;
     }
   }
 
