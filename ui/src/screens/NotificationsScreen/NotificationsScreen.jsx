@@ -51,7 +51,6 @@ export class NotificationsScreen extends React.Component {
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
-
         <Dashboard>
           {location.state && location.state.referrer === '/' && (
             <WelcomeMessage name={role.name} />

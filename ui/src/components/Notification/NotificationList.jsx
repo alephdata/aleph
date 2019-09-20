@@ -61,7 +61,7 @@ class NotificationList extends Component {
         { result.total === 0
           && (
           <ErrorSection
-            visual="notifications"
+            icon="notifications"
             title={intl.formatMessage(messages.no_notifications)}
           />
           )

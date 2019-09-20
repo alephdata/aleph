@@ -82,7 +82,7 @@ class EntityReferencesMode extends React.Component {
       intl, reference, result, schema,
     } = this.props;
     if (!reference) {
-      return <ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />;
+      return <ErrorSection icon="graph" title={intl.formatMessage(messages.no_relationships)} />;
     }
     const { property } = reference;
     const results = ensureArray(result.results);

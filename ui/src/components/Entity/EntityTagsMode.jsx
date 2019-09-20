@@ -36,7 +36,7 @@ class EntityTagsMode extends React.Component {
     if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
       return (
         <ErrorSection
-          visual="tag"
+          icon="tag"
           title={intl.formatMessage(messages.no_tags)}
         />
       );

@@ -91,7 +91,7 @@ export class SystemStatusScreen extends React.Component {
             {result.total === 0
               && (
                 <ErrorSection
-                  visual="dashboard"
+                  icon="dashboard"
                   title={intl.formatMessage(messages.no_active_collection)}
                 />
               )

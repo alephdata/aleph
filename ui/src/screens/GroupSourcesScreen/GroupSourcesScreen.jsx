@@ -27,6 +27,10 @@ const messages = defineMessages({
     id: 'sources.index.filter',
     defaultMessage: 'Filter the sources…',
   },
+  empty: {
+    id: 'sources.index.empty',
+    defaultMessage: 'This group has no sources.',
+  },
   facet_category: {
     id: 'search.facets.facet.category',
     defaultMessage: 'Categories',
@@ -98,6 +102,12 @@ export class GroupSourcesScreen extends Component {
           </div>
           {result.isError && (
             <ErrorSection error={result.error} />
+          )}
+          {result.total === 0 && (
+            <ErrorSection
+              icon="shield"
+              title={intl.formatMessage(messages.empty)}
+            />
           )}
           <ul className="results">
             {result.results !== undefined && result.results.map(

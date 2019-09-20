@@ -168,7 +168,6 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const context = {
     facet: ['category', 'countries'],
-    'filter:kind': 'source',
   };
   const query = Query.fromLocation('collections', location, context, 'collections')
     .sortBy('count', 'desc')

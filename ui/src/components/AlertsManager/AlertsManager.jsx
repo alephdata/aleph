@@ -114,7 +114,7 @@ class AlertsDialog extends Component {
         </form>
         { alerts.page !== undefined && !alerts.results.length && (
           <ErrorSection
-            visual="eye-off"
+            icon="eye-off"
             title={intl.formatMessage(messages.no_alerts)}
           />
         )}

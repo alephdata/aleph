@@ -101,8 +101,8 @@ export class Navbar extends React.Component {
     const { mobileSearchOpen } = this.state;
 
     const defaultScope = {
-      listItem: 'OCCRP Aleph',
-      label: 'OCCRP Aleph',
+      listItem: metadata.app.title,
+      label: metadata.app.title,
       onSearch: this.onDefaultSearch,
     };
 

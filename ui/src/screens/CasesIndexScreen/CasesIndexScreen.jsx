@@ -113,7 +113,7 @@ export class CasesIndexScreen extends Component {
           </ul>
           {result.total === 0 && (
             <ErrorSection
-              visual="search"
+              icon="search"
               title={intl.formatMessage(messages.no_results_title)}
             />
           )}

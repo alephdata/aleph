@@ -351,7 +351,7 @@ export class SearchScreen extends React.Component {
             />
             {result.total === 0 && (
               <ErrorSection
-                visual="search"
+                icon="search"
                 title={intl.formatMessage(messages.no_results_title)}
                 resolver={<SuggestAlert queryText={query.state.q} />}
                 description={intl.formatMessage(messages.no_results_description)}

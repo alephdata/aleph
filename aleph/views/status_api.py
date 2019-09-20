@@ -29,4 +29,5 @@ def status():
             result['id'] = fid
             results.append(result)
     status['results'] = results
+    status['total'] = len(results)
     return jsonify(status)

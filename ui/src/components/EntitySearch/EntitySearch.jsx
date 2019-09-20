@@ -82,14 +82,14 @@ export class EntitySearch extends Component {
           <section className="PartialError">
             { !isEmpty && (
               <ErrorSection
-                visual="search"
+                icon="search"
                 title={intl.formatMessage(messages.no_results_title)}
                 description={intl.formatMessage(messages.no_results_description)}
               />
             )}
             { isEmpty && (
               <ErrorSection
-                visual="folder-open"
+                icon="folder-open"
                 title={intl.formatMessage(messages.empty_title)}
               />
             )}
