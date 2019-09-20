@@ -61,8 +61,10 @@ def refresh_role(role, sync=False):
 
 
 def update_roles():
-    q = db.session.query(Role)
-    for role in q:
+    # Flush authz for anonymous users:
+    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ),
+                    cache.key(Authz.PREFIX, Authz.WRITE))
+    for role in Role.all():
         update_role(role)
 
 
@@ -70,11 +72,6 @@ def check_visible(role, authz):
     """Users should not see group roles which they are not a part of."""
     if role is None:
         return False
-    if authz.is_admin or role.id in authz.roles:
+    if authz.can_read_role(role.id):
         return True
     return role.type == Role.USER
-
-
-def check_editable(role, authz):
-    """Check if a role can be edited by the current user."""
-    return role.id == authz.id

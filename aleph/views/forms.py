@@ -1,5 +1,6 @@
 from banal import ensure_dict
 from normality import stringify
+from flask_babel import gettext
 from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
@@ -9,6 +10,7 @@ from marshmallow.fields import Dict, String, Boolean
 from marshmallow.validate import Email, Length
 from marshmallow.exceptions import ValidationError
 
+from aleph import settings
 from aleph.model import Collection
 
 
@@ -30,7 +32,7 @@ class Category(String):
 
     def _validate(self, value):
         if value not in Collection.CATEGORIES.keys():
-            raise ValidationError('Invalid category.')
+            raise ValidationError(gettext('Invalid category.'))
 
 
 class Url(String):
@@ -40,7 +42,7 @@ class Url(String):
 
     def _validate(self, value):
         if value is not None and normalize_url(value) is None:
-            raise ValidationError('Invalid URL.')
+            raise ValidationError(gettext('Invalid URL.'))
 
 
 class Language(String):
@@ -51,7 +53,18 @@ class Language(String):
 
     def _validate(self, value):
         if not registry.language.validate(value):
-            raise ValidationError('Invalid language code.')
+            raise ValidationError(gettext('Invalid language code.'))
+
+
+class Locale(String):
+    """A user locale."""
+
+    def _deserialize(self, value, attr, data):
+        return stringify(value)
+
+    def _validate(self, value):
+        if value not in settings.UI_LANGUAGES:
+            raise ValidationError(gettext('Invalid user locale.'))
 
 
 class Country(String):
@@ -62,7 +75,8 @@ class Country(String):
 
     def _validate(self, value):
         if not registry.country.validate(value):
-            raise ValidationError('Invalid country code: %s' % value)
+            msg = gettext('Invalid country code: %s')
+            raise ValidationError(msg % value)
 
 
 class PartialDate(String):
@@ -70,7 +84,7 @@ class PartialDate(String):
 
     def _validate(self, value):
         if not registry.date.validate(value):
-            raise ValidationError('Invalid date: %s' % value)
+            raise ValidationError(gettext('Invalid date: %s') % value)
 
 
 class SchemaName(String):
@@ -78,13 +92,15 @@ class SchemaName(String):
     def _validate(self, value):
         schema = model.get(value)
         if schema is None or schema.abstract:
-            raise ValidationError('Invalid schema name: %s' % value)
+            msg = gettext('Invalid schema name: %s')
+            raise ValidationError(msg % value)
 
 
 class RoleSchema(Schema):
     name = String(validate=Length(min=3))
     is_muted = Boolean(missing=None)
     password = String(validate=MIN_PASSWORD, missing=None, load_only=True)
+    locale = Locale(allow_none=True, missing=None)
 
 
 class RoleCodeCreateSchema(Schema):

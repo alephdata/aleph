@@ -4,42 +4,29 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 
 import Preview from 'src/components/Preview/Preview';
-import { PreviewEntity, PreviewCollection } from 'src/components/Preview/';
+import { PreviewEntity } from 'src/components/Preview/';
 
 function PreviewManager(props) {
   const {
-    previewId, previewType, previewMode, parsedHash,
+    previewId, previewMode, parsedHash,
   } = props;
   if (previewId === undefined || previewId === null) {
     return <Preview hidden />;
   }
 
-  if (previewType === 'entity' || previewType === 'document') {
-    return (
-      <PreviewEntity
-        previewId={previewId}
-        previewMode={previewMode}
-        parsedHash={parsedHash}
-      />
-    );
-  }
-  if (previewType === 'collection') {
-    return (
-      <PreviewCollection
-        previewId={previewId}
-        previewMode={previewMode}
-        parsedHash={parsedHash}
-      />
-    );
-  }
-  return <Preview hidden />;
+  return (
+    <PreviewEntity
+      previewId={previewId}
+      previewMode={previewMode}
+      parsedHash={parsedHash}
+    />
+  );
 }
 
 const mapStateToProps = (state, ownProps) => {
   const parsedHash = queryString.parse(ownProps.location.hash);
   return {
     previewId: parsedHash['preview:id'],
-    previewType: parsedHash['preview:type'],
     previewMode: parsedHash['preview:mode'],
     parsedHash,
   };

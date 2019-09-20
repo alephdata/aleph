@@ -13,8 +13,10 @@ const initialState = {
 const handleLogin = (state, token) => {
   const data = jwtDecode(token);
   return {
-    ...data,
     token,
+    isAdmin: data.a,
+    role: data.role,
+    roles: data.r,
     loggedIn: true,
     sessionID: state.sessionID || uuidv4(),
   };

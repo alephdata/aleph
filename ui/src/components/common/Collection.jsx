@@ -10,7 +10,6 @@ import c from 'classnames';
 import { fetchCollection } from 'src/actions';
 import { selectCollection } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
-import togglePreview from 'src/util/togglePreview';
 
 import './Collection.scss';
 
@@ -47,28 +46,14 @@ class CollectionLabel extends PureComponent {
 }
 
 
-class CollectionLink extends Component {
-  constructor(props) {
-    super(props);
-    this.onClick = this.onClick.bind(this);
-  }
-
-  onClick(event) {
-    const { collection, history, preview } = this.props;
-    if (preview === true) {
-      event.preventDefault();
-      togglePreview(history, collection, 'collection');
-    }
-  }
-
+class CollectionLink extends PureComponent {
   render() {
     const { collection, icon = true, className } = this.props;
     if (collection === undefined || collection.links === undefined) {
       return <Collection.Label collection={collection} icon={icon} />;
     }
-    const link = getCollectionLink(collection);
     return (
-      <Link to={link} className={c('CollectionLink', className)} onClick={this.onClick}>
+      <Link to={getCollectionLink(collection)} className={c('CollectionLink', className)}>
         <Collection.Label collection={collection} icon={icon} />
       </Link>
     );

@@ -1,5 +1,6 @@
 import io
 import csv
+import logging
 from banal import as_bool
 from normality import stringify
 from flask import Response, request, render_template
@@ -17,6 +18,8 @@ from aleph.model import Collection, Entity
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
+
+log = logging.getLogger(__name__)
 
 
 def require(*predicates):
@@ -118,18 +121,22 @@ def sanitize_html(html_text, base_url):
     # TODO: circumvent encoding declarations?
     if html_text is None or not len(html_text.strip()):
         return
-    cleaned = CLEANER.clean_html(html_text)
-    html = document_fromstring(cleaned)
-    for (el, attr, href, _) in html.iterlinks():
-        href = normalize_href(href, base_url)
-        if href is not None:
-            el.set(attr, href)
-        if el.tag == 'a':
-            el.set('target', '_blank')
-            rel = set(el.get('rel', '').lower().split())
-            rel.update(['nofollow', 'noreferrer', 'external', 'noopener'])
-            el.set('rel', ' '.join(rel))
-    return tostring(html)
+    try:
+        cleaned = CLEANER.clean_html(html_text)
+        html = document_fromstring(cleaned)
+        for (el, attr, href, _) in html.iterlinks():
+            href = normalize_href(href, base_url)
+            if href is not None:
+                el.set(attr, href)
+            if el.tag == 'a':
+                el.set('target', '_blank')
+                rel = set(el.get('rel', '').lower().split())
+                rel.update(['nofollow', 'noreferrer', 'external', 'noopener'])
+                el.set('rel', ' '.join(rel))
+        return tostring(html)
+    except Exception:
+        log.exception("HTML sanitizer failure")
+        return gettext("[HTML removed: could not be sanitized]")
 
 
 def normalize_href(href, base_url):

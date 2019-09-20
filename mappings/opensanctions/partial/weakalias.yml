@@ -1,9 +1,0 @@
-filters_not:
-  quality: strong
-entities:
-  entity:
-    schema: Thing
-    key: entity_id
-    properties:
-      weakAlias:
-        column: name

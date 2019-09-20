@@ -10,6 +10,7 @@ class TimestampSupport(object):
     """Provides helpers for date and time parsing."""
     TIMESTAMP_FORMATS = (
         '%Y-%m-%dT%H:%M:%S',
+        '%Y-%m-%d %H:%M:%S',
         '%Y-%m-%dT%H:%M:%SZ',
         '%Y:%m:%d %H:%M:%SZ',  # exif
         '%Z %Y-%m-%d %H:%M:%S',

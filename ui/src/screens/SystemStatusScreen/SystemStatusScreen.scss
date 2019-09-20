@@ -1,0 +1,29 @@
+@import "~src/app/tables";
+
+.StatusTable {
+  @extend .settings-table;
+
+  tr td, tr th {
+    vertical-align: middle;
+  }
+
+  td.text {
+    padding-left: 0;
+  }
+
+  td.narrow {
+    padding-right: 0;
+  }
+}
+
+.SystemStatusScreen {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+  align-items: stretch;
+
+  .ErrorSection {
+    padding: 10px;
+  }
+}

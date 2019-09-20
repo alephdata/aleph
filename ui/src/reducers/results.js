@@ -12,6 +12,7 @@ import {
   deleteCollection,
   ingestDocument,
   deleteEntity,
+  queryDashboard,
 } from 'src/actions';
 
 const initialState = {};
@@ -41,6 +42,14 @@ export default createReducer({
   }) => resultLoadError(state, query, error),
 
   [queryNotifications.COMPLETE]: updateResults,
+
+  [queryDashboard.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryDashboard.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+
+  [queryDashboard.COMPLETE]: updateResults,
 
   // Clear out the results cache when operations are performed that
   // may affect the content of the results.

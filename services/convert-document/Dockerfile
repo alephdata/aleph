@@ -22,7 +22,10 @@ ENV LANG='en_US.UTF-8' \
 RUN groupadd -g 1000 -r app \
     && useradd -m -u 1000 -s /bin/false -g app app
 
-RUN pip3 install --no-cache-dir -q aiohttp pantomime>=0.3.2
+ADD https://raw.githubusercontent.com/unoconv/unoconv/0.8.2/unoconv /usr/bin/unoconv
+RUN chmod a+rx /usr/bin/unoconv
+RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN pip3 install --no-cache-dir -q flask pantomime>=0.3.2
 RUN mkdir -p /convert
 COPY setup.py /convert
 COPY convert /convert/convert
@@ -30,4 +33,4 @@ WORKDIR /convert
 RUN pip3 install -q -e .
 
 USER app
-CMD ["python3", "convert/server.py"]
+CMD ["python3", "convert/app.py"]
