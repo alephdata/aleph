@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import c from 'classnames';
 
 import getCategoryLink from 'src/util/getCategoryLink';
-
-
 import { selectMetadata } from 'src/selectors';
 
 
@@ -26,7 +24,6 @@ class CategoryLabel extends Component {
     const { collection, categories, category: pureCategory } = this.props;
     const category = collection ? collection.category : pureCategory;
 
-    console.log('in category', category, categories);
     return categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
   }
 }

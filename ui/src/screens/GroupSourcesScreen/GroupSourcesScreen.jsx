@@ -119,9 +119,6 @@ export class GroupSourcesScreen extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { groupId } = ownProps.match.params;
-
-  console.log(state, ownProps);
-
   const context = {
     'filter:kind': 'source',
   };
