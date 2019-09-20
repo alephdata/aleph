@@ -66,10 +66,10 @@ export class NotificationsScreen extends React.Component {
             </p>
           </div>
           <Toolbar>
-            <Button icon="tick" className="mark-read" onClick={this.onMarkRead} disabled={!canMarkRead}>
+            <Button icon="tick" className="mark-read bp3-intent-primary" onClick={this.onMarkRead} disabled={!canMarkRead}>
               <FormattedMessage
                 id="notifications.mark_read"
-                defaultMessage="Mark as seen"
+                defaultMessage="Mark all as seen"
               />
             </Button>
           </Toolbar>

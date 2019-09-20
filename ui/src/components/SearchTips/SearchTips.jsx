@@ -1,29 +1,45 @@
 import React from 'react';
-import { Drawer, Position, Card } from '@blueprintjs/core';
+import { Drawer, Position } from '@blueprintjs/core';
+import { FormattedMessage } from 'react-intl';
+
 
 import './SearchTips.scss';
 
 const tips = [
   {
+    id: 'exact',
     title: 'Exact matches',
-    content: '<p>To find exact matches for a given search term, e.g. to search for a person or company, try putting the name in quotes:</p><p class="example">"Barack Obama"</p>',
+    content: [
+      'Use <em>""</em> to return only exact matches.  For example, the search <em>"barack obama”</em> will return only results containing the exact phrase "barack obama"',
+    ],
   },
   {
-    title: 'Proximity Searches',
-    content: '<p>If you do not want to find a precise string, but merely specify that two words are supposed to appear close to each other, you might want to use proximity search. This will try to find all the requested search terms within a given distance from each other:</p><p class="example">"Bank America"~2</p><p>This will find relevant matches with the terms "Bank" and "America" occurring within two words from each other, such as "Bank of America", "Bank in America", even "America has a Bank".</p>',
+    id: 'spelling',
+    title: 'Spelling variants',
+    content: [
+      'Use <em>~</em> to increase the fuzziness of a search.  For example, <em>Wladimir~2</em> will return not just the term “Wladimir” but also similar spellings such as "Wladimyr" or "Vladimyr". A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant.',
+    ],
   },
   {
-    title: 'Spelling errors',
-    content: '<p>The same principle of proximity can also be applied inside of individual words. A search will then try to find not just the precise word you have specified, but also spelling variants. A spelling variant is defined by the number of spelling mistakes that must be made to get from the original word to the variant.</p><p class="example">Wladimir~2</p><p>This will find not just the term "Wladimir", but also similar words such as "Vladimir", "Wladimyr" or "Vladimyr". Note that if you set the permissible distance too high, you will get very slow searches and many false results.</p>',
-  },
-  {
+    id: 'composite',
     title: 'Composite queries',
-    content: '<p>You can make queries composed of multiple terms in various ways. The simplest form is to just put more than one word into the search bar. In this case, Aleph will try and find documents that contain all of the given terms and put these first. After that, results that miss any of the given search terms will also be shown.</p><p>If you want to make sure that a given term must show up in the results (or may never show up), you can put a plus sign ("+") in front of it (or a minus sign, "-", to make sure all documents with the given word are removed).</p><p class="example">banana -ice -cream +fruit</p>',
+    content: [
+      'The search <em>banana ice cream</em> prioritizes results that contain all three terms: banana, ice, and cream.  Results with one or more of the given terms will follow',
+      '<em>+banana ice cream</em> requires that only results with the term banana will be returned, while ice and cream are optional',
+      '<em>-banana ice cream</em> ensures that no results with the term banana will be returned',
+      '<em>banana AND “ice cream”</em> requires that only results with both banana and ice cream are returned',
+      '<em>banana OR “ice cream”</em> ensures that only results with either banana or ice cream are returned',
+      'These operations can be combined as you like.  For example <em>banana AND (“ice cream” OR “gelato”) -chocolate</em> will return results where banana appears with ice cream or gelato in the document but where chocolate is not present',
+    ],
   },
   {
-    title: 'Boolean queries',
-    content: '<p>You can also make more complex, boolean queries in which the terms "OR" and "AND" are used to specify the that certain search terms must appear together (or can serve as alternatives to each other).</p><p class="example">banana AND ("ice cream" OR gelato)</p>',
+    id: 'proximity',
+    title: 'Proximity searches',
+    content: [
+      'To search for two terms within a certain distance of each other, use double quotes <em>""</em> around the two words and the tilde <em>~</em> symbol at the end of the phrase.  For example <em>“Bank America”~2</em> will find relevant matches with the terms "Bank" and "America" occurring within two words from each other, such as "Bank of America", "Bank in America", even "America has a Bank".',
+    ],
   },
+
 ];
 
 export default class SearchTips extends React.Component {
@@ -45,10 +61,27 @@ export default class SearchTips extends React.Component {
         >
           <div className="SearchTips__content">
             {tips.map(tip => (
-              <Card key={tip.title} className="SearchTips__section">
-                <h5 className="SearchTips__section__title">{tip.title}</h5>
-                <div className="SearchTips__section__content" dangerouslySetInnerHTML={{ __html: tip.content }} />
-              </Card>
+              <div key={tip.id} className="SearchTips__section">
+                <h5 className="SearchTips__section__title">
+                  <FormattedMessage
+                    id={`searchTips.${tip.id}.title`}
+                    defaultMessage={tip.title}
+                  />
+                </h5>
+                <ul className="SearchTips__section__content">
+                  {/* eslint-disable react/no-array-index-key */}
+                  {tip.content.map((contentItem, i) => (
+                    <li className="SearchTips__section__item" key={i}>
+                      <FormattedMessage
+                        id={`searchTips.${tip.id}.${i}`}
+                        defaultMessage={contentItem}
+                      >
+                        {msg => <span dangerouslySetInnerHTML={{ __html: msg }} />}
+                      </FormattedMessage>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
         </Drawer>

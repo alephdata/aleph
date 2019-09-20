@@ -23,6 +23,7 @@ class EntityBreadcrumb extends PureComponent {
     const parent = entity.getFirst('parent');
     const ancestors = entity.getProperty('ancestors');
     const hasAncestors = ancestors.length > 1;
+
     return (
       <React.Fragment>
         { hasAncestors && (

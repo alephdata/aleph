@@ -51,19 +51,24 @@
 
 .DualPane .InfoPane {
   @extend %SidePane;
-  border-right: 0;
-  box-shadow: $pt-elevation-shadow-2;
-  background: $aleph-content-background;
+  border-radius: $aleph-border-radius;
   flex-direction: row !important;
   min-height: unset;
-  border-radius: $aleph-border-radius;
   margin: 0 $aleph-grid-size $aleph-grid-size;
+  overflow: visible;
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-infopane-md-width !important;
   }
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     width: 100% !important;
     margin-bottom: 1em;
+  }
+
+  &__inner-container {
+    border-right: 0;
+    border-radius: $aleph-border-radius;
+    box-shadow: $pt-elevation-shadow-2;
+    background: $aleph-content-background;
   }
 
   h1, h2 {
