@@ -137,7 +137,7 @@ class RolesApiTestCase(TestCase):
         db.session.close()
 
         self.assertEqual(res.status_code, 201)
-        self.assertEqual(res.json['email'], email)
+        self.assertEqual(res.json.get('email'), email)
 
         role = Role.by_email(email)
         self.assertIsNotNone(role)
