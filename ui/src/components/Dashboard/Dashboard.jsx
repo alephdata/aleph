@@ -110,8 +110,8 @@ class Dashboard extends React.Component {
                     key={group.id}
                     icon="shield"
                     text={group.label}
-                    onClick={() => this.navigate(`/group/${group.id}`)}
-                    active={current === `/group/${group.id}`}
+                    onClick={() => this.navigate(`/groups/${group.id}`)}
+                    active={current === `/groups/${group.id}`}
                   />
                 ))}
               </React.Fragment>

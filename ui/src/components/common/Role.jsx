@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import {
-  Button, MenuItem, Position, Classes, Alignment,
+  Button, MenuItem, Position, Classes, Alignment, Icon,
 } from '@blueprintjs/core';
 import { Select as BlueprintSelect } from '@blueprintjs/select';
 
 import wordList from 'src/util/wordList';
 import { suggestRoles } from 'src/actions';
-import { Icon } from './Icon';
 
 import './Role.scss';
 
@@ -32,11 +31,12 @@ class RoleLabel extends Component {
     if (!role) {
       return null;
     }
+    const iconName = role.type === 'user' ? 'user' : 'shield';
     return (
       <React.Fragment>
         { icon && (
           <React.Fragment>
-            <Icon name="person" />
+            <Icon icon={iconName} className="RoleIcon" />
           </React.Fragment>
         )}
         { long ? role.label : role.name }
@@ -52,11 +52,14 @@ class RoleLink extends PureComponent {
     if (!role) {
       return null;
     }
-    return (
-      <Link to={`/sources?collectionsfilter:team_id=${role.id}`}>
-        <RoleLabel {...this.props} />
-      </Link>
-    );
+    if (role.type === 'group') {
+      return (
+        <Link to={`/groups/${role.id}`}>
+          <RoleLabel {...this.props} />
+        </Link>
+      );
+    }
+    return <RoleLabel {...this.props} />;
   }
 }
 

@@ -66,7 +66,7 @@ class Router extends Component {
           <Route path="/history" exact component={HistoryScreen} />
           <Route path="/settings" exact component={SettingsScreen} />
           <Route path="/status" exact component={SystemStatusScreen} />
-          <Route path="/group/:groupId" exact component={GroupSourcesScreen} />
+          <Route path="/groups/:groupId" exact component={GroupSourcesScreen} />
           <Route path="/" exact component={HomeScreen} />
           <Route component={NotFoundScreen} />
         </Switch>
