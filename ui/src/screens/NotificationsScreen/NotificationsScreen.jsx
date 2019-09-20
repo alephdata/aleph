@@ -11,7 +11,6 @@ import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-import { WelcomeMessage } from 'src/components/common';
 
 
 import { selectNotificationsResult } from 'src/selectors';
@@ -23,6 +22,10 @@ const messages = defineMessages({
   title: {
     id: 'notifications.title',
     defaultMessage: 'Recent notifications',
+  },
+  greeting: {
+    id: 'notifications.greeting',
+    defaultMessage: 'What\'s new, {role}?',
   },
 });
 
@@ -41,7 +44,7 @@ export class NotificationsScreen extends React.Component {
   }
 
   render() {
-    const { query, result, intl, location, role } = this.props;
+    const { query, result, intl, role } = this.props;
     const { isMarkedRead } = this.state;
     const canMarkRead = !isMarkedRead && result.total !== undefined && result.total > 0;
 
@@ -52,11 +55,10 @@ export class NotificationsScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
-          {location.state && location.state.referrer === '/' && (
-            <WelcomeMessage name={role.name} />
-          )}
           <div className="Dashboard__title-container">
-            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <h5 className="Dashboard__title">
+              {intl.formatMessage(messages.greeting, { role: role.name })}
+            </h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="notification.description"

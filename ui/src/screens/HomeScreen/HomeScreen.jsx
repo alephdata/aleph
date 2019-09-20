@@ -141,19 +141,12 @@ export class HomeScreen extends Component {
     const { intl, metadata, session, statistics = {} } = this.props;
 
     if (session.loggedIn) {
-      return (
-        <Redirect
-          to={{
-            pathname: '/notifications',
-            state: { referrer: '/' },
-          }}
-        />
-      );
+      return <Redirect to="/notifications" />;
     }
 
     const searchScope = {
-      listItem: 'OCCRP Aleph',
-      label: 'OCCRP Aleph',
+      listItem: metadata.app.title,
+      label: metadata.app.title,
       onSearch: this.doSearch,
     };
 
