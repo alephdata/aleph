@@ -24,8 +24,15 @@ class BaseApiTestCase(TestCase):
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res
         assert 'things' in res.json, res.json
+        assert res.json['collections'] == 0, res.json
         assert res.json['things'] == 0, res.json
+
         self.load_fixtures()
+        res = self.client.get('/api/2/statistics')
+        assert res.status_code == 200, res
+        assert res.json['collections'] == 1, res.json
+        assert res.json['things'] == 1, res.json
+
         _, headers = self.login(is_admin=True)
         res = self.client.get('/api/2/statistics', headers=headers)
         assert res.status_code == 200, res

@@ -61,8 +61,10 @@ def refresh_role(role, sync=False):
 
 
 def update_roles():
-    q = db.session.query(Role)
-    for role in q:
+    # Flush authz for anonymous users:
+    cache.kv.delete(cache.key(Authz.PREFIX, Authz.READ),
+                    cache.key(Authz.PREFIX, Authz.WRITE))
+    for role in Role.all():
         update_role(role)
 
 

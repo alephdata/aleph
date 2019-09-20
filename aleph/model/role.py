@@ -159,7 +159,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def load_cli_user(cls):
         return cls.load_or_create(foreign_id=settings.SYSTEM_USER,
                                   name='Aleph',
-                                  type=cls.USER)
+                                  type=cls.USER,
+                                  is_admin=True)
 
     @classmethod
     def load_id(cls, foreign_id):

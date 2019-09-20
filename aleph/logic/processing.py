@@ -88,7 +88,7 @@ def index_entities(stage, collection, iterable, sync=False):
     if len(entities):
         stage.report_finished(len(entities))
         index_bulk(collection, entities, job_id=stage.job.id, sync=sync)
-    refresh_collection(collection)
+    refresh_collection(collection.id)
 
 
 def bulk_write(collection, iterable, job_id=None, unsafe=False):
