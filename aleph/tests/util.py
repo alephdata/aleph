@@ -10,12 +10,12 @@ from faker import Factory
 
 from aleph import settings
 from aleph.authz import Authz
-from aleph.queues import get_stage, OP_INDEX, OP_PROCESS
+from aleph.queues import get_stage, OP_PROCESS
 from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
-from aleph.logic.aggregator import drop_aggregator
+from aleph.logic.aggregator import drop_aggregator, get_aggregator
 from aleph.logic.collections import update_collection
-from aleph.logic.processing import index_entities, process_collection
+from aleph.logic.processing import process_collection
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
@@ -30,15 +30,13 @@ DB_URI = settings.DATABASE_URI + '_test'
 
 def read_entities(file_name):
     now = datetime.utcnow()
-    entities = []
     with open(file_name) as fh:
         while True:
             entity = read_entity(fh)
             if entity is None:
                 break
             entity.set('indexUpdatedAt', now, quiet=True)
-            entities.append(entity)
-    return entities
+            yield entity
 
 
 class TestCase(FlaskTestCase):
@@ -153,10 +151,11 @@ class TestCase(FlaskTestCase):
         stage = get_stage(self.public_coll, OP_PROCESS)
         process_collection(stage, self.public_coll, ingest=False, sync=True)
 
-        samples = read_entities(self.get_fixture_path('samples.ijson'))
-        drop_aggregator(self.private_coll)
-        stage = get_stage(self.private_coll, OP_INDEX)
-        index_entities(stage, self.private_coll, samples, sync=True)
+        aggregator = get_aggregator(self.private_coll)
+        aggregator.delete()
+        for sample in read_entities(self.get_fixture_path('samples.ijson')):
+            aggregator.put(sample, fragment='sample')
+        aggregator.close()
         stage = get_stage(self.private_coll, OP_PROCESS)
         process_collection(stage, self.private_coll, ingest=False, sync=True)
 
