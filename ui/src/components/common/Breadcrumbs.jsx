@@ -14,7 +14,7 @@ class CollectionBreadcrumb extends PureComponent {
       <React.Fragment>
         {showCategory && (
           <li key={collection.category}>
-            <Category.Link collection={collection} className="bp3-breadcrumb" />
+            <Category.Link collection={collection} className="bp3-breadcrumb" icon />
           </li>
         )}
         <li key={collection.id}>

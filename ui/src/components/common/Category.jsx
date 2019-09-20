@@ -1,11 +1,14 @@
 import React, { Component, PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
 import getCategoryLink from 'src/util/getCategoryLink';
 import { selectMetadata } from 'src/selectors';
+
+import './Category.scss';
 
 
 class CategoryLabel extends Component {
@@ -21,10 +24,15 @@ class CategoryLabel extends Component {
   }
 
   render() {
-    const { collection, categories, category: pureCategory } = this.props;
+    const { collection, categories, category: pureCategory, icon } = this.props;
     const category = collection ? collection.category : pureCategory;
-
-    return categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
+    const label = categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
+    return (
+      <span className="CategoryLabel" title={label}>
+        { icon && (<Icon icon="list" />)}
+        <span>{ label }</span>
+      </span>
+    );
   }
 }
 
@@ -36,7 +44,7 @@ class CategoryLink extends PureComponent {
     }
     return (
       <Link to={getCategoryLink(collection)} className={c('CategoryLink', className)}>
-        <Category.Label collection={collection} />
+        <Category.Label {...this.props} />
       </Link>
     );
   }
