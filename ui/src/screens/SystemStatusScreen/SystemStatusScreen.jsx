@@ -104,7 +104,7 @@ export class SystemStatusScreen extends React.Component {
                       <FormattedMessage id="infoMode.collection" defaultMessage="Collection" />
                     </th>
                     <th className="numeric narrow">
-                      <FormattedMessage id="collection.status.jobs" defaultMessage="Number of Jobs" />
+                      <FormattedMessage id="collection.status.jobs" defaultMessage="Jobs" />
                     </th>
                     <th className="numeric narrow">
                       <FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished Tasks" />

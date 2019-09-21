@@ -15,11 +15,11 @@ blueprint = Blueprint('status_api', __name__)
 def status():
     require(request.authz.logged_in)
     status = get_active_collection_status()
-    active_collections = status.pop('datasets')
+    active_collections = status.pop('datasets', [])
     active_foreign_ids = set(active_collections.keys())
     collections = request.authz.collections(request.authz.READ)
     results = []
-    for fid in active_foreign_ids:
+    for fid in sorted(active_foreign_ids):
         collection = Collection.by_foreign_id(fid)
         if collection is None:
             continue
@@ -28,6 +28,7 @@ def status():
             result['collection'] = collection.to_dict()
             result['id'] = fid
             results.append(result)
-    status['results'] = results
-    status['total'] = len(results)
-    return jsonify(status)
+    return jsonify({
+        'results': results,
+        'total': len(results)
+    })
