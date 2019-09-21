@@ -1,6 +1,7 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Intent, FormGroup, InputGroup, Checkbox } from '@blueprintjs/core';
+import { Button, Intent, FormGroup, InputGroup, Checkbox, Alignment, MenuItem, Classes } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -9,7 +10,7 @@ import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import ClipboardInput from 'src/components/common/ClipboardInput';
 import { updateRole, fetchRole } from 'src/actions';
-import { selectSession, selectMetadata } from 'src/selectors';
+import { selectSession, selectMetadata, selectLocale } from 'src/selectors';
 
 import './SettingsScreen.scss';
 
@@ -26,6 +27,10 @@ const messages = defineMessages({
   name: {
     id: 'settings.name',
     defaultMessage: 'Name',
+  },
+  locale: {
+    id: 'settings.locale',
+    defaultMessage: 'Language',
   },
   api_key: {
     id: 'settings.api_key',
@@ -87,6 +92,8 @@ export class SettingsScreen extends React.Component {
     this.onSave = this.onSave.bind(this);
     this.onChangeInput = this.onChangeInput.bind(this);
     this.onToggleMuted = this.onToggleMuted.bind(this);
+    this.onSelectLocale = this.onSelectLocale.bind(this);
+    this.renderLocale = this.renderLocale.bind(this);
   }
 
   static getDerivedStateFromProps(props) {
@@ -124,6 +131,14 @@ export class SettingsScreen extends React.Component {
     this.setState({ role });
   }
 
+  onSelectLocale(locale, event) {
+    const { role } = this.state;
+    event.stopPropagation();
+    role.locale = locale;
+    console.log(locale);
+    this.setState({ role });
+  }
+
   validName() {
     const { role: { name } } = this.state;
     return name !== undefined && name !== null && name.length > 2;
@@ -145,6 +160,18 @@ export class SettingsScreen extends React.Component {
 
   valid() {
     return this.validName() && this.validPassword() && this.validPasswordConfirm();
+  }
+
+  renderLocale(locale, { handleClick, modifiers }) {
+    const { locales } = this.props.metadata.app;
+    return (
+      <MenuItem
+        className={modifiers.active ? Classes.ACTIVE : ''}
+        key={locale}
+        onClick={handleClick}
+        text={locales[locale]}
+      />
+    );
   }
 
   renderPassword() {
@@ -212,9 +239,10 @@ export class SettingsScreen extends React.Component {
   }
 
   render() {
-    const { intl } = this.props;
+    const { intl, metadata } = this.props;
     const { role } = this.state;
     const nameIntent = this.validName() ? undefined : Intent.DANGER;
+    const locales = Object.keys(metadata.app.locales);
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
@@ -233,6 +261,33 @@ export class SettingsScreen extends React.Component {
               intent={nameIntent}
               large
             />
+          </FormGroup>
+          <FormGroup
+            label={intl.formatMessage(messages.locale)}
+            labelFor="locale"
+          >
+            <Select
+              itemRenderer={this.renderLocale}
+              items={locales}
+              onItemSelect={this.onSelectLocale}
+              popoverProps={{
+                minimal: true,
+                fill: true,
+              //  position: Position.BOTTOM_LEFT,
+              }}
+              inputProps={{
+                fill: true,
+              }}
+              filterable={false}
+            >
+              <Button
+                fill
+                text={metadata.app.locales[role.locale]}
+                alignText={Alignment.LEFT}
+                icon="translate"
+                rightIcon="caret-down"
+              />
+            </Select>
           </FormGroup>
           <FormGroup
             label={intl.formatMessage(messages.api_key)}
@@ -276,7 +331,10 @@ export class SettingsScreen extends React.Component {
 const mapStateToProps = state => ({
   session: selectSession(state),
   metadata: selectMetadata(state),
-  role: state.session.role,
+  role: {
+    ...state.session.role,
+    locale: selectLocale(state),
+  },
 });
 
 SettingsScreen = withRouter(SettingsScreen);

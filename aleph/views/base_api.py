@@ -1,4 +1,5 @@
 import logging
+from babel import Locale
 from collections import defaultdict
 from flask import Blueprint, request
 from flask_babel import gettext, get_locale
@@ -10,9 +11,8 @@ from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
 from aleph.core import cache, settings, url_for
-from aleph.model import Collection, Role
+from aleph.model import Collection
 from aleph.logic import resolver
-from aleph.views.serializers import RoleSerializer
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
 
@@ -36,6 +36,9 @@ def metadata():
     if settings.OAUTH:
         auth['oauth_uri'] = url_for('sessions_api.oauth_init')
 
+    locales = settings.UI_LANGUAGES
+    locales = {l: Locale(l).get_language_name(l) for l in locales}
+
     data = {
         'status': 'ok',
         'maintenance': request.authz.in_maintenance,
@@ -49,7 +52,7 @@ def metadata():
             'logo': settings.APP_LOGO,
             'favicon': settings.APP_FAVICON,
             'locale': str(locale),
-            'locales': settings.UI_LANGUAGES
+            'locales': locales
         },
         'categories': Collection.CATEGORIES,
         'countries': registry.country.names,

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import {
-  Button, MenuItem, Position, Classes, Alignment, Icon,
+  Button, MenuItem, Classes, Alignment, Icon,
 } from '@blueprintjs/core';
 import { Select as BlueprintSelect } from '@blueprintjs/select';
 
@@ -128,9 +128,12 @@ class Select extends Component {
         onQueryChange={this.onSuggest}
         popoverProps={{
           minimal: true,
-          position: Position.BOTTOM_LEFT,
+          fill: true,
+          // position: Position.BOTTOM_LEFT,
         }}
-        fill
+        inputProps={{
+          fill: true,
+        }}
         filterable
         resetOnQuery
         resetOnClose
