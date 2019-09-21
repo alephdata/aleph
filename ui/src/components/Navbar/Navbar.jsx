@@ -31,7 +31,6 @@ export class Navbar extends React.Component {
 
   componentDidMount() {
     const { query } = this.props;
-
     if (query !== undefined) {
       this.setState({ searchValue: query.getString('q') });
     }
@@ -92,7 +91,6 @@ export class Navbar extends React.Component {
       searchScope.onSearch(searchValue);
     }
   };
-
 
   render() {
     const {

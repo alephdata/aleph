@@ -11,42 +11,25 @@ const initialState = {
   offset: 0,
 };
 
-const deriveQueryLog = (state, { query }) => {
-  const queryText = query.state.q;
-  const currentDate = new Date();
-  let { results } = state;
-  if (queryText && results) {
-    const itemIndex = results.findIndex(({ text }) => queryText === text);
-    results = [...results];
-    let item = {
-      count: 1,
-      query: queryText,
-      last: currentDate.toISOString(),
-      first: currentDate.toISOString(),
-    };
-    if (itemIndex + 1) {
-      [item] = results.splice(itemIndex, 1);
-      item = {
-        ...item,
-        count: 1 + item.count,
-      };
-    }
-    results.unshift(item);
-    return {
-      ...state,
-      results,
-    };
-  } return state;
-};
-
 export default createReducer({
-  [queryEntities.START]: deriveQueryLog,
+  [queryEntities.START]: (state, { query }) => {
+    if (!query.state.q) {
+      return state;
+    }
+    return {
+      isLoading: true,
+      shouldLoad: true,
+      isError: false,
+    };
+  },
+
   [fetchQueryLogs.START]: state => ({
     ...state,
     isLoading: true,
     shouldLoad: false,
     isError: false,
   }),
+
   [fetchQueryLogs.ERROR]: (state, { error }) => ({
     isLoading: false,
     shouldLoad: false,
@@ -54,9 +37,11 @@ export default createReducer({
     results: [],
     error,
   }),
+
   [fetchQueryLogs.COMPLETE]: (state, {
     result: queryLogs,
   }) => mergeResults(state, queryLogs),
+
   [deleteQueryLog.START]: (state, props) => ({
     ...state,
     results: state.results.filter(({ query }) => query !== props.query),

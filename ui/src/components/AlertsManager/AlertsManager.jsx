@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { ControlGroup, InputGroup, Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -87,26 +88,19 @@ class AlertsDialog extends Component {
           <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity is added that matches any of the alerts you have set up below." />
         </div>
         <form onSubmit={this.onAddAlert} className="add-form">
-          <div className="bp3-control-group bp3-fill">
-            <div className="bp3-input-group bp3-fill">
-              <input
-                type="text"
-                className="bp3-input"
-                autoComplete="off"
-                placeholder={intl.formatMessage(messages.add_placeholder)}
-                onChange={this.onChangeAddingInput}
-                value={newAlert}
-              />
-            </div>
-            <button
-              type="button"
-              className="bp3-button bp3-fixed"
+          <ControlGroup fill>
+            <InputGroup
+              leftIcon="notifications"
+              placeholder={intl.formatMessage(messages.add_placeholder)}
+              onChange={this.onChangeAddingInput}
+              value={newAlert}
+            />
+            <Button
               disabled={newAlert.length === 0}
               onClick={this.onAddAlert}
-            >
-              <FormattedMessage id="alerts.add" defaultMessage="Add alert" />
-            </button>
-          </div>
+              text={<FormattedMessage id="alerts.add" defaultMessage="Add alert" />}
+            />
+          </ControlGroup>
         </form>
         { alerts.page !== undefined && !alerts.results.length && (
           <ErrorSection
