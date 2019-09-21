@@ -57,7 +57,7 @@ export class NotificationsScreen extends React.Component {
         <Dashboard>
           <div className="Dashboard__title-container">
             <h5 className="Dashboard__title">
-              {intl.formatMessage(messages.greeting, { role: role.name })}
+              {intl.formatMessage(messages.greeting, { role: role ? role.name : '' })}
             </h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
