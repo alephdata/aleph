@@ -13,6 +13,7 @@ import Language from './Language';
 import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
+import Suggest from './Suggest';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
 import ErrorSection from './ErrorSection';
@@ -24,6 +25,7 @@ import URL from './URL';
 import { Icon } from './Icon';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
+import QueryText from './QueryText';
 
 export {
   Breadcrumbs,
@@ -41,6 +43,7 @@ export {
   Property,
   Role,
   Schema,
+  Suggest,
   SectionLoading,
   TextLoading,
   ErrorSection,
@@ -51,5 +54,6 @@ export {
   URL,
   SearchBox,
   SearchListings,
+  QueryText,
   Icon,
 };

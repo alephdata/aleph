@@ -221,3 +221,4 @@ export class Suggest extends React.PureComponent {
 }
 
 /* eslint-enable */
+export default Suggest;

@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
-import { Suggest } from 'src/components/common/Suggest';
+import { Suggest, QueryText } from 'src/components/common';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 import Query from 'src/app/Query';
 import { selectQueryLogsLimited, selectSession } from 'src/selectors';
@@ -103,7 +103,7 @@ class SearchBox extends React.Component {
       className: 'navbar-search-item',
       key: queryItem.query,
       onClick: handleClick,
-      text: queryItem.query,
+      text: <QueryText query={queryItem.query} />,
       labelElement: <this.RemoveQueryLog queryItem={queryItem} />,
       icon,
     };

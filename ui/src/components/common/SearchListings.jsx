@@ -3,9 +3,7 @@ import { Button, Tooltip } from '@blueprintjs/core';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 // import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
-import {
-  Date,
-} from 'src/components/common';
+import { Date, QueryText } from 'src/components/common';
 
 import './SearchListings.scss';
 
@@ -50,7 +48,7 @@ export class SearchListings extends PureComponent {
                 </Tooltip>
               </td>
               <td className="SearchListings__text text-main">
-                {item.query}
+                <QueryText query={item.query} />
               </td>
               <td className="SearchListings__text text-date">
                 <Date value={item.updated_at || item.last} showTime />
