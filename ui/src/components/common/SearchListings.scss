@@ -18,8 +18,9 @@
     &.text-main {
       font-weight: bold;
     }
-    &.text-secondary {
+    &.text-date {
       color: $gray3;
+      text-align: right;
     }
 
     span {

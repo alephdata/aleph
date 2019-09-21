@@ -52,7 +52,7 @@ export class SearchListings extends PureComponent {
               <td className="SearchListings__text text-main">
                 {item.query}
               </td>
-              <td className="SearchListings__text text-secondary">
+              <td className="SearchListings__text text-date">
                 <Date value={item.updated_at || item.last} showTime />
               </td>
               {listType === 'search history' && (
