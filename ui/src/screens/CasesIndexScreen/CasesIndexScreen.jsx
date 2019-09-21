@@ -13,8 +13,10 @@ import {
 } from 'src/components/common';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
+import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
 
 import './CasesIndexScreen.scss';
+
 
 const messages = defineMessages({
   title: {
@@ -47,7 +49,6 @@ const messages = defineMessages({
 export class CasesIndexScreen extends Component {
   constructor(props) {
     super(props);
-
     this.updateQuery = this.updateQuery.bind(this);
   }
 
@@ -97,6 +98,9 @@ export class CasesIndexScreen extends Component {
       <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs} title={intl.formatMessage(messages.title)} equireSession>
         <Dashboard>
           <div className="Dashboard__title-container">
+            <div className="Dashboard__actions">
+              <CaseCreateButton />
+            </div>
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
@@ -106,7 +110,7 @@ export class CasesIndexScreen extends Component {
             </p>
           </div>
 
-          <CollectionIndexSearch query={query} updateQuery={this.updateQuery} casefiles />
+          <CollectionIndexSearch query={query} updateQuery={this.updateQuery} />
           <ul className="results">
             {result.results !== undefined && result.results
               .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}

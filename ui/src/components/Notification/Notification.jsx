@@ -3,6 +3,7 @@ import { FormattedRelative } from 'react-intl';
 
 import Role from 'src/components/common/Role';
 import Collection from 'src/components/common/Collection';
+import QueryText from 'src/components/common/QueryText';
 import Entity from 'src/components/common/Entity';
 
 import './Notification.scss';
@@ -20,7 +21,7 @@ class Notification extends PureComponent {
       return <Entity.Link entity={object} preview icon />;
     }
     if (type === 'alert') {
-      return object ? object.query : null;
+      return object ? <QueryText query={object.query} /> : null;
     }
     if (type === 'role') {
       return <Role.Label role={object} />;

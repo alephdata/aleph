@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
 import { deleteNotifications } from 'src/actions';
-import Toolbar from 'src/components/Toolbar/Toolbar';
 import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -56,24 +55,24 @@ export class NotificationsScreen extends React.Component {
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
           <div className="Dashboard__title-container">
+            <div className="Dashboard__actions">
+              <Button icon="tick" className="mark-read bp3-intent-primary" onClick={this.onMarkRead} disabled={!canMarkRead}>
+                <FormattedMessage
+                  id="notifications.mark.read"
+                  defaultMessage="Clear all"
+                />
+              </Button>
+            </div>
             <h5 className="Dashboard__title">
               {intl.formatMessage(messages.greeting, { role: role ? role.name : '' })}
             </h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="notification.description"
-                defaultMessage="View the latest updates to datasets and groups you follow."
+                defaultMessage="View the latest updates to datasets, groups and tracking alerts you follow."
               />
             </p>
           </div>
-          <Toolbar>
-            <Button icon="tick" className="mark-read bp3-intent-primary" onClick={this.onMarkRead} disabled={!canMarkRead}>
-              <FormattedMessage
-                id="notifications.mark_read"
-                defaultMessage="Mark all as seen"
-              />
-            </Button>
-          </Toolbar>
           <NotificationList query={query} />
         </Dashboard>
       </Screen>

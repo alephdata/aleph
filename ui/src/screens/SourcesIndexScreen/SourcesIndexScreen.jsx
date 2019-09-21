@@ -5,6 +5,8 @@ import {
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
+import { ButtonGroup } from '@blueprintjs/core';
+
 import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
@@ -16,9 +18,10 @@ import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
-
+import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
 
 import './SourcesIndexScreen.scss';
+
 
 const messages = defineMessages({
   title: {
@@ -97,8 +100,13 @@ export class SourcesIndexScreen extends Component {
 
   render() {
     const { result, query, intl } = this.props;
+    const operation = (
+      <ButtonGroup>
+        <CaseCreateButton />
+      </ButtonGroup>
+    );
     const breadcrumbs = (
-      <Breadcrumbs>
+      <Breadcrumbs operation={operation}>
         { !!result.total && (
           <Breadcrumbs.Text text={(
             <FormattedMessage
@@ -139,8 +147,8 @@ export class SourcesIndexScreen extends Component {
             />
           </DualPane.SidePane>
           <DualPane.ContentPane className="padded">
-            <CollectionIndexSearch query={query} updateQuery={this.updateQuery} />
             <SignInCallout />
+            <CollectionIndexSearch query={query} updateQuery={this.updateQuery} />
             <QueryTags query={query} updateQuery={this.updateQuery} />
             {result.isError && (
               <ErrorSection error={result.error} />

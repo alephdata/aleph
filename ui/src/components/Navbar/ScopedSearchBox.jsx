@@ -3,12 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import c from 'classnames';
-
-import { MenuItem } from '@blueprintjs/core/lib/esm/components/menu/menuItem';
-import { Button } from '@blueprintjs/core/lib/esm/components/button/buttons';
-import {
-  ControlGroup,
-} from '@blueprintjs/core';
+import { ControlGroup, Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 
 import { Suggest, QueryText } from 'src/components/common';
@@ -168,7 +163,11 @@ class SearchBox extends React.Component {
             filterable={false}
             items={searchScopes}
             itemRenderer={this.renderScopeItem}
-            popoverProps={{ minimal: true, className: 'SearchBox__scoped-input__popover', usePortal: false }}
+            popoverProps={{
+              minimal: true,
+              lassName: 'SearchBox__scoped-input__popover',
+              usePortal: false,
+            }}
             disabled={!multipleScopes}
           >
             <Button

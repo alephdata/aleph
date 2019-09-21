@@ -33,14 +33,10 @@ class RoleLabel extends Component {
     }
     const iconName = role.type === 'user' ? 'user' : 'shield';
     return (
-      <React.Fragment>
-        { icon && (
-          <React.Fragment>
-            <Icon icon={iconName} className="RoleIcon" />
-          </React.Fragment>
-        )}
+      <span className="Role">
+        { icon && <Icon icon={iconName} /> }
         { long ? role.label : role.name }
-      </React.Fragment>
+      </span>
     );
   }
 }
