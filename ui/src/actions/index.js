@@ -23,6 +23,7 @@ export {
   fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,
 } from './entityActions';
 export { fetchMetadata, fetchStatistics } from './metadataActions';
+export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export { queryDashboard } from './dashboardActions';
 
 export { createAction };

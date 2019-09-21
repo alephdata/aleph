@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
+import { deleteQueryLog, fetchQueryLogs } from 'src/actions';
 import { queryEntities } from 'src/actions/entityActions';
 import { mergeResults } from './util';
 
@@ -12,14 +12,15 @@ const initialState = {
 };
 
 export default createReducer({
-  [queryEntities.START]: (state, { query }) => {
+  [queryEntities.COMPLETE]: (state, { query }) => {
     if (!query.state.q) {
       return state;
     }
     return {
-      isLoading: true,
+      isLoading: false,
       shouldLoad: true,
       isError: false,
+      result: state.result,
     };
   },
 
@@ -34,7 +35,7 @@ export default createReducer({
     isLoading: false,
     shouldLoad: false,
     isError: true,
-    results: [],
+    result: state.result,
     error,
   }),
 
@@ -42,8 +43,11 @@ export default createReducer({
     result: queryLogs,
   }) => mergeResults(state, queryLogs),
 
-  [deleteQueryLog.START]: (state, props) => ({
-    ...state,
-    results: state.results.filter(({ query }) => query !== props.query),
+  [deleteQueryLog.COMPLETE]: state => ({
+    isLoading: false,
+    shouldLoad: true,
+    isError: false,
+    result: state.result,
   }),
+
 }, initialState);

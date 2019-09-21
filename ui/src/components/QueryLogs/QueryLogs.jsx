@@ -18,6 +18,10 @@ export class QueryLogs extends PureComponent {
     this.fetchIfNeeded();
   }
 
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
   onSearch(query) {
     const { history } = this.props;
     history.push({
@@ -32,8 +36,8 @@ export class QueryLogs extends PureComponent {
   }
 
   getMoreResults = () => {
-    const { query, result, limit } = this.props;
-    if (!limit && !result.isLoading && result.next) {
+    const { query, result } = this.props;
+    if (!result.isLoading && result.next) {
       this.props.fetchQueryLogs({ query, next: result.next });
     }
   };
@@ -41,7 +45,7 @@ export class QueryLogs extends PureComponent {
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (!result.isLoading && result.shouldLoad) {
-      this.props.fetchQueryLogs({ query, next: result.next });
+      this.props.fetchQueryLogs({ query });
     }
   }
 
@@ -77,7 +81,7 @@ export class QueryLogs extends PureComponent {
 
 const mapStateToProps = (state) => {
   const query = Query
-    .fromLocation('querylog', document.location, {}, 'queryLog')
+    .fromLocation('querylog', document.location, {}, 'querylog')
     .limit(20);
   const result = selectQueryLog(state, query);
   return { query, result };

@@ -40,17 +40,11 @@ class SearchBox extends React.Component {
     this.state = {
       activeScope: props.searchScopes[props.searchScopes.length - 1],
     };
-
     this.changeSearchScope = this.changeSearchScope.bind(this);
   }
 
   componentDidMount() {
-    const {
-      queryLogs, session, query,
-    } = this.props;
-    if (session.loggedIn && !queryLogs.isLoading && queryLogs.shouldLoad) {
-      this.props.fetchQueryLogs({ query, next: queryLogs.next });
-    }
+    this.fetchIfNeeded();
   }
 
   /* eslint-disable react/no-did-update-set-state */
@@ -62,6 +56,7 @@ class SearchBox extends React.Component {
         activeScope: searchScopes[searchScopes.length - 1],
       });
     }
+    this.fetchIfNeeded();
   }
 
   onChange = newSearchValue => this.props.updateSearchValue(newSearchValue);
@@ -118,6 +113,13 @@ class SearchBox extends React.Component {
   itemListPredicate = (query, queryList) => (
     query ? [{ query, isVirtual: true }] : [{ query: '' }, ...queryList]
   )
+
+  fetchIfNeeded() {
+    const { queryLogs, session, query } = this.props;
+    if (session.loggedIn && queryLogs.shouldLoad) {
+      this.props.fetchQueryLogs({ query, next: queryLogs.next });
+    }
+  }
 
   changeSearchScope(newScope) {
     this.onSearchSubmit(newScope);
