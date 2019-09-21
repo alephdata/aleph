@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { ControlGroup, InputGroup, Button } from '@blueprintjs/core';
+import { ControlGroup, InputGroup, Button, Intent } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -94,11 +94,14 @@ class AlertsDialog extends Component {
               placeholder={intl.formatMessage(messages.add_placeholder)}
               onChange={this.onChangeAddingInput}
               value={newAlert}
+              large
             />
             <Button
               disabled={newAlert.length === 0}
               onClick={this.onAddAlert}
-              text={<FormattedMessage id="alerts.add" defaultMessage="Add alert" />}
+              intent={Intent.PRIMARY}
+              text={<FormattedMessage id="alerts.track" defaultMessage="Track" />}
+              large
             />
           </ControlGroup>
         </form>
