@@ -84,7 +84,7 @@ export class SystemStatusScreen extends React.Component {
               <p className="Dashboard__subheading">
                 <FormattedMessage
                   id="dashboard.subheading"
-                  defaultMessage="Check the status of dataset uploads and updates"
+                  defaultMessage="Check an overview of status of all ongoing data analysis."
                 />
               </p>
             </div>
@@ -101,7 +101,7 @@ export class SystemStatusScreen extends React.Component {
                 <thead>
                   <tr>
                     <th>
-                      <FormattedMessage id="infoMode.collection" defaultMessage="Collection" />
+                      <FormattedMessage id="collection.status.collection" defaultMessage="Collection" />
                     </th>
                     <th className="numeric narrow">
                       <FormattedMessage id="collection.status.jobs" defaultMessage="Jobs" />
@@ -126,7 +126,7 @@ export class SystemStatusScreen extends React.Component {
                         </td>
                         <td className="numeric narrow">{res.jobs.length}</td>
                         <td className="numeric narrow">{res.finished}</td>
-                        <td className="numeric narrow">{res.pending}</td>
+                        <td className="numeric narrow">{res.pending + res.running}</td>
                         <td className="numeric narrow">
                           <Tooltip content={intl.formatMessage(messages.cancel_button)}>
                             <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
