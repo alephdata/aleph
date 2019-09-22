@@ -10,7 +10,6 @@ import DualPane from './DualPane';
 import Entity from './Entity';
 import FileSize from './FileSize';
 import Language from './Language';
-import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
 import Suggest from './Suggest';
@@ -41,7 +40,6 @@ export {
   Entity,
   FileSize,
   Language,
-  Property,
   Role,
   Schema,
   Suggest,

@@ -12,8 +12,9 @@ import {
   selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'src/selectors';
 import {
-  ErrorSection, Property, SectionLoading, SearchBox, Entity,
+  ErrorSection, SectionLoading, SearchBox, Entity,
 } from 'src/components/common';
+import Property from 'src/components/Property';
 import ensureArray from 'src/util/ensureArray';
 import { queryEntities } from 'src/actions/index';
 

@@ -1,5 +1,4 @@
-import React, { Component, PureComponent } from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { PureComponent } from 'react';
 
 import Entity from 'src/components/common/Entity';
 import {
@@ -8,9 +7,8 @@ import {
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
 
-import './Property.scss';
 
-class Value extends PureComponent {
+export class Value extends PureComponent {
   render() {
     const { value, prop } = this.props;
     if (!value) {
@@ -41,25 +39,7 @@ class Value extends PureComponent {
   }
 }
 
-class Name extends PureComponent {
-  render() {
-    const { prop } = this.props;
-    return prop.label;
-  }
-}
-
-class Reverse extends PureComponent {
-  render() {
-    const { prop } = this.props;
-    if (!prop.hasReverse) {
-      return <FormattedMessage id="property.inverse" defaultMessage="'{label}' of …" values={prop} />;
-    }
-    const reverseProp = prop.getReverse();
-    return reverseProp.label;
-  }
-}
-
-class Values extends PureComponent {
+export class Values extends PureComponent {
   render() {
     const { prop, values, separator = ' · ' } = this.props;
     const vals = ensureArray(values).map(value => (
@@ -71,15 +51,3 @@ class Values extends PureComponent {
     return (<span>{ wordList(vals, separator) }</span>);
   }
 }
-
-class Property extends Component {
-    static Name = Name;
-
-    static Reverse = Reverse;
-
-    static Value = Value;
-
-    static Values = Values;
-}
-
-export default Property;

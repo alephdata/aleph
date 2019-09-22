@@ -1,8 +1,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Count, Property } from 'src/components/common';
 import { Link } from 'react-router-dom';
 
+import { Count } from 'src/components/common';
+import Property from 'src/components/Property';
 import getCollectionLink from 'src/util/getCollectionLink';
 
 import './EntityInfoMode.scss';
@@ -21,7 +22,7 @@ function EntityInfoMode(props) {
             <Property.Name prop={prop} />
           </span>
           <span className="value">
-            <Property.Values prop={prop} values={entity.getProperty(prop)} />
+            <Property.Links prop={prop} values={entity.getProperty(prop)} />
           </span>
         </li>
       ))}
