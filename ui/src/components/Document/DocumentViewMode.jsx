@@ -17,14 +17,6 @@ import './DocumentViewMode.scss';
 const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer'));
 
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const query = Query.fromLocation('entities', location, {}, '');
-  return {
-    queryText: query.getString('q'),
-  };
-};
-
 export class DocumentViewMode extends React.Component {
   renderContent() {
     const { document, queryText, activeMode } = this.props;
@@ -120,6 +112,16 @@ export class DocumentViewMode extends React.Component {
     );
   }
 }
+
+
+const mapStateToProps = (state, ownProps) => {
+  const { location } = ownProps;
+  const query = Query.fromLocation('entities', location, {}, '');
+  return {
+    queryText: query.getString('q'),
+  };
+};
+
 export default compose(
   withRouter,
   connect(mapStateToProps),

@@ -69,11 +69,12 @@ export class CollectionScreen extends Component {
       <CollectionManageButton collection={collection} />
     );
 
+    const active = activeMode !== 'xref';
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory />
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active={active} />
         {activeMode === 'xref' && (
-          <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />
+          <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} icon="search-around" active />
         )}
         {extraBreadcrumbs}
       </Breadcrumbs>

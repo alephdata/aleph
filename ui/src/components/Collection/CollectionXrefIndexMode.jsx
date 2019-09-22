@@ -32,6 +32,15 @@ export class CollectionXrefIndexMode extends React.PureComponent {
     const exportPath = collection.links.xref_export;
     return (
       <section className="CollectionXrefTable">
+        {xrefIndex.total && (
+          <a href={exportPath} download className="bp3-button">
+            <Icon icon="download" />
+            <FormattedMessage
+              id="xref.download"
+              defaultMessage="Download matches"
+            />
+          </a>
+        )}
         <table className="data-table">
           <thead>
             <tr>
@@ -50,19 +59,6 @@ export class CollectionXrefIndexMode extends React.PureComponent {
                     defaultMessage="Matches"
                   />
                 </span>
-              </th>
-            </tr>
-            <tr>
-              <th colSpan={2}>
-                {xrefIndex.total && (
-                  <a href={exportPath} download>
-                    <Icon icon="download" />
-                    <FormattedMessage
-                      id="xref.download"
-                      defaultMessage="Download matches"
-                    />
-                  </a>
-                )}
               </th>
             </tr>
           </thead>

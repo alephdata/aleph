@@ -8,7 +8,7 @@ import './Breadcrumbs.scss';
 
 class CollectionBreadcrumb extends PureComponent {
   render() {
-    const { collection, showCategory } = this.props;
+    const { collection, active, showCategory } = this.props;
 
     return (
       <React.Fragment>
@@ -18,7 +18,7 @@ class CollectionBreadcrumb extends PureComponent {
           </li>
         )}
         <li key={collection.id}>
-          <Collection.Link collection={collection} className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': showCategory })} icon truncate={30} />
+          <Collection.Link collection={collection} className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
         </li>
       </React.Fragment>
     );
@@ -57,13 +57,17 @@ class EntityBreadcrumb extends PureComponent {
 
 class TextBreadcrumb extends PureComponent {
   render() {
-    const { text } = this.props;
+    const { text, icon, active, key } = this.props;
     if (!text) {
       return null;
     }
+    const className = c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active });
     return (
-      <li key="text">
-        <span className="bp3-breadcrumb bp3-breadcrumb-current">{text}</span>
+      <li key={key || 'text'}>
+        <span className={className}>
+          {icon && <Icon icon={icon} />}
+          {text}
+        </span>
       </li>
     );
   }

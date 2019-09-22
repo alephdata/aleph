@@ -13,6 +13,10 @@
 
   .bp3-breadcrumb {
     font-size: $aleph-font-size;
+
+    .bp3-icon {
+      margin-right: $aleph-icon-padding;
+    }
   }
 
   .bp3-breadcrumb-current {
