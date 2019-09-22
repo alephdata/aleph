@@ -1,7 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 import {
-  defineMessages, FormattedNumber, FormattedMessage, injectIntl,
+  defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
 import { Icon, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
@@ -12,7 +12,7 @@ import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  Collection, DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs,
+  Collection, DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
 } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
@@ -268,34 +268,12 @@ export class SearchScreen extends React.Component {
     );
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <li>
-          <span className="bp3-breadcrumb bp3-breadcrumb-current">
-            {(result.total_type === 'gte' && !result.isLoading) && (
-              <FormattedMessage
-                id="search.screen.more_results"
-                defaultMessage="More than {total} results"
-                values={{
-                  total: <FormattedNumber value={result.total} />,
-                }}
-              />
-            )}
-            {(result.total_type === 'eq' && !result.isLoading) && (
-              <FormattedMessage
-                id="search.screen.results"
-                defaultMessage="{total} results"
-                values={{
-                  total: <FormattedNumber value={result.total} />,
-                }}
-              />
-            )}
-            { result.isLoading && (
-            <FormattedMessage id="search.screen.searching" defaultMessage="Searching..." />
-            )}
-            { result.isError && (
-            <FormattedMessage id="search.screen.error" defaultMessage="Error" />
-            )}
-          </span>
-        </li>
+        <Breadcrumbs.Text key="search" icon="search">
+          <FormattedMessage id="search.screen.breadcrumb" defaultMessage="Search" />
+        </Breadcrumbs.Text>
+        <Breadcrumbs.Text key="results" active>
+          <ResultCount result={result} />
+        </Breadcrumbs.Text>
       </Breadcrumbs>
     );
 

@@ -57,8 +57,8 @@ class EntityBreadcrumb extends PureComponent {
 
 class TextBreadcrumb extends PureComponent {
   render() {
-    const { text, icon, active, key } = this.props;
-    if (!text) {
+    const { children, icon, active, key } = this.props;
+    if (!children) {
       return null;
     }
     const className = c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active });
@@ -66,7 +66,7 @@ class TextBreadcrumb extends PureComponent {
       <li key={key || 'text'}>
         <span className={className}>
           {icon && <Icon icon={icon} />}
-          {text}
+          {children}
         </span>
       </li>
     );

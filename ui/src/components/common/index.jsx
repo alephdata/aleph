@@ -26,6 +26,7 @@ import { Icon } from './Icon';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import QueryText from './QueryText';
+import ResultCount from './ResultCount';
 
 export {
   Breadcrumbs,
@@ -55,5 +56,6 @@ export {
   SearchBox,
   SearchListings,
   QueryText,
+  ResultCount,
   Icon,
 };

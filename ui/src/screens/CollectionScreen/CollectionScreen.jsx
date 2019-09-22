@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -14,18 +14,6 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
 import { CollectionManageButton } from 'src/components/Toolbar';
-
-
-const messages = defineMessages({
-  placeholder: {
-    id: 'collections.index.filter',
-    defaultMessage: 'Search in {label}',
-  },
-  xref_title: {
-    id: 'collections.xref.title',
-    defaultMessage: 'Cross-reference',
-  },
-});
 
 
 export class CollectionScreen extends Component {
@@ -43,7 +31,7 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      intl, collection, collectionId, activeMode,
+      collection, collectionId, activeMode,
     } = this.props;
     const { extraBreadcrumbs } = this.props;
 
@@ -74,7 +62,12 @@ export class CollectionScreen extends Component {
       <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection key="collection" collection={collection} showCategory active={active} />
         {activeMode === 'xref' && (
-          <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} icon="search-around" active />
+          <Breadcrumbs.Text icon="search-around" active>
+            <FormattedMessage
+              id="collections.xref.title"
+              defaultMessage="Cross-reference"
+            />
+          </Breadcrumbs.Text>
         )}
         {extraBreadcrumbs}
       </Breadcrumbs>
@@ -125,5 +118,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
 )(CollectionScreen);

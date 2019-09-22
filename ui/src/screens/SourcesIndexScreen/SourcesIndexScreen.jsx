@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
+  defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -11,7 +11,7 @@ import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
-  Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection,
+  Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection, ResultCount,
 } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import QueryTags from 'src/components/QueryTags/QueryTags';
@@ -107,27 +107,15 @@ export class SourcesIndexScreen extends Component {
     );
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        { !!result.total && (
-          <Breadcrumbs.Text text={(
-            <FormattedMessage
-              id="sources.index.total"
-              defaultMessage="{total} sources of documents and data"
-              values={{
-                total: <FormattedNumber value={result.total || 0} />,
-              }}
-            />
-            )}
+        <Breadcrumbs.Text icon="database">
+          <FormattedMessage
+            id="sources.index.breadcrumb"
+            defaultMessage="Datasets"
           />
-        )}
-        { !result.total && (
-          <Breadcrumbs.Text text={(
-            <FormattedMessage
-              id="sources.index.none"
-              defaultMessage="No sources were found"
-            />
-            )}
-          />
-        )}
+        </Breadcrumbs.Text>
+        <Breadcrumbs.Text active>
+          <ResultCount result={result} />
+        </Breadcrumbs.Text>
       </Breadcrumbs>
     );
 

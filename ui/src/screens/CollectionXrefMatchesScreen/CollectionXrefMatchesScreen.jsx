@@ -235,7 +235,9 @@ export class CollectionXrefMatchesScreen extends Component {
               <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference" />
             </Link>
           </li>
-          <Breadcrumbs.Text text={other.label} active />
+          <Breadcrumbs.Text active>
+            {other.label}
+          </Breadcrumbs.Text>
         </Breadcrumbs>
         {this.renderXrefTable()}
       </Screen>
