@@ -128,6 +128,13 @@ export function selectEntityTags(state, entityId) {
   return selectObject(state.entityTags, entityId);
 }
 
+export function selectValueCount(state, prop, value) {
+  if (!prop.matchable || !prop.type.grouped) {
+    return null;
+  }
+  return state.values[`${prop.type.group}:${value}`] || null;
+}
+
 export function selectEntityReferences(state, entityId) {
   const model = selectModel(state);
   const references = selectObject(state.entityReferences, entityId);
