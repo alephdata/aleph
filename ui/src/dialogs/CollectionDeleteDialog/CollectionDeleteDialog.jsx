@@ -16,10 +16,6 @@ const messages = defineMessages({
     id: 'collection.delete.cancel',
     defaultMessage: 'Cancel',
   },
-  delete_error: {
-    id: 'collection.delete.error',
-    defaultMessage: 'An error occured while attempting to delete this case.',
-  },
 });
 
 
@@ -31,7 +27,7 @@ class CollectionDeleteDialog extends Component {
 
   async onDelete() {
     const { collection, history } = this.props;
-    const path = collection.casefile ? '/cases' : '/sources';
+    const path = collection.casefile ? '/cases' : '/datasets';
     await this.props.deleteCollection(collection);
     history.push({ pathname: path });
   }

@@ -30,7 +30,7 @@ const messages = defineMessages({
   },
   facet_collection_id: {
     id: 'search.facets.facet.collection_id',
-    defaultMessage: 'Sources',
+    defaultMessage: 'Datasets',
   },
   facet_languages: {
     id: 'search.facets.facet.languages',
@@ -173,27 +173,27 @@ export class SearchScreen extends React.Component {
 
   getSearchScopes() {
     const { query } = this.props;
-    const activeSources = query ? query.getFilter('collection_id') : [];
+    const activeCollections = query ? query.getFilter('collection_id') : [];
 
-    const collectionScopeList = activeSources.map(sourceId => (
+    const collectionScopeList = activeCollections.map(collectionId => (
       {
         listItem: (
-          <Collection.Load id={sourceId} renderWhenLoading="...">
+          <Collection.Load id={collectionId} renderWhenLoading="...">
             {collection => (
               <Collection.Label collection={collection} icon truncate={30} />
             )}
           </Collection.Load>
         ),
         onSearch: (queryText) => {
-          const newQuery = query.set('q', queryText).setFilter('collection_id', sourceId);
+          const newQuery = query.set('q', queryText).setFilter('collection_id', collectionId);
           this.updateQuery(newQuery);
         },
       }
     ));
 
-    if (activeSources.length > 1) {
+    if (activeCollections.length > 1) {
       collectionScopeList.push({
-        listItem: <span>{`Search ${activeSources.length} Datasets`}</span>,
+        listItem: <span>{`Search ${activeCollections.length} datasets`}</span>,
         onSearch: queryText => this.updateQuery(query.set('q', queryText)),
       });
     }

@@ -133,9 +133,9 @@ export class Navbar extends React.Component {
           )}
         </Bp3Navbar.Group>
         <Bp3Navbar.Group align={Alignment.RIGHT} className="Navbar__right-group" id="navbarSupportedContent">
-          <Link to="/sources">
-            <Button icon="database" className="Navbar__sources-button bp3-minimal">
-              <FormattedMessage id="nav.sources" defaultMessage="Sources" />
+          <Link to="/datasets">
+            <Button icon="database" className="Navbar_collections-button bp3-minimal">
+              <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
             </Button>
           </Link>
           {!isHomepage && (

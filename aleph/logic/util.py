@@ -15,7 +15,7 @@ def ui_url(resource, id=None, _relative=False, **query):
 
 
 def collection_url(collection_id=None, **query):
-    return ui_url('collections', id=collection_id, **query)
+    return ui_url('datasets', id=collection_id, **query)
 
 
 def entity_url(entity_id=None, **query):

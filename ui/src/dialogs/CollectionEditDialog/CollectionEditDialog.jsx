@@ -35,13 +35,9 @@ const messages = defineMessages({
     id: 'collection.edit.info.placeholder_data_url',
     defaultMessage: 'Link to the raw data in a downloadable form',
   },
-  source_title: {
-    id: 'collection.edit.title.source',
-    defaultMessage: 'Source settings',
-  },
-  case_title: {
-    id: 'collection.edit.title.case',
-    defaultMessage: 'Case settings',
+  title: {
+    id: 'collection.edit.title',
+    defaultMessage: 'Dataset settings',
   },
   delete_button: {
     id: 'collection.edit.info.delete',
@@ -132,15 +128,12 @@ export class CollectionEditDialog extends Component {
   render() {
     const { intl, categories } = this.props;
     const { collection, blocking } = this.state;
-    const title = collection.casefile
-      ? intl.formatMessage(messages.case_title)
-      : intl.formatMessage(messages.source_title);
     return (
       <Dialog
         icon="cog"
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}
-        title={title}
+        title={intl.formatMessage(messages.title)}
       >
         <div className="bp3-dialog-body">
           <div className="bp3-form-group">

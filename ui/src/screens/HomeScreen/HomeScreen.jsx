@@ -204,7 +204,7 @@ export class HomeScreen extends Component {
                   headline={(
                     <FormattedMessage
                       id="home.statistics.categories"
-                      defaultMessage="from {collections} sources"
+                      defaultMessage="from {collections} datasets"
                       values={{
                         collections: <FormattedNumber value={statistics.collections || 0} />,
                       }}
@@ -213,7 +213,7 @@ export class HomeScreen extends Component {
                   seeMoreButtonText={restCount => (
                     <FormattedMessage
                       id="home.statistics.other"
-                      defaultMessage="{count} more sources"
+                      defaultMessage="{count} more datasets"
                       values={{
                         count: restCount,
                       }}
@@ -223,7 +223,7 @@ export class HomeScreen extends Component {
                   isLoading={!statistics.categories}
                   ItemContentContainer={props => (
                     <Link
-                      to={`/sources?collectionsfilter:category=${props.name}`}
+                      to={`/datasets?collectionsfilter:category=${props.name}`}
                     >
                       <Category.Label category={props.name} />
                       <Numeric num={props.count} />
@@ -252,7 +252,7 @@ export class HomeScreen extends Component {
                   statistic={statistics.countries}
                   isLoading={!statistics.countries}
                   ItemContentContainer={props => (
-                    <Link to={`/sources?collectionsfilter:countries=${props.name}`}>
+                    <Link to={`/datasets?collectionsfilter:countries=${props.name}`}>
                       <Country.Name {...props} code={props.name} />
                       <Numeric num={props.count} />
                     </Link>

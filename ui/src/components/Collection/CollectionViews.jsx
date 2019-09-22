@@ -83,7 +83,7 @@ class CollectionViews extends React.Component {
             title={
               <React.Fragment>
                 <Icon name="folder" />
-                <FormattedMessage id="entity.info.source" defaultMessage="Documents" />
+                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
               </React.Fragment>}
             panel={<CollectionDocumentsMode collection={collection} />}

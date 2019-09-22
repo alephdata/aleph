@@ -79,7 +79,7 @@ class CollectionManageButton extends Component {
                 <MenuItem
                   icon="social-media"
                   onClick={this.togglePublish}
-                  text={<FormattedMessage id="collection.info.publish" defaultMessage="Publish as source" />}
+                  text={<FormattedMessage id="collection.info.publish" defaultMessage="Publish dataset" />}
                 />
               )}
               <MenuDivider />

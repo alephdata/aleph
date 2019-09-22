@@ -7,7 +7,7 @@ import './CollectionIndexSearch.scss';
 const messages = defineMessages({
   placeholder: {
     id: 'collection.index.placeholder',
-    defaultMessage: 'Search in datasets...',
+    defaultMessage: 'Search datasets...',
   },
 });
 

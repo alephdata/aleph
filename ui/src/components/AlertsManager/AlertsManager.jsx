@@ -85,7 +85,7 @@ class AlertsDialog extends Component {
     return (
       <div className="AlertsManager">
         <div className="bp3-callout bp3-intent-primary">
-          <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity is added that matches any of the alerts you have set up below." />
+          <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new result is added that matches any of the alerts you have set up below." />
         </div>
         <form onSubmit={this.onAddAlert} className="add-form">
           <ControlGroup fill>

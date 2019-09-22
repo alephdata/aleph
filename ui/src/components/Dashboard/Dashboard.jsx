@@ -20,7 +20,7 @@ const messages = defineMessages({
   },
   cases: {
     id: 'dashboard.cases',
-    defaultMessage: 'Case files',
+    defaultMessage: 'Personal datasets',
   },
   settings: {
     id: 'dashboard.settings',

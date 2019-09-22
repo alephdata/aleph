@@ -20,30 +20,26 @@ import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
 import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
 
-import './SourcesIndexScreen.scss';
+import './CollectionIndexScreen.scss';
 
 
 const messages = defineMessages({
   title: {
-    id: 'sources.index.title',
-    defaultMessage: 'Sources',
-  },
-  placeholder: {
-    id: 'sources.index.filter',
-    defaultMessage: 'Filter the sources…',
+    id: 'collection.index.title',
+    defaultMessage: 'Datasets',
   },
   facet_category: {
-    id: 'search.facets.facet.category',
+    id: 'collection.index.facet.category',
     defaultMessage: 'Categories',
   },
   facet_countries: {
-    id: 'search.facets.facet.countries',
+    id: 'collection.index.facet.countries',
     defaultMessage: 'Countries',
   },
 });
 
 
-export class SourcesIndexScreen extends Component {
+export class CollectionIndexScreen extends Component {
   constructor(props) {
     super(props);
     const { intl } = props;
@@ -109,7 +105,7 @@ export class SourcesIndexScreen extends Component {
       <Breadcrumbs operation={operation}>
         <Breadcrumbs.Text icon="database">
           <FormattedMessage
-            id="sources.index.breadcrumb"
+            id="collection.index.breadcrumb"
             defaultMessage="Datasets"
           />
         </Breadcrumbs.Text>
@@ -121,7 +117,7 @@ export class SourcesIndexScreen extends Component {
 
     return (
       <Screen
-        className="SourcesIndexScreen"
+        className="CollectionIndexScreen"
         title={intl.formatMessage(messages.title)}
       >
         {breadcrumbs}
@@ -178,4 +174,4 @@ const mapDispatchToProps = { queryCollections };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
-)(SourcesIndexScreen);
+)(CollectionIndexScreen);

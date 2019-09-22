@@ -30,7 +30,7 @@ function EntityInfoMode(props) {
           <span>
             <FormattedMessage
               id="infoMode.collection"
-              defaultMessage="Collection"
+              defaultMessage="Dataset"
             />
           </span>
         </span>

@@ -12,15 +12,15 @@ import './AuthButtons.scss';
 
 
 const messages = defineMessages({
-  view_notifications: {
+  notifications: {
     id: 'nav.view_notifications',
     defaultMessage: 'Notifications',
   },
-  myDatasets: {
-    id: 'nav.myDatasets',
-    defaultMessage: 'Case files',
+  casefiles: {
+    id: 'nav.casefiles',
+    defaultMessage: 'Personal datasets',
   },
-  systemStatus: {
+  system_status: {
     id: 'nav.systemStatus',
     defaultMessage: 'System status',
   },
@@ -36,8 +36,8 @@ const messages = defineMessages({
     id: 'nav.signin',
     defaultMessage: 'Sign in / Register',
   },
-  queryLogs: {
-    id: 'nav.queryLogs',
+  querylogs: {
+    id: 'nav.querylogs',
     defaultMessage: 'Searches & alerts',
   },
 });
@@ -71,25 +71,25 @@ export class AuthButtons extends Component {
                   {' '}
                   {' '}
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.view_notifications)}
+                    {intl.formatMessage(messages.notifications)}
                   </div>
                 </Link>
                 <Link to="/history" className="bp3-menu-item">
                   <Icon icon="history" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.queryLogs)}
+                    {intl.formatMessage(messages.querylogs)}
                   </div>
                 </Link>
                 <Link to="/cases" className="bp3-menu-item">
                   <Icon icon="briefcase" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.myDatasets)}
+                    {intl.formatMessage(messages.casefiles)}
                   </div>
                 </Link>
                 <Link to="/status" className="bp3-menu-item">
                   <Icon icon="dashboard" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.systemStatus)}
+                    {intl.formatMessage(messages.system_status)}
                   </div>
                 </Link>
                 <MenuDivider />

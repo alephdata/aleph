@@ -48,7 +48,7 @@ export class CollectionXrefIndexMode extends React.PureComponent {
                 <span className="value">
                   <FormattedMessage
                     id="xref.collection"
-                    defaultMessage="Cross-referenced collection"
+                    defaultMessage="Cross-referenced dataset"
                   />
                 </span>
               </th>

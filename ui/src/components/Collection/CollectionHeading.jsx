@@ -13,10 +13,10 @@ class CollectionHeading extends PureComponent {
           <span className="bp3-text-muted">
             <Collection.Label collection={collection} label={false} />
             { collection.casefile && (
-              <FormattedMessage id="collection.info.case" defaultMessage="Casefile" />
+              <FormattedMessage id="collection.info.case" defaultMessage="Personal dataset" />
             )}
             { !collection.casefile && (
-              <FormattedMessage id="collection.info.source" defaultMessage="Source" />
+              <FormattedMessage id="collection.info.collection" defaultMessage="Dataset" />
             )}
           </span>
           <h1 itemProp="name">

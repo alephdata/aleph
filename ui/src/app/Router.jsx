@@ -17,9 +17,9 @@ import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsSc
 import HistoryScreen from 'src/screens/HistoryScreen/HistoryScreen';
 import SettingsScreen from 'src/screens/SettingsScreen/SettingsScreen';
 import SystemStatusScreen from 'src/screens/SystemStatusScreen/SystemStatusScreen';
-import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
 import GroupScreen from 'src/screens/GroupScreen/GroupScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
+import CollectionIndexScreen from 'src/screens/CollectionIndexScreen/CollectionIndexScreen';
 import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
 import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
@@ -56,11 +56,14 @@ class Router extends Component {
           <Redirect from="/text/:documentId" to="/entities/:documentId" />
           <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
           <Redirect from="/documents/:documentId" to="/entities/:documentId" />
-          <Route path="/sources" exact component={SourcesIndexScreen} />
+          <Route path="/datasets" exact component={CollectionIndexScreen} />
+          <Redirect from="/sources" to="/datasets" />
           <Route path="/cases" exact component={CasesIndexScreen} />
-          <Redirect from="/collections/:collectionId/documents" to="/collections/:collectionId" />
-          <Route path="/collections/:collectionId" exact component={CollectionScreen} />
-          <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
+          <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
+          <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
+          <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
+          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId/xref/:otherId" />
+          <Route path="/datasets/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
           <Route path="/history" exact component={HistoryScreen} />

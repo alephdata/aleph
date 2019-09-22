@@ -19,25 +19,9 @@ import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import './GroupScreen.scss';
 
 const messages = defineMessages({
-  title: {
-    id: 'sources.index.title',
-    defaultMessage: 'Sources',
-  },
-  placeholder: {
-    id: 'sources.index.filter',
-    defaultMessage: 'Filter the sources…',
-  },
   empty: {
     id: 'sources.index.empty',
-    defaultMessage: 'This group has no sources.',
-  },
-  facet_category: {
-    id: 'search.facets.facet.category',
-    defaultMessage: 'Categories',
-  },
-  facet_countries: {
-    id: 'search.facets.facet.countries',
-    defaultMessage: 'Countries',
+    defaultMessage: 'This group is not linked to any datasets.',
   },
 });
 
@@ -82,20 +66,14 @@ export class GroupScreen extends Component {
 
   render() {
     const { result, group, intl } = this.props;
-
-    const title = group ? group.label : '';
-
     return (
-      <Screen
-        className="GroupScreen"
-        title={intl.formatMessage(messages.title)}
-      >
+      <Screen className="GroupScreen" title={group.label} requireSession>
         <Dashboard>
           <div className="Dashboard__title-container">
             <h5 className="Dashboard__title">{title}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
-                id="groupSourcePage.description"
+                id="group.page.description"
                 defaultMessage="The list below shows all datasets that belong to this group."
               />
             </p>
