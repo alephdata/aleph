@@ -4,12 +4,23 @@
 // Column & row customisation for any tables.
 table {
   // Force a table-row to be a single line, truncating contents of large cells.
-  tr.nowrap > td,
+  tr.nowrap > td, td.nowrap,
   tr.nowrap > th {
     max-width: 0; // somehow, this seems to make keep column widths in check.
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    &.expand {
+      width: 2em;
+      max-width: 2em;
+      overflow: visible;
+      padding-left: 0;
+      padding-top: ($aleph-grid-size / 1.2);
+      .bp3-button {
+        margin-left: 0;
+      }
+    }
   }
 
   // Make these columns take the minimal width that fits the content
@@ -75,8 +86,15 @@ table {
     max-width: unset;
   }
 
-  // th.numeric, td.numeric, th.number, td.number {
-  td.numeric, td.number {
+  tr.prefix {
+    td {
+      border-bottom: 0px !important;
+      padding-bottom: 0;
+    }
+  }
+
+  th.numeric, td.numeric, th.number, td.number {
+    width: 1%;
     text-align: right;
     white-space: nowrap;
     overflow: visible;

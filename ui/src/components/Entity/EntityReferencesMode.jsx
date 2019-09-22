@@ -1,11 +1,13 @@
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Button } from '@blueprintjs/core';
+import c from 'classnames';
+
 import Query from 'src/app/Query';
-import { queryEntities } from 'src/actions/index';
 import {
   selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'src/selectors';
@@ -13,8 +15,7 @@ import {
   ErrorSection, Property, SectionLoading, SearchBox, Entity,
 } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
-import togglePreview from 'src/util/togglePreview';
-import getEntityLink from 'src/util/getEntityLink';
+import { queryEntities } from 'src/actions/index';
 
 const messages = defineMessages({
   no_relationships: {
@@ -46,6 +47,9 @@ class EntityReferencesMode extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      expandedId: null,
+    };
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
@@ -57,10 +61,9 @@ class EntityReferencesMode extends React.Component {
     this.fetchIfNeeded();
   }
 
-  onShowDetails(event, entity) {
-    const { history } = this.props;
-    event.preventDefault();
-    togglePreview(history, entity, 'entity');
+  onExpand(entity) {
+    const { expandedId } = this.state;
+    this.setState({ expandedId: expandedId === entity.id ? null : entity.id });
   }
 
   getMoreResults() {
@@ -84,7 +87,7 @@ class EntityReferencesMode extends React.Component {
       content = <Entity.Link entity={entity}>{content}</Entity.Link>;
     }
     return (
-      <td key={prop.name} className={prop.type}>
+      <td key={prop.name} className={prop.type.name}>
         {content}
       </td>
     );
@@ -92,20 +95,42 @@ class EntityReferencesMode extends React.Component {
 
   renderRow(columns, entity) {
     const { isThing } = this.props;
-    return (
-      <tr key={entity.id}>
-        {columns.map(prop => this.renderCell(prop, entity))}
+    const isExpanded = entity.id === this.state.expandedId;
+    const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
+    const mainRow = (
+      <tr key={entity.id} className={c('nowrap', { prefix: isExpanded })}>
         { !isThing && (
-          <td key="details" className="narrow">
-            <a href={getEntityLink(entity)} onClick={e => this.onShowDetails(e, entity)}>
-              <span>
-                <FormattedMessage id="references.details" defaultMessage="Details" />
-              </span>
-            </a>
+          <td className="expand">
+            <Button onClick={() => this.onExpand(entity)} small minimal icon={expandIcon} />
           </td>
         )}
+        {columns.map(prop => this.renderCell(prop, entity))}
       </tr>
     );
+    if (!isExpanded) {
+      return mainRow;
+    }
+    const properties = entity.getProperties().filter(prop => !prop.hidden);
+    return [
+      mainRow,
+      <tr key={`${entity.id}-expanded`}>
+        <td />
+        <td colSpan={columns.length}>
+          <ul className="info-sheet">
+            { properties.map(prop => (
+              <li key={prop.name}>
+                <span className="key">
+                  <Property.Name prop={prop} />
+                </span>
+                <span className="value">
+                  <Property.Values prop={prop} values={entity.getProperty(prop)} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </td>
+      </tr>,
+    ];
   }
 
   render() {
@@ -131,14 +156,14 @@ class EntityReferencesMode extends React.Component {
         <table className="data-table references-data-table">
           <thead>
             <tr>
+              { !isThing && (
+                <th key="expand" />
+              )}
               {columns.map(prop => (
                 <th key={prop.name} className={prop.type}>
                   <Property.Name prop={prop} />
                 </th>
               ))}
-              { !isThing && (
-                <th key="details" className="narrow" />
-              )}
             </tr>
           </thead>
           <tbody>
