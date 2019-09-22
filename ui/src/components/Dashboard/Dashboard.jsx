@@ -81,14 +81,8 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="history"
               text={intl.formatMessage(messages.history)}
-              onClick={() => this.navigate('/history#searches')}
+              onClick={() => this.navigate('/history#alerts')}
               active={current === '/history'}
-            />
-            <MenuItem
-              icon="dashboard"
-              text={intl.formatMessage(messages.status)}
-              onClick={() => this.navigate('/status')}
-              active={current === '/status'}
             />
             <MenuItem
               icon="briefcase"
@@ -96,8 +90,13 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
             />
-
-            { groups.total !== undefined && (
+            <MenuItem
+              icon="dashboard"
+              text={intl.formatMessage(messages.status)}
+              onClick={() => this.navigate('/status')}
+              active={current === '/status'}
+            />
+            { groups.total > 0 && (
               <React.Fragment>
                 <MenuDivider />
                 <li className="bp3-menu-header">

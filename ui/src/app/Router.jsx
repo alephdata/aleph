@@ -18,7 +18,7 @@ import HistoryScreen from 'src/screens/HistoryScreen/HistoryScreen';
 import SettingsScreen from 'src/screens/SettingsScreen/SettingsScreen';
 import SystemStatusScreen from 'src/screens/SystemStatusScreen/SystemStatusScreen';
 import SourcesIndexScreen from 'src/screens/SourcesIndexScreen/SourcesIndexScreen';
-import GroupSourcesScreen from 'src/screens/GroupSourcesScreen/GroupSourcesScreen';
+import GroupScreen from 'src/screens/GroupScreen/GroupScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
 import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
@@ -66,7 +66,7 @@ class Router extends Component {
           <Route path="/history" exact component={HistoryScreen} />
           <Route path="/settings" exact component={SettingsScreen} />
           <Route path="/status" exact component={SystemStatusScreen} />
-          <Route path="/groups/:groupId" exact component={GroupSourcesScreen} />
+          <Route path="/groups/:groupId" exact component={GroupScreen} />
           <Route path="/" exact component={HomeScreen} />
           <Route component={NotFoundScreen} />
         </Switch>

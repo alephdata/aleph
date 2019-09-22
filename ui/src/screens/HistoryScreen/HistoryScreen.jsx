@@ -40,9 +40,7 @@ export class HistoryScreen extends React.Component {
 
   handleTabChange() {
     const { activeTab, history } = this.props;
-
     const nextTabId = activeTab === 'searches' ? 'alerts' : 'searches';
-
     history.push({
       hash: nextTabId,
     });
@@ -65,12 +63,6 @@ export class HistoryScreen extends React.Component {
           </div>
           <Tabs id="TabsExample" onChange={this.handleTabChange} selectedTabId={activeTab}>
             <Tab
-              id="searches"
-              title={intl.formatMessage(messages.searches)}
-              panel={<QueryLogs />}
-              panelClassName="ember-panel"
-            />
-            <Tab
               id="alerts"
               title={(
                 <React.Fragment>
@@ -84,6 +76,12 @@ export class HistoryScreen extends React.Component {
               )}
               className={activeTab === 'alerts' ? 'active' : ''}
               panel={<AlertsManager />}
+              panelClassName="ember-panel"
+            />
+            <Tab
+              id="searches"
+              title={intl.formatMessage(messages.searches)}
+              panel={<QueryLogs />}
               panelClassName="ember-panel"
             />
           </Tabs>

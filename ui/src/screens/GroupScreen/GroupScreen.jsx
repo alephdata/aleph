@@ -16,7 +16,7 @@ import Screen from 'src/components/Screen/Screen';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
 
 
-import './GroupSourcesScreen.scss';
+import './GroupScreen.scss';
 
 const messages = defineMessages({
   title: {
@@ -42,7 +42,7 @@ const messages = defineMessages({
 });
 
 
-export class GroupSourcesScreen extends Component {
+export class GroupScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -87,7 +87,7 @@ export class GroupSourcesScreen extends Component {
 
     return (
       <Screen
-        className="GroupSourcesScreen"
+        className="GroupScreen"
         title={intl.formatMessage(messages.title)}
       >
         <Dashboard>
@@ -151,4 +151,4 @@ const mapDispatchToProps = { queryCollections };
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
-)(GroupSourcesScreen);
+)(GroupScreen);

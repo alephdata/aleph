@@ -80,16 +80,16 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.queryLogs)}
                   </div>
                 </Link>
-                <Link to="/status" className="bp3-menu-item">
-                  <Icon icon="dashboard" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.systemStatus)}
-                  </div>
-                </Link>
                 <Link to="/cases" className="bp3-menu-item">
                   <Icon icon="briefcase" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.myDatasets)}
+                  </div>
+                </Link>
+                <Link to="/status" className="bp3-menu-item">
+                  <Icon icon="dashboard" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.systemStatus)}
                   </div>
                 </Link>
                 <MenuDivider />
@@ -104,8 +104,8 @@ export class AuthButtons extends Component {
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
 )}
-            position={Position.BOTTOM_RIGHT}
-            minimal
+            position={Position.BOTTOM_LEFT}
+            fill
           >
             <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
           </Popover>

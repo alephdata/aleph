@@ -135,7 +135,6 @@ export class SettingsScreen extends React.Component {
     const { role } = this.state;
     event.stopPropagation();
     role.locale = locale;
-    console.log(locale);
     this.setState({ role });
   }
 
