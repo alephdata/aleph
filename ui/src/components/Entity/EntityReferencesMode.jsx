@@ -10,7 +10,7 @@ import {
   selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'src/selectors';
 import {
-  ErrorSection, Property, SectionLoading, SearchBox,
+  ErrorSection, Property, SectionLoading, SearchBox, Entity,
 } from 'src/components/common';
 import ensureArray from 'src/util/ensureArray';
 import togglePreview from 'src/util/togglePreview';
@@ -77,9 +77,40 @@ class EntityReferencesMode extends React.Component {
     }
   }
 
+  renderCell(prop, entity) {
+    const { schema, isThing } = this.props;
+    let content = <Property.Values prop={prop} values={entity.getProperty(prop)} />;
+    if (isThing && schema.caption.indexOf(prop.name) !== -1) {
+      content = <Entity.Link entity={entity}>{content}</Entity.Link>;
+    }
+    return (
+      <td key={prop.name} className={prop.type}>
+        {content}
+      </td>
+    );
+  }
+
+  renderRow(columns, entity) {
+    const { isThing } = this.props;
+    return (
+      <tr key={entity.id}>
+        {columns.map(prop => this.renderCell(prop, entity))}
+        { !isThing && (
+          <td key="details" className="narrow">
+            <a href={getEntityLink(entity)} onClick={e => this.onShowDetails(e, entity)}>
+              <span>
+                <FormattedMessage id="references.details" defaultMessage="Details" />
+              </span>
+            </a>
+          </td>
+        )}
+      </tr>
+    );
+  }
+
   render() {
     const {
-      intl, reference, result, schema,
+      intl, reference, result, schema, isThing,
     } = this.props;
     if (!reference) {
       return <ErrorSection icon="graph" title={intl.formatMessage(messages.no_relationships)} />;
@@ -105,29 +136,13 @@ class EntityReferencesMode extends React.Component {
                   <Property.Name prop={prop} />
                 </th>
               ))}
-              <th key="details" className="narrow" />
+              { !isThing && (
+                <th key="details" className="narrow" />
+              )}
             </tr>
           </thead>
           <tbody>
-            {results.map(entity => (
-              <tr key={entity.id}>
-                {columns.map(prop => (
-                  <td key={prop.name} className={prop.type}>
-                    <Property.Values
-                      prop={prop}
-                      values={entity.getProperty(prop)}
-                    />
-                  </td>
-                ))}
-                <td key="details" className="narrow">
-                  <a href={getEntityLink(entity)} onClick={e => this.onShowDetails(e, entity)}>
-                    <span>
-                      <FormattedMessage id="references.details" defaultMessage="Details" />
-                    </span>
-                  </a>
-                </td>
-              </tr>
-            ))}
+            {results.map(entity => this.renderRow(columns, entity))}
           </tbody>
         </table>
         <Waypoint
@@ -154,11 +169,13 @@ const mapStateToProps = (state, ownProps) => {
     'filter:schemata': reference.schema,
   };
   const query = Query.fromLocation('entities', location, context, reference.property.name);
+  const schema = selectSchema(state, reference.schema);
   return {
     reference,
     query,
+    schema,
     result: selectEntitiesResult(state, query),
-    schema: selectSchema(state, reference.schema),
+    isThing: schema.isThing(),
   };
 };
 
