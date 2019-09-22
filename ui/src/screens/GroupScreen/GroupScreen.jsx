@@ -5,18 +5,18 @@ import {
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
+
 import Query from 'src/app/Query';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-import { queryCollections } from 'src/actions';
-import { selectCollectionsResult } from 'src/selectors';
-import {
-  SectionLoading, ErrorSection,
-} from 'src/components/common';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
-
+import LoadingScreen from 'src/components/Screen/LoadingScreen';
+import { queryCollections, fetchGroups } from 'src/actions';
+import { selectCollectionsResult, selectGroups } from 'src/selectors';
 
 import './GroupScreen.scss';
+
 
 const messages = defineMessages({
   empty: {
@@ -29,7 +29,6 @@ const messages = defineMessages({
 export class GroupScreen extends Component {
   constructor(props) {
     super(props);
-
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
   }
@@ -50,7 +49,10 @@ export class GroupScreen extends Component {
   }
 
   fetchIfNeeded() {
-    const { query, result } = this.props;
+    const { query, result, groups } = this.props;
+    if (groups.shouldLoad) {
+      this.props.fetchGroups();
+    }
     if (result.shouldLoad) {
       this.props.queryCollections({ query });
     }
@@ -66,11 +68,14 @@ export class GroupScreen extends Component {
 
   render() {
     const { result, group, intl } = this.props;
+    if (!group || !group.id) {
+      return <LoadingScreen />;
+    }
     return (
       <Screen className="GroupScreen" title={group.label} requireSession>
         <Dashboard>
           <div className="Dashboard__title-container">
-            <h5 className="Dashboard__title">{title}</h5>
+            <h5 className="Dashboard__title">{group.label}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="group.page.description"
@@ -110,23 +115,25 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'filter:kind': 'source',
   };
-  const query = Query.fromLocation('collections', { search: `collectionsfilter:team_id=${groupId}` }, context, 'collections')
+  const query = Query.fromLocation('collections', {}, context, 'collections')
+    .setFilter('team_id', groupId)
     .sortBy('count', 'desc')
     .limit(20);
 
-  const group = state.groups.results && state.groups.results.find(accessGroup => (
+  const groups = selectGroups(state);
+  const group = groups.results && groups.results.find(accessGroup => (
     accessGroup.id === groupId
   ));
 
   return {
     query,
     group,
+    groups,
     result: selectCollectionsResult(state, query),
   };
 };
-const mapDispatchToProps = { queryCollections };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { fetchGroups, queryCollections }),
   injectIntl,
 )(GroupScreen);

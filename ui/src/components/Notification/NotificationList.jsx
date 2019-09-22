@@ -15,7 +15,7 @@ import './NotificationList.scss';
 const messages = defineMessages({
   no_notifications: {
     id: 'notifications.no_notifications',
-    defaultMessage: 'There are no notifications',
+    defaultMessage: 'You have no unseen notifications',
   },
 });
 

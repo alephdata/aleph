@@ -56,13 +56,14 @@ class EntityLink extends Component {
   }
 
   render() {
-    const { entity, className } = this.props;
+    const { entity, className, children } = this.props;
+    const content = children || <Entity.Label {...this.props} />;
     if (!entity || !entity.schema) {
-      return <Entity.Label {...this.props} />;
+      return content;
     }
     return (
       <Link to={getEntityLink(entity)} onClick={this.onClick} className={c('EntityLink', className)}>
-        <Entity.Label {...this.props} />
+        {content}
       </Link>
     );
   }
