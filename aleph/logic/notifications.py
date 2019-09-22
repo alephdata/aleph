@@ -110,9 +110,7 @@ def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
     since = datetime.utcnow() - timedelta(hours=26)
-    q = Notification.by_channels(get_role_channels(role),
-                                 since=since,
-                                 exclude_actor_id=role.id)
+    q = Notification.by_channels(get_role_channels(role), role, since=since)
     total_count = q.count()
     log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:

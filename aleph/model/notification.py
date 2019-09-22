@@ -1,5 +1,5 @@
 import logging
-from sqlalchemy import cast
+from sqlalchemy import cast, or_
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -60,18 +60,21 @@ class Notification(db.Model, IdModel, DatedModel):
         return notf
 
     @classmethod
-    def by_channels(cls, channels, since=None, exclude_actor_id=None):
+    def by_channels(cls, channels, role, since=None):
         channels = cast(channels, ARRAY(db.String(255)))
         q = cls.all()
         q = q.filter(cls.channels.overlap(channels))
-        # q = q.filter(cls.channels.any(channel))
         q = q.filter(cls._event.in_(Events.names()))
-        if exclude_actor_id is not None:
-            q = q.filter(cls.actor_id != exclude_actor_id)
+        q = q.filter(or_(
+            cls.actor_id != role.id,
+            cls.actor_id == None  # noqa
+        ))
+        since = since or role.notified_at
+        if since is not None and role.notified_at is not None:
+            since = max(since, role.notified_at)
         if since is not None:
             q = q.filter(cls.created_at >= since)
         q = q.order_by(cls.created_at.desc())
-        q = q.order_by(cls.id.desc())
         return q
 
     @classmethod
