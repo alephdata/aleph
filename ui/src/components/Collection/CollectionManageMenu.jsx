@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
-import {
-  Button, Menu, MenuItem, Position, Popover,
-} from '@blueprintjs/core';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { Button, ButtonGroup, Intent, Tooltip } from '@blueprintjs/core';
 
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
@@ -11,8 +9,15 @@ import CollectionPublishAlert from 'src/components/Collection/CollectionPublishA
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import { selectSession } from 'src/selectors';
 
+const messages = defineMessages({
+  publish: {
+    id: 'collection.publish.admin',
+    defaultMessage: 'Only administrators can publish a dataset.',
+  },
+});
 
-class CollectionManageButton extends Component {
+
+class CollectionManageMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,7 +43,7 @@ class CollectionManageButton extends Component {
   }
 
   render() {
-    const { collection, session } = this.props;
+    const { intl, collection, session } = this.props;
     const {
       settingsIsOpen, accessIsOpen, deleteIsOpen, publishIsOpen,
     } = this.state;
@@ -46,49 +51,33 @@ class CollectionManageButton extends Component {
     if (!collection.writeable) {
       return null;
     }
-    const canPublish = collection.casefile && session.isAdmin;
+    let publishButton = (
+      <Button icon="document-share" onClick={this.togglePublish} disabled={!session.isAdmin}>
+        <FormattedMessage id="collection.info.publish" defaultMessage="Publish" />
+      </Button>
+    );
+    if (!collection.isAdmin) {
+      publishButton = (
+        <Tooltip content={intl.formatMessage(messages.publish)}>
+          {publishButton}
+        </Tooltip>
+      );
+    }
 
     return (
       <React.Fragment>
-        <Popover
-          content={(
-            <Menu>
-              <MenuItem
-                icon="cog"
-                onClick={this.toggleSettings}
-                text={<FormattedMessage id="collection.info.edit_button" defaultMessage="Settings" />}
-              />
-              <MenuItem
-                icon="key"
-                onClick={this.toggleAccess}
-                text={<FormattedMessage id="collection.info.share" defaultMessage="Share" />}
-              />
-              {canPublish && (
-                <MenuItem
-                  icon="social-media"
-                  onClick={this.togglePublish}
-                  text={<FormattedMessage id="collection.info.publish" defaultMessage="Publish dataset" />}
-                />
-              )}
-              <Menu.Divider />
-              <MenuItem
-                icon="trash"
-                intent="danger"
-                onClick={this.toggleDelete}
-                text={<FormattedMessage id="collection.info.delete" defaultMessage="Delete" />}
-              />
-            </Menu>
-        )}
-          position={Position.BOTTOM_LEFT}
-        >
-          <Button
-            icon="cog"
-            className="bp3-intent-primary"
-            text={
-              <FormattedMessage id="collection.info.manage_button" defaultMessage="Manage..." />
-            }
-          />
-        </Popover>
+        <ButtonGroup>
+          <Button icon="cog" onClick={this.toggleSettings}>
+            <FormattedMessage id="collection.info.settings" defaultMessage="Settings" />
+          </Button>
+          <Button icon="key" onClick={this.toggleAccess}>
+            <FormattedMessage id="collection.info.access" defaultMessage="Share" />
+          </Button>
+          { collection.casefile && publishButton }
+          <Button icon="trash" onClick={this.toggleDelete} intent={Intent.DANGER}>
+            <FormattedMessage id="collection.info.delete" defaultMessage="Delete" />
+          </Button>
+        </ButtonGroup>
         <CollectionEditDialog
           collection={collection}
           isOpen={settingsIsOpen}
@@ -116,5 +105,6 @@ class CollectionManageButton extends Component {
 
 const mapStateToProps = state => ({ session: selectSession(state) });
 
-CollectionManageButton = connect(mapStateToProps)(CollectionManageButton);
-export default CollectionManageButton;
+CollectionManageMenu = connect(mapStateToProps)(CollectionManageMenu);
+CollectionManageMenu = injectIntl(CollectionManageMenu);
+export default CollectionManageMenu;

@@ -46,7 +46,7 @@ class CollectionDeleteDialog extends Component {
       >
         <FormattedMessage
           id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete all contained items?"
+          defaultMessage="Are you sure you want to delete this dataset and all contained items?"
         />
       </Alert>
     );
