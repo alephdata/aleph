@@ -159,7 +159,6 @@ class EntityViews extends React.Component {
         { isMatchable && (
           <Tab
             id="similar"
-            disabled={similar.total < 1}
             title={(
               <TextLoading loading={similar.shouldLoad || similar.isLoading}>
                 <Icon name="similar" iconSize="14px" className="entity-icon" />

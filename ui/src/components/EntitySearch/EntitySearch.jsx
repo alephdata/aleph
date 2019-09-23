@@ -73,6 +73,7 @@ export class EntitySearch extends Component {
       query, result, intl, className,
       documentMode, hideCollection,
       showPreview, updateSelection, selection,
+      emptyComponent,
     } = this.props;
     const isEmpty = !query.hasQuery();
 
@@ -87,12 +88,7 @@ export class EntitySearch extends Component {
                 description={intl.formatMessage(messages.no_results_description)}
               />
             )}
-            { isEmpty && (
-              <ErrorSection
-                icon="folder-open"
-                title={intl.formatMessage(messages.empty_title)}
-              />
-            )}
+            { isEmpty && emptyComponent }
           </section>
         )}
         <EntityTable

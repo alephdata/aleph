@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { Callout } from '@blueprintjs/core';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -9,8 +9,16 @@ import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialo
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
+import { ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
+
+const messages = defineMessages({
+  empty: {
+    id: 'entity.document.manager.empty',
+    defaultMessage: 'No files or directories.',
+  },
+});
 
 
 export class DocumentManager extends Component {
@@ -63,13 +71,20 @@ export class DocumentManager extends Component {
 
   render() {
     const {
-      collection, document, query, hasPending,
+      collection, document, query, hasPending, intl,
     } = this.props;
     const { selection } = this.state;
     const mutableCollection = collection !== undefined && collection.writeable;
     const mutableDocument = document === undefined || (document.schema && document.schema.name === 'Folder');
     const showActions = mutableCollection && mutableDocument;
     const updateSelection = showActions ? this.updateSelection : undefined;
+
+    const emptyComponent = (
+      <ErrorSection
+        icon="folder-open"
+        title={intl.formatMessage(messages.empty)}
+      />
+    );
 
     return (
       <div className="DocumentManager">
@@ -102,6 +117,7 @@ export class DocumentManager extends Component {
           showPreview={false}
           selection={selection}
           updateSelection={updateSelection}
+          emptyComponent={emptyComponent}
         />
         <EntityDeleteDialog
           entities={selection}
@@ -135,4 +151,5 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   withRouter,
   connect(mapStateToProps, { queryEntities }),
+  injectIntl,
 )(DocumentManager);
