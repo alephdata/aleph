@@ -7,7 +7,6 @@ import {
 
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
-import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import CollectionPublishAlert from 'src/components/Collection/CollectionPublishAlert';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
@@ -21,19 +20,15 @@ class CollectionManageButton extends Component {
       settingsIsOpen: false,
       accessIsOpen: false,
       xrefIsOpen: false,
-      analyzeIsOpen: false,
       deleteIsOpen: false,
       publishIsOpen: false,
     };
-
     this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleAccess = this.toggleAccess.bind(this);
     this.toggleXref = this.toggleXref.bind(this);
   }
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
-
-  toggleAnalyze = () => this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
 
   togglePublish = () => this.setState(({ publishIsOpen }) => ({ publishIsOpen: !publishIsOpen }));
 
@@ -52,7 +47,7 @@ class CollectionManageButton extends Component {
   render() {
     const { collection, session } = this.props;
     const {
-      settingsIsOpen, accessIsOpen, xrefIsOpen, analyzeIsOpen, deleteIsOpen, publishIsOpen,
+      settingsIsOpen, accessIsOpen, xrefIsOpen, deleteIsOpen, publishIsOpen,
     } = this.state;
 
     if (!collection.writeable) {
@@ -88,11 +83,6 @@ class CollectionManageButton extends Component {
                 onClick={this.toggleXref}
                 text={<FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference" />}
               />
-              <MenuItem
-                icon="automatic-updates"
-                onClick={this.toggleAnalyze}
-                text={<FormattedMessage id="collection.info.analyze" defaultMessage="Re-analyze" />}
-              />
               <Menu.Divider />
               <MenuItem
                 icon="trash"
@@ -126,11 +116,6 @@ class CollectionManageButton extends Component {
           collection={collection}
           isOpen={xrefIsOpen}
           toggleDialog={this.toggleXref}
-        />
-        <CollectionAnalyzeAlert
-          collection={collection}
-          isOpen={analyzeIsOpen}
-          toggleAlert={this.toggleAnalyze}
         />
         <CollectionPublishAlert
           collection={collection}
