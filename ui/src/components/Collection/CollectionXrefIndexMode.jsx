@@ -9,7 +9,7 @@ import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'r
 import { Collection, SectionLoading, ErrorSection } from 'src/components/common';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import getCollectionLink from 'src/util/getCollectionLink';
-import { selectCollectionXrefIndex } from 'src/selectors';
+import { selectCollectionXrefIndex, selectSession } from 'src/selectors';
 
 import './CollectionXrefIndexMode.scss';
 
@@ -84,26 +84,28 @@ export class CollectionXrefIndexMode extends React.PureComponent {
   }
 
   render() {
-    const { collection, xrefIndex } = this.props;
+    const { session, collection, xrefIndex } = this.props;
     if (xrefIndex.isLoading || xrefIndex.shouldLoad) {
       return <SectionLoading />;
     }
     return (
       <section className="CollectionXrefTable">
-        <ButtonGroup>
-          <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXref}>
-            <FormattedMessage
-              id="xref.compute"
-              defaultMessage="Compute"
-            />
-          </Button>
-          <AnchorButton icon="download" href={collection.links.xref_export} download disabled={!xrefIndex.total}>
-            <FormattedMessage
-              id="xref.download"
-              defaultMessage="Download Excel"
-            />
-          </AnchorButton>
-        </ButtonGroup>
+        { session.loggedIn && (
+          <ButtonGroup>
+            <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXref}>
+              <FormattedMessage
+                id="xref.compute"
+                defaultMessage="Compute"
+              />
+            </Button>
+            <AnchorButton icon="download" href={collection.links.xref_export} download disabled={!xrefIndex.total}>
+              <FormattedMessage
+                id="xref.download"
+                defaultMessage="Download Excel"
+              />
+            </AnchorButton>
+          </ButtonGroup>
+        )}
         {this.renderTable()}
         <CollectionXrefDialog
           collection={collection}
@@ -119,6 +121,7 @@ const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
   return {
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
+    session: selectSession(state),
   };
 };
 

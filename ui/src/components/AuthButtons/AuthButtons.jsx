@@ -29,7 +29,7 @@ const messages = defineMessages({
     defaultMessage: 'Sign out',
   },
   signin: {
-    id: 'nav.signin',
+    id: 'nav.signin_register',
     defaultMessage: 'Sign in / Register',
   },
   querylogs: {
