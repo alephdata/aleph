@@ -13,7 +13,7 @@ class Count extends PureComponent {
     }
 
     return (
-      <span className="Count bp3-tag bp3-round">
+      <span className="Count bp3-tag bp3-small bp3-minimal bp3-round">
         <Numeric num={count} abbr={!full} />
       </span>
     );

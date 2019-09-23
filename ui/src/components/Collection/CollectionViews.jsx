@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { Tabs, Tab, Icon as BlueprintIcon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import {
@@ -105,7 +105,7 @@ class CollectionViews extends React.Component {
           id="xref"
           title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
-              <Icon name="relationship" />
+              <BlueprintIcon className="left-icon" icon="search-around" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xrefIndex.total} />
             </TextLoading>}

@@ -107,6 +107,10 @@ a {
   width: 100%;
 }
 
+.left-icon {
+  margin-right: $aleph-icon-padding;
+}
+
 /* This causes toasts to appear *below* the navbar instead of on top of it */
 .aleph-toaster {
   margin-top: $aleph-grid-size * 5;
