@@ -29,7 +29,12 @@ export class PreviewEntity extends React.Component {
     this.onClose = this.onClose.bind(this);
   }
 
-  onClose() {
+  onClose(event) {
+    // don't close preview if other entity label is clicked
+    if (event.target.classList.contains('EntityLabel')) {
+      return;
+    }
+
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash['preview:id'] = undefined;
@@ -37,7 +42,6 @@ export class PreviewEntity extends React.Component {
     parsedHash['preview:mode'] = undefined;
     parsedHash.page = undefined;
 
-    console.log('in preview on close', this, queryString);
     history.push({
       pathname: location.pathname,
       search: location.search,
@@ -73,7 +77,7 @@ export class PreviewEntity extends React.Component {
           hasBackdrop={false}
           autoFocus={false}
           enforceFocus={false}
-          canOutsideClickClose={false}
+          // canOutsideClickClose={false}
           portalClassName="PreviewEntity__overlay-container"
         >
           <DualPane.InfoPane className="with-heading">

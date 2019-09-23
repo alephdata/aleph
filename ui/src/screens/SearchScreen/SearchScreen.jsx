@@ -363,8 +363,6 @@ export class SearchScreen extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
 
-  console.log(location);
-
   // We normally only want Things, not Intervals (relations between things).
   const context = {
     highlight: true,
