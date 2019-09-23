@@ -20,10 +20,6 @@ const messages = defineMessages({
     id: 'nav.casefiles',
     defaultMessage: 'Personal datasets',
   },
-  system_status: {
-    id: 'nav.systemStatus',
-    defaultMessage: 'System status',
-  },
   settings: {
     id: 'nav.settings',
     defaultMessage: 'Settings',
@@ -84,12 +80,6 @@ export class AuthButtons extends Component {
                   <Icon icon="briefcase" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.casefiles)}
-                  </div>
-                </Link>
-                <Link to="/status" className="bp3-menu-item">
-                  <Icon icon="dashboard" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.system_status)}
                   </div>
                 </Link>
                 <MenuDivider />

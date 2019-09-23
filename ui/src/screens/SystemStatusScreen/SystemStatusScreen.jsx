@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Button, Tooltip } from '@blueprintjs/core';
+import { Button, Tooltip, ProgressBar, Intent } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import { Collection, SectionLoading, ErrorSection } from 'src/components/common';
@@ -37,6 +37,7 @@ const messages = defineMessages({
 export class SystemStatusScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.renderRow = this.renderRow.bind(this);
     this.fetchIfNeeded = this.fetchIfNeeded.bind(this);
     this.cancelCollection = this.cancelCollection.bind(this);
   }
@@ -66,6 +67,36 @@ export class SystemStatusScreen extends React.Component {
 
   cancelCollection(collection) {
     this.props.triggerCollectionCancel(collection.id);
+  }
+
+  renderRow(res) {
+    const { intl } = this.props;
+    const active = res.pending + res.running;
+    const total = active + res.finished;
+    const progress = res.finished / total;
+
+    return (
+      <tr key={res.id}>
+        <td className="entity">
+          <Link to={getCollectionLink(res.collection)}>
+            <Collection.Label collection={res.collection} />
+          </Link>
+        </td>
+        <td className="numeric narrow">{res.jobs.length}</td>
+        <td>
+          <ProgressBar value={progress} intent={Intent.PRIMARY} />
+        </td>
+        <td className="numeric narrow">{res.finished}</td>
+        <td className="numeric narrow">{active}</td>
+        <td className="numeric narrow">
+          <Tooltip content={intl.formatMessage(messages.cancel_button)}>
+            <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
+              <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
+            </Button>
+          </Tooltip>
+        </td>
+      </tr>
+    );
   }
 
   render() {
@@ -106,37 +137,20 @@ export class SystemStatusScreen extends React.Component {
                     <th className="numeric narrow">
                       <FormattedMessage id="collection.status.jobs" defaultMessage="Jobs" />
                     </th>
-                    <th className="numeric narrow">
-                      <FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished Tasks" />
+                    <th>
+                      <FormattedMessage id="collection.status.progress" defaultMessage="Tasks" />
                     </th>
                     <th className="numeric narrow">
-                      <FormattedMessage id="collection.status.pending_tasks" defaultMessage="Pending Tasks" />
+                      <FormattedMessage id="collection.status.finished_tasks" defaultMessage="Finished" />
+                    </th>
+                    <th className="numeric narrow">
+                      <FormattedMessage id="collection.status.pending_tasks" defaultMessage="Pending" />
                     </th>
                     <th className="numeric narrow" />
                   </tr>
                 </thead>
                 <tbody>
-                  {result.results.map(res => (
-                    (
-                      <tr key={res.id}>
-                        <td className="entity">
-                          <Link to={getCollectionLink(res.collection)}>
-                            <Collection.Label collection={res.collection} />
-                          </Link>
-                        </td>
-                        <td className="numeric narrow">{res.jobs.length}</td>
-                        <td className="numeric narrow">{res.finished}</td>
-                        <td className="numeric narrow">{res.pending + res.running}</td>
-                        <td className="numeric narrow">
-                          <Tooltip content={intl.formatMessage(messages.cancel_button)}>
-                            <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
-                              <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
-                            </Button>
-                          </Tooltip>
-                        </td>
-                      </tr>
-                    )
-                  ))}
+                  {result.results.map(this.renderRow)}
                 </tbody>
               </table>
             )}
