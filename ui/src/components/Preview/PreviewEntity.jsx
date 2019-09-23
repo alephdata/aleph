@@ -36,6 +36,8 @@ export class PreviewEntity extends React.Component {
     parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
     parsedHash.page = undefined;
+
+    console.log('in preview on close', this, queryString);
     history.push({
       pathname: location.pathname,
       search: location.search,
@@ -71,7 +73,7 @@ export class PreviewEntity extends React.Component {
           hasBackdrop={false}
           autoFocus={false}
           enforceFocus={false}
-          // usePortal={false}
+          canOutsideClickClose={false}
           portalClassName="PreviewEntity__overlay-container"
         >
           <DualPane.InfoPane className="with-heading">

@@ -222,18 +222,22 @@ export class SearchScreen extends React.Component {
     });
   }
 
-  showNextPreview() {
+  showNextPreview(event) {
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[1 + currentSelectionIndex];
-    if (nextEntity) {
+
+    if (nextEntity && currentSelectionIndex >= 0) {
+      event.preventDefault();
       this.showPreview(nextEntity);
     }
   }
 
-  showPreviousPreview() {
+  showPreviousPreview(event) {
+    event.preventDefault();
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[currentSelectionIndex - 1];
-    if (nextEntity) {
+    if (nextEntity && currentSelectionIndex >= 0) {
+      event.preventDefault();
       this.showPreview(nextEntity);
     }
   }
@@ -290,6 +294,12 @@ export class SearchScreen extends React.Component {
           },
           {
             combo: 'k', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
+          },
+          {
+            combo: 'up', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
+          },
+          {
+            combo: 'down', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
           },
         ]}
       >
@@ -352,6 +362,8 @@ export class SearchScreen extends React.Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
+
+  console.log(location);
 
   // We normally only want Things, not Intervals (relations between things).
   const context = {

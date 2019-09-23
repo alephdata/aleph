@@ -13,8 +13,6 @@ function PreviewManager(props) {
     return null;
   }
 
-  console.log('rendering preview manager');
-
   return (
     <PreviewEntity
       previewId={previewId}

@@ -25,7 +25,7 @@ class EntityTableRow extends Component {
     // highlighted automatically.
     const isActive = parsedHash['preview:id'] && parsedHash['preview:id'] === entity.id;
     const isPrefix = !!highlights.length;
-    const resultClass = c('EntityTableRow', 'nowrap', { active: isActive }, { prefix: isPrefix }); 
+    const resultClass = c('EntityTableRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
     const highlightsClass = c('EntityTableRow', { active: isActive });
     return (
       <React.Fragment>
