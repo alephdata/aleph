@@ -6,6 +6,7 @@ import { Count, Tag } from 'src/components/common';
 import { Value } from 'src/components/Property/Value';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
+import getValueLink from 'src/util/getValueLink';
 import { selectValueCount } from 'src/selectors';
 
 
@@ -16,10 +17,10 @@ class ValueLink extends Component {
     if (count === null || count === 0) {
       return content;
     }
-    const href = `/search?facet=collection_id&facet_size:collection_id=10&facet_total:Acollection_id=true&filter:${prop.type.group}=${value}`;
+    const href = getValueLink(prop.type, value);
     return (
       <span className="ValueLink">
-        <Tag.Icon field={prop.type.group} />
+        <Link to={href}><Tag.Icon field={prop.type.group} /></Link>
         <Link to={href}>{content}</Link>
         <Count count={count} />
       </span>
