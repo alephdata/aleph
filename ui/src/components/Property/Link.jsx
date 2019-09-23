@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { Count } from 'src/components/common';
+import { Count, Tag } from 'src/components/common';
 import { Value } from 'src/components/Property/Value';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
@@ -18,10 +18,11 @@ class ValueLink extends Component {
     }
     const href = `/search?facet=collection_id&facet_size:collection_id=10&facet_total:Acollection_id=true&filter:${prop.type.group}=${value}`;
     return (
-      <Link to={href} className="ValueLink">
-        {content}
+      <span className="ValueLink">
+        <Tag.Icon field={prop.type.group} />
+        <Link to={href}>{content}</Link>
         <Count count={count} />
-      </Link>
+      </span>
     );
   }
 }

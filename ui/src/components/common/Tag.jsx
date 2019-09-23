@@ -11,9 +11,9 @@ class TagIcon extends PureComponent {
     /* *
     * TODO: Fix this implementation once phones, addresses ann link icons will be available
     * */
-    names: <Icon name="tags" className={this.className} />,
+    names: <IconBlueprint icon="tag" className={this.className} />,
     identifiers: <Icon name="license" className={this.className} />,
-    emails: <Icon name="email" className={this.className} />,
+    emails: <IconBlueprint icon="envelope" className={this.className} />,
     phones: <IconBlueprint icon="phone" className={this.className} />,
     addresses: <IconBlueprint icon="home" className={this.className} />,
     link: <IconBlueprint icon="link" className={this.className} />,

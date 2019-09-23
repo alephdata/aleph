@@ -142,18 +142,20 @@ class EntityViews extends React.Component {
             }
           />
         ))}
-        <Tab
-          id="tags"
-          disabled={tags.total < 1}
-          title={(
-            <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-              <Icon name="tags" iconSize="14px" className="entity-icon" />
-              <FormattedMessage id="entity.info.tags" defaultMessage="Tags" />
-              <Count count={tags.total} />
-            </TextLoading>
-          )}
-          panel={<EntityTagsMode entity={entity} />}
-        />
+        { entity.schema.isDocument() && (
+          <Tab
+            id="tags"
+            disabled={tags.total < 1}
+            title={(
+              <TextLoading loading={tags.shouldLoad || tags.isLoading}>
+                <Icon name="tags" iconSize="14px" className="entity-icon" />
+                <FormattedMessage id="entity.info.tags" defaultMessage="Mentioned" />
+                <Count count={tags.total} />
+              </TextLoading>
+            )}
+            panel={<EntityTagsMode entity={entity} />}
+          />
+        )}
         { isMatchable && (
           <Tab
             id="similar"
