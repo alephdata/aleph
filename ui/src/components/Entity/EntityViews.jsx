@@ -149,7 +149,7 @@ class EntityViews extends React.Component {
             title={(
               <TextLoading loading={tags.shouldLoad || tags.isLoading}>
                 <Icon name="tags" iconSize="14px" className="entity-icon" />
-                <FormattedMessage id="entity.info.tags" defaultMessage="Mentioned" />
+                <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
                 <Count count={tags.total} />
               </TextLoading>
             )}
