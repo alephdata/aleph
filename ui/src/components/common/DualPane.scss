@@ -16,10 +16,6 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
   }
 }
 
-.InfoPane {
-  flex: 10;
-}
-
 .DualPane .ContentPane {
   display: flex;
   flex-direction: column;
@@ -61,12 +57,12 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
 
 .DualPane .InfoPane {
   @extend %SidePane;
-  flex-direction: row !important;
-  min-height: unset;
-  margin: 0 0 $aleph-grid-size;
-  overflow: visible;
   border-right: 1px solid $aleph-border-color;
   padding-right: $dual-pane-padding;
+  overflow: visible;
+  min-height: unset;
+  margin: 0 0 $aleph-grid-size;
+  flex-direction: row !important;
 
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-infopane-md-width !important;
@@ -79,6 +75,10 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
     border-bottom: 1px solid $aleph-border-color;
     padding-right: 0;
   }
+}
+
+.InfoPane {
+  flex: 10;
 
   h1, h2 {
     // Show a subtle line below headings

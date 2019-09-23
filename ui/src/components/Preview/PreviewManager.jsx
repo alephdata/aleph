@@ -14,6 +14,8 @@ function PreviewManager(props) {
     return <Preview hidden />;
   }
 
+  console.log('rendering preview manager');
+
   return (
     <PreviewEntity
       previewId={previewId}
