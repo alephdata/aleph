@@ -13,7 +13,7 @@ import { selectValueCount } from 'src/selectors';
 class ValueLink extends Component {
   render() {
     const { value, prop, count } = this.props;
-    const content = <Value value={value} prop={prop} />;
+    const content = <Value {...this.props} />;
     if (count === null || count === 0) {
       return content;
     }
@@ -39,12 +39,12 @@ export { ValueLink };
 
 export class ValueLinks extends Component {
   render() {
-    const { prop, values, separator = ' · ' } = this.props;
+    const { prop, values, separator = ' · ', missing = '—' } = this.props;
     const vals = ensureArray(values).map(value => (
-      <ValueLink key={value.id || value} prop={prop} value={value} />
+      <ValueLink key={value.id || value} prop={prop} value={value} {...this.props} />
     ));
     if (!vals.length) {
-      return (<span className="no-value">—</span>);
+      return (<span className="no-value">{missing}</span>);
     }
     return (<span>{ wordList(vals, separator) }</span>);
   }

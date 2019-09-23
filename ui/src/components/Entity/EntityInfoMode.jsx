@@ -3,29 +3,16 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
 import { Count } from 'src/components/common';
-import Property from 'src/components/Property';
 import getCollectionLink from 'src/util/getCollectionLink';
+import EntityProperties from 'src/components/Entity/EntityProperties';
 
 import './EntityInfoMode.scss';
 
 
 function EntityInfoMode(props) {
   const { entity } = props;
-  const properties = entity.getProperties()
-    .filter(prop => !prop.hidden);
-
   return (
-    <ul className="EntityInfoMode info-sheet">
-      { properties.map(prop => (
-        <li key={prop.name}>
-          <span className="key">
-            <Property.Name prop={prop} />
-          </span>
-          <span className="value">
-            <Property.Links prop={prop} values={entity.getProperty(prop)} />
-          </span>
-        </li>
-      ))}
+    <EntityProperties entity={entity}>
       <li>
         <span className="key">
           <span>
@@ -61,7 +48,7 @@ function EntityInfoMode(props) {
           </ul>
         </span>
       </li>
-    </ul>
+    </EntityProperties>
   );
 }
 

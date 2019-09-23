@@ -14,6 +14,7 @@ import {
 import {
   ErrorSection, SectionLoading, SearchBox, Entity,
 } from 'src/components/common';
+import EntityProperties from 'src/components/Entity/EntityProperties';
 import Property from 'src/components/Property';
 import ensureArray from 'src/util/ensureArray';
 import { queryEntities } from 'src/actions/index';
@@ -111,24 +112,12 @@ class EntityReferencesMode extends React.Component {
     if (!isExpanded) {
       return mainRow;
     }
-    const properties = entity.getProperties().filter(prop => !prop.hidden);
     return [
       mainRow,
       <tr key={`${entity.id}-expanded`}>
         <td />
         <td colSpan={columns.length}>
-          <ul className="info-sheet">
-            { properties.map(prop => (
-              <li key={prop.name}>
-                <span className="key">
-                  <Property.Name prop={prop} />
-                </span>
-                <span className="value">
-                  <Property.Values prop={prop} values={entity.getProperty(prop)} />
-                </span>
-              </li>
-            ))}
-          </ul>
+          <EntityProperties entity={entity} />
         </td>
       </tr>,
     ];

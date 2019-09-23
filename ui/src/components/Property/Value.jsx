@@ -41,12 +41,12 @@ export class Value extends PureComponent {
 
 export class Values extends PureComponent {
   render() {
-    const { prop, values, separator = ' · ' } = this.props;
+    const { prop, values, separator = ' · ', missing = '—' } = this.props;
     const vals = ensureArray(values).map(value => (
-      <Value key={value.id || value} prop={prop} value={value} />
+      <Value key={value.id || value} prop={prop} value={value} {...this.props} />
     ));
     if (!vals.length) {
-      return (<span className="no-value">—</span>);
+      return (<span className="no-value">{missing}</span>);
     }
     return (<span>{ wordList(vals, separator) }</span>);
   }

@@ -138,8 +138,9 @@ class Select extends Component {
         <Button
           fill
           text={label}
-          alignText={Alignment.LEFT}
+          icon="user"
           rightIcon="search"
+          alignText={Alignment.LEFT}
         />
       </BlueprintSelect>
     );
