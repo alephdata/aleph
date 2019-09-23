@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
 
-import Preview from 'src/components/Preview/Preview';
 import { PreviewEntity } from 'src/components/Preview/';
 
 function PreviewManager(props) {
@@ -11,7 +10,7 @@ function PreviewManager(props) {
     previewId, previewMode, parsedHash,
   } = props;
   if (previewId === undefined || previewId === null) {
-    return <Preview hidden />;
+    return null;
   }
 
   console.log('rendering preview manager');

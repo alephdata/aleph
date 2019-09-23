@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Preview from 'src/components/Preview/Preview';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityViews from 'src/components/Entity/EntityViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectEntityView } from 'src/selectors';
+import { Drawer } from '@blueprintjs/core';
 
+import './PreviewEntity.scss';
 
 const mapStateToProps = (state, ownProps) => {
   const { previewId, previewMode } = ownProps;
@@ -30,7 +31,6 @@ export class PreviewEntity extends React.Component {
     }
     return (
       <React.Fragment>
-        <EntityToolbar entity={entity} isPreview />
         <EntityHeading entity={entity} isPreview />
         <EntityViews entity={entity} activeMode={previewMode} isPreview />
       </React.Fragment>
@@ -38,14 +38,25 @@ export class PreviewEntity extends React.Component {
   }
 
   render() {
-    const { previewId } = this.props;
+    const { previewId, entity, hidden } = this.props;
     return (
       <EntityContextLoader entityId={previewId}>
-        <Preview maximised>
+        <Drawer
+          className="PreviewEntity"
+          isOpen={!hidden}
+          autoFocus={false}
+          canOutsideClickClose
+          canEscapeKeyClose
+          enforceFocus={false}
+          hasBackdrop={false}
+          title={<EntityToolbar entity={entity} />}
+          isCloseButtonShown={false}
+          onClosing={() => console.log('on closing!')}
+        >
           <DualPane.InfoPane className="with-heading">
             {this.renderContext()}
           </DualPane.InfoPane>
-        </Preview>
+        </Drawer>
       </EntityContextLoader>
     );
   }

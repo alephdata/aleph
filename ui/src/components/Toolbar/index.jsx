@@ -1,4 +1,3 @@
-import Toolbar from './Toolbar';
 import CloseButton from './CloseButton';
 import DownloadButton from './DownloadButton';
 import PagingButtons from './PagingButtons';
@@ -7,7 +6,6 @@ import DocumentFolderButton from './DocumentFolderButton';
 import CollectionManageButton from './CollectionManageButton';
 
 export {
-  Toolbar,
   CloseButton,
   DownloadButton,
   PagingButtons,

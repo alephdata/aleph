@@ -5,7 +5,7 @@
   padding: $aleph-grid-size/2 $aleph-grid-size*3;
   display: flex;
   justify-content: space-between;
-  background-color: $light-gray4;
+  background-color: $aleph-breadcrumbs-background;
 
   .bp3-breadcrumbs > li::after {
     margin: 0 10px;
