@@ -1,5 +1,7 @@
 import React from 'react';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityHeading from 'src/components/Entity/EntityHeading';
@@ -8,6 +10,7 @@ import EntityViews from 'src/components/Entity/EntityViews';
 import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectEntityView } from 'src/selectors';
 import { Drawer } from '@blueprintjs/core';
+import queryString from 'query-string';
 
 import './PreviewEntity.scss';
 
@@ -19,8 +22,27 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-
 export class PreviewEntity extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onClose = this.onClose.bind(this);
+  }
+
+  onClose() {
+    const { history, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    parsedHash['preview:id'] = undefined;
+    parsedHash['preview:type'] = undefined;
+    parsedHash['preview:mode'] = undefined;
+    parsedHash.page = undefined;
+    history.push({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
   renderContext() {
     const { entity, previewMode } = this.props;
     if (entity.isError) {
@@ -44,14 +66,13 @@ export class PreviewEntity extends React.Component {
         <Drawer
           className="PreviewEntity"
           isOpen={!hidden}
-          autoFocus={false}
-          canOutsideClickClose
-          canEscapeKeyClose
-          enforceFocus={false}
-          hasBackdrop={false}
           title={<EntityToolbar entity={entity} />}
-          isCloseButtonShown={false}
-          onClosing={() => console.log('on closing!')}
+          onClose={this.onClose}
+          hasBackdrop={false}
+          autoFocus={false}
+          enforceFocus={false}
+          // usePortal={false}
+          portalClassName="PreviewEntity__overlay-container"
         >
           <DualPane.InfoPane className="with-heading">
             {this.renderContext()}
@@ -62,4 +83,7 @@ export class PreviewEntity extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(PreviewEntity);
+export default compose(
+  withRouter,
+  connect(mapStateToProps),
+)(PreviewEntity);

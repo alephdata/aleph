@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { ButtonGroup } from '@blueprintjs/core';
 
-import { CloseButton, DownloadButton } from 'src/components/Toolbar';
+import { DownloadButton } from 'src/components/Toolbar';
 import getEntityLink from 'src/util/getEntityLink';
 
 import './EntityToolbar.scss';
@@ -32,7 +32,6 @@ class EntityToolbar extends React.Component {
             <DownloadButton document={entity} isPreview />
           )}
         </ButtonGroup>
-        <CloseButton />
       </div>
     );
   }

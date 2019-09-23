@@ -48,6 +48,12 @@ class EntityTable extends Component {
     return (!result.isLoading) ? { result } : null;
   }
 
+  onArrowNavigate() {
+    const { selection } = this.props;
+
+    console.log('in on arrow navigate', selection);
+  }
+
   sortColumn(newField) {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
@@ -88,6 +94,7 @@ class EntityTable extends Component {
           className={className}
           sorted={sortedField === field && (direction === 'desc' ? 'desc' : 'asc')}
           onClick={() => this.sortColumn(field)}
+          onArrowKey={() => this.onArrowNavigate()}
           {...otherProps}
         >
           {intl.formatMessage(messages[`column_${field}`])}

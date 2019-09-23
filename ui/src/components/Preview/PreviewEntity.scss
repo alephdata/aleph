@@ -1,13 +1,18 @@
 @import "src/app/variables.scss";
 
 .PreviewEntity {
+  &__overlay-container .bp3-overlay-container {
+    right: 0;
+    left: auto;
+  }
+
   & .InfoPane {
     padding: 0 $aleph-grid-size*1.5;
     overflow-y: scroll;
+  }
 
-    // .pane-heading {
-    //   padding: ($aleph-grid-size * 3) 0 $aleph-grid-size;
-    // }
+  .info-tabs-padding {
+    padding: $aleph-grid-size*2 0;
   }
 
   .bp3-drawer-header {
