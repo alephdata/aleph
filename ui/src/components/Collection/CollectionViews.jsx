@@ -103,7 +103,6 @@ class CollectionViews extends React.Component {
         ))}
         <Tab
           id="xref"
-          disabled={xrefIndex.total < 1}
           title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
               <Icon name="relationship" />

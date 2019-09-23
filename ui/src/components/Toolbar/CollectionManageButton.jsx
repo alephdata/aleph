@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import {
-  Button, Menu, MenuItem, MenuDivider, Position, Popover,
+  Button, Menu, MenuItem, Position, Popover,
 } from '@blueprintjs/core';
 
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
 import CollectionPublishAlert from 'src/components/Collection/CollectionPublishAlert';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
-import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import { selectSession } from 'src/selectors';
 
 
@@ -19,22 +18,16 @@ class CollectionManageButton extends Component {
     this.state = {
       settingsIsOpen: false,
       accessIsOpen: false,
-      xrefIsOpen: false,
       deleteIsOpen: false,
       publishIsOpen: false,
     };
     this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleAccess = this.toggleAccess.bind(this);
-    this.toggleXref = this.toggleXref.bind(this);
   }
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   togglePublish = () => this.setState(({ publishIsOpen }) => ({ publishIsOpen: !publishIsOpen }));
-
-  toggleXref() {
-    this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
-  }
 
   toggleAccess() {
     this.setState(({ accessIsOpen }) => ({ accessIsOpen: !accessIsOpen }));
@@ -47,7 +40,7 @@ class CollectionManageButton extends Component {
   render() {
     const { collection, session } = this.props;
     const {
-      settingsIsOpen, accessIsOpen, xrefIsOpen, deleteIsOpen, publishIsOpen,
+      settingsIsOpen, accessIsOpen, deleteIsOpen, publishIsOpen,
     } = this.state;
 
     if (!collection.writeable) {
@@ -77,12 +70,6 @@ class CollectionManageButton extends Component {
                   text={<FormattedMessage id="collection.info.publish" defaultMessage="Publish dataset" />}
                 />
               )}
-              <MenuDivider />
-              <MenuItem
-                icon="search-around"
-                onClick={this.toggleXref}
-                text={<FormattedMessage id="collection.info.xref" defaultMessage="Cross-reference" />}
-              />
               <Menu.Divider />
               <MenuItem
                 icon="trash"
@@ -111,11 +98,6 @@ class CollectionManageButton extends Component {
           collection={collection}
           isOpen={accessIsOpen}
           toggleDialog={this.toggleAccess}
-        />
-        <CollectionXrefDialog
-          collection={collection}
-          isOpen={xrefIsOpen}
-          toggleDialog={this.toggleXref}
         />
         <CollectionPublishAlert
           collection={collection}
