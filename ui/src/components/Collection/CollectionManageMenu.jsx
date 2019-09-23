@@ -54,7 +54,7 @@ class CollectionManageMenu extends Component {
         <FormattedMessage id="collection.info.publish" defaultMessage="Publish" />
       </Button>
     );
-    if (!collection.isAdmin) {
+    if (!session.isAdmin) {
       publishButton = (
         <Tooltip content={intl.formatMessage(messages.publish)}>
           {publishButton}
