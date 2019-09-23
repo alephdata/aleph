@@ -45,6 +45,7 @@ export class CollectionIndexSearch extends Component {
           <InputGroup
             large
             fill
+            autoFocus
             leftIcon="search"
             onChange={this.onChangeQueryPrefix}
             placeholder={intl.formatMessage(messages.placeholder)}

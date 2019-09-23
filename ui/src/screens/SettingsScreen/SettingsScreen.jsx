@@ -258,6 +258,7 @@ export class SettingsScreen extends React.Component {
               value={role.name}
               onChange={this.onChangeInput}
               intent={nameIntent}
+              autoFocus
               large
             />
           </FormGroup>

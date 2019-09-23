@@ -94,6 +94,7 @@ class AlertsDialog extends Component {
               placeholder={intl.formatMessage(messages.add_placeholder)}
               onChange={this.onChangeAddingInput}
               value={newAlert}
+              autoFocus
               large
             />
             <Button

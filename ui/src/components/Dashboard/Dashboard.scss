@@ -85,5 +85,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         flex-direction: column;
         flex-grow: 6;
         overflow-x: auto;
+        padding-left: ($aleph-grid-size / 2);
+        padding-right: ($aleph-grid-size / 2);
     }
 }
