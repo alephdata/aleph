@@ -6,7 +6,6 @@ import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
 import { Numeric } from 'src/components/common';
 import { triggerCollectionCancel, fetchCollectionStatus } from 'src/actions';
 import { selectCollectionStatus } from 'src/selectors';
-// import wordList from 'src/util/wordList';
 
 import './CollectionStatus.scss';
 

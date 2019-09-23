@@ -14,10 +14,6 @@ import { selectSession, selectMetadata } from 'src/selectors';
 
 import './Screen.scss';
 
-const mapStateToProps = state => ({
-  metadata: selectMetadata(state),
-  session: selectSession(state),
-});
 
 export class Screen extends React.Component {
   constructor(props) {
@@ -79,7 +75,7 @@ export class Screen extends React.Component {
     const forceAuth = requireSession && !session.loggedIn;
     const mainClass = isHomepage ? 'main-homepage' : 'main';
     const titleTemplate = hasMetadata ? `%s - ${metadata.app.title}` : '%s';
-    const defaultTitle = hasMetadata ? metadata.app.title : 'OCCRP Aleph';
+    const defaultTitle = hasMetadata ? metadata.app.title : 'Aleph';
 
     return (
       <div className={c('Screen', className)}>
@@ -123,14 +119,17 @@ export class Screen extends React.Component {
           />
         )}
         <SearchTips isOpen={searchTipsOpen} />
-        <Footer
-          isHomepage={isHomepage}
-          metadata={metadata}
-        />
+        <Footer isHomepage={isHomepage} metadata={metadata} />
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  metadata: selectMetadata(state),
+  session: selectSession(state),
+});
+
 export default compose(
   withRouter,
   connect(mapStateToProps),
