@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Intent, Tooltip } from '@blueprintjs/core';
+import { Button, ButtonGroup, Tooltip } from '@blueprintjs/core';
 
 import CollectionEditDialog from 'src/dialogs/CollectionEditDialog/CollectionEditDialog';
 import CollectionAccessDialog from 'src/dialogs/CollectionAccessDialog/CollectionAccessDialog';
@@ -21,31 +21,29 @@ class CollectionManageMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settingsIsOpen: false,
+      editIsOpen: false,
       accessIsOpen: false,
       deleteIsOpen: false,
       publishIsOpen: false,
     };
-    this.toggleSettings = this.toggleSettings.bind(this);
+    this.toggleEdit = this.toggleEdit.bind(this);
     this.toggleAccess = this.toggleAccess.bind(this);
+    this.toggleDelete = this.toggleDelete.bind(this);
+    this.togglePublish = this.togglePublish.bind(this);
   }
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   togglePublish = () => this.setState(({ publishIsOpen }) => ({ publishIsOpen: !publishIsOpen }));
 
-  toggleAccess() {
-    this.setState(({ accessIsOpen }) => ({ accessIsOpen: !accessIsOpen }));
-  }
+  toggleAccess = () => this.setState(({ accessIsOpen }) => ({ accessIsOpen: !accessIsOpen }));
 
-  toggleSettings() {
-    this.setState(({ settingsIsOpen }) => ({ settingsIsOpen: !settingsIsOpen }));
-  }
+  toggleEdit = () => this.setState(({ editIsOpen }) => ({ editIsOpen: !editIsOpen }));
 
   render() {
     const { intl, collection, session } = this.props;
     const {
-      settingsIsOpen, accessIsOpen, deleteIsOpen, publishIsOpen,
+      editIsOpen, accessIsOpen, deleteIsOpen, publishIsOpen,
     } = this.state;
 
     if (!collection.writeable) {
@@ -67,21 +65,21 @@ class CollectionManageMenu extends Component {
     return (
       <React.Fragment>
         <ButtonGroup>
-          <Button icon="cog" onClick={this.toggleSettings}>
-            <FormattedMessage id="collection.info.settings" defaultMessage="Settings" />
+          <Button icon="cog" onClick={this.toggleEdit}>
+            <FormattedMessage id="collection.info.edit" defaultMessage="Settings" />
           </Button>
           <Button icon="key" onClick={this.toggleAccess}>
             <FormattedMessage id="collection.info.access" defaultMessage="Share" />
           </Button>
           { collection.casefile && publishButton }
-          <Button icon="trash" onClick={this.toggleDelete} intent={Intent.DANGER}>
+          <Button icon="trash" onClick={this.toggleDelete}>
             <FormattedMessage id="collection.info.delete" defaultMessage="Delete" />
           </Button>
         </ButtonGroup>
         <CollectionEditDialog
           collection={collection}
-          isOpen={settingsIsOpen}
-          toggleDialog={this.toggleSettings}
+          isOpen={editIsOpen}
+          toggleDialog={this.toggleEdit}
         />
         <CollectionAccessDialog
           collection={collection}
