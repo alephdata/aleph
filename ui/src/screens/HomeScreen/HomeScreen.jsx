@@ -125,8 +125,6 @@ export class HomeScreen extends Component {
 
   onSubmit = event => event.preventDefault();
 
-  handleSearchBtn = () => this.doSearch();
-
   doSearch = (searchValue = this.state.value) => {
     const { history } = this.props;
     history.push({
@@ -139,7 +137,6 @@ export class HomeScreen extends Component {
 
   render() {
     const { intl, metadata, session, statistics = {} } = this.props;
-
     if (session.loggedIn) {
       return <Redirect to="/notifications" />;
     }

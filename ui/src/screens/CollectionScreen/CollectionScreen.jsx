@@ -4,7 +4,9 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import Screen from 'src/components/Screen/Screen';
+import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
@@ -13,7 +15,6 @@ import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
-import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
 
 
 export class CollectionScreen extends Component {
