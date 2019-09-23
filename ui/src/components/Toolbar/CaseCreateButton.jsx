@@ -9,7 +9,7 @@ import { selectSession } from 'src/selectors';
 const messages = defineMessages({
   login: {
     id: 'case.create.login',
-    defaultMessage: 'Please sign in first.',
+    defaultMessage: 'You must sign in to upload your own data.',
   },
 });
 

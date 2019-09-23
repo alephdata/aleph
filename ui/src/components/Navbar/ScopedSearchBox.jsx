@@ -122,7 +122,7 @@ class SearchBox extends React.Component {
 
   render() {
     const {
-      props: { searchValue, searchScopes, inputClasses, intl, hideScopeMenu, toggleSearchTips },
+      props: { searchValue, searchScopes, inputClasses, intl, toggleSearchTips },
       state: { activeScope },
       itemRenderer, onChange,
       itemListPredicate,
@@ -158,25 +158,23 @@ class SearchBox extends React.Component {
 
     return (
       <ControlGroup className="SearchBox" vertical={false} fill>
-        {!hideScopeMenu && (
-          <Select
-            filterable={false}
-            items={searchScopes}
-            itemRenderer={this.renderScopeItem}
-            popoverProps={{
-              minimal: true,
-              lassName: 'SearchBox__scoped-input__popover',
-              usePortal: false,
-            }}
-            disabled={!multipleScopes}
-          >
-            <Button
-              className={c('SearchBox__scoped-input__scope-button', { unclickable: !multipleScopes })}
-              text={activeScope.listItem}
-              rightIcon={multipleScopes ? 'caret-down' : null}
-            />
-          </Select>
-        )}
+        <Select
+          filterable={false}
+          items={searchScopes}
+          itemRenderer={this.renderScopeItem}
+          popoverProps={{
+            minimal: true,
+            lassName: 'SearchBox__scoped-input__popover',
+            usePortal: false,
+          }}
+          disabled={!multipleScopes}
+        >
+          <Button
+            className={c('SearchBox__scoped-input__scope-button', { unclickable: !multipleScopes })}
+            text={activeScope.listItem}
+            rightIcon={multipleScopes ? 'caret-down' : null}
+          />
+        </Select>
         <Suggest
           inputProps={inputProps}
           popoverProps={popoverProps}
@@ -191,14 +189,12 @@ class SearchBox extends React.Component {
           onItemSelect={onItemSelect}
           resetOnQuery
         />
-        {!hideScopeMenu && (
-          <Button
-            className="SearchBox__search-tips bp3-fixed"
-            icon="help"
-            minimal
-            onClick={toggleSearchTips}
-          />
-        )}
+        <Button
+          className="SearchBox__search-tips bp3-fixed"
+          icon="help"
+          minimal
+          onClick={toggleSearchTips}
+        />
       </ControlGroup>
     );
   }

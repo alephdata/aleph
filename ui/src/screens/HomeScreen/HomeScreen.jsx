@@ -7,17 +7,17 @@ import {
 } from 'react-intl';
 import { Link, Redirect } from 'react-router-dom';
 import {
-  Button, ControlGroup, Divider,
+  Button, ControlGroup, Divider, InputGroup,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
 import {
   Category, Country, Schema, Numeric, DualPane,
 } from 'src/components/common';
+import wordList from 'src/util/wordList';
 
 import './HomeScreen.scss';
 
@@ -27,13 +27,9 @@ const messages = defineMessages({
     id: 'home.title',
     defaultMessage: 'Find public records and leaks',
   },
-  search_placeholder: {
-    id: 'home.search_placeholder',
+  placeholder: {
+    id: 'home.placeholder',
     defaultMessage: 'Try searching: {samples}',
-  },
-  home_search: {
-    id: 'home.search',
-    defaultMessage: 'Search',
   },
 });
 
@@ -107,8 +103,8 @@ class Statistics extends PureComponent {
 export class HomeScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { value: '' };
-    this.onChange = this.onChange.bind(this);
+    this.state = { query: '' };
+    this.onChangeQuery = this.onChangeQuery.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -117,39 +113,26 @@ export class HomeScreen extends Component {
     this.props.fetchStatistics();
   }
 
-  onChange({ target }) {
-    this.setState({ value: target.value });
+  onChangeQuery({ target }) {
+    this.setState({ query: target.value });
   }
 
-  updateSearchValue = value => this.setState({ value });
-
-  onSubmit = event => event.preventDefault();
-
-  handleSearchBtn = () => this.doSearch();
-
-  doSearch = (searchValue = this.state.value) => {
+  onSubmit() {
     const { history } = this.props;
     history.push({
       pathname: '/search',
       search: queryString.stringify({
-        q: searchValue,
+        q: this.state.query,
       }),
     });
-  };
+  }
 
   render() {
     const { intl, metadata, session, statistics = {} } = this.props;
-
     if (session.loggedIn) {
       return <Redirect to="/notifications" />;
     }
-
-    const searchScope = {
-      listItem: metadata.app.title,
-      label: metadata.app.title,
-      onSearch: this.doSearch,
-    };
-
+    const samples = wordList(metadata.app.samples, ', ').join('');
     return (
       <Screen
         isHomepage
@@ -161,14 +144,14 @@ export class HomeScreen extends Component {
             <div className="inner-searchbox">
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill>
-                  <ScopedSearchBox
+                  <InputGroup
                     id="search-box"
-                    doSearch={this.doSearch}
-                    updateSearchValue={this.updateSearchValue}
-                    searchValue={this.state.value}
-                    searchScopes={[searchScope]}
-                    inputClasses="bp3-large"
-                    hideScopeMenu
+                    large
+                    autoFocus
+                    leftIcon="search"
+                    placeholder={intl.formatMessage(messages.placeholder, { samples })}
+                    value={this.state.query}
+                    onChange={this.onChangeQuery}
                   />
                 </ControlGroup>
               </form>
@@ -273,9 +256,8 @@ const mapStateToProps = state => ({
   session: selectSession(state),
   metadata: selectMetadata(state),
 });
-const mapDispatchToProps = { fetchStatistics };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { fetchStatistics }),
   injectIntl,
 )(HomeScreen);

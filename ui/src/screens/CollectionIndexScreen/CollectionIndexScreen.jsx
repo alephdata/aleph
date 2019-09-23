@@ -169,9 +169,8 @@ const mapStateToProps = (state, ownProps) => {
     result: selectCollectionsResult(state, query),
   };
 };
-const mapDispatchToProps = { queryCollections };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryCollections }),
   injectIntl,
 )(CollectionIndexScreen);

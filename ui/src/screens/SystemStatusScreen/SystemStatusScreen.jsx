@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import { Button, Tooltip, ProgressBar, Intent } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
-import { Collection, SectionLoading, ErrorSection } from 'src/components/common';
+import { Collection, SectionLoading, ErrorSection, Numeric } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -86,8 +86,12 @@ export class SystemStatusScreen extends React.Component {
         <td>
           <ProgressBar value={progress} intent={Intent.PRIMARY} />
         </td>
-        <td className="numeric narrow">{res.finished}</td>
-        <td className="numeric narrow">{active}</td>
+        <td className="numeric narrow">
+          <Numeric num={res.finished} />
+        </td>
+        <td className="numeric narrow">
+          <Numeric num={active} />
+        </td>
         <td className="numeric narrow">
           <Tooltip content={intl.formatMessage(messages.cancel_button)}>
             <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
