@@ -4,7 +4,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-09-20T15:27:48.218Z\n"
+"POT-Creation-Date: 2019-09-23T12:37:08.036Z\n"
 "Last-Translator: Emina Muratovic <emina@occrp.org>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "'{label}' of …"
 msgstr ""
 
-#. [settings.password_confirm]
+#. [settings.confirm]
 #. defaultMessage is:
 #. (confirm)
 #: i18n/messages.json
@@ -35,11 +35,51 @@ msgstr "(potvrdi)"
 msgid "(missing)"
 msgstr "(nedostaje)"
 
-#. [collection.status.pending]
+#. [searchTips.composite.2]
 #. defaultMessage is:
-#. ({percent}%)
+#. <em>+banana ice cream</em> requires that only results with the term banana
+#. will be returned, while ice and cream are optional
 #: i18n/messages.json
-msgid "({percent}%)"
+msgid ""
+"<em>+banana ice cream</em> requires that only results with the term banana "
+"will be returned, while ice and cream are optional"
+msgstr ""
+
+#. [searchTips.composite.3]
+#. defaultMessage is:
+#. <em>-banana ice cream</em> ensures that no results with the term banana
+#. will be returned
+#: i18n/messages.json
+msgid ""
+"<em>-banana ice cream</em> ensures that no results with the term banana will"
+" be returned"
+msgstr ""
+
+#. [searchTips.composite.4]
+#. defaultMessage is:
+#. <em>banana AND “ice cream”</em> requires that only results with both banana
+#. and ice cream are returned
+#: i18n/messages.json
+msgid ""
+"<em>banana AND “ice cream”</em> requires that only results with both banana "
+"and ice cream are returned"
+msgstr ""
+
+#. [searchTips.composite.5]
+#. defaultMessage is:
+#. <em>banana OR “ice cream”</em> ensures that only results with either banana
+#. or ice cream are returned
+#: i18n/messages.json
+msgid ""
+"<em>banana OR “ice cream”</em> ensures that only results with either banana "
+"or ice cream are returned"
+msgstr ""
+
+#. [case.summary]
+#. defaultMessage is:
+#. A brief description of the dataset
+#: i18n/messages.json
+msgid "A brief description of the dataset"
 msgstr ""
 
 #. [collection.edit.info.placeholder_summary]
@@ -91,19 +131,12 @@ msgstr "Aktiviraj"
 msgid "Activate your account"
 msgstr "Aktiviraj svoj profil"
 
-#. [notifications.heading]
+#. [dashboard.activity]
 #. defaultMessage is:
-#. Active Collections
+#. Activity
 #: i18n/messages.json
-msgid "Active Collections"
+msgid "Activity"
 msgstr ""
-
-#. [alerts.add]
-#. defaultMessage is:
-#. Add alert
-#: i18n/messages.json
-msgid "Add alert"
-msgstr "Dodaj notifikaciju"
 
 #. [search.facets.facet.addresses]
 #. defaultMessage is:
@@ -133,13 +166,6 @@ msgstr ""
 msgid "Already have account? Sign in!"
 msgstr "Već imate kreiran profil? Logujte se!"
 
-#. [collection.delete.error]
-#. defaultMessage is:
-#. An error occured while attempting to delete this case.
-#: i18n/messages.json
-msgid "An error occured while attempting to delete this case."
-msgstr "Dogodila se grešla prilikom brisanja ovog slučaja."
-
 #. [entity.delete.error]
 #. defaultMessage is:
 #. An error occured while attempting to delete this entity.
@@ -156,10 +182,10 @@ msgstr "Desila se neočekivana greška"
 
 #. [collection.delete.question]
 #. defaultMessage is:
-#. Are you sure you want to delete all contained items?
+#. Are you sure you want to delete this dataset and all contained items?
 #: i18n/messages.json
-msgid "Are you sure you want to delete all contained items?"
-msgstr "Da li ste sigurni da želite da izbrišete sve stavke unutar ovoga?"
+msgid "Are you sure you want to delete this dataset and all contained items?"
+msgstr ""
 
 #. [entity.delete.question]
 #. defaultMessage is:
@@ -182,11 +208,14 @@ msgstr ""
 msgid "BCC"
 msgstr "BCC"
 
-#. [collection.info.browse_button]
+#. [queryLogs.description]
 #. defaultMessage is:
-#. Browse
+#. Below is a list of your most recent searches. You have the option to delete
+#. specific searches so they do not show up in our records.
 #: i18n/messages.json
-msgid "Browse"
+msgid ""
+"Below is a list of your most recent searches. You have the option to delete "
+"specific searches so they do not show up in our records."
 msgstr ""
 
 #. [email.cc]
@@ -242,46 +271,6 @@ msgstr ""
 msgid "Cannot export more than 10,000 results at a time"
 msgstr ""
 
-#. [case.description]
-#. defaultMessage is:
-#. Case files help you group and share the documents and data which belong to
-#. a particular story. You can upload documents, such as PDFs, email archives
-#. or spreadsheets, and they will be made easy to search and browse.
-#: i18n/messages.json
-msgid ""
-"Case files help you group and share the documents and data which belong to a"
-" particular story. You can upload documents, such as PDFs, email archives or"
-" spreadsheets, and they will be made easy to search and browse."
-msgstr ""
-
-#. [collection.edit.title.case]
-#. defaultMessage is:
-#. Case settings
-#: i18n/messages.json
-msgid "Case settings"
-msgstr ""
-
-#. [collection.info.case]
-#. defaultMessage is:
-#. Casefile
-#: i18n/messages.json
-msgid "Casefile"
-msgstr ""
-
-#. [collection.publish.succeed]
-#. defaultMessage is:
-#. Casefile is published
-#: i18n/messages.json
-msgid "Casefile is published"
-msgstr ""
-
-#. [nav.cases]
-#. defaultMessage is:
-#. Cases
-#: i18n/messages.json
-msgid "Cases"
-msgstr ""
-
 #. [cases.browser.breadcrumb]
 #. defaultMessage is:
 #. Cases overview
@@ -292,7 +281,7 @@ msgstr ""
 #. [collection.xref.filter.categories]
 #. defaultMessage is:
 #. Categories
-#. [search.facets.facet.category]
+#. [collection.index.facet.category]
 #. defaultMessage is:
 #. Categories
 #: i18n/messages.json i18n/messages.json
@@ -309,19 +298,26 @@ msgstr "Kategorije"
 msgid "Category"
 msgstr "Kategorija"
 
+#. [settings.password.title]
+#. defaultMessage is:
+#. Change your password
+#: i18n/messages.json
+msgid "Change your password"
+msgstr ""
+
+#. [dashboard.subheading]
+#. defaultMessage is:
+#. Check an overview of status of all ongoing data analysis.
+#: i18n/messages.json
+msgid "Check an overview of status of all ongoing data analysis."
+msgstr ""
+
 #. [signup.inbox.title]
 #. defaultMessage is:
 #. Check your inbox
 #: i18n/messages.json
 msgid "Check your inbox"
 msgstr "Provjeri svoju poštu"
-
-#. [case.choose.name]
-#. defaultMessage is:
-#. Choose a title:
-#: i18n/messages.json
-msgid "Choose a title:"
-msgstr "Izaberi naslov:"
 
 #. [role.select.user]
 #. defaultMessage is:
@@ -337,11 +333,28 @@ msgstr "Izaberi korisnika"
 msgid "Choose files to upload..."
 msgstr "Izaberi fajlove za unos..."
 
+#. [tags.results]
+#. defaultMessage is:
+#. Citations
+#: i18n/messages.json
+msgid "Citations"
+msgstr ""
+
 #. [queryFilters.clearAll]
 #. defaultMessage is:
 #. Clear all
-#: i18n/messages.json
+#. [notifications.mark.read]
+#. defaultMessage is:
+#. Clear all
+#: i18n/messages.json i18n/messages.json
 msgid "Clear all"
+msgstr ""
+
+#. [navbar.alert_add]
+#. defaultMessage is:
+#. Click to receive alerts about new results for this search.
+#: i18n/messages.json
+msgid "Click to receive alerts about new results for this search."
 msgstr ""
 
 #. [footer.code]
@@ -351,13 +364,10 @@ msgstr ""
 msgid "Code"
 msgstr "Code"
 
-#. [infoMode.collection]
+#. [collection.status.collection]
 #. defaultMessage is:
 #. Collection
-#. [infoMode.collection]
-#. defaultMessage is:
-#. Collection
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Collection"
 msgstr ""
 
@@ -370,6 +380,20 @@ msgstr ""
 #: i18n/messages.json i18n/messages.json
 msgid "Compare entities between collections"
 msgstr "Uporedi entitete sa kolekcijama"
+
+#. [searchTips.composite.title]
+#. defaultMessage is:
+#. Composite queries
+#: i18n/messages.json
+msgid "Composite queries"
+msgstr ""
+
+#. [xref.compute]
+#. defaultMessage is:
+#. Compute
+#: i18n/messages.json
+msgid "Compute"
+msgstr ""
 
 #. [password_auth.confirm]
 #. defaultMessage is:
@@ -412,7 +436,7 @@ msgstr ""
 #. [collection.edit.info.countries]
 #. defaultMessage is:
 #. Countries
-#. [search.facets.facet.countries]
+#. [collection.index.facet.countries]
 #. defaultMessage is:
 #. Countries
 #. [xref.countries]
@@ -421,11 +445,8 @@ msgstr ""
 #. [search.facets.facet.countries]
 #. defaultMessage is:
 #. Countries
-#. [search.facets.facet.countries]
-#. defaultMessage is:
-#. Countries
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Countries"
 msgstr "Države"
 
@@ -443,17 +464,21 @@ msgstr "Država"
 msgid "Create"
 msgstr "Kreiraj"
 
+#. [alerts.add_placeholder]
+#. defaultMessage is:
+#. Create a new tracking alert...
+#: i18n/messages.json
+msgid "Create a new tracking alert..."
+msgstr ""
+
 #. [case.title]
 #. defaultMessage is:
-#. Create a new casefile
+#. Create a personal dataset
 #: i18n/messages.json
-msgid "Create a new casefile"
+msgid "Create a personal dataset"
 msgstr ""
 
 #. [entity.info.xref]
-#. defaultMessage is:
-#. Cross-reference
-#. [collection.info.xref]
 #. defaultMessage is:
 #. Cross-reference
 #. [collection.xref.title]
@@ -466,39 +491,38 @@ msgstr ""
 #. defaultMessage is:
 #. Cross-reference
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
 msgid "Cross-reference"
 msgstr "Povezane reference"
 
 #. [collection.xref.xrefAll]
 #. defaultMessage is:
-#. Cross-reference all sources
+#. Cross-reference all datasets
 #: i18n/messages.json
-msgid "Cross-reference all sources"
+msgid "Cross-reference all datasets"
 msgstr ""
 
 #. [collection.xref.xrefSpecific]
 #. defaultMessage is:
-#. Cross-reference specific sources (faster)
+#. Cross-reference specific datasets (faster)
 #: i18n/messages.json
-msgid "Cross-reference specific sources (faster)"
+msgid "Cross-reference specific datasets (faster)"
 msgstr ""
 
 #. [xref.collection]
 #. defaultMessage is:
-#. Cross-referenced collection
+#. Cross-referenced dataset
 #: i18n/messages.json
-msgid "Cross-referenced collection"
+msgid "Cross-referenced dataset"
 msgstr ""
 
 #. [collection.xref.alert.text]
 #. defaultMessage is:
-#. Cross-referencing against all other data may take a lot of time. Only start
-#. this process once and allow several hours for it to complete.
+#. Cross-referencing against all other data may take a lot of time. Start this
+#. process once and then wait for it to complete.
 #: i18n/messages.json
 msgid ""
-"Cross-referencing against all other data may take a lot of time. Only start "
-"this process once and allow several hours for it to complete."
+"Cross-referencing against all other data may take a lot of time. Start this "
+"process once and then wait for it to complete."
 msgstr ""
 
 #. [collection.xref.processing]
@@ -506,6 +530,13 @@ msgstr ""
 #. Cross-referencing started.
 #: i18n/messages.json
 msgid "Cross-referencing started."
+msgstr ""
+
+#. [settings.current_password]
+#. defaultMessage is:
+#. Current password
+#: i18n/messages.json
+msgid "Current password"
 msgstr ""
 
 #. [collection.data_url]
@@ -522,6 +553,49 @@ msgstr ""
 msgid "Data source URL"
 msgstr ""
 
+#. [collection.info.collection]
+#. defaultMessage is:
+#. Dataset
+#. [infoMode.collection]
+#. defaultMessage is:
+#. Dataset
+#. [entity.column.collection_id]
+#. defaultMessage is:
+#. Dataset
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Dataset"
+msgstr ""
+
+#. [collection.publish.succeed]
+#. defaultMessage is:
+#. Dataset is published
+#: i18n/messages.json
+msgid "Dataset is published"
+msgstr ""
+
+#. [collection.edit.title]
+#. defaultMessage is:
+#. Dataset settings
+#: i18n/messages.json
+msgid "Dataset settings"
+msgstr ""
+
+#. [nav.collections]
+#. defaultMessage is:
+#. Datasets
+#. [collection.index.title]
+#. defaultMessage is:
+#. Datasets
+#. [collection.index.breadcrumb]
+#. defaultMessage is:
+#. Datasets
+#. [search.facets.facet.collection_id]
+#. defaultMessage is:
+#. Datasets
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Datasets"
+msgstr ""
+
 #. [entity.column.dates]
 #. defaultMessage is:
 #. Date
@@ -535,10 +609,10 @@ msgstr ""
 msgid "Date"
 msgstr "Datum"
 
-#. [document.viewer.delete]
+#. [collection.info.delete]
 #. defaultMessage is:
 #. Delete
-#. [collection.info.delete]
+#. [document.viewer.delete]
 #. defaultMessage is:
 #. Delete
 #. [collection.delete.confirm]
@@ -555,21 +629,7 @@ msgstr "Datum"
 msgid "Delete"
 msgstr "Izbriši"
 
-#. [case.choose.summary]
-#. defaultMessage is:
-#. Describe it briefly:
-#: i18n/messages.json
-msgid "Describe it briefly:"
-msgstr "Opišite ukratko:"
-
-#. [references.details]
-#. defaultMessage is:
-#. Details
-#: i18n/messages.json
-msgid "Details"
-msgstr ""
-
-#. [entity.info.source]
+#. [entity.info.documents]
 #. defaultMessage is:
 #. Documents
 #. [entity.info.documents]
@@ -609,9 +669,9 @@ msgstr "Preuzmi"
 
 #. [xref.download]
 #. defaultMessage is:
-#. Download matches
+#. Download Excel
 #: i18n/messages.json
-msgid "Download matches"
+msgid "Download Excel"
 msgstr ""
 
 #. [document.download.tooltip]
@@ -649,6 +709,13 @@ msgstr "Uredi"
 msgid "Email address"
 msgstr "E-mail adresa"
 
+#. [settings.current_explain]
+#. defaultMessage is:
+#. Enter your current password to set a new one.
+#: i18n/messages.json
+msgid "Enter your current password to set a new one."
+msgstr ""
+
 #. [collection.entity_types]
 #. defaultMessage is:
 #. Entity types
@@ -656,18 +723,32 @@ msgstr "E-mail adresa"
 msgid "Entity types"
 msgstr ""
 
-#. [search.screen.error]
+#. [result.error]
 #. defaultMessage is:
 #. Error
 #: i18n/messages.json
 msgid "Error"
 msgstr "Greška"
 
+#. [searchTips.exact.title]
+#. defaultMessage is:
+#. Exact matches
+#: i18n/messages.json
+msgid "Exact matches"
+msgstr ""
+
 #. [search.screen.export]
 #. defaultMessage is:
 #. Export
 #: i18n/messages.json
 msgid "Export"
+msgstr ""
+
+#. [tags.title]
+#. defaultMessage is:
+#. Extracted selectors
+#: i18n/messages.json
+msgid "Extracted selectors"
 msgstr ""
 
 #. [search.facets.facet.mimetypes]
@@ -684,18 +765,11 @@ msgstr "Tip fajla"
 msgid "Filter by access"
 msgstr ""
 
-#. [collection.xref.filter.sources]
+#. [collection.xref.filter.collections]
 #. defaultMessage is:
-#. Filter sources
+#. Filter datasets
 #: i18n/messages.json
-msgid "Filter sources"
-msgstr ""
-
-#. [sources.index.filter]
-#. defaultMessage is:
-#. Filter the sources…
-#: i18n/messages.json
-msgid "Filter the sources…"
+msgid "Filter datasets"
 msgstr ""
 
 #. [search.screen.filters]
@@ -714,9 +788,9 @@ msgstr ""
 
 #. [collection.status.finished_tasks]
 #. defaultMessage is:
-#. Finished Tasks
+#. Finished
 #: i18n/messages.json
-msgid "Finished Tasks"
+msgid "Finished"
 msgstr ""
 
 #. [document.folder.untitled]
@@ -736,6 +810,13 @@ msgstr "Naziv foldera"
 msgid "Foreign ID"
 msgstr ""
 
+#. [result.results]
+#. defaultMessage is:
+#. Found {total} results
+#: i18n/messages.json
+msgid "Found {total} results"
+msgstr ""
+
 #. [email.from]
 #. defaultMessage is:
 #. From
@@ -743,18 +824,13 @@ msgstr ""
 msgid "From"
 msgstr "Od"
 
-#. [alert.suggest.text]
+#. [dashboard.groups]
 #. defaultMessage is:
-#. Get notified {alertComponent} when data related to {queryText} is added.
-#: i18n/messages.json
-msgid ""
-"Get notified {alertComponent} when data related to {queryText} is added."
-msgstr ""
-
+#. Groups
 #. [collection.edit.groups]
 #. defaultMessage is:
 #. Groups
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Groups"
 msgstr "Grupe"
 
@@ -768,10 +844,7 @@ msgstr "Pomoć"
 #. [entity.info.info]
 #. defaultMessage is:
 #. Info
-#. [entity.info.info]
-#. defaultMessage is:
-#. Info
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Info"
 msgstr ""
 
@@ -785,13 +858,24 @@ msgstr ""
 msgid "Information URL"
 msgstr ""
 
-#. [alerts.add_placeholder]
+#. [settings.saved]
 #. defaultMessage is:
-#. Keep track of searches...
+#. It's official, your profile is updated.
+#: i18n/messages.json
+msgid "It's official, your profile is updated."
+msgstr ""
+
+#. [collection.status.jobs]
+#. defaultMessage is:
+#. Jobs
+#: i18n/messages.json
+msgid "Jobs"
+msgstr ""
+
 #. [queryLogs.add_placeholder]
 #. defaultMessage is:
 #. Keep track of searches...
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Keep track of searches..."
 msgstr "Pratite historiju pretrage..."
 
@@ -802,9 +886,13 @@ msgstr "Pratite historiju pretrage..."
 msgid "Label"
 msgstr "Oznaka"
 
-#. [nav.languages]
+#. [settings.locale]
 #. defaultMessage is:
-#. Languages
+#. Language
+#: i18n/messages.json
+msgid "Language"
+msgstr ""
+
 #. [collection.edit.info.languages]
 #. defaultMessage is:
 #. Languages
@@ -814,7 +902,7 @@ msgstr "Oznaka"
 #. [search.facets.facet.languages]
 #. defaultMessage is:
 #. Languages
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Languages"
 msgstr "Jezici"
 
@@ -853,23 +941,6 @@ msgstr ""
 msgid "Loading…"
 msgstr "Učitavanje..."
 
-#. [case.not.found]
-#. defaultMessage is:
-#. Log in to create your own case files, upload documents and manage your
-#. investigations!
-#: i18n/messages.json
-msgid ""
-"Log in to create your own case files, upload documents and manage your "
-"investigations!"
-msgstr ""
-
-#. [login.not_available_title]
-#. defaultMessage is:
-#. Login is disabled
-#: i18n/messages.json
-msgid "Login is disabled"
-msgstr "Prijava nije moguća"
-
 #. [logout.success]
 #. defaultMessage is:
 #. Logout successful
@@ -880,26 +951,9 @@ msgstr "Uspješno ste se odjavili"
 #. [alerts.heading]
 #. defaultMessage is:
 #. Manage your alerts
-#. [queryLogs.heading]
-#. defaultMessage is:
-#. Manage your alerts
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Manage your alerts"
 msgstr "Upravljaj pretplatama"
-
-#. [case.question]
-#. defaultMessage is:
-#. Manage your investigations
-#: i18n/messages.json
-msgid "Manage your investigations"
-msgstr "Upravljajte svojim istragama"
-
-#. [collection.info.manage_button]
-#. defaultMessage is:
-#. Manage...
-#: i18n/messages.json
-msgid "Manage..."
-msgstr ""
 
 #. [collection.creator]
 #. defaultMessage is:
@@ -907,13 +961,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "Manager"
 msgstr "Upravitelj"
-
-#. [notifications.mark_read]
-#. defaultMessage is:
-#. Mark as seen
-#: i18n/messages.json
-msgid "Mark as seen"
-msgstr "Označi kao viđeno"
 
 #. [collection.reconcile.description]
 #. defaultMessage is:
@@ -933,7 +980,14 @@ msgstr ""
 msgid "Matches"
 msgstr ""
 
-#. [search.screen.more_results]
+#. [entity.info.tags]
+#. defaultMessage is:
+#. Mentions
+#: i18n/messages.json
+msgid "Mentions"
+msgstr ""
+
+#. [result.more_results]
 #. defaultMessage is:
 #. More than {total} results
 #: i18n/messages.json
@@ -943,10 +997,10 @@ msgstr ""
 #. [entity.column.name]
 #. defaultMessage is:
 #. Name
-#. [settings.name]
+#. [xref.name]
 #. defaultMessage is:
 #. Name
-#. [xref.name]
+#. [settings.name]
 #. defaultMessage is:
 #. Name
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -960,11 +1014,11 @@ msgstr "Ime"
 msgid "Names"
 msgstr "Imena"
 
-#. [collection.index.search.create]
+#. [cases.index.create]
 #. defaultMessage is:
-#. New case
+#. New dataset
 #: i18n/messages.json
-msgid "New case"
+msgid "New dataset"
 msgstr ""
 
 #. [document.folder.button]
@@ -977,11 +1031,25 @@ msgstr ""
 msgid "New folder"
 msgstr "Nova datoteka"
 
+#. [settings.new_password]
+#. defaultMessage is:
+#. New password
+#: i18n/messages.json
+msgid "New password"
+msgstr ""
+
 #. [language.multiselect.no.result]
 #. defaultMessage is:
 #. No Result
 #: i18n/messages.json
 msgid "No Result"
+msgstr ""
+
+#. [entity.document.manager.empty]
+#. defaultMessage is:
+#. No files or directories.
+#: i18n/messages.json
+msgid "No files or directories."
 msgstr ""
 
 #. [email.body.empty]
@@ -1005,6 +1073,13 @@ msgstr "Nema opcija"
 msgid "No preview is available for this document"
 msgstr "Pregled ovog dokumenta nije dostupan"
 
+#. [result.none]
+#. defaultMessage is:
+#. No results found
+#: i18n/messages.json
+msgid "No results found"
+msgstr ""
+
 #. [country.multiselect.no.results]
 #. defaultMessage is:
 #. No results.
@@ -1022,25 +1097,18 @@ msgstr "Nema rezultata."
 msgid "No search results"
 msgstr "Nema rezultata pretrage"
 
+#. [entity.tags.no_tags]
+#. defaultMessage is:
+#. No selectors were extracted from this entity.
+#: i18n/messages.json
+msgid "No selectors were extracted from this entity."
+msgstr ""
+
 #. [document.search.no_match]
 #. defaultMessage is:
 #. No single page within this document matches all your search terms.
 #: i18n/messages.json
 msgid "No single page within this document matches all your search terms."
-msgstr ""
-
-#. [sources.index.none]
-#. defaultMessage is:
-#. No sources were found
-#: i18n/messages.json
-msgid "No sources were found"
-msgstr ""
-
-#. [entity.tags.no_tags]
-#. defaultMessage is:
-#. No tags found for this entity.
-#: i18n/messages.json
-msgid "No tags found for this entity."
 msgstr ""
 
 #. [auth.unauthorized]
@@ -1053,16 +1121,12 @@ msgstr "Nije Vam dozvoljen pristup"
 #. [nav.view_notifications]
 #. defaultMessage is:
 #. Notifications
-#: i18n/messages.json
+#. [dashboard.notifications]
+#. defaultMessage is:
+#. Notifications
+#: i18n/messages.json i18n/messages.json
 msgid "Notifications"
 msgstr "Notifikacije"
-
-#. [collection.status.jobs]
-#. defaultMessage is:
-#. Number of Jobs
-#: i18n/messages.json
-msgid "Number of Jobs"
-msgstr ""
 
 #. [document.upload.notice]
 #. defaultMessage is:
@@ -1075,6 +1139,20 @@ msgid ""
 msgstr ""
 "Kada unos bude završen, biti će potrebno par momenata da bi dokument bio "
 "procesuiran i da bi mogao biti korišten za pretragu."
+
+#. [result.solo]
+#. defaultMessage is:
+#. One result found
+#: i18n/messages.json
+msgid "One result found"
+msgstr ""
+
+#. [collection.publish.admin]
+#. defaultMessage is:
+#. Only administrators can publish a dataset.
+#: i18n/messages.json
+msgid "Only administrators can publish a dataset."
+msgstr ""
 
 #. [sidebar.open]
 #. defaultMessage is:
@@ -1114,10 +1192,7 @@ msgstr ""
 #. [password_auth.password]
 #. defaultMessage is:
 #. Password
-#. [settings.password]
-#. defaultMessage is:
-#. Password
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Password"
 msgstr "Šifra"
 
@@ -1130,9 +1205,41 @@ msgstr "Šifre nisu iste"
 
 #. [collection.status.pending_tasks]
 #. defaultMessage is:
-#. Pending Tasks
+#. Pending
 #: i18n/messages.json
-msgid "Pending Tasks"
+msgid "Pending"
+msgstr ""
+
+#. [collection.info.case]
+#. defaultMessage is:
+#. Personal dataset
+#: i18n/messages.json
+msgid "Personal dataset"
+msgstr ""
+
+#. [nav.casefiles]
+#. defaultMessage is:
+#. Personal datasets
+#. [dashboard.cases]
+#. defaultMessage is:
+#. Personal datasets
+#. [cases.title]
+#. defaultMessage is:
+#. Personal datasets
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Personal datasets"
+msgstr ""
+
+#. [case.description]
+#. defaultMessage is:
+#. Personal datasets let you upload and share documents and data which belong
+#. to a particular story. You can upload PDFs, email archives or spreadsheets,
+#. and they will be made easy to search and browse.
+#: i18n/messages.json
+msgid ""
+"Personal datasets let you upload and share documents and data which belong "
+"to a particular story. You can upload PDFs, email archives or spreadsheets, "
+"and they will be made easy to search and browse."
 msgstr ""
 
 #. [search.facets.facet.phones]
@@ -1142,25 +1249,28 @@ msgstr ""
 msgid "Phones"
 msgstr "Telefoni"
 
-#. [nav.profile]
+#. [case.create.login]
 #. defaultMessage is:
-#. Profile
+#. Please sign in first.
 #: i18n/messages.json
-msgid "Profile"
-msgstr "Profil"
+msgid "Please sign in first."
+msgstr ""
 
-#. [collection.publish.confirm]
+#. [searchTips.proximity.title]
 #. defaultMessage is:
-#. Publish
+#. Proximity searches
 #: i18n/messages.json
-msgid "Publish"
+msgid "Proximity searches"
 msgstr ""
 
 #. [collection.info.publish]
 #. defaultMessage is:
-#. Publish as source
-#: i18n/messages.json
-msgid "Publish as source"
+#. Publish
+#. [collection.publish.confirm]
+#. defaultMessage is:
+#. Publish
+#: i18n/messages.json i18n/messages.json
+msgid "Publish"
 msgstr ""
 
 #. [collection.publisher]
@@ -1180,13 +1290,6 @@ msgstr ""
 msgid "Publisher URL"
 msgstr ""
 
-#. [collection.info.analyze]
-#. defaultMessage is:
-#. Re-analyze
-#: i18n/messages.json
-msgid "Re-analyze"
-msgstr ""
-
 #. [collection.analyze.processing]
 #. defaultMessage is:
 #. Re-analyzing started.
@@ -1196,12 +1299,26 @@ msgstr ""
 
 #. [collection.analyze.alert.text]
 #. defaultMessage is:
-#. Re-analyzing the collection will take some time. Please start the process
-#. only once and allow time for it to complete.
+#. Re-analyzing the dataset will take some time. Start the process only once
+#. and allow time for it to complete.
 #: i18n/messages.json
 msgid ""
-"Re-analyzing the collection will take some time. Please start the process "
-"only once and allow time for it to complete."
+"Re-analyzing the dataset will take some time. Start the process only once "
+"and allow time for it to complete."
+msgstr ""
+
+#. [document.manager.analyze]
+#. defaultMessage is:
+#. Re-process
+#: i18n/messages.json
+msgid "Re-process"
+msgstr ""
+
+#. [settings.email.muted]
+#. defaultMessage is:
+#. Receive daily notification e-mails
+#: i18n/messages.json
+msgid "Receive daily notification e-mails"
 msgstr ""
 
 #. [notifications.title]
@@ -1232,25 +1349,11 @@ msgstr ""
 msgid "Register"
 msgstr "Registrujte se"
 
-#. [queryLogs.query.delete]
-#. defaultMessage is:
-#. Remove
-#: i18n/messages.json
-msgid "Remove"
-msgstr ""
-
 #. [queryLogs.query.delete.tooltip]
 #. defaultMessage is:
-#. Remove from search history
+#. Remove from {listType}
 #: i18n/messages.json
-msgid "Remove from search history"
-msgstr ""
-
-#. [tags.results]
-#. defaultMessage is:
-#. Results
-#: i18n/messages.json
-msgid "Results"
+msgid "Remove from {listType}"
 msgstr ""
 
 #. [collection.xref.select.showSelected]
@@ -1284,13 +1387,13 @@ msgstr "Sačuvaj izmjene"
 msgid "Score"
 msgstr "Količina usaglašenosti"
 
-#. [collection.info.search_button]
-#. defaultMessage is:
-#. Search
 #. [home.search]
 #. defaultMessage is:
 #. Search
 #. [search.title]
+#. defaultMessage is:
+#. Search
+#. [search.screen.breadcrumb]
 #. defaultMessage is:
 #. Search
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -1304,68 +1407,41 @@ msgstr "Pretraži"
 msgid "Search by country name"
 msgstr "Pretraži po imenu države"
 
-#. [collection.index.casefiles.placeholder]
+#. [search.nolabel_placeholder]
 #. defaultMessage is:
-#. Search case files used in investigations...
+#. Search companies, people and documents
 #: i18n/messages.json
-msgid "Search case files used in investigations..."
+msgid "Search companies, people and documents"
 msgstr ""
 
-#. [case.search_cases_placeholder]
+#. [collection.index.placeholder]
 #. defaultMessage is:
-#. Search cases
+#. Search datasets...
 #: i18n/messages.json
-msgid "Search cases"
+msgid "Search datasets..."
 msgstr ""
 
-#. [navbar.mobile_search_placeholder]
-#. defaultMessage is:
-#. Search companies, people and ...
-#: i18n/messages.json
-msgid "Search companies, people and ..."
-msgstr "Pretraži kompanije, ljude i ..."
-
-#. [navbar.search_placeholder]
-#. defaultMessage is:
-#. Search companies, people and documents.
-#: i18n/messages.json
-msgid "Search companies, people and documents."
-msgstr "Pretraži kompanije, osobe ili dokumente"
-
-#. [collection.index.sources.placeholder]
-#. defaultMessage is:
-#. Search curated data sources...
-#: i18n/messages.json
-msgid "Search curated data sources..."
-msgstr ""
-
-#. [alerts.alert.search]
-#. defaultMessage is:
-#. Search for {query}
 #. [queryLogs.query.search]
 #. defaultMessage is:
 #. Search for {query}
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Search for {query}"
 msgstr ""
 
-#. [nav.queryLogs]
+#. [queryLogs.title]
 #. defaultMessage is:
 #. Search history
-#. [queryLogs.title]
+#. [history.search.title]
 #. defaultMessage is:
 #. Search history
 #: i18n/messages.json i18n/messages.json
 msgid "Search history"
 msgstr ""
 
-#. [collections.index.filter]
+#. [search.placeholder]
 #. defaultMessage is:
 #. Search in {label}
-#. [documents.screen.filter]
-#. defaultMessage is:
-#. Search in {label}
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Search in {label}"
 msgstr ""
 
@@ -1383,7 +1459,20 @@ msgstr "Pretraži korisnike"
 msgid "Search {things} entities"
 msgstr ""
 
-#. [search.screen.searching]
+#. [nav.querylogs]
+#. defaultMessage is:
+#. Searches & alerts
+#. [dashboard.history]
+#. defaultMessage is:
+#. Searches & alerts
+#. [history.title]
+#. defaultMessage is:
+#. Searches & alerts
+#: i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Searches & alerts"
+msgstr ""
+
+#. [result.searching]
 #. defaultMessage is:
 #. Searching...
 #: i18n/messages.json
@@ -1414,17 +1503,20 @@ msgstr "Greška na serveru"
 #. [nav.settings]
 #. defaultMessage is:
 #. Settings
-#. [collection.info.edit_button]
+#. [collection.info.settings]
+#. defaultMessage is:
+#. Settings
+#. [dashboard.settings]
 #. defaultMessage is:
 #. Settings
 #. [settings.title]
 #. defaultMessage is:
 #. Settings
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Settings"
 msgstr "Podešavanja"
 
-#. [collection.info.share]
+#. [collection.info.access]
 #. defaultMessage is:
 #. Share
 #: i18n/messages.json
@@ -1433,17 +1525,10 @@ msgstr ""
 
 #. [case.share.with]
 #. defaultMessage is:
-#. Share with:
+#. Share with
 #: i18n/messages.json
-msgid "Share with:"
+msgid "Share with"
 msgstr ""
-
-#. [search.facets.facet.team]
-#. defaultMessage is:
-#. Shared with
-#: i18n/messages.json
-msgid "Shared with"
-msgstr "Podijeljeno sa"
 
 #. [search.facets.showMore]
 #. defaultMessage is:
@@ -1455,17 +1540,20 @@ msgstr "Prikaži više..."
 #. [password_auth.signin]
 #. defaultMessage is:
 #. Sign in
+#. [nav.signin]
+#. defaultMessage is:
+#. Sign in
 #. [search.callout_message.button_text]
 #. defaultMessage is:
 #. Sign in
 #. [signup.title]
 #. defaultMessage is:
 #. Sign in
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sign in"
 msgstr "Prijava"
 
-#. [nav.signin]
+#. [nav.signin_register]
 #. defaultMessage is:
 #. Sign in / Register
 #: i18n/messages.json
@@ -1517,35 +1605,12 @@ msgid ""
 "results you are authorised to access."
 msgstr ""
 
-#. [collection.info.source]
+#. [searchTips.spelling.title]
 #. defaultMessage is:
-#. Source
-#. [entity.column.collection_id]
-#. defaultMessage is:
-#. Source
-#: i18n/messages.json i18n/messages.json
-msgid "Source"
-msgstr "Izvor"
-
-#. [collection.edit.title.source]
-#. defaultMessage is:
-#. Source settings
+#. Spelling variants
 #: i18n/messages.json
-msgid "Source settings"
-msgstr "Podešavanja izvora"
-
-#. [nav.sources]
-#. defaultMessage is:
-#. Sources
-#. [search.facets.facet.collection_id]
-#. defaultMessage is:
-#. Sources
-#. [sources.index.title]
-#. defaultMessage is:
-#. Sources
-#: i18n/messages.json i18n/messages.json i18n/messages.json
-msgid "Sources"
-msgstr "Izvori"
+msgid "Spelling variants"
+msgstr ""
 
 #. [collection.xref.confirm_button]
 #. defaultMessage is:
@@ -1560,13 +1625,6 @@ msgstr ""
 #: i18n/messages.json
 msgid "Start re-analyzing"
 msgstr ""
-
-#. [alerts.alert.delete]
-#. defaultMessage is:
-#. Stop tracking
-#: i18n/messages.json
-msgid "Stop tracking"
-msgstr "Prestani pratiti"
 
 #. [email.subject]
 #. defaultMessage is:
@@ -1585,7 +1643,7 @@ msgstr "Uspješno"
 #. [collection.edit.info.summary]
 #. defaultMessage is:
 #. Summary
-#. [case.summary]
+#. [case.choose.summary]
 #. defaultMessage is:
 #. Summary
 #: i18n/messages.json i18n/messages.json
@@ -1599,19 +1657,19 @@ msgstr "Opis"
 msgid "System Status"
 msgstr ""
 
-#. [tags.title]
+#. [dashboard.status]
 #. defaultMessage is:
-#. Tag
+#. System status
 #: i18n/messages.json
-msgid "Tag"
+msgid "System status"
 msgstr ""
 
-#. [entity.info.tags]
+#. [collection.status.progress]
 #. defaultMessage is:
-#. Tags
+#. Tasks
 #: i18n/messages.json
-msgid "Tags"
-msgstr "Linkovi"
+msgid "Tasks"
+msgstr ""
 
 #. [entity.info.text]
 #. defaultMessage is:
@@ -1627,12 +1685,31 @@ msgstr ""
 msgid "The Server did not accept your input"
 msgstr "Server nije prihvatio Vaš unos"
 
+#. [group.page.description]
+#. defaultMessage is:
+#. The list below shows all datasets that belong to this group.
+#: i18n/messages.json
+msgid "The list below shows all datasets that belong to this group."
+msgstr ""
+
 #. [error.screen.not_found]
 #. defaultMessage is:
 #. The requested page could not be found.
 #: i18n/messages.json
 msgid "The requested page could not be found."
 msgstr "Tražena stranica nije pronađena."
+
+#. [searchTips.composite.1]
+#. defaultMessage is:
+#. The search <em>banana ice cream</em> prioritizes results that contain all
+#. three terms: banana, ice, and cream.  Results with one or more of the given
+#. terms will follow
+#: i18n/messages.json
+msgid ""
+"The search <em>banana ice cream</em> prioritizes results that contain all "
+"three terms: banana, ice, and cream.  Results with one or more of the given "
+"terms will follow"
+msgstr ""
 
 #. [document.viewer.ignored_file]
 #. defaultMessage is:
@@ -1653,12 +1730,19 @@ msgstr ""
 msgid "There are no active collections"
 msgstr ""
 
-#. [notifications.no_notifications]
+#. [collection.xref.empty]
 #. defaultMessage is:
-#. There are no notifications
+#. There are no cross-referencing results.
 #: i18n/messages.json
-msgid "There are no notifications"
-msgstr "Nemate notifikacija"
+msgid "There are no cross-referencing results."
+msgstr ""
+
+#. [entity.similar.empty]
+#. defaultMessage is:
+#. There are no similar entities.
+#: i18n/messages.json
+msgid "There are no similar entities."
+msgstr ""
 
 #. [document.folder.error]
 #. defaultMessage is:
@@ -1673,6 +1757,20 @@ msgstr ""
 #: i18n/messages.json
 msgid "There was an error while uploading the file."
 msgstr "Desila se greška prilikom unosa fajla."
+
+#. [searchTips.composite.6]
+#. defaultMessage is:
+#. These operations can be combined as you like.  For example <em>banana AND
+#. (“ice cream” OR “gelato”) -chocolate</em> will return results where banana
+#. appears with ice cream or gelato in the document but where chocolate is not
+#. present
+#: i18n/messages.json
+msgid ""
+"These operations can be combined as you like.  For example <em>banana AND "
+"(“ice cream” OR “gelato”) -chocolate</em> will return results where banana "
+"appears with ice cream or gelato in the document but where chocolate is not "
+"present"
+msgstr ""
 
 #. [entity.references.no_relationships]
 #. defaultMessage is:
@@ -1695,7 +1793,53 @@ msgstr "Ova datoteka je prazna"
 msgid "This folder is not fully imported."
 msgstr "Ovaj folder nije u potpunosti unešen."
 
-#. [alert.manager.title]
+#. [sources.index.empty]
+#. defaultMessage is:
+#. This group is not linked to any datasets.
+#: i18n/messages.json
+msgid "This group is not linked to any datasets."
+msgstr ""
+
+#. [case.choose.name]
+#. defaultMessage is:
+#. Title
+#: i18n/messages.json
+msgid "Title"
+msgstr ""
+
+#. [searchTips.proximity.1]
+#. defaultMessage is:
+#. To search for two terms within a certain distance of each other, use double
+#. quotes <em>""</em> around the two words and the tilde <em>~</em> symbol at
+#. the end of the phrase.  For example <em>“Bank America”~2</em> will find
+#. relevant matches with the terms "Bank" and "America" occurring within two
+#. words from each other, such as "Bank of America", "Bank in America", even
+#. "America has a Bank".
+#: i18n/messages.json
+msgid ""
+"To search for two terms within a certain distance of each other, use double "
+"quotes <em>\"\"</em> around the two words and the tilde <em>~</em> symbol at"
+" the end of the phrase.  For example <em>“Bank America”~2</em> will find "
+"relevant matches with the terms \"Bank\" and \"America\" occurring within "
+"two words from each other, such as \"Bank of America\", \"Bank in America\","
+" even \"America has a Bank\"."
+msgstr ""
+
+#. [alerts.track]
+#. defaultMessage is:
+#. Track
+#: i18n/messages.json
+msgid "Track"
+msgstr ""
+
+#. [alert.suggest.prompt]
+#. defaultMessage is:
+#. Track {queryText}: {alertComponent}
+#: i18n/messages.json
+msgid "Track {queryText}: {alertComponent}"
+msgstr ""
+
+#. [history.alerts.title]
 #. defaultMessage is:
 #. Tracking alerts
 #: i18n/messages.json
@@ -1743,31 +1887,28 @@ msgstr "Tipovi"
 msgid "Unknown"
 msgstr "Nepoznato"
 
-#. [case.untitled_label]
+#. [case.label_placeholder]
 #. defaultMessage is:
-#. Untitled case file
+#. Untitled dataset
 #: i18n/messages.json
-msgid "Untitled case file"
+msgid "Untitled dataset"
 msgstr ""
 
 #. [alerts.save]
 #. defaultMessage is:
 #. Update
-#. [queryLogs.save]
-#. defaultMessage is:
-#. Update
 #. [settings.save]
 #. defaultMessage is:
 #. Update
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Update"
 msgstr "Ažuriraj"
 
 #. [collection.status.title]
 #. defaultMessage is:
-#. Update in progress
+#. Update in progress ({percent}%)
 #: i18n/messages.json
-msgid "Update in progress"
+msgid "Update in progress ({percent}%)"
 msgstr ""
 
 #. [collection.last_updated]
@@ -1800,6 +1941,34 @@ msgstr "Unos dokumenata"
 #: i18n/messages.json
 msgid "Uploading: {file}..."
 msgstr "Unosi se: {file}..."
+
+#. [searchTips.exact.1]
+#. defaultMessage is:
+#. Use <em>""</em> to return only exact matches.  For example, the search
+#. <em>"barack obama"</em> will return only results containing the exact
+#. phrase "barack obama"
+#: i18n/messages.json
+msgid ""
+"Use <em>\"\"</em> to return only exact matches.  For example, the search "
+"<em>\"barack obama\"</em> will return only results containing the exact "
+"phrase \"barack obama\""
+msgstr ""
+
+#. [searchTips.spelling.1]
+#. defaultMessage is:
+#. Use <em>~</em> to increase the fuzziness of a search.  For example,
+#. <em>Wladimir~2</em> will return not just the term “Wladimir” but also
+#. similar spellings such as "Wladimyr" or "Vladimyr". A spelling variant is
+#. defined by the number of spelling mistakes that must be made to get from
+#. the original word to the variant.
+#: i18n/messages.json
+msgid ""
+"Use <em>~</em> to increase the fuzziness of a search.  For example, "
+"<em>Wladimir~2</em> will return not just the term “Wladimir” but also "
+"similar spellings such as \"Wladimyr\" or \"Vladimyr\". A spelling variant "
+"is defined by the number of spelling mistakes that must be made to get from "
+"the original word to the variant."
+msgstr ""
 
 #. [settings.password.rules]
 #. defaultMessage is:
@@ -1843,6 +2012,14 @@ msgstr "Korisnici"
 msgid "View"
 msgstr "Pregled"
 
+#. [notification.description]
+#. defaultMessage is:
+#. View the latest updates to datasets, groups and tracking alerts you follow.
+#: i18n/messages.json
+msgid ""
+"View the latest updates to datasets, groups and tracking alerts you follow."
+msgstr ""
+
 #. [search.warning]
 #. defaultMessage is:
 #. Warning:
@@ -1861,18 +2038,11 @@ msgid ""
 msgstr ""
 "Poslali smo Vam e-mail, molimo da pomoću linka završite svoju registraciju"
 
-#. [collection.publish.alert.text]
+#. [notifications.greeting]
 #. defaultMessage is:
-#. You are converting this case file to a source. Sources are to be seen as
-#. raw evidence and can be made public for every visitor of the system to see.
-#. Please make sure you do not publish material identifying your sources,
-#. directly or through metadata.
+#. What's new, {role}?
 #: i18n/messages.json
-msgid ""
-"You are converting this case file to a source. Sources are to be seen as raw"
-" evidence and can be made public for every visitor of the system to see. "
-"Please make sure you do not publish material identifying your sources, "
-"directly or through metadata."
+msgid "What's new, {role}?"
 msgstr ""
 
 #. [alerts.no_alerts]
@@ -1885,11 +2055,18 @@ msgstr ""
 msgid "You are not tracking any searches"
 msgstr "Ne pratite nijednu pretragu"
 
-#. [search.callout_message.signedIn]
+#. [collection.publish.alert.text]
 #. defaultMessage is:
-#. You are part of {roles} - click to see the associated sources.
+#. You are publishing a dataset. Published datasets are understood as raw
+#. evidence and can be made public for every visitor of the system to see.
+#. Please make sure you do not publish material identifying your sources,
+#. directly or through metadata.
 #: i18n/messages.json
-msgid "You are part of {roles} - click to see the associated sources."
+msgid ""
+"You are publishing a dataset. Published datasets are understood as raw "
+"evidence and can be made public for every visitor of the system to see. "
+"Please make sure you do not publish material identifying your sources, "
+"directly or through metadata."
 msgstr ""
 
 #. [navbar.alert_remove]
@@ -1901,46 +2078,37 @@ msgstr "Dobijate notifikacije u vezi ove pretrage."
 
 #. [cases.no_results_title]
 #. defaultMessage is:
-#. You do not have any case files yet
+#. You do not have any personal datasets yet
 #: i18n/messages.json
-msgid "You do not have any case files yet"
+msgid "You do not have any personal datasets yet"
 msgstr ""
 
-#. [login.pw_wrong_credentials]
+#. [notifications.no_notifications]
 #. defaultMessage is:
-#. You have entered an invalid username or password
+#. You have no unseen notifications
 #: i18n/messages.json
-msgid "You have entered an invalid username or password"
+msgid "You have no unseen notifications"
 msgstr ""
 
 #. [collection.xref.select.selectStatus]
 #. defaultMessage is:
 #. You have selected {selectedCount, number} {selectedCount, plural, one
-#. {source} other {sources}}
+#. {collection} other {collections}}
 #: i18n/messages.json
 msgid ""
 "You have selected {selectedCount, number} {selectedCount, plural, one "
-"{source} other {sources}}"
+"{collection} other {collections}}"
 msgstr ""
-
-#. [navbar.alert_add]
-#. defaultMessage is:
-#. You will receive alerts for new results.
-#: i18n/messages.json
-msgid "You will receive alerts for new results."
-msgstr "Dobiti ćete notifikacije za novu pretragu."
 
 #. [alert.manager.description]
 #. defaultMessage is:
-#. You will receive notifications when a new document or entity matches any of
-#. the alerts you have set up below.
+#. You will receive notifications when a new result is added that matches any
+#. of the alerts you have set up below.
 #: i18n/messages.json
 msgid ""
-"You will receive notifications when a new document or entity matches any of "
-"the alerts you have set up below."
+"You will receive notifications when a new result is added that matches any "
+"of the alerts you have set up below."
 msgstr ""
-"Dobiti ćete notifikacije kada novi dokument ili entitet bude odgovarao bilo "
-"kojoj notifikaciji koju ste dodali ispod."
 
 #. [password_auth.name]
 #. defaultMessage is:
@@ -1966,13 +2134,6 @@ msgstr "Vaše izmjene su sačuvane."
 msgid "Your e-mail address cannot be changed"
 msgstr "Vaša e-mail adresa ne može se promijeniti"
 
-#. [notifications.heading]
-#. defaultMessage is:
-#. Your notifications
-#: i18n/messages.json
-msgid "Your notifications"
-msgstr "Vaše notifikacije"
-
 #. [pass.auth.not_same]
 #. defaultMessage is:
 #. Your passwords are not the same!
@@ -1982,9 +2143,9 @@ msgstr "Vaše šifre nisu iste!"
 
 #. [home.statistics.categories]
 #. defaultMessage is:
-#. from {collections} sources
+#. from {collections} datasets
 #: i18n/messages.json
-msgid "from {collections} sources"
+msgid "from {collections} datasets"
 msgstr ""
 
 #. [home.statistics.countries]
@@ -2029,18 +2190,18 @@ msgstr ""
 msgid "{count} more countries & territories"
 msgstr ""
 
+#. [home.statistics.other]
+#. defaultMessage is:
+#. {count} more datasets
+#: i18n/messages.json
+msgid "{count} more datasets"
+msgstr ""
+
 #. [home.statistics.othertypes]
 #. defaultMessage is:
 #. {count} more entity types
 #: i18n/messages.json
 msgid "{count} more entity types"
-msgstr ""
-
-#. [home.statistics.other]
-#. defaultMessage is:
-#. {count} more sources
-#: i18n/messages.json
-msgid "{count} more sources"
 msgstr ""
 
 #. [search.facets.filtersSelected]
@@ -2055,18 +2216,4 @@ msgstr "{count} odabrano"
 #. {finished} of {total} completed
 #: i18n/messages.json
 msgid "{finished} of {total} completed"
-msgstr ""
-
-#. [search.screen.results]
-#. defaultMessage is:
-#. {total} results
-#: i18n/messages.json
-msgid "{total} results"
-msgstr ""
-
-#. [sources.index.total]
-#. defaultMessage is:
-#. {total} sources of documents and data
-#: i18n/messages.json
-msgid "{total} sources of documents and data"
 msgstr ""

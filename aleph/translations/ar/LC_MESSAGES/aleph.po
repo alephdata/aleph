@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-20 17:27+0200\n"
+"POT-Creation-Date: 2019-09-23 14:37+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -103,6 +103,10 @@ msgid "Air and maritime registers"
 msgstr ""
 
 #: aleph/model/collection.py:43
+msgid "Personal datasets"
+msgstr ""
+
+#: aleph/model/collection.py:44
 msgid "Other material"
 msgstr ""
 
@@ -170,27 +174,27 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:118
+#: aleph/views/base_api.py:110
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:141
+#: aleph/views/base_api.py:133
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:150
+#: aleph/views/base_api.py:142
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:159
+#: aleph/views/base_api.py:151
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:177
+#: aleph/views/base_api.py:169
 msgid "Access token is invalid."
 msgstr ""
 
-#: aleph/views/base_api.py:186
+#: aleph/views/base_api.py:178
 msgid "There was an error during search"
 msgstr ""
 
@@ -225,20 +229,24 @@ msgstr ""
 msgid "Invalid schema name: %s"
 msgstr ""
 
-#: aleph/views/roles_api.py:28
+#: aleph/views/roles_api.py:30
 msgid "prefix filter is too short"
 msgstr ""
 
-#: aleph/views/roles_api.py:46
+#: aleph/views/roles_api.py:48
 msgid "To proceed, please check your email."
 msgstr ""
 
-#: aleph/views/roles_api.py:61
+#: aleph/views/roles_api.py:63
 msgid "Invalid code"
 msgstr ""
 
-#: aleph/views/roles_api.py:68
+#: aleph/views/roles_api.py:70
 msgid "Email is already registered"
+msgstr ""
+
+#: aleph/views/roles_api.py:107
+msgid "Incorrect password."
 msgstr ""
 
 #: aleph/views/sessions_api.py:58 aleph/views/sessions_api.py:61
