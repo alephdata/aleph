@@ -23,9 +23,9 @@ const messages = defineMessages({
     id: 'dashboard.title',
     defaultMessage: 'System Status',
   },
-  no_active_collection: {
-    id: 'dashboard.no_active_collection',
-    defaultMessage: 'There are no active collections',
+  no_active: {
+    id: 'collection.status.no_active',
+    defaultMessage: 'There are no ongoing tasks',
   },
   cancel_button: {
     id: 'collection.status.cancel_button',
@@ -126,15 +126,15 @@ export class SystemStatusScreen extends React.Component {
                 />
               </p>
             </div>
-            {result.total === 0
+            {!result.isLoading && result.total === 0
               && (
                 <ErrorSection
                   icon="dashboard"
-                  title={intl.formatMessage(messages.no_active_collection)}
+                  title={intl.formatMessage(messages.no_active)}
                 />
               )
             }
-            {result.total !== 0 && (
+            {!result.isLoading && result.total !== 0 && (
               <table className="StatusTable">
                 <thead>
                   <tr>
