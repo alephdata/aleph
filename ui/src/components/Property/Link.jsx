@@ -23,7 +23,6 @@ class ValueLink extends Component {
   render() {
     const { intl, value, prop, count, metadata } = this.props;
     const content = <Value {...this.props} />;
-    console.log(prop.type, value);
     if (count === null || count === 0) {
       return content;
     }

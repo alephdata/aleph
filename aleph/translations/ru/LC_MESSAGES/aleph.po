@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-23 14:37+0200\n"
+"POT-Creation-Date: 2019-09-24 21:43+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -108,7 +108,7 @@ msgstr "Регистр воздушных и морских судов"
 
 #: aleph/model/collection.py:43
 msgid "Personal datasets"
-msgstr ""
+msgstr "Персональные наборы данных"
 
 #: aleph/model/collection.py:44
 msgid "Other material"
@@ -215,34 +215,34 @@ msgstr "Во время поиска произошла ошибка"
 
 #: aleph/views/forms.py:35
 msgid "Invalid category."
-msgstr ""
+msgstr "Неверная категория"
 
 #: aleph/views/forms.py:45
 msgid "Invalid URL."
-msgstr ""
+msgstr "Некорректная ссылка."
 
 #: aleph/views/forms.py:56
 msgid "Invalid language code."
-msgstr ""
+msgstr "Некорректный языковой код."
 
 #: aleph/views/forms.py:67
 msgid "Invalid user locale."
-msgstr ""
+msgstr "Неверные региональные настройки."
 
 #: aleph/views/forms.py:78
 #, python-format
 msgid "Invalid country code: %s"
-msgstr ""
+msgstr "Некорректный код страны: %s"
 
 #: aleph/views/forms.py:87
 #, python-format
 msgid "Invalid date: %s"
-msgstr ""
+msgstr "Неверная дата: %s"
 
 #: aleph/views/forms.py:95
 #, python-format
 msgid "Invalid schema name: %s"
-msgstr ""
+msgstr "Некорректное имя схемы: %s"
 
 #: aleph/views/roles_api.py:30
 msgid "prefix filter is too short"
@@ -262,7 +262,7 @@ msgstr "Этот электронный адрес уже зарегистрир
 
 #: aleph/views/roles_api.py:107
 msgid "Incorrect password."
-msgstr ""
+msgstr "Неверный пароль."
 
 #: aleph/views/sessions_api.py:58 aleph/views/sessions_api.py:61
 msgid "Invalid user or password."
@@ -278,4 +278,4 @@ msgstr "Ошибка проверки данных"
 
 #: aleph/views/util.py:139
 msgid "[HTML removed: could not be sanitized]"
-msgstr ""
+msgstr "[HTML-код удалён как небезопасный]"

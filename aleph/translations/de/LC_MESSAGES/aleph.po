@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-23 14:37+0200\n"
+"POT-Creation-Date: 2019-09-24 21:43+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
@@ -88,7 +88,7 @@ msgstr "Lizenzen und Zulassungen"
 
 #: aleph/model/collection.py:38
 msgid "Regulatory filings"
-msgstr "Aufsichtsbekanntmachungen"
+msgstr "Aufsichtseinreichungen"
 
 #: aleph/model/collection.py:39
 msgid "Persons of interest"
@@ -108,7 +108,7 @@ msgstr "Luft- und Seeregister"
 
 #: aleph/model/collection.py:43
 msgid "Personal datasets"
-msgstr ""
+msgstr "Persönliche Datensätze"
 
 #: aleph/model/collection.py:44
 msgid "Other material"
@@ -200,7 +200,7 @@ msgstr "/api/1/ is deprecated, please use /api/2/."
 
 #: aleph/views/base_api.py:133
 msgid "You are not authorized to do this."
-msgstr "Ihnen fehlen die erforderlichen Nutzerrechte"
+msgstr "Ihnen fehlt das Recht, dies zu tun."
 
 #: aleph/views/base_api.py:142
 msgid "This path does not exist."
@@ -255,7 +255,7 @@ msgstr "prefix-Filter ist zu kurz"
 
 #: aleph/views/roles_api.py:48
 msgid "To proceed, please check your email."
-msgstr "Prüfen sie bitte ihren E-Mail-Eingang um fortzufahren."
+msgstr "Um fortzufahren reagieren sie bitte auf eine E-Mail."
 
 #: aleph/views/roles_api.py:63
 msgid "Invalid code"
@@ -267,7 +267,7 @@ msgstr "Diese E-Mail ist bereits angemeldet"
 
 #: aleph/views/roles_api.py:107
 msgid "Incorrect password."
-msgstr ""
+msgstr "Falsches Passwort."
 
 #: aleph/views/sessions_api.py:58 aleph/views/sessions_api.py:61
 msgid "Invalid user or password."
