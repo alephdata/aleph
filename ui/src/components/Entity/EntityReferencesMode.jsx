@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button } from '@blueprintjs/core';
+import queryString from 'query-string';
 import c from 'classnames';
 
 import Query from 'src/app/Query';
@@ -49,9 +50,6 @@ class EntityReferencesMode extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      expandedId: null,
-    };
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
@@ -64,8 +62,13 @@ class EntityReferencesMode extends React.Component {
   }
 
   onExpand(entity) {
-    const { expandedId } = this.state;
-    this.setState({ expandedId: expandedId === entity.id ? null : entity.id });
+    const { expandedId, parsedHash, history, location } = this.props;
+    parsedHash.expand = expandedId === entity.id ? undefined : entity.id;
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
   }
 
   getMoreResults() {
@@ -96,8 +99,8 @@ class EntityReferencesMode extends React.Component {
   }
 
   renderRow(columns, entity) {
-    const { isThing } = this.props;
-    const isExpanded = entity.id === this.state.expandedId;
+    const { isThing, expandedId } = this.props;
+    const isExpanded = entity.id === expandedId;
     const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
     const mainRow = (
       <tr key={entity.id} className={c('nowrap', { prefix: isExpanded })}>
@@ -175,6 +178,7 @@ class EntityReferencesMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, mode, location } = ownProps;
+  const parsedHash = queryString.parse(ownProps.location.hash);
   const reference = selectEntityReference(state, entity.id, mode);
   if (!reference) {
     return {};
@@ -189,6 +193,8 @@ const mapStateToProps = (state, ownProps) => {
     reference,
     query,
     schema,
+    parsedHash,
+    expandedId: parsedHash.expand,
     result: selectEntitiesResult(state, query),
     isThing: schema.isThing(),
   };
