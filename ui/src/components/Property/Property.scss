@@ -5,9 +5,9 @@ span.no-value {
 }
 
 .ValueLink {
-    .Count.bp3-tag {
-        margin-left: $aleph-icon-padding;
-        // background-color: $aleph-theme-intent;
-        cursor: help;
-    }
+  text-decoration: none !important;
+
+  .Count.bp3-tag {
+    padding: 0 5px;
+  }
 }

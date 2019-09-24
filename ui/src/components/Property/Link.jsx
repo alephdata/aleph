@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Tooltip } from '@blueprintjs/core';
+import { Tag as Bp3Tag, Tooltip } from '@blueprintjs/core';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import { Count, Tag } from 'src/components/common';
@@ -9,44 +9,49 @@ import { Value } from 'src/components/Property/Value';
 import wordList from 'src/util/wordList';
 import ensureArray from 'src/util/ensureArray';
 import getValueLink from 'src/util/getValueLink';
-import { selectValueCount } from 'src/selectors';
+import { selectValueCount, selectMetadata } from 'src/selectors';
 
 const messages = defineMessages({
   tooltip: {
     id: 'valuelink.tooltip',
-    defaultMessage: '{count} global mentions: {value}',
+    defaultMessage: '{count} mentions in {appName}',
   },
 });
 
 
 class ValueLink extends Component {
   render() {
-    const { intl, value, prop, count } = this.props;
+    const { intl, value, prop, count, metadata } = this.props;
     const content = <Value {...this.props} />;
     if (count === null || count === 0) {
       return content;
     }
     const href = getValueLink(prop.type, value);
-    const values = { count, value };
     return (
-      <span className="ValueLink">
-        <Link to={href}><Tag.Icon field={prop.type.group} /></Link>
-        <Link to={href}>{content}</Link>
-        <Tooltip
-          content={intl.formatMessage(messages.tooltip, values)}
-          transitionDuration={0}
-          hoverOpenDelay={100}
-        >
-          <Count count={count} />
-        </Tooltip>
-      </span>
+      <Tooltip
+        content={intl.formatMessage(messages.tooltip, { count, appName: metadata.app.title })}
+        transitionDuration={0}
+        hoverOpenDelay={100}
+      >
+        <Link to={href} className="ValueLink">
+          <Bp3Tag minimal interactive>
+            <Tag.Icon field={prop.type.group} />
+            <span>{content}</span>
+            <Count count={count} className="no-fill" />
+          </Bp3Tag>
+        </Link>
+      </Tooltip>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   const { value, prop } = ownProps;
-  return { count: selectValueCount(state, prop, value) };
+
+  return {
+    count: selectValueCount(state, prop, value),
+    metadata: selectMetadata(state),
+  };
 };
 
 ValueLink = connect(mapStateToProps)(ValueLink);

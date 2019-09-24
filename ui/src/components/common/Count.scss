@@ -1,7 +1,10 @@
 @import "src/app/variables.scss";
 
 .Count {
-    &.bp3-tag {
-        font-weight: 600;
-    }
+  &.bp3-tag {
+    font-weight: 600;
+  }
+  &.no-fill {
+    background: none !important;
+  }
 }
