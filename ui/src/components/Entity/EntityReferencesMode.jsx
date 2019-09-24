@@ -8,17 +8,17 @@ import { Button } from '@blueprintjs/core';
 import queryString from 'query-string';
 import c from 'classnames';
 
-import Query from 'src/app/Query';
 import {
   selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'src/selectors';
 import {
-  ErrorSection, SectionLoading, SearchBox, Entity,
+  ErrorSection, SectionLoading, Entity,
 } from 'src/components/common';
 import EntityProperties from 'src/components/Entity/EntityProperties';
 import Property from 'src/components/Property';
 import ensureArray from 'src/util/ensureArray';
 import { queryEntities } from 'src/actions/index';
+import { queryEntityReference } from 'src/queries';
 
 const messages = defineMessages({
   no_relationships: {
@@ -29,25 +29,6 @@ const messages = defineMessages({
 
 
 class EntityReferencesMode extends React.Component {
-  static Search = function Search(props) {
-    return (
-      <div className="bp3-callout bp3-intent-primary">
-        <SearchBox
-          searchText={props.query.getString('q')}
-          onSearch={(queryText) => {
-            const { history } = props;
-            history.push({
-              pathname: props.location.pathname,
-              search: props.query.setString('q', queryText).toLocation(),
-              hash: props.location.hash,
-            });
-          }}
-        />
-      </div>
-
-    );
-  }
-
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -135,17 +116,9 @@ class EntityReferencesMode extends React.Component {
     }
     const { property } = reference;
     const results = ensureArray(result.results);
-    const isSearchable = reference.count > result.limit;
     const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
     return (
       <section className="EntityReferencesTable">
-        {isSearchable && (
-          <EntityReferencesMode.Search
-            query={this.props.query}
-            history={this.props.history}
-            location={this.props.location}
-          />
-        )}
         <table className="data-table references-data-table">
           <thead>
             <tr>
@@ -183,11 +156,7 @@ const mapStateToProps = (state, ownProps) => {
   if (!reference) {
     return {};
   }
-  const context = {
-    [`filter:properties.${reference.property.name}`]: entity.id,
-    'filter:schemata': reference.schema,
-  };
-  const query = Query.fromLocation('entities', location, context, reference.property.name);
+  const query = queryEntityReference(location, entity, reference);
   const schema = selectSchema(state, reference.schema);
   return {
     reference,
@@ -200,10 +169,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = { queryEntities };
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
   injectIntl,
 )(EntityReferencesMode);
