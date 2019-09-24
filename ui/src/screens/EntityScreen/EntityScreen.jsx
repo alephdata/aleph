@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
+import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import { compose } from 'redux';
@@ -12,16 +13,15 @@ import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import Property from 'src/components/Property';
 import { Collection, DualPane, Entity, Breadcrumbs } from 'src/components/common';
 import { DownloadButton } from 'src/components/Toolbar';
-import Query from 'src/app/Query';
 import getEntityLink from 'src/util/getEntityLink';
+import { queryEntityReference } from 'src/queries';
 import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
 
-
-const getEntityTitle = entity => entity.getFirst('title') || entity.getFirst('fileName') || entity.getCaption();
 
 class EntityScreen extends Component {
   static SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
@@ -49,7 +49,6 @@ class EntityScreen extends Component {
     const parsedHash = queryString.parse(location.hash);
     const newQuery = query.setString('q', queryText);
     parsedHash['preview:id'] = undefined;
-    parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
     parsedHash.page = undefined;
     history.push({
@@ -60,27 +59,48 @@ class EntityScreen extends Component {
   }
 
   getEntitySearchScope(entity) {
-    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
+    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES) && !entity.schema.isA('Email');
     if (!hasSearch) {
       return null;
     }
-    const entityTitle = getEntityTitle(entity);
     const entityLink = getEntityLink(entity);
     return {
       listItem: <Entity.Label entity={entity} icon truncate={30} />,
-      label: entityTitle,
+      label: entity.getCaption(),
+      onSearch: queryText => this.onSearch(queryText, entityLink),
+    };
+  }
+
+  getReferenceSearchScope(entity) {
+    const { reference } = this.props;
+    if (!reference || reference.count < 10) {
+      return null;
+    }
+    const item = (
+      <React.Fragment>
+        <Entity.Label entity={entity} icon truncate={30} />
+        {': '}
+        <Property.Reverse prop={reference.property} />
+      </React.Fragment>
+    );
+    const entityLink = getEntityLink(entity);
+    return {
+      listItem: item,
+      label: reference.property.getReverse().label,
       onSearch: queryText => this.onSearch(queryText, entityLink),
     };
   }
 
   getSearchScopes() {
-    const {
-      entity,
-    } = this.props;
+    const { entity } = this.props;
     const scopes = [];
 
-    let currEntity = entity;
+    const referenceScope = this.getReferenceSearchScope(entity);
+    if (referenceScope) {
+      scopes.push(referenceScope);
+    }
 
+    let currEntity = entity;
     while (currEntity) {
       const entityScope = this.getEntitySearchScope(currEntity);
       if (entityScope) {
@@ -100,7 +120,7 @@ class EntityScreen extends Component {
 
   render() {
     const {
-      entity, entityId, activeMode, query,
+      entity, entityId, activeMode, query, isDocument,
     } = this.props;
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
@@ -112,10 +132,8 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-    const title = getEntityTitle(entity);
-    const isDocument = entity && entity.schema.isDocument();
-    const showDownloadButton = isDocument && entity.links && entity.links.file;
 
+    const showDownloadButton = isDocument && entity.links && entity.links.file;
     const operation = showDownloadButton && (
       <DownloadButton document={entity} />
     );
@@ -129,7 +147,7 @@ class EntityScreen extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={title} searchScopes={this.getSearchScopes()} query={query}>
+        <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">
@@ -153,16 +171,22 @@ class EntityScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entityId, mode } = ownProps.match.params;
+  const { entityId } = ownProps.match.params;
   const { location } = ownProps;
-  const reference = selectEntityReference(state, entityId, mode);
+  const entity = selectEntity(state, entityId);
   const hashQuery = queryString.parse(location.hash);
+  const isDocument = entity && entity.id && entity.schema.isDocument();
+  const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
+  const reference = selectEntityReference(state, entityId, activeMode);
+  const referenceQuery = queryEntityReference(location, entity, reference);
+  const documentQuery = Query.fromLocation('entities', location, {}, 'document');
   return {
+    entity,
     entityId,
     reference,
-    entity: selectEntity(state, entityId),
-    query: Query.fromLocation('entities', location, {}, 'document'),
-    activeMode: selectEntityView(state, entityId, hashQuery.mode, false),
+    activeMode,
+    isDocument,
+    query: referenceQuery || documentQuery,
   };
 };
 

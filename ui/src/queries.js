@@ -1,5 +1,6 @@
 import Query from 'src/app/Query';
 
+
 export function queryCollectionDocuments(location, collectionId) {
   const context = {
     'filter:collection_id': collectionId,
@@ -29,6 +30,17 @@ export function queryFolderDocuments(location, documentId, queryText) {
     query = query.setString('q', queryText);
   }
   return query;
+}
+
+export function queryEntityReference(location, entity, reference) {
+  if (!reference) {
+    return null;
+  }
+  const context = {
+    [`filter:properties.${reference.property.name}`]: entity.id,
+    'filter:schemata': reference.schema,
+  };
+  return Query.fromLocation('entities', location, context, reference.property.name);
 }
 
 export function queryEntitySimilar(location, entityId) {

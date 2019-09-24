@@ -155,9 +155,7 @@ export function selectEntityReference(state, entityId, qname) {
   if (!references.total) {
     return undefined;
   }
-
-  return references.results
-    .find(ref => ref.property.qname === qname) || references.results[0];
+  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectEntityView(state, entityId, mode, isPreview) {

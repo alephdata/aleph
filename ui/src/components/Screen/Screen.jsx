@@ -18,13 +18,11 @@ import './Screen.scss';
 export class Screen extends React.Component {
   constructor(props) {
     super(props);
-    this.toggleAuthentication = this.toggleAuthentication.bind(this);
-
     this.state = {
       searchTipsOpen: false,
     };
-
     this.onToggleSearchTips = this.onToggleSearchTips.bind(this);
+    this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
   componentDidMount() {
