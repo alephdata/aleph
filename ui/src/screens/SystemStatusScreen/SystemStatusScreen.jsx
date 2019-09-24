@@ -122,7 +122,7 @@ export class SystemStatusScreen extends React.Component {
               <p className="Dashboard__subheading">
                 <FormattedMessage
                   id="dashboard.subheading"
-                  defaultMessage="Check an overview of status of all ongoing data analysis."
+                  defaultMessage="Check the progress of ongoing data analysis, upload, and processing tasks."
                 />
               </p>
             </div>
