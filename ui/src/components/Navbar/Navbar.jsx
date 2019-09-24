@@ -16,37 +16,12 @@ import './Navbar.scss';
 export class Navbar extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      searchValue: props.query ? props.query.getString('q') : '',
       mobileSearchOpen: false,
     };
-
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onDefaultSearch = this.onDefaultSearch.bind(this);
     this.onToggleMobileSearch = this.onToggleMobileSearch.bind(this);
+    this.onDefaultSearch = this.onDefaultSearch.bind(this);
   }
-
-
-  componentDidMount() {
-    const { query } = this.props;
-    if (query !== undefined) {
-      this.setState({ searchValue: query.getString('q') });
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (snapshot.query.shouldUpdate) {
-      this.updateSearchValue(snapshot.query.nextValue);
-    }
-  }
-
-  onChange({ target }) {
-    this.setState({ searchValue: target.value });
-  }
-
-  onSubmit = event => event.preventDefault();
 
   onToggleMobileSearch(event) {
     event.preventDefault();
@@ -54,55 +29,29 @@ export class Navbar extends React.Component {
   }
 
   onDefaultSearch(queryText) {
-    const { history } = this.props;
-
-    history.push({
-      pathname: '/search',
-      search: queryString.stringify({
-        q: queryText,
-      }),
-    });
-  }
-
-  getSnapshotBeforeUpdate(prevProps) {
-    if (this.props.query && (prevProps.query.state.q !== this.props.query.state.q)) {
-      if (this.props.query.state.q !== this.state.searchValue) {
-        return {
-          query: {
-            shouldUpdate: true,
-            nextValue: this.props.query.state.q || '',
-          },
-        };
-      }
-    }
-    return {
-      query: {},
-    };
-  }
-
-  updateSearchValue = searchValue => this.setState({ searchValue });
-
-  doSearch = (searchValue = this.state.searchValue, searchScope) => {
-    const { query, updateQuery } = this.props;
-
-    if (updateQuery !== undefined) {
-      updateQuery(query.set('q', searchValue));
+    const { history, query, location } = this.props;
+    if (!query || location.pathname !== '/search') {
+      history.push({
+        pathname: '/search',
+        search: queryString.stringify({ q: queryText }),
+      });
     } else {
-      searchScope.onSearch(searchValue);
+      const newQuery = query.set('q', queryText);
+      history.push({ search: newQuery.toLocation() });
     }
-  };
+  }
 
   render() {
     const {
-      metadata, session, searchScopes, role, onToggleSearchTips, isHomepage,
+      metadata, session, searchScopes, role, query, isHomepage,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
     const defaultScope = {
       listItem: metadata.app.title,
-      label: metadata.app.title,
       onSearch: this.onDefaultSearch,
     };
+    const scopes = searchScopes ? [defaultScope, ...searchScopes] : [defaultScope];
 
     return (
       <Bp3Navbar id="Navbar" className="Navbar bp3-dark">
@@ -119,16 +68,11 @@ export class Navbar extends React.Component {
         <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
           {!isHomepage && (
             <div className="Navbar__search-container">
-              <form onSubmit={this.onSubmit} autoComplete="off">
-                <ScopedSearchBox
-                  doSearch={this.doSearch}
-                  updateSearchValue={this.updateSearchValue}
-                  searchValue={this.state.searchValue}
-                  searchScopes={searchScopes
-                    ? [...[defaultScope], ...searchScopes] : [defaultScope]}
-                  toggleSearchTips={onToggleSearchTips}
-                />
-              </form>
+              <ScopedSearchBox
+                query={query}
+                searchScopes={scopes}
+                onToggleSearchTips={this.props.onToggleSearchTips}
+              />
             </div>
           )}
         </Bp3Navbar.Group>

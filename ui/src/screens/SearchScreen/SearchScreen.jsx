@@ -270,10 +270,10 @@ export class SearchScreen extends React.Component {
     );
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Text key="search" icon="search">
+        <Breadcrumbs.Text icon="search">
           <FormattedMessage id="search.screen.breadcrumb" defaultMessage="Search" />
         </Breadcrumbs.Text>
-        <Breadcrumbs.Text key="results" active>
+        <Breadcrumbs.Text active>
           <ResultCount result={result} />
         </Breadcrumbs.Text>
       </Breadcrumbs>
