@@ -34,7 +34,11 @@ const messages = defineMessages({
   },
   querylogs: {
     id: 'nav.querylogs',
-    defaultMessage: 'Searches & alerts',
+    defaultMessage: 'Search history',
+  },
+  alerts: {
+    id: 'nav.alerts',
+    defaultMessage: 'Alerts',
   },
 });
 export class AuthButtons extends Component {
@@ -74,6 +78,12 @@ export class AuthButtons extends Component {
                   <Icon icon="history" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.querylogs)}
+                  </div>
+                </Link>
+                <Link to="/alerts" className="bp3-menu-item">
+                  <Icon icon="feed" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.alerts)}
                   </div>
                 </Link>
                 <Link to="/cases" className="bp3-menu-item">

@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { Count } from 'src/components/common';
 
 import { fetchGroups } from 'src/actions';
-import { selectGroups } from 'src/selectors';
+import { selectAlerts, selectGroups } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -16,7 +17,11 @@ const messages = defineMessages({
   },
   history: {
     id: 'dashboard.history',
-    defaultMessage: 'Searches & alerts',
+    defaultMessage: 'Search history',
+  },
+  alerts: {
+    id: 'dashboard.alerts',
+    defaultMessage: 'Alerts',
   },
   cases: {
     id: 'dashboard.cases',
@@ -60,7 +65,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { intl, location, groups } = this.props;
+    const { alerts, intl, location, groups } = this.props;
     const current = location.pathname;
 
     return (
@@ -81,8 +86,19 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="history"
               text={intl.formatMessage(messages.history)}
-              onClick={() => this.navigate('/history#alerts')}
+              onClick={() => this.navigate('/history')}
               active={current === '/history'}
+            />
+            <MenuItem
+              icon="feed"
+              text={(
+                <React.Fragment>
+                  <span>{intl.formatMessage(messages.alerts)}</span>
+                  <Count count={alerts.total} />
+                </React.Fragment>
+              )}
+              onClick={() => this.navigate('/alerts')}
+              active={current === '/alerts'}
             />
             <MenuItem
               icon="briefcase"
@@ -111,16 +127,16 @@ class Dashboard extends React.Component {
             )}
             <MenuDivider />
             <MenuItem
-              icon="cog"
-              text={intl.formatMessage(messages.settings)}
-              onClick={() => this.navigate('/settings')}
-              active={current === '/settings'}
-            />
-            <MenuItem
               icon="dashboard"
               text={intl.formatMessage(messages.status)}
               onClick={() => this.navigate('/status')}
               active={current === '/status'}
+            />
+            <MenuItem
+              icon="cog"
+              text={intl.formatMessage(messages.settings)}
+              onClick={() => this.navigate('/settings')}
+              active={current === '/settings'}
             />
           </Menu>
         </div>
@@ -133,8 +149,9 @@ class Dashboard extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const alerts = selectAlerts(state);
   const groups = selectGroups(state);
-  return { groups };
+  return { alerts, groups };
 };
 
 Dashboard = injectIntl(Dashboard);

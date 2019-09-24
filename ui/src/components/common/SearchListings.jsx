@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button, Tooltip } from '@blueprintjs/core';
+import { Button, Icon, Tooltip } from '@blueprintjs/core';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
 // import c from 'classnames';
 import { defineMessages, injectIntl } from 'react-intl';
@@ -36,16 +36,21 @@ export class SearchListings extends PureComponent {
           {items.map(item => (
             <tr key={item.id || item.last} className="SearchListings__row">
               <td className="SearchListings__button narrow">
-                <Tooltip
-                  content={intl.formatMessage(messages.search_query, { query: item.query })}
-                >
-                  <Button
-                    icon="search"
-                    minimal
-                    small
-                    onClick={() => onSearch(item)}
-                  />
-                </Tooltip>
+                {listType === 'search history' && (
+                  <Tooltip
+                    content={intl.formatMessage(messages.search_query, { query: item.query })}
+                  >
+                    <Button
+                      icon="search"
+                      minimal
+                      small
+                      onClick={() => onSearch(item)}
+                    />
+                  </Tooltip>
+                )}
+                {listType === 'alerts' && (
+                  <Icon className="bp3-intent-primary" icon="feed-subscribed" />
+                )}
               </td>
               <td className="SearchListings__text text-main">
                 <QueryText query={item.query} />

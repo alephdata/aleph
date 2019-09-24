@@ -15,6 +15,7 @@ import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
 import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
 import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
 import HistoryScreen from 'src/screens/HistoryScreen/HistoryScreen';
+import AlertsScreen from 'src/screens/AlertsScreen/AlertsScreen';
 import SettingsScreen from 'src/screens/SettingsScreen/SettingsScreen';
 import SystemStatusScreen from 'src/screens/SystemStatusScreen/SystemStatusScreen';
 import GroupScreen from 'src/screens/GroupScreen/GroupScreen';
@@ -67,6 +68,7 @@ class Router extends Component {
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
           <Route path="/history" exact component={HistoryScreen} />
+          <Route path="/alerts" exact component={AlertsScreen} />
           <Route path="/settings" exact component={SettingsScreen} />
           <Route path="/status" exact component={SystemStatusScreen} />
           <Route path="/groups/:groupId" exact component={GroupScreen} />

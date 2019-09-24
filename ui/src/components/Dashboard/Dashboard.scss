@@ -30,11 +30,18 @@ $dashboard-padding: $aleph-grid-size * 2.5;
 
         .bp3-menu-item {
           padding: 6px 7px;
-          // font-weight: bold;
 
           .bp3-icon {
             margin-right: 12px;
-            // color: rgb(24, 32, 38);
+          }
+
+          .Count {
+            float: right;
+          }
+
+          &.bp3-active .Count {
+            color: white;
+            background: none;
           }
         }
 

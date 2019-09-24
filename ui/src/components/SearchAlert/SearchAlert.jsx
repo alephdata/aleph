@@ -93,7 +93,8 @@ class SearchAlert extends Component {
     const alertExists = this.alertExists();
     const className = c('bp3-button',
       'bp3-minimal',
-      'bp3-icon-notifications',
+      { 'bp3-icon-feed': !alertExists },
+      { 'bp3-icon-feed-subscribed': alertExists },
       'bp3-small',
       { 'bp3-intent-primary': alertExists },
       { 'bp3-disabled': this.state.updating });

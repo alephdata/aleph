@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Waypoint } from 'react-waypoint';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -54,12 +54,6 @@ export class QueryLogs extends PureComponent {
 
     return (
       <div className="QueryLogs">
-        <div className="bp3-callout bp3-intent-primary">
-          <FormattedMessage
-            id="queryLogs.description"
-            defaultMessage="Below is a list of your most recent searches. You have the option to delete specific searches so they do not show up in our records."
-          />
-        </div>
         { result.page !== undefined && result.results.length > 0 && (
           <SearchListings
             listType="search history"
