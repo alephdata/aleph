@@ -18,6 +18,11 @@ import { selectCollection, selectCollectionView } from 'src/selectors';
 
 
 export class CollectionScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.onSearch = this.onSearch.bind(this);
+  }
+
   onSearch(queryText) {
     const { history, collection } = this.props;
     const query = {
@@ -51,7 +56,7 @@ export class CollectionScreen extends Component {
     const searchScope = {
       listItem: <Collection.Label collection={collection} icon truncate={30} />,
       label: collection.label,
-      onSearch: this.onSearch.bind(this),
+      onSearch: this.onSearch,
     };
 
     const operation = (

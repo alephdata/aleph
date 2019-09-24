@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
-import PreviewManager from 'src/components/Preview/PreviewManager';
+import EntityPreview from 'src/components/Entity/EntityPreview';
 import Navbar from 'src/components/Navbar/Navbar';
 import Footer from 'src/components/Footer/Footer';
 import SearchTips from 'src/components/SearchTips/SearchTips';
@@ -108,7 +108,7 @@ export class Screen extends React.Component {
             <main className={mainClass}>
               {this.props.children}
             </main>
-            <PreviewManager />
+            <EntityPreview />
           </React.Fragment>
         )}
         {forceAuth && (

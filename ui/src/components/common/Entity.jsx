@@ -51,7 +51,7 @@ class EntityLink extends Component {
     const { entity, history, preview } = this.props;
     if (preview) {
       event.preventDefault();
-      togglePreview(history, entity, 'entity');
+      togglePreview(history, entity);
     }
   }
 

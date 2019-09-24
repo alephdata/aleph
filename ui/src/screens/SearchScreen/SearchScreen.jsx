@@ -243,9 +243,7 @@ export class SearchScreen extends React.Component {
   }
 
   showPreview(entity) {
-    const { history } = this.props;
-    const previewType = entity.schema.isDocument() ? 'document' : 'entity';
-    togglePreview(history, entity, previewType);
+    togglePreview(this.props.history, entity);
   }
 
   toggleFacets() {

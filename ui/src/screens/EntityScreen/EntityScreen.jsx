@@ -47,7 +47,6 @@ class EntityScreen extends Component {
   onSearch(queryText, entityLink) {
     const { history, location, query } = this.props;
     const parsedHash = queryString.parse(location.hash);
-
     const newQuery = query.setString('q', queryText);
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;

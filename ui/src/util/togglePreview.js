@@ -1,20 +1,18 @@
 import queryString from 'query-string';
 
-export default function togglePreview(history, previewObject, previewType) {
+export default function togglePreview(history, entity) {
   const { location } = history;
-  const parsedHash = queryString.parse(location.hash);
-  parsedHash['preview:mode'] = undefined;
-  if (parsedHash['preview:id'] === previewObject.id && parsedHash['preview:type'] === previewType) {
-    parsedHash['preview:id'] = undefined;
-    parsedHash['preview:type'] = undefined;
+  const parsed = queryString.parse(location.hash);
+  parsed['preview:mode'] = undefined;
+  if (entity) {
+    parsed['preview:id'] = parsed['preview:id'] === entity.id ? undefined : entity.id;
   } else {
-    parsedHash['preview:id'] = previewObject.id;
-    parsedHash['preview:type'] = previewType;
+    parsed['preview:id'] = undefined;
+    parsed.page = undefined;
   }
-
   history.push({
     pathname: location.pathname,
     search: location.search,
-    hash: queryString.stringify(parsedHash),
+    hash: queryString.stringify(parsed),
   });
 }
