@@ -23,27 +23,26 @@ class ValueLink extends Component {
   render() {
     const { intl, value, prop, count, metadata } = this.props;
     const content = <Value {...this.props} />;
+    console.log(prop.type, value);
     if (count === null || count === 0) {
       return content;
     }
 
     const href = getValueLink(prop.type, value);
     return (
-      <div className="ValueLink">
-        <Link to={href}>
-          <Bp3Tag minimal interactive className="bp3-intent-primary">
+      <Tooltip
+        content={intl.formatMessage(messages.tooltip, { count, appName: metadata.app.title })}
+        transitionDuration={0}
+        hoverOpenDelay={100}
+      >
+        <Link to={href} className="ValueLink">
+          <Bp3Tag minimal interactive>
             <Tag.Icon field={prop.type.group} />
             <span>{content}</span>
+            <Count count={count} className="no-fill" />
           </Bp3Tag>
         </Link>
-        <Tooltip
-          content={intl.formatMessage(messages.tooltip, { count, appName: metadata.app.title })}
-          transitionDuration={0}
-          hoverOpenDelay={100}
-        >
-          <Count count={count} />
-        </Tooltip>
-      </div>
+      </Tooltip>
     );
   }
 }

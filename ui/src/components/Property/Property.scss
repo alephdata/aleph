@@ -5,12 +5,14 @@ span.no-value {
 }
 
 .ValueLink {
-  a {
-    text-decoration: none !important;
-  }
+  text-decoration: none !important;
 
-  .Count {
-    margin-left: 5px;
-    cursor: help;
+  .bp3-tag {
+    background-color: $aleph-breadcrumbs-background !important;
+    
+    .Count {
+      padding: 0 5px 0 8px;
+      border: none;
+    }
   }
 }
