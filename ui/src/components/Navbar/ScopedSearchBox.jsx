@@ -164,7 +164,7 @@ class SearchBox extends React.Component {
           itemRenderer={this.renderScopeItem}
           popoverProps={{
             minimal: true,
-            lassName: 'SearchBox__scoped-input__popover',
+            className: 'SearchBox__scoped-input__popover',
             usePortal: false,
           }}
           disabled={!multipleScopes}

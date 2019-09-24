@@ -24,8 +24,8 @@ class EntityToolbar extends React.Component {
         <ButtonGroup minimal className="EntityToolbar__buttons bp3-intent-primary">
           {isThing && (
             <Link to={getEntityLink(entity)} className="bp3-button">
-              <span className="bp3-icon-share" />
-              <FormattedMessage id="sidebar.open" defaultMessage="Open" />
+              <span className="bp3-icon-fullscreen" />
+              <FormattedMessage id="sidebar.open" defaultMessage="Expand" />
             </Link>
           )}
           {showDownloadButton && (
