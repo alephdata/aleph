@@ -21,8 +21,6 @@ import {
 } from 'src/selectors';
 
 
-const getEntityTitle = entity => entity.getFirst('title') || entity.getFirst('fileName') || entity.getCaption();
-
 class EntityScreen extends Component {
   static SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
 
@@ -49,7 +47,6 @@ class EntityScreen extends Component {
     const parsedHash = queryString.parse(location.hash);
     const newQuery = query.setString('q', queryText);
     parsedHash['preview:id'] = undefined;
-    parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
     parsedHash.page = undefined;
     history.push({
@@ -60,15 +57,14 @@ class EntityScreen extends Component {
   }
 
   getEntitySearchScope(entity) {
-    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
+    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES) && !entity.schema.isA('Email');
     if (!hasSearch) {
       return null;
     }
-    const entityTitle = getEntityTitle(entity);
     const entityLink = getEntityLink(entity);
     return {
       listItem: <Entity.Label entity={entity} icon truncate={30} />,
-      label: entityTitle,
+      label: entity.getCaption(),
       onSearch: queryText => this.onSearch(queryText, entityLink),
     };
   }
@@ -112,7 +108,6 @@ class EntityScreen extends Component {
         </EntityContextLoader>
       );
     }
-    const title = getEntityTitle(entity);
     const isDocument = entity && entity.schema.isDocument();
     const showDownloadButton = isDocument && entity.links && entity.links.file;
 
@@ -129,7 +124,7 @@ class EntityScreen extends Component {
 
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={title} searchScopes={this.getSearchScopes()} query={query}>
+        <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">
