@@ -71,6 +71,7 @@ export class SystemStatusScreen extends React.Component {
 
   renderRow(res) {
     const { intl } = this.props;
+    const { collection } = res;
     const active = res.pending + res.running;
     const total = active + res.finished;
     const progress = res.finished / total;
@@ -78,8 +79,8 @@ export class SystemStatusScreen extends React.Component {
     return (
       <tr key={res.id}>
         <td className="entity">
-          <Link to={getCollectionLink(res.collection)}>
-            <Collection.Label collection={res.collection} />
+          <Link to={getCollectionLink(collection)}>
+            <Collection.Label collection={collection} />
           </Link>
         </td>
         <td className="numeric narrow">{res.jobs.length}</td>
@@ -93,11 +94,13 @@ export class SystemStatusScreen extends React.Component {
           <Numeric num={active} />
         </td>
         <td className="numeric narrow">
-          <Tooltip content={intl.formatMessage(messages.cancel_button)}>
-            <Button onClick={() => this.cancelCollection(res.collection)} icon="delete" minimal small>
-              <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
-            </Button>
-          </Tooltip>
+          { collection.writeable && (
+            <Tooltip content={intl.formatMessage(messages.cancel_button)}>
+              <Button onClick={() => this.cancelCollection(collection)} icon="delete" minimal small>
+                <FormattedMessage id="collection.cancel.button" defaultMessage="Cancel" />
+              </Button>
+            </Tooltip>
+          )}
         </td>
       </tr>
     );
