@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
 import { ControlGroup, InputGroup } from '@blueprintjs/core';
 
 import './CollectionIndexSearch.scss';
-
-const messages = defineMessages({
-  placeholder: {
-    id: 'collection.index.placeholder',
-    defaultMessage: 'Search datasets...',
-  },
-});
 
 export class CollectionIndexSearch extends Component {
   constructor(props) {
@@ -37,7 +29,7 @@ export class CollectionIndexSearch extends Component {
   }
 
   render() {
-    const { intl } = this.props;
+    const { placeholder } = this.props;
     const { queryText } = this.state;
     return (
       <form onSubmit={this.onSubmit} className="CollectionIndexSearch">
@@ -48,7 +40,7 @@ export class CollectionIndexSearch extends Component {
             autoFocus
             leftIcon="search"
             onChange={this.onChangeQueryPrefix}
-            placeholder={intl.formatMessage(messages.placeholder)}
+            placeholder={placeholder}
             value={queryText}
           />
         </ControlGroup>
@@ -57,4 +49,4 @@ export class CollectionIndexSearch extends Component {
   }
 }
 
-export default injectIntl(CollectionIndexSearch);
+export default CollectionIndexSearch;

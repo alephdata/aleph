@@ -27,6 +27,10 @@ const messages = defineMessages({
     id: 'cases.no_results_title',
     defaultMessage: 'You do not have any personal datasets yet',
   },
+  placeholder: {
+    id: 'cases.placeholder',
+    defaultMessage: 'Search personal datasets...',
+  },
 });
 
 
@@ -78,6 +82,8 @@ export class CasesIndexScreen extends Component {
         </li>
       </Breadcrumbs>
     );
+
+    console.log(result);
     return (
       <Screen
         className="CasesIndexScreen"
@@ -98,25 +104,33 @@ export class CasesIndexScreen extends Component {
               />
             </p>
           </div>
-
-          <CollectionIndexSearch query={query} updateQuery={this.updateQuery} />
-          <ul className="results">
-            {result.results !== undefined && result.results
-              .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}
-          </ul>
-          {result.total === 0 && (
+          {!result.isLoading && result.total === 0 && (
             <ErrorSection
               icon="search"
               title={intl.formatMessage(messages.no_results_title)}
             />
           )}
-          <Waypoint
-            onEnter={this.getMoreResults}
-            bottomOffset="-300px"
-            scrollableAncestor={window}
-          />
+          {!result.isLoading && result.total !== 0 && (
+            <React.Fragment>
+              <CollectionIndexSearch
+                query={query}
+                updateQuery={this.updateQuery}
+                placeholder={intl.formatMessage(messages.placeholder)}
+              />
+              <ul className="results">
+                {result.results !== undefined && result.results
+                  .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}
+              </ul>
+
+              <Waypoint
+                onEnter={this.getMoreResults}
+                bottomOffset="-300px"
+                scrollableAncestor={window}
+              />
+            </React.Fragment>
+          )}
           {result.isLoading && (
-          <SectionLoading />
+            <SectionLoading />
           )}
         </Dashboard>
       </Screen>

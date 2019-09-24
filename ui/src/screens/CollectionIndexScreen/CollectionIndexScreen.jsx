@@ -36,6 +36,10 @@ const messages = defineMessages({
     id: 'collection.index.facet.countries',
     defaultMessage: 'Countries',
   },
+  placeholder: {
+    id: 'collection.index.placeholder',
+    defaultMessage: 'Search datasets...',
+  },
 });
 
 
@@ -132,7 +136,11 @@ export class CollectionIndexScreen extends Component {
           </DualPane.SidePane>
           <DualPane.ContentPane className="padded">
             <SignInCallout />
-            <CollectionIndexSearch query={query} updateQuery={this.updateQuery} />
+            <CollectionIndexSearch
+              query={query}
+              updateQuery={this.updateQuery}
+              placeholder={intl.formatMessage(messages.placeholder)}
+            />
             <QueryTags query={query} updateQuery={this.updateQuery} />
             {result.isError && (
               <ErrorSection error={result.error} />
