@@ -62,7 +62,7 @@ export class EntityPreview extends React.Component {
           autoFocus={false}
           enforceFocus={false}
           // canOutsideClickClose={false}
-          portalClassName="PreviewEntity__overlay-container"
+          portalClassName="EntityPreview__overlay-container"
         >
           <DualPane.InfoPane className="with-heading">
             {this.renderContext()}
