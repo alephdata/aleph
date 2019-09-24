@@ -4,11 +4,16 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Callout } from '@blueprintjs/core';
+import c from 'classnames';
+
 import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
+
+import './EntitySearch.scss';
 
 const messages = defineMessages({
   no_results_title: {
@@ -68,6 +73,22 @@ export class EntitySearch extends Component {
     return undefined;
   }
 
+  generateFoundText() {
+    const { result, foundTextGenerator } = this.props;
+
+    if (!foundTextGenerator || result.isLoading || result.total === 0
+      || !result.facets || !result.facets.collection_id) {
+      return null;
+    }
+
+    const text = foundTextGenerator({
+      resultCount: result.total,
+      datasetCount: result.facets.collection_id.total,
+    });
+
+    return <Callout icon={null} intent="primary" className="EntitySearch__foundText">{text}</Callout>;
+  }
+
   render() {
     const {
       query, result, intl, className,
@@ -76,9 +97,10 @@ export class EntitySearch extends Component {
       emptyComponent,
     } = this.props;
     const isEmpty = !query.hasQuery();
+    const foundText = this.generateFoundText();
 
     return (
-      <div className={className}>
+      <div className={c('EntitySearch', className)}>
         {result.total === 0 && (
           <section className="PartialError">
             { !isEmpty && (
@@ -91,6 +113,7 @@ export class EntitySearch extends Component {
             { isEmpty && emptyComponent }
           </section>
         )}
+        {foundText}
         <EntityTable
           query={query}
           result={result}

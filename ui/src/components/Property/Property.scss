@@ -5,9 +5,12 @@ span.no-value {
 }
 
 .ValueLink {
-  text-decoration: none !important;
+  a {
+    text-decoration: none !important;
+  }
 
-  .Count.bp3-tag {
-    padding: 0 5px;
+  .Count {
+    margin-left: 5px;
+    cursor: help;
   }
 }

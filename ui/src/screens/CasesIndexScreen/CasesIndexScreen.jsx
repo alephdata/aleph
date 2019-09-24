@@ -83,7 +83,6 @@ export class CasesIndexScreen extends Component {
       </Breadcrumbs>
     );
 
-    console.log(result);
     return (
       <Screen
         className="CasesIndexScreen"

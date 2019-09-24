@@ -33,5 +33,11 @@ export function queryFolderDocuments(location, documentId, queryText) {
 
 export function queryEntitySimilar(location, entityId) {
   const path = entityId ? `entities/${entityId}/similar` : undefined;
-  return Query.fromLocation(path, location, {}, 'similar');
+
+  const context = {
+    facet: 'collection_id',
+    'facet_total:collection_id': true,
+  };
+
+  return Query.fromLocation(path, location, context, 'similar');
 }

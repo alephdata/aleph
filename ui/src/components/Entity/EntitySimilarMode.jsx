@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
@@ -28,6 +28,19 @@ class EntitySimilarMode extends Component {
       <EntitySearch
         query={this.props.query}
         emptyComponent={emptyComponent}
+        foundTextGenerator={
+          ({ resultCount, datasetCount }) => (
+            <FormattedMessage
+              id="entity.similar.found_text"
+              defaultMessage={`Found {resultCount}
+                {resultCount, plural, one {similar entity} other {similar entities}}
+                from {datasetCount}
+                {datasetCount, plural, one {dataset} other {datasets}}
+              `}
+              values={{ resultCount, datasetCount }}
+            />
+          )
+        }
       />
     );
   }
