@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectModel } from 'src/selectors';
-import { Icon } from './Icon';
+import { Icon } from '@blueprintjs/core';
 
 class SchemaIcon extends PureComponent {
   render() {
@@ -12,7 +12,7 @@ class SchemaIcon extends PureComponent {
         className="entity-icon"
         iconSize="16px"
         {...rest}
-        name={schema.name.toLowerCase()}
+        icon={schema.name.toLowerCase()}
       />
     );
   }

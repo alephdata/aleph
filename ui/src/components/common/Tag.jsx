@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Icon as IconBlueprint } from '@blueprintjs/core/lib/esm/components/icon/icon';
+import { Icon } from '@blueprintjs/core/lib/esm/components/icon/icon';
 
 import './Tag.scss';
 
@@ -10,15 +10,15 @@ class TagIcon extends PureComponent {
     /* *
     * TODO: Fix this implementation once phones, addresses ann link icons will be available
     * */
-    names: <IconBlueprint icon="tag" className={this.className} />,
-    identifiers: <IconBlueprint icon="id-number" className={this.className} />,
-    emails: <IconBlueprint icon="envelope" className={this.className} />,
-    ibans: <IconBlueprint icon="bank-account" className={this.className} />,
-    checksums: <IconBlueprint icon="barcode" className={this.className} />,
-    ips: <IconBlueprint icon="ip-address" className={this.className} />,
-    phones: <IconBlueprint icon="phone" className={this.className} />,
-    addresses: <IconBlueprint icon="home" className={this.className} />,
-    link: <IconBlueprint icon="link" className={this.className} />,
+    names: <Icon icon="tag" className={this.className} />,
+    identifiers: <Icon icon="id-number" className={this.className} />,
+    emails: <Icon icon="envelope" className={this.className} />,
+    ibans: <Icon icon="bank-account" className={this.className} />,
+    checksums: <Icon icon="barcode" className={this.className} />,
+    ips: <Icon icon="ip-address" className={this.className} />,
+    phones: <Icon icon="phone" className={this.className} />,
+    addresses: <Icon icon="home" className={this.className} />,
+    link: <Icon icon="link" className={this.className} />,
   };
 
   render() {
