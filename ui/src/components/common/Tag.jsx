@@ -7,9 +7,6 @@ class TagIcon extends PureComponent {
   className='tag-icon';
 
   icons = {
-    /* *
-    * TODO: Fix this implementation once phones, addresses ann link icons will be available
-    * */
     names: <Icon icon="tag" className={this.className} />,
     identifiers: <Icon icon="id-number" className={this.className} />,
     emails: <Icon icon="envelope" className={this.className} />,
