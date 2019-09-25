@@ -59,11 +59,6 @@ export class Navbar extends React.Component {
           <Link to="/" className="Navbar__home-link">
             <img src={metadata.app.logo} alt={metadata.app.title} />
           </Link>
-          {isHomepage && (
-            <Bp3Navbar.Heading>
-              {metadata.app.title}
-            </Bp3Navbar.Heading>
-          )}
         </Bp3Navbar.Group>
         <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
           {!isHomepage && (

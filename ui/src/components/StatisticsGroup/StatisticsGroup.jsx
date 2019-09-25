@@ -9,12 +9,14 @@ import {
 } from 'src/components/common';
 import Statistics from './Statistics';
 
+import './StatisticsGroup.scss';
+
 
 class StatisticsGroup extends PureComponent {
   render() {
     const { statistics } = this.props;
     return (
-      <DualPane className="statistics-list">
+      <DualPane className="StatisticsGroup">
         <Statistics
           headline={(
             <FormattedMessage

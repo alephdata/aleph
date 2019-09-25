@@ -3,10 +3,11 @@ import _ from 'lodash';
 import c from 'classnames';
 import { Button } from '@blueprintjs/core';
 
+import './Statistics.scss';
 
-class StatisticsList extends PureComponent {
+class Statistics extends PureComponent {
   static Item({
-    ItemContentContainer = StatisticsList.ItemContentContainer,
+    ItemContentContainer = Statistics.ItemContentContainer,
     item: [name, count],
     ...rest
   }) {
@@ -36,8 +37,8 @@ class StatisticsList extends PureComponent {
       seeMoreButtonText,
       headline,
       isLoading,
-      children = isLoading ? StatisticsList.Noop : StatisticsList.Item,
-      ItemContentContainer = StatisticsList.ItemContentContainer,
+      children = isLoading ? Statistics.Noop : Statistics.Item,
+      ItemContentContainer = Statistics.ItemContentContainer,
     } = this.props;
     const {
       listLen,
@@ -47,17 +48,17 @@ class StatisticsList extends PureComponent {
     ) : Object.entries(statistic);
     const rest = list.length - listLen;
     return (
-      <div className="statistic bp3-callout">
-        <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
-        <ul className="statistic--list">
+      <div className="Statistics bp3-callout">
+        <h5 className={c('bp3-heading', 'Statistics__headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
+        <ul className="Statistics__list">
           {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({
-            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
+            className: c('Statistics__list-item', { 'bp3-skeleton': isLoading }),
             key: item[0],
             item,
             ItemContentContainer,
           }))}
           {rest > 0 && !isLoading && (
-            <li className={c('statistic--list-item', { 'bp3-skeleton': isLoading })}>
+            <li className={c('Statistics__list-item', { 'bp3-skeleton': isLoading })}>
               <Button
                 onClick={this.onExpand}
                 text={seeMoreButtonText(rest)}
@@ -70,4 +71,4 @@ class StatisticsList extends PureComponent {
   }
 }
 
-export default StatisticsList;
+export default Statistics;

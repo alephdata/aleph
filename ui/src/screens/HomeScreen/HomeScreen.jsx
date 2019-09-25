@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
-
+import { Redirect } from 'react-router-dom';
 import {
-  ControlGroup, Divider, InputGroup,
+  ControlGroup, InputGroup,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -58,10 +58,13 @@ export class HomeScreen extends Component {
   }
 
   render() {
-    const { intl, metadata, statistics = {} } = this.props;
-    // if (session.loggedIn) {
-    //   return <Redirect to="/notifications" />;
-    // }
+    const { intl, metadata, statistics = {}, session } = this.props;
+    if (session.loggedIn) {
+      return <Redirect to="/notifications" />;
+    }
+
+    const appDescription = metadata.app.description;
+
     const samples = wordList(metadata.app.samples, ', ').join('');
     return (
       <Screen
@@ -69,9 +72,16 @@ export class HomeScreen extends Component {
         title={intl.formatMessage(messages.title)}
         description={metadata.app.description}
       >
-        <section className="HomePage">
-          <div className="outer-searchbox">
-            <div className="inner-searchbox">
+        <section className="HomeScreen">
+          <div className="HomeScreen__section title-section">
+            <div className="HomeScreen__section__content">
+              <div className="HomeScreen__text-container">
+                <h1 className="HomeScreen__title">{metadata.app.title}</h1>
+                {appDescription && (
+                  <p className="HomeScreen__description">{appDescription}</p>
+                )}
+              </div>
+
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill>
                   <InputGroup
@@ -86,7 +96,6 @@ export class HomeScreen extends Component {
                 </ControlGroup>
               </form>
               <StatisticsGroup statistics={statistics} />
-              <Divider />
             </div>
           </div>
         </section>
