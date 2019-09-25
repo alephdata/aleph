@@ -76,6 +76,10 @@ export function selectStatistics(state) {
   return selectObject(state, 'statistics');
 }
 
+export function selectSystemStatus(state) {
+  return selectObject(state, 'systemStatus');
+}
+
 export function selectCollection(state, collectionId) {
   return selectObject(state.collections, collectionId);
 }
@@ -116,11 +120,6 @@ export function selectNotificationsResult(state, query) {
       }
     });
   });
-  return result;
-}
-
-export function selectDashboardResult(state, query) {
-  const result = selectResult(state, query, (stateInner, id) => stateInner.dashboard[id]);
   return result;
 }
 
