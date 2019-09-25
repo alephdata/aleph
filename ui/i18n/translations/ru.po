@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-09-24T19:43:07.709Z\n"
+"POT-Creation-Date: 2019-09-25T12:49:01.992Z\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,8 @@ msgid ""
 "<em>+banana ice cream</em> requires that only results with the term banana "
 "will be returned, while ice and cream are optional"
 msgstr ""
+"В поисковом запросе <em>+банановое мороженое</em>«банановое» является "
+"обязательной частью, а «мороженое» — опциональной "
 
 #. [searchTips.composite.3]
 #. defaultMessage is:
@@ -53,6 +55,8 @@ msgid ""
 "<em>-banana ice cream</em> ensures that no results with the term banana will"
 " be returned"
 msgstr ""
+"Запрос<em> -банановое мороженое </em> позволяет получить только те "
+"результаты поиска, в которых не встречается слово «банановое»"
 
 #. [searchTips.composite.4]
 #. defaultMessage is:
@@ -63,6 +67,8 @@ msgid ""
 "<em>banana AND “ice cream”</em> requires that only results with both banana "
 "and ice cream are returned"
 msgstr ""
+"Запрос <em>банановое AND “мороженое” </em>возвращает только те результаты, в"
+" которых встречаются оба слова"
 
 #. [searchTips.composite.5]
 #. defaultMessage is:
@@ -73,13 +79,15 @@ msgid ""
 "<em>banana OR “ice cream”</em> ensures that only results with either banana "
 "or ice cream are returned"
 msgstr ""
+"Запрос <em> банановое OR “морожение” </em> возвращает только те результаты, "
+"в которых встречается слово «банановое» или слово «мороженое»"
 
 #. [case.summary]
 #. defaultMessage is:
 #. A brief description of the dataset
 #: i18n/messages.json
 msgid "A brief description of the dataset"
-msgstr ""
+msgstr "Краткое описание набора данных"
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
@@ -135,7 +143,7 @@ msgstr "Активирируйте аккаунт"
 #. Activity
 #: i18n/messages.json
 msgid "Activity"
-msgstr ""
+msgstr "События"
 
 #. [search.facets.facet.addresses]
 #. defaultMessage is:
@@ -159,7 +167,7 @@ msgstr "Алеф {version}"
 #. Alerts
 #: i18n/messages.json i18n/messages.json
 msgid "Alerts"
-msgstr ""
+msgstr "Оповещения"
 
 #. [collection.xref.filter.allCategories]
 #. defaultMessage is:
@@ -322,7 +330,7 @@ msgstr "Поменять пароль"
 #: i18n/messages.json
 msgid ""
 "Check the progress of ongoing data analysis, upload, and processing tasks."
-msgstr ""
+msgstr "Статус операций анализа, загрузки или обработки данных."
 
 #. [signup.inbox.title]
 #. defaultMessage is:
@@ -350,7 +358,7 @@ msgstr "Выберите файлы для загрузки"
 #. Citations
 #: i18n/messages.json
 msgid "Citations"
-msgstr ""
+msgstr "Цитаты"
 
 #. [queryFilters.clearAll]
 #. defaultMessage is:
@@ -368,6 +376,7 @@ msgstr "Очистить все"
 #: i18n/messages.json
 msgid "Click to receive alerts about new results for this search."
 msgstr ""
+"Вам будут приходить оповещения о новых результатах этого поискового запроса."
 
 #. [footer.code]
 #. defaultMessage is:
@@ -398,14 +407,14 @@ msgstr "Сравнить сущности из коллекций"
 #. Composite queries
 #: i18n/messages.json
 msgid "Composite queries"
-msgstr ""
+msgstr "Сложносоставные запросы"
 
 #. [xref.compute]
 #. defaultMessage is:
 #. Compute
 #: i18n/messages.json
 msgid "Compute"
-msgstr ""
+msgstr "Обработать"
 
 #. [password_auth.confirm]
 #. defaultMessage is:
@@ -481,14 +490,14 @@ msgstr "Создать"
 #. Create a new tracking alert...
 #: i18n/messages.json
 msgid "Create a new tracking alert..."
-msgstr ""
+msgstr "Создать новое оповещение"
 
 #. [case.title]
 #. defaultMessage is:
 #. Create a personal dataset
 #: i18n/messages.json
 msgid "Create a personal dataset"
-msgstr ""
+msgstr "Создать персональный набор данных"
 
 #. [entity.info.xref]
 #. defaultMessage is:
@@ -511,21 +520,21 @@ msgstr "Перекрёстное сравнение"
 #. Cross-reference all datasets
 #: i18n/messages.json
 msgid "Cross-reference all datasets"
-msgstr ""
+msgstr "Перекрёстное сравнение всех наборов данных"
 
 #. [collection.xref.xrefSpecific]
 #. defaultMessage is:
 #. Cross-reference specific datasets (faster)
 #: i18n/messages.json
 msgid "Cross-reference specific datasets (faster)"
-msgstr ""
+msgstr "Перекрёстное сравнение отдельных наборов данных (быстрее)"
 
 #. [xref.collection]
 #. defaultMessage is:
 #. Cross-referenced dataset
 #: i18n/messages.json
 msgid "Cross-referenced dataset"
-msgstr ""
+msgstr "Результаты перекрёстного сравнения"
 
 #. [collection.xref.alert.text]
 #. defaultMessage is:
@@ -536,6 +545,8 @@ msgid ""
 "Cross-referencing against all other data may take a lot of time. Start this "
 "process once and then wait for it to complete."
 msgstr ""
+"Перекрёстное сравнение со всеми наборами данных требует очень много времени."
+" Запустите процедуру только один раз и дождитесь завершения."
 
 #. [collection.xref.processing]
 #. defaultMessage is:
@@ -549,7 +560,7 @@ msgstr "Перекрёстное сравнение запущено."
 #. Current password
 #: i18n/messages.json
 msgid "Current password"
-msgstr ""
+msgstr "Действующий пароль"
 
 #. [collection.data_url]
 #. defaultMessage is:
@@ -576,21 +587,21 @@ msgstr "Ссылка на исходные данные"
 #. Dataset
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Dataset"
-msgstr ""
+msgstr "Набор данных"
 
 #. [collection.publish.succeed]
 #. defaultMessage is:
 #. Dataset is published
 #: i18n/messages.json
 msgid "Dataset is published"
-msgstr ""
+msgstr "Данные опубликованы"
 
 #. [collection.edit.title]
 #. defaultMessage is:
 #. Dataset settings
 #: i18n/messages.json
 msgid "Dataset settings"
-msgstr ""
+msgstr "Настройки набора данных"
 
 #. [nav.collections]
 #. defaultMessage is:
@@ -606,7 +617,7 @@ msgstr ""
 #. Datasets
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Datasets"
-msgstr ""
+msgstr "Наборы данных"
 
 #. [entity.column.dates]
 #. defaultMessage is:
@@ -684,7 +695,7 @@ msgstr "Скачать"
 #. Download Excel
 #: i18n/messages.json
 msgid "Download Excel"
-msgstr ""
+msgstr "Скачать в формате Excel"
 
 #. [document.download.tooltip]
 #. defaultMessage is:
@@ -754,7 +765,7 @@ msgstr "Точные соответствия"
 #. Expand
 #: i18n/messages.json
 msgid "Expand"
-msgstr ""
+msgstr "Развернуть"
 
 #. [search.screen.export]
 #. defaultMessage is:
@@ -768,7 +779,7 @@ msgstr "Экспорт"
 #. Extracted selectors
 #: i18n/messages.json
 msgid "Extracted selectors"
-msgstr ""
+msgstr "Найденные селекторы"
 
 #. [search.facets.facet.mimetypes]
 #. defaultMessage is:
@@ -843,6 +854,10 @@ msgid ""
 "                from {datasetCount}\n"
 "                {datasetCount, plural, one {dataset} other {datasets}}"
 msgstr ""
+"Найдено {resultCount}\n"
+"                    {resultCount, plural, one {похожая запись} прочих {похожих записей}}\n"
+"                    из {datasetCount}\n"
+"                    {datasetCount, plurla, one {набор данных} из {наборов данных}}"
 
 #. [result.results]
 #. defaultMessage is:
@@ -904,7 +919,7 @@ msgstr "Ваша учётная запись обновлена"
 #. Jobs
 #: i18n/messages.json
 msgid "Jobs"
-msgstr ""
+msgstr "Задачи"
 
 #. [queryLogs.add_placeholder]
 #. defaultMessage is:
@@ -1138,7 +1153,7 @@ msgstr "Ничего не найдено"
 #. No selectors were extracted from this entity.
 #: i18n/messages.json
 msgid "No selectors were extracted from this entity."
-msgstr ""
+msgstr "В данной записи селекторов нет"
 
 #. [document.search.no_match]
 #. defaultMessage is:
@@ -1347,7 +1362,7 @@ msgstr "Повторный анализ"
 #. Receive daily notification e-mails
 #: i18n/messages.json
 msgid "Receive daily notification e-mails"
-msgstr ""
+msgstr "Получать ежедневные оповещения по эл. почте"
 
 #. [notifications.title]
 #. defaultMessage is:
@@ -1481,7 +1496,7 @@ msgstr "Поиск в {label}"
 #. Search personal datasets...
 #: i18n/messages.json
 msgid "Search personal datasets..."
-msgstr ""
+msgstr "Поиск по персональным наборам данных..."
 
 #. [case.users]
 #. defaultMessage is:
@@ -1689,7 +1704,7 @@ msgstr "Статус Системы"
 #. System status
 #: i18n/messages.json
 msgid "System status"
-msgstr ""
+msgstr "Системный статус"
 
 #. [collection.status.progress]
 #. defaultMessage is:
@@ -1737,6 +1752,9 @@ msgid ""
 "three terms: banana, ice, and cream.  Results with one or more of the given "
 "terms will follow"
 msgstr ""
+"В ответ на запрос <em> банановое мороженое </em> сначала будут представлены "
+"результаты с упоминанием обоих слов, а затем — результаты с одним из искомых"
+" слов."
 
 #. [document.viewer.ignored_file]
 #. defaultMessage is:
@@ -1762,7 +1780,7 @@ msgstr "Результаты перекрёстного сравнения от�
 #. There are no ongoing tasks
 #: i18n/messages.json
 msgid "There are no ongoing tasks"
-msgstr ""
+msgstr "Нет активных задач"
 
 #. [entity.similar.empty]
 #. defaultMessage is:
@@ -1798,6 +1816,10 @@ msgid ""
 "appears with ice cream or gelato in the document but where chocolate is not "
 "present"
 msgstr ""
+"Эти операции можно сочетать любым способом. Например, в ответ на запрос <em>"
+" банановое AND (“мороженое” OR “джелато”) -шоколад </em> вы получите "
+"документы, в которых слово «банановый» встречается вместе со словами "
+"«мороженое» или «джелато», но которые не будут содержать слово «шоколад»."
 
 #. [entity.references.no_relationships]
 #. defaultMessage is:
@@ -1851,20 +1873,27 @@ msgid ""
 "two words from each other, such as \"Bank of America\", \"Bank in America\","
 " even \"America has a Bank\"."
 msgstr ""
+"Для поиска фраз состоящих из заданных слов, находящихся на некотором "
+"расстоянии друг от друга, используйте двойные кавычки <em>\"\" </em> вокруг "
+"искомых слов и знак тильды <em>~</em>в конце фразы. Например, на запрос "
+"<em>“Bank America”~2</em> вы получите все результаты, в которых слова "
+"\"Bank\" и \"America\" будут расположены на расстоянии двух слов друг от "
+"друга, такие как \"Bank of America\", \"Bank in America\" и даже \"America "
+"has a Bank\"."
 
 #. [alerts.track]
 #. defaultMessage is:
 #. Track
 #: i18n/messages.json
 msgid "Track"
-msgstr ""
+msgstr "Отслеживать"
 
 #. [alert.suggest.prompt]
 #. defaultMessage is:
 #. Track {queryText}: {alertComponent}
 #: i18n/messages.json
 msgid "Track {queryText}: {alertComponent}"
-msgstr ""
+msgstr "Отслеживать {queryText}: {alertComponent}"
 
 #. [alerts.title]
 #. defaultMessage is:
@@ -1980,6 +2009,9 @@ msgid ""
 "<em>\"barack obama\"</em> will return only results containing the exact "
 "phrase \"barack obama\""
 msgstr ""
+"Используйте <em> \"\" </em>, чтобы получить только точные соответствия. "
+"Например, в ответ на запрос<em> \"барак обама\" </em> вы получите только те "
+"результаты, которые содержат искомую фразу в точном соответствии."
 
 #. [searchTips.spelling.1]
 #. defaultMessage is:
@@ -1996,6 +2028,11 @@ msgid ""
 "is defined by the number of spelling mistakes that must be made to get from "
 "the original word to the variant."
 msgstr ""
+"Используйте <em>~</em> для нечёткого поиска. Например, в ответ на запрос "
+"<em>Wladimir~2</em> вы получите результаты не только соодержащие «Wladimir»,"
+" но и такие варианты написания, как «Wladimyr» или «Vladimyr». Варианты "
+"написания определяются количеством ошибок или побуквенных изменений для "
+"получения варианта из исходного слова."
 
 #. [settings.password.rules]
 #. defaultMessage is:
@@ -2045,6 +2082,8 @@ msgstr "Просмотр"
 msgid ""
 "View the latest updates to datasets, groups and tracking alerts you follow."
 msgstr ""
+"Показать последние обновления для наборов данных, групп и оповещений, на "
+"которые вы подписаны"
 
 #. [search.warning]
 #. defaultMessage is:
@@ -2068,7 +2107,7 @@ msgstr "Мы отправили вам письмо с ссылкой для з�
 #. What's new, {role}?
 #: i18n/messages.json
 msgid "What's new, {role}?"
-msgstr ""
+msgstr "Что нового, {role}?"
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
@@ -2093,6 +2132,11 @@ msgid ""
 "Please make sure you do not publish material identifying your sources, "
 "directly or through metadata."
 msgstr ""
+"Вы собираетесь опубликовать набор данных. Наборы данных следует "
+"рассматривать как вещественные доказательства, доступ к которым при "
+"необходимости можно предоставить любому посетителю. Убедитесь, что вы не "
+"публикуете материалов, которые прямо или косвенно, например, через "
+"метаданные, указывают на ваш источник."
 
 #. [navbar.alert_remove]
 #. defaultMessage is:
@@ -2106,14 +2150,14 @@ msgstr "Вы подписаны на оповещения для этого по
 #. You do not have any personal datasets yet
 #: i18n/messages.json
 msgid "You do not have any personal datasets yet"
-msgstr ""
+msgstr "У вас пока нет персональных наборов данных"
 
 #. [notifications.no_notifications]
 #. defaultMessage is:
 #. You have no unseen notifications
 #: i18n/messages.json
 msgid "You have no unseen notifications"
-msgstr ""
+msgstr "У вас нет непросмотренных оповещений"
 
 #. [collection.xref.select.selectStatus]
 #. defaultMessage is:
@@ -2124,13 +2168,15 @@ msgid ""
 "You have selected {selectedCount, number} {selectedCount, plural, one "
 "{collection} other {collections}}"
 msgstr ""
+"Вы выбрали {selectedCount, number} {selectedCount, plural, one {collection} "
+"остальных {collections}}"
 
 #. [case.create.login]
 #. defaultMessage is:
 #. You must sign in to upload your own data.
 #: i18n/messages.json
 msgid "You must sign in to upload your own data."
-msgstr ""
+msgstr "Для загрузки данных необходимо авторизоваться."
 
 #. [alert.manager.description]
 #. defaultMessage is:
@@ -2141,6 +2187,8 @@ msgid ""
 "You will receive notifications when a new result is added that matches any "
 "of the alerts you have set up below."
 msgstr ""
+"Укажите искомые слова и, в случае, если они будут найдены в новых "
+"документах, вы увидите оповещение."
 
 #. [password_auth.name]
 #. defaultMessage is:
@@ -2178,7 +2226,7 @@ msgstr "Пароли не совпадают!"
 #. from {collections} datasets
 #: i18n/messages.json
 msgid "from {collections} datasets"
-msgstr ""
+msgstr "Наборов данных: {collections}"
 
 #. [home.statistics.countries]
 #. defaultMessage is:
@@ -2213,7 +2261,7 @@ msgstr "не:"
 #. unknown
 #: i18n/messages.json
 msgid "unknown"
-msgstr ""
+msgstr "что-то неизвестное"
 
 #. [infoMode.collection.entries]
 #. defaultMessage is:
@@ -2227,7 +2275,7 @@ msgstr "{count} записей"
 #. {count} mentions in {appName}
 #: i18n/messages.json
 msgid "{count} mentions in {appName}"
-msgstr ""
+msgstr "Упоминаний в {appName}: {count}"
 
 #. [home.statistics.territories]
 #. defaultMessage is:
