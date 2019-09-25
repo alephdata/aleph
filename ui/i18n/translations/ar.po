@@ -1,7 +1,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-09-25T12:49:01.992Z\n"
+"POT-Creation-Date: 2019-09-25T14:53:45.568Z\n"
 "Language-Team: Arabic (https://www.transifex.com/aleph/teams/76591/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1323,7 +1323,10 @@ msgstr ""
 #. [document.manager.analyze]
 #. defaultMessage is:
 #. Re-process
-#: i18n/messages.json
+#. [collection.edit.info.analyze]
+#. defaultMessage is:
+#. Re-process
+#: i18n/messages.json i18n/messages.json
 msgid "Re-process"
 msgstr ""
 
