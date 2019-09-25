@@ -57,6 +57,7 @@ export class SystemStatusScreen extends React.Component {
   }
 
   fetchStatus() {
+    clearTimeout(this.timeout);
     this.props.fetchSystemStatus().finally(() => {
       this.timeout = setTimeout(this.fetchStatus, 3000);
     });
@@ -73,7 +74,6 @@ export class SystemStatusScreen extends React.Component {
     const active = res.pending + res.running;
     const total = active + res.finished;
     const progress = res.finished / total;
-
     return (
       <tr key={collection.id}>
         <td className="entity">
@@ -106,10 +106,10 @@ export class SystemStatusScreen extends React.Component {
 
   render() {
     const { result, intl } = this.props;
-
     if (result.isError) {
       return <ErrorScreen error={result.error} />;
     }
+    const results = result.results || [];
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
@@ -124,15 +124,13 @@ export class SystemStatusScreen extends React.Component {
                 />
               </p>
             </div>
-            {!result.isLoading && result.total === 0
-              && (
-                <ErrorSection
-                  icon="dashboard"
-                  title={intl.formatMessage(messages.no_active)}
-                />
-              )
-            }
-            {!result.isLoading && result.total !== 0 && (
+            {result.total === 0 && (
+              <ErrorSection
+                icon="dashboard"
+                title={intl.formatMessage(messages.no_active)}
+              />
+            )}
+            {result.total > 0 && (
               <table className="StatusTable">
                 <thead>
                   <tr>
@@ -155,11 +153,11 @@ export class SystemStatusScreen extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {result.results && result.results.map(this.renderRow)}
+                  {results.map(this.renderRow)}
                 </tbody>
               </table>
             )}
-            {!result.total && result.isLoading && (
+            {!result.results && result.isLoading && (
               <SectionLoading />
             )}
           </React.Fragment>
