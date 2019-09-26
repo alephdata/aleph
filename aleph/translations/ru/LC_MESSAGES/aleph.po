@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-09-20 17:27+0200\n"
+"POT-Creation-Date: 2019-09-25 16:54+0200\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -107,6 +107,10 @@ msgid "Air and maritime registers"
 msgstr "Регистр воздушных и морских судов"
 
 #: aleph/model/collection.py:43
+msgid "Personal datasets"
+msgstr "Персональные наборы данных"
+
+#: aleph/model/collection.py:44
 msgid "Other material"
 msgstr "Прочие материалы"
 
@@ -185,76 +189,80 @@ msgstr ""
 "\n"
 "    Для завершения регистрации, пожалуйста, перейдите на <a href=\"%(url)s\"> страницу регистрации </a>."
 
-#: aleph/views/base_api.py:118
+#: aleph/views/base_api.py:110
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr "/api/1/ устарел, пожалуйста, используйте /api/2/."
 
-#: aleph/views/base_api.py:141
+#: aleph/views/base_api.py:133
 msgid "You are not authorized to do this."
 msgstr "У вас недостаточно прав."
 
-#: aleph/views/base_api.py:150
+#: aleph/views/base_api.py:142
 msgid "This path does not exist."
 msgstr "Неверный путь."
 
-#: aleph/views/base_api.py:159
+#: aleph/views/base_api.py:151
 msgid "Internal server error."
 msgstr "Ошибка сервера."
 
-#: aleph/views/base_api.py:177
+#: aleph/views/base_api.py:169
 msgid "Access token is invalid."
 msgstr "Неверный ключ доступа."
 
-#: aleph/views/base_api.py:186
+#: aleph/views/base_api.py:178
 msgid "There was an error during search"
 msgstr "Во время поиска произошла ошибка"
 
 #: aleph/views/forms.py:35
 msgid "Invalid category."
-msgstr ""
+msgstr "Неверная категория"
 
 #: aleph/views/forms.py:45
 msgid "Invalid URL."
-msgstr ""
+msgstr "Некорректная ссылка."
 
 #: aleph/views/forms.py:56
 msgid "Invalid language code."
-msgstr ""
+msgstr "Некорректный языковой код."
 
 #: aleph/views/forms.py:67
 msgid "Invalid user locale."
-msgstr ""
+msgstr "Неверные региональные настройки."
 
 #: aleph/views/forms.py:78
 #, python-format
 msgid "Invalid country code: %s"
-msgstr ""
+msgstr "Некорректный код страны: %s"
 
 #: aleph/views/forms.py:87
 #, python-format
 msgid "Invalid date: %s"
-msgstr ""
+msgstr "Неверная дата: %s"
 
 #: aleph/views/forms.py:95
 #, python-format
 msgid "Invalid schema name: %s"
-msgstr ""
+msgstr "Некорректное имя схемы: %s"
 
-#: aleph/views/roles_api.py:28
+#: aleph/views/roles_api.py:30
 msgid "prefix filter is too short"
 msgstr "Префикс слишком короткий"
 
-#: aleph/views/roles_api.py:46
+#: aleph/views/roles_api.py:48
 msgid "To proceed, please check your email."
 msgstr "Пожалуйста, проверьте почту"
 
-#: aleph/views/roles_api.py:61
+#: aleph/views/roles_api.py:63
 msgid "Invalid code"
 msgstr "Неверный код"
 
-#: aleph/views/roles_api.py:68
+#: aleph/views/roles_api.py:70
 msgid "Email is already registered"
 msgstr "Этот электронный адрес уже зарегистрирован"
+
+#: aleph/views/roles_api.py:107
+msgid "Incorrect password."
+msgstr "Неверный пароль."
 
 #: aleph/views/sessions_api.py:58 aleph/views/sessions_api.py:61
 msgid "Invalid user or password."
@@ -270,4 +278,4 @@ msgstr "Ошибка проверки данных"
 
 #: aleph/views/util.py:139
 msgid "[HTML removed: could not be sanitized]"
-msgstr ""
+msgstr "[HTML-код удалён как небезопасный]"

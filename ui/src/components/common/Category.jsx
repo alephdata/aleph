@@ -1,11 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Icon } from '@blueprintjs/core';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import c from 'classnames';
 
+import getCategoryLink from 'src/util/getCategoryLink';
 import { selectMetadata } from 'src/selectors';
 
+import './Category.scss';
 
-class Category extends Component {
+
+class CategoryLabel extends Component {
   shouldComponentUpdate(nextProps) {
     const {
       collection = {},
@@ -18,9 +24,29 @@ class Category extends Component {
   }
 
   render() {
-    const { collection, categories, category: pureCategory } = this.props;
+    const { collection, categories, category: pureCategory, icon } = this.props;
     const category = collection ? collection.category : pureCategory;
-    return categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
+    const label = categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
+    return (
+      <span className="CategoryLabel" title={label}>
+        { icon && (<Icon icon="list" />)}
+        <span>{ label }</span>
+      </span>
+    );
+  }
+}
+
+class CategoryLink extends PureComponent {
+  render() {
+    const { collection, className } = this.props;
+    if (collection === undefined || collection.category === undefined) {
+      return <Category.Label collection={collection} />;
+    }
+    return (
+      <Link to={getCategoryLink(collection)} className={c('CategoryLink', className)}>
+        <Category.Label {...this.props} />
+      </Link>
+    );
   }
 }
 
@@ -28,4 +54,10 @@ const mapStateToProps = state => ({
   categories: selectMetadata(state).categories,
 });
 
-export default connect(mapStateToProps)(Category);
+class Category {
+  static Label = connect(mapStateToProps)(CategoryLabel);
+
+  static Link = connect(mapStateToProps)(CategoryLink);
+}
+
+export default Category;

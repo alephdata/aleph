@@ -1,6 +1,6 @@
 import { createAction } from 'redux-act';
 
-export { fetchRole, suggestRoles, updateRole } from './roleActions';
+export { fetchRole, suggestRoles, updateRole, fetchGroups } from './roleActions';
 export { addAlert, deleteAlert, fetchAlerts } from './alertActions';
 export { deleteNotifications, queryNotifications } from './notificationActions';
 export { fetchDocumentContent, ingestDocument } from './documentActions';
@@ -22,8 +22,8 @@ export {
 export {
   fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,
 } from './entityActions';
-export { fetchMetadata, fetchStatistics } from './metadataActions';
-export { queryDashboard } from './dashboardActions';
+export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
+export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

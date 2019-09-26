@@ -1,20 +1,24 @@
 import React from 'react';
 import { Waypoint } from 'react-waypoint';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import Query from 'src/app/Query';
-import { queryEntities } from 'src/actions/index';
+import { Button } from '@blueprintjs/core';
+import queryString from 'query-string';
+import c from 'classnames';
+
 import {
   selectEntitiesResult, selectEntityReference, selectSchema,
 } from 'src/selectors';
 import {
-  ErrorSection, Property, SectionLoading, SearchBox,
+  ErrorSection, SectionLoading, Entity,
 } from 'src/components/common';
+import EntityProperties from 'src/components/Entity/EntityProperties';
+import Property from 'src/components/Property';
 import ensureArray from 'src/util/ensureArray';
-import togglePreview from 'src/util/togglePreview';
-import getEntityLink from 'src/util/getEntityLink';
+import { queryEntities } from 'src/actions/index';
+import { queryEntityReference } from 'src/queries';
 
 const messages = defineMessages({
   no_relationships: {
@@ -25,25 +29,6 @@ const messages = defineMessages({
 
 
 class EntityReferencesMode extends React.Component {
-  static Search = function Search(props) {
-    return (
-      <div className="bp3-callout bp3-intent-primary">
-        <SearchBox
-          searchText={props.query.getString('q')}
-          onSearch={(queryText) => {
-            const { history } = props;
-            history.push({
-              pathname: props.location.pathname,
-              search: props.query.setString('q', queryText).toLocation(),
-              hash: props.location.hash,
-            });
-          }}
-        />
-      </div>
-
-    );
-  }
-
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -57,10 +42,14 @@ class EntityReferencesMode extends React.Component {
     this.fetchIfNeeded();
   }
 
-  onShowDetails(event, entity) {
-    const { history } = this.props;
-    event.preventDefault();
-    togglePreview(history, entity, 'entity');
+  onExpand(entity) {
+    const { expandedId, parsedHash, history, location } = this.props;
+    parsedHash.expand = expandedId === entity.id ? undefined : entity.id;
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
   }
 
   getMoreResults() {
@@ -77,57 +66,74 @@ class EntityReferencesMode extends React.Component {
     }
   }
 
+  renderCell(prop, entity) {
+    const { schema, isThing } = this.props;
+    let content = <Property.Values prop={prop} values={entity.getProperty(prop)} />;
+    if (isThing && schema.caption.indexOf(prop.name) !== -1) {
+      content = <Entity.Link entity={entity}>{content}</Entity.Link>;
+    }
+    return (
+      <td key={prop.name} className={prop.type.name}>
+        {content}
+      </td>
+    );
+  }
+
+  renderRow(columns, entity) {
+    const { isThing, expandedId } = this.props;
+    const isExpanded = entity.id === expandedId;
+    const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
+    const mainRow = (
+      <tr key={entity.id} className={c('nowrap', { prefix: isExpanded })}>
+        { !isThing && (
+          <td className="expand">
+            <Button onClick={() => this.onExpand(entity)} small minimal icon={expandIcon} />
+          </td>
+        )}
+        {columns.map(prop => this.renderCell(prop, entity))}
+      </tr>
+    );
+    if (!isExpanded) {
+      return mainRow;
+    }
+    return [
+      mainRow,
+      <tr key={`${entity.id}-expanded`}>
+        <td />
+        <td colSpan={columns.length}>
+          <EntityProperties entity={entity} />
+        </td>
+      </tr>,
+    ];
+  }
+
   render() {
     const {
-      intl, reference, result, schema,
+      intl, reference, result, schema, isThing,
     } = this.props;
     if (!reference) {
-      return <ErrorSection visual="graph" title={intl.formatMessage(messages.no_relationships)} />;
+      return <ErrorSection icon="graph" title={intl.formatMessage(messages.no_relationships)} />;
     }
     const { property } = reference;
     const results = ensureArray(result.results);
-    const isSearchable = reference.count > result.limit;
     const columns = schema.getFeaturedProperties().filter(prop => prop.name !== property.name);
     return (
       <section className="EntityReferencesTable">
-        {isSearchable && (
-          <EntityReferencesMode.Search
-            query={this.props.query}
-            history={this.props.history}
-            location={this.props.location}
-          />
-        )}
         <table className="data-table references-data-table">
           <thead>
             <tr>
+              { !isThing && (
+                <th key="expand" />
+              )}
               {columns.map(prop => (
                 <th key={prop.name} className={prop.type}>
                   <Property.Name prop={prop} />
                 </th>
               ))}
-              <th key="details" className="narrow" />
             </tr>
           </thead>
           <tbody>
-            {results.map(entity => (
-              <tr key={entity.id}>
-                {columns.map(prop => (
-                  <td key={prop.name} className={prop.type}>
-                    <Property.Values
-                      prop={prop}
-                      values={entity.getProperty(prop)}
-                    />
-                  </td>
-                ))}
-                <td key="details" className="narrow">
-                  <a href={getEntityLink(entity)} onClick={e => this.onShowDetails(e, entity)}>
-                    <span>
-                      <FormattedMessage id="references.details" defaultMessage="Details" />
-                    </span>
-                  </a>
-                </td>
-              </tr>
-            ))}
+            {results.map(entity => this.renderRow(columns, entity))}
           </tbody>
         </table>
         <Waypoint
@@ -145,27 +151,26 @@ class EntityReferencesMode extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { entity, mode, location } = ownProps;
+  const parsedHash = queryString.parse(ownProps.location.hash);
   const reference = selectEntityReference(state, entity.id, mode);
   if (!reference) {
     return {};
   }
-  const context = {
-    [`filter:properties.${reference.property.name}`]: entity.id,
-    'filter:schemata': reference.schema,
-  };
-  const query = Query.fromLocation('entities', location, context, reference.property.name);
+  const query = queryEntityReference(location, entity, reference);
+  const schema = selectSchema(state, reference.schema);
   return {
     reference,
     query,
+    schema,
+    parsedHash,
+    expandedId: parsedHash.expand,
     result: selectEntitiesResult(state, query),
-    schema: selectSchema(state, reference.schema),
+    isThing: schema.isThing(),
   };
 };
 
-const mapDispatchToProps = { queryEntities };
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
   injectIntl,
 )(EntityReferencesMode);

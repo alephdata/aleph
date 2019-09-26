@@ -40,6 +40,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'customs': lazy_gettext('Customs declarations'),
         'census': lazy_gettext('Population census'),
         'transport': lazy_gettext('Air and maritime registers'),
+        'casefile': lazy_gettext('Personal datasets'),
         'other': lazy_gettext('Other material')
     }
 
@@ -90,6 +91,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             creator = Role.by_id(data.get('creator_id'))
             if creator is not None:
                 self.creator = creator
+
+        if self.casefile:
+            self.category = 'casefile'
 
         self.touch()
         db.session.flush()

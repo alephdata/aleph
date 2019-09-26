@@ -19,6 +19,8 @@ export default function ClipboardInput(props) {
   return (
     <InputGroup
       inputRef={inputRef}
+      leftIcon={props.icon}
+      id={props.id}
       readOnly
       value={props.value}
       rightElement={(

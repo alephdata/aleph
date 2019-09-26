@@ -164,7 +164,6 @@ const mapStateToProps = (state, ownProps) => {
   const { query, field, defaultSize } = ownProps;
   const facetSize = query.getInt(`facet_size:${field}`, defaultSize);
   const isOpen = query.hasFacet(field) && facetSize > 0;
-
   return {
     facetSize,
     defaultSize,

@@ -7,8 +7,8 @@ import { debounce } from 'lodash';
 
 const messages = defineMessages({
   filter: {
-    id: 'collection.xref.filter.sources',
-    defaultMessage: 'Filter sources',
+    id: 'collection.xref.filter.collections',
+    defaultMessage: 'Filter datasets',
   },
   categories: {
     id: 'collection.xref.filter.categories',

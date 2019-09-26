@@ -1,0 +1,8 @@
+@import "src/app/variables.scss";
+
+.QueryText {
+    font-family: monospace;
+    white-space: nowrap;
+    font-size: 0.95em;
+    color: $gray1;
+}

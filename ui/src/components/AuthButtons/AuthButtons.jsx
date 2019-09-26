@@ -5,7 +5,6 @@ import {
   Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position,
 } from '@blueprintjs/core';
 
-import SettingsDialog from 'src/dialogs/SettingsDialog/SettingsDialog';
 import AuthenticationDialog from 'src/dialogs/AuthenticationDialog/AuthenticationDialog';
 import QueryLogsDialog from 'src/dialogs/QueryLogsDialog/QueryLogsDialog';
 
@@ -13,9 +12,13 @@ import './AuthButtons.scss';
 
 
 const messages = defineMessages({
-  view_notifications: {
+  notifications: {
     id: 'nav.view_notifications',
     defaultMessage: 'Notifications',
+  },
+  casefiles: {
+    id: 'nav.casefiles',
+    defaultMessage: 'Personal datasets',
   },
   settings: {
     id: 'nav.settings',
@@ -26,24 +29,25 @@ const messages = defineMessages({
     defaultMessage: 'Sign out',
   },
   signin: {
-    id: 'nav.signin',
+    id: 'nav.signin_register',
     defaultMessage: 'Sign in / Register',
   },
-  queryLogs: {
-    id: 'nav.queryLogs',
+  querylogs: {
+    id: 'nav.querylogs',
     defaultMessage: 'Search history',
+  },
+  alerts: {
+    id: 'nav.alerts',
+    defaultMessage: 'Alerts',
   },
 });
 export class AuthButtons extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      settingsIsOpen: false,
       queryLogsIsOpen: false,
       isSignupOpen: false,
     };
-
-    this.toggleSettings = this.toggleSettings.bind(this);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
   }
 
@@ -53,41 +57,58 @@ export class AuthButtons extends Component {
     this.setState(({ isSignupOpen }) => ({ isSignupOpen: !isSignupOpen }));
   }
 
-
-  toggleSettings() {
-    this.setState(({ settingsIsOpen }) => ({ settingsIsOpen: !settingsIsOpen }));
-  }
-
   render() {
-    const { session, auth, intl } = this.props;
+    const { session, role, auth, intl } = this.props;
 
     if (session.loggedIn) {
       return (
         <span className="AuthButtons">
           <Popover
             content={(
-              <Menu>
+              <Menu className="AuthButtons__popover">
                 <Link to="/notifications" className="bp3-menu-item">
                   <Icon icon="notifications" />
                   {' '}
                   {' '}
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.view_notifications)}
+                    {intl.formatMessage(messages.notifications)}
                   </div>
                 </Link>
-                <MenuItem icon="history" onClick={this.toggleQueryLogs} text={intl.formatMessage(messages.queryLogs)} />
-                <MenuItem icon="cog" onClick={this.toggleSettings} text={`${intl.formatMessage(messages.settings)}…`} />
+                <Link to="/history" className="bp3-menu-item">
+                  <Icon icon="history" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.querylogs)}
+                  </div>
+                </Link>
+                <Link to="/alerts" className="bp3-menu-item">
+                  <Icon icon="feed" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.alerts)}
+                  </div>
+                </Link>
+                <Link to="/cases" className="bp3-menu-item">
+                  <Icon icon="briefcase" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.casefiles)}
+                  </div>
+                </Link>
                 <MenuDivider />
+                <Link to="/settings" className="bp3-menu-item">
+                  <Icon icon="cog" />
+                  {' '}
+                  {' '}
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.settings)}
+                  </div>
+                </Link>
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
 )}
             position={Position.BOTTOM_LEFT}
+            fill
           >
-            <Button icon="user" className="bp3-minimal navbar-option-title">
-              <FormattedMessage id="nav.profile" defaultMessage="Profile" />
-            </Button>
+            <Button icon="user" className="bp3-minimal" rightIcon="caret-down" text={role ? role.name : 'Profile'} />
           </Popover>
-          <SettingsDialog isOpen={this.state.settingsIsOpen} toggleDialog={this.toggleSettings} />
           <QueryLogsDialog
             isOpen={this.state.queryLogsIsOpen}
             toggleDialog={this.toggleQueryLogs}
@@ -105,7 +126,7 @@ export class AuthButtons extends Component {
             toggleDialog={this.toggleAuthentication}
           />
           <Button icon="log-in" className="bp3-minimal" onClick={this.toggleAuthentication}>
-            <FormattedMessage id="nav.signin" defaultMessage="Sign in / Register" />
+            <FormattedMessage id="nav.signin" defaultMessage="Sign in" />
           </Button>
         </span>
       );

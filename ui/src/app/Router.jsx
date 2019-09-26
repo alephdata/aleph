@@ -1,4 +1,4 @@
-import React, { Component, Suspense, lazy } from 'react';
+import React, { Component, Suspense } from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Spinner } from '@blueprintjs/core';
@@ -6,21 +6,24 @@ import { Spinner } from '@blueprintjs/core';
 import { fetchMetadata as fetchMetadataAction } from 'src/actions';
 import { selectSession, selectMetadata } from 'src/selectors';
 import './Router.scss';
+import NotFoundScreen from 'src/screens/NotFoundScreen/NotFoundScreen';
 
-
-const NotFoundScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/NotFoundScreen/NotFoundScreen'));
-const OAuthScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/OAuthScreen/OAuthScreen'));
-const LogoutScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/LogoutScreen/LogoutScreen'));
-const ActivateScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/ActivateScreen/ActivateScreen'));
-const HomeScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/HomeScreen/HomeScreen'));
-const SearchScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SearchScreen/SearchScreen'));
-const NotificationsScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/NotificationsScreen/NotificationsScreen'));
-const SystemStatusScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SystemStatusScreen/SystemStatusScreen'));
-const SourcesIndexScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/SourcesIndexScreen/SourcesIndexScreen'));
-const CasesIndexScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CasesIndexScreen/CasesIndexScreen'));
-const CollectionScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionScreen/CollectionScreen'));
-const CollectionXrefMatchesScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen'));
-const EntityScreen = lazy(() => import(/* webpackChunkName: 'base' */ 'src/screens/EntityScreen/EntityScreen'));
+import OAuthScreen from 'src/screens/OAuthScreen/OAuthScreen';
+import LogoutScreen from 'src/screens/LogoutScreen/LogoutScreen';
+import ActivateScreen from 'src/screens/ActivateScreen/ActivateScreen';
+import HomeScreen from 'src/screens/HomeScreen/HomeScreen';
+import SearchScreen from 'src/screens/SearchScreen/SearchScreen';
+import NotificationsScreen from 'src/screens/NotificationsScreen/NotificationsScreen';
+import HistoryScreen from 'src/screens/HistoryScreen/HistoryScreen';
+import AlertsScreen from 'src/screens/AlertsScreen/AlertsScreen';
+import SettingsScreen from 'src/screens/SettingsScreen/SettingsScreen';
+import SystemStatusScreen from 'src/screens/SystemStatusScreen/SystemStatusScreen';
+import GroupScreen from 'src/screens/GroupScreen/GroupScreen';
+import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
+import CollectionIndexScreen from 'src/screens/CollectionIndexScreen/CollectionIndexScreen';
+import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
+import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
+import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
 
 
 class Router extends Component {
@@ -54,14 +57,21 @@ class Router extends Component {
           <Redirect from="/text/:documentId" to="/entities/:documentId" />
           <Redirect from="/tabular/:documentId/:sheet" to="/entities/:documentId" />
           <Redirect from="/documents/:documentId" to="/entities/:documentId" />
-          <Route path="/sources" exact component={SourcesIndexScreen} />
+          <Route path="/datasets" exact component={CollectionIndexScreen} />
+          <Redirect from="/sources" to="/datasets" />
           <Route path="/cases" exact component={CasesIndexScreen} />
-          <Redirect from="/collections/:collectionId/documents" to="/collections/:collectionId" />
-          <Route path="/collections/:collectionId" exact component={CollectionScreen} />
-          <Route path="/collections/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
+          <Redirect from="/collections/:collectionId/documents" to="/datasets/:collectionId" />
+          <Route path="/datasets/:collectionId" exact component={CollectionScreen} />
+          <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
+          <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId/xref/:otherId" />
+          <Route path="/datasets/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
+          <Route path="/history" exact component={HistoryScreen} />
+          <Route path="/alerts" exact component={AlertsScreen} />
+          <Route path="/settings" exact component={SettingsScreen} />
           <Route path="/status" exact component={SystemStatusScreen} />
+          <Route path="/groups/:groupId" exact component={GroupScreen} />
           <Route path="/" exact component={HomeScreen} />
           <Route component={NotFoundScreen} />
         </Switch>

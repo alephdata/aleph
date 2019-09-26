@@ -6,7 +6,6 @@ import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
 import { Numeric } from 'src/components/common';
 import { triggerCollectionCancel, fetchCollectionStatus } from 'src/actions';
 import { selectCollectionStatus } from 'src/selectors';
-// import wordList from 'src/util/wordList';
 
 import './CollectionStatus.scss';
 
@@ -51,12 +50,13 @@ class CollectionStatus extends Component {
   render() {
     const { collection, status, intl } = this.props;
     const pending = status.pending || 0;
+    const running = status.running || 0;
     const finished = status.finished || 0;
-    const total = pending + finished;
-    if (!collection || status.shouldLoad || !pending) {
+    const active = pending + running;
+    const total = active + finished;
+    if (!collection || status.shouldLoad || !active) {
       return null;
     }
-    const determinate = pending > 6;
     const progress = finished / total;
     const percent = Math.round(progress * 100);
     return (
@@ -64,15 +64,9 @@ class CollectionStatus extends Component {
         <h4 className="bp3-heading">
           <FormattedMessage
             id="collection.status.title"
-            defaultMessage="Update in progress"
+            defaultMessage="Update in progress ({percent}%)"
+            values={{ percent: <Numeric num={percent} /> }}
           />
-          {determinate && (
-            <FormattedMessage
-              id="collection.status.pending"
-              defaultMessage=" ({percent}%)"
-              values={{ percent: <Numeric num={percent} /> }}
-            />
-          )}
         </h4>
         <h6 className="bp3-heading total-count">
           <FormattedMessage
@@ -82,11 +76,7 @@ class CollectionStatus extends Component {
           />
         </h6>
         <div className="progress-area">
-          <ProgressBar
-            animate
-            intent={Intent.PRIMARY}
-            value={determinate ? progress : undefined}
-          />
+          <ProgressBar animate intent={Intent.PRIMARY} value={progress} />
           <Tooltip content={intl.formatMessage(messages.cancel_button)}>
             <Button onClick={this.onCancel} icon="delete" minimal />
           </Tooltip>

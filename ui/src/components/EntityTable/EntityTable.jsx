@@ -15,7 +15,7 @@ const messages = defineMessages({
   },
   column_collection_id: {
     id: 'entity.column.collection_id',
-    defaultMessage: 'Source',
+    defaultMessage: 'Dataset',
   },
   column_schema: {
     id: 'entity.column.schema',

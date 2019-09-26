@@ -10,9 +10,9 @@ import DualPane from './DualPane';
 import Entity from './Entity';
 import FileSize from './FileSize';
 import Language from './Language';
-import Property from './Property';
 import Role from './Role';
 import Schema from './Schema';
+import Suggest from './Suggest';
 import SectionLoading from './SectionLoading';
 import TextLoading from './TextLoading';
 import ErrorSection from './ErrorSection';
@@ -23,6 +23,9 @@ import Tag from './Tag';
 import URL from './URL';
 import { Icon } from './Icon';
 import SearchBox from './SearchBox';
+import SearchListings from './SearchListings';
+import QueryText from './QueryText';
+import ResultCount from './ResultCount';
 
 export {
   Breadcrumbs,
@@ -37,9 +40,9 @@ export {
   Entity,
   FileSize,
   Language,
-  Property,
   Role,
   Schema,
+  Suggest,
   SectionLoading,
   TextLoading,
   ErrorSection,
@@ -49,5 +52,8 @@ export {
   Tag,
   URL,
   SearchBox,
+  SearchListings,
+  QueryText,
+  ResultCount,
   Icon,
 };

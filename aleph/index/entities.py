@@ -165,7 +165,6 @@ def format_proxy(proxy, collection, job_id=None):
     properties = data.get('properties')
     text = properties.pop('indexText', [])
     text.extend(fps)
-    text.append(collection.label)
     data['text'] = text
 
     data['updated_at'] = collection.updated_at

@@ -1,0 +1,29 @@
+@import "~src/app/tables";
+@import "src/app/variables.scss";
+
+
+.SearchListings {
+  @extend .settings-table;
+
+  td {
+    padding: $aleph-grid-size;
+    vertical-align: middle !important;
+  }
+
+  &__button.narrow {
+    padding: 13px 5px;
+  }
+
+  &__text {
+    &.text-date {
+      color: $gray3;
+      text-align: right;
+    }
+
+    span {
+      padding: 0 3px;
+    }
+  }
+
+
+}

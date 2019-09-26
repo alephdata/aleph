@@ -129,8 +129,8 @@ class CollectionXrefSelect extends Component {
               <FormattedMessage
                 id="collection.xref.select.selectStatus"
                 defaultMessage={`You have selected {selectedCount, number} {selectedCount, plural,
-                      one {source}
-                      other {sources}
+                      one {collection}
+                      other {collections}
                     }`}
                 values={{ selectedCount: selectedCollections.length }}
               />

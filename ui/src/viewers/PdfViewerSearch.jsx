@@ -69,7 +69,7 @@ class PdfViewerSearch extends Component {
                   to={this.getResultLink(res)}
                   className={classNames({ active: page === res.index })}
                 >
-                  <span className="bp3-icon-document" />
+                  <span className="bp3-icon bp3-icon-document" />
                   <FormattedMessage
                     id="document.pdf.search.page"
                     defaultMessage="Page {page}"

@@ -183,5 +183,7 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 403, res
 
         res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res
+        res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert 0 == res.json['pending'], res.json

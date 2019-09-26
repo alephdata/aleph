@@ -1,0 +1,59 @@
+@import "src/app/variables.scss";
+
+.SearchBox {
+  .bp3-input {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    margin-right: 15px !important;
+  }
+
+  &__scoped-input {
+    &__scope-button {
+      white-space: nowrap;
+      color: white !important;
+      background: $gray1 !important;
+      box-shadow: none !important;
+      padding: 5px 10px;
+      font-weight: 500;
+
+      &.unclickable {
+        cursor: auto;
+      }
+
+      .bp3-icon {
+        color: white !important;
+      }
+    }
+
+    &__popover {
+      .bp3-menu {
+        background: $gray1 !important;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .bp3-menu-item {
+        font-weight: 500;
+      }
+    }
+  }
+
+  &__search-tips {
+    @media screen and (max-width: $aleph-screen-sm-max-width) {
+      display: none;
+    }
+  }
+
+  &__submit {
+    background-color: $blue3 !important;
+    border: none !important;
+  }
+}
