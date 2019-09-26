@@ -1,8 +1,21 @@
 swagger: "2.0"
 info:
-  title: Aleph API
+  title: Aleph API Documentation
   description: |
-    The Aleph web interface is powered by a Flask HTTP API. 
+    Aleph is a powerful tool for people who follow the money. It helps investigators to securely access and search 
+    large amounts of data - no matter whether they are a government database or a leaked email archive.
+    
+    # General Overview
+
+    The Aleph web interface is powered by a Flask HTTP API. Aleph supports an extensive API for searching documents 
+    and entities. It can also be used to retrieve raw metadata, source documents and other useful details. Aleph's API
+    tries to follow a pragmatic approach based on the following principles:
+
+    - All API calls are prefixed with an API version; this version is `/api/2/`.
+    - Responses and requests are both encoded as JSON. Requests should have the `Content-Type` and `Accept` headers set to `application/json`.
+    - The application uses Representational State Transfer (REST) principles where convenient, but also has some procedural API calls.
+    - The API allows API Authorization via an API key or JSON Web Tokens.
+
 
     # Authentication and Authorization
 
@@ -18,12 +31,39 @@ info:
 
     Alternatively, the API key can also be sent as a query parameter under the `api_key` key.
 
-    # Endpoints
   version: 3.2.10
+  contact:
+    url: https://github.com/alephdata/aleph
+  x-logo:
+    url: 'https://avatars3.githubusercontent.com/u/26249985?s=200&v=4'
+    altText: Aleph logo
+  license:
+    name: MIT
+    url: 'https://github.com/alephdata/aleph/blob/master/LICENSE.txt'
+externalDocs:
+  description: Find out more about Aleph, a suite of data analysis tools for investigators.
+  url: 'https://docs.alephdata.org/'
 host: data.occrp.org
 basePath: /api/2
 schemes:
   - https
+tags:
+  - name: "Collection"
+    x-displayName: "Collections API"
+    description: |
+      Create and manage collections.
+  - name: "Alert"
+    x-displayName: "Alerts API"
+    description: |
+      Create and manage alerts.
+  - name: "Entity"
+    x-displayName: "Entities and Search API"
+    description: |
+      Search, create and manage entities.
+  - name: "Archive"
+    x-displayName: "Archive API"
+    description: |
+      Download blobs from the archive.
 paths:
   /alerts:
     get:
@@ -36,6 +76,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/AlertsResponse'
+      tags: ["Alert"]
     post:
       summary: Create an alert
       description: Creates an alert for a given query string.
@@ -55,6 +96,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Alert'
+      tags: ["Alert"]
+
   /alerts/{alert_id}:
     get:
       summary: Fetch an alert
@@ -66,11 +109,14 @@ paths:
           type: integer
           minimum: 1
           description: The alert ID.
+      produces:
+        - application/json
       responses:
         200:
           description: OK
           schema:
             $ref: '#/definitions/Alert'
+      tags: ["Alert"]
     delete:
       summary: Delete an alert
       description: Delete the alert with id `alert_id`
@@ -81,6 +127,8 @@ paths:
           type: integer
           minimum: 1
           description: The alert ID.
+      tags: ["Alert"]
+
   /archive:
     get:
       summary: Download a blob from the archive
@@ -95,16 +143,22 @@ paths:
           description: OK
           schema:
             type: file
+      tags: ["Archive"]
+
   /collections:
     get:
       summary: List collections
       description: Returns a list of collections matching a given query. Returns all the collections
                accessible by a user if no query is given.
+      produces:
+        - application/json
       responses:
         200:
           description: OK
           schema:
             $ref: '#/definitions/CollectionsResponse'
+      tags: ["Collection"]
+
   /collections/{collection_id}:
     get:
       summary: Get a collection
@@ -116,11 +170,14 @@ paths:
           type: integer
           minimum: 1
           description: The collection ID.
+      produces:
+        - application/json
       responses:
         200:
           description: OK
           schema:
             $ref: '#/definitions/Collection'
+      tags: ["Collection"]
     delete:
       summary: Delete a collection
       description: Delete the collection with id `collection_id`
@@ -134,6 +191,8 @@ paths:
       responses:
         204:
           description: ''
+      tags: ["Collection"]
+
   /collections/{collection_id}/process:
     post:
       summary: Process a collection
@@ -151,6 +210,11 @@ paths:
         - in: query
           name: reset
           type: boolean
+      responses:
+        202:
+          description: ''
+      tags: ["Collection"]
+
   /collections/{collection_id}/mapping:
     post:
       summary: Load mappings for a collection
@@ -167,6 +231,11 @@ paths:
           required: true
           type: object
           description: The mapping to apply.
+      responses:
+        202:
+          description: ''
+      tags: ["Collection"]
+
   /collections/{collection_id}/bulk:
     post:
       summary: Load entities into a collection
@@ -196,6 +265,8 @@ paths:
       responses:
         204:
           description: ''
+      tags: ["Collection"]
+
   /collections/{collection_id}/status:
     get:
       summary: Check processing status of a collection
@@ -207,6 +278,8 @@ paths:
           type: integer
           minimum: 1
           description: The collection ID.
+      produces:
+        - application/json
       responses:
         200:
           description: OK
@@ -245,6 +318,7 @@ paths:
                             type: string
                           stage:
                             type: string
+      tags: ["Collection"]
     delete:
       summary: Cancel processing of a collection
       description: Cancel all queued tasks for the collection with id `collection_id`
@@ -255,6 +329,8 @@ paths:
           type: integer
           minimum: 1
           description: The collection ID.
+      produces:
+        - application/json
       responses:
         200:
           description: OK
@@ -293,6 +369,8 @@ paths:
                             type: string
                           stage:
                             type: string
+      tags: ["Collection"]
+
   /search:
     get:
       summary: Search entities
@@ -353,6 +431,8 @@ paths:
           description: Resturns a list of entities in result
           schema:
             $ref: '#/definitions/EntitiesResponse'
+      tags: ["Entity"]
+
   /search/export:
     get:
       summary: Download the results of a search
@@ -360,13 +440,55 @@ paths:
         Downloads all the results of a search as a zip archive; upto a max of 10,000 results.
         Supports the same query parameters as [`/search`](#/paths/~1search/get).
       parameters:
-        - in: body
-          name: entitty
+        - in: query
+          name: q
+          type: string
+          description: A query string in ElasticSearch query syntax. Can include field searches, such as `title:penguin`
+        - in: query
+          name: facet
+          type: string
+          description: Return facet values for the given metadata field, such as `languages`, `countries`, `mime_type` or
+                       `extension`. This can be specified multiple times for more than one facet to be added.
+        - in: query
+          name: filter:{field_name}
+          type: string
+          description: |
+            Filter the results by the given field. This is useful when used in conjunction with facet to create a drill-down mechanism. Useful fields are:
+            - `collection_id`, documents belonging to a particular collection.
+            - `title`, of the document.
+            - `file_name`, of the source file.
+            - `source_url`, URL of the source file.
+            - `extension`, file extension of the source file.
+            - `languages`, in the document.
+            - `countries`, associated with the document.
+            - `keywords`, from the document.
+            - `emails`, email addresses mentioned in the document.
+            - `domains`, websites mentioned in the document.
+            - `phone_numbers`, mentioned in the document.
+            - `dates`, in any of the following formats: yyyy-MM-dd, yyyy-MM, yyyy-MM-d, yyyy-M, yyyy
+            - `mime_type`, of the source file.
+            - `author`, according to the source file's metadata.
+            - `summary`, of the document.
+            - `text`, entire text extracted from the document.
+            - `created_at`, when the document was added to aleph (yyyy-mm -ddThh:ii:ss.uuuuuu).
+            - `updated_at`, when the document was modified in aleph (yyyy -mm-ddThh:ii:ss.uuuuuu).
+        - in: query
+          name: limit
+          type: integer
+          description: The number of results to return, max. 10,000.
+        - in: query
+          name: offset
+          type: integer
+          description: The number of results to skip at the beginning of the result set.
       produces:
         - application/zip
       responses:
         200:
           description: OK
+          schema:
+            type: string
+            format: binary
+      tags: ["Entity"]
 
   /match:
     post:
@@ -388,11 +510,22 @@ paths:
           type: array
           items:
             type: string
+        - in: query
+          name: filter:schema
+          type: array
+          items:
+            type: string
+        - in: query
+          name: filter:schemata
+          type: array
+          items:
+            type: string
       responses:
         200:
-          description: Resturns a list of entities in result
+          description: Returns a list of entities in result
           schema:
             $ref: '#/definitions/EntitiesResponse'
+      tags: ["Entity"]
 
   /entities:
     post:
@@ -413,13 +546,196 @@ paths:
                 required: true
               foreign_id:
                 type: string
+      produces:
+        - application/json
       responses:
         200:
           description: Resturns the created entity
           schema:
             $ref: '#/definitions/Entity'
-              
+      tags: ["Entity"]
 
+  /entities/{entity_id}:
+    get:
+      summary: Get an entity
+      description: Return the entity with id `entity_id`
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Entity'
+      tags: ["Entity"]
+    post:
+      summary: Update an entity
+      description: Update the entity with id `entity_id`
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          type: string
+        - in: body
+          schema:
+            type: object
+            properties:
+              schema:
+                type: string
+              properties:
+                type: object
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Entity'
+      tags: ["Entity"]
+    delete:
+      summary: Delete an entity
+      description: Delete the entity with id `entity_id`
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          type: string
+      responses:
+        204:
+          description: ''
+      tags: ["Entity"]
+
+  /entities/{entity_id}/content:
+    get:
+      summary: Get the content of an entity
+      description: Return the text and/or html content of the entity with id `entity_id`
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              headers:
+                type: object
+              text:
+                type: string
+              html:
+                type: string
+        404:
+          description: ''
+      tags: ["Entity"]
+
+  /entities/{entity_id}/similar:
+    get:
+      summary: Get similar entities
+      description: Get a list of similar entities to the entity with id `entity_id`
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          type: string
+        - in: query
+          name: filter:schema
+          type: array
+          items:
+            type: string
+        - in: query
+          name: filter:schemata
+          type: array
+          items:
+            type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Resturns a list of entities in result
+          schema:
+            $ref: '#/definitions/EntitiesResponse'
+      tags: ["Entity"]
+
+  /entities/{entity_id}/references:
+    get:
+      summary: Get entity references
+      description: Get the schema-wise aggregation of references to the entity with id `entity_id`
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: ok
+              total:
+                type: integer
+              results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    count:
+                      type: integer
+                    property:
+                      type: object
+                    schema:
+                      type: string
+      tags: ["Entity"]
+
+  /entities/{entity_id}/tags:
+    get:
+      summary: Get entity tags
+      description:
+        Get tags for the entity with id `entity_id`. Tags include the query string
+        to make a search by that particular tag.
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: ok
+              total:
+                type: integer
+              results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: query string for this tag
+                    value:
+                      type: string
+                    field:
+                      type: string
+                    count:
+                      type: integer
+      tags: ["Entity"]
 
 definitions:
   QueryResponse:
