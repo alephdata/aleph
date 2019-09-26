@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 import connect from 'react-redux/es/connect/connect';
-import { Callout, Tag } from '@blueprintjs/core';
+import { Callout } from '@blueprintjs/core';
 import { FormattedMessage } from 'react-intl';
 import SearchAlert from 'src/components/SearchAlert/SearchAlert';
+import { QueryText } from 'src/components/common';
 import { selectAlerts, selectSession } from 'src/selectors';
 
 class SuggestAlert extends PureComponent {
@@ -19,11 +20,11 @@ class SuggestAlert extends PureComponent {
     return (
       <Callout>
         <FormattedMessage
-          id="alert.suggest.text"
-          defaultMessage={'Get notified {alertComponent} when data related to {queryText} is added.'}
+          id="alert.suggest.prompt"
+          defaultMessage={'Track {queryText}: {alertComponent}'}
           values={{
             alertComponent: <SearchAlert queryText={queryText} />,
-            queryText: <Tag large>{queryText}</Tag>,
+            queryText: <QueryText query={queryText} />,
           }}
         />
 

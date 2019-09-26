@@ -1,31 +1,26 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 
+import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViews from 'src/components/Entity/EntityViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
-import Query from 'src/app/Query';
+import Property from 'src/components/Property';
+import { Collection, DualPane, Entity, Breadcrumbs } from 'src/components/common';
+import { DownloadButton } from 'src/components/Toolbar';
+import getEntityLink from 'src/util/getEntityLink';
+import { queryEntityReference } from 'src/queries';
 import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
-
-
-const messages = defineMessages({
-  placeholder: {
-    id: 'documents.screen.filter',
-    defaultMessage: 'Search in {label}',
-  },
-});
 
 
 class EntityScreen extends Component {
@@ -33,27 +28,99 @@ class EntityScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
-  onSearch(queryText) {
+  onCollectionSearch(queryText) {
+    const { history, entity } = this.props;
+    const query = {
+      q: queryText,
+      'filter:collection_id': entity.collection.id,
+    };
+    history.push({
+      pathname: '/search',
+      search: queryString.stringify(query),
+    });
+  }
+
+  onSearch(queryText, entityLink) {
     const { history, location, query } = this.props;
     const parsedHash = queryString.parse(location.hash);
     const newQuery = query.setString('q', queryText);
     parsedHash['preview:id'] = undefined;
-    parsedHash['preview:type'] = undefined;
     parsedHash['preview:mode'] = undefined;
     parsedHash.page = undefined;
     history.push({
-      pathname: location.pathname,
+      pathname: entityLink,
       search: newQuery.toLocation(),
       hash: queryString.stringify(parsedHash),
     });
   }
 
+  getEntitySearchScope(entity) {
+    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES) && !entity.schema.isA('Email');
+    if (!hasSearch) {
+      return null;
+    }
+    const entityLink = getEntityLink(entity);
+    return {
+      listItem: <Entity.Label entity={entity} icon truncate={30} />,
+      label: entity.getCaption(),
+      onSearch: queryText => this.onSearch(queryText, entityLink),
+    };
+  }
+
+  getReferenceSearchScope(entity) {
+    const { reference } = this.props;
+    if (!reference || reference.count < 10) {
+      return null;
+    }
+    const item = (
+      <React.Fragment>
+        <Entity.Label entity={entity} icon truncate={30} />
+        {': '}
+        <Property.Reverse prop={reference.property} />
+      </React.Fragment>
+    );
+    const entityLink = getEntityLink(entity);
+    return {
+      listItem: item,
+      label: reference.property.getReverse().label,
+      onSearch: queryText => this.onSearch(queryText, entityLink),
+    };
+  }
+
+  getSearchScopes() {
+    const { entity } = this.props;
+    const scopes = [];
+
+    const referenceScope = this.getReferenceSearchScope(entity);
+    if (referenceScope) {
+      scopes.push(referenceScope);
+    }
+
+    let currEntity = entity;
+    while (currEntity) {
+      const entityScope = this.getEntitySearchScope(currEntity);
+      if (entityScope) {
+        scopes.push(entityScope);
+      }
+      currEntity = currEntity.getFirst('parent');
+    }
+
+    scopes.push({
+      listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
+      label: entity.collection.label,
+      onSearch: this.onCollectionSearch,
+    });
+
+    return scopes.reverse();
+  }
+
   render() {
     const {
-      entity, entityId, activeMode, intl, query,
+      entity, entityId, activeMode, query, isDocument,
     } = this.props;
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
@@ -66,14 +133,9 @@ class EntityScreen extends Component {
       );
     }
 
-    const title = entity.getFirst('title') || entity.getFirst('fileName') || entity.getCaption();
-    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES);
-    const operation = !hasSearch ? undefined : (
-      <SearchBox
-        onSearch={this.onSearch}
-        searchPlaceholder={intl.formatMessage(messages.placeholder, { label: title })}
-        searchText={query.getString('q')}
-      />
+    const showDownloadButton = isDocument && entity.links && entity.links.file;
+    const operation = showDownloadButton && (
+      <DownloadButton document={entity} />
     );
 
     const breadcrumbs = (
@@ -82,13 +144,13 @@ class EntityScreen extends Component {
         <Breadcrumbs.Entity entity={entity} />
       </Breadcrumbs>
     );
+
     return (
       <EntityContextLoader entityId={entityId}>
-        <Screen title={title}>
+        <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">
-              <EntityToolbar entity={entity} isPreview={false} />
               <EntityHeading entity={entity} isPreview={false} />
               <div className="pane-content">
                 <EntityInfoMode entity={entity} isPreview={false} />
@@ -109,16 +171,22 @@ class EntityScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { entityId, mode } = ownProps.match.params;
+  const { entityId } = ownProps.match.params;
   const { location } = ownProps;
-  const reference = selectEntityReference(state, entityId, mode);
+  const entity = selectEntity(state, entityId);
   const hashQuery = queryString.parse(location.hash);
+  const isDocument = entity && entity.id && entity.schema.isDocument();
+  const activeMode = selectEntityView(state, entityId, hashQuery.mode, false);
+  const reference = selectEntityReference(state, entityId, activeMode);
+  const referenceQuery = queryEntityReference(location, entity, reference);
+  const documentQuery = Query.fromLocation('entities', location, {}, 'document');
   return {
+    entity,
     entityId,
     reference,
-    entity: selectEntity(state, entityId),
-    query: Query.fromLocation('entities', location, {}, 'document'),
-    activeMode: selectEntityView(state, entityId, hashQuery.mode, false),
+    activeMode,
+    isDocument,
+    query: referenceQuery || documentQuery,
   };
 };
 

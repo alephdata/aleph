@@ -1,42 +1,35 @@
 import React, { Component } from 'react';
 import { Waypoint } from 'react-waypoint';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import { Icon, H1 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
+import Dashboard from 'src/components/Dashboard/Dashboard';
 import {
-  Breadcrumbs, ErrorSection, DualPane, SectionLoading,
+  Breadcrumbs, ErrorSection, SectionLoading,
 } from 'src/components/common';
-import SearchFacets from 'src/components/Facet/SearchFacets';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
+import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
 
 import './CasesIndexScreen.scss';
 
+
 const messages = defineMessages({
+  title: {
+    id: 'cases.title',
+    defaultMessage: 'Personal datasets',
+  },
   no_results_title: {
     id: 'cases.no_results_title',
-    defaultMessage: 'You do not have any case files yet',
+    defaultMessage: 'You do not have any personal datasets yet',
   },
-  filter: {
-    id: 'case.search_cases_placeholder',
-    defaultMessage: 'Search cases',
-  },
-  not_found: {
-    id: 'case.not.found',
-    defaultMessage: 'Log in to create your own case files, upload documents and manage your investigations!',
-  },
-  facet_countries: {
-    id: 'search.facets.facet.countries',
-    defaultMessage: 'Countries',
-  },
-  facet_team: {
-    id: 'search.facets.facet.team',
-    defaultMessage: 'Shared with',
+  placeholder: {
+    id: 'cases.placeholder',
+    defaultMessage: 'Search personal datasets...',
   },
 });
 
@@ -44,22 +37,6 @@ const messages = defineMessages({
 export class CasesIndexScreen extends Component {
   constructor(props) {
     super(props);
-    const { intl } = props;
-    this.state = {
-      facets: [
-        {
-          field: 'countries',
-          label: intl.formatMessage(messages.facet_countries),
-          icon: 'globe',
-          defaultSize: 300,
-        }, {
-          field: 'team.name',
-          label: intl.formatMessage(messages.facet_team),
-          icon: 'social-media',
-          defaultSize: 20,
-        },
-      ],
-    };
     this.updateQuery = this.updateQuery.bind(this);
   }
 
@@ -105,55 +82,56 @@ export class CasesIndexScreen extends Component {
         </li>
       </Breadcrumbs>
     );
+
     return (
-      <Screen className="CasesIndexScreen" breadcrumbs={breadcrumbs} requireSession>
-        <DualPane className="explainer">
-          <DualPane.SidePane>
-            <Icon icon="briefcase" iconSize={100} />
-          </DualPane.SidePane>
-          <DualPane.ContentPane className="padded">
-            <H1 className="title-explanation">
-              <FormattedMessage id="case.question" defaultMessage="Manage your investigations" />
-            </H1>
-            <p className="description-explanation">
+      <Screen
+        className="CasesIndexScreen"
+        breadcrumbs={breadcrumbs}
+        title={intl.formatMessage(messages.title)}
+        requireSession
+      >
+        <Dashboard>
+          <div className="Dashboard__title-container">
+            <div className="Dashboard__actions">
+              <CaseCreateButton />
+            </div>
+            <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
+            <p className="Dashboard__subheading">
               <FormattedMessage
                 id="case.description"
-                defaultMessage="Case files help you group and share the documents and data which belong to a particular story. You can upload documents, such as PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+                defaultMessage="Personal datasets let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
               />
             </p>
-          </DualPane.ContentPane>
-        </DualPane>
-        <DualPane>
-          <DualPane.SidePane>
-            <SearchFacets
-              facets={this.state.facets}
-              query={query}
-              result={result}
-              updateQuery={this.updateQuery}
+          </div>
+          {!result.isLoading && result.total === 0 && (
+            <ErrorSection
+              icon="search"
+              title={intl.formatMessage(messages.no_results_title)}
             />
-          </DualPane.SidePane>
-          <DualPane.ContentPane className="padded">
-            <CollectionIndexSearch query={query} updateQuery={this.updateQuery} casefiles />
-            <ul className="results">
-              {result.results !== undefined && result.results
-                .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}
-            </ul>
-            {result.total === 0 && (
-              <ErrorSection
-                visual="search"
-                title={intl.formatMessage(messages.no_results_title)}
+          )}
+          {!result.isLoading && result.total !== 0 && (
+            <React.Fragment>
+              <CollectionIndexSearch
+                query={query}
+                updateQuery={this.updateQuery}
+                placeholder={intl.formatMessage(messages.placeholder)}
               />
-            )}
-            <Waypoint
-              onEnter={this.getMoreResults}
-              bottomOffset="-300px"
-              scrollableAncestor={window}
-            />
-            {result.isLoading && (
+              <ul className="results">
+                {result.results !== undefined && result.results
+                  .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}
+              </ul>
+
+              <Waypoint
+                onEnter={this.getMoreResults}
+                bottomOffset="-300px"
+                scrollableAncestor={window}
+              />
+            </React.Fragment>
+          )}
+          {result.isLoading && (
             <SectionLoading />
-            )}
-          </DualPane.ContentPane>
-        </DualPane>
+          )}
+        </Dashboard>
       </Screen>
     );
   }
@@ -175,10 +153,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = {
-  queryCollections,
-};
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryCollections }),
   injectIntl,
 )(CasesIndexScreen);

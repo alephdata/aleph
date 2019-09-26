@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { min } from 'lodash';
-import { FormattedDate } from 'react-intl';
+import { FormattedDate, FormattedTime } from 'react-intl';
 
 class Earliest extends PureComponent {
   render() {
@@ -14,19 +14,22 @@ class Date extends PureComponent {
   static Earliest = Earliest;
 
   render() {
-    const { value: dateString } = this.props;
+    const { value: dateString, showTime } = this.props;
     if (!dateString) {
       return null;
     }
     const availableChunks = dateString.split(/-/);
     const dateObject = Reflect.construct(window.Date, [dateString]);
     return (
-      <FormattedDate
-        value={dateObject}
-        year="numeric"
-        month={availableChunks[1] && 'long'}
-        day={availableChunks[2] && 'numeric'}
-      />
+      <React.Fragment>
+        <FormattedDate
+          value={dateObject}
+          year="numeric"
+          month={availableChunks[1] && '2-digit'}
+          day={availableChunks[2] && '2-digit'}
+        />
+        {showTime && <FormattedTime value={dateObject} />}
+      </React.Fragment>
     );
   }
 }

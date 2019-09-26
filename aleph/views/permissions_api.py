@@ -14,7 +14,9 @@ blueprint = Blueprint('permissions_api', __name__)
 @blueprint.route('/api/2/collections/<int:id>/permissions')
 def index(id):
     collection = get_db_collection(id, request.authz.WRITE)
-    roles = [r for r in Role.all_groups() if check_visible(r, request.authz)]
+    roles = Role.all_groups(request.authz).all()
+    if request.authz.is_admin:
+        roles.extend(Role.all_system())
     q = Permission.all()
     q = q.filter(Permission.collection_id == collection.id)
     permissions = []
@@ -50,8 +52,7 @@ def index(id):
 def update(id):
     collection = get_db_collection(id, request.authz.WRITE)
     for permission in parse_request(PermissionSchema, many=True):
-        role_id = permission.get('role_id')
-        role = Role.by_id(role_id)
+        role = Role.by_id(permission.get('role_id'))
         if not check_visible(role, request.authz):
             continue
         if role.is_public:

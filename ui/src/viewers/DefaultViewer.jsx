@@ -22,7 +22,7 @@ export class DefaultViewer extends React.PureComponent {
     const message = backendMessage || intl.formatMessage(messages.ignored_file);
     return (
       <ErrorSection
-        visual="issue"
+        icon="issue"
         title={intl.formatMessage(messages.no_viewer)}
         description={message}
       />

@@ -1,5 +1,5 @@
 import { createReducer } from 'redux-act';
-import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
+import { deleteQueryLog, fetchQueryLogs } from 'src/actions';
 import { queryEntities } from 'src/actions/entityActions';
 import { mergeResults } from './util';
 
@@ -11,54 +11,43 @@ const initialState = {
   offset: 0,
 };
 
-const deriveQueryLog = (state, { query }) => {
-  const queryText = query.state.q;
-  const currentDate = new Date();
-  let { results } = state;
-  if (queryText && results) {
-    const itemIndex = results.findIndex(({ text }) => queryText === text);
-    results = [...results];
-    let item = {
-      count: 1,
-      query: queryText,
-      last: currentDate.toISOString(),
-      first: currentDate.toISOString(),
-    };
-    if (itemIndex + 1) {
-      [item] = results.splice(itemIndex, 1);
-      item = {
-        ...item,
-        count: 1 + item.count,
-      };
-    }
-    results.unshift(item);
-    return {
-      ...state,
-      results,
-    };
-  } return state;
-};
-
 export default createReducer({
-  [queryEntities.START]: deriveQueryLog,
+  [queryEntities.COMPLETE]: (state, { query }) => {
+    if (!query.state.q) {
+      return state;
+    }
+    return {
+      isLoading: false,
+      shouldLoad: true,
+      isError: false,
+      result: state.result,
+    };
+  },
+
   [fetchQueryLogs.START]: state => ({
     ...state,
     isLoading: true,
     shouldLoad: false,
     isError: false,
   }),
+
   [fetchQueryLogs.ERROR]: (state, { error }) => ({
     isLoading: false,
     shouldLoad: false,
     isError: true,
-    results: [],
+    result: state.result,
     error,
   }),
+
   [fetchQueryLogs.COMPLETE]: (state, {
     result: queryLogs,
   }) => mergeResults(state, queryLogs),
-  [deleteQueryLog.START]: (state, { text: query }) => ({
-    ...state,
-    results: state.results.filter(({ text }) => text !== query),
+
+  [deleteQueryLog.COMPLETE]: state => ({
+    isLoading: false,
+    shouldLoad: true,
+    isError: false,
+    result: state.result,
   }),
+
 }, initialState);

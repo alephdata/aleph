@@ -139,10 +139,8 @@ def index_proxy(collection, proxy, sync=False):
 
 def index_bulk(collection, entities, job_id=None, sync=False):
     """Index a set of entities."""
-    actions = []
-    for entity in entities:
-        actions.append(format_proxy(entity, collection, job_id=job_id))
-    bulk_actions(actions, sync=sync)
+    entities = (format_proxy(p, collection, job_id=job_id) for p in entities)
+    bulk_actions(entities, sync=sync)
 
 
 def _numeric_values(type_, values):
@@ -167,7 +165,6 @@ def format_proxy(proxy, collection, job_id=None):
     properties = data.get('properties')
     text = properties.pop('indexText', [])
     text.extend(fps)
-    text.append(collection.label)
     data['text'] = text
 
     data['updated_at'] = collection.updated_at

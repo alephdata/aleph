@@ -16,9 +16,7 @@ blueprint = Blueprint('notifications_api', __name__)
 def index():
     require(request.authz.logged_in)
     role = Role.by_id(request.authz.id)
-    query = Notification.by_channels(get_role_channels(role),
-                                     since=role.notified_at,
-                                     exclude_actor_id=role.id)
+    query = Notification.by_channels(get_role_channels(role), role)
     result = DatabaseQueryResult(request, query)
     return NotificationSerializer.jsonify_result(result)
 

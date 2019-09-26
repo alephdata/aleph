@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Tooltip, H4 } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { ControlGroup, InputGroup, Button, Intent } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { DualPane, ErrorSection } from 'src/components/common';
+import { ErrorSection, SearchListings } from 'src/components/common';
 import { fetchAlerts, addAlert, deleteAlert } from 'src/actions';
 
 import './AlertsManager.scss';
@@ -22,19 +22,11 @@ const messages = defineMessages({
   },
   add_placeholder: {
     id: 'alerts.add_placeholder',
-    defaultMessage: 'Keep track of searches...',
+    defaultMessage: 'Create a new tracking alert...',
   },
   no_alerts: {
     id: 'alerts.no_alerts',
     defaultMessage: 'You are not tracking any searches',
-  },
-  search_alert: {
-    id: 'alerts.alert.search',
-    defaultMessage: 'Search for {query}',
-  },
-  delete_alert: {
-    id: 'alerts.alert.delete',
-    defaultMessage: 'Stop tracking',
   },
 });
 
@@ -91,77 +83,41 @@ class AlertsDialog extends Component {
     const { newAlert } = this.state;
 
     return (
-      <DualPane.SidePane className="AlertsManager">
-        <div className="bp3-callout bp3-intent-primary">
-          <H4 className="bp3-callout-title">
-            <FormattedMessage id="alert.manager.title" defaultMessage="Tracking alerts" />
-          </H4>
-          <FormattedMessage id="alert.manager.description" defaultMessage="You will receive notifications when a new document or entity matches any of the alerts you have set up below." />
-        </div>
+      <div className="AlertsManager">
         <form onSubmit={this.onAddAlert} className="add-form">
-          <div className="bp3-control-group bp3-fill">
-            <div className="bp3-input-group bp3-fill">
-              <input
-                type="text"
-                className="bp3-input"
-                autoComplete="off"
-                placeholder={intl.formatMessage(messages.add_placeholder)}
-                onChange={this.onChangeAddingInput}
-                value={newAlert}
-              />
-            </div>
-            <button
-              type="button"
-              className="bp3-button bp3-fixed"
+          <ControlGroup fill>
+            <InputGroup
+              leftIcon="feed"
+              placeholder={intl.formatMessage(messages.add_placeholder)}
+              onChange={this.onChangeAddingInput}
+              value={newAlert}
+              autoFocus
+              large
+            />
+            <Button
               disabled={newAlert.length === 0}
               onClick={this.onAddAlert}
-            >
-              <FormattedMessage id="alerts.add" defaultMessage="Add alert" />
-            </button>
-          </div>
+              intent={Intent.PRIMARY}
+              text={<FormattedMessage id="alerts.track" defaultMessage="Track" />}
+              large
+            />
+          </ControlGroup>
         </form>
         { alerts.page !== undefined && !alerts.results.length && (
           <ErrorSection
-            visual="eye-off"
+            icon="eye-off"
             title={intl.formatMessage(messages.no_alerts)}
           />
         )}
         { alerts.page !== undefined && alerts.results.length > 0 && (
-          <table className="alerts-table settings-table">
-            <tbody>
-              {alerts.results.map(item => (
-                <tr key={item.id}>
-                  <td className="alert-label">
-                    {item.query}
-                  </td>
-                  <td className="narrow">
-                    <Tooltip
-                      content={intl.formatMessage(messages.search_alert, { query: item.query })}
-                    >
-                      <Button
-                        icon="search"
-                        minimal
-                        small
-                        onClick={() => this.onSearch(item.query)}
-                      />
-                    </Tooltip>
-                  </td>
-                  <td className="narrow">
-                    <Tooltip content={intl.formatMessage(messages.delete_alert)}>
-                      <Button
-                        icon="cross"
-                        minimal
-                        small
-                        onClick={() => this.onDeleteAlert(item.id)}
-                      />
-                    </Tooltip>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <SearchListings
+            listType="alerts"
+            items={alerts.results}
+            onDelete={item => this.onDeleteAlert(item.id)}
+            onSearch={item => this.onSearch(item.query)}
+          />
         )}
-      </DualPane.SidePane>
+      </div>
     );
   }
 }

@@ -19,7 +19,7 @@ class CollectionListItem extends PureComponent {
     return (
       <li className="CollectionListItem" key={collection.id}>
         <H4>
-          <Count count={collection.count} full />
+          <Count className="bp3-intent-primary" count={collection.count} full />
           <Collection.Link preview={preview} collection={collection} icon />
         </H4>
         {collection.summary
@@ -34,8 +34,7 @@ class CollectionListItem extends PureComponent {
         <p className="details">
           { !collection.casefile && (
             <span className="details-item">
-              <Icon icon="list" />
-              <Category collection={collection} />
+              <Category.Label collection={collection} icon />
             </span>
           )}
 

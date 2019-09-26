@@ -49,9 +49,14 @@ $pagesWidth: 150px;
           p { 
             margin-bottom: 0;
 
+            .bp3-icon {
+              margin-right: $aleph-icon-padding;
+            }
+
             a {
               text-decoration: none;
             }
+
             em {
               background: $aleph-text-highlight-color;
               font-style: normal;

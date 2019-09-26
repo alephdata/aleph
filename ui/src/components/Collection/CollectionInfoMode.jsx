@@ -24,7 +24,6 @@ class CollectionInfoMode extends PureComponent {
 
     return (
       <div className="CollectionOverview">
-        <p itemProp="description">{collection.summary}</p>
         <ul className="info-sheet">
           { !collection.casefile && (
             <li>
@@ -32,7 +31,7 @@ class CollectionInfoMode extends PureComponent {
                 <FormattedMessage id="collection.category" defaultMessage="Category" />
               </span>
               <span className="value">
-                <Category collection={collection} />
+                <Category.Label collection={collection} />
               </span>
             </li>
           )}

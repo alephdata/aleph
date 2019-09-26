@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Pre } from '@blueprintjs/core';
 
-import Property from 'src/components/common/Property';
 import SectionLoading from 'src/components/common/SectionLoading';
+import Property from 'src/components/Property';
 import { selectDocumentContent } from 'src/selectors';
 import wordList from 'src/util/wordList';
 

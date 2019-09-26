@@ -13,6 +13,10 @@
             float: right;
             display: block;
         }
+
+        .bp3-icon {
+            padding-bottom: 2px;
+        }
     }
 
     .summary {
@@ -30,7 +34,7 @@
         margin-right: 2em;
 
         .bp3-icon {
-            margin-right: $aleph-grid-size / 2;
+            margin-right: $aleph-icon-padding;
         }
     }
 

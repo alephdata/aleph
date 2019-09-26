@@ -7,6 +7,7 @@ import statistics from './statistics';
 import entities from './entities';
 import entityReferences from './entityReferences';
 import entityTags from './entityTags';
+import values from './values';
 import documentContent from './documentContent';
 import collections from './collections';
 import collectionStatus from './collectionStatus';
@@ -15,9 +16,11 @@ import collectionXrefIndex from './collectionXrefIndex';
 import collectionXrefMatches from './collectionXrefMatches';
 import results from './results';
 import alerts from './alerts';
+import groups from './groups';
 import notifications from './notifications';
+import systemStatus from './systemStatus';
 import queryLogs from './queryLogs';
-import dashboard from './dashboard';
+
 
 const rootReducer = combineReducers({
   metadata,
@@ -26,10 +29,12 @@ const rootReducer = combineReducers({
   statistics,
   entities,
   entityReferences,
+  entityTags,
+  values,
   documentContent,
   alerts,
+  groups,
   notifications,
-  entityTags,
   collections,
   collectionStatus,
   collectionPermissions,
@@ -37,7 +42,7 @@ const rootReducer = combineReducers({
   collectionXrefMatches,
   queryLogs,
   results,
-  dashboard,
+  systemStatus,
 });
 
 export default rootReducer;

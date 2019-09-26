@@ -1,16 +1,25 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Callout } from '@blueprintjs/core';
-import { FormattedMessage } from 'react-intl';
+import { Callout, Button } from '@blueprintjs/core';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
+import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
+import { ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
+
+const messages = defineMessages({
+  empty: {
+    id: 'entity.document.manager.empty',
+    defaultMessage: 'No files or directories.',
+  },
+});
 
 
 export class DocumentManager extends Component {
@@ -19,9 +28,11 @@ export class DocumentManager extends Component {
     this.state = {
       selection: [],
       deleteIsOpen: false,
+      analyzeIsOpen: false,
     };
     this.updateSelection = this.updateSelection.bind(this);
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
+    this.toggleAnalyze = this.toggleAnalyze.bind(this);
   }
 
   componentDidMount() {
@@ -61,9 +72,13 @@ export class DocumentManager extends Component {
     this.setState(({ deleteIsOpen: !deleteIsOpen }));
   }
 
+  toggleAnalyze() {
+    this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
+  }
+
   render() {
     const {
-      collection, document, query, hasPending,
+      collection, document, query, hasPending, intl,
     } = this.props;
     const { selection } = this.state;
     const mutableCollection = collection !== undefined && collection.writeable;
@@ -71,20 +86,27 @@ export class DocumentManager extends Component {
     const showActions = mutableCollection && mutableDocument;
     const updateSelection = showActions ? this.updateSelection : undefined;
 
+    const emptyComponent = (
+      <ErrorSection
+        icon="folder-open"
+        title={intl.formatMessage(messages.empty)}
+      />
+    );
+
     return (
       <div className="DocumentManager">
         { showActions && (
           <div className="bp3-button-group">
             <DocumentUploadButton collection={collection} parent={document} />
             <DocumentFolderButton collection={collection} parent={document} />
-            <button
-              type="button"
-              className="bp3-button bp3-icon-delete"
-              disabled={!selection.length}
-              onClick={this.toggleDeleteSelection}
-            >
+            <Button icon="delete" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
               <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
-            </button>
+            </Button>
+            { mutableCollection && !document && (
+              <Button icon="automatic-updates" onClick={this.toggleAnalyze}>
+                <FormattedMessage id="document.manager.analyze" defaultMessage="Re-process" />
+              </Button>
+            )}
           </div>
         )}
         { hasPending && (
@@ -102,16 +124,23 @@ export class DocumentManager extends Component {
           showPreview={false}
           selection={selection}
           updateSelection={updateSelection}
+          emptyComponent={emptyComponent}
         />
         <EntityDeleteDialog
           entities={selection}
           isOpen={this.state.deleteIsOpen}
           toggleDialog={this.toggleDeleteSelection}
         />
+        <CollectionAnalyzeAlert
+          collection={collection}
+          isOpen={this.state.analyzeIsOpen}
+          toggleAlert={this.toggleAnalyze}
+        />
       </div>
     );
   }
 }
+
 const mapStateToProps = (state, ownProps) => {
   let { query } = ownProps;
   const { collection } = ownProps;
@@ -131,8 +160,8 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = { queryEntities };
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
+  injectIntl,
 )(DocumentManager);

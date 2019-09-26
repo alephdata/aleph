@@ -2,12 +2,16 @@
 
 .AuthButtons {
   display: inline-flex;
-  margin-left: $aleph-grid-size;
   @media screen and (max-width: $aleph-screen-md-max-width) {
     margin-left: 0;
   }
 
   .menu-item-width {
     min-width: 0 !important;
+  }
+
+  &__popover {
+    border-radius: 0 !important;
+    background-color: #3a454d !important;
   }
 }

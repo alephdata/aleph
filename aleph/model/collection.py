@@ -40,6 +40,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         'customs': lazy_gettext('Customs declarations'),
         'census': lazy_gettext('Population census'),
         'transport': lazy_gettext('Air and maritime registers'),
+        'casefile': lazy_gettext('Personal datasets'),
         'other': lazy_gettext('Other material')
     }
 
@@ -69,7 +70,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.updated_at = datetime.utcnow()
         db.session.add(self)
 
-    def update(self, data, creator=None):
+    def update(self, data, authz):
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
         self.summary = data.get('summary', self.summary)
@@ -77,14 +78,23 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.publisher_url = data.get('publisher_url', self.publisher_url)
         self.info_url = data.get('info_url', self.info_url)
         self.data_url = data.get('data_url', self.data_url)
-        self.category = data.get('category', self.category)
-        self.casefile = as_bool(data.get('casefile'), default=self.casefile)
         self.countries = ensure_list(data.get('countries', self.countries))
         self.languages = ensure_list(data.get('languages', self.languages))
-        if creator is None:
+
+        # Some fields are editable only by admins in order to have
+        # a strict separation between source evidence and case
+        # material.
+        if authz.is_admin:
+            self.category = data.get('category', self.category)
+            self.casefile = as_bool(data.get('casefile'),
+                                    default=self.casefile)
             creator = Role.by_id(data.get('creator_id'))
-        if creator is not None:
-            self.creator = creator
+            if creator is not None:
+                self.creator = creator
+
+        if self.casefile:
+            self.category = 'casefile'
+
         self.touch()
         db.session.flush()
         if self.creator is not None:
@@ -168,7 +178,7 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         return cls._apply_authz(q, authz)
 
     @classmethod
-    def create(cls, data, creator=None, created_at=None):
+    def create(cls, data, authz, created_at=None):
         foreign_id = data.get('foreign_id') or make_textid()
         collection = cls.by_foreign_id(foreign_id, deleted=True)
         if collection is None:
@@ -176,8 +186,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             collection.created_at = created_at
             collection.foreign_id = foreign_id
             collection.category = cls.DEFAULT
-            collection.casefile = False
-        collection.update(data, creator=creator)
+            collection.casefile = True
+            collection.creator_id = authz.id
+        collection.update(data, authz)
         collection.deleted_at = None
         return collection
 

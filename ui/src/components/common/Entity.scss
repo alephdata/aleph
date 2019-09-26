@@ -1,6 +1,8 @@
 @import "src/app/variables.scss";
 
 .EntityLabel {
+  vertical-align: middle;
+
   /* @TODO Refactor Entity to use .bp3-text-muted instead of .untitled class */
   /* Using opacity change (instead of fixed color) is an interim measure */
   &.untitled {
@@ -10,6 +12,10 @@
 
   &.disabled {
     color: $aleph-greyed-text;
+  }
+
+  .entity-icon {
+    margin-right: $aleph-icon-padding;
   }
 }
 

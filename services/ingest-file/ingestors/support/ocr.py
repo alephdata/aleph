@@ -84,8 +84,8 @@ class LocalOCRService(object):
         try:
             image = Image.open(BytesIO(data))
             image.load()
-        except Exception:
-            log.exception("Cannot open image data using Pillow")
+        except Exception as exc:
+            log.error("Cannot open image data using Pillow: %s", exc)
             return ''
 
         with temp_locale(TESSERACT_LOCALE):
@@ -104,7 +104,7 @@ class LocalOCRService(object):
                          confidence, duration)
                 return text
             except Exception as exc:
-                log.warning("OCR error: %s", exc)
+                log.error("OCR error: %s", exc)
                 return ''
             finally:
                 api.Clear()

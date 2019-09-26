@@ -1,13 +1,8 @@
-@import "~src/app/tables";
+@import "src/app/variables.scss";
 
 .QueryLogs {
-  @extend .settings-table;
-  
-  td.text {
-    padding-left: 0;
-  }
-
-  td.narrow {
-    padding-right: 0;
+  .bp3-callout {
+    max-width: 700px;
+    margin-bottom: $aleph-grid-size*2;
   }
 }

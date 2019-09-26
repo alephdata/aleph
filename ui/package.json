@@ -1,9 +1,9 @@
 {
   "name": "aleph-ui",
-  "version": "3.2.10",
+  "version": "3.2.11",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "^1.19.1",
+    "@alephdata/followthemoney": "^1.20.2",
     "@blueprintjs/core": "^3.16.2",
     "@blueprintjs/icons": "3.8.0",
     "@blueprintjs/select": "^3.8.0",

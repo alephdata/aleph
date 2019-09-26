@@ -1,4 +1,4 @@
-FROM elasticsearch:7.3.0
+FROM elasticsearch:7.3.2
 
 RUN bin/elasticsearch-plugin install --batch discovery-gce
 RUN bin/elasticsearch-plugin install --batch repository-s3

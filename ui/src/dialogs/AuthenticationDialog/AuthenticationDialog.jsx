@@ -25,14 +25,6 @@ const messages = defineMessages({
     id: 'signup.register',
     defaultMessage: 'Register',
   },
-  not_available_title: {
-    id: 'login.not_available_title',
-    defaultMessage: 'Login is disabled',
-  },
-  pw_wrong_credentials: {
-    id: 'login.pw_wrong_credentials',
-    defaultMessage: 'You have entered an invalid username or password',
-  },
 });
 
 export class AuthenticationDialog extends Component {
