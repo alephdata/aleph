@@ -31,7 +31,10 @@ info:
 
     Alternatively, the API key can also be sent as a query parameter under the `api_key` key.
 
-  version: 3.2.10
+    Similarly, a JWT can be sent in the Authorization header, after it has been returned by the login and/or OAuth processes.
+    Aleph does not use session cookies or any other type of stateful API.
+
+  version: 3.2.11
   contact:
     url: https://github.com/alephdata/aleph
   x-logo:
@@ -47,23 +50,53 @@ host: data.occrp.org
 basePath: /api/2
 schemes:
   - https
+
 tags:
   - name: "Collection"
     x-displayName: "Collections API"
     description: |
       Create and manage collections.
-  - name: "Alert"
-    x-displayName: "Alerts API"
-    description: |
-      Create and manage alerts.
   - name: "Entity"
     x-displayName: "Entities and Search API"
     description: |
       Search, create and manage entities.
+  - name: "Ingest"
+    x-displayName: "Ingest API"
+    description: |
+      Upload documents to a collection.
+  - name: "Xref"
+    x-displayName: "Cross-reference API"
+    description: |
+      Cross-reference entities of a collection with other collections.
+  - name: "Status"
+    x-displayName: "Systme Status API"
+    description: |
+      Get an overview of ongoing tasks
   - name: "Archive"
     x-displayName: "Archive API"
     description: |
       Download blobs from the archive.
+  - name: "Alert"
+    x-displayName: "Alerts API"
+    description: |
+      Create and manage alerts.
+  - name: "Group"
+    x-displayName: "Groups API"
+    description: |
+      List authorization groups
+  - name: "Notification"
+    x-displayName: "Notifications API"
+    description: |
+      Fetch and manage notifications
+  - name: "Permission"
+    x-displayName: "Permissions API"
+    description: |
+      Fetch and manage permissions on a collection
+  - name: "Query Log"
+    x-displayName: "Query Log API"
+    description: |
+      Fetch and delete query logs
+
 paths:
   /alerts:
     get:
@@ -157,6 +190,21 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/CollectionsResponse'
+      tags: ["Collection"]
+    post:
+      summary: Create a collection
+      description: Create a collection with the given metadata
+      parameters:
+        - in: body
+          schema:
+            $ref: '#/definitions/CollectionCreateSchema'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Collection'
       tags: ["Collection"]
 
   /collections/{collection_id}:
@@ -284,40 +332,7 @@ paths:
         200:
           description: OK
           schema:
-            type: object
-            properties:
-              finished:
-                type: integer
-              pending:
-                type: integer
-              running:
-                type: integer
-              jobs:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    finished:
-                      type: integer
-                    pending:
-                      type: integer
-                    running:
-                      type: integer
-                    stages:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          finished:
-                            type: integer
-                          pending:
-                            type: integer
-                          running:
-                            type: integer
-                          job_id:
-                            type: string
-                          stage:
-                            type: string
+            $ref: '#/definitions/CollectionStatus'
       tags: ["Collection"]
     delete:
       summary: Cancel processing of a collection
@@ -737,6 +752,243 @@ paths:
                       type: integer
       tags: ["Entity"]
 
+  /collections/{collection_id}/ingest:
+    post:
+      summary: Upload a document to a collection
+      description: Upload a document to a collection with id `collection_id`
+      consumes:
+       - multipart/form-data
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+        - in: formData
+          type: file
+          description: The file to upload.
+        - in: formData
+          name: meta
+          schema:
+            $ref: '#/definitions/DocumentCreateSchema'
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              id:
+                type: integer
+                description: id of the uploaded document
+      tags: ["Ingest", "Collection"]
+
+  /collections/{collection_id}/xref:
+    get:
+      summary: Fetch cross-reference matches
+      description: Fetch cross-reference matches grouped by collection, for entities in the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/XrefCollectionResponse'
+      tags: ["Xref", "Collection"]
+    post:
+      summary: Generate cross-reference matches
+      description: Generate cross-reference matches for entities in a collection.
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+        - in: body
+          schema:
+            type: object
+            properties:
+              against_collection_ids:
+                type: array
+                description: Optional argument to specify collections agaist which cross-referencing will be done
+                items:
+                  type: integer
+      produces:
+        - application/json
+      responses:
+        202:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: accepted
+      tags: ["Xref", "Collection"]
+
+  /collections/{collection_id}/xref/{other_collection_id}:
+    get:
+      summary: Fetch cross-reference matches between collections
+      description: Fetch cross-reference matches between 2 collections with ids `collection_id` and `other_collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+        - in: path
+          name: other_collection_id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/XrefResponse'
+      tags: ["Xref", "Collection"]
+
+  /collections/{collection_id}/xref/export:
+    get:
+      summary: Download cross-reference results
+      description: Download results of cross-referencing as an excel file
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+      produces:
+        - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        200:
+          schema:
+            type: file
+      tags: ["Xref", "Collection"]
+
+  /status:
+    get:
+      summary: Get an overview of collections being processed
+      description: List collections being processed currently and pending task counts
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/SystemStatusResponse'
+      tags: ["Status"]
+
+  /groups:
+    get:
+      summary: List groups
+      description: Get the list of groups the user belongs to. Groups are used for authorization.
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/GroupsResponse'
+      tags: ["Group"]
+
+  /notifications:
+    get:
+      summary: Get notifications
+      description: Get all the notifications for the user
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/NotificationsResponse'
+      tags: ["Notification"]
+    delete:
+      summary: Clear notifications
+      description: Delete all notification for the user
+      produces:
+        - application/json
+      responses:
+        202:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: ok
+      tags: ["Notification"]
+
+  /collections/{collection_id}/permissions:
+    get:
+      summary: Get permissions for a collection
+      description: Get the list of all permissions for the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/PermissionsResponse'
+      tags: ["Permission", "Collection"]
+    post:
+      summary: Update permissions for a collection
+      description: Update permissions for the collection with id `collection_id`
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          type: integer
+        - in: body
+          type: array
+          items:
+            type: object
+            properties:
+              write:
+                type: boolean
+              read:
+                type: boolean
+              role_id:
+                type: integer
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/PermissionsResponse'
+      tags: ["Permission", "Collection"]
+
+  /querylog:
+    get:
+      summary: Get query logs
+      description: Get query logs for the user
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+            $ref: '#/definitions/QueryLogsResponse'
+      tags: ["Query Log"]
+    delete:
+      summary: Clear query log
+      description: Delete the query logs for a particular search term
+      parameters:
+        - in: query
+          name: query
+          type: string
+      produces:
+        - application/json
+      responses:
+        204:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+      tags: ["Query Log"]
+
 definitions:
   QueryResponse:
     type: object
@@ -789,12 +1041,42 @@ definitions:
 
   AlertsResponse:
     allOf:
-          - $ref: '#/definitions/QueryResponse'
+      - $ref: '#/definitions/QueryResponse'
     properties:
       results:
         type: array
         items:
           $ref: '#/definitions/Alert'
+
+  CollectionCreateSchema:
+    type: object
+    properties:
+      label:
+        type: string
+      foreign_id:
+        type: string
+      casefile:
+        type: boolean
+      summary:
+        type: string
+      publisher:
+        type: string
+      publisher_url:
+        type: string
+      data_url:
+        type: string
+      info_url:
+        type: string
+      countries:
+        type: array
+        items:
+          type: string
+      languages:
+        type: array
+        items:
+          type: string
+      category:
+        type: string
 
   Collection:
     type: object
@@ -926,3 +1208,282 @@ definitions:
         properties:
           export:
             type: string
+
+  DocumentCreateSchema:
+    type: object
+    properties:
+      foreign_id:
+        type: string
+      title:
+        type: string
+      summary:
+        type: string
+      countries:
+        type: array
+        items:
+          type: string
+      languages:
+        type: array
+        items:
+          type: string
+      keywords:
+        type: array
+        items:
+          type: string
+      date:
+        type: string
+      authored_at:
+        type: string
+      modified_at:
+        type: string
+      published_at:
+        type: string
+      retrieved_at:
+        type: string
+      file_name:
+        type: string
+      author:
+        type: string
+      generator:
+        type: string
+      crawler:
+        type: string
+      mime_type:
+        type: string
+      source_url:
+        type: string
+      parent_id :
+        type: string
+
+  XrefCollectionResponse:
+    allOf:
+      - $ref: '#/definitions/QueryResponse'
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/XrefCollection'
+
+  XrefCollection:
+    type: object
+    properties:
+      matches:
+        type: integer
+      parent:
+        type: integer
+      collection:
+        $ref: '#/definitions/Collection'
+
+  XrefResponse:
+    allOf:
+      - $ref: '#/definitions/QueryResponse'
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/XrefMatch'
+
+  XrefMatch:
+    type: object
+    properties:
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      id:
+        type: integer
+      score:
+        type: float
+      collection_id:
+        type: integer
+      match_collection_id:
+        type: integer
+      entity:
+        $ref: '#/definitions/Entity'
+      match:
+        $ref: '#/definitions/Entity'
+
+  SystemStatusResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          allOf:
+            - $ref: '#/definitions/CollectionStatus'
+          properties:
+            collection:
+              $ref: '#/definitions/Collection'
+            id:
+              type: string
+
+  CollectionStatus:
+    type: object
+    properties:
+      finished:
+        type: integer
+      pending:
+        type: integer
+      running:
+        type: integer
+      jobs:
+        type: array
+        items:
+          type: object
+          properties:
+            finished:
+              type: integer
+            pending:
+              type: integer
+            running:
+              type: integer
+            stages:
+              type: array
+              items:
+                type: object
+                properties:
+                  finished:
+                    type: integer
+                  pending:
+                    type: integer
+                  running:
+                    type: integer
+                  job_id:
+                    type: string
+                  stage:
+                    type: string
+
+  GroupsResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/Group'
+
+  Group:
+    type: object
+    properties:
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      id:
+        type: integer
+      type:
+        type: string
+      name:
+        type: string
+      label:
+        type: string
+      is_admin:
+        type: boolean
+
+  NotificationsResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            created_at:
+              type: string
+            updated_at:
+              type: string
+            id:
+              type: integer
+            actor_id:
+              type: integer
+            event:
+              type: object
+              properties:
+                name:
+                  type: string
+                templates:
+                  type: string
+                params:
+                  type: object
+            params:
+              type: object
+
+  PermissionsResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            created_at:
+              type: string
+            updated_at:
+              type: string
+            id:
+              type: integer
+            read:
+              type: boolean
+            write:
+              type: boolean
+            role:
+              $ref: '#/definitions/Role'
+
+  Role:
+    type: object
+    properties:
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      id:
+        type: integer
+      type:
+        type: string
+        enum: ["user", "group", "system"]
+      name:
+        type: string
+      label:
+        type: string
+      email:
+        type: string
+      api_key:
+        type: string
+      is_admin:
+        type: boolean
+      is_muted:
+        type: boolean
+      has_password:
+        type: boolean
+      writeable:
+        type: boolean
+      links:
+        type: object
+
+  QueryLogsResponse:
+    allOf:
+      - $ref: '#/definitions/QueryResponse'
+    properties:
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/QueryLog'
+
+  QueryLog:
+    type: object
+    properties:
+      query:
+        type: string
+      first:
+        type: string
+      last:
+        type: string
+      count:
+        type: integer
