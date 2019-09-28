@@ -68,7 +68,6 @@ export class EntityImport extends Component {
       delimiter: ',',
       newline: '\n',
       encoding: 'utf-8',
-      // header: true,
       chunk: (results, parser) => {
         this.setState({
           csvRows: results.data.slice(0, 10),
@@ -137,7 +136,6 @@ export class EntityImport extends Component {
           }
         }]
       };
-      console.log(completeMapping);
       await makeMapping(document.collection.id, completeMapping);
     } catch (e) {
       console.error(e);
@@ -181,7 +179,6 @@ export class EntityImport extends Component {
             helperText="Which entity would you like to create?"
             label="Entity-Type"
             labelFor="entity-type"
-            labelInfo="(required)"
           >
             <Select
               id="entity-type"
@@ -201,7 +198,6 @@ export class EntityImport extends Component {
               <FormGroup
                 helperText="Assign the fields in your csv to properties of the entity"
                 label="Field-Mapping"
-                labelInfo="(required)"
               >
 
                 <table className="bp3-html-table bp3-html-table-condensed bp3-small bp3-html-table-striped">
@@ -232,7 +228,6 @@ export class EntityImport extends Component {
               </FormGroup>
               <FormGroup
                 label="Keys"
-                labelInfo="(required)"
               >
                 <MultiSelect
                   items={csvColumns}
