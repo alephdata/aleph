@@ -48,7 +48,7 @@ export class DocumentViewMode extends React.Component {
       );
     }
     if (document.schema.isA('Table')) {
-      if (document.links.csv === undefined) {
+      if (!document.links || !document.links.csv) {
         return (
           <TableViewer
             document={document}

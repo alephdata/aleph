@@ -256,7 +256,8 @@ export class SearchScreen extends React.Component {
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
-    const exportLink = !result.links ? null : result.links.export;
+    const hasExportLink = result && result.links && result.links.export;
+    const exportLink = !hasExportLink ? null : result.links.export;
     const tooltip = intl.formatMessage(messages.alert_export_disabled);
 
     const operation = (
@@ -360,7 +361,6 @@ export class SearchScreen extends React.Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-
   // We normally only want Things, not Intervals (relations between things).
   const context = {
     highlight: true,
