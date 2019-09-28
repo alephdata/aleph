@@ -17,6 +17,7 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
     MIME_TYPES = [
         'application/msg',
         'application/x-msg',
+        'application/vnd.ms-outlook',
         'msg/rfc822'
     ]
     EXTENSIONS = ['msg']
