@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Count, Icon, Property, SectionLoading, TextLoading,
+  Count, Icon, SectionLoading, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 import {
@@ -19,6 +19,7 @@ import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import EntityImport from 'src/components/EntityImport/EntityImport';
 import Schema from 'src/components/common/Schema';
+import Property from 'src/components/Property';
 
 
 class EntityViews extends React.Component {
@@ -142,22 +143,23 @@ class EntityViews extends React.Component {
             }
           />
         ))}
-        <Tab
-          id="tags"
-          disabled={tags.total < 1}
-          title={(
-            <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-              <Icon name="tags" iconSize="14px" className="entity-icon" />
-              <FormattedMessage id="entity.info.tags" defaultMessage="Tags" />
-              <Count count={tags.total} />
-            </TextLoading>
-          )}
-          panel={<EntityTagsMode entity={entity} />}
-        />
+        { entity.schema.isDocument() && (
+          <Tab
+            id="tags"
+            disabled={tags.total < 1}
+            title={(
+              <TextLoading loading={tags.shouldLoad || tags.isLoading}>
+                <Icon name="tags" iconSize="14px" className="entity-icon" />
+                <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
+                <Count count={tags.total} />
+              </TextLoading>
+            )}
+            panel={<EntityTagsMode entity={entity} />}
+          />
+        )}
         { isMatchable && (
           <Tab
             id="similar"
-            disabled={similar.total < 1}
             title={(
               <TextLoading loading={similar.shouldLoad || similar.isLoading}>
                 <Icon name="similar" iconSize="14px" className="entity-icon" />

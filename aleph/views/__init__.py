@@ -3,6 +3,7 @@ from aleph.views.context import blueprint as cache
 from aleph.views.base_api import blueprint as base_api
 from aleph.views.sessions_api import blueprint as sessions_api
 from aleph.views.roles_api import blueprint as roles_api
+from aleph.views.groups_api import blueprint as groups_api
 from aleph.views.permissions_api import blueprint as permissions_api
 from aleph.views.collections_api import blueprint as collections_api
 from aleph.views.entities_api import blueprint as entities_api
@@ -14,6 +15,7 @@ from aleph.views.xref_api import blueprint as xref_api
 from aleph.views.querylog_api import blueprint as querylog_api
 from aleph.views.stream_api import blueprint as stream_api
 from aleph.views.archive_api import blueprint as archive_api
+from aleph.views.status_api import blueprint as status_api
 
 
 def mount_app_blueprints(app):
@@ -21,6 +23,7 @@ def mount_app_blueprints(app):
     app.register_blueprint(base_api)
     app.register_blueprint(sessions_api)
     app.register_blueprint(roles_api)
+    app.register_blueprint(groups_api)
     app.register_blueprint(permissions_api)
     app.register_blueprint(collections_api)
     app.register_blueprint(entities_api)
@@ -32,4 +35,5 @@ def mount_app_blueprints(app):
     app.register_blueprint(querylog_api)
     app.register_blueprint(stream_api)
     app.register_blueprint(archive_api)
+    app.register_blueprint(status_api)
     signals.register_blueprints.send(app=app)

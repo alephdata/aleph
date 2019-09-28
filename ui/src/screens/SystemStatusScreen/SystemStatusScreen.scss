@@ -1,0 +1,17 @@
+@import "~src/app/tables";
+
+.StatusTable {
+  @extend .data-table;
+
+  tr td, tr th {
+    vertical-align: middle;
+  }
+
+  td.text {
+    padding-left: 0;
+  }
+
+  td.narrow {
+    padding-right: 0;
+  }
+}

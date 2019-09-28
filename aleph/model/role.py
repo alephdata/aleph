@@ -47,6 +47,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     password = None
     reset_token = db.Column(db.Unicode, nullable=True)
     notified_at = db.Column(db.DateTime, nullable=True)
+    locale = db.Column(db.Unicode, nullable=True)
 
     permissions = db.relationship('Permission', backref='role')
 
@@ -62,7 +63,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def is_alertable(self):
         if self.email is None:
             return False
-        if self.is_muted:
+        if self.is_muted is True:
             return False
         # TODO: ignore people that have not logged in for a certain time?
         return True
@@ -76,6 +77,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         self.is_muted = data.get('is_muted', self.is_muted)
         if data.get('password'):
             self.set_password(data.get('password'))
+        self.locale = data.get('locale', self.locale)
         self.updated_at = datetime.utcnow()
 
     def clear_roles(self):
@@ -99,6 +101,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             'name': self.name,
             'label': self.label,
             'email': self.email,
+            'locale': self.locale,
             'api_key': self.api_key,
             'is_admin': self.is_admin,
             'is_muted': self.is_muted,
@@ -135,6 +138,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.name = name or email
             role.type = type
             role.is_admin = False
+            role.is_muted = False
             role.notified_at = datetime.utcnow()
 
         if role.api_key is None:
@@ -159,7 +163,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def load_cli_user(cls):
         return cls.load_or_create(foreign_id=settings.SYSTEM_USER,
                                   name='Aleph',
-                                  type=cls.USER)
+                                  type=cls.USER,
+                                  is_admin=True)
 
     @classmethod
     def load_id(cls, foreign_id):
@@ -198,15 +203,20 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         return q
 
     @classmethod
-    def all_groups(cls):
-        return cls.all().filter(Role.type != Role.USER)
+    def all_groups(cls, authz):
+        q = cls.all()
+        q = q.filter(Role.type == Role.GROUP)
+        if not authz.is_admin:
+            q = q.filter(Role.id.in_(authz.roles))
+        return q
 
     @classmethod
-    def all_users(cls, has_email=False):
-        q = cls.all().filter(Role.type == Role.USER)
-        if has_email:
-            q = q.filter(Role.email != None)  # noqa
-        return q
+    def all_users(cls):
+        return cls.all().filter(Role.type == Role.USER)
+
+    @classmethod
+    def all_system(cls):
+        return cls.all().filter(Role.type == Role.SYSTEM)
 
     def set_password(self, secret):
         """Hashes and sets the role password.
@@ -221,7 +231,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         :param str secret: The password to be checked.
         :rtype: bool
         """
-        return check_password_hash(self.password_digest or '', secret)
+        digest = self.password_digest or ''
+        return check_password_hash(digest, secret)
 
     def __repr__(self):
         return '<Role(%r,%r)>' % (self.id, self.foreign_id)

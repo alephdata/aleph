@@ -1,7 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 import {
-  defineMessages, FormattedNumber, FormattedMessage, injectIntl,
+  defineMessages, FormattedMessage, injectIntl,
 } from 'react-intl';
 import { Waypoint } from 'react-waypoint';
 import { Icon, ButtonGroup, AnchorButton, Tooltip } from '@blueprintjs/core';
@@ -12,7 +12,7 @@ import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import {
-  DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs,
+  Collection, DualPane, SectionLoading, SignInCallout, ErrorSection, Breadcrumbs, ResultCount,
 } from 'src/components/common';
 import EntityTable from 'src/components/EntityTable/EntityTable';
 import SearchFacets from 'src/components/Facet/SearchFacets';
@@ -30,7 +30,7 @@ const messages = defineMessages({
   },
   facet_collection_id: {
     id: 'search.facets.facet.collection_id',
-    defaultMessage: 'Sources',
+    defaultMessage: 'Datasets',
   },
   facet_languages: {
     id: 'search.facets.facet.languages',
@@ -171,6 +171,36 @@ export class SearchScreen extends React.Component {
     );
   }
 
+  getSearchScopes() {
+    const { query } = this.props;
+    const activeCollections = query ? query.getFilter('collection_id') : [];
+
+    const collectionScopeList = activeCollections.map(collectionId => (
+      {
+        listItem: (
+          <Collection.Load id={collectionId} renderWhenLoading="...">
+            {collection => (
+              <Collection.Label collection={collection} icon truncate={30} />
+            )}
+          </Collection.Load>
+        ),
+        onSearch: (queryText) => {
+          const newQuery = query.set('q', queryText).setFilter('collection_id', collectionId);
+          this.updateQuery(newQuery);
+        },
+      }
+    ));
+
+    if (activeCollections.length > 1) {
+      collectionScopeList.push({
+        listItem: <span>{`Search ${activeCollections.length} datasets`}</span>,
+        onSearch: queryText => this.updateQuery(query.set('q', queryText)),
+      });
+    }
+
+    return collectionScopeList;
+  }
+
   fetchIfNeeded() {
     const { result, query } = this.props;
     if (result.shouldLoad) {
@@ -184,6 +214,7 @@ export class SearchScreen extends React.Component {
     const parsedHash = queryString.parse(location.hash);
     parsedHash['preview:id'] = undefined;
     parsedHash['preview:type'] = undefined;
+
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -191,26 +222,28 @@ export class SearchScreen extends React.Component {
     });
   }
 
-  showNextPreview() {
+  showNextPreview(event) {
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[1 + currentSelectionIndex];
-    if (nextEntity) {
+
+    if (nextEntity && currentSelectionIndex >= 0) {
+      event.preventDefault();
       this.showPreview(nextEntity);
     }
   }
 
-  showPreviousPreview() {
+  showPreviousPreview(event) {
+    event.preventDefault();
     const currentSelectionIndex = this.getCurrentPreviewIndex();
     const nextEntity = this.props.result.results[currentSelectionIndex - 1];
-    if (nextEntity) {
+    if (nextEntity && currentSelectionIndex >= 0) {
+      event.preventDefault();
       this.showPreview(nextEntity);
     }
   }
 
   showPreview(entity) {
-    const { history } = this.props;
-    const previewType = entity.schema.isDocument() ? 'document' : 'entity';
-    togglePreview(history, entity, previewType);
+    togglePreview(this.props.history, entity);
   }
 
   toggleFacets() {
@@ -223,13 +256,14 @@ export class SearchScreen extends React.Component {
     const title = query.getString('q') || intl.formatMessage(messages.page_title);
     const hideFacetsClass = hideFacets ? 'show' : 'hide';
     const plusMinusIcon = hideFacets ? 'minus' : 'plus';
-    const exportLink = !result.links ? null : result.links.export;
+    const hasExportLink = result && result.links && result.links.export;
+    const exportLink = !hasExportLink ? null : result.links.export;
     const tooltip = intl.formatMessage(messages.alert_export_disabled);
 
     const operation = (
-      <ButtonGroup minimal>
+      <ButtonGroup>
         <Tooltip content={tooltip} disabled={exportLink}>
-          <AnchorButton icon="download" disabled={!exportLink} href={exportLink}>
+          <AnchorButton className="bp3-intent-primary" icon="download" disabled={!exportLink} href={exportLink}>
             <FormattedMessage id="search.screen.export" defaultMessage="Export" />
           </AnchorButton>
         </Tooltip>
@@ -237,48 +271,34 @@ export class SearchScreen extends React.Component {
     );
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <li>
-          <span className="bp3-breadcrumb bp3-breadcrumb-current">
-            {(result.total_type === 'gte' && !result.isLoading) && (
-              <FormattedMessage
-                id="search.screen.more_results"
-                defaultMessage="More than {total} results"
-                values={{
-                  total: <FormattedNumber value={result.total} />,
-                }}
-              />
-            )}
-            {(result.total_type === 'eq' && !result.isLoading) && (
-              <FormattedMessage
-                id="search.screen.results"
-                defaultMessage="{total} results"
-                values={{
-                  total: <FormattedNumber value={result.total} />,
-                }}
-              />
-            )}
-            { result.isLoading && (
-            <FormattedMessage id="search.screen.searching" defaultMessage="Searching..." />
-            )}
-            { result.isError && (
-            <FormattedMessage id="search.screen.error" defaultMessage="Error" />
-            )}
-          </span>
-        </li>
+        <Breadcrumbs.Text icon="search">
+          <FormattedMessage id="search.screen.breadcrumb" defaultMessage="Search" />
+        </Breadcrumbs.Text>
+        <Breadcrumbs.Text active>
+          <ResultCount result={result} />
+        </Breadcrumbs.Text>
       </Breadcrumbs>
     );
+
+    const searchScopes = this.getSearchScopes();
 
     return (
       <Screen
         query={query}
-        updateQuery={this.updateQuery}
         title={title}
+        searchScopes={searchScopes}
         hotKeys={[
           {
             combo: 'j', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
           },
           {
             combo: 'k', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
+          },
+          {
+            combo: 'up', global: true, label: 'Preview previous search entity', onKeyDown: this.showPreviousPreview,
+          },
+          {
+            combo: 'down', global: true, label: 'Preview next search entity', onKeyDown: this.showNextPreview,
           },
         ]}
       >
@@ -318,7 +338,7 @@ export class SearchScreen extends React.Component {
             />
             {result.total === 0 && (
               <ErrorSection
-                visual="search"
+                icon="search"
                 title={intl.formatMessage(messages.no_results_title)}
                 resolver={<SuggestAlert queryText={query.state.q} />}
                 description={intl.formatMessage(messages.no_results_description)}
@@ -341,7 +361,6 @@ export class SearchScreen extends React.Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-
   // We normally only want Things, not Intervals (relations between things).
   const context = {
     highlight: true,

@@ -5,7 +5,7 @@ from aleph.authz import Authz
 from aleph.core import db, es
 from aleph.model import Alert, Events, Entity
 from aleph.index.indexes import entities_read_index
-from aleph.index.util import unpack_result, authz_query, MAX_PAGE
+from aleph.index.util import unpack_result, authz_query
 from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
@@ -27,8 +27,6 @@ def check_alert(alert_id):
     alert = Alert.by_id(alert_id)
     if alert is None or alert.role is None:
         return
-    if not alert.role.is_alertable:
-        return
     log.info("Check alert [%s]: %s", alert.id, alert.query)
     authz = Authz.from_role(alert.role)
     query = alert_query(alert, authz)
@@ -42,11 +40,9 @@ def check_alert(alert_id):
         params = {
             'alert': alert,
             'role': alert.role,
-            'entity': entity
+            'entity': entity.get('id')
         }
-        publish(Events.MATCH_ALERT,
-                actor_id=entity.get('uploader_id'),
-                params=params)
+        publish(Events.MATCH_ALERT, params=params, channels=[alert.role])
         db.session.flush()
 
     alert.update()
@@ -68,12 +64,13 @@ def alert_query(alert, authz):
             'minimum_should_match': '90%'
         }
     }]
-    filters = [
-        {'range': {'updated_at': {'gt': alert.notified_at}}},
-        authz_query(authz)
-    ]
+    filters = [authz_query(authz)]
+    if alert.notified_at is not None:
+        notified_at = alert.notified_at.isoformat()
+        filters.append({'range': {'updated_at': {'gt': notified_at}}})
     return {
-        'size': MAX_PAGE,
+        'size': 50,
+        '_source': {'includes': ['name']},
         'query': {
             'bool': {
                 'should': queries,

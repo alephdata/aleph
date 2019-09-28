@@ -5,19 +5,21 @@ $aleph-grid-size: $pt-grid-size;
 $aleph-font-size: $pt-font-size;
 $aleph-line-height: $pt-line-height;
 $aleph-border-radius: $pt-border-radius;
+$aleph-icon-padding: ($aleph-grid-size / 2);
 
 $aleph-screen-sm-max-width: 575px;
 $aleph-screen-md-max-width: 980px;
 $aleph-screen-lg-max-width: 1200px;
 
-$aleph-page-background: $light-gray5;
+$aleph-breadcrumbs-background: $light-gray4;
+$aleph-page-background: white;
 $aleph-link-color: $pt-link-color;
 $aleph-visited-link-color: darken($aleph-link-color, 15%);
 // $aleph-sidebar-background: $dark-gray5;
 $aleph-sidebar-background: $pt-link-color;
 $aleph-sidebar-foreground: white;
 $aleph-facet-background: $light-gray4;
-$aleph-table-heading-background: $light-gray4;
+$aleph-table-heading-background: white;
 $aleph-table-border-color: $light-gray2;
 $aleph-content-background: white;
 $aleph-border-color: $light-gray2;
@@ -27,7 +29,6 @@ $aleph-theme-intent: $aleph-link-color;
 $table-border: $light-gray3;
 $table-header-color: $blue3;
 $table-border-color: rgba(16, 22, 26, 0.15);
-
 
 $alpeh-preview-pane-width: 1024px;
 $aleph-single-pane-width: 1024px;

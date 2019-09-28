@@ -10,7 +10,7 @@ import { showSuccessToast } from 'src/app/toast';
 const messages = defineMessages({
   processing: {
     id: 'collection.publish.succeed',
-    defaultMessage: 'Casefile is published',
+    defaultMessage: 'Dataset is published',
   },
   cancel: {
     id: 'collection.publish.cancel',
@@ -56,7 +56,7 @@ class CollectionPublishAlert extends Component {
         <p>
           <FormattedMessage
             id="collection.publish.alert.text"
-            defaultMessage="You are converting this case file to a source. Sources are to be seen as raw evidence and can be made public for every visitor of the system to see. Please make sure you do not publish material identifying your sources, directly or through metadata."
+            defaultMessage="You are publishing a dataset. Published datasets are understood as raw evidence and can be made public for every visitor of the system to see. Please make sure you do not publish material identifying your sources, directly or through metadata."
           />
         </p>
       </Alert>

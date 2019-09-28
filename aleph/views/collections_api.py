@@ -6,7 +6,7 @@ from followthemoney.exc import InvalidMapping
 
 from aleph.core import db, settings
 from aleph.authz import Authz
-from aleph.model import Role, Collection
+from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
 from aleph.queues import OP_BULKLOAD, OP_PROCESS
@@ -48,9 +48,8 @@ def sitemap():
 def create():
     require(request.authz.logged_in)
     data = parse_request(CollectionCreateSchema)
-    role = Role.by_id(request.authz.id)
     sync = get_flag('sync')
-    collection = create_collection(data, role=role, sync=sync)
+    collection = create_collection(data, request.authz, sync=sync)
     return CollectionSerializer.jsonify(collection)
 
 
@@ -65,7 +64,7 @@ def update(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request(CollectionUpdateSchema)
     sync = get_flag('sync')
-    collection.update(data)
+    collection.update(data, request.authz)
     db.session.commit()
     data = update_collection(collection, sync=sync)
     return CollectionSerializer.jsonify(data)
@@ -135,7 +134,7 @@ def status(collection_id):
 def cancel(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     cancel_queue(collection)
-    return jsonify(get_status(collection))
+    return ('', 204)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>', methods=['DELETE'])

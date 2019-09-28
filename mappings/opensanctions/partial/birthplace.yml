@@ -1,9 +1,0 @@
-entities:
-  entity:
-    schema: Thing
-    key: entity_id
-    properties:
-      country:
-        column: country_code
-      notes:
-        column: place

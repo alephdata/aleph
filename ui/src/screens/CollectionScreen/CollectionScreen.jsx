@@ -1,43 +1,20 @@
 import React, { Component } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+
 import Screen from 'src/components/Screen/Screen';
+import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
-import CollectionToolbar from 'src/components/Collection/CollectionToolbar';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { DualPane, Breadcrumbs, SearchBox } from 'src/components/common';
+import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionView } from 'src/selectors';
-
-
-const messages = defineMessages({
-  placeholder: {
-    id: 'collections.index.filter',
-    defaultMessage: 'Search in {label}',
-  },
-  xref_title: {
-    id: 'collections.xref.title',
-    defaultMessage: 'Cross-reference',
-  },
-});
-
-
-const mapStateToProps = (state, ownProps) => {
-  const { collectionId } = ownProps.match.params;
-  const { location } = ownProps;
-  const hashQuery = queryString.parse(location.hash);
-  return {
-    collectionId,
-    collection: selectCollection(state, collectionId),
-    activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
-  };
-};
 
 
 export class CollectionScreen extends Component {
@@ -60,7 +37,7 @@ export class CollectionScreen extends Component {
 
   render() {
     const {
-      intl, collection, collectionId, activeMode,
+      collection, collectionId, activeMode,
     } = this.props;
     const { extraBreadcrumbs } = this.props;
 
@@ -76,17 +53,27 @@ export class CollectionScreen extends Component {
       );
     }
 
+    const searchScope = {
+      listItem: <Collection.Label collection={collection} icon truncate={30} />,
+      label: collection.label,
+      onSearch: this.onSearch,
+    };
+
     const operation = (
-      <SearchBox
-        onSearch={this.onSearch}
-        searchPlaceholder={intl.formatMessage(messages.placeholder, { label: collection.label })}
-      />
+      <CollectionManageMenu collection={collection} />
     );
+
+    const active = activeMode !== 'xref';
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={collection} />
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active={active} />
         {activeMode === 'xref' && (
-          <Breadcrumbs.Text text={intl.formatMessage(messages.xref_title)} />
+          <Breadcrumbs.Text icon="search-around" active>
+            <FormattedMessage
+              id="collections.xref.title"
+              defaultMessage="Cross-reference"
+            />
+          </Breadcrumbs.Text>
         )}
         {extraBreadcrumbs}
       </Breadcrumbs>
@@ -94,11 +81,14 @@ export class CollectionScreen extends Component {
 
     return (
       <CollectionContextLoader collectionId={collectionId}>
-        <Screen title={collection.label} description={collection.summary}>
+        <Screen
+          title={collection.label}
+          description={collection.summary}
+          searchScopes={[searchScope]}
+        >
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.InfoPane className="with-heading">
-              <CollectionToolbar collection={collection} />
               <CollectionHeading collection={collection} />
               <div className="pane-content">
                 <CollectionInfoMode collection={collection} />
@@ -118,8 +108,20 @@ export class CollectionScreen extends Component {
   }
 }
 
+
+const mapStateToProps = (state, ownProps) => {
+  const { collectionId } = ownProps.match.params;
+  const { location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+  return {
+    collectionId,
+    collection: selectCollection(state, collectionId),
+    activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
+  };
+};
+
+
 export default compose(
   withRouter,
   connect(mapStateToProps),
-  injectIntl,
 )(CollectionScreen);

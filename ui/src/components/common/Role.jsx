@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import {
-  Button, MenuItem, Position, Classes, Alignment,
+  Button, MenuItem, Classes, Alignment, Icon,
 } from '@blueprintjs/core';
 import { Select as BlueprintSelect } from '@blueprintjs/select';
 
 import wordList from 'src/util/wordList';
 import { suggestRoles } from 'src/actions';
-import { Icon } from './Icon';
 
 import './Role.scss';
 
@@ -21,26 +20,18 @@ const messages = defineMessages({
 });
 
 
-class RoleLabel extends Component {
-  shouldComponentUpdate(nextProps) {
-    const { role } = this.props;
-    return role.id !== nextProps.role.id;
-  }
-
+class RoleLabel extends PureComponent {
   render() {
     const { role, icon = true, long = false } = this.props;
-    if (!role) {
+    if (!role || !role.type) {
       return null;
     }
+    const iconName = role.type === 'user' ? 'user' : 'shield';
     return (
-      <React.Fragment>
-        { icon && (
-          <React.Fragment>
-            <Icon name="person" />
-          </React.Fragment>
-        )}
+      <span className="Role">
+        { icon && <Icon icon={iconName} /> }
         { long ? role.label : role.name }
-      </React.Fragment>
+      </span>
     );
   }
 }
@@ -49,14 +40,11 @@ class RoleLabel extends Component {
 class RoleLink extends PureComponent {
   render() {
     const { role } = this.props;
-    if (!role) {
-      return null;
+    const content = <RoleLabel {...this.props} />;
+    if (role && role.type && role.type === 'group') {
+      return <Link to={`/groups/${role.id}`}>{content}</Link>;
     }
-    return (
-      <Link to={`/sources?collectionsfilter:team_id=${role.id}`}>
-        <RoleLabel {...this.props} />
-      </Link>
-    );
+    return content;
   }
 }
 
@@ -125,9 +113,12 @@ class Select extends Component {
         onQueryChange={this.onSuggest}
         popoverProps={{
           minimal: true,
-          position: Position.BOTTOM_LEFT,
+          fill: true,
+          // position: Position.BOTTOM_LEFT,
         }}
-        fill
+        inputProps={{
+          fill: true,
+        }}
         filterable
         resetOnQuery
         resetOnClose
@@ -136,8 +127,9 @@ class Select extends Component {
         <Button
           fill
           text={label}
-          alignText={Alignment.LEFT}
+          icon="user"
           rightIcon="search"
+          alignText={Alignment.LEFT}
         />
       </BlueprintSelect>
     );

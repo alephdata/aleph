@@ -30,9 +30,12 @@ export function selectLocale(state) {
   // either saved in localStorage or extracted from metadata. The initial
   // request to metadata will be sent with unmodified Accept-Language headers
   // allowing the backend to perform language negotiation.
-  const { config, metadata } = state;
+  const { config, session, metadata } = state;
   if (config && config.locale) {
     return config.locale;
+  }
+  if (session && session.role && session.role.locale) {
+    return session.role.locale;
   }
   if (metadata && metadata.app) {
     return metadata.app.locale;
@@ -65,8 +68,16 @@ export function selectAlerts(state) {
   return selectObject(state, 'alerts');
 }
 
+export function selectGroups(state) {
+  return state.groups;
+}
+
 export function selectStatistics(state) {
   return selectObject(state, 'statistics');
+}
+
+export function selectSystemStatus(state) {
+  return selectObject(state, 'systemStatus');
 }
 
 export function selectCollection(state, collectionId) {
@@ -116,6 +127,13 @@ export function selectEntityTags(state, entityId) {
   return selectObject(state.entityTags, entityId);
 }
 
+export function selectValueCount(state, prop, value) {
+  if (!prop.matchable || !prop.type.grouped) {
+    return null;
+  }
+  return state.values[`${prop.type.group}:${value}`] || null;
+}
+
 export function selectEntityReferences(state, entityId) {
   const model = selectModel(state);
   const references = selectObject(state.entityReferences, entityId);
@@ -136,9 +154,7 @@ export function selectEntityReference(state, entityId, qname) {
   if (!references.total) {
     return undefined;
   }
-
-  return references.results
-    .find(ref => ref.property.qname === qname) || references.results[0];
+  return references.results.find(ref => ref.property.qname === qname);
 }
 
 export function selectEntityView(state, entityId, mode, isPreview) {
@@ -165,12 +181,9 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   return undefined;
 }
 
-export function selectCollectionView(state, collectionId, mode, isPreview) {
+export function selectCollectionView(state, collectionId, mode) {
   if (mode) {
     return mode;
-  }
-  if (isPreview) {
-    return 'info';
   }
   const collection = selectCollection(state, collectionId);
   const model = selectModel(state);

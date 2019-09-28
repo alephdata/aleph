@@ -15,7 +15,7 @@ from aleph.util import html_link
 log = logging.getLogger(__name__)
 
 
-def channel(obj, clazz=None):
+def channel_tag(obj, clazz=None):
     clazz = clazz or type(obj)
     if clazz == str:
         return obj
@@ -31,12 +31,10 @@ def publish(event, actor_id=None, params=None, channels=None):
     assert isinstance(event, Event), event
     params = params or {}
     outparams = {}
-    channels = ensure_list(channels)
-    channels.append(channel(actor_id, clazz=Role))
+    channels = [channel_tag(c) for c in ensure_list(channels)]
     for name, clazz in event.params.items():
         obj = params.get(name)
         outparams[name] = get_entity_id(obj)
-        channels.append(channel(obj, clazz=clazz))
     Notification.publish(event,
                          actor_id=actor_id,
                          params=outparams,
@@ -45,7 +43,7 @@ def publish(event, actor_id=None, params=None, channels=None):
 
 
 def flush_notifications(obj, clazz=None):
-    channel_ = channel(obj, clazz=clazz)
+    channel_ = channel_tag(obj, clazz=clazz)
     Notification.delete_by_channel(channel_)
 
 
@@ -60,9 +58,9 @@ def get_role_channels(role):
     if role.deleted_at is None and role.type == Role.USER:
         authz = Authz.from_role(role)
         for role_id in authz.roles:
-            channels.append(channel(role_id, Role))
+            channels.append(channel_tag(role_id, Role))
         for coll_id in authz.collections(authz.READ):
-            channels.append(channel(coll_id, Collection))
+            channels.append(channel_tag(coll_id, Collection))
     cache.set_list(key, channels, expire=cache.EXPIRE)
     return channels
 
@@ -103,17 +101,18 @@ def render_notification(stub, notification):
 
 def generate_digest():
     """Generate notification digest emails for all users."""
-    for role in Role.all_users(has_email=True):
-        generate_role_digest(role)
+    for role in Role.all_users():
+        if role.is_alertable:
+            generate_role_digest(role)
 
 
 def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
-    since = datetime.utcnow() - timedelta(hours=25)
-    q = Notification.by_channels(get_role_channels(role),
-                                 since=since, exclude_actor_id=role.id)
+    since = datetime.utcnow() - timedelta(hours=26)
+    q = Notification.by_channels(get_role_channels(role), role, since=since)
     total_count = q.count()
+    log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:
         return
     notifications = [render_notification(role, n) for n in q.limit(20)]

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import {
   defineMessages, FormattedMessage, FormattedNumber, injectIntl,
@@ -230,10 +231,13 @@ export class CollectionXrefMatchesScreen extends Component {
           <Breadcrumbs.Collection collection={collection} />
           <li>
             <Link className="bp3-breadcrumb" to={indexPath}>
+              <Icon icon="search-around" />
               <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference" />
             </Link>
           </li>
-          <Breadcrumbs.Text text={other.label} />
+          <Breadcrumbs.Text active>
+            {other.label}
+          </Breadcrumbs.Text>
         </Breadcrumbs>
         {this.renderXrefTable()}
       </Screen>

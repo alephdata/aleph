@@ -25,11 +25,11 @@ const messages = defineMessages({
   },
   xrefAll: {
     id: 'collection.xref.xrefAll',
-    defaultMessage: 'Cross-reference all sources',
+    defaultMessage: 'Cross-reference all datasets',
   },
   xrefSpecific: {
     id: 'collection.xref.xrefSpecific',
-    defaultMessage: 'Cross-reference specific sources (faster)',
+    defaultMessage: 'Cross-reference specific datasets (faster)',
   },
 });
 
@@ -84,7 +84,7 @@ class CollectionXrefDialog extends Component {
     <Callout intent="warning">
       <FormattedMessage
         id="collection.xref.alert.text"
-        defaultMessage="Cross-referencing against all other data may take a lot of time. Only start this process once and allow several hours for it to complete."
+        defaultMessage="Cross-referencing against all other data may take a lot of time. Start this process once and then wait for it to complete."
       />
     </Callout>
   )

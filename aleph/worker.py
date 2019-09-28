@@ -8,9 +8,10 @@ from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS
 from aleph.queues import OP_XREF, OP_XREF_ITEM
 from aleph.queues import OPERATIONS
 from aleph.logic.alerts import check_alerts
-from aleph.logic.collections import index_collections, update_collection
+from aleph.logic.collections import index_collections, refresh_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.bulkload import bulk_load
+from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
 from aleph.logic.processing import index_aggregate, process_collection
 
@@ -29,12 +30,13 @@ class AlephWorker(Worker):
             self.hourly.update()
             log.info("Running hourly tasks...")
             index_collections()
+            check_alerts()
 
         if self.daily.check():
             self.daily.update()
             log.info("Running daily tasks...")
-            check_alerts()
             generate_digest()
+            update_roles()
 
     def handle(self, task):
         stage = task.stage
@@ -60,7 +62,7 @@ class AlephWorker(Worker):
         if task.job.is_done():
             collection = Collection.by_foreign_id(task.job.dataset.name)
             if collection is not None:
-                update_collection(collection)
+                refresh_collection(collection.id)
             task.job.remove()
 
 

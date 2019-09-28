@@ -3,13 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { Tabs, Tab, Icon as BlueprintIcon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import {
   Count, TextLoading, Schema, Icon,
 } from 'src/components/common';
-import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
@@ -64,7 +63,7 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      isPreview, collection, activeMode, xrefIndex,
+      collection, activeMode, xrefIndex,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
@@ -77,17 +76,6 @@ class CollectionViews extends React.Component {
         renderActiveTabPanelOnly
         className="info-tabs-padding"
       >
-        {isPreview && (
-          <Tab
-            id="info"
-            title={
-              <React.Fragment>
-                <Icon name="info" />
-                <FormattedMessage id="entity.info.info" defaultMessage="Info" />
-              </React.Fragment>}
-            panel={<CollectionInfoMode collection={collection} />}
-          />
-        )}
         {hasBrowse && (
           <Tab
             id="Document"
@@ -95,7 +83,7 @@ class CollectionViews extends React.Component {
             title={
               <React.Fragment>
                 <Icon name="folder" />
-                <FormattedMessage id="entity.info.source" defaultMessage="Documents" />
+                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
               </React.Fragment>}
             panel={<CollectionDocumentsMode collection={collection} />}
@@ -115,10 +103,9 @@ class CollectionViews extends React.Component {
         ))}
         <Tab
           id="xref"
-          disabled={xrefIndex.total < 1}
           title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
-              <Icon name="relationship" />
+              <BlueprintIcon className="left-icon" icon="search-around" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xrefIndex.total} />
             </TextLoading>}

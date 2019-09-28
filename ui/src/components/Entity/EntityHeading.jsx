@@ -9,7 +9,7 @@ class EntityHeading extends React.PureComponent {
     return (
       <React.Fragment>
         <div className="pane-heading">
-          <span>
+          <span className="bp3-text-muted">
             <Schema.Label schema={entity.schema} icon />
           </span>
           <h1>

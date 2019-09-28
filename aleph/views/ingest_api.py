@@ -8,8 +8,10 @@ from normality import safe_filename, stringify
 from servicelayer.archive.util import ensure_path
 
 from aleph.core import db, archive
-from aleph.model import Document
+from aleph.model import Document, Entity, Events
 from aleph.queues import ingest_entity
+from aleph.index.entities import index_proxy
+from aleph.logic.notifications import publish, channel_tag
 from aleph.views.util import get_db_collection, get_flag
 from aleph.views.util import jsonify, validate_data, get_session_id
 from aleph.views.forms import DocumentCreateSchema
@@ -50,6 +52,24 @@ def _load_metadata():
     return meta, foreign_id
 
 
+def _notify(collection, document_id):
+    if not collection.casefile:
+        return
+    channels = [
+        channel_tag(document_id, Entity),
+        channel_tag(collection),
+    ]
+    params = {
+        'collection': collection,
+        'document': document_id
+    }
+    publish(Events.INGEST_DOCUMENT,
+            params=params,
+            channels=channels,
+            actor_id=request.authz.id)
+    db.session.commit()
+
+
 @blueprint.route('/api/2/collections/<int:collection_id>/ingest',
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
@@ -75,11 +95,15 @@ def ingest_upload(collection_id):
         collection.touch()
         db.session.commit()
         proxy = document.to_proxy()
+        if proxy.schema.is_a(Document.SCHEMA_FOLDER) and sync:
+            index_proxy(collection, proxy, sync=sync)
         ingest_entity(collection, proxy, job_id=job_id, sync=sync)
+        document_id = collection.ns.sign(document.id)
+        _notify(collection, document_id)    
     finally:
         shutil.rmtree(upload_dir)
 
     return jsonify({
         'status': 'ok',
-        'id': stringify(document.id)
+        'id': document_id
     }, status=201)

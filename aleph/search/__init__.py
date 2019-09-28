@@ -14,6 +14,15 @@ from aleph.search.query import Query
 log = logging.getLogger(__name__)
 
 
+class CollectionsQuery(Query):
+    TEXT_FIELDS = ['label^3', 'text']
+    SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
+    PREFIX_FIELD = 'label'
+
+    def get_index(self):
+        return collections_index()
+
+
 class EntitiesQuery(Query):
     TEXT_FIELDS = ['fingerprints.text^3', 'text']
     PREFIX_FIELD = 'names.text'
@@ -54,12 +63,3 @@ class MatchQuery(EntitiesQuery):
         return match_query(self.entity,
                            collection_ids=self.collection_ids,
                            query=query)
-
-
-class CollectionsQuery(Query):
-    TEXT_FIELDS = ['label^3', 'text']
-    SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
-    PREFIX_FIELD = 'label'
-
-    def get_index(self):
-        return collections_index()

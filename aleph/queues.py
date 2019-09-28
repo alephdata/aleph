@@ -3,8 +3,6 @@ from servicelayer.rate_limit import RateLimit
 from servicelayer.jobs import Job, Stage, Dataset
 
 from aleph.core import kv, settings
-from aleph.model import Document
-from aleph.index.entities import index_proxy
 
 log = logging.getLogger(__name__)
 
@@ -43,14 +41,17 @@ def get_status(collection):
     return Dataset(kv, collection.foreign_id).get_status()
 
 
+def get_active_collection_status():
+    data = Dataset.get_active_dataset_status(kv)
+    return data
+
+
 def cancel_queue(collection):
     Dataset(kv, collection.foreign_id).cancel()
 
 
 def ingest_entity(collection, proxy, job_id=None, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
-    if proxy.schema.is_a(Document.SCHEMA_FOLDER):
-        index_proxy(collection, proxy, sync=sync)
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     stage = get_stage(collection, OP_INGEST, job_id=job_id)
     from aleph.logic.aggregator import get_aggregator_name

@@ -15,13 +15,13 @@ import getCollectionLink from 'src/util/getCollectionLink';
 import './CreateCaseDialog.scss';
 
 const messages = defineMessages({
-  untitled_label: {
-    id: 'case.untitled_label',
-    defaultMessage: 'Untitled case file',
+  label_placeholder: {
+    id: 'case.label_placeholder',
+    defaultMessage: 'Untitled dataset',
   },
-  summary: {
+  summary_placeholder: {
     id: 'case.summary',
-    defaultMessage: 'Summary',
+    defaultMessage: 'A brief description of the dataset',
   },
   save: {
     id: 'case.save',
@@ -33,7 +33,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'case.title',
-    defaultMessage: 'Create a new casefile',
+    defaultMessage: 'Create a personal dataset',
   },
 });
 
@@ -135,14 +135,14 @@ class CreateCaseDialog extends Component {
           <div className="bp3-dialog-body">
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="label">
-                <FormattedMessage id="case.choose.name" defaultMessage="Choose a title:" />
+                <FormattedMessage id="case.choose.name" defaultMessage="Title" />
                 <div className="bp3-input-group bp3-large bp3-fill">
                   <input
                     id="label"
                     type="text"
                     className="bp3-input"
                     autoComplete="off"
-                    placeholder={intl.formatMessage(messages.untitled_label)}
+                    placeholder={intl.formatMessage(messages.label_placeholder)}
                     onChange={this.onChangeLabel}
                     value={collection.label}
                   />
@@ -153,13 +153,13 @@ class CreateCaseDialog extends Component {
               <label className="bp3-label" htmlFor="summary">
                 <FormattedMessage
                   id="case.choose.summary"
-                  defaultMessage="Describe it briefly:"
+                  defaultMessage="Summary"
                 />
                 <div className="bp3-input-group bp3-fill">
                   <textarea
                     id="summary"
                     className="bp3-input"
-                    placeholder={intl.formatMessage(messages.summary)}
+                    placeholder={intl.formatMessage(messages.summary_placeholder)}
                     onChange={this.onChangeSummary}
                     value={collection.summary}
                   />
@@ -185,7 +185,7 @@ class CreateCaseDialog extends Component {
               <label className="bp3-label">
                 <FormattedMessage
                   id="case.share.with"
-                  defaultMessage="Share with:"
+                  defaultMessage="Share with"
                 />
                 <Role.Select onSelect={this.onAddRole} exclude={exclude} />
               </label>

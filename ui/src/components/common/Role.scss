@@ -1,0 +1,9 @@
+@import "src/app/variables.scss";
+
+.Role {
+    white-space: nowrap;
+
+    .bp3-icon {
+        margin-right: $aleph-icon-padding;
+    }
+}

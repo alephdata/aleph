@@ -1,8 +1,11 @@
 import cgi
 import logging
+from banal import is_mapping
 from normality import slugify
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.namespace import Namespace
+from followthemoney.util import sanitize_text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm.attributes import flag_modified
 
@@ -63,7 +66,9 @@ class Document(db.Model, DatedModel):
                  'modified_at', 'published_at', 'retrieved_at', 'languages',
                  'countries', 'keywords')
         for prop in props:
-            self.meta[prop] = data.get(prop, self.meta.get(prop))
+            text = data.get(prop, self.meta.get(prop))
+            self.meta[prop] = sanitize_text(text)
+
         flag_modified(self, 'meta')
 
     def delete(self, deleted_at=None):
@@ -79,6 +84,8 @@ class Document(db.Model, DatedModel):
     def save(cls, collection, parent=None, foreign_id=None,
              content_hash=None, meta=None, uploader_id=None):
         """Try and find a document by various criteria."""
+        foreign_id = sanitize_text(foreign_id)
+
         q = cls.all()
         q = q.filter(Document.collection_id == collection.id)
 
@@ -115,13 +122,14 @@ class Document(db.Model, DatedModel):
         return document
 
     @classmethod
-    def by_id(cls, id, collection_id=None):
+    def by_id(cls, document_id, collection_id=None):
         try:
-            id = int(id)
+            document_id, _ = Namespace.parse(document_id)
+            document_id = int(document_id)
         except Exception:
             return
         q = cls.all()
-        q = q.filter(cls.id == id)
+        q = q.filter(cls.id == document_id)
         if collection_id is not None:
             q = q.filter(cls.collection_id == collection_id)
         return q.first()
@@ -148,8 +156,11 @@ class Document(db.Model, DatedModel):
             'properties': {}
         })
         meta = dict(self.meta)
-        headers = meta.pop('headers', {}) or {}
-        headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        headers = meta.pop('headers', {})
+        if is_mapping(headers):
+            headers = {slugify(k, sep='_'): v for k, v in headers.items()}
+        else:
+            headers = {}
         proxy.set('contentHash', self.content_hash)
         proxy.set('parent', self.parent_id)
         proxy.set('ancestors', self.ancestors)

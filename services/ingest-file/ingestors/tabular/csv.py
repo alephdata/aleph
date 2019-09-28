@@ -40,7 +40,7 @@ class CSVIngestor(Ingestor, EncodingSupport, TableSupport):
         except UnicodeDecodeError as ude:
             log.warning("Encoding error: %r", entity)
             raise ProcessingException("Could not decode CSV (%s)" % encoding) from ude  # noqa
-        except Exception as err:
+        except (Exception, csv.Error) as err:
             log.exception("CSV error: %s", err)
             raise ProcessingException("Invalid CSV: %s" % err) from err
         finally:

@@ -16,7 +16,7 @@ export default createReducer({
     (state, { id, data }) => objectLoadComplete(state, id, data),
 
   [triggerCollectionCancel.COMPLETE]:
-    (state, { id, data }) => objectLoadComplete(state, id, data),
+    () => invalidateResults(),
 
   [ingestDocument.COMPLETE]:
     () => invalidateResults(),

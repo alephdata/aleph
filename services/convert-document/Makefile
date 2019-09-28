@@ -1,6 +1,4 @@
 
-all: test
-
 build:
 	docker build --cache-from alephdata/convert-document -t alephdata/convert-document .
 
@@ -8,7 +6,7 @@ test: build
 	docker run -ti alephdata/convert-document pytest
 
 shell: build
-	docker run -ti alephdata/convert-document bash
+	docker run -ti -v $(PWD):/convert -p 3000:3000 alephdata/convert-document bash
 
 run: build
 	docker run -p 3000:3000 -ti alephdata/convert-document

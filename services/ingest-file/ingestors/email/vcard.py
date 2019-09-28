@@ -1,7 +1,9 @@
 import logging
 import vobject
+from vobject.base import ParseError
 from banal import ensure_list
 from followthemoney import model
+from followthemoney.util import sanitize_text
 
 from ingestors.ingestor import Ingestor
 from ingestors.support.encoding import EncodingSupport
@@ -42,9 +44,10 @@ class VCardIngestor(Ingestor, EncodingSupport):
     def ingest(self, file_path, entity):
         entity.schema = model.get('PlainText')
         text = self.read_file_decoded(entity, file_path)
+        text = sanitize_text(text)
         entity.set('bodyText', text)
         try:
             for card in vobject.readComponents(text):
                 self.ingest_card(entity, card)
-        except vobject.base.ParseError as err:
+        except (ParseError, UnicodeDecodeError) as err:
             raise ProcessingException('Cannot parse vcard: %s' % err) from err

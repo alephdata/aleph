@@ -1,32 +1,34 @@
 @import "src/app/variables.scss";
 
+$dual-pane-padding: $aleph-grid-size * 3;
+$dual-pane-padding-mobile: $aleph-grid-size*2;
+
 .DualPane {
   flex-grow: 1;
   display: flex;
   flex-flow: row nowrap;
   align-content: stretch;
   align-items: stretch;
+  padding: $dual-pane-padding;
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     flex-flow: column;
+    padding: $dual-pane-padding-mobile;
   }
-}
-
-.InfoPane {
-  flex: 10;
 }
 
 .DualPane .ContentPane {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  overflow-x: auto;
+  padding: 0 0 0 $dual-pane-padding;
 
-  &.padded {
-    padding: $aleph-grid-size * 2;
+  .info-tabs-padding {
+    padding: 0;
   }
 
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     order: 2;
+    padding: 0;
   }
 }
 
@@ -34,60 +36,72 @@
   flex: none;
   width: $aleph-sidebar-width;
   border-right: 0;
-  overflow-x: hidden; // just in case.
   min-height: 100%;
 }
 
 .DualPane .SidePane {
   @extend %SidePane;
-  padding: $aleph-grid-size * 2;
+  padding-right: $dual-pane-padding;
+  border-right: 1px solid $light-gray2;
+
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-sidepane-md-width;
   }
+
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     width: 100%;
+    border: none;
+    padding-right: $dual-pane-padding-mobile;
   }
 }
 
 .DualPane .InfoPane {
   @extend %SidePane;
-  border-right: 0;
-  box-shadow: $pt-elevation-shadow-3;
-  background: $aleph-content-background;
+  border-right: 1px solid $aleph-border-color;
+  padding-right: $dual-pane-padding;
+  overflow: visible;
+  min-height: unset;
+  margin: 0 0 $aleph-grid-size;
   flex-direction: row !important;
-  min-height: 100%;
+
+  .pane-heading {
+    border-bottom: 1px solid $aleph-border-color;
+    padding: ($aleph-grid-size * 4) 0;
+  }
+
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-infopane-md-width !important;
   }
+
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     width: 100% !important;
     margin-bottom: 1em;
+    border-right: none;
+    border-bottom: 1px solid $aleph-border-color;
+    padding-right: 0;
   }
-  
+}
+
+.InfoPane {
+  flex: 10;
+
   h1, h2 {
     // Show a subtle line below headings
     margin-bottom: $aleph-grid-size;
-    padding-bottom: $aleph-grid-size;
+    padding: $aleph-grid-size 0;
     line-height: 1.5;
     border-bottom: 1px solid $aleph-border-color;
     overflow-wrap: break-word;
   }
 
-  .pane-heading {
-    background: $aleph-sidebar-background;
-    padding: $aleph-grid-size*4 $aleph-grid-size*2;
-    color: white;
-  }
-
   .pane-heading h1 {
     border: 0;
     margin: 0;
-    color: white;
-    font-weight: 300;
+    font-weight: bold;
   }
 
   .pane-content {
-    padding: $aleph-grid-size $aleph-grid-size*2;
+    padding: ($aleph-grid-size * 4) 0;
   }
 
   .collection-content {

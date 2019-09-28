@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-08-21 10:11+0200\n"
+"POT-Creation-Date: 2019-09-25 16:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,75 +33,79 @@ msgstr ""
 msgid "Registration"
 msgstr ""
 
-#: aleph/model/collection.py:25
+#: aleph/model/collection.py:26
 msgid "News archives"
 msgstr ""
 
-#: aleph/model/collection.py:26
+#: aleph/model/collection.py:27
 msgid "Leaks"
 msgstr ""
 
-#: aleph/model/collection.py:27
+#: aleph/model/collection.py:28
 msgid "Land registry"
 msgstr ""
 
-#: aleph/model/collection.py:28
+#: aleph/model/collection.py:29
 msgid "Gazettes"
 msgstr ""
 
-#: aleph/model/collection.py:29
+#: aleph/model/collection.py:30
 msgid "Court archives"
 msgstr ""
 
-#: aleph/model/collection.py:30
+#: aleph/model/collection.py:31
 msgid "Company registries"
 msgstr ""
 
-#: aleph/model/collection.py:31
+#: aleph/model/collection.py:32
 msgid "Sanctions lists"
 msgstr ""
 
-#: aleph/model/collection.py:32
+#: aleph/model/collection.py:33
 msgid "Procurement"
 msgstr ""
 
-#: aleph/model/collection.py:33
+#: aleph/model/collection.py:34
 msgid "Financial records"
 msgstr ""
 
-#: aleph/model/collection.py:34
+#: aleph/model/collection.py:35
 msgid "Grey literature"
 msgstr ""
 
-#: aleph/model/collection.py:35
+#: aleph/model/collection.py:36
 msgid "Document libraries"
 msgstr ""
 
-#: aleph/model/collection.py:36
+#: aleph/model/collection.py:37
 msgid "Licenses and concessions"
 msgstr ""
 
-#: aleph/model/collection.py:37
+#: aleph/model/collection.py:38
 msgid "Regulatory filings"
 msgstr ""
 
-#: aleph/model/collection.py:38
+#: aleph/model/collection.py:39
 msgid "Persons of interest"
 msgstr ""
 
-#: aleph/model/collection.py:39
+#: aleph/model/collection.py:40
 msgid "Customs declarations"
 msgstr ""
 
-#: aleph/model/collection.py:40
+#: aleph/model/collection.py:41
 msgid "Population census"
 msgstr ""
 
-#: aleph/model/collection.py:41
+#: aleph/model/collection.py:42
 msgid "Air and maritime registers"
 msgstr ""
 
-#: aleph/model/collection.py:42
+#: aleph/model/collection.py:43
+msgid "Personal datasets"
+msgstr ""
+
+#: aleph/model/collection.py:44
 msgid "Other material"
 msgstr ""
 
@@ -125,11 +129,7 @@ msgstr ""
 msgid "{{actor}} gave {{role}} access to {{collection}}"
 msgstr ""
 
-#: aleph/model/event.py:100
-msgid "{{actor}} removed access to {{collection}} from {{role}}"
-msgstr ""
-
-#: aleph/search/__init__.py:30
+#: aleph/search/__init__.py:39
 msgid "No schema is specified for the query."
 msgstr ""
 
@@ -176,44 +176,79 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/views/base_api.py:118
+#: aleph/views/base_api.py:110
 msgid "/api/1/ is deprecated, please use /api/2/."
 msgstr ""
 
-#: aleph/views/base_api.py:139
+#: aleph/views/base_api.py:133
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: aleph/views/base_api.py:148
+#: aleph/views/base_api.py:142
 msgid "This path does not exist."
 msgstr ""
 
-#: aleph/views/base_api.py:157
+#: aleph/views/base_api.py:151
 msgid "Internal server error."
 msgstr ""
 
-#: aleph/views/base_api.py:175
+#: aleph/views/base_api.py:169
 msgid "Access token is invalid."
 msgstr ""
 
-#: aleph/views/base_api.py:184
+#: aleph/views/base_api.py:178
 msgid "There was an error during search"
 msgstr ""
 
-#: aleph/views/roles_api.py:28
+#: aleph/views/forms.py:35
+msgid "Invalid category."
+msgstr ""
+
+#: aleph/views/forms.py:45
+msgid "Invalid URL."
+msgstr ""
+
+#: aleph/views/forms.py:56
+msgid "Invalid language code."
+msgstr ""
+
+#: aleph/views/forms.py:67
+msgid "Invalid user locale."
+msgstr ""
+
+#: aleph/views/forms.py:78
+#, python-format
+msgid "Invalid country code: %s"
+msgstr ""
+
+#: aleph/views/forms.py:87
+#, python-format
+msgid "Invalid date: %s"
+msgstr ""
+
+#: aleph/views/forms.py:95
+#, python-format
+msgid "Invalid schema name: %s"
+msgstr ""
+
+#: aleph/views/roles_api.py:30
 msgid "prefix filter is too short"
 msgstr ""
 
-#: aleph/views/roles_api.py:46
+#: aleph/views/roles_api.py:48
 msgid "To proceed, please check your email."
 msgstr ""
 
-#: aleph/views/roles_api.py:61
+#: aleph/views/roles_api.py:63
 msgid "Invalid code"
 msgstr ""
 
-#: aleph/views/roles_api.py:68
+#: aleph/views/roles_api.py:70
 msgid "Email is already registered"
+msgstr ""
+
+#: aleph/views/roles_api.py:107
+msgid "Incorrect password."
 msgstr ""
 
 #: aleph/views/sessions_api.py:58 aleph/views/sessions_api.py:61
@@ -224,7 +259,11 @@ msgstr ""
 msgid "Authentication has failed."
 msgstr ""
 
-#: aleph/views/util.py:56
+#: aleph/views/util.py:59
 msgid "Error during data validation"
+msgstr ""
+
+#: aleph/views/util.py:139
+msgid "[HTML removed: could not be sanitized]"
 msgstr ""
 

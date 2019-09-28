@@ -15,7 +15,7 @@ import './NotificationList.scss';
 const messages = defineMessages({
   no_notifications: {
     id: 'notifications.no_notifications',
-    defaultMessage: 'There are no notifications',
+    defaultMessage: 'You have no unseen notifications',
   },
 });
 
@@ -61,7 +61,7 @@ class NotificationList extends Component {
         { result.total === 0
           && (
           <ErrorSection
-            visual="notifications"
+            icon="notifications"
             title={intl.formatMessage(messages.no_notifications)}
           />
           )

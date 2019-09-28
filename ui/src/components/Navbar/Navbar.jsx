@@ -1,181 +1,110 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import queryString from 'query-string';
-import { Button, Icon } from '@blueprintjs/core';
+import { Alignment, Button, Navbar as Bp3Navbar } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import AuthButtons from 'src/components/AuthButtons/AuthButtons';
-import LanguageMenu from 'src/components/LanguageMenu/LanguageMenu';
 import { selectSession } from 'src/selectors';
-import SearchBox from 'src/components/Navbar/SearchBox';
+import ScopedSearchBox from 'src/components/Navbar/ScopedSearchBox';
+import c from 'classnames';
+
 import './Navbar.scss';
-
-const messages = defineMessages({
-  search_placeholder: {
-    id: 'navbar.search_placeholder',
-    defaultMessage: 'Search companies, people and documents.',
-  },
-  mobile_search_placeholder: {
-    id: 'navbar.mobile_search_placeholder',
-    defaultMessage: 'Search companies, people and ...',
-  },
-});
-
 
 export class Navbar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { searchValue: '', isMenuOpen: false, searchOpen: false };
-
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onOpenMenu = this.onOpenMenu.bind(this);
-    this.onToggleSearch = this.onToggleSearch.bind(this);
-  }
-
-
-  componentDidMount() {
-    const { query } = this.props;
-    if (query !== undefined) {
-      this.setState({ searchValue: query.getString('q') });
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (snapshot.query.shouldUpdate) {
-      this.updateSearchValue(snapshot.query.nextValue);
-    }
-  }
-
-  onChange({ target }) {
-    this.setState({ searchValue: target.value });
-  }
-
-  onSubmit = event => event.preventDefault();
-
-  onOpenMenu(event) {
-    event.preventDefault();
-    this.setState(({ isMenuOpen }) => ({ isMenuOpen: !isMenuOpen }));
-  }
-
-  onToggleSearch(event) {
-    event.preventDefault();
-    this.setState(({ searchOpen }) => ({ searchOpen: !searchOpen }));
-  }
-
-  getSnapshotBeforeUpdate(prevProps) {
-    if (this.props.query && (prevProps.query.state.q !== this.props.query.state.q)) {
-      if (this.props.query.state.q !== this.state.searchValue) {
-        return {
-          query: {
-            shouldUpdate: true,
-            nextValue: this.props.query.state.q || '',
-          },
-        };
-      }
-    }
-    return {
-      query: {},
+    this.state = {
+      mobileSearchOpen: false,
     };
+    this.onToggleMobileSearch = this.onToggleMobileSearch.bind(this);
+    this.onDefaultSearch = this.onDefaultSearch.bind(this);
   }
 
-  updateSearchValue = searchValue => this.setState({ searchValue });
+  onToggleMobileSearch(event) {
+    event.preventDefault();
+    this.setState(({ mobileSearchOpen }) => ({ mobileSearchOpen: !mobileSearchOpen }));
+  }
 
-  doSearch = (searchValue = this.state.searchValue) => {
-    const { query, updateQuery, history } = this.props;
-    if (updateQuery !== undefined) {
-      updateQuery(query.set('q', searchValue));
-    } else {
+  onDefaultSearch(queryText) {
+    const { history, query, location } = this.props;
+    if (!query || location.pathname !== '/search') {
       history.push({
         pathname: '/search',
-        search: queryString.stringify({
-          q: searchValue,
-        }),
+        search: queryString.stringify({ q: queryText }),
       });
+    } else {
+      const newQuery = query.set('q', queryText);
+      history.push({ search: newQuery.toLocation() });
     }
-  };
-
+  }
 
   render() {
     const {
-      metadata, session, intl, isHomepage,
+      metadata, session, searchScopes, role, query, isHomepage,
     } = this.props;
-    const { isMenuOpen, searchOpen } = this.state;
+    const { mobileSearchOpen } = this.state;
+
+    const defaultScope = {
+      listItem: metadata.app.title,
+      onSearch: this.onDefaultSearch,
+    };
+    const scopes = searchScopes ? [defaultScope, ...searchScopes] : [defaultScope];
 
     return (
-      <div id="Navbar" className="Navbar">
-        <nav className="bp3-navbar">
-          <div className="navbar-header-search">
-            <div className="bp3-navbar-group">
-              <div className="bp3-navbar-heading">
-                <Link to="/">
-                  <img src={metadata.app.logo} alt={metadata.app.title} />
-                </Link>
-              </div>
-              <div className="bp3-navbar-heading heading-title">
-                <Link to="/">{metadata.app.title}</Link>
-              </div>
+      <Bp3Navbar id="Navbar" className="Navbar bp3-dark">
+        <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
+          <Link to="/" className="Navbar__home-link">
+            <img src={metadata.app.logo} alt={metadata.app.title} />
+          </Link>
+        </Bp3Navbar.Group>
+        <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
+          {!isHomepage && (
+            <div className="Navbar__search-container">
+              <ScopedSearchBox
+                query={query}
+                searchScopes={scopes}
+                onToggleSearchTips={this.props.onToggleSearchTips}
+              />
             </div>
-
-            <div className={searchOpen ? 'full-length-input visible-sm-flex' : 'hide'}>
-              <button type="button" className="back-button visible-sm-block bp3-button bp3-large bp3-minimal bp3-icon-arrow-left" onClick={this.onToggleSearch} />
-              {!isHomepage && (
-              <form onSubmit={this.onSubmit} autoComplete="off" className="navbar-search-form">
-                <SearchBox
-                  doSearch={this.doSearch}
-                  placeholder={intl.formatMessage(
-                    searchOpen ? messages.mobile_search_placeholder : messages.search_placeholder,
-                  )}
-                  updateSearchValue={this.updateSearchValue}
-                  searchValue={this.state.searchValue}
-                />
-              </form>
+          )}
+        </Bp3Navbar.Group>
+        <Bp3Navbar.Group align={Alignment.RIGHT} className="Navbar__right-group" id="navbarSupportedContent">
+          <Link to="/datasets">
+            <Button icon="database" className="Navbar_collections-button bp3-minimal">
+              <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
+            </Button>
+          </Link>
+          {!isHomepage && (
+            <div className="Navbar__mobile-search-toggle">
+              {!mobileSearchOpen && (
+                <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+              )}
+              {mobileSearchOpen && (
+                <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
               )}
             </div>
-
-
-            <div className={`search-and-burger-icons ${isHomepage && 'burger-fixed'}`}>
-              {!isHomepage && (
-                <a className="search-icon icon visible-sm-block" href="/" onClick={this.onToggleSearch}>
-                  <Icon icon="search" />
-                </a>
-              )}
-              <a className={`menu-icon icon visible-sm-block ${isMenuOpen && 'transform'}`} href="/" onClick={this.onOpenMenu}>
-                <div className="bar1" />
-                <div className="bar2" />
-                <div className="bar3" />
-              </a>
-            </div>
-            <div className={`navbar-options bp3-navbar-group ${isMenuOpen && 'show-menu-dropdown'}`} id="navbarSupportedContent">
-              <div className="menu-items">
-                <Link to="/sources">
-                  <Button icon="database" className="bp3-minimal">
-                    <FormattedMessage id="nav.sources" defaultMessage="Sources" />
-                  </Button>
-                </Link>
-                {session.loggedIn
-                  && (
-                  <Link to="/cases">
-                    <Button icon="briefcase" className="bp3-minimal">
-                      <FormattedMessage id="nav.cases" defaultMessage="Cases" />
-                    </Button>
-                  </Link>
-                  )
-                }
-                <div className="bp3-navbar-divider" />
-                <AuthButtons session={session} auth={metadata.auth} />
-                <LanguageMenu />
-              </div>
-            </div>
+          )}
+          <Bp3Navbar.Divider className={c({ 'mobile-hidden': mobileSearchOpen })} />
+          <div className={c({ 'mobile-hidden': mobileSearchOpen })}>
+            <AuthButtons
+              session={session}
+              auth={metadata.auth}
+              role={role}
+              className={c({ hide: mobileSearchOpen })}
+            />
           </div>
-        </nav>
-      </div>
+        </Bp3Navbar.Group>
+      </Bp3Navbar>
     );
   }
 }
-const mapStateToProps = state => ({ session: selectSession(state) });
+const mapStateToProps = state => ({
+  session: selectSession(state),
+  role: state.session.role,
+});
 
 export default compose(
   withRouter,

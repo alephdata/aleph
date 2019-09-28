@@ -9,7 +9,9 @@ class InfoPane extends PureComponent {
     const { children, className } = this.props;
     return (
       <aside className={c('InfoPane', className)} style={this.props.style}>
-        {children}
+        <div className="InfoPane__inner-container">
+          {children}
+        </div>
       </aside>
     );
   }

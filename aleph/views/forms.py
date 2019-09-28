@@ -1,13 +1,16 @@
 from banal import ensure_dict
 from normality import stringify
+from flask_babel import gettext
+from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
 from marshmallow import Schema, pre_load
 from marshmallow.fields import List, Integer
-from marshmallow.fields import Url, Dict, String, Boolean
+from marshmallow.fields import Dict, String, Boolean
 from marshmallow.validate import Email, Length
 from marshmallow.exceptions import ValidationError
 
+from aleph import settings
 from aleph.model import Collection
 
 
@@ -29,7 +32,17 @@ class Category(String):
 
     def _validate(self, value):
         if value not in Collection.CATEGORIES.keys():
-            raise ValidationError('Invalid category.')
+            raise ValidationError(gettext('Invalid category.'))
+
+
+class Url(String):
+
+    def _deserialize(self, value, attr, data):
+        return stringify(value)
+
+    def _validate(self, value):
+        if value is not None and normalize_url(value) is None:
+            raise ValidationError(gettext('Invalid URL.'))
 
 
 class Language(String):
@@ -40,7 +53,18 @@ class Language(String):
 
     def _validate(self, value):
         if not registry.language.validate(value):
-            raise ValidationError('Invalid language code.')
+            raise ValidationError(gettext('Invalid language code.'))
+
+
+class Locale(String):
+    """A user locale."""
+
+    def _deserialize(self, value, attr, data):
+        return stringify(value)
+
+    def _validate(self, value):
+        if value not in settings.UI_LANGUAGES:
+            raise ValidationError(gettext('Invalid user locale.'))
 
 
 class Country(String):
@@ -51,7 +75,8 @@ class Country(String):
 
     def _validate(self, value):
         if not registry.country.validate(value):
-            raise ValidationError('Invalid country code: %s' % value)
+            msg = gettext('Invalid country code: %s')
+            raise ValidationError(msg % value)
 
 
 class PartialDate(String):
@@ -59,7 +84,7 @@ class PartialDate(String):
 
     def _validate(self, value):
         if not registry.date.validate(value):
-            raise ValidationError('Invalid date: %s' % value)
+            raise ValidationError(gettext('Invalid date: %s') % value)
 
 
 class SchemaName(String):
@@ -67,13 +92,16 @@ class SchemaName(String):
     def _validate(self, value):
         schema = model.get(value)
         if schema is None or schema.abstract:
-            raise ValidationError('Invalid schema name: %s' % value)
+            msg = gettext('Invalid schema name: %s')
+            raise ValidationError(msg % value)
 
 
 class RoleSchema(Schema):
-    name = String(validate=Length(min=3))
+    name = String(validate=Length(min=4))
     is_muted = Boolean(missing=None)
     password = String(validate=MIN_PASSWORD, missing=None, load_only=True)
+    current_password = String(missing=None, load_only=True)
+    locale = Locale(allow_none=True, missing=None)
 
 
 class RoleCodeCreateSchema(Schema):
@@ -81,7 +109,7 @@ class RoleCodeCreateSchema(Schema):
 
 
 class RoleCreateSchema(Schema):
-    name = String()
+    name = String(validate=Length(min=4))
     password = String(validate=MIN_PASSWORD, required=True)
     code = String(required=True)
 
@@ -113,11 +141,11 @@ class CollectionCreateSchema(Schema):
     label = String(validate=Length(min=2, max=500), required=True)
     foreign_id = String(missing=None)
     casefile = Boolean(missing=None)
-    summary = String(allow_none=True)
-    publisher = String(allow_none=True)
-    publisher_url = Url(allow_none=True)
-    data_url = Url(allow_none=True)
-    info_url = Url(allow_none=True)
+    summary = String(allow_none=True, missing=None)
+    publisher = String(allow_none=True, missing=None)
+    publisher_url = Url(allow_none=True, missing=None)
+    data_url = Url(allow_none=True, missing=None)
+    info_url = Url(allow_none=True, missing=None)
     countries = List(Country())
     languages = List(Language())
     category = Category(missing=None)

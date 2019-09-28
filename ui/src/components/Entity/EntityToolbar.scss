@@ -1,0 +1,13 @@
+@import "src/app/variables.scss";
+
+.EntityToolbar {
+  font-weight: normal;
+  // &__buttons {
+  //   float: right;
+  //   padding-right: $aleph-grid-size;
+  // }
+  .button-close {
+    margin: 0;
+    float: right;
+  }
+}

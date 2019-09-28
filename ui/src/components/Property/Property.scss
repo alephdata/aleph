@@ -1,0 +1,18 @@
+@import "src/app/variables.scss";
+
+span.no-value {
+    color: $aleph-greyed-text;
+}
+
+.ValueLink {
+  text-decoration: none !important;
+
+  .bp3-tag {
+    background-color: $aleph-breadcrumbs-background !important;
+    
+    .Count {
+      padding: 0 5px 0 8px;
+      border: none;
+    }
+  }
+}

@@ -1,7 +1,0 @@
-entities:
-  entity:
-    schema: Person
-    key: entity_id
-    properties: 
-      birthDate:
-        column: date
