@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { selectModel } from 'src/selectors';
 import { Button, Card, FormGroup, H5, Intent, MenuItem } from '@blueprintjs/core';
 import { Select, MultiSelect } from '@blueprintjs/select';
-import { Property } from 'src/components/common';
+import Property from 'src/components/Property';
 import Papa from 'papaparse';
 import { showErrorToast } from "../../app/toast";
 import { defineMessages, injectIntl } from "react-intl";
-import { ingestDocument, makeMapping } from 'src/actions';
+import { makeMapping } from 'src/actions';
 
 const messages = defineMessages({
   error: {
