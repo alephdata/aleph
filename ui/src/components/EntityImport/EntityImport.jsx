@@ -3,13 +3,14 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { selectModel } from 'src/selectors';
-import { Button, Card, FormGroup, H5, Intent, MenuItem } from '@blueprintjs/core';
+import { Button, Card, FormGroup, Callout, H5, Intent, MenuItem } from '@blueprintjs/core';
 import { Select, MultiSelect } from '@blueprintjs/select';
 import Property from 'src/components/Property';
 import Papa from 'papaparse';
 import { showErrorToast } from "../../app/toast";
 import { defineMessages, injectIntl } from "react-intl";
 import { makeMapping } from 'src/actions';
+import './EntityImport.scss';
 
 const messages = defineMessages({
   error: {
@@ -42,6 +43,7 @@ export class EntityImport extends Component {
     super(props);
     this.state = {
       importModel: null,
+      schema: 'Thing',
       csvRows: [],
       csvLoading: true,
       mapping: {
@@ -76,6 +78,10 @@ export class EntityImport extends Component {
         parser.abort();
       }
     })
+  }
+
+  onSchemaSelect(schema) {
+    this.setState({ schema: schema.name });
   }
 
   onModelSelect(model) {
@@ -116,7 +122,6 @@ export class EntityImport extends Component {
   }
 
   async onFormSubmit(event) {
-    console.log("on submit");
     event.preventDefault();
     const { intl, document, makeMapping } = this.props;
     const { mapping, importModel, isSubmitting } = this.state;
@@ -146,7 +151,7 @@ export class EntityImport extends Component {
 
   render() {
     const { model, document } = this.props;
-    const { importModel, csvRows, mapping, isSubmitting } = this.state;
+    const { schema, importModel, csvRows, mapping, isSubmitting } = this.state;
     let csvColumns;
     if (importModel) {
       const columnsJson = document.getFirst('columns');
@@ -166,17 +171,40 @@ export class EntityImport extends Component {
       });
     }
 
-    console.log(document);
-
     const items = Object.keys(model.schemata)
       .map(key => model.schemata[key])
-      .filter(item => item.isCreateable && !item.abstract && item.schemata.indexOf('Thing') >= 0)
+      .filter(item => item.isCreateable && !item.abstract && item.schemata.indexOf(schema) >= 0)
       .sort((a, b) => a.label.localeCompare(b.label));
+
+    const schemata = [{
+      name: 'Thing',
+      label: 'Thing'
+    }, {
+      name: 'Interval',
+      label: 'Interval'
+    }];
     return (
       <form onSubmit={(ev) => this.onFormSubmit(ev)}>
         <Card style={{ marginBottom: '1rem' }}>
+          <H5>Entity to create per row</H5>
           <FormGroup
-            helperText="Which entity would you like to create?"
+            helperText={<span>select <em>Interval</em> if you want to create some sort of relationship (payment, contract, ...)</span>}
+            label="Schema"
+            labelFor="schema"
+          >
+            <Select
+              id="schema"
+              items={schemata}
+              filterable={false}
+              itemRenderer={itemRenderer}
+              onItemSelect={item => this.onSchemaSelect(item)}
+            >
+              <Button text={schema ? schema : 'Please choose a schema'}
+                      rightIcon="double-caret-vertical"/>
+            </Select>
+          </FormGroup>
+          <FormGroup
+            helperText={<span>Derived types from the selected Follow The Money schema</span>}
             label="Entity-Type"
             labelFor="entity-type"
           >
@@ -187,7 +215,7 @@ export class EntityImport extends Component {
               itemRenderer={itemRenderer}
               onItemSelect={item => this.onModelSelect(item)}
             >
-              <Button text={importModel ? importModel.label : 'Please choose an entity-type'}
+              <Button text={importModel ? importModel.label : 'Please choose an Entity-Type'}
                       rightIcon="double-caret-vertical"/>
             </Select>
           </FormGroup>
@@ -195,6 +223,7 @@ export class EntityImport extends Component {
         {importModel && (
           <section>
             <Card style={{ marginBottom: '1rem' }}>
+              <H5>Properties for the entity</H5>
               <FormGroup
                 helperText="Assign the fields in your csv to properties of the entity"
                 label="Field-Mapping"
@@ -227,6 +256,7 @@ export class EntityImport extends Component {
                 </table>
               </FormGroup>
               <FormGroup
+                helperText={<span>All keys combined specify the id of the entity. The id has to be unique and can be refered when creating relationships.</span>}
                 label="Keys"
               >
                 <MultiSelect
@@ -242,6 +272,7 @@ export class EntityImport extends Component {
                   noResults={
                     <MenuItem disabled text="No Results"/>
                   }
+                  popoverProps={{ popoverClassName: 'EntityImportForm-popover' }}
                 />
               </FormGroup>
             </Card>
@@ -255,6 +286,11 @@ export class EntityImport extends Component {
             />
           </section>
         )}
+        <Callout intent="primary" title="Look up the schema" style={{ marginTop: '1rem' }}>
+          It is very helpful to have a look into the documentation of the <a
+          href="https://docs.alephdata.org/developers/followthemoney#schema" target="_blank">Follow the Money
+          schema</a> while filling out this form
+        </Callout>
       </form>
     );
   }
