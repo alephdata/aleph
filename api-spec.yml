@@ -1,356 +1,1293 @@
-swagger: "2.0"
+openapi: 3.0.0
 info:
-  title: Aleph API Documentation
-  description: |
-    Aleph is a powerful tool for people who follow the money. It helps investigators to securely access and search 
-    large amounts of data - no matter whether they are a government database or a leaked email archive.
-    
+  contact:
+    url: 'https://github.com/alephdata/aleph'
+  description: >
+    Aleph is a powerful tool for people who follow the money. It helps
+    investigators to securely access and search large amounts of data - no
+    matter whether they are a government database or a leaked email archive.
+
+
     # General Overview
 
-    The Aleph web interface is powered by a Flask HTTP API. Aleph supports an extensive API for searching documents 
-    and entities. It can also be used to retrieve raw metadata, source documents and other useful details. Aleph's API
-    tries to follow a pragmatic approach based on the following principles:
+
+    The Aleph web interface is powered by a Flask HTTP API. Aleph supports an
+    extensive API for searching documents and entities. It can also be used to
+    retrieve raw metadata, source documents and other useful details. Aleph's
+    API tries to follow a pragmatic approach based on the following principles:
+
 
     - All API calls are prefixed with an API version; this version is `/api/2/`.
-    - Responses and requests are both encoded as JSON. Requests should have the `Content-Type` and `Accept` headers set to `application/json`.
-    - The application uses Representational State Transfer (REST) principles where convenient, but also has some procedural API calls.
+
+    - Responses and requests are both encoded as JSON. Requests should have the
+    `Content-Type` and `Accept` headers set to `application/json`.
+
+    - The application uses Representational State Transfer (REST) principles
+    where convenient, but also has some procedural API calls.
+
     - The API allows API Authorization via an API key or JSON Web Tokens.
+
 
 
     # Authentication and Authorization
 
-    By default, any Aleph search will return only public documents in responses to API requests.
-    If you want to access documents which are not marked public, you will need to sign into the tool. This can be
-    done through the use on an **API key**.
 
-    The API key for any account can be found by clicking on the "Profile" menu item in the navigation menu.
+    By default, any Aleph search will return only public documents in responses
+    to API requests.
 
-    The API key must be sent on all queries using the `Authorization` HTTP header:
+    If you want to access documents which are not marked public, you will need
+    to sign into the tool. This can be done through the use on an **API key**.
+    The API key for any account can be found by clicking on the "Profile" menu
+    item in the navigation menu.
+
+
+    The API key must be sent on all queries using the `Authorization` HTTP
+    header:
+
 
     ```Authorization: ApiKey 363af1e2b03b41c6b3adc604956e2f66```
 
-    Alternatively, the API key can also be sent as a query parameter under the `api_key` key.
 
-    Similarly, a JWT can be sent in the Authorization header, after it has been returned by the login and/or OAuth processes.
-    Aleph does not use session cookies or any other type of stateful API.
+    Alternatively, the API key can also be sent as a query parameter under the
+    `api_key` key.
 
-  version: 3.2.11
-  contact:
-    url: https://github.com/alephdata/aleph
-  x-logo:
-    url: 'https://avatars3.githubusercontent.com/u/26249985?s=200&v=4'
-    altText: Aleph logo
+
+    Similarly, a JWT can be sent in the Authorization header, after it has been
+    returned by the login and/or OAuth processes. Aleph does not use session
+    cookies or any other type of stateful API.
   license:
     name: MIT
     url: 'https://github.com/alephdata/aleph/blob/master/LICENSE.txt'
-externalDocs:
-  description: Find out more about Aleph, a suite of data analysis tools for investigators.
-  url: 'https://docs.alephdata.org/'
-host: data.occrp.org
-basePath: /api/2
-schemes:
-  - https
-
-tags:
-  - name: "Collection"
-    x-displayName: "Collections API"
-    description: |
-      Create and manage collections.
-  - name: "Entity"
-    x-displayName: "Entities and Search API"
-    description: |
-      Search, create and manage entities.
-  - name: "Ingest"
-    x-displayName: "Ingest API"
-    description: |
-      Upload documents to a collection.
-  - name: "Xref"
-    x-displayName: "Cross-reference API"
-    description: |
-      Cross-reference entities of a collection with other collections.
-  - name: "Status"
-    x-displayName: "Systme Status API"
-    description: |
-      Get an overview of ongoing tasks
-  - name: "Archive"
-    x-displayName: "Archive API"
-    description: |
-      Download blobs from the archive.
-  - name: "Alert"
-    x-displayName: "Alerts API"
-    description: |
-      Create and manage alerts.
-  - name: "Group"
-    x-displayName: "Groups API"
-    description: |
-      List authorization groups
-  - name: "Notification"
-    x-displayName: "Notifications API"
-    description: |
-      Fetch and manage notifications
-  - name: "Permission"
-    x-displayName: "Permissions API"
-    description: |
-      Fetch and manage permissions on a collection
-  - name: "Query Log"
-    x-displayName: "Query Log API"
-    description: |
-      Fetch and delete query logs
-
+  title: Aleph API Documentation
+  version: 3.2.11
+  x-logo:
+    altText: Aleph logo
+    url: 'https://avatars3.githubusercontent.com/u/26249985?s=200&v=4'
+servers:
+  - url: 'https://data.occrp.org/api/2'
 paths:
   /alerts:
     get:
-      summary: List alerts
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertsResponse'
+          description: OK
+      tags:
+        - Alert
       description: Returns a list of alerts for the user.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/AlertsResponse'
-      tags: ["Alert"]
+      summary: List alerts
     post:
-      summary: Create an alert
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+          description: OK
+      tags:
+        - Alert
       description: Creates an alert for a given query string.
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          schema:
-            type: object
-            properties:
-              query:
-                type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Alert'
-      tags: ["Alert"]
-
-  /alerts/{alert_id}:
-    get:
-      summary: Fetch an alert
-      description: Return the alert with id `alert_id`
-      parameters:
-        - in: path
-          name: alert_id
-          required: true
-          type: integer
-          minimum: 1
-          description: The alert ID.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Alert'
-      tags: ["Alert"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                query:
+                  type: string
+                  example: putin
+              type: object
+      summary: Create an alert
+  '/alerts/{alert_id}':
     delete:
-      summary: Delete an alert
-      description: Delete the alert with id `alert_id`
       parameters:
-        - in: path
+        - description: The alert ID.
+          in: path
           name: alert_id
           required: true
-          type: integer
-          minimum: 1
-          description: The alert ID.
-      tags: ["Alert"]
-
+          schema:
+            minimum: 1
+            type: integer
+          example: 2
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Alert
+      description: Delete the alert with id `alert_id`
+      summary: Delete an alert
+    get:
+      parameters:
+        - description: The alert ID.
+          in: path
+          name: alert_id
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+          example: 2
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+          description: OK
+      tags:
+        - Alert
+      description: Return the alert with id `alert_id`
+      summary: Fetch an alert
   /archive:
     get:
-      summary: Download a blob from the archive
-      description: Downloads a binary blob from the blob storage archive.
       parameters:
-        - in: query
+        - description: authorization token for an archive blob
+          in: query
           name: claim
-          type: integer
-          description: authorization token for an archive blob
-      responses:
-        200:
-          description: OK
           schema:
-            type: file
-      tags: ["Archive"]
-
+            type: integer
+      responses:
+        '200':
+          content:
+            '*/*': {}
+          description: OK
+      tags:
+        - Archive
+      description: Downloads a binary blob from the blob storage archive.
+      summary: Download a blob from the archive
   /collections:
     get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionsResponse'
+          description: OK
+      tags:
+        - Collection
+      description: >-
+        Returns a list of collections matching a given query. Returns all the
+        collections accessible by a user if no query is given.
       summary: List collections
-      description: Returns a list of collections matching a given query. Returns all the collections
-               accessible by a user if no query is given.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/CollectionsResponse'
-      tags: ["Collection"]
     post:
-      summary: Create a collection
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+          description: OK
+      tags:
+        - Collection
       description: Create a collection with the given metadata
-      parameters:
-        - in: body
-          schema:
-            $ref: '#/definitions/CollectionCreateSchema'
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Collection'
-      tags: ["Collection"]
-
-  /collections/{collection_id}:
-    get:
-      summary: Get a collection
-      description: Return the collection with id `collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-          minimum: 1
-          description: The collection ID.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Collection'
-      tags: ["Collection"]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionCreateSchema'
+      summary: Create a collection
+  '/collections/{collection_id}':
     delete:
-      summary: Delete a collection
-      description: Delete the collection with id `collection_id`
       parameters:
-        - in: path
+        - description: The collection ID.
+          in: path
           name: collection_id
           required: true
-          type: integer
-          minimum: 1
-          description: The collection ID.
+          schema:
+            minimum: 1
+            type: integer
       responses:
-        204:
-          description: ''
-      tags: ["Collection"]
-
-  /collections/{collection_id}/process:
+        '204':
+          description: No Content
+      tags:
+        - Collection
+      description: Delete the collection with id `collection_id`
+      summary: Delete a collection
+    get:
+      parameters:
+        - description: The collection ID.
+          in: path
+          name: collection_id
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+          description: OK
+      tags:
+        - Collection
+      description: Return the collection with id `collection_id`
+      summary: Get a collection
+  '/collections/{collection_id}/bulk':
     post:
-      summary: Process a collection
-      description: Start processing the collection with id `collection_id`
+      parameters:
+        - description: The collection ID.
+          in: path
+          name: collection_id
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+        - description: >-
+            This will disable checksum security measures in order to allow bulk
+            loading of document data.
+          in: query
+          name: unsafe
+          schema:
+            type: boolean
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Collection
+      description: Bulk load entities into the collection with id `collection_id`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                properties:
+                  properties:
+                    type: object
+                  schema:
+                    type: string
+                type: object
+              type: array
+        description: Entities to be loaded.
+      summary: Load entities into a collection
+  '/collections/{collection_id}/ingest':
+    post:
       parameters:
         - in: path
           name: collection_id
           required: true
-          type: integer
-          minimum: 1
-          description: The collection ID.
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    description: id of the uploaded document
+                    type: integer
+                  status:
+                    type: string
+                type: object
+          description: OK
+      tags:
+        - Ingest
+        - Collection
+      description: Upload a document to a collection with id `collection_id`
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: string
+                  format: binary
+                  description: The document to upload
+                meta:
+                  $ref: '#/components/schemas/DocumentCreateSchema'
+      summary: Upload a document to a collection
+  '/collections/{collection_id}/mapping':
+    post:
+      parameters:
+        - description: The collection ID.
+          in: path
+          name: collection_id
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '202':
+          description: Accepted
+      tags:
+        - Collection
+      description: Load the mapping for the collection with id `collection_id`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        description: The mapping to apply.
+        required: true
+      summary: Load mappings for a collection
+  '/collections/{collection_id}/permissions':
+    get:
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionsResponse'
+          description: OK
+      tags:
+        - Permission
+        - Collection
+      description: >-
+        Get the list of all permissions for the collection with id
+        `collection_id`
+      summary: Get permissions for a collection
+    post:
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionsResponse'
+          description: OK
+      tags:
+        - Permission
+        - Collection
+      description: Update permissions for the collection with id `collection_id`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                properties:
+                  read:
+                    type: boolean
+                  role_id:
+                    type: integer
+                  write:
+                    type: boolean
+                type: object
+              type: array
+      summary: Update permissions for a collection
+  '/collections/{collection_id}/process':
+    post:
+      parameters:
+        - description: The collection ID.
+          in: path
+          name: collection_id
+          required: true
+          schema:
+            minimum: 1
+            type: integer
         - in: query
           name: ingest
-          type: boolean
+          schema:
+            type: boolean
         - in: query
           name: reset
-          type: boolean
-      responses:
-        202:
-          description: ''
-      tags: ["Collection"]
-
-  /collections/{collection_id}/mapping:
-    post:
-      summary: Load mappings for a collection
-      description: Load the mapping for the collection with id `collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-          minimum: 1
-          description: The collection ID.
-        - in: body
-          name: mapping
-          required: true
-          type: object
-          description: The mapping to apply.
-      responses:
-        202:
-          description: ''
-      tags: ["Collection"]
-
-  /collections/{collection_id}/bulk:
-    post:
-      summary: Load entities into a collection
-      description: Bulk load entities into the collection with id `collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-          minimum: 1
-          description: The collection ID.
-        - in: query
-          name: unsafe
-          type: boolean
-          description: This will disable checksum security measures in order to allow bulk
-                        loading of document data.
-        - in: body
-          type: array
-          items:
-            type: object
-            properties:
-              schema:
-                type: string
-              properties:
-                type: object
-          description: Entities to be loaded.
-      responses:
-        204:
-          description: ''
-      tags: ["Collection"]
-
-  /collections/{collection_id}/status:
-    get:
-      summary: Check processing status of a collection
-      description: Return the task queue status for the collection with id `collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-          minimum: 1
-          description: The collection ID.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
           schema:
-            $ref: '#/definitions/CollectionStatus'
-      tags: ["Collection"]
+            type: boolean
+      responses:
+        '202':
+          description: Accepted
+      tags:
+        - Collection
+      description: Start processing the collection with id `collection_id`
+      summary: Process a collection
+  '/collections/{collection_id}/status':
     delete:
-      summary: Cancel processing of a collection
+      parameters:
+        - description: The collection ID.
+          in: path
+          name: collection_id
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  finished:
+                    type: integer
+                  jobs:
+                    items:
+                      properties:
+                        finished:
+                          type: integer
+                        pending:
+                          type: integer
+                        running:
+                          type: integer
+                        stages:
+                          items:
+                            properties:
+                              finished:
+                                type: integer
+                              job_id:
+                                type: string
+                              pending:
+                                type: integer
+                              running:
+                                type: integer
+                              stage:
+                                type: string
+                            type: object
+                          type: array
+                      type: object
+                    type: array
+                  pending:
+                    type: integer
+                  running:
+                    type: integer
+                type: object
+          description: OK
+      tags:
+        - Collection
       description: Cancel all queued tasks for the collection with id `collection_id`
+      summary: Cancel processing of a collection
+    get:
+      parameters:
+        - description: The collection ID.
+          in: path
+          name: collection_id
+          required: true
+          schema:
+            minimum: 1
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionStatus'
+          description: OK
+      tags:
+        - Collection
+      description: Return the task queue status for the collection with id `collection_id`
+      summary: Check processing status of a collection
+  '/collections/{collection_id}/xref':
+    get:
       parameters:
         - in: path
           name: collection_id
           required: true
-          type: integer
-          minimum: 1
-          description: The collection ID.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
           schema:
-            type: object
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/XrefCollectionResponse'
+          description: OK
+      tags:
+        - Xref
+        - Collection
+      description: >-
+        Fetch cross-reference matches grouped by collection, for entities in the
+        collection with id `collection_id`
+      summary: Fetch cross-reference matches
+    post:
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    description: accepted
+                    type: string
+                type: object
+          description: Accepted
+      tags:
+        - Xref
+        - Collection
+      description: Generate cross-reference matches for entities in a collection.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                against_collection_ids:
+                  description: >-
+                    Optional argument to specify collections agaist which
+                    cross-referencing will be done
+                  items:
+                    type: integer
+                  type: array
+              type: object
+      summary: Generate cross-reference matches
+  '/collections/{collection_id}/xref/export':
+    get:
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet: {}
+          description: OK
+      tags:
+        - Xref
+        - Collection
+      description: Download results of cross-referencing as an excel file
+      summary: Download cross-reference results
+  '/collections/{collection_id}/xref/{other_collection_id}':
+    get:
+      parameters:
+        - in: path
+          name: collection_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: other_collection_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/XrefResponse'
+          description: OK
+      tags:
+        - Xref
+        - Collection
+      description: >-
+        Fetch cross-reference matches between 2 collections with ids
+        `collection_id` and `other_collection_id`
+      summary: Fetch cross-reference matches between collections
+  /entities:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: Resturns the created entity
+      tags:
+        - Entity
+      description: >-
+        Create an entity in a collection with a given schema and a set of given
+        properties.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                collection_id:
+                  type: string
+                foreign_id:
+                  type: string
+                properties:
+                  type: object
+                schema:
+                  type: string
+              required:
+                - schema
+                - collection_id
+              type: object
+      summary: Create an entity in a collection
+  '/entities/{entity_id}':
+    delete:
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Entity
+      description: Delete the entity with id `entity_id`
+      summary: Delete an entity
+    get:
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: OK
+      tags:
+        - Entity
+      description: Return the entity with id `entity_id`
+      summary: Get an entity
+    post:
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+          description: OK
+      tags:
+        - Entity
+      description: Update the entity with id `entity_id`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                properties:
+                  type: object
+                schema:
+                  type: string
+              type: object
+      summary: Update an entity
+  '/entities/{entity_id}/content':
+    get:
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  headers:
+                    type: object
+                  html:
+                    type: string
+                  text:
+                    type: string
+                type: object
+          description: OK
+        '404':
+          description: Not Found
+      tags:
+        - Entity
+      description: Return the text and/or html content of the entity with id `entity_id`
+      summary: Get the content of an entity
+  '/entities/{entity_id}/references':
+    get:
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  results:
+                    items:
+                      properties:
+                        count:
+                          type: integer
+                        property:
+                          type: object
+                        schema:
+                          type: string
+                      type: object
+                    type: array
+                  status:
+                    description: ok
+                    type: string
+                  total:
+                    type: integer
+                type: object
+          description: OK
+      tags:
+        - Entity
+      description: >-
+        Get the schema-wise aggregation of references to the entity with id
+        `entity_id`
+      summary: Get entity references
+  '/entities/{entity_id}/similar':
+    get:
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: 'filter:schema'
+          schema:
+            items:
+              type: string
+            type: array
+        - in: query
+          name: 'filter:schemata'
+          schema:
+            items:
+              type: string
+            type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitiesResponse'
+          description: Resturns a list of entities in result
+      tags:
+        - Entity
+      description: Get a list of similar entities to the entity with id `entity_id`
+      summary: Get similar entities
+  '/entities/{entity_id}/tags':
+    get:
+      parameters:
+        - in: path
+          name: entity_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  results:
+                    items:
+                      properties:
+                        count:
+                          type: integer
+                        field:
+                          type: string
+                        id:
+                          description: query string for this tag
+                          type: string
+                        value:
+                          type: string
+                      type: object
+                    type: array
+                  status:
+                    description: ok
+                    type: string
+                  total:
+                    type: integer
+                type: object
+          description: OK
+      tags:
+        - Entity
+      description: >-
+        Get tags for the entity with id `entity_id`. Tags include the query
+        string to make a search by that particular tag.
+      summary: Get entity tags
+  /groups:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupsResponse'
+          description: OK
+      tags:
+        - Group
+      description: >-
+        Get the list of groups the user belongs to. Groups are used for
+        authorization.
+      summary: List groups
+  /match:
+    post:
+      parameters:
+        - in: query
+          name: collection_ids
+          schema:
+            items:
+              type: string
+            type: array
+        - in: query
+          name: 'filter:schema'
+          schema:
+            items:
+              type: string
+            type: array
+        - in: query
+          name: 'filter:schemata'
+          schema:
+            items:
+              type: string
+            type: array
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EntitiesResponse'
+          description: Returns a list of entities in result
+      tags:
+        - Entity
+      description: >-
+        Query for similar entities matching a given entity inside a given list
+        of collections.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                properties:
+                  type: object
+                schema:
+                  type: string
+              required:
+                - schema
+              type: object
+      summary: Query for similar entities
+  /notifications:
+    delete:
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    description: ok
+                    type: string
+                type: object
+          description: Accepted
+      tags:
+        - Notification
+      description: Delete all notification for the user
+      summary: Clear notifications
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationsResponse'
+          description: OK
+      tags:
+        - Notification
+      description: Get all the notifications for the user
+      summary: Get notifications
+  /querylog:
+    delete:
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    type: string
+                type: object
+          description: No Content
+      tags:
+        - Query Log
+      description: Delete the query logs for a particular search term
+      summary: Clear query log
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryLogsResponse'
+          description: OK
+      tags:
+        - Query Log
+      description: Get query logs for the user
+      summary: Get query logs
+  /search:
+    get:
+      parameters:
+        - description: >-
+            A query string in ElasticSearch query syntax. Can include field
+            searches, such as `title:penguin`
+          in: query
+          name: q
+          schema:
+            type: string
+        - description: >-
+            Return facet values for the given metadata field, such as
+            `languages`, `countries`, `mime_type` or `extension`. This can be
+            specified multiple times for more than one facet to be added.
+          in: query
+          name: facet
+          schema:
+            type: string
+        - description: >
+            Filter the results by the given field. This is useful when used in
+            conjunction with facet to create a drill-down mechanism. Useful
+            fields are:
+
+            - `collection_id`, documents belonging to a particular collection.
+
+            - `title`, of the document.
+
+            - `file_name`, of the source file.
+
+            - `source_url`, URL of the source file.
+
+            - `extension`, file extension of the source file.
+
+            - `languages`, in the document.
+
+            - `countries`, associated with the document.
+
+            - `keywords`, from the document.
+
+            - `emails`, email addresses mentioned in the document.
+
+            - `domains`, websites mentioned in the document.
+
+            - `phone_numbers`, mentioned in the document.
+
+            - `dates`, in any of the following formats: yyyy-MM-dd, yyyy-MM,
+            yyyy-MM-d, yyyy-M, yyyy
+
+            - `mime_type`, of the source file.
+
+            - `author`, according to the source file's metadata.
+
+            - `summary`, of the document.
+
+            - `text`, entire text extracted from the document.
+
+            - `created_at`, when the document was added to aleph (yyyy-mm
+            -ddThh:ii:ss.uuuuuu).
+
+            - `updated_at`, when the document was modified in aleph (yyyy
+            -mm-ddThh:ii:ss.uuuuuu).
+          in: query
+          name: 'filter:{field_name}'
+          schema:
+            type: string
+        - description: 'The number of results to return, max. 10,000.'
+          in: query
+          name: limit
+          schema:
+            type: integer
+        - description: The number of results to skip at the beginning of the result set.
+          in: query
+          name: offset
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitiesResponse'
+          description: Resturns a list of entities in result
+      tags:
+        - Entity
+      description: >
+        Returns a list of entities matching the given search criteria.
+
+
+        By default, all queries will return a facet of the collections for which
+        matching documents/entities have been found.
+
+        A filter can be applied to show only results from a particular
+        collection: `?filter:collection_id={collection_id}`.
+
+
+        If you know you only want to search documents (unstructured, ingested
+        data) or entities (structured data which may
+
+        have been extracted from a dataset, or entered by a human) you can use
+        these arguments with the `/documents`
+
+        or `/entities` endpoints.
+      summary: Search entities
+  /search/export:
+    get:
+      parameters:
+        - description: >-
+            A query string in ElasticSearch query syntax. Can include field
+            searches, such as `title:penguin`
+          in: query
+          name: q
+          schema:
+            type: string
+        - description: >-
+            Return facet values for the given metadata field, such as
+            `languages`, `countries`, `mime_type` or `extension`. This can be
+            specified multiple times for more than one facet to be added.
+          in: query
+          name: facet
+          schema:
+            type: string
+        - description: >
+            Filter the results by the given field. This is useful when used in
+            conjunction with facet to create a drill-down mechanism. Useful
+            fields are:
+
+            - `collection_id`, documents belonging to a particular collection.
+
+            - `title`, of the document.
+
+            - `file_name`, of the source file.
+
+            - `source_url`, URL of the source file.
+
+            - `extension`, file extension of the source file.
+
+            - `languages`, in the document.
+
+            - `countries`, associated with the document.
+
+            - `keywords`, from the document.
+
+            - `emails`, email addresses mentioned in the document.
+
+            - `domains`, websites mentioned in the document.
+
+            - `phone_numbers`, mentioned in the document.
+
+            - `dates`, in any of the following formats: yyyy-MM-dd, yyyy-MM,
+            yyyy-MM-d, yyyy-M, yyyy
+
+            - `mime_type`, of the source file.
+
+            - `author`, according to the source file's metadata.
+
+            - `summary`, of the document.
+
+            - `text`, entire text extracted from the document.
+
+            - `created_at`, when the document was added to aleph (yyyy-mm
+            -ddThh:ii:ss.uuuuuu).
+
+            - `updated_at`, when the document was modified in aleph (yyyy
+            -mm-ddThh:ii:ss.uuuuuu).
+          in: query
+          name: 'filter:{field_name}'
+          schema:
+            type: string
+        - description: 'The number of results to return, max. 10,000.'
+          in: query
+          name: limit
+          schema:
+            type: integer
+        - description: The number of results to skip at the beginning of the result set.
+          in: query
+          name: offset
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/zip:
+              schema:
+                format: binary
+                type: string
+          description: OK
+      tags:
+        - Entity
+      description: >-
+        Downloads all the results of a search as a zip archive; upto a max of
+        10,000 results. Supports the same query parameters as
+        [`/search`](#/paths/~1search/get).
+      summary: Download the results of a search
+  /status:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatusResponse'
+          description: OK
+      tags:
+        - Status
+      description: List collections being processed currently and pending task counts
+      summary: Get an overview of collections being processed
+components:
+  schemas:
+    Alert:
+      properties:
+        created_at:
+          type: string
+        id:
+          type: integer
+        links:
+          properties:
+            self:
+              type: string
+          type: object
+        normalized:
+          type: string
+        query:
+          description: query string for the alert
+          type: string
+        updated_at:
+          type: string
+        writable:
+          type: boolean
+      type: object
+      example:
+        created_at: "2019-09-30T07:21:44.259556"
+        updated_at: "2019-09-30T07:21:44.259564"
+        id: 2
+        query: putin
+        normalized: putin
+        notified_at: 2019-09-30T07:21:44.258102
+        links:
+          self: http://localhost:8080/api/2/alerts/2
+        writeable: true
+    AlertsResponse:
+      allOf:
+        - $ref: '#/components/schemas/QueryResponse'
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/Alert'
+          type: array
+      type: object
+      example:
+        status: ok
+        results:
+          - created_at: '2019-09-30T07:21:44.259556'
+            updated_at: '2019-09-30T07:21:44.259564'
+            id: '2'
+            query: putin
+            normalized: putin
+            notified_at: '2019-09-30T07:21:44.258102'
+            links:
+              self: http://localhost:8080/api/2/alerts/2
+            writeable: true
+        total: 1
+        total_type: eq
+        page: 1
+        limit: 9999
+        offset: 0
+        pages: 1
+        next: 
+        previous: 
+    Collection:
+      properties:
+        casefile:
+          type: boolean
+        category:
+          type: string
+        collection_id:
+          type: integer
+        count:
+          type: integer
+        countries:
+          items:
+            type: string
+          type: array
+        created_at:
+          type: string
+        creator:
+          type: object
+        foreign_id:
+          type: string
+        id:
+          type: integer
+        kind:
+          type: string
+        label:
+          type: string
+        links:
+          properties:
+            reconcile:
+              type: string
+            self:
+              type: string
+            ui:
+              type: string
+            xref:
+              type: string
+            xref_export:
+              type: string
+          type: object
+        schemata:
+          type: object
+        secret:
+          type: boolean
+        team:
+          type: object
+        updated_at:
+          type: string
+        writable:
+          type: boolean
+      type: object
+    CollectionCreateSchema:
+      properties:
+        casefile:
+          type: boolean
+        category:
+          type: string
+        countries:
+          items:
+            type: string
+          type: array
+        data_url:
+          type: string
+        foreign_id:
+          type: string
+        info_url:
+          type: string
+        label:
+          type: string
+        languages:
+          items:
+            type: string
+          type: array
+        publisher:
+          type: string
+        publisher_url:
+          type: string
+        summary:
+          type: string
+      type: object
+    CollectionStatus:
+      properties:
+        finished:
+          type: integer
+        jobs:
+          items:
             properties:
               finished:
                 type: integer
@@ -358,1132 +1295,418 @@ paths:
                 type: integer
               running:
                 type: integer
-              jobs:
-                type: array
+              stages:
                 items:
-                  type: object
                   properties:
                     finished:
                       type: integer
+                    job_id:
+                      type: string
                     pending:
                       type: integer
                     running:
                       type: integer
-                    stages:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          finished:
-                            type: integer
-                          pending:
-                            type: integer
-                          running:
-                            type: integer
-                          job_id:
-                            type: string
-                          stage:
-                            type: string
-      tags: ["Collection"]
-
-  /search:
-    get:
-      summary: Search entities
-      description: |
-        Returns a list of entities matching the given search criteria.
-
-        By default, all queries will return a facet of the collections for which matching documents/entities have been found.
-        A filter can be applied to show only results from a particular collection: `?filter:collection_id={collection_id}`.
-
-        If you know you only want to search documents (unstructured, ingested data) or entities (structured data which may
-        have been extracted from a dataset, or entered by a human) you can use these arguments with the `/documents`
-        or `/entities` endpoints.
-      parameters:
-        - in: query
-          name: q
-          type: string
-          description: A query string in ElasticSearch query syntax. Can include field searches, such as `title:penguin`
-        - in: query
-          name: facet
-          type: string
-          description: Return facet values for the given metadata field, such as `languages`, `countries`, `mime_type` or
-                       `extension`. This can be specified multiple times for more than one facet to be added.
-        - in: query
-          name: filter:{field_name}
-          type: string
-          description: |
-            Filter the results by the given field. This is useful when used in conjunction with facet to create a drill-down mechanism. Useful fields are:
-            - `collection_id`, documents belonging to a particular collection.
-            - `title`, of the document.
-            - `file_name`, of the source file.
-            - `source_url`, URL of the source file.
-            - `extension`, file extension of the source file.
-            - `languages`, in the document.
-            - `countries`, associated with the document.
-            - `keywords`, from the document.
-            - `emails`, email addresses mentioned in the document.
-            - `domains`, websites mentioned in the document.
-            - `phone_numbers`, mentioned in the document.
-            - `dates`, in any of the following formats: yyyy-MM-dd, yyyy-MM, yyyy-MM-d, yyyy-M, yyyy
-            - `mime_type`, of the source file.
-            - `author`, according to the source file's metadata.
-            - `summary`, of the document.
-            - `text`, entire text extracted from the document.
-            - `created_at`, when the document was added to aleph (yyyy-mm -ddThh:ii:ss.uuuuuu).
-            - `updated_at`, when the document was modified in aleph (yyyy -mm-ddThh:ii:ss.uuuuuu).
-        - in: query
-          name: limit
-          type: integer
-          description: The number of results to return, max. 10,000.
-        - in: query
-          name: offset
-          type: integer
-          description: The number of results to skip at the beginning of the result set.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: Resturns a list of entities in result
-          schema:
-            $ref: '#/definitions/EntitiesResponse'
-      tags: ["Entity"]
-
-  /search/export:
-    get:
-      summary: Download the results of a search
-      description:
-        Downloads all the results of a search as a zip archive; upto a max of 10,000 results.
-        Supports the same query parameters as [`/search`](#/paths/~1search/get).
-      parameters:
-        - in: query
-          name: q
-          type: string
-          description: A query string in ElasticSearch query syntax. Can include field searches, such as `title:penguin`
-        - in: query
-          name: facet
-          type: string
-          description: Return facet values for the given metadata field, such as `languages`, `countries`, `mime_type` or
-                       `extension`. This can be specified multiple times for more than one facet to be added.
-        - in: query
-          name: filter:{field_name}
-          type: string
-          description: |
-            Filter the results by the given field. This is useful when used in conjunction with facet to create a drill-down mechanism. Useful fields are:
-            - `collection_id`, documents belonging to a particular collection.
-            - `title`, of the document.
-            - `file_name`, of the source file.
-            - `source_url`, URL of the source file.
-            - `extension`, file extension of the source file.
-            - `languages`, in the document.
-            - `countries`, associated with the document.
-            - `keywords`, from the document.
-            - `emails`, email addresses mentioned in the document.
-            - `domains`, websites mentioned in the document.
-            - `phone_numbers`, mentioned in the document.
-            - `dates`, in any of the following formats: yyyy-MM-dd, yyyy-MM, yyyy-MM-d, yyyy-M, yyyy
-            - `mime_type`, of the source file.
-            - `author`, according to the source file's metadata.
-            - `summary`, of the document.
-            - `text`, entire text extracted from the document.
-            - `created_at`, when the document was added to aleph (yyyy-mm -ddThh:ii:ss.uuuuuu).
-            - `updated_at`, when the document was modified in aleph (yyyy -mm-ddThh:ii:ss.uuuuuu).
-        - in: query
-          name: limit
-          type: integer
-          description: The number of results to return, max. 10,000.
-        - in: query
-          name: offset
-          type: integer
-          description: The number of results to skip at the beginning of the result set.
-      produces:
-        - application/zip
-      responses:
-        200:
-          description: OK
-          schema:
-            type: string
-            format: binary
-      tags: ["Entity"]
-
-  /match:
-    post:
-      summary: Query for similar entities
-      description:
-        Query for similar entities matching a given entity inside a given list of collections.
-      parameters:
-        - in: body
-          schema:
-            type: object
-            properties:
-              schema:
-                type: string
-                required: true
-              properties:
-                type: object
-        - in: query
-          name: collection_ids
-          type: array
-          items:
-            type: string
-        - in: query
-          name: filter:schema
-          type: array
-          items:
-            type: string
-        - in: query
-          name: filter:schemata
-          type: array
-          items:
-            type: string
-      responses:
-        200:
-          description: Returns a list of entities in result
-          schema:
-            $ref: '#/definitions/EntitiesResponse'
-      tags: ["Entity"]
-
-  /entities:
-    post:
-      summary: Create an entity in a collection
-      description: Create an entity in a collection with a given schema and a set of given properties.
-      parameters:
-        - in: body
-          schema:
-            type: object
-            properties:
-              schema:
-                type: string
-                required: true
-              properties:
-                type: object
-              collection_id:
-                type: string
-                required: true
-              foreign_id:
-                type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: Resturns the created entity
-          schema:
-            $ref: '#/definitions/Entity'
-      tags: ["Entity"]
-
-  /entities/{entity_id}:
-    get:
-      summary: Get an entity
-      description: Return the entity with id `entity_id`
-      parameters:
-        - in: path
-          name: entity_id
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Entity'
-      tags: ["Entity"]
-    post:
-      summary: Update an entity
-      description: Update the entity with id `entity_id`
-      parameters:
-        - in: path
-          name: entity_id
-          required: true
-          type: string
-        - in: body
-          schema:
-            type: object
-            properties:
-              schema:
-                type: string
-              properties:
-                type: object
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Entity'
-      tags: ["Entity"]
-    delete:
-      summary: Delete an entity
-      description: Delete the entity with id `entity_id`
-      parameters:
-        - in: path
-          name: entity_id
-          required: true
-          type: string
-      responses:
-        204:
-          description: ''
-      tags: ["Entity"]
-
-  /entities/{entity_id}/content:
-    get:
-      summary: Get the content of an entity
-      description: Return the text and/or html content of the entity with id `entity_id`
-      parameters:
-        - in: path
-          name: entity_id
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          schema:
-            type: object
-            properties:
-              headers:
-                type: object
-              text:
-                type: string
-              html:
-                type: string
-        404:
-          description: ''
-      tags: ["Entity"]
-
-  /entities/{entity_id}/similar:
-    get:
-      summary: Get similar entities
-      description: Get a list of similar entities to the entity with id `entity_id`
-      parameters:
-        - in: path
-          name: entity_id
-          required: true
-          type: string
-        - in: query
-          name: filter:schema
-          type: array
-          items:
-            type: string
-        - in: query
-          name: filter:schemata
-          type: array
-          items:
-            type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          description: Resturns a list of entities in result
-          schema:
-            $ref: '#/definitions/EntitiesResponse'
-      tags: ["Entity"]
-
-  /entities/{entity_id}/references:
-    get:
-      summary: Get entity references
-      description: Get the schema-wise aggregation of references to the entity with id `entity_id`
-      parameters:
-        - in: path
-          name: entity_id
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                description: ok
-              total:
-                type: integer
-              results:
-                type: array
-                items:
+                    stage:
+                      type: string
                   type: object
-                  properties:
-                    count:
-                      type: integer
-                    property:
-                      type: object
-                    schema:
-                      type: string
-      tags: ["Entity"]
-
-  /entities/{entity_id}/tags:
-    get:
-      summary: Get entity tags
-      description:
-        Get tags for the entity with id `entity_id`. Tags include the query string
-        to make a search by that particular tag.
-      parameters:
-        - in: path
-          name: entity_id
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                description: ok
-              total:
-                type: integer
-              results:
                 type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: query string for this tag
-                    value:
-                      type: string
-                    field:
-                      type: string
-                    count:
-                      type: integer
-      tags: ["Entity"]
-
-  /collections/{collection_id}/ingest:
-    post:
-      summary: Upload a document to a collection
-      description: Upload a document to a collection with id `collection_id`
-      consumes:
-       - multipart/form-data
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-        - in: formData
-          type: file
-          description: The file to upload.
-        - in: formData
-          name: meta
-          schema:
-            $ref: '#/definitions/DocumentCreateSchema'
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
             type: object
+          type: array
+        pending:
+          type: integer
+        running:
+          type: integer
+      type: object
+    CollectionsResponse:
+      allOf:
+        - $ref: '#/components/schemas/QueryResponse'
+      properties:
+        facets:
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/Collection'
+          type: array
+      type: object
+    DocumentCreateSchema:
+      properties:
+        author:
+          type: string
+        authored_at:
+          type: string
+        countries:
+          items:
+            type: string
+          type: array
+        crawler:
+          type: string
+        date:
+          type: string
+        file_name:
+          type: string
+        foreign_id:
+          type: string
+        generator:
+          type: string
+        keywords:
+          items:
+            type: string
+          type: array
+        languages:
+          items:
+            type: string
+          type: array
+        mime_type:
+          type: string
+        modified_at:
+          type: string
+        parent_id:
+          type: string
+        published_at:
+          type: string
+        retrieved_at:
+          type: string
+        source_url:
+          type: string
+        summary:
+          type: string
+        title:
+          type: string
+      type: object
+    EntitiesResponse:
+      allOf:
+        - $ref: '#/components/schemas/QueryResponse'
+      properties:
+        links:
+          properties:
+            export:
+              type: string
+          type: object
+        results:
+          items:
+            $ref: '#/components/schemas/Entity'
+          type: array
+      type: object
+    Entity:
+      properties:
+        collection:
+          $ref: '#/components/schemas/Collection'
+        countries:
+          items:
+            type: string
+          type: array
+        dates:
+          items:
+            type: string
+          type: array
+        highlight:
+          items:
+            type: string
+          type: array
+        id:
+          type: string
+        job_id:
+          type: string
+        links:
+          properties:
+            tags:
+              type: string
+            csv:
+              type: string
+            file:
+              type: string
+            pdf:
+              type: string
+            reference:
+              type: string
+            self:
+              type: string
+            ui:
+              type: string
+          type: object
+        name:
+          type: string
+        properties:
+          type: object
+        schema:
+          type: string
+        schemata:
+          items:
+            type: string
+          type: array
+        score:
+          type: number
+        updated_at:
+          type: string
+        writable:
+          type: boolean
+      type: object
+    Group:
+      properties:
+        created_at:
+          type: string
+        id:
+          type: integer
+        is_admin:
+          type: boolean
+        label:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        updated_at:
+          type: string
+      type: object
+    GroupsResponse:
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/Group'
+          type: array
+        total:
+          type: integer
+      type: object
+    NotificationsResponse:
+      properties:
+        results:
+          items:
             properties:
-              status:
+              actor_id:
+                type: integer
+              created_at:
+                type: string
+              event:
+                properties:
+                  name:
+                    type: string
+                  params:
+                    type: object
+                  templates:
+                    type: string
+                type: object
+              id:
+                type: integer
+              params:
+                type: object
+              updated_at:
+                type: string
+            type: object
+          type: array
+        total:
+          type: integer
+      type: object
+    PermissionsResponse:
+      properties:
+        results:
+          items:
+            properties:
+              created_at:
                 type: string
               id:
                 type: integer
-                description: id of the uploaded document
-      tags: ["Ingest", "Collection"]
-
-  /collections/{collection_id}/xref:
-    get:
-      summary: Fetch cross-reference matches
-      description: Fetch cross-reference matches grouped by collection, for entities in the collection with id `collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/XrefCollectionResponse'
-      tags: ["Xref", "Collection"]
-    post:
-      summary: Generate cross-reference matches
-      description: Generate cross-reference matches for entities in a collection.
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-        - in: body
-          schema:
-            type: object
-            properties:
-              against_collection_ids:
-                type: array
-                description: Optional argument to specify collections agaist which cross-referencing will be done
-                items:
-                  type: integer
-      produces:
-        - application/json
-      responses:
-        202:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                description: accepted
-      tags: ["Xref", "Collection"]
-
-  /collections/{collection_id}/xref/{other_collection_id}:
-    get:
-      summary: Fetch cross-reference matches between collections
-      description: Fetch cross-reference matches between 2 collections with ids `collection_id` and `other_collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-        - in: path
-          name: other_collection_id
-          required: true
-          type: integer
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/XrefResponse'
-      tags: ["Xref", "Collection"]
-
-  /collections/{collection_id}/xref/export:
-    get:
-      summary: Download cross-reference results
-      description: Download results of cross-referencing as an excel file
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-      produces:
-        - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-      responses:
-        200:
-          schema:
-            type: file
-      tags: ["Xref", "Collection"]
-
-  /status:
-    get:
-      summary: Get an overview of collections being processed
-      description: List collections being processed currently and pending task counts
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/SystemStatusResponse'
-      tags: ["Status"]
-
-  /groups:
-    get:
-      summary: List groups
-      description: Get the list of groups the user belongs to. Groups are used for authorization.
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/GroupsResponse'
-      tags: ["Group"]
-
-  /notifications:
-    get:
-      summary: Get notifications
-      description: Get all the notifications for the user
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/NotificationsResponse'
-      tags: ["Notification"]
-    delete:
-      summary: Clear notifications
-      description: Delete all notification for the user
-      produces:
-        - application/json
-      responses:
-        202:
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                description: ok
-      tags: ["Notification"]
-
-  /collections/{collection_id}/permissions:
-    get:
-      summary: Get permissions for a collection
-      description: Get the list of all permissions for the collection with id `collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/PermissionsResponse'
-      tags: ["Permission", "Collection"]
-    post:
-      summary: Update permissions for a collection
-      description: Update permissions for the collection with id `collection_id`
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          type: integer
-        - in: body
-          type: array
-          items:
-            type: object
-            properties:
-              write:
-                type: boolean
               read:
                 type: boolean
-              role_id:
-                type: integer
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/PermissionsResponse'
-      tags: ["Permission", "Collection"]
-
-  /querylog:
-    get:
-      summary: Get query logs
-      description: Get query logs for the user
-      produces:
-        - application/json
-      responses:
-        200:
-          schema:
-            $ref: '#/definitions/QueryLogsResponse'
-      tags: ["Query Log"]
-    delete:
-      summary: Clear query log
-      description: Delete the query logs for a particular search term
-      parameters:
-        - in: query
-          name: query
-          type: string
-      produces:
-        - application/json
-      responses:
-        204:
-          schema:
-            type: object
-            properties:
-              status:
+              role:
+                $ref: '#/components/schemas/Role'
+              updated_at:
                 type: string
-      tags: ["Query Log"]
-
-definitions:
-  QueryResponse:
-    type: object
-    properties:
-      status:
-        type: string
-        description: ok
-      total:
-        type: integer
-      total_type:
-        type: string
-      page:
-        type: integer
-        description: Current page number
-      limit:
-        type: integer
-      offset:
-        type: integer
-      pages:
-        type: integer
-        description: Total number of pages
-      next:
-        type: ["string", "null"]
-        description: URL of the next set of results or null
-      previous:
-        type: ["string", "null"]
-        description: URL of the previous set of results or null
-
-  Alert:
-    type: object
-    properties:
-      created_at:
-        type: string
-      updated_at:
-        type: string
-      id:
-        type: integer
-      query:
-        type: string
-        description: query string for the alert
-      normalized:
-        type: string
-      writable:
-        type: boolean
-      links:
-        type: object
-        properties:
-          self:
-            type: string
-
-  AlertsResponse:
-    allOf:
-      - $ref: '#/definitions/QueryResponse'
-    properties:
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/Alert'
-
-  CollectionCreateSchema:
-    type: object
-    properties:
-      label:
-        type: string
-      foreign_id:
-        type: string
-      casefile:
-        type: boolean
-      summary:
-        type: string
-      publisher:
-        type: string
-      publisher_url:
-        type: string
-      data_url:
-        type: string
-      info_url:
-        type: string
-      countries:
-        type: array
-        items:
-          type: string
-      languages:
-        type: array
-        items:
-          type: string
-      category:
-        type: string
-
-  Collection:
-    type: object
-    properties:
-      casefile:
-        type: boolean
-      schemata:
-        type: object
-      kind:
-        type: string
-      count:
-        type: integer
-      created_at:
-        type: string
-      label:
-        type: string
-      secret:
-        type: boolean
-      countries:
-        type: array
-        items:
-          type: string
-      collection_id:
-        type: integer
-      foreign_id:
-        type: string
-      updated_at:
-        type: string
-      category:
-        type: string
-      id:
-        type: integer
-      links:
-        type: object
-        properties:
-          self:
-            type: string
-          xref:
-            type: string
-          xref_export:
-            type: string
-          reconcile:
-            type: string
-          ui:
-            type: string
-      writable:
-        type: boolean
-      creator:
-        type: object
-      team:
-        type: object
-
-  CollectionsResponse:
-    allOf:
-      - $ref: '#/definitions/QueryResponse'
-    properties:
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/Collection'
-      facets:
-        type: object
-  
-  Entity:
-    type: object
-    properties:
-      schema:
-        type: string
-      schemata:
-        type: array
-        items:
-          type: string
-      updated_at:
-        type: string
-      job_id:
-        type: string
-      name:
-        type: string
-      dates:
-        type: array
-        items:
-          type: string
-      countries:
-        type: array
-        items:
-          type: string
+              write:
+                type: boolean
+            type: object
+          type: array
+        total:
+          type: integer
+      type: object
+    QueryLog:
       properties:
-        type: object
-      id:
-        type: string
-      score:
-        type: float
-      highlight:
-        type: array
-        items:
+        count:
+          type: integer
+        first:
           type: string
-      collection:
-        $ref: '#/definitions/Collection'
-      links:
-        type: object
-        properties:
-          self:
-            type: string
-          reference:
-            type: string
-          tags:
-            type: string
-          ui:
-            type: string
-          pdf:
-            type: string
-          file:
-            type: string
-          csv:
-            type: string
-      writable:
-        type: boolean
-
-  EntitiesResponse:
-    allOf:
-      - $ref: '#/definitions/QueryResponse'
-    properties:
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/Entity'
-      links:
-        type: object
-        properties:
-          export:
-            type: string
-
-  DocumentCreateSchema:
-    type: object
-    properties:
-      foreign_id:
-        type: string
-      title:
-        type: string
-      summary:
-        type: string
-      countries:
-        type: array
-        items:
+        last:
           type: string
-      languages:
-        type: array
-        items:
+        query:
           type: string
-      keywords:
-        type: array
-        items:
+      type: object
+    QueryLogsResponse:
+      allOf:
+        - $ref: '#/components/schemas/QueryResponse'
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/QueryLog'
+          type: array
+      type: object
+    QueryResponse:
+      properties:
+        limit:
+          type: integer
+        next:
+          description: URL of the next set of results or null
+          nullable: true
           type: string
-      date:
-        type: string
-      authored_at:
-        type: string
-      modified_at:
-        type: string
-      published_at:
-        type: string
-      retrieved_at:
-        type: string
-      file_name:
-        type: string
-      author:
-        type: string
-      generator:
-        type: string
-      crawler:
-        type: string
-      mime_type:
-        type: string
-      source_url:
-        type: string
-      parent_id :
-        type: string
-
-  XrefCollectionResponse:
-    allOf:
-      - $ref: '#/definitions/QueryResponse'
-    properties:
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/XrefCollection'
-
-  XrefCollection:
-    type: object
-    properties:
-      matches:
-        type: integer
-      parent:
-        type: integer
-      collection:
-        $ref: '#/definitions/Collection'
-
-  XrefResponse:
-    allOf:
-      - $ref: '#/definitions/QueryResponse'
-    properties:
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/XrefMatch'
-
-  XrefMatch:
-    type: object
-    properties:
-      created_at:
-        type: string
-      updated_at:
-        type: string
-      id:
-        type: integer
-      score:
-        type: float
-      collection_id:
-        type: integer
-      match_collection_id:
-        type: integer
-      entity:
-        $ref: '#/definitions/Entity'
-      match:
-        $ref: '#/definitions/Entity'
-
-  SystemStatusResponse:
-    type: object
-    properties:
-      total:
-        type: integer
-      results:
-        type: array
-        items:
-          allOf:
-            - $ref: '#/definitions/CollectionStatus'
-          properties:
-            collection:
-              $ref: '#/definitions/Collection'
-            id:
-              type: string
-
-  CollectionStatus:
-    type: object
-    properties:
-      finished:
-        type: integer
-      pending:
-        type: integer
-      running:
-        type: integer
-      jobs:
-        type: array
-        items:
+        offset:
+          type: integer
+        page:
+          description: Current page number
+          type: integer
+        pages:
+          description: Total number of pages
+          type: integer
+        previous:
+          description: URL of the previous set of results or null
+          nullable: true
+          type: string
+        status:
+          description: ok
+          type: string
+        total:
+          type: integer
+        total_type:
+          type: string
+      type: object
+    Role:
+      properties:
+        api_key:
+          type: string
+        created_at:
+          type: string
+        email:
+          type: string
+        has_password:
+          type: boolean
+        id:
+          type: integer
+        is_admin:
+          type: boolean
+        is_muted:
+          type: boolean
+        label:
+          type: string
+        links:
           type: object
-          properties:
-            finished:
-              type: integer
-            pending:
-              type: integer
-            running:
-              type: integer
-            stages:
-              type: array
-              items:
-                type: object
-                properties:
-                  finished:
-                    type: integer
-                  pending:
-                    type: integer
-                  running:
-                    type: integer
-                  job_id:
-                    type: string
-                  stage:
-                    type: string
+        name:
+          type: string
+        type:
+          enum:
+            - user
+            - group
+            - system
+          type: string
+        updated_at:
+          type: string
+        writeable:
+          type: boolean
+      type: object
+    SystemStatusResponse:
+      properties:
+        results:
+          items:
+            allOf:
+              - $ref: '#/components/schemas/CollectionStatus'
+            properties:
+              collection:
+                $ref: '#/components/schemas/Collection'
+              id:
+                type: string
+            type: object
+          type: array
+        total:
+          type: integer
+      type: object
+    XrefCollection:
+      properties:
+        collection:
+          $ref: '#/components/schemas/Collection'
+        matches:
+          type: integer
+        parent:
+          type: integer
+      type: object
+    XrefCollectionResponse:
+      allOf:
+        - $ref: '#/components/schemas/QueryResponse'
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/XrefCollection'
+          type: array
+      type: object
+    XrefMatch:
+      properties:
+        collection_id:
+          type: integer
+        created_at:
+          type: string
+        entity:
+          $ref: '#/components/schemas/Entity'
+        id:
+          type: integer
+        match:
+          $ref: '#/components/schemas/Entity'
+        match_collection_id:
+          type: integer
+        score:
+          type: number
+        updated_at:
+          type: string
+      type: object
+    XrefResponse:
+      allOf:
+        - $ref: '#/components/schemas/QueryResponse'
+      properties:
+        results:
+          items:
+            $ref: '#/components/schemas/XrefMatch'
+          type: array
+      type: object
+tags:
+  - description: |
+      Create and manage alerts.
+    name: Alert
+    x-displayName: Alerts API
+  - description: |
+      Download blobs from the archive.
+    name: Archive
+    x-displayName: Archive API
+  - description: |
+      Create and manage collections.
+    name: Collection
+    x-displayName: Collections API
+  - description: |
+      Cross-reference entities of a collection with other collections.
+    name: Xref
+    x-displayName: Cross-reference API
+  - description: |
+      Search, create and manage entities.
+    name: Entity
+    x-displayName: Entities and Search API
+  - description: |
+      List authorization groups
+    name: Group
+    x-displayName: Groups API
+  - description: |
+      Upload documents to a collection.
+    name: Ingest
+    x-displayName: Ingest API
+  - description: |
+      Fetch and manage notifications
+    name: Notification
+    x-displayName: Notifications API
+  - description: |
+      Fetch and manage permissions on a collection
+    name: Permission
+    x-displayName: Permissions API
+  - description: |
+      Fetch and delete query logs
+    name: Query Log
+    x-displayName: Query Log API
+  - description: |
+      Get an overview of ongoing tasks
+    name: Status
+    x-displayName: System Status API
+externalDocs:
+  description: 'Find out more about Aleph, a suite of data analysis tools for investigators.'
+  url: 'https://docs.alephdata.org/'
 
-  GroupsResponse:
-    type: object
-    properties:
-      total:
-        type: integer
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/Group'
-
-  Group:
-    type: object
-    properties:
-      created_at:
-        type: string
-      updated_at:
-        type: string
-      id:
-        type: integer
-      type:
-        type: string
-      name:
-        type: string
-      label:
-        type: string
-      is_admin:
-        type: boolean
-
-  NotificationsResponse:
-    type: object
-    properties:
-      total:
-        type: integer
-      results:
-        type: array
-        items:
-          type: object
-          properties:
-            created_at:
-              type: string
-            updated_at:
-              type: string
-            id:
-              type: integer
-            actor_id:
-              type: integer
-            event:
-              type: object
-              properties:
-                name:
-                  type: string
-                templates:
-                  type: string
-                params:
-                  type: object
-            params:
-              type: object
-
-  PermissionsResponse:
-    type: object
-    properties:
-      total:
-        type: integer
-      results:
-        type: array
-        items:
-          type: object
-          properties:
-            created_at:
-              type: string
-            updated_at:
-              type: string
-            id:
-              type: integer
-            read:
-              type: boolean
-            write:
-              type: boolean
-            role:
-              $ref: '#/definitions/Role'
-
-  Role:
-    type: object
-    properties:
-      created_at:
-        type: string
-      updated_at:
-        type: string
-      id:
-        type: integer
-      type:
-        type: string
-        enum: ["user", "group", "system"]
-      name:
-        type: string
-      label:
-        type: string
-      email:
-        type: string
-      api_key:
-        type: string
-      is_admin:
-        type: boolean
-      is_muted:
-        type: boolean
-      has_password:
-        type: boolean
-      writeable:
-        type: boolean
-      links:
-        type: object
-
-  QueryLogsResponse:
-    allOf:
-      - $ref: '#/definitions/QueryResponse'
-    properties:
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/QueryLog'
-
-  QueryLog:
-    type: object
-    properties:
-      query:
-        type: string
-      first:
-        type: string
-      last:
-        type: string
-      count:
-        type: integer
