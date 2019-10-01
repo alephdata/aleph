@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-09-25T12:49:01.992Z\n"
+"POT-Creation-Date: 2019-09-25T14:53:45.568Z\n"
 "Last-Translator: John Ospina <jmospina@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/aleph/teams/76591/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1326,7 +1326,10 @@ msgstr ""
 #. [document.manager.analyze]
 #. defaultMessage is:
 #. Re-process
-#: i18n/messages.json
+#. [collection.edit.info.analyze]
+#. defaultMessage is:
+#. Re-process
+#: i18n/messages.json i18n/messages.json
 msgid "Re-process"
 msgstr ""
 

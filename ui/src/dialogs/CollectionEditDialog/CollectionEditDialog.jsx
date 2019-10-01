@@ -4,6 +4,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import CollectionDeleteDialog from 'src/dialogs/CollectionDeleteDialog/CollectionDeleteDialog';
+import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import { Role, Country, Language } from 'src/components/common';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import { updateCollection } from 'src/actions';
@@ -43,6 +44,10 @@ const messages = defineMessages({
     id: 'collection.edit.info.delete',
     defaultMessage: 'Delete',
   },
+  analyze_button: {
+    id: 'collection.edit.info.analyze',
+    defaultMessage: 'Re-process',
+  },
   cancel_button: {
     id: 'collection.edit.info.cancel',
     defaultMessage: 'Cancel',
@@ -65,6 +70,7 @@ export class CollectionEditDialog extends Component {
     this.state = {
       collection: props.collection,
       deleteIsOpen: false,
+      analyzeIsOpen: false,
       blocking: false,
     };
 
@@ -74,6 +80,7 @@ export class CollectionEditDialog extends Component {
     this.onSelectCreator = this.onSelectCreator.bind(this);
     this.onFieldChange = this.onFieldChange.bind(this);
     this.toggleDeleteCollection = this.toggleDeleteCollection.bind(this);
+    this.toggleAnalyzeCollection = this.toggleAnalyzeCollection.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -123,6 +130,10 @@ export class CollectionEditDialog extends Component {
 
   toggleDeleteCollection() {
     this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
+  }
+
+  toggleAnalyzeCollection() {
+    this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
   }
 
   render() {
@@ -310,9 +321,10 @@ export class CollectionEditDialog extends Component {
               text={intl.formatMessage(messages.delete_button)}
             />
             <Button
-              onClick={this.props.toggleDialog}
+              icon="automatic-updates"
+              onClick={this.toggleAnalyzeCollection}
               disabled={blocking}
-              text={intl.formatMessage(messages.cancel_button)}
+              text={intl.formatMessage(messages.analyze_button)}
             />
             <Button
               intent={Intent.PRIMARY}
@@ -326,6 +338,11 @@ export class CollectionEditDialog extends Component {
           isOpen={this.state.deleteIsOpen}
           collection={collection}
           toggleDialog={this.toggleDeleteCollection}
+        />
+        <CollectionAnalyzeAlert
+          collection={collection}
+          isOpen={this.state.analyzeIsOpen}
+          toggleAlert={this.toggleAnalyzeCollection}
         />
       </Dialog>
     );

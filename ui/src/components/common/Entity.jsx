@@ -17,7 +17,7 @@ import './Entity.scss';
 class EntityLabel extends PureComponent {
   render() {
     const { entity, icon = false, truncate } = this.props;
-    if (!entity) {
+    if (!entity || !entity.id) {
       return null;
     }
     const caption = entity.getCaption();
@@ -47,13 +47,14 @@ class EntityLink extends PureComponent {
   }
 
   render() {
-    const { entity, className, children } = this.props;
+    const { entity, className, children, preview } = this.props;
     const content = children || <Entity.Label {...this.props} />;
-    if (!entity || !entity.schema) {
+    const link = getEntityLink(entity);
+    if (!link) {
       return content;
     }
     return (
-      <Link to={getEntityLink(entity)} onClick={this.onClick} className={c('EntityLink', className)}>
+      <Link to={link} onClick={preview ? this.onClick : undefined} className={c('EntityLink', className)}>
         {content}
       </Link>
     );

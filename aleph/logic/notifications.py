@@ -15,7 +15,7 @@ from aleph.util import html_link
 log = logging.getLogger(__name__)
 
 
-def channel(obj, clazz=None):
+def channel_tag(obj, clazz=None):
     clazz = clazz or type(obj)
     if clazz == str:
         return obj
@@ -31,7 +31,7 @@ def publish(event, actor_id=None, params=None, channels=None):
     assert isinstance(event, Event), event
     params = params or {}
     outparams = {}
-    channels = [channel(c) for c in ensure_list(channels)]
+    channels = [channel_tag(c) for c in ensure_list(channels)]
     for name, clazz in event.params.items():
         obj = params.get(name)
         outparams[name] = get_entity_id(obj)
@@ -43,7 +43,7 @@ def publish(event, actor_id=None, params=None, channels=None):
 
 
 def flush_notifications(obj, clazz=None):
-    channel_ = channel(obj, clazz=clazz)
+    channel_ = channel_tag(obj, clazz=clazz)
     Notification.delete_by_channel(channel_)
 
 
@@ -58,9 +58,9 @@ def get_role_channels(role):
     if role.deleted_at is None and role.type == Role.USER:
         authz = Authz.from_role(role)
         for role_id in authz.roles:
-            channels.append(channel(role_id, Role))
+            channels.append(channel_tag(role_id, Role))
         for coll_id in authz.collections(authz.READ):
-            channels.append(channel(coll_id, Collection))
+            channels.append(channel_tag(coll_id, Collection))
     cache.set_list(key, channels, expire=cache.EXPIRE)
     return channels
 
