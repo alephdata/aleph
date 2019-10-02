@@ -18,7 +18,7 @@ def bulk_load(stage, collection, config):
     queries = keys_values(config, 'queries', 'query')
     for query in queries:
         bulk_load_query(stage, collection, hash_data(query), query)
-    queue_task(collection, OP_INDEX, job_id=stage.job.id)
+    queue_task(collection, OP_INDEX, job_id=stage.job.id, payload=config)
 
 
 def bulk_load_query(stage, collection, query_id, query):

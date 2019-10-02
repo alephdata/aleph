@@ -96,7 +96,11 @@ def _get_mapping_query(mapping):
                 url = local_path.as_posix()
         if url is not None:
             query['csv_url'] = url
-            return {'query': query}
+            return {
+                'query': query,
+                'mapping_id': mapping.id,
+                'proof_id': mapping.table_id,
+            }
         raise BadRequest("Could not generate csv url for the table")
     raise BadRequest("Source table doesn't have a csvHash")
 

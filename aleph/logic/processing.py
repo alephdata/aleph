@@ -48,12 +48,14 @@ def process_collection(stage, collection, ingest=True,
         aggregator.close()
 
 
-def _process_entity(entity, sync=False):
+def _process_entity(entity, sync=False, proof_id=None):
     """Perform pre-index processing on an entity, includes running the
-    NLP pipeline."""
+    NLP pipeline, adding proof if any."""
     if entity.id is None:
         raise InvalidData("No ID for entity", errors=entity.to_dict())
     tag_entity(entity)
+    if proof_id:
+        entity.add('proof', proof_id)
     if sync:
         refresh_entity_id(entity.id)
     # log.debug("Index: %r", entity)
@@ -81,11 +83,16 @@ def _fetch_entities(stage, collection, entity_id=None, batch=50):
         aggregator.close()
 
 
-def index_aggregate(stage, collection, entity_id=None, sync=False):
+def index_aggregate(stage, collection, sync=False, **kwargs):
     """Project the contents of the collections aggregator into the index."""
+    entity_id = kwargs.get('entity_id')
+    mapping_id = kwargs.get('mapping_id')
+    proof_id = kwargs.get('proof_id')
     entities = _fetch_entities(stage, collection, entity_id=entity_id)
-    entities = (_process_entity(e, sync=sync) for e in entities)
-    index_bulk(collection, entities, job_id=stage.job.id)
+    entities = (_process_entity(e, sync=sync, proof_id=proof_id) for e in entities)  # noqa
+    index_bulk(
+        collection, entities, job_id=stage.job.id, mapping_id=mapping_id
+    )
     refresh_collection(collection.id)
 
 
