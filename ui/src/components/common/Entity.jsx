@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -14,19 +14,10 @@ import getEntityLink from 'src/util/getEntityLink';
 import './Entity.scss';
 
 
-class EntityLabel extends Component {
-  shouldComponentUpdate(nextProps) {
-    const { entity = {} } = this.props;
-    const { entity: nextEntity = {} } = nextProps;
-    return entity.id !== nextEntity.id;
-  }
-
+class EntityLabel extends PureComponent {
   render() {
-    const {
-      entity, icon = false, truncate,
-    } = this.props;
-
-    if (!entity) {
+    const { entity, icon = false, truncate } = this.props;
+    if (!entity || !entity.id) {
       return null;
     }
     const caption = entity.getCaption();
@@ -41,7 +32,7 @@ class EntityLabel extends Component {
 }
 
 
-class EntityLink extends Component {
+class EntityLink extends PureComponent {
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
@@ -56,13 +47,14 @@ class EntityLink extends Component {
   }
 
   render() {
-    const { entity, className, children } = this.props;
+    const { entity, className, children, preview } = this.props;
     const content = children || <Entity.Label {...this.props} />;
-    if (!entity || !entity.schema) {
+    const link = getEntityLink(entity);
+    if (!link) {
       return content;
     }
     return (
-      <Link to={getEntityLink(entity)} onClick={this.onClick} className={c('EntityLink', className)}>
+      <Link to={link} onClick={preview ? this.onClick : undefined} className={c('EntityLink', className)}>
         {content}
       </Link>
     );

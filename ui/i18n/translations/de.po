@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-09-24T19:43:07.709Z\n"
+"POT-Creation-Date: 2019-09-25T14:53:45.568Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2019\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -401,7 +401,7 @@ msgstr "Sammlung"
 #. Compare entities between collections
 #: i18n/messages.json i18n/messages.json
 msgid "Compare entities between collections"
-msgstr "Querverweis von Entitäten in unterschiedlichen Sammlungen"
+msgstr "Querverweis mit Entitäten in anderen Datensätzen"
 
 #. [searchTips.composite.title]
 #. defaultMessage is:
@@ -1354,7 +1354,10 @@ msgstr ""
 #. [document.manager.analyze]
 #. defaultMessage is:
 #. Re-process
-#: i18n/messages.json
+#. [collection.edit.info.analyze]
+#. defaultMessage is:
+#. Re-process
+#: i18n/messages.json i18n/messages.json
 msgid "Re-process"
 msgstr "Erneut verarbeiten"
 
@@ -1422,7 +1425,7 @@ msgstr "Speichern"
 #. Save changes
 #: i18n/messages.json i18n/messages.json
 msgid "Save changes"
-msgstr "Änderungen speichern"
+msgstr "Speichern"
 
 #. [xref.score]
 #. defaultMessage is:
@@ -2073,7 +2076,7 @@ msgstr "Benutzer"
 #. View
 #: i18n/messages.json i18n/messages.json
 msgid "View"
-msgstr "Sehen"
+msgstr "Darstellung"
 
 #. [notification.description]
 #. defaultMessage is:

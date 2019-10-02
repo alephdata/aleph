@@ -35,7 +35,7 @@ class ValueLink extends Component {
         hoverOpenDelay={100}
       >
         <Link to={href} className="ValueLink">
-          <Bp3Tag minimal interactive>
+          <Bp3Tag minimal interactive multiline>
             <Tag.Icon field={prop.type.group} />
             <span>{content}</span>
             <Count count={count} className="no-fill" />

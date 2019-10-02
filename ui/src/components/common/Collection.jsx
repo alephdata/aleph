@@ -19,7 +19,7 @@ class CollectionLabel extends PureComponent {
     const {
       collection, icon = true, label = true, truncate,
     } = this.props;
-    if (collection === undefined || collection.id === undefined) {
+    if (!collection || !collection.id) {
       return null;
     }
 
@@ -48,15 +48,13 @@ class CollectionLabel extends PureComponent {
 
 class CollectionLink extends PureComponent {
   render() {
-    const { collection, icon = true, className } = this.props;
-    if (collection === undefined || collection.links === undefined) {
-      return <Collection.Label collection={collection} icon={icon} />;
+    const { collection, className } = this.props;
+    const link = getCollectionLink(collection);
+    const content = <Collection.Label {...this.props} />;
+    if (!link) {
+      return content;
     }
-    return (
-      <Link to={getCollectionLink(collection)} className={c('CollectionLink', className)}>
-        <Collection.Label collection={collection} icon={icon} />
-      </Link>
-    );
+    return <Link to={link} className={c('CollectionLink', className)}>{content}</Link>;
   }
 }
 

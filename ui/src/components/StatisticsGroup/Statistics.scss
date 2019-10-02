@@ -1,0 +1,45 @@
+@import 'src/app/variables.scss';
+
+.Statistics {
+  display: inline-block;
+
+  &__list {
+    list-style: none;
+    padding: unset;
+  }
+
+  &__headline {
+    color: white !important;
+    text-align: left;
+  }
+
+  &__list-item {
+    display: flex;
+    justify-content: space-between;
+
+    a, .bp3-button {
+      color: $aleph-content-background !important;
+      width: 100%;
+      text-align: left;
+      padding: 3px;
+      transition: background-color .1s ease-out;
+
+      &:hover {
+        text-decoration: none;
+        background-color: #ffffff38;
+      }
+    }
+
+    .bp3-button {
+      box-shadow: none;
+      background: none;
+      border-radius: 0;
+      min-height: 25px;
+      justify-content: left;
+    }
+
+    a > .Numeric{
+      float: right;
+    }
+  }
+}

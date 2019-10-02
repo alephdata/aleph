@@ -5,13 +5,12 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, Tooltip, ProgressBar, Intent } from '@blueprintjs/core';
 
-import Query from 'src/app/Query';
 import { Collection, SectionLoading, ErrorSection, Numeric } from 'src/components/common';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { triggerCollectionCancel, queryDashboard } from 'src/actions';
-import { selectDashboardResult } from 'src/selectors';
+import { triggerCollectionCancel, fetchSystemStatus } from 'src/actions';
+import { selectSystemStatus } from 'src/selectors';
 import { Link } from 'react-router-dom';
 import getCollectionLink from 'src/util/getCollectionLink';
 
@@ -38,17 +37,18 @@ export class SystemStatusScreen extends React.Component {
   constructor(props) {
     super(props);
     this.renderRow = this.renderRow.bind(this);
-    this.fetchIfNeeded = this.fetchIfNeeded.bind(this);
+    this.fetchStatus = this.fetchStatus.bind(this);
     this.cancelCollection = this.cancelCollection.bind(this);
   }
 
   componentDidMount() {
-    this.fetchIfNeeded();
+    this.fetchStatus();
   }
 
-  componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchIfNeeded();
+  componentDidUpdate() {
+    const { result } = this.props;
+    if (result.shouldLoad) {
+      this.fetchStatus();
     }
   }
 
@@ -56,17 +56,16 @@ export class SystemStatusScreen extends React.Component {
     clearTimeout(this.timeout);
   }
 
-  fetchIfNeeded() {
-    const { result, query } = this.props;
-    if (!result.isLoading) {
-      this.props.queryDashboard({ query }).finally(() => {
-        this.timeout = setTimeout(this.fetchIfNeeded, 10000);
-      });
-    }
+  fetchStatus() {
+    clearTimeout(this.timeout);
+    this.props.fetchSystemStatus().finally(() => {
+      this.timeout = setTimeout(this.fetchStatus, 3000);
+    });
   }
 
-  cancelCollection(collection) {
-    this.props.triggerCollectionCancel(collection.id);
+  async cancelCollection(collection) {
+    await this.props.triggerCollectionCancel(collection.id);
+    this.fetchStatus();
   }
 
   renderRow(res) {
@@ -75,9 +74,8 @@ export class SystemStatusScreen extends React.Component {
     const active = res.pending + res.running;
     const total = active + res.finished;
     const progress = res.finished / total;
-
     return (
-      <tr key={res.id}>
+      <tr key={collection.id}>
         <td className="entity">
           <Link to={getCollectionLink(collection)}>
             <Collection.Label collection={collection} />
@@ -108,10 +106,10 @@ export class SystemStatusScreen extends React.Component {
 
   render() {
     const { result, intl } = this.props;
-
     if (result.isError) {
       return <ErrorScreen error={result.error} />;
     }
+    const results = result.results || [];
 
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
@@ -126,15 +124,13 @@ export class SystemStatusScreen extends React.Component {
                 />
               </p>
             </div>
-            {!result.isLoading && result.total === 0
-              && (
-                <ErrorSection
-                  icon="dashboard"
-                  title={intl.formatMessage(messages.no_active)}
-                />
-              )
-            }
-            {!result.isLoading && result.total !== 0 && (
+            {result.total === 0 && (
+              <ErrorSection
+                icon="dashboard"
+                title={intl.formatMessage(messages.no_active)}
+              />
+            )}
+            {result.total > 0 && (
               <table className="StatusTable">
                 <thead>
                   <tr>
@@ -157,11 +153,11 @@ export class SystemStatusScreen extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {result.results.map(this.renderRow)}
+                  {results.map(this.renderRow)}
                 </tbody>
               </table>
             )}
-            {!result.total && result.isLoading && (
+            {!result.results && result.isLoading && (
               <SectionLoading />
             )}
           </React.Fragment>
@@ -172,17 +168,13 @@ export class SystemStatusScreen extends React.Component {
 }
 
 
-const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
-  const query = Query.fromLocation('status', location, {}, 'status');
-  const result = selectDashboardResult(state, query);
-  return { query, result };
+const mapStateToProps = (state) => {
+  const status = selectSystemStatus(state);
+  return { result: status };
 };
-
-const mapDispatchToProps = { triggerCollectionCancel, queryDashboard };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { triggerCollectionCancel, fetchSystemStatus }),
   injectIntl,
 )(SystemStatusScreen);

@@ -23,7 +23,7 @@ class CollectionHeading extends PureComponent {
             {collection.label}
           </h1>
           <CollectionStatus collection={collection} />
-          <p className="bp3-text-muted" itemProp="description">{collection.summary}</p>
+          <p className="bp3-text-muted bp3-running-text" itemProp="description">{collection.summary}</p>
         </div>
       </React.Fragment>
     );

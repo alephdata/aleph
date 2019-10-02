@@ -134,7 +134,7 @@ def status(collection_id):
 def cancel(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     cancel_queue(collection)
-    return jsonify(get_status(collection))
+    return ('', 204)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>', methods=['DELETE'])

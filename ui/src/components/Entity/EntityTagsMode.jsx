@@ -44,7 +44,7 @@ class EntityTagsMode extends React.Component {
 
   render() {
     const { intl, entity, tags } = this.props;
-    if (!tags || !entity.links || !tags.results || tags.results.length === 0) {
+    if (!entity || !entity.links || !tags || !tags.results || tags.results.length === 0) {
       return (
         <ErrorSection
           icon="tag"

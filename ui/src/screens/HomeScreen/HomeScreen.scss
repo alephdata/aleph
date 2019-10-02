@@ -1,88 +1,40 @@
 @import 'src/app/variables.scss';
 
-.HomePage {
-  min-height: 100vh;
-  background-color: black;
-  background-image: url("../../assets/europe_asia_dark.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  text-align: center;
+$vertical-spacing: $aleph-grid-size*5;
 
-  .outer-searchbox {
-    max-width: 60em;
-    margin: 0 auto;
-    display: table;
-    height: 80%;
-    width: 100%;
-    padding: $aleph-grid-size * 2;
-    padding-top: 25vh;
-  }
+.HomeScreen {
+  &__section {
+    text-align: center;
 
-  h4 {
-    color: white !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  .inner-searchbox {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  section {
-    min-height: 95.5vh;
-  }
-
-  .search-form {
-    max-width: 60em;
-    margin: 0 auto;
-    // padding-bottom: 2em;
-  }
-
-  .statistics-list {
-    color: $aleph-content-background;
-    padding: 0;
-  }
-
-  .statistic {
-    display: inline-block;
-    &--list{
-      list-style: none;
-      padding: unset;
+    &.title-section {
+      min-height: 100vh;
+      background-color: black;
+      background-image: url("../../assets/europe_asia_dark.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      color: white;
     }
-    &--headline{
-      color:white;
-      text-align: left;
+
+    &__content {
+      max-width: 800px;
+      margin: auto;
+      padding: 70px 30px;
+      vertical-align: middle;
     }
-    &--list-item{
-      display: flex;
-      justify-content: space-between;
+  }
 
-      a, .bp3-button{
-        color:$aleph-content-background;
-        width: 100%;
-        text-align: left;
-        padding: 3px;
-        transition: background-color .1s ease-out;
+  &__text-container {
+    margin: 0 0 $vertical-spacing;
+  }
 
-        &:hover {
-          text-decoration: none;
-          background-color: #ffffff38;
-        }
-      }
+  &__title {
+    font-size: 42px;
+    margin: 0;
+  }
 
-      .bp3-button {
-        box-shadow: none;
-        background: none;
-        border-radius: 0;
-        min-height: 25px;
-        justify-content: left;
-      }
-
-      a > .Numeric{
-        float: right;
-      }
-    }
+  &__description {
+    font-size: 16px;
+    margin: $vertical-spacing/2 0;
   }
 }

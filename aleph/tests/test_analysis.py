@@ -2,7 +2,7 @@ from aleph.tests.util import TestCase
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.analysis import tag_entity
+from aleph.analysis import analyze_entity
 from aleph.analysis.patterns import EMAIL_REGEX, IPV4_REGEX
 from aleph.analysis.patterns import IPV6_REGEX, PHONE_REGEX
 from aleph.analysis.patterns import IBAN_REGEX
@@ -15,7 +15,7 @@ class TestAnalysis(TestCase):
         text = text * 5
         entity = model.make_entity('PlainText')
         entity.add('bodyText', text)
-        tag_entity(entity)
+        analyze_entity(entity)
         names = entity.get_type_values(registry.name)
         assert 'Angela Merkel' in names, names
 
@@ -23,7 +23,7 @@ class TestAnalysis(TestCase):
         text = "C'est le caniche d'Emmanuel Macron. " * 2
         entity = model.make_entity('PlainText')
         entity.add('bodyText', text)
-        tag_entity(entity)
+        analyze_entity(entity)
         names = entity.get_type_values(registry.name)
         assert "d'Emmanuel Macron" in names, names
         assert entity.get('detectedLanguage') == ['fra'], entity.get('detectedLanguage')  # noqa
@@ -32,7 +32,7 @@ class TestAnalysis(TestCase):
         text = "Mr. Flubby Flubber called the number tel:+919988111222 twice"
         entity = model.make_entity('PlainText')
         entity.add('bodyText', text)
-        tag_entity(entity)
+        analyze_entity(entity)
         phones = entity.get_type_values(registry.phone)
         assert '+919988111222' in phones
         countries = entity.get_type_values(registry.country)

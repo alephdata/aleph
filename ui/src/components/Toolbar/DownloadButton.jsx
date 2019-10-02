@@ -11,10 +11,10 @@ const messages = defineMessages({
 });
 
 
-class DownloadButton extends React.Component {
+class DownloadButton extends React.PureComponent {
   render() {
     const { intl, document, isPreview } = this.props;
-    if (document.links === undefined || document.links.file === undefined) {
+    if (!document || !document.links || !document.links.file) {
       return null;
     }
     return (

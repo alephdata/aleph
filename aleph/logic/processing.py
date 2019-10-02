@@ -6,7 +6,7 @@ from followthemoney.pragma import remove_checksums
 
 from aleph.model import Entity, Document
 from aleph.queues import ingest_entity
-from aleph.analysis import tag_entity
+from aleph.analysis import analyze_entity
 from aleph.queues import queue_task, OP_INDEX
 from aleph.index.entities import index_bulk
 from aleph.logic.entities import refresh_entity_id
@@ -53,7 +53,7 @@ def _process_entity(entity, sync=False):
     NLP pipeline."""
     if entity.id is None:
         raise InvalidData("No ID for entity", errors=entity.to_dict())
-    tag_entity(entity)
+    analyze_entity(entity)
     if sync:
         refresh_entity_id(entity.id)
     # log.debug("Index: %r", entity)

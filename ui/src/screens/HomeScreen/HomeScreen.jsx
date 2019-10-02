@@ -1,22 +1,19 @@
-import React, { Component, PureComponent } from 'react';
-import _ from 'lodash';
-import c from 'classnames';
+import React, { Component } from 'react';
 import queryString from 'query-string';
+import { Redirect } from 'react-router-dom';
 import {
-  defineMessages, FormattedMessage, FormattedNumber, injectIntl,
-} from 'react-intl';
-import { Link, Redirect } from 'react-router-dom';
-import {
-  Button, ControlGroup, Divider, InputGroup,
+  ControlGroup, InputGroup,
 } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import {
+  defineMessages, injectIntl,
+} from 'react-intl';
 import { fetchStatistics } from 'src/actions/index';
 import { selectMetadata, selectSession, selectStatistics } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
-import {
-  Category, Country, Schema, Numeric, DualPane,
-} from 'src/components/common';
+import StatisticsGroup from 'src/components/StatisticsGroup/StatisticsGroup';
+
 import wordList from 'src/util/wordList';
 
 import './HomeScreen.scss';
@@ -32,73 +29,6 @@ const messages = defineMessages({
     defaultMessage: 'Try searching: {samples}',
   },
 });
-
-class Statistics extends PureComponent {
-  static Item({
-    ItemContentContainer = Statistics.ItemContentContainer,
-    item: [name, count],
-    ...rest
-  }) {
-    return (
-      <li {...rest}>
-        <ItemContentContainer name={name} count={count} />
-      </li>
-    );
-  }
-
-  static Noop(props) { return <div key={props.key} className={props.className}>skeleton</div>; }
-
-  constructor(props) {
-    super(props);
-    this.state = { listLen: 15 };
-    this.onExpand = this.onExpand.bind(this);
-  }
-
-  onExpand() {
-    const expandIncrement = 30;
-    this.setState(prevState => ({ listLen: prevState.listLen + expandIncrement }));
-  }
-
-  render() {
-    const {
-      statistic,
-      seeMoreButtonText,
-      headline,
-      isLoading,
-      children = isLoading ? Statistics.Noop : Statistics.Item,
-      ItemContentContainer = Statistics.ItemContentContainer,
-    } = this.props;
-    const {
-      listLen,
-    } = this.state;
-    const list = isLoading ? Array.from(
-      { length: 40 }, (i, ii) => ([ii]),
-    ) : Object.entries(statistic);
-    const rest = list.length - listLen;
-    return (
-      <div className="statistic bp3-callout">
-        <h5 className={c('bp3-heading', 'statistic--headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
-        <ul className="statistic--list">
-          {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({
-            className: c('statistic--list-item', { 'bp3-skeleton': isLoading }),
-            key: item[0],
-            item,
-            ItemContentContainer,
-          }))}
-          {rest > 0 && !isLoading && (
-            <li className={c('statistic--list-item', { 'bp3-skeleton': isLoading })}>
-              <Button
-                onClick={this.onExpand}
-                text={seeMoreButtonText(rest)}
-              />
-            </li>
-          )}
-        </ul>
-      </div>
-    );
-  }
-}
-
 
 export class HomeScreen extends Component {
   constructor(props) {
@@ -128,10 +58,13 @@ export class HomeScreen extends Component {
   }
 
   render() {
-    const { intl, metadata, session, statistics = {} } = this.props;
+    const { intl, metadata, statistics = {}, session } = this.props;
     if (session.loggedIn) {
       return <Redirect to="/notifications" />;
     }
+
+    const appDescription = metadata.app.description;
+
     const samples = wordList(metadata.app.samples, ', ').join('');
     return (
       <Screen
@@ -139,9 +72,16 @@ export class HomeScreen extends Component {
         title={intl.formatMessage(messages.title)}
         description={metadata.app.description}
       >
-        <section className="HomePage">
-          <div className="outer-searchbox">
-            <div className="inner-searchbox">
+        <section className="HomeScreen">
+          <div className="HomeScreen__section title-section">
+            <div className="HomeScreen__section__content">
+              <div className="HomeScreen__text-container">
+                <h1 className="HomeScreen__title">{metadata.app.title}</h1>
+                {appDescription && (
+                  <p className="HomeScreen__description">{appDescription}</p>
+                )}
+              </div>
+
               <form onSubmit={this.onSubmit} className="search-form" autoComplete="off">
                 <ControlGroup fill>
                   <InputGroup
@@ -155,94 +95,7 @@ export class HomeScreen extends Component {
                   />
                 </ControlGroup>
               </form>
-              <DualPane className="statistics-list">
-                <Statistics
-                  headline={(
-                    <FormattedMessage
-                      id="home.statistics.schemata"
-                      defaultMessage="Search {things} entities"
-                      values={{
-                        things: <Numeric num={statistics.things} abbr />,
-                      }}
-                    />
-                  )}
-                  seeMoreButtonText={restCount => (
-                    <FormattedMessage
-                      id="home.statistics.othertypes"
-                      defaultMessage="{count} more entity types"
-                      values={{
-                        count: restCount,
-                      }}
-                    />
-                  )}
-                  statistic={statistics.schemata}
-                  isLoading={!statistics.schemata}
-                  ItemContentContainer={props => (
-                    <Schema.Smart.Link url={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
-                      <Numeric num={props.count} />
-                    </Schema.Smart.Link>
-                  )}
-                />
-                <Statistics
-                  headline={(
-                    <FormattedMessage
-                      id="home.statistics.categories"
-                      defaultMessage="from {collections} datasets"
-                      values={{
-                        collections: <FormattedNumber value={statistics.collections || 0} />,
-                      }}
-                    />
-                  )}
-                  seeMoreButtonText={restCount => (
-                    <FormattedMessage
-                      id="home.statistics.other"
-                      defaultMessage="{count} more datasets"
-                      values={{
-                        count: restCount,
-                      }}
-                    />
-                  )}
-                  statistic={statistics.categories}
-                  isLoading={!statistics.categories}
-                  ItemContentContainer={props => (
-                    <Link
-                      to={`/datasets?collectionsfilter:category=${props.name}`}
-                    >
-                      <Category.Label category={props.name} />
-                      <Numeric num={props.count} />
-                    </Link>
-                  )}
-                />
-                <Statistics
-                  headline={(
-                    <FormattedMessage
-                      id="home.statistics.countries"
-                      defaultMessage="in {count} countries"
-                      values={{
-                        count: _.size(statistics.countries),
-                      }}
-                    />
-                  )}
-                  seeMoreButtonText={restCount => (
-                    <FormattedMessage
-                      id="home.statistics.territories"
-                      defaultMessage="{count} more countries & territories"
-                      values={{
-                        count: restCount,
-                      }}
-                    />
-                  )}
-                  statistic={statistics.countries}
-                  isLoading={!statistics.countries}
-                  ItemContentContainer={props => (
-                    <Link to={`/datasets?collectionsfilter:countries=${props.name}`}>
-                      <Country.Name {...props} code={props.name} />
-                      <Numeric num={props.count} />
-                    </Link>
-                  )}
-                />
-              </DualPane>
-              <Divider />
+              <StatisticsGroup statistics={statistics} />
             </div>
           </div>
         </section>

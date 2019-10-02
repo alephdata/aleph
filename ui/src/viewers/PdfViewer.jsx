@@ -143,7 +143,7 @@ export class PdfViewer extends Component {
     const {
       document, activeMode, baseQuery, page, queryText, numPages,
     } = this.props;
-    if (document.id === undefined) {
+    if (!document.id || !document.links) {
       return null;
     }
     if (numPages === undefined || numPages === null) {

@@ -40,7 +40,7 @@ class EmailIdentity(object):
         if self.email is not None:
             key = self.email.lower().strip()
             fragment = safe_fragment(self.label)
-            self.entity = manager.make_entity('LegalEntity')
+            self.entity = manager.make_entity('Person')
             self.entity.make_id(key)
             self.entity.add('name', self.name)
             self.entity.add('email', self.email)

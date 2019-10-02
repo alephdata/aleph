@@ -133,7 +133,7 @@ class EntityScreen extends Component {
       );
     }
 
-    const showDownloadButton = isDocument && entity.links && entity.links.file;
+    const showDownloadButton = isDocument && entity && entity.links && entity.links.file;
     const operation = showDownloadButton && (
       <DownloadButton document={entity} />
     );
