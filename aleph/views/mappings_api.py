@@ -14,6 +14,7 @@ from aleph.views.context import enable_cache
 from aleph.views.forms import MappingSchema
 from aleph.views.util import require, obj_or_404, get_session_id
 from aleph.queues import queue_task, OP_BULKLOAD
+from aleph.logic.collections import refresh_collection
 
 blueprint = Blueprint('mappings_api', __name__)
 log = logging.getLogger(__name__)
@@ -112,4 +113,7 @@ def mapping(mapping_id):
     # except InvalidMapping as invalid:
     #     raise BadRequest(invalid)
     queue_task(collection, OP_BULKLOAD, job_id=get_session_id(), payload=query)
+    collection.touch()
+    db.session.commit()
+    refresh_collection(collection.id)
     return ('', 202)
