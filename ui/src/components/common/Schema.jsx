@@ -25,7 +25,7 @@ class SchemaLabel extends Component {
     if (icon) {
       return (
         <span>
-          <Schema.Icon schema={schema} />
+          <Schema.Icon schema={schema} className="left-icon" />
           {label}
         </span>
       );
@@ -39,7 +39,7 @@ function SchemaLink(props) {
   return (
     <React.Fragment>
       <Link to={url}>
-        <Schema.Icon schema={schema} />
+        <Schema.Icon schema={schema} className="left-icon" />
         <Schema.Label schema={schema} icon={false} plural={plural} />
         {children}
       </Link>
