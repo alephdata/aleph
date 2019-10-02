@@ -9,3 +9,4 @@ from aleph.model.document import Document  # noqa
 from aleph.model.event import Event, Events  # noqa
 from aleph.model.notification import Notification  # noqa
 from aleph.model.query_log import QueryLog  # noqa
+from aleph.model.mapping import Mapping  # noqa

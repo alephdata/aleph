@@ -195,3 +195,8 @@ class DocumentCreateSchema(Schema):
     @pre_load
     def flatten(self, data):
         return flatten(data, 'parent_id', 'parent')
+
+
+class MappingSchema(Schema):
+    # mapping_query = String()
+    table_id = String()

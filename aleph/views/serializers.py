@@ -309,3 +309,7 @@ class NotificationSerializer(Serializer):
         obj['params'] = params
         obj['event'] = event.to_dict()
         return obj
+
+
+class MappingSerializer(Serializer):
+    pass
