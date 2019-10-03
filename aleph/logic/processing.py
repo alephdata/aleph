@@ -54,11 +54,15 @@ def _process_entity(entity, sync=False, proof_id=None):
     if entity.id is None:
         raise InvalidData("No ID for entity", errors=entity.to_dict())
     tag_entity(entity)
-    if proof_id:
-        entity.add('proof', proof_id)
     if sync:
         refresh_entity_id(entity.id)
     # log.debug("Index: %r", entity)
+    return entity
+
+
+def _assign_proof(entity, collection, proof_id=None):
+    if proof_id and collection.ns.sign(entity.id) != proof_id:
+        entity.add('proof', proof_id)
     return entity
 
 
@@ -89,7 +93,8 @@ def index_aggregate(stage, collection, sync=False, **kwargs):
     mapping_id = kwargs.get('mapping_id')
     proof_id = kwargs.get('proof_id')
     entities = _fetch_entities(stage, collection, entity_id=entity_id)
-    entities = (_process_entity(e, sync=sync, proof_id=proof_id) for e in entities)  # noqa
+    entities = (_process_entity(e, sync=sync) for e in entities)
+    entities = (_assign_proof(e, collection, proof_id=proof_id) for e in entities)  # noqa
     index_bulk(
         collection, entities, job_id=stage.job.id, mapping_id=mapping_id
     )
