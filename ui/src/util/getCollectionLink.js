@@ -1,6 +1,3 @@
 export default function getCollectionLink(collection) {
-  if (collection.id) {
-    return `/datasets/${collection.id}`;
-  }
-  return null;
+  return (collection && collection.id) ? `/datasets/${collection.id}` : null;
 }

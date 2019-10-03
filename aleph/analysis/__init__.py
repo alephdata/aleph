@@ -2,7 +2,7 @@ import logging
 from followthemoney.types import registry
 
 from aleph.core import settings
-from aleph.model import Document
+from aleph.model import Document, Entity
 from aleph.analysis.aggregate import TagAggregator
 from aleph.analysis.extract import extract_entities
 from aleph.analysis.patterns import extract_patterns
@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 MAPPING = {
     registry.name: 'namesMentioned',
     registry.language: 'detectedLanguage',
-    registry.country: 'country',
+    registry.country: 'detectedCountry',
     registry.ip: 'ipMentioned',
     registry.email: 'emailMentioned',
     registry.phone: 'phoneMentioned',
@@ -23,7 +23,7 @@ MAPPING = {
 }
 
 
-def tag_entity(entity):
+def extract_named_entities(entity):
     if not settings.TAG_ENTITIES:
         return
     # TODO: should we have a schema called "Taggable" with
@@ -50,3 +50,23 @@ def tag_entity(entity):
     if len(aggregator):
         log.info("Extracted %d tags [%s]: %s", len(aggregator),
                  entity.id, entity.caption)
+
+
+def name_entity(entity):
+    """If an entity has multiple names, pick the most central one
+    and set all the others as aliases. This is awkward given that
+    names aren't special and may not always be the caption."""
+    if not entity.schema.is_a(Entity.THING):
+        return
+    names = entity.get('name')
+    if len(names) <= 1:
+        return
+    name = registry.name.pick(names)
+    names.remove(name)
+    entity.set('name', name)
+    entity.add('alias', names)
+
+
+def analyze_entity(entity):
+    extract_named_entities(entity)
+    name_entity(entity)

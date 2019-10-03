@@ -3,11 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab, Icon as BlueprintIcon } from '@blueprintjs/core';
+import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import {
-  Count, TextLoading, Schema, Icon,
+  Count, TextLoading, Schema,
 } from 'src/components/common';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
@@ -82,7 +82,7 @@ class CollectionViews extends React.Component {
             disabled={numOfDocs === 0}
             title={
               <React.Fragment>
-                <Icon name="folder" />
+                <Icon icon="folder" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
               </React.Fragment>}
@@ -105,7 +105,7 @@ class CollectionViews extends React.Component {
           id="xref"
           title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
-              <BlueprintIcon className="left-icon" icon="search-around" />
+              <Icon className="left-icon" icon="search-around" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xrefIndex.total} />
             </TextLoading>}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import { Button, Intent, Tooltip } from '@blueprintjs/core';
+import { Button, AnchorButton, Intent, Tooltip, Position } from '@blueprintjs/core';
 
 import CreateCaseDialog from 'src/dialogs/CreateCaseDialog/CreateCaseDialog';
 import { selectSession } from 'src/selectors';
@@ -31,10 +31,13 @@ class CaseCreateButton extends React.Component {
     const { intl, session } = this.props;
     if (!session.loggedIn) {
       return (
-        <Tooltip content={intl.formatMessage(messages.login)}>
-          <Button icon="folder-new" intent={Intent.PRIMARY} disabled>
+        <Tooltip
+          content={intl.formatMessage(messages.login)}
+          position={Position.BOTTOM}
+        >
+          <AnchorButton icon="folder-new" intent={Intent.PRIMARY} disabled>
             <FormattedMessage id="cases.index.create" defaultMessage="New dataset" />
-          </Button>
+          </AnchorButton>
         </Tooltip>
       );
     }

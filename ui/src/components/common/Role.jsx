@@ -20,15 +20,10 @@ const messages = defineMessages({
 });
 
 
-class RoleLabel extends Component {
-  shouldComponentUpdate(nextProps) {
-    const { role } = this.props;
-    return role.id !== nextProps.role.id;
-  }
-
+class RoleLabel extends PureComponent {
   render() {
     const { role, icon = true, long = false } = this.props;
-    if (!role) {
+    if (!role || !role.type) {
       return null;
     }
     const iconName = role.type === 'user' ? 'user' : 'shield';
@@ -45,17 +40,11 @@ class RoleLabel extends Component {
 class RoleLink extends PureComponent {
   render() {
     const { role } = this.props;
-    if (!role) {
-      return null;
+    const content = <RoleLabel {...this.props} />;
+    if (role && role.type && role.type === 'group') {
+      return <Link to={`/groups/${role.id}`}>{content}</Link>;
     }
-    if (role.type === 'group') {
-      return (
-        <Link to={`/groups/${role.id}`}>
-          <RoleLabel {...this.props} />
-        </Link>
-      );
-    }
-    return <RoleLabel {...this.props} />;
+    return content;
   }
 }
 

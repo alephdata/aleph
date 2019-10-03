@@ -17,7 +17,7 @@ class EntityToolbar extends React.Component {
     }
     const isThing = entity && entity.schema.isThing();
     const isDocument = entity && entity.schema.isDocument();
-    const showDownloadButton = isDocument && entity.links && entity.links.file;
+    const showDownloadButton = isDocument && entity && entity.links && entity.links.file;
 
     return (
       <div className="EntityToolbar">
