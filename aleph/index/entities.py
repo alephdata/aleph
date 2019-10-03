@@ -137,9 +137,11 @@ def index_proxy(collection, proxy, sync=False):
     return index_bulk(collection, [proxy], sync=sync)
 
 
-def index_bulk(collection, entities, job_id=None, mapping_id=None, sync=False):
+def index_bulk(collection, entities, job_id=None, mapping_id=None, proof_id=None, sync=False):  # noqa
     """Index a set of entities."""
-    entities = (format_proxy(p, collection, job_id=job_id, mapping_id=mapping_id) for p in entities)  # noqa
+    entities = (format_proxy(p, collection, job_id=job_id,
+                             mapping_id=mapping_id,
+                             proof_id=proof_id) for p in entities)
     bulk_actions(entities, sync=sync)
 
 
@@ -148,14 +150,18 @@ def _numeric_values(type_, values):
     return [v for v in values if v is not None]
 
 
-def format_proxy(proxy, collection, job_id=None, mapping_id=None):
+def format_proxy(proxy, collection, job_id=None, mapping_id=None, proof_id=None):  # noqa
     """Apply final denormalisations to the index."""
     proxy.context = {}
     proxy = collection.ns.apply(proxy)
+    if proof_id and proxy.id != proof_id:
+        proxy.add('proof', proof_id)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
     data['job_id'] = job_id
-    if mapping_id:
+    # Don't wanna tag the source table (otherwise it gets deleted when we clear
+    # a mapping)
+    if mapping_id and data['id'] == proof_id:
         data['mapping_id'] = mapping_id
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])

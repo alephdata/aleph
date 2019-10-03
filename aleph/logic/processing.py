@@ -60,12 +60,6 @@ def _process_entity(entity, sync=False, proof_id=None):
     return entity
 
 
-def _assign_proof(entity, collection, proof_id=None):
-    if proof_id and collection.ns.sign(entity.id) != proof_id:
-        entity.add('proof', proof_id)
-    return entity
-
-
 def _fetch_entities(stage, collection, entity_id=None, batch=50):
     aggregator = get_aggregator(collection)
     try:
@@ -94,9 +88,9 @@ def index_aggregate(stage, collection, sync=False, **kwargs):
     proof_id = kwargs.get('proof_id')
     entities = _fetch_entities(stage, collection, entity_id=entity_id)
     entities = (_process_entity(e, sync=sync) for e in entities)
-    entities = (_assign_proof(e, collection, proof_id=proof_id) for e in entities)  # noqa
     index_bulk(
-        collection, entities, job_id=stage.job.id, mapping_id=mapping_id
+        collection, entities, job_id=stage.job.id, mapping_id=mapping_id,
+        proof_id=proof_id
     )
     refresh_collection(collection.id)
 
