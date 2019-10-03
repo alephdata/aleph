@@ -24,7 +24,7 @@ class EntityLabel extends PureComponent {
     const label = truncate ? truncateText(caption, truncate) : caption;
     return (
       <span className={c('EntityLabel', { untitled: !label })} title={caption}>
-        {icon && <Schema.Icon schema={entity.schema} />}
+        {icon && <Schema.Icon schema={entity.schema} className="left-icon" />}
         {label}
       </span>
     );

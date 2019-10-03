@@ -1,12 +1,12 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Tab, Tabs } from '@blueprintjs/core';
+import { Tab, Tabs, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import {
-  Count, Icon, SectionLoading, TextLoading,
+  Count, SectionLoading, TextLoading,
 } from 'src/components/common';
 import { queryEntitySimilar, queryFolderDocuments } from 'src/queries';
 import {
@@ -70,7 +70,7 @@ class EntityViews extends React.Component {
             id="info"
             title={(
               <React.Fragment>
-                <Icon name="info" iconSize="14px" className="entity-icon" />
+                <Icon icon="info" iconSize="14px" className="left-icon" />
                 <span className="tab-padding">
                   <FormattedMessage id="entity.info.info" defaultMessage="Info" />
                 </span>
@@ -86,7 +86,7 @@ class EntityViews extends React.Component {
             id="view"
             title={(
               <React.Fragment>
-                <Icon name="showdocuments" />
+                <Icon icon="showdocuments" />
                 <FormattedMessage id="entity.info.view" defaultMessage="View" />
               </React.Fragment>
             )}
@@ -98,7 +98,7 @@ class EntityViews extends React.Component {
             id="text"
             title={(
               <React.Fragment>
-                <Icon name="plaintext" />
+                <Icon icon="plaintext" />
                 <FormattedMessage id="entity.info.text" defaultMessage="Text" />
               </React.Fragment>
             )}
@@ -111,7 +111,7 @@ class EntityViews extends React.Component {
             disabled={children.total < 1}
             title={(
               <TextLoading loading={children.isLoading}>
-                <Icon name="folder" />
+                <Icon icon="folder" className="left-icon" />
                 { entity.schema.isA('Email') && (
                   <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
                 )}
@@ -148,7 +148,7 @@ class EntityViews extends React.Component {
             disabled={tags.total < 1}
             title={(
               <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-                <Icon name="tags" iconSize="14px" className="entity-icon" />
+                <Icon icon="tags" iconSize="14px" className="left-icon" />
                 <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
                 <Count count={tags.total} />
               </TextLoading>
@@ -161,7 +161,7 @@ class EntityViews extends React.Component {
             id="similar"
             title={(
               <TextLoading loading={similar.shouldLoad || similar.isLoading}>
-                <Icon name="similar" iconSize="14px" className="entity-icon" />
+                <Icon icon="similar" iconSize="14px" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
                 <Count count={similar.total} />
               </TextLoading>
