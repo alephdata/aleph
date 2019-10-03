@@ -8,7 +8,7 @@ class CollectionHeading extends PureComponent {
   render() {
     const { collection } = this.props;
     return (
-      <React.Fragment>
+      <>
         <div className="pane-heading">
           <span className="bp3-text-muted">
             <Collection.Label collection={collection} label={false} />
@@ -25,7 +25,7 @@ class CollectionHeading extends PureComponent {
           <CollectionStatus collection={collection} />
           <p className="bp3-text-muted bp3-running-text" itemProp="description">{collection.summary}</p>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

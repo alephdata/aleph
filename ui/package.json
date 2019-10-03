@@ -166,6 +166,7 @@
       "react/no-danger": "off",
       "react/prop-types": "off",
       "react/no-multi-comp": "off",
+      "react/style-prop-object": "off",
       "react/destructuring-assignment": "off",
       "react/jsx-props-no-spreading": "off",
       "react/jsx-curly-brace-presence": "off",

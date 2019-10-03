@@ -1,6 +1,6 @@
 # User Interface
 
-This folder contains the Aleph 2 user interface, a ReactJS-based application. 
+This folder contains the Aleph user interface, a ReactJS-based application. 
 
 ## Installation / Development
 

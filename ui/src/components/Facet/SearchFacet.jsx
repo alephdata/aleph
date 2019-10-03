@@ -108,7 +108,7 @@ class SearchFacet extends Component {
           </span>
 
           {isFiltered && (
-            <React.Fragment>
+            <>
               <span className="FilterCount bp3-text-muted">
                 <FormattedMessage
                   id="search.facets.filtersSelected"
@@ -116,11 +116,11 @@ class SearchFacet extends Component {
                   values={{ count: intl.formatNumber(count) }}
                 />
               </span>
-            </React.Fragment>
+            </>
           )}
 
           {isOpen && (
-            <React.Fragment>
+            <>
               {facet.total === 0 && (
                 <span className="bp3-tag bp3-small bp3-round bp3-minimal">0</span>
               )}
@@ -130,7 +130,7 @@ class SearchFacet extends Component {
                   <FormattedNumber value={facet.total} />
                 </span>
               )}
-            </React.Fragment>
+            </>
           )}
         </div>
         <Collapse isOpen={isOpen} className={c({ updating: isUpdating })}>

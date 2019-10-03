@@ -104,7 +104,7 @@ export class HomeScreen extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   statistics: selectStatistics(state),
   session: selectSession(state),
   metadata: selectMetadata(state),

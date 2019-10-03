@@ -28,7 +28,7 @@ class EntityTableRow extends Component {
     const resultClass = c('EntityTableRow', 'nowrap', { active: isActive }, { prefix: isPrefix });
     const highlightsClass = c('EntityTableRow', { active: isActive });
     return (
-      <React.Fragment>
+      <>
         <tr key={entity.id} className={resultClass}>
           {updateSelection && (
             <td className="select">
@@ -78,7 +78,7 @@ class EntityTableRow extends Component {
           </tr>
           )
         }
-      </React.Fragment>
+      </>
     );
   }
 }

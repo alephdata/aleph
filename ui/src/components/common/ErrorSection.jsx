@@ -36,7 +36,7 @@ export class ErrorSection extends PureComponent {
     const message = error === undefined ? title : error.message;
 
     return (
-      <React.Fragment>
+      <>
         <AuthenticationDialog
           auth={metadata.auth}
           nextPath={window.location.href}
@@ -53,7 +53,7 @@ export class ErrorSection extends PureComponent {
             />
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

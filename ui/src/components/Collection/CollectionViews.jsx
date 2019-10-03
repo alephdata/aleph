@@ -81,11 +81,11 @@ class CollectionViews extends React.Component {
             id="Document"
             disabled={numOfDocs === 0}
             title={
-              <React.Fragment>
+              <>
                 <Icon icon="folder" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
-              </React.Fragment>}
+              </>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
@@ -94,10 +94,10 @@ class CollectionViews extends React.Component {
             id={ref.schema}
             key={ref.schema}
             title={
-              <React.Fragment>
+              <>
                 <Schema.Smart.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
-              </React.Fragment>}
+              </>}
             panel={<CollectionEntitiesMode collection={collection} activeMode={activeMode} />}
           />
         ))}

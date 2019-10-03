@@ -114,7 +114,7 @@ export class SystemStatusScreen extends React.Component {
     return (
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
-          <React.Fragment>
+          <>
             <div className="Dashboard__title-container">
               <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
               <p className="Dashboard__subheading">
@@ -160,7 +160,7 @@ export class SystemStatusScreen extends React.Component {
             {!result.results && result.isLoading && (
               <SectionLoading />
             )}
-          </React.Fragment>
+          </>
         </Dashboard>
       </Screen>
     );

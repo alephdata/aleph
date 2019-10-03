@@ -26,7 +26,7 @@ class DocumentUploadButton extends React.Component {
     }
 
     return (
-      <React.Fragment>
+      <>
         <Button onClick={this.toggleUpload} icon="upload">
           <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
         </Button>
@@ -36,7 +36,7 @@ class DocumentUploadButton extends React.Component {
           isOpen={this.state.isUploadOpen}
           toggleDialog={this.toggleUpload}
         />
-      </React.Fragment>
+      </>
     );
   }
 }
