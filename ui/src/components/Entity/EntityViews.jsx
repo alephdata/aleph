@@ -111,7 +111,7 @@ class EntityViews extends React.Component {
             disabled={children.total < 1}
             title={(
               <TextLoading loading={children.isLoading}>
-                <Icon icon="folder" iconSize="16px" className="left-icon" />
+                <Icon icon="folder" className="left-icon" />
                 { entity.schema.isA('Email') && (
                   <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
                 )}

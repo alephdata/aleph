@@ -82,7 +82,7 @@ class CollectionViews extends React.Component {
             disabled={numOfDocs === 0}
             title={
               <React.Fragment>
-                <Icon icon="folder" className="left-icon" iconSize={16} />
+                <Icon icon="folder" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
               </React.Fragment>}
