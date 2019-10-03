@@ -55,7 +55,7 @@ def extract_named_entities(entity):
 def name_entity(entity):
     """If an entity has multiple names, pick the most central one
     and set all the others as aliases. This is awkward given that
-    names aren't special and may not alwyas be the caption."""
+    names aren't special and may not always be the caption."""
     if not entity.schema.is_a(Entity.THING):
         return
     names = entity.get('name')
