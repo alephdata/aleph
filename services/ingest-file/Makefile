@@ -7,4 +7,8 @@ build:
 push:
 	docker push $(IMAGE):$(TAG)
 
+upgrade:
+	pip install -U -r /ingestors/requirements.in
+	pip freeze --exclude-editable >/ingestors/requirements.txt
+
 .PHONY: build push
