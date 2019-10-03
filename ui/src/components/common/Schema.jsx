@@ -9,7 +9,6 @@ class SchemaIcon extends PureComponent {
     const { schema, ...rest } = this.props;
     return (
       <Icon
-        className="entity-icon"
         iconSize="16px"
         {...rest}
         icon={schema.name.toLowerCase()}

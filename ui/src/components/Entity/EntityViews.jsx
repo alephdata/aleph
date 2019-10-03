@@ -70,7 +70,7 @@ class EntityViews extends React.Component {
             id="info"
             title={(
               <React.Fragment>
-                <Icon icon="info" iconSize="14px" className="entity-icon" />
+                <Icon icon="info" iconSize="14px" className="left-icon" />
                 <span className="tab-padding">
                   <FormattedMessage id="entity.info.info" defaultMessage="Info" />
                 </span>
@@ -111,7 +111,7 @@ class EntityViews extends React.Component {
             disabled={children.total < 1}
             title={(
               <TextLoading loading={children.isLoading}>
-                <Icon icon="folder" />
+                <Icon icon="folder" iconSize="16px" className="left-icon" />
                 { entity.schema.isA('Email') && (
                   <FormattedMessage id="entity.info.attachments" defaultMessage="Attachments" />
                 )}
@@ -148,7 +148,7 @@ class EntityViews extends React.Component {
             disabled={tags.total < 1}
             title={(
               <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-                <Icon icon="tags" iconSize="14px" className="entity-icon" />
+                <Icon icon="tags" iconSize="14px" className="left-icon" />
                 <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
                 <Count count={tags.total} />
               </TextLoading>
@@ -161,7 +161,7 @@ class EntityViews extends React.Component {
             id="similar"
             title={(
               <TextLoading loading={similar.shouldLoad || similar.isLoading}>
-                <Icon icon="similar" iconSize="14px" className="entity-icon" />
+                <Icon icon="similar" iconSize="14px" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
                 <Count count={similar.total} />
               </TextLoading>
