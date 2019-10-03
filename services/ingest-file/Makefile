@@ -9,6 +9,6 @@ push:
 
 upgrade:
 	pip install -U -r /ingestors/requirements.in
-	pip freeze --exclude-editable >/ingestors/requirements.txt
+	pip freeze --exclude-editable | grep -vi pygobject >/ingestors/requirements.txt
 
 .PHONY: build push
