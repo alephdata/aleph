@@ -17,7 +17,7 @@ class Mapping(db.Model, SoftDeleteModel):
     __tablename__ = 'mapping'
 
     id = db.Column(db.Integer, primary_key=True)
-    entities_query = db.Column('query', JSONB)
+    query = db.Column('query', JSONB)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     role = db.relationship(Role, backref=db.backref('mappings', lazy='dynamic'))  # noqa
@@ -27,8 +27,10 @@ class Mapping(db.Model, SoftDeleteModel):
 
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
-    def update(self):
+    def update(self, query=None):
         self.updated_at = datetime.utcnow()
+        if query:
+            self.query = query
         db.session.add(self)
         db.session.commit()
 
@@ -41,7 +43,7 @@ class Mapping(db.Model, SoftDeleteModel):
         data = self.to_dict_dates()
         data.update({
             'id': stringify(self.id),
-            'entities_query': dict(self.entities_query),
+            'query': dict(self.query),
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
             'table_id': self.table_id,
@@ -77,7 +79,7 @@ class Mapping(db.Model, SoftDeleteModel):
     def create(cls, query, table_id, collection, role_id):
         mapping = cls()
         mapping.role_id = role_id
-        mapping.entities_query = query
+        mapping.query = query
         mapping.collection_id = collection.id
         mapping.table_id = table_id
         mapping.update()

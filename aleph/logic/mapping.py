@@ -25,7 +25,7 @@ def get_mapping_query(mapping):
     properties = table.get('properties', {})
     csv_hash = first(properties.get('csvHash'))
     query = {
-        'entities': mapping.entities_query
+        'entities': mapping.query
     }
     url = None
     if csv_hash:
