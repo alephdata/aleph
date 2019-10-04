@@ -2,7 +2,7 @@ import os
 from unittest import skip  # noqa
 from followthemoney.cli.util import load_mapping_file
 
-from aleph.logic.bulkload import bulk_load
+from aleph.logic.mapping import bulk_load
 from aleph.queues import get_stage, OP_BULKLOAD
 from aleph.tests.util import TestCase
 

@@ -6,7 +6,7 @@ from followthemoney.cli.util import load_mapping_file
 from aleph.core import db
 from aleph.model import Entity
 from aleph.queues import get_stage, OP_BULKLOAD
-from aleph.logic.bulkload import bulk_load
+from aleph.logic.mapping import bulk_load
 from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 
