@@ -101,8 +101,8 @@ class MappingAPITest(TestCase):
         person = res.json['results'][0]
         assert person['properties'].get('proof')[0].get('id') == self.ent.id, person['properties']  # noqa
 
-        # test clearing loaded entities
-        url = "/api/2/collections/%s/mappings/%s/clear" % (self.col.id, mapping_id)  # noqa
+        # test deleting loaded entities
+        url = "/api/2/collections/%s/mappings/%s/flush" % (self.col.id, mapping_id)  # noqa
         res = self.client.post(url, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.post(url, headers=self.headers)
@@ -110,5 +110,5 @@ class MappingAPITest(TestCase):
         url = "/api/2/entities?filter:collection_id=%s&filter:schema=LegalEntity" % self.col.id  # noqa
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
-        # The pre-existing legal entity should not be cleared
+        # The pre-existing legal entity should not be deleted
         assert res.json['total'] == 1, res.json

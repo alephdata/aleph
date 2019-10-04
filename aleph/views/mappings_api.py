@@ -52,7 +52,7 @@ def view(collection_id, mapping_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['DELETE'])  # noqa
 def delete(collection_id, mapping_id):
-    require(request.authz.session_write)
+    require(request.authz.logged_in)
     get_db_collection(collection_id, action=request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
@@ -75,9 +75,9 @@ def trigger(collection_id, mapping_id):
     return ('', 202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/clear',  # noqa
+@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush',  # noqa
                  methods=['POST', 'PUT'])
-def clear(collection_id, mapping_id):
+def flush(collection_id, mapping_id):
     """Delete the entities created by this mapping"""
     require(request.authz.logged_in)
     collection = get_db_collection(collection_id, request.authz.WRITE)

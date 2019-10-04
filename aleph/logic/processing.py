@@ -50,7 +50,7 @@ def process_collection(stage, collection, ingest=True,
 
 def _process_entity(entity, sync=False):
     """Perform pre-index processing on an entity, includes running the
-    NLP pipeline, adding proof if any."""
+    NLP pipeline"""
     if entity.id is None:
         raise InvalidData("No ID for entity", errors=entity.to_dict())
     tag_entity(entity)
