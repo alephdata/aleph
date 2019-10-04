@@ -77,7 +77,7 @@ endpoint.interceptors.response.use(
 
 
 function App() {
-  console.log('APP HAS UPDATED AGAIN AND AGAIN');
+  // extends blueprint icon renderer to render icons from the ftm iconRegistry
   initializeIconRenderer();
 
   return (
