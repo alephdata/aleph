@@ -15,6 +15,7 @@ from aleph.views.forms import MappingSchema
 from aleph.views.util import require, obj_or_404, get_session_id
 from aleph.queues import queue_task, OP_BULKLOAD
 from aleph.logic.collections import refresh_collection
+from aleph.index.entities import delete_entities_by_mapping_id
 
 blueprint = Blueprint('mappings_api', __name__)
 log = logging.getLogger(__name__)
@@ -106,17 +107,26 @@ def _get_mapping_query(mapping):
 
 
 @blueprint.route('/api/2/mappings/<int:mapping_id>/trigger', methods=['POST', 'PUT'])  # noqa
-def mapping(mapping_id):
+def trigger(mapping_id):
     require(request.authz.logged_in)
     mapping = obj_or_404(Mapping.by_id(mapping_id, role_id=request.authz.id))
     collection = get_db_collection(mapping.collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
     query = _get_mapping_query(mapping)
-    # try:
-    #     model.make_mapping(query)
-    # except InvalidMapping as invalid:
-    #     raise BadRequest(invalid)
     queue_task(collection, OP_BULKLOAD, job_id=get_session_id(), payload=query)
+    collection.touch()
+    db.session.commit()
+    refresh_collection(collection.id)
+    return ('', 202)
+
+
+@blueprint.route('/api/2/mappings/<int:mapping_id>/clear', methods=['POST', 'PUT'])  # noqa
+def clear(mapping_id):
+    """Delete the entities created by this mapping"""
+    require(request.authz.logged_in)
+    mapping = obj_or_404(Mapping.by_id(mapping_id, role_id=request.authz.id))
+    collection = get_db_collection(mapping.collection_id, request.authz.WRITE)
+    delete_entities_by_mapping_id(mapping_id.id)
     collection.touch()
     db.session.commit()
     refresh_collection(collection.id)

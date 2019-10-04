@@ -161,7 +161,7 @@ def format_proxy(proxy, collection, job_id=None, mapping_id=None, proof_id=None)
     data['job_id'] = job_id
     # Don't wanna tag the source table (otherwise it gets deleted when we clear
     # a mapping)
-    if mapping_id and data['id'] == proof_id:
+    if mapping_id and data['id'] != proof_id:
         data['mapping_id'] = mapping_id
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
@@ -210,3 +210,28 @@ def delete_entity(entity_id, exclude=None, sync=False):
                   refresh=refresh_sync(sync))
         q = {'term': {'entities': entity_id}}
         query_delete(entities_read_index(), q, sync=sync)
+
+
+def delete_entities_by_mapping_id(mapping_id, sync=False):
+    """Delete entities loaded by a mapping"""
+    index = entities_read_index()
+    query = {
+        'bool': {
+            'filter': [{
+                "match": {
+                    "mapping_id": mapping_id
+                }
+            }]
+        }
+    }
+    query = {
+        'query': query,
+        '_source': _source_spec([], []),
+        'size': MAX_PAGE
+    }
+    result = es.search(index=index, body=query)
+    # log.debug(result)
+    for doc in result.get('hits', {}).get('hits', []):
+        entity = unpack_result(doc)
+        if entity is not None:
+            delete_entity(entity['id'])
