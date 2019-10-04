@@ -2,6 +2,7 @@ import logging
 
 from flask import request
 from werkzeug.exceptions import BadRequest
+from followthemoney import model
 
 from aleph.core import archive
 from aleph.views.util import get_index_entity
@@ -14,9 +15,10 @@ log = logging.getLogger(__name__)
 def load_query():
     try:
         query = request.json.get('mapping_query', '{}')
-        # TODO: validate query
+        # just for validation
+        model.make_mapping({'entities': query})
     except Exception as ex:
-        raise BadRequest(str(ex))
+        raise BadRequest(ex)
     return query
 
 
@@ -25,7 +27,8 @@ def get_mapping_query(mapping):
     properties = table.get('properties', {})
     csv_hash = first(properties.get('csvHash'))
     query = {
-        'entities': mapping.query
+        'entities': mapping.query,
+        'proof_id': mapping.table_id,
     }
     url = None
     if csv_hash:
@@ -39,7 +42,6 @@ def get_mapping_query(mapping):
             return {
                 'query': query,
                 'mapping_id': mapping.id,
-                'proof_id': mapping.table_id,
             }
         raise BadRequest("Could not generate csv url for the table")
     raise BadRequest("Source table doesn't have a csvHash")

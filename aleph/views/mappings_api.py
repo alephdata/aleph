@@ -36,7 +36,6 @@ def create(collection_id):
     data = parse_request(MappingSchema)
     entity_id = data.get('table_id')
     query = load_query()
-    # TODO: validate query
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     mapping = Mapping.create(query, entity.get('id'), collection, request.authz.id)  # noqa
