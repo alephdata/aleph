@@ -22,7 +22,7 @@ docutils==0.15.2
 entrypoints==0.3
 et-xmlfile==1.0.1
 fakeredis==1.0.3
-followthemoney==1.21.0
+followthemoney==1.21.1
 google-api-core==1.14.2
 google-auth==1.6.3
 google-cloud-core==1.0.3
