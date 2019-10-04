@@ -7,7 +7,7 @@ import { logout } from 'src/actions/sessionActions';
 import { selectLocale } from 'src/selectors';
 import Router from './Router';
 import Translator from './Translator';
-
+import initializeIconRenderer from './initializeIconRenderer';
 
 // TODO Initialise store here instead of in store.js (which should just export
 // createStore).
@@ -77,6 +77,9 @@ endpoint.interceptors.response.use(
 
 
 function App() {
+  console.log('APP HAS UPDATED AGAIN AND AGAIN');
+  initializeIconRenderer();
+
   return (
     <Provider store={store}>
       <Translator>
