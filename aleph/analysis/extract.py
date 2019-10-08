@@ -55,27 +55,43 @@ def get_language(text):
     return langs[0]
 
 
+def _load_model(lang):
+    """Load the spaCy model for the specified language"""
+    attr_name = '_nlp_%s' % lang
+    if not hasattr(settings, attr_name):
+        log.info("Loading spaCy model: %s..." % lang)
+        try:
+            setattr(settings, attr_name, spacy.load(lang))
+        except OSError:
+            log.error("Cannot load spaCy model: %s", lang)
+    return getattr(settings, attr_name)
+
+
+def get_models(entity):
+    """Iterate over the NER models applicable to the given entity."""
+    languages = entity.get_type_values(registry.language)
+    models = []
+    for lang in languages:
+        if lang in settings.NER_MODELS:
+            models.append(_load_model(lang))
+    if not len(models):
+        models.append(_load_model(settings.NER_DEFAULT_MODEL))
+    return models
+
+
 def extract_entities(entity, text):
     if len(text) < TEXT_MIN_LENGTH or len(text) > TEXT_MAX_LENGTH:
         return
-    langs = get_language(text)
-    entity.add('detectedLanguage', langs)
-    if langs == ['en']:
-        lang = 'en'
-    else:
-        lang = 'xx'
-    attr_name = '_nlp_' + lang
-    if not hasattr(settings, attr_name):
-        log.info("Loading spaCy model: %s..." % lang)
-        setattr(settings, attr_name, spacy.load(lang))
-    doc = getattr(settings, attr_name)(text)
-    for ent in doc.ents:
-        tag_type = SPACY_TYPES.get(ent.label_)
-        if tag_type is None:
-            continue
-        if tag_type == registry.name:
-            name = clean_name(ent.text)
-            yield (registry.name, name)
-        if tag_type == registry.address:
-            for country in location_country(ent.text):
-                yield (registry.country, country)
+    entity.add('detectedLanguage', get_language(text))
+    for model in get_models(entity):
+        doc = model(text)
+        for ent in doc.ents:
+            tag_type = SPACY_TYPES.get(ent.label_)
+            if tag_type is None:
+                continue
+            if tag_type == registry.name:
+                name = clean_name(ent.text)
+                yield (registry.name, name)
+            if tag_type == registry.address:
+                for country in location_country(ent.text):
+                    yield (registry.country, country)
