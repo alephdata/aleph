@@ -175,7 +175,7 @@ class EntityViews extends React.Component {
             id="import"
             title={(
               <React.Fragment>
-                <Icon name="import" />
+                <Icon icon="import" className="left-icon" />
                 <FormattedMessage id="entity.import.view" defaultMessage="Import" />
               </React.Fragment>
             )}
