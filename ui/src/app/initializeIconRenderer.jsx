@@ -14,7 +14,6 @@ const renderSvgPaths = (pathsSize, iconName) => {
 
 // extends blueprint icon renderer to render icons from the ftm iconRegistry
 export default function initializeIconRenderer() {
-  console.log('calling initializeIconRenderer');
   BlueprintIcon.prototype._render = BlueprintIcon.prototype.render;
   BlueprintIcon.prototype._renderSvgPaths = BlueprintIcon.prototype.renderSvgPaths;
 
