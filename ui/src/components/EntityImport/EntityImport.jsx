@@ -44,7 +44,6 @@ export class EntityImport extends Component {
     super(props);
     this.state = {
       importModel: null,
-      schema: 'Thing',
       csvRows: [],
       mapping: {
         keys: [],
@@ -56,10 +55,6 @@ export class EntityImport extends Component {
 
   componentDidMount() {
     this.fetchCsvRows();
-  }
-
-  onSchemaSelect(schema) {
-    this.setState({ schema: schema.name });
   }
 
   onModelSelect(model) {
@@ -148,7 +143,7 @@ export class EntityImport extends Component {
 
   render() {
     const { model, document } = this.props;
-    const { schema, importModel, csvRows, mapping, isSubmitting } = this.state;
+    const { importModel, csvRows, mapping, isSubmitting } = this.state;
     let csvColumns;
     if (importModel) {
       const columnsJson = document.getFirst('columns');
@@ -170,44 +165,13 @@ export class EntityImport extends Component {
 
     const items = Object.keys(model.schemata)
       .map(key => model.schemata[key])
-      .filter(item => item.isCreateable && !item.abstract && item.schemata.indexOf(schema) >= 0)
+      .filter(item => item.isCreateable && !item.abstract && item.schemata.indexOf('Thing') >= 0)
       .sort((a, b) => a.label.localeCompare(b.label));
 
-    const schemata = [{
-      name: 'Thing',
-      label: 'Thing',
-    }, {
-      name: 'Interval',
-      label: 'Interval',
-    }];
     return (
       <form onSubmit={ev => this.onFormSubmit(ev)}>
         <Card style={{ marginBottom: '1rem' }}>
           <H5>Entity to create per row</H5>
-          <FormGroup
-            helperText={(
-              <span>
-                select
-                <em>Interval</em>
-                if you want to create some sort of relationship (payment, contract, ...)
-              </span>
-            )}
-            label="Schema"
-            labelFor="schema"
-          >
-            <Select
-              id="schema"
-              items={schemata}
-              filterable={false}
-              itemRenderer={itemRenderer}
-              onItemSelect={item => this.onSchemaSelect(item)}
-            >
-              <Button
-                text={schema || 'Please choose a schema'}
-                rightIcon="double-caret-vertical"
-              />
-            </Select>
-          </FormGroup>
           <FormGroup
             helperText={<span>Derived types from the selected Follow The Money schema</span>}
             label="Entity-Type"
