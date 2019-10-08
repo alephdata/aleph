@@ -103,6 +103,10 @@ LID_MODEL_PATH = env.get('ALEPH_LID_MODEL_PATH', '/aleph/contrib/lid.176.ftz')
 # Disable entity extraction
 TAG_ENTITIES = env.to_bool('ALEPH_TAG_ENTITIES', True)
 
+# List available NER models
+NER_MODELS = set(env.to_list('ALEPH_NER_MODELS', ['eng']))
+NER_DEFAULT_MODEL = 'xx'
+
 # Result high-lighting
 RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)
 
