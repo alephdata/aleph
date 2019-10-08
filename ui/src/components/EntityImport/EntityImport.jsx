@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -7,10 +6,11 @@ import { Button, Card, FormGroup, Callout, H5, Intent, MenuItem } from '@bluepri
 import { Select, MultiSelect } from '@blueprintjs/select';
 import Property from 'src/components/Property';
 import Papa from 'papaparse';
-import { showErrorToast } from "../../app/toast";
-import { defineMessages, injectIntl } from "react-intl";
+import { defineMessages, injectIntl } from 'react-intl';
 import { makeMapping } from 'src/actions';
 import './EntityImport.scss';
+import { showErrorToast } from 'src/app/toast';
+
 
 const messages = defineMessages({
   error: {
@@ -28,15 +28,16 @@ const itemRenderer = (item, { handleClick }) => (
 );
 
 const csvColumnRenderer = (item, { handleClick }) => (
-  <MenuItem style={{ maxWidth: '30vw' }}
-            key={item.id}
-            text={item.label}
-            label={item.helptext}
-            onClick={handleClick}
+  <MenuItem
+    style={{ maxWidth: '30vw' }}
+    key={item.id}
+    text={item.label}
+    label={item.helptext}
+    onClick={handleClick}
   />
 );
 
-const csvColumnTagRenderer = (item) => item;
+const csvColumnTagRenderer = item => item;
 
 export class EntityImport extends Component {
   constructor(props) {
@@ -45,39 +46,16 @@ export class EntityImport extends Component {
       importModel: null,
       schema: 'Thing',
       csvRows: [],
-      csvLoading: true,
       mapping: {
         keys: [],
-        properties: {}
+        properties: {},
       },
-      isSubmitting: false
+      isSubmitting: false,
     };
   }
 
   componentDidMount() {
     this.fetchCsvRows();
-  }
-
-  fetchCsvRows() {
-    const { document } = this.props;
-    this.setState({ csvLoading: true });
-
-    const url = document.links.csv;
-    // set chunk size to 100 KB
-    Papa.RemoteChunkSize = 1024 * 100;
-    Papa.parse(url, {
-      download: true,
-      delimiter: ',',
-      newline: '\n',
-      encoding: 'utf-8',
-      chunk: (results, parser) => {
-        this.setState({
-          csvRows: results.data.slice(0, 10),
-          csvLoading: false
-        });
-        parser.abort();
-      }
-    })
   }
 
   onSchemaSelect(schema) {
@@ -92,7 +70,7 @@ export class EntityImport extends Component {
     const { mapping } = this.state;
     const newMapping = Object.assign({}, mapping);
     newMapping.properties[entityProp] = {
-      column: csvColumn.id
+      column: csvColumn.id,
     };
     this.setState({ mapping: newMapping });
   }
@@ -116,14 +94,9 @@ export class EntityImport extends Component {
     }
   }
 
-  getMappingForProp(prop) {
-    const { mapping } = this.state;
-    return mapping.properties[prop] || {};
-  }
-
   async onFormSubmit(event) {
     event.preventDefault();
-    const { intl, document, makeMapping } = this.props;
+    const { intl, document } = this.props;
     const { mapping, importModel, isSubmitting } = this.state;
     if (isSubmitting) {
       return;
@@ -137,16 +110,40 @@ export class EntityImport extends Component {
           entities: {
             a: Object.assign({
               schema: importModel.name,
-            }, mapping)
-          }
-        }]
+            }, mapping),
+          },
+        }],
       };
-      await makeMapping(document.collection.id, completeMapping);
+      await this.props.makeMapping(document.collection.id, completeMapping);
     } catch (e) {
       console.error(e);
       showErrorToast(intl.formatMessage(messages.error));
       this.setState({ isSubmitting: false });
     }
+  }
+
+  getMappingForProp(prop) {
+    const { mapping } = this.state;
+    return mapping.properties[prop] || {};
+  }
+
+  fetchCsvRows() {
+    const { document } = this.props;
+    const url = document.links.csv;
+    // set chunk size to 100 KB
+    Papa.RemoteChunkSize = 1024 * 100;
+    Papa.parse(url, {
+      download: true,
+      delimiter: ',',
+      newline: '\n',
+      encoding: 'utf-8',
+      chunk: (results, parser) => {
+        this.setState({
+          csvRows: results.data.slice(0, 10),
+        });
+        parser.abort();
+      },
+    });
   }
 
   render() {
@@ -166,8 +163,8 @@ export class EntityImport extends Component {
         return {
           id: label,
           helptext: alternateLabel,
-          label: label
-        }
+          label,
+        };
       });
     }
 
@@ -178,17 +175,23 @@ export class EntityImport extends Component {
 
     const schemata = [{
       name: 'Thing',
-      label: 'Thing'
+      label: 'Thing',
     }, {
       name: 'Interval',
-      label: 'Interval'
+      label: 'Interval',
     }];
     return (
-      <form onSubmit={(ev) => this.onFormSubmit(ev)}>
+      <form onSubmit={ev => this.onFormSubmit(ev)}>
         <Card style={{ marginBottom: '1rem' }}>
           <H5>Entity to create per row</H5>
           <FormGroup
-            helperText={<span>select <em>Interval</em> if you want to create some sort of relationship (payment, contract, ...)</span>}
+            helperText={(
+              <span>
+                select
+                <em>Interval</em>
+                if you want to create some sort of relationship (payment, contract, ...)
+              </span>
+            )}
             label="Schema"
             labelFor="schema"
           >
@@ -199,8 +202,10 @@ export class EntityImport extends Component {
               itemRenderer={itemRenderer}
               onItemSelect={item => this.onSchemaSelect(item)}
             >
-              <Button text={schema ? schema : 'Please choose a schema'}
-                      rightIcon="double-caret-vertical"/>
+              <Button
+                text={schema || 'Please choose a schema'}
+                rightIcon="double-caret-vertical"
+              />
             </Select>
           </FormGroup>
           <FormGroup
@@ -215,8 +220,10 @@ export class EntityImport extends Component {
               itemRenderer={itemRenderer}
               onItemSelect={item => this.onModelSelect(item)}
             >
-              <Button text={importModel ? importModel.label : 'Please choose an Entity-Type'}
-                      rightIcon="double-caret-vertical"/>
+              <Button
+                text={importModel ? importModel.label : 'Please choose an Entity-Type'}
+                rightIcon="double-caret-vertical"
+              />
             </Select>
           </FormGroup>
         </Card>
@@ -231,32 +238,44 @@ export class EntityImport extends Component {
 
                 <table className="bp3-html-table bp3-html-table-condensed bp3-small bp3-html-table-striped">
                   <thead>
-                  <tr>
-                    <td>Entity</td>
-                    <td>CSV</td>
-                  </tr>
+                    <tr>
+                      <td>Entity</td>
+                      <td>CSV</td>
+                    </tr>
                   </thead>
                   <tbody>
-                  {importModel.featured
-                    .sort((a, b) => a.localeCompare(b))
-                    .map(prop => <tr key={prop}>
-                      <td><Property.Name prop={importModel.getProperty(prop)}/></td>
-                      <td><Select
-                        id={`csv-column-${prop}`}
-                        items={csvColumns}
-                        filterable={false}
-                        itemRenderer={csvColumnRenderer}
-                        onItemSelect={item => this.onCsvColumnSelect(prop, item)}
-                      >
-                        <Button text={this.getMappingForProp(prop).column || "(none)"}
-                                rightIcon="double-caret-vertical"/>
-                      </Select></td>
-                    </tr>)}
+                    {importModel.featured
+                      .sort((a, b) => a.localeCompare(b))
+                      .map(prop => (
+                        <tr key={prop}>
+                          <td><Property.Name prop={importModel.getProperty(prop)} /></td>
+                          <td>
+                            <Select
+                              id={`csv-column-${prop}`}
+                              items={csvColumns}
+                              filterable={false}
+                              itemRenderer={csvColumnRenderer}
+                              onItemSelect={item => this.onCsvColumnSelect(prop, item)}
+                            >
+                              <Button
+                                text={this.getMappingForProp(prop).column || '(none)'}
+                                rightIcon="double-caret-vertical"
+                              />
+                            </Select>
+                          </td>
+                        </tr>
+                      ))
+                    }
                   </tbody>
                 </table>
               </FormGroup>
               <FormGroup
-                helperText={<span>All keys combined specify the id of the entity. The id has to be unique and can be refered when creating relationships.</span>}
+                helperText={(
+                  <span>
+                    All keys combined specify the id of the entity. The id has
+                    to be unique and can be refered when creating relationships.
+                  </span>
+                )}
                 label="Keys"
               >
                 <MultiSelect
@@ -267,10 +286,10 @@ export class EntityImport extends Component {
                   selectedItems={mapping.keys}
                   itemPredicate={() => true}
                   tagInputProps={{
-                    onRemove: (item) => this.onCsvKeyRemove(item),
+                    onRemove: item => this.onCsvKeyRemove(item),
                   }}
                   noResults={
-                    <MenuItem disabled text="No Results"/>
+                    <MenuItem disabled text="No Results" />
                   }
                   popoverProps={{ popoverClassName: 'EntityImportForm-popover' }}
                 />
@@ -282,14 +301,20 @@ export class EntityImport extends Component {
               disabled={isSubmitting}
               intent={Intent.PRIMARY}
               text="Import"
-              onClick={(ev) => this.onFormSubmit(ev)}
+              onClick={ev => this.onFormSubmit(ev)}
             />
           </section>
         )}
         <Callout intent="primary" title="Look up the schema" style={{ marginTop: '1rem' }}>
-          It is very helpful to have a look into the documentation of the <a
-          href="https://docs.alephdata.org/developers/followthemoney#schema" target="_blank">Follow the Money
-          schema</a> while filling out this form
+          It is very helpful to have a look into the documentation of the
+          <a
+            href="https://docs.alephdata.org/developers/followthemoney#schema"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Follow the Money schema
+          </a>
+          while filling out this form
         </Callout>
       </form>
     );
@@ -304,5 +329,5 @@ const mapStateToProps = state => ({
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
-  injectIntl
+  injectIntl,
 )(EntityImport);
