@@ -71,3 +71,8 @@ export const triggerCollectionCancel = asyncActionCreator(id => async () => {
   const response = await endpoint.delete(`collections/${id}/status`);
   return { id, data: response.data };
 }, { name: 'TRIGGER_COLLECTION_CANCEL' });
+
+export const makeMapping = asyncActionCreator((id, mapping) => async () => {
+  const response = await endpoint.post(`collections/${id}/mapping`, mapping);
+  return { id, data: response.data };
+}, { name: 'FETCH_COLLECTION_PERMISSIONS' });

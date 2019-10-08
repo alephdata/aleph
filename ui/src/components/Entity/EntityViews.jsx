@@ -17,6 +17,7 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
+import EntityImport from 'src/components/EntityImport/EntityImport';
 import Schema from 'src/components/common/Schema';
 import Property from 'src/components/Property';
 
@@ -167,6 +168,18 @@ class EntityViews extends React.Component {
               </TextLoading>
             )}
             panel={<EntitySimilarMode entity={entity} />}
+          />
+        )}
+        { (hasViewMode && entity.schema.isA('Table')) && (
+          <Tab
+            id="import"
+            title={(
+              <React.Fragment>
+                <Icon name="import" />
+                <FormattedMessage id="entity.import.view" defaultMessage="Import" />
+              </React.Fragment>
+            )}
+            panel={<EntityImport document={entity} />}
           />
         )}
       </Tabs>
