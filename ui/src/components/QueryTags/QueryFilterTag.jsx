@@ -57,10 +57,10 @@ class QueryFilterTag extends PureComponent {
         return (
           <Entity.Load id={value} renderWhenLoading="…">
             {entity => (
-              <React.Fragment>
+              <>
                 <FormattedMessage id="search.filterTag.ancestors" defaultMessage="in:" />
                 <Entity.Label entity={entity} icon />
-              </React.Fragment>
+              </>
             )}
           </Entity.Load>
         );
@@ -68,10 +68,10 @@ class QueryFilterTag extends PureComponent {
         return (
           <Entity.Load id={value} renderWhenLoading="…">
             {entity => (
-              <React.Fragment>
+              <>
                 <FormattedMessage id="search.filterTag.exclude" defaultMessage="not:" />
                 <Entity.Label entity={entity} icon />
-              </React.Fragment>
+              </>
             )}
           </Entity.Load>
         );
@@ -89,10 +89,10 @@ class QueryFilterTag extends PureComponent {
       case 'phones':
       case 'addresses':
         return (
-          <React.Fragment>
+          <>
             <Tag.Icon field={filter} />
             {value}
-          </React.Fragment>
+          </>
         );
       default:
         return value;

@@ -22,10 +22,10 @@ import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
 
+const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
+
 
 class EntityScreen extends Component {
-  static SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
-
   constructor(props) {
     super(props);
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
@@ -59,7 +59,7 @@ class EntityScreen extends Component {
   }
 
   getEntitySearchScope(entity) {
-    const hasSearch = entity.schema.isAny(EntityScreen.SEARCHABLES) && !entity.schema.isA('Email');
+    const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
     if (!hasSearch) {
       return null;
     }
@@ -77,11 +77,11 @@ class EntityScreen extends Component {
       return null;
     }
     const item = (
-      <React.Fragment>
+      <>
         <Entity.Label entity={entity} icon truncate={30} />
-        {': '}
+        { ': ' }
         <Property.Reverse prop={reference.property} />
-      </React.Fragment>
+      </>
     );
     const entityLink = getEntityLink(entity);
     return {

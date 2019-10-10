@@ -51,7 +51,7 @@ class PdfViewerSearch extends Component {
     return (
       <div className="pages">
         {result.total === 0 && (
-          <React.Fragment>
+          <>
             <div className="bp3-callout bp3-intent-warning bp3-icon-search">
               <FormattedMessage
                 id="document.search.no_match"
@@ -59,7 +59,7 @@ class PdfViewerSearch extends Component {
               />
             </div>
             {this.props.children}
-          </React.Fragment>
+          </>
         )}
         <ul>
           {result.results.map(res => (

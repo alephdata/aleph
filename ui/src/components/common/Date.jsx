@@ -21,7 +21,7 @@ class Date extends PureComponent {
     const availableChunks = dateString.split(/-/);
     const dateObject = Reflect.construct(window.Date, [dateString]);
     return (
-      <React.Fragment>
+      <>
         <FormattedDate
           value={dateObject}
           year="numeric"
@@ -29,7 +29,7 @@ class Date extends PureComponent {
           day={availableChunks[2] && '2-digit'}
         />
         {showTime && <FormattedTime value={dateObject} />}
-      </React.Fragment>
+      </>
     );
   }
 }

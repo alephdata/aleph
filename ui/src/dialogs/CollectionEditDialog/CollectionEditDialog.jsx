@@ -196,7 +196,7 @@ export class CollectionEditDialog extends Component {
             </div>
           </div>
           { !collection.casefile && (
-            <React.Fragment>
+            <>
               <div className="bp3-form-group">
                 <label className="bp3-label">
                   <FormattedMessage id="collection.edit.info.publisher" defaultMessage="Publisher" />
@@ -257,7 +257,7 @@ export class CollectionEditDialog extends Component {
                   />
                 </div>
               </div>
-            </React.Fragment>
+            </>
           )}
           <div className="bp3-form-group">
             <label className="bp3-label">

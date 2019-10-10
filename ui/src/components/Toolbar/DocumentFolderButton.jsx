@@ -27,7 +27,7 @@ class DocumentFolderButton extends React.Component {
     }
 
     return (
-      <React.Fragment>
+      <>
         <Button onClick={this.toggleFolder} icon="folder-new">
           <FormattedMessage id="document.folder.button" defaultMessage="New folder" />
         </Button>
@@ -37,7 +37,7 @@ class DocumentFolderButton extends React.Component {
           isOpen={this.state.isFolderOpen}
           toggleDialog={this.toggleFolder}
         />
-      </React.Fragment>
+      </>
     );
   }
 }

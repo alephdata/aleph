@@ -102,12 +102,12 @@ export class Screen extends React.Component {
           </div>
         )}
         {!forceAuth && (
-          <React.Fragment>
+          <>
             <main className={mainClass}>
               {this.props.children}
             </main>
             <EntityPreview />
-          </React.Fragment>
+          </>
         )}
         {forceAuth && (
           <AuthenticationDialog

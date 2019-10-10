@@ -63,7 +63,7 @@ class CollectionManageMenu extends Component {
     }
 
     return (
-      <React.Fragment>
+      <>
         <ButtonGroup>
           <Button icon="cog" onClick={this.toggleEdit}>
             <FormattedMessage id="collection.info.edit" defaultMessage="Settings" />
@@ -96,7 +96,7 @@ class CollectionManageMenu extends Component {
           collection={collection}
           toggleDialog={this.toggleDelete}
         />
-      </React.Fragment>
+      </>
     );
   }
 }

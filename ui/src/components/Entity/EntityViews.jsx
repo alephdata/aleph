@@ -69,12 +69,12 @@ class EntityViews extends React.Component {
           <Tab
             id="info"
             title={(
-              <React.Fragment>
+              <>
                 <Icon icon="info" iconSize="14px" className="left-icon" />
                 <span className="tab-padding">
                   <FormattedMessage id="entity.info.info" defaultMessage="Info" />
                 </span>
-              </React.Fragment>
+              </>
             )}
             panel={
               <EntityInfoMode entity={entity} />
@@ -85,10 +85,10 @@ class EntityViews extends React.Component {
           <Tab
             id="view"
             title={(
-              <React.Fragment>
+              <>
                 <Icon icon="showdocuments" />
                 <FormattedMessage id="entity.info.view" defaultMessage="View" />
-              </React.Fragment>
+              </>
             )}
             panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
           />
@@ -97,10 +97,10 @@ class EntityViews extends React.Component {
           <Tab
             id="text"
             title={(
-              <React.Fragment>
+              <>
                 <Icon icon="plaintext" />
                 <FormattedMessage id="entity.info.text" defaultMessage="Text" />
-              </React.Fragment>
+              </>
             )}
             panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
           />
@@ -131,11 +131,11 @@ class EntityViews extends React.Component {
             id={ref.property.qname}
             key={ref.property.qname}
             title={(
-              <React.Fragment>
+              <>
                 <Schema.Icon schema={ref.schema} iconSize="14px" />
                 <Property.Reverse prop={ref.property} />
                 <Count count={ref.count} />
-              </React.Fragment>
+              </>
             )}
             panel={
               <EntityReferencesMode entity={entity} mode={activeMode} />

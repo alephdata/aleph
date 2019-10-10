@@ -36,13 +36,13 @@ class SchemaLabel extends Component {
 function SchemaLink(props) {
   const { schema, plural, url, children } = props;
   return (
-    <React.Fragment>
+    <>
       <Link to={url}>
         <Schema.Icon schema={schema} className="left-icon" />
         <Schema.Label schema={schema} icon={false} plural={plural} />
         {children}
       </Link>
-    </React.Fragment>
+    </>
   );
 }
 

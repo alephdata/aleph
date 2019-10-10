@@ -82,7 +82,7 @@ export class CollectionXrefMatchesScreen extends Component {
   renderXrefTable() {
     const { other, index, matches } = this.props;
     return (
-      <React.Fragment>
+      <>
         <table className="CollectionXrefMatchesScreen data-table">
           <thead>
             <tr>
@@ -161,7 +161,7 @@ export class CollectionXrefMatchesScreen extends Component {
                   <FormattedNumber value={parseInt(parseFloat(match.score) * 100, 10)} />
                 </td>
                 {match.entity && (
-                  <React.Fragment>
+                  <>
                     <td className="entity">
                       <Entity.Link entity={match.entity} preview icon />
                     </td>
@@ -171,7 +171,7 @@ export class CollectionXrefMatchesScreen extends Component {
                     <td>
                       <Country.List codes={match.entity.getTypeValues('country')} short />
                     </td>
-                  </React.Fragment>
+                  </>
                 )}
                 {!match.entity && (
                   <td colSpan="3">
@@ -179,7 +179,7 @@ export class CollectionXrefMatchesScreen extends Component {
                   </td>
                 )}
                 {match.match && (
-                  <React.Fragment>
+                  <>
                     <td className="entity">
                       <Entity.Link entity={match.match} preview icon />
                     </td>
@@ -189,7 +189,7 @@ export class CollectionXrefMatchesScreen extends Component {
                     <td>
                       <Country.List codes={match.match.getTypeValues('country')} short />
                     </td>
-                  </React.Fragment>
+                  </>
                 )}
                 {!match.match && (
                   <td colSpan="3">
@@ -208,7 +208,7 @@ export class CollectionXrefMatchesScreen extends Component {
         { matches.isLoading && (
           <SectionLoading />
         )}
-      </React.Fragment>
+      </>
     );
   }
 

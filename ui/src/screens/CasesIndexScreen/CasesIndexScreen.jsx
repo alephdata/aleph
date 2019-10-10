@@ -110,7 +110,7 @@ export class CasesIndexScreen extends Component {
             />
           )}
           {!result.isLoading && result.total !== 0 && (
-            <React.Fragment>
+            <>
               <CollectionIndexSearch
                 query={query}
                 updateQuery={this.updateQuery}
@@ -126,7 +126,7 @@ export class CasesIndexScreen extends Component {
                 bottomOffset="-300px"
                 scrollableAncestor={window}
               />
-            </React.Fragment>
+            </>
           )}
           {result.isLoading && (
             <SectionLoading />

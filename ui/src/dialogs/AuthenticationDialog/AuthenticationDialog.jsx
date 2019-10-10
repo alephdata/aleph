@@ -146,12 +146,12 @@ export class AuthenticationDialog extends Component {
               )}
           </section>
           {auth.oauth_uri && (
-            <React.Fragment>
+            <>
               <MenuDivider className="menu-divider" />
               <Button icon="log-in" large fill onClick={this.onOAuthLogin}>
                 <FormattedMessage id="login.oauth" defaultMessage="Sign in via OAuth" />
               </Button>
-            </React.Fragment>
+            </>
           )}
         </div>
       </Dialog>

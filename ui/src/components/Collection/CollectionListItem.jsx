@@ -22,15 +22,13 @@ class CollectionListItem extends PureComponent {
           <Count className="bp3-intent-primary" count={collection.count} full />
           <Collection.Link preview={preview} collection={collection} icon />
         </H4>
-        {collection.summary
-          && (
+        {collection.summary && (
           <p className="summary">
             <Truncate lines={2} title={collection.summary}>
               { collection.summary }
             </Truncate>
           </p>
-          )
-        }
+        )}
         <p className="details">
           { !collection.casefile && (
             <span className="details-item">
@@ -48,14 +46,12 @@ class CollectionListItem extends PureComponent {
               }}
             />
           </span>
-
           { collection.countries && collection.countries.length > 0 && (
             <span className="details-item">
               <Icon icon="globe" />
               <Country.List codes={collection.countries} truncate={3} />
             </span>
           )}
-
           { collection.casefile && (
             <span className="details-item">
               <Icon icon="social-media" />
