@@ -1,4 +1,5 @@
 from unittest import skip  # noqa
+import json
 import logging
 
 from followthemoney import model
@@ -36,6 +37,20 @@ class MappingAPITest(TestCase):
         self.ent.id = self.col.ns.sign(self.ent.id)
         index_proxy(self.col, self.ent)
         data = {
+            'id': 'foo2',
+            'schema': 'Table',
+            'properties': {
+                'csvHash': self.content_hash,
+                'contentHash': self.content_hash,
+                'mimeType': 'text/csv',
+                'fileName': 'experts.csv',
+                'name': 'experts.csv'
+            }
+        }
+        self.ent2 = EntityProxy.from_dict(model, data)
+        self.ent2.id = self.col.ns.sign(self.ent2.id)
+        index_proxy(self.col, self.ent2)
+        data = {
             'id': 'bar',
             'schema': 'LegalEntity',
             'properties': {
@@ -70,9 +85,6 @@ class MappingAPITest(TestCase):
                         "nationality": {
                             "column": "nationality"
                         },
-                        "gender": {
-                            "column": "gender"
-                        }
                     }
                 }
             }
@@ -112,3 +124,44 @@ class MappingAPITest(TestCase):
         assert res.status_code == 200, res
         # The pre-existing legal entity should not be deleted
         assert res.json['total'] == 1, res.json
+
+        data = {
+            'table_id': self.ent2.id,
+            'mapping_query': {
+                "person": {
+                    "schema": "Person",
+                    "keys": [
+                        "name",
+                        "nationality"
+                    ],
+                    "properties": {
+                        "name": {
+                            "column": "name"
+                        },
+                        "nationality": {
+                            "column": "nationality"
+                        },
+                        "gender": {
+                            "column": "gender"
+                        }
+                    }
+                }
+            }
+        }
+        url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        assert 'gender' not in json.dumps(res.json['query']), res.json
+        res = self.client.post(url, json=data, headers=self.headers_x)
+        assert res.status_code == 403, res
+        res = self.client.post(url, json=data, headers=self.headers)
+        assert res.status_code == 200, res
+        assert res.json.get('table_id') == self.ent2.id, res.json
+        assert 'gender' in json.dumps(res.json['query'])
+
+        res = self.client.delete(url, headers=self.headers_x)
+        assert res.status_code == 403, res
+        res = self.client.delete(url, headers=self.headers)
+        assert res.status_code == 204, res
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 404, res

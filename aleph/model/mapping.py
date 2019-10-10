@@ -27,10 +27,12 @@ class Mapping(db.Model, SoftDeleteModel):
 
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
-    def update(self, query=None):
+    def update(self, query=None, table_id=None):
         self.updated_at = datetime.utcnow()
         if query:
             self.query = query
+        if table_id:
+            self.table_id = table_id
         db.session.add(self)
         db.session.commit()
 
