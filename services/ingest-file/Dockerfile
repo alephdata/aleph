@@ -2,6 +2,7 @@ FROM ubuntu:19.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
+    && apt-get -q -y upgrade \
     && apt-get -q -y install \
         tesseract-ocr-eng \
         tesseract-ocr-swa \
