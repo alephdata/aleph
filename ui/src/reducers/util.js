@@ -50,7 +50,7 @@ export function objectLoadError(state, id, error) {
       isError: true,
       shouldLoad: false,
       error,
-    }
+    },
   };
 }
 
