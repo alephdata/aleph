@@ -2,6 +2,9 @@ import re
 from banal import ensure_list
 from followthemoney.types import registry
 
+from aleph.analysis.util import TAG_EMAIL, TAG_PHONE
+from aleph.analysis.util import TAG_IP, TAG_IBAN, TAG_COUNTRY
+
 
 EMAIL_REGEX = re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}', re.IGNORECASE)  # noqa
 PHONE_REGEX = re.compile(r'(\+?[\d\-\(\)\/\s]{5,}\d{2})', re.IGNORECASE)  # noqa
@@ -10,21 +13,23 @@ IPV6_REGEX = re.compile(r'(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]
 IBAN_REGEX = re.compile(r'\b([a-zA-Z]{2} ?[0-9]{2} ?[a-zA-Z0-9]{4} ?[0-9]{7} ?([a-zA-Z0-9]?){0,16})\b', re.IGNORECASE)  # noqa
 
 REGEX_TYPES = {
-    EMAIL_REGEX: registry.email,
-    PHONE_REGEX: registry.phone,
-    IPV4_REGEX: registry.ip,
-    IPV6_REGEX: registry.ip,
-    IBAN_REGEX: registry.iban,
+    EMAIL_REGEX: TAG_EMAIL,
+    PHONE_REGEX: TAG_PHONE,
+    IPV4_REGEX: TAG_IP,
+    IPV6_REGEX: TAG_IP,
+    IBAN_REGEX: TAG_IBAN,
 }
 
 
-def extract_patterns(text, countries):
-    for pattern, tag_type in REGEX_TYPES.items():
+def extract_patterns(entity, text):
+    countries = entity.get_type_values(registry.country)
+    for pattern, prop_name in REGEX_TYPES.items():
+        prop = entity.schema.get(prop_name)
         for match in pattern.finditer(text):
             match_text = match.group(0)
-            cleaned_text = tag_type.clean(match_text, countries=countries)
+            cleaned_text = prop.type.clean(match_text, countries=countries)
             if cleaned_text is not None:
-                yield (tag_type, cleaned_text)
-            hints = tag_type.country_hint(cleaned_text)
+                yield (prop_name, cleaned_text)
+            hints = prop.type.country_hint(cleaned_text)
             for country in ensure_list(hints):
-                yield (registry.country, country)
+                yield (TAG_COUNTRY, country)

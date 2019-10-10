@@ -25,7 +25,6 @@ import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
-import './Icon';
 
 export {
   Breadcrumbs,

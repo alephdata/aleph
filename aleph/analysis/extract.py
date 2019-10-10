@@ -9,6 +9,8 @@ from followthemoney.types import registry
 
 from aleph.core import settings, kv
 from aleph.analysis.util import tag_key, place_key
+from aleph.analysis.util import TAG_PERSON, TAG_COMPANY
+from aleph.analysis.util import TAG_LOCATION, TAG_COUNTRY
 
 log = logging.getLogger(__name__)
 TEXT_MIN_LENGTH = 60
@@ -17,11 +19,11 @@ NAME_MAX_LENGTH = 100
 NAME_MIN_LENGTH = 4
 # https://spacy.io/api/annotation#named-entities
 SPACY_TYPES = {
-    'PER': registry.name,
-    'PERSON': registry.name,
-    'ORG': registry.name,
-    'LOC': registry.address,
-    'GPE': registry.address
+    'PER': TAG_PERSON,
+    'PERSON': TAG_PERSON,
+    'ORG': TAG_COMPANY,
+    'LOC': TAG_LOCATION,
+    'GPE': TAG_LOCATION
 }
 
 
@@ -55,27 +57,43 @@ def get_language(text):
     return langs[0]
 
 
+def _load_model(lang):
+    """Load the spaCy model for the specified language"""
+    attr_name = '_nlp_%s' % lang
+    if not hasattr(settings, attr_name):
+        log.info("Loading spaCy model: %s..." % lang)
+        try:
+            setattr(settings, attr_name, spacy.load(lang))
+        except OSError:
+            log.error("Cannot load spaCy model: %s", lang)
+    return getattr(settings, attr_name)
+
+
+def get_models(entity):
+    """Iterate over the NER models applicable to the given entity."""
+    languages = entity.get_type_values(registry.language)
+    models = []
+    for lang in languages:
+        if lang in settings.NER_MODELS:
+            models.append(_load_model(lang))
+    if not len(models):
+        models.append(_load_model(settings.NER_DEFAULT_MODEL))
+    return models
+
+
 def extract_entities(entity, text):
     if len(text) < TEXT_MIN_LENGTH or len(text) > TEXT_MAX_LENGTH:
         return
-    langs = get_language(text)
-    entity.add('detectedLanguage', langs)
-    if langs == ['en']:
-        lang = 'en'
-    else:
-        lang = 'xx'
-    attr_name = '_nlp_' + lang
-    if not hasattr(settings, attr_name):
-        log.info("Loading spaCy model: %s..." % lang)
-        setattr(settings, attr_name, spacy.load(lang))
-    doc = getattr(settings, attr_name)(text)
-    for ent in doc.ents:
-        tag_type = SPACY_TYPES.get(ent.label_)
-        if tag_type is None:
-            continue
-        if tag_type == registry.name:
-            name = clean_name(ent.text)
-            yield (registry.name, name)
-        if tag_type == registry.address:
-            for country in location_country(ent.text):
-                yield (registry.country, country)
+    entity.add('detectedLanguage', get_language(text))
+    for model in get_models(entity):
+        doc = model(text)
+        for ent in doc.ents:
+            prop_name = SPACY_TYPES.get(ent.label_)
+            if prop_name is None:
+                continue
+            if prop_name in (TAG_COMPANY, TAG_PERSON):
+                name = clean_name(ent.text)
+                yield (prop_name, name)
+            if prop_name == TAG_LOCATION:
+                for country in location_country(ent.text):
+                    yield (TAG_COUNTRY, country)

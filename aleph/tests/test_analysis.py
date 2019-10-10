@@ -25,7 +25,7 @@ class TestAnalysis(TestCase):
         entity.add('bodyText', text)
         analyze_entity(entity)
         names = entity.get_type_values(registry.name)
-        assert "d'Emmanuel Macron" in names, names
+        assert "Emmanuel Macron" in names, names
         assert entity.get('detectedLanguage') == ['fra'], entity.get('detectedLanguage')  # noqa
 
     def test_pattern_extract(self):
