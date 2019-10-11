@@ -152,16 +152,32 @@ class MappingAPITest(TestCase):
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         assert 'gender' not in json.dumps(res.json['query']), res.json
+        url = "/api/2/collections/%s/mappings/%s?flush=true" % (self.col.id, mapping_id)  # noqa
         res = self.client.post(url, json=data, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 200, res
         assert res.json.get('table_id') == self.ent2.id, res.json
         assert 'gender' in json.dumps(res.json['query'])
+        url = "/api/2/entities?filter:collection_id=%s&filter:schema=LegalEntity" % self.col.id  # noqa
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        assert res.json['total'] == 1, res.json
 
+        url = "/api/2/collections/%s/mappings/%s/trigger" % (self.col.id, mapping_id)  # noqa
+        res = self.client.post(url, headers=self.headers)
+        url = "/api/2/entities?filter:collection_id=%s&filter:schema=Person" % self.col.id  # noqa
+        res = self.client.get(url, headers=self.headers)
+        assert res.json['total'] == 14, res.json
+
+        url = "/api/2/collections/%s/mappings/%s?flush=true" % (self.col.id, mapping_id)  # noqa
         res = self.client.delete(url, headers=self.headers_x)
         assert res.status_code == 403, res
         res = self.client.delete(url, headers=self.headers)
         assert res.status_code == 204, res
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 404, res
+        url = "/api/2/entities?filter:collection_id=%s&filter:schema=LegalEntity" % self.col.id  # noqa
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        assert res.json['total'] == 1, res.json

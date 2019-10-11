@@ -53,7 +53,7 @@ def view(collection_id, mapping_id):
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['POST', 'PUT'])  # noqa
 def update(collection_id, mapping_id):
     require(request.authz.logged_in)
-    get_db_collection(collection_id, action=request.authz.WRITE)
+    collection = get_db_collection(collection_id, action=request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     data = parse_request(MappingSchema)
     entity_id = data.get('table_id')
@@ -61,16 +61,25 @@ def update(collection_id, mapping_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     mapping.update(query=query, table_id=entity.get('id'))
+    if request.args.get('flush') is True:
+        delete_entities_by_mapping_id(mapping.id)
+        collection.touch()
+        db.session.commit()
+        refresh_collection(collection.id)
     return MappingSerializer.jsonify(mapping)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['DELETE'])  # noqa
 def delete(collection_id, mapping_id):
     require(request.authz.logged_in)
-    get_db_collection(collection_id, action=request.authz.WRITE)
+    collection = get_db_collection(collection_id, action=request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
-    db.session.commit()
+    if request.args.get('flush') is True:
+        delete_entities_by_mapping_id(mapping.id)
+        collection.touch()
+        db.session.commit()
+        refresh_collection(collection.id)
     return ('', 204)
 
 
