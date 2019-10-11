@@ -212,7 +212,7 @@ def delete_entities_by_mapping_id(mapping_id, sync=False):
     query = {
         'bool': {
             'filter': [{
-                "match": {
+                "term": {
                     "mapping_id": mapping_id
                 }
             }]
