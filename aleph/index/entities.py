@@ -137,9 +137,10 @@ def index_proxy(collection, proxy, sync=False):
     return index_bulk(collection, [proxy], sync=sync)
 
 
-def index_bulk(collection, entities, job_id=None, sync=False):
+def index_bulk(collection, entities, job_id=None, mapping_id=None, sync=False):  # noqa
     """Index a set of entities."""
-    entities = (format_proxy(p, collection, job_id=job_id) for p in entities)
+    entities = (format_proxy(p, collection, job_id=job_id,
+                             mapping_id=mapping_id) for p in entities)
     bulk_actions(entities, sync=sync)
 
 
@@ -148,13 +149,14 @@ def _numeric_values(type_, values):
     return [v for v in values if v is not None]
 
 
-def format_proxy(proxy, collection, job_id=None):
+def format_proxy(proxy, collection, job_id=None, mapping_id=None):  # noqa
     """Apply final denormalisations to the index."""
     proxy.context = {}
     proxy = collection.ns.apply(proxy)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
     data['job_id'] = job_id
+    data['mapping_id'] = mapping_id
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
@@ -202,3 +204,28 @@ def delete_entity(entity_id, exclude=None, sync=False):
                   refresh=refresh_sync(sync))
         q = {'term': {'entities': entity_id}}
         query_delete(entities_read_index(), q, sync=sync)
+
+
+def delete_entities_by_mapping_id(mapping_id, sync=False):
+    """Delete entities loaded by a mapping"""
+    index = entities_read_index()
+    query = {
+        'bool': {
+            'filter': [{
+                "term": {
+                    "mapping_id": mapping_id
+                }
+            }]
+        }
+    }
+    query = {
+        'query': query,
+        '_source': _source_spec([], []),
+        'size': MAX_PAGE
+    }
+    result = es.search(index=index, body=query)
+    # log.debug(result)
+    for doc in result.get('hits', {}).get('hits', []):
+        entity = unpack_result(doc)
+        if entity is not None:
+            delete_entity(entity['id'])

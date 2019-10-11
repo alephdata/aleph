@@ -85,25 +85,6 @@ def process(collection_id):
     return ('', 202)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/mapping', methods=['POST', 'PUT'])  # noqa
-def mapping(collection_id):
-    collection = get_db_collection(collection_id, request.authz.WRITE)
-    require(request.authz.can_bulk_import())
-    if not request.is_json:
-        raise BadRequest()
-    data = request.get_json().get(collection.foreign_id)
-    for query in keys_values(data, 'queries', 'query'):
-        try:
-            model.make_mapping(query)
-        except InvalidMapping as invalid:
-            raise BadRequest(invalid)
-    queue_task(collection, OP_BULKLOAD, job_id=get_session_id(), payload=data)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection_id)
-    return ('', 202)
-
-
 @blueprint.route('/api/2/collections/<int:collection_id>/_bulk', methods=['POST'])  # noqa
 @blueprint.route('/api/2/collections/<int:collection_id>/bulk', methods=['POST'])  # noqa
 def bulk(collection_id):

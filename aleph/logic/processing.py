@@ -50,7 +50,7 @@ def process_collection(stage, collection, ingest=True,
 
 def _process_entity(entity, sync=False):
     """Perform pre-index processing on an entity, includes running the
-    NLP pipeline."""
+    NLP pipeline"""
     if entity.id is None:
         raise InvalidData("No ID for entity", errors=entity.to_dict())
     analyze_entity(entity)
@@ -60,13 +60,14 @@ def _process_entity(entity, sync=False):
     return entity
 
 
-def _fetch_entities(stage, collection, entity_id=None, batch=50):
+def _fetch_entities(stage, collection, entity_ids=None, batch=50):
     aggregator = get_aggregator(collection)
     try:
-        if entity_id is None:
+        if entity_ids is None:
             yield from aggregator
             return
-        yield from aggregator.iterate(entity_id=entity_id)
+        for entity_id in entity_ids:
+            yield from aggregator.iterate(entity_id=entity_id)
 
         # WEIRD: Instead of indexing a single entity, this will try
         # pull a whole batch of them off the queue and do it at once.
@@ -81,11 +82,13 @@ def _fetch_entities(stage, collection, entity_id=None, batch=50):
         aggregator.close()
 
 
-def index_aggregate(stage, collection, entity_id=None, sync=False):
+def index_aggregate(stage, collection, sync=False, **kwargs):
     """Project the contents of the collections aggregator into the index."""
-    entities = _fetch_entities(stage, collection, entity_id=entity_id)
+    entity_ids = kwargs.get('entity_ids')
+    mapping_id = kwargs.get('mapping_id')
+    entities = _fetch_entities(stage, collection, entity_ids=entity_ids)
     entities = (_process_entity(e, sync=sync) for e in entities)
-    index_bulk(collection, entities, job_id=stage.job.id)
+    index_bulk(collection, entities, job_id=stage.job.id, mapping_id=mapping_id)  # noqa
     refresh_collection(collection.id)
 
 
