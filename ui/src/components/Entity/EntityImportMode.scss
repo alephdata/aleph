@@ -1,0 +1,33 @@
+@import "src/app/variables.scss";
+
+.EntityImport {
+  &__info {
+    margin-bottom: $aleph-grid-size*2;
+  }
+
+  &__section {
+    display: table;
+    margin: 20px 0;
+
+    &__title, &__form {
+      display: table-cell;
+    }
+
+    &__title {
+      width: 200px;
+      padding-right: 20px;
+      border-right: 1px solid $aleph-border-color;
+    }
+
+    &__form {
+      padding-left: 20px;
+    }
+  }
+}
+
+.EntityImportForm {
+  &-popover {
+    max-height: 30vh;
+    overflow: auto;
+  }
+}

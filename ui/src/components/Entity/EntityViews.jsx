@@ -17,7 +17,7 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
-import EntityImport from 'src/components/EntityImport/EntityImport';
+import EntityImportMode from 'src/components/Entity/EntityImportMode';
 import Schema from 'src/components/common/Schema';
 import Property from 'src/components/Property';
 
@@ -57,6 +57,8 @@ class EntityViews extends React.Component {
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
     const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
+
+    console.log(entity);
 
     return (
       <Tabs
@@ -179,7 +181,7 @@ class EntityViews extends React.Component {
                 <FormattedMessage id="entity.import.view" defaultMessage="Import" />
               </React.Fragment>
             )}
-            panel={<EntityImport document={entity} />}
+            panel={<EntityImportMode entity={entity} />}
           />
         )}
       </Tabs>

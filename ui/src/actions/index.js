@@ -10,6 +10,7 @@ export {
   fetchCollection,
   fetchCollectionStatus,
   fetchCollectionPermissions,
+  fetchCollectionMappings,
   fetchCollectionXrefIndex,
   queryCollections,
   queryXrefMatches,

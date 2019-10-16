@@ -211,6 +211,10 @@ export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state.collectionPermissions, collectionId);
 }
 
+export function selectCollectionMappings(state, collectionId) {
+  return selectObject(state.collectionMappings, collectionId);
+}
+
 export function selectCollectionXrefIndex(state, collectionId) {
   return selectObject(state.collectionXrefIndex, collectionId);
 }

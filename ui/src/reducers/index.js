@@ -11,6 +11,7 @@ import values from './values';
 import documentContent from './documentContent';
 import collections from './collections';
 import collectionStatus from './collectionStatus';
+import collectionMappings from './collectionMappings';
 import collectionPermissions from './collectionPermissions';
 import collectionXrefIndex from './collectionXrefIndex';
 import collectionXrefMatches from './collectionXrefMatches';
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
   notifications,
   collections,
   collectionStatus,
+  collectionMappings,
   collectionPermissions,
   collectionXrefIndex,
   collectionXrefMatches,
