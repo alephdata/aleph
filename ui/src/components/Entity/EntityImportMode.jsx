@@ -1,15 +1,18 @@
+/* eslint-disable */
+
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings } from 'src/selectors';
-import EntityImportListings from './EntityImportListings';
-import EntityImportEditor from './EntityImportEditor';
-
+import TableViewer from 'src/viewers/TableViewer';
+import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
+import {
+  Column, Table,
+} from '@blueprintjs/table';
 
 import './EntityImportMode.scss';
-
 
 export class EntityImportMode extends Component {
   componentDidMount() {
@@ -20,20 +23,58 @@ export class EntityImportMode extends Component {
     console.log('deleting', item, this);
   }
 
-  render() {
-    console.log('mappings', this.props.mappings);
-    const { mappings } = this.props;
+  renderTableView() {
+    const { entity } = this.props;
+    if (entity.isLoading || entity.shouldLoad) {
+      return null;
+    }
+
+    if (!entity.links || !entity.links.csv) {
+      return (
+        <TableViewer
+          document={entity}
+        />
+      );
+    }
+    return (
+      <CSVStreamViewer
+        document={entity}
+      />
+    );
+  }
+
+  renderColumnSelectRow() {
+    const { entity } = this.props;
+
+    const columnsJson = entity.getFirst('columns');
+    const columns = columnsJson ? JSON.parse(columnsJson) : [];
 
     return (
+      <div className="TableViewer">
+        <Table
+          numRows={1}
+          enableGhostCells
+          enableRowHeader
+        >
+          {columns.map((column, i) => (
+            <Column
+              key={column}
+              id={i}
+              name={column}
+              cellRenderer={this.renderCell}
+            />
+          ))}
+        </Table>
+      </div>
+    );
+  }
+
+  render() {
+    return (
       <div>
-        {mappings && mappings.length > 0 && (
-          <div>
-            <h5>Existing mappings</h5>
-            <EntityImportListings items={mappings} onDelete={this.deleteListing} />
-          </div>
-        )}
         <div>
-          <EntityImportEditor />
+          {this.renderColumnSelectRow()}
+          {this.renderTableView()}
         </div>
       </div>
     );

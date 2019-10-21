@@ -58,8 +58,6 @@ class EntityViews extends React.Component {
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
     const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
 
-    console.log(entity);
-
     return (
       <Tabs
         id="EntityInfoTabs"
