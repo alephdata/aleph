@@ -48,7 +48,7 @@ phonenumbers==8.10.20
 pillow==6.2.0
 plyvel==1.1.0
 protobuf==3.9.2
-psycopg2-binary==2.8.3
+psycopg2-binary==2.8.4
 pyasn1-modules==0.2.6
 pyasn1==0.4.7
 pycparser==2.19
