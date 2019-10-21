@@ -33,7 +33,7 @@ fasttext==0.9.1
 
 # Testing dependencies
 factory-boy==2.10.0
-Faker==0.8.13
+Faker==2.0.3
 nose
 coverage
 coveralls
