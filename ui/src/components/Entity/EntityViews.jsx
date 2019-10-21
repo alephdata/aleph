@@ -70,7 +70,7 @@ class EntityViews extends React.Component {
             id="info"
             title={(
               <>
-                <Icon icon="info" iconSize="14px" className="left-icon" />
+                <Icon icon="info" className="left-icon" />
                 <span className="tab-padding">
                   <FormattedMessage id="entity.info.info" defaultMessage="Info" />
                 </span>
@@ -86,7 +86,7 @@ class EntityViews extends React.Component {
             id="view"
             title={(
               <>
-                <Icon icon="showdocuments" />
+                <Icon icon="showdocuments" className="left-icon" />
                 <FormattedMessage id="entity.info.view" defaultMessage="View" />
               </>
             )}
@@ -98,7 +98,7 @@ class EntityViews extends React.Component {
             id="text"
             title={(
               <>
-                <Icon icon="plaintext" />
+                <Icon icon="plaintext" className="left-icon" />
                 <FormattedMessage id="entity.info.text" defaultMessage="Text" />
               </>
             )}
@@ -132,7 +132,7 @@ class EntityViews extends React.Component {
             key={ref.property.qname}
             title={(
               <>
-                <Schema.Icon schema={ref.schema} iconSize="14px" />
+                <Schema.Icon schema={ref.schema} className="left-icon" />
                 <Property.Reverse prop={ref.property} />
                 <Count count={ref.count} />
               </>
@@ -148,7 +148,7 @@ class EntityViews extends React.Component {
             disabled={tags.total < 1}
             title={(
               <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-                <Icon icon="tags" iconSize="14px" className="left-icon" />
+                <Icon icon="tags" className="left-icon" />
                 <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
                 <Count count={tags.total} />
               </TextLoading>
@@ -161,7 +161,7 @@ class EntityViews extends React.Component {
             id="similar"
             title={(
               <TextLoading loading={similar.shouldLoad || similar.isLoading}>
-                <Icon icon="similar" iconSize="14px" className="left-icon" />
+                <Icon icon="similar" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
                 <Count count={similar.total} />
               </TextLoading>
