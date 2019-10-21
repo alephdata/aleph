@@ -24,7 +24,7 @@ requests[security]==2.21.0
 urllib3==1.24.2
 redis==3.2.1
 fakeredis==1.0.3
-networkx==2.3
+networkx==2.4
 zipstream==1.1.4
 grpcio==1.23.0
 google-cloud-storage==1.20.0
