@@ -106,6 +106,13 @@ class MappingAPITest(TestCase):
         res = self.client.post(url, headers=self.headers)
         assert res.status_code == 202, res
 
+        url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        assert res.json['last_run_status'] == 'success', res.json
+        assert res.json['last_run_jobid'] is not None, res.json
+        assert res.json['last_run_err_msg'] is None, res.json
+
         url = "/api/2/entities?filter:collection_id=%s&filter:schema=Person" % self.col.id  # noqa
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res

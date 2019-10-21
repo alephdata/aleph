@@ -11,6 +11,7 @@ from aleph.views.util import get_index_entity
 from aleph.views.serializers import first
 from aleph.logic.aggregator import get_aggregator
 from aleph.queues import queue_task, OP_INDEX
+from aleph.model import Mapping
 
 
 log = logging.getLogger(__name__)
@@ -58,10 +59,21 @@ def bulk_load(stage, collection, config):
     which can be understood by the entity index.
     """
     queries = keys_values(config, 'queries', 'query')
+    mapping_id = config.get('mapping_id')
+    mapping = Mapping.by_id(mapping_id)
     config['entity_ids'] = []
     for query in queries:
-        entity_ids = load_mapping_query(stage, collection, hash_data(query), query)  # noqa
-        config['entity_ids'].extend(entity_ids)
+        try:
+            entity_ids = load_mapping_query(stage, collection, hash_data(query), query)  # noqa
+            config['entity_ids'].extend(entity_ids)
+        except Exception as exc:
+            if mapping:
+                mapping.set_status(stage.job.id, status=Mapping.FAILED, error=str(exc))  # noqa
+            else:
+                raise exc
+        else:
+            if mapping:
+                mapping.set_status(stage.job.id, status=Mapping.SUCCESS)
     queue_task(collection, OP_INDEX, job_id=stage.job.id, payload=config)
 
 
