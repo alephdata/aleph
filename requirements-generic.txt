@@ -23,7 +23,7 @@ rdflib==4.2.2
 requests[security]==2.21.0
 urllib3==1.25.6
 redis==3.2.1
-fakeredis==1.0.3
+fakeredis==1.0.5
 networkx==2.4
 zipstream==1.1.4
 grpcio==1.23.0
