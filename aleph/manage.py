@@ -226,6 +226,16 @@ def evilshit():
     upgrade()
 
 
+@manager.command
+def test():
+    from aleph.logic.names import get_composite_frequency, name_distribution
+    name_distribution()
+    # print(get_composite_frequency("Hans Schmidt"))
+    # print(get_composite_frequency("Friedrich Lindenberg"))
+    # print(get_composite_frequency("Abu Ahmed Baghdadi"))
+    # print(get_composite_frequency("ENRON"))
+
+
 def main():
     manager.run()
 
