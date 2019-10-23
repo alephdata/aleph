@@ -17,7 +17,7 @@ marshmallow==2.19.2
 gunicorn==19.9.0
 blinker==1.4
 Babel==2.7.0
-PyYAML==5.1
+PyYAML==5.1.2
 pyjwt==1.7.1
 rdflib==4.2.2
 requests[security]==2.21.0
