@@ -45,7 +45,7 @@ openpyxl==3.0.0
 pantomime==0.3.3
 pdflib==0.2.1
 phonenumbers==8.10.20
-pillow==6.2.0
+pillow==6.2.1
 plyvel==1.1.0
 protobuf==3.9.2
 psycopg2-binary==2.8.4
