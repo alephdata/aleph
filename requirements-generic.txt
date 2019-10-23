@@ -13,7 +13,7 @@ SQLAlchemy==1.3.10
 alembic==1.2.1
 
 elasticsearch==7.0.5
-marshmallow==2.19.2
+marshmallow==3.2.1
 gunicorn==19.9.0
 blinker==1.4
 Babel==2.7.0
