@@ -1,0 +1,35 @@
+.MappingChecklist {
+  display: flex;
+  margin-bottom: 20px;
+
+  &__list-container {
+    flex: 1 1 50%;
+
+    &:first-child {
+      margin-right: 15px;
+    }
+    &:last-child {
+      margin-left: 15px;
+    }
+  }
+
+  &__list {
+    margin: 5px 0;
+  }
+
+  &__properties {
+    list-style: none;
+  }
+
+  &__property {
+    display: table;
+    width: 100%;
+    &__check, &__label, &__value {
+      display: table-cell;
+    }
+
+    &__label {
+      width: 30%;
+    }
+  }
+}

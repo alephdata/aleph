@@ -268,7 +268,10 @@ export class EntityImportMode extends Component {
                       onItemSelect={item => this.onCsvKeySelect(item)}
                       selectedItems={mapping.keys}
                       itemPredicate={() => true}
+                      placeholder={'Select from available columns'}
+                      fill
                       tagInputProps={{
+                        tagProps: { minimal: true },
                         onRemove: item => this.onCsvKeyRemove(item),
                       }}
                       noResults={

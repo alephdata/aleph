@@ -21,6 +21,7 @@
     "react-dom": "^16.8.3",
     "react-helmet": "^6.0.0-beta",
     "react-intl": "^2.8.0",
+    "react-json-pretty": "^2.2.0",
     "react-pdf": "^4.1.0",
     "react-redux": "^6.0.1",
     "react-router": "^5.0.0",
