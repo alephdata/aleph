@@ -65,7 +65,6 @@ docker-pull:
 
 docker-push:
 	docker push alephdata/aleph-elasticsearch:$(ALEPH_TAG)
-	docker push alephdata/convert-document:$(ALEPH_TAG)
 	docker push alephdata/ingest-file:$(ALEPH_TAG)
 	docker push alephdata/aleph:$(ALEPH_TAG)
 	docker push alephdata/aleph-ui:$(ALEPH_TAG)
