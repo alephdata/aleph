@@ -35,11 +35,7 @@ services:
         - redis-data:/data
 
   convert-document:
-    build:
-      context: services/convert-document
-      cache_from:
-        - alephdata/convert-document:latest
-    image: alephdata/convert-document:${ALEPH_TAG:-latest}
+    image: alephdata/convert-document:189c0e1d212b8f3adeaaae5b3c36b064954c76a5
     restart: on-failure
     tmpfs:
       - /tmp
