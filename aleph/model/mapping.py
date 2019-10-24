@@ -3,6 +3,7 @@ import logging
 
 from normality import stringify
 from sqlalchemy.dialects.postgresql import JSONB
+from flask_babel import lazy_gettext
 
 from aleph.core import db
 from aleph.model import Role, Collection
@@ -16,6 +17,14 @@ class Mapping(db.Model, SoftDeleteModel):
     """A mapping to load entities from a table"""
     __tablename__ = 'mapping'
 
+    FAILED = 'failed'
+    SUCCESS = 'success'
+
+    MAPPING_STATUS = {
+        SUCCESS: lazy_gettext('success'),
+        FAILED: lazy_gettext('failed')
+    }
+
     id = db.Column(db.Integer, primary_key=True)
     query = db.Column('query', JSONB)
 
@@ -27,12 +36,23 @@ class Mapping(db.Model, SoftDeleteModel):
 
     table_id = db.Column(db.String(ENTITY_ID_LEN), index=True)
 
+    last_run_jobid = db.Column(db.String(128), nullable=True)
+    last_run_status = db.Column(db.Unicode, nullable=True)
+    last_run_err_msg = db.Column(db.Unicode, nullable=True)
+
     def update(self, query=None, table_id=None):
         self.updated_at = datetime.utcnow()
         if query:
             self.query = query
         if table_id:
             self.table_id = table_id
+        db.session.add(self)
+        db.session.commit()
+
+    def set_status(self, job_id, status, error=None):
+        self.last_run_jobid = job_id
+        self.last_run_status = status
+        self.last_run_err_msg = error
         db.session.add(self)
         db.session.commit()
 
@@ -49,7 +69,12 @@ class Mapping(db.Model, SoftDeleteModel):
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
             'table_id': self.table_id,
+            'last_run_status': None,
+            'last_run_jobid': self.last_run_jobid,
+            'last_run_err_msg': self.last_run_err_msg
         })
+        if self.last_run_status in self.MAPPING_STATUS:
+            data['last_run_status'] = self.last_run_status
         return data
 
     @classmethod
