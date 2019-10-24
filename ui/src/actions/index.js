@@ -6,6 +6,7 @@ export { deleteNotifications, queryNotifications } from './notificationActions';
 export { fetchDocumentContent, ingestDocument } from './documentActions';
 export {
   createCollection,
+  createCollectionMapping,
   deleteCollection,
   fetchCollection,
   fetchCollectionStatus,
@@ -18,8 +19,8 @@ export {
   triggerCollectionAnalyze,
   triggerCollectionCancel,
   updateCollection,
+  updateCollectionMapping,
   updateCollectionPermissions,
-  makeMapping,
 } from './collectionActions';
 export {
   fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,

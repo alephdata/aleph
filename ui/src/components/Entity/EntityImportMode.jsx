@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
 import JSONPretty from 'react-json-pretty';
-import { fetchCollectionMappings, makeMapping } from 'src/actions';
+import { fetchCollectionMappings, createCollectionMapping, updateCollectionMapping } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import TableViewer from 'src/viewers/TableViewer';
 import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
@@ -14,6 +14,8 @@ import EntityImportSchemaSelect from './EntityImportSchemaSelect';
 import EntityImportMappingChecklist from './EntityImportMappingChecklist';
 import EntityImportPropertyAssign from './EntityImportPropertyAssign';
 import { Button, Intent } from '@blueprintjs/core';
+import { showErrorToast } from 'src/app/toast';
+
 
 import {
   Column, Table,
@@ -206,54 +208,46 @@ export class EntityImportMode extends Component {
       })
     });
 
-    this.setState({ mappings: mappings });
-    // model.getSchema()
-
+    this.setState({ existingMappingId: existingMapping.id, mappings: mappings });
   }
 
   async onFormSubmit(event) {
     event.preventDefault();
-    const { intl, entity } = this.props;
+    const { createCollectionMapping, entity, updateCollectionMapping } = this.props;
+    console.log(entity);
+    const { existingMappingId, mapping } = this.state;
+
     try {
-      // console.log('mapping is', mapping);
-      // const completeMapping = {};
-      // completeMapping[entity.collection.foreign_id] = {
-      //   queries: [{
-      //     csv_url: entity.links.csv.replace(/localhost:8080/, 'api:5000'),
-      //     entities: {
-      //       a: Object.assign({
-      //         schema: importModel.name,
-      //       }, mapping),
-      //     },
-      //   }],
-      // };
-      const test = {
-        table_id: '5',
-        mapping_query: {
-          person: {
-            schema: 'Person',
-            keys: [
-              'name',
-              'nationality',
-            ],
-            properties: {
-              name: {
-                column: 'name',
-              },
-              nationality: {
-                column: 'nationality',
-              },
-            },
-          },
-        },
+      const fullMapping = {
+        table_id: entity.id,
+        mapping_query: this.convertToJSON(mapping),
       };
-      await this.props.makeMapping(entity.collection.id, test);
-      // await this.props.fetchMapping(entity.collection.id);
+      // const test = {
+      //   table_id: '5',
+      //   mapping_query: {
+      //     person: {
+      //       schema: 'Person',
+      //       keys: [
+      //         'name',
+      //       ],
+      //       properties: {
+      //         name: {
+      //           column: 'name',
+      //         },
+      //       },
+      //     },
+      //   },
+      // };
+      if (existingMappingId) {
+        await updateCollectionMapping(entity.collection.id, existingMappingId, fullMapping);
+      } else {
+        await createCollectionMapping(entity.collection.id, fullMapping);
+      }
+
       console.log('finished');
     } catch (e) {
       console.error(e);
-      showErrorToast(intl.formatMessage(messages.error));
-      this.setState({ isSubmitting: false });
+      showErrorToast(e);
     }
   }
 
@@ -262,8 +256,9 @@ export class EntityImportMode extends Component {
     const { mappings, csvData } = this.state;
 
     console.log('mappings', mappings);
-
     console.log('existing mappings are', existingMappings)
+
+    const existingMapping = existingMappings.length && !existingMappings.isLoading && !existingMappings.isError ? existingMappings[0] : null
 
     // console.log('csv data is', csvData);
     let columns, columnLabels, fullMapping;
@@ -283,6 +278,16 @@ export class EntityImportMode extends Component {
 
     return (
       <div>
+        {existingMapping && (
+          <div>
+            <span>Created at</span>
+            <span>{existingMapping.created_at}</span>
+            <span>Last updated</span>
+            <span>{existingMapping.updated_at}</span>
+            <span>Running status</span>
+            <span>{existingMapping.last_run_status}</span>
+          </div>
+        )}
         <h6 className="bp3-heading">
           1. Select Entity Types to Map
         </h6>
@@ -340,7 +345,7 @@ export class EntityImportMode extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchCollectionMappings, makeMapping };
+const mapDispatchToProps = { fetchCollectionMappings, createCollectionMapping, updateCollectionMapping };
 
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.entity.collection.id;
