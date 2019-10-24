@@ -76,7 +76,7 @@ export const makeMapping = asyncActionCreator((id, mapping) => async () => {
   console.log('in make mapping', id, mapping);
   const response = await endpoint.post(`collections/${id}/mappings`, mapping);
   return { id, data: response.data };
-}, { name: 'FETCH_COLLECTION_PERMISSIONS' });
+}, { name: 'MAKE_MAPPING' });
 
 export const fetchCollectionMappings = asyncActionCreator(id => async () => {
   const response = await endpoint.get(`collections/${id}/mappings`);

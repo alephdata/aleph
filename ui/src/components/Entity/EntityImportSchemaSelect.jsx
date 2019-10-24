@@ -26,11 +26,11 @@ const itemRenderer = (item, { handleClick }) => (
 
 export class EntityImportSchemaSelect extends Component {
   render() {
-    const { model, onSelect, selectedSchemata } = this.props;
+    const { model, onSelect, mappings } = this.props;
 
     const [things, relationships] = Object.keys(model.schemata)
       .map(key => model.schemata[key])
-      .filter(item => item.isCreateable && !item.abstract && !selectedSchemata.has(item.name))
+      .filter(item => item.isCreateable && !item.abstract && !mappings.has(item.name))
       .reduce((result, element) => {
         result[element.schemata.indexOf('Thing') >= 0 ? 0 : 1].push(element);
         return result;

@@ -58,11 +58,28 @@ export class EntityImportPropertyAssign extends Component {
     );
   };
 
-  renderHeaderCell(colIndex) {
-    const { csvData, columnMappings, onPropertyAssign, selectedSchemata } = this.props;
+  getColumnAssignments() {
+    const { mappings } = this.props;
+
+    const columnAssignments = new Map();
+
+    mappings.forEach(({ id, properties }) => {
+      Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
+        if (propValue && propValue.column) {
+          columnAssignments.set(propValue.column, { mappingId: id, property: propKey});
+        }
+      })
+    })
+
+    console.log('columnAssignments', columnAssignments);
+    return columnAssignments;
+  }
+
+  renderHeaderCell(colIndex, columnAssignments) {
+    const { csvData, onPropertyAssign, mappings } = this.props;
     const columns = csvData[0];
     const colLabel = columns[colIndex];
-    const currValue = columnMappings[colIndex]
+    const currValue = columnAssignments.get(colLabel);
 
     return (
       <ColumnHeaderCell
@@ -70,15 +87,15 @@ export class EntityImportPropertyAssign extends Component {
       >
         <Select
           id="entity-type"
-          items={Array.from(selectedSchemata.values())}
+          items={Array.from(mappings.values())}
           itemListRenderer={this.itemListRenderer}
           itemRenderer={itemRenderer}
           popoverProps={{ minimal: true }}
           filterable={false}
-          onItemSelect={(item, e) => onPropertyAssign(item, colIndex)}
+          onItemSelect={({schema, property}, e) => onPropertyAssign(schema, property.name, {column: colLabel})}
         >
           <Button
-            text={currValue ? `${currValue.schema}.${currValue.property.name}` : 'Assign a value'}
+            text={currValue ? `${currValue.mappingId}.${currValue.property}` : 'Assign a value'}
             rightIcon="double-caret-vertical"
           />
         </Select>
@@ -104,6 +121,8 @@ export class EntityImportPropertyAssign extends Component {
     const { csvData } = this.props;
     const columns = csvData[0];
 
+    const columnAssignments = this.getColumnAssignments();
+
     return (
       <div className="TableViewer">
         <Table
@@ -117,7 +136,7 @@ export class EntityImportPropertyAssign extends Component {
               id={i}
               name={column}
               cellRenderer={this.renderCell}
-              columnHeaderCellRenderer={(colIndex) => this.renderHeaderCell(colIndex)}
+              columnHeaderCellRenderer={(colIndex) => this.renderHeaderCell(colIndex, columnAssignments)}
             />
           ))}
         </Table>

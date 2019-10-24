@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
 import JSONPretty from 'react-json-pretty';
-import { fetchCollectionMappings } from 'src/actions';
+import { fetchCollectionMappings, makeMapping } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import TableViewer from 'src/viewers/TableViewer';
 import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
@@ -74,22 +74,28 @@ export class EntityImportMode extends Component {
     super(props);
 
     this.state = {
-      selectedSchemata: new Map(),
-      columnMappings: [],
+      mappings: new Map(),
       csvData: null
     };
 
-    this.onSchemaAdd = this.onSchemaAdd.bind(this);
-    this.onSchemaRemove = this.onSchemaRemove.bind(this);
+    this.onMappingAdd = this.onMappingAdd.bind(this);
+    this.onMappingRemove = this.onMappingRemove.bind(this);
     this.onKeyAssign = this.onKeyAssign.bind(this);
     this.onKeyRemove = this.onKeyRemove.bind(this);
-    this.onEdgeAssign = this.onEdgeAssign.bind(this);
-
     this.onPropertyAssign = this.onPropertyAssign.bind(this);
   }
   componentDidMount() {
     this.fetchCsvData();
     this.props.fetchCollectionMappings(this.props.entity.collection.id);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { existingMappings } = this.props;
+    if (existingMappings && existingMappings.length && !existingMappings.isLoading && !existingMappings.isError &&
+      prevProps.existingMappings !== existingMappings) {
+        console.log('LOADING FROM EXISTING MAPPING', existingMappings.length);
+        this.loadFromMapping(existingMappings[0]);
+    }
   }
 
   fetchCsvData() {
@@ -115,143 +121,153 @@ export class EntityImportMode extends Component {
     console.log('deleting', item, this);
   }
 
-  onSchemaAdd(schema) {
-    const { selectedSchemata } = this.state;
-    const newSchemaList = new Map(selectedSchemata);
-    const schemaObject = {
+  onMappingAdd(schema) {
+    const { mappings } = this.state;
+    const clone = new Map(mappings);
+    const id = schema.name;
+
+    const newMapping = {
+      id,
       schema,
       keys: [],
-      source: null,
-      target: null,
+      properties: {}
     };
-    newSchemaList.set(schema.name, schemaObject)
+    clone.set(id, newMapping);
 
-    this.setState(({ selectedSchemata }) => ({ selectedSchemata: newSchemaList }));
+    this.setState(({ mappings }) => ({ mappings: clone }));
   }
 
-  onSchemaRemove(item) {
-    console.log('in on schema remove');
+  onMappingRemove(item) {
+    console.log('in on mapping remove');
   }
 
-  onKeyAssign(schema, item) {
-    this.updateSelectedSchemata(schema, schemaObj => schemaObj.keys.push(item))
+  onKeyAssign(mappingId, key) {
+    this.updateMappings(mappingId, mappingObj => mappingObj.keys.push(key))
   }
 
-  onKeyRemove(schema, item) {
-    this.updateSelectedSchemata(schema, schemaObj => {
-      const index = schemaObj.keys.indexOf(item);
+  onKeyRemove(mappingId, key) {
+    this.updateMappings(mappingId, mappingObj => {
+      const index = mappingObj.keys.indexOf(key);
       if (index !== -1) {
-        schemaObj.keys.splice(index, 1);
+        mappingObj.keys.splice(index, 1);
       }
     })
   }
 
-  onEdgeAssign(schema, sourceOrTarget, entityToAssign) {
-    console.log('in edge assign', entityToAssign);
-    this.updateSelectedSchemata(schema, schemaObj => schemaObj[sourceOrTarget] = entityToAssign)
+  onPropertyAssign(mappingId, propName, value) {
+    this.updateMappings(mappingId, mappingObj => mappingObj.properties[propName] = value)
   }
 
-  updateSelectedSchemata(schema, updateToApply) {
-    const { selectedSchemata } = this.state;
-    const newSchemaObj = selectedSchemata.get(schema.name);
+  updateMappings(mappingId, updateToApply) {
+    console.log('updating', mappingId);
+    const { mappings } = this.state;
+    const clone = new Map(mappings);
 
-    updateToApply(newSchemaObj);
-
-    const newSchemaList = new Map(selectedSchemata);
-    newSchemaList.set(schema.name, newSchemaObj)
-    this.setState(({ selectedSchemata }) => ({ selectedSchemata: newSchemaList }));
+    const newMappingObj = clone.get(mappingId);
+    if (newMappingObj) {
+      updateToApply(newMappingObj);
+      this.setState(({ mappings }) => ({ mappings: clone }));
+    }
   }
 
-  onPropertyAssign(item, column) {
-    console.log('assigning', item, column);
-    const { columnMappings } = this.state;
+  convertToJSON() {
+    const { mappings, csvData } = this.state;
+    const toJSON = {};
 
-    const newColumnMappings = [...columnMappings]
-    newColumnMappings[column] = item
-    this.setState(({ columnMappings }) => ({ columnMappings: newColumnMappings }));
-  }
-
-  // mapping_query: {
-  //   person: {
-  //     schema: 'Person',
-  //     keys: [
-  //       'name',
-  //       'nationality',
-  //     ],
-  //     properties: {
-  //       name: {
-  //         column: 'name',
-  //       },
-  //       nationality: {
-  //         column: 'nationality',
-  //       },
-  //     },
-  //   },
-  // },
-
-  // [
-  //   0:
-  //     {
-  //       schema:
-  //       property:
-  //     },
-  //   1:
-  //     {
-  //
-  //     }
-  // ]
-
-  convertToMapping() {
-    const { columnMappings, selectedSchemata, csvData } = this.state;
-    const mapping = {};
-    const columnNames = csvData[0];
-
-    selectedSchemata.forEach(({schema, keys, source, target}, schemaName) => {
-      const properties = {};
-
-      if (source) {
-        properties[schema.edge.source] = source
-      }
-      if (target) {
-        properties[schema.edge.target] = target
-      }
-      mapping[schema.name] = {
-        schema: schemaName,
+    mappings.forEach(({id, schema, keys, properties}) => {
+      toJSON[id] = {
+        schema: schema.name,
         keys,
         properties
       };
     });
 
-    columnMappings.forEach((column, i) => {
-      if (column) {
-        const {schema, property} = column;
-        const columnName = columnNames[i];
-        mapping[schema].properties[property.name] = { column: columnName };
-      }
-    })
-
-    return mapping;
+    return toJSON;
   }
 
-  convertFromMapping(mapping) {
+  // const schemaObject = {
+  //   schema,
+  //   keys: [],
+  //   source: null,
+  //   target: null,
+  // };
 
-    Object.entries(mapping)
+  loadFromMapping(existingMapping) {
+    const { model } = this.props;
+
+    const mappings = new Map();
+
+    Object.values(existingMapping.query).forEach(({keys, schema, properties}) => {
+      mappings.set(schema, {
+        id: schema,
+        schema: model.getSchema(schema),
+        keys,
+        properties,
+      })
+    });
+
+    this.setState({ mappings: mappings });
+    // model.getSchema()
+
   }
 
-  onFormSubmit() {
-    console.log('in on form submit');
+  async onFormSubmit(event) {
+    event.preventDefault();
+    const { intl, entity } = this.props;
+    try {
+      // console.log('mapping is', mapping);
+      // const completeMapping = {};
+      // completeMapping[entity.collection.foreign_id] = {
+      //   queries: [{
+      //     csv_url: entity.links.csv.replace(/localhost:8080/, 'api:5000'),
+      //     entities: {
+      //       a: Object.assign({
+      //         schema: importModel.name,
+      //       }, mapping),
+      //     },
+      //   }],
+      // };
+      const test = {
+        table_id: '5',
+        mapping_query: {
+          person: {
+            schema: 'Person',
+            keys: [
+              'name',
+              'nationality',
+            ],
+            properties: {
+              name: {
+                column: 'name',
+              },
+              nationality: {
+                column: 'nationality',
+              },
+            },
+          },
+        },
+      };
+      await this.props.makeMapping(entity.collection.id, test);
+      // await this.props.fetchMapping(entity.collection.id);
+      console.log('finished');
+    } catch (e) {
+      console.error(e);
+      showErrorToast(intl.formatMessage(messages.error));
+      this.setState({ isSubmitting: false });
+    }
   }
 
   render() {
-    const { entity, model } = this.props;
-    const { selectedSchemata, columnMappings, csvData } = this.state;
+    const { entity, model, existingMappings } = this.props;
+    const { mappings, csvData } = this.state;
 
-    console.log('selectedSchemata, columnMappings', selectedSchemata, columnMappings);
+    console.log('mappings', mappings);
+
+    console.log('existing mappings are', existingMappings)
 
     // console.log('csv data is', csvData);
     let columns, columnLabels, fullMapping;
     if (csvData) {
-      fullMapping = this.convertToMapping();
       const columnsJson = entity.getFirst('columns');
       columns = columnsJson ? JSON.parse(columnsJson) : [];
       columnLabels = columns.map((column, index) => {
@@ -272,10 +288,10 @@ export class EntityImportMode extends Component {
         </h6>
         <EntityImportSchemaSelect
           model={model}
-          selectedSchemata={selectedSchemata}
-          onSelect={this.onSchemaAdd}
+          mappings={mappings}
+          onSelect={this.onMappingAdd}
         />
-        {selectedSchemata.size > 0 && (
+        {mappings.size > 0 && (
           <React.Fragment>
             <div className="EntityImport__section">
               <h6 className="bp3-heading">
@@ -283,11 +299,10 @@ export class EntityImportMode extends Component {
               </h6>
               <EntityImportMappingChecklist
                 columnLabels={columnLabels}
-                columnMappings={columnMappings}
-                selectedSchemata={selectedSchemata}
+                mappings={mappings}
                 onKeyAssign={this.onKeyAssign}
                 onKeyRemove={this.onKeyRemove}
-                onEdgeAssign={this.onEdgeAssign}
+                onPropertyAssign={this.onPropertyAssign}
               />
             </div>
             {csvData && (
@@ -297,8 +312,7 @@ export class EntityImportMode extends Component {
                 </h6>
                 <EntityImportPropertyAssign
                   csvData={csvData}
-                  columnMappings={columnMappings}
-                  selectedSchemata={selectedSchemata}
+                  mappings={mappings}
                   onPropertyAssign={this.onPropertyAssign}
                 />
               </div>
@@ -308,7 +322,7 @@ export class EntityImportMode extends Component {
                 4. Verify
               </h6>
 
-              <JSONPretty id="json-pretty" data={fullMapping} />
+              <JSONPretty id="json-pretty" data={this.convertToJSON(mappings)} />
             </div>
             <div className="EntityImport__section">
               <Button
@@ -326,13 +340,13 @@ export class EntityImportMode extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchCollectionMappings };
+const mapDispatchToProps = { fetchCollectionMappings, makeMapping };
 
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.entity.collection.id;
   return {
     model: selectModel(state),
-    mappings: selectCollectionMappings(state, collectionId)
+    existingMappings: selectCollectionMappings(state, collectionId)
   };
 };
 

@@ -49,7 +49,7 @@ export class EntityImportMappingChecklist extends Component {
   //   );
   // }
 
-  renderKeySelect(schema, keys) {
+  renderKeySelect({id, keys}) {
     const { columnLabels, onKeyAssign, onKeyRemove } = this.props;
 
     return (
@@ -68,14 +68,14 @@ export class EntityImportMappingChecklist extends Component {
           items={columnLabels.filter((column) => keys.indexOf(column) === -1)}
           itemRenderer={keySelectItemRenderer}
           tagRenderer={item => item}
-          onItemSelect={item => onKeyAssign(schema, item)}
+          onItemSelect={item => onKeyAssign(id, item)}
           selectedItems={keys}
           itemPredicate={() => true}
           placeholder={'Select keys from available columns'}
           fill
           tagInputProps={{
             tagProps: { minimal: true },
-            onRemove: item => onKeyRemove(schema, item),
+            onRemove: item => onKeyRemove(id, item),
           }}
           noResults={
             <MenuItem disabled text="No Results" />
@@ -86,27 +86,20 @@ export class EntityImportMappingChecklist extends Component {
     )
   }
 
-  renderEntitySelect(schemaObj, sourceOrTarget) {
-    const { selectedSchemata, onEdgeAssign } = this.props;
-    const { schema } = schemaObj;
-    const edgePropertyName = schema.edge[sourceOrTarget]
-    const edgeProperty = schema.getProperty(edgePropertyName)
+  renderEntitySelect(mapping, property) {
+    const { mappings, onPropertyAssign } = this.props;
+    const { id, schema } = mapping;
 
-    console.log(edgeProperty);
-
-    const items = Array.from(selectedSchemata.values())
-      .filter(({schema}) => !schema.isEdg && schema.isA(edgeProperty.getRange()))
+    const items = Array.from(mappings.values())
+      .filter(({schema}) => !schema.isEdge && schema.isA(property.getRange()))
       .map(({schema}) => schema.name)
 
     const disabled = items.length < 1;
-
-    console.log('schema object', schemaObj)
-
-    const currValue = schemaObj[sourceOrTarget];
+    const currValue = mapping.properties[property.name];
 
     return (
       <div className="MappingChecklist__property">
-        <span className="MappingChecklist__property__label">{edgePropertyName}</span>
+        <span className="MappingChecklist__property__label">{property.label}</span>
         <span className="MappingChecklist__property__value">
           <FormGroup
             label=""
@@ -117,7 +110,7 @@ export class EntityImportMappingChecklist extends Component {
               id="entity-select"
               items={items}
               itemRenderer={entityItemRenderer}
-              onItemSelect={item => onEdgeAssign(schema, sourceOrTarget, item)}
+              onItemSelect={item => onPropertyAssign(id, property.name, item)}
               filterable={false}
               popoverProps={{ minimal: true }}
               activeItem={currValue}
@@ -151,12 +144,13 @@ export class EntityImportMappingChecklist extends Component {
   //   return foundMappings;
   // }
 
-  renderSchemaChecklist(schemaObj) {
-    const {schema, keys} = schemaObj;
+  renderMappingChecklist(mapping) {
+    const {id, schema} = mapping;
+    // const
     // const propMappings = this.getMappingsForSchema(schema.name);
 
     return (
-      <Card className="MappingChecklist__list" key={schema.name}>
+      <Card className="MappingChecklist__list" key={id}>
         <Schema.Smart.Label schema={schema} icon />
         {schema.description &&
           <span>{schema.description}</span>
@@ -164,13 +158,13 @@ export class EntityImportMappingChecklist extends Component {
         <div className="MappingChecklist__property">
           <span className="MappingChecklist__property__label">Keys</span>
           <span className="MappingChecklist__property__value">
-            {this.renderKeySelect(schema, keys)}
+            {this.renderKeySelect(mapping)}
           </span>
         </div>
         {schema.isEdge && (
           <React.Fragment>
-            {this.renderEntitySelect(schemaObj, 'source')}
-            {this.renderEntitySelect(schemaObj, 'target')}
+            {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.source))}
+            {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.target))}
           </React.Fragment>
         )}
       </Card>
@@ -180,15 +174,15 @@ export class EntityImportMappingChecklist extends Component {
   }
 
   render() {
-    const { selectedSchemata, columnMappings } = this.props;
+    const { mappings } = this.props;
 
     const thingChecklists = [], relationshipChecklists = [];
 
-    selectedSchemata.forEach((schema) => {
-      if (schema.schema.isEdge) {
-        relationshipChecklists.push(this.renderSchemaChecklist(schema));
+    mappings.forEach((mapping) => {
+      if (mapping.schema.isEdge) {
+        relationshipChecklists.push(this.renderMappingChecklist(mapping));
       } else {
-        thingChecklists.push(this.renderSchemaChecklist(schema));
+        thingChecklists.push(this.renderMappingChecklist(mapping));
       }
     });
 
