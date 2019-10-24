@@ -17,7 +17,7 @@ import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
-import EntityImportMode from 'src/components/Entity/EntityImportMode';
+import EntityImportMode from 'src/components/EntityImport/EntityImportMode';
 import Schema from 'src/components/common/Schema';
 import Property from 'src/components/Property';
 
