@@ -98,6 +98,19 @@ a {
   color: $aleph-greyed-text;
 }
 
+.text-page-title {
+  font-size: 22px;
+  color: $dark-gray1;
+  margin: 0 0 $aleph-grid-size;
+}
+
+.text-page-subtitle {
+  color: $dark-gray5;
+  line-height: 1.5;
+  clear: both;
+  max-width: 700px;
+}
+
 .clickable {
   cursor: pointer;
 }

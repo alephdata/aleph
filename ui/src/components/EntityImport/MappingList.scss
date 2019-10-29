@@ -1,0 +1,40 @@
+@import "src/app/variables.scss";
+
+.MappingList {
+  &__item {
+    color: white;
+    box-shadow: none !important;
+    margin: $aleph-grid-size 0;
+
+    &__title.bp3-heading {
+      color: white;
+    }
+
+    &__property {
+      display: table;
+      width: 100%;
+
+      &__label, &__value {
+        display: table-cell;
+      }
+
+      &__value {
+        width: 75%;
+        padding-left: 15px;
+      }
+
+      &__label {
+        width: 25%;
+        margin: 10px 0;
+      }
+    }
+
+    .bp3-form-helper-text {
+      color: white !important;
+    }
+  }
+
+  &__properties {
+    list-style: none;
+  }
+}

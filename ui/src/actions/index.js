@@ -8,6 +8,7 @@ export {
   createCollection,
   createCollectionMapping,
   deleteCollection,
+  deleteCollectionMapping,
   fetchCollection,
   fetchCollectionStatus,
   fetchCollectionPermissions,

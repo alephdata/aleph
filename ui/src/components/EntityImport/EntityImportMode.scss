@@ -1,32 +1,72 @@
 @import "src/app/variables.scss";
 
 .EntityImport {
+  &__status {
+    margin-bottom: $aleph-grid-size*2;
+
+    span {
+      margin: 0 2px;
+      // color: #106ba3;
+    }
+
+    .bp3-heading {
+      color: #106ba3 !important;
+    }
+  }
+
   &__info {
     margin-bottom: $aleph-grid-size*2;
   }
 
   &__section {
-    margin: 20px 0;
+    margin: 50px 0;
 
-    &__title, &__form {
-      display: table-cell;
+    &__title.bp3-heading {
+      margin-bottom: 25px;
     }
+  }
 
-    &__title {
-      width: 200px;
-      padding-right: 20px;
+  &__split-section-container {
+    width: 100%;
+    display: table;
+  }
+
+  &__split-section {
+    $split-section-padding: 2*$aleph-grid-size;
+    width: 50%;
+    display: table-cell;
+
+    &:first-child {
+      padding-right: $split-section-padding;
       border-right: 1px solid $aleph-border-color;
     }
+    &:last-child {
+      padding-left: $split-section-padding;
+    }
 
-    &__form {
-      padding-left: 20px;
+    &__title.bp3-heading {
     }
   }
-}
 
-.EntityImportForm {
-  &-popover {
-    max-height: 30vh;
-    overflow: auto;
+  .TableViewer {
+    height: auto;
+
+    .bp3-table-column-name {
+      text-align: center;
+      font-weight: 500;
+    }
+    .bp3-table-header-content {
+      padding: 0 3px 5px;
+      text-align: center;
+    }
+
+    .bp3-button-text {
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 100px;
+      text-overflow: ellipsis;
+    }
   }
+
+
 }

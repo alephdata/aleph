@@ -9,32 +9,32 @@ import { deleteCollection } from 'src/actions';
 
 const messages = defineMessages({
   button_confirm: {
-    id: 'collection.delete.confirm',
-    defaultMessage: 'Delete',
+    id: 'mapping.create.confirm',
+    defaultMessage: 'Create mapping & import',
   },
   button_cancel: {
-    id: 'collection.delete.cancel',
+    id: 'mapping.create.cancel',
     defaultMessage: 'Cancel',
   },
 });
 
 
-class EntityImportDeleteDialog extends Component {
+class EntityImportCreateDialog extends Component {
   render() {
     const { intl } = this.props;
     return (
       <Alert
         isOpen={this.props.isOpen}
-        icon="trash"
-        intent={Intent.DANGER}
+        icon="add"
+        intent={Intent.PRIMARY}
         cancelButtonText={intl.formatMessage(messages.button_cancel)}
         confirmButtonText={intl.formatMessage(messages.button_confirm)}
         onCancel={this.props.toggleDialog}
-        onConfirm={this.props.onDelete}
+        onConfirm={this.props.onCreate}
       >
         <FormattedMessage
-          id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete this dataset and all contained items?"
+          id="mapping.create.question"
+          defaultMessage="Are you sure you are ready to import entities using this mapping?"
         />
       </Alert>
     );
@@ -47,4 +47,4 @@ export default compose(
   withRouter,
   connect(null, mapDispatchToProps),
   injectIntl,
-)(EntityImportDeleteDialog);
+)(EntityImportCreateDialog);

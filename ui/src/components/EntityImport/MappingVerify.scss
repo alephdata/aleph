@@ -1,0 +1,39 @@
+@import "src/app/variables.scss";
+
+.MappingVerify {
+  &__item {
+    border: 1px solid;
+    box-shadow: none !important;
+    margin: 10px 0;
+  }
+  &__section {
+    margin-top: 10px;
+    &__title {
+      font-weight: 500;
+    }
+
+    &__value {
+      margin-left: 7px;
+    }
+  }
+
+  &__list {
+    margin: 3px 0;
+    padding-left: 10px;
+    list-style-type: circle;
+    list-style-position: inside;
+  }
+
+  &__listItem {
+    margin: 5px 0;
+    &__label {
+    }
+    &__value {
+      margin-left: 7px;
+
+      .bp3-input-group {
+        display: inline-block;
+      }
+    }
+  }
+}

@@ -38,20 +38,42 @@ export class EntityImportPropertyAssign extends Component {
   itemListRenderer({ items, itemsParentRef, renderItem }) {
     return (
       <Menu ulRef={itemsParentRef}>
-        {items.map(({schema, visibleProps}) => {
-          return (
-            <MenuItem key={schema.name} text={<Schema.Smart.Label schema={schema} icon />}>
-              {
-                schema.getFeaturedProperties().map(prop => renderItem({schema: schema.name, property: prop}))
-              }
-              <MenuDivider />
-              <MenuItem text='Other'>
+        {items.map(({schema}) => {
+          let featuredProps = schema.getFeaturedProperties();
+          let otherProps = schema.getEditableProperties()
+            .filter(prop => featuredProps.indexOf(prop) === -1);
+
+          if (schema.isEdge) {
+            const edgeProps = schema.edge;
+            const edgeCondition = prop => prop.name !== edgeProps.source && prop.name !== edgeProps.target
+            featuredProps = featuredProps.filter(edgeCondition)
+            otherProps = otherProps.filter(edgeCondition)
+          }
+
+          if (featuredProps.length > 0) {
+            return (
+              <MenuItem key={schema.name} text={<Schema.Smart.Label schema={schema} icon />}>
                 {
-                  schema.getEditableProperties().map(prop => renderItem({schema: schema.name, property: prop}))
+                  featuredProps.map(prop => renderItem({schema: schema.name, property: prop}))
+                }
+                <MenuDivider />
+                <MenuItem text='Other'>
+                  {
+                    otherProps.map(prop => renderItem({schema: schema.name, property: prop}))
+                  }
+                </MenuItem>
+              </MenuItem>
+            )
+          } else {
+            return (
+              <MenuItem key={schema.name} text={<Schema.Smart.Label schema={schema} icon />}>
+                {
+                  otherProps.map(prop => renderItem({schema: schema.name, property: prop}))
                 }
               </MenuItem>
-            </MenuItem>
-          )
+            )
+          }
+
         })}
 
       </Menu>
@@ -63,10 +85,10 @@ export class EntityImportPropertyAssign extends Component {
 
     const columnAssignments = new Map();
 
-    mappings.forEach(({ id, properties }) => {
+    mappings.forEach(({ id, schema, properties }) => {
       Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
         if (propValue && propValue.column) {
-          columnAssignments.set(propValue.column, { mappingId: id, property: propKey});
+          columnAssignments.set(propValue.column, { mappingId: id, property: schema.getProperty(propKey)});
         }
       })
     })
@@ -75,15 +97,18 @@ export class EntityImportPropertyAssign extends Component {
     return columnAssignments;
   }
 
-  renderHeaderCell(colIndex, columnAssignments) {
-    const { csvData, onPropertyAssign, mappings } = this.props;
-    const columns = csvData[0];
-    const colLabel = columns[colIndex];
-    const currValue = columnAssignments.get(colLabel);
+  renderHeaderCell(colLabel, colValue) {
+    const { onPropertyAssign, mappings } = this.props;
+
+    const style = {
+      color:  colValue ? 'white' : 'black',
+      backgroundColor: colValue ? mappings.get(colValue.mappingId).color : 'white',
+    };
 
     return (
       <ColumnHeaderCell
         name={colLabel}
+        style={style}
       >
         <Select
           id="entity-type"
@@ -95,21 +120,27 @@ export class EntityImportPropertyAssign extends Component {
           onItemSelect={({schema, property}, e) => onPropertyAssign(schema, property.name, {column: colLabel})}
         >
           <Button
-            text={currValue ? `${currValue.mappingId}.${currValue.property}` : 'Assign a value'}
+            text={colValue ? `${colValue.property.label}` : 'Assign a value'}
             rightIcon="double-caret-vertical"
+            className="EntityImport__header-select-button"
           />
         </Select>
       </ColumnHeaderCell>
     );
   }
 
-  renderCell(rowIndex, colIndex) {
-    const { csvData } = this.props;
+  renderCell(rowIndex, colIndex, colHeaderValue) {
+    const { csvData, mappings } = this.props;
     const value = csvData[rowIndex][colIndex];
     const loading = false;
 
+    const style = {
+      color:  colHeaderValue ? 'white' : 'black',
+      backgroundColor: colHeaderValue ? mappings.get(colHeaderValue.mappingId).color : 'white',
+    };
+
     return (
-      <Cell loading={loading}>
+      <Cell loading={loading} style={style}>
         <TruncatedFormat detectTruncation>
           {value || ''}
         </TruncatedFormat>
@@ -118,9 +149,7 @@ export class EntityImportPropertyAssign extends Component {
   }
 
   render() {
-    const { csvData } = this.props;
-    const columns = csvData[0];
-
+    const { csvData, columnLabels, mappings } = this.props;
     const columnAssignments = this.getColumnAssignments();
 
     return (
@@ -129,16 +158,23 @@ export class EntityImportPropertyAssign extends Component {
           numRows={10}
           enableGhostCells
           enableRowHeader
+          enableRowResizing={false}
+          enableColumnResizing={false}
+          selectionModes="NONE"
         >
-          {columns.map((column, i) => (
-            <Column
-              key={column}
-              id={i}
-              name={column}
-              cellRenderer={this.renderCell}
-              columnHeaderCellRenderer={(colIndex) => this.renderHeaderCell(colIndex, columnAssignments)}
-            />
-          ))}
+          {columnLabels.map((colLabel, i) => {
+            const colValue = columnAssignments.get(colLabel);
+
+            return (
+              <Column
+                key={colLabel}
+                id={i}
+                name={colLabel}
+                cellRenderer={(rowIndex, colIndex) => this.renderCell(rowIndex, colIndex, colValue)}
+                columnHeaderCellRenderer={() => this.renderHeaderCell(colLabel, colValue)}
+              />
+            )
+          })}
         </Table>
       </div>
     );

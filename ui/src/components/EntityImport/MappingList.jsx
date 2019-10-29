@@ -5,14 +5,14 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { fetchCollectionMappings } from 'src/actions';
-import { Button, Card, FormGroup, Icon, MenuItem } from '@blueprintjs/core';
+import { Button, Card, FormGroup, Icon, MenuItem, Tooltip, Position } from '@blueprintjs/core';
 import { Select, MultiSelect } from '@blueprintjs/select';
 import {
   Schema,
 } from 'src/components/common';
 import Property from 'src/components/Property';
 
-import './EntityImportMappingChecklist.scss';
+import './MappingList.scss';
 
 const keySelectItemRenderer = (item, { handleClick }) => (
   <MenuItem
@@ -32,25 +32,22 @@ const entityItemRenderer = (item, { handleClick }) => (
   />
 );
 
-export class EntityImportMappingChecklist extends Component {
-  // renderProperty(property, propMappings) {
-  //   const { columnLabels } = this.props;
-  //   const propName = property.name;
-  //   let value;
-  //   if (propMappings.get(propName) !== undefined) {
-  //     value = columnLabels[propMappings.get(propName)]
-  //   }
-  //
-  //   return (
-  //     <tr className="MappingChecklist__property" key={property.name}>
-  //       <td className="MappingChecklist__property__label">{property.label}</td>
-  //       <td className="MappingChecklist__property__value">{value}</td>
-  //     </tr>
-  //   );
-  // }
+export class MappingList extends Component {
+  renderProperty(property, propValue) {
+    const value = propValue.column || propValue;
+
+    return (
+      <div className="MappingList__item__property" key={property.name}>
+        <span className="MappingList__item__property__label">{property.label}</span>
+        <span className="MappingList__item__property__value">{value}</span>
+      </div>
+    );
+  }
 
   renderKeySelect({id, keys}) {
     const { columnLabels, onKeyAssign, onKeyRemove } = this.props;
+
+    console.log('columnLabels are', columnLabels);
 
     return (
       <FormGroup
@@ -86,25 +83,50 @@ export class EntityImportMappingChecklist extends Component {
     )
   }
 
-  renderEntitySelect(mapping, property) {
-    const { mappings, onPropertyAssign } = this.props;
-    const { id, schema } = mapping;
+  renderColumnSelect(schema) {
+    const {  } = this.props;
 
-    const items = Array.from(mappings.values())
-      .filter(({schema}) => !schema.isEdge && schema.isA(property.getRange()))
+    const items = schema.getEditableProperties();
+    const currValue = null;
+
+    return (
+      <Select
+        id="entity-select"
+        items={items}
+        itemRenderer={keySelectItemRenderer}
+        onItemSelect={item => onPropertyAssign(id, property.name, item)}
+        filterable={false}
+        popoverProps={{ minimal: true }}
+        activeItem={currValue}
+      >
+        <Button
+          text={currValue || 'Select a property'}
+          rightIcon="double-caret-vertical"
+        />
+      </Select>
+    )
+  }
+
+  renderEntitySelect(mapping, property) {
+    const { fullMappingsList, onPropertyAssign } = this.props;
+    const { id, schema } = mapping;
+    const propertyRange = property.getRange();
+
+    const items = Array.from(fullMappingsList.values())
+      .filter(({schema}) => !schema.isEdge && schema.isA(propertyRange))
       .map(({schema}) => schema.name)
 
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
 
     return (
-      <div className="MappingChecklist__property">
-        <span className="MappingChecklist__property__label">{property.label}</span>
-        <span className="MappingChecklist__property__value">
+      <div className="MappingList__item__property">
+        <span className="MappingList__item__property__label">{property.label}</span>
+        <span className="MappingList__item__property__value">
           <FormGroup
             label=""
             labelFor="entity-select"
-            helperText={disabled ? 'No entities available' : ''}
+            helperText={disabled ? `No matching entities available` : ''}
           >
             <Select
               id="entity-select"
@@ -120,53 +142,54 @@ export class EntityImportMappingChecklist extends Component {
                 rightIcon="double-caret-vertical"
                 disabled={disabled}
               />
+
             </Select>
           </FormGroup>
         </span>
+        {disabled && (
+          <span className="MappingList__item__property__help">
+            <Tooltip
+              content={`You must create a thing of type "${propertyRange.label}" to be the ${property.label}`}
+              position="auto"
+            >
+              <Icon icon="help" />
+            </Tooltip>
+          </span>
+        )}
       </div>
 
     )
   }
 
-  // getMappingsForSchema(schemaName) {
-  //   const { columnMappings } = this.props;
-  //   const foundMappings = new Map();
-  //
-  //   columnMappings.forEach((mapping, i) => {
-  //     if (mapping) {
-  //       const {schema, property} = mapping
-  //       if (schema === schemaName) {
-  //         foundMappings.set(property.name, i);
-  //       }
-  //     }
-  //   })
-  //
-  //   return foundMappings;
-  // }
+  renderMappingListItem(mapping) {
+    const { editable } = this.props;
+    const { id, schema, properties } = mapping;
 
-  renderMappingChecklist(mapping) {
-    const {id, schema} = mapping;
-    // const
-    // const propMappings = this.getMappingsForSchema(schema.name);
+    const style = {
+      backgroundColor: mapping.color,
+    }
 
     return (
-      <Card className="MappingChecklist__list" key={id}>
-        <Schema.Smart.Label schema={schema} icon />
-        {schema.description &&
-          <span>{schema.description}</span>
-        }
-        <div className="MappingChecklist__property">
-          <span className="MappingChecklist__property__label">Keys</span>
-          <span className="MappingChecklist__property__value">
-            {this.renderKeySelect(mapping)}
+      <Card className="MappingList__item" key={id} style={style} >
+        <h6 className="MappingList__item__title bp3-heading">
+          <Schema.Smart.Label schema={schema} icon />
+        </h6>
+        <div className="MappingList__item__property">
+          <span className="MappingList__item__property__label">Keys</span>
+          <span className="MappingList__item__property__value">
+            {editable && this.renderKeySelect(mapping)}
+            {!editable && mapping.keys.join(', ') }
           </span>
         </div>
-        {schema.isEdge && (
+        {editable && schema.isEdge && (
           <React.Fragment>
             {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.source))}
             {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.target))}
           </React.Fragment>
         )}
+        {!editable && Array.from(Object.entries(properties)).map(([propName, propValue]) => (
+          this.renderProperty(schema.getProperty(propName), propValue)
+        ))}
       </Card>
     );
     // {visibleProps.map(property => this.renderProperty(property, propMappings))}
@@ -174,26 +197,11 @@ export class EntityImportMappingChecklist extends Component {
   }
 
   render() {
-    const { mappings } = this.props;
-
-    const thingChecklists = [], relationshipChecklists = [];
-
-    mappings.forEach((mapping) => {
-      if (mapping.schema.isEdge) {
-        relationshipChecklists.push(this.renderMappingChecklist(mapping));
-      } else {
-        thingChecklists.push(this.renderMappingChecklist(mapping));
-      }
-    });
+    const { items } = this.props;
 
     return (
-      <div className="MappingChecklist">
-        <div className="MappingChecklist__list-container">
-          {thingChecklists}
-        </div>
-        <div className="MappingChecklist__list-container">
-          {relationshipChecklists}
-        </div>
+      <div className="MappingList">
+        {items.map(item => this.renderMappingListItem(item))}
       </div>
     );
   }
@@ -208,4 +216,4 @@ const mapStateToProps = () => {
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
-)(EntityImportMappingChecklist);
+)(MappingList);

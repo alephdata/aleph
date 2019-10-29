@@ -75,6 +75,9 @@ export const triggerCollectionCancel = asyncActionCreator(id => async () => {
 export const createCollectionMapping = asyncActionCreator((id, mapping) => async () => {
   console.log('in create mapping', id, mapping);
   const response = await endpoint.post(`collections/${id}/mappings`, mapping);
+  if (response && response.data) {
+    await endpoint.put(`collections/${id}/mappings/${response.data.id}/trigger`);
+  }
   return { id, data: response.data };
 }, { name: 'CREATE_COLLECTION_MAPPING' });
 
@@ -85,6 +88,13 @@ export const updateCollectionMapping = (
     return { id: collectionId, data: response.data };
   }, { name: 'UPDATE_COLLECTION_MAPPING' })
 );
+
+export const deleteCollectionMapping = asyncActionCreator((collectionId, mappingId) => async () => {
+  console.log('in delete mapping', collectionId, mappingId);
+  const config = { params: { flush: true } };
+  const response = await endpoint.delete(`collections/${collectionId}/mappings/${mappingId}`, config);
+  return { mappingId, data: response.data };
+}, { name: 'DELETE_COLLECTION_MAPPING' });
 
 export const fetchCollectionMappings = asyncActionCreator(id => async () => {
   const response = await endpoint.get(`collections/${id}/mappings`);
