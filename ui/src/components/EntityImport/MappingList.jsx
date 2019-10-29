@@ -162,7 +162,7 @@ export class MappingList extends Component {
   }
 
   renderMappingListItem(mapping) {
-    const { editable } = this.props;
+    const { editable, onMappingRemove } = this.props;
     const { id, schema, properties } = mapping;
 
     const style = {
@@ -171,6 +171,12 @@ export class MappingList extends Component {
 
     return (
       <Card className="MappingList__item" key={id} style={style} >
+        <Button
+          className="MappingList__item__close"
+          icon="cross"
+          minimal
+          onClick={() => onMappingRemove(schema)}
+        />
         <h6 className="MappingList__item__title bp3-heading">
           <Schema.Smart.Label schema={schema} icon />
         </h6>

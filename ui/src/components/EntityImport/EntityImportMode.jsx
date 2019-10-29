@@ -107,8 +107,12 @@ export class EntityImportMode extends Component {
     this.setState(({ mappings }) => ({ mappings: clone }));
   }
 
-  onMappingRemove(item) {
-    console.log('in on mapping remove');
+  onMappingRemove(schema) {
+    const { mappings } = this.state;
+    const clone = new Map(mappings);
+    clone.delete(schema.name)
+
+    this.setState(({ mappings }) => ({ mappings: clone }));
   }
 
   onKeyAssign(mappingId, key) {
@@ -129,7 +133,6 @@ export class EntityImportMode extends Component {
   }
 
   updateMappings(mappingId, updateToApply) {
-    console.log('updating', mappingId);
     const { mappings } = this.state;
     const clone = new Map(mappings);
 
@@ -139,27 +142,6 @@ export class EntityImportMode extends Component {
       this.setState(({ mappings }) => ({ mappings: clone }));
     }
   }
-
-  // const test = {
-  //   table_id: '5',
-  //   mapping_query: {
-  //     person: {
-  //       schema: 'Person',
-  //       keys: [
-  //         'name',
-  //         'nationality',
-  //       ],
-  //       properties: {
-  //         name: {
-  //           column: 'name',
-  //         },
-  //         nationality: {
-  //           column: 'nationality',
-  //         },
-  //       },
-  //     },
-  //   },
-  // };
 
   formatMappings() {
     const { entity } = this.props;
@@ -281,6 +263,7 @@ export class EntityImportMode extends Component {
                 onKeyAssign={this.onKeyAssign}
                 onKeyRemove={this.onKeyRemove}
                 onPropertyAssign={this.onPropertyAssign}
+                onMappingRemove={this.onMappingRemove}
               />
             </div>
             <div className="EntityImport__split-section">
@@ -298,6 +281,7 @@ export class EntityImportMode extends Component {
                 onKeyAssign={this.onKeyAssign}
                 onKeyRemove={this.onKeyRemove}
                 onPropertyAssign={this.onPropertyAssign}
+                onMappingRemove={this.onMappingRemove}
               />
             </div>
           </div>
@@ -339,7 +323,7 @@ export class EntityImportMode extends Component {
             </div>
             <div className="EntityImport__section">
               <h5 className="bp3-heading EntityImport__section__title">
-                5. Preview
+                4. Preview
               </h5>
               <JSONPretty id="json-pretty" data={this.formatMappings(mappings)} />
             </div>

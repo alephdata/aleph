@@ -73,8 +73,11 @@ class MappingVerifyItem extends Component {
       return <span className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</span>
     } else {
       const referredEntity = fullMappingsList.get(propValue);
-      console.log(referredEntity)
-      return <span className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>{propValue}</span>
+      return (
+        <span className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
+          <Schema.Smart.Label schema={referredEntity.schema} icon />
+        </span>
+      );
     }
   }
 

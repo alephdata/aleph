@@ -2,9 +2,20 @@
 
 .MappingList {
   &__item {
+    position: relative;
     color: white;
     box-shadow: none !important;
     margin: $aleph-grid-size 0;
+
+    &__close {
+      position: absolute;
+      top: $aleph-grid-size/2;
+      right: $aleph-grid-size/2;
+
+      svg {
+        fill: white !important;
+      }
+    }
 
     &__title.bp3-heading {
       color: white;
