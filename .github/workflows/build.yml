@@ -14,7 +14,7 @@ jobs:
     - name: Build production image
       run: |
         docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
-    - name: Push docker image (master)
+    - name: Push docker image (hash)
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph-ui-production:${GITHUB_SHA}
@@ -26,7 +26,31 @@ jobs:
       run: |
         docker build -t alephdata/aleph-elasticsearch:${GITHUB_SHA} services/elasticsearch
         docker tag alephdata/aleph-elasticsearch:${GITHUB_SHA} alephdata/aleph-elasticsearch:latest
-    - name: Push docker image (master)
+    - name: Push docker image (hash)
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph-elasticsearch:${GITHUB_SHA}
+  docker-ingest-file:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build docker image
+      run: |
+        docker build -t alephdata/ingest-file:${GITHUB_SHA} services/ingest-file
+        docker tag alephdata/ingest-file:${GITHUB_SHA} alephdata/ingest-file:latest
+    - name: Push docker image (hash)
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        docker push alephdata/ingest-file:${GITHUB_SHA}
+  docker-aleph:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build docker image
+      run: |
+        docker build -t alephdata/aleph:${GITHUB_SHA} .
+        docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
+    - name: Push docker image (hash)
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        docker push alephdata/aleph:${GITHUB_SHA}
