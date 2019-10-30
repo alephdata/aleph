@@ -44,6 +44,7 @@ class EntityTagsMode extends React.Component {
 
   render() {
     const { intl, entity, tags } = this.props;
+    console.log('IN TAGS', entity, tags);
     if (!entity || !entity.links || !tags || !tags.results || tags.results.length === 0) {
       return (
         <ErrorSection

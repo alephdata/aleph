@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
+import { showErrorToast } from 'src/app/toast';
 import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import TableViewer from 'src/viewers/TableViewer';
@@ -47,6 +48,7 @@ export class EntityImportMode extends Component {
     this.onKeyAssign = this.onKeyAssign.bind(this);
     this.onKeyRemove = this.onKeyRemove.bind(this);
     this.onPropertyAssign = this.onPropertyAssign.bind(this);
+    this.onValidate = this.onValidate.bind(this);
   }
 
   componentDidMount() {
@@ -143,8 +145,36 @@ export class EntityImportMode extends Component {
     }
   }
 
-  onValidationError(error) {
-    this.setState(({ validationError }) => ({ validationError: error }));
+  onValidate() {
+    console.log('validating');
+    const { mappings } = this.state;
+    const errors = [];
+    let isValid = true
+
+    mappings.forEach(({ id, keys, properties, schema}) => {
+      if (keys.length === 0) {
+        errors.push(`Key Error: ${id} entity must have at least one key`);
+        isValid = false;
+      }
+      if (schema.isEdge) {
+        const { source, target } = schema.edge;
+
+        if (!properties.hasOwnProperty(source)) {
+          errors.push(`Relationship Error: ${id} entity must have a ${source} property assigned`);
+          isValid = false;
+        }
+        if (!properties.hasOwnProperty(target)) {
+          errors.push(`Relationship Error: ${id} entity must have a ${target} property assigned`);
+          isValid = false;
+        }
+      }
+    })
+
+    if (!isValid) {
+      showErrorToast({ message: errors.map(error => <li>{error}</li>) });
+    }
+
+    return isValid;
   }
 
   formatMappings() {
@@ -331,6 +361,7 @@ export class EntityImportMode extends Component {
                   mappings={this.formatMappings(mappings)}
                   collectionId={entity.collection.id}
                   mappingId={existingMappingId}
+                  validate={this.onValidate}
                 />
               </div>
             </React.Fragment>
