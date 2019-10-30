@@ -24,7 +24,8 @@ class MappingVerifyItem extends Component {
     const { id, schema, properties } = mapping;
 
     const items = schema.getEditableProperties()
-      .filter(prop => !properties[prop.name]);
+      .filter(prop => !properties[prop.name])
+      .sort((a, b) => (a.label > b.label ? 1 : -1));
 
     return (
       <Select

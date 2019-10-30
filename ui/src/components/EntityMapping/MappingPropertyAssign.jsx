@@ -27,9 +27,11 @@ export class MappingPropertyAssign extends Component {
   }
 
   getSchemaProps = (schema) => {
-    let featuredProps = schema.getFeaturedProperties();
+    let featuredProps = schema.getFeaturedProperties()
+      .sort((a, b) => (a.label > b.label ? 1 : -1));
     let otherProps = schema.getEditableProperties()
-      .filter(prop => featuredProps.indexOf(prop) === -1);
+      .filter(prop => featuredProps.indexOf(prop) === -1)
+      .sort((a, b) => (a.label > b.label ? 1 : -1));
 
     if (schema.isEdge) {
       const edgeProps = schema.edge;
@@ -105,7 +107,7 @@ export class MappingPropertyAssign extends Component {
           )}
           <Select
             id="entity-type"
-            items={Array.from(mappings.values())}
+            items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
             itemListRenderer={listProps => this.itemListRenderer(listProps)}
             itemRenderer={itemRenderer}
             popoverProps={{ minimal: true }}

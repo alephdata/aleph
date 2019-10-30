@@ -28,9 +28,14 @@ const entityItemRenderer = (item, { handleClick }) => (
 );
 
 
-export class MappingKeyAssign extends Component {
+export class MappingKeyAssignItem extends Component {
   renderKeySelect({ id, keys }) {
-    const { columnLabels, onKeyAssign, onKeyRemove } = this.props;
+    console.log('props', this.props);
+    const { columnLabels, onKeyAdd, onKeyRemove } = this.props;
+
+    const items = columnLabels
+      .filter((column) => keys.indexOf(column) === -1)
+      .sort();
 
     return (
       <FormGroup
@@ -45,10 +50,10 @@ export class MappingKeyAssign extends Component {
       >
         <MultiSelect
           id="key-select"
-          items={columnLabels.filter((column) => keys.indexOf(column) === -1)}
+          items={items}
           itemRenderer={keySelectItemRenderer}
           tagRenderer={item => item}
-          onItemSelect={item => onKeyAssign(id, item)}
+          onItemSelect={item => onKeyAdd(id, item)}
           selectedItems={keys}
           itemPredicate={() => true}
           placeholder={'Select keys from available columns'}
@@ -73,7 +78,8 @@ export class MappingKeyAssign extends Component {
 
     const items = Array.from(fullMappingsList.values())
       .filter(({ schema }) => !schema.isEdge && schema.isA(propertyRange))
-      .map(({ schema }) => schema.name);
+      .map(({ schema }) => schema.name)
+      .sort((a, b) => a.localeCompare(b));
 
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
@@ -120,8 +126,8 @@ export class MappingKeyAssign extends Component {
     );
   }
 
-  renderMappingKeyAssignItem(mapping) {
-    const { onMappingRemove } = this.props;
+  render() {
+    const { mapping, onMappingRemove } = this.props;
     const { id, color, schema } = mapping;
 
     return (
@@ -150,16 +156,18 @@ export class MappingKeyAssign extends Component {
       </Card>
     );
   }
-
-  render() {
-    const { items } = this.props;
-
-    return (
-      <div className="MappingKeyAssign">
-        {items.map(item => this.renderMappingKeyAssignItem(item))}
-      </div>
-    );
-  }
 }
+
+const MappingKeyAssign = ({ items, ...props }) => (
+  <div className="MappingKeyAssign">
+    {items.map(item => (
+      <MappingKeyAssignItem
+        key={item.id}
+        mapping={item}
+        {...props}
+      />
+    ))}
+  </div>
+);
 
 export default compose(injectIntl)(MappingKeyAssign);

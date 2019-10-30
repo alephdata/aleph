@@ -20,7 +20,7 @@ import {
 import './EntityMappingMode.scss';
 
 const colorOptions = [
-  Colors.BLUE1, Colors.GREEN1, Colors.ORANGE1, Colors.RED1, Colors.VIOLET1, Colors.TURQUOISE1,
+  Colors.BLUE1, Colors.TURQUOISE1, Colors.VIOLET1, Colors.ORANGE1, Colors.GREEN1, Colors.RED1,
 ];
 
 const messages = defineMessages({
