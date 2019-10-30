@@ -48,7 +48,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build docker image
       run: |
-        docker build -t alephdata/aleph:${GITHUB_SHA} .
+        docker pull alephdata/aleph:latest
+        docker build --cache-from alephdata/aleph:latest -t alephdata/aleph:${GITHUB_SHA} .
         docker tag alephdata/aleph:${GITHUB_SHA} alephdata/aleph:latest
     - name: Push docker image (hash)
       run: |
