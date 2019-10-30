@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { fetchCollectionMappings } from 'src/actions';
 import { Button, FormGroup, Card, H5, Intent, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
@@ -25,7 +24,8 @@ const itemRenderer = (item, { handleClick }) => (
 
 export class MappingSelect extends Component {
   render() {
-    const { items, label, onSelect } = this.props;
+    const { schemaSelectOptions, onSelect, type } = this.props;
+    const items = schemaSelectOptions[type === 'thing' ? 0 : 1];
 
     return (
       <div className="MappingSelect">
@@ -39,7 +39,7 @@ export class MappingSelect extends Component {
         >
           <Button
             icon="add"
-            text={`Add a new ${label}`}
+            text={`Add a new ${type}`}
             rightIcon="double-caret-vertical"
           />
         </Select>
@@ -48,13 +48,4 @@ export class MappingSelect extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchCollectionMappings };
-
-const mapStateToProps = () => {
-  return {};
-};
-
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  injectIntl,
-)(MappingSelect);
+export default MappingSelect;

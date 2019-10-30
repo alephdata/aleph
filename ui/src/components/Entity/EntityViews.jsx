@@ -176,10 +176,10 @@ class EntityViews extends React.Component {
           <Tab
             id="import"
             title={(
-              <React.Fragment>
+              <>
                 <Icon icon="import" className="left-icon" />
                 <FormattedMessage id="entity.import.view" defaultMessage="Import" />
-              </React.Fragment>
+              </>
             )}
             panel={<EntityImportMode entity={entity} />}
           />

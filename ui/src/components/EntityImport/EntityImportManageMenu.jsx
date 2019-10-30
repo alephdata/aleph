@@ -11,12 +11,6 @@ import EntityImportSaveDialog from 'src/dialogs/EntityImportSaveDialog/EntityImp
 import EntityImportDeleteDialog from 'src/dialogs/EntityImportDeleteDialog/EntityImportDeleteDialog';
 import { selectSession } from 'src/selectors';
 
-// const messages = defineMessages({
-//   publish: {
-//     id: 'collection.publish.admin',
-//     defaultMessage: 'Only administrators can publish a dataset.',
-//   },
-// });
 
 class EntityImportManageMenu extends Component {
   constructor(props) {
@@ -69,7 +63,6 @@ class EntityImportManageMenu extends Component {
       showSuccessToast('Successfully deleted');
       this.toggleDelete();
     } catch (e) {
-      console.log(e);
       showErrorToast(e);
     }
   }
@@ -88,18 +81,12 @@ class EntityImportManageMenu extends Component {
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
-  validate() {
-    const { mappings } = this.props;
-
-    console.log('validating', mappings);
-  }
-
   render() {
     const { mappingId, mappings } = this.props;
     const { createIsOpen, deleteIsOpen, previewIsOpen, saveIsOpen } = this.state;
 
     return (
-      <React.Fragment>
+      <>
         <ButtonGroup>
           {mappingId && (
             <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
@@ -138,7 +125,7 @@ class EntityImportManageMenu extends Component {
           toggleDialog={this.toggleDelete}
           onDelete={this.onDelete}
         />
-      </React.Fragment>
+      </>
     );
   }
 }

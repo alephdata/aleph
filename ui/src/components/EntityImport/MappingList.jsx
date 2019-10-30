@@ -183,23 +183,17 @@ export class MappingList extends Component {
         <div className="MappingList__item__property">
           <span className="MappingList__item__property__label">Keys</span>
           <span className="MappingList__item__property__value">
-            {editable && this.renderKeySelect(mapping)}
-            {!editable && mapping.keys.join(', ') }
+            {this.renderKeySelect(mapping)}
           </span>
         </div>
-        {editable && schema.isEdge && (
+        {schema.isEdge && (
           <React.Fragment>
             {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.source))}
             {this.renderEntitySelect(mapping, schema.getProperty(schema.edge.target))}
           </React.Fragment>
         )}
-        {!editable && Array.from(Object.entries(properties)).map(([propName, propValue]) => (
-          this.renderProperty(schema.getProperty(propName), propValue)
-        ))}
       </Card>
     );
-    // {visibleProps.map(property => this.renderProperty(property, propMappings))}
-
   }
 
   render() {

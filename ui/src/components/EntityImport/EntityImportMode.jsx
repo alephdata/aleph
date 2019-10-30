@@ -13,25 +13,31 @@ import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import MappingStatus from './MappingStatus';
 import MappingSelect from './MappingSelect';
 import MappingList from './MappingList';
-import MappingVerify from './MappingVerify';
+import MappingSplitSection from './MappingSplitSection';
 
+import MappingVerify from './MappingVerify';
 import EntityImportPropertyAssign from './EntityImportPropertyAssign';
 import EntityImportManageMenu from './EntityImportManageMenu';
 import {
   Date, Entity,
 } from 'src/components/common';
-
 import { Button, Colors, Intent } from '@blueprintjs/core';
 import {
   Column, Table,
 } from '@blueprintjs/table';
-
 
 import './EntityImportMode.scss';
 
 const colorOptions = [
   Colors.BLUE1, Colors.GREEN1, Colors.ORANGE1, Colors.RED1, Colors.VIOLET1, Colors.TURQUOISE1
 ];
+
+const messages = defineMessages({
+  no_tags: {
+    id: 'entity.tags.no_tags',
+    defaultMessage: 'No selectors were extracted from this entity.',
+  },
+});
 
 export class EntityImportMode extends Component {
   constructor(props) {
@@ -45,7 +51,7 @@ export class EntityImportMode extends Component {
 
     this.onMappingAdd = this.onMappingAdd.bind(this);
     this.onMappingRemove = this.onMappingRemove.bind(this);
-    this.onKeyAssign = this.onKeyAssign.bind(this);
+    this.onKeyAdd = this.onKeyAdd.bind(this);
     this.onKeyRemove = this.onKeyRemove.bind(this);
     this.onPropertyAssign = this.onPropertyAssign.bind(this);
     this.onValidate = this.onValidate.bind(this);
@@ -57,11 +63,9 @@ export class EntityImportMode extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('updating!!!!');
     const { existingMappings } = this.props;
-    if (existingMappings && existingMappings.length && !existingMappings.isLoading && !existingMappings.isError &&
-      prevProps.existingMappings !== existingMappings) {
-        console.log('LOADING FROM EXISTING MAPPING', existingMappings.length);
+    if (existingMappings && existingMappings.length && !existingMappings.isLoading && !existingMappings.isError
+      && prevProps.existingMappings !== existingMappings) {
         this.loadFromMapping(existingMappings[0]);
     }
   }
@@ -77,7 +81,6 @@ export class EntityImportMode extends Component {
       newline: '\n',
       encoding: 'utf-8',
       chunk: (results, parser) => {
-        console.log(results.data[0], results.data.slice(0, 1));
         this.setState({
           csvHeader: results.data[0],
           csvData: results.data.slice(1, 15),
@@ -85,10 +88,6 @@ export class EntityImportMode extends Component {
         parser.abort();
       },
     });
-  }
-
-  deleteListing(item) {
-    console.log('deleting', item, this);
   }
 
   onMappingAdd(schema) {
@@ -117,7 +116,7 @@ export class EntityImportMode extends Component {
     this.setState(({ mappings }) => ({ mappings: clone }));
   }
 
-  onKeyAssign(mappingId, key) {
+  onKeyAdd(mappingId, key) {
     this.updateMappings(mappingId, mappingObj => mappingObj.keys.push(key))
   }
 
@@ -146,10 +145,9 @@ export class EntityImportMode extends Component {
   }
 
   onValidate() {
-    console.log('validating');
     const { mappings } = this.state;
     const errors = [];
-    let isValid = true
+    let isValid = true;
 
     mappings.forEach(({ id, keys, properties, schema}) => {
       if (keys.length === 0) {
@@ -222,30 +220,15 @@ export class EntityImportMode extends Component {
       return null;
     }
 
-    console.log('mappings', mappings);
-    console.log('existing mappings are', existingMappings)
+    const existingMapping = existingMappings.length && !existingMappings.isLoading && !existingMappings.isError ? existingMappings[0] : null;
 
-    console.log('entity is', entity.getProperty('fileName'));
-
-    const existingMapping = existingMappings.length && !existingMappings.isLoading && !existingMappings.isError ? existingMappings[0] : null
-
-    // console.log('csv data is', csvData);
-
-    const [things, relationships] = Object.keys(model.schemata)
+    const schemaSelectOptions = Object.keys(model.schemata)
       .map(key => model.schemata[key])
       .filter(item => item.isCreateable && !item.abstract && !mappings.has(item.name))
       .reduce((result, schema) => {
         result[schema.isEdge ? 1 : 0].push(schema);
         return result;
       },[[], []]);
-
-    const [mappedThings, mappedRelationships] = Array.from(mappings.values())
-      .reduce((result, element) => {
-        result[element.schema.isEdge ? 1 : 0].push(element);
-        return result;
-      },[[], []])
-
-    console.log(mappedThings);
 
     return (
       <div className="EntityImport">
@@ -277,46 +260,30 @@ export class EntityImportMode extends Component {
             <h5 className="bp3-heading EntityImport__section__title">
               1. Select entity types to map
             </h5>
-            <div className="EntityImport__split-section-container">
-              <div className="EntityImport__split-section">
-                <h6 className="EntityImport__split-section__title bp3-heading">Objects</h6>
-                <MappingSelect
-                  items={things}
-                  label="object"
-                  onSelect={this.onMappingAdd}
-                />
-                <MappingList
-                  editable
-                  columnLabels={csvHeader}
-                  items={mappedThings}
-                  onKeyAssign={this.onKeyAssign}
-                  onKeyRemove={this.onKeyRemove}
-                  onPropertyAssign={this.onPropertyAssign}
-                  onMappingRemove={this.onMappingRemove}
-                />
-              </div>
-              <div className="EntityImport__split-section">
-                <h6 className="EntityImport__split-section__title bp3-heading">Relationships</h6>
-                <MappingSelect
-                  items={relationships}
-                  label="relationship"
-                  onSelect={this.onMappingAdd}
-                />
-                <MappingList
-                  editable
-                  columnLabels={csvHeader}
-                  items={mappedRelationships}
-                  fullMappingsList={mappings}
-                  onKeyAssign={this.onKeyAssign}
-                  onKeyRemove={this.onKeyRemove}
-                  onPropertyAssign={this.onPropertyAssign}
-                  onMappingRemove={this.onMappingRemove}
-                />
-              </div>
-            </div>
+            <MappingSplitSection
+              items={Array.from(mappings.values())}
+              sectionContentsRenderer={((subitems, type) => (
+                <>
+                  <MappingSelect
+                    schemaSelectOptions={schemaSelectOptions}
+                    type={type}
+                    onSelect={this.onMappingAdd}
+                  />
+                  <MappingList
+                    columnLabels={csvHeader}
+                    items={subitems}
+                    fullMappingsList={mappings}
+                    onKeyAdd={this.onKeyAdd}
+                    onKeyRemove={this.onKeyRemove}
+                    onPropertyAssign={this.onPropertyAssign}
+                    onMappingRemove={this.onMappingRemove}
+                  />
+                </>
+              ))}
+            />
           </div>
           {mappings.size > 0 && (
-            <React.Fragment>
+            <>
               <div className="EntityImport__section">
                 <h5 className="bp3-heading EntityImport__section__title">
                   2. Map columns to properties
@@ -332,23 +299,16 @@ export class EntityImportMode extends Component {
                 <h5 className="bp3-heading EntityImport__section__title">
                   3. Verify
                 </h5>
-                <div className="EntityImport__split-section-container">
-                  <div className="EntityImport__split-section">
-                    <h4 className="EntityImport__split-section__title">Objects</h4>
+                <MappingSplitSection
+                  items={Array.from(mappings.values())}
+                  sectionContentsRenderer={(subitems => (
                     <MappingVerify
-                      items={mappedThings}
-                      onPropertyAssign={this.onPropertyAssign}
-                    />
-                  </div>
-                  <div className="EntityImport__split-section">
-                    <h4 className="EntityImport__split-section__title">Relationships</h4>
-                    <MappingVerify
-                      items={mappedRelationships}
+                      items={subitems}
                       fullMappingsList={mappings}
                       onPropertyAssign={this.onPropertyAssign}
                     />
-                  </div>
-                </div>
+                  ))}
+                />
               </div>
               <div className="EntityImport__section">
                 {existingMapping && (
@@ -364,7 +324,7 @@ export class EntityImportMode extends Component {
                   validate={this.onValidate}
                 />
               </div>
-            </React.Fragment>
+            </>
           )}
         </div>
       </div>
@@ -376,7 +336,6 @@ const mapDispatchToProps = { fetchCollectionMappings };
 
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.entity.collection.id;
-  console.log('state is', state);
   return {
     model: selectModel(state),
     existingMappings: selectCollectionMappings(state, collectionId)

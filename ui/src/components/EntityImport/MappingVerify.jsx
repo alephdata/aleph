@@ -115,30 +115,15 @@ class MappingVerifyItem extends Component {
   }
 }
 
-export class MappingVerify extends Component {
-  render() {
-    const { items, fullMappingsList, onPropertyAssign } = this.props;
+const MappingVerify = ({ items, fullMappingsList, onPropertyAssign }) => (
+  <div className="MappingVerify">
+    {items.map((mapping) => (
+      <MappingVerifyItem fullMappingsList={fullMappingsList} mapping={mapping} onPropertyAssign={onPropertyAssign} key={mapping.id} />
+    ))}
+  </div>
+);
 
-    console.log(items);
-
-    return (
-      <div className="MappingVerify">
-        {items.map((mapping) => (
-          <MappingVerifyItem fullMappingsList={fullMappingsList} mapping={mapping} onPropertyAssign={onPropertyAssign} />
-        ))}
-      </div>
-    );
-  }
-}
-
-
-const mapDispatchToProps = { fetchCollectionMappings };
-
-const mapStateToProps = () => {
-  return {};
-};
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
 )(MappingVerify);
