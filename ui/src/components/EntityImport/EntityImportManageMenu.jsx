@@ -5,6 +5,7 @@ import { Button } from '@blueprintjs/core';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 import { createCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
 
+import EntityImportPreviewDialog from 'src/dialogs/EntityImportPreviewDialog/EntityImportPreviewDialog';
 import EntityImportCreateDialog from 'src/dialogs/EntityImportCreateDialog/EntityImportCreateDialog';
 import EntityImportSaveDialog from 'src/dialogs/EntityImportSaveDialog/EntityImportSaveDialog';
 import EntityImportDeleteDialog from 'src/dialogs/EntityImportDeleteDialog/EntityImportDeleteDialog';
@@ -21,11 +22,13 @@ class EntityImportManageMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      previewIsOpen: false,
       createIsOpen: false,
       saveIsOpen: false,
       deleteIsOpen: false,
     };
 
+    this.togglePreview = this.togglePreview.bind(this);
     this.toggleCreate = this.toggleCreate.bind(this);
     this.toggleSave = this.toggleSave.bind(this);
     this.toggleDelete = this.toggleDelete.bind(this);
@@ -35,14 +38,14 @@ class EntityImportManageMenu extends Component {
   }
 
   async onSave() {
-    const { collectionId, mappings, mappingId } = this.props;
-
-    try {
-      await this.props.updateCollectionMapping(collectionId, mappingId, mappings);
-      this.toggleSave();
-    } catch (e) {
-      showErrorToast(e);
-    }
+    // const { collectionId, mappings, mappingId } = this.props;
+    this.validate();
+    // try {
+    //   await this.props.updateCollectionMapping(collectionId, mappingId, mappings);
+    //   this.toggleSave();
+    // } catch (e) {
+    //   showErrorToast(e);
+    // }
   }
 
   async onCreate() {
@@ -70,6 +73,10 @@ class EntityImportManageMenu extends Component {
     }
   }
 
+  togglePreview = () => this.setState(({ previewIsOpen }) => (
+    { previewIsOpen: !previewIsOpen }
+  ));
+
   toggleCreate = () => this.setState(({ createIsOpen }) => (
     { createIsOpen: !createIsOpen }
   ));
@@ -80,13 +87,21 @@ class EntityImportManageMenu extends Component {
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
+  validate() {
+    const { mappings } = this.props;
+
+    console.log('validating', mappings);
+  }
 
   render() {
-    const { mappingId } = this.props;
-    const { createIsOpen, deleteIsOpen, saveIsOpen } = this.state;
+    const { mappingId, mappings } = this.props;
+    const { createIsOpen, deleteIsOpen, previewIsOpen, saveIsOpen } = this.state;
 
     return (
       <React.Fragment>
+        <Button icon="eye-open" onClick={this.togglePreview}>
+          <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview" />
+        </Button>
         {mappingId && (
           <Button icon="floppy-disk" onClick={this.toggleSave}>
             <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
@@ -100,6 +115,11 @@ class EntityImportManageMenu extends Component {
         <Button icon="trash" onClick={this.toggleDelete}>
           <FormattedMessage id="mapping.actions.delete" defaultMessage="Delete" />
         </Button>
+        <EntityImportPreviewDialog
+          isOpen={previewIsOpen}
+          mappings={mappings}
+          toggleDialog={this.togglePreview}
+        />
         <EntityImportCreateDialog
           isOpen={createIsOpen}
           toggleDialog={this.toggleCreate}

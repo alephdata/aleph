@@ -5,7 +5,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
-import JSONPretty from 'react-json-pretty';
 import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import TableViewer from 'src/viewers/TableViewer';
@@ -39,7 +38,8 @@ export class EntityImportMode extends Component {
 
     this.state = {
       mappings: new Map(),
-      csvData: null
+      csvData: null,
+      validationError: null,
     };
 
     this.onMappingAdd = this.onMappingAdd.bind(this);
@@ -143,6 +143,10 @@ export class EntityImportMode extends Component {
     }
   }
 
+  onValidationError(error) {
+    this.setState(({ validationError }) => ({ validationError: error }));
+  }
+
   formatMappings() {
     const { entity } = this.props;
     const { mappings, csvData } = this.state;
@@ -216,7 +220,7 @@ export class EntityImportMode extends Component {
     return (
       <div className="EntityImport">
         <h1 className="text-page-title">
-          <FormattedMessage id="mapping.title" defaultMessage="Mapping Editor" />
+          <FormattedMessage id="mapping.title" defaultMessage="Import as structured entities" />
         </h1>
         <p className="text-page-subtitle">
         <FormattedMessage
@@ -238,104 +242,100 @@ export class EntityImportMode extends Component {
           }}
         />
         </p>
-        {existingMapping && (
-          <MappingStatus
-            collection={entity.collection}
-            mapping={existingMapping}
-          />
-        )}
-        <div className="EntityImport__section">
-          <h5 className="bp3-heading EntityImport__section__title">
-            1. Select entity types to map
-          </h5>
-          <div className="EntityImport__split-section-container">
-            <div className="EntityImport__split-section">
-              <h6 className="EntityImport__split-section__title bp3-heading">Things</h6>
-              <MappingSelect
-                items={things}
-                label="thing"
-                onSelect={this.onMappingAdd}
-              />
-              <MappingList
-                editable
-                columnLabels={csvHeader}
-                items={mappedThings}
-                onKeyAssign={this.onKeyAssign}
-                onKeyRemove={this.onKeyRemove}
-                onPropertyAssign={this.onPropertyAssign}
-                onMappingRemove={this.onMappingRemove}
-              />
-            </div>
-            <div className="EntityImport__split-section">
-              <h6 className="EntityImport__split-section__title bp3-heading">Relationships</h6>
-              <MappingSelect
-                items={relationships}
-                label="relationship"
-                onSelect={this.onMappingAdd}
-              />
-              <MappingList
-                editable
-                columnLabels={csvHeader}
-                items={mappedRelationships}
-                fullMappingsList={mappings}
-                onKeyAssign={this.onKeyAssign}
-                onKeyRemove={this.onKeyRemove}
-                onPropertyAssign={this.onPropertyAssign}
-                onMappingRemove={this.onMappingRemove}
-              />
-            </div>
-          </div>
-        </div>
-        {mappings.size > 0 && (
-          <React.Fragment>
-            <div className="EntityImport__section">
-              <h5 className="bp3-heading EntityImport__section__title">
-                2. Map columns to properties
-              </h5>
-              <EntityImportPropertyAssign
-                columnLabels={csvHeader}
-                csvData={csvData}
-                mappings={mappings}
-                onPropertyAssign={this.onPropertyAssign}
-              />
-            </div>
-            <div className="EntityImport__section">
-              <h5 className="bp3-heading EntityImport__section__title">
-                3. Verify
-              </h5>
-              <div className="EntityImport__split-section-container">
-                <div className="EntityImport__split-section">
-                  <h4 className="EntityImport__split-section__title">Things</h4>
-                  <MappingVerify
-                    items={mappedThings}
-                    onPropertyAssign={this.onPropertyAssign}
-                  />
-                </div>
-                <div className="EntityImport__split-section">
-                  <h4 className="EntityImport__split-section__title">Relationships</h4>
-                  <MappingVerify
-                    items={mappedRelationships}
-                    fullMappingsList={mappings}
-                    onPropertyAssign={this.onPropertyAssign}
-                  />
-                </div>
+        <div className="EntityImport__sections">
+          <div className="EntityImport__section">
+            <h5 className="bp3-heading EntityImport__section__title">
+              1. Select entity types to map
+            </h5>
+            <div className="EntityImport__split-section-container">
+              <div className="EntityImport__split-section">
+                <h6 className="EntityImport__split-section__title bp3-heading">Objects</h6>
+                <MappingSelect
+                  items={things}
+                  label="object"
+                  onSelect={this.onMappingAdd}
+                />
+                <MappingList
+                  editable
+                  columnLabels={csvHeader}
+                  items={mappedThings}
+                  onKeyAssign={this.onKeyAssign}
+                  onKeyRemove={this.onKeyRemove}
+                  onPropertyAssign={this.onPropertyAssign}
+                  onMappingRemove={this.onMappingRemove}
+                />
+              </div>
+              <div className="EntityImport__split-section">
+                <h6 className="EntityImport__split-section__title bp3-heading">Relationships</h6>
+                <MappingSelect
+                  items={relationships}
+                  label="relationship"
+                  onSelect={this.onMappingAdd}
+                />
+                <MappingList
+                  editable
+                  columnLabels={csvHeader}
+                  items={mappedRelationships}
+                  fullMappingsList={mappings}
+                  onKeyAssign={this.onKeyAssign}
+                  onKeyRemove={this.onKeyRemove}
+                  onPropertyAssign={this.onPropertyAssign}
+                  onMappingRemove={this.onMappingRemove}
+                />
               </div>
             </div>
-            <div className="EntityImport__section">
-              <h5 className="bp3-heading EntityImport__section__title">
-                4. Preview
-              </h5>
-              <JSONPretty id="json-pretty" data={this.formatMappings(mappings)} />
-            </div>
-            <div className="EntityImport__section">
-              <EntityImportManageMenu
-                mappings={this.formatMappings(mappings)}
-                collectionId={entity.collection.id}
-                mappingId={existingMappingId}
-              />
-            </div>
-          </React.Fragment>
-        )}
+          </div>
+          {mappings.size > 0 && (
+            <React.Fragment>
+              <div className="EntityImport__section">
+                <h5 className="bp3-heading EntityImport__section__title">
+                  2. Map columns to properties
+                </h5>
+                <EntityImportPropertyAssign
+                  columnLabels={csvHeader}
+                  csvData={csvData}
+                  mappings={mappings}
+                  onPropertyAssign={this.onPropertyAssign}
+                />
+              </div>
+              <div className="EntityImport__section">
+                <h5 className="bp3-heading EntityImport__section__title">
+                  3. Verify
+                </h5>
+                <div className="EntityImport__split-section-container">
+                  <div className="EntityImport__split-section">
+                    <h4 className="EntityImport__split-section__title">Objects</h4>
+                    <MappingVerify
+                      items={mappedThings}
+                      onPropertyAssign={this.onPropertyAssign}
+                    />
+                  </div>
+                  <div className="EntityImport__split-section">
+                    <h4 className="EntityImport__split-section__title">Relationships</h4>
+                    <MappingVerify
+                      items={mappedRelationships}
+                      fullMappingsList={mappings}
+                      onPropertyAssign={this.onPropertyAssign}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="EntityImport__section">
+                {existingMapping && (
+                  <MappingStatus
+                    collection={entity.collection}
+                    mapping={existingMapping}
+                  />
+                )}
+                <EntityImportManageMenu
+                  mappings={this.formatMappings(mappings)}
+                  collectionId={entity.collection.id}
+                  mappingId={existingMappingId}
+                />
+              </div>
+            </React.Fragment>
+          )}
+        </div>
       </div>
     );
   }

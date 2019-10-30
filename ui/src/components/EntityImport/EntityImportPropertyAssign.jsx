@@ -26,7 +26,6 @@ const itemRenderer = ({schema, property}, { handleClick }) => {
 };
 
 
-
 export class EntityImportPropertyAssign extends Component {
   constructor(props) {
     super(props);
@@ -102,29 +101,38 @@ export class EntityImportPropertyAssign extends Component {
 
     const style = {
       color:  colValue ? 'white' : 'black',
-      backgroundColor: colValue ? mappings.get(colValue.mappingId).color : 'white',
+      backgroundColor: colValue ? mappings.get(colValue.mappingId).color : 'unset',
     };
+
+    console.log('colvalue is', colValue);
 
     return (
       <ColumnHeaderCell
         name={colLabel}
         style={style}
       >
-        <Select
-          id="entity-type"
-          items={Array.from(mappings.values())}
-          itemListRenderer={this.itemListRenderer}
-          itemRenderer={itemRenderer}
-          popoverProps={{ minimal: true }}
-          filterable={false}
-          onItemSelect={({schema, property}, e) => onPropertyAssign(schema, property.name, {column: colLabel})}
-        >
-          <Button
-            text={colValue ? `${colValue.property.label}` : 'Assign a value'}
-            rightIcon="double-caret-vertical"
-            className="EntityImport__header-select-button"
-          />
-        </Select>
+        <div className="EntityImport__headerSelect">
+          {colValue && (
+            <div className="EntityImport__headerSelect__label">
+              <Schema.Smart.Label schema={colValue.mappingId} icon />
+            </div>
+          )}
+          <Select
+            id="entity-type"
+            items={Array.from(mappings.values())}
+            itemListRenderer={this.itemListRenderer}
+            itemRenderer={itemRenderer}
+            popoverProps={{ minimal: true }}
+            filterable={false}
+            onItemSelect={({schema, property}, e) => onPropertyAssign(schema, property.name, {column: colLabel})}
+          >
+            <Button
+              text={colValue ? `${colValue.property.label}` : 'Assign a value'}
+              rightIcon="double-caret-vertical"
+              className="EntityImport__header-select-button"
+            />
+          </Select>
+        </div>
       </ColumnHeaderCell>
     );
   }
@@ -161,6 +169,7 @@ export class EntityImportPropertyAssign extends Component {
           enableRowResizing={false}
           enableColumnResizing={false}
           selectionModes="NONE"
+          defaultColumnWidth={180}
         >
           {columnLabels.map((colLabel, i) => {
             const colValue = columnAssignments.get(colLabel);

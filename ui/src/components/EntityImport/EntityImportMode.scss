@@ -19,9 +19,16 @@
   }
 
   &__section {
-    margin: 50px 0;
+    margin: 45px 0;
+    padding-bottom: 45px;
+    border-bottom: 1px solid $aleph-border-color;
+
+    &:last-child {
+      border: none;
+    }
 
     &__title.bp3-heading {
+      color: #0d598a;
       margin-bottom: 25px;
     }
   }
@@ -38,7 +45,7 @@
 
     &:first-child {
       padding-right: $split-section-padding;
-      border-right: 1px solid $aleph-border-color;
+      // border-right: 1px solid $aleph-border-color;
     }
     &:last-child {
       padding-left: $split-section-padding;
@@ -54,10 +61,13 @@
     .bp3-table-column-name {
       text-align: center;
       font-weight: 500;
+      border-bottom: 1px solid $aleph-border-color;
     }
+
     .bp3-table-header-content {
       padding: 0 3px 5px;
       text-align: center;
+      min-height: 80px;
     }
 
     .bp3-button-text {
@@ -65,6 +75,18 @@
       white-space: nowrap;
       max-width: 100px;
       text-overflow: ellipsis;
+    }
+
+    .EntityImport__headerSelect {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      position: absolute;
+
+      &__label {
+        white-space: nowrap;
+        margin-bottom: 3px;
+      }
     }
   }
 

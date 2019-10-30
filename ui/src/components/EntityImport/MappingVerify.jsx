@@ -41,7 +41,7 @@ class MappingVerifyItem extends Component {
         popoverProps={{ minimal: true }}
       >
         <Button
-          text="Add a literal property"
+          text="Add a fixed value"
           icon="add"
         />
       </Select>
@@ -68,7 +68,7 @@ class MappingVerifyItem extends Component {
     if (!propValue) {
       return null;
     } else if (propValue.hasOwnProperty('column')) {
-      return <span className="MappingVerify__listItem__value" style={{ color: mapping.color }}>{propValue.column}</span>
+      return <span className="MappingVerify__listItem__value bp3-monospace-text">{propValue.column}</span>
     } else if (propValue.hasOwnProperty('literal')) {
       return <span className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</span>
     } else {
@@ -91,7 +91,7 @@ class MappingVerifyItem extends Component {
         </h6>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">Keys:</span>
-          <span className="MappingVerify__section__value" style={{ color: color }}>{keys.join(', ')}</span>
+          <span className="MappingVerify__section__value bp3-monospace-text">{keys.join(', ')}</span>
         </div>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">Properties:</span>

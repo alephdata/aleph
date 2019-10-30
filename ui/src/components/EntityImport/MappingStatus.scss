@@ -1,23 +1,13 @@
 @import "src/app/variables.scss";
 
 .MappingStatus {
-    background-color: $light-gray4 !important;
-    color: black;
+  background-color: $light-gray4 !important;
+  color: black;
+  margin: 30px 0;
 
-    .total-count {
-      font-size: 12px;
-      margin: 0 !important;
+  &__statusItem {
+    span {
+      margin: 0 2px;
     }
-
-    .progress-area {
-        flex-grow: 1;
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-
-        .bp3-progress-bar {
-            flex-grow: 10;
-            margin-right: $aleph-grid-size;
-        }
-    }
+  }
 }

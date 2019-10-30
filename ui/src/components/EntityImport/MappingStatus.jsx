@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
+import { Callout, ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
 
 import { Date, Numeric } from 'src/components/common';
 import { triggerCollectionCancel, fetchCollectionStatus } from 'src/actions';
@@ -75,18 +75,21 @@ class CollectionStatus extends Component {
     const { mapping, status } = this.props;
     console.log('status', status);
     return (
-      <div className="MappingStatus bp3-callout bp3-intent-primary">
+      <Callout
+        className="MappingStatus"
+        intent={Intent.PRIMARY}
+      >
         <div>
-          <h6 className="bp3-heading">
+          <h4 className="bp3-heading">Status</h4>
+          <h6 className="bp3-heading MappingStatus__statusItem">
             <FormattedMessage
               id="collection.status.remaining"
-              defaultMessage="Created:"
+              defaultMessage="Mapping first created:"
             />
             <Date value={mapping.created_at} showTime />
           </h6>
-        </div>
-        <div>
-          <h6 className="bp3-heading">
+
+          <h6 className="bp3-heading MappingStatus__statusItem">
             <FormattedMessage
               id="collection.status.remaining"
               defaultMessage="Last updated:"
@@ -113,7 +116,7 @@ class CollectionStatus extends Component {
           defaultMessage="Continue to frolic about while data is being processed."
         />
         */}
-      </div>
+      </Callout>
     );
   }
 }
