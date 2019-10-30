@@ -72,12 +72,12 @@ class EntityViews extends React.Component {
           <Tab
             id="info"
             title={(
-              <React.Fragment>
-                <Icon icon="info" iconSize="14px" className="left-icon" />
+              <>
+                <Icon icon="info" className="left-icon" />
                 <span className="tab-padding">
                   <FormattedMessage id="entity.info.info" defaultMessage="Info" />
                 </span>
-              </React.Fragment>
+              </>
             )}
             panel={
               <EntityInfoMode entity={entity} />
@@ -88,10 +88,10 @@ class EntityViews extends React.Component {
           <Tab
             id="view"
             title={(
-              <React.Fragment>
-                <Icon icon="showdocuments" />
+              <>
+                <Icon icon="showdocuments" className="left-icon" />
                 <FormattedMessage id="entity.info.view" defaultMessage="View" />
-              </React.Fragment>
+              </>
             )}
             panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
           />
@@ -100,10 +100,10 @@ class EntityViews extends React.Component {
           <Tab
             id="text"
             title={(
-              <React.Fragment>
-                <Icon icon="plaintext" />
+              <>
+                <Icon icon="plaintext" className="left-icon" />
                 <FormattedMessage id="entity.info.text" defaultMessage="Text" />
-              </React.Fragment>
+              </>
             )}
             panel={<DocumentViewMode document={entity} activeMode={activeMode} />}
           />
@@ -134,11 +134,11 @@ class EntityViews extends React.Component {
             id={ref.property.qname}
             key={ref.property.qname}
             title={(
-              <React.Fragment>
-                <Schema.Icon schema={ref.schema} iconSize="14px" />
+              <>
+                <Schema.Icon schema={ref.schema} className="left-icon" />
                 <Property.Reverse prop={ref.property} />
                 <Count count={ref.count} />
-              </React.Fragment>
+              </>
             )}
             panel={
               <EntityReferencesMode entity={entity} mode={activeMode} />
@@ -151,7 +151,7 @@ class EntityViews extends React.Component {
             disabled={tags.total < 1}
             title={(
               <TextLoading loading={tags.shouldLoad || tags.isLoading}>
-                <Icon icon="tags" iconSize="14px" className="left-icon" />
+                <Icon icon="tags" className="left-icon" />
                 <FormattedMessage id="entity.info.tags" defaultMessage="Mentions" />
                 <Count count={tags.total} />
               </TextLoading>
@@ -164,7 +164,7 @@ class EntityViews extends React.Component {
             id="similar"
             title={(
               <TextLoading loading={similar.shouldLoad || similar.isLoading}>
-                <Icon icon="similar" iconSize="14px" className="left-icon" />
+                <Icon icon="similar" className="left-icon" />
                 <FormattedMessage id="entity.info.similar" defaultMessage="Similar" />
                 <Count count={similar.total} />
               </TextLoading>

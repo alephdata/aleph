@@ -120,7 +120,7 @@ a {
 }
 
 .left-icon {
-  margin-right: $aleph-icon-padding;
+  margin-right: $aleph-icon-padding !important;
 }
 
 /* This causes toasts to appear *below* the navbar instead of on top of it */

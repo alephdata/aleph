@@ -92,10 +92,10 @@ class Dashboard extends React.Component {
             <MenuItem
               icon="feed"
               text={(
-                <React.Fragment>
+                <>
                   <span>{intl.formatMessage(messages.alerts)}</span>
                   <Count count={alerts.total} />
-                </React.Fragment>
+                </>
               )}
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
@@ -107,7 +107,7 @@ class Dashboard extends React.Component {
               active={current === '/cases'}
             />
             { groups.total > 0 && (
-              <React.Fragment>
+              <>
                 <MenuDivider />
                 <li className="bp3-menu-header">
                   <h6 className="bp3-heading">
@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
                     active={current === `/groups/${group.id}`}
                   />
                 ))}
-              </React.Fragment>
+              </>
             )}
             <MenuDivider />
             <MenuItem

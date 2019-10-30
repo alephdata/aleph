@@ -55,7 +55,7 @@ class EntityTagsMode extends React.Component {
     }
 
     return (
-      <React.Fragment>
+      <>
         <table className="data-table">
           <thead>
             <tr>
@@ -81,7 +81,7 @@ class EntityTagsMode extends React.Component {
             {tags.results.map(tag => this.renderRow(tag))}
           </tbody>
         </table>
-      </React.Fragment>
+      </>
     );
   }
 }

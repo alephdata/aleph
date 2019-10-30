@@ -29,9 +29,10 @@ class OutlookMsgIngestor(Ingestor, EmailSupport, OLESupport):
     def ingest(self, file_path, entity):
         entity.schema = model.get('Email')
         try:
-            msg = Message(file_path)
+            msg = Message(file_path.as_posix())
         except Exception as exc:
-            raise ProcessingException("Cannot open message file.") from exc
+            msg = "Cannot open message file: %s" % exc
+            raise ProcessingException(msg) from exc
 
         self.extract_olefileio_metadata(msg, entity)
 

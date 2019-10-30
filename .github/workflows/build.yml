@@ -1,0 +1,32 @@
+name: package
+
+on: [push]
+
+jobs:
+  docker-ui:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build development image
+      run: |
+        docker build -t alephdata/aleph-ui:${GITHUB_SHA} ui
+        docker tag alephdata/aleph-ui:${GITHUB_SHA} alephdata/aleph-ui:latest
+    - name: Build production image
+      run: |
+        docker build -t alephdata/aleph-ui-production:${GITHUB_SHA} -f ui/Dockerfile.production ui
+    - name: Push docker image (master)
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        docker push alephdata/aleph-ui-production:${GITHUB_SHA}
+  docker-elasticsearch:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build docker image
+      run: |
+        docker build -t alephdata/aleph-elasticsearch:${GITHUB_SHA} services/elasticsearch
+        docker tag alephdata/aleph-elasticsearch:${GITHUB_SHA} alephdata/aleph-elasticsearch:latest
+    - name: Push docker image (master)
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        docker push alephdata/aleph-elasticsearch:${GITHUB_SHA}

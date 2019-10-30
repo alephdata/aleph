@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { FormattedRelative } from 'react-intl';
+import { selectUnit } from '@formatjs/intl-utils';
+import { FormattedRelativeTime } from 'react-intl';
 
 import Role from 'src/components/common/Role';
 import Collection from 'src/components/common/Collection';
@@ -58,11 +59,16 @@ class Notification extends PureComponent {
     });
 
     const createdDate = this.convertUTCDateToLocalDate(new Date(createdAt));
-
+    const { value, unit } = selectUnit(createdDate, Date.now());
     return (
       <li key={id} className="Notification">
         <div className="timestamp">
-          <FormattedRelative value={createdDate.toString()} />
+          <FormattedRelativeTime
+            value={value}
+            unit={unit}
+            style="long"
+            numeric="auto"
+          />
         </div>
         {message}
       </li>

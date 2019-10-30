@@ -7,7 +7,7 @@ class EntityHeading extends React.PureComponent {
   render() {
     const { entity } = this.props;
     return (
-      <React.Fragment>
+      <>
         <div className="pane-heading">
           <span className="bp3-text-muted">
             <Schema.Label schema={entity.schema} icon />
@@ -18,7 +18,7 @@ class EntityHeading extends React.PureComponent {
             )}
           </h1>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

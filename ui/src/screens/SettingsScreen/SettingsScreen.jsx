@@ -185,7 +185,7 @@ export class SettingsScreen extends React.Component {
     const confirmIntent = confirm ? undefined : Intent.DANGER;
     const confirmHelper = confirm ? undefined : intl.formatMessage(messages.password_mismatch);
     return (
-      <React.Fragment>
+      <>
         <h3>
           <FormattedMessage
             id="settings.password.title"
@@ -233,7 +233,7 @@ export class SettingsScreen extends React.Component {
             type="password"
           />
         </FormGroup>
-      </React.Fragment>
+      </>
     );
   }
 

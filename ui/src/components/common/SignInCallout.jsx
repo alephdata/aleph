@@ -42,7 +42,7 @@ export class SignInCallout extends React.Component {
     }
 
     return (
-      <React.Fragment>
+      <>
         <AuthenticationDialog
           auth={metadata.auth}
           isOpen={isAuthOpen}
@@ -70,7 +70,7 @@ export class SignInCallout extends React.Component {
           />
           <Button className="bp3-minimal button-close" icon="cross" onClick={this.onHideCallout} />
         </Callout>
-      </React.Fragment>
+      </>
     );
   }
 }

@@ -12,16 +12,6 @@ from aleph.analysis.util import load_places
 # could be it's own package, e.g. followthemoney-tagger.
 log = logging.getLogger(__name__)
 
-MAPPING = {
-    registry.name: 'namesMentioned',
-    registry.language: 'detectedLanguage',
-    registry.country: 'detectedCountry',
-    registry.ip: 'ipMentioned',
-    registry.email: 'emailMentioned',
-    registry.phone: 'phoneMentioned',
-    registry.iban: 'ibanMentioned'
-}
-
 
 def extract_named_entities(entity):
     if not settings.TAG_ENTITIES:
@@ -36,15 +26,13 @@ def extract_named_entities(entity):
 
     load_places()
     aggregator = TagAggregator()
-    countries = entity.get_type_values(registry.country)
     for text in entity.get_type_values(registry.text):
-        for (type_, tag) in extract_entities(entity, text):
-            aggregator.add(type_, tag)
-        for (type_, tag) in extract_patterns(text, countries):
-            aggregator.add(type_, tag)
+        for (prop, tag) in extract_entities(entity, text):
+            aggregator.add(prop, tag)
+        for (prop, tag) in extract_patterns(entity, text):
+            aggregator.add(prop, tag)
 
-    for (label, type_) in aggregator.entities:
-        prop = MAPPING.get(type_)
+    for (label, prop) in aggregator.entities:
         entity.add(prop, label, quiet=True, cleaned=True)
 
     if len(aggregator):
