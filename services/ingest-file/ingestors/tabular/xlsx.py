@@ -44,6 +44,7 @@ class ExcelXMLIngestor(Ingestor, TableSupport, OOXMLSupport):
                 table = self.manager.make_entity('Table', parent=entity)
                 table.make_id(entity.id, name)
                 table.set('title', name)
+                log.debug('Sheet: %s', name)
                 self.emit_row_tuples(table, self.generate_rows(book[name]))
                 if table.has('csvHash'):
                     self.manager.emit_entity(table)

@@ -42,7 +42,7 @@ class CaseCreateButton extends React.Component {
       );
     }
     return (
-      <React.Fragment>
+      <>
         <Button onClick={this.toggle} icon="folder-new" intent={Intent.PRIMARY}>
           <FormattedMessage id="cases.index.create" defaultMessage="New dataset" />
         </Button>
@@ -50,7 +50,7 @@ class CaseCreateButton extends React.Component {
           isOpen={this.state.isOpen}
           toggleDialog={this.toggle}
         />
-      </React.Fragment>
+      </>
     );
   }
 }

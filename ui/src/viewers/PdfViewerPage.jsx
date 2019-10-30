@@ -32,10 +32,10 @@ class PdfViewerPage extends Component {
       return <SectionLoading />;
     }
     return (
-      <React.Fragment>
+      <>
         <PagingButtons document={document} numberOfPages={numPages} />
         <TextViewer document={entity} noStyle />
-      </React.Fragment>
+      </>
     );
   }
 }

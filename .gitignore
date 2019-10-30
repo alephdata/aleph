@@ -17,7 +17,6 @@ ui/**/*.css
 
 contrib/allCountries.zip
 services/elasticsearch/secrets
-services/convert-document/out.pdf
 
 celerybeat-schedule*
 aleph.env

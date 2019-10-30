@@ -9,6 +9,16 @@ from aleph.core import settings, kv
 log = logging.getLogger(__name__)
 PLACE_KEY = 'ner*gns'
 
+TAG_PERSON = 'peopleMentioned'
+TAG_COMPANY = 'companiesMentioned'
+TAG_LANGUAGE = 'detectedLanguage'
+TAG_COUNTRY = 'detectedCountry'
+TAG_IP = 'ipMentioned'
+TAG_EMAIL = 'emailMentioned'
+TAG_PHONE = 'phoneMentioned'
+TAG_IBAN = 'ibanMentioned'
+TAG_LOCATION = 'location'
+
 
 def tag_key(label):
     return normalize(label, lowercase=True, ascii=True)

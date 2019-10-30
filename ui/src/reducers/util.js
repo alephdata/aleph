@@ -43,13 +43,15 @@ export function resultLoadStart(state, query) {
 }
 
 export function objectLoadError(state, id, error) {
-  const object = {
-    isLoading: false,
-    isError: true,
-    shouldLoad: false,
-    error,
+  return {
+    ...state,
+    [id]: {
+      isLoading: false,
+      isError: true,
+      shouldLoad: false,
+      error,
+    },
   };
-  return { ...state, [id]: _.assign({}, state[id], object) };
 }
 
 export function resultLoadError(state, query, error) {

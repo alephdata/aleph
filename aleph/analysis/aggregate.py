@@ -1,8 +1,9 @@
 import logging
 from Levenshtein import setmedian
-from followthemoney.types import registry
 
 from aleph.analysis.util import tag_key
+from aleph.analysis.util import TAG_COUNTRY, TAG_LANGUAGE, TAG_PHONE
+from aleph.analysis.util import TAG_PERSON, TAG_COMPANY
 
 
 log = logging.getLogger(__name__)
@@ -11,10 +12,11 @@ log = logging.getLogger(__name__)
 class TagAggregator(object):
     MAX_TAGS = 10000
     CUTOFFS = {
-        registry.country: .2,
-        registry.language: .3,
-        registry.name: .003,
-        registry.phone: .05,
+        TAG_COUNTRY: .2,
+        TAG_LANGUAGE: .3,
+        TAG_PERSON: .003,
+        TAG_COMPANY: .003,
+        TAG_PHONE: .05,
     }
 
     def __init__(self):
@@ -49,7 +51,7 @@ class TagAggregator(object):
                 continue
 
             label = tags[0]
-            if type_ == registry.name and len(set(tags)) > 0:
+            if type_ in (TAG_COMPANY, TAG_PERSON) and len(set(tags)) > 0:
                 label = setmedian(tags)
             yield label, type_
 

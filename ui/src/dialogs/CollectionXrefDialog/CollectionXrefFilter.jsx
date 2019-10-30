@@ -51,7 +51,7 @@ class CollectionXrefFilter extends Component {
 
   onChange(filterUpdate) {
     /* eslint-disable-next-line react/no-access-state-in-setstate */
-    const filter = Object.assign({}, this.state.filter, filterUpdate);
+    const filter = { ...this.state.filter, ...filterUpdate };
     this.setState({ filter });
     return filter;
   }

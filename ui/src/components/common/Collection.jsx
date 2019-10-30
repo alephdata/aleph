@@ -1,5 +1,4 @@
 import React, { Component, PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -60,12 +59,6 @@ class CollectionLink extends PureComponent {
 
 
 class CollectionLoad extends Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    children: PropTypes.func.isRequired,
-    renderWhenLoading: PropTypes.node.isRequired,
-  }
-
   componentDidMount() {
     this.fetchIfNeeded();
   }

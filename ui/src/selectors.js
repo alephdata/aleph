@@ -92,6 +92,7 @@ export function selectEntity(state, entityId) {
   result.isLoading = !!entity.isLoading;
   result.isError = !!entity.isError;
   result.shouldLoad = !!entity.shouldLoad;
+  result.error = entity.error;
   result.links = entity.links;
   result.collection = entity.collection;
   result.highlight = entity.highlight;

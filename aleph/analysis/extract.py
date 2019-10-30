@@ -9,6 +9,8 @@ from followthemoney.types import registry
 
 from aleph.core import settings, kv
 from aleph.analysis.util import tag_key, place_key
+from aleph.analysis.util import TAG_PERSON, TAG_COMPANY
+from aleph.analysis.util import TAG_LOCATION, TAG_COUNTRY
 
 log = logging.getLogger(__name__)
 TEXT_MIN_LENGTH = 60
@@ -17,11 +19,11 @@ NAME_MAX_LENGTH = 100
 NAME_MIN_LENGTH = 4
 # https://spacy.io/api/annotation#named-entities
 SPACY_TYPES = {
-    'PER': registry.name,
-    'PERSON': registry.name,
-    'ORG': registry.name,
-    'LOC': registry.address,
-    'GPE': registry.address
+    'PER': TAG_PERSON,
+    'PERSON': TAG_PERSON,
+    'ORG': TAG_COMPANY,
+    'LOC': TAG_LOCATION,
+    'GPE': TAG_LOCATION
 }
 
 
@@ -86,12 +88,12 @@ def extract_entities(entity, text):
     for model in get_models(entity):
         doc = model(text)
         for ent in doc.ents:
-            tag_type = SPACY_TYPES.get(ent.label_)
-            if tag_type is None:
+            prop_name = SPACY_TYPES.get(ent.label_)
+            if prop_name is None:
                 continue
-            if tag_type == registry.name:
+            if prop_name in (TAG_COMPANY, TAG_PERSON):
                 name = clean_name(ent.text)
-                yield (registry.name, name)
-            if tag_type == registry.address:
+                yield (prop_name, name)
+            if prop_name == TAG_LOCATION:
                 for country in location_country(ent.text):
-                    yield (registry.country, country)
+                    yield (TAG_COUNTRY, country)

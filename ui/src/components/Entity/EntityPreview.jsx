@@ -39,10 +39,10 @@ export class EntityPreview extends React.Component {
       return <SectionLoading />;
     }
     return (
-      <React.Fragment>
+      <>
         <EntityHeading entity={entity} isPreview />
         <EntityViews entity={entity} activeMode={activeMode} isPreview />
-      </React.Fragment>
+      </>
     );
   }
 
