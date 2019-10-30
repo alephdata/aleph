@@ -1,25 +1,15 @@
-/* eslint-disable */
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import { Callout, ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import { Callout, Intent } from '@blueprintjs/core';
 
-import { Date, Numeric } from 'src/components/common';
+import { Date } from 'src/components/common';
 import { triggerCollectionCancel, fetchCollectionStatus } from 'src/actions';
 import { selectCollectionStatus } from 'src/selectors';
 
 import './MappingStatus.scss';
 
-const messages = defineMessages({
-  cancel_button: {
-    id: 'collection.status.cancel_button',
-    defaultMessage: 'Cancel the process',
-  },
-});
-
-
-class CollectionStatus extends Component {
+class MappingStatus extends Component {
   constructor(props) {
     super(props);
     this.fetchStatus = this.fetchStatus.bind(this);
@@ -34,10 +24,10 @@ class CollectionStatus extends Component {
     // clearTimeout(this.timeout);
   }
 
-  onCancel() {
-    // const { collection } = this.props;
-    // this.props.triggerCollectionCancel(collection.id);
-  }
+  // onCancel() {
+  //   // const { collection } = this.props;
+  //   // this.props.triggerCollectionCancel(collection.id);
+  // }
 
   fetchStatus() {
     const { collection } = this.props;
@@ -49,27 +39,27 @@ class CollectionStatus extends Component {
       });
   }
 
-  /*existingMapping && (
-    <div className="bp3-callout bp3-intent-primary EntityImport__status">
-      <div>
-        <h4 className="bp3-heading">Mapping Status</h4>
-        <div>
-          <span className="bp3-heading">Created at:</span>
-          <span><Date value={existingMapping.created_at} showTime /></span>
-        </div>
-        <div>
-          <span className="bp3-heading">Last updated:</span>
-          <span><Date value={existingMapping.updated_at} showTime /></span>
-        </div>
-        {existingMapping.last_run_status && (
-          <div>
-            <span className="bp3-heading">Running status:</span>
-            <span>{existingMapping.last_run_status}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  )*/
+  // existingMapping && (
+  //   <div className="bp3-callout bp3-intent-primary EntityImport__status">
+  //     <div>
+  //       <h4 className="bp3-heading">Mapping Status</h4>
+  //       <div>
+  //         <span className="bp3-heading">Created at:</span>
+  //         <span><Date value={existingMapping.created_at} showTime /></span>
+  //       </div>
+  //       <div>
+  //         <span className="bp3-heading">Last updated:</span>
+  //         <span><Date value={existingMapping.updated_at} showTime /></span>
+  //       </div>
+  //       {existingMapping.last_run_status && (
+  //         <div>
+  //           <span className="bp3-heading">Running status:</span>
+  //           <span>{existingMapping.last_run_status}</span>
+  //         </div>
+  //       )}
+  //     </div>
+  //   </div>
+  // )
 
   render() {
     const { mapping, status } = this.props;
@@ -126,6 +116,6 @@ const mapStateToProps = (state, ownProps) => {
   return { status: selectCollectionStatus(state, collection.id) };
 };
 const mapDispatchToProps = { fetchCollectionStatus, triggerCollectionCancel };
-CollectionStatus = connect(mapStateToProps, mapDispatchToProps)(CollectionStatus);
-CollectionStatus = injectIntl(CollectionStatus);
-export default CollectionStatus;
+MappingStatus = connect(mapStateToProps, mapDispatchToProps)(MappingStatus);
+MappingStatus = injectIntl(MappingStatus);
+export default MappingStatus;

@@ -5,14 +5,14 @@ import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 import { createCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
 
-import EntityImportPreviewDialog from 'src/dialogs/EntityImportPreviewDialog/EntityImportPreviewDialog';
-import EntityImportCreateDialog from 'src/dialogs/EntityImportCreateDialog/EntityImportCreateDialog';
-import EntityImportSaveDialog from 'src/dialogs/EntityImportSaveDialog/EntityImportSaveDialog';
-import EntityImportDeleteDialog from 'src/dialogs/EntityImportDeleteDialog/EntityImportDeleteDialog';
+import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
+import MappingCreateDialog from 'src/dialogs/MappingCreateDialog/MappingCreateDialog';
+import MappingSaveDialog from 'src/dialogs/MappingSaveDialog/MappingSaveDialog';
+import MappingDeleteDialog from 'src/dialogs/MappingDeleteDialog/MappingDeleteDialog';
 import { selectSession } from 'src/selectors';
 
 
-class EntityImportManageMenu extends Component {
+class MappingManageMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -105,22 +105,22 @@ class EntityImportManageMenu extends Component {
             <FormattedMessage id="mapping.actions.delete" defaultMessage="Delete" />
           </Button>
         </ButtonGroup>
-        <EntityImportPreviewDialog
+        <MappingPreviewDialog
           isOpen={previewIsOpen}
           mappings={mappings}
           toggleDialog={this.togglePreview}
         />
-        <EntityImportCreateDialog
+        <MappingCreateDialog
           isOpen={createIsOpen}
           toggleDialog={this.toggleCreate}
           onCreate={this.onCreate}
         />
-        <EntityImportSaveDialog
+        <MappingSaveDialog
           isOpen={saveIsOpen}
           toggleDialog={this.toggleSave}
           onSave={this.onSave}
         />
-        <EntityImportDeleteDialog
+        <MappingDeleteDialog
           isOpen={deleteIsOpen}
           toggleDialog={this.toggleDelete}
           onDelete={this.onDelete}
@@ -138,6 +138,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => ({ session: selectSession(state) });
 
-EntityImportManageMenu = connect(mapStateToProps, mapDispatchToProps)(EntityImportManageMenu);
-EntityImportManageMenu = injectIntl(EntityImportManageMenu);
-export default EntityImportManageMenu;
+MappingManageMenu = connect(mapStateToProps, mapDispatchToProps)(MappingManageMenu);
+MappingManageMenu = injectIntl(MappingManageMenu);
+export default MappingManageMenu;

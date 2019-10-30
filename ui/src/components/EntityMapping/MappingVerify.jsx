@@ -1,16 +1,11 @@
-/* eslint-disable */
-
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { fetchCollectionMappings } from 'src/actions';
-import { Button, Card, FormGroup, Icon, InputGroup, MenuItem, Tooltip, Position } from '@blueprintjs/core';
-import { Select, MultiSelect } from '@blueprintjs/select';
+import { Button, Card, InputGroup, MenuItem } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
 import {
   Schema,
 } from 'src/components/common';
-import Property from 'src/components/Property';
 
 import './MappingVerify.scss';
 
@@ -29,14 +24,14 @@ class MappingVerifyItem extends Component {
     const { id, schema, properties } = mapping;
 
     const items = schema.getEditableProperties()
-      .filter(prop => !properties.hasOwnProperty(prop.name));
+      .filter(prop => !properties[prop.name]);
 
     return (
       <Select
         id="entity-select"
         items={items}
         itemRenderer={itemRenderer}
-        onItemSelect={(item) => onPropertyAssign(id, item.name, { 'literal': '' })}
+        onItemSelect={(item) => onPropertyAssign(id, item.name, { literal: '' })}
         filterable={false}
         popoverProps={{ minimal: true }}
       >
@@ -55,7 +50,7 @@ class MappingVerifyItem extends Component {
       <InputGroup
         id="text-input"
         placeholder="Add a literal value"
-        onChange={e => onPropertyAssign(mapping.id, propertyName, { 'literal': e.target.value })}
+        onChange={e => onPropertyAssign(mapping.id, propertyName, { literal: e.target.value })}
         value={value}
         small
       />
@@ -63,22 +58,23 @@ class MappingVerifyItem extends Component {
   }
 
   renderPropertyValue(propName, propValue) {
-    const { mapping, fullMappingsList } = this.props;
+    const { fullMappingsList } = this.props;
 
     if (!propValue) {
       return null;
-    } else if (propValue.hasOwnProperty('column')) {
-      return <span className="MappingVerify__listItem__value bp3-monospace-text">{propValue.column}</span>
-    } else if (propValue.hasOwnProperty('literal')) {
-      return <span className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</span>
-    } else {
-      const referredEntity = fullMappingsList.get(propValue);
-      return (
-        <span className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
-          <Schema.Smart.Label schema={referredEntity.schema} icon />
-        </span>
-      );
     }
+    if (propValue.column) {
+      return <span className="MappingVerify__listItem__value bp3-monospace-text">{propValue.column}</span>;
+    }
+    if (propValue.literal) {
+      return <span className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</span>;
+    }
+    const referredEntity = fullMappingsList.get(propValue);
+    return (
+      <span className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
+        <Schema.Smart.Label schema={referredEntity.schema} icon />
+      </span>
+    );
   }
 
   render() {
@@ -86,7 +82,7 @@ class MappingVerifyItem extends Component {
 
     return (
       <Card className="MappingVerify__item" key={id} style={{ borderColor: color }}>
-        <h6 className="MappingVerify__title bp3-heading" style={{ color: color }}>
+        <h6 className="MappingVerify__title bp3-heading" style={{ color }}>
           <Schema.Smart.Label schema={schema} icon />
         </h6>
         <div className="MappingVerify__section">
@@ -96,14 +92,17 @@ class MappingVerifyItem extends Component {
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">Properties:</span>
           <ul className="MappingVerify__list">
-            <React.Fragment>
+            <>
               {Array.from(Object.entries(properties)).map(([propName, propValue]) => (
-                <li className="MappingVerify__listItem">
-                  <span className="MappingVerify__listItem__label">{schema.getProperty(propName).label}:</span>
+                <li className="MappingVerify__listItem" key={propName}>
+                  <span className="MappingVerify__listItem__label">
+                    {schema.getProperty(propName).label}
+                    :
+                  </span>
                   {this.renderPropertyValue(propName, propValue)}
                 </li>
               ))}
-            </React.Fragment>
+            </>
           </ul>
 
         </div>
@@ -118,7 +117,12 @@ class MappingVerifyItem extends Component {
 const MappingVerify = ({ items, fullMappingsList, onPropertyAssign }) => (
   <div className="MappingVerify">
     {items.map((mapping) => (
-      <MappingVerifyItem fullMappingsList={fullMappingsList} mapping={mapping} onPropertyAssign={onPropertyAssign} key={mapping.id} />
+      <MappingVerifyItem
+        fullMappingsList={fullMappingsList}
+        mapping={mapping}
+        onPropertyAssign={onPropertyAssign}
+        key={mapping.id}
+      />
     ))}
   </div>
 );

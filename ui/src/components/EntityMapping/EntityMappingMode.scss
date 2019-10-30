@@ -1,0 +1,34 @@
+@import "src/app/variables.scss";
+
+.EntityMappingMode {
+  &__status {
+    margin-bottom: $aleph-grid-size*2;
+
+    span {
+      margin: 0 2px;
+    }
+
+    .bp3-heading {
+      color: #106ba3 !important;
+    }
+  }
+
+  &__info {
+    margin-bottom: $aleph-grid-size*2;
+  }
+
+  &__section {
+    margin: 45px 0;
+    padding-bottom: 45px;
+    border-bottom: 1px solid $aleph-border-color;
+
+    &:last-child {
+      border: none;
+    }
+
+    &__title.bp3-heading {
+      color: #0d598a;
+      margin-bottom: 25px;
+    }
+  }
+}

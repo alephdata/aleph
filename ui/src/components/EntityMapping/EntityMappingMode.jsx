@@ -1,52 +1,58 @@
-/* eslint-disable */
-
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
+import { Colors } from '@blueprintjs/core';
 import { showErrorToast } from 'src/app/toast';
 import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
-import TableViewer from 'src/viewers/TableViewer';
-import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
-import MappingStatus from './MappingStatus';
-import MappingSelect from './MappingSelect';
-import MappingList from './MappingList';
-import MappingSplitSection from './MappingSplitSection';
-
-import MappingVerify from './MappingVerify';
-import EntityImportPropertyAssign from './EntityImportPropertyAssign';
-import EntityImportManageMenu from './EntityImportManageMenu';
 import {
-  Date, Entity,
-} from 'src/components/common';
-import { Button, Colors, Intent } from '@blueprintjs/core';
-import {
-  Column, Table,
-} from '@blueprintjs/table';
+  MappingKeyAssign,
+  MappingManageMenu,
+  MappingPropertyAssign,
+  MappingSchemaSelect,
+  MappingSplitSection,
+  MappingStatus,
+  MappingVerify,
+} from '.';
 
-import './EntityImportMode.scss';
+import './EntityMappingMode.scss';
 
 const colorOptions = [
-  Colors.BLUE1, Colors.GREEN1, Colors.ORANGE1, Colors.RED1, Colors.VIOLET1, Colors.TURQUOISE1
+  Colors.BLUE1, Colors.GREEN1, Colors.ORANGE1, Colors.RED1, Colors.VIOLET1, Colors.TURQUOISE1,
 ];
 
 const messages = defineMessages({
-  no_tags: {
-    id: 'entity.tags.no_tags',
-    defaultMessage: 'No selectors were extracted from this entity.',
+  keyError: {
+    id: 'mapping.error.keyMissing',
+    defaultMessage: 'Key Error: {id} entity must have at least one key',
+  },
+  relationshipError: {
+    id: 'mapping.error.relationshipMissing',
+    defaultMessage: 'Relationship Error: {id} entity must have a {source} and {target} assigned',
+  },
+  section1Title: {
+    id: 'mapping.section1.title',
+    defaultMessage: '1. Select entity types to map',
+  },
+  section2Title: {
+    id: 'mapping.section2.title',
+    defaultMessage: '2. Map data columns to entity properties',
+  },
+  section3Title: {
+    id: 'mapping.section3.title',
+    defaultMessage: '3. Verify',
   },
 });
 
-export class EntityImportMode extends Component {
+export class EntityMappingMode extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       mappings: new Map(),
       csvData: null,
-      validationError: null,
     };
 
     this.onMappingAdd = this.onMappingAdd.bind(this);
@@ -64,9 +70,91 @@ export class EntityImportMode extends Component {
 
   componentDidUpdate(prevProps) {
     const { existingMappings } = this.props;
-    if (existingMappings && existingMappings.length && !existingMappings.isLoading && !existingMappings.isError
-      && prevProps.existingMappings !== existingMappings) {
-        this.loadFromMapping(existingMappings[0]);
+    if (existingMappings && existingMappings.length && !existingMappings.isLoading
+      && !existingMappings.isError && prevProps.existingMappings !== existingMappings) {
+      this.loadFromMapping(existingMappings[0]);
+    }
+  }
+
+  onMappingAdd(schema) {
+    const { mappings } = this.state;
+    const clone = new Map(mappings);
+    const id = schema.name;
+    const index = mappings.size;
+
+    const newMapping = {
+      id,
+      color: colorOptions[index % colorOptions.length],
+      schema,
+      keys: [],
+      properties: {},
+    };
+    clone.set(id, newMapping);
+
+    this.setState({ mappings: clone });
+  }
+
+  onMappingRemove(schema) {
+    const { mappings } = this.state;
+    const clone = new Map(mappings);
+    clone.delete(schema.name);
+
+    this.setState({ mappings: clone });
+  }
+
+  onKeyAdd(mappingId, key) {
+    this.updateMappings(mappingId, mappingObj => mappingObj.keys.push(key));
+  }
+
+  onKeyRemove(mappingId, key) {
+    this.updateMappings(mappingId, mappingObj => {
+      const index = mappingObj.keys.indexOf(key);
+      if (index !== -1) {
+        mappingObj.keys.splice(index, 1);
+      }
+    });
+  }
+
+  onPropertyAssign(mappingId, propName, value) {
+    this.updateMappings(mappingId, (mappingObj) => { mappingObj.properties[propName] = value; });
+  }
+
+  onValidate() {
+    const { intl } = this.props;
+    const { mappings } = this.state;
+    const errors = [];
+    let isValid = true;
+
+    mappings.forEach(({ id, keys, properties, schema }) => {
+      if (keys.length === 0) {
+        errors.push(intl.formatMessage(messages.keyError, { id }));
+        isValid = false;
+      }
+      if (schema.isEdge) {
+        const { source, target } = schema.edge;
+
+        if (!properties[source] || !properties[target]) {
+          errors.push(intl.formatMessage(messages.relationshipError, { id, source, target }));
+          isValid = false;
+        }
+      }
+    });
+
+    if (!isValid) {
+      showErrorToast({ message: errors.map(error => <li key={error}>{error}</li>) });
+    }
+
+    return isValid;
+  }
+
+  updateMappings(mappingId, updateToApply) {
+    const { mappings } = this.state;
+    const clone = new Map(mappings);
+
+    const newMappingObj = clone.get(mappingId);
+    if (newMappingObj) {
+      updateToApply(newMappingObj);
+      this.setState({ mappings: clone });
     }
   }
 
@@ -90,107 +178,22 @@ export class EntityImportMode extends Component {
     });
   }
 
-  onMappingAdd(schema) {
-    const { mappings } = this.state;
-    const clone = new Map(mappings);
-    const id = schema.name;
-    const index = mappings.size;
-
-    const newMapping = {
-      id,
-      color: colorOptions[index%colorOptions.length],
-      schema,
-      keys: [],
-      properties: {}
-    };
-    clone.set(id, newMapping);
-
-    this.setState(({ mappings }) => ({ mappings: clone }));
-  }
-
-  onMappingRemove(schema) {
-    const { mappings } = this.state;
-    const clone = new Map(mappings);
-    clone.delete(schema.name)
-
-    this.setState(({ mappings }) => ({ mappings: clone }));
-  }
-
-  onKeyAdd(mappingId, key) {
-    this.updateMappings(mappingId, mappingObj => mappingObj.keys.push(key))
-  }
-
-  onKeyRemove(mappingId, key) {
-    this.updateMappings(mappingId, mappingObj => {
-      const index = mappingObj.keys.indexOf(key);
-      if (index !== -1) {
-        mappingObj.keys.splice(index, 1);
-      }
-    })
-  }
-
-  onPropertyAssign(mappingId, propName, value) {
-    this.updateMappings(mappingId, mappingObj => mappingObj.properties[propName] = value)
-  }
-
-  updateMappings(mappingId, updateToApply) {
-    const { mappings } = this.state;
-    const clone = new Map(mappings);
-
-    const newMappingObj = clone.get(mappingId);
-    if (newMappingObj) {
-      updateToApply(newMappingObj);
-      this.setState(({ mappings }) => ({ mappings: clone }));
-    }
-  }
-
-  onValidate() {
-    const { mappings } = this.state;
-    const errors = [];
-    let isValid = true;
-
-    mappings.forEach(({ id, keys, properties, schema}) => {
-      if (keys.length === 0) {
-        errors.push(`Key Error: ${id} entity must have at least one key`);
-        isValid = false;
-      }
-      if (schema.isEdge) {
-        const { source, target } = schema.edge;
-
-        if (!properties.hasOwnProperty(source)) {
-          errors.push(`Relationship Error: ${id} entity must have a ${source} property assigned`);
-          isValid = false;
-        }
-        if (!properties.hasOwnProperty(target)) {
-          errors.push(`Relationship Error: ${id} entity must have a ${target} property assigned`);
-          isValid = false;
-        }
-      }
-    })
-
-    if (!isValid) {
-      showErrorToast({ message: errors.map(error => <li>{error}</li>) });
-    }
-
-    return isValid;
-  }
-
   formatMappings() {
     const { entity } = this.props;
-    const { mappings, csvData } = this.state;
-    const toFormat = {};
+    const { mappings } = this.state;
+    const query = {};
 
-    mappings.forEach(({id, schema, keys, properties}) => {
-      toFormat[id] = {
+    mappings.forEach(({ id, schema, keys, properties }) => {
+      query[id] = {
         schema: schema.name,
         keys,
-        properties
+        properties,
       };
     });
 
     return {
       table_id: entity.id,
-      mapping_query: toFormat,
+      mapping_query: query,
     };
   }
 
@@ -199,28 +202,29 @@ export class EntityImportMode extends Component {
 
     const mappings = new Map();
 
-    Object.values(existingMapping.query).forEach(({keys, schema, properties}, i) => {
+    Object.values(existingMapping.query).forEach(({ keys, schema, properties }, i) => {
       mappings.set(schema, {
         id: schema,
-        color: colorOptions[i%colorOptions.length],
+        color: colorOptions[i % colorOptions.length],
         schema: model.getSchema(schema),
         keys,
         properties,
-      })
+      });
     });
 
-    this.setState({ existingMappingId: existingMapping.id, mappings: mappings });
+    this.setState({ existingMappingId: existingMapping.id, mappings });
   }
 
   render() {
-    const { entity, model, existingMappings } = this.props;
+    const { entity, intl, model, existingMappings } = this.props;
     const { mappings, csvData, csvHeader, existingMappingId } = this.state;
 
     if (!csvData || !csvHeader) {
       return null;
     }
 
-    const existingMapping = existingMappings.length && !existingMappings.isLoading && !existingMappings.isError ? existingMappings[0] : null;
+    const existingMapping = existingMappings.length && !existingMappings.isLoading
+      && !existingMappings.isError ? existingMappings[0] : null;
 
     const schemaSelectOptions = Object.keys(model.schemata)
       .map(key => model.schemata[key])
@@ -228,48 +232,48 @@ export class EntityImportMode extends Component {
       .reduce((result, schema) => {
         result[schema.isEdge ? 1 : 0].push(schema);
         return result;
-      },[[], []]);
+      }, [[], []]);
 
     return (
-      <div className="EntityImport">
+      <div className="EntityMappingMode">
         <h1 className="text-page-title">
           <FormattedMessage id="mapping.title" defaultMessage="Import as structured entities" />
         </h1>
         <p className="text-page-subtitle">
-        <FormattedMessage
-          id="mapping.info"
-          defaultMessage="Follow the steps below to map items in this dataset to structured Follow the Money entites. For more information, please refer to the {link}"
-          values={{
-            link: (
-              <a
-                href="https://docs.alephdata.org/developers/mappings"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FormattedMessage
-                  id="collection.mapping.infoLink"
-                  defaultMessage="Aleph data mapping documentation"
-                />
-              </a>
-            ),
-          }}
-        />
+          <FormattedMessage
+            id="mapping.info"
+            defaultMessage="Follow the steps below to map items in this dataset to structured Follow the Money entites. For more information, please refer to the {link}"
+            values={{
+              link: (
+                <a
+                  href="https://docs.alephdata.org/developers/mappings"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FormattedMessage
+                    id="collection.mapping.infoLink"
+                    defaultMessage="Aleph data mapping documentation"
+                  />
+                </a>
+              ),
+            }}
+          />
         </p>
-        <div className="EntityImport__sections">
-          <div className="EntityImport__section">
-            <h5 className="bp3-heading EntityImport__section__title">
-              1. Select entity types to map
+        <div className="EntityMappingMode__sections">
+          <div className="EntityMappingMode__section">
+            <h5 className="bp3-heading EntityMappingMode__section__title">
+              {intl.formatMessage(messages.section1Title)}
             </h5>
             <MappingSplitSection
               items={Array.from(mappings.values())}
               sectionContentsRenderer={((subitems, type) => (
                 <>
-                  <MappingSelect
+                  <MappingSchemaSelect
                     schemaSelectOptions={schemaSelectOptions}
                     type={type}
                     onSelect={this.onMappingAdd}
                   />
-                  <MappingList
+                  <MappingKeyAssign
                     columnLabels={csvHeader}
                     items={subitems}
                     fullMappingsList={mappings}
@@ -284,20 +288,20 @@ export class EntityImportMode extends Component {
           </div>
           {mappings.size > 0 && (
             <>
-              <div className="EntityImport__section">
-                <h5 className="bp3-heading EntityImport__section__title">
-                  2. Map columns to properties
+              <div className="EntityMappingMode__section">
+                <h5 className="bp3-heading EntityMappingMode__section__title">
+                  {intl.formatMessage(messages.section2Title)}
                 </h5>
-                <EntityImportPropertyAssign
+                <MappingPropertyAssign
                   columnLabels={csvHeader}
                   csvData={csvData}
                   mappings={mappings}
                   onPropertyAssign={this.onPropertyAssign}
                 />
               </div>
-              <div className="EntityImport__section">
-                <h5 className="bp3-heading EntityImport__section__title">
-                  3. Verify
+              <div className="EntityMappingMode__section">
+                <h5 className="bp3-heading EntityMappingMode__section__title">
+                  {intl.formatMessage(messages.section3Title)}
                 </h5>
                 <MappingSplitSection
                   items={Array.from(mappings.values())}
@@ -310,14 +314,14 @@ export class EntityImportMode extends Component {
                   ))}
                 />
               </div>
-              <div className="EntityImport__section">
+              <div className="EntityMappingMode__section">
                 {existingMapping && (
                   <MappingStatus
                     collection={entity.collection}
                     mapping={existingMapping}
                   />
                 )}
-                <EntityImportManageMenu
+                <MappingManageMenu
                   mappings={this.formatMappings(mappings)}
                   collectionId={entity.collection.id}
                   mappingId={existingMappingId}
@@ -338,11 +342,11 @@ const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.entity.collection.id;
   return {
     model: selectModel(state),
-    existingMappings: selectCollectionMappings(state, collectionId)
+    existingMappings: selectCollectionMappings(state, collectionId),
   };
 };
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
-)(EntityImportMode);
+)(EntityMappingMode);

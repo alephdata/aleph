@@ -19,7 +19,7 @@ const messages = defineMessages({
 });
 
 
-class EntityImportCreateDialog extends Component {
+class MappingCreateDialog extends Component {
   render() {
     const { intl } = this.props;
     return (
@@ -47,4 +47,4 @@ export default compose(
   withRouter,
   connect(null, mapDispatchToProps),
   injectIntl,
-)(EntityImportCreateDialog);
+)(MappingCreateDialog);

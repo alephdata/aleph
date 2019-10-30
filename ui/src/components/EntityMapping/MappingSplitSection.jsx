@@ -2,6 +2,8 @@ import React from 'react';
 import { compose } from 'redux';
 import { injectIntl } from 'react-intl';
 
+import './MappingSplitSection.scss';
+
 const MappingSplitSection = (({ items, sectionContentsRenderer }) => {
   const [things, relationships] = items
     .reduce((result, item) => {
@@ -10,19 +12,18 @@ const MappingSplitSection = (({ items, sectionContentsRenderer }) => {
     }, [[], []]);
 
   return (
-    <div className="EntityImport__split-section-container">
-      <div className="EntityImport__split-section">
-        <h4 className="EntityImport__split-section__title">Objects</h4>
+    <div className="MappingSplitSection-container">
+      <div className="MappingSplitSection">
+        <h4 className="MappingSplitSection__title">Objects</h4>
         {sectionContentsRenderer(things, 'thing')}
       </div>
-      <div className="EntityImport__split-section">
-        <h4 className="EntityImport__split-section__title">Relationships</h4>
+      <div className="MappingSplitSection">
+        <h4 className="MappingSplitSection__title">Relationships</h4>
         {sectionContentsRenderer(relationships, 'relationship')}
       </div>
     </div>
   );
 });
-
 
 export default compose(
   injectIntl,

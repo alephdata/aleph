@@ -16,8 +16,8 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
+import EntityMappingMode from 'src/components/EntityMapping/EntityMappingMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
-import EntityImportMode from 'src/components/EntityImport/EntityImportMode';
 import Schema from 'src/components/common/Schema';
 import Property from 'src/components/Property';
 
@@ -181,7 +181,7 @@ class EntityViews extends React.Component {
                 <FormattedMessage id="entity.import.view" defaultMessage="Import" />
               </>
             )}
-            panel={<EntityImportMode entity={entity} />}
+            panel={<EntityMappingMode entity={entity} />}
           />
         )}
       </Tabs>

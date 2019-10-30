@@ -2,7 +2,7 @@ import React from 'react';
 import { Dialog, Intent } from '@blueprintjs/core';
 import JSONPretty from 'react-json-pretty';
 
-const EntityImportPreviewDialog = props => (
+const MappingPreviewDialog = props => (
   <Dialog
     isOpen={props.isOpen}
     title="Preview"
@@ -16,4 +16,4 @@ const EntityImportPreviewDialog = props => (
   </Dialog>
 );
 
-export default EntityImportPreviewDialog;
+export default MappingPreviewDialog;
