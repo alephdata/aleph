@@ -82,7 +82,7 @@ export const createCollectionMapping = asyncActionCreator((id, mapping) => async
 
 export const updateCollectionMapping = (
   asyncActionCreator((collectionId, mappingId, mapping) => async () => {
-    const config = { params: { flush: true }};
+    const config = { params: { flush: true } };
     const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}`, mapping, config);
     console.log('response is', response);
     return { id: collectionId, data: response.data };
@@ -91,7 +91,7 @@ export const updateCollectionMapping = (
 
 export const deleteCollectionMapping = asyncActionCreator((collectionId, mappingId) => async () => {
   console.log('in delete mapping', collectionId, mappingId);
-  const config = { params: { flush: true }};
+  const config = { params: { flush: true } };
   const response = await endpoint.delete(`collections/${collectionId}/mappings/${mappingId}`, config);
   return { mappingId, data: response.data };
 }, { name: 'DELETE_COLLECTION_MAPPING' });
