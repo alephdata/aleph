@@ -1,8 +1,9 @@
 @import "src/app/variables.scss";
 
 .MappingStatus {
-  color: black;
-  margin-top: 25px;
+  margin: 25px 0 0;
+  display: inline-block;
+  width: auto !important;
 
   &__statusItem {
     span {

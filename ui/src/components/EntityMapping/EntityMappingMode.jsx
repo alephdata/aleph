@@ -211,7 +211,6 @@ export class EntityMappingMode extends Component {
 
   loadFromMapping(existingMapping) {
     const { model } = this.props;
-
     const mappings = new Map();
 
     Object.values(existingMapping.query).forEach(({ keys, schema, properties }, i) => {

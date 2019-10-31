@@ -95,7 +95,6 @@ export const deleteCollectionMapping = asyncActionCreator((collectionId, mapping
 }, { name: 'DELETE_COLLECTION_MAPPING' });
 
 export const flushCollectionMapping = asyncActionCreator((collectionId, mappingId) => async () => {
-  console.log('in flush mapping', collectionId, mappingId);
   const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}/flush`);
   return { mappingId, data: response.data };
 }, { name: 'FLUSH_COLLECTION_MAPPING' });
