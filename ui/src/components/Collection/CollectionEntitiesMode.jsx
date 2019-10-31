@@ -8,7 +8,6 @@ import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 
 class CollectionEntitiesMode extends React.PureComponent {
   render() {
-    console.log('IN COLELCTION ENTITES MODE');
     const { query } = this.props;
     return (
       <EntitySearch

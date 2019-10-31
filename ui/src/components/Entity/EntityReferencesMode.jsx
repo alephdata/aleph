@@ -68,7 +68,6 @@ class EntityReferencesMode extends React.Component {
 
   renderCell(prop, entity) {
     const { schema, isThing } = this.props;
-    console.log('rendering cell', prop, entity.getProperty(prop));
     let content = <Property.Values prop={prop} values={entity.getProperty(prop)} />;
     if (isThing && schema.caption.indexOf(prop.name) !== -1) {
       content = <Entity.Link entity={entity}>{content}</Entity.Link>;
@@ -113,7 +112,6 @@ class EntityReferencesMode extends React.Component {
       intl, reference, result, schema, isThing,
     } = this.props;
 
-    console.log('in REF MODE', this.props);
     if (!reference) {
       return <ErrorSection icon="graph" title={intl.formatMessage(messages.no_relationships)} />;
     }
