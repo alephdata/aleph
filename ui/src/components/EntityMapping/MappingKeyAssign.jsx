@@ -72,7 +72,7 @@ export class MappingKeyAssignItem extends Component {
   }
 
   renderEntitySelect(mapping, property) {
-    const { fullMappingsList, onPropertyAssign } = this.props;
+    const { fullMappingsList, onPropertyAdd } = this.props;
     const { id } = mapping;
     const propertyRange = property.getRange();
 
@@ -97,7 +97,7 @@ export class MappingKeyAssignItem extends Component {
               id="entity-select"
               items={items}
               itemRenderer={entityItemRenderer}
-              onItemSelect={item => onPropertyAssign(id, property.name, item)}
+              onItemSelect={item => onPropertyAdd(id, property.name, item)}
               filterable={false}
               popoverProps={{ minimal: true }}
               activeItem={currValue}

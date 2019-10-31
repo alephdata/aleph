@@ -26,21 +26,13 @@ export class MappingPropertyAssign extends Component {
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
   }
 
-  getSchemaProps = (schema) => {
-    let featuredProps = schema.getFeaturedProperties()
+  getAssignableProps = (schema) => {
+    const featuredProps = schema.getFeaturedProperties()
+      .filter(prop => !prop.type.isEntity)
       .sort((a, b) => (a.label > b.label ? 1 : -1));
-    let otherProps = schema.getEditableProperties()
-      .filter(prop => featuredProps.indexOf(prop) === -1)
+    const otherProps = schema.getEditableProperties()
+      .filter(prop => !prop.type.isEntity && featuredProps.indexOf(prop) === -1)
       .sort((a, b) => (a.label > b.label ? 1 : -1));
-
-    if (schema.isEdge) {
-      const edgeProps = schema.edge;
-      const edgeCondition = prop => (
-        prop.name !== edgeProps.source && prop.name !== edgeProps.target
-      );
-      featuredProps = featuredProps.filter(edgeCondition);
-      otherProps = otherProps.filter(edgeCondition);
-    }
 
     return { featuredProps, otherProps };
   }
@@ -66,7 +58,7 @@ export class MappingPropertyAssign extends Component {
     return (
       <Menu ulRef={itemsParentRef}>
         {items.map(({ schema }) => {
-          const { featuredProps, otherProps } = this.getSchemaProps(schema);
+          const { featuredProps, otherProps } = this.getAssignableProps(schema);
 
           return (
             <MenuItem key={schema.name} text={<Schema.Smart.Label schema={schema} icon />}>
@@ -87,7 +79,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   renderHeaderCell(colLabel, colValue) {
-    const { onPropertyAssign, mappings } = this.props;
+    const { onPropertyAdd, mappings } = this.props;
 
     const style = {
       color: colValue ? 'white' : 'black',
@@ -113,7 +105,7 @@ export class MappingPropertyAssign extends Component {
             popoverProps={{ minimal: true }}
             filterable={false}
             onItemSelect={({ schema, property }) => (
-              onPropertyAssign(schema, property.name, { column: colLabel })
+              onPropertyAdd(schema, property.name, { column: colLabel })
             )}
           >
             <Button

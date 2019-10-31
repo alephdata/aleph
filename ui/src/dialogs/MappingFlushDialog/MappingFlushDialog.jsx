@@ -10,7 +10,7 @@ import { deleteCollection } from 'src/actions';
 const messages = defineMessages({
   button_confirm: {
     id: 'mapping.flush.confirm',
-    defaultMessage: 'Delete',
+    defaultMessage: 'Remove',
   },
   button_cancel: {
     id: 'mapping.flush.cancel',
@@ -34,7 +34,7 @@ class MappingFlushDialog extends Component {
       >
         <FormattedMessage
           id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete entities imported using this mapping?"
+          defaultMessage="Are you sure you want to remove entities imported using this mapping?"
         />
       </Alert>
     );

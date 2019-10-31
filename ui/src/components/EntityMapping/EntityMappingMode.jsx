@@ -59,7 +59,8 @@ export class EntityMappingMode extends Component {
     this.onMappingRemove = this.onMappingRemove.bind(this);
     this.onKeyAdd = this.onKeyAdd.bind(this);
     this.onKeyRemove = this.onKeyRemove.bind(this);
-    this.onPropertyAssign = this.onPropertyAssign.bind(this);
+    this.onPropertyAdd = this.onPropertyAdd.bind(this);
+    this.onPropertyRemove = this.onPropertyRemove.bind(this);
     this.onValidate = this.onValidate.bind(this);
   }
 
@@ -115,8 +116,12 @@ export class EntityMappingMode extends Component {
     });
   }
 
-  onPropertyAssign(mappingId, propName, value) {
+  onPropertyAdd(mappingId, propName, value) {
     this.updateMappings(mappingId, (mappingObj) => { mappingObj.properties[propName] = value; });
+  }
+
+  onPropertyRemove(mappingId, propName) {
+    this.updateMappings(mappingId, (mappingObj) => { delete mappingObj.properties[propName]; });
   }
 
   onValidate() {
@@ -223,6 +228,8 @@ export class EntityMappingMode extends Component {
       return null;
     }
 
+    console.log(csvData, csvHeader);
+
     const existingMapping = existingMappings.length && !existingMappings.isLoading
       && !existingMappings.isError ? existingMappings[0] : null;
 
@@ -279,7 +286,7 @@ export class EntityMappingMode extends Component {
                     fullMappingsList={mappings}
                     onKeyAdd={this.onKeyAdd}
                     onKeyRemove={this.onKeyRemove}
-                    onPropertyAssign={this.onPropertyAssign}
+                    onPropertyAdd={this.onPropertyAdd}
                     onMappingRemove={this.onMappingRemove}
                   />
                 </>
@@ -296,7 +303,7 @@ export class EntityMappingMode extends Component {
                   columnLabels={csvHeader}
                   csvData={csvData}
                   mappings={mappings}
-                  onPropertyAssign={this.onPropertyAssign}
+                  onPropertyAdd={this.onPropertyAdd}
                 />
               </div>
               <div className="EntityMappingMode__section">
@@ -309,7 +316,8 @@ export class EntityMappingMode extends Component {
                     <MappingVerify
                       items={subitems}
                       fullMappingsList={mappings}
-                      onPropertyAssign={this.onPropertyAssign}
+                      onPropertyRemove={this.onPropertyRemove}
+                      onPropertyAdd={this.onPropertyAdd}
                     />
                   ))}
                 />

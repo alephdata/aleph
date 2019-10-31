@@ -20,11 +20,11 @@ const itemRenderer = (item, { handleClick }) => (
 
 class MappingVerifyItem extends Component {
   renderLiteralSelect() {
-    const { mapping, onPropertyAssign } = this.props;
+    const { mapping, onPropertyAdd } = this.props;
     const { id, schema, properties } = mapping;
 
     const items = schema.getEditableProperties()
-      .filter(prop => !properties[prop.name])
+      .filter(prop => !properties[prop.name] && !prop.type.isEntity)
       .sort((a, b) => (a.label > b.label ? 1 : -1));
 
     return (
@@ -32,7 +32,7 @@ class MappingVerifyItem extends Component {
         id="entity-select"
         items={items}
         itemRenderer={itemRenderer}
-        onItemSelect={(item) => onPropertyAssign(id, item.name, { literal: '' })}
+        onItemSelect={(item) => onPropertyAdd(id, item.name, { literal: '' })}
         filterable={false}
         popoverProps={{ minimal: true }}
       >
@@ -45,13 +45,13 @@ class MappingVerifyItem extends Component {
   }
 
   renderLiteralEdit(propertyName, value) {
-    const { mapping, onPropertyAssign } = this.props;
+    const { mapping, onPropertyAdd } = this.props;
 
     return (
       <InputGroup
         id="text-input"
-        placeholder="Add a literal value"
-        onChange={e => onPropertyAssign(mapping.id, propertyName, { literal: e.target.value })}
+        placeholder="Add a fixed value"
+        onChange={e => onPropertyAdd(mapping.id, propertyName, { literal: e.target.value })}
         value={value}
         small
       />
@@ -64,22 +64,27 @@ class MappingVerifyItem extends Component {
     if (!propValue) {
       return null;
     }
-    if (propValue.column) {
+    if (propValue.column !== undefined) {
       return <span className="MappingVerify__listItem__value bp3-monospace-text">{propValue.column}</span>;
     }
-    if (propValue.literal) {
+    if (propValue.literal !== undefined) {
       return <span className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</span>;
     }
     const referredEntity = fullMappingsList.get(propValue);
-    return (
-      <span className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
-        <Schema.Smart.Label schema={referredEntity.schema} icon />
-      </span>
-    );
+    if (referredEntity) {
+      return (
+        <span className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
+          <Schema.Smart.Label schema={referredEntity.schema} icon />
+        </span>
+      );
+    }
+
+    return null;
   }
 
   render() {
-    const { id, schema, color, keys, properties } = this.props.mapping;
+    const { mapping, onPropertyRemove } = this.props;
+    const { id, schema, color, keys, properties } = mapping;
 
     return (
       <Card className="MappingVerify__item" key={id} style={{ borderColor: color }}>
@@ -95,7 +100,9 @@ class MappingVerifyItem extends Component {
           <ul className="MappingVerify__list">
             <>
               {Array.from(Object.entries(properties)).map(([propName, propValue]) => (
+
                 <li className="MappingVerify__listItem" key={propName}>
+                  <Button minimal icon="cross" onClick={() => onPropertyRemove(id, propName)} />
                   <span className="MappingVerify__listItem__label">
                     {schema.getProperty(propName).label}
                     :
@@ -115,14 +122,13 @@ class MappingVerifyItem extends Component {
   }
 }
 
-const MappingVerify = ({ items, fullMappingsList, onPropertyAssign }) => (
+const MappingVerify = ({ items, ...props }) => (
   <div className="MappingVerify">
     {items.map((mapping) => (
       <MappingVerifyItem
-        fullMappingsList={fullMappingsList}
-        mapping={mapping}
-        onPropertyAssign={onPropertyAssign}
         key={mapping.id}
+        mapping={mapping}
+        {...props}
       />
     ))}
   </div>

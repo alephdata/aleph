@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
-import { showErrorToast, showSuccessToast } from 'src/app/toast';
+import { showErrorToast, showInfoToast } from 'src/app/toast';
 import { createCollectionMapping, flushCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
 
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
@@ -11,6 +11,25 @@ import MappingFlushDialog from 'src/dialogs/MappingFlushDialog/MappingFlushDialo
 import MappingSaveDialog from 'src/dialogs/MappingSaveDialog/MappingSaveDialog';
 import MappingDeleteDialog from 'src/dialogs/MappingDeleteDialog/MappingDeleteDialog';
 import { selectSession } from 'src/selectors';
+
+const messages = defineMessages({
+  create: {
+    id: 'mapping.actions.create.toast',
+    defaultMessage: 'Creating mapping',
+  },
+  save: {
+    id: 'mapping.actions.save.toast',
+    defaultMessage: 'Saving mapping',
+  },
+  delete: {
+    id: 'mapping.actions.delete.toast',
+    defaultMessage: 'Deleting mapping',
+  },
+  flush: {
+    id: 'mapping.actions.flush.toast',
+    defaultMessage: 'Removing imported entities',
+  },
+});
 
 
 class MappingManageMenu extends Component {
@@ -31,14 +50,16 @@ class MappingManageMenu extends Component {
     this.toggleDelete = this.toggleDelete.bind(this);
     this.onCreate = this.onCreate.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.onFlush = this.onFlush.bind(this);
     this.onSave = this.onSave.bind(this);
   }
 
-  async onSave() {
-    const { collectionId, mappings, mappingId, validate } = this.props;
+  onSave() {
+    const { collectionId, mappings, mappingId, validate, intl } = this.props;
     if (validate()) {
       try {
-        await this.props.updateCollectionMapping(collectionId, mappingId, mappings);
+        this.props.updateCollectionMapping(collectionId, mappingId, mappings);
+        showInfoToast(intl.formatMessage(messages.save));
         this.toggleSave();
       } catch (e) {
         showErrorToast(e);
@@ -47,11 +68,12 @@ class MappingManageMenu extends Component {
   }
 
   async onCreate() {
-    const { collectionId, mappings, validate } = this.props;
+    const { collectionId, mappings, validate, intl } = this.props;
     if (validate()) {
       try {
-        await this.props.createCollectionMapping(collectionId, mappings);
-        showSuccessToast('Successfully created');
+        this.props.createCollectionMapping(collectionId, mappings);
+        showInfoToast(intl.formatMessage(messages.create));
+        this.toggleCreate();
       } catch (e) {
         showErrorToast(e);
       }
@@ -59,11 +81,11 @@ class MappingManageMenu extends Component {
   }
 
   async onDelete() {
-    const { collectionId, mappingId } = this.props;
+    const { collectionId, mappingId, intl } = this.props;
 
     try {
       await this.props.deleteCollectionMapping(collectionId, mappingId);
-      showSuccessToast('Successfully deleted');
+      showInfoToast(intl.formatMessage(messages.delete));
       this.toggleDelete();
     } catch (e) {
       showErrorToast(e);
@@ -71,11 +93,11 @@ class MappingManageMenu extends Component {
   }
 
   async onFlush() {
-    const { collectionId, mappingId } = this.props;
+    const { collectionId, mappingId, intl } = this.props;
 
     try {
       await this.props.flushCollectionMapping(collectionId, mappingId);
-      showSuccessToast('Successfully deleted');
+      showInfoToast(intl.formatMessage(messages.flush));
       this.toggleFlush();
     } catch (e) {
       showErrorToast(e);
@@ -107,6 +129,9 @@ class MappingManageMenu extends Component {
     return (
       <>
         <ButtonGroup>
+          <Button icon="eye-open" onClick={this.togglePreview}>
+            <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
+          </Button>
           {mappingId && (
             <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
               <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
@@ -117,9 +142,7 @@ class MappingManageMenu extends Component {
               <FormattedMessage id="mapping.actions.create" defaultMessage="Create mapping" />
             </Button>
           )}
-          <Button icon="eye-open" onClick={this.togglePreview}>
-            <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
-          </Button>
+
           {mappingId && (
             <Button icon="delete" onClick={this.toggleFlush}>
               <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove imported entities" />
