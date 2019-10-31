@@ -14,6 +14,7 @@ export {
   fetchCollectionPermissions,
   fetchCollectionMappings,
   fetchCollectionXrefIndex,
+  flushCollectionMapping,
   queryCollections,
   queryXrefMatches,
   tiggerXrefMatches,

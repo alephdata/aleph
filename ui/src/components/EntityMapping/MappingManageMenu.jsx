@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
-import { createCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
+import { createCollectionMapping, flushCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
 
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import MappingCreateDialog from 'src/dialogs/MappingCreateDialog/MappingCreateDialog';
+import MappingFlushDialog from 'src/dialogs/MappingFlushDialog/MappingFlushDialog';
 import MappingSaveDialog from 'src/dialogs/MappingSaveDialog/MappingSaveDialog';
 import MappingDeleteDialog from 'src/dialogs/MappingDeleteDialog/MappingDeleteDialog';
 import { selectSession } from 'src/selectors';
@@ -18,6 +19,7 @@ class MappingManageMenu extends Component {
     this.state = {
       previewIsOpen: false,
       createIsOpen: false,
+      flushIsOpen: false,
       saveIsOpen: false,
       deleteIsOpen: false,
     };
@@ -25,6 +27,7 @@ class MappingManageMenu extends Component {
     this.togglePreview = this.togglePreview.bind(this);
     this.toggleCreate = this.toggleCreate.bind(this);
     this.toggleSave = this.toggleSave.bind(this);
+    this.toggleFlush = this.toggleFlush.bind(this);
     this.toggleDelete = this.toggleDelete.bind(this);
     this.onCreate = this.onCreate.bind(this);
     this.onDelete = this.onDelete.bind(this);
@@ -67,6 +70,18 @@ class MappingManageMenu extends Component {
     }
   }
 
+  async onFlush() {
+    const { collectionId, mappingId } = this.props;
+
+    try {
+      await this.props.flushCollectionMapping(collectionId, mappingId);
+      showSuccessToast('Successfully deleted');
+      this.toggleFlush();
+    } catch (e) {
+      showErrorToast(e);
+    }
+  }
+
   togglePreview = () => this.setState(({ previewIsOpen }) => (
     { previewIsOpen: !previewIsOpen }
   ));
@@ -79,11 +94,15 @@ class MappingManageMenu extends Component {
     { saveIsOpen: !saveIsOpen }
   ));
 
+  toggleFlush = () => this.setState(({ flushIsOpen }) => (
+    { flushIsOpen: !flushIsOpen }
+  ));
+
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   render() {
     const { mappingId, mappings } = this.props;
-    const { createIsOpen, deleteIsOpen, previewIsOpen, saveIsOpen } = this.state;
+    const { createIsOpen, deleteIsOpen, flushIsOpen, previewIsOpen, saveIsOpen } = this.state;
 
     return (
       <>
@@ -99,8 +118,13 @@ class MappingManageMenu extends Component {
             </Button>
           )}
           <Button icon="eye-open" onClick={this.togglePreview}>
-            <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview" />
+            <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
           </Button>
+          {mappingId && (
+            <Button icon="delete" onClick={this.toggleFlush}>
+              <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove imported entities" />
+            </Button>
+          )}
           <Button icon="trash" onClick={this.toggleDelete}>
             <FormattedMessage id="mapping.actions.delete" defaultMessage="Delete" />
           </Button>
@@ -120,6 +144,11 @@ class MappingManageMenu extends Component {
           toggleDialog={this.toggleSave}
           onSave={this.onSave}
         />
+        <MappingFlushDialog
+          isOpen={flushIsOpen}
+          toggleDialog={this.toggleFlush}
+          onFlush={this.onFlush}
+        />
         <MappingDeleteDialog
           isOpen={deleteIsOpen}
           toggleDialog={this.toggleDelete}
@@ -132,6 +161,7 @@ class MappingManageMenu extends Component {
 
 const mapDispatchToProps = {
   createCollectionMapping,
+  flushCollectionMapping,
   deleteCollectionMapping,
   updateCollectionMapping,
 };
