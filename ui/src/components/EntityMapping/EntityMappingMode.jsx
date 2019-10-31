@@ -3,10 +3,11 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
-import { Colors } from '@blueprintjs/core';
+import { Button, ButtonGroup, Colors } from '@blueprintjs/core';
 import { showErrorToast } from 'src/app/toast';
 import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
+import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import {
   MappingKeyAssign,
   MappingManageMenu,
@@ -53,6 +54,7 @@ export class EntityMappingMode extends Component {
     this.state = {
       mappings: new Map(),
       csvData: null,
+      previewIsOpen: false,
     };
 
     this.onMappingAdd = this.onMappingAdd.bind(this);
@@ -62,6 +64,7 @@ export class EntityMappingMode extends Component {
     this.onPropertyAdd = this.onPropertyAdd.bind(this);
     this.onPropertyRemove = this.onPropertyRemove.bind(this);
     this.onValidate = this.onValidate.bind(this);
+    this.togglePreview = this.togglePreview.bind(this);
   }
 
   componentDidMount() {
@@ -70,6 +73,7 @@ export class EntityMappingMode extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log('entity updated!!!', prevProps.existingMappings);
     const { existingMappings } = this.props;
     if (existingMappings && existingMappings.length && !existingMappings.isLoading
       && !existingMappings.isError && prevProps.existingMappings !== existingMappings) {
@@ -152,6 +156,10 @@ export class EntityMappingMode extends Component {
     return isValid;
   }
 
+  togglePreview = () => this.setState(({ previewIsOpen }) => (
+    { previewIsOpen: !previewIsOpen }
+  ));
+
   updateMappings(mappingId, updateToApply) {
     const { mappings } = this.state;
     const clone = new Map(mappings);
@@ -222,7 +230,7 @@ export class EntityMappingMode extends Component {
 
   render() {
     const { entity, intl, model, existingMappings } = this.props;
-    const { mappings, csvData, csvHeader, existingMappingId } = this.state;
+    const { mappings, csvData, csvHeader, existingMappingId, previewIsOpen } = this.state;
 
     if (!csvData || !csvHeader) {
       return null;
@@ -243,29 +251,37 @@ export class EntityMappingMode extends Component {
 
     return (
       <div className="EntityMappingMode">
-        <h1 className="text-page-title">
-          <FormattedMessage id="mapping.title" defaultMessage="Import as structured entities" />
-        </h1>
-        <p className="text-page-subtitle">
-          <FormattedMessage
-            id="mapping.info"
-            defaultMessage="Follow the steps below to map items in this dataset to structured Follow the Money entites. For more information, please refer to the {link}"
-            values={{
-              link: (
-                <a
-                  href="https://docs.alephdata.org/developers/mappings"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FormattedMessage
-                    id="mapping.infoLink"
-                    defaultMessage="Aleph data mapping documentation"
-                  />
-                </a>
-              ),
-            }}
+        <div className="EntityMappingMode__title-container">
+          <h1 className="text-page-title">
+            <FormattedMessage id="mapping.title" defaultMessage="Generate structured entities" />
+          </h1>
+          <p className="text-page-subtitle">
+            <FormattedMessage
+              id="mapping.info"
+              defaultMessage="Follow the steps below to map items in this dataset to structured Follow the Money entites. For more information, please refer to the {link}"
+              values={{
+                link: (
+                  <a
+                    href="https://docs.alephdata.org/developers/mappings"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id="mapping.infoLink"
+                      defaultMessage="Aleph data mapping documentation"
+                    />
+                  </a>
+                ),
+              }}
+            />
+          </p>
+        </div>
+        {existingMapping && (
+          <MappingStatus
+            collection={entity.collection}
+            mapping={existingMapping}
           />
-        </p>
+        )}
         <div className="EntityMappingMode__sections">
           <div className="EntityMappingMode__section">
             <h5 className="bp3-heading EntityMappingMode__section__title">
@@ -321,14 +337,13 @@ export class EntityMappingMode extends Component {
                     />
                   ))}
                 />
+                <ButtonGroup className="EntityMappingMode__preview">
+                  <Button icon="eye-open" onClick={this.togglePreview}>
+                    <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
+                  </Button>
+                </ButtonGroup>
               </div>
               <div className="EntityMappingMode__section">
-                {existingMapping && (
-                  <MappingStatus
-                    collection={entity.collection}
-                    mapping={existingMapping}
-                  />
-                )}
                 <MappingManageMenu
                   mappings={this.formatMappings(mappings)}
                   collectionId={entity.collection.id}
@@ -339,6 +354,11 @@ export class EntityMappingMode extends Component {
             </>
           )}
         </div>
+        <MappingPreviewDialog
+          isOpen={previewIsOpen}
+          mappings={mappings}
+          toggleDialog={this.togglePreview}
+        />
       </div>
     );
   }

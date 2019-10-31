@@ -1,12 +1,12 @@
 @import "src/app/variables.scss";
 
 .MappingStatus {
-  background-color: $light-gray4 !important;
   color: black;
-  margin: 30px 0;
+  margin-top: 25px;
 
   &__statusItem {
     span {
+      font-weight: normal;
       margin: 0 2px;
     }
   }

@@ -77,7 +77,7 @@ export class MappingPropertyAssign extends Component {
               {
                 featuredProps.map(prop => renderItem({ schema: schema.name, property: prop }))
               }
-              {featuredProps.length && otherProps.length && <MenuDivider />}
+              {featuredProps.length > 0 && otherProps.length > 0 && <MenuDivider />}
               <MenuItem text={intl.formatMessage(messages.other)}>
                 {
                   otherProps.map(prop => renderItem({ schema: schema.name, property: prop }))

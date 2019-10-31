@@ -15,4 +15,8 @@ $split-section-padding: 2*$aleph-grid-size;
   &:last-child {
     padding-left: $split-section-padding;
   }
+
+  &__title {
+    margin-top: 0;
+  }
 }

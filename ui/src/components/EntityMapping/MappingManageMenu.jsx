@@ -5,7 +5,6 @@ import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { showErrorToast, showInfoToast } from 'src/app/toast';
 import { createCollectionMapping, flushCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
 
-import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import MappingCreateDialog from 'src/dialogs/MappingCreateDialog/MappingCreateDialog';
 import MappingFlushDialog from 'src/dialogs/MappingFlushDialog/MappingFlushDialog';
 import MappingSaveDialog from 'src/dialogs/MappingSaveDialog/MappingSaveDialog';
@@ -27,7 +26,7 @@ const messages = defineMessages({
   },
   flush: {
     id: 'mapping.actions.flush.toast',
-    defaultMessage: 'Removing imported entities...',
+    defaultMessage: 'Removing generated entities...',
   },
 });
 
@@ -36,14 +35,12 @@ class MappingManageMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      previewIsOpen: false,
       createIsOpen: false,
       flushIsOpen: false,
       saveIsOpen: false,
       deleteIsOpen: false,
     };
 
-    this.togglePreview = this.togglePreview.bind(this);
     this.toggleCreate = this.toggleCreate.bind(this);
     this.toggleSave = this.toggleSave.bind(this);
     this.toggleFlush = this.toggleFlush.bind(this);
@@ -104,10 +101,6 @@ class MappingManageMenu extends Component {
     }
   }
 
-  togglePreview = () => this.setState(({ previewIsOpen }) => (
-    { previewIsOpen: !previewIsOpen }
-  ));
-
   toggleCreate = () => this.setState(({ createIsOpen }) => (
     { createIsOpen: !createIsOpen }
   ));
@@ -123,16 +116,11 @@ class MappingManageMenu extends Component {
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   render() {
-    const { mappingId, mappings } = this.props;
-    const { createIsOpen, deleteIsOpen, flushIsOpen, previewIsOpen, saveIsOpen } = this.state;
+    const { mappingId } = this.props;
+    const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
 
     return (
       <>
-        <ButtonGroup>
-          <Button icon="eye-open" onClick={this.togglePreview}>
-            <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
-          </Button>
-        </ButtonGroup>
         <ButtonGroup>
           {mappingId && (
             <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
@@ -147,18 +135,13 @@ class MappingManageMenu extends Component {
 
           {mappingId && (
             <Button icon="delete" onClick={this.toggleFlush}>
-              <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove imported entities" />
+              <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />
             </Button>
           )}
           <Button icon="trash" onClick={this.toggleDelete}>
             <FormattedMessage id="mapping.actions.delete" defaultMessage="Delete" />
           </Button>
         </ButtonGroup>
-        <MappingPreviewDialog
-          isOpen={previewIsOpen}
-          mappings={mappings}
-          toggleDialog={this.togglePreview}
-        />
         <MappingCreateDialog
           isOpen={createIsOpen}
           toggleDialog={this.toggleCreate}
