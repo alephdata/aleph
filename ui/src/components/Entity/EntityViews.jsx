@@ -177,7 +177,7 @@ class EntityViews extends React.Component {
             id="import"
             title={(
               <>
-                <Icon icon="new-object" className="left-icon" />
+                <Icon icon="add" className="left-icon" />
                 <FormattedMessage id="entity.import.view" defaultMessage="Generate entities" />
               </>
             )}

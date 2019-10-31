@@ -64,7 +64,7 @@ class MappingManageMenu extends Component {
     }
   }
 
-  async onCreate() {
+  onCreate() {
     const { collectionId, mappings, validate, intl } = this.props;
     if (validate()) {
       try {
@@ -77,11 +77,11 @@ class MappingManageMenu extends Component {
     }
   }
 
-  async onDelete() {
+  onDelete() {
     const { collectionId, mappingId, intl } = this.props;
 
     try {
-      await this.props.deleteCollectionMapping(collectionId, mappingId);
+      this.props.deleteCollectionMapping(collectionId, mappingId);
       showInfoToast(intl.formatMessage(messages.delete));
       this.toggleDelete();
     } catch (e) {
@@ -89,11 +89,11 @@ class MappingManageMenu extends Component {
     }
   }
 
-  async onFlush() {
+  onFlush() {
     const { collectionId, mappingId, intl } = this.props;
 
     try {
-      await this.props.flushCollectionMapping(collectionId, mappingId);
+      this.props.flushCollectionMapping(collectionId, mappingId);
       showInfoToast(intl.formatMessage(messages.flush));
       this.toggleFlush();
     } catch (e) {

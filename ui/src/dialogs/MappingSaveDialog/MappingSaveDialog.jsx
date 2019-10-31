@@ -33,7 +33,7 @@ class MappingSaveDialog extends Component {
         onConfirm={this.props.onSave}
       >
         <FormattedMessage
-          id="collection.save.question"
+          id="mapping.save.question"
           defaultMessage="Updating this mapping will delete any previously extracted entities. Are you sure you would like to continue?"
         />
       </Alert>

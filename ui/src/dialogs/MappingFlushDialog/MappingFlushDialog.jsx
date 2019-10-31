@@ -33,7 +33,7 @@ class MappingFlushDialog extends Component {
         onConfirm={this.props.onFlush}
       >
         <FormattedMessage
-          id="collection.delete.question"
+          id="mapping.flush.question"
           defaultMessage="Are you sure you want to remove entities imported using this mapping?"
         />
       </Alert>

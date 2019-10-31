@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import {
-  Schema,
-} from 'src/components/common';
+import { defineMessages, injectIntl } from 'react-intl';
+import { Schema } from 'src/components/common';
 
 import './MappingSchemaSelect.scss';
+
+const messages = defineMessages({
+  thing: {
+    id: 'mapping.schemaSelect.button.thing',
+    defaultMessage: 'Add a new object',
+  },
+  relationship: {
+    id: 'mapping.schemaSelect.button.relationship',
+    defaultMessage: 'Add a new relationship',
+  },
+});
 
 const itemRenderer = (item, { handleClick }) => (
   <MenuItem
@@ -17,7 +28,7 @@ const itemRenderer = (item, { handleClick }) => (
 
 export class MappingSchemaSelect extends Component {
   render() {
-    const { schemaSelectOptions, onSelect, type } = this.props;
+    const { intl, schemaSelectOptions, onSelect, type } = this.props;
     const items = schemaSelectOptions[type === 'thing' ? 0 : 1];
 
     return (
@@ -32,7 +43,7 @@ export class MappingSchemaSelect extends Component {
         >
           <Button
             icon="add"
-            text={`Add a new ${type}`}
+            text={intl.formatMessage(messages[type])}
             rightIcon="double-caret-vertical"
           />
         </Select>
@@ -41,4 +52,7 @@ export class MappingSchemaSelect extends Component {
   }
 }
 
-export default MappingSchemaSelect;
+
+export default compose(
+  injectIntl,
+)(MappingSchemaSelect);

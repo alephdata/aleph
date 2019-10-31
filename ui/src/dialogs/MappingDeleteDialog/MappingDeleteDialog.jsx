@@ -9,11 +9,11 @@ import { deleteCollection } from 'src/actions';
 
 const messages = defineMessages({
   button_confirm: {
-    id: 'collection.delete.confirm',
+    id: 'mapping.delete.confirm',
     defaultMessage: 'Delete',
   },
   button_cancel: {
-    id: 'collection.delete.cancel',
+    id: 'mapping.delete.cancel',
     defaultMessage: 'Cancel',
   },
 });
@@ -33,8 +33,8 @@ class MappingDeleteDialog extends Component {
         onConfirm={this.props.onDelete}
       >
         <FormattedMessage
-          id="collection.delete.question"
-          defaultMessage="Are you sure you want to delete this dataset and all contained items?"
+          id="mapping.delete.question"
+          defaultMessage="Are you sure you want to delete this mapping and all generated entities?"
         />
       </Alert>
     );

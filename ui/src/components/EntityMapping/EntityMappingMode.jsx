@@ -236,8 +236,6 @@ export class EntityMappingMode extends Component {
       return null;
     }
 
-    console.log(csvData, csvHeader);
-
     const existingMapping = existingMappings.length && !existingMappings.isLoading
       && !existingMappings.isError ? existingMappings[0] : null;
 
@@ -320,6 +318,7 @@ export class EntityMappingMode extends Component {
                   csvData={csvData}
                   mappings={mappings}
                   onPropertyAdd={this.onPropertyAdd}
+                  onPropertyRemove={this.onPropertyRemove}
                 />
               </div>
               <div className="EntityMappingMode__section">
@@ -356,7 +355,7 @@ export class EntityMappingMode extends Component {
         </div>
         <MappingPreviewDialog
           isOpen={previewIsOpen}
-          mappings={mappings}
+          mappings={this.formatMappings(mappings)}
           toggleDialog={this.togglePreview}
         />
       </div>

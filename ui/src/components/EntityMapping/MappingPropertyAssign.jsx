@@ -91,7 +91,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   renderHeaderCell(colLabel, colValue) {
-    const { intl, onPropertyAdd, mappings } = this.props;
+    const { intl, onPropertyAdd, onPropertyRemove, mappings } = this.props;
 
     const style = {
       color: colValue ? 'white' : 'black',
@@ -116,9 +116,12 @@ export class MappingPropertyAssign extends Component {
             itemRenderer={itemRenderer}
             popoverProps={{ minimal: true }}
             filterable={false}
-            onItemSelect={({ schema, property }) => (
-              onPropertyAdd(schema, property.name, { column: colLabel })
-            )}
+            onItemSelect={({ schema, property }) => {
+              onPropertyAdd(schema, property.name, { column: colLabel });
+              if (colValue) {
+                onPropertyRemove(colValue.mappingId, colValue.property.name);
+              }
+            }}
           >
             <Button
               text={colValue ? `${colValue.property.label}` : intl.formatMessage(messages.placeholder)}
