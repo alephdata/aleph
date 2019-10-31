@@ -15,19 +15,19 @@ import { selectSession } from 'src/selectors';
 const messages = defineMessages({
   create: {
     id: 'mapping.actions.create.toast',
-    defaultMessage: 'Creating mapping',
+    defaultMessage: 'Creating mapping...',
   },
   save: {
     id: 'mapping.actions.save.toast',
-    defaultMessage: 'Saving mapping',
+    defaultMessage: 'Saving mapping...',
   },
   delete: {
     id: 'mapping.actions.delete.toast',
-    defaultMessage: 'Deleting mapping',
+    defaultMessage: 'Deleting mapping...',
   },
   flush: {
     id: 'mapping.actions.flush.toast',
-    defaultMessage: 'Removing imported entities',
+    defaultMessage: 'Removing imported entities...',
   },
 });
 
@@ -132,6 +132,8 @@ class MappingManageMenu extends Component {
           <Button icon="eye-open" onClick={this.togglePreview}>
             <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
           </Button>
+        </ButtonGroup>
+        <ButtonGroup>
           {mappingId && (
             <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
               <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />

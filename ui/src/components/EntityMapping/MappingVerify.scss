@@ -1,5 +1,6 @@
 @import "src/app/variables.scss";
-$internal-spacing: 6px;
+$internal-vertical-spacing: 3px;
+$internal-horizontal-spacing: 7px;
 
 .MappingVerify {
   &__item {
@@ -14,24 +15,24 @@ $internal-spacing: 6px;
     }
 
     &__value {
-      margin-left: $internal-spacing;
+      margin-left: $internal-horizontal-spacing;
     }
   }
 
   &__list {
-    margin: 3px 0;
+    margin: $internal-vertical-spacing 0;
     padding-left: 0;
     list-style-type: none;
     list-style-position: inside;
   }
 
   &__listItem {
-    margin: $internal-spacing 0;
+    margin: $internal-vertical-spacing 0;
     &__label {
-      margin-left: $internal-spacing;
+      margin-left: $internal-horizontal-spacing;
     }
     &__value {
-      margin-left: $internal-spacing;
+      margin-left: $internal-horizontal-spacing;
 
       .bp3-input-group {
         display: inline-block;

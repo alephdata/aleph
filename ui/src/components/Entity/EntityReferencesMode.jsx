@@ -68,6 +68,7 @@ class EntityReferencesMode extends React.Component {
 
   renderCell(prop, entity) {
     const { schema, isThing } = this.props;
+    console.log('rendering cell', prop, entity.getProperty(prop));
     let content = <Property.Values prop={prop} values={entity.getProperty(prop)} />;
     if (isThing && schema.caption.indexOf(prop.name) !== -1) {
       content = <Entity.Link entity={entity}>{content}</Entity.Link>;

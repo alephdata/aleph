@@ -38,7 +38,7 @@ const messages = defineMessages({
   },
   section2Title: {
     id: 'mapping.section2.title',
-    defaultMessage: '2. Map data columns to entity properties',
+    defaultMessage: '2. Map columns to entity properties',
   },
   section3Title: {
     id: 'mapping.section3.title',
@@ -258,7 +258,7 @@ export class EntityMappingMode extends Component {
                   rel="noopener noreferrer"
                 >
                   <FormattedMessage
-                    id="collection.mapping.infoLink"
+                    id="mapping.infoLink"
                     defaultMessage="Aleph data mapping documentation"
                   />
                 </a>

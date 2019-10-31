@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select, MultiSelect } from '@blueprintjs/select';
 import {
@@ -8,6 +8,29 @@ import {
 } from 'src/components/common';
 
 import './MappingKeyAssign.scss';
+
+const messages = defineMessages({
+  keyAssignPlaceholder: {
+    id: 'mapping.keyAssign.placeholder',
+    defaultMessage: 'Select keys from available columns',
+  },
+  keyAssignNoResults: {
+    id: 'mapping.keyAssign.noResults',
+    defaultMessage: 'No results',
+  },
+  entityAssignNoResults: {
+    id: 'mapping.entityAssign.noResults',
+    defaultMessage: 'No matching entities available',
+  },
+  entityAssignPlaceholder: {
+    id: 'mapping.entityAssign.placeholder',
+    defaultMessage: 'Select an entity',
+  },
+  entityAssignHelpText: {
+    id: 'mapping.entityAssign.helpText',
+    defaultMessage: 'You must create an object of type "{range}" to be the {property}',
+  },
+});
 
 const keySelectItemRenderer = (item, { handleClick }) => (
   <MenuItem
@@ -30,8 +53,7 @@ const entityItemRenderer = (item, { handleClick }) => (
 
 export class MappingKeyAssignItem extends Component {
   renderKeySelect({ id, keys }) {
-    console.log('props', this.props);
-    const { columnLabels, onKeyAdd, onKeyRemove } = this.props;
+    const { columnLabels, onKeyAdd, onKeyRemove, intl } = this.props;
 
     const items = columnLabels
       .filter((column) => keys.indexOf(column) === -1)
@@ -39,12 +61,12 @@ export class MappingKeyAssignItem extends Component {
 
     return (
       <FormGroup
-        label=""
-        labelFor="key-select"
         helperText={(
           <span>
-            All keys combined specify the id of the entity. The id has
-            to be unique.
+            <FormattedMessage
+              id="mapping.keyAssign.helpText"
+              defaultMessage="All keys combined specify the id of the entity. The id must be unique."
+            />
           </span>
         )}
       >
@@ -56,14 +78,14 @@ export class MappingKeyAssignItem extends Component {
           onItemSelect={item => onKeyAdd(id, item)}
           selectedItems={keys}
           itemPredicate={() => true}
-          placeholder={'Select keys from available columns'}
+          placeholder={intl.formatMessage(messages.keyAssignPlaceholder)}
           fill
           tagInputProps={{
             tagProps: { minimal: true },
             onRemove: item => onKeyRemove(id, item),
           }}
           noResults={
-            <MenuItem disabled text="No Results" />
+            <MenuItem disabled text={intl.formatMessage(messages.keyAssignNoResults)} />
           }
           popoverProps={{ minimal: true, popoverClassName: 'EntityMappingModeForm-popover' }}
         />
@@ -72,7 +94,7 @@ export class MappingKeyAssignItem extends Component {
   }
 
   renderEntitySelect(mapping, property) {
-    const { fullMappingsList, onPropertyAdd } = this.props;
+    const { intl, fullMappingsList, onPropertyAdd } = this.props;
     const { id } = mapping;
     const propertyRange = property.getRange();
 
@@ -91,7 +113,7 @@ export class MappingKeyAssignItem extends Component {
           <FormGroup
             label=""
             labelFor="entity-select"
-            helperText={disabled ? 'No matching entities available' : ''}
+            helperText={disabled ? intl.formatMessage(messages.entityAssignNoResults) : ''}
           >
             <Select
               id="entity-select"
@@ -103,8 +125,8 @@ export class MappingKeyAssignItem extends Component {
               activeItem={currValue}
             >
               <Button
-                text={currValue || 'Select an entity'}
-                rightIcon="double-caret-vertical"
+                text={currValue || intl.formatMessage(messages.entityAssignPlaceholder)}
+                rightIcon="caret-down"
                 disabled={disabled}
               />
 
@@ -114,7 +136,10 @@ export class MappingKeyAssignItem extends Component {
         {disabled && (
           <span className="MappingKeyAssign__item__property__help">
             <Tooltip
-              content={`You must create a thing of type "${propertyRange.label}" to be the ${property.label}`}
+              content={intl.formatMessage(messages.entityAssignHelpText, {
+                range: propertyRange.label,
+                property: property.label,
+              })}
               position="auto"
             >
               <Icon icon="help" />
@@ -142,7 +167,9 @@ export class MappingKeyAssignItem extends Component {
           <Schema.Smart.Label schema={schema} icon />
         </h6>
         <div className="MappingKeyAssign__item__property">
-          <span className="MappingKeyAssign__item__property__label">Keys</span>
+          <span className="MappingKeyAssign__item__property__label">
+            <FormattedMessage id="mapping.keys" defaultMessage="Keys" />
+          </span>
           <span className="MappingKeyAssign__item__property__value">
             {this.renderKeySelect(mapping)}
           </span>

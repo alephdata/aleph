@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, InputGroup, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import {
@@ -8,6 +8,13 @@ import {
 } from 'src/components/common';
 
 import './MappingVerify.scss';
+
+const messages = defineMessages({
+  placeholder: {
+    id: 'mapping.propAssign.literalPlaceholder',
+    defaultMessage: 'Add a fixed value',
+  },
+});
 
 const itemRenderer = (item, { handleClick }) => (
   <MenuItem
@@ -20,7 +27,7 @@ const itemRenderer = (item, { handleClick }) => (
 
 class MappingVerifyItem extends Component {
   renderLiteralSelect() {
-    const { mapping, onPropertyAdd } = this.props;
+    const { intl, mapping, onPropertyAdd } = this.props;
     const { id, schema, properties } = mapping;
 
     const items = schema.getEditableProperties()
@@ -37,7 +44,7 @@ class MappingVerifyItem extends Component {
         popoverProps={{ minimal: true }}
       >
         <Button
-          text="Add a fixed value"
+          text={intl.formatMessage(messages.placeholder)}
           icon="add"
         />
       </Select>
@@ -45,12 +52,12 @@ class MappingVerifyItem extends Component {
   }
 
   renderLiteralEdit(propertyName, value) {
-    const { mapping, onPropertyAdd } = this.props;
+    const { intl, mapping, onPropertyAdd } = this.props;
 
     return (
       <InputGroup
         id="text-input"
-        placeholder="Add a fixed value"
+        placeholder={intl.formatMessage(messages.placeholder)}
         onChange={e => onPropertyAdd(mapping.id, propertyName, { literal: e.target.value })}
         value={value}
         small
@@ -92,11 +99,17 @@ class MappingVerifyItem extends Component {
           <Schema.Smart.Label schema={schema} icon />
         </h6>
         <div className="MappingVerify__section">
-          <span className="MappingVerify__section__title">Keys:</span>
+          <span className="MappingVerify__section__title">
+            <FormattedMessage id="mapping.keys" defaultMessage="Keys" />
+            :
+          </span>
           <span className="MappingVerify__section__value bp3-monospace-text">{keys.join(', ')}</span>
         </div>
         <div className="MappingVerify__section">
-          <span className="MappingVerify__section__title">Properties:</span>
+          <span className="MappingVerify__section__title">
+            <FormattedMessage id="mapping.props" defaultMessage="Properties" />
+            :
+          </span>
           <ul className="MappingVerify__list">
             <>
               {Array.from(Object.entries(properties)).map(([propName, propValue]) => (

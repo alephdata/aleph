@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Schema } from 'src/components/common';
@@ -9,6 +9,17 @@ import {
 } from '@blueprintjs/table';
 
 import './MappingPropertyAssign.scss';
+
+const messages = defineMessages({
+  other: {
+    id: 'mapping.propAssign.other',
+    defaultMessage: 'Other',
+  },
+  placeholder: {
+    id: 'mapping.propAssign.placeholder',
+    defaultMessage: 'Assign a property',
+  },
+});
 
 const itemRenderer = ({ property }, { handleClick }) => (
   <MenuItem
@@ -55,6 +66,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   itemListRenderer({ items, itemsParentRef, renderItem }) {
+    const { intl } = this.props;
     return (
       <Menu ulRef={itemsParentRef}>
         {items.map(({ schema }) => {
@@ -66,7 +78,7 @@ export class MappingPropertyAssign extends Component {
                 featuredProps.map(prop => renderItem({ schema: schema.name, property: prop }))
               }
               {featuredProps.length && otherProps.length && <MenuDivider />}
-              <MenuItem text="Other">
+              <MenuItem text={intl.formatMessage(messages.other)}>
                 {
                   otherProps.map(prop => renderItem({ schema: schema.name, property: prop }))
                 }
@@ -79,7 +91,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   renderHeaderCell(colLabel, colValue) {
-    const { onPropertyAdd, mappings } = this.props;
+    const { intl, onPropertyAdd, mappings } = this.props;
 
     const style = {
       color: colValue ? 'white' : 'black',
@@ -109,8 +121,8 @@ export class MappingPropertyAssign extends Component {
             )}
           >
             <Button
-              text={colValue ? `${colValue.property.label}` : 'Assign a value'}
-              rightIcon="double-caret-vertical"
+              text={colValue ? `${colValue.property.label}` : intl.formatMessage(messages.placeholder)}
+              rightIcon="caret-down"
               className="MappingPropertyAssign__headerSelect__button"
             />
           </Select>
