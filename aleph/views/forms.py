@@ -25,8 +25,25 @@ def flatten(data, target, source):
     return data
 
 
+def deserialize_locale(value):
+    return stringify(value)
+
+
+def deserialize_url(value):
+    return stringify(value)
+
+
+def deserialize_language(value):
+    return registry.language.clean(value)
+
+
+def deserialize_country(value):
+    return registry.country.clean(value)
+
+
 @FormatChecker.cls_checks("locale", raises=ValueError)
 def check_locale(value):
+    value = deserialize_locale(value)
     if value not in settings.UI_LANGUAGES:
         raise ValueError(gettext('Invalid user locale.'))
     return True
@@ -34,6 +51,7 @@ def check_locale(value):
 
 @FormatChecker.cls_checks("country", raises=ValueError)
 def check_country_code(value):
+    value = deserialize_country(value)
     if not registry.country.validate(value):
         msg = gettext('Invalid country code: %s')
         raise ValueError(msg % value)
@@ -49,6 +67,7 @@ def check_category(value):
 
 @FormatChecker.cls_checks("url", raises=ValueError)
 def check_url(value):
+    value = deserialize_url(value)
     if value is not None and normalize_url(value) is None:
         raise ValueError(gettext('Invalid URL.'))
     return True
@@ -56,6 +75,7 @@ def check_url(value):
 
 @FormatChecker.cls_checks("language", raises=ValueError)
 def check_language(value):
+    value = deserialize_language(value)
     if not registry.language.validate(value):
         raise ValueError(gettext('Invalid language code.'))
     return True
@@ -77,22 +97,6 @@ def check_partial_date(value):
     return True
 
 
-def deserialize_locale(value):
-    return stringify(value)
-
-
-def deserialize_url(value):
-    return stringify(value)
-
-
-def deserialize_language(value):
-    return registry.language.clean(value)
-
-
-def deserialize_country(value):
-    return registry.country.clean(value)
-
-
 class Schema(abc.ABC):
     FORMAT_DESERIALIZERS = {
         "locale": deserialize_locale,
@@ -112,20 +116,53 @@ class Schema(abc.ABC):
     def pre_load(self):
         return self.data
 
-    def deserialize(self, data):
-        props = self.schema["properties"]
+    def _deserialize_array(self, schema, data):
+        items_schema = schema.get("items")
+        if items_schema is not None:
+            type_ = items_schema.get("type")
+            if type_ == "string":
+                for idx, item in enumerate(data):
+                    data[idx] = self._deserialize_string(items_schema, item)
+            if type_ == "object":
+                for idx, item in enumerate(data):
+                    data[idx] = self._deserialize_object(items_schema, item)
+            if type_ == "array":
+                for idx, item in enumerate(data):
+                    data[idx] = self._deserialize_array(items_schema, item)
+        return data
+
+    def _deserialize_string(self, schema, data):
+        format_ = schema.get("format")
+        if format_ is not None:
+            deserializer = self.FORMAT_DESERIALIZERS.get(format_)
+            if deserializer:
+                data = deserializer(data)
+        return data
+
+    def _deserialize_object(self, schema, data):
+        props = schema.get("properties", {})
         for prop, val in props.items():
-            format_ = val.get("format")
-            if format_ is not None:
-                deserializer = self.FORMAT_DESERIALIZERS.get(format_)
-                if deserializer and data.get(prop, None) is not None:
-                    data[prop] = deserializer(data[prop])
+            type_ = val.get("type")
+            if type_ == "string":
+                if data.get(prop) is not None:
+                    data[prop] = self._deserialize_string(val, data.get(prop))
+            if type_ == "object":
+                if data.get(prop) is not None:
+                    data[prop] = self._deserialize_object(val, data.get(prop))
+            if type_ == "array":
+                if data.get(prop) is not None:
+                    data[prop] = self._deserialize_array(val, data.get(prop))
+        return data
+
+    def deserialize(self, data):
+        data = self._deserialize_object(self.schema, data)
         return data
 
     def validate(self):
         data = self.pre_load()
         validate(data, self.schema, format_checker=FormatChecker())
-        return self.deserialize(data)
+        data = self.deserialize(data)
+        return data
 
 
 class RoleSchema(Schema):
@@ -166,7 +203,8 @@ class RoleCodeCreateSchema(Schema):
                     "type": "string",
                     "format": "email"
                 }
-            }
+            },
+            "required": ["email"],
         }
 
 
@@ -187,7 +225,8 @@ class RoleCreateSchema(Schema):
                 "code": {
                     "type": "string",
                 },
-            }
+            },
+            "required": ["password", "code"],
         }
 
 
@@ -205,7 +244,8 @@ class LoginSchema(Schema):
                     "type": "string",
                     "minLength": 3,
                 }
-            }
+            },
+            "required": ["email"],
         }
 
 
@@ -390,7 +430,8 @@ class EntityUpdateSchema(Schema):
                 "properties": {
                     "type": "object"
                 }
-            }
+            },
+            "required": ["schema"],
         }
 
 
