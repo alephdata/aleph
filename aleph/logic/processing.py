@@ -41,8 +41,8 @@ def process_collection(stage, collection, ingest=True,
             ingest_entity(collection, proxy, job_id=stage.job.id)
     else:
         queue_task(collection, OP_INDEX,
-                    job_id=stage.job.id,
-                    context={'sync': sync})
+                   job_id=stage.job.id,
+                   context={'sync': sync})
     aggregator.close()
 
 
