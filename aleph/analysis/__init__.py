@@ -6,6 +6,7 @@ from aleph.model import Document, Entity
 from aleph.analysis.aggregate import TagAggregator
 from aleph.analysis.extract import extract_entities
 from aleph.analysis.patterns import extract_patterns
+from aleph.analysis.language import detect_languages
 from aleph.analysis.util import load_places
 
 # TODO: this doesn't really have that much to do with aleph and
@@ -26,7 +27,9 @@ def extract_named_entities(entity):
 
     load_places()
     aggregator = TagAggregator()
-    for text in entity.get_type_values(registry.text):
+    texts = entity.get_type_values(registry.text)
+    detect_languages(entity, texts)
+    for text in texts:
         for (prop, tag) in extract_entities(entity, text):
             aggregator.add(prop, tag)
         for (prop, tag) in extract_patterns(entity, text):
@@ -36,8 +39,8 @@ def extract_named_entities(entity):
         entity.add(prop, label, quiet=True, cleaned=True)
 
     if len(aggregator):
-        log.info("Extracted %d tags [%s]: %s", len(aggregator),
-                 entity.id, entity.caption)
+        log.debug("Extracted %d tags [%s]: %s", len(aggregator),
+                  entity.id, entity.caption)
 
 
 def name_entity(entity):
