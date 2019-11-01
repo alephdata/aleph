@@ -61,7 +61,7 @@ def update(collection_id, mapping_id):
     enable_cache()
     entity = get_index_entity(entity_id, request.authz.READ)
     mapping.update(query=query, table_id=entity.get('id'))
-    if request.args.get('flush') is True:
+    if request.args.get('flush') == 'true':
         delete_entities_by_mapping_id(mapping.id)
         collection.touch()
         db.session.commit()
