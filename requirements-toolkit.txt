@@ -4,7 +4,7 @@ banal==0.4.2
 urlnormalizer==1.2.5
 followthemoney==1.21.5
 fingerprints==0.6.6
-servicelayer[google,amazon]==1.8.4
+servicelayer[google,amazon]==1.9.0
 normality==2.0.0
 pantomime==0.3.3
-balkhash[leveldb,sql]==1.0.2
+balkhash[leveldb,sql]==1.1.0

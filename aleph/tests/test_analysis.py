@@ -3,8 +3,7 @@ from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.analysis import analyze_entity
-from aleph.analysis.patterns import EMAIL_REGEX, IPV4_REGEX
-from aleph.analysis.patterns import IPV6_REGEX, PHONE_REGEX
+from aleph.analysis.patterns import EMAIL_REGEX, PHONE_REGEX
 from aleph.analysis.patterns import IBAN_REGEX
 
 
@@ -57,25 +56,6 @@ class TestPatterns(TestCase):
         ]
         for number in PHONE_NUMBERS:
             matches = PHONE_REGEX.findall(number)
-            assert len(matches) == 1
-
-    def test_ipv4_address(self):
-        IPV4_ADDRESSES = [
-            "118.197.24.21",
-            "0.0.0.0",
-            "172.0.0.1"
-        ]
-        for ip in IPV4_ADDRESSES:
-            matches = IPV4_REGEX.findall(ip)
-            assert len(matches) == 1, matches
-
-    def test_ipv6_address(self):
-        IPV6_ADDRESSES = [
-            "b239:181e:8f52:e4ee:ce42:c45c:6a03:4f14",
-            "2001:db8:0:1234:0:567:8:1"
-        ]
-        for ip in IPV6_ADDRESSES:
-            matches = IPV6_REGEX.findall(ip)
             assert len(matches) == 1
 
     def test_iban(self):
