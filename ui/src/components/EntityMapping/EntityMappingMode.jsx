@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
 import { Button, ButtonGroup, Colors } from '@blueprintjs/core';
 import { showErrorToast } from 'src/app/toast';
-import { fetchCollectionMappings } from 'src/actions';
+import { fetchCollectionMapping } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import {
@@ -69,7 +69,7 @@ export class EntityMappingMode extends Component {
 
   componentDidMount() {
     this.fetchCsvData();
-    this.props.fetchCollectionMappings(this.props.entity.collection.id);
+    this.props.fetchCollectionMapping(this.props.entity.collection.id, this.props.entity.id);
   }
 
   componentDidUpdate(prevProps) {
@@ -361,10 +361,12 @@ export class EntityMappingMode extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchCollectionMappings };
+const mapDispatchToProps = { fetchCollectionMapping };
 
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.entity.collection.id;
+
+  console.log(state, selectCollectionMappings(state, collectionId));
   return {
     model: selectModel(state),
     existingMappings: selectCollectionMappings(state, collectionId),

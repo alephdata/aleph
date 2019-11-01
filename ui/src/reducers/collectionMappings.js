@@ -1,18 +1,32 @@
 import { createReducer } from 'redux-act';
 
-import { fetchCollectionMappings } from 'src/actions';
-import { objectLoadStart, objectLoadError, objectLoadComplete } from 'src/reducers/util';
+import { fetchCollectionMapping, updateCollectionMapping, createCollectionMapping, deleteCollectionMapping } from 'src/actions';
+import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete } from 'src/reducers/util';
 
 const initialState = {};
 
 export default createReducer({
-  [fetchCollectionMappings.START]: (state, { id }) => objectLoadStart(state, id),
+  [fetchCollectionMapping.START]: (state, { collectionId }) => objectLoadStart(state, collectionId),
 
-  [fetchCollectionMappings.ERROR]: (state, {
-    error, args: { id },
-  }) => objectLoadError(state, id, error),
+  [fetchCollectionMapping.ERROR]: (state, {
+    error, args: { collectionId },
+  }) => objectLoadError(state, collectionId, error),
 
-  [fetchCollectionMappings.COMPLETE]: (state, {
-    id, data,
-  }) => objectLoadComplete(state, id, data),
+  [fetchCollectionMapping.COMPLETE]: (state, {
+    collectionId, data,
+  }) => objectLoadComplete(state, collectionId, data),
+
+  [createCollectionMapping.COMPLETE]: (state, {
+    collectionId, data,
+  }) => objectLoadComplete(state, collectionId, data),
+
+  [updateCollectionMapping.COMPLETE]: (state, {
+    collectionId, data,
+  }) => objectLoadComplete(state, collectionId, data),
+
+  [deleteCollectionMapping.COMPLETE]: (state, { collectionId }) => {
+    console.log('in delete complete', collectionId, state);
+    return objectDelete(state, collectionId);
+  },
+
 }, initialState);

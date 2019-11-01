@@ -72,34 +72,34 @@ export const triggerCollectionCancel = asyncActionCreator(id => async () => {
   return { id, data: response.data };
 }, { name: 'TRIGGER_COLLECTION_CANCEL' });
 
-export const createCollectionMapping = asyncActionCreator((id, mapping) => async () => {
-  const response = await endpoint.post(`collections/${id}/mappings`, mapping);
-  if (response && response.data) {
-    await endpoint.put(`collections/${id}/mappings/${response.data.id}/trigger`);
+export const createCollectionMapping = asyncActionCreator((collectionId, mapping) => async () => {
+  const response = await endpoint.post(`collections/${collectionId}/mappings`, mapping);
+  if (response && response.data && response.data.id) {
+    await endpoint.put(`collections/${collectionId}/mappings/${response.data.id}/trigger`);
   }
-  return { id, data: response.data };
+  return { collectionId, data: response.data };
 }, { name: 'CREATE_COLLECTION_MAPPING' });
 
 export const updateCollectionMapping = (
   asyncActionCreator((collectionId, mappingId, mapping) => async () => {
     const config = { params: { flush: true } };
     const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}`, mapping, config);
-    return { id: collectionId, data: response.data };
+    return { collectionId, mappingId, data: response.data };
   }, { name: 'UPDATE_COLLECTION_MAPPING' })
 );
 
 export const deleteCollectionMapping = asyncActionCreator((collectionId, mappingId) => async () => {
   const config = { params: { flush: true } };
   const response = await endpoint.delete(`collections/${collectionId}/mappings/${mappingId}`, config);
-  return { mappingId, data: response.data };
+  return { collectionId, mappingId, data: response.data };
 }, { name: 'DELETE_COLLECTION_MAPPING' });
 
 export const flushCollectionMapping = asyncActionCreator((collectionId, mappingId) => async () => {
   const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}/flush`);
-  return { mappingId, data: response.data };
+  return { collectionId, mappingId, data: response.data };
 }, { name: 'FLUSH_COLLECTION_MAPPING' });
 
-export const fetchCollectionMappings = asyncActionCreator(id => async () => {
-  const response = await endpoint.get(`collections/${id}/mappings`);
-  return { id, data: response.data.results };
-}, { name: 'FETCH_COLLECTION_MAPPINGS' });
+export const fetchCollectionMapping = asyncActionCreator((collectionId, entityId) => async () => {
+  const response = await endpoint.get(`collections/${collectionId}/mappings?filter:table=${entityId}`);
+  return { collectionId, data: response.data.results };
+}, { name: 'FETCH_COLLECTION_MAPPING' });
