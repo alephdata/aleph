@@ -51,6 +51,7 @@ def create_system_roles():
 def update_role(role):
     """Synchronize denormalised role configuration."""
     refresh_role(role)
+    get_role(role.id)
 
 
 def refresh_role(role, sync=False):

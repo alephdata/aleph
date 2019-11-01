@@ -10,39 +10,34 @@ from aleph.analysis import analyze_entity
 from aleph.queues import queue_task, OP_INDEX
 from aleph.index.entities import index_bulk
 from aleph.logic.entities import refresh_entity_id
-from aleph.logic.collections import refresh_collection, reset_collection
+from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
 
 
 def _collection_proxies(collection):
-    for entity in Entity.by_collection(collection.id).yield_per(1000):
+    for entity in Entity.by_collection(collection.id).yield_per(5000):
         yield entity.to_proxy()
-    for document in Document.by_collection(collection.id).yield_per(1000):
+    for document in Document.by_collection(collection.id).yield_per(5000):
         yield document.to_proxy()
 
 
-def process_collection(stage, collection, ingest=True,
-                       reset=False, sync=False):
+def process_collection(stage, collection, ingest=True, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
-    ingest = ingest or reset
-    if reset:
-        reset_collection(collection, sync=True)
     aggregator = get_aggregator(collection)
-    writer = aggregator.bulk()
     for proxy in _collection_proxies(collection):
-        writer.put(proxy, fragment='db')
-        stage.report_finished(1)
-    writer.flush()
-    if ingest:
-        for proxy in aggregator:
-            ingest_entity(collection, proxy, job_id=stage.job.id)
-    else:
-        queue_task(collection, OP_INDEX,
-                   job_id=stage.job.id,
-                   context={'sync': sync})
+        if ingest and proxy.schema.is_a(Document.SCHEMA):
+            ingest_entity(collection, proxy,
+                          job_id=stage.job.id,
+                          sync=sync)
+        else:
+            aggregator.put(proxy, fragment='db')
+            queue_task(collection, OP_INDEX,
+                       job_id=stage.job.id,
+                       payload={'entity_id': proxy.id},
+                       context={'sync': sync})
     aggregator.close()
 
 
@@ -65,6 +60,7 @@ def _fetch_entities(stage, collection, entity_id=None, batch=100):
         done = 0
         for task in stage.get_tasks(limit=batch):
             entity_id.append(task.payload.get('entity_id'))
+            done += 1
         stage.mark_done(done)
 
     yield from aggregator.iterate(entity_id=entity_id)
