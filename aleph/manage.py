@@ -54,10 +54,14 @@ def collections():
 
 
 @manager.command
-def worker():
+@manager.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
+def worker(sync=False):
     """Run the queue-based worker service."""
     worker = get_worker()
-    worker.run()
+    if sync:
+        worker.sync()
+    else:
+        worker.run()
 
 
 @manager.command
