@@ -1,5 +1,5 @@
 import logging
-from banal import is_mapping
+from banal import is_mapping, ensure_list
 from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
@@ -31,21 +31,19 @@ def process_collection(stage, collection, ingest=True,
     if reset:
         reset_collection(collection, sync=True)
     aggregator = get_aggregator(collection)
-    try:
-        writer = aggregator.bulk()
-        for proxy in _collection_proxies(collection):
-            writer.put(proxy, fragment='db')
-            stage.report_finished(1)
-        writer.flush()
-        if ingest:
-            for proxy in aggregator:
-                ingest_entity(collection, proxy, job_id=stage.job.id)
-        else:
-            queue_task(collection, OP_INDEX,
-                       job_id=stage.job.id,
-                       context={'sync': sync})
-    finally:
-        aggregator.close()
+    writer = aggregator.bulk()
+    for proxy in _collection_proxies(collection):
+        writer.put(proxy, fragment='db')
+        stage.report_finished(1)
+    writer.flush()
+    if ingest:
+        for proxy in aggregator:
+            ingest_entity(collection, proxy, job_id=stage.job.id)
+    else:
+        queue_task(collection, OP_INDEX,
+                    job_id=stage.job.id,
+                    context={'sync': sync})
+    aggregator.close()
 
 
 def _process_entity(entity, sync=False):
@@ -58,25 +56,19 @@ def _process_entity(entity, sync=False):
     return entity
 
 
-def _fetch_entities(stage, collection, entity_id=None, batch=50):
+def _fetch_entities(stage, collection, entity_id=None, batch=100):
     aggregator = get_aggregator(collection)
-    try:
-        if entity_id is None:
-            yield from aggregator
-            return
-        yield from aggregator.iterate(entity_id=entity_id)
-
+    if entity_id is not None:
+        entity_id = ensure_list(entity_id)
         # WEIRD: Instead of indexing a single entity, this will try
         # pull a whole batch of them off the queue and do it at once.
         done = 0
         for task in stage.get_tasks(limit=batch):
-            entity_id = task.payload.get('entity_id')
-            for entity in aggregator.iterate(entity_id=entity_id):
-                yield entity
-                done += 1
+            entity_id.append(task.payload.get('entity_id'))
         stage.mark_done(done)
-    finally:
-        aggregator.close()
+
+    yield from aggregator.iterate(entity_id=entity_id)
+    aggregator.close()
 
 
 def index_aggregate(stage, collection, entity_id=None, sync=False):
