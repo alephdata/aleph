@@ -33,6 +33,13 @@ class AlertsApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'banana pumpkin' in res.json['query'], res.json
+        for wrong_data in [{'query': 2}, {"quarry": "stone"}]:
+            wdata = json.dumps(wrong_data)
+            res = self.client.post('/api/2/alerts',
+                                   data=wdata,
+                                   headers=headers,
+                                   content_type='application/json')
+            assert res.status_code == 400, res.json
 
     def test_create_with_query(self):
         data = {'query': 'putin'}
