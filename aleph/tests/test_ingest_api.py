@@ -80,7 +80,8 @@ class IngestApiTestCase(TestCase):
         meta = {
             'file_name': 'directory',
             'foreign_id': 'directory',
-            'schema': 'Folder'
+            'schema': 'Folder',
+            'collection_id': self.col.id,
         }
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)
@@ -91,7 +92,8 @@ class IngestApiTestCase(TestCase):
         meta = {
             'file_name': 'subdirectory',
             'foreign_id': 'subdirectory',
-            'parent': {'id': directory}
+            'parent': {'id': directory},
+            'collection_id': self.col.id,
         }
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)

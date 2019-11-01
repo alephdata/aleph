@@ -165,7 +165,8 @@ class CollectionsApiTestCase(TestCase):
             'countries': ['de', 'us'],
             'languages': ['en'],
             'mime_type': 'text/csv',
-            'source_url': 'http://pudo.org/experts.csv'
+            'source_url': 'http://pudo.org/experts.csv',
+            'collection_id': self.col.id,
         }
         csv_path = self.get_fixture_path('experts.csv')
         data = {
@@ -173,7 +174,8 @@ class CollectionsApiTestCase(TestCase):
             'foo': open(csv_path, 'rb'),
         }
         ingest_url = '/api/2/collections/%s/ingest' % self.col.id
-        self.client.post(ingest_url, data=data, headers=headers)
+        res = self.client.post(ingest_url, data=data, headers=headers)
+        assert res.status_code == 201, res
 
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
