@@ -69,6 +69,10 @@ class MappingAPITest(TestCase):
         res = self.client.get(url, headers=self.headers_x)
         assert res.status_code == 403, res
 
+        url = '/api/2/collections/%s/mappings?filter:table=%s' % (self.col.id, self.ent.id)  # noqa
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+
         data = {
             'table_id': self.ent.id,
             'mapping_query': {

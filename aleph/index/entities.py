@@ -208,6 +208,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
 
 def delete_entities_by_mapping_id(mapping_id, sync=False):
     """Delete entities loaded by a mapping"""
+    log.debug("Flushing entities for mapping %s", mapping_id)
     index = entities_read_index()
     query = {
         'bool': {

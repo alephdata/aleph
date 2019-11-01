@@ -25,7 +25,7 @@ def index_by_collection(collection_id):
     parser = QueryParser(request.args, request.authz)
     q = Mapping.by_collection(collection.id)
     if 'table' in parser.filters:
-        q = Mapping.by_table(parser.filters['table'], q)
+        q = Mapping.by_table(parser.filters['table'].pop(), q)
     result = DatabaseQueryResult(request, q, parser=parser)
     return MappingSerializer.jsonify_result(result)
 
@@ -75,7 +75,7 @@ def delete(collection_id, mapping_id):
     collection = get_db_collection(collection_id, action=request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
-    if request.args.get('flush') is True:
+    if request.args.get('flush') == 'true':
         delete_entities_by_mapping_id(mapping.id)
         collection.touch()
         db.session.commit()
