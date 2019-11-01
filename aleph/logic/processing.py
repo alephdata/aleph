@@ -51,8 +51,6 @@ def process_collection(stage, collection, ingest=True,
 def _process_entity(entity, sync=False):
     """Perform pre-index processing on an entity, includes running the
     NLP pipeline."""
-    if entity.id is None:
-        raise InvalidData("No ID for entity", errors=entity.to_dict())
     analyze_entity(entity)
     if sync:
         refresh_entity_id(entity.id)
@@ -91,11 +89,14 @@ def index_aggregate(stage, collection, entity_id=None, sync=False):
 
 def bulk_write(collection, entities, job_id=None, unsafe=False):
     """Write a set of entities - given as dicts - to the index."""
+    # This is called mainly by the /api/2/collections/X/_bulk API.
     def _generate():
         for data in entities:
             if not is_mapping(data):
                 raise InvalidData("Failed to read input data", errors=data)
             entity = model.get_proxy(data)
+            if entity.id is None:
+                raise InvalidData("No ID for entity", errors=entity.to_dict())
             if not unsafe:
                 entity = remove_checksums(entity)
             yield _process_entity(entity)
