@@ -1,20 +1,18 @@
+import abc
+
 from banal import ensure_dict
 from normality import stringify
 from flask_babel import gettext
 from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
-from marshmallow import Schema, pre_load
-from marshmallow.fields import List, Integer
-from marshmallow.fields import Dict, String, Boolean
-from marshmallow.validate import Email, Length
-from marshmallow.exceptions import ValidationError
+from jsonschema import FormatChecker, validate
 
 from aleph import settings
 from aleph.model import Collection
 
 
-MIN_PASSWORD = Length(min=6)
+MIN_PASSWORD_LENGTH = 6
 
 
 def flatten(data, target, source):
@@ -27,171 +25,480 @@ def flatten(data, target, source):
     return data
 
 
-class Category(String):
-    """A category of collections, e.g. leaks, court cases, sanctions list."""
-
-    def _validate(self, value):
-        if value not in Collection.CATEGORIES.keys():
-            raise ValidationError(gettext('Invalid category.'))
-
-
-class Url(String):
-
-    def _deserialize(self, value, attr, data):
-        return stringify(value)
-
-    def _validate(self, value):
-        if value is not None and normalize_url(value) is None:
-            raise ValidationError(gettext('Invalid URL.'))
+@FormatChecker.cls_checks("locale", raises=ValueError)
+def check_locale(value):
+    if value not in settings.UI_LANGUAGES:
+        raise ValueError(gettext('Invalid user locale.'))
+    return True
 
 
-class Language(String):
-    """A valid language code."""
-
-    def _deserialize(self, value, attr, data):
-        return registry.language.clean(value)
-
-    def _validate(self, value):
-        if not registry.language.validate(value):
-            raise ValidationError(gettext('Invalid language code.'))
+@FormatChecker.cls_checks("country", raises=ValueError)
+def check_country_code(value):
+    if not registry.country.validate(value):
+        msg = gettext('Invalid country code: %s')
+        raise ValueError(msg % value)
+    return True
 
 
-class Locale(String):
-    """A user locale."""
-
-    def _deserialize(self, value, attr, data):
-        return stringify(value)
-
-    def _validate(self, value):
-        if value not in settings.UI_LANGUAGES:
-            raise ValidationError(gettext('Invalid user locale.'))
+@FormatChecker.cls_checks("category", raises=ValueError)
+def check_category(value):
+    if value not in Collection.CATEGORIES.keys():
+        raise ValueError(gettext('Invalid category.'))
+    return True
 
 
-class Country(String):
-    """A valid country code."""
-
-    def _deserialize(self, value, attr, data):
-        return registry.country.clean(value)
-
-    def _validate(self, value):
-        if not registry.country.validate(value):
-            msg = gettext('Invalid country code: %s')
-            raise ValidationError(msg % value)
+@FormatChecker.cls_checks("url", raises=ValueError)
+def check_url(value):
+    if value is not None and normalize_url(value) is None:
+        raise ValueError(gettext('Invalid URL.'))
+    return True
 
 
-class PartialDate(String):
-    """Any valid prefix of an ISO 8601 datetime string."""
+@FormatChecker.cls_checks("language", raises=ValueError)
+def check_language(value):
+    if not registry.language.validate(value):
+        raise ValueError(gettext('Invalid language code.'))
+    return True
 
-    def _validate(self, value):
-        if not registry.date.validate(value):
-            raise ValidationError(gettext('Invalid date: %s') % value)
+
+@FormatChecker.cls_checks("schema", raises=ValueError)
+def check_schema(value):
+    schema = model.get(value)
+    if schema is None or schema.abstract:
+        msg = gettext('Invalid schema name: %s')
+        raise ValueError(msg % value)
+    return True
 
 
-class SchemaName(String):
+@FormatChecker.cls_checks("partial-date", raises=ValueError)
+def check_partial_date(value):
+    if not registry.date.validate(value):
+        raise ValueError(gettext('Invalid date: %s') % value)
+    return True
 
-    def _validate(self, value):
-        schema = model.get(value)
-        if schema is None or schema.abstract:
-            msg = gettext('Invalid schema name: %s')
-            raise ValidationError(msg % value)
+
+def deserialize_locale(value):
+    return stringify(value)
+
+
+def deserialize_url(value):
+    return stringify(value)
+
+
+def deserialize_language(value):
+    return registry.language.clean(value)
+
+
+def deserialize_country(value):
+    return registry.country.clean(value)
+
+
+class Schema(abc.ABC):
+    FORMAT_DESERIALIZERS = {
+        "locale": deserialize_locale,
+        "url": deserialize_url,
+        "language": deserialize_language,
+        "country": deserialize_country,
+    }
+
+    def __init__(self, data):
+        self.data = data
+
+    @property
+    @abc.abstractmethod
+    def schema(self):
+        pass
+
+    def pre_load(self):
+        return self.data
+
+    def deserialize(self, data):
+        props = self.schema["properties"]
+        for prop, val in props.items():
+            format_ = val.get("format")
+            if format_ is not None:
+                deserializer = self.FORMAT_DESERIALIZERS.get(format_)
+                if deserializer and data.get(prop, None) is not None:
+                    data[prop] = deserializer(data[prop])
+        return data
+
+    def validate(self):
+        data = self.pre_load()
+        validate(data, self.schema, format_checker=FormatChecker())
+        return self.deserialize(data)
 
 
 class RoleSchema(Schema):
-    name = String(validate=Length(min=4))
-    is_muted = Boolean(missing=None)
-    password = String(validate=MIN_PASSWORD, missing=None, load_only=True)
-    current_password = String(missing=None, load_only=True)
-    locale = Locale(allow_none=True, missing=None)
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 4
+                },
+                "is_muted": {
+                    "type": "boolean"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": MIN_PASSWORD_LENGTH,
+                },
+                "current_password": {
+                    "type": "string",
+                },
+                "locale": {
+                    "type": ["string", "null"],
+                    "format": "locale"
+                }
+            }
+        }
 
 
 class RoleCodeCreateSchema(Schema):
-    email = String(validate=Email(), required=True)
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "email"
+                }
+            }
+        }
 
 
 class RoleCreateSchema(Schema):
-    name = String(validate=Length(min=4))
-    password = String(validate=MIN_PASSWORD, required=True)
-    code = String(required=True)
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 4,
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": MIN_PASSWORD_LENGTH,
+                },
+                "code": {
+                    "type": "string",
+                },
+            }
+        }
 
 
 class LoginSchema(Schema):
-    email = String(validate=Email(), required=True)
-    password = String(validate=Length(min=3))
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "email",
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 3,
+                }
+            }
+        }
 
 
 class PermissionSchema(Schema):
-    write = Boolean(required=True)
-    read = Boolean(required=True)
-    role_id = String(required=True)
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "write": {
+                    "type": "boolean",
+                },
+                "read": {
+                    "type": "boolean",
+                },
+                "role_id": {
+                    "type": "string",
+                }
+            },
+            "required": ["write", "read", "role_id"],
+        }
 
-    @pre_load
-    def flatten(self, data):
-        return flatten(data, 'role_id', 'role')
+    def pre_load(self):
+        return flatten(self.data, 'role_id', 'role')
 
 
 class AlertSchema(Schema):
-    query = String()
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string"}
+            },
+            "required": ["query"]
+        }
 
 
 class XrefSchema(Schema):
-    against_collection_ids = List(Integer())
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "against_collection_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                }
+            }
+        }
 
 
 class CollectionCreateSchema(Schema):
-    label = String(validate=Length(min=2, max=500), required=True)
-    foreign_id = String(missing=None)
-    casefile = Boolean(missing=None)
-    summary = String(allow_none=True, missing=None)
-    publisher = String(allow_none=True, missing=None)
-    publisher_url = Url(allow_none=True, missing=None)
-    data_url = Url(allow_none=True, missing=None)
-    info_url = Url(allow_none=True, missing=None)
-    countries = List(Country())
-    languages = List(Language())
-    category = Category(missing=None)
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 500,
+                },
+                "foreign_id": {
+                    "type": "string",
+                },
+                "summary": {
+                    "type": ["string", "null"],
+                },
+                "publisher": {
+                    "type": ["string", "null"],
+                },
+                "publisher_url": {
+                    "type": ["string", "null"],
+                    "format": "url",
+                },
+                "data_url": {
+                    "type": ["string", "null"],
+                    "format": "url",
+                },
+                "info_url": {
+                    "type": ["string", "null"],
+                    "format": "url",
+                },
+                "countries": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "country",
+                    }
+                },
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "language",
+                    }
+                },
+                "category": {
+                    "type": "string",
+                    "format": "category",
+                }
+            },
+            "required": ["label"],
+        }
 
 
-class CollectionUpdateSchema(CollectionCreateSchema):
-    creator_id = String(allow_none=True)
+class CollectionUpdateSchema(Schema):
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 500,
+                },
+                "foreign_id": {
+                    "type": "string",
+                },
+                "summary": {
+                    "type": "string",
+                },
+                "publisher": {
+                    "type": "string",
+                },
+                "publisher_url": {
+                    "type": "string",
+                    "format": "url",
+                },
+                "data_url": {
+                    "type": "string",
+                    "format": "url",
+                },
+                "info_url": {
+                    "type": "string",
+                    "format": "url",
+                },
+                "countries": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "country",
+                    }
+                },
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "language",
+                    }
+                },
+                "category": {
+                    "type": "string",
+                    "format": "category",
+                },
+                "creator_id": {
+                    "type": ["string", "null"],
+                }
+            },
+            "required": ["label"],
+        }
 
-    @pre_load
-    def flatten(self, data):
-        return flatten(data, 'creator_id', 'creator')
+    def pre_load(self):
+        return flatten(self.data, 'creator_id', 'creator')
 
 
 class EntityUpdateSchema(Schema):
-    schema = SchemaName(required=True)
-    properties = Dict()
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "schema": {
+                    "type": "string",
+                    "format": "schema",
+                },
+                "properties": {
+                    "type": "object"
+                }
+            }
+        }
 
 
-class EntityCreateSchema(EntityUpdateSchema):
-    foreign_id = String()
-    collection_id = String(required=True)
+class EntityCreateSchema(Schema):
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "schema": {
+                    "type": "string",
+                    "format": "schema",
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "foreign_id": {
+                    "type": "string",
+                },
+                "collection_id": {
+                    "type": "string"
+                }
+            },
+            "required": ["collection_id"]
+        }
 
-    @pre_load
-    def flatten(self, data):
-        return flatten(data, 'collection_id', 'collection')
+    def pre_load(self):
+        return flatten(self.data, 'collection_id', 'collection')
 
 
 class DocumentCreateSchema(Schema):
-    title = String(allow_none=True)
-    summary = String(allow_none=True)
-    countries = List(Country())
-    languages = List(Language())
-    keywords = List(String(validate=Length(min=0, max=5000)))
-    date = PartialDate(allow_none=True)
-    authored_at = PartialDate(allow_none=True)
-    modified_at = PartialDate(allow_none=True)
-    published_at = PartialDate(allow_none=True)
-    retrieved_at = PartialDate(allow_none=True)
-    file_name = String(allow_none=True)
-    author = String(allow_none=True)
-    generator = String(allow_none=True)
-    crawler = String(allow_none=True)
-    mime_type = String(allow_none=True)
-    source_url = String(allow_none=True)
-    parent_id = String(allow_none=True)
+    @property
+    def schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": ["string", "null"],
+                },
+                "summary": {
+                    "type": ["string", "null"],
+                },
+                "countries": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "country",
+                    }
+                },
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "language",
+                    }
+                },
+                "keywords": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 5000,  # TODO: seems excessive?
+                    }
+                },
+                "date": {
+                    "type": ["string", "null"],
+                    "format": "partial-date"
+                },
+                "authored_at": {
+                    "type": ["string", "null"],
+                    "format": "partial-date"
+                },
+                "modified_at": {
+                    "type": ["string", "null"],
+                    "format": "partial-date"
+                },
+                "published_at": {
+                    "type": ["string", "null"],
+                    "format": "partial-date"
+                },
+                "retrieved_at": {
+                    "type": ["string", "null"],
+                    "format": "partial-date"
+                },
+                "filename": {
+                    "type": ["string", "null"],
+                },
+                "author": {
+                    "type": ["string", "null"]
+                },
+                "generator": {
+                    "type": ["string", "null"]
+                },
+                "crawler": {
+                    "type": ["string", "null"]
+                },
+                "mime_type": {
+                    "type": ["string", "null"]
+                },
+                "source_url": {
+                    "type": ["string", "null"]
+                },
+                "parent_id": {
+                    "type": ["string", "null"]
+                }
+            },
+            "required": ["collection_id"]
+        }
 
-    @pre_load
-    def flatten(self, data):
-        return flatten(data, 'parent_id', 'parent')
+    def pre_load(self):
+        return flatten(self.data, 'parent_id', 'parent')

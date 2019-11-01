@@ -12,6 +12,7 @@ from lxml.etree import tostring
 from lxml.html import document_fromstring
 from lxml.html.clean import Cleaner
 from servicelayer.jobs import Job
+from jsonschema import ValidationError
 
 from aleph.authz import Authz
 from aleph.model import Collection, Entity
@@ -49,19 +50,6 @@ def get_session_id():
     return '%s:%s' % (role_id, session_id)
 
 
-def validate_data(data, schema, many=None):
-    """Validate the data inside a request against a schema."""
-    data, errors = schema().load(data, many=many)
-    if len(errors):
-        resp = jsonify({
-            'status': 'error',
-            'errors': errors,
-            'message': gettext('Error during data validation')
-        }, status=400)
-        raise BadRequest(response=resp)
-    return data
-
-
 def parse_request(schema, many=None):
     """Get request form data or body and validate it against a schema."""
     if request.is_json:
@@ -69,6 +57,32 @@ def parse_request(schema, many=None):
     else:
         data = request.form.to_dict(flat=True)
     return validate_data(data, schema, many=many)
+
+
+def _validate_data(data, schema):
+    schema = schema(data)
+    return schema.validate()
+
+
+def validate_data(data, schema, many=None):
+    """Validate the data inside a request against a schema."""
+    try:
+        if many:
+            data_ = []
+            for instance in data:
+                data_.append(_validate_data(instance, schema))
+            data = data_
+        else:
+            data = _validate_data(data, schema)
+    except ValidationError as err:
+        # TODO: switch to iter_errors
+        resp = jsonify({
+            'status': 'error',
+            'errors': [err.message],
+            'message': gettext('Error during data validation')
+        }, status=400)
+        raise BadRequest(response=resp)
+    return data
 
 
 def get_db_entity(entity_id, action=Authz.READ):

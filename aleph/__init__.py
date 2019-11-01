@@ -2,7 +2,6 @@ import logging
 import warnings
 from pkg_resources import get_distribution
 from sqlalchemy.exc import SAWarning
-from marshmallow.warnings import ChangedInMarshmallow3Warning
 
 __version__ = get_distribution('aleph').version
 
@@ -12,7 +11,6 @@ warnings.filterwarnings("ignore", category=YAMLLoadWarning)
 # shut up useless SA warning:
 warnings.filterwarnings('ignore', 'Unicode type received non-unicode bind param value.')  # noqa
 warnings.filterwarnings('ignore', category=SAWarning)
-warnings.filterwarnings('ignore', category=ChangedInMarshmallow3Warning)
 
 # loggers.
 logging.basicConfig(level=logging.DEBUG)
