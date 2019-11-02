@@ -1,7 +1,7 @@
 import logging
 from flask_babel import gettext
 from flask import Blueprint, redirect, request
-from flask_oauthlib.client import OAuthException
+from authlib.common.errors import AuthlibBaseError
 from werkzeug.exceptions import Unauthorized, BadRequest
 
 from aleph import signals, settings
@@ -73,21 +73,21 @@ def password_login():
 @blueprint.route('/api/2/sessions/oauth')
 def oauth_init():
     require(settings.OAUTH)
-    callback_url = url_for('.oauth_callback')
+    url = url_for('.oauth_callback')
     state = request.args.get('next', request.referrer)
-    return oauth.provider.authorize(callback=callback_url, state=state)
+    return oauth.provider.authorize_redirect(url, state=state)
 
 
 @blueprint.route('/api/2/sessions/callback')
 def oauth_callback():
     require(settings.OAUTH)
-    resp = oauth.provider.authorized_response()
-    if resp is None or isinstance(resp, OAuthException):
-        log.warning("Failed OAuth: %r", resp)
+    token = oauth.provider.authorize_access_token()
+    if token is None or isinstance(token, AuthlibBaseError):
+        log.warning("Failed OAuth: %r", token)
         raise Unauthorized(gettext("Authentication has failed."))
 
     response = signals.handle_oauth_session.send(provider=oauth.provider,
-                                                 oauth=resp)
+                                                 oauth=token)
     for (_, role) in response:
         if role is None:
             continue
