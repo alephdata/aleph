@@ -1,20 +1,17 @@
-import logging
-
 import spacy
-import fasttext
+import logging
 from banal import ensure_list
 from normality import collapse_spaces
 from fingerprints import clean_entity_name
 from followthemoney.types import registry
 
 from aleph.core import settings, kv
+from aleph.analysis.util import check_text_length
 from aleph.analysis.util import tag_key, place_key
 from aleph.analysis.util import TAG_PERSON, TAG_COMPANY
 from aleph.analysis.util import TAG_LOCATION, TAG_COUNTRY
 
 log = logging.getLogger(__name__)
-TEXT_MIN_LENGTH = 60
-TEXT_MAX_LENGTH = 900000
 NAME_MAX_LENGTH = 100
 NAME_MIN_LENGTH = 4
 # https://spacy.io/api/annotation#named-entities
@@ -46,17 +43,6 @@ def location_country(location):
         return []
 
 
-def get_language(text):
-    """Given a list of lines, return a list of (line, lang)"""
-    if not hasattr(settings, '_lang_detector'):
-        lid_model = fasttext.load_model(settings.LID_MODEL_PATH)
-        settings._lang_detector = lid_model
-    langs = settings._lang_detector.predict(text.replace('\n', ' '))
-    # fasttext labels are prefixed, with '__label__' by default
-    langs = [lang.replace('__label__', '') for lang in langs[0]]
-    return langs[0]
-
-
 def _load_model(lang):
     """Load the spaCy model for the specified language"""
     attr_name = '_nlp_%s' % lang
@@ -82,9 +68,8 @@ def get_models(entity):
 
 
 def extract_entities(entity, text):
-    if len(text) < TEXT_MIN_LENGTH or len(text) > TEXT_MAX_LENGTH:
+    if not check_text_length(text):
         return
-    entity.add('detectedLanguage', get_language(text))
     for model in get_models(entity):
         doc = model(text)
         for ent in doc.ents:

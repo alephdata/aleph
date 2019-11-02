@@ -16,13 +16,13 @@ from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.views import mount_app_blueprints
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
-from aleph.queues import get_active_collection_status
+from aleph.queues import get_active_collection_status, get_stage
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
-from aleph.index.collections import index_collection
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
-from aleph.logic.collections import refresh_collection
+from aleph.logic.collections import refresh_collection, index_collections
+from aleph.logic.processing import index_aggregate, process_collection
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import update_role, update_roles
 from aleph.logic.rdf import export_collection
@@ -54,10 +54,14 @@ def collections():
 
 
 @manager.command
-def worker():
+@manager.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
+def worker(sync=False):
     """Run the queue-based worker service."""
     worker = get_worker()
-    worker.run()
+    if sync:
+        worker.sync()
+    else:
+        worker.run()
 
 
 @manager.command
@@ -79,13 +83,41 @@ def crawldir(path, language=None, foreign_id=None):
     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
     crawl_directory(collection, path)
     log.info('Complete. Make sure a worker is running :)')
+    refresh_collection(collection.id)
 
 
 @manager.command
+@manager.option('-k', '--keep-metadata', is_flag=True, default=False)
 def delete(foreign_id, keep_metadata=False):
     """Delete all the contents for a given collecton."""
     collection = get_collection(foreign_id)
     delete_collection(collection, keep_metadata=keep_metadata)
+
+
+@manager.command
+@manager.option('--sync', is_flag=True, default=False)
+def reset(foreign_id, sync=False):
+    """Clear the search index and entity cache or a collection."""
+    collection = get_collection(foreign_id)
+    reset_collection(collection, sync=False)
+
+
+@manager.command
+@manager.option('--sync', is_flag=True, default=False)
+def reindex(foreign_id, sync=False):
+    """Clear the search index and entity cache or a collection."""
+    collection = get_collection(foreign_id)
+    stage = get_stage(collection, OP_PROCESS)
+    index_aggregate(stage, collection, sync=sync)
+
+
+@manager.command
+@manager.option('--sync', is_flag=True, default=False)
+def process(foreign_id, sync=False):
+    """Process documents and database entities and index them."""
+    collection = get_collection(foreign_id)
+    stage = get_stage(collection, OP_PROCESS)
+    process_collection(stage, collection, sync=sync)
 
 
 @manager.command
@@ -99,23 +131,10 @@ def flushdeleted():
 @manager.option('--index', is_flag=True, default=False)
 @manager.option('--process', is_flag=True, default=False)
 @manager.option('--reset', is_flag=True, default=False)
-@manager.option('--keep-metadata', is_flag=True, default=False)
 def update(foreign_id=None, index=False, process=False, reset=False):
     """Re-index all the collections and entities."""
     update_roles()
-    q = Collection.all(deleted=True)
-    if foreign_id is not None:
-        q = [get_collection(foreign_id)]
-    for collection in q:
-        if reset:
-            reset_collection(collection, sync=True)
-        refresh_collection(collection.id)
-        index_collection(collection)
-        if collection.deleted_at is not None:
-            continue
-        if index or process:
-            payload = {'ingest': process}
-            queue_task(collection, OP_PROCESS, payload=payload)
+    index_collections(refresh=True)
 
 
 @manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa
@@ -157,6 +176,7 @@ def cancel(foreign_id):
     """Cancel all queued tasks for the dataset."""
     collection = get_collection(foreign_id)
     cancel_queue(collection)
+    refresh_collection(collection.id)
 
 
 @manager.command

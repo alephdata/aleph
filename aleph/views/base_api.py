@@ -60,7 +60,7 @@ def metadata():
         'model': model,
         'auth': auth
     }
-    cache.set_complex(key, data, expire=120)
+    cache.set_complex(key, data, expires=120)
     return jsonify(data)
 
 

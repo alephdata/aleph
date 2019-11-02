@@ -11,9 +11,9 @@ log = logging.getLogger(__name__)
 class Cache(object):
     EXPIRE = settings.REDIS_EXPIRE
 
-    def __init__(self, kv, expire=None, prefix=None):
+    def __init__(self, kv, expires=None, prefix=None):
         self.kv = kv
-        self.expire = expire
+        self.expires = expires
         self.prefix = prefix
 
     def key(self, *parts):
@@ -22,20 +22,20 @@ class Cache(object):
     def object_key(self, clazz, key, *parts):
         return self.key(clazz.__name__, key, *parts)
 
-    def set(self, key, value, expire=None):
-        expire = expire or self.expire
-        self.kv.set(key, value, ex=expire)
+    def set(self, key, value, expires=None):
+        expires = expires or self.expires
+        self.kv.set(key, value, ex=expires)
 
-    def set_complex(self, key, value, expire=None):
+    def set_complex(self, key, value, expires=None):
         value = json.dumps(value, cls=JSONEncoder)
-        return self.set(key, value, expire=expire)
+        return self.set(key, value, expires=expires)
 
-    def set_list(self, key, values, expire=None):
+    def set_list(self, key, values, expires=None):
         self.kv.delete(key)
         if len(values):
             self.kv.rpush(key, *values)
-            if expire is not None:
-                self.kv.expire(key, expire)
+            if expires is not None:
+                self.kv.expire(key, expires)
 
     def get(self, key):
         return self.kv.get(key)
