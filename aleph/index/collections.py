@@ -56,7 +56,7 @@ def get_collection(collection_id):
     languages = ensure_list(collection.languages)
     languages = languages or stats['languages'].keys()
     data['languages'] = registry.language.normalize_set(languages)
-    cache.set_complex(key, data, expire=cache.EXPIRE)
+    cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
 

@@ -30,7 +30,7 @@ def _source_spec(includes, excludes):
 def _cache_entity(entity):
     # Cache entities only briefly to avoid filling up redis
     key = cache.object_key(Entity, entity.get('id'))
-    cache.set_complex(key, entity, expire=60 * 60 * 2)
+    cache.set_complex(key, entity, expires=60 * 60 * 2)
 
 
 def _entities_query(filters, authz, collection_id, schemata):

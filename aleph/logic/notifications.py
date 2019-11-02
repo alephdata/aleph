@@ -61,7 +61,7 @@ def get_role_channels(role):
             channels.append(channel_tag(role_id, Role))
         for coll_id in authz.collections(authz.READ):
             channels.append(channel_tag(coll_id, Collection))
-    cache.set_list(key, channels, expire=cache.EXPIRE)
+    cache.set_list(key, channels, expires=cache.EXPIRE)
     return channels
 
 
