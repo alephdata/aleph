@@ -57,11 +57,9 @@ def _fetch_entities(stage, collection, entity_id=None, batch=100):
         entity_id = ensure_list(entity_id)
         # WEIRD: Instead of indexing a single entity, this will try
         # pull a whole batch of them off the queue and do it at once.
-        done = 0
         for task in stage.get_tasks(limit=batch):
             entity_id.append(task.payload.get('entity_id'))
-            done += 1
-        stage.mark_done(done)
+        stage.mark_done(len(entity_id) - 1)
 
     yield from aggregator.iterate(entity_id=entity_id)
     aggregator.close()
