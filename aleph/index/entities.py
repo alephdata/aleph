@@ -96,7 +96,6 @@ def entities_by_ids(ids, schemata=None, cached=False,
         return
     index = entities_read_index(schema=schemata)
     query = {'ids': {'values': ids}}
-    # query = {'bool': {'filter': query}}
     query = {
         'query': query,
         '_source': _source_spec(includes, excludes),

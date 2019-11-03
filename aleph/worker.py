@@ -52,7 +52,7 @@ class AlephWorker(Worker):
         if stage.stage == OP_BULKLOAD:
             bulk_load(stage, collection, payload)
         if stage.stage == OP_PROCESS:
-            if payload.get('reset'):
+            if payload.pop('reset', False):
                 reset_collection(collection, sync=True)
             process_collection(stage, collection, sync=sync, **payload)
         if stage.stage == OP_XREF:

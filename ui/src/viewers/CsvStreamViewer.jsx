@@ -93,15 +93,20 @@ class CSVStreamViewer extends React.Component {
 
   render() {
     const { document } = this.props;
+    const { rows } = this.state;
     if (document.id === undefined) {
       return null;
     }
+    const numRows = parseInt(document.getFirst('rowCount'), 10);
     const columnsJson = document.getFirst('columns');
-    const columns = columnsJson ? JSON.parse(columnsJson) : [];
+    const columnsFtm = columnsJson ? JSON.parse(columnsJson) : [];
+    // HACK: Use the first row of the data as headers if nothing is in the
+    // FtM metadata.
+    const columns = columnsFtm.length || (rows.length > 0 ? rows[0] : []);
     return (
       <div className="TableViewer">
         <Table
-          numRows={document.getFirst('rowCount')}
+          numRows={numRows}
           enableGhostCells
           enableRowHeader
           onVisibleCellsChange={this.onVisibleCellsChange}

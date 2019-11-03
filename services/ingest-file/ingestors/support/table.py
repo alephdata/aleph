@@ -25,10 +25,12 @@ class TableSupport(TempFileSupport):
                 csv_writer.writerow(values)
                 self.manager.emit_text_fragment(table, values, row_count)
                 row_count += 1
+                if row_count > 0 and row_count % 1000 == 0:
+                    log.info("Table emit [%s]: %s...", table, row_count)
         if row_count > 0:
             csv_hash = self.manager.store(csv_path, mime_type=CSV)
             table.set('csvHash', csv_hash)
-        table.set('rowCount', row_count + 1)
+        table.set('rowCount', row_count)
         table.set('columns', registry.json.pack(headers))
 
     def wrap_row_tuples(self, rows):
