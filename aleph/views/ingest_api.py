@@ -99,7 +99,7 @@ def ingest_upload(collection_id):
             index_proxy(collection, proxy, sync=sync)
         ingest_entity(collection, proxy, job_id=job_id, sync=sync)
         document_id = collection.ns.sign(document.id)
-        _notify(collection, document_id)    
+        _notify(collection, document_id)
     finally:
         shutil.rmtree(upload_dir)
 
