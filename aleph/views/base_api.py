@@ -172,9 +172,12 @@ def handle_jwt_expired(err):
 
 @blueprint.app_errorhandler(TransportError)
 def handle_es_error(err):
-    log.error("ES [%s]: %r", err.error, err.info)
+    message = err.error
+    error = err.info.get('error', {})
+    for root_cause in error.get('root_cause', []):
+        message = root_cause.get('reason', message)
     return jsonify({
         'status': 'error',
-        'message': gettext('There was an error during search'),
-        'context': err.error
-    }, status=500)
+        'message': message,
+        'context': err.info
+    }, status=err.status_code)
