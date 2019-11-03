@@ -1,5 +1,4 @@
 Flask==1.1.1
-requests-oauthlib==1.1.0
 Flask-SQLAlchemy==2.4.1
 Flask-Script==2.0.6
 Flask-Testing==0.7.1

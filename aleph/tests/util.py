@@ -56,7 +56,6 @@ class TestCase(FlaskTestCase):
         settings.TESTING = True
         settings.DEBUG = True
         settings.CACHE = True
-        settings.EAGER = True
         settings.OAUTH = False
         settings.SECRET_KEY = 'batman'
         settings.APP_UI_URL = UI_URL
