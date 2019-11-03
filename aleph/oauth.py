@@ -19,13 +19,11 @@ def configure_oauth(app, cache):
             name=settings.OAUTH_NAME,
             client_id=settings.OAUTH_KEY,
             client_secret=settings.OAUTH_SECRET,
+            client_kwargs={'scope': settings.OAUTH_SCOPE},
             request_token_url=settings.OAUTH_REQUEST_TOKEN_URL,
-            request_token_params={
-                'scope': settings.OAUTH_SCOPE
-            },
-            api_base_url=settings.OAUTH_BASE_URL,
             access_token_method=settings.OAUTH_TOKEN_METHOD,
             access_token_url=settings.OAUTH_TOKEN_URL,
+            api_base_url=settings.OAUTH_BASE_URL,
             authorize_url=settings.OAUTH_AUTHORIZE_URL
         )
     oauth.init_app(app, cache=cache)
