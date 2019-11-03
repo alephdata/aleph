@@ -35,7 +35,7 @@ web: services
 	$(COMPOSE) up api ui
 
 worker: services
-	$(COMPOSE) run --rm -e ALEPH_EAGER=false app aleph worker
+	$(COMPOSE) run --rm app aleph worker
 
 tail:
 	$(COMPOSE) logs -f

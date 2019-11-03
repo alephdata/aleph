@@ -31,7 +31,7 @@ def get_stage(collection, stage, job_id=None):
 def queue_task(collection, stage, job_id=None, payload=None, context=None):
     stage = get_stage(collection, stage, job_id=job_id)
     stage.queue(payload or {}, context or {})
-    if settings.EAGER:
+    if settings.TESTING:
         from aleph.worker import get_worker
         worker = get_worker()
         worker.sync()
