@@ -20,11 +20,11 @@ const messages = defineMessages({
   },
   entityAssignNoResults: {
     id: 'mapping.entityAssign.noResults',
-    defaultMessage: 'No matching entities available',
+    defaultMessage: 'No matching objects available',
   },
   entityAssignPlaceholder: {
     id: 'mapping.entityAssign.placeholder',
-    defaultMessage: 'Select an entity',
+    defaultMessage: 'Select an object',
   },
   entityAssignHelpText: {
     id: 'mapping.entityAssign.helpText',

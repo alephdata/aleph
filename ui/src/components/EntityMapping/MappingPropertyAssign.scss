@@ -24,6 +24,11 @@
     }
   }
 
+  .bp3-submenu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
   &__headerSelect {
     top: 50%;
     left: 50%;

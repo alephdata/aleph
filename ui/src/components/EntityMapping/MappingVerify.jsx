@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, InputGroup, MenuItem } from '@blueprintjs/core';
+import { Button, Card, HTMLTable, InputGroup, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import {
   Schema,
@@ -10,9 +10,17 @@ import {
 import './MappingVerify.scss';
 
 const messages = defineMessages({
-  placeholder: {
+  literal_placeholder: {
     id: 'mapping.propAssign.literalPlaceholder',
+    defaultMessage: 'Add fixed value text',
+  },
+  literal_button_text: {
+    id: 'mapping.propAssign.literalButtonText',
     defaultMessage: 'Add a fixed value',
+  },
+  remove: {
+    id: 'mapping.propRemove',
+    defaultMessage: 'Remove this property from mapping',
   },
 });
 
@@ -44,7 +52,7 @@ class MappingVerifyItem extends Component {
         popoverProps={{ minimal: true }}
       >
         <Button
-          text={intl.formatMessage(messages.placeholder)}
+          text={intl.formatMessage(messages.literal_button_text)}
           icon="add"
         />
       </Select>
@@ -57,7 +65,7 @@ class MappingVerifyItem extends Component {
     return (
       <InputGroup
         id="text-input"
-        placeholder={intl.formatMessage(messages.placeholder)}
+        placeholder={intl.formatMessage(messages.literal_placeholder)}
         onChange={e => onPropertyAdd(mapping.id, propertyName, { literal: e.target.value })}
         value={value}
         small
@@ -72,17 +80,17 @@ class MappingVerifyItem extends Component {
       return null;
     }
     if (propValue.column !== undefined) {
-      return <span className="MappingVerify__listItem__value bp3-monospace-text">{propValue.column}</span>;
+      return <td className="MappingVerify__listItem__value bp3-monospace-text">{propValue.column}</td>;
     }
     if (propValue.literal !== undefined) {
-      return <span className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</span>;
+      return <td className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</td>;
     }
     const referredEntity = fullMappingsList.get(propValue);
     if (referredEntity) {
       return (
-        <span className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
+        <td className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
           <Schema.Smart.Label schema={referredEntity.schema} icon />
-        </span>
+        </td>
       );
     }
 
@@ -90,7 +98,7 @@ class MappingVerifyItem extends Component {
   }
 
   render() {
-    const { mapping, onPropertyRemove } = this.props;
+    const { intl, mapping, onPropertyRemove } = this.props;
     const { id, schema, color, keys, properties } = mapping;
 
     return (
@@ -103,28 +111,30 @@ class MappingVerifyItem extends Component {
             <FormattedMessage id="mapping.keys" defaultMessage="Keys" />
             :
           </span>
-          <span className="MappingVerify__section__value bp3-monospace-text">{keys.join(', ')}</span>
+          <p className="MappingVerify__section__value bp3-monospace-text">{keys.join(', ')}</p>
         </div>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">
             <FormattedMessage id="mapping.props" defaultMessage="Properties" />
             :
           </span>
-          <ul className="MappingVerify__list">
-            <>
+          <HTMLTable className="MappingVerify__list">
+            <tbody>
               {Array.from(Object.entries(properties)).map(([propName, propValue]) => (
-
-                <li className="MappingVerify__listItem" key={propName}>
-                  <Button minimal icon="cross" onClick={() => onPropertyRemove(id, propName)} />
-                  <span className="MappingVerify__listItem__label">
+                <tr className="MappingVerify__listItem" key={propName}>
+                  <td className="MappingVerify__listItem__label">
                     {schema.getProperty(propName).label}
-                    :
-                  </span>
+                  </td>
                   {this.renderPropertyValue(propName, propValue)}
-                </li>
+                  <td className="MappingVerify__listItem__close">
+                    <Tooltip content={intl.formatMessage(messages.remove)}>
+                      <Button minimal icon="cross" onClick={() => onPropertyRemove(id, propName)} />
+                    </Tooltip>
+                  </td>
+                </tr>
               ))}
-            </>
-          </ul>
+            </tbody>
+          </HTMLTable>
 
         </div>
         <div className="MappingVerify__section">

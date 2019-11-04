@@ -1,41 +1,38 @@
 @import "src/app/variables.scss";
-$internal-vertical-spacing: 3px;
-$internal-horizontal-spacing: 7px;
 
 .MappingVerify {
   &__item {
     border: 1px solid;
     box-shadow: none !important;
-    margin: 10px 0;
+    margin: $aleph-grid-size 0;
   }
+
   &__section {
-    margin-top: 20px;
+    margin-top: $aleph-grid-size;
     &__title {
       font-weight: 500;
     }
 
     &__value {
-      margin-left: $internal-horizontal-spacing;
+      margin-top: 7px;
     }
   }
 
-  &__list {
-    margin: $internal-vertical-spacing 0;
-    padding-left: 0;
-    list-style-type: none;
-    list-style-position: inside;
-  }
+  &__list.bp3-html-table {
+    width: 100%;
+    margin-top: $aleph-grid-size;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
 
-  &__listItem {
-    margin: $internal-vertical-spacing 0;
-    &__label {
-      margin-left: $internal-horizontal-spacing;
-    }
-    &__value {
-      margin-left: $internal-horizontal-spacing;
+    td {
+      box-shadow: none !important;
+      vertical-align: middle !important;
+      padding: 3px 10px !important;
+      border: 1px solid $aleph-border-color;
 
-      .bp3-input-group {
-        display: inline-block;
+      &.MappingVerify__listItem__close {
+        width: 10px !important;
+        padding: 0 !important;
       }
     }
   }

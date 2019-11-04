@@ -39,10 +39,10 @@ export class MappingSchemaSelect extends Component {
           filterable={false}
           itemRenderer={itemRenderer}
           onItemSelect={item => onSelect(item)}
-          popoverProps={{ minimal: true }}
+          popoverProps={{ minimal: true, preventOverflow: true }}
         >
           <Button
-            icon="add"
+            icon="plus"
             text={intl.formatMessage(messages[type])}
             rightIcon="double-caret-vertical"
           />

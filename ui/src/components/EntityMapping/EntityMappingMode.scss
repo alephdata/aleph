@@ -1,9 +1,9 @@
 @import "src/app/variables.scss";
-$vertical-spacing: 60px;
+$vertical-spacing: 50px;
 
 .EntityMappingMode {
   &__title-container {
-    margin: 40px 0 30px;
+    margin: $aleph-grid-size*4 0 $aleph-grid-size*3;
   }
 
   &__section {
@@ -18,6 +18,6 @@ $vertical-spacing: 60px;
   }
 
   &__preview {
-    margin-top: 20px;
+    margin-top: $aleph-grid-size*2;
   }
 }
