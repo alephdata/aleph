@@ -10,7 +10,7 @@ import { deleteCollection } from 'src/actions';
 const messages = defineMessages({
   button_confirm: {
     id: 'mapping.create.confirm',
-    defaultMessage: 'Create mapping & import',
+    defaultMessage: 'Generate',
   },
   button_cancel: {
     id: 'mapping.create.cancel',
@@ -34,7 +34,7 @@ class MappingCreateDialog extends Component {
       >
         <FormattedMessage
           id="mapping.create.question"
-          defaultMessage="Are you sure you are ready to import entities using this mapping?"
+          defaultMessage="Are you sure you are ready to generate entities using this mapping?"
         />
       </Alert>
     );

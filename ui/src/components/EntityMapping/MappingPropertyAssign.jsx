@@ -68,7 +68,7 @@ export class MappingPropertyAssign extends Component {
   itemListRenderer({ items, itemsParentRef, renderItem }) {
     const { intl } = this.props;
     return (
-      <Menu ulRef={itemsParentRef}>
+      <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
         {items.map(({ schema }) => {
           const { featuredProps, otherProps } = this.getAssignableProps(schema);
 

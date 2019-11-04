@@ -137,9 +137,7 @@ class MappingVerifyItem extends Component {
           </HTMLTable>
 
         </div>
-        <div className="MappingVerify__section">
-          {this.renderLiteralSelect()}
-        </div>
+        {this.renderLiteralSelect()}
       </Card>
     );
   }

@@ -14,15 +14,15 @@ import { selectSession } from 'src/selectors';
 const messages = defineMessages({
   create: {
     id: 'mapping.actions.create.toast',
-    defaultMessage: 'Creating mapping...',
+    defaultMessage: 'Generating entities...',
   },
   save: {
     id: 'mapping.actions.save.toast',
-    defaultMessage: 'Saving mapping...',
+    defaultMessage: 'Re-generating entities...',
   },
   delete: {
     id: 'mapping.actions.delete.toast',
-    defaultMessage: 'Deleting mapping...',
+    defaultMessage: 'Deleting mapping and generated entities...',
   },
   flush: {
     id: 'mapping.actions.flush.toast',
@@ -129,7 +129,7 @@ class MappingManageMenu extends Component {
           )}
           {!mappingId && (
             <Button icon="add" intent={Intent.PRIMARY} onClick={this.toggleCreate}>
-              <FormattedMessage id="mapping.actions.create" defaultMessage="Create mapping" />
+              <FormattedMessage id="mapping.actions.create" defaultMessage="Generate entities" />
             </Button>
           )}
 

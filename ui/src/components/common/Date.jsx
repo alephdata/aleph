@@ -30,7 +30,7 @@ class Date extends PureComponent {
         />
         {showTime && (
           <>
-            <span> - </span>
+            <span> </span>
             <FormattedTime value={dateObject} />
           </>
         )}

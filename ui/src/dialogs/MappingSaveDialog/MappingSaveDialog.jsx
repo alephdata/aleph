@@ -10,7 +10,7 @@ import { deleteCollection } from 'src/actions';
 const messages = defineMessages({
   button_confirm: {
     id: 'mapping.save.confirm',
-    defaultMessage: 'Update mapping & re-import',
+    defaultMessage: 'Update mapping & re-generate',
   },
   button_cancel: {
     id: 'mapping.save.cancel',
@@ -34,7 +34,7 @@ class MappingSaveDialog extends Component {
       >
         <FormattedMessage
           id="mapping.save.question"
-          defaultMessage="Updating this mapping will delete any previously extracted entities. Are you sure you would like to continue?"
+          defaultMessage="Updating this mapping will delete any previously generated entities and re-generate them. Are you sure you would like to continue?"
         />
       </Alert>
     );

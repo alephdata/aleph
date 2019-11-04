@@ -34,7 +34,7 @@ class MappingFlushDialog extends Component {
       >
         <FormattedMessage
           id="mapping.flush.question"
-          defaultMessage="Are you sure you want to remove entities imported using this mapping?"
+          defaultMessage="Are you sure you want to remove entities generated using this mapping?"
         />
       </Alert>
     );
