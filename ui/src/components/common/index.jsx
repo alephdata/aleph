@@ -21,7 +21,6 @@ import SortableTH from './SortableTH';
 import Count from './Count';
 import Tag from './Tag';
 import URL from './URL';
-import { Icon } from './Icon';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
 import QueryText from './QueryText';
@@ -55,5 +54,4 @@ export {
   SearchListings,
   QueryText,
   ResultCount,
-  Icon,
 };

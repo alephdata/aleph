@@ -1,4 +1,3 @@
-import codecs
 import logging
 import chardet
 from normality import stringify, guess_encoding
@@ -46,10 +45,9 @@ class EncodingSupport(object):
     def read_file_decoded(self, entity, file_path):
         with open(file_path, 'rb') as fh:
             body = fh.read()
-            if not entity.has('encoding'):
-                result = chardet.detect(body)
-                encoding = normalize_result(result, self.DEFAULT_ENCODING)
-                entity.set('encoding', encoding)
+
+        if not entity.has('encoding'):
+            entity.set('encoding', guess_encoding(body))
 
         for encoding in entity.get('encoding'):
             try:

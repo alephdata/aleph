@@ -76,10 +76,11 @@ class CollectionXrefSelect extends Component {
     queryEndpoint({ query, next })
       .then((response) => {
         if (next) {
-          const updatedQueryResult = Object.assign({}, queryResult, {
+          const updatedQueryResult = {
+            ...queryResult,
             results: queryResult.results.concat(response.result.results),
             next: response.result.next,
-          });
+          };
           this.setState({ queryResult: updatedQueryResult, loading: false });
         } else {
           this.setState({ queryResult: response.result, loading: false });

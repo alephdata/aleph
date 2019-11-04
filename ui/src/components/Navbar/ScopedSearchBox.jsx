@@ -99,7 +99,7 @@ class SearchBox extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: selectSession(state),
 });
 

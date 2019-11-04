@@ -14,13 +14,13 @@ class HtmlViewer extends Component {
       return <SectionLoading />;
     }
     return (
-      <React.Fragment>
+      <>
         <div className="outer">
           <div className="inner HtmlViewer">
             <span dangerouslySetInnerHTML={{ __html: content.html }} />
           </div>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

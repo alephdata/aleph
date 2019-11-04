@@ -35,7 +35,7 @@ web: services
 	$(COMPOSE) up api ui
 
 worker: services
-	$(COMPOSE) run --rm -e ALEPH_EAGER=false app aleph worker
+	$(COMPOSE) run --rm app aleph worker
 
 tail:
 	$(COMPOSE) logs -f
@@ -65,7 +65,6 @@ docker-pull:
 
 docker-push:
 	docker push alephdata/aleph-elasticsearch:$(ALEPH_TAG)
-	docker push alephdata/convert-document:$(ALEPH_TAG)
 	docker push alephdata/ingest-file:$(ALEPH_TAG)
 	docker push alephdata/aleph:$(ALEPH_TAG)
 	docker push alephdata/aleph-ui:$(ALEPH_TAG)

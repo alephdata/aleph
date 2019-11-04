@@ -9,7 +9,7 @@ from aleph.core import db, es
 from aleph.model import Match, Collection
 from aleph.logic import resolver
 from aleph.queues import queue_task, OP_XREF_ITEM
-from aleph.index.entities import get_entity, iter_entities, entities_by_ids
+from aleph.index.entities import iter_entities, entities_by_ids
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import unpack_result, none_query
 from aleph.index.util import BULK_PAGE
@@ -45,30 +45,38 @@ def xref_query_item(proxy, collection_ids=None):
 
 
 def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
-    entity = get_entity(entity_id)
-    proxy = model.get_proxy(entity)
-    dq = db.session.query(Match)
-    dq = dq.filter(Match.entity_id == proxy.id)
-    dq.delete()
-    matches = xref_query_item(proxy, collection_ids=against_collection_ids)
-    for (score, other_id, other) in matches:
-        log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
-        obj = Match()
-        obj.entity_id = proxy.id
-        obj.collection_id = collection.id
-        obj.match_id = other.id
-        obj.match_collection_id = other_id
-        obj.score = score
-        db.session.add(obj)
+    "Cross-reference an entity against others to generate potential matches."
+    entity_ids = [entity_id]
+    # This is running as a background job. In order to avoid running each
+    # entity one by one, we do it 101 at a time. This avoids sending redudant
+    # queries to the database and elasticsearch, making cross-ref much faster.
+    for task in stage.get_tasks(limit=100):
+        entity_ids.append(task.payload.get('entity_id'))
+    stage.mark_done(len(entity_ids) - 1)
+    # log.debug("Have %d entity IDs for xref", len(entity_ids))
+    for data in entities_by_ids(entity_ids, includes=['schema', 'properties']):
+        proxy = model.get_proxy(data)
+        # log.info("XRef: %r", proxy)
+        dq = db.session.query(Match)
+        dq = dq.filter(Match.entity_id == proxy.id)
+        dq.delete()
+        matches = xref_query_item(proxy, collection_ids=against_collection_ids)
+        for (score, other_id, other) in matches:
+            log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
+            obj = Match()
+            obj.entity_id = proxy.id
+            obj.collection_id = collection.id
+            obj.match_id = other.id
+            obj.match_collection_id = other_id
+            obj.score = score
+            db.session.add(obj)
     db.session.commit()
 
 
 def xref_collection(stage, collection, against_collection_ids=None):
     """Cross-reference all the entities and documents in a collection."""
     matchable = [s.name for s in model if s.matchable]
-    entities = iter_entities(collection_id=collection.id,
-                             schemata=matchable,
-                             cached=True)
+    entities = iter_entities(collection_id=collection.id, schemata=matchable)
     for entity in entities:
         payload = {
             'entity_id': entity.get('id'),

@@ -13,8 +13,6 @@ from flask_babel import lazy_gettext
 DEBUG = env.to_bool('ALEPH_DEBUG', False)
 # Propose HTTP caching to the user agents.
 CACHE = env.to_bool('ALEPH_CACHE', not DEBUG)
-# Disable delayed processing via queue
-EAGER = env.to_bool('ALEPH_EAGER', DEBUG)
 # Puts the system into read-only mode and displays a warning.
 MAINTENANCE = env.to_bool('ALEPH_MAINTENANCE', False)
 # Unit test context.
@@ -102,6 +100,10 @@ LID_MODEL_PATH = env.get('ALEPH_LID_MODEL_PATH', '/aleph/contrib/lid.176.ftz')
 
 # Disable entity extraction
 TAG_ENTITIES = env.to_bool('ALEPH_TAG_ENTITIES', True)
+
+# List available NER models
+NER_MODELS = set(env.to_list('ALEPH_NER_MODELS', ['eng']))
+NER_DEFAULT_MODEL = 'xx'
 
 # Result high-lighting
 RESULT_HIGHLIGHT = env.to_bool('ALEPH_RESULT_HIGHLIGHT', True)

@@ -11,7 +11,7 @@ class CollectionBreadcrumb extends PureComponent {
     const { collection, active, showCategory } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         {showCategory && (
           <li key={collection.category}>
             <Category.Link collection={collection} className="bp3-breadcrumb" icon />
@@ -20,7 +20,7 @@ class CollectionBreadcrumb extends PureComponent {
         <li key={collection.id}>
           <Collection.Link collection={collection} className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
         </li>
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -33,7 +33,7 @@ class EntityBreadcrumb extends PureComponent {
     const hasAncestors = ancestors.length > 1;
 
     return (
-      <React.Fragment>
+      <>
         { hasAncestors && (
           <li key="ancestors">
             <span className="bp3-breadcrumb">
@@ -49,7 +49,7 @@ class EntityBreadcrumb extends PureComponent {
         <li key={entity.id}>
           <Entity.Link entity={entity} className="bp3-breadcrumb bp3-breadcrumb-current" icon truncate={30} />
         </li>
-      </React.Fragment>
+      </>
     );
   }
 }

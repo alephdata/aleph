@@ -2,9 +2,8 @@ from aleph.tests.util import TestCase
 from followthemoney import model
 from followthemoney.types import registry
 
-from aleph.analysis import tag_entity
-from aleph.analysis.patterns import EMAIL_REGEX, IPV4_REGEX
-from aleph.analysis.patterns import IPV6_REGEX, PHONE_REGEX
+from aleph.analysis import analyze_entity
+from aleph.analysis.patterns import EMAIL_REGEX, PHONE_REGEX
 from aleph.analysis.patterns import IBAN_REGEX
 
 
@@ -15,7 +14,7 @@ class TestAnalysis(TestCase):
         text = text * 5
         entity = model.make_entity('PlainText')
         entity.add('bodyText', text)
-        tag_entity(entity)
+        analyze_entity(entity)
         names = entity.get_type_values(registry.name)
         assert 'Angela Merkel' in names, names
 
@@ -23,16 +22,16 @@ class TestAnalysis(TestCase):
         text = "C'est le caniche d'Emmanuel Macron. " * 2
         entity = model.make_entity('PlainText')
         entity.add('bodyText', text)
-        tag_entity(entity)
+        analyze_entity(entity)
         names = entity.get_type_values(registry.name)
-        assert "d'Emmanuel Macron" in names, names
+        assert "Emmanuel Macron" in names, names
         assert entity.get('detectedLanguage') == ['fra'], entity.get('detectedLanguage')  # noqa
 
     def test_pattern_extract(self):
         text = "Mr. Flubby Flubber called the number tel:+919988111222 twice"
         entity = model.make_entity('PlainText')
         entity.add('bodyText', text)
-        tag_entity(entity)
+        analyze_entity(entity)
         phones = entity.get_type_values(registry.phone)
         assert '+919988111222' in phones
         countries = entity.get_type_values(registry.country)
@@ -57,25 +56,6 @@ class TestPatterns(TestCase):
         ]
         for number in PHONE_NUMBERS:
             matches = PHONE_REGEX.findall(number)
-            assert len(matches) == 1
-
-    def test_ipv4_address(self):
-        IPV4_ADDRESSES = [
-            "118.197.24.21",
-            "0.0.0.0",
-            "172.0.0.1"
-        ]
-        for ip in IPV4_ADDRESSES:
-            matches = IPV4_REGEX.findall(ip)
-            assert len(matches) == 1, matches
-
-    def test_ipv6_address(self):
-        IPV6_ADDRESSES = [
-            "b239:181e:8f52:e4ee:ce42:c45c:6a03:4f14",
-            "2001:db8:0:1234:0:567:8:1"
-        ]
-        for ip in IPV6_ADDRESSES:
-            matches = IPV6_REGEX.findall(ip)
             assert len(matches) == 1
 
     def test_iban(self):

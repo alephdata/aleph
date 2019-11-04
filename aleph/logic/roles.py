@@ -21,7 +21,7 @@ def get_role(role_id):
         if role is None:
             return
         data = role.to_dict()
-        cache.set_complex(key, data, expire=cache.EXPIRE)
+        cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
 
@@ -51,6 +51,7 @@ def create_system_roles():
 def update_role(role):
     """Synchronize denormalised role configuration."""
     refresh_role(role)
+    get_role(role.id)
 
 
 def refresh_role(role, sync=False):

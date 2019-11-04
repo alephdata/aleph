@@ -1,5 +1,4 @@
 import React, { Component, PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -19,7 +18,7 @@ class CollectionLabel extends PureComponent {
     const {
       collection, icon = true, label = true, truncate,
     } = this.props;
-    if (collection === undefined || collection.id === undefined) {
+    if (!collection || !collection.id) {
       return null;
     }
 
@@ -48,26 +47,18 @@ class CollectionLabel extends PureComponent {
 
 class CollectionLink extends PureComponent {
   render() {
-    const { collection, icon = true, className } = this.props;
-    if (collection === undefined || collection.links === undefined) {
-      return <Collection.Label collection={collection} icon={icon} />;
+    const { collection, className } = this.props;
+    const link = getCollectionLink(collection);
+    const content = <Collection.Label {...this.props} />;
+    if (!link) {
+      return content;
     }
-    return (
-      <Link to={getCollectionLink(collection)} className={c('CollectionLink', className)}>
-        <Collection.Label collection={collection} icon={icon} />
-      </Link>
-    );
+    return <Link to={link} className={c('CollectionLink', className)}>{content}</Link>;
   }
 }
 
 
 class CollectionLoad extends Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    children: PropTypes.func.isRequired,
-    renderWhenLoading: PropTypes.node.isRequired,
-  }
-
   componentDidMount() {
     this.fetchIfNeeded();
   }

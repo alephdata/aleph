@@ -3,9 +3,10 @@
 $preview-padding: $aleph-grid-size*1.5;
 
 .EntityPreview {
-  &__overlay-container .bp3-overlay-container {
+  &__overlay-container .bp3-overlay.bp3-overlay-container {
     right: 0;
     left: auto;
+    overflow: visible;
   }
 
   & .InfoPane {

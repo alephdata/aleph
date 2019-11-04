@@ -2,17 +2,16 @@ import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { selectModel } from 'src/selectors';
-import { Icon } from './Icon';
+import { Icon } from '@blueprintjs/core';
 
 class SchemaIcon extends PureComponent {
   render() {
     const { schema, ...rest } = this.props;
     return (
       <Icon
-        className="entity-icon"
         iconSize="16px"
         {...rest}
-        name={schema.name.toLowerCase()}
+        icon={schema.name.toLowerCase()}
       />
     );
   }
@@ -25,7 +24,7 @@ class SchemaLabel extends Component {
     if (icon) {
       return (
         <span>
-          <Schema.Icon schema={schema} />
+          <Schema.Icon schema={schema} className="left-icon" />
           {label}
         </span>
       );
@@ -37,13 +36,13 @@ class SchemaLabel extends Component {
 function SchemaLink(props) {
   const { schema, plural, url, children } = props;
   return (
-    <React.Fragment>
+    <>
       <Link to={url}>
-        <Schema.Icon schema={schema} />
+        <Schema.Icon schema={schema} className="left-icon" />
         <Schema.Label schema={schema} icon={false} plural={plural} />
         {children}
       </Link>
-    </React.Fragment>
+    </>
   );
 }
 

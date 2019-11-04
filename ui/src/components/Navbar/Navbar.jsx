@@ -36,7 +36,8 @@ export class Navbar extends React.Component {
         search: queryString.stringify({ q: queryText }),
       });
     } else {
-      const newQuery = query.set('q', queryText);
+      const newQuery = query.set('q', queryText)
+        .clearFilter('collection_id');
       history.push({ search: newQuery.toLocation() });
     }
   }
@@ -101,7 +102,7 @@ export class Navbar extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   session: selectSession(state),
   role: state.session.role,
 });

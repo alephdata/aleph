@@ -9,8 +9,8 @@ import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
 import Notification from 'src/components/Notification/Notification';
 
-
 import './NotificationList.scss';
+
 
 const messages = defineMessages({
   no_notifications: {
@@ -36,9 +36,6 @@ class NotificationList extends Component {
     }
   }
 
-  // componentWillUnmount() {
-  // }
-
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isLoading && result.next && !result.isError) {
@@ -57,15 +54,13 @@ class NotificationList extends Component {
     const { result, intl } = this.props;
 
     return (
-      <React.Fragment>
-        { result.total === 0
-          && (
+      <>
+        { result.total === 0 && (
           <ErrorSection
             icon="notifications"
             title={intl.formatMessage(messages.no_notifications)}
           />
-          )
-        }
+        )}
         { result.total !== 0 && (
           <ul className="NotificationList">
             {result.results.map(notif => <Notification key={notif.id} notification={notif} />)}
@@ -79,7 +74,7 @@ class NotificationList extends Component {
         { result.isLoading && (
           <SectionLoading />
         )}
-      </React.Fragment>
+      </>
     );
   }
 }

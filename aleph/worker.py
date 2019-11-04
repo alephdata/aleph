@@ -9,6 +9,7 @@ from aleph.queues import OP_XREF, OP_XREF_ITEM
 from aleph.queues import OPERATIONS
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import index_collections, refresh_collection
+from aleph.logic.collections import reset_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.bulkload import bulk_load
 from aleph.logic.roles import update_roles
@@ -51,6 +52,8 @@ class AlephWorker(Worker):
         if stage.stage == OP_BULKLOAD:
             bulk_load(stage, collection, payload)
         if stage.stage == OP_PROCESS:
+            if payload.pop('reset', False):
+                reset_collection(collection, sync=True)
             process_collection(stage, collection, sync=sync, **payload)
         if stage.stage == OP_XREF:
             xref_collection(stage, collection, **payload)

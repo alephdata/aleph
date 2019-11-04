@@ -1,5 +1,6 @@
 import logging
 from pprint import pprint  # noqa
+from elasticsearch import RequestError
 
 from aleph.authz import Authz
 from aleph.core import db, es
@@ -12,7 +13,7 @@ log = logging.getLogger(__name__)
 
 
 def get_alert(alert_id):
-    alert = Alert.by_id(alert_id)
+    alert = Alert.by_id(alert_id, deleted=True)
     if alert is not None:
         return alert.to_dict()
 
@@ -29,9 +30,16 @@ def check_alert(alert_id):
         return
     log.info("Check alert [%s]: %s", alert.id, alert.query)
     authz = Authz.from_role(alert.role)
-    query = alert_query(alert, authz)
-    index = entities_read_index(schema=Entity.THING)
-    result = es.search(index=index, body=query)
+    try:
+        query = alert_query(alert, authz)
+        index = entities_read_index(schema=Entity.THING)
+        result = es.search(index=index, body=query)
+    except RequestError as re:
+        log.error("Invalid query [%s]: %r", alert.query, re.error)
+        alert.delete()
+        db.session.commit()
+        return
+
     for result in result.get('hits').get('hits', []):
         entity = unpack_result(result)
         if entity is None:

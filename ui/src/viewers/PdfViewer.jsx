@@ -101,7 +101,7 @@ export class PdfViewer extends Component {
 
   fetchComponents() {
     import(/* webpackChunkName:'pdf-lib' */'react-pdf/dist/entry.webpack')
-      .then(components => this.setState({ components }));
+      .then((components) => this.setState({ components }));
   }
 
   renderPdf() {
@@ -111,7 +111,7 @@ export class PdfViewer extends Component {
     const { width } = this.state;
     const { Document, Page } = this.state.components;
     return (
-      <React.Fragment>
+      <>
         {numPages !== null && numPages > 0 && (
           <PagingButtons document={document} numberOfPages={numPages} />
         )}
@@ -135,7 +135,7 @@ export class PdfViewer extends Component {
             )}
           </Document>
         </div>
-      </React.Fragment>
+      </>
     );
   }
 
@@ -143,7 +143,7 @@ export class PdfViewer extends Component {
     const {
       document, activeMode, baseQuery, page, queryText, numPages,
     } = this.props;
-    if (document.id === undefined) {
+    if (!document.id || !document.links) {
       return null;
     }
     if (numPages === undefined || numPages === null) {

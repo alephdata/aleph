@@ -187,7 +187,7 @@ class CollectionAccessDialog extends Component {
                   />
                 ))}
                 {groupRoles.length > 0 && (
-                  <React.Fragment>
+                  <>
                     <tr key="groups">
                       <td className="header-topic" colSpan="3">
                         <FormattedMessage
@@ -203,7 +203,7 @@ class CollectionAccessDialog extends Component {
                         onToggle={this.onToggle}
                       />
                     ))}
-                  </React.Fragment>
+                  </>
                 )}
                 <tr key="users">
                   <td className="header-topic" colSpan="3">

@@ -17,14 +17,14 @@ class EntityToolbar extends React.Component {
     }
     const isThing = entity && entity.schema.isThing();
     const isDocument = entity && entity.schema.isDocument();
-    const showDownloadButton = isDocument && entity.links && entity.links.file;
+    const showDownloadButton = isDocument && entity && entity.links && entity.links.file;
 
     return (
       <div className="EntityToolbar">
         <ButtonGroup minimal className="EntityToolbar__buttons bp3-intent-primary">
           {isThing && (
             <Link to={getEntityLink(entity)} className="bp3-button">
-              <span className="bp3-icon-fullscreen" />
+              <span className="bp3-icon-fullscreen left-icon" />
               <FormattedMessage id="sidebar.open" defaultMessage="Expand" />
             </Link>
           )}
