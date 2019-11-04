@@ -102,7 +102,8 @@ class CSVStreamViewer extends React.Component {
     const columnsFtm = columnsJson ? JSON.parse(columnsJson) : [];
     // HACK: Use the first row of the data as headers if nothing is in the
     // FtM metadata.
-    const columns = columnsFtm.length || (rows.length > 0 ? rows[0] : []);
+    const columnsHeader = rows.length > 0 ? rows[0] : [];
+    const columns = columnsFtm.length ? columnsFtm : columnsHeader;
     return (
       <div className="TableViewer">
         <Table
