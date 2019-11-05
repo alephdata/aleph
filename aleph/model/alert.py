@@ -50,8 +50,8 @@ class Alert(db.Model, SoftDeleteModel):
         return data
 
     @classmethod
-    def by_id(cls, id, role_id=None):
-        q = cls.all().filter_by(id=id)
+    def by_id(cls, id, role_id=None, deleted=False):
+        q = cls.all(deleted=deleted).filter_by(id=id)
         if role_id is not None:
             q = q.filter(cls.role_id == role_id)
         return q.first()

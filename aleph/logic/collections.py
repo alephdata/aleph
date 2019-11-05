@@ -48,8 +48,10 @@ def reset_collection(collection, sync=False):
     db.session.commit()
 
 
-def index_collections():
+def index_collections(refresh=False):
     for collection in Collection.all(deleted=True):
+        if refresh:
+            refresh_collection(collection.id, sync=True)
         index.index_collection(collection)
 
 

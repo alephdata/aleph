@@ -13,11 +13,21 @@ TAG_PERSON = 'peopleMentioned'
 TAG_COMPANY = 'companiesMentioned'
 TAG_LANGUAGE = 'detectedLanguage'
 TAG_COUNTRY = 'detectedCountry'
-TAG_IP = 'ipMentioned'
 TAG_EMAIL = 'emailMentioned'
 TAG_PHONE = 'phoneMentioned'
 TAG_IBAN = 'ibanMentioned'
 TAG_LOCATION = 'location'
+
+TEXT_MIN_LENGTH = 60
+TEXT_MAX_LENGTH = 900000
+
+
+def check_text_length(text):
+    if text is None:
+        return False
+    if len(text) < TEXT_MIN_LENGTH or len(text) > TEXT_MAX_LENGTH:
+        return False
+    return True
 
 
 def tag_key(label):

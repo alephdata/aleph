@@ -13,8 +13,6 @@ from flask_babel import lazy_gettext
 DEBUG = env.to_bool('ALEPH_DEBUG', False)
 # Propose HTTP caching to the user agents.
 CACHE = env.to_bool('ALEPH_CACHE', not DEBUG)
-# Disable delayed processing via queue
-EAGER = env.to_bool('ALEPH_EAGER', DEBUG)
 # Puts the system into read-only mode and displays a warning.
 MAINTENANCE = env.to_bool('ALEPH_MAINTENANCE', False)
 # Unit test context.

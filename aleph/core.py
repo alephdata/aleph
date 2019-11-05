@@ -46,7 +46,7 @@ def create_app(config={}):
     })
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
-    configure_oauth(app)
+    configure_oauth(app, cache=get_cache())
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)

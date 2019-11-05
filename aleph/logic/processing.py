@@ -1,5 +1,5 @@
 import logging
-from banal import is_mapping
+from banal import is_mapping, ensure_list
 from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
@@ -10,49 +10,40 @@ from aleph.analysis import analyze_entity
 from aleph.queues import queue_task, OP_INDEX
 from aleph.index.entities import index_bulk
 from aleph.logic.entities import refresh_entity_id
-from aleph.logic.collections import refresh_collection, reset_collection
+from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
 
 
 def _collection_proxies(collection):
-    for entity in Entity.by_collection(collection.id).yield_per(1000):
+    for entity in Entity.by_collection(collection.id).yield_per(5000):
         yield entity.to_proxy()
-    for document in Document.by_collection(collection.id).yield_per(1000):
+    for document in Document.by_collection(collection.id).yield_per(5000):
         yield document.to_proxy()
 
 
-def process_collection(stage, collection, ingest=True,
-                       reset=False, sync=False):
+def process_collection(stage, collection, ingest=True, sync=False):
     """Trigger a full re-parse of all documents and re-build the
     search index from the aggregator."""
-    ingest = ingest or reset
-    if reset:
-        reset_collection(collection, sync=True)
     aggregator = get_aggregator(collection)
-    try:
-        writer = aggregator.bulk()
-        for proxy in _collection_proxies(collection):
-            writer.put(proxy, fragment='db')
-            stage.report_finished(1)
-        writer.flush()
-        if ingest:
-            for proxy in aggregator:
-                ingest_entity(collection, proxy, job_id=stage.job.id)
+    for proxy in _collection_proxies(collection):
+        if ingest and proxy.schema.is_a(Document.SCHEMA):
+            ingest_entity(collection, proxy,
+                          job_id=stage.job.id,
+                          sync=sync)
         else:
+            aggregator.put(proxy, fragment='db')
             queue_task(collection, OP_INDEX,
                        job_id=stage.job.id,
+                       payload={'entity_id': proxy.id},
                        context={'sync': sync})
-    finally:
-        aggregator.close()
+    aggregator.close()
 
 
 def _process_entity(entity, sync=False):
     """Perform pre-index processing on an entity, includes running the
-    NLP pipeline"""
-    if entity.id is None:
-        raise InvalidData("No ID for entity", errors=entity.to_dict())
+    NLP pipeline."""
     analyze_entity(entity)
     if sync:
         refresh_entity_id(entity.id)
@@ -60,26 +51,18 @@ def _process_entity(entity, sync=False):
     return entity
 
 
-def _fetch_entities(stage, collection, entity_ids=None, batch=50):
+def _fetch_entities(stage, collection, entity_ids=None, batch=100):
     aggregator = get_aggregator(collection)
-    try:
-        if entity_ids is None:
-            yield from aggregator
-            return
-        for entity_id in entity_ids:
-            yield from aggregator.iterate(entity_id=entity_id)
-
+    if entity_ids is not None:
+        entity_ids = ensure_list(entity_ids)
         # WEIRD: Instead of indexing a single entity, this will try
         # pull a whole batch of them off the queue and do it at once.
-        done = 0
         for task in stage.get_tasks(limit=batch):
-            entity_id = task.payload.get('entity_id')
-            for entity in aggregator.iterate(entity_id=entity_id):
-                yield entity
-                done += 1
-        stage.mark_done(done)
-    finally:
-        aggregator.close()
+            entity_ids.append(task.payload.get('entity_id'))
+        stage.mark_done(len(entity_ids) - 1)
+
+    yield from aggregator.iterate(entity_id=entity_ids)
+    aggregator.close()
 
 
 def index_aggregate(stage, collection, sync=False, **kwargs):
@@ -94,11 +77,14 @@ def index_aggregate(stage, collection, sync=False, **kwargs):
 
 def bulk_write(collection, entities, job_id=None, unsafe=False):
     """Write a set of entities - given as dicts - to the index."""
+    # This is called mainly by the /api/2/collections/X/_bulk API.
     def _generate():
         for data in entities:
             if not is_mapping(data):
                 raise InvalidData("Failed to read input data", errors=data)
             entity = model.get_proxy(data)
+            if entity.id is None:
+                raise InvalidData("No ID for entity", errors=entity.to_dict())
             if not unsafe:
                 entity = remove_checksums(entity)
             yield _process_entity(entity)

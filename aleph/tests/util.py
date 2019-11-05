@@ -15,7 +15,7 @@ from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
 from aleph.logic.aggregator import drop_aggregator, get_aggregator
 from aleph.logic.collections import update_collection
-from aleph.logic.processing import process_collection
+from aleph.logic.processing import process_collection, index_aggregate
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
@@ -56,7 +56,6 @@ class TestCase(FlaskTestCase):
         settings.TESTING = True
         settings.DEBUG = True
         settings.CACHE = True
-        settings.EAGER = True
         settings.OAUTH = False
         settings.SECRET_KEY = 'batman'
         settings.APP_UI_URL = UI_URL
@@ -153,10 +152,12 @@ class TestCase(FlaskTestCase):
 
         aggregator = get_aggregator(self.private_coll)
         aggregator.delete()
+        stage = get_stage(self.private_coll, OP_PROCESS)
         for sample in read_entities(self.get_fixture_path('samples.ijson')):
             aggregator.put(sample, fragment='sample')
+            index_aggregate(stage, self.private_coll,
+                            entity_id=sample.id, sync=True)
         aggregator.close()
-        stage = get_stage(self.private_coll, OP_PROCESS)
         process_collection(stage, self.private_coll, ingest=False, sync=True)
 
     def setUp(self):

@@ -81,5 +81,5 @@ class HTMLSupport(TimestampSupport):
             text = self.extract_html_text(doc)
             entity.add('indexText', text)
             return text
-        except Exception as exc:
-            log.exception("Error extracting text from HTML.")
+        except Exception:
+            log.exception("Error extracting text from HTML")
