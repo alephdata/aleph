@@ -69,12 +69,17 @@ export class EntityMappingMode extends Component {
 
   componentDidMount() {
     this.fetchCsvData();
-    this.props.fetchCollectionMappings(this.props.entity.collection.id);
+    if (!this.props.existingMapping) {
+      this.props.fetchCollectionMappings(this.props.entity.collection.id);
+    }
   }
 
   componentDidUpdate(prevProps) {
     const { existingMapping } = this.props;
+
+    console.log('in component did update', existingMapping, prevProps.existingMapping, prevProps.existingMapping === existingMapping);
     if (existingMapping && prevProps.existingMapping !== existingMapping) {
+      console.log('loading from mapping!');
       this.loadFromMapping(existingMapping);
     }
   }
@@ -363,13 +368,12 @@ const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.entity.collection.id;
   const entityId = ownProps.entity.id;
   const collectionMappings = selectCollectionMappings(state, collectionId);
+  const entityMapping = collectionMappings && collectionMappings.length > 0
+    ? collectionMappings.find(mapping => mapping.table_id === entityId) : undefined;
 
-  console.log(state, collectionMappings);
   return {
     model: selectModel(state),
-    existingMapping: collectionMappings && collectionMappings.length && collectionMappings.find(
-      mapping => mapping.table_id === entityId,
-    ),
+    existingMapping: entityMapping,
   };
 };
 
