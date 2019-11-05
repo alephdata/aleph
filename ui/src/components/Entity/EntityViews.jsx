@@ -172,11 +172,11 @@ class EntityViews extends React.Component {
         )}
         { (hasViewMode && entity.schema.isA('Table')) && (
           <Tab
-            id="import"
+            id="mapping"
             title={(
               <>
                 <Icon icon="new-object" className="left-icon" />
-                <FormattedMessage id="entity.import.view" defaultMessage="Generate entities" />
+                <FormattedMessage id="entity.mapping.view" defaultMessage="Generate entities" />
               </>
             )}
             panel={<EntityMappingMode entity={entity} />}

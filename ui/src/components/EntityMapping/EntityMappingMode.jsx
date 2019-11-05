@@ -77,9 +77,7 @@ export class EntityMappingMode extends Component {
   componentDidUpdate(prevProps) {
     const { existingMapping } = this.props;
 
-    console.log('in component did update', existingMapping, prevProps.existingMapping, prevProps.existingMapping === existingMapping);
     if (existingMapping && prevProps.existingMapping !== existingMapping) {
-      console.log('loading from mapping!');
       this.loadFromMapping(existingMapping);
     }
   }
