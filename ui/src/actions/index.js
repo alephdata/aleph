@@ -12,7 +12,7 @@ export {
   fetchCollection,
   fetchCollectionStatus,
   fetchCollectionPermissions,
-  fetchCollectionMapping,
+  fetchCollectionMappings,
   fetchCollectionXrefIndex,
   flushCollectionMapping,
   queryCollections,

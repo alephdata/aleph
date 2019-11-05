@@ -19,7 +19,7 @@ const MappingStatus = ({ mapping }) => {
         <h6 className="bp3-heading MappingStatus__statusItem">
           <span>
             <FormattedMessage
-              id="collection.status.remaining"
+              id="mapping.status.updated"
               defaultMessage="Last updated:"
             />
           </span>
@@ -31,8 +31,8 @@ const MappingStatus = ({ mapping }) => {
           <h6 className="bp3-heading MappingStatus__statusItem">
             <span>
               <FormattedMessage
-                id="collection.status.remaining"
-                defaultMessage="Import status:"
+                id="mapping.status.status"
+                defaultMessage="Status:"
               />
             </span>
             <span>
@@ -44,8 +44,8 @@ const MappingStatus = ({ mapping }) => {
           <h6 className="bp3-heading MappingStatus__statusItem">
             <span>
               <FormattedMessage
-                id="collection.status.remaining"
-                defaultMessage="Import error:"
+                id="mapping.status.error"
+                defaultMessage="Error:"
               />
             </span>
             <span>

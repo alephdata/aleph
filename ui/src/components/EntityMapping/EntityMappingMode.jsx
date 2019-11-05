@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
 import { Button, ButtonGroup, Colors } from '@blueprintjs/core';
 import { showErrorToast } from 'src/app/toast';
-import { fetchCollectionMapping } from 'src/actions';
+import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import {
@@ -69,14 +69,13 @@ export class EntityMappingMode extends Component {
 
   componentDidMount() {
     this.fetchCsvData();
-    this.props.fetchCollectionMapping(this.props.entity.collection.id, this.props.entity.id);
+    this.props.fetchCollectionMappings(this.props.entity.collection.id);
   }
 
   componentDidUpdate(prevProps) {
-    const { existingMappings } = this.props;
-    if (existingMappings && existingMappings.length && !existingMappings.isLoading
-      && !existingMappings.isError && prevProps.existingMappings !== existingMappings) {
-      this.loadFromMapping(existingMappings[0]);
+    const { existingMapping } = this.props;
+    if (existingMapping && prevProps.existingMapping !== existingMapping) {
+      this.loadFromMapping(existingMapping);
     }
   }
 
@@ -223,19 +222,16 @@ export class EntityMappingMode extends Component {
       });
     });
 
-    this.setState({ existingMappingId: existingMapping.id, mappings });
+    this.setState({ mappings });
   }
 
   render() {
-    const { entity, intl, model, existingMappings } = this.props;
-    const { mappings, csvData, csvHeader, existingMappingId, previewIsOpen } = this.state;
+    const { entity, intl, model, existingMapping } = this.props;
+    const { mappings, csvData, csvHeader, previewIsOpen } = this.state;
 
     if (!csvData || !csvHeader) {
       return null;
     }
-
-    const existingMapping = existingMappings.length && !existingMappings.isLoading
-      && !existingMappings.isError ? existingMappings[0] : null;
 
     const schemaSelectOptions = Object.keys(model.schemata)
       .map(key => model.schemata[key])
@@ -344,7 +340,7 @@ export class EntityMappingMode extends Component {
                 <MappingManageMenu
                   mappings={this.formatMappings(mappings)}
                   collectionId={entity.collection.id}
-                  mappingId={existingMappingId}
+                  mappingId={existingMapping && existingMapping.id}
                   validate={this.onValidate}
                 />
               </div>
@@ -361,15 +357,19 @@ export class EntityMappingMode extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchCollectionMapping };
+const mapDispatchToProps = { fetchCollectionMappings };
 
 const mapStateToProps = (state, ownProps) => {
   const collectionId = ownProps.entity.collection.id;
+  const entityId = ownProps.entity.id;
+  const collectionMappings = selectCollectionMappings(state, collectionId);
 
-  console.log(state, selectCollectionMappings(state, collectionId));
+  console.log(state, collectionMappings);
   return {
     model: selectModel(state),
-    existingMappings: selectCollectionMappings(state, collectionId),
+    existingMapping: collectionMappings && collectionMappings.length && collectionMappings.find(
+      mapping => mapping.table_id === entityId,
+    ),
   };
 };
 
