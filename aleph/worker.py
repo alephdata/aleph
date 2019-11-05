@@ -58,7 +58,7 @@ class AlephWorker(Worker):
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
         if stage.stage == OP_BULKDELETE:
-            delete_entities_by_mapping_id(stage, sync=sync, **payload)
+            delete_entities_by_mapping_id(stage, collection, sync=sync, **payload)  # noqa
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
     def after_task(self, task):
