@@ -5,7 +5,7 @@ from aleph.core import kv, db
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS
-from aleph.queues import OP_XREF, OP_XREF_ITEM
+from aleph.queues import OP_XREF, OP_XREF_ITEM, OP_BULKDELETE
 from aleph.queues import OPERATIONS
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import index_collections, refresh_collection
@@ -14,6 +14,7 @@ from aleph.logic.mapping import bulk_load
 from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
 from aleph.logic.processing import index_aggregate, process_collection
+from aleph.index.entities import delete_entities_by_mapping_id
 
 log = logging.getLogger(__name__)
 
@@ -56,6 +57,8 @@ class AlephWorker(Worker):
             xref_collection(stage, collection, **payload)
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
+        if stage.stage == OP_BULKDELETE:
+            delete_entities_by_mapping_id(stage, sync=sync, **payload)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
     def after_task(self, task):

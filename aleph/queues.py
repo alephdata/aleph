@@ -12,10 +12,11 @@ OP_XREF = 'xref'
 OP_XREF_ITEM = 'xitem'
 OP_PROCESS = 'process'
 OP_BULKLOAD = 'bulkload'
+OP_BULKDELETE = 'bulkdelete'
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_BULKLOAD, OP_XREF_ITEM,)
+OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_BULKLOAD, OP_XREF_ITEM, OP_BULKDELETE)  # noqa
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):

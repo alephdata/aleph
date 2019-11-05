@@ -82,7 +82,7 @@ export const createCollectionMapping = asyncActionCreator((collectionId, mapping
 
 export const updateCollectionMapping = (
   asyncActionCreator((collectionId, mappingId, mapping) => async () => {
-    const config = { params: { flush: true } };
+    const config = { params: { flush: true, trigger: true } };
     const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}`, mapping, config);
     return { collectionId, mappingId, data: response.data };
   }, { name: 'UPDATE_COLLECTION_MAPPING' })

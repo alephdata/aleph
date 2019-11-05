@@ -206,7 +206,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
         query_delete(entities_read_index(), q, sync=sync)
 
 
-def delete_entities_by_mapping_id(mapping_id, sync=False):
+def delete_entities_by_mapping_id(stage, mapping_id, sync=False):
     """Delete entities loaded by a mapping"""
     log.debug("Flushing entities for mapping %s", mapping_id)
     index = entities_read_index()

@@ -2,18 +2,14 @@ import logging
 
 from flask import Blueprint, request
 
-from aleph.core import db
 from aleph.model import Mapping
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import MappingSerializer
 from aleph.views.util import get_db_collection, get_index_entity, parse_request  # noqa
 from aleph.views.context import enable_cache
 from aleph.views.forms import MappingSchema
-from aleph.views.util import require, obj_or_404, get_session_id
-from aleph.queues import queue_task, OP_BULKLOAD
-from aleph.logic.collections import refresh_collection
-from aleph.logic.mapping import load_query, get_mapping_query
-from aleph.index.entities import delete_entities_by_mapping_id
+from aleph.views.util import require, obj_or_404
+from aleph.logic.mapping import load_query, load_mapping, flush_mapping
 
 blueprint = Blueprint('mappings_api', __name__)
 log = logging.getLogger(__name__)
@@ -62,10 +58,9 @@ def update(collection_id, mapping_id):
     entity = get_index_entity(entity_id, request.authz.READ)
     mapping.update(query=query, table_id=entity.get('id'))
     if request.args.get('flush') == 'true':
-        delete_entities_by_mapping_id(mapping.id)
-        collection.touch()
-        db.session.commit()
-        refresh_collection(collection.id)
+        flush_mapping(collection, mapping)
+    if request.args.get('trigger') == 'true':
+        load_mapping(collection, mapping)
     return MappingSerializer.jsonify(mapping)
 
 
@@ -76,10 +71,7 @@ def delete(collection_id, mapping_id):
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
     if request.args.get('flush') == 'true':
-        delete_entities_by_mapping_id(mapping.id)
-        collection.touch()
-        db.session.commit()
-        refresh_collection(collection.id)
+        flush_mapping(collection, mapping)
     return ('', 204)
 
 
@@ -90,12 +82,7 @@ def trigger(collection_id, mapping_id):
     collection = get_db_collection(collection_id, action=request.authz.WRITE)
     require(request.authz.can_bulk_import())
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    query = get_mapping_query(mapping)
-    job_id = get_session_id()
-    queue_task(collection, OP_BULKLOAD, job_id=job_id, payload=query)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection.id)
+    load_mapping(collection, mapping)
     return ('', 202)
 
 
@@ -106,8 +93,5 @@ def flush(collection_id, mapping_id):
     require(request.authz.logged_in)
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    delete_entities_by_mapping_id(mapping.id)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection.id)
+    flush_mapping(collection, mapping)
     return ('', 202)
