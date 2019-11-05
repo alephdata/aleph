@@ -43,6 +43,7 @@ const PasswordAuth = ({
           type="email"
           name="email"
           required
+          autoFocus
           ref={el => emailElement = el}
         />
       </label>
