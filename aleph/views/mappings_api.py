@@ -1,6 +1,7 @@
 import logging
-
+from followthemoney import model
 from flask import Blueprint, request
+from werkzeug.exceptions import BadRequest
 
 from aleph.model import Mapping
 from aleph.search import QueryParser, DatabaseQueryResult
@@ -9,10 +10,20 @@ from aleph.views.util import get_db_collection, get_index_entity, parse_request 
 from aleph.views.context import enable_cache
 from aleph.views.forms import MappingSchema
 from aleph.views.util import require, obj_or_404
-from aleph.logic.mapping import load_query, load_mapping, flush_mapping
+from aleph.logic.mapping import load_mapping, flush_mapping
 
 blueprint = Blueprint('mappings_api', __name__)
 log = logging.getLogger(__name__)
+
+
+def load_query():
+    try:
+        query = request.json.get('mapping_query', '{}')
+        # just for validation
+        model.make_mapping({'entities': query})
+    except Exception as ex:
+        raise BadRequest(ex)
+    return query
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings', methods=['GET'])  # noqa
