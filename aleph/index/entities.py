@@ -135,13 +135,12 @@ def index_entity(entity, sync=False):
 
 def index_proxy(collection, proxy, sync=False):
     delete_entity(proxy.id, exclude=proxy.schema, sync=False)
-    return index_bulk(collection, [proxy], sync=sync)
+    return index_bulk(collection, [proxy], {}, sync=sync)
 
 
-def index_bulk(collection, entities, job_id=None, mapping_id=None, sync=False):  # noqa
+def index_bulk(collection, entities, extra, sync=False):
     """Index a set of entities."""
-    entities = (format_proxy(p, collection, job_id=job_id,
-                             mapping_id=mapping_id) for p in entities)
+    entities = (format_proxy(p, collection, extra) for p in entities)
     bulk_actions(entities, sync=sync)
 
 
@@ -150,14 +149,13 @@ def _numeric_values(type_, values):
     return [v for v in values if v is not None]
 
 
-def format_proxy(proxy, collection, job_id=None, mapping_id=None):  # noqa
+def format_proxy(proxy, collection, extra):
     """Apply final denormalisations to the index."""
     proxy.context = {}
     proxy = collection.ns.apply(proxy)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
-    data['job_id'] = job_id
-    data['mapping_id'] = mapping_id
+
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
@@ -183,6 +181,9 @@ def format_proxy(proxy, collection, job_id=None, mapping_id=None):  # noqa
     # also cast group field for dates
     numeric['dates'] = _numeric_values(registry.date, data.get('dates'))
     data['numeric'] = numeric
+
+    # add possible overrides
+    data.update(extra)
 
     # pprint(data)
     entity_id = data.pop('id')

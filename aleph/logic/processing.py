@@ -71,7 +71,8 @@ def index_aggregate(stage, collection, sync=False, **kwargs):
     mapping_id = kwargs.get('mapping_id')
     entities = _fetch_entities(stage, collection, entity_ids=entity_ids)
     entities = (_process_entity(e, sync=sync) for e in entities)
-    index_bulk(collection, entities, job_id=stage.job.id, mapping_id=mapping_id)  # noqa
+    extra = {'job_id': stage.job.id, 'mapping_id': mapping_id}
+    index_bulk(collection, entities, extra)
     refresh_collection(collection.id)
 
 
@@ -89,5 +90,5 @@ def bulk_write(collection, entities, job_id=None, unsafe=False):
                 entity = remove_checksums(entity)
             yield _process_entity(entity)
 
-    index_bulk(collection, _generate(), job_id=job_id)
+    index_bulk(collection, _generate(), {'job_id': job_id})
     refresh_collection(collection.id)
