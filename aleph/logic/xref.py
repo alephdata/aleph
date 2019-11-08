@@ -50,7 +50,7 @@ def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
     # This is running as a background job. In order to avoid running each
     # entity one by one, we do it 101 at a time. This avoids sending redudant
     # queries to the database and elasticsearch, making cross-ref much faster.
-    for task in stage.get_tasks(limit=100):
+    for task in stage.get_tasks(limit=50):
         entity_ids.append(task.payload.get('entity_id'))
     stage.mark_done(len(entity_ids) - 1)
     # log.debug("Have %d entity IDs for xref", len(entity_ids))
