@@ -78,29 +78,11 @@ class Mapping(db.Model, SoftDeleteModel):
         return data
 
     @classmethod
-    def by_id(cls, id, role_id=None):
-        q = cls.all().filter_by(id=id)
-        if role_id is not None:
-            q = q.filter(cls.role_id == role_id)
-        return q.first()
-
-    @classmethod
-    def by_role_id(cls, role_id):
-        q = cls.all()
-        q = q.filter(cls.role_id == role_id)
-        q = q.order_by(cls.created_at.desc())
-        q = q.order_by(cls.id.desc())
+    def by_collection(cls, collection_id, table_id=None):
+        q = cls.all().filter(cls.collection_id == collection_id)
+        if table_id is not None:
+            q = q.filter(cls.table_id == table_id)
         return q
-
-    @classmethod
-    def by_collection(cls, collection_id):
-        return cls.all().filter(Mapping.collection_id == collection_id)
-
-    @classmethod
-    def by_table(cls, table_id, q=None):
-        if q is None:
-            q = cls.all()
-        return q.filter(Mapping.table_id == table_id)
 
     @classmethod
     def create(cls, query, table_id, collection, role_id):
