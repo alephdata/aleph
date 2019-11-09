@@ -55,12 +55,12 @@ def bulk_load(stage, collection, config):
             config['entity_ids'].extend(entity_ids)
         except Exception as exc:
             if mapping:
-                mapping.set_status(stage.job.id, status=Mapping.FAILED, error=str(exc))  # noqa
+                mapping.set_status(status=Mapping.FAILED, error=str(exc))  # noqa
             else:
                 raise exc
         else:
             if mapping:
-                mapping.set_status(stage.job.id, status=Mapping.SUCCESS)
+                mapping.set_status(status=Mapping.SUCCESS)
     queue_task(collection, OP_INDEX, job_id=stage.job.id, payload=config)
 
 

@@ -1,18 +1,18 @@
-"""empty message
+"""Introduce table to store mappings in the DB.
 
 Revision ID: 40d6ffcd8442
 Revises: 8a8ef1f7e6fa
 Create Date: 2019-10-02 04:37:55.784441
 
 """
+from alembic import op
+import sqlalchemy as sa
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = '40d6ffcd8442'
 down_revision = '8a8ef1f7e6fa'
 
-from alembic import op
-import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 
 def upgrade():
     op.create_table('mapping',
@@ -34,7 +34,4 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_index(op.f('ix_mapping_table_id'), table_name='mapping')
-    op.drop_index(op.f('ix_mapping_role_id'), table_name='mapping')
-    op.drop_index(op.f('ix_mapping_collection_id'), table_name='mapping')
-    op.drop_table('mapping')
+    pass
