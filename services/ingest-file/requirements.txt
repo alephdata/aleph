@@ -9,7 +9,7 @@ psycopg2-binary==2.8.4
 pyicu==2.4.2
 
 grpcio==1.25.0
-google-cloud-vision==0.39.0
+google-cloud-vision==0.40.0
 google-cloud-storage==1.22.0
 
 # Development
