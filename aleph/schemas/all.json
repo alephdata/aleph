@@ -67,6 +67,9 @@
       "$ref": "QueryResponse.json"
     },
     {
+      "$ref": "ReferencesResponse.json"
+    },
+    {
       "$ref": "Role.json"
     },
     {
@@ -80,6 +83,9 @@
     },
     {
       "$ref": "SystemStatusResponse.json"
+    },
+    {
+      "$ref": "TagsResponse.json"
     },
     {
       "$ref": "XrefCollection.json"
