@@ -58,7 +58,7 @@
       "items": {
         "properties": {
           "collection_id": {
-            "type": "integer"
+            "type": "string"
           },
           "created_at": {
             "type": "string"
@@ -221,7 +221,7 @@
             "$schema": "http://json-schema.org/schema#"
           },
           "id": {
-            "type": "integer"
+            "type": "string"
           },
           "match": {
             "properties": {
@@ -381,7 +381,7 @@
             "$schema": "http://json-schema.org/schema#"
           },
           "match_collection_id": {
-            "type": "integer"
+            "type": "string"
           },
           "score": {
             "type": "number"

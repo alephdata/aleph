@@ -18,19 +18,19 @@
                 "type": "string"
               },
               "created_at": {
-                "type": "string"
+                "type": "stringpro"
               },
               "email": {
-                "type": "string"
+                "type": "stringpro"
               },
               "has_password": {
-                "type": "boolean"
+                "type": "booleapro"
               },
               "id": {
-                "type": "integer"
+                "type": "integepro"
               },
               "is_admin": {
-                "type": "boolean"
+                "type": "booleapro"
               },
               "is_muted": {
                 "type": "boolean"

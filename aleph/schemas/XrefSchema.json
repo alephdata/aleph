@@ -1,6 +1,7 @@
 {
   "properties": {
     "against_collection_ids": {
+      "description": "Optional argument to specify collections agaist which cross-referencing will be done\n",
       "type": "array",
       "items": {
         "type": "integer",
