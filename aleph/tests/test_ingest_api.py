@@ -32,7 +32,7 @@ class IngestApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         meta = {
             'collection_id': self.col.id,
-            'countries': ['de', 'us'],
+            'countries': ['de', 'usa'],
             'languages': ['en'],
             'mime_type': 'text/csv',
             'source_url': 'http://pudo.org/experts.csv'
@@ -49,6 +49,8 @@ class IngestApiTestCase(TestCase):
         db_id, _ = res.json.get('id').split('.', 1)
         doc = Document.by_id(db_id)
         assert doc.schema == Document.SCHEMA, doc.schema
+        assert doc.meta['countries'] == ['de', 'us'], doc.meta
+        assert doc.meta['languages'] == ['eng'], doc.meta
 
         status = get_status(self.col)
         assert status.get('pending') == 1, status

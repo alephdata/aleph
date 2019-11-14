@@ -6,6 +6,7 @@ from sqlalchemy.orm import aliased
 from banal import as_bool, ensure_list
 from sqlalchemy.dialects.postgresql import ARRAY
 from followthemoney.namespace import Namespace
+from followthemoney.types import registry
 
 from aleph.core import db
 from aleph.model.role import Role
@@ -76,10 +77,18 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
         self.summary = data.get('summary', self.summary)
         self.publisher = data.get('publisher', self.publisher)
         self.publisher_url = data.get('publisher_url', self.publisher_url)
+        if self.publisher_url is not None:
+            self.publisher_url = stringify(self.publisher_url)
         self.info_url = data.get('info_url', self.info_url)
+        if self.info_url is not None:
+            self.info_url = stringify(self.info_url)
         self.data_url = data.get('data_url', self.data_url)
+        if self.data_url is not None:
+            self.data_url = stringify(self.data_url)
         self.countries = ensure_list(data.get('countries', self.countries))
+        self.countries = [registry.country.clean(val) for val in self.countries]  # noqa
         self.languages = ensure_list(data.get('languages', self.languages))
+        self.languages = [registry.language.clean(val) for val in self.languages]  # noqa
 
         # Some fields are editable only by admins in order to have
         # a strict separation between source evidence and case

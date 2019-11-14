@@ -1,6 +1,6 @@
 import cgi
 import logging
-from banal import is_mapping
+from banal import is_mapping, ensure_list
 from normality import slugify
 from followthemoney import model
 from followthemoney.types import registry
@@ -65,9 +65,16 @@ class Document(db.Model, DatedModel):
                  'file_name', 'mime_type', 'headers', 'date', 'authored_at',
                  'modified_at', 'published_at', 'retrieved_at', 'languages',
                  'countries', 'keywords')
+        data['countries'] = ensure_list(data.get('countries', []))
+        data['countries'] = [registry.country.clean(val) for val in data['countries']]  # noqa
+        data['languages'] = ensure_list(data.get('languages', []))
+        data['languages'] = [registry.language.clean(val) for val in data['languages']]  # noqa
         for prop in props:
             text = data.get(prop, self.meta.get(prop))
-            self.meta[prop] = sanitize_text(text)
+            if isinstance(text, list):
+                self.meta[prop] = [sanitize_text(txt) for txt in text]
+            else:
+                self.meta[prop] = sanitize_text(text)
 
         flag_modified(self, 'meta')
 
