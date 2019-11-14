@@ -7,8 +7,14 @@
         },
         "next": {
           "description": "URL of the next set of results or null",
-          "nullable": true,
-          "type": "string"
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "offset": {
           "type": "integer"
@@ -23,8 +29,14 @@
         },
         "previous": {
           "description": "URL of the previous set of results or null",
-          "nullable": true,
-          "type": "string"
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "status": {
           "description": "ok",
@@ -49,7 +61,7 @@
             "type": "string"
           },
           "id": {
-            "type": "integer"
+            "type": "string"
           },
           "links": {
             "properties": {

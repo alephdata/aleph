@@ -1,7 +1,8 @@
 {
   "properties": {
     "query": {
-      "type": "string"
+      "type": "string",
+      "example": "putin"
     }
   },
   "required": [

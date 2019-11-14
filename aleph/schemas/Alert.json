@@ -4,7 +4,7 @@
       "type": "string"
     },
     "id": {
-      "type": "integer"
+      "type": "string"
     },
     "links": {
       "properties": {
