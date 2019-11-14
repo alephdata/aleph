@@ -1,0 +1,18 @@
+{
+  "properties": {
+    "count": {
+      "type": "integer"
+    },
+    "first": {
+      "type": "string"
+    },
+    "last": {
+      "type": "string"
+    },
+    "query": {
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

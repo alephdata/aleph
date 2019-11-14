@@ -60,8 +60,7 @@ def parse_request(schema, many=None):
 
 
 def _validate_data(data, schema):
-    schema = schema(data)
-    return schema.validate()
+    return schema().validate(data)
 
 
 def validate_data(data, schema, many=None):

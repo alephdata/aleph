@@ -1164,16 +1164,6 @@ components:
         writable:
           type: boolean
       type: object
-      example:
-        created_at: "2019-09-30T07:21:44.259556"
-        updated_at: "2019-09-30T07:21:44.259564"
-        id: 2
-        query: putin
-        normalized: putin
-        notified_at: 2019-09-30T07:21:44.258102
-        links:
-          self: http://localhost:8080/api/2/alerts/2
-        writeable: true
     AlertsResponse:
       allOf:
         - $ref: '#/components/schemas/QueryResponse'
@@ -1183,26 +1173,12 @@ components:
             $ref: '#/components/schemas/Alert'
           type: array
       type: object
-      example:
-        status: ok
-        results:
-          - created_at: '2019-09-30T07:21:44.259556'
-            updated_at: '2019-09-30T07:21:44.259564'
-            id: '2'
-            query: putin
-            normalized: putin
-            notified_at: '2019-09-30T07:21:44.258102'
-            links:
-              self: http://localhost:8080/api/2/alerts/2
-            writeable: true
-        total: 1
-        total_type: eq
-        page: 1
-        limit: 9999
-        offset: 0
-        pages: 1
-        next: 
-        previous: 
+    AlertSchema:
+      properties:
+        query:
+          type: string
+      required: ["query"]
+      type: object
     Collection:
       properties:
         casefile:
@@ -1259,28 +1235,56 @@ components:
           type: boolean
         category:
           type: string
+          format: category
         countries:
           items:
             type: string
+            format: country
           type: array
         data_url:
-          type: string
+          anyOf:
+            - type: "null"
+            - type: string
+              format: url
         foreign_id:
           type: string
         info_url:
-          type: string
+          anyOf:
+            - type: "null"
+            - type: string
+              format: url
         label:
           type: string
+          minLength: 2
+          maxLength: 500
         languages:
           items:
             type: string
+            format: language
           type: array
         publisher:
-          type: string
+          anyOf:
+            - type: "null"
+            - type: string
         publisher_url:
-          type: string
+          anyOf:
+            - type: "null"
+            - type: string
+              format: url
         summary:
-          type: string
+          anyOf:
+            - type: "null"
+            - type: string
+      required: ["label"]
+      type: object
+    CollectionUpdateSchema:
+      allOf:
+        - $ref: '#/components/schemas/CollectionCreateSchema'
+      properties:
+        creator_id:
+          anyOf:
+            - type: "null"
+            - type: string
       type: object
     CollectionStatus:
       properties:
@@ -1331,47 +1335,86 @@ components:
     DocumentCreateSchema:
       properties:
         author:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         authored_at:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
+              format: "partial-date"
         countries:
           items:
             type: string
+            format: country
           type: array
         crawler:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         date:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
+              format: "partial-date"
         file_name:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         foreign_id:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         generator:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         keywords:
           items:
             type: string
+            minLength: 0
+            maxLength: 5000
           type: array
         languages:
           items:
             type: string
+            format: language
           type: array
         mime_type:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         modified_at:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
+              format: "partial-date"
         parent_id:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         published_at:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
+              format: "partial-date"
         retrieved_at:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
+              format: "partial-date"
         source_url:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         summary:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         title:
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
       type: object
     EntitiesResponse:
       allOf:
@@ -1441,6 +1484,25 @@ components:
         writable:
           type: boolean
       type: object
+    EntityUpdateSchema:
+      properties:
+        schema:
+          type: string
+          format: schema
+        properties:
+          type: object
+      required: ["schema"]
+      type: object
+    EntityCreateSchema:
+      allOf:
+        - $ref: '#/components/schemas/EntityUpdateSchema'
+      properties:
+        collection_id:
+          type: string
+        foreign_id:
+          type: string
+      required: ["collection_id"]
+      type: object
     Group:
       properties:
         created_at:
@@ -1466,6 +1528,16 @@ components:
           type: array
         total:
           type: integer
+      type: object
+    LoginSchema:
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 3
+      required: ["email"]
       type: object
     NotificationsResponse:
       properties:
@@ -1517,6 +1589,16 @@ components:
           type: array
         total:
           type: integer
+      type: object
+    PermissionSchema:
+      properties:
+        write:
+          type: boolean
+        read:
+          type: boolean
+        role_id:
+          type: string
+      required: ["write", "read", "role_id"]
       type: object
     QueryLog:
       properties:
@@ -1599,6 +1681,43 @@ components:
         writeable:
           type: boolean
       type: object
+    RoleSchema:
+      properties:
+        name:
+          type: string
+          minLength: 4
+        is_muted:
+          type: boolean
+        password:
+          type: string
+          minLength": 6
+        current_password:
+          type: string
+        locale:
+          anyOf:
+            - type: "null"
+            - type: string
+              format: locale
+      type: object
+    RoleCodeCreateSchema:
+      properties:
+        email:
+          type: string
+          format: email
+      required: ["email"]
+      type: object
+    RoleCreateSchema:
+      properties:
+        name:
+          type: string
+          minLength: 4
+        password:
+          type: string
+          minLength: 6
+        code:
+          type: string
+      required: ["password", "code"]
+      type: object
     SystemStatusResponse:
       properties:
         results:
@@ -1660,6 +1779,14 @@ components:
           items:
             $ref: '#/components/schemas/XrefMatch'
           type: array
+      type: object
+    XrefSchema:
+      properties:
+        against_collection_ids:
+          type: array
+          items:
+            type: integer
+            minimum: 1
       type: object
 tags:
   - description: |

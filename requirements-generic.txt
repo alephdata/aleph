@@ -15,6 +15,7 @@ elasticsearch==7.0.5
 marshmallow==2.19.2
 gunicorn==20.0.0
 jsonschema==3.1.1
+jsonref==0.2
 gunicorn==19.9.0
 blinker==1.4
 Babel==2.7.0

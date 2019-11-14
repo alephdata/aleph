@@ -1,0 +1,16 @@
+{
+  "properties": {
+    "schema": {
+      "type": "string",
+      "format": "schema"
+    },
+    "properties": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema"
+  ],
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

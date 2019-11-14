@@ -72,6 +72,7 @@ docker-push:
 
 dev: 
 	pip install -q bumpversion babel jinja2
+	pip install -q git+https://github.com/alephdata/openapi2jsonschema@3cccfcb5fe7f7a7e94edc5b3ab74616322690af4
 
 fixtures:
 	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
@@ -89,5 +90,9 @@ translate: dev
 	tx push --source
 	tx pull -a -f
 	pybabel compile -d aleph/translations -D aleph -f
+
+build-schema: dev
+	openapi2jsonschema -o aleph/schemas api-spec.yml
+	openapi2jsonschema -o aleph/schemas api-spec.yml --stand-alone
 
 .PHONY: build services

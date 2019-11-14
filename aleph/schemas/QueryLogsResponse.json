@@ -1,0 +1,69 @@
+{
+  "allOf": [
+    {
+      "properties": {
+        "limit": {
+          "type": "integer"
+        },
+        "next": {
+          "description": "URL of the next set of results or null",
+          "nullable": true,
+          "type": "string"
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "page": {
+          "description": "Current page number",
+          "type": "integer"
+        },
+        "pages": {
+          "description": "Total number of pages",
+          "type": "integer"
+        },
+        "previous": {
+          "description": "URL of the previous set of results or null",
+          "nullable": true,
+          "type": "string"
+        },
+        "status": {
+          "description": "ok",
+          "type": "string"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "total_type": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "$schema": "http://json-schema.org/schema#"
+    }
+  ],
+  "properties": {
+    "results": {
+      "items": {
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "$schema": "http://json-schema.org/schema#"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}
