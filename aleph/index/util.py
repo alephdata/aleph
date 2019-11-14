@@ -130,7 +130,7 @@ def query_delete(index, query, sync=False, **kwargs):
                                wait_for_completion=sync,
                                refresh=refresh_sync(sync),
                                request_timeout=84600,
-                               timeout='3500m',
+                               timeout='700m',
                                **kwargs)
             return
         except TransportError as exc:
@@ -147,7 +147,9 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
                             initial_backoff=2,
                             yield_ok=False,
                             raise_on_error=False,
-                            refresh=refresh_sync(sync))
+                            refresh=refresh_sync(sync),
+                            request_timeout=84600,
+                            timeout='700m')
     for _, details in stream:
         if details.get('delete', {}).get('status') == 404:
             continue
