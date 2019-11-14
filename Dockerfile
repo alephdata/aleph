@@ -3,7 +3,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq -y update \
     && apt-get -q -y install build-essential locales \
-        ca-certificates postgresql-client \
+        ca-certificates postgresql-client curl \
         python3-pip python3-dev python3-icu python3-psycopg2 \
         python3-lxml python3-crypto cython3 \
     && apt-get -qq -y autoremove \
@@ -24,7 +24,7 @@ RUN groupadd -g 1000 -r app \
 RUN pip3 install --no-cache-dir -q -U pip setuptools six
 
 # Install spaCy and link models to three-letter language codes
-RUN pip3 install --no-cache-dir -q spacy==2.2.1
+RUN pip3 install --no-cache-dir -q spacy==2.2.2
 RUN python3 -m spacy download xx_ent_wiki_sm \
     && python3 -m spacy link xx_ent_wiki_sm xx
 RUN python3 -m spacy download en_core_web_sm \
