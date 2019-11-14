@@ -4,6 +4,7 @@ from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 from aleph.logic.xref import xref_collection
 from aleph.queues import get_stage, OP_XREF
+from aleph.views.forms import Schema
 
 
 class XrefApiTestCase(TestCase):
@@ -115,6 +116,8 @@ class XrefApiTestCase(TestCase):
         coll0 = res.json['results'][0]['collection']
         assert 'Obsidian Order' not in coll0['label'], res.json
         assert 'Dabo Girls' in coll0['label'], res.json
+        schema = Schema(schema='XrefResponse')
+        schema.validate(res.json)
 
         # Logged in as outsider (restricted access)
         _, headers = self.login(foreign_id='outsider')
@@ -124,6 +127,8 @@ class XrefApiTestCase(TestCase):
         coll0 = res.json['results'][0]['collection']
         assert 'Obsidian Order' not in coll0['label'], res.json
         assert 'Dabo Girls' in coll0['label'], res.json
+        schema = Schema(schema='XrefResponse')
+        schema.validate(res.json)
 
         # Logged in as creator (all access)
         _, headers = self.login(foreign_id='creator')
@@ -133,6 +138,8 @@ class XrefApiTestCase(TestCase):
         labels = [m['collection']['label'] for m in res.json['results']]
         assert 'Obsidian Order' in labels, res.json
         assert 'Dabo Girls' in labels, res.json
+        schema = Schema(schema='XrefResponse')
+        schema.validate(res.json)
 
     def test_export(self):
         xref_collection(self.stage, self.residents)
@@ -172,6 +179,8 @@ class XrefApiTestCase(TestCase):
         assert 'Garak' not in match_dabo.json['results'][0]['entity']['name']
         assert 'Tain' not in match_dabo.json['results'][0]['match']['name']
         assert 'MPella' not in match_dabo.json['results'][0]['match']['name']
+        schema = Schema(schema='XrefResponse')
+        schema.validate(match_dabo.json)
 
         match_obsidian = self.client.get('/api/2/collections/%s/xref/%s' %
                                          (self.residents.id, self.obsidian.id),

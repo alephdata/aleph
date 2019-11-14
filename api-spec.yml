@@ -249,12 +249,7 @@ paths:
           application/json:
             schema:
               items:
-                properties:
-                  properties:
-                    type: object
-                  schema:
-                    type: string
-                type: object
+                $ref: '#/components/schemas/EntityUpdateSchema'
               type: array
         description: Entities to be loaded.
       summary: Load entities into a collection
@@ -489,15 +484,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                against_collection_ids:
-                  description: >-
-                    Optional argument to specify collections agaist which
-                    cross-referencing will be done
-                  items:
-                    type: integer
-                  type: array
-              type: object
+              $ref: '#/components/schemas/XrefSchema'
       summary: Generate cross-reference matches
   '/collections/{collection_id}/xref/export':
     get:
@@ -562,19 +549,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                collection_id:
-                  type: string
-                foreign_id:
-                  type: string
-                properties:
-                  type: object
-                schema:
-                  type: string
-              required:
-                - schema
-                - collection_id
-              type: object
+              $ref: '#/components/schemas/EntityCreateSchema'
       summary: Create an entity in a collection
   '/entities/{entity_id}':
     delete:
@@ -678,24 +653,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  results:
-                    items:
-                      properties:
-                        count:
-                          type: integer
-                        property:
-                          type: object
-                        schema:
-                          type: string
-                      type: object
-                    type: array
-                  status:
-                    description: ok
-                    type: string
-                  total:
-                    type: integer
-                type: object
+                $ref: '#/components/schemas/ReferencesResponse'
           description: OK
       tags:
         - Entity
@@ -747,27 +705,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  results:
-                    items:
-                      properties:
-                        count:
-                          type: integer
-                        field:
-                          type: string
-                        id:
-                          description: query string for this tag
-                          type: string
-                        value:
-                          type: string
-                      type: object
-                    type: array
-                  status:
-                    description: ok
-                    type: string
-                  total:
-                    type: integer
-                type: object
+                $ref: '#/components/schemas/TagsResponse'
           description: OK
       tags:
         - Entity
@@ -1614,20 +1552,39 @@ components:
         total_type:
           type: string
       type: object
+    ReferencesResponse:
+      properties:
+        results:
+          items:
+            properties:
+              count:
+                type: integer
+              property:
+                type: object
+              schema:
+                type: string
+            type: object
+          type: array
+        status:
+          description: ok
+          type: string
+        total:
+          type: integer
+      type: object
     Role:
       properties:
         api_key:
           type: string
         created_at:
-          type: string
+          type: stringpro
         email:
-          type: string
+          type: stringpro
         has_password:
-          type: boolean
+          type: booleapro
         id:
-          type: integer
+          type: integepro
         is_admin:
-          type: boolean
+          type: booleapro
         is_muted:
           type: boolean
         label:
@@ -1700,6 +1657,28 @@ components:
         total:
           type: integer
       type: object
+    TagsResponse:
+      properties:
+        results:
+          items:
+            properties:
+              count:
+                type: integer
+              field:
+                type: string
+              id:
+                description: query string for this tag
+                type: string
+              value:
+                type: string
+            type: object
+          type: array
+        status:
+          description: ok
+          type: string
+        total:
+          type: integer
+      type: object
     XrefCollection:
       properties:
         collection:
@@ -1721,17 +1700,17 @@ components:
     XrefMatch:
       properties:
         collection_id:
-          type: integer
+          type: string
         created_at:
           type: string
         entity:
           $ref: '#/components/schemas/Entity'
         id:
-          type: integer
+          type: string
         match:
           $ref: '#/components/schemas/Entity'
         match_collection_id:
-          type: integer
+          type: string
         score:
           type: number
         updated_at:
@@ -1749,6 +1728,9 @@ components:
     XrefSchema:
       properties:
         against_collection_ids:
+          description: >
+            Optional argument to specify collections agaist which
+            cross-referencing will be done
           type: array
           items:
             type: integer
