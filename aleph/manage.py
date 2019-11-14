@@ -1,19 +1,18 @@
 # coding: utf-8
+import click
 import logging
 from pathlib import Path
 from pprint import pprint  # noqa
 from banal import ensure_list
 from normality import slugify
-from flask_script import Manager, commands as flask_script_commands
-from flask_script.commands import ShowUrls
-from flask_migrate import MigrateCommand
+from flask.cli import FlaskGroup
 from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import create_app, db, cache
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
-from aleph.views import mount_app_blueprints
+# from aleph.views import mount_app_blueprints
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, get_stage
@@ -30,13 +29,6 @@ from aleph.logic.permissions import update_permission
 
 
 log = logging.getLogger('aleph')
-flask_script_commands.text_type = str
-
-app = create_app()
-mount_app_blueprints(app)
-manager = Manager(app)
-manager.add_command('db', MigrateCommand)
-manager.add_command('routes', ShowUrls)
 
 
 def get_collection(foreign_id):
@@ -46,15 +38,21 @@ def get_collection(foreign_id):
     return collection
 
 
-@manager.command
+@click.group(cls=FlaskGroup, create_app=create_app)
+def cli():
+    """Server-side command line for aleph."""
+    # mount_app_blueprints(app)
+
+
+@cli.command()
 def collections():
     """List all collections."""
     for collection in Collection.all():
         print(collection.id, collection.foreign_id, collection.label)
 
 
-@manager.command
-@manager.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
+@cli.command()
+@click.option('-s', '--sync', is_flag=True, default=False, help='Run without threads and quit when no tasks are left.')  # noqa
 def worker(sync=False):
     """Run the queue-based worker service."""
     worker = get_worker()
@@ -64,9 +62,9 @@ def worker(sync=False):
         worker.run()
 
 
-@manager.command
-@manager.option('-l', '--language', dest='language', nargs='*')
-@manager.option('-f', '--foreign_id', dest='foreign_id')
+@cli.command()
+@click.option('-l', '--language', multiple=True, help='ISO language codes for OCR')  # noqa
+@click.option('-f', '--foreign_id', help='Foreign ID of the collection')
 def crawldir(path, language=None, foreign_id=None):
     """Crawl the given directory."""
     path = Path(path)
@@ -86,33 +84,32 @@ def crawldir(path, language=None, foreign_id=None):
     refresh_collection(collection.id)
 
 
-@manager.command
-@manager.option('-k', '--keep-metadata', is_flag=True, default=False)
+@cli.command()
+@click.option('-k', '--keep-metadata', is_flag=True, default=False)
 def delete(foreign_id, keep_metadata=False):
     """Delete all the contents for a given collecton."""
     collection = get_collection(foreign_id)
     delete_collection(collection, keep_metadata=keep_metadata)
 
 
-@manager.command
-@manager.option('--sync', is_flag=True, default=False)
+@cli.command()
+@click.option('--sync', is_flag=True, default=False)
 def reset(foreign_id, sync=False):
     """Clear the search index and entity cache or a collection."""
     collection = get_collection(foreign_id)
     reset_collection(collection, sync=False)
 
 
-@manager.command
-@manager.option('--sync', is_flag=True, default=False)
-def reindex(foreign_id, sync=False):
+@cli.command()
+def reindex(foreign_id):
     """Clear the search index and entity cache or a collection."""
     collection = get_collection(foreign_id)
     stage = get_stage(collection, OP_PROCESS)
-    index_aggregate(stage, collection, sync=sync)
+    index_aggregate(stage, collection)
 
 
-@manager.command
-@manager.option('--sync', is_flag=True, default=False)
+@cli.command()
+@click.option('--sync', is_flag=True, default=False)
 def process(foreign_id, sync=False):
     """Process documents and database entities and index them."""
     collection = get_collection(foreign_id)
@@ -120,25 +117,26 @@ def process(foreign_id, sync=False):
     process_collection(stage, collection, sync=sync)
 
 
-@manager.command
+@cli.command()
 def flushdeleted():
     """Remove soft-deleted database objects."""
     cleanup_deleted()
 
 
-@manager.command
-@manager.option('-f', '--foreign-id')
-@manager.option('--index', is_flag=True, default=False)
-@manager.option('--process', is_flag=True, default=False)
-@manager.option('--reset', is_flag=True, default=False)
+@cli.command()
+@click.option('-f', '--foreign-id')
+@click.option('--index', is_flag=True, default=False)
+@click.option('--process', is_flag=True, default=False)
+@click.option('--reset', is_flag=True, default=False)
 def update(foreign_id=None, index=False, process=False, reset=False):
     """Re-index all the collections and entities."""
     update_roles()
     index_collections(refresh=True)
 
 
-@manager.option('-a', '--against', dest='against', nargs='*', help='foreign-ids of collections to xref against')  # noqa
-@manager.option('-f', '--foreign_id', dest='foreign_id', required=True, help='foreign-id of collection to xref')  # noqa
+@cli.command()
+@click.option('-a', '--against', multiple=True, help='foreign-ids of collections to xref against')  # noqa
+@click.option('-f', '--foreign_id', required=True, help='foreign-id of collection to xref')  # noqa
 def xref(foreign_id, against=None):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
@@ -147,7 +145,7 @@ def xref(foreign_id, against=None):
     queue_task(collection, OP_XREF, payload=against)
 
 
-@manager.command
+@cli.command()
 def bulkload(file_name):
     """Load entities from the specified mapping file."""
     log.info("Loading bulk data from: %s", file_name)
@@ -160,7 +158,7 @@ def bulkload(file_name):
         queue_task(collection, OP_BULKLOAD, payload=data)
 
 
-@manager.command
+@cli.command()
 def status(foreign_id=None):
     """Get the queue status (pending and finished tasks.)"""
     if foreign_id is not None:
@@ -171,7 +169,7 @@ def status(foreign_id=None):
     pprint(status)
 
 
-@manager.command
+@cli.command()
 def cancel(foreign_id):
     """Cancel all queued tasks for the dataset."""
     collection = get_collection(foreign_id)
@@ -179,13 +177,12 @@ def cancel(foreign_id):
     refresh_collection(collection.id)
 
 
-@manager.command
-@manager.option('-n', '--name', dest='name')
-@manager.option('-e', '--email', dest='email')
-@manager.option('-i', '--is_admin', dest='is_admin')
-@manager.option('-p', '--password', dest='password')
-def createuser(foreign_id, password=None, name=None, email=None,
-               is_admin=False):
+@cli.command()
+@click.option('-n', '--name')
+@click.option('-e', '--email')
+@click.option('-i', '--is_admin')
+@click.option('-p', '--password')
+def createuser(foreign_id, password=None, name=None, email=None, is_admin=False):  # noqa
     """Create a user and show their API key."""
     role = Role.load_or_create(foreign_id, Role.USER,
                                name or foreign_id,
@@ -199,7 +196,7 @@ def createuser(foreign_id, password=None, name=None, email=None,
     return role.api_key
 
 
-@manager.command
+@cli.command()
 def publish(foreign_id):
     """Make a collection visible to all users."""
     collection = get_collection(foreign_id)
@@ -209,7 +206,7 @@ def publish(foreign_id):
     update_collection(collection)
 
 
-@manager.command
+@cli.command()
 def rdf(foreign_id):
     """Generate a RDF triples for the given collection."""
     collection = get_collection(foreign_id)
@@ -219,36 +216,28 @@ def rdf(foreign_id):
             print(line)
 
 
-@manager.command
+@cli.command()
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_system()
 
 
-@manager.command
+@cli.command()
 def resetindex():
     """Re-create the ES index configuration, dropping all data."""
     delete_index()
     upgrade()
 
 
-@manager.command
+@cli.command()
 def resetcache():
     """Clear the redis cache."""
     cache.flush()
 
 
-@manager.command
+@cli.command()
 def evilshit():
     """EVIL: Delete all data and recreate the database."""
     delete_index()
     destroy_db()
     upgrade()
-
-
-def main():
-    manager.run()
-
-
-if __name__ == "__main__":
-    main()

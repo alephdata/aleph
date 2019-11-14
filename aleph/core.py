@@ -42,7 +42,8 @@ def create_app(config={}):
 
     app.config.update({
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI,
-        'BABEL_DOMAIN': 'aleph'
+        'FLASK_SKIP_DOTENV': True,
+        'BABEL_DOMAIN': 'aleph',
     })
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
