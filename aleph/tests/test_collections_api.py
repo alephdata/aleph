@@ -14,7 +14,8 @@ class CollectionsApiTestCase(TestCase):
             label='Test Collection',
             foreign_id='test_coll_entities_api',
             category='leak',
-            countries=[]
+            countries=['usa'],
+            languages=['en'],
         )
         self.ent = Entity.create({
             'schema': 'Person',
@@ -34,6 +35,8 @@ class CollectionsApiTestCase(TestCase):
                               headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
+        assert res.json['results'][0]['languages'] == ['eng'], res.json
+        assert res.json['results'][0]['countries'] == ['us'], res.json
 
     def test_sitemap(self):
         res = self.client.get('/api/2/sitemap.xml')
