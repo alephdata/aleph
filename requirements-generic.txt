@@ -1,6 +1,5 @@
 Flask==1.1.1
 Flask-SQLAlchemy==2.4.1
-Flask-Script==2.0.6
 Flask-Testing==0.7.1
 Flask-Mail==0.9.1
 Flask-Migrate==2.5.2
@@ -29,6 +28,7 @@ grpcio==1.25.0
 google-cloud-storage==1.23.0
 google-cloud-logging==1.14.0
 fasttext==0.9.1
+tabulate==0.8.5
 
 # Testing dependencies
 factory-boy==2.12.0
