@@ -75,17 +75,18 @@ class Schema():
     SCHEMA_NAME = None
     PREFIX = 'schema'
 
-    def __init__(self):
-        self.schema = self.load_json_schema()
+    def __init__(self, schema=None):
+        self.schema = self.load_json_schema(schema_name=schema)
 
-    def load_json_schema(self):
+    def load_json_schema(self, schema_name=None):
         """Loads the given schema file"""
-        key = cache.key(self.PREFIX, self.SCHEMA_NAME)
+        schema_name = schema_name or self.SCHEMA_NAME
+        key = cache.key(self.PREFIX, schema_name)
         schema = cache.get(key)
         if schema is not None:
             return jsonref.loads(schema)
 
-        relative_path = os.path.join('schemas', '%s.json' % self.SCHEMA_NAME)
+        relative_path = os.path.join('schemas', '%s.json' % schema_name)
         absolute_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)), relative_path
         )

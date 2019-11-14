@@ -94,11 +94,7 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                query:
-                  type: string
-                  example: putin
-              type: object
+              $ref: '#/components/schemas/AlertSchema'
       summary: Create an alert
   '/alerts/{alert_id}':
     delete:
@@ -419,40 +415,7 @@ paths:
           content:
             application/json:
               schema:
-                properties:
-                  finished:
-                    type: integer
-                  jobs:
-                    items:
-                      properties:
-                        finished:
-                          type: integer
-                        pending:
-                          type: integer
-                        running:
-                          type: integer
-                        stages:
-                          items:
-                            properties:
-                              finished:
-                                type: integer
-                              job_id:
-                                type: string
-                              pending:
-                                type: integer
-                              running:
-                                type: integer
-                              stage:
-                                type: string
-                            type: object
-                          type: array
-                      type: object
-                    type: array
-                  pending:
-                    type: integer
-                  running:
-                    type: integer
-                type: object
+                $ref: '#/components/schemas/CollectionStatus'
           description: OK
       tags:
         - Collection
@@ -1148,7 +1111,7 @@ components:
         created_at:
           type: string
         id:
-          type: integer
+          type: string
         links:
           properties:
             self:
@@ -1177,6 +1140,7 @@ components:
       properties:
         query:
           type: string
+          example: putin
       required: ["query"]
       type: object
     Collection:
@@ -1186,7 +1150,7 @@ components:
         category:
           type: string
         collection_id:
-          type: integer
+          type: string
         count:
           type: integer
         countries:
@@ -1200,7 +1164,7 @@ components:
         foreign_id:
           type: string
         id:
-          type: integer
+          type: string
         kind:
           type: string
         label:
@@ -1626,8 +1590,9 @@ components:
           type: integer
         next:
           description: URL of the next set of results or null
-          nullable: true
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         offset:
           type: integer
         page:
@@ -1638,8 +1603,9 @@ components:
           type: integer
         previous:
           description: URL of the previous set of results or null
-          nullable: true
-          type: string
+          oneOf:
+            - type: "null"
+            - type: string
         status:
           description: ok
           type: string

@@ -69,7 +69,7 @@
                 "type": "string"
               },
               "collection_id": {
-                "type": "integer"
+                "type": "string"
               },
               "count": {
                 "type": "integer"
@@ -90,7 +90,7 @@
                 "type": "string"
               },
               "id": {
-                "type": "integer"
+                "type": "string"
               },
               "kind": {
                 "type": "string"
