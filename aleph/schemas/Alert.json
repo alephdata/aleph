@@ -1,0 +1,33 @@
+{
+  "properties": {
+    "created_at": {
+      "type": "string"
+    },
+    "id": {
+      "type": "integer"
+    },
+    "links": {
+      "properties": {
+        "self": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "normalized": {
+      "type": "string"
+    },
+    "query": {
+      "description": "query string for the alert",
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "writable": {
+      "type": "boolean"
+    }
+  },
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

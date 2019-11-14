@@ -1,0 +1,77 @@
+{
+  "properties": {
+    "casefile": {
+      "type": "boolean"
+    },
+    "category": {
+      "type": "string"
+    },
+    "collection_id": {
+      "type": "integer"
+    },
+    "count": {
+      "type": "integer"
+    },
+    "countries": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "creator": {
+      "type": "object"
+    },
+    "foreign_id": {
+      "type": "string"
+    },
+    "id": {
+      "type": "integer"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "links": {
+      "properties": {
+        "reconcile": {
+          "type": "string"
+        },
+        "self": {
+          "type": "string"
+        },
+        "ui": {
+          "type": "string"
+        },
+        "xref": {
+          "type": "string"
+        },
+        "xref_export": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "schemata": {
+      "type": "object"
+    },
+    "secret": {
+      "type": "boolean"
+    },
+    "team": {
+      "type": "object"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "writable": {
+      "type": "boolean"
+    }
+  },
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

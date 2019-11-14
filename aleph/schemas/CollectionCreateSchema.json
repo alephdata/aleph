@@ -1,0 +1,91 @@
+{
+  "properties": {
+    "casefile": {
+      "type": "boolean"
+    },
+    "category": {
+      "type": "string",
+      "format": "category"
+    },
+    "countries": {
+      "items": {
+        "type": "string",
+        "format": "country"
+      },
+      "type": "array"
+    },
+    "data_url": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "url"
+        }
+      ]
+    },
+    "foreign_id": {
+      "type": "string"
+    },
+    "info_url": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "url"
+        }
+      ]
+    },
+    "label": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 500
+    },
+    "languages": {
+      "items": {
+        "type": "string",
+        "format": "language"
+      },
+      "type": "array"
+    },
+    "publisher": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "publisher_url": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "url"
+        }
+      ]
+    },
+    "summary": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "required": [
+    "label"
+  ],
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

@@ -1,0 +1,13 @@
+{
+  "properties": {
+    "against_collection_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      }
+    }
+  },
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

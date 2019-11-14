@@ -1,0 +1,21 @@
+{
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 4
+    },
+    "password": {
+      "type": "string",
+      "minLength": 6
+    },
+    "code": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "password",
+    "code"
+  ],
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

@@ -1,0 +1,31 @@
+{
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 4
+    },
+    "is_muted": {
+      "type": "boolean"
+    },
+    "password": {
+      "type": "string",
+      "minLength\"": 6
+    },
+    "current_password": {
+      "type": "string"
+    },
+    "locale": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "format": "locale"
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}

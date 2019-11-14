@@ -1,0 +1,12 @@
+{
+  "properties": {
+    "query": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "query"
+  ],
+  "type": "object",
+  "$schema": "http://json-schema.org/schema#"
+}
