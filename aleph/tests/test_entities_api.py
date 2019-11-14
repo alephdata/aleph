@@ -9,6 +9,7 @@ from aleph.queues import get_stage, OP_BULKLOAD
 from aleph.logic.bulkload import bulk_load
 from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
+from aleph.views.forms import Schema
 
 
 class EntitiesApiTestCase(TestCase):
@@ -49,6 +50,8 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url+'&facet=countries', headers=headers)
         assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['countries'], res.json
+        schema = Schema(schema='EntitiesResponse')
+        schema.validate(res.json)
 
     def test_export(self):
         self.load_fixtures()
@@ -70,6 +73,8 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'LegalEntity' in res.json['schema'], res.json
         assert 'Winnie' in res.json['name'], res.json
+        schema = Schema(schema='Entity')
+        schema.validate(res.json)
 
     def test_update(self):
         _, headers = self.login(is_admin=True)
@@ -86,6 +91,8 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'little' in res.json['name'], res.json
+        schema = Schema(schema='Entity')
+        schema.validate(res.json)
 
         data['properties'].pop('name', None)
         res = self.client.post(url,
@@ -111,6 +118,8 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'middle' in res.json['properties']['summary'][0], res.json
+        schema = Schema(schema='Entity')
+        schema.validate(res.json)
 
     def test_create_collection_object(self):
         _, headers = self.login(is_admin=True)
@@ -132,6 +141,8 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert res.json['collection']['id'] == str(self.col.id), res.json
+        schema = Schema(schema='Entity')
+        schema.validate(res.json)
 
     def test_create_nested(self):
         _, headers = self.login(is_admin=True)
@@ -151,6 +162,8 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 2 == len(res.json['properties'].get('alias', [])), res.json
+        schema = Schema(schema='Entity')
+        schema.validate(res.json)
 
     def test_merge_nested(self):
         _, headers = self.login(is_admin=True)
@@ -263,6 +276,8 @@ class EntitiesApiTestCase(TestCase):
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
+        schema = Schema(schema='EntitiesResponse')
+        schema.validate(res.json)
 
     def test_match(self):
         _, headers = self.login(is_admin=True)
@@ -292,6 +307,8 @@ class EntitiesApiTestCase(TestCase):
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
+        schema = Schema(schema='EntitiesResponse')
+        schema.validate(res.json)
 
     def test_entity_references(self):
         db_uri = self.get_fixture_path('experts.csv').as_uri()
@@ -313,6 +330,8 @@ class EntitiesApiTestCase(TestCase):
         results = res.json['results']
         assert len(results) == 1, results
         assert results[0]['count'] == 3, results
+        schema = Schema(schema='ReferencesResponse')
+        schema.validate(res.json)
 
     def test_entity_tags(self):
         _, headers = self.login(is_admin=True)
@@ -345,3 +364,5 @@ class EntitiesApiTestCase(TestCase):
         results = res.json['results']
         assert len(results) == 1, results
         assert results[0]['value'] == '+491769817271', results
+        schema = Schema(schema='TagsResponse')
+        schema.validate(res.json)

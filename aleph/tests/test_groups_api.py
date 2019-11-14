@@ -1,6 +1,7 @@
 from aleph.core import db
 from aleph.model import Role
 from aleph.tests.util import TestCase
+from aleph.views.forms import Schema
 
 
 class GroupsApiTestCase(TestCase):
@@ -26,3 +27,5 @@ class GroupsApiTestCase(TestCase):
         res = self.client.get('/api/2/groups', headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
+        schema = Schema(schema='GroupsResponse')
+        schema.validate(res.json)
