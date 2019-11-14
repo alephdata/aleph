@@ -5,6 +5,7 @@ from pathlib import Path
 from pprint import pprint  # noqa
 from banal import ensure_list
 from normality import slugify
+from tabulate import tabulate
 from flask.cli import FlaskGroup
 from followthemoney.cli.util import load_mapping_file
 
@@ -12,7 +13,6 @@ from aleph.core import create_app, db, cache
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
-# from aleph.views import mount_app_blueprints
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, get_stage
@@ -20,7 +20,7 @@ from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
-from aleph.logic.collections import refresh_collection, index_collections
+from aleph.logic.collections import index_collections
 from aleph.logic.processing import index_aggregate, process_collection
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import update_role, update_roles
@@ -34,21 +34,23 @@ log = logging.getLogger('aleph')
 def get_collection(foreign_id):
     collection = Collection.by_foreign_id(foreign_id, deleted=True)
     if collection is None:
-        raise ValueError("No such collection: %r" % foreign_id)
+        raise click.BadParameter("No such collection: %r" % foreign_id)
     return collection
 
 
 @click.group(cls=FlaskGroup, create_app=create_app)
 def cli():
     """Server-side command line for aleph."""
-    # mount_app_blueprints(app)
+    # mount_app_blueprints(current_app)
 
 
 @cli.command()
 def collections():
     """List all collections."""
-    for collection in Collection.all():
-        print(collection.id, collection.foreign_id, collection.label)
+    collections = []
+    for coll in Collection.all():
+        collections.append((coll.foreign_id, coll.id, coll.label))
+    print(tabulate(collections, headers=['Foreign ID', 'ID', 'Label']))
 
 
 @cli.command()
@@ -63,6 +65,7 @@ def worker(sync=False):
 
 
 @cli.command()
+@click.argument('path', type=click.Path(exists=True))
 @click.option('-l', '--language', multiple=True, help='ISO language codes for OCR')  # noqa
 @click.option('-f', '--foreign_id', help='Foreign ID of the collection')
 def crawldir(path, language=None, foreign_id=None):
@@ -81,10 +84,11 @@ def crawldir(path, language=None, foreign_id=None):
     log.info('Crawling %s to %s (%s)...', path, foreign_id, collection.id)
     crawl_directory(collection, path)
     log.info('Complete. Make sure a worker is running :)')
-    refresh_collection(collection.id)
+    update_collection(collection)
 
 
 @cli.command()
+@click.argument('foreign_id')
 @click.option('-k', '--keep-metadata', is_flag=True, default=False)
 def delete(foreign_id, keep_metadata=False):
     """Delete all the contents for a given collecton."""
@@ -93,6 +97,7 @@ def delete(foreign_id, keep_metadata=False):
 
 
 @cli.command()
+@click.argument('foreign_id')
 @click.option('--sync', is_flag=True, default=False)
 def reset(foreign_id, sync=False):
     """Clear the search index and entity cache or a collection."""
@@ -101,14 +106,17 @@ def reset(foreign_id, sync=False):
 
 
 @cli.command()
+@click.argument('foreign_id')
 def reindex(foreign_id):
     """Clear the search index and entity cache or a collection."""
     collection = get_collection(foreign_id)
     stage = get_stage(collection, OP_PROCESS)
     index_aggregate(stage, collection)
+    update_collection(collection)
 
 
 @cli.command()
+@click.argument('foreign_id')
 @click.option('--sync', is_flag=True, default=False)
 def process(foreign_id, sync=False):
     """Process documents and database entities and index them."""
@@ -124,19 +132,15 @@ def flushdeleted():
 
 
 @cli.command()
-@click.option('-f', '--foreign-id')
-@click.option('--index', is_flag=True, default=False)
-@click.option('--process', is_flag=True, default=False)
-@click.option('--reset', is_flag=True, default=False)
-def update(foreign_id=None, index=False, process=False, reset=False):
-    """Re-index all the collections and entities."""
+def update(index=False, process=False, reset=False):
+    """Re-index all the collections and clear some caches."""
     update_roles()
     index_collections(refresh=True)
 
 
 @cli.command()
-@click.option('-a', '--against', multiple=True, help='foreign-ids of collections to xref against')  # noqa
-@click.option('-f', '--foreign_id', required=True, help='foreign-id of collection to xref')  # noqa
+@click.argument('foreign_id')
+@click.option('-a', '--against', multiple=True, help='foreign IDs of collections to xref against')  # noqa
 def xref(foreign_id, against=None):
     """Cross-reference all entities and documents in a collection."""
     collection = get_collection(foreign_id)
@@ -146,6 +150,7 @@ def xref(foreign_id, against=None):
 
 
 @cli.command()
+@click.argument('file_name')
 def bulkload(file_name):
     """Load entities from the specified mapping file."""
     log.info("Loading bulk data from: %s", file_name)
@@ -174,7 +179,7 @@ def cancel(foreign_id):
     """Cancel all queued tasks for the dataset."""
     collection = get_collection(foreign_id)
     cancel_queue(collection)
-    refresh_collection(collection.id)
+    update_collection(collection)
 
 
 @cli.command()

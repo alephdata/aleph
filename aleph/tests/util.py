@@ -19,7 +19,6 @@ from aleph.logic.processing import process_collection, index_aggregate
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
-from aleph.views import mount_app_blueprints
 from aleph.oauth import oauth
 
 APP_NAME = 'aleph-test'
@@ -70,7 +69,6 @@ class TestCase(FlaskTestCase):
         settings.TAG_ENTITIES = True
         settings._gcp_logger = None
         app = create_app({})
-        mount_app_blueprints(app)
         return app
 
     def create_user(self, foreign_id='tester', name=None, email=None,
