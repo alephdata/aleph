@@ -1,42 +1,12 @@
 import logging
-from banal import first
-from flask import request
-from werkzeug.exceptions import BadRequest
 from followthemoney import model
 from banal import hash_data, keys_values
 
-from aleph.core import archive, db
-from aleph.views.util import get_index_entity, get_session_id
 from aleph.logic.aggregator import get_aggregator
-from aleph.logic.collections import refresh_collection
-from aleph.queues import queue_task, OP_INDEX, OP_BULKDELETE, OP_BULKLOAD
+from aleph.queues import queue_task, OP_INDEX
 from aleph.model import Mapping
 
 log = logging.getLogger(__name__)
-
-
-def get_mapping_query(mapping):
-    table = get_index_entity(mapping.table_id, request.authz.READ)
-    properties = table.get('properties', {})
-    csv_hash = first(properties.get('csvHash'))
-    query = {
-        'entities': mapping.query,
-        'proof': mapping.table_id,
-    }
-    if csv_hash:
-        url = archive.generate_url(csv_hash)
-        if not url:
-            local_path = archive.load_file(csv_hash)
-            if local_path is not None:
-                url = local_path.as_posix()
-        if url is not None:
-            query['csv_url'] = url
-            return {
-                'query': query,
-                'mapping_id': mapping.id,
-            }
-        raise BadRequest("Could not generate csv url for the table")
-    raise BadRequest("Source table doesn't have a csvHash")
 
 
 def bulk_load(stage, collection, config):
@@ -93,21 +63,4 @@ def load_mapping_query(stage, collection, query_id, query):
     return entity_ids
 
 
-def flush_mapping(collection, mapping):
-    job_id = get_session_id()
-    payload = {
-        'mapping_id': mapping.id,
-    }
-    queue_task(collection, OP_BULKDELETE, job_id=job_id, payload=payload)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection.id)
 
-
-def load_mapping(collection, mapping):
-    query = get_mapping_query(mapping)
-    job_id = get_session_id()
-    queue_task(collection, OP_BULKLOAD, job_id=job_id, payload=query)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection.id)
