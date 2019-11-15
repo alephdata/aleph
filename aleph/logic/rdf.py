@@ -25,7 +25,7 @@ def export_entity(entity, collection_uri):
     uri = registry.entity.rdf(entity.id)
     g.add((uri, DCTERMS.isPartOf, collection_uri))
     g.add((collection_uri, DCTERMS.hasPart, uri))
-    for triple in entity.triples:
+    for triple in entity.triples():
         g.add(triple)
     return g
 
