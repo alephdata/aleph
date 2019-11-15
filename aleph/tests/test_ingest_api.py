@@ -31,7 +31,6 @@ class IngestApiTestCase(TestCase):
     def test_upload_csv_doc(self):
         _, headers = self.login(is_admin=True)
         meta = {
-            'collection_id': self.col.id,
             'countries': ['de', 'usa'],
             'languages': ['en'],
             'mime_type': 'text/csv',
