@@ -10,7 +10,7 @@ from normality import slugify
 from tabulate import tabulate
 from flask.cli import FlaskGroup
 from servicelayer.jobs import Job
-from followthemoney.cli.util import load_mapping_file
+from followthemoney.cli.util import load_mapping_file, write_object
 
 from aleph.core import create_app, db, cache
 from aleph.authz import Authz
@@ -20,6 +20,7 @@ from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, get_stage
 from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.index.entities import iter_entities
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
@@ -194,11 +195,22 @@ def load_entities(foreign_id, infile, unsafe=False):
     update_collection(collection)
 
 
+@cli.command('dump-entities')
+@click.argument('foreign_id')
+@click.option('-o', '--outfile', type=click.File('w'), default='-')  # noqa
+def dump_entities(foreign_id, outfile):
+    """Export FtM entities for the given collection."""
+    collection = get_collection(foreign_id)
+    for entity in iter_entities(collection_id=collection.id,
+                                includes=['schema', 'properties.*']):
+        write_object(outfile, entity)
+
+
 @cli.command('dump-rdf')
 @click.argument('foreign_id')
 @click.option('-o', '--outfile', type=click.File('wb'), default='-')  # noqa
 def dump_rdf(foreign_id, outfile):
-    """Generate a RDF triples for the given collection."""
+    """Export RDF triples for the given collection."""
     collection = get_collection(foreign_id)
     for line in export_collection(collection):
         outfile.write(line)
