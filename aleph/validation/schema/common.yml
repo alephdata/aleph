@@ -28,4 +28,15 @@ QueryResponse:
       type: integer
     total_type:
       type: string
-  
+
+DatedModel:
+  type: object
+  properties:
+    id:
+      type: string
+    created_at:
+      type: string
+      format: partial-date
+    updated_at:
+      type: string
+      format: partial-date

@@ -12,10 +12,10 @@ from lxml.etree import tostring
 from lxml.html import document_fromstring
 from lxml.html.clean import Cleaner
 from servicelayer.jobs import Job
-from jsonschema import ValidationError
 
 from aleph.authz import Authz
 from aleph.model import Collection, Entity
+from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
@@ -50,38 +50,32 @@ def get_session_id():
     return '%s:%s' % (role_id, session_id)
 
 
-def parse_request(schema, many=None):
+def parse_request(schema):
     """Get request form data or body and validate it against a schema."""
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict(flat=True)
-    return validate_data(data, schema, many=many)
+    return validate(data, schema)
 
 
-def _validate_data(data, schema):
-    return schema().validate(data)
-
-
-def validate_data(data, schema, many=None):
+def validate(data, schema):
     """Validate the data inside a request against a schema."""
-    try:
-        if many:
-            data_ = []
-            for instance in data:
-                data_.append(_validate_data(instance, schema))
-            data = data_
-        else:
-            data = _validate_data(data, schema)
-    except ValidationError as err:
-        # TODO: switch to iter_errors
-        resp = jsonify({
-            'status': 'error',
-            'errors': [err.message],
-            'message': gettext('Error during data validation')
-        }, status=400)
-        raise BadRequest(response=resp)
-    return data
+    validator = get_validator(schema)
+    errors = {}
+    for error in validator.iter_errors(data):
+        path = '.'.join(error.path)
+        errors[path] = error.message
+
+    if not len(errors):
+        return data
+
+    resp = jsonify({
+        'status': 'error',
+        'errors': errors,
+        'message': gettext('Error during data validation')
+    }, status=400)
+    raise BadRequest(response=resp)
 
 
 def get_db_entity(entity_id, action=Authz.READ):

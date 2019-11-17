@@ -3,7 +3,6 @@ from flask import Blueprint, request
 from aleph.core import db
 from aleph.model import Alert
 from aleph.search import DatabaseQueryResult
-from aleph.views.forms import AlertSchema
 from aleph.views.serializers import AlertSerializer
 from aleph.views.util import require, obj_or_404
 from aleph.views.util import parse_request
@@ -63,7 +62,7 @@ def create():
               $ref: '#/components/schemas/Alert'
     """
     require(request.authz.session_write)
-    data = parse_request(AlertSchema)
+    data = parse_request('AlertCreate')
     alert = Alert.create(data, request.authz.id)
     db.session.commit()
     tag_request(alert_id=alert.id)

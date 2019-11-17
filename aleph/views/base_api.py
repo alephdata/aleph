@@ -1,7 +1,7 @@
 import logging
 from babel import Locale
 from collections import defaultdict
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
 from followthemoney import model
@@ -13,6 +13,7 @@ from aleph import __version__
 from aleph.core import cache, settings, url_for
 from aleph.model import Collection
 from aleph.logic import resolver
+from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
 
@@ -62,6 +63,15 @@ def metadata():
     }
     cache.set_complex(key, data, expires=120)
     return jsonify(data)
+
+
+@blueprint.route('/api/openapi.json')
+def openapi():
+    """Generate an OpenAPI 3.0 documentation JSON file for the API."""
+    spec = get_openapi_spec(current_app)
+    for view in current_app.view_functions.values():
+        spec.path(view=view)
+    return jsonify(spec.to_dict())
 
 
 @blueprint.route('/api/2/statistics')

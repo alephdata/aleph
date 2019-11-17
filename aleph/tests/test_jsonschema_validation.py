@@ -1,14 +1,10 @@
 from werkzeug.exceptions import BadRequest
 
-from aleph.views.forms import RoleSchema
 from aleph.tests.util import TestCase
-from aleph.views.util import validate_data
+from aleph.views.util import validate
 
 
 class SchemaValidationTest(TestCase):
-
-    def setUp(self):
-        super(SchemaValidationTest, self).setUp()
 
     def test_role_schema(self):
         data = {
@@ -19,4 +15,4 @@ class SchemaValidationTest(TestCase):
             "locale": "en-us",
         }
         with self.assertRaises(BadRequest):
-            validate_data(data, RoleSchema)
+            validate(data, 'RoleUpdate')

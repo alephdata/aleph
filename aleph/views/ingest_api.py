@@ -13,8 +13,7 @@ from aleph.queues import ingest_entity
 from aleph.index.entities import index_proxy
 from aleph.logic.notifications import publish, channel_tag
 from aleph.views.util import get_db_collection, get_flag
-from aleph.views.util import jsonify, validate_data, get_session_id
-from aleph.views.forms import DocumentCreateSchema
+from aleph.views.util import jsonify, validate, get_session_id
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
@@ -42,7 +41,7 @@ def _load_metadata():
     except Exception as ex:
         raise BadRequest(str(ex))
 
-    validate_data(meta, DocumentCreateSchema)
+    validate(meta, 'DocumentIngest')
     foreign_id = stringify(meta.get('foreign_id'))
     if not len(request.files) and foreign_id is None:
         raise BadRequest(response=jsonify({

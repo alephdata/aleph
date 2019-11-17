@@ -1,77 +1,12 @@
 import os
 
-from banal import ensure_dict
-from normality import stringify
-from flask_babel import gettext
-from urlnormalizer import normalize_url
-from followthemoney import model
-from followthemoney.types import registry
-from jsonschema import FormatChecker, validate
+from jsonschema import validate
 # import jsonref
 
-from aleph import settings
 from aleph.core import cache
-from aleph.model import Collection
-
-
-@FormatChecker.cls_checks("locale", raises=ValueError)
-def check_locale(value):
-    value = stringify(value)
-    if value not in settings.UI_LANGUAGES:
-        raise ValueError(gettext('Invalid user locale.'))
-    return True
-
-
-@FormatChecker.cls_checks("country", raises=ValueError)
-def check_country_code(value):
-    value = registry.country.clean(value)
-    if not registry.country.validate(value):
-        msg = gettext('Invalid country code: %s')
-        raise ValueError(msg % value)
-    return True
-
-
-@FormatChecker.cls_checks("category", raises=ValueError)
-def check_category(value):
-    if value not in Collection.CATEGORIES.keys():
-        raise ValueError(gettext('Invalid category.'))
-    return True
-
-
-@FormatChecker.cls_checks("url", raises=ValueError)
-def check_url(value):
-    value = stringify(value)
-    if value is not None and normalize_url(value) is None:
-        raise ValueError(gettext('Invalid URL.'))
-    return True
-
-
-@FormatChecker.cls_checks("language", raises=ValueError)
-def check_language(value):
-    value = registry.language.clean(value)
-    if not registry.language.validate(value):
-        raise ValueError(gettext('Invalid language code.'))
-    return True
-
-
-@FormatChecker.cls_checks("schema", raises=ValueError)
-def check_schema(value):
-    schema = model.get(value)
-    if schema is None or schema.abstract:
-        msg = gettext('Invalid schema name: %s')
-        raise ValueError(msg % value)
-    return True
-
-
-@FormatChecker.cls_checks("partial-date", raises=ValueError)
-def check_partial_date(value):
-    if not registry.date.validate(value):
-        raise ValueError(gettext('Invalid date: %s') % value)
-    return True
 
 
 class Schema():
-
     SCHEMA_NAME = None
     PREFIX = 'schema'
 
@@ -105,15 +40,6 @@ class Schema():
         return data
 
     def pre_load(self, data):
-        return data
-
-    def flatten(self, data, target, source):
-        """Move a nested object with an ID to a direct key."""
-        data = ensure_dict(data)
-        value = stringify(data.get(target))
-        if value is None:
-            value = stringify(ensure_dict(data.get(source)).get('id'))
-        data[target] = value
         return data
 
 
