@@ -1,0 +1,28 @@
+AlertCreate:
+  type: object
+  required: ["query"]
+  properties:
+    query:
+      type: string
+      example: putin
+      description: query string for the alert
+Alert:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/AlertCreate'
+  properties:
+    id:
+      type: string
+    normalized:
+      type: string
+    updated_at:
+      type: string
+    created_at:
+      type: string
+    writable:
+      type: boolean
+    links:
+      type: object
+      properties:
+        self:
+          type: string

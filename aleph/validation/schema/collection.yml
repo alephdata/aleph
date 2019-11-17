@@ -1,0 +1,152 @@
+Collection:
+  type: object
+  properties:
+    casefile:
+      type: boolean
+    category:
+      type: string
+      format: category
+    # collection_id:
+    #   type: string
+    count:
+      type: integer
+    countries:
+      type: array
+      items:
+        type: string
+        format: country
+    created_at:
+      type: string
+    creator:
+      type: object
+    foreign_id:
+      type: string
+    id:
+      type: string
+    kind:
+      type: string
+    label:
+      type: string
+    links:
+      properties:
+        reconcile:
+          type: string
+        self:
+          type: string
+        ui:
+          type: string
+        xref:
+          type: string
+        xref_export:
+          type: string
+      type: object
+    schemata:
+      type: object
+    secret:
+      type: boolean
+    team:
+      type: object
+    updated_at:
+      type: string
+    writable:
+      type: boolean
+CollectionCreate:
+  type: object
+  properties:
+    casefile:
+      type: boolean
+    category:
+      type: string
+      format: category
+    countries:
+      items:
+        type: string
+        format: country
+      type: array
+    data_url:
+      anyOf:
+      - type: "null"
+      - type: string
+        format: url
+    foreign_id:
+      type: string
+    info_url:
+      anyOf:
+      - type: "null"
+      - type: string
+        format: url
+    label:
+      type: string
+      minLength: 2
+      maxLength: 500
+    languages:
+      items:
+        type: string
+        format: language
+      type: array
+    publisher:
+      anyOf:
+      - type: "null"
+      - type: string
+    publisher_url:
+      anyOf:
+      - type: "null"
+      - type: string
+        format: url
+    summary:
+      anyOf:
+      - type: "null"
+      - type: string
+  required: ["label"]
+CollectionUpdate:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/CollectionCreate'
+  properties:
+    creator_id:
+      anyOf:
+      - type: "null"
+      - type: string
+StatusCounts:
+  type: object
+  properties:
+    finished:
+      type: integer
+    pending:
+      type: integer
+    running:
+      type: integer
+CollectionStatus:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/StatusCounts'  
+  properties:
+    jobs:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/StatusCounts'
+        properties:
+          stages:
+            type: array
+            items:
+              type: object
+              allOf:
+              - $ref: '#/components/schemas/StatusCounts'
+              properties:
+                job_id:
+                  type: string
+                stage:
+                  type: string
+CollectionsResponse:
+  allOf:
+   - $ref: '#/components/schemas/QueryResponse'
+  properties:
+    facets:
+      type: object
+    results:
+      items:
+        $ref: '#/components/schemas/Collection'
+      type: array
+  type: object

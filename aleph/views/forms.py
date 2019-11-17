@@ -7,7 +7,7 @@ from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
 from jsonschema import FormatChecker, validate
-import jsonref
+# import jsonref
 
 from aleph import settings
 from aleph.core import cache

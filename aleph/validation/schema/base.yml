@@ -1,0 +1,65 @@
+LoginSchema:
+  type: object
+  required: ["email", "password"]
+  properties:
+    email:
+      type: string
+      format: email
+    password:
+      type: string
+      minLength: 3
+
+SystemStatusResponse:
+  type: object
+  properties:
+    total:
+      type: integer
+    results:
+      type: array
+      items:
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/CollectionStatus'
+        properties:
+          id:
+            type: string
+          collection:
+            $ref: '#/components/schemas/Collection'
+
+
+Notification:
+  type: object
+  properties:
+    actor_id:
+      type: integer
+    created_at:
+      type: string
+    event:
+      properties:
+        name:
+          type: string
+        params:
+          type: object
+        templates:
+          type: string
+      type: object
+    id:
+      type: integer
+    params:
+      type: object
+    updated_at:
+      type: string
+
+
+NotificationsResponse:
+  type: object
+  properties:
+    total:
+      type: integer
+    results:
+      type: array
+      items:
+        $ref: '#/components/schemas/Notification'
+            
+      
+    

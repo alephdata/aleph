@@ -1,0 +1,75 @@
+RoleCodeCreate:
+  type: object
+  properties:
+    email:
+      type: string
+      format: email
+  required: ["email"]
+RoleCreate:
+  type: object
+  properties:
+    name:
+      type: string
+      minLength: 4
+    password:
+      type: string
+      minLength: 6
+    code:
+      type: string
+  required: ["password", "code"]
+RoleUpdate:
+  type: object
+  properties:
+    name:
+      type: string
+      minLength: 4
+    is_muted:
+      type: boolean
+    password:
+      type: string
+      minLength": 6
+    current_password:
+      type: string
+    locale:
+      anyOf:
+      - type: "null"
+      - type: string
+        format: locale
+Role:
+  type: object
+  properties:
+    api_key:
+      type: string
+    created_at:
+      type: string
+    email:
+      type: string
+    has_password:
+      type: boolean
+    id:
+      type: string
+    is_admin:
+      type: boolean
+    is_muted:
+      type: boolean
+    label:
+      type: string
+    links:
+      type: object
+    locale:
+      anyOf:
+      - type: "null"
+      - type: string
+        format: locale
+    name:
+      type: string
+    type:
+      enum:
+      - user
+      - group
+      - system
+      type: string
+    updated_at:
+      type: string
+    writeable:
+      type: boolean

@@ -1,0 +1,21 @@
+QueryLog:
+  type: object
+  properties:
+    count:
+      type: integer
+    first:
+      type: string
+    last:
+      type: string
+    query:
+      type: string
+
+QueryLogsResponse:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/QueryResponse'
+  properties:
+    results:
+      type: array
+      items:
+        $ref: '#/components/schemas/QueryLog'

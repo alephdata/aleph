@@ -1,0 +1,128 @@
+EntitiesResponse:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/QueryResponse'
+  properties:
+    links:
+      properties:
+        export:
+          type: string
+      type: object
+    results:
+      items:
+        $ref: '#/components/schemas/Entity'
+      type: array
+Entity:
+  type: object
+  properties:
+    collection:
+      $ref: '#/components/schemas/Collection'
+    countries:
+      items:
+        type: string
+      type: array
+    dates:
+      items:
+        type: string
+      type: array
+    highlight:
+      items:
+        type: string
+      type: array
+    id:
+      type: string
+    job_id:
+      type: string
+    links:
+      properties:
+        tags:
+          type: string
+        csv:
+          type: string
+        file:
+          type: string
+        pdf:
+          type: string
+        reference:
+          type: string
+        self:
+          type: string
+        ui:
+          type: string
+      type: object
+    name:
+      type: string
+    properties:
+      type: object
+    schema:
+      type: string
+    schemata:
+      items:
+        type: string
+      type: array
+    score:
+      type: number
+    updated_at:
+      type: string
+    writable:
+      type: boolean
+EntityUpdate:
+  required: ["schema"]
+  type: object
+  properties:
+    schema:
+      type: string
+      format: schema
+    properties:
+      type: object
+EntityCreate:
+  required: ["collection_id"]
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/EntityUpdateSchema'
+  properties:
+    collection_id:
+      type: string
+    foreign_id:
+      type: string
+EntityReferences:
+  type: object
+  properties:
+    results:
+      items:
+        properties:
+          count:
+            type: integer
+          property:
+            type: object
+          schema:
+            type: string
+        type: object
+      type: array
+    status:
+      description: ok
+      type: string
+    total:
+      type: integer
+EntityTagsResponse:
+  type: object
+  properties:
+    results:
+      items:
+        properties:
+          count:
+            type: integer
+          field:
+            type: string
+          id:
+            description: query string for this tag
+            type: string
+          value:
+            type: string
+        type: object
+      type: array
+    status:
+      description: ok
+      type: string
+    total:
+      type: integer

@@ -71,6 +71,9 @@ def create_app(config={}):
     # applications can register their behaviour.
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
+
+    from aleph.views import mount_app_blueprints
+    mount_app_blueprints(app)
     return app
 
 

@@ -1,0 +1,36 @@
+Permission:
+  type: object
+  properties:
+    created_at:
+      type: string
+    id:
+      type: integer
+    read:
+      type: boolean
+    role:
+      $ref: '#/components/schemas/Role'
+    updated_at:
+      type: string
+    write:
+      type: boolean
+
+PermissionsResponse:
+  type: object
+  properties:
+    total:
+      type: integer
+    results:
+      type: array
+      items:
+        $ref: '#/components/schemas/Permission'
+
+PermissionUpdate:
+  properties:
+    write:
+      type: boolean
+    read:
+      type: boolean
+    role_id:
+      type: string
+  required: ["write", "read", "role_id"]
+  type: object
