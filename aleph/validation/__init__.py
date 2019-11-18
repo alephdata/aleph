@@ -9,6 +9,7 @@ from apispec_webframeworks.flask import FlaskPlugin
 
 from aleph import settings, __version__
 from aleph.validation.formats import checker
+from aleph.validation.util import to_jsonschema
 
 URI = 'https://schema.alephdata.org/'
 SCHEMA_DIR = os.path.join(os.path.dirname(__file__), 'schema')
@@ -60,7 +61,7 @@ def get_resolver():
         schemata = get_schemata()
         resolver.store[URI] = {
             'components': {
-                'schemas': schemata
+                'schemas': to_jsonschema(schemata)
             }
         }
         settings._json_resolver = resolver
@@ -74,23 +75,3 @@ def get_validator(schema):
     return Draft4Validator(schema,
                            format_checker=checker,
                            resolver=resolver)
-
-
-def validate(data, ref):
-
-    errors = {}
-    for error in validator.iter_errors(data):
-        path = '.'.join(error.path)
-        errors[path] = error.message
-
-    resp = jsonify({
-        'status': 'error',
-        'errors': errors,
-        'message': gettext('Error during data validation')
-    }, status=400)
-    raise BadRequest(response=resp)
-
-
-if __name__ == '__main__':
-    validate({'label': 44}, '#/components/schemas/CollectionCreate')
-    validate({}, '#/components/schemas/CollectionCreate')

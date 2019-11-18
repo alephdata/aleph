@@ -18,16 +18,19 @@ def retrieve():
     get:
       summary: Download a blob from the archive
       parameters:
-      - description: authorization token for an archive blob
+      - description: Authorization token for an archive blob
         in: query
         name: claim
         schema:
-          type: integer
+          type: string
+          description: A signed JWT with the object hash.
       responses:
         '200':
+          description: OK
           content:
             '*/*': {}
-          description: OK
+        '404':
+          description: Object does not exist.
       tags:
       - Archive
     """

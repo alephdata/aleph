@@ -93,6 +93,15 @@ def password_login():
 
 @blueprint.route('/api/2/sessions/oauth')
 def oauth_init():
+    """Init OAuth auth flow.
+    ---
+    get:
+      summary: Start OAuth authentication
+      description: Initiate a forward to the OAuth server.
+      responses:
+        '302':
+          description: Redirect
+    """
     require(settings.OAUTH)
     url = url_for('.oauth_callback')
     state = request.args.get('next', request.referrer)

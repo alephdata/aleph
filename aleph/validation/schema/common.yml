@@ -4,10 +4,10 @@ QueryResponse:
     limit:
       type: integer
     next:
+      type: string
+      format: url
+      nullable: true
       description: URL of the next set of results or null
-      oneOf:
-        - type: "null"
-        - type: string
     offset:
       type: integer
     page:
@@ -17,10 +17,10 @@ QueryResponse:
       description: Total number of pages
       type: integer
     previous:
+      type: string
+      format: url
+      nullable: true
       description: URL of the previous set of results or null
-      oneOf:
-        - type: "null"
-        - type: string
     status:
       description: ok
       type: string

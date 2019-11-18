@@ -5,7 +5,7 @@ AlertCreate:
     query:
       type: string
       example: putin
-      description: query string for the alert
+      description: Query string for the alert
 Alert:
   type: object
   allOf:

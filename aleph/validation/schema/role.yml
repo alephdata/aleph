@@ -31,10 +31,9 @@ RoleUpdate:
     current_password:
       type: string
     locale:
-      anyOf:
-      - type: "null"
-      - type: string
-        format: locale
+      type: string
+      nullable: true
+      format: locale
 Role:
   type: object
   properties:
@@ -57,10 +56,9 @@ Role:
     links:
       type: object
     locale:
-      anyOf:
-      - type: "null"
-      - type: string
-        format: locale
+      type: string
+      nullable: true
+      format: locale
     name:
       type: string
     type:

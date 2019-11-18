@@ -39,10 +39,13 @@ Entity:
           type: string
         csv:
           type: string
+          nullable: true
         file:
           type: string
+          nullable: true
         pdf:
           type: string
+          nullable: true
         reference:
           type: string
         self:
@@ -66,6 +69,7 @@ Entity:
       type: string
     writable:
       type: boolean
+
 EntityUpdate:
   required: ["schema"]
   type: object
@@ -75,6 +79,7 @@ EntityUpdate:
       format: schema
     properties:
       type: object
+
 EntityCreate:
   required: ["collection_id"]
   type: object
@@ -85,6 +90,7 @@ EntityCreate:
       type: string
     foreign_id:
       type: string
+
 EntityReferences:
   type: object
   properties:
@@ -97,6 +103,7 @@ EntityReferences:
             type: object
           schema:
             type: string
+            format: schema
         type: object
       type: array
     status:
@@ -104,6 +111,7 @@ EntityReferences:
       type: string
     total:
       type: integer
+
 EntityTagsResponse:
   type: object
   properties:

@@ -35,6 +35,7 @@ XrefMatch:
       type: number
     updated_at:
       type: string
+
 XrefResponse:
   allOf:
   - $ref: '#/components/schemas/QueryResponse'
@@ -44,6 +45,7 @@ XrefResponse:
         $ref: '#/components/schemas/XrefMatch'
       type: array
   type: object
+
 Xref:
   type: object
   properties:
@@ -55,4 +57,3 @@ Xref:
       items:
         type: integer
         minimum: 1
-  

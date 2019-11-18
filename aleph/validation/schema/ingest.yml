@@ -2,40 +2,33 @@ DocumentIngest:
   type: object
   properties:
     author:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     authored_at:
-      oneOf:
-      - type: "null"
-      - type: string
-        format: "partial-date"
+      type: string
+      format: "partial-date"
+      nullable: true
     countries:
+      type: array
       items:
         type: string
         format: country
-      type: array
     crawler:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     date:
-      oneOf:
-      - type: "null"
-      - type: string
-        format: "partial-date"
+      type: string
+      nullable: true
+      format: "partial-date"
     file_name:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     foreign_id:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     generator:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     keywords:
       items:
         type: string
@@ -48,38 +41,30 @@ DocumentIngest:
         format: language
       type: array
     mime_type:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     modified_at:
-      oneOf:
-      - type: "null"
-      - type: string
-        format: "partial-date"
+      type: string
+      nullable: true
+      format: "partial-date"
     parent_id:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     published_at:
-      oneOf:
-      - type: "null"
-      - type: string
-        format: "partial-date"
+      type: string
+      nullable: true
+      format: "partial-date"
     retrieved_at:
-      oneOf:
-      - type: "null"
-      - type: string
-        format: "partial-date"
+      type: string
+      nullable: true
+      format: "partial-date"
     source_url:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
+      format: url
     summary:
-      oneOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     title:
-      oneOf:
-      - type: "null"
-      - type: string
-  
+      type: string
+      nullable: true

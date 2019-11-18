@@ -6,8 +6,6 @@ Collection:
     category:
       type: string
       format: category
-    # collection_id:
-    #   type: string
     count:
       type: integer
     countries:
@@ -25,6 +23,7 @@ Collection:
       type: string
     kind:
       type: string
+      enum: ["casefile", "source"]
     label:
       type: string
     links:
@@ -64,17 +63,15 @@ CollectionCreate:
         format: country
       type: array
     data_url:
-      anyOf:
-      - type: "null"
-      - type: string
-        format: url
+      type: string
+      format: url
+      nullable: true
     foreign_id:
       type: string
     info_url:
-      anyOf:
-      - type: "null"
-      - type: string
-        format: url
+      type: string
+      format: url
+      nullable: true
     label:
       type: string
       minLength: 2
@@ -85,18 +82,15 @@ CollectionCreate:
         format: language
       type: array
     publisher:
-      anyOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
     publisher_url:
-      anyOf:
-      - type: "null"
-      - type: string
-        format: url
+      type: string
+      format: url
+      nullable: true
     summary:
-      anyOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
   required: ["label"]
 CollectionUpdate:
   type: object
@@ -104,9 +98,9 @@ CollectionUpdate:
   - $ref: '#/components/schemas/CollectionCreate'
   properties:
     creator_id:
-      anyOf:
-      - type: "null"
-      - type: string
+      type: string
+      nullable: true
+
 StatusCounts:
   type: object
   properties:
@@ -116,6 +110,7 @@ StatusCounts:
       type: integer
     running:
       type: integer
+
 CollectionStatus:
   type: object
   allOf:
@@ -139,6 +134,7 @@ CollectionStatus:
                   type: string
                 stage:
                   type: string
+
 CollectionsResponse:
   allOf:
    - $ref: '#/components/schemas/QueryResponse'
