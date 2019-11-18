@@ -301,20 +301,20 @@ export class EntityMappingMode extends Component {
               ))}
             />
           </div>
+          <div className="EntityMappingMode__section">
+            <h5 className="bp3-heading EntityMappingMode__section__title">
+              {intl.formatMessage(messages.section2Title)}
+            </h5>
+            <MappingPropertyAssign
+              columnLabels={csvHeader}
+              csvData={csvData}
+              mappings={mappings}
+              onPropertyAdd={this.onPropertyAdd}
+              onPropertyRemove={this.onPropertyRemove}
+            />
+          </div>
           {mappings.size > 0 && (
             <>
-              <div className="EntityMappingMode__section">
-                <h5 className="bp3-heading EntityMappingMode__section__title">
-                  {intl.formatMessage(messages.section2Title)}
-                </h5>
-                <MappingPropertyAssign
-                  columnLabels={csvHeader}
-                  csvData={csvData}
-                  mappings={mappings}
-                  onPropertyAdd={this.onPropertyAdd}
-                  onPropertyRemove={this.onPropertyRemove}
-                />
-              </div>
               <div className="EntityMappingMode__section">
                 <h5 className="bp3-heading EntityMappingMode__section__title">
                   {intl.formatMessage(messages.section3Title)}
