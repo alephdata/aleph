@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
-import { Button, ButtonGroup, Colors } from '@blueprintjs/core';
+import { Button, ButtonGroup } from '@blueprintjs/core';
 import { showErrorToast } from 'src/app/toast';
 import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
@@ -17,12 +17,10 @@ import {
   MappingStatus,
   MappingVerify,
 } from '.';
+import { assignMappingColor } from './util';
 
 import './EntityMappingMode.scss';
 
-const colorOptions = [
-  Colors.BLUE1, Colors.TURQUOISE1, Colors.VIOLET1, Colors.ORANGE1, Colors.GREEN1, Colors.RED1,
-];
 
 const messages = defineMessages({
   keyError: {
@@ -86,11 +84,10 @@ export class EntityMappingMode extends Component {
     const { mappings } = this.state;
     const clone = new Map(mappings);
     const id = schema.name;
-    const index = mappings.size;
 
     const newMapping = {
       id,
-      color: colorOptions[index % colorOptions.length],
+      color: assignMappingColor(mappings),
       schema,
       keys: [],
       properties: {},
@@ -215,10 +212,10 @@ export class EntityMappingMode extends Component {
     const { model } = this.props;
     const mappings = new Map();
 
-    Object.values(existingMapping.query).forEach(({ keys, schema, properties }, i) => {
+    Object.values(existingMapping.query).forEach(({ keys, schema, properties }) => {
       mappings.set(schema, {
         id: schema,
-        color: colorOptions[i % colorOptions.length],
+        color: assignMappingColor(mappings),
         schema: model.getSchema(schema),
         keys,
         properties,
