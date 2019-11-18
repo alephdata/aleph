@@ -40,4 +40,12 @@
       margin-bottom: 3px;
     }
   }
+
+  &__error {
+    line-height: 1.4;
+    font-style: italic;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }

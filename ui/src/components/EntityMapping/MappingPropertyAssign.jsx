@@ -11,6 +11,14 @@ import {
 import './MappingPropertyAssign.scss';
 
 const messages = defineMessages({
+  error_blank: {
+    id: 'mapping.propAssign.errorBlank',
+    defaultMessage: 'Columns with no header cannot be assigned',
+  },
+  error_duplicate: {
+    id: 'mapping.propAssign.errorDuplicate',
+    defaultMessage: 'Columns with duplicate headers cannot be assigned',
+  },
   other: {
     id: 'mapping.propAssign.other',
     defaultMessage: 'Other',
@@ -90,59 +98,67 @@ export class MappingPropertyAssign extends Component {
     );
   }
 
-  renderHeaderCell(colLabel, colValue) {
-    const { intl, onPropertyAdd, onPropertyRemove, mappings } = this.props;
+  checkColumnValidity(colLabel) {
+    const { columnLabels, intl } = this.props;
+    const labelOccurrenceCount = columnLabels.filter(label => label === colLabel).length;
 
-    const style = {
-      color: colValue ? 'white' : 'black',
-      backgroundColor: colValue ? mappings.get(colValue.mappingId).color : 'unset',
-    };
+    if (colLabel === '') {
+      return intl.formatMessage(messages.error_blank);
+    }
+    if (labelOccurrenceCount > 1) {
+      return intl.formatMessage(messages.error_duplicate);
+    }
+    return null;
+  }
+
+  renderHeaderCell(colLabel, colValue, style, colError) {
+    const { intl, onPropertyAdd, onPropertyRemove, mappings } = this.props;
 
     return (
       <ColumnHeaderCell
-        name={colLabel}
+        name={colLabel || '-'}
         style={style}
       >
-        <div className="MappingPropertyAssign__headerSelect">
-          {colValue && (
-            <div className="MappingPropertyAssign__headerSelect__label">
-              <Schema.Smart.Label schema={colValue.mappingId} icon />
-            </div>
-          )}
-          <Select
-            id="entity-type"
-            items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
-            itemListRenderer={listProps => this.itemListRenderer(listProps)}
-            itemRenderer={itemRenderer}
-            popoverProps={{ minimal: true }}
-            filterable={false}
-            onItemSelect={({ schema, property }) => {
-              onPropertyAdd(schema, property.name, { column: colLabel });
-              if (colValue) {
-                onPropertyRemove(colValue.mappingId, colValue.property.name);
-              }
-            }}
-          >
-            <Button
-              text={colValue ? `${colValue.property.label}` : intl.formatMessage(messages.placeholder)}
-              rightIcon="caret-down"
-              className="MappingPropertyAssign__headerSelect__button"
-            />
-          </Select>
-        </div>
+        {colError && (
+          <p className="MappingPropertyAssign__error">{colError}</p>
+        )}
+        {!colError && (
+          <div className="MappingPropertyAssign__headerSelect">
+            {colValue && (
+              <div className="MappingPropertyAssign__headerSelect__label">
+                <Schema.Smart.Label schema={colValue.mappingId} icon />
+              </div>
+            )}
+            <Select
+              id="entity-type"
+              items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
+              itemListRenderer={listProps => this.itemListRenderer(listProps)}
+              itemRenderer={itemRenderer}
+              popoverProps={{ minimal: true }}
+              filterable={false}
+              onItemSelect={({ schema, property }) => {
+                onPropertyAdd(schema, property.name, { column: colLabel });
+                if (colValue) {
+                  onPropertyRemove(colValue.mappingId, colValue.property.name);
+                }
+              }}
+            >
+              <Button
+                text={colValue ? `${colValue.property.label}` : intl.formatMessage(messages.placeholder)}
+                rightIcon="caret-down"
+                className="MappingPropertyAssign__headerSelect__button"
+              />
+            </Select>
+          </div>
+        )}
       </ColumnHeaderCell>
     );
   }
 
-  renderCell(rowIndex, colIndex, colHeaderValue) {
-    const { csvData, mappings } = this.props;
+  renderCell(rowIndex, colIndex, style) {
+    const { csvData } = this.props;
     const value = csvData[rowIndex][colIndex];
     const loading = false;
-
-    const style = {
-      color: colHeaderValue ? 'white' : 'black',
-      backgroundColor: colHeaderValue ? mappings.get(colHeaderValue.mappingId).color : 'white',
-    };
 
     return (
       <Cell loading={loading} style={style}>
@@ -154,7 +170,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   render() {
-    const { columnLabels } = this.props;
+    const { columnLabels, mappings } = this.props;
     const columnAssignments = this.getColumnAssignments();
 
     return (
@@ -170,14 +186,32 @@ export class MappingPropertyAssign extends Component {
         >
           {columnLabels.map((colLabel, i) => {
             const colValue = columnAssignments.get(colLabel);
+            const colError = this.checkColumnValidity(colLabel);
+            const style = {
+              color: 'black',
+              backgroundColor: 'white',
+            };
+
+            if (colError) {
+              style.color = 'rgba(0,0,0,.4)';
+              style.pointerEvents = 'none';
+              style.cursor = 'not-allowed';
+            } else if (colValue) {
+              style.color = 'white';
+              style.backgroundColor = mappings.get(colValue.mappingId).color;
+            }
 
             return (
               <Column
                 key={colLabel}
                 id={i}
                 name={colLabel}
-                cellRenderer={(rowIndex, colIndex) => this.renderCell(rowIndex, colIndex, colValue)}
-                columnHeaderCellRenderer={() => this.renderHeaderCell(colLabel, colValue)}
+                cellRenderer={(rowIndex, colIndex) => (
+                  this.renderCell(rowIndex, colIndex, style, colError)
+                )}
+                columnHeaderCellRenderer={() => (
+                  this.renderHeaderCell(colLabel, colValue, style, colError)
+                )}
               />
             );
           })}

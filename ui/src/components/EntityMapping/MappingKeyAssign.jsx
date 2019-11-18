@@ -56,7 +56,7 @@ export class MappingKeyAssignItem extends Component {
     const { columnLabels, onKeyAdd, onKeyRemove, intl } = this.props;
 
     const items = columnLabels
-      .filter((column) => keys.indexOf(column) === -1)
+      .filter((column) => column !== '' && keys.indexOf(column) === -1)
       .sort();
 
     return (
