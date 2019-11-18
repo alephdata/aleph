@@ -61,6 +61,3 @@ def load_mapping_query(stage, collection, query_id, query):
     log.info("[%s] Query done (%s entities)",
              collection.foreign_id, entities_count)
     return entity_ids
-
-
-

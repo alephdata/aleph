@@ -12,8 +12,10 @@ from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, query_delete, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
-from aleph.logic.aggregator import get_aggregator
-from aleph.logic.entities import refresh_entity_id
+from aleph.index.collections import delete_entities
+from aleph.logic.collections import refresh_collection
+from aleph.logic.aggregator import drop_aggregator
+
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
@@ -211,27 +213,6 @@ def delete_entity(entity_id, exclude=None, sync=False):
 def delete_entities_by_mapping_id(stage, collection, mapping_id, sync=False):
     """Delete entities loaded by a mapping"""
     log.debug("Flushing entities for mapping %s", mapping_id)
-    aggregator = get_aggregator(collection)
-    index = entities_read_index()
-    query = {
-        'bool': {
-            'filter': [{
-                "term": {
-                    "mapping_id": mapping_id
-                }
-            }]
-        }
-    }
-    query = {
-        'query': query,
-        '_source': _source_spec([], []),
-        'size': MAX_PAGE
-    }
-    result = es.search(index=index, body=query)
-    # log.debug(result)
-    for doc in result.get('hits', {}).get('hits', []):
-        entity = unpack_result(doc)
-        if entity is not None:
-            delete_entity(entity['id'])
-            aggregator.delete(entity_id=entity['id'])
-            refresh_entity_id(entity['id'])
+    delete_entities(collection.id, mapping_id=mapping_id, sync=sync)
+    drop_aggregator(collection)
+    refresh_collection(collection.id)
