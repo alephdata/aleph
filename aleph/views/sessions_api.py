@@ -11,7 +11,6 @@ from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.util import ui_url
 from aleph.logic.roles import update_role
-from aleph.views.forms import LoginSchema
 from aleph.views.util import get_url_path, parse_request
 from aleph.views.util import require, jsonify
 
@@ -50,9 +49,31 @@ def decode_authz():
 
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
 def password_login():
-    """Provides email and password authentication."""
+    """Provides email and password authentication.
+    ---
+    post:
+      summary: Log in as a user
+      description: Create a session token using a username and password.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+    """
     require(settings.PASSWORD_LOGIN)
-    data = parse_request(LoginSchema)
+    data = parse_request('Login')
     role = Role.by_email(data.get('email'))
     if role is None or not role.has_password:
         raise BadRequest(gettext("Invalid user or password."))

@@ -79,7 +79,7 @@ EntityCreate:
   required: ["collection_id"]
   type: object
   allOf:
-    - $ref: '#/components/schemas/EntityUpdateSchema'
+    - $ref: '#/components/schemas/EntityUpdate'
   properties:
     collection_id:
       type: string

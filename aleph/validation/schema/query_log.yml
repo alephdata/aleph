@@ -9,13 +9,3 @@ QueryLog:
       type: string
     query:
       type: string
-
-QueryLogsResponse:
-  type: object
-  allOf:
-  - $ref: '#/components/schemas/QueryResponse'
-  properties:
-    results:
-      type: array
-      items:
-        $ref: '#/components/schemas/QueryLog'

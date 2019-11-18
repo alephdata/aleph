@@ -1,4 +1,4 @@
-LoginSchema:
+Login:
   type: object
   required: ["email", "password"]
   properties:
@@ -49,17 +49,3 @@ Notification:
       type: object
     updated_at:
       type: string
-
-
-NotificationsResponse:
-  type: object
-  properties:
-    total:
-      type: integer
-    results:
-      type: array
-      items:
-        $ref: '#/components/schemas/Notification'
-            
-      
-    

@@ -617,21 +617,6 @@ paths:
         Get tags for the entity with id `entity_id`. Tags include the query
         string to make a search by that particular tag.
       summary: Get entity tags
-  /groups:
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GroupsResponse'
-          description: OK
-      tags:
-        - Group
-      description: >-
-        Get the list of groups the user belongs to. Groups are used for
-        authorization.
-      summary: List groups
   /match:
     post:
       parameters:
@@ -678,68 +663,6 @@ paths:
                 - schema
               type: object
       summary: Query for similar entities
-  /notifications:
-    delete:
-      responses:
-        '202':
-          content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    description: ok
-                    type: string
-                type: object
-          description: Accepted
-      tags:
-        - Notification
-      description: Delete all notification for the user
-      summary: Clear notifications
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotificationsResponse'
-          description: OK
-      tags:
-        - Notification
-      description: Get all the notifications for the user
-      summary: Get notifications
-  /querylog:
-    delete:
-      parameters:
-        - in: query
-          name: query
-          schema:
-            type: string
-      responses:
-        '204':
-          content:
-            application/json:
-              schema:
-                properties:
-                  status:
-                    type: string
-                type: object
-          description: No Content
-      tags:
-        - Query Log
-      description: Delete the query logs for a particular search term
-      summary: Clear query log
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/QueryLogsResponse'
-          description: OK
-      tags:
-        - Query Log
-      description: Get query logs for the user
-      summary: Get query logs
   /search:
     get:
       parameters:
@@ -933,19 +856,6 @@ paths:
         10,000 results. Supports the same query parameters as
         [`/search`](#/paths/~1search/get).
       summary: Download the results of a search
-  /status:
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemStatusResponse'
-          description: OK
-      tags:
-        - Status
-      description: List collections being processed currently and pending task counts
-      summary: Get an overview of collections being processed
 tags:
   - description: |
       Create and manage alerts.

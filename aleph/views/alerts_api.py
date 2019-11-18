@@ -27,9 +27,9 @@ def index():
                 - $ref: '#/components/schemas/QueryResponse'
                 properties:
                   results:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Alert'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Alert'
           description: OK
       tags:
         - Alert
@@ -46,6 +46,11 @@ def create():
     ---
     post:
       summary: Create an alert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alert'
       responses:
         '200':
           content:
@@ -55,11 +60,6 @@ def create():
           description: OK
       tags:
         - Alert
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Alert'
     """
     require(request.authz.session_write)
     data = parse_request('AlertCreate')

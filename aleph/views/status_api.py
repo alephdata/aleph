@@ -4,8 +4,7 @@ from flask import Blueprint, request
 from aleph.model import Collection
 from aleph.queues import get_active_collection_status
 from aleph.views.serializers import CollectionSerializer
-from aleph.views.util import jsonify
-from aleph.views.util import require
+from aleph.views.util import jsonify, require
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('status_api', __name__)
@@ -13,6 +12,22 @@ blueprint = Blueprint('status_api', __name__)
 
 @blueprint.route('/api/2/status', methods=['GET'])
 def status():
+    """
+    ---
+    get:
+      summary: Get an overview of collections being processed
+      description: >
+        List collections being processed currently and pending task counts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStatusResponse'
+      tags:
+        - Status
+    """
     require(request.authz.logged_in)
     status = get_active_collection_status()
     active_collections = status.pop('datasets', [])

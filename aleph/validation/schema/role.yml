@@ -27,7 +27,7 @@ RoleUpdate:
       type: boolean
     password:
       type: string
-      minLength": 6
+      minLength: 6
     current_password:
       type: string
     locale:
