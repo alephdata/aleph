@@ -32,7 +32,7 @@ def suggest():
         name: prefix
         required: true
         schema:
-          type: prefix
+          type: string
       responses:
         '200':
           description: OK
@@ -169,6 +169,13 @@ def view(id):
         Fetch detailed information about a role that the user is
         entitled to access, e.g. their own role, or a group they
         are part of.
+      parameters:
+      - in: path
+        name: id
+        required: true
+        description: role ID
+        schema:
+          type: integer
       responses:
         '200':
           description: OK
@@ -192,6 +199,13 @@ def update(id):
         Update a role to change its display name, or to define a
         new login password. Users can only update roles they have
         write access to, i.e. their own.
+      parameters:
+      - in: path
+        name: id
+        required: true
+        description: role ID
+        schema:
+          type: integer
       requestBody:
         content:
           application/json:

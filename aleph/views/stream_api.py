@@ -41,6 +41,12 @@ def triples(collection_id):
       description: >-
         This will return a list of triples that describe each entity
         in the given collection. The format is `ntriples`.
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: OK

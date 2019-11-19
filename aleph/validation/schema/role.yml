@@ -37,7 +37,7 @@ RoleUpdate:
       nullable: true
       format: locale
 
-      Role:
+Role:
   type: object
   allOf:
   - $ref: '#/components/schemas/DatedModel'
