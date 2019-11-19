@@ -34,6 +34,23 @@ def entities(collection_id=None):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/_rdf')
 def triples(collection_id):
+    """
+    ---
+    get:
+      summary: Linked data stream of the collection
+      description: >-
+        This will return a list of triples that describe each entity
+        in the given collection. The format is `ntriples`.
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+      tags:
+      - Entity
+    """
     require(request.authz.can_stream())
     log.debug("Stream triples [%r] begins... (coll: %s)",
               request.authz, collection_id)

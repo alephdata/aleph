@@ -5,6 +5,7 @@ RoleCodeCreate:
       type: string
       format: email
   required: ["email"]
+
 RoleCreate:
   type: object
   properties:
@@ -17,6 +18,7 @@ RoleCreate:
     code:
       type: string
   required: ["password", "code"]
+
 RoleUpdate:
   type: object
   properties:
@@ -34,7 +36,8 @@ RoleUpdate:
       type: string
       nullable: true
       format: locale
-Role:
+
+      Role:
   type: object
   allOf:
   - $ref: '#/components/schemas/DatedModel'

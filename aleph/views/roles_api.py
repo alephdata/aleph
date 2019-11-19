@@ -9,8 +9,6 @@ from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
 from aleph.logic.roles import challenge_role, update_role
-from aleph.views.forms import RoleSchema
-from aleph.views.forms import RoleCodeCreateSchema, RoleCreateSchema
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
 from aleph.views.context import tag_request
@@ -21,6 +19,37 @@ log = logging.getLogger(__name__)
 
 @blueprint.route('/api/2/roles/_suggest', methods=['GET'])
 def suggest():
+    """
+    ---
+    get:
+      summary: Suggest users matching a search prefix
+      description: >-
+        For a given `prefix`, suggest matching user accounts. For
+        security reasons, the prefix must be more than three
+        characters long.
+      parameters:
+      - in: query
+        name: prefix
+        required: true
+        schema:
+          type: prefix
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Role'
+      tags:
+      - Role
+    """
     require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz, limit=10)
     if parser.prefix is None or len(parser.prefix) < 3:
@@ -39,9 +68,34 @@ def suggest():
 
 @blueprint.route('/api/2/roles/code', methods=['POST'])
 def create_code():
+    """Send a account creation token to an email address.
+    ---
+    post:
+      summary: Begin account registration
+      description: >
+        Begin validating a user email by sending a token to the address
+        which can then be used to create an account.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleCodeCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+    """
     require(settings.PASSWORD_LOGIN)
     require(not request.authz.in_maintenance)
-    data = parse_request(RoleCodeCreateSchema)
+    data = parse_request('RoleCodeCreate')
     challenge_role(data)
     return jsonify({
         'status': 'ok',
@@ -51,9 +105,28 @@ def create_code():
 
 @blueprint.route('/api/2/roles', methods=['POST'])
 def create():
+    """Create a user role.
+    ---
+    post:
+      summary: Create a user account
+      description: >
+        Create a user role by supplying the required account details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleCreate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    """
     require(settings.PASSWORD_LOGIN)
     require(not request.authz.in_maintenance)
-    data = parse_request(RoleCreateSchema)
+    data = parse_request('RoleCreate')
     try:
         email = Role.SIGNATURE.loads(data.get('code'),
                                      max_age=Role.SIGNATURE_MAX_AGE)
@@ -88,6 +161,22 @@ def create():
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['GET'])
 def view(id):
+    """Retrieve role details.
+    ---
+    post:
+      summary: Retrieve role details
+      description: >
+        Fetch detailed information about a role that the user is
+        entitled to access, e.g. their own role, or a group they
+        are part of.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    """
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_read_role(role.id))
     return RoleSerializer.jsonify(role)
@@ -95,9 +184,30 @@ def view(id):
 
 @blueprint.route('/api/2/roles/<int:id>', methods=['POST', 'PUT'])
 def update(id):
+    """Change user settings.
+    ---
+    post:
+      summary: Change user settings
+      description: >
+        Update a role to change its display name, or to define a
+        new login password. Users can only update roles they have
+        write access to, i.e. their own.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    """
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_write_role(role.id))
-    data = parse_request(RoleSchema)
+    data = parse_request('RoleUpdate')
 
     # When changing passwords, check the old password first.
     # cf. https://github.com/alephdata/aleph/issues/718
