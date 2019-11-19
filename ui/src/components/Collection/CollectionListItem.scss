@@ -20,7 +20,8 @@
     }
 
     .summary {
-        font-size: $pt-font-size-large;
+        font-size: $pt-font-size;
+        margin-bottom: $aleph-grid-size;
     }
 
     .details {
@@ -28,7 +29,7 @@
         color: $aleph-greyed-text;
     }
 
-    .details-item { 
+    .details-item {
         display: inline-block;
         min-width: 8em;
         margin-right: 2em;
