@@ -8,16 +8,6 @@ XrefCollection:
     parent:
       type: integer
 
-XrefCollectionResponse:
-  type: object
-  allOf:
-  - $ref: '#/components/schemas/QueryResponse'
-  properties:
-    results:
-      items:
-        $ref: '#/components/schemas/XrefCollection'
-      type: array
-
 XrefMatch:
   type: object
   allOf:
@@ -34,17 +24,7 @@ XrefMatch:
     score:
       type: number
 
-XrefResponse:
-  allOf:
-  - $ref: '#/components/schemas/QueryResponse'
-  properties:
-    results:
-      items:
-        $ref: '#/components/schemas/XrefMatch'
-      type: array
-  type: object
-
-Xref:
+XrefGenerate:
   type: object
   properties:
     against_collection_ids:
