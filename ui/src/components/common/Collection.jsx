@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { Icon } from '@blueprintjs/core';
+import { Icon, Spinner } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
@@ -16,7 +16,7 @@ import './Collection.scss';
 class CollectionLabel extends PureComponent {
   render() {
     const {
-      collection, icon = true, label = true, truncate,
+      collection, icon = true, label = true, updating = false, truncate,
     } = this.props;
     if (!collection || !collection.id) {
       return null;
@@ -34,10 +34,16 @@ class CollectionLabel extends PureComponent {
     if (truncate) {
       text = truncateText(collection.label, truncate);
     }
+    let renderedIcon;
+    if (updating) {
+      renderedIcon = <Spinner size="16" />;
+    } else if (icon) {
+      renderedIcon = <Icon icon={iconName} style={style} />;
+    }
 
     return (
       <span className="CollectionLabel" title={collection.label}>
-        { icon && (<Icon icon={iconName} style={style} />)}
+        { renderedIcon }
         <span>{ label && text }</span>
       </span>
     );

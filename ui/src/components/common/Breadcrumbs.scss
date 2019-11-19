@@ -22,5 +22,9 @@
   .bp3-breadcrumb-current {
     pointer-events: none;
     color: $blue1;
+
+    .bp3-spinner-head {
+      stroke: $blue1;
+    }
   }
 }

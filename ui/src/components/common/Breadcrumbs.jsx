@@ -1,14 +1,67 @@
 import React, { PureComponent, Component } from 'react';
-import { Icon } from '@blueprintjs/core';
+import { defineMessages, injectIntl } from 'react-intl';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { Icon, Tooltip } from '@blueprintjs/core';
 import c from 'classnames';
-import { Category, Collection, Entity } from 'src/components/common';
+import { Category, Collection, Entity, Numeric } from 'src/components/common';
+
+import { fetchCollectionStatus } from 'src/actions';
+import { selectCollectionStatus } from 'src/selectors';
 
 import './Breadcrumbs.scss';
 
+const messages = defineMessages({
+  updating: {
+    id: 'collection.status.progress',
+    defaultMessage: 'Update in progress ({percent}%)',
+  },
+});
 
 class CollectionBreadcrumb extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.fetchStatus = this.fetchStatus.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchStatus();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
+  fetchStatus() {
+    const { collection } = this.props;
+    this.props.fetchCollectionStatus(collection)
+      .finally(() => {
+        const { status } = this.props;
+        const duration = status.pending === 0 ? 6000 : 2000;
+        this.timeout = setTimeout(this.fetchStatus, duration);
+      });
+  }
+
   render() {
-    const { collection, active, showCategory } = this.props;
+    const { active, collection, intl, showCategory, status } = this.props;
+    const pending = status.pending || 0;
+    const running = status.running || 0;
+    const finished = status.finished || 0;
+    const inProcess = pending + running;
+    const total = inProcess + finished;
+    const progress = finished / total;
+    const percent = <Numeric num={Math.round(progress * 100)} />;
+    const updating = !status.shouldLoad && inProcess;
+
+    const collectionLink = (
+      <Collection.Link
+        collection={collection}
+        className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })}
+        icon
+        truncate={30}
+        updating={updating}
+      />
+    );
 
     return (
       <>
@@ -18,7 +71,12 @@ class CollectionBreadcrumb extends PureComponent {
           </li>
         )}
         <li key={collection.id}>
-          <Collection.Link collection={collection} className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
+          {updating && (
+            <Tooltip content={intl.formatMessage(messages.updating, { percent })}>
+              {collectionLink}
+            </Tooltip>
+          )}
+          {!updating && collectionLink}
         </li>
       </>
     );
@@ -73,8 +131,16 @@ class TextBreadcrumb extends PureComponent {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  const { collection } = ownProps;
+  return { status: selectCollectionStatus(state, collection.id) };
+};
+
 export default class Breadcrumbs extends Component {
-  static Collection = CollectionBreadcrumb;
+  static Collection = compose(
+    connect(mapStateToProps, { fetchCollectionStatus }),
+    injectIntl,
+  )(CollectionBreadcrumb);
 
   static Entity = EntityBreadcrumb;
 
