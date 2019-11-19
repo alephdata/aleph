@@ -98,6 +98,22 @@ a {
   color: $aleph-greyed-text;
 }
 
+.text-markdown {
+  * {
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: $aleph-grid-size 0 !important;
+    padding: $aleph-grid-size 0 !important;
+  }
+
+  p {
+    margin-bottom: $aleph-grid-size*1.5 !important;
+  }
+}
+
 .clickable {
   cursor: pointer;
 }
