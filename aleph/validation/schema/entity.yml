@@ -12,8 +12,11 @@ EntitiesResponse:
       items:
         $ref: '#/components/schemas/Entity'
       type: array
+
 Entity:
   type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
   properties:
     collection:
       $ref: '#/components/schemas/Collection'
@@ -29,8 +32,6 @@ Entity:
       items:
         type: string
       type: array
-    id:
-      type: string
     job_id:
       type: string
     links:
@@ -65,8 +66,6 @@ Entity:
       type: array
     score:
       type: number
-    updated_at:
-      type: string
     writable:
       type: boolean
 
@@ -81,10 +80,10 @@ EntityUpdate:
       type: object
 
 EntityCreate:
-  required: ["collection_id"]
   type: object
   allOf:
     - $ref: '#/components/schemas/EntityUpdate'
+  required: ["collection_id"]
   properties:
     collection_id:
       type: string

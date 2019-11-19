@@ -6,19 +6,15 @@ AlertCreate:
       type: string
       example: putin
       description: Query string for the alert
+
 Alert:
   type: object
   allOf:
-  - $ref: '#/components/schemas/AlertCreate'
+  - $ref: '#/components/schemas/DatedModel'
   properties:
-    id:
-      type: string
     normalized:
       type: string
-    updated_at:
-      type: string
-    created_at:
-      type: string
+      readOnly: true
     writable:
       type: boolean
     links:

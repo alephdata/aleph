@@ -219,61 +219,6 @@ paths:
         description: The mapping to apply.
         required: true
       summary: Load mappings for a collection
-  '/collections/{collection_id}/permissions':
-    get:
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PermissionsResponse'
-          description: OK
-      tags:
-        - Permission
-        - Collection
-      description: >-
-        Get the list of all permissions for the collection with id
-        `collection_id`
-      summary: Get permissions for a collection
-    post:
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PermissionsResponse'
-          description: OK
-      tags:
-        - Permission
-        - Collection
-      description: Update permissions for the collection with id `collection_id`
-      requestBody:
-        content:
-          application/json:
-            schema:
-              items:
-                properties:
-                  read:
-                    type: boolean
-                  role_id:
-                    type: integer
-                  write:
-                    type: boolean
-                type: object
-              type: array
-      summary: Update permissions for a collection
   '/collections/{collection_id}/process':
     post:
       parameters:
@@ -809,7 +754,7 @@ paths:
 
             - `domains`, websites mentioned in the document.
 
-            - `phone_numbers`, mentioned in the document.
+            - `phones`, mentioned in the document.
 
             - `dates`, in any of the following formats: yyyy-MM-dd, yyyy-MM,
             yyyy-MM-d, yyyy-M, yyyy

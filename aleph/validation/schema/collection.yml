@@ -1,5 +1,7 @@
 Collection:
   type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
   properties:
     casefile:
       type: boolean
@@ -13,13 +15,9 @@ Collection:
       items:
         type: string
         format: country
-    created_at:
-      type: string
     creator:
       type: object
     foreign_id:
-      type: string
-    id:
       type: string
     kind:
       type: string
@@ -43,12 +41,9 @@ Collection:
       type: object
     secret:
       type: boolean
-    team:
-      type: object
-    updated_at:
-      type: string
     writable:
       type: boolean
+
 CollectionCreate:
   type: object
   properties:
@@ -92,6 +87,7 @@ CollectionCreate:
       type: string
       nullable: true
   required: ["label"]
+
 CollectionUpdate:
   type: object
   allOf:

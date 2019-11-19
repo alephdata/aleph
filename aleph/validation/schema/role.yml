@@ -36,17 +36,15 @@ RoleUpdate:
       format: locale
 Role:
   type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
   properties:
     api_key:
-      type: string
-    created_at:
       type: string
     email:
       type: string
     has_password:
       type: boolean
-    id:
-      type: string
     is_admin:
       type: boolean
     is_muted:
@@ -66,8 +64,6 @@ Role:
       - user
       - group
       - system
-      type: string
-    updated_at:
       type: string
     writeable:
       type: boolean

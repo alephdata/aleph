@@ -16,6 +16,7 @@ def to_jsonschema(obj):
                 {'type': type_, 'format': format_},
             ]
 
+        obj.pop('nullable', None)
         out = {}
         for key, value in obj.items():
             out[key] = to_jsonschema(value)

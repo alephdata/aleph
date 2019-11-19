@@ -34,9 +34,12 @@ DatedModel:
   properties:
     id:
       type: string
+      readOnly: true
     created_at:
       type: string
       format: partial-date
+      readOnly: true
     updated_at:
       type: string
       format: partial-date
+      readOnly: true

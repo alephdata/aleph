@@ -157,6 +157,7 @@ def healthz():
                 properties:
                   status:
                     type: string
+                    example: 'ok'
     """
     return jsonify({'status': 'ok'})
 
