@@ -33,7 +33,7 @@ def index():
                     items:
                       $ref: '#/components/schemas/Role'
       tags:
-        - Group
+      - Role
     """
     require(request.authz.logged_in)
     q = Role.all_groups(request.authz)

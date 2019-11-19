@@ -56,75 +56,6 @@ info:
 servers:
   - url: 'https://data.occrp.org/api/2'
 paths:  
-  /collections:
-    get:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CollectionsResponse'
-          description: OK
-      tags:
-        - Collection
-      description: >-
-        Returns a list of collections matching a given query. Returns all the
-        collections accessible by a user if no query is given.
-      summary: List collections
-    post:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Collection'
-          description: OK
-      tags:
-        - Collection
-      description: Create a collection with the given metadata
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CollectionCreateSchema'
-      summary: Create a collection
-  '/collections/{collection_id}':
-    delete:
-      parameters:
-        - description: The collection ID.
-          in: path
-          name: collection_id
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-      responses:
-        '204':
-          description: No Content
-      tags:
-        - Collection
-      description: Delete the collection with id `collection_id`
-      summary: Delete a collection
-    get:
-      parameters:
-        - description: The collection ID.
-          in: path
-          name: collection_id
-          required: true
-          schema:
-            minimum: 1
-            type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Collection'
-          description: OK
-      tags:
-        - Collection
-      description: Return the collection with id `collection_id`
-      summary: Get a collection
   '/collections/{collection_id}/bulk':
     post:
       parameters:
@@ -145,8 +76,6 @@ paths:
       responses:
         '204':
           description: No Content
-      tags:
-        - Collection
       description: Bulk load entities into the collection with id `collection_id`
       requestBody:
         content:
@@ -157,44 +86,8 @@ paths:
               type: array
         description: Entities to be loaded.
       summary: Load entities into a collection
-  '/collections/{collection_id}/ingest':
-    post:
-      parameters:
-        - in: path
-          name: collection_id
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  id:
-                    description: id of the uploaded document
-                    type: integer
-                  status:
-                    type: string
-                type: object
-          description: OK
       tags:
-        - Ingest
-        - Collection
-      description: Upload a document to a collection with id `collection_id`
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                document:
-                  type: string
-                  format: binary
-                  description: The document to upload
-                meta:
-                  $ref: '#/components/schemas/DocumentCreateSchema'
-      summary: Upload a document to a collection
+      - Collection
   '/collections/{collection_id}/mapping':
     post:
       parameters:

@@ -8,19 +8,17 @@ from urlnormalizer import query_string
 
 from aleph.core import db, url_for
 from aleph.model import QueryLog
-from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
+from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags
+from aleph.index.entities import entities_by_ids
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
-from aleph.index.entities import entities_by_ids
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
 from aleph.views.util import require
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
-from aleph.views.forms import EntityCreateSchema, EntityUpdateSchema
-
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('entities_api', __name__)

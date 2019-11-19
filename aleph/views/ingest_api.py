@@ -72,6 +72,46 @@ def _notify(collection, document_id):
 @blueprint.route('/api/2/collections/<int:collection_id>/ingest',
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
+    """
+    ---
+    post:
+      summary: Upload a document to a collection
+      description: Upload a document to a collection with id `collection_id`
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The document to upload
+                meta:
+                  $ref: '#/components/schemas/DocumentIngest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    description: id of the uploaded document
+                    type: integer
+                  status:
+                    type: string
+                type: object
+      tags:
+      - Ingest
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     job_id = get_session_id()
     sync = get_flag('sync', default=False)

@@ -5,7 +5,6 @@ from aleph.model import Match
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.logic.xref import export_matches
 from aleph.views.serializers import MatchSerializer, MatchCollectionsSerializer
-from aleph.views.forms import XrefSchema
 from aleph.queues import queue_task, OP_XREF
 from aleph.views.util import get_db_collection, jsonify
 from aleph.views.util import parse_request
@@ -16,6 +15,9 @@ blueprint = Blueprint('xref_api', __name__)
 
 @blueprint.route('/api/2/collections/<int:collection_id>/xref', methods=['GET'])  # noqa
 def index(collection_id):
+    """
+    ---
+    """
     collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
     q = Match.group_by_collection(collection.id, authz=request.authz)
