@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import ReactMarkdown from 'react-markdown';
 import { Icon, H4 } from '@blueprintjs/core';
-import Truncate from 'react-truncate';
 import Count from 'src/components/common/Count';
 import {
   Date, Role, Category, Country, Collection,
@@ -24,13 +22,7 @@ class CollectionListItem extends PureComponent {
           <Collection.Link preview={preview} collection={collection} icon />
         </H4>
         {collection.summary && (
-          <div className="summary bp3-running-text">
-            <Truncate lines={2}>
-              <ReactMarkdown>
-                { collection.summary }
-              </ReactMarkdown>
-            </Truncate>
-          </div>
+          <Collection.Summary collection={collection} className="summary" truncate={2} />
         )}
         <p className="details">
           { !collection.casefile && (

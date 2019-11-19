@@ -1,8 +1,10 @@
 import React, { Component, PureComponent } from 'react';
 import { Icon } from '@blueprintjs/core';
+import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
+import Truncate from 'react-truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
@@ -11,6 +13,14 @@ import { selectCollection } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
 
 import './Collection.scss';
+
+// formats markdown elements to plain text
+const simpleRenderer = ({ children }) => (
+  <>
+    <span>{children}</span>
+    <span> </span>
+  </>
+);
 
 
 class CollectionLabel extends PureComponent {
@@ -43,6 +53,25 @@ class CollectionLabel extends PureComponent {
     );
   }
 }
+
+const CollectionSummary = ({ className, collection, truncate }) => {
+  const content = (
+    <ReactMarkdown
+      skipHtml
+      linkTarget="_blank"
+      renderers={truncate ? { paragraph: simpleRenderer, listItem: simpleRenderer } : {}}
+    >
+      { collection.summary }
+    </ReactMarkdown>
+  );
+
+  return (
+    <div className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}>
+      {truncate && <Truncate lines={truncate}>{content}</Truncate>}
+      {!truncate && content}
+    </div>
+  );
+};
 
 
 class CollectionLink extends PureComponent {
@@ -89,6 +118,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 class Collection {
   static Label = CollectionLabel;
+
+  static Summary = CollectionSummary;
 
   static Link = withRouter(CollectionLink);
 

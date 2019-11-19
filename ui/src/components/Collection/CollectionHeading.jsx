@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import ReactMarkdown from 'react-markdown';
-
 import { Collection } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
@@ -24,9 +22,9 @@ class CollectionHeading extends PureComponent {
             {collection.label}
           </h1>
           <CollectionStatus collection={collection} />
-          <div className="bp3-text-muted bp3-running-text text-markdown" itemProp="description">
-            <ReactMarkdown skipHtml linkTarget="_blank">{collection.summary}</ReactMarkdown>
-          </div>
+          {collection.summary && (
+            <Collection.Summary collection={collection} />
+          )}
         </div>
       </>
     );
