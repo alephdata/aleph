@@ -66,9 +66,13 @@ export class EntityMappingMode extends Component {
   }
 
   componentDidMount() {
+    const { entity, existingMapping } = this.props;
+
     this.fetchCsvData();
-    if (!this.props.existingMapping) {
-      this.props.fetchCollectionMappings(this.props.entity.collection.id);
+    if (existingMapping) {
+      this.loadFromMapping(existingMapping);
+    } else {
+      this.props.fetchCollectionMappings(entity.collection.id);
     }
   }
 
