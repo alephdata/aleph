@@ -298,6 +298,7 @@ class NotificationSerializer(Serializer):
             self.queue(clazz, key, Entity.THING)
 
     def _serialize(self, obj):
+        obj['id'] = str(obj['id'])
         event = Events.get(obj.get('event'))
         params = {
             'actor': self.resolve(Role, obj.get('actor_id'), RoleSerializer)

@@ -66,6 +66,7 @@ def validate(data, schema):
     for error in validator.iter_errors(data):
         path = '.'.join(error.path)
         errors[path] = error.message
+        log.info("ERROR [%s]: %s", path, error.message)
 
     if not len(errors):
         return data

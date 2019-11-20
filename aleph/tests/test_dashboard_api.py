@@ -1,5 +1,5 @@
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
-from aleph.views.forms import Schema
 
 
 class DashboardApiTestCase(TestCase):
@@ -20,5 +20,4 @@ class DashboardApiTestCase(TestCase):
                               headers=headers)
         assert res.status_code == 200, res
         assert res.json.get('total') == 0, res.json
-        schema = Schema(schema='SystemStatusResponse')
-        schema.validate(res.json)
+        validate(res.json, 'SystemStatusResponse')

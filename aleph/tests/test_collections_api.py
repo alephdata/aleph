@@ -2,8 +2,8 @@ import json
 
 from aleph.core import db
 from aleph.model import Entity
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
-from aleph.views.forms import Schema
 
 
 class CollectionsApiTestCase(TestCase):
@@ -38,8 +38,7 @@ class CollectionsApiTestCase(TestCase):
         assert res.json['total'] == 1, res.json
         assert res.json['results'][0]['languages'] == ['eng'], res.json
         assert res.json['results'][0]['countries'] == ['us'], res.json
-        schema = Schema(schema='CollectionsResponse')
-        schema.validate(res.json)
+        assert validate(res.json['results'][0], 'Collection')
 
     def test_sitemap(self):
         res = self.client.get('/api/2/sitemap.xml')
@@ -58,8 +57,7 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'test_coll' in res.json['foreign_id'], res.json
         assert 'Winnie' not in res.json['label'], res.json
-        schema = Schema(schema='Collection')
-        schema.validate(res.json)
+        assert validate(res.json, 'Collection')
 
     def test_update_valid(self):
         _, headers = self.login(is_admin=True)
@@ -76,8 +74,7 @@ class CollectionsApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'Collected' in res.json['label'], res.json
-        schema = Schema(schema='Collection')
-        schema.validate(res.json)
+        assert validate(res.json, 'Collection')
 
     def test_update_no_label(self):
         _, headers = self.login(is_admin=True)
@@ -190,8 +187,7 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert 1 == res.json['pending'], res.json
-        schema = Schema(schema='CollectionStatus')
-        schema.validate(res.json)
+        assert validate(res.json, 'CollectionStatus')
 
         res = self.client.delete(url)
         assert res.status_code == 403, res
