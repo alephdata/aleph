@@ -24,7 +24,7 @@ class XrefTestCase(TestCase):
 
         entity = {
             'schema': 'Person',
-            'collection_id': self.coll_a.id,
+            'collection_id': str(self.coll_a.id),
             'properties': {
                 'name': 'Carlos Danger',
                 'nationality': 'US'
@@ -35,7 +35,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'collection_id': self.coll_b.id,
+            'collection_id': str(self.coll_b.id),
             'properties': {
                 'name': 'Carlos Danger',
                 'nationality': 'US'
@@ -46,7 +46,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'LegalEntity',
-            'collection_id': self.coll_b.id,
+            'collection_id': str(self.coll_b.id),
             'properties': {
                 'name': 'Carlos Danger',
                 'country': 'GB'
@@ -57,7 +57,7 @@ class XrefTestCase(TestCase):
                          content_type='application/json')
         entity = {
             'schema': 'Person',
-            'collection_id': self.coll_b.id,
+            'collection_id': str(self.coll_b.id),
             'properties': {
                 'name': 'Pure Risk',
                 'nationality': 'US'
@@ -69,7 +69,7 @@ class XrefTestCase(TestCase):
 
         entity = {
             'schema': 'LegalEntity',
-            'collection_id': self.coll_c.id,
+            'collection_id': str(self.coll_c.id),
             'properties': {
                 'name': 'Carlos Danger',
                 'country': 'GB'

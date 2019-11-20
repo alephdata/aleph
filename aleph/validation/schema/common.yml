@@ -1,0 +1,52 @@
+QueryResponse:
+  type: object
+  properties:
+    limit:
+      type: integer
+      example: 30
+    next:
+      type: string
+      format: url
+      nullable: true
+      description: URL of the next set of results or null
+    offset:
+      type: integer
+      example: 0
+    page:
+      description: Current page number
+      type: integer
+      example: 1
+    pages:
+      description: Total number of pages
+      type: integer
+      example: 42
+    previous:
+      type: string
+      format: url
+      nullable: true
+      description: URL of the previous set of results or null
+    status:
+      type: string
+      example: ok
+      description: ok
+    total:
+      type: integer
+      example: 9999
+    total_type:
+      type: string
+      example: eq
+
+DatedModel:
+  type: object
+  properties:
+    id:
+      type: string
+      readOnly: true
+    created_at:
+      type: string
+      format: partial-date
+      readOnly: true
+    updated_at:
+      type: string
+      format: partial-date
+      readOnly: true

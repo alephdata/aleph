@@ -24,7 +24,7 @@ setup(
     entry_points={
         'aleph.init': [],
         'console_scripts': [
-            'aleph = aleph.manage:main',
+            'aleph = aleph.manage:cli',
         ]
     },
     tests_require=['coverage', 'nose']

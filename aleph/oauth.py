@@ -3,7 +3,7 @@ from urllib.request import urlopen
 import base64
 import json
 import logging
-from authlib.flask.client import OAuth
+from authlib.integrations.flask_client import OAuth
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
 
@@ -31,7 +31,7 @@ def configure_oauth(app, cache):
 
 
 @signals.handle_oauth_session.connect
-def handle_azure_oauth(sender, provider=None, oauth=None):
+def handle_azure_oauth(sender, provider=None, oauth_token=None):
     from aleph.model import Role
     if 'login.microsoftonline.com' not in provider.api_base_url:
         return
@@ -68,33 +68,30 @@ def handle_azure_oauth(sender, provider=None, oauth=None):
 
 
 @signals.handle_oauth_session.connect
-def handle_google_oauth(sender, provider=None, oauth=None):
+def handle_google_oauth(sender, provider=None, oauth_token=None):
     from aleph.model import Role
     if 'googleapis.com' not in provider.api_base_url:
         return
-
-    token = (oauth.get('access_token'), '')
-    me = provider.get('userinfo', token=token)
-    user_id = 'google:%s' % me.data.get('id')
-    return Role.load_or_create(user_id, Role.USER, me.data.get('name'),
-                               email=me.data.get('email'))
+    data = provider.get('userinfo', token=oauth_token).json()
+    user_id = 'google:%s' % data.get('id')
+    return Role.load_or_create(user_id, Role.USER, data.get('name'),
+                               email=data.get('email'))
 
 
 @signals.handle_oauth_session.connect
-def handle_facebook_oauth(sender, provider=None, oauth=None):
+def handle_facebook_oauth(sender, provider=None, oauth_token=None):
     from aleph.model import Role
     if 'facebook.com' not in provider.api_base_url:
         return
 
-    token = (oauth.get('access_token'), '')
-    me = provider.get('me?fields=id,name,email', token=token)
-    user_id = 'facebook:%s' % me.data.get('id')
-    return Role.load_or_create(user_id, Role.USER, me.data.get('name'),
-                               email=me.data.get('email'))
+    data = provider.get('me?fields=id,name,email', token=oauth_token).json()
+    user_id = 'facebook:%s' % data.get('id')
+    return Role.load_or_create(user_id, Role.USER, data.get('name'),
+                               email=data.get('email'))
 
 
 @signals.handle_oauth_session.connect
-def handle_keycloak_oauth(sender, provider=None, oauth=None):
+def handle_keycloak_oauth(sender, provider=None, oauth_token=None):
     from aleph.model import Role
     superuser_role = 'superuser'
 

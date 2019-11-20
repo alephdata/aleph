@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-
 import { Collection } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
@@ -23,7 +22,9 @@ class CollectionHeading extends PureComponent {
             {collection.label}
           </h1>
           <CollectionStatus collection={collection} />
-          <p className="bp3-text-muted bp3-running-text" itemProp="description">{collection.summary}</p>
+          {collection.summary && (
+            <Collection.Summary collection={collection} />
+          )}
         </div>
       </>
     );

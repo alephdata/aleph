@@ -1,19 +1,50 @@
+from banal import ensure_dict
 from flask import Blueprint, request
 
 from aleph.model import Role, Permission
 from aleph.logic.roles import check_visible
 from aleph.logic.permissions import update_permission
 from aleph.logic.collections import update_collection
-from aleph.views.forms import PermissionSchema
 from aleph.views.serializers import PermissionSerializer
 from aleph.views.util import get_db_collection, jsonify, parse_request
 
 blueprint = Blueprint('permissions_api', __name__)
 
 
-@blueprint.route('/api/2/collections/<int:id>/permissions')
-def index(id):
-    collection = get_db_collection(id, request.authz.WRITE)
+@blueprint.route('/api/2/collections/<int:collection_id>/permissions')
+def index(collection_id):
+    """
+    ---
+    get:
+      summary: Get permissions for a collection
+      description: >-
+        Get the list of all permissions for the collection with id
+        `collection_id`
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Permission'
+      tags:
+      - Permission
+      - Collection
+    """
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     roles = Role.all_groups(request.authz).all()
     if request.authz.is_admin:
         roles.extend(Role.all_system())
@@ -47,12 +78,49 @@ def index(id):
     })
 
 
-@blueprint.route('/api/2/collections/<int:id>/permissions',
+@blueprint.route('/api/2/collections/<int:collection_id>/permissions',
                  methods=['POST', 'PUT'])
-def update(id):
-    collection = get_db_collection(id, request.authz.WRITE)
-    for permission in parse_request(PermissionSchema, many=True):
-        role = Role.by_id(permission.get('role_id'))
+def update(collection_id):
+    """
+    ---
+    post:
+      summary: Update permissions for a collection
+      description: >
+        Update permissions for the collection with id `collection_id`
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PermissionUpdateList'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Permission'
+      tags:
+      - Permission
+      - Collection
+    """
+    collection = get_db_collection(collection_id, request.authz.WRITE)
+    for permission in parse_request('PermissionUpdateList'):
+        role_obj = ensure_dict(permission.get('role'))
+        role_id = permission.get('role_id', role_obj.get('id'))
+        role = Role.by_id(role_id)
         if not check_visible(role, request.authz):
             continue
         if role.is_public:
@@ -66,4 +134,4 @@ def update(id):
                           permission['write'],
                           editor_id=request.authz.id)
     update_collection(collection)
-    return index(id)
+    return index(collection_id)

@@ -1,0 +1,15 @@
+QueryLog:
+  type: object
+  properties:
+    query:
+      type: string
+      example: search term
+    count:
+      type: integer
+      example: 3
+    first:
+      type: string
+      format: date-time
+    last:
+      type: string
+      format: date-time

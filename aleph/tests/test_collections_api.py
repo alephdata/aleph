@@ -2,6 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Entity
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
 
@@ -14,7 +15,8 @@ class CollectionsApiTestCase(TestCase):
             label='Test Collection',
             foreign_id='test_coll_entities_api',
             category='leak',
-            countries=[]
+            countries=['usa'],
+            languages=['en'],
         )
         self.ent = Entity.create({
             'schema': 'Person',
@@ -34,6 +36,9 @@ class CollectionsApiTestCase(TestCase):
                               headers=headers)
         assert res.status_code == 200, res
         assert res.json['total'] == 1, res.json
+        assert res.json['results'][0]['languages'] == ['eng'], res.json
+        assert res.json['results'][0]['countries'] == ['us'], res.json
+        assert validate(res.json['results'][0], 'Collection')
 
     def test_sitemap(self):
         res = self.client.get('/api/2/sitemap.xml')
@@ -52,6 +57,7 @@ class CollectionsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'test_coll' in res.json['foreign_id'], res.json
         assert 'Winnie' not in res.json['label'], res.json
+        assert validate(res.json, 'Collection')
 
     def test_update_valid(self):
         _, headers = self.login(is_admin=True)
@@ -68,6 +74,7 @@ class CollectionsApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'Collected' in res.json['label'], res.json
+        assert validate(res.json, 'Collection')
 
     def test_update_no_label(self):
         _, headers = self.login(is_admin=True)
@@ -165,7 +172,8 @@ class CollectionsApiTestCase(TestCase):
             'countries': ['de', 'us'],
             'languages': ['en'],
             'mime_type': 'text/csv',
-            'source_url': 'http://pudo.org/experts.csv'
+            'source_url': 'http://pudo.org/experts.csv',
+            'collection_id': self.col.id,
         }
         csv_path = self.get_fixture_path('experts.csv')
         data = {
@@ -173,11 +181,13 @@ class CollectionsApiTestCase(TestCase):
             'foo': open(csv_path, 'rb'),
         }
         ingest_url = '/api/2/collections/%s/ingest' % self.col.id
-        self.client.post(ingest_url, data=data, headers=headers)
+        res = self.client.post(ingest_url, data=data, headers=headers)
+        assert res.status_code == 201, res
 
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert 1 == res.json['pending'], res.json
+        assert validate(res.json, 'CollectionStatus')
 
         res = self.client.delete(url)
         assert res.status_code == 403, res

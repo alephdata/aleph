@@ -1,9 +1,7 @@
 @import "src/app/variables.scss";
 
 .CollectionListItem {
-    // margin-top: $aleph-grid-size;
-    margin-bottom: $aleph-grid-size;
-    padding-bottom: $aleph-grid-size * 2;
+    padding: $aleph-grid-size*2.5 0;
     border-bottom: 1px solid $table-border-color;
 
     h4 {
@@ -20,7 +18,8 @@
     }
 
     .summary {
-        font-size: $pt-font-size-large;
+        font-size: $pt-font-size;
+        margin-bottom: $aleph-grid-size;
     }
 
     .details {
@@ -28,7 +27,7 @@
         color: $aleph-greyed-text;
     }
 
-    .details-item { 
+    .details-item {
         display: inline-block;
         min-width: 8em;
         margin-right: 2em;

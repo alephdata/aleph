@@ -15,6 +15,33 @@ blueprint = Blueprint('bulk_api', __name__)
 @blueprint.route('/api/2/entities/_stream')
 @blueprint.route('/api/2/collections/<int:collection_id>/_stream')
 def entities(collection_id=None):
+    """
+    ---
+    get:
+      summary: Stream collection entities.
+      description: >
+        Stream a JSON form of each entity in the given collection, or
+        throughout the entire database.
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/x-ndjson:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+      tags:
+      - Entity
+    """
     require(request.authz.can_stream())
     log.debug("Stream entities [%r] begins... (coll: %s)",
               request.authz, collection_id)
@@ -34,6 +61,29 @@ def entities(collection_id=None):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/_rdf')
 def triples(collection_id):
+    """
+    ---
+    get:
+      summary: Linked data stream of the collection
+      description: >-
+        This will return a list of triples that describe each entity
+        in the given collection. The format is `ntriples`.
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+      tags:
+      - Entity
+    """
     require(request.authz.can_stream())
     log.debug("Stream triples [%r] begins... (coll: %s)",
               request.authz, collection_id)

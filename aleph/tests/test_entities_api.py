@@ -8,6 +8,7 @@ from aleph.model import Entity
 from aleph.queues import get_stage, OP_BULKLOAD
 from aleph.logic.bulkload import bulk_load
 from aleph.index.entities import index_entity
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
 
@@ -27,6 +28,7 @@ class EntitiesApiTestCase(TestCase):
         self.ent = Entity.create(self.data, self.col)
         self.id = self.col.ns.sign(self.ent.id)
         db.session.commit()
+        self.col_id = str(self.col.id)
         index_entity(self.ent)
 
     def test_index(self):
@@ -43,12 +45,13 @@ class EntitiesApiTestCase(TestCase):
         assert len(res.json['facets']['collection_id']['values']) == 1, \
             res.json
         col0 = res.json['facets']['collection_id']['values'][0]
-        assert col0['id'] == str(self.col.id), res.json
+        assert col0['id'] == self.col_id, res.json
         assert col0['label'] == self.col.label, res.json
         assert len(res.json['facets']) == 1, res.json
         res = self.client.get(url+'&facet=countries', headers=headers)
         assert len(res.json['facets']) == 1, res.json
         assert 'values' in res.json['facets']['countries'], res.json
+        validate(res.json['results'][0], 'Entity')
 
     def test_export(self):
         self.load_fixtures()
@@ -70,6 +73,7 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert 'LegalEntity' in res.json['schema'], res.json
         assert 'Winnie' in res.json['name'], res.json
+        validate(res.json, 'Entity')
 
     def test_update(self):
         _, headers = self.login(is_admin=True)
@@ -86,6 +90,7 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'little' in res.json['name'], res.json
+        validate(res.json, 'Entity')
 
         data['properties'].pop('name', None)
         res = self.client.post(url,
@@ -99,7 +104,7 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'RealEstate',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Our house",
                 'summary': "In the middle of our street"
@@ -111,6 +116,7 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, res.json
         assert 'middle' in res.json['properties']['summary'][0], res.json
+        validate(res.json, 'Entity')
 
     def test_create_collection_object(self):
         _, headers = self.login(is_admin=True)
@@ -118,7 +124,7 @@ class EntitiesApiTestCase(TestCase):
         data = {
             'schema': 'RealEstate',
             'collection': {
-                'id': self.col.id,
+                'id': self.col_id,
                 'label': 'blaaa'
             },
             'properties': {
@@ -131,14 +137,15 @@ class EntitiesApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res.json
-        assert res.json['collection']['id'] == str(self.col.id), res.json
+        assert res.json['collection']['id'] == self.col_id, res.json
+        validate(res.json, 'Entity')
 
     def test_create_nested(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
                 'alias': ["Usama bin Laden", "Osama bin Ladin"],
@@ -157,7 +164,7 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
                 'alias': ["Usama bin Laden", "Osama bin Ladin"],
@@ -184,7 +191,7 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
                 'alias': ["Usama bin Laden", "Osama bin Ladin"]
@@ -214,7 +221,7 @@ class EntitiesApiTestCase(TestCase):
             'properties': {
                 'name': "Osama bin Laden",
             },
-            'collection_id': self.col.id
+            'collection_id': self.col_id
         }
         res = self.client.post(url,
                                data=json.dumps(data),
@@ -233,7 +240,7 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
             }
@@ -244,7 +251,7 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
             }
@@ -263,12 +270,13 @@ class EntitiesApiTestCase(TestCase):
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
+        validate(data['results'][0], 'Entity')
 
     def test_match(self):
         _, headers = self.login(is_admin=True)
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Osama bin Laden",
             }
@@ -292,6 +300,7 @@ class EntitiesApiTestCase(TestCase):
         assert len(data['results']) == 1, data
         assert 'Laden' in data['results'][0]['name'], data
         assert b'Pooh' not in res.data, res.data
+        validate(data['results'][0], 'Entity')
 
     def test_entity_references(self):
         db_uri = self.get_fixture_path('experts.csv').as_uri()
@@ -313,13 +322,14 @@ class EntitiesApiTestCase(TestCase):
         results = res.json['results']
         assert len(results) == 1, results
         assert results[0]['count'] == 3, results
+        validate(res.json['results'][0], 'EntityReference')
 
     def test_entity_tags(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Blaaaa blubb",
                 'phone': '+491769817271'
@@ -330,7 +340,7 @@ class EntitiesApiTestCase(TestCase):
                                 content_type='application/json')
         data = {
             'schema': 'Person',
-            'collection_id': self.col.id,
+            'collection_id': self.col_id,
             'properties': {
                 'name': "Nobody Man",
                 'phone': '+491769817271'
@@ -345,3 +355,4 @@ class EntitiesApiTestCase(TestCase):
         results = res.json['results']
         assert len(results) == 1, results
         assert results[0]['value'] == '+491769817271', results
+        validate(res.json['results'][0], 'EntityTag')
