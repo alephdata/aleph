@@ -157,20 +157,6 @@ def xref(foreign_id, against=None):
     queue_task(collection, OP_XREF, payload=against)
 
 
-@cli.command()
-@click.argument('file_name')
-def bulkload(file_name):
-    """Load entities from the specified mapping file."""
-    log.info("Mapping bulk data from: %s", file_name)
-    config = load_mapping_file(file_name)
-    for foreign_id, data in config.items():
-        data['foreign_id'] = foreign_id
-        data['label'] = data.get('label', foreign_id)
-        create_collection(data)
-        collection = Collection.by_foreign_id(foreign_id)
-        queue_task(collection, OP_BULKLOAD, payload=data)
-
-
 @cli.command('load-entities')
 @click.argument('foreign_id')
 @click.option('-i', '--infile', type=click.File('r'), default='-')  # noqa

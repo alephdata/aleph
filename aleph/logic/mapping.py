@@ -24,13 +24,9 @@ def bulk_load(stage, collection, config):
             entity_ids = load_mapping_query(stage, collection, hash_data(query), query)  # noqa
             config['entity_ids'].extend(entity_ids)
         except Exception as exc:
-            if mapping:
-                mapping.set_status(status=Mapping.FAILED, error=str(exc))  # noqa
-            else:
-                raise exc
+            mapping.set_status(status=Mapping.FAILED, error=str(exc))
         else:
-            if mapping:
-                mapping.set_status(status=Mapping.SUCCESS)
+            mapping.set_status(status=Mapping.SUCCESS)
     queue_task(collection, OP_INDEX, job_id=stage.job.id, payload=config)
 
 
