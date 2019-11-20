@@ -142,6 +142,35 @@ def view(collection_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>', methods=['POST', 'PUT'])  # noqa
 def update(collection_id):
+    """
+    ---
+    post:
+      summary: Update a collection
+      description: >
+        Change collection metadata and update statistics.
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionUpdate'
+      tags:
+        - Collection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request('CollectionUpdate')
     sync = get_flag('sync')
@@ -153,6 +182,33 @@ def update(collection_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/process', methods=['POST', 'PUT'])  # noqa
 def process(collection_id):
+    """
+    ---
+    post:
+      summary: Process a collection
+      description: Start processing the collection with id `collection_id`
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      - in: query
+        name: ingest
+        schema:
+          type: boolean
+      - in: query
+        name: reset
+        schema:
+          type: boolean
+      responses:
+        '202':
+          description: Accepted
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
     data = {'reset': get_flag('reset', True)}
@@ -165,6 +221,32 @@ def process(collection_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mapping', methods=['POST', 'PUT'])  # noqa
 def mapping(collection_id):
+    """
+    ---
+    post:
+      summary: Load mappings for a collection
+      description: Load the mapping for the collection with id `collection_id`
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        description: The mapping to apply.
+        required: true
+      responses:
+        '202':
+          description: Accepted
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
     if not request.is_json:
@@ -185,6 +267,41 @@ def mapping(collection_id):
 @blueprint.route('/api/2/collections/<int:collection_id>/_bulk', methods=['POST'])  # noqa
 @blueprint.route('/api/2/collections/<int:collection_id>/bulk', methods=['POST'])  # noqa
 def bulk(collection_id):
+    """
+    ---
+    post:
+      summary: Load entities into a collection
+      description: >
+        Bulk load entities into the collection with id `collection_id`
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      - description: >-
+          This will disable checksum security measures in order to allow bulk
+          loading of document data.
+        in: query
+        name: unsafe
+        schema:
+          type: boolean
+      requestBody:
+        description: Entities to be loaded.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/EntityUpdate'
+      responses:
+        '204':
+          description: No Content
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
     job_id = get_session_id()
@@ -204,12 +321,60 @@ def bulk(collection_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/status', methods=['GET'])  # noqa
 def status(collection_id):
+    """
+    ---
+    get:
+      summary: Check processing status of a collection
+      description: >
+        Return the task queue status for the collection with id `collection_id`
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionStatus'    
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.READ)
     return jsonify(get_status(collection))
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/status', methods=['DELETE'])  # noqa
 def cancel(collection_id):
+    """
+    ---
+    delete:
+      summary: Cancel processing of a collection
+      description: >
+        Cancel all queued tasks for the collection with id `collection_id`
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionStatus'
+          description: OK
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     cancel_queue(collection)
     return ('', 204)

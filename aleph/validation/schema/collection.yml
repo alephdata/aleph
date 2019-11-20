@@ -53,10 +53,10 @@ CollectionCreate:
       type: string
       format: category
     countries:
+      type: array
       items:
         type: string
         format: country
-      type: array
     data_url:
       type: string
       format: url
@@ -72,10 +72,10 @@ CollectionCreate:
       minLength: 2
       maxLength: 500
     languages:
+      type: array
       items:
         type: string
         format: language
-      type: array
     publisher:
       type: string
       nullable: true

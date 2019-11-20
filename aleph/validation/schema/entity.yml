@@ -21,38 +21,47 @@ Entity:
     collection:
       $ref: '#/components/schemas/Collection'
     countries:
+      type: array
       items:
         type: string
-      type: array
+        format: country
     dates:
+      type: array
       items:
         type: string
-      type: array
+        format: partial-date
     highlight:
+      type: array
       items:
         type: string
-      type: array
     job_id:
       type: string
     links:
       properties:
         tags:
           type: string
+          format: url
         csv:
           type: string
           nullable: true
+          format: url
         file:
           type: string
           nullable: true
+          format: url
         pdf:
           type: string
           nullable: true
+          format: url
         reference:
           type: string
+          format: url
         self:
           type: string
+          format: url
         ui:
           type: string
+          format: url
       type: object
     name:
       type: string
@@ -60,14 +69,18 @@ Entity:
       type: object
     schema:
       type: string
+      format: schema
+      example: Person
     schemata:
+      type: array
       items:
         type: string
-      type: array
+        format: schema
     score:
       type: number
     writable:
       type: boolean
+      example: false
 
 EntityUpdate:
   required: ["schema"]
@@ -90,46 +103,32 @@ EntityCreate:
     foreign_id:
       type: string
 
-EntityReferences:
+EntityReference:
   type: object
   properties:
-    results:
-      items:
-        properties:
-          count:
-            type: integer
-          property:
-            type: object
-          schema:
-            type: string
-            format: schema
-        type: object
-      type: array
-    status:
-      description: ok
+    schema:
       type: string
-    total:
+      format: schema
+      example: Directorship
+    property:
+      type: object
+      example: director
+    count:
       type: integer
+      example: 1
 
-EntityTagsResponse:
+EntityTag:
   type: object
   properties:
-    results:
-      items:
-        properties:
-          count:
-            type: integer
-          field:
-            type: string
-          id:
-            description: query string for this tag
-            type: string
-          value:
-            type: string
-        type: object
-      type: array
-    status:
-      description: ok
+    id:
+      description: query string for this tag
       type: string
-    total:
+    field:
+      type: string
+      example: countries
+    value:
+      type: string
+      example: de
+    count:
       type: integer
+      example: 1

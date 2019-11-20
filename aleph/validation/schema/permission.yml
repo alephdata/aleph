@@ -5,10 +5,10 @@ Permission:
   properties:
     read:
       type: boolean
-    role:
-      $ref: '#/components/schemas/Role'
     write:
       type: boolean
+    role:
+      $ref: '#/components/schemas/Role'
 
 PermissionUpdate:
   required: ["write", "read", "role_id"]

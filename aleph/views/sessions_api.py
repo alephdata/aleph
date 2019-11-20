@@ -71,6 +71,8 @@ def password_login():
                     type: string
                   token:
                     type: string
+      tags:
+      - Role
     """
     require(settings.PASSWORD_LOGIN)
     data = parse_request('Login')
@@ -101,6 +103,8 @@ def oauth_init():
       responses:
         '302':
           description: Redirect
+      tags:
+      - Role
     """
     require(settings.OAUTH)
     url = url_for('.oauth_callback')

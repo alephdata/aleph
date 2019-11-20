@@ -92,6 +92,8 @@ def create_code():
                     type: string
                   token:
                     type: string
+      tags:
+      - Role
     """
     require(settings.PASSWORD_LOGIN)
     require(not request.authz.in_maintenance)
@@ -123,6 +125,8 @@ def create():
             application/json:
               schema:
                 $ref: '#/components/schemas/Role'
+      tags:
+      - Role
     """
     require(settings.PASSWORD_LOGIN)
     require(not request.authz.in_maintenance)
@@ -183,6 +187,8 @@ def view(id):
             application/json:
               schema:
                 $ref: '#/components/schemas/Role'
+      tags:
+      - Role
     """
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_read_role(role.id))
@@ -218,6 +224,8 @@ def update(id):
             application/json:
               schema:
                 $ref: '#/components/schemas/Role'
+      tags:
+      - Role
     """
     role = obj_or_404(Role.by_id(id))
     require(request.authz.can_write_role(role.id))

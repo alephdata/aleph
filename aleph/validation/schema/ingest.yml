@@ -4,6 +4,7 @@ DocumentIngest:
     author:
       type: string
       nullable: true
+      example: John Doe
     authored_at:
       type: string
       format: "partial-date"
@@ -23,6 +24,7 @@ DocumentIngest:
     file_name:
       type: string
       nullable: true
+      example: Example.pdf
     foreign_id:
       type: string
       nullable: true
@@ -30,16 +32,16 @@ DocumentIngest:
       type: string
       nullable: true
     keywords:
+      type: array
       items:
         type: string
         minLength: 0
         maxLength: 5000
-      type: array
     languages:
+      type: array
       items:
         type: string
         format: language
-      type: array
     mime_type:
       type: string
       nullable: true
@@ -68,3 +70,4 @@ DocumentIngest:
     title:
       type: string
       nullable: true
+      example: Example document title

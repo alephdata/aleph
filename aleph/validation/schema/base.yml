@@ -5,6 +5,7 @@ Login:
     email:
       type: string
       format: email
+      example: user@example.org
     password:
       type: string
       minLength: 3
@@ -34,6 +35,7 @@ Notification:
   properties:
     actor_id:
       type: integer
+      description: Role ID of the user initiating the event.
     event:
       properties:
         name:
