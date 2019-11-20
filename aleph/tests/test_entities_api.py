@@ -5,8 +5,8 @@ from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import db
 from aleph.model import Entity, Mapping
-from aleph.queues import get_stage, OP_BULKLOAD
-from aleph.logic.mapping import bulk_load
+from aleph.queues import get_stage, OP_REFRESH_MAPPING
+from aleph.logic.mapping import refresh_mapping
 from aleph.index.entities import index_entity
 from aleph.tests.util import TestCase
 
@@ -299,11 +299,11 @@ class EntitiesApiTestCase(TestCase):
         yml_path = self.get_fixture_path('experts.yml')
         config = load_mapping_file(yml_path)
         coll = self.create_collection()
-        stage = get_stage(coll, OP_BULKLOAD)
+        stage = get_stage(coll, OP_REFRESH_MAPPING)
         mapping = Mapping.create({}, 'fake-id', coll, 1)
-        config = config.get('experts')
-        config['mapping_id'] = mapping.id
-        bulk_load(stage, coll, config)
+        query = config.get('experts').get('queries')[0]
+        config = {'query': query, 'mapping_id': mapping.id}
+        refresh_mapping(stage, coll, config)
         _, headers = self.login(is_admin=True)
 
         query = '/api/2/entities?filter:schemata=Thing&q=Climate'

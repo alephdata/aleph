@@ -14,7 +14,7 @@ from aleph.views.util import (
     require, obj_or_404
 )
 from aleph.views.forms import MappingSchema
-from aleph.queues import queue_task, OP_BULKDELETE, OP_BULKLOAD
+from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_REFRESH_MAPPING
 
 
 blueprint = Blueprint('mappings_api', __name__)
@@ -60,7 +60,7 @@ def flush_mapping(collection, mapping):
     payload = {
         'mapping_id': mapping.id,
     }
-    queue_task(collection, OP_BULKDELETE, job_id=job_id, payload=payload)
+    queue_task(collection, OP_FLUSH_MAPPING, job_id=job_id, payload=payload)
     collection.touch()
     db.session.commit()
     refresh_collection(collection.id)
@@ -69,7 +69,7 @@ def flush_mapping(collection, mapping):
 def load_mapping(collection, mapping):
     query = get_mapping_query(mapping)
     job_id = get_session_id()
-    queue_task(collection, OP_BULKLOAD, job_id=job_id, payload=query)
+    queue_task(collection, OP_REFRESH_MAPPING, job_id=job_id, payload=query)
     collection.touch()
     db.session.commit()
     refresh_collection(collection.id)
