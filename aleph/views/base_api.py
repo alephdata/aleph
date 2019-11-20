@@ -26,14 +26,16 @@ def metadata():
     """Get operational metadata for the frontend.
     ---
     get:
-        summary: Retrieve system metadata from the application.
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  type: object
+      summary: Retrieve system metadata from the application.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - System
     """
     locale = get_locale()
     enable_cache(vary_user=False, vary=str(locale))
@@ -106,6 +108,8 @@ def statistics():
             application/json:
               schema:
                 type: object
+      tags:
+      - System
     """
     enable_cache()
     collections = request.authz.collections(request.authz.READ)
@@ -158,6 +162,8 @@ def healthz():
                   status:
                     type: string
                     example: 'ok'
+      tags:
+      - System
     """
     return jsonify({'status': 'ok'})
 

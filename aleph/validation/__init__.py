@@ -9,6 +9,7 @@ from apispec_webframeworks.flask import FlaskPlugin
 
 from aleph import settings, __version__
 from aleph.validation.formats import checker
+from aleph.validation.spec import spec_info, spec_tags, spec_docs
 from aleph.validation.util import to_jsonschema
 
 URI = 'https://schema.alephdata.org/'
@@ -44,10 +45,12 @@ def get_schemata():
 
 def get_openapi_spec(app):
     spec = APISpec(
-        title="aleph",
+        title="Aleph API Documentation",
         version=__version__,
         openapi_version="3.0.2",
-        # info=dict(description="A minimal gist API"),
+        info=spec_info,
+        externalDocs=spec_docs,
+        tags=spec_tags,
         plugins=[FlaskPlugin()],
     )
     for name, spec_ in get_schemata().items():

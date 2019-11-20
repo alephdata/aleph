@@ -109,7 +109,8 @@ def index():
         name: limit
         schema:
           type: integer
-      - description: The number of results to skip at the beginning of the result set.
+      - description: >
+            The number of results to skip at the beginning of the result set.
         in: query
         name: offset
         schema:
@@ -151,8 +152,9 @@ def export():
       description: >-
         Downloads all the results of a search as a zip archive; upto a max of
         10,000 results. The returned file will contain an Excel document with
-        structured data as well as the binary files from all matching documents.
-        
+        structured data as well as the binary files from all matching
+        documents.
+
         Supports the same query parameters as the search API.
       responses:
         '200':

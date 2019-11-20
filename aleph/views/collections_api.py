@@ -69,6 +69,8 @@ def sitemap():
             text/xml:
               schema:
                 type: object
+      tags:
+      - System
     """
     enable_cache(vary_user=False)
     collections = []
@@ -341,7 +343,7 @@ def status(collection_id):
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CollectionStatus'    
+                $ref: '#/components/schemas/CollectionStatus'
       tags:
       - Collection
     """

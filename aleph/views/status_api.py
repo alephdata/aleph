@@ -26,7 +26,7 @@ def status():
               schema:
                 $ref: '#/components/schemas/SystemStatusResponse'
       tags:
-        - Status
+      - System
     """
     require(request.authz.logged_in)
     status = get_active_collection_status()

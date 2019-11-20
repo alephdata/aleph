@@ -124,6 +124,8 @@ def reconcile(collection_id=None):
       responses:
         '200':
           description: OK
+      tags:
+      - Collection
     """
     collection = None
     if collection_id is not None:
