@@ -16,7 +16,6 @@ const messages = defineMessages({
   },
 });
 
-
 class CollectionStatus extends Component {
   constructor(props) {
     super(props);

@@ -36,7 +36,6 @@ export const fetchCollectionPermissions = asyncActionCreator(id => async () => {
 
 export const fetchCollectionStatus = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`collections/${id}/status`);
-  console.log('FETCHING COLLECTION STATUS');
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_STATUS' });
 
@@ -72,3 +71,7 @@ export const triggerCollectionCancel = asyncActionCreator(id => async () => {
   const response = await endpoint.delete(`collections/${id}/status`);
   return { id, data: response.data };
 }, { name: 'TRIGGER_COLLECTION_CANCEL' });
+
+export const triggerCollectionReload = id => (
+  { type: 'TRIGGER_COLLECTION_RELOAD', payload: { id } }
+);

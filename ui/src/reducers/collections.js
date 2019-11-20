@@ -1,7 +1,11 @@
 import { createReducer } from 'redux-act';
 
 import {
-  fetchCollection, updateCollection, queryCollections, createCollection, deleteCollection,
+  fetchCollection,
+  updateCollection,
+  queryCollections,
+  createCollection,
+  deleteCollection,
 } from 'src/actions';
 import {
   objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects,
@@ -23,5 +27,7 @@ export default createReducer({
   [createCollection.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
   [deleteCollection.COMPLETE]: (state, { id }) => objectDelete(state, id),
+
+  TRIGGER_COLLECTION_RELOAD: (state, { id }) => objectDelete(state, id),
 
 }, initialState);

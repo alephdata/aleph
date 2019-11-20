@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { fetchCollection, fetchCollectionStatus, fetchCollectionXrefIndex } from 'src/actions';
+import { fetchCollection, fetchCollectionStatus, fetchCollectionXrefIndex, triggerCollectionReload } from 'src/actions';
 import { selectCollection, selectCollectionStatus, selectCollectionXrefIndex } from 'src/selectors';
 
 
@@ -14,11 +14,19 @@ class CollectionContextLoader extends PureComponent {
 
   componentDidMount() {
     this.fetchIfNeeded();
-    this.fetchStatus();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const { collectionId, status } = this.props;
+    const prevStatus = prevProps.status;
     this.fetchIfNeeded();
+
+    const wasUpdating = prevStatus.pending > 0 || prevStatus.running > 0;
+    const isUpdating = status.pending > 0 || status.running > 0;
+
+    if (wasUpdating && !isUpdating) {
+      this.props.triggerCollectionReload(collectionId);
+    }
   }
 
   componentWillUnmount() {
@@ -26,7 +34,12 @@ class CollectionContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const { collectionId, collection } = this.props;
+    const { collectionId, collection, status } = this.props;
+
+    if (!status || status.shouldLoad) {
+      this.fetchStatus();
+    }
+
     if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
     }
@@ -39,7 +52,6 @@ class CollectionContextLoader extends PureComponent {
 
   fetchStatus() {
     const { collection } = this.props;
-    console.log('setting up status fetcher');
     this.props.fetchCollectionStatus(collection)
       .finally(() => {
         const { status } = this.props;
@@ -62,7 +74,12 @@ const mapStateToProps = (state, ownProps) => {
     xrefIndex: selectCollectionXrefIndex(state, collectionId),
   };
 };
-const mapDispatchToProps = { fetchCollection, fetchCollectionStatus, fetchCollectionXrefIndex };
+const mapDispatchToProps = {
+  fetchCollection,
+  fetchCollectionStatus,
+  fetchCollectionXrefIndex,
+  triggerCollectionReload,
+};
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
