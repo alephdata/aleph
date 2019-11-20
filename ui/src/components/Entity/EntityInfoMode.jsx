@@ -26,9 +26,7 @@ function EntityInfoMode(props) {
             <Collection.Status collection={entity.collection} showPopover icon />
           </span>
           {entity.collection.summary && (
-            <span className="collection-info__item bp3-text-muted">
-              {entity.collection.summary}
-            </span>
+            <Collection.Summary collection={entity.collection} className="collection-info__item" truncate={4} />
           )}
           <span className="collection-info__item">
             <FormattedMessage

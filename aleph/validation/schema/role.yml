@@ -1,0 +1,89 @@
+RoleCodeCreate:
+  type: object
+  properties:
+    email:
+      type: string
+      format: email
+      example: user@example.org
+  required: ["email"]
+
+RoleCreate:
+  type: object
+  properties:
+    name:
+      type: string
+      minLength: 4
+      example: Example User
+    password:
+      type: string
+      minLength: 6
+      writeOnly: true
+    code:
+      type: string
+      description: Token received from email confirmation.
+  required: ["password", "code"]
+
+RoleUpdate:
+  type: object
+  properties:
+    name:
+      type: string
+      minLength: 4
+    is_muted:
+      type: boolean
+      example: false
+    password:
+      type: string
+      minLength: 6
+      writeOnly: true
+    current_password:
+      type: string
+      writeOnly: true
+    locale:
+      type: string
+      nullable: true
+      format: locale
+      example: en
+
+Role:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    name:
+      type: string
+    label:
+      type: string
+    api_key:
+      type: string
+      readOnly: true
+    email:
+      type: string
+      format: email
+      readOnly: true
+      example: user@example.org
+    has_password:
+      type: boolean
+      readOnly: true
+    is_admin:
+      type: boolean
+      readOnly: true
+    is_muted:
+      type: boolean
+    links:
+      type: object
+    locale:
+      type: string
+      nullable: true
+      format: locale
+    type:
+      enum:
+      - user
+      - group
+      - system
+      type: string
+      readOnly: true
+    writeable:
+      type: boolean
+      example: true
+      readOnly: true

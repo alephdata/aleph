@@ -11,7 +11,6 @@ from aleph.oauth import oauth
 from aleph.model import Role
 from aleph.logic.util import ui_url
 from aleph.logic.roles import update_role
-from aleph.views.forms import LoginSchema
 from aleph.views.util import get_url_path, parse_request
 from aleph.views.util import require, jsonify
 
@@ -50,9 +49,33 @@ def decode_authz():
 
 @blueprint.route('/api/2/sessions/login', methods=['POST'])
 def password_login():
-    """Provides email and password authentication."""
+    """Provides email and password authentication.
+    ---
+    post:
+      summary: Log in as a user
+      description: Create a session token using a username and password.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  token:
+                    type: string
+      tags:
+      - Role
+    """
     require(settings.PASSWORD_LOGIN)
-    data = parse_request(LoginSchema)
+    data = parse_request('Login')
     role = Role.by_email(data.get('email'))
     if role is None or not role.has_password:
         raise BadRequest(gettext("Invalid user or password."))
@@ -72,6 +95,17 @@ def password_login():
 
 @blueprint.route('/api/2/sessions/oauth')
 def oauth_init():
+    """Init OAuth auth flow.
+    ---
+    get:
+      summary: Start OAuth authentication
+      description: Initiate a forward to the OAuth server.
+      responses:
+        '302':
+          description: Redirect
+      tags:
+      - Role
+    """
     require(settings.OAUTH)
     url = url_for('.oauth_callback')
     state = request.args.get('next', request.referrer)
@@ -87,7 +121,7 @@ def oauth_callback():
         raise Unauthorized(gettext("Authentication has failed."))
 
     response = signals.handle_oauth_session.send(provider=oauth.provider,
-                                                 oauth=token)
+                                                 oauth_token=token)
     for (_, role) in response:
         if role is None:
             continue

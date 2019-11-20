@@ -77,7 +77,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         self.is_muted = data.get('is_muted', self.is_muted)
         if data.get('password'):
             self.set_password(data.get('password'))
-        self.locale = data.get('locale', self.locale)
+        self.locale = stringify(data.get('locale', self.locale))
         self.updated_at = datetime.utcnow()
 
     def clear_roles(self):

@@ -1,0 +1,24 @@
+AlertCreate:
+  type: object
+  required: ["query"]
+  properties:
+    query:
+      type: string
+      example: putin
+      description: Query string for the alert
+
+Alert:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    normalized:
+      type: string
+      readOnly: true
+    writable:
+      type: boolean
+    links:
+      type: object
+      properties:
+        self:
+          type: string

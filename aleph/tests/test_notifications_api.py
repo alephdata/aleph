@@ -4,6 +4,7 @@ from aleph.core import db
 from aleph.model import Events, Notification, Role
 from aleph.logic.roles import update_role
 from aleph.logic.notifications import publish
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
 
@@ -43,6 +44,7 @@ class NotificationsApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 2, res.json
         not0 = res.json['results'][0]
+        validate(not0, 'Notification')
 
         role = not0['params']['role']
         assert isinstance(role, dict), not0

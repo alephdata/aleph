@@ -1,0 +1,146 @@
+Collection:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    casefile:
+      type: boolean
+    category:
+      type: string
+      format: category
+    count:
+      type: integer
+    countries:
+      type: array
+      items:
+        type: string
+        format: country
+    creator:
+      $ref: '#/components/schemas/Role'
+    foreign_id:
+      type: string
+    kind:
+      type: string
+      enum: ["casefile", "source"]
+    label:
+      type: string
+    links:
+      properties:
+        reconcile:
+          type: string
+        self:
+          type: string
+        ui:
+          type: string
+        xref:
+          type: string
+        xref_export:
+          type: string
+      type: object
+    schemata:
+      type: object
+    secret:
+      type: boolean
+    writable:
+      type: boolean
+
+CollectionCreate:
+  type: object
+  properties:
+    casefile:
+      type: boolean
+    category:
+      type: string
+      format: category
+    countries:
+      type: array
+      items:
+        type: string
+        format: country
+    data_url:
+      type: string
+      format: url
+      nullable: true
+    foreign_id:
+      type: string
+    info_url:
+      type: string
+      format: url
+      nullable: true
+    label:
+      type: string
+      minLength: 2
+      maxLength: 500
+    languages:
+      type: array
+      items:
+        type: string
+        format: language
+    publisher:
+      type: string
+      nullable: true
+    publisher_url:
+      type: string
+      format: url
+      nullable: true
+    summary:
+      type: string
+      nullable: true
+  required: ["label"]
+
+CollectionUpdate:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/CollectionCreate'
+  properties:
+    creator_id:
+      type: string
+      nullable: true
+    creator:
+      $ref: '#/components/schemas/Role'
+
+StatusCounts:
+  type: object
+  properties:
+    finished:
+      type: integer
+    pending:
+      type: integer
+    running:
+      type: integer
+
+CollectionStatus:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/StatusCounts'  
+  properties:
+    jobs:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/StatusCounts'
+        properties:
+          stages:
+            type: array
+            items:
+              type: object
+              allOf:
+              - $ref: '#/components/schemas/StatusCounts'
+              properties:
+                job_id:
+                  type: string
+                stage:
+                  type: string
+
+CollectionsResponse:
+  allOf:
+   - $ref: '#/components/schemas/QueryResponse'
+  properties:
+    facets:
+      type: object
+    results:
+      items:
+        $ref: '#/components/schemas/Collection'
+      type: array
+  type: object

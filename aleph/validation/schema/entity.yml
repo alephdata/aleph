@@ -1,0 +1,136 @@
+EntitiesResponse:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/QueryResponse'
+  properties:
+    links:
+      properties:
+        export:
+          type: string
+      type: object
+    results:
+      items:
+        $ref: '#/components/schemas/Entity'
+      type: array
+
+Entity:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    collection:
+      $ref: '#/components/schemas/Collection'
+    countries:
+      type: array
+      items:
+        type: string
+        format: country
+    dates:
+      type: array
+      items:
+        type: string
+        format: partial-date
+    highlight:
+      type: array
+      items:
+        type: string
+    job_id:
+      type: string
+    links:
+      properties:
+        tags:
+          type: string
+          format: url
+        csv:
+          type: string
+          nullable: true
+          format: url
+        file:
+          type: string
+          nullable: true
+          format: url
+        pdf:
+          type: string
+          nullable: true
+          format: url
+        reference:
+          type: string
+          format: url
+        self:
+          type: string
+          format: url
+        ui:
+          type: string
+          format: url
+      type: object
+    name:
+      type: string
+    properties:
+      type: object
+    schema:
+      type: string
+      format: schema
+      example: Person
+    schemata:
+      type: array
+      items:
+        type: string
+        format: schema
+    score:
+      type: number
+    writable:
+      type: boolean
+      example: false
+
+EntityUpdate:
+  required: ["schema"]
+  type: object
+  properties:
+    schema:
+      type: string
+      format: schema
+    properties:
+      type: object
+
+EntityCreate:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/EntityUpdate'
+  # required: ["collection_id"]
+  properties:
+    collection_id:
+      type: string
+    collection:
+      $ref: '#/components/schemas/Collection'
+    foreign_id:
+      type: string
+
+EntityReference:
+  type: object
+  properties:
+    schema:
+      type: string
+      format: schema
+      example: Directorship
+    property:
+      type: object
+      example: director
+    count:
+      type: integer
+      example: 1
+
+EntityTag:
+  type: object
+  properties:
+    id:
+      description: query string for this tag
+      type: string
+    field:
+      type: string
+      example: countries
+    value:
+      type: string
+      example: de
+    count:
+      type: integer
+      example: 1
