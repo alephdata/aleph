@@ -52,6 +52,7 @@ class CollectionContextLoader extends PureComponent {
 
   fetchStatus() {
     const { collection } = this.props;
+    if (!collection || !collection.id || collection.isLoading) { return; }
     this.props.fetchCollectionStatus(collection)
       .finally(() => {
         const { status } = this.props;
