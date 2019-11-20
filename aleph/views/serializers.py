@@ -106,6 +106,7 @@ class Serializer(object):
 class RoleSerializer(Serializer):
 
     def _serialize(self, obj):
+        obj['id'] = str(obj.get('id'))
         obj['links'] = {
             'self': url_for('roles_api.view', id=obj.get('id'))
         }
@@ -130,6 +131,7 @@ class AlertSerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get('id')
+        obj['id'] = str(pk)
         obj['links'] = {
             'self': url_for('alerts_api.view', alert_id=pk)
         }
@@ -148,6 +150,7 @@ class CollectionSerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get('id')
+        obj['id'] = str(pk)
         obj['links'] = {
             'self': url_for('collections_api.view', collection_id=pk),
             'xref': url_for('xref_api.index', collection_id=pk),
@@ -202,6 +205,7 @@ class EntitySerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get('id')
+        obj['id'] = str(pk)
         authz = request.authz
         collection_id = obj.pop('collection_id', None)
         obj['collection'] = self.resolve(Collection, collection_id,
@@ -270,6 +274,7 @@ class MatchSerializer(Serializer):
         self.queue(Entity, obj.get('match_id'), matchable)
 
     def _serialize(self, obj):
+        obj['id'] = str(obj['id'])
         entity_id = obj.pop('entity_id', None)
         obj['entity'] = self.resolve(Entity, entity_id, EntitySerializer)
         match_id = obj.pop('match_id', None)

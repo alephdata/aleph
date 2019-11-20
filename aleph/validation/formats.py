@@ -55,7 +55,7 @@ def check_language(value):
 @checker.checks("schema", raises=ValueError)
 def check_schema(value):
     schema = model.get(value)
-    if schema is None or schema.abstract:
+    if schema is None:
         msg = gettext('Invalid schema name: %s')
         raise ValueError(msg % value)
     return True

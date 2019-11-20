@@ -64,7 +64,7 @@ def validate(data, schema):
     validator = get_validator(schema)
     errors = {}
     for error in validator.iter_errors(data):
-        path = '.'.join(error.path)
+        path = '.'.join((str(c) for c in error.path))
         errors[path] = error.message
         log.info("ERROR [%s]: %s", path, error.message)
 

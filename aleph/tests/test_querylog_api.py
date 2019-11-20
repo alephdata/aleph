@@ -1,5 +1,5 @@
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
-from aleph.views.forms import Schema
 
 HDR = 'X-Aleph-Session'
 
@@ -29,8 +29,8 @@ class QueryLogApiTestCase(TestCase):
         res = self.client.get('/api/2/search?q=bar', headers=headers)
         res = self.client.get('/api/2/querylog', headers=headers)
         assert res.json['total'] == 2, res
-        schema = Schema(schema='QueryLogsResponse')
-        schema.validate(res.json)
+        validate(res.json['results'][0], 'QueryLog')
+        validate(res.json['results'][1], 'QueryLog')
 
     def test_delete_querylog(self):
         _, headers = self.login()
