@@ -17,6 +17,7 @@ RoleCreate:
     password:
       type: string
       minLength: 6
+      writeOnly: true
     code:
       type: string
       description: Token received from email confirmation.
@@ -34,8 +35,10 @@ RoleUpdate:
     password:
       type: string
       minLength: 6
+      writeOnly: true
     current_password:
       type: string
+      writeOnly: true
     locale:
       type: string
       nullable: true

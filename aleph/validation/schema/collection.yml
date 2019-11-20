@@ -16,7 +16,7 @@ Collection:
         type: string
         format: country
     creator:
-      type: object
+      $ref: '#/components/schemas/Role'
     foreign_id:
       type: string
     kind:
@@ -96,6 +96,8 @@ CollectionUpdate:
     creator_id:
       type: string
       nullable: true
+    creator:
+      $ref: '#/components/schemas/Role'
 
 StatusCounts:
   type: object

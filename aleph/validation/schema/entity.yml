@@ -96,10 +96,12 @@ EntityCreate:
   type: object
   allOf:
     - $ref: '#/components/schemas/EntityUpdate'
-  required: ["collection_id"]
+  # required: ["collection_id"]
   properties:
     collection_id:
       type: string
+    collection:
+      $ref: '#/components/schemas/Collection'
     foreign_id:
       type: string
 

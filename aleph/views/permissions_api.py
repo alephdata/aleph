@@ -1,3 +1,4 @@
+from banal import ensure_dict
 from flask import Blueprint, request
 
 from aleph.model import Role, Permission
@@ -117,7 +118,9 @@ def update(collection_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     for permission in parse_request('PermissionUpdateList'):
-        role = Role.by_id(permission.get('role_id'))
+        role_obj = ensure_dict(permission.get('role'))
+        role_id = permission.get('role_id', role_obj.get('id'))
+        role = Role.by_id(role_id)
         if not check_visible(role, request.authz):
             continue
         if role.is_public:

@@ -3,7 +3,7 @@ from datetime import datetime
 from normality import stringify
 from flask_babel import lazy_gettext
 from sqlalchemy.orm import aliased
-from banal import as_bool, ensure_list
+from banal import as_bool, ensure_list, ensure_dict
 from sqlalchemy.dialects.postgresql import ARRAY
 from followthemoney.namespace import Namespace
 from followthemoney.types import registry
@@ -97,7 +97,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             self.category = data.get('category', self.category)
             self.casefile = as_bool(data.get('casefile'),
                                     default=self.casefile)
-            creator = Role.by_id(data.get('creator_id'))
+            creator = ensure_dict(data.get('creator'))
+            creator_id = data.get('creator_id', creator.get('id'))
+            creator = Role.by_id(creator_id)
             if creator is not None:
                 self.creator = creator
 

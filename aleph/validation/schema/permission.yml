@@ -11,7 +11,7 @@ Permission:
       $ref: '#/components/schemas/Role'
 
 PermissionUpdate:
-  required: ["write", "read", "role_id"]
+  required: ["write", "read"]
   type: object
   properties:
     write:
@@ -20,6 +20,8 @@ PermissionUpdate:
       type: boolean
     role_id:
       type: string
+    role:
+      $ref: '#/components/schemas/Role'
   
 PermissionUpdateList:
   type: array

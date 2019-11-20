@@ -1,8 +1,6 @@
 import os
 import yaml
 import logging
-from normality import stringify
-from banal import is_mapping, ensure_dict
 from jsonschema import RefResolver, Draft4Validator
 from apispec import APISpec
 from apispec_webframeworks.flask import FlaskPlugin
@@ -16,19 +14,6 @@ URI = 'https://schema.alephdata.org/'
 SCHEMA_DIR = os.path.join(os.path.dirname(__file__), 'schema')
 
 log = logging.getLogger(__name__)
-
-
-def flatten_nested(data, target, source):
-    """Move a nested object with an ID to a direct key."""
-    if not is_mapping(data):
-        return data
-    data = ensure_dict(data)
-    source = ensure_dict(data.pop(source, None))
-    value = data.get(target)
-    if value is None:
-        value = stringify(source.get('id'))
-    data[target] = value
-    return data
 
 
 def get_schemata():

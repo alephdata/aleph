@@ -1,6 +1,7 @@
 import json
 import shutil
 import logging
+from banal import ensure_dict
 from flask import Blueprint, request
 from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
@@ -22,7 +23,8 @@ blueprint = Blueprint('ingest_api', __name__)
 def _load_parent(collection, meta):
     """Determine the parent document for the document that is to be
     ingested."""
-    parent_id = meta.get('parent_id')
+    parent = ensure_dict(meta.get('parent'))
+    parent_id = meta.get('parent_id', parent.get('id'))
     if parent_id is None:
         return
     parent = Document.by_id(parent_id, collection_id=collection.id)

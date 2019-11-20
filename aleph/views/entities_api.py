@@ -1,4 +1,5 @@
 import logging
+from banal import ensure_dict
 from flask import Blueprint, request, Response
 from followthemoney import model
 from followthemoney.types import registry
@@ -247,7 +248,9 @@ def create():
         - Entity
     """
     data = parse_request('EntityCreate')
-    collection = get_db_collection(data['collection_id'], request.authz.WRITE)
+    collection = ensure_dict(data.get('collection'))
+    collection_id = data.get('collection_id', collection.get('id'))
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     entity_id = create_entity(data, collection, sync=True)
     tag_request(entity_id=entity_id, collection_id=str(collection.id))
     entity = get_index_entity(entity_id, request.authz.READ)

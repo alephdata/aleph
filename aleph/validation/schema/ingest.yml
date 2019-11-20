@@ -52,6 +52,8 @@ DocumentIngest:
     parent_id:
       type: string
       nullable: true
+    parent:
+      $ref: '#/components/schemas/Entity'
     published_at:
       type: string
       nullable: true
