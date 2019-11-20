@@ -1,15 +1,12 @@
-from banal import ensure_list, keys_values
+from banal import ensure_list
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
-from followthemoney import model
-from followthemoney.exc import InvalidMapping
 
 from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_BULKLOAD, OP_PROCESS
+from aleph.queues import OP_PROCESS
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.processing import bulk_write
