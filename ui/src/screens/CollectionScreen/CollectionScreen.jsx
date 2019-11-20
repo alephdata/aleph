@@ -14,7 +14,7 @@ import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
-import { selectCollection, selectCollectionView } from 'src/selectors';
+import { selectCollection, selectCollectionStatus, selectCollectionView } from 'src/selectors';
 
 
 export class CollectionScreen extends Component {
@@ -113,9 +113,15 @@ const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
+
+  // console.log('-------');
+  // console.log(state);
+  // console.log(selectCollection(state, collectionId));
+  // console.log(selectCollectionStatus(state, collectionId));
   return {
     collectionId,
     collection: selectCollection(state, collectionId),
+    status: selectCollectionStatus(state, collectionId),
     activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
   };
 };

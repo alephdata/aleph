@@ -67,7 +67,7 @@ class CollectionLink extends PureComponent {
 
 class CollectionUpdateStatus extends PureComponent {
   componentDidMount() {
-    this.props.fetchCollectionStatus(this.props.collection);
+    // this.props.fetchCollectionStatus(this.props.collection);
   }
 
   render() {

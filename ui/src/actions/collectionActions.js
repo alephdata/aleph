@@ -36,6 +36,7 @@ export const fetchCollectionPermissions = asyncActionCreator(id => async () => {
 
 export const fetchCollectionStatus = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`collections/${id}/status`);
+  console.log('FETCHING COLLECTION STATUS');
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_STATUS' });
 
