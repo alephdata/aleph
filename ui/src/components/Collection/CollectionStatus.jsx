@@ -48,7 +48,7 @@ class CollectionStatus extends Component {
   }
 
   render() {
-    const { collection, status, intl } = this.props;
+    const { collection, intl, showCancel, status } = this.props;
     const pending = status.pending || 0;
     const running = status.running || 0;
     const finished = status.finished || 0;
@@ -77,9 +77,11 @@ class CollectionStatus extends Component {
         </h6>
         <div className="progress-area">
           <ProgressBar animate intent={Intent.PRIMARY} value={progress} />
-          <Tooltip content={intl.formatMessage(messages.cancel_button)}>
-            <Button onClick={this.onCancel} icon="delete" minimal />
-          </Tooltip>
+          {showCancel && (
+            <Tooltip content={intl.formatMessage(messages.cancel_button)}>
+              <Button onClick={this.onCancel} icon="delete" minimal />
+            </Tooltip>
+          )}
         </div>
         <FormattedMessage
           id="collection.status.message"

@@ -22,7 +22,7 @@ class CollectionHeading extends PureComponent {
           <h1 itemProp="name">
             {collection.label}
           </h1>
-          <CollectionStatus collection={collection} />
+          <CollectionStatus collection={collection} showCancel />
           <p className="bp3-text-muted bp3-running-text" itemProp="description">{collection.summary}</p>
         </div>
       </>

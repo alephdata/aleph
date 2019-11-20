@@ -9,3 +9,11 @@
       display: inline-block;
     }
 }
+
+.CollectionUpdateStatus {
+  &__popover {
+    .bp3-popover-arrow-fill {
+      fill: $light-gray4 !important;
+    }
+  }
+}

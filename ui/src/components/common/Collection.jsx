@@ -1,14 +1,16 @@
 import React, { Component, PureComponent } from 'react';
-import { Icon, Spinner } from '@blueprintjs/core';
+import { Icon, Popover, Spinner } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import { fetchCollection } from 'src/actions';
-import { selectCollection } from 'src/selectors';
+import { fetchCollection, fetchCollectionStatus } from 'src/actions';
+import { selectCollection, selectCollectionStatus } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
+import CollectionStatus from 'src/components/Collection/CollectionStatus';
+
 
 import './Collection.scss';
 
@@ -63,6 +65,39 @@ class CollectionLink extends PureComponent {
   }
 }
 
+class CollectionUpdateStatus extends PureComponent {
+  componentDidMount() {
+    this.props.fetchCollectionStatus(this.props.collection);
+  }
+
+  render() {
+    const { collection, showPopover, status } = this.props;
+    const updating = !status.shouldLoad && (status.pending || status.running);
+
+    const collectionLink = (
+      <CollectionLink
+        updating={updating}
+        {...this.props}
+      />
+    );
+
+    if (showPopover && updating) {
+      return (
+        <Popover
+          lazy
+          interactionKind="hover"
+          autofocus={false}
+          enforceFocus={false}
+          popoverClassName="CollectionUpdateStatus__popover"
+          target={collectionLink}
+          content={<CollectionStatus collection={collection} showCancel={false} />}
+        />
+      );
+    }
+
+    return collectionLink;
+  }
+}
 
 class CollectionLoad extends Component {
   componentDidMount() {
@@ -89,16 +124,23 @@ class CollectionLoad extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const statusMapStateToProps = (state, ownProps) => ({
+  status: selectCollectionStatus(state, ownProps.collection.id),
+});
+
+const loadMapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
 
 class Collection {
   static Label = CollectionLabel;
 
+  static Status =
+    connect(statusMapStateToProps, { fetchCollectionStatus })(CollectionUpdateStatus);
+
   static Link = withRouter(CollectionLink);
 
-  static Load = connect(mapStateToProps, { fetchCollection })(CollectionLoad);
+  static Load = connect(loadMapStateToProps, { fetchCollection })(CollectionLoad);
 }
 
 export default Collection;
