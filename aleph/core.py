@@ -42,7 +42,9 @@ def create_app(config={}):
 
     app.config.update({
         'SQLALCHEMY_DATABASE_URI': settings.DATABASE_URI,
-        'BABEL_DOMAIN': 'aleph'
+        'FLASK_SKIP_DOTENV': True,
+        'FLASK_DEBUG': settings.DEBUG,
+        'BABEL_DOMAIN': 'aleph',
     })
 
     migrate.init_app(app, db, directory=settings.ALEMBIC_DIR)
@@ -66,6 +68,9 @@ def create_app(config={}):
                       strict_transport_security=settings.FORCE_HTTPS,
                       feature_policy=feature_policy,
                       content_security_policy=settings.CONTENT_POLICY)
+
+    from aleph.views import mount_app_blueprints
+    mount_app_blueprints(app)
 
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.

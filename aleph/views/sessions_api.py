@@ -121,7 +121,7 @@ def oauth_callback():
         raise Unauthorized(gettext("Authentication has failed."))
 
     response = signals.handle_oauth_session.send(provider=oauth.provider,
-                                                 oauth=token)
+                                                 oauth_token=token)
     for (_, role) in response:
         if role is None:
             continue
