@@ -3,7 +3,7 @@
 .Navbar {
   &.bp3-navbar {
     display: flex;
-    padding: 0 $aleph-grid-size * 1.5;
+    padding: 0 $aleph-content-padding;
     justify-content: space-between;
     background-color: $dark-gray1 !important;
 
