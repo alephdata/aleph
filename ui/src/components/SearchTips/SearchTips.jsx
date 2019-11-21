@@ -14,6 +14,7 @@ export default class SearchTips extends React.Component {
   }
 
   render() {
+    const { navbarRef } = this.props;
     return (
       <div className="SearchTips" ref={this.ref}>
         <Drawer
@@ -22,7 +23,14 @@ export default class SearchTips extends React.Component {
           canOutsideClickClose
           usePortal
           hasBackdrop={false}
+          enforceFocus={false}
           portalContainer={this.ref.current}
+          onClose={(e) => {
+            // prevent interaction with Navbar from closing
+            if (!navbarRef || !navbarRef.current || !navbarRef.current.contains(e.target)) {
+              this.props.onToggle();
+            }
+          }}
         >
           <div className="SearchTips__content">
             <div className="SearchTips__section">
