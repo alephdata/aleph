@@ -23,6 +23,10 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
   overflow-x: hidden;
   padding: 0 0 0 $dual-pane-padding;
 
+  &.allow-overflow {
+    overflow: visible;
+  }
+
   .info-tabs-padding {
     padding: 0;
   }

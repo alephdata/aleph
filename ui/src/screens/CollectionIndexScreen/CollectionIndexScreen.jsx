@@ -134,7 +134,7 @@ export class CollectionIndexScreen extends Component {
               updateQuery={this.updateQuery}
             />
           </DualPane.SidePane>
-          <DualPane.ContentPane className="padded">
+          <DualPane.ContentPane className="allow-overflow">
             <SignInCallout />
             <CollectionIndexSearch
               query={query}
