@@ -71,3 +71,7 @@ export const triggerCollectionCancel = asyncActionCreator(id => async () => {
   const response = await endpoint.delete(`collections/${id}/status`);
   return { id, data: response.data };
 }, { name: 'TRIGGER_COLLECTION_CANCEL' });
+
+export const triggerCollectionReload = id => (
+  { type: 'TRIGGER_COLLECTION_RELOAD', payload: { id } }
+);
