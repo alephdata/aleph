@@ -7,8 +7,15 @@
   justify-content: space-between;
   background-color: $aleph-breadcrumbs-background;
 
-  .bp3-breadcrumbs > li::after {
-    margin: 0 10px;
+  .bp3-breadcrumbs {
+    height: auto;
+
+    & > li {
+      margin: 5px 0;
+      &::after {
+        margin: 0 10px;
+      }
+    }
   }
 
   .bp3-breadcrumb {
