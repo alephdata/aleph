@@ -13,7 +13,6 @@ from aleph.views.util import (
     get_db_collection, parse_request, get_index_entity, get_session_id,
     require, obj_or_404
 )
-from aleph.views.forms import MappingSchema
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_REFRESH_MAPPING
 
 
@@ -77,6 +76,41 @@ def load_mapping(collection, mapping):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings', methods=['GET'])  # noqa
 def index(collection_id):
+    """Returns a list of mappings for the collection and table.
+    ---
+    get:
+      summary: List mappings
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      - description: The table id.
+        in: query
+        name: table
+        schema:
+          type: string
+      requestBody:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mapping'
+          description: OK
+      tags:
+        - Collection
+    """
     collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
     table_id = first(parser.filters.get('table'))
@@ -87,8 +121,36 @@ def index(collection_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings', methods=['POST', 'PUT'])  # noqa
 def create(collection_id):
+    """Create a mapping.
+    ---
+    post:
+      summary: Create a mapping
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MappingCreate'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mapping'
+          description: OK
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    data = parse_request(MappingSchema)
+    data = parse_request('MappingCreate')
     entity_id = data.get('table_id')
     query = load_query()
     entity = get_index_entity(entity_id, request.authz.READ)
@@ -98,6 +160,37 @@ def create(collection_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['GET'])  # noqa
 def view(collection_id, mapping_id):
+    """Return the mapping with id `mapping_id`.
+    ---
+    get:
+      summary: Fetch a mapping
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      - description: The mapping id.
+        in: path
+        name: mapping_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mapping'
+          description: OK
+      tags:
+      - Collection
+    """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping)
@@ -105,9 +198,45 @@ def view(collection_id, mapping_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['POST', 'PUT'])  # noqa
 def update(collection_id, mapping_id):
+    """Update the mapping with id `mapping_id`.
+    ---
+    post:
+      summary: Update a mapping
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      - description: The mapping id.
+        in: path
+        name: mapping_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MappingCreate'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mapping'
+          description: OK
+      tags:
+      - Collection
+    """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    data = parse_request(MappingSchema)
+    data = parse_request('MappingCreate')
     entity_id = data.get('table_id')
     query = load_query()
     entity = get_index_entity(entity_id, request.authz.READ)
@@ -117,6 +246,33 @@ def update(collection_id, mapping_id):
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['DELETE'])  # noqa
 def delete(collection_id, mapping_id):
+    """Delete a mapping.
+    ---
+    delete:
+      summary: Delete a mapping
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      - description: The mapping id.
+        in: path
+        name: mapping_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      responses:
+        '204':
+          description: No Content
+      tags:
+      - Collection
+    """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     mapping.delete()
@@ -126,6 +282,34 @@ def delete(collection_id, mapping_id):
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/trigger',  # noqa
                  methods=['POST', 'PUT'])
 def trigger(collection_id, mapping_id):
+    """Load entities by running the mapping with id `mapping_id`. Flushes
+    previously loaded entities before loading new entities.
+    ---
+    post:
+      summary: Load entities from a mapping
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      - description: The mapping id.
+        in: path
+        name: mapping_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      responses:
+        '202':
+          description: No Content
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     require(request.authz.can_bulk_import())
     mapping = obj_or_404(Mapping.by_id(mapping_id))
@@ -136,7 +320,33 @@ def trigger(collection_id, mapping_id):
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/flush',  # noqa
                  methods=['POST', 'PUT'])
 def flush(collection_id, mapping_id):
-    """Delete the entities created by this mapping"""
+    """Flush all entities loaded by mapping with id `mapping_id`.
+    ---
+    post:
+      summary: Flush entities loaded by a mapping
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      - description: The mapping id.
+        in: path
+        name: mapping_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      responses:
+        '202':
+          description: No Content
+      tags:
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     flush_mapping(collection, mapping)

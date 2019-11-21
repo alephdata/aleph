@@ -1,6 +1,6 @@
 import logging
 from followthemoney import model
-from banal import hash_data, keys_values
+from banal import hash_data
 
 from aleph.logic.aggregator import get_aggregator
 from aleph.queues import queue_task, OP_INDEX
