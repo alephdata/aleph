@@ -23,6 +23,7 @@ export class Screen extends React.Component {
     };
     this.onToggleSearchTips = this.onToggleSearchTips.bind(this);
     this.toggleAuthentication = this.toggleAuthentication.bind(this);
+    this.navbarRef = React.createRef();
   }
 
   componentDidMount() {
@@ -89,6 +90,7 @@ export class Screen extends React.Component {
           )}
         </Helmet>
         <Navbar
+          navbarRef={this.navbarRef}
           metadata={metadata}
           session={session}
           query={query}
@@ -116,7 +118,11 @@ export class Screen extends React.Component {
             toggleDialog={this.toggleAuthentication}
           />
         )}
-        <SearchTips isOpen={searchTipsOpen} />
+        <SearchTips
+          isOpen={searchTipsOpen}
+          onToggle={this.onToggleSearchTips}
+          navbarRef={this.navbarRef}
+        />
         <Footer isHomepage={isHomepage} metadata={metadata} />
       </div>
     );

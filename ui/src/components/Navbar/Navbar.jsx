@@ -44,7 +44,7 @@ export class Navbar extends React.Component {
 
   render() {
     const {
-      metadata, session, searchScopes, role, query, isHomepage,
+      metadata, session, searchScopes, navbarRef, role, query, isHomepage,
     } = this.props;
     const { mobileSearchOpen } = this.state;
 
@@ -55,50 +55,52 @@ export class Navbar extends React.Component {
     const scopes = searchScopes ? [defaultScope, ...searchScopes] : [defaultScope];
 
     return (
-      <Bp3Navbar id="Navbar" className="Navbar bp3-dark">
-        <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
-          <Link to="/" className="Navbar__home-link">
-            <img src={metadata.app.logo} alt={metadata.app.title} />
-          </Link>
-        </Bp3Navbar.Group>
-        <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
-          {!isHomepage && (
-            <div className="Navbar__search-container">
-              <ScopedSearchBox
-                query={query}
-                searchScopes={scopes}
-                onToggleSearchTips={this.props.onToggleSearchTips}
+      <div ref={navbarRef}>
+        <Bp3Navbar id="Navbar" className="Navbar bp3-dark">
+          <Bp3Navbar.Group align={Alignment.LEFT} className={c('Navbar__left-group', { hide: mobileSearchOpen })}>
+            <Link to="/" className="Navbar__home-link">
+              <img src={metadata.app.logo} alt={metadata.app.title} />
+            </Link>
+          </Bp3Navbar.Group>
+          <Bp3Navbar.Group align={Alignment.CENTER} className={c('Navbar__middle-group', { 'mobile-force-open': mobileSearchOpen })}>
+            {!isHomepage && (
+              <div className="Navbar__search-container">
+                <ScopedSearchBox
+                  query={query}
+                  searchScopes={scopes}
+                  onToggleSearchTips={this.props.onToggleSearchTips}
+                />
+              </div>
+            )}
+          </Bp3Navbar.Group>
+          <Bp3Navbar.Group align={Alignment.RIGHT} className="Navbar__right-group" id="navbarSupportedContent">
+            <Link to="/datasets">
+              <Button icon="database" className="Navbar_collections-button bp3-minimal">
+                <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
+              </Button>
+            </Link>
+            {!isHomepage && (
+              <div className="Navbar__mobile-search-toggle">
+                {!mobileSearchOpen && (
+                  <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+                )}
+                {mobileSearchOpen && (
+                  <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
+                )}
+              </div>
+            )}
+            <Bp3Navbar.Divider className={c({ 'mobile-hidden': mobileSearchOpen })} />
+            <div className={c({ 'mobile-hidden': mobileSearchOpen })}>
+              <AuthButtons
+                session={session}
+                auth={metadata.auth}
+                role={role}
+                className={c({ hide: mobileSearchOpen })}
               />
             </div>
-          )}
-        </Bp3Navbar.Group>
-        <Bp3Navbar.Group align={Alignment.RIGHT} className="Navbar__right-group" id="navbarSupportedContent">
-          <Link to="/datasets">
-            <Button icon="database" className="Navbar_collections-button bp3-minimal">
-              <FormattedMessage id="nav.collections" defaultMessage="Datasets" />
-            </Button>
-          </Link>
-          {!isHomepage && (
-            <div className="Navbar__mobile-search-toggle">
-              {!mobileSearchOpen && (
-                <Button icon="search" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
-              )}
-              {mobileSearchOpen && (
-                <Button icon="cross" className="bp3-minimal" onClick={this.onToggleMobileSearch} />
-              )}
-            </div>
-          )}
-          <Bp3Navbar.Divider className={c({ 'mobile-hidden': mobileSearchOpen })} />
-          <div className={c({ 'mobile-hidden': mobileSearchOpen })}>
-            <AuthButtons
-              session={session}
-              auth={metadata.auth}
-              role={role}
-              className={c({ hide: mobileSearchOpen })}
-            />
-          </div>
-        </Bp3Navbar.Group>
-      </Bp3Navbar>
+          </Bp3Navbar.Group>
+        </Bp3Navbar>
+      </div>
     );
   }
 }

@@ -2,13 +2,20 @@
 
 .Breadcrumbs {
   z-index: 1;
-  padding: $aleph-grid-size/2 $aleph-grid-size*3;
+  padding: $aleph-grid-size/2 $aleph-grid-size*1.5;
   display: flex;
   justify-content: space-between;
   background-color: $aleph-breadcrumbs-background;
 
-  .bp3-breadcrumbs > li::after {
-    margin: 0 10px;
+  .bp3-breadcrumbs {
+    height: auto;
+
+    & > li {
+      margin: 5px 0;
+      &::after {
+        margin: 0 10px;
+      }
+    }
   }
 
   .bp3-breadcrumb {
