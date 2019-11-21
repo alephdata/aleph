@@ -10,9 +10,12 @@ SQLAlchemy==1.3.11
 alembic==1.3.1
 authlib==0.13
 
-elasticsearch==7.0.5
+elasticsearch==7.1.0
 marshmallow==2.19.2
 gunicorn==20.0.0
+jsonschema==3.1.1
+apispec==3.1.0
+apispec-webframeworks==0.5.0
 blinker==1.4
 Babel==2.7.0
 PyYAML==5.1.2
@@ -28,7 +31,7 @@ grpcio==1.25.0
 google-cloud-storage==1.23.0
 google-cloud-logging==1.14.0
 fasttext==0.9.1
-tabulate==0.8.5
+tabulate==0.8.6
 
 # Testing dependencies
 factory-boy==2.12.0

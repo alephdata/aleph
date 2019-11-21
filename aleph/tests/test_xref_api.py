@@ -1,9 +1,10 @@
 from aleph.core import db
 from aleph.model import Entity
-from aleph.index.entities import index_entity
-from aleph.tests.util import TestCase
-from aleph.logic.xref import xref_collection
 from aleph.queues import get_stage, OP_XREF
+from aleph.index.entities import index_entity
+from aleph.logic.xref import xref_collection
+from aleph.views.util import validate
+from aleph.tests.util import TestCase
 
 
 class XrefApiTestCase(TestCase):
@@ -115,6 +116,7 @@ class XrefApiTestCase(TestCase):
         coll0 = res.json['results'][0]['collection']
         assert 'Obsidian Order' not in coll0['label'], res.json
         assert 'Dabo Girls' in coll0['label'], res.json
+        validate(coll0, 'XrefCollection')
 
         # Logged in as outsider (restricted access)
         _, headers = self.login(foreign_id='outsider')
@@ -124,6 +126,7 @@ class XrefApiTestCase(TestCase):
         coll0 = res.json['results'][0]['collection']
         assert 'Obsidian Order' not in coll0['label'], res.json
         assert 'Dabo Girls' in coll0['label'], res.json
+        validate(coll0, 'XrefCollection')
 
         # Logged in as creator (all access)
         _, headers = self.login(foreign_id='creator')

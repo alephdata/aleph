@@ -14,6 +14,28 @@ blueprint = Blueprint('notifications_api', __name__)
 
 @blueprint.route('/api/2/notifications', methods=['GET'])
 def index():
+    """
+    ---
+    get:
+      summary: Get notifications
+      description: Get all the notifications for the user
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+          description: OK
+      tags:
+      - Notification
+    """
     require(request.authz.logged_in)
     role = Role.by_id(request.authz.id)
     query = Notification.by_channels(get_role_channels(role), role)
@@ -23,6 +45,25 @@ def index():
 
 @blueprint.route('/api/2/notifications', methods=['DELETE'])
 def mark_read():
+    """
+    ---
+    delete:
+      summary: Clear notifications
+      description: Delete all notification for the user
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    description: ok
+                    type: string
+                type: object
+          description: Accepted
+      tags:
+      - Notification
+    """
     require(request.authz.logged_in)
     role = Role.by_id(request.authz.id)
     role.notified_at = datetime.utcnow()

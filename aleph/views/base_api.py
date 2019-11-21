@@ -1,7 +1,7 @@
 import logging
 from babel import Locale
 from collections import defaultdict
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
 from followthemoney import model
@@ -13,6 +13,7 @@ from aleph import __version__
 from aleph.core import cache, settings, url_for
 from aleph.model import Collection
 from aleph.logic import resolver
+from aleph.validation import get_openapi_spec
 from aleph.views.context import enable_cache, NotModified
 from aleph.views.util import jsonify
 
@@ -22,6 +23,20 @@ log = logging.getLogger(__name__)
 
 @blueprint.route('/api/2/metadata')
 def metadata():
+    """Get operational metadata for the frontend.
+    ---
+    get:
+      summary: Retrieve system metadata from the application.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - System
+    """
     locale = get_locale()
     enable_cache(vary_user=False, vary=str(locale))
     key = cache.key('metadata', settings.PROCESS_ID, locale)
@@ -64,9 +79,38 @@ def metadata():
     return jsonify(data)
 
 
+@blueprint.route('/api/openapi.json')
+def openapi():
+    """Generate an OpenAPI 3.0 documentation JSON file for the API."""
+    spec = get_openapi_spec(current_app)
+    for name, view in current_app.view_functions.items():
+        if name in ('static', 'base_api.openapi',
+                    'base_api.api_v1_message',
+                    'sessions_api.oauth_callback'):
+            continue
+        log.info('%s - %s', name, view.__qualname__)
+        spec.path(view=view)
+    return jsonify(spec.to_dict())
+
+
 @blueprint.route('/api/2/statistics')
 def statistics():
-    """Get a summary of the data acessible to the current user."""
+    """Get a summary of the data acessible to the current user.
+    ---
+    get:
+      summary: System-wide user statistics.
+      description: >
+        Get a summary of the data acessible to the current user.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+      - System
+    """
     enable_cache()
     collections = request.authz.collections(request.authz.READ)
     for collection_id in collections:
@@ -100,6 +144,27 @@ def statistics():
 
 @blueprint.route('/healthz')
 def healthz():
+    """
+    ---
+    get:
+      summary: Health check endpoint.
+      description: >
+        This can be used e.g. for Kubernetes health checks, but it doesn't
+        do any internal checks.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'ok'
+      tags:
+      - System
+    """
     return jsonify({'status': 'ok'})
 
 

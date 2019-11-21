@@ -2,6 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Alert
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
 
@@ -18,6 +19,7 @@ class AlertsApiTestCase(TestCase):
                               headers=headers)
         assert res.status_code == 200, res
         assert res.json.get('total') == 0, res.json
+        validate(res.json, 'QueryResponse')
 
     def test_create(self):
         data = {'query': 'banana pumpkin'}
@@ -32,7 +34,15 @@ class AlertsApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res.json
+        validate(res.json, 'Alert')
         assert 'banana pumpkin' in res.json['query'], res.json
+        for wrong_data in [{'query': 2}, {"quarry": "stone"}]:
+            wdata = json.dumps(wrong_data)
+            res = self.client.post('/api/2/alerts',
+                                   data=wdata,
+                                   headers=headers,
+                                   content_type='application/json')
+            assert res.status_code == 400, res.json
 
     def test_create_with_query(self):
         data = {'query': 'putin'}
@@ -43,6 +53,7 @@ class AlertsApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res.json
+        validate(res.json, 'Alert')
         assert res.json['query'] == 'putin', res.json
 
     def test_view(self):
@@ -57,6 +68,7 @@ class AlertsApiTestCase(TestCase):
         res2 = self.client.get(url,
                                headers=headers)
         assert res2.json['id'] == res.json['id'], res2.json
+        validate(res.json, 'Alert')
 
         res3 = self.client.get('/api/2/alerts/100000',
                                headers=headers)

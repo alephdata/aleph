@@ -1,3 +1,4 @@
+from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
 
@@ -19,3 +20,4 @@ class DashboardApiTestCase(TestCase):
                               headers=headers)
         assert res.status_code == 200, res
         assert res.json.get('total') == 0, res.json
+        validate(res.json, 'SystemStatusResponse')

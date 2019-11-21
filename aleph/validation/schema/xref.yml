@@ -1,0 +1,37 @@
+XrefCollection:
+  type: object
+  properties:
+    collection:
+      $ref: '#/components/schemas/Collection'
+    matches:
+      type: integer
+    parent:
+      type: integer
+
+XrefMatch:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    collection_id:
+      type: string
+    entity:
+      $ref: '#/components/schemas/Entity'
+    match:
+      $ref: '#/components/schemas/Entity'
+    match_collection_id:
+      type: string
+    score:
+      type: number
+
+XrefGenerate:
+  type: object
+  properties:
+    against_collection_ids:
+      description: >
+        Optional argument to specify collections agaist which
+        cross-referencing will be done
+      type: array
+      items:
+        type: integer
+        minimum: 1

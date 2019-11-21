@@ -15,6 +15,7 @@ from servicelayer.jobs import Job
 
 from aleph.authz import Authz
 from aleph.model import Collection, Entity
+from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
 from aleph.util import JSONEncoder
@@ -49,26 +50,33 @@ def get_session_id():
     return '%s:%s' % (role_id, session_id)
 
 
-def validate_data(data, schema, many=None):
-    """Validate the data inside a request against a schema."""
-    data, errors = schema().load(data, many=many)
-    if len(errors):
-        resp = jsonify({
-            'status': 'error',
-            'errors': errors,
-            'message': gettext('Error during data validation')
-        }, status=400)
-        raise BadRequest(response=resp)
-    return data
-
-
-def parse_request(schema, many=None):
+def parse_request(schema):
     """Get request form data or body and validate it against a schema."""
     if request.is_json:
         data = request.get_json()
     else:
         data = request.form.to_dict(flat=True)
-    return validate_data(data, schema, many=many)
+    return validate(data, schema)
+
+
+def validate(data, schema):
+    """Validate the data inside a request against a schema."""
+    validator = get_validator(schema)
+    errors = {}
+    for error in validator.iter_errors(data):
+        path = '.'.join((str(c) for c in error.path))
+        errors[path] = error.message
+        log.info("ERROR [%s]: %s", path, error.message)
+
+    if not len(errors):
+        return data
+
+    resp = jsonify({
+        'status': 'error',
+        'errors': errors,
+        'message': gettext('Error during data validation')
+    }, status=400)
+    raise BadRequest(response=resp)
 
 
 def get_db_entity(entity_id, action=Authz.READ):

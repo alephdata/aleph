@@ -98,7 +98,35 @@ def reconcile_index(collection=None):
                  methods=['GET', 'POST'])
 @talisman(content_security_policy=CSP)
 def reconcile(collection_id=None):
-    """Reconciliation API, emulates Google Refine API."""
+    """Reconciliation API, emulates Google Refine API.
+    ---
+    post:
+      summary: Freebase reconciliation API
+      description: >
+        An implementation of the reconciliation API from Freebase, used
+        by OpenRefine to match entities.
+      parameters:
+      - description: The collection ID.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: object
+      responses:
+        '200':
+          description: OK
+      tags:
+      - Collection
+    """
     collection = None
     if collection_id is not None:
         collection = get_index_collection(collection_id)

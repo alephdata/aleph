@@ -1,0 +1,49 @@
+Login:
+  type: object
+  required: ["email", "password"]
+  properties:
+    email:
+      type: string
+      format: email
+      example: user@example.org
+    password:
+      type: string
+      minLength: 3
+
+SystemStatusResponse:
+  type: object
+  properties:
+    total:
+      type: integer
+    results:
+      type: array
+      items:
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/CollectionStatus'
+        properties:
+          id:
+            type: string
+          collection:
+            $ref: '#/components/schemas/Collection'
+
+
+Notification:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    actor_id:
+      type: integer
+      description: Role ID of the user initiating the event.
+    event:
+      properties:
+        name:
+          type: string
+        params:
+          type: object
+        templates:
+          type: string
+      type: object
+    params:
+      type: object

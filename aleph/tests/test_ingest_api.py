@@ -31,7 +31,7 @@ class IngestApiTestCase(TestCase):
     def test_upload_csv_doc(self):
         _, headers = self.login(is_admin=True)
         meta = {
-            'countries': ['de', 'us'],
+            'countries': ['de', 'usa'],
             'languages': ['en'],
             'mime_type': 'text/csv',
             'source_url': 'http://pudo.org/experts.csv'
@@ -48,6 +48,8 @@ class IngestApiTestCase(TestCase):
         db_id, _ = res.json.get('id').split('.', 1)
         doc = Document.by_id(db_id)
         assert doc.schema == Document.SCHEMA, doc.schema
+        assert doc.meta['countries'] == ['de', 'us'], doc.meta
+        assert doc.meta['languages'] == ['eng'], doc.meta
 
         status = get_status(self.col)
         assert status.get('pending') == 1, status
@@ -79,7 +81,8 @@ class IngestApiTestCase(TestCase):
         meta = {
             'file_name': 'directory',
             'foreign_id': 'directory',
-            'schema': 'Folder'
+            'schema': 'Folder',
+            'collection_id': self.col.id,
         }
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)
@@ -90,7 +93,8 @@ class IngestApiTestCase(TestCase):
         meta = {
             'file_name': 'subdirectory',
             'foreign_id': 'subdirectory',
-            'parent': {'id': directory}
+            'parent': {'id': directory},
+            'collection_id': self.col.id,
         }
         data = {'meta': json.dumps(meta)}
         res = self.client.post(self.url, data=data, headers=headers)

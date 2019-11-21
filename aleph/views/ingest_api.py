@@ -1,6 +1,7 @@
 import json
 import shutil
 import logging
+from banal import ensure_dict
 from flask import Blueprint, request
 from tempfile import mkdtemp
 from werkzeug.exceptions import BadRequest
@@ -13,8 +14,7 @@ from aleph.queues import ingest_entity
 from aleph.index.entities import index_proxy
 from aleph.logic.notifications import publish, channel_tag
 from aleph.views.util import get_db_collection, get_flag
-from aleph.views.util import jsonify, validate_data, get_session_id
-from aleph.views.forms import DocumentCreateSchema
+from aleph.views.util import jsonify, validate, get_session_id
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('ingest_api', __name__)
@@ -23,7 +23,8 @@ blueprint = Blueprint('ingest_api', __name__)
 def _load_parent(collection, meta):
     """Determine the parent document for the document that is to be
     ingested."""
-    parent_id = meta.get('parent_id')
+    parent = ensure_dict(meta.get('parent'))
+    parent_id = meta.get('parent_id', parent.get('id'))
     if parent_id is None:
         return
     parent = Document.by_id(parent_id, collection_id=collection.id)
@@ -42,7 +43,7 @@ def _load_metadata():
     except Exception as ex:
         raise BadRequest(str(ex))
 
-    validate_data(meta, DocumentCreateSchema)
+    validate(meta, 'DocumentIngest')
     foreign_id = stringify(meta.get('foreign_id'))
     if not len(request.files) and foreign_id is None:
         raise BadRequest(response=jsonify({
@@ -73,6 +74,46 @@ def _notify(collection, document_id):
 @blueprint.route('/api/2/collections/<int:collection_id>/ingest',
                  methods=['POST', 'PUT'])
 def ingest_upload(collection_id):
+    """
+    ---
+    post:
+      summary: Upload a document to a collection
+      description: Upload a document to a collection with id `collection_id`
+      parameters:
+      - in: path
+        name: collection_id
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The document to upload
+                meta:
+                  $ref: '#/components/schemas/DocumentIngest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    description: id of the uploaded document
+                    type: integer
+                  status:
+                    type: string
+                type: object
+      tags:
+      - Ingest
+      - Collection
+    """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     job_id = get_session_id()
     sync = get_flag('sync', default=False)
