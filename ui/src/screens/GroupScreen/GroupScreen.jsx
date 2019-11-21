@@ -112,10 +112,7 @@ export class GroupScreen extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { groupId } = ownProps.match.params;
-  const context = {
-    'filter:kind': 'source',
-  };
-  const query = Query.fromLocation('collections', {}, context, 'collections')
+  const query = Query.fromLocation('collections', {}, {}, 'collections')
     .setFilter('team_id', groupId)
     .sortBy('count', 'desc')
     .limit(20);
