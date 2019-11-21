@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
 span.no-value {
-    color: $aleph-greyed-text;
+  color: $aleph-greyed-text;
 }
 
 .ValueLink {
@@ -9,10 +9,17 @@ span.no-value {
 
   .bp3-tag {
     background-color: $aleph-breadcrumbs-background !important;
-    
+    margin: 2px 0;
+
+    &:hover {
+      background-color: $light-gray2 !important;
+    }
+
     .Count {
-      padding: 0 5px 0 8px;
+      padding: 0 5px;
       border: none;
+      background-color: white !important;
+      margin-left: 5px !important;
     }
   }
 }
