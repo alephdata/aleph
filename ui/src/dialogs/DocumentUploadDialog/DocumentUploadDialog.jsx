@@ -41,7 +41,6 @@ export class DocumentUploadDialog extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props.filesToUpload);
     this.state = {
       files: props.filesToUpload || [],
       percentCompleted: 0,

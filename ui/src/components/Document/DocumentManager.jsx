@@ -15,6 +15,8 @@ import { ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 
+import './DocumentManager.scss';
+
 const messages = defineMessages({
   empty: {
     id: 'entity.document.manager.empty',
@@ -115,15 +117,17 @@ export class DocumentManager extends Component {
     );
 
     const contents = (
-      <EntitySearch
-        query={query}
-        hideCollection
-        documentMode
-        showPreview={false}
-        selection={selection}
-        updateSelection={updateSelection}
-        emptyComponent={emptyComponent}
-      />
+      <div className="DocumentManager__content">
+        <EntitySearch
+          query={query}
+          hideCollection
+          documentMode
+          showPreview={false}
+          selection={selection}
+          updateSelection={updateSelection}
+          emptyComponent={emptyComponent}
+        />
+      </div>
     );
 
     return (
@@ -162,7 +166,10 @@ export class DocumentManager extends Component {
           >
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()}>
-                <input {...getInputProps()} />
+                <input
+                  {...getInputProps()}
+                  onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+                />
                 {contents}
               </div>
             )}
