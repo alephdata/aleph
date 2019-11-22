@@ -80,7 +80,6 @@ export class DocumentUploadDialog extends Component {
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
     }
-    this.setState({ uploadingFile: null });
   }
 
   onUploadProgress(progressEvent) {
