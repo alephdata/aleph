@@ -57,9 +57,6 @@ def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
     for data in entities_by_ids(entity_ids, includes=['schema', 'properties']):
         proxy = model.get_proxy(data)
         # log.info("XRef: %r", proxy)
-        dq = db.session.query(Match)
-        dq = dq.filter(Match.entity_id == proxy.id)
-        dq.delete()
         matches = xref_query_item(proxy, collection_ids=against_collection_ids)
         for (score, other_id, other) in matches:
             log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
@@ -70,11 +67,15 @@ def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
             obj.match_collection_id = other_id
             obj.score = score
             db.session.add(obj)
-    db.session.commit()
+        db.session.commit()
 
 
 def xref_collection(stage, collection, against_collection_ids=None):
     """Cross-reference all the entities and documents in a collection."""
+    dq = db.session.query(Match)
+    dq = dq.filter(Match.collection_id == collection.id)
+    dq.delete()
+    db.session.commit()
     matchable = [s.name for s in model if s.matchable]
     entities = iter_entities(collection_id=collection.id, schemata=matchable)
     for entity in entities:
