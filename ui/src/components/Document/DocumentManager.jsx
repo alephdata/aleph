@@ -7,7 +7,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
-import DocumentUploadButton from 'src/components/Toolbar/DocumentUploadButton';
+import DocumentUploadDialog from 'src/dialogs/DocumentUploadDialog/DocumentUploadDialog';
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
@@ -30,9 +30,11 @@ export class DocumentManager extends Component {
       selection: [],
       deleteIsOpen: false,
       analyzeIsOpen: false,
+      uploadIsOpen: false,
     };
     this.updateSelection = this.updateSelection.bind(this);
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
+    this.toggleUpload = this.toggleUpload.bind(this);
     this.toggleAnalyze = this.toggleAnalyze.bind(this);
   }
 
@@ -73,8 +75,22 @@ export class DocumentManager extends Component {
     this.setState(({ deleteIsOpen: !deleteIsOpen }));
   }
 
+  toggleUpload() {
+    this.setState(({ uploadIsOpen }) => ({ uploadIsOpen: !uploadIsOpen }));
+  }
+
   toggleAnalyze() {
     this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
+  }
+
+  canUpload() {
+    const { collection, document } = this.props;
+    const parentFolder = document == null ? true : document.schema.isA('Folder');
+
+    if (!parentFolder || !collection.writeable) {
+      return false;
+    }
+    return true;
   }
 
   render() {
@@ -86,6 +102,7 @@ export class DocumentManager extends Component {
     const mutableDocument = document === undefined || (document.schema && document.schema.name === 'Folder');
     const showActions = mutableCollection && mutableDocument;
     const updateSelection = showActions ? this.updateSelection : undefined;
+    const canUpload = this.canUpload();
 
     const emptyComponent = (
       <ErrorSection
@@ -94,11 +111,27 @@ export class DocumentManager extends Component {
       />
     );
 
+    const contents = (
+      <EntitySearch
+        query={query}
+        hideCollection
+        documentMode
+        showPreview={false}
+        selection={selection}
+        updateSelection={updateSelection}
+        emptyComponent={emptyComponent}
+      />
+    );
+
     return (
       <div className="DocumentManager">
         { showActions && (
           <div className="bp3-button-group">
-            <DocumentUploadButton collection={collection} parent={document} />
+            { canUpload && (
+              <Button icon="upload" onClick={this.toggleUpload}>
+                <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
+              </Button>
+            )}
             <DocumentFolderButton collection={collection} parent={document} />
             <Button icon="delete" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
               <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
@@ -118,26 +151,27 @@ export class DocumentManager extends Component {
             />
           </Callout>
         )}
-        <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
-          {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              <EntitySearch
-                query={query}
-                hideCollection
-                documentMode
-                showPreview={false}
-                selection={selection}
-                updateSelection={updateSelection}
-                emptyComponent={emptyComponent}
-              />
-            </div>
-          )}
-        </Dropzone>
+        { canUpload && (
+          <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                {contents}
+              </div>
+            )}
+          </Dropzone>
+        )}
+        { !canUpload && contents }
         <EntityDeleteDialog
           entities={selection}
           isOpen={this.state.deleteIsOpen}
           toggleDialog={this.toggleDeleteSelection}
+        />
+        <DocumentUploadDialog
+          collection={collection}
+          parent={document}
+          isOpen={this.state.uploadIsOpen}
+          toggleDialog={this.toggleUpload}
         />
         <CollectionAnalyzeAlert
           collection={collection}
