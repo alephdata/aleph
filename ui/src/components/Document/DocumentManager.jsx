@@ -75,8 +75,11 @@ export class DocumentManager extends Component {
     this.setState(({ deleteIsOpen: !deleteIsOpen }));
   }
 
-  toggleUpload() {
-    this.setState(({ uploadIsOpen }) => ({ uploadIsOpen: !uploadIsOpen }));
+  toggleUpload(files = []) {
+    this.setState(({ uploadIsOpen }) => ({
+      uploadIsOpen: !uploadIsOpen,
+      filesToUpload: files,
+    }));
   }
 
   toggleAnalyze() {
@@ -128,7 +131,7 @@ export class DocumentManager extends Component {
         { showActions && (
           <div className="bp3-button-group">
             { canUpload && (
-              <Button icon="upload" onClick={this.toggleUpload}>
+              <Button icon="upload" onClick={() => this.toggleUpload()}>
                 <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
               </Button>
             )}
@@ -152,7 +155,11 @@ export class DocumentManager extends Component {
           </Callout>
         )}
         { canUpload && (
-          <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+          <Dropzone
+            onDrop={acceptedFiles => (
+              acceptedFiles && acceptedFiles.length ? this.toggleUpload(acceptedFiles) : null
+            )}
+          >
             {({ getRootProps, getInputProps }) => (
               <div {...getRootProps()}>
                 <input {...getInputProps()} />
@@ -167,12 +174,15 @@ export class DocumentManager extends Component {
           isOpen={this.state.deleteIsOpen}
           toggleDialog={this.toggleDeleteSelection}
         />
-        <DocumentUploadDialog
-          collection={collection}
-          parent={document}
-          isOpen={this.state.uploadIsOpen}
-          toggleDialog={this.toggleUpload}
-        />
+        {this.state.uploadIsOpen && (
+          <DocumentUploadDialog
+            collection={collection}
+            parent={document}
+            isOpen={this.state.uploadIsOpen}
+            toggleDialog={this.toggleUpload}
+            filesToUpload={this.state.filesToUpload}
+          />
+        )}
         <CollectionAnalyzeAlert
           collection={collection}
           isOpen={this.state.analyzeIsOpen}

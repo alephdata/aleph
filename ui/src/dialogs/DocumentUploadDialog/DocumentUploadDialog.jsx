@@ -40,8 +40,10 @@ const messages = defineMessages({
 export class DocumentUploadDialog extends Component {
   constructor(props) {
     super(props);
+
+    console.log(props.filesToUpload);
     this.state = {
-      files: [],
+      files: props.filesToUpload || [],
       percentCompleted: 0,
       uploadingFile: null,
     };
