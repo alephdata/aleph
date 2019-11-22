@@ -22,6 +22,10 @@ const messages = defineMessages({
     id: 'entity.document.manager.empty',
     defaultMessage: 'No files or directories.',
   },
+  emptyCanUpload: {
+    id: 'entity.document.manager.emptyCanUpload',
+    defaultMessage: 'No files or directories. Drop files here or click to upload.',
+  },
 });
 
 
@@ -110,10 +114,13 @@ export class DocumentManager extends Component {
     const canUpload = this.canUpload();
 
     const emptyComponent = (
-      <ErrorSection
-        icon="folder-open"
-        title={intl.formatMessage(messages.empty)}
-      />
+      // eslint-disable-next-line
+      <div className="DocumentManager__content__empty" onClick={() => this.toggleUpload()}>
+        <ErrorSection
+          icon={canUpload ? 'plus' : 'folder-open'}
+          title={intl.formatMessage(canUpload ? messages.emptyCanUpload : messages.empty)}
+        />
+      </div>
     );
 
     const contents = (
