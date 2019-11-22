@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { Callout, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import Dropzone from 'react-dropzone';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -117,15 +118,22 @@ export class DocumentManager extends Component {
             />
           </Callout>
         )}
-        <EntitySearch
-          query={query}
-          hideCollection
-          documentMode
-          showPreview={false}
-          selection={selection}
-          updateSelection={updateSelection}
-          emptyComponent={emptyComponent}
-        />
+        <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+          {({ getRootProps, getInputProps }) => (
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              <EntitySearch
+                query={query}
+                hideCollection
+                documentMode
+                showPreview={false}
+                selection={selection}
+                updateSelection={updateSelection}
+                emptyComponent={emptyComponent}
+              />
+            </div>
+          )}
+        </Dropzone>
         <EntityDeleteDialog
           entities={selection}
           isOpen={this.state.deleteIsOpen}
