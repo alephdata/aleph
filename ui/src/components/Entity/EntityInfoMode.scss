@@ -1,6 +1,16 @@
+@import "src/app/variables.scss";
+
 .EntityInfoMode {
   .collection-info__item {
     display: block;
     padding: 5px 0;
+  }
+
+  .bp3-spinner-head {
+    stroke: $blue1 !important;
+  }
+
+  .CollectionLabel {
+    vertical-align: middle;
   }
 }

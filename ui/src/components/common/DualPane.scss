@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 
-$dual-pane-padding: $aleph-grid-size * 3;
+$dual-pane-padding: $aleph-content-padding;
 $dual-pane-padding-mobile: $aleph-grid-size*2;
 
 .DualPane {
@@ -20,7 +20,12 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow-x: hidden;
   padding: 0 0 0 $dual-pane-padding;
+
+  &.allow-overflow {
+    overflow: visible;
+  }
 
   .info-tabs-padding {
     padding: 0;

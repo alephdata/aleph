@@ -23,7 +23,7 @@ function EntityInfoMode(props) {
         </span>
         <Card elevation={0} className="value collection-info">
           <span className="collection-info__item">
-            <Collection.Link collection={entity.collection} icon />
+            <Collection.Status collection={entity.collection} showPopover icon />
           </span>
           {entity.collection.summary && (
             <Collection.Summary collection={entity.collection} className="collection-info__item" truncate={4} />

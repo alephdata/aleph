@@ -21,7 +21,7 @@ class CollectionHeading extends PureComponent {
           <h1 itemProp="name">
             {collection.label}
           </h1>
-          <CollectionStatus collection={collection} />
+          <CollectionStatus collection={collection} showCancel />
           {collection.summary && (
             <Collection.Summary collection={collection} />
           )}

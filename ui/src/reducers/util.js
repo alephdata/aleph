@@ -59,6 +59,11 @@ export function resultLoadError(state, query, error) {
   return objectLoadError(state, key, error);
 }
 
+export function objectReload(state, id) {
+  const object = { isLoading: false, shouldLoad: true };
+  return { ...state, [id]: _.assign({}, state[id], object) };
+}
+
 export function objectDelete(state, id) {
   _.unset(state, id);
   return state;

@@ -16,6 +16,7 @@ export {
   tiggerXrefMatches,
   triggerCollectionAnalyze,
   triggerCollectionCancel,
+  triggerCollectionReload,
   updateCollection,
   updateCollectionPermissions,
 } from './collectionActions';

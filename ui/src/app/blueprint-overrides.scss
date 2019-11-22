@@ -23,3 +23,15 @@
   margin-top: 0;
   margin-left: 0;
 }
+
+.bp3-tab-list {
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+  }
+}

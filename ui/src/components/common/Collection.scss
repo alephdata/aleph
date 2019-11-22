@@ -1,7 +1,19 @@
 @import "src/app/variables.scss";
 
 .CollectionLabel {
-    .bp3-icon {
+    .bp3-icon, .bp3-spinner {
         margin-right: $aleph-icon-padding;
     }
+
+    .bp3-spinner {
+      display: inline-block;
+    }
+}
+
+.CollectionUpdateStatus {
+  &__popover {
+    .bp3-popover-arrow-fill {
+      fill: $light-gray4 !important;
+    }
+  }
 }

@@ -37,7 +37,7 @@ def handle_azure_oauth(sender, provider=None, oauth_token=None):
         return
 
     # Get incoming token, extract header for use with certificate verification
-    id_token = oauth.get('id_token')
+    id_token = oauth_token.get('id_token')
     headerbit = id_token.split('.')[0]
     headerbit = base64.b64decode(headerbit).decode('utf8')
     headerbit = json.loads(headerbit)
@@ -98,7 +98,7 @@ def handle_keycloak_oauth(sender, provider=None, oauth_token=None):
     if 'secure.occrp.org' not in provider.api_base_url:
         return
 
-    access_token = oauth.get('access_token')
+    access_token = oauth_token.get('access_token')
     token_data = jwt.decode(access_token, verify=False)
     clients = token_data.get('resource_access', {})
     client = clients.get(provider.client_id, {})
