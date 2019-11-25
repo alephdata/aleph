@@ -57,8 +57,6 @@ jobs:
         docker push alephdata/aleph:${GITHUB_SHA}
   test-aleph:
     runs-on: ubuntu-latest
-    env:
-      CURRENT_BRANCH: ${GITHUB_REF#refs/heads/}
     steps:
     - uses: actions/checkout@v1
     - name: Set up
@@ -71,8 +69,7 @@ jobs:
       run: make docker-pull
     - name: Docker build
       run: |
-        echo "${GITHUB_REF#refs/heads/}"
-        echo ${{ env.CURRENT_BRANCH }}
+        echo "${GITHUB_REF}"
         make build
         make services
         sleep 5
