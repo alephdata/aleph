@@ -86,6 +86,37 @@ def get_collection_stats(collection_id):
     return data
 
 
+def get_collection_statistics(collection_id):
+    """Compute some statistics on the content of a collection."""
+    if collection_id is None:
+        return
+    key = cache.object_key(Collection, collection_id, 'stats')
+    data = cache.get_complex(key)
+    if data is not None:
+        return data
+
+    facets = ['schema', 'names', 'addresses', 'phones', 'emails',
+              'countries', 'languages', 'ibans']
+    log.info("Generating statistics: %s", collection_id)
+    aggs = {f: {'terms': {'field': f, 'size': 300}} for f in facets}
+    query = {'term': {'collection_id': collection_id}}
+    query = {
+        'size': 0,
+        'query': {'bool': {'filter': [query]}},
+        'aggs': aggs
+    }
+    index = entities_read_index(schema=Entity.THING)
+    result = es.search(index=index, body=query)
+    aggregations = result.get('aggregations', {})
+    data = {}
+    for facet in facets:
+        data[facet] = {}
+        for bucket in aggregations.get(facet, {}).get('buckets', []):
+            data[facet][bucket['key']] = bucket['doc_count']
+    cache.set_complex(key, data, expires=cache.EXPIRE)
+    return data
+
+
 def delete_collection(collection_id, sync=False):
     """Delete all documents from a particular collection."""
     es.delete(collections_index(),
