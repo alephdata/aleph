@@ -4,16 +4,13 @@ from followthemoney import model
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
-from aleph.core import db, archive
+from aleph.core import db
 from aleph.model import Mapping
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.logic.collections import refresh_collection
+from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
-from aleph.views.util import (
-    get_db_collection, parse_request, get_index_entity, get_session_id,
-    require, obj_or_404
-)
-from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_REFRESH_MAPPING
+from aleph.views.util import get_db_collection, parse_request
+from aleph.views.util import get_index_entity, get_session_id, obj_or_404
 
 
 blueprint = Blueprint('mappings_api', __name__)
@@ -28,50 +25,6 @@ def load_query():
     except Exception as ex:
         raise BadRequest(ex)
     return query
-
-
-def get_mapping_query(mapping):
-    table = get_index_entity(mapping.table_id, request.authz.READ)
-    properties = table.get('properties', {})
-    csv_hash = first(properties.get('csvHash'))
-    query = {
-        'entities': mapping.query,
-        'proof': mapping.table_id,
-    }
-    if csv_hash:
-        url = archive.generate_url(csv_hash)
-        if not url:
-            local_path = archive.load_file(csv_hash)
-            if local_path is not None:
-                url = local_path.as_posix()
-        if url is not None:
-            query['csv_url'] = url
-            return {
-                'query': query,
-                'mapping_id': mapping.id,
-            }
-        raise BadRequest("Could not generate csv url for the table")
-    raise BadRequest("Source table doesn't have a csvHash")
-
-
-def flush_mapping(collection, mapping):
-    job_id = get_session_id()
-    payload = {
-        'mapping_id': mapping.id,
-    }
-    queue_task(collection, OP_FLUSH_MAPPING, job_id=job_id, payload=payload)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection.id)
-
-
-def load_mapping(collection, mapping):
-    query = get_mapping_query(mapping)
-    job_id = get_session_id()
-    queue_task(collection, OP_REFRESH_MAPPING, job_id=job_id, payload=query)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection.id)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings', methods=['GET'])  # noqa
@@ -311,9 +264,12 @@ def trigger(collection_id, mapping_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    require(request.authz.can_bulk_import())
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    load_mapping(collection, mapping)
+    job_id = get_session_id()
+    payload = {'mapping_id': mapping.id}
+    queue_task(collection, OP_LOAD_MAPPING, job_id=job_id, payload=payload)
+    collection.touch()
+    db.session.commit()
     return ('', 202)
 
 
@@ -349,5 +305,7 @@ def flush(collection_id, mapping_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
-    flush_mapping(collection, mapping)
+    queue_task(collection, OP_FLUSH_MAPPING,
+               job_id=get_session_id(),
+               payload={'mapping_id': mapping.id})
     return ('', 202)

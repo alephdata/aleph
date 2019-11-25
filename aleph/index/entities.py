@@ -12,9 +12,6 @@ from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, query_delete, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
-from aleph.index.collections import delete_entities
-from aleph.logic.collections import refresh_collection
-from aleph.logic.aggregator import drop_aggregator
 
 
 log = logging.getLogger(__name__)
@@ -208,11 +205,3 @@ def delete_entity(entity_id, exclude=None, sync=False):
                   refresh=refresh_sync(sync))
         q = {'term': {'entities': entity_id}}
         query_delete(entities_read_index(), q, sync=sync)
-
-
-def delete_entities_by_mapping_id(stage, collection, mapping_id, sync=False):
-    """Delete entities loaded by a mapping"""
-    log.debug("Flushing entities for mapping %s", mapping_id)
-    delete_entities(collection.id, mapping_id=mapping_id, sync=sync)
-    drop_aggregator(collection)
-    refresh_collection(collection.id)
