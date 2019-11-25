@@ -10,7 +10,6 @@ import {
   queryNotifications,
   createCollection,
   deleteCollection,
-  ingestDocument,
   deleteEntity,
 } from 'src/actions';
 
@@ -46,7 +45,8 @@ export default createReducer({
   // may affect the content of the results.
   [createCollection.COMPLETE]: invalidateResults,
   [deleteCollection.COMPLETE]: invalidateResults,
-  [ingestDocument.COMPLETE]: invalidateResults,
   [deleteEntity.COMPLETE]: invalidateResults,
+  TRIGGER_COLLECTION_RELOAD: invalidateResults,
+
 
 }, initialState);

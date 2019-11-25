@@ -55,3 +55,46 @@ jobs:
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph:${GITHUB_SHA}
+  test-aleph:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up
+      run: |
+        sudo sysctl -w vm.max_map_count=262144
+        sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
+        docker --version
+        docker-compose --version
+    - name: Docker pull
+      run: make docker-pull
+    - name: Docker build
+      run: |
+        echo "${GITHUB_REF}"
+        make build
+        make services
+        sleep 5
+    - name: Run ingest tests
+      run: make ingest-test
+    - name: Run aleph tests
+      run: make test
+    - name: Push docker images for master
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        make ALEPH_TAG=master build-full docker-push
+    - name: Push docker images for develop
+      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        make ALEPH_TAG=develop build-full docker-push
+    - name: Push docker images for occrp/production
+      if: github.event_name == 'push' && github.ref == 'refs/heads/occrp/production'
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        make ALEPH_TAG=occrp build-full docker-push
+    - name: Push docker images for tags
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+      run: |
+        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+        make ALEPH_TAG=${GITHUB_REF/refs\/tags\//} build-full docker-push
+        make ALEPH_TAG=latest build-full docker-push

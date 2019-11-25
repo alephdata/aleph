@@ -20,6 +20,7 @@ export {
   tiggerXrefMatches,
   triggerCollectionAnalyze,
   triggerCollectionCancel,
+  triggerCollectionReload,
   updateCollection,
   updateCollectionMapping,
   updateCollectionPermissions,

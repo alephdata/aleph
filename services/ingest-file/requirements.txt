@@ -1,8 +1,8 @@
 banal==0.4.2
 normality==2.0.0
 pantomime==0.3.3
-servicelayer[google,amazon]==1.9.0
-balkhash[leveldb,sql]==1.1.1
+servicelayer[google,amazon]==1.9.2
+balkhash[leveldb,sql]==1.1.2
 followthemoney==1.23.0
 languagecodes==1.0.5
 psycopg2-binary==2.8.4
@@ -26,9 +26,9 @@ python-magic==0.4.15
 pypdf2==1.26.0
 rarfile==3.1
 xlrd==1.2.0
-openpyxl==3.0.0
+openpyxl==3.0.1
 odfpy==1.4.0
-cchardet==2.1.4
+cchardet==2.1.5
 lxml==4.4.1
 olefile==0.46
 pillow==6.2.1
