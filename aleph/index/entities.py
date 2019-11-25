@@ -12,6 +12,10 @@ from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
 from aleph.index.util import authz_query, query_delete, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
+from aleph.index.collections import delete_entities
+from aleph.logic.collections import refresh_collection
+from aleph.logic.aggregator import drop_aggregator
+
 
 log = logging.getLogger(__name__)
 EXCLUDE_DEFAULT = ['text', 'fingerprints', 'names', 'phones', 'emails',
@@ -133,12 +137,12 @@ def index_entity(entity, sync=False):
 
 def index_proxy(collection, proxy, sync=False):
     delete_entity(proxy.id, exclude=proxy.schema, sync=False)
-    return index_bulk(collection, [proxy], sync=sync)
+    return index_bulk(collection, [proxy], {}, sync=sync)
 
 
-def index_bulk(collection, entities, job_id=None, sync=False):
+def index_bulk(collection, entities, extra, sync=False):
     """Index a set of entities."""
-    entities = (format_proxy(p, collection, job_id=job_id) for p in entities)
+    entities = (format_proxy(p, collection, extra) for p in entities)
     bulk_actions(entities, sync=sync)
 
 
@@ -147,13 +151,13 @@ def _numeric_values(type_, values):
     return [v for v in values if v is not None]
 
 
-def format_proxy(proxy, collection, job_id=None):
+def format_proxy(proxy, collection, extra):
     """Apply final denormalisations to the index."""
     proxy.context = {}
     proxy = collection.ns.apply(proxy)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
-    data['job_id'] = job_id
+
     names = ensure_list(data.get('names'))
     fps = set([fingerprints.generate(name) for name in names])
     fps.update(names)
@@ -180,6 +184,9 @@ def format_proxy(proxy, collection, job_id=None):
     numeric['dates'] = _numeric_values(registry.date, data.get('dates'))
     data['numeric'] = numeric
 
+    # add possible overrides
+    data.update(extra)
+
     # pprint(data)
     entity_id = data.pop('id')
     return {
@@ -201,3 +208,11 @@ def delete_entity(entity_id, exclude=None, sync=False):
                   refresh=refresh_sync(sync))
         q = {'term': {'entities': entity_id}}
         query_delete(entities_read_index(), q, sync=sync)
+
+
+def delete_entities_by_mapping_id(stage, collection, mapping_id, sync=False):
+    """Delete entities loaded by a mapping"""
+    log.debug("Flushing entities for mapping %s", mapping_id)
+    delete_entities(collection.id, mapping_id=mapping_id, sync=sync)
+    drop_aggregator(collection)
+    refresh_collection(collection.id)

@@ -2,7 +2,7 @@ import logging
 from flask import request
 from normality import stringify, safe_filename
 from pantomime.types import PDF, CSV
-from banal import ensure_list, is_listish, is_mapping
+from banal import ensure_list, is_listish, is_mapping, first
 from followthemoney import model
 from followthemoney.types import registry
 
@@ -13,11 +13,6 @@ from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
 
 log = logging.getLogger(__name__)
-
-
-def first(values):
-    for value in ensure_list(values):
-        return value
 
 
 class Serializer(object):
@@ -315,3 +310,7 @@ class NotificationSerializer(Serializer):
         obj['params'] = params
         obj['event'] = event.to_dict()
         return obj
+
+
+class MappingSerializer(Serializer):
+    pass

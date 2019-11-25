@@ -170,6 +170,7 @@ def configure_schema(schema, version):
             "document_id": KEYWORD,
             "collection_id": KEYWORD,
             "job_id": KEYWORD,
+            "mapping_id": KEYWORD,
             "uploader_id": KEYWORD,
             "keywords": KEYWORD,
             registry.entity.group: KEYWORD,

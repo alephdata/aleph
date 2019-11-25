@@ -11,11 +11,12 @@ OP_INDEX = 'index'
 OP_XREF = 'xref'
 OP_XREF_ITEM = 'xitem'
 OP_PROCESS = 'process'
-OP_BULKLOAD = 'bulkload'
+OP_REFRESH_MAPPING = 'refreshmapping'
+OP_FLUSH_MAPPING = 'flushmapping'
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_BULKLOAD, OP_XREF_ITEM,)
+OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_XREF_ITEM, OP_REFRESH_MAPPING, OP_FLUSH_MAPPING)  # noqa
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):

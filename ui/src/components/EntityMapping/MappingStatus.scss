@@ -1,0 +1,14 @@
+@import "src/app/variables.scss";
+
+.MappingStatus {
+  margin: 0;
+  display: inline-block;
+  width: auto !important;
+
+  &__statusItem {
+    span {
+      font-weight: normal;
+      margin: 0 2px;
+    }
+  }
+}

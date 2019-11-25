@@ -1,15 +1,12 @@
-from banal import ensure_list, keys_values
+from banal import ensure_list
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
-from followthemoney import model
-from followthemoney.exc import InvalidMapping
 
 from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_BULKLOAD, OP_PROCESS
+from aleph.queues import OP_PROCESS
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.processing import bulk_write
@@ -215,51 +212,6 @@ def process(collection_id):
     # re-process the documents
     data = {'reset': get_flag('reset', True)}
     queue_task(collection, OP_PROCESS, job_id=get_session_id(), payload=data)
-    collection.touch()
-    db.session.commit()
-    refresh_collection(collection_id)
-    return ('', 202)
-
-
-@blueprint.route('/api/2/collections/<int:collection_id>/mapping', methods=['POST', 'PUT'])  # noqa
-def mapping(collection_id):
-    """
-    ---
-    post:
-      summary: Load mappings for a collection
-      description: Load the mapping for the collection with id `collection_id`
-      parameters:
-      - description: The collection ID.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-        description: The mapping to apply.
-        required: true
-      responses:
-        '202':
-          description: Accepted
-      tags:
-      - Collection
-    """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
-    require(request.authz.can_bulk_import())
-    if not request.is_json:
-        raise BadRequest()
-    data = request.get_json().get(collection.foreign_id)
-    for query in keys_values(data, 'queries', 'query'):
-        try:
-            model.make_mapping(query)
-        except InvalidMapping as invalid:
-            raise BadRequest(invalid)
-    queue_task(collection, OP_BULKLOAD, job_id=get_session_id(), payload=data)
     collection.touch()
     db.session.commit()
     refresh_collection(collection_id)
