@@ -81,17 +81,17 @@ jobs:
     - name: Run aleph tests
       run: make test
     - name: Push docker images for master
-      if: github.event_name == 'push' && env.CURRENT_BRANCH == 'master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         make ALEPH_TAG=master build-full docker-push
     - name: Push docker images for develop
-      if: github.event_name == 'push' && env.CURRENT_BRANCH == 'develop'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         make ALEPH_TAG=develop build-full docker-push
     - name: Push docker images for occrp/production
-      if: github.event_name == 'push' && env.CURRENT_BRANCH == 'occrp/production'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/occrp/production'
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         make ALEPH_TAG=occrp build-full docker-push
