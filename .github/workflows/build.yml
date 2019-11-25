@@ -57,6 +57,8 @@ jobs:
         docker push alephdata/aleph:${GITHUB_SHA}
   test-aleph:
     runs-on: ubuntu-latest
+    env:
+      CURRENT_BRANCH: ${GITHUB_REF#refs/heads/}
     steps:
     - uses: actions/checkout@v1
     - name: Set up
@@ -70,6 +72,7 @@ jobs:
     - name: Docker build
       run: |
         echo "${GITHUB_REF#refs/heads/}"
+        echo ${{ env.CURRENT_BRANCH }}
         make build
         make services
         sleep 5
@@ -78,17 +81,17 @@ jobs:
     - name: Run aleph tests
       run: make test
     - name: Push docker images for master
-      if: github.event_name == 'push' && ${GITHUB_REF#refs/heads/} == 'master'
+      if: github.event_name == 'push' && env.CURRENT_BRANCH == 'master'
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         make ALEPH_TAG=master build-full docker-push
     - name: Push docker images for develop
-      if: github.event_name == 'push' && ${GITHUB_REF#refs/heads/} == 'develop'
+      if: github.event_name == 'push' && env.CURRENT_BRANCH == 'develop'
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         make ALEPH_TAG=develop build-full docker-push
     - name: Push docker images for occrp/production
-      if: github.event_name == 'push' && ${GITHUB_REF#refs/heads/} == 'occrp/production'
+      if: github.event_name == 'push' && env.CURRENT_BRANCH == 'occrp/production'
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         make ALEPH_TAG=occrp build-full docker-push
