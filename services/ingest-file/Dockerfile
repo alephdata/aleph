@@ -77,7 +77,9 @@ RUN apt-get -qq -y update \
 RUN apt-get -qq -y update \
     && apt-get -q -y install build-essential locales ca-certificates \
         # python deps (mostly to install their dependencies)
-        python3-pip python3-dev python3-pil python3-tesserocr \
+        python3-pip python3-dev python3-pil \
+        # tesseract
+        tesseract-ocr libtesseract-dev libleptonica-dev pkg-config\
         # libraries
         libxslt1-dev libpq-dev libldap2-dev libsasl2-dev \
         zlib1g-dev libicu-dev libxml2-dev \

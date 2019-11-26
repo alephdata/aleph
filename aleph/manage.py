@@ -10,7 +10,7 @@ from normality import slugify
 from tabulate import tabulate
 from flask.cli import FlaskGroup
 from servicelayer.jobs import Job
-from followthemoney.cli.util import load_mapping_file, write_object
+from followthemoney.cli.util import write_object
 
 from aleph.core import create_app, db, cache
 from aleph.authz import Authz
@@ -19,7 +19,7 @@ from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
 from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, get_stage
-from aleph.queues import OP_BULKLOAD, OP_PROCESS, OP_XREF
+from aleph.queues import OP_PROCESS, OP_XREF
 from aleph.index.entities import iter_entities
 from aleph.index.admin import delete_index
 from aleph.logic.collections import create_collection, update_collection
@@ -155,20 +155,6 @@ def xref(foreign_id, against=None):
     against = [get_collection(c).id for c in ensure_list(against)]
     against = {'against_collection_ids': against}
     queue_task(collection, OP_XREF, payload=against)
-
-
-@cli.command()
-@click.argument('file_name')
-def bulkload(file_name):
-    """Load entities from the specified mapping file."""
-    log.info("Mapping bulk data from: %s", file_name)
-    config = load_mapping_file(file_name)
-    for foreign_id, data in config.items():
-        data['foreign_id'] = foreign_id
-        data['label'] = data.get('label', foreign_id)
-        create_collection(data)
-        collection = Collection.by_foreign_id(foreign_id)
-        queue_task(collection, OP_BULKLOAD, payload=data)
 
 
 @cli.command('load-entities')

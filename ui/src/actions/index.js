@@ -6,11 +6,15 @@ export { deleteNotifications, queryNotifications } from './notificationActions';
 export { fetchDocumentContent, ingestDocument } from './documentActions';
 export {
   createCollection,
+  createCollectionMapping,
   deleteCollection,
+  deleteCollectionMapping,
   fetchCollection,
   fetchCollectionStatus,
   fetchCollectionPermissions,
+  fetchCollectionMappings,
   fetchCollectionXrefIndex,
+  flushCollectionMapping,
   queryCollections,
   queryXrefMatches,
   tiggerXrefMatches,
@@ -18,6 +22,7 @@ export {
   triggerCollectionCancel,
   triggerCollectionReload,
   updateCollection,
+  updateCollectionMapping,
   updateCollectionPermissions,
 } from './collectionActions';
 export {

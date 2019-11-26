@@ -1,0 +1,31 @@
+MappingCreate:
+  type: object
+  required: ["mapping_query", "table_id"]
+  properties:
+    table_id:
+      type: string
+    mapping_query:
+      type: object
+
+Mapping:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    collection_id:
+      type: string
+    role_id:
+      type: string
+    table_id:
+      type: string
+    last_run_err_msg:
+      type: string
+      readOnly: true
+      nullable: true
+    last_run_status:
+      type: string
+      enum: ["failed", "success"]
+      readonly: true
+      nullable: true
+    query:
+      type: object

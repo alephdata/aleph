@@ -51,25 +51,28 @@ def _process_entity(entity, sync=False):
     return entity
 
 
-def _fetch_entities(stage, collection, entity_id=None, batch=100):
+def _fetch_entities(stage, collection, entity_ids=None, batch=100):
     aggregator = get_aggregator(collection)
-    if entity_id is not None:
-        entity_id = ensure_list(entity_id)
+    if entity_ids is not None:
+        entity_ids = ensure_list(entity_ids)
         # WEIRD: Instead of indexing a single entity, this will try
         # pull a whole batch of them off the queue and do it at once.
         for task in stage.get_tasks(limit=batch):
-            entity_id.append(task.payload.get('entity_id'))
-        stage.mark_done(len(entity_id) - 1)
+            entity_ids.append(task.payload.get('entity_id'))
+        stage.mark_done(len(entity_ids) - 1)
 
-    yield from aggregator.iterate(entity_id=entity_id)
+    yield from aggregator.iterate(entity_id=entity_ids)
     aggregator.close()
 
 
-def index_aggregate(stage, collection, entity_id=None, sync=False):
+def index_aggregate(stage, collection, sync=False, **kwargs):
     """Project the contents of the collections aggregator into the index."""
-    entities = _fetch_entities(stage, collection, entity_id=entity_id)
+    entity_ids = kwargs.get('entity_ids')
+    mapping_id = kwargs.get('mapping_id')
+    entities = _fetch_entities(stage, collection, entity_ids=entity_ids)
     entities = (_process_entity(e, sync=sync) for e in entities)
-    index_bulk(collection, entities, job_id=stage.job.id)
+    extra = {'job_id': stage.job.id, 'mapping_id': mapping_id}
+    index_bulk(collection, entities, extra)
     refresh_collection(collection.id)
 
 
@@ -87,5 +90,5 @@ def bulk_write(collection, entities, job_id=None, unsafe=False):
                 entity = remove_checksums(entity)
             yield _process_entity(entity)
 
-    index_bulk(collection, _generate(), job_id=job_id)
+    index_bulk(collection, _generate(), {'job_id': job_id})
     refresh_collection(collection.id)
