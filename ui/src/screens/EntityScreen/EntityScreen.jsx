@@ -151,8 +151,10 @@ class EntityScreen extends Component {
           {breadcrumbs}
           <DualPane>
             <DualPane.InfoPane className="with-heading">
-              <EntityHeading entity={entity} isPreview={false} />
-              <div className="pane-content">
+              <div className="InfoPane__heading">
+                <EntityHeading entity={entity} isPreview={false} />
+              </div>
+              <div className="InfoPane__content">
                 <EntityInfoMode entity={entity} isPreview={false} />
               </div>
             </DualPane.InfoPane>

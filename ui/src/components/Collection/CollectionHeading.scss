@@ -1,0 +1,21 @@
+@import "src/app/variables.scss";
+
+.CollectionHeading {
+  border-bottom: 1px solid $aleph-border-color;
+  padding: ($aleph-grid-size * 4) 0;
+
+  h1, h2 {
+    // Show a subtle line below headings
+    margin-bottom: $aleph-grid-size;
+    padding: $aleph-grid-size 0;
+    line-height: 1.5;
+    border-bottom: 1px solid $aleph-border-color;
+    overflow-wrap: break-word;
+  }
+
+  h1 {
+    border: 0;
+    margin: 4px 0 0;
+    font-weight: bold;
+  }
+}

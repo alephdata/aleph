@@ -89,8 +89,10 @@ export class CollectionScreen extends Component {
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
             <DualPane.InfoPane className="with-heading">
-              <CollectionHeading collection={collection} />
-              <div className="pane-content">
+              <div className="InfoPane__heading">
+                <CollectionHeading collection={collection} />
+              </div>
+              <div className="InfoPane__content">
                 <CollectionInfoMode collection={collection} />
               </div>
             </DualPane.InfoPane>

@@ -40,39 +40,9 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
 %SidePane {
   flex: none;
   width: $aleph-sidebar-width;
-  border-right: 0;
-  min-height: 100%;
-}
-
-.DualPane .SidePane {
-  @extend %SidePane;
-  padding-right: $dual-pane-padding;
-  border-right: 1px solid $light-gray2;
-
-  @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
-    width: $aleph-sidepane-md-width;
-  }
-
-  @media screen and (max-width: $aleph-screen-sm-max-width) {
-    width: 100%;
-    border: none;
-    padding-right: $dual-pane-padding-mobile;
-  }
-}
-
-.DualPane .InfoPane {
-  @extend %SidePane;
   border-right: 1px solid $aleph-border-color;
   padding-right: $dual-pane-padding;
-  overflow: visible;
-  min-height: unset;
-  margin: 0 0 $aleph-grid-size;
-  flex-direction: row !important;
-
-  .pane-heading {
-    border-bottom: 1px solid $aleph-border-color;
-    padding: ($aleph-grid-size * 4) 0;
-  }
+  min-height: 100%;
 
   @media screen and (max-width: $aleph-screen-md-max-width) and (min-width: $aleph-screen-sm-max-width) {
     width: $aleph-infopane-md-width !important;
@@ -87,17 +57,25 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
   }
 }
 
+.DualPane .SidePane {
+  @extend %SidePane;
+}
+
+.DualPane .InfoPane {
+  @extend %SidePane;
+  overflow: visible;
+  min-height: unset;
+  margin: 0 0 $aleph-grid-size;
+  flex-direction: row !important;
+
+  .pane-heading {
+    border-bottom: 1px solid $aleph-border-color;
+    padding: ($aleph-grid-size * 4) 0;
+  }
+}
+
 .InfoPane {
   flex: 10;
-
-  h1, h2 {
-    // Show a subtle line below headings
-    margin-bottom: $aleph-grid-size;
-    padding: $aleph-grid-size 0;
-    line-height: 1.5;
-    border-bottom: 1px solid $aleph-border-color;
-    overflow-wrap: break-word;
-  }
 
   .pane-heading h1 {
     border: 0;
