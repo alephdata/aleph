@@ -204,6 +204,10 @@ export function selectCollectionView(state, collectionId, mode) {
   return largestSchema; // yay.
 }
 
+export function selectCollectionStatistics(state, collectionId) {
+  return selectObject(state.collectionStatistics, collectionId);
+}
+
 export function selectCollectionStatus(state, collectionId) {
   return selectObject(state.collectionStatus, collectionId);
 }

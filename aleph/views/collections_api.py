@@ -6,7 +6,7 @@ from aleph.authz import Authz
 from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
-from aleph.queues import OP_BULKLOAD, OP_PROCESS
+from aleph.queues import OP_PROCESS
 from aleph.index.collections import get_collection_statistics
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
