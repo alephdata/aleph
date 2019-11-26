@@ -22,6 +22,8 @@ import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
 
+import 'src/components/common/ItemOverview.scss';
+
 const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
 
 
@@ -150,14 +152,14 @@ class EntityScreen extends Component {
         <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
           {breadcrumbs}
           <DualPane>
-            <DualPane.InfoPane className="with-heading">
-              <div className="InfoPane__heading">
+            <DualPane.SidePane className="ItemOverview">
+              <div className="ItemOverview__heading">
                 <EntityHeading entity={entity} isPreview={false} />
               </div>
-              <div className="InfoPane__content">
+              <div className="ItemOverview__content">
                 <EntityInfoMode entity={entity} isPreview={false} />
               </div>
-            </DualPane.InfoPane>
+            </DualPane.SidePane>
             <DualPane.ContentPane>
               <EntityViews
                 entity={entity}

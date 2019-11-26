@@ -23,7 +23,7 @@ class CollectionInfoMode extends PureComponent {
     ) : [];
 
     return (
-      <div className="CollectionOverview">
+      <div className="CollectionInfoMode">
         <ul className="info-sheet">
           { !collection.casefile && (
             <li>

@@ -16,6 +16,8 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionStatus, selectCollectionView } from 'src/selectors';
 
+import 'src/components/common/ItemOverview.scss';
+
 
 export class CollectionScreen extends Component {
   constructor(props) {
@@ -88,14 +90,14 @@ export class CollectionScreen extends Component {
         >
           {breadcrumbs}
           <DualPane itemScope itemType="https://schema.org/Dataset">
-            <DualPane.InfoPane className="with-heading">
-              <div className="InfoPane__heading">
+            <DualPane.SidePane className="ItemOverview">
+              <div className="ItemOverview__heading">
                 <CollectionHeading collection={collection} />
               </div>
-              <div className="InfoPane__content">
+              <div className="ItemOverview__content">
                 <CollectionInfoMode collection={collection} />
               </div>
-            </DualPane.InfoPane>
+            </DualPane.SidePane>
             <DualPane.ContentPane>
               <CollectionViews
                 collection={collection}

@@ -328,7 +328,7 @@ export class SearchScreen extends React.Component {
               />
             </div>
           </DualPane.SidePane>
-          <DualPane.ContentPane className="padded">
+          <DualPane.ContentPane>
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery} />
             <EntityTable
