@@ -20,6 +20,12 @@ const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/
 export class DocumentViewMode extends React.Component {
   renderContent() {
     const { document, queryText, activeMode } = this.props;
+    const processingError = document.getProperty('processingError');
+
+    if (processingError && processingError.length) {
+      return <DefaultViewer document={document} queryText={queryText} />;
+    }
+
     if (document.schema.isA('Email')) {
       if (activeMode === 'browse') {
         return (
