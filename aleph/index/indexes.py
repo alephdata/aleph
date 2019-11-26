@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
 PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
-LATIN_TEXT = {"type": "text", "analyzer": "icu_latin"}
+LATIN_TEXT = {"type": "text", "analyzer": "latin_index"}
 KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 NUMERIC = {"type": "double"}
@@ -51,7 +51,7 @@ def configure_collections():
             "label": {
                 "type": "text",
                 "copy_to": "text",
-                "analyzer": "icu_latin",
+                "analyzer": "latin_index",
                 "fields": {"kw": KEYWORD}
             },
             "collection_id": KEYWORD,
@@ -73,7 +73,7 @@ def configure_collections():
             "team_id": KEYWORD,
             "text": {
                 "type": "text",
-                "analyzer": "icu_latin",
+                "analyzer": "latin_index",
                 "term_vector": "with_positions_offsets",
                 "store": True
             },
@@ -159,7 +159,8 @@ def configure_schema(schema, version):
         "properties": {
             "name": {
                 "type": "text",
-                "analyzer": "icu_latin",
+                "analyzer": "latin_index",
+                "search_analyzer": "latin_query",
                 "fields": {"kw": KEYWORD},
                 "boost": 3.0,
                 "copy_to": "text"
@@ -196,13 +197,14 @@ def configure_schema(schema, version):
             },
             "fingerprints": {
                 "type": "keyword",
-                "normalizer": "icu_latin",
+                "normalizer": "latin_index",
                 "copy_to": "text",
                 "fields": {"text": LATIN_TEXT}
             },
             "text": {
                 "type": "text",
-                "analyzer": "icu_latin",
+                "analyzer": "latin_index",
+                "search_analyzer": "latin_query",
                 "term_vector": "with_positions_offsets",
                 "store": True
             },
