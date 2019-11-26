@@ -57,6 +57,7 @@ class EntityViews extends React.Component {
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
     const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
+    const processingError = entity.getProperty('processingError');
 
     return (
       <Tabs
@@ -143,7 +144,7 @@ class EntityViews extends React.Component {
             }
           />
         ))}
-        { entity.schema.isDocument() && (
+        { entity.schema.isDocument() && (!processingError || !processingError.length) && (
           <Tab
             id="tags"
             disabled={tags.total < 1}
