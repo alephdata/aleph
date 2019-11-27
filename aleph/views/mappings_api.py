@@ -19,11 +19,12 @@ log = logging.getLogger(__name__)
 
 def load_query():
     try:
-        query = request.json.get('mapping_query', '{}')
+        query = request.json.get('mapping_query', {})
         # just for validation
         model.make_mapping({'entities': query})
     except Exception as ex:
-        raise BadRequest(ex)
+        log.exception("Validation error: %s", request.json)
+        raise BadRequest(str(ex))
     return query
 
 

@@ -85,13 +85,16 @@ class MappingVerifyItem extends Component {
     if (propValue.literal !== undefined) {
       return <td className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</td>;
     }
-    const referredEntity = fullMappingsList.get(propValue);
-    if (referredEntity) {
-      return (
-        <td className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
-          <Schema.Smart.Label schema={referredEntity.schema} icon />
-        </td>
-      );
+    if (propValue.entity !== undefined) {
+      const referredEntity = fullMappingsList.get(propValue.entity);
+
+      if (referredEntity) {
+        return (
+          <td className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
+            <Schema.Smart.Label schema={referredEntity.schema} icon />
+          </td>
+        );
+      }
     }
 
     return null;

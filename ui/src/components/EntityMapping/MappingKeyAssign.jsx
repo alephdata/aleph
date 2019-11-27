@@ -105,6 +105,9 @@ export class MappingKeyAssignItem extends Component {
 
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
+    const buttonText = currValue && currValue.entity
+      ? <Schema.Smart.Label schema={currValue.entity} icon />
+      : intl.formatMessage(messages.entityAssignPlaceholder);
 
     return (
       <div className="MappingKeyAssign__item__property">
@@ -119,13 +122,13 @@ export class MappingKeyAssignItem extends Component {
               id="entity-select"
               items={items}
               itemRenderer={entityItemRenderer}
-              onItemSelect={item => onPropertyAdd(id, property.name, item)}
+              onItemSelect={item => onPropertyAdd(id, property.name, { entity: item })}
               filterable={false}
               popoverProps={{ minimal: true }}
               activeItem={currValue}
             >
               <Button
-                text={currValue || intl.formatMessage(messages.entityAssignPlaceholder)}
+                text={buttonText}
                 rightIcon="caret-down"
                 disabled={disabled}
               />

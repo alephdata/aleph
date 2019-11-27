@@ -42,7 +42,7 @@ class Query(object):
                 "query_string": {
                     "query": self.parser.text,
                     "fields": self.TEXT_FIELDS,
-                    "analyzer": "icu_latin",
+                    "analyzer": "latin_query",
                     "default_operator": "AND",
                     "minimum_should_match": "3<80%",
                     "lenient": True
