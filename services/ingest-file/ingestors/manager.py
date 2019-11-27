@@ -1,11 +1,13 @@
+import os
 import magic
 import logging
 import balkhash
 from pprint import pprint  # noqa
 from tempfile import mkdtemp
-from banal import ensure_list
-from normality import stringify
 from followthemoney import model
+from banal import ensure_list, first
+from mimetypes import guess_extension
+from normality import stringify, safe_filename
 from balkhash.utils import safe_fragment
 from servicelayer.archive import init_archive
 from servicelayer.archive.util import ensure_path
@@ -110,10 +112,29 @@ class Manager(object):
         file_path = ensure_path(file_path)
         if file_path is not None and file_path.is_file():
             return self.archive.archive_file(file_path, mime_type=mime_type)
+    
+    def make_filename(self, entity):
+        """Some of the file importers actually care about the file
+        extension, so this is trying to make sure we use a temporary
+        file name that has an appropriate extension."""
+        for file_name in entity.get('fileName', quiet=True):
+            _, extension = os.path.splitext(file_name)
+            if len(extension):
+                return file_name
+        extension = first(entity.get('extension', quiet=True))
+        if extension is None:
+            mime_type = first(entity.get('mimeType', quiet=True))
+            if mime_type is not None:
+                extension = guess_extension(mime_type)
+        extension = extension or 'bin'
+        return safe_filename('data', extension=extension)
 
     def ingest_entity(self, entity):
         for content_hash in entity.get('contentHash', quiet=True):
+            file_name = self.make_filename(entity)
+            # log.info("Local archive name: %s", file_name)
             file_path = self.archive.load_file(content_hash,
+                                               file_name=file_name,
                                                temp_path=self.work_path)
             if file_path is None or not file_path.exists():
                 continue

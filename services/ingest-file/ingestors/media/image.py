@@ -31,6 +31,7 @@ class ImageIngestor(Ingestor, OCRSupport, TimestampSupport):
     ]
     EXTENSIONS = [
         'jpg',
+        'jpe',
         'jpeg',
         'png',
         'gif',
