@@ -122,7 +122,7 @@ class Manager(object):
         for file_name in entity.get('fileName', quiet=True):
             _, extension = os.path.splitext(file_name)
             if len(extension):
-                return file_name
+                return safe_filename(file_name)
         extension = first(entity.get('extension', quiet=True))
         if extension is None:
             mime_type = first(entity.get('mimeType', quiet=True))
