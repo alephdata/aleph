@@ -37,11 +37,8 @@ class CSVIngestor(Ingestor, EncodingSupport, TableSupport):
             dialect = csv.Sniffer().sniff(sample)
             reader = csv.reader(fh, dialect=dialect)
             self.emit_row_tuples(entity, reader)
-        except UnicodeDecodeError as ude:
-            log.warning("Encoding error: %r", entity)
-            raise ProcessingException("Could not decode CSV (%s)" % encoding) from ude  # noqa
-        except (Exception, csv.Error) as err:
-            log.exception("CSV error: %s", err)
+        except (Exception, UnicodeDecodeError, csv.Error) as err:
+            log.warning("CSV error: %s", err)
             raise ProcessingException("Invalid CSV: %s" % err) from err
         finally:
             fh.close()
