@@ -22,7 +22,7 @@ class CollectionStatisticsMode extends React.PureComponent {
   }
 
   renderStatisticsItem(key) {
-    const { statistics } = this.props;
+    const { collection, statistics } = this.props;
     const values = statistics[key];
 
     console.log('rendering', key, values);
@@ -30,6 +30,7 @@ class CollectionStatisticsMode extends React.PureComponent {
     if (values && !_.isEmpty(values)) {
       return (
         <CollectionStatistics
+          collection={collection}
           key={key}
           title={getFacetLabel(key)}
           statistics={values}
