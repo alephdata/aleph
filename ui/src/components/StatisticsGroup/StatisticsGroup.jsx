@@ -18,6 +18,7 @@ class StatisticsGroup extends PureComponent {
     return (
       <DualPane className="StatisticsGroup">
         <Statistics
+          styleType="light"
           headline={(
             <FormattedMessage
               id="home.statistics.schemata"
@@ -40,11 +41,14 @@ class StatisticsGroup extends PureComponent {
           isLoading={!statistics.schemata}
           ItemContentContainer={props => (
             <Schema.Smart.Link url={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
-              <Numeric num={props.count} />
+              <span className="value">
+                <Numeric num={props.count} />
+              </span>
             </Schema.Smart.Link>
           )}
         />
         <Statistics
+          styleType="light"
           headline={(
             <FormattedMessage
               id="home.statistics.categories"
@@ -70,11 +74,14 @@ class StatisticsGroup extends PureComponent {
               to={`/datasets?collectionsfilter:category=${props.name}`}
             >
               <Category.Label category={props.name} />
-              <Numeric num={props.count} />
+              <span className="value">
+                <Numeric num={props.count} />
+              </span>
             </Link>
           )}
         />
         <Statistics
+          styleType="light"
           headline={(
             <FormattedMessage
               id="home.statistics.countries"
@@ -98,7 +105,9 @@ class StatisticsGroup extends PureComponent {
           ItemContentContainer={props => (
             <Link to={`/datasets?collectionsfilter:countries=${props.name}`}>
               <Country.Name {...props} code={props.name} />
-              <Numeric num={props.count} />
+              <span className="value">
+                <Numeric num={props.count} />
+              </span>
             </Link>
           )}
         />

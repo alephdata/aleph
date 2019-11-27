@@ -37,6 +37,7 @@ class Statistics extends PureComponent {
       seeMoreButtonText,
       headline,
       isLoading,
+      styleType,
       children = isLoading ? Statistics.Noop : Statistics.Item,
       ItemContentContainer = Statistics.ItemContentContainer,
     } = this.props;
@@ -48,7 +49,7 @@ class Statistics extends PureComponent {
     ) : Object.entries(statistic);
     const rest = list.length - listLen;
     return (
-      <div className="Statistics bp3-callout">
+      <div className={c('Statistics bp3-callout', styleType)}>
         <h5 className={c('bp3-heading', 'Statistics__headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
         <ul className="Statistics__list">
           {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({

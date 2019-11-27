@@ -16,23 +16,18 @@ class CollectionStatistics extends PureComponent {
 
   renderItem({ name, count }) {
     const { collection, field } = this.props;
+    let label = name;
 
     if (field === 'schema') {
-      return (
-        <Schema.Smart.Link
-          schema={name}
-          plural
-          url={`/search?filter:collection_id=${collection.id}&filter:schema=${name}`}
-        >
-          <Numeric num={count} />
-        </Schema.Smart.Link>
-      );
+      label = <Schema.Smart.Label schema={name} plural icon />;
     }
 
     return (
       <Link to={`/search?filter:collection_id=${collection.id}&filter:${field}=${name}`}>
-        {name}
-        <Numeric num={count} />
+        <span className="label">{label}</span>
+        <span className="value">
+          <Numeric num={count} />
+        </span>
       </Link>
     );
   }
@@ -47,13 +42,14 @@ class CollectionStatistics extends PureComponent {
             headline={<Facet.Label field={field} />}
             seeMoreButtonText={() => (
               <FormattedMessage
-                id="home.statistics.othertypes"
+                id="collection.statistics.showmore"
                 defaultMessage="Show more"
               />
             )}
             statistic={statistics}
             isLoading={!statistics}
             ItemContentContainer={this.renderItem}
+            styleType="dark"
           />
         </div>
       </div>

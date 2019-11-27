@@ -3,6 +3,11 @@
 .Statistics {
   display: inline-block;
 
+  &.bp3-callout.dark {
+    // background-color: white !important;
+    // border: 1px solid $aleph-border-color;
+  }
+
   &__list {
     list-style: none;
     padding: unset;
@@ -11,6 +16,10 @@
   &__headline {
     color: white !important;
     text-align: left;
+
+    .dark & {
+      color: $blue1 !important;
+    }
   }
 
   &__list-item {
@@ -28,18 +37,24 @@
         text-decoration: none;
         background-color: #ffffff38;
       }
+
+      .dark & {
+        color: black !important;
+      }
     }
 
     .bp3-button {
-      box-shadow: none;
-      background: none;
+      box-shadow: none !important;
+      background: none !important;
       border-radius: 0;
       min-height: 25px;
       justify-content: left;
     }
 
-    a > .Numeric{
+    a > .value {
       float: right;
+      color: $aleph-greyed-text;
+
     }
   }
 }
