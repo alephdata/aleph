@@ -1,0 +1,115 @@
+DiagramCreate:
+  type: object
+  required: ["data"]
+  properties:
+    data:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/DatedModel'
+
+Diagram:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  properties:
+    collection:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Collection'
+    role_id:
+      type: string
+    data:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/DiagramData'
+    writable:
+      type: boolean
+
+DiagramData:
+  type: object
+  properties:
+    layout:
+      type: object
+      properties:
+        entities:
+          type: array
+          items:
+            type: object
+            allOf:
+            - $ref: '#/components/schemas/EntityUpdate'
+            properties:
+              id:
+                type: string
+            required: ["id", "schema"]
+        vertices:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+              label:
+                type: string
+              fixed:
+                type: boolean
+              hidden:
+                type: boolean
+              color:
+                type: string
+              position:
+                type: object
+                properties:
+                  x:
+                    type: number
+                  y:
+                    type: number
+              entityId:
+                type: string
+        edged:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+              label:
+                type: string
+              sourceId:
+                type: string
+              targetId:
+                type: string
+              entityId:
+                type: string
+              propertyQName:
+                type: string
+              labelPosition:
+                type: object
+                properties:
+                  x:
+                    type: number
+                  y:
+                    type: number
+        groupings:
+          type: array
+        selection:
+          type: array
+    viewport:
+      type: object
+      properties:
+        zoomLevel:
+          type: number
+        ratio:
+          type: number
+        center:
+          type: object
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+    required: ["layout", "viewport"]
+

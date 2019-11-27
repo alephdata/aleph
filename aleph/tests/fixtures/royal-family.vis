@@ -1,0 +1,403 @@
+{
+    "layout": {
+        "entities": [
+            {
+                "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "schema": "Person",
+                "properties": {
+                    "name": [
+                        "Queen Elizabeth II"
+                    ],
+                    "nationality": [
+                        "gb"
+                    ]
+                }
+            },
+            {
+                "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "schema": "Person",
+                "properties": {
+                    "name": [
+                        "Prince Philip"
+                    ],
+                    "nationality": [
+                        "gb"
+                    ],
+                    "title": [
+                        "Duke of Edinburgh"
+                    ]
+                }
+            },
+            {
+                "id": "07e0f724-2b96-45fb-af61-b68ac4d72b6c",
+                "schema": "Family",
+                "properties": {
+                    "person": [
+                        {
+                            "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Queen Elizabeth II"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ]
+                            }
+                        }
+                    ],
+                    "relative": [
+                        {
+                            "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Prince Philip"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ],
+                                "title": [
+                                    "Duke of Edinburgh"
+                                ]
+                            }
+                        }
+                    ],
+                    "relationship": [
+                        "Husband"
+                    ]
+                }
+            },
+            {
+                "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "schema": "Person",
+                "properties": {
+                    "name": [
+                        "Prince Charles"
+                    ],
+                    "nationality": [
+                        "gb"
+                    ],
+                    "title": [
+                        "Prince of Wales"
+                    ]
+                }
+            },
+            {
+                "id": "3c990875-c494-4d3f-94d5-61eee6cb09cd",
+                "schema": "Succession",
+                "properties": {
+                    "predecessor": [
+                        {
+                            "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Queen Elizabeth II"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ]
+                            }
+                        }
+                    ],
+                    "successor": [
+                        {
+                            "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Prince Charles"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ],
+                                "title": [
+                                    "Prince of Wales"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "id": "c6ef2610-4d72-4a0a-bb69-852befef39a2",
+                "schema": "Family",
+                "properties": {
+                    "person": [
+                        {
+                            "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Queen Elizabeth II"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ]
+                            }
+                        }
+                    ],
+                    "relative": [
+                        {
+                            "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Prince Charles"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ],
+                                "title": [
+                                    "Prince of Wales"
+                                ]
+                            }
+                        }
+                    ],
+                    "relationship": [
+                        "Son"
+                    ]
+                }
+            },
+            {
+                "id": "0a6a7f48-7eaa-4167-a0b9-465ff238d0a3",
+                "schema": "Family",
+                "properties": {
+                    "person": [
+                        {
+                            "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Prince Philip"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ],
+                                "title": [
+                                    "Duke of Edinburgh"
+                                ]
+                            }
+                        }
+                    ],
+                    "relative": [
+                        {
+                            "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                            "schema": "Person",
+                            "properties": {
+                                "name": [
+                                    "Prince Charles"
+                                ],
+                                "nationality": [
+                                    "gb"
+                                ],
+                                "title": [
+                                    "Prince of Wales"
+                                ]
+                            }
+                        }
+                    ],
+                    "relationship": [
+                        "Son"
+                    ]
+                }
+            }
+        ],
+        "vertices": [
+            {
+                "id": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "type": "entity",
+                "label": "Queen Elizabeth II",
+                "fixed": true,
+                "hidden": false,
+                "color": "#A66321",
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "entityId": "c6409d9d-9e48-4bd7-be3d-b29530f99239"
+            },
+            {
+                "id": "name:Queen Elizabeth II",
+                "type": "name",
+                "label": "Queen Elizabeth II",
+                "fixed": false,
+                "hidden": false,
+                "color": "GRAY",
+                "position": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            {
+                "id": "country:gb",
+                "type": "country",
+                "label": "gb",
+                "fixed": true,
+                "hidden": false,
+                "color": "GRAY",
+                "position": {
+                    "x": -4,
+                    "y": 4
+                }
+            },
+            {
+                "id": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "type": "entity",
+                "label": "Prince Philip",
+                "fixed": true,
+                "hidden": false,
+                "color": "#106BA3",
+                "position": {
+                    "x": -9,
+                    "y": 0
+                },
+                "entityId": "46454905-22b1-41e3-ba91-6faefbd7ddc1"
+            },
+            {
+                "id": "name:Prince Philip",
+                "type": "name",
+                "label": "Prince Philip",
+                "fixed": false,
+                "hidden": false,
+                "color": "GRAY",
+                "position": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            {
+                "id": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "type": "entity",
+                "label": "Prince Charles",
+                "fixed": true,
+                "hidden": false,
+                "color": "#106BA3",
+                "position": {
+                    "x": 0,
+                    "y": 10
+                },
+                "entityId": "44fd4875-5556-4a31-9639-e17d1fa4574a"
+            },
+            {
+                "id": "name:Prince Charles",
+                "type": "name",
+                "label": "Prince Charles",
+                "fixed": false,
+                "hidden": false,
+                "color": "GRAY",
+                "position": {
+                    "x": 0,
+                    "y": 0
+                }
+            }
+        ],
+        "edges": [
+            {
+                "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239:Thing:name(name:Queen Elizabeth II)",
+                "type": "name",
+                "label": "Name",
+                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "targetId": "name:Queen Elizabeth II",
+                "entityId": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "propertyQName": "Thing:name"
+            },
+            {
+                "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239:Person:nationality(country:gb)",
+                "type": "country",
+                "label": "Nationality",
+                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "targetId": "country:gb",
+                "entityId": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "propertyQName": "Person:nationality"
+            },
+            {
+                "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1:Thing:name(name:Prince Philip)",
+                "type": "name",
+                "label": "Name",
+                "sourceId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "targetId": "name:Prince Philip",
+                "entityId": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "propertyQName": "Thing:name"
+            },
+            {
+                "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1:Person:nationality(country:gb)",
+                "type": "country",
+                "label": "Nationality",
+                "sourceId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "targetId": "country:gb",
+                "entityId": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "propertyQName": "Person:nationality"
+            },
+            {
+                "id": "07e0f724-2b96-45fb-af61-b68ac4d72b6c(entity:c6409d9d-9e48-4bd7-be3d-b29530f99239, entity:46454905-22b1-41e3-ba91-6faefbd7ddc1)",
+                "type": "entity",
+                "label": "Husband",
+                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "targetId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "entityId": "07e0f724-2b96-45fb-af61-b68ac4d72b6c"
+            },
+            {
+                "id": "44fd4875-5556-4a31-9639-e17d1fa4574a:Thing:name(name:Prince Charles)",
+                "type": "name",
+                "label": "Name",
+                "sourceId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "targetId": "name:Prince Charles",
+                "entityId": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "propertyQName": "Thing:name"
+            },
+            {
+                "id": "44fd4875-5556-4a31-9639-e17d1fa4574a:Person:nationality(country:gb)",
+                "type": "country",
+                "label": "Nationality",
+                "sourceId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "targetId": "country:gb",
+                "entityId": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "propertyQName": "Person:nationality"
+            },
+            {
+                "id": "3c990875-c494-4d3f-94d5-61eee6cb09cd(entity:c6409d9d-9e48-4bd7-be3d-b29530f99239, entity:44fd4875-5556-4a31-9639-e17d1fa4574a)",
+                "type": "entity",
+                "label": "Succession",
+                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "targetId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "entityId": "3c990875-c494-4d3f-94d5-61eee6cb09cd"
+            },
+            {
+                "id": "c6ef2610-4d72-4a0a-bb69-852befef39a2(entity:c6409d9d-9e48-4bd7-be3d-b29530f99239, entity:44fd4875-5556-4a31-9639-e17d1fa4574a)",
+                "type": "entity",
+                "label": "Son",
+                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "targetId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "entityId": "c6ef2610-4d72-4a0a-bb69-852befef39a2",
+                "labelPosition": {
+                    "x": 2.9189189189189175,
+                    "y": 5.135135135135137
+                }
+            },
+            {
+                "id": "0a6a7f48-7eaa-4167-a0b9-465ff238d0a3(entity:46454905-22b1-41e3-ba91-6faefbd7ddc1, entity:44fd4875-5556-4a31-9639-e17d1fa4574a)",
+                "type": "entity",
+                "label": "Son",
+                "sourceId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "targetId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "entityId": "0a6a7f48-7eaa-4167-a0b9-465ff238d0a3",
+                "labelPosition": {
+                    "x": -5.95945945945946,
+                    "y": 6.324324324324324
+                }
+            }
+        ],
+        "groupings": [],
+        "selection": []
+    },
+    "viewport": {
+        "zoomLevel": 0.4,
+        "ratio": 0.735,
+        "center": {
+            "x": -4.5,
+            "y": 5
+        }
+    }
+}
