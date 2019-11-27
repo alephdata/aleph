@@ -2,9 +2,9 @@
 
 .ItemOverview {
   &.horizontal {
-    // display: flex;
-    margin-bottom: ($aleph-grid-size * 4);
-    padding-bottom: ($aleph-grid-size * 4);
+    display: flex;
+    margin-bottom: $aleph-content-padding;
+    padding: $aleph-content-padding;
     // border-bottom: 1px solid $aleph-border-color;
   }
 
@@ -19,12 +19,12 @@
     }
 
     .horizontal & {
-      // flex: 1 1 600px;
-      padding: $aleph-content-padding;
+      flex: 1 1 40%;
+      padding: $aleph-grid-size*4;
       padding-left: 0;
       border-bottom: none;
       max-width: 800px;
-      // border-right: 1px solid $aleph-border-color;
+      border-right: 1px solid $aleph-border-color;
     }
 
     &__title, &__subtitle, &__description {
@@ -34,6 +34,12 @@
 
     &__title {
       line-height: 1.5;
+    }
+
+    &__centered-container {
+      // position: relative;
+      // top: 50%;
+      // transform: translateY(-50%);
     }
   }
 
@@ -45,9 +51,9 @@
     }
 
     .horizontal & {
-      // flex: 1 1 auto;
+      flex: 1 1 60%;
       padding: 0;
-      padding-right: 0;
+      padding-left: $aleph-content-padding;
     }
   }
 }

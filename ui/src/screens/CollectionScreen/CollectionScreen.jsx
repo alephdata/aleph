@@ -4,6 +4,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Card } from '@blueprintjs/core';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
@@ -90,14 +91,16 @@ export class CollectionScreen extends Component {
         >
           {breadcrumbs}
           <SinglePane itemScope itemType="https://schema.org/Dataset">
-            <div className="ItemOverview horizontal">
+            <Card elevation={1} className="ItemOverview horizontal">
               <div className="ItemOverview__heading">
-                <CollectionHeading collection={collection} />
+                <div className="ItemOverview__heading__centered-container">
+                  <CollectionHeading collection={collection} />
+                </div>
               </div>
               <div className="ItemOverview__content">
                 <CollectionInfoMode collection={collection} />
               </div>
-            </div>
+            </Card>
             <CollectionViews
               collection={collection}
               activeMode={activeMode}

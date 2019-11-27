@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Collection } from 'src/components/common';
+import { Category, Collection } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 import './CollectionHeading.scss';
@@ -18,7 +18,7 @@ class CollectionHeading extends PureComponent {
             <FormattedMessage id="collection.info.case" defaultMessage="Personal dataset" />
           )}
           { !collection.casefile && (
-            <FormattedMessage id="collection.info.collection" defaultMessage="Dataset" />
+            <Category.Label collection={collection} />
           )}
         </span>
         <h1 itemProp="name" className="ItemOverview__heading__title">

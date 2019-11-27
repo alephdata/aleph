@@ -7,13 +7,11 @@ import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
 import CollectionStatistics from './CollectionStatistics';
 
-
 import './CollectionStatisticsMode.scss';
 
 const statFields = [
   'schema', 'emails', 'addresses', 'ibans', 'languages', 'phones', 'names',
 ];
-
 
 class CollectionStatisticsMode extends React.PureComponent {
   componentDidMount() {

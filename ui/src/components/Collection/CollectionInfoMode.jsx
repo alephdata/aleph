@@ -1,9 +1,7 @@
-import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { Card } from '@blueprintjs/core';
+import { FormattedMessage } from 'react-intl';
 import {
-  Category, Country, Role, Date, URL, Schema,
+  Country, Role, Date, URL,
 } from 'src/components/common';
 import ClipboardInput from 'src/components/common/ClipboardInput';
 
@@ -16,28 +14,10 @@ class CollectionInfoMode extends PureComponent {
       return null;
     }
 
-    const content = collection.schemata ? _.reverse(
-      _.sortBy(
-        Object.entries(collection.schemata)
-          .map(([name, number]) => ({ name, number })),
-        ['number'],
-      ),
-    ) : [];
-
     return (
       <div className="CollectionInfoMode">
-        <Card elevation={1} className="CollectionInfoMode__section">
+        <div className="CollectionInfoMode__section">
           <ul className="info-sheet">
-            { !collection.casefile && (
-              <li>
-                <span className="key">
-                  <FormattedMessage id="collection.category" defaultMessage="Category" />
-                </span>
-                <span className="value">
-                  <Category.Label collection={collection} />
-                </span>
-              </li>
-            )}
             { (collection.publisher || collection.publisher_url) && (
               <li>
                 <span className="key">
@@ -117,37 +97,8 @@ class CollectionInfoMode extends PureComponent {
               </span>
             </li>
           </ul>
-        </Card>
-        <Card elevation={1} className="CollectionInfoMode__section">
-          <ul className="info-sheet">
-            { !!content.length && (
-              <li className="tight">
-                <span className="key">
-                  <FormattedMessage id="collection.entity_types" defaultMessage="Entity types" />
-                </span>
-                <span className="value">
-                  <ul className="info-rank">
-                    { content.map(item => (
-                      <li key={item.name}>
-                        <span className="category">
-                          <Schema.Smart.Link
-                            schema={item.name}
-                            plural
-                            url={`/search?filter:collection_id=${collection.id}&filter:schema=${item.name}`}
-                          />
-                        </span>
-                        <span className="count">
-                          <FormattedNumber value={item.number} />
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </span>
-              </li>
-            )}
-          </ul>
-        </Card>
-        <Card elevation={1} className="CollectionInfoMode__section">
+        </div>
+        <div className="CollectionInfoMode__section">
           <ul className="info-sheet">
             <li>
               <span className="key">
@@ -176,7 +127,7 @@ class CollectionInfoMode extends PureComponent {
               </span>
             </li>
           </ul>
-        </Card>
+        </div>
       </div>
     );
   }
