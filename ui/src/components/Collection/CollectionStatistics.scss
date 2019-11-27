@@ -2,11 +2,37 @@
 
 .CollectionStatistics {
   break-inside: avoid;
-  padding: 8px 0;
+  padding: 10px 0;
+  border: 1px solid $aleph-border-color;
+  border-radius: 3px;
+
   // flex: auto;
   // width: 50%;
 
   &__inner-container {
+  }
+
+  &__heading {
+    // background-color: $blue1;
+    border-radius: 5px;
+    padding: 15px;
+
+    &__total, &__label {
+      // color: white;
+      color: $blue1;
+      text-align: center;
+      margin: 10px;
+    }
+
+    &__total {
+      font-size: 52px;
+      margin-bottom: 0;
+    }
+
+    &__label {
+      font-size: 16px;
+    }
+
   }
 
   &__title.bp3-heading {

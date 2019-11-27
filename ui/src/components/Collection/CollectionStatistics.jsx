@@ -38,8 +38,15 @@ class CollectionStatistics extends PureComponent {
     return (
       <div className="CollectionStatistics">
         <div className="CollectionStatistics__inner-container">
+          <div className="CollectionStatistics__heading">
+            <h5 className="CollectionStatistics__heading__total">
+              <Numeric num={Object.keys(statistics).length} abbr={3} />
+            </h5>
+            <h5 className="CollectionStatistics__heading__label">
+              <Facet.Label field={field} />
+            </h5>
+          </div>
           <Statistics
-            headline={<Facet.Label field={field} />}
             seeMoreButtonText={() => (
               <FormattedMessage
                 id="collection.statistics.showmore"

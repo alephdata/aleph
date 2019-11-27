@@ -91,7 +91,7 @@ export class CollectionScreen extends Component {
         >
           {breadcrumbs}
           <SinglePane itemScope itemType="https://schema.org/Dataset">
-            <Card elevation={1} className="ItemOverview horizontal">
+            <Card className="ItemOverview horizontal">
               <div className="ItemOverview__heading">
                 <div className="ItemOverview__heading__centered-container">
                   <CollectionHeading collection={collection} />
