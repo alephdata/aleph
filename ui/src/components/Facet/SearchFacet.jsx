@@ -104,7 +104,7 @@ class SearchFacet extends Component {
           )}
           <span className="FacetName">
             <span className={`FacetIcon bp3-icon bp3-icon-${icon}`} />
-            {label}
+            {intl.formatMessage(label)}
           </span>
 
           {isFiltered && (

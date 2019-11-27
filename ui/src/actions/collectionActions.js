@@ -41,7 +41,6 @@ export const fetchCollectionStatus = asyncActionCreator(({ id }) => async () => 
 
 export const fetchCollectionStatistics = asyncActionCreator(({ id }) => async () => {
   const response = await endpoint.get(`collections/${id}/statistics`);
-  console.log(response);
   return { id, data: response.data };
 }, { name: 'FETCH_COLLECTION_STATISTICS' });
 

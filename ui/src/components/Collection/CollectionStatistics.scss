@@ -1,0 +1,38 @@
+@import "src/app/variables.scss";
+
+.CollectionStatistics {
+  break-inside: avoid;
+  padding: 5px 0;
+  // flex: auto;
+  // width: 50%;
+
+  &__inner-container {
+  }
+
+  &__title.bp3-heading {
+    color: $blue1;
+  }
+
+  // &__values {
+  //   display: table;
+  //   width: 100%;
+  // }
+  //
+  // &__value {
+  //   display: table-row;
+  //   &__label, &__count {
+  //     display: table-cell;
+  //   }
+  //
+  //   &__label {
+  //     position: relative;
+  //     left: 0;
+  //     padding: 0;
+  //   }
+  //
+  //   &__count {
+  //     position: relative;
+  //     right: 0;
+  //   }
+  // }
+}
