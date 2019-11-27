@@ -7,6 +7,7 @@ from tempfile import mkdtemp
 from followthemoney import model
 from banal import ensure_list, first
 from mimetypes import guess_extension
+from pantomime import normalize_mimetype
 from normality import stringify, safe_filename
 from balkhash.utils import safe_fragment
 from servicelayer.archive import init_archive
@@ -110,6 +111,7 @@ class Manager(object):
 
     def store(self, file_path, mime_type=None):
         file_path = ensure_path(file_path)
+        mime_type = normalize_mimetype(mime_type)
         if file_path is not None and file_path.is_file():
             return self.archive.archive_file(file_path, mime_type=mime_type)
     

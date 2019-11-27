@@ -27,11 +27,12 @@ redis==3.3.11
 fakeredis==1.0.5
 networkx==2.4
 zipstream==1.1.4
+fasttext==0.9.1
+tabulate==0.8.6
+
 grpcio==1.25.0
 google-cloud-storage==1.23.0
 google-cloud-logging==1.14.0
-fasttext==0.9.1
-tabulate==0.8.6
 
 # Testing dependencies
 factory-boy==2.12.0
