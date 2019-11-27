@@ -20,7 +20,6 @@ import QueryTags from 'src/components/QueryTags/QueryTags';
 import SuggestAlert from 'src/components/SuggestAlert/SuggestAlert';
 import Screen from 'src/components/Screen/Screen';
 import togglePreview from 'src/util/togglePreview';
-import { getFacetLabels } from 'src/util/getFacetLabel';
 
 import './SearchScreen.scss';
 
@@ -53,7 +52,7 @@ export class SearchScreen extends React.Component {
 
 
     this.state = {
-      facets: getFacetLabels(facetKeys),
+      facets: facetKeys,
       hideFacets: false,
     };
 

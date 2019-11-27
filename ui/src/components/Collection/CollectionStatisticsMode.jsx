@@ -5,12 +5,12 @@ import { withRouter } from 'react-router';
 import _ from 'lodash';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
-import { getFacetLabel } from 'src/util/getFacetLabel';
 import CollectionStatistics from './CollectionStatistics';
+
 
 import './CollectionStatisticsMode.scss';
 
-const statKeys = [
+const statFields = [
   'schema', 'emails', 'addresses', 'ibans', 'languages', 'phones', 'names',
 ];
 
@@ -21,18 +21,16 @@ class CollectionStatisticsMode extends React.PureComponent {
     this.props.fetchCollectionStatistics(collection);
   }
 
-  renderStatisticsItem(key) {
+  renderStatisticsItem(statKey) {
     const { collection, statistics } = this.props;
-    const values = statistics[key];
-
-    console.log('rendering', key, values);
+    const values = statistics[statKey];
 
     if (values && !_.isEmpty(values)) {
       return (
         <CollectionStatistics
           collection={collection}
-          key={key}
-          title={getFacetLabel(key)}
+          key={statKey}
+          field={statKey}
           statistics={values}
         />
       );
@@ -43,7 +41,7 @@ class CollectionStatisticsMode extends React.PureComponent {
   render() {
     return (
       <div className="CollectionStatisticsMode">
-        {statKeys.map(key => this.renderStatisticsItem(key))}
+        {statFields.map(stat => this.renderStatisticsItem(stat))}
       </div>
     );
   }

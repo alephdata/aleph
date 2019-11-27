@@ -4,95 +4,103 @@ import {
 
 const messages = defineMessages({
   facet_schema: {
-    id: 'search.facets.facet.schema',
+    id: 'facet.schema',
     defaultMessage: 'Types',
   },
   facet_collection_id: {
-    id: 'search.facets.facet.collection_id',
+    id: 'facet.collection_id',
     defaultMessage: 'Datasets',
   },
   facet_languages: {
-    id: 'search.facets.facet.languages',
+    id: 'facet.languages',
     defaultMessage: 'Languages',
   },
   facet_emails: {
-    id: 'search.facets.facet.emails',
+    id: 'facet.emails',
     defaultMessage: 'E-Mails',
   },
   facet_phones: {
-    id: 'search.facets.facet.phones',
+    id: 'facet.phones',
     defaultMessage: 'Phones',
   },
   facet_countries: {
-    id: 'search.facets.facet.countries',
+    id: 'facet.countries',
     defaultMessage: 'Countries',
   },
   facet_names: {
-    id: 'search.facets.facet.names',
+    id: 'facet.names',
     defaultMessage: 'Names',
   },
   facet_addresses: {
-    id: 'search.facets.facet.addresses',
+    id: 'facet.addresses',
     defaultMessage: 'Addresses',
   },
   facet_mime_type: {
-    id: 'search.facets.facet.mimetypes',
+    id: 'facet.mimetypes',
     defaultMessage: 'File types',
+  },
+  facet_category: {
+    id: 'facet.category',
+    defaultMessage: 'Categories',
   },
 });
 
 const propLabels = {
+  addresses: {
+    field: 'addresses',
+    label: messages.facet_addresses,
+    icon: 'map',
+  },
+  category: {
+    field: 'category',
+    label: messages.facet_category,
+    icon: 'list',
+  },
   collection_id: {
     field: 'collection_id',
     label: messages.facet_collection_id,
     icon: 'database',
   },
-  schema: {
-    field: 'schema',
-    label: messages.facet_schema,
-    icon: 'list-columns',
-  },
   countries: {
     field: 'countries',
     label: messages.facet_countries,
     icon: 'globe',
-  },
-  languages: {
-    field: 'languages',
-    label: messages.facet_languages,
-    icon: 'translate',
+    defaultSize: 300,
   },
   emails: {
     field: 'emails',
     label: messages.facet_emails,
     icon: 'envelope',
   },
-  phones: {
-    field: 'phones',
-    label: messages.facet_phones,
-    icon: 'phone',
-  },
-  names: {
-    field: 'names',
-    label: messages.facet_names,
-    icon: 'id-number',
-  },
-  addresses: {
-    field: 'addresses',
-    label: messages.facet_addresses,
-    icon: 'map',
+  languages: {
+    field: 'languages',
+    label: messages.facet_languages,
+    icon: 'translate',
   },
   mimetypes: {
     field: 'mimetypes',
     label: messages.facet_mime_type,
     icon: 'document',
   },
+  names: {
+    field: 'names',
+    label: messages.facet_names,
+    icon: 'id-number',
+  },
+  phones: {
+    field: 'phones',
+    label: messages.facet_phones,
+    icon: 'phone',
+  },
+  schema: {
+    field: 'schema',
+    label: messages.facet_schema,
+    icon: 'list-columns',
+  },
 };
 
-export const getFacetLabel = (key) => (
+const getFacetLabel = (key) => (
   propLabels[key]
 );
 
-export const getFacetLabels = (keys) => (
-  keys.map(key => propLabels[key])
-);
+export default getFacetLabel;
