@@ -5,7 +5,7 @@ import {
   FormattedMessage, FormattedNumber,
 } from 'react-intl';
 import {
-  Category, Country, Schema, Numeric, DualPane,
+  Category, Country, Schema, Numeric, SinglePane,
 } from 'src/components/common';
 import Statistics from './Statistics';
 
@@ -16,7 +16,7 @@ class StatisticsGroup extends PureComponent {
   render() {
     const { statistics } = this.props;
     return (
-      <DualPane className="StatisticsGroup">
+      <SinglePane className="StatisticsGroup">
         <Statistics
           styleType="light"
           headline={(
@@ -111,7 +111,7 @@ class StatisticsGroup extends PureComponent {
             </Link>
           )}
         />
-      </DualPane>
+      </SinglePane>
     );
   }
 }

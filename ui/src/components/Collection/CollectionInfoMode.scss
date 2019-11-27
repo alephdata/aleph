@@ -1,0 +1,24 @@
+@import "src/app/variables.scss";
+
+.CollectionInfoMode {
+  display: flex;
+
+  &__section {
+    flex: 1 1 33%;
+    padding: $aleph-content-padding;
+
+    &:first-child {
+      margin-right: $aleph-content-padding;
+      // padding-left: 0;
+      // border-right: 1px solid $aleph-border-color;
+    }
+
+    &:last-child {
+      margin-left: $aleph-content-padding;
+
+      // padding-right: 0;
+      // border-left: 1px solid $aleph-border-color;
+      //
+    }
+  }
+}

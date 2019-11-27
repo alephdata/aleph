@@ -13,8 +13,10 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
+import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionStatus, selectCollectionView } from 'src/selectors';
+
+import 'src/components/common/ItemOverview.scss';
 
 
 export class CollectionScreen extends Component {
@@ -87,21 +89,21 @@ export class CollectionScreen extends Component {
           searchScopes={[searchScope]}
         >
           {breadcrumbs}
-          <DualPane itemScope itemType="https://schema.org/Dataset">
-            <DualPane.InfoPane className="with-heading">
-              <CollectionHeading collection={collection} />
-              <div className="pane-content">
+          <SinglePane itemScope itemType="https://schema.org/Dataset">
+            <div className="ItemOverview horizontal">
+              <div className="ItemOverview__heading">
+                <CollectionHeading collection={collection} />
+              </div>
+              <div className="ItemOverview__content">
                 <CollectionInfoMode collection={collection} />
               </div>
-            </DualPane.InfoPane>
-            <DualPane.ContentPane>
-              <CollectionViews
-                collection={collection}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </DualPane.ContentPane>
-          </DualPane>
+            </div>
+            <CollectionViews
+              collection={collection}
+              activeMode={activeMode}
+              isPreview={false}
+            />
+          </SinglePane>
         </Screen>
       </CollectionContextLoader>
     );

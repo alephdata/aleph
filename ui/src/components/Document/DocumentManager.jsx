@@ -14,6 +14,8 @@ import { ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 
+import './DocumentManager.scss';
+
 const messages = defineMessages({
   empty: {
     id: 'entity.document.manager.empty',
@@ -96,7 +98,7 @@ export class DocumentManager extends Component {
     return (
       <div className="DocumentManager">
         { showActions && (
-          <div className="bp3-button-group">
+          <div className="bp3-button-group DocumentManager__actions">
             <DocumentUploadButton collection={collection} parent={document} />
             <DocumentFolderButton collection={collection} parent={document} />
             <Button icon="delete" onClick={this.toggleDeleteSelection} disabled={!selection.length}>

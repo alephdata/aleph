@@ -1,0 +1,7 @@
+@import 'src/app/variables.scss';
+
+.DocumentManager {
+  &__actions {
+    margin-bottom: $aleph-grid-size*2;
+  }
+}
