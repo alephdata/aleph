@@ -170,7 +170,7 @@ class EntityViews extends React.Component {
             panel={<EntitySimilarMode entity={entity} />}
           />
         )}
-        { (hasViewMode && entity.schema.isA('Table')) && (
+        { (entity.collection.writeable && entity.schema.isA('Table')) && (
           <Tab
             id="mapping"
             title={(
