@@ -184,8 +184,8 @@ def configure_index(index, mapping, settings):
         es.indices.close(index=index)
         settings.get('index').pop('number_of_shards')
         res = es.indices.put_settings(index=index,
-                                     body=settings,
-                                     ignore=[400])
+                                      body=settings,
+                                      ignore=[400])
         es.indices.open(index=index)
         return res.get('status') != 400
     log.info("Creating index: %s...", index)
@@ -225,9 +225,9 @@ def index_settings(shards=5, replicas=2):
                         "id": "Any-Latin; NFKD; Lower(); [:Nonspacing Mark:] Remove; NFKC"  # noqa
                     },
                     "synonames": {
-                        "type" : "synonym",
+                        "type": "synonym",
                         "lenient": True,
-                        "synonyms_path" : "synonames.txt"
+                        "synonyms_path": "synonames.txt"
                     }
                 }
             }

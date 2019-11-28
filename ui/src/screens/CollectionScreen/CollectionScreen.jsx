@@ -48,7 +48,7 @@ export class CollectionScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
-    if (collection.shouldLoad || collection.isLoading) {
+    if (!collection.id || !collection.links) {
       return (
         <CollectionContextLoader collectionId={collectionId}>
           <LoadingScreen />

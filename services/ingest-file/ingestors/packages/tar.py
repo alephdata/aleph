@@ -33,9 +33,9 @@ class TarIngestor(PackageSupport, Ingestor):
                         fh = tf.extractfile(name)
                         self.extract_member(temp_dir, name, fh,
                                             encoding=encoding)
-                    except Exception as ex:
+                    except Exception:
                         # TODO: should this be a fatal error?
-                        log.debug("Failed to unpack [%r]: %s", name, ex)
+                        log.exception("Failed to unpack [%r]: %s", name)
         except (tarfile.TarError, IOError, EOFError) as err:
             raise ProcessingException('Invalid Tar file: %s' % err) from err
 

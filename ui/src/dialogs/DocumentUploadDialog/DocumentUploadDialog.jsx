@@ -40,8 +40,9 @@ const messages = defineMessages({
 export class DocumentUploadDialog extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      files: [],
+      files: props.filesToUpload || [],
       percentCompleted: 0,
       uploadingFile: null,
     };
@@ -79,7 +80,6 @@ export class DocumentUploadDialog extends Component {
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
     }
-    this.setState({ uploadingFile: null });
   }
 
   onUploadProgress(progressEvent) {

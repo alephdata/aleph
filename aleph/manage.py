@@ -22,6 +22,7 @@ from aleph.queues import get_active_collection_status, get_stage
 from aleph.queues import OP_PROCESS, OP_XREF
 from aleph.index.entities import iter_entities
 from aleph.index.admin import delete_index
+from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
 from aleph.logic.collections import index_collections
@@ -144,6 +145,15 @@ def update(index=False, process=False, reset=False):
     """Re-index all the collections and clear some caches."""
     update_roles()
     index_collections(refresh=True)
+
+
+@cli.command('namefreq')
+def namefreq():
+    compute_name_frequencies()
+    # from aleph.logic.names import name_frequency
+    # name_frequency("John Smith")
+    # name_frequency("Friedrich Lindenberg")
+    # name_frequency("Ion Radu")
 
 
 @cli.command()

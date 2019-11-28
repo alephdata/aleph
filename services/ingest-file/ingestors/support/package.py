@@ -18,7 +18,7 @@ class PackageSupport(TempFileSupport, EncodingSupport):
 
     def extract_member(self, base_dir, name, fh, encoding):
         out_path = self.ensure_path(base_dir, name, encoding=encoding)
-        if out_path is None:
+        if out_path is None or fh is None:
             return
         file_name = out_path.name
         try:

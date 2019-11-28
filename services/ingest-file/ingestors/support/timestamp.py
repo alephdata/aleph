@@ -27,6 +27,8 @@ class TimestampSupport(object):
         formats = ensure_list(fmt) or self.TIMESTAMP_FORMATS
         for fmt in formats:
             try:
+                if '.' in text and '.' not in fmt:
+                    text, _ = text.split('.', 1)
                 return datetime.strptime(text, fmt)
             except Exception:
                 pass
