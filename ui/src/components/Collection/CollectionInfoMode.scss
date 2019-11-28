@@ -3,26 +3,19 @@
 .CollectionInfoMode {
   display: flex;
 
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    display: inherit;
+  }
+
+  @media screen and (min-width: $aleph-screen-md-max-width) and (max-width: $aleph-screen-lg-max-width) {
+    display: inherit;
+  }
+
   &__section {
     flex: 1 1 50%;
 
     .info-sheet {
       margin: 0;
     }
-    // border-left: 1px solid $aleph-border-color;
-    // padding-left: $aleph-content-padding;
-
-
-    // &:first-child {
-    //   // padding-left: 0;
-    //   border-right: 1px solid $aleph-border-color;
-    // }
-    //
-    // &:last-child {
-    //
-    //   // padding-right: 0;
-    //   // border-left: 1px solid $aleph-border-color;
-    //   //
-    // }
   }
 }

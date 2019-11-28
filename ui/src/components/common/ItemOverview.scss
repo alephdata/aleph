@@ -35,6 +35,10 @@
         max-width: 800px;
         border-right: 1px solid $aleph-border-color;
       }
+
+      @media screen and (max-width: $aleph-screen-lg-max-width) {
+        flex-basis: 50%;
+      }
     }
 
     &__title, &__subtitle, &__description {
@@ -64,6 +68,10 @@
       @include large {
         flex: 1 1 65%;
         padding-left: ($aleph-grid-size * 4);
+      }
+
+      @media screen and (max-width: $aleph-screen-lg-max-width) {
+        flex-basis: 50%;
       }
     }
   }
