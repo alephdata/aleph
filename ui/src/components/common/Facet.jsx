@@ -7,7 +7,10 @@ import getFacetLabel from 'src/util/getFacetLabel';
 class FacetLabel extends PureComponent {
   render() {
     const { field, intl } = this.props;
-    const { icon, label } = getFacetLabel(field);
+    const labelObject = getFacetLabel(field);
+    if (!field || !labelObject) { return null; }
+
+    const { icon, label } = labelObject;
 
     return (
       <>

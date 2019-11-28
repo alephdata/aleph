@@ -5,22 +5,29 @@
 
   &.bp3-callout.dark {
     background-color: white;
-    // border: 1px solid $aleph-border-color;
-  }
-
-  &__list {
-    list-style: none;
-    padding: unset;
+    border: 1px solid #ebf1f5;
   }
 
   &__headline {
     color: white !important;
     text-align: left;
+    margin-bottom: 15px;
 
     .dark & {
       color: $blue1 !important;
     }
   }
+
+  &__filter {
+    margin-bottom: 15px;
+  }
+
+  &__list {
+    list-style: none;
+    padding: unset;
+    margin: 0;
+  }
+
 
   &__list-item {
     display: flex;
@@ -35,10 +42,10 @@
 
       &:hover {
         text-decoration: none;
-        background-color: #ffffff38;
+        background-color: #ffffff38 !important;
 
         .dark & {
-          background-color: #ebf1f5;
+          background-color: #ffffff7a !important;
         }
       }
 
@@ -55,10 +62,26 @@
       justify-content: left;
     }
 
-    a > .value {
-      float: right;
-      color: $aleph-greyed-text;
+    .inner-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
 
+    .label {
+      flex: 1 1 auto;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 5px;
+    }
+
+    .value {
+      flex: 0 0 auto;
+
+      .dark & {
+        color: $aleph-greyed-text;
+      }
     }
   }
 }

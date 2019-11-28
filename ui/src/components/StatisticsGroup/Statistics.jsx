@@ -80,6 +80,7 @@ class Statistics extends PureComponent {
         <h5 className={c('bp3-heading', 'Statistics__headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
         {hasFilter && (
           <InputGroup
+            className="Statistics__filter"
             leftIcon="search"
             placeholder={filterPlaceholder}
             onChange={this.onFilterChange}

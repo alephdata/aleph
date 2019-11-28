@@ -2,9 +2,14 @@
 
 .CollectionStatistics {
   break-inside: avoid;
-  padding: 10px 0;
-  border: 1px solid $aleph-border-color;
+  margin: $aleph-content-padding 0;
+  // border: 1px solid $aleph-border-color;
   border-radius: 3px;
+  background-color: #ebf1f5;
+
+  &:first-child {
+    margin: 0;
+  }
 
   // flex: auto;
   // width: 50%;

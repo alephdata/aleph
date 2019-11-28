@@ -1,11 +1,19 @@
 @import "src/app/variables.scss";
 
+@mixin large {
+  @media screen and (min-width: $aleph-screen-md-max-width) {
+    @content;
+  }
+}
+
 .ItemOverview {
   &.horizontal {
-    display: flex;
     margin-bottom: $aleph-content-padding;
-    padding: $aleph-content-padding;
-    // border-bottom: 1px solid $aleph-border-color;
+
+    @include large {
+      display: flex;
+      padding: $aleph-content-padding;
+    }
   }
 
   &__heading {
@@ -19,12 +27,14 @@
     }
 
     .horizontal & {
-      flex: 1 1 40%;
-      padding: $aleph-grid-size*4;
-      padding-left: 0;
-      border-bottom: none;
-      max-width: 800px;
-      border-right: 1px solid $aleph-border-color;
+      @include large {
+        flex: 1 1 40%;
+        padding: $aleph-grid-size*4;
+        padding-left: 0;
+        border-bottom: none;
+        max-width: 800px;
+        border-right: 1px solid $aleph-border-color;
+      }
     }
 
     &__title, &__subtitle, &__description {
@@ -51,9 +61,11 @@
     }
 
     .horizontal & {
-      flex: 1 1 60%;
-      padding: 0;
-      padding-left: $aleph-content-padding;
+      @include large {
+        flex: 1 1 60%;
+        padding: 0;
+        padding-left: ($aleph-grid-size * 4);
+      }
     }
   }
 }

@@ -29,19 +29,19 @@ class CollectionStatistics extends PureComponent {
   renderItem({ name, count }) {
     const { collection, field } = this.props;
     let label = name;
-    let link = `/search?filter:collection_id=${collection.id}&filter:${field}=${name}`;
 
     if (field === 'schema') {
       label = <Schema.Smart.Label schema={name} plural icon />;
-      link = `#mode=${name}`;
     }
 
     return (
-      <Link to={link}>
-        <span className="label">{label}</span>
-        <span className="value">
-          <Numeric num={count} />
-        </span>
+      <Link target="_blank" to={`/search?filter:collection_id=${collection.id}&filter:${field}=${name}`}>
+        <div className="inner-container">
+          <span className="label">{label}</span>
+          <span className="value">
+            <Numeric num={count} />
+          </span>
+        </div>
       </Link>
     );
   }
@@ -74,7 +74,7 @@ class CollectionStatistics extends PureComponent {
             isLoading={!statistics}
             ItemContentContainer={this.renderItem}
             styleType="dark"
-            hasFilter={statLength > 10}
+            hasFilter={statLength > 15}
             filterPlaceholder={
               isSubset
                 ? intl.formatMessage(messages.search_placeholder_subset, { field, statLength })

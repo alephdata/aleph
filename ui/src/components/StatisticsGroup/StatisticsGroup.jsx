@@ -40,11 +40,16 @@ class StatisticsGroup extends PureComponent {
           statistic={statistics.schemata}
           isLoading={!statistics.schemata}
           ItemContentContainer={props => (
-            <Schema.Smart.Link url={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
-              <span className="value">
-                <Numeric num={props.count} />
-              </span>
-            </Schema.Smart.Link>
+            <Link to={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
+              <div className="inner-container">
+                <span className="label">
+                  <Schema.Smart.Label schema={props.name} {...props} />
+                </span>
+                <span className="value">
+                  <Numeric num={props.count} />
+                </span>
+              </div>
+            </Link>
           )}
         />
         <Statistics
@@ -73,10 +78,14 @@ class StatisticsGroup extends PureComponent {
             <Link
               to={`/datasets?collectionsfilter:category=${props.name}`}
             >
-              <Category.Label category={props.name} />
-              <span className="value">
-                <Numeric num={props.count} />
-              </span>
+              <div className="inner-container">
+                <span className="label">
+                  <Category.Label category={props.name} />
+                </span>
+                <span className="value">
+                  <Numeric num={props.count} />
+                </span>
+              </div>
             </Link>
           )}
         />
@@ -104,10 +113,14 @@ class StatisticsGroup extends PureComponent {
           isLoading={!statistics.countries}
           ItemContentContainer={props => (
             <Link to={`/datasets?collectionsfilter:countries=${props.name}`}>
-              <Country.Name {...props} code={props.name} />
-              <span className="value">
-                <Numeric num={props.count} />
-              </span>
+              <div className="inner-container">
+                <span className="label">
+                  <Country.Name {...props} code={props.name} />
+                </span>
+                <span className="value">
+                  <Numeric num={props.count} />
+                </span>
+              </div>
             </Link>
           )}
         />
