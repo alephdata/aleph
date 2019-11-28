@@ -1,11 +1,23 @@
 import React, { PureComponent } from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Facet, Numeric, Schema } from 'src/components/common';
 import Statistics from 'src/components/StatisticsGroup/Statistics';
 
-
 import './CollectionStatistics.scss';
+
+const messages = defineMessages({
+  search_placeholder: {
+    id: 'collection.statistics.searchPlaceholder',
+    defaultMessage: 'Search {field}',
+  },
+  search_placeholder_subset: {
+    id: 'collection.statistics.searchPlaceholderSubset',
+    defaultMessage: 'Search top {statLength} {field}',
+  },
+});
+
+const maxQueryLength = 300;
 
 class CollectionStatistics extends PureComponent {
   constructor(props) {
@@ -17,13 +29,15 @@ class CollectionStatistics extends PureComponent {
   renderItem({ name, count }) {
     const { collection, field } = this.props;
     let label = name;
+    let link = `/search?filter:collection_id=${collection.id}&filter:${field}=${name}`;
 
     if (field === 'schema') {
       label = <Schema.Smart.Label schema={name} plural icon />;
+      link = `#mode=${name}`;
     }
 
     return (
-      <Link to={`/search?filter:collection_id=${collection.id}&filter:${field}=${name}`}>
+      <Link to={link}>
         <span className="label">{label}</span>
         <span className="value">
           <Numeric num={count} />
@@ -33,7 +47,10 @@ class CollectionStatistics extends PureComponent {
   }
 
   render() {
-    const { field, statistics } = this.props;
+    const { field, intl, statistics } = this.props;
+
+    const statLength = Object.keys(statistics).length;
+    const isSubset = statLength === maxQueryLength;
 
     return (
       <div className="CollectionStatistics">
@@ -57,6 +74,12 @@ class CollectionStatistics extends PureComponent {
             isLoading={!statistics}
             ItemContentContainer={this.renderItem}
             styleType="dark"
+            hasFilter={statLength > 10}
+            filterPlaceholder={
+              isSubset
+                ? intl.formatMessage(messages.search_placeholder_subset, { field, statLength })
+                : intl.formatMessage(messages.search_placeholder, { field })
+            }
           />
         </div>
       </div>

@@ -4,7 +4,7 @@
   display: inline-block;
 
   &.bp3-callout.dark {
-    background-color: white !important;
+    background-color: white;
     // border: 1px solid $aleph-border-color;
   }
 
@@ -36,6 +36,10 @@
       &:hover {
         text-decoration: none;
         background-color: #ffffff38;
+
+        .dark & {
+          background-color: #ebf1f5;
+        }
       }
 
       .dark & {
