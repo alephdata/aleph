@@ -182,28 +182,6 @@ export function selectEntityView(state, entityId, mode, isPreview) {
   return undefined;
 }
 
-export function selectCollectionView(state, collectionId, mode) {
-  if (mode) {
-    return mode;
-  }
-  const collection = selectCollection(state, collectionId);
-  const model = selectModel(state);
-  let largestSchema = 'Document';
-  let largestCount = 0;
-  const schemata = {};
-
-  Object.keys(collection.schemata || {})
-    .forEach((key) => {
-      const norm = model.getSchema(key).isDocument() ? 'Document' : key;
-      schemata[norm] = (schemata[norm] || 0) + collection.schemata[key];
-      if (schemata[norm] > largestCount) {
-        largestCount = schemata[norm];
-        largestSchema = norm;
-      }
-    });
-  return largestSchema; // yay.
-}
-
 export function selectCollectionStatistics(state, collectionId) {
   return selectObject(state.collectionStatistics, collectionId);
 }

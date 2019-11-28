@@ -15,7 +15,7 @@ import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
-import { selectCollection, selectCollectionStatus, selectCollectionView } from 'src/selectors';
+import { selectCollection, selectCollectionStatus } from 'src/selectors';
 
 import 'src/components/common/ItemOverview.scss';
 
@@ -123,7 +123,7 @@ const mapStateToProps = (state, ownProps) => {
     collectionId,
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
-    activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
+    activeMode: hashQuery.mode || 'Overview',
   };
 };
 
