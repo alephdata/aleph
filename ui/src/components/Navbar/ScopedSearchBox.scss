@@ -35,10 +35,15 @@
     }
 
     &__popover {
+      .bp3-popover-content {
+        padding: 0 !important;
+      }
+
       .bp3-menu {
         background: $gray1 !important;
         border-radius: 0;
         box-shadow: none;
+        padding: 5px !important;
       }
 
       .bp3-menu-item {
