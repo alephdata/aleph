@@ -1,23 +1,11 @@
 import React, { PureComponent } from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Facet, Language, Numeric, Schema } from 'src/components/common';
 import Statistics from 'src/components/StatisticsGroup/Statistics';
 
 import './CollectionStatistics.scss';
 
-const messages = defineMessages({
-  search_placeholder: {
-    id: 'collection.statistics.searchPlaceholder',
-    defaultMessage: 'Search {field}',
-  },
-  search_placeholder_subset: {
-    id: 'collection.statistics.searchPlaceholderSubset',
-    defaultMessage: 'Search top {statLength} {field}',
-  },
-});
-
-const maxQueryLength = 300;
 
 class CollectionStatistics extends PureComponent {
   constructor(props) {
@@ -49,10 +37,7 @@ class CollectionStatistics extends PureComponent {
   }
 
   render() {
-    const { field, intl, statistics } = this.props;
-
-    const statLength = Object.keys(statistics).length;
-    const isSubset = statLength === maxQueryLength;
+    const { field, statistics } = this.props;
 
     return (
       <div className="CollectionStatistics">
@@ -76,12 +61,6 @@ class CollectionStatistics extends PureComponent {
             isLoading={!statistics}
             ItemContentContainer={this.renderItem}
             styleType="dark"
-            hasFilter={statLength > 15}
-            filterPlaceholder={
-              isSubset
-                ? intl.formatMessage(messages.search_placeholder_subset, { field, statLength })
-                : intl.formatMessage(messages.search_placeholder, { field })
-            }
           />
         </div>
       </div>

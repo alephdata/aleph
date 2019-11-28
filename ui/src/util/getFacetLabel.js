@@ -5,7 +5,7 @@ import {
 const messages = defineMessages({
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: 'Entity types',
+    defaultMessage: 'Types',
   },
   facet_collection_id: {
     id: 'facet.collection_id',
