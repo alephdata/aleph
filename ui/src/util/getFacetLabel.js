@@ -5,11 +5,15 @@ import {
 const messages = defineMessages({
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: 'Types',
+    defaultMessage: 'Entity types',
   },
   facet_collection_id: {
     id: 'facet.collection_id',
     defaultMessage: 'Datasets',
+  },
+  facet_ibans: {
+    id: 'facet.ibans',
+    defaultMessage: 'Iban numbers',
   },
   facet_languages: {
     id: 'facet.languages',
@@ -71,6 +75,11 @@ const propLabels = {
     field: 'emails',
     label: messages.facet_emails,
     icon: 'envelope',
+  },
+  ibans: {
+    field: 'ibans',
+    label: messages.facet_ibans,
+    icon: 'credit-card',
   },
   languages: {
     field: 'languages',

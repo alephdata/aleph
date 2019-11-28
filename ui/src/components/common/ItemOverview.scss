@@ -28,7 +28,7 @@
 
     .horizontal & {
       @include large {
-        flex: 1 1 40%;
+        flex: 1 1 35%;
         padding: $aleph-grid-size*4;
         padding-left: 0;
         border-bottom: none;
@@ -62,8 +62,7 @@
 
     .horizontal & {
       @include large {
-        flex: 1 1 60%;
-        padding: 0;
+        flex: 1 1 65%;
         padding-left: ($aleph-grid-size * 4);
       }
     }

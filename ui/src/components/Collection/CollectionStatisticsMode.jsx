@@ -10,7 +10,7 @@ import CollectionStatistics from './CollectionStatistics';
 import './CollectionStatisticsMode.scss';
 
 const statFields = [
-  'schema', 'emails', 'addresses', 'ibans', 'languages', 'phones', 'names',
+  'schema', 'emails', 'addresses', 'ibans', 'phones', 'names',
 ];
 
 class CollectionStatisticsMode extends React.PureComponent {

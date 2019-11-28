@@ -25,6 +25,8 @@ class CategoryLabel extends Component {
 
   render() {
     const { collection, categories, category: pureCategory, icon } = this.props;
+
+    console.log(categories);
     const category = collection ? collection.category : pureCategory;
     const label = categories[category] || <FormattedMessage id="category.other" defaultMessage="Other" />;
     return (

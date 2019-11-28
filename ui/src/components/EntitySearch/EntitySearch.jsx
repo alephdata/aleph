@@ -129,9 +129,7 @@ export class EntitySearch extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        {result.isLoading && (
-          <SectionLoading />
-        )}
+        <SectionLoading />
       </div>
     );
   }
