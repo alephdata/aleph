@@ -7,8 +7,7 @@ from aleph.model import Mapping
 from aleph.logic.aggregator import get_aggregator
 from aleph.queues import queue_task, OP_INDEX
 from aleph.index.entities import get_entity
-from aleph.index.collections import delete_entities
-from aleph.logic.collections import refresh_collection
+from aleph.index.collections import delete_entities, update_collection
 from aleph.logic.aggregator import drop_aggregator
 
 log = logging.getLogger(__name__)
@@ -77,4 +76,4 @@ def flush_mapping(stage, collection, mapping_id, sync=False):
     drop_aggregator(collection)
     collection.touch()
     db.session.commit()
-    refresh_collection(collection.id)
+    update_collection(collection)
