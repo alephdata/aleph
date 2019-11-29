@@ -46,6 +46,7 @@ class Diagram extends React.Component {
           updateLayout={this.updateLayout}
           updateViewport={this.updateViewport}
           exportSvg={this.exportSvg}
+          writeable
         />
       </div>
     );

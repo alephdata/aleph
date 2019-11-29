@@ -27,6 +27,10 @@ const messages = defineMessages({
     id: 'dashboard.cases',
     defaultMessage: 'Personal datasets',
   },
+  diagrams: {
+    id: 'dashboard.diagrams',
+    defaultMessage: 'Diagrams',
+  },
   settings: {
     id: 'dashboard.settings',
     defaultMessage: 'Settings',
@@ -105,6 +109,12 @@ class Dashboard extends React.Component {
               text={intl.formatMessage(messages.cases)}
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
+            />
+            <MenuItem
+              icon="graph"
+              text={intl.formatMessage(messages.diagrams)}
+              onClick={() => this.navigate('/diagrams')}
+              active={current === '/diagrams'}
             />
             { groups.total > 0 && (
               <>

@@ -72,8 +72,8 @@ export class DiagramsIndexScreen extends Component {
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
-                id="case.description"
-                defaultMessage="Personal datasets let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
+                id="diagram.description"
+                defaultMessage="Diagrams let you visualize complex relationships within a dataset."
               />
             </p>
           </div>
