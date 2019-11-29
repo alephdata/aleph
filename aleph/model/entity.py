@@ -67,8 +67,9 @@ class Entity(db.Model, SoftDeleteModel):
             'schema': self.schema,
             'properties': self.data
         })
-        proxy.add('name', self.name)
-        proxy.set('indexUpdatedAt', self.updated_at)
+        if proxy.schema.is_a('Thing'):
+            proxy.add('name', self.name)
+            proxy.set('indexUpdatedAt', self.updated_at)
         return proxy
 
     @classmethod
