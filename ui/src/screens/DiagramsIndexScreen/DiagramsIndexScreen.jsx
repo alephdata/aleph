@@ -9,7 +9,7 @@ import Dashboard from 'src/components/Dashboard/Dashboard';
 import {
   Breadcrumbs,
 } from 'src/components/common';
-import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
+import DiagramCreateButton from 'src/components/Toolbar/DiagramCreateButton';
 
 
 const messages = defineMessages({
@@ -67,7 +67,7 @@ export class DiagramsIndexScreen extends Component {
         <Dashboard>
           <div className="Dashboard__title-container">
             <div className="Dashboard__actions">
-              <CaseCreateButton />
+              <DiagramCreateButton />
             </div>
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
