@@ -51,7 +51,7 @@ export class DiagramsIndexScreen extends Component {
         <li>
           <FormattedMessage
             id="cases.browser.breadcrumb"
-            defaultMessage="Cases overview"
+            defaultMessage="Diagrams"
           />
         </li>
       </Breadcrumbs>

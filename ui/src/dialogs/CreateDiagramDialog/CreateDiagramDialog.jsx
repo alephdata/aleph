@@ -4,6 +4,8 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import Query from 'src/app/Query';
+import { Collection } from 'src/components/common';
 import {
   createCollection,
   updateCollectionPermissions,
@@ -76,12 +78,22 @@ class CreateDiagramDialog extends Component {
     this.setState({ summary: target.value });
   }
 
-  onChangeCollection() {
-
+  onChangeCollection(collection) {
+    this.setState({ collection });
   }
 
   checkValid() {
     return true;
+  }
+
+  getCollectionOptionsQuery() {
+    const { location } = this.props;
+
+    const context = {
+      'filter:kind': 'casefile',
+    };
+    return Query.fromLocation('collections', location, context, 'collections')
+      .sortBy('label', 'asc');
   }
 
   render() {
@@ -138,6 +150,12 @@ class CreateDiagramDialog extends Component {
                   id="diagram.collectionSelect"
                   defaultMessage="Select a dataset"
                 />
+                <Collection.Select
+                  collection={collection}
+                  onSelect={this.onChangeCollection}
+                  query={this.getCollectionOptionsQuery()}
+                />
+
               </label>
             </div>
           </div>

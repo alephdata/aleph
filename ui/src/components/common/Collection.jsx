@@ -1,5 +1,7 @@
 import React, { Component, PureComponent } from 'react';
-import { Icon, Popover, Spinner } from '@blueprintjs/core';
+import { Alignment, Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
+import { defineMessages, injectIntl } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
@@ -8,13 +10,20 @@ import Truncate from 'react-truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import { fetchCollection, fetchCollectionStatus } from 'src/actions';
-import { selectCollection, selectCollectionStatus } from 'src/selectors';
+import { fetchCollection, fetchCollectionStatus, queryCollections } from 'src/actions';
+import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 
 import './Collection.scss';
+
+const messages = defineMessages({
+  label: {
+    id: 'collection.select',
+    defaultMessage: 'Select a dataset',
+  },
+});
 
 // formats markdown elements to plain text
 const simpleRenderer = ({ children }) => (
@@ -153,6 +162,74 @@ class CollectionLoad extends Component {
   }
 }
 
+class CollectionSelect extends Component {
+  constructor(props) {
+    super(props);
+    this.renderCollection = this.renderCollection.bind(this);
+    this.onSelectCollection = this.onSelectCollection.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  onSelectCollection(collection, event) {
+    event.stopPropagation();
+    this.props.onSelect(collection);
+  }
+
+  renderCollection = (collection, { handleClick }) => (
+    <MenuItem
+      key={collection.id}
+      onClick={handleClick}
+      text={collection.label}
+    />
+  )
+
+  fetchIfNeeded() {
+    const { query, result } = this.props;
+    if (result.shouldLoad) {
+      this.props.queryCollections({ query });
+    }
+  }
+
+  render() {
+    const { collection, intl, result } = this.props;
+    const label = collection ? collection.label : intl.formatMessage(messages.label);
+
+    return (
+      <Select
+        itemRenderer={this.renderCollection}
+        items={result.results}
+        onItemSelect={this.onSelectCollection}
+        popoverProps={{
+          minimal: true,
+          fill: true,
+          // position: Position.BOTTOM_LEFT,
+        }}
+        inputProps={{
+          fill: true,
+        }}
+        filterable={false}
+        resetOnClose
+        resetOnSelect
+      >
+        <Button
+          fill
+          text={label}
+          icon="user"
+          rightIcon="search"
+          alignText={Alignment.LEFT}
+        />
+      </Select>
+    );
+  }
+}
+
 const statusMapStateToProps = (state, ownProps) => ({
   status: selectCollectionStatus(state, ownProps.collection.id),
 });
@@ -160,6 +237,15 @@ const statusMapStateToProps = (state, ownProps) => ({
 const loadMapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
+
+const selectMapStateToProps = (state, ownProps) => {
+  const { query } = ownProps;
+
+  return {
+    query,
+    result: selectCollectionsResult(state, query),
+  };
+};
 
 class Collection {
   static Label = CollectionLabel;
@@ -172,6 +258,11 @@ class Collection {
   static Link = withRouter(CollectionLink);
 
   static Load = connect(loadMapStateToProps, { fetchCollection })(CollectionLoad);
+
+  static Select = connect(
+    selectMapStateToProps,
+    { queryCollections },
+  )(injectIntl(CollectionSelect));
 }
 
 export default Collection;
