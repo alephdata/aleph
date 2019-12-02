@@ -1,27 +1,35 @@
 @import "src/app/variables.scss";
 
 .CollectionStatistics {
-  border-radius: 3px;
+  padding: $aleph-content-padding/2;
+  flex: auto;
+  width: 25%;
+  max-width: 25%;
 
-  break-inside: avoid;
-  margin: $aleph-content-padding 0;
-
-  &:first-child {
-    margin-top: 0;
+  @media screen and (max-width: $aleph-screen-lg-max-width) {
+    width: 33%;
+    max-width: 33%;
   }
 
+  @media screen and (max-width: $aleph-screen-md-max-width) {
+    width: 50%;
+    max-width: 50%;
+  }
 
-  // padding: $aleph-content-padding/2;
-  // flex: auto;
-  // width: 25%;
-  // max-width: 25%;
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    width: 100%;
+    max-width: 100%;
+  }
 
   &__inner-container {
+    border: 1px solid #ebf1f5;
+    border-radius: 5px;
   }
 
   &__heading {
     background-color: #ebf1f5;
-    border-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     padding: 15px;
 
     &__total, &__label {
@@ -40,31 +48,4 @@
     }
 
   }
-
-  &__title.bp3-heading {
-    // color: $blue1;
-  }
-
-  // &__values {
-  //   display: table;
-  //   width: 100%;
-  // }
-  //
-  // &__value {
-  //   display: table-row;
-  //   &__label, &__count {
-  //     display: table-cell;
-  //   }
-  //
-  //   &__label {
-  //     position: relative;
-  //     left: 0;
-  //     padding: 0;
-  //   }
-  //
-  //   &__count {
-  //     position: relative;
-  //     right: 0;
-  //   }
-  // }
 }

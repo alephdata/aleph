@@ -1,33 +1,12 @@
 @import "src/app/variables.scss";
 
 .CollectionStatisticsMode {
-  column-count: 4;
-  column-gap: $aleph-content-padding;
-  column-fill: balance;
-
-  @media screen and (max-width: $aleph-screen-lg-max-width) {
-    column-count: 3;
-  }
-
-  @media screen and (max-width: $aleph-screen-md-max-width) {
-    column-count: 2;
-  }
-
-  @media screen and (max-width: $aleph-screen-sm-max-width) {
-    column-count: 1;
-  }
-
-  // display: flex;
-  // flex-flow: row wrap;
-  // justify-content: space-between;
-  // margin: 0 -$aleph-content-padding/2;
-
-  // display: flex;
-  // align-items: left;
-  // justify-content: left;
-  // flex-direction: row;
-  // flex-wrap: wrap;
-  // flex-flow: row wrap;
-  // align-content: flex-end;
-
+  margin: 0 -$aleph-content-padding/2;
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-flow: row wrap;
+  align-content: flex-end;
 }
