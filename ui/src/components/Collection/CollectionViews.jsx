@@ -89,7 +89,6 @@ class CollectionViews extends React.Component {
         {hasBrowse && (
           <Tab
             id="Document"
-            disabled={numOfDocs === 0}
             title={
               <>
                 <Icon icon="folder" className="left-icon" />
