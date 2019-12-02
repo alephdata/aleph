@@ -16,7 +16,10 @@ class Diagram(db.Model, SoftDeleteModel):
     __tablename__ = 'diagram'
 
     id = db.Column(db.Integer, primary_key=True)
-    data = db.Column('data', JSONB)
+    label = db.Column(db.Unicode)
+    summary = db.Column(db.Unicode, nullable=True)
+    entities = db.Column('entities', db.ARRAY(db.Unicode))
+    layout = db.Column('layout', JSONB)
 
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), index=True)
     role = db.relationship(Role, backref=db.backref('diagrams', lazy='dynamic'))  # noqa
@@ -27,7 +30,10 @@ class Diagram(db.Model, SoftDeleteModel):
     def update(self, data=None):
         self.updated_at = datetime.utcnow()
         if data:
-            self.data = data
+            self.label = data.get('label', self.label)
+            self.summary = data.get('summary', self.summary)
+            self.entities = data.get('entities', self.entities)
+            self.layout = data.get('layout', self.layout)
         db.session.add(self)
         db.session.commit()
 
@@ -40,7 +46,10 @@ class Diagram(db.Model, SoftDeleteModel):
         data = self.to_dict_dates()
         data.update({
             'id': stringify(self.id),
-            'data': dict(self.data),
+            'label': self.label,
+            'summary': self.summary,
+            'entities': self.entities,
+            'data': {'layout': dict(self.layout)},
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
         })
@@ -52,17 +61,16 @@ class Diagram(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def create(cls, data, collection, role_id):
+    def create(cls, data,  collection, role_id):
         diagram = cls()
         diagram.role_id = role_id
-        diagram.data = data
+        diagram.label = data.get('label')
+        diagram.summary = data.get('summary')
+        diagram.entities = data.get('entities')
+        diagram.layout = data.get('layout')
         diagram.collection_id = collection.id
         diagram.update()
         return diagram
-
-    @property
-    def entity_ids(self):
-        return self.data['layout']['entities']
 
     def __repr__(self):
         return '<Diagram(%r, %r)>' % (self.id, self.collection_id)

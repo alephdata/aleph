@@ -2,10 +2,16 @@ DiagramCreate:
   type: object
   required: ["data"]
   properties:
+    label:
+      type: string
+    summary:
+      type: string
+      nullable: true
     data:
       type: object
       allOf:
-      - $ref: '#/components/schemas/DatedModel'
+      - $ref: '#/components/schemas/DiagramData'
+  required: ["label", "data"]
 
 Diagram:
   type: object
@@ -18,12 +24,18 @@ Diagram:
       - $ref: '#/components/schemas/Collection'
     role_id:
       type: string
+    label:
+      type: string
+    summary:
+      type: string
+      nullable: true
     data:
       type: object
       allOf:
       - $ref: '#/components/schemas/DiagramData'
-    writable:
+    writeable:
       type: boolean
+  required: ["collection", "role_id", "label", "data", "writeable"]
 
 DiagramData:
   type: object
@@ -67,7 +79,7 @@ DiagramData:
                     type: number
               entityId:
                 type: string
-        edged:
+        edges:
           type: array
           items:
             type: object
@@ -95,21 +107,18 @@ DiagramData:
                     type: number
         groupings:
           type: array
-        selection:
-          type: array
-    viewport:
-      type: object
-      properties:
-        zoomLevel:
-          type: number
-        ratio:
-          type: number
-        center:
-          type: object
-          properties:
-            x:
-              type: number
-            y:
-              type: number
-    required: ["layout", "viewport"]
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+              color:
+                type: string
+              vertices:
+                type: array
+                items:
+                  type: string
+    required: ["layout"]
 

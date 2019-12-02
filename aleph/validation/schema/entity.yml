@@ -78,7 +78,7 @@ Entity:
         format: schema
     score:
       type: number
-    writable:
+    writeable:
       type: boolean
       example: false
 
