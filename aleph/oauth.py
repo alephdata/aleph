@@ -1,8 +1,8 @@
 import jwt
-from urllib.request import urlopen
-import base64
 import json
+import base64
 import logging
+from urllib.request import urlopen
 from authlib.integrations.flask_client import OAuth
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.hazmat.backends import default_backend
