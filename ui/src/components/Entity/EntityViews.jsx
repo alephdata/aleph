@@ -16,6 +16,7 @@ import EntityReferencesMode from 'src/components/Entity/EntityReferencesMode';
 import EntityTagsMode from 'src/components/Entity/EntityTagsMode';
 import EntitySimilarMode from 'src/components/Entity/EntitySimilarMode';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
+import EntityMappingMode from 'src/components/EntityMapping/EntityMappingMode';
 import DocumentViewMode from 'src/components/Document/DocumentViewMode';
 import Schema from 'src/components/common/Schema';
 import Property from 'src/components/Property';
@@ -56,6 +57,7 @@ class EntityViews extends React.Component {
     const hasDocumentViewMode = hasViewer || (!hasBrowseMode && !hasTextMode);
     const hasViewMode = entity.schema.isDocument() && hasDocumentViewMode;
     const refs = !references.results ? [] : references.results.filter(ref => !ref.reverse.hidden);
+    const processingError = entity.getProperty('processingError');
 
     return (
       <Tabs
@@ -142,7 +144,7 @@ class EntityViews extends React.Component {
             }
           />
         ))}
-        { entity.schema.isDocument() && (
+        { entity.schema.isDocument() && (!processingError || !processingError.length) && (
           <Tab
             id="tags"
             disabled={tags.total < 1}
@@ -167,6 +169,18 @@ class EntityViews extends React.Component {
               </TextLoading>
             )}
             panel={<EntitySimilarMode entity={entity} />}
+          />
+        )}
+        { (entity.collection.writeable && entity.schema.isA('Table')) && (
+          <Tab
+            id="mapping"
+            title={(
+              <>
+                <Icon icon="new-object" className="left-icon" />
+                <FormattedMessage id="entity.mapping.view" defaultMessage="Generate entities" />
+              </>
+            )}
+            panel={<EntityMappingMode entity={entity} />}
           />
         )}
       </Tabs>

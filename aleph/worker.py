@@ -4,14 +4,16 @@ from servicelayer.worker import Worker
 from aleph.core import kv, db
 from aleph.model import Collection
 from aleph.queues import get_rate_limit
-from aleph.queues import OP_INDEX, OP_BULKLOAD, OP_PROCESS
-from aleph.queues import OP_XREF, OP_XREF_ITEM
+from aleph.queues import (
+    OP_INDEX, OP_PROCESS, OP_XREF, OP_XREF_ITEM,
+    OP_LOAD_MAPPING, OP_FLUSH_MAPPING
+)
 from aleph.queues import OPERATIONS
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import index_collections, refresh_collection
 from aleph.logic.collections import reset_collection
 from aleph.logic.notifications import generate_digest
-from aleph.logic.bulkload import bulk_load
+from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
 from aleph.logic.processing import index_aggregate, process_collection
@@ -49,8 +51,10 @@ class AlephWorker(Worker):
         sync = task.context.get('sync', False)
         if stage.stage == OP_INDEX:
             index_aggregate(stage, collection, sync=sync, **payload)
-        if stage.stage == OP_BULKLOAD:
-            bulk_load(stage, collection, payload)
+        if stage.stage == OP_LOAD_MAPPING:
+            load_mapping(stage, collection, **payload)
+        if stage.stage == OP_FLUSH_MAPPING:
+            flush_mapping(stage, collection, sync=sync, **payload)
         if stage.stage == OP_PROCESS:
             if payload.pop('reset', False):
                 reset_collection(collection, sync=True)

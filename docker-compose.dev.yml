@@ -98,7 +98,7 @@ services:
       cache_from:
         - alephdata/aleph:latest
     image: alephdata/aleph:${ALEPH_TAG:-latest}
-    command: aleph run -h 0.0.0.0 -p 5000 --with-threads
+    command: aleph run -h 0.0.0.0 -p 5000 --with-threads --reload --debugger
     ports:
       - "127.0.0.1:5000:5000"
     restart: on-failure

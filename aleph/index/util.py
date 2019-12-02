@@ -181,6 +181,12 @@ def configure_index(index, mapping, settings):
         res = es.indices.put_mapping(index=index,
                                      body=mapping,
                                      ignore=[400])
+        es.indices.close(index=index)
+        settings.get('index').pop('number_of_shards')
+        res = es.indices.put_settings(index=index,
+                                      body=settings,
+                                      ignore=[400])
+        es.indices.open(index=index)
         return res.get('status') != 400
     log.info("Creating index: %s...", index)
     res = es.indices.create(index, body={
@@ -198,13 +204,17 @@ def index_settings(shards=5, replicas=2):
             "number_of_replicas": replicas,
             "analysis": {
                 "analyzer": {
-                    "icu_latin": {
+                    "latin_index": {
                         "tokenizer": "standard",
                         "filter": ["latinize"]
+                    },
+                    "latin_query": {
+                        "tokenizer": "standard",
+                        "filter": ["latinize", "synonames"]
                     }
                 },
                 "normalizer": {
-                    "icu_latin": {
+                    "latin_index": {
                         "type": "custom",
                         "filter": ["latinize"]
                     }
@@ -213,6 +223,11 @@ def index_settings(shards=5, replicas=2):
                     "latinize": {
                         "type": "icu_transform",
                         "id": "Any-Latin; NFKD; Lower(); [:Nonspacing Mark:] Remove; NFKC"  # noqa
+                    },
+                    "synonames": {
+                        "type": "synonym",
+                        "lenient": True,
+                        "synonyms_path": "synonames.txt"
                     }
                 }
             }

@@ -18,6 +18,7 @@ $icon-font-path: "~@blueprintjs/icons/resources/icons";
 @import "~@blueprintjs/core/src/blueprint.scss";
 @import "~@blueprintjs/table/src/table.scss";
 @import "~@blueprintjs/icons/src/blueprint-icons.scss";
+@import "~@blueprintjs/select/src/blueprint-select.scss";
 @import "./variables.scss";
 @import "./tables.scss";
 @import "./blueprint-overrides.scss";
@@ -96,6 +97,19 @@ a {
 
 .text-muted {
   color: $aleph-greyed-text;
+}
+
+.text-page-title {
+  font-size: 22px;
+  color: $dark-gray1;
+  margin: 0 0 $aleph-grid-size;
+}
+
+.text-page-subtitle {
+  color: $dark-gray5;
+  line-height: 1.5;
+  clear: both;
+  max-width: 700px;
 }
 
 .text-markdown {

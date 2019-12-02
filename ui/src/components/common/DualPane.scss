@@ -22,6 +22,7 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
   flex-grow: 1;
   overflow-x: hidden;
   padding: 0 0 0 $dual-pane-padding;
+  overflow-x: scroll;
 
   &.allow-overflow {
     overflow: visible;

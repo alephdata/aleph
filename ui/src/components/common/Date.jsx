@@ -28,7 +28,12 @@ class Date extends PureComponent {
           month={availableChunks[1] && '2-digit'}
           day={availableChunks[2] && '2-digit'}
         />
-        {showTime && <FormattedTime value={dateObject} />}
+        {showTime && (
+          <>
+            <span>-</span>
+            <FormattedTime value={dateObject} />
+          </>
+        )}
       </>
     );
   }

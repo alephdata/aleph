@@ -1,0 +1,22 @@
+@import "src/app/variables.scss";
+$split-section-padding: 2*$aleph-grid-size;
+
+.MappingSplitSection {
+  &-container {
+    width: 100%;
+    display: table;
+  }
+  width: 50%;
+  display: table-cell;
+
+  &:first-child {
+    padding-right: $split-section-padding;
+  }
+  &:last-child {
+    padding-left: $split-section-padding;
+  }
+
+  &__title {
+    margin-top: 0;
+  }
+}

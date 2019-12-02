@@ -142,8 +142,8 @@ def sanitize_html(html_text, base_url):
                 rel.update(['nofollow', 'noreferrer', 'external', 'noopener'])
                 el.set('rel', ' '.join(rel))
         return tostring(html)
-    except Exception:
-        log.exception("HTML sanitizer failure")
+    except Exception as exc:
+        log.warning("HTML sanitizer failure [%s]: %s", type(exc), exc)
         return gettext("[HTML removed: could not be sanitized]")
 
 
