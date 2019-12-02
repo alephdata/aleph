@@ -389,8 +389,25 @@
                 }
             }
         ],
-        "groupings": [],
-        "selection": []
+        "groupings": [
+            {
+                "id": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239,country:gb,entity:46454905-22b1-41e3-ba91-6faefbd7ddc1,entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "label": "Royal Family",
+                "color": "#106BA3",
+                "vertices": [
+                    "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                    "country:gb",
+                    "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                    "entity:44fd4875-5556-4a31-9639-e17d1fa4574a"
+                ]
+            }
+        ],
+        "selection": [
+            "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+            "country:gb",
+            "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+            "entity:44fd4875-5556-4a31-9639-e17d1fa4574a"
+        ]
     },
     "viewport": {
         "zoomLevel": 0.4,

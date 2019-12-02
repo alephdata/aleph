@@ -19,7 +19,11 @@ class DiagramAPITest(TestCase):
         _, self.headers_x = self.login(foreign_id='user_3')
         self.fixture = self.get_fixture_path('royal-family.vis')
         with open(self.fixture, 'r') as fp:
-            self.input_data = {'data': json.load(fp)}
+            self.input_data = {
+                'data': json.load(fp),
+                'label': 'Royal Family',
+                'summary': '...'
+            }
 
     def test_diagram_create(self):
         url = '/api/2/collections/%s/diagrams' % self.col.id
@@ -36,5 +40,15 @@ class DiagramAPITest(TestCase):
             list
         ), res.json['data']['layout']['entities'][2]['properties']['person']
         assert res.json['data']['layout']['entities'][2]['properties']['person'][0]['schema']  == 'Person'  # noqa
+
+        diagram_id = res.json['id']
+        url = '/api/2/collections/%s/diagrams/%s' % (self.col.id, diagram_id)
+        res = self.client.get(url, headers=self.headers)  # noqa
+        assert res.status_code == 200, res
+        validate(res.json, 'Diagram')
+        assert res.json['label'] == 'Royal Family'
+
+    def test_unauthorized_create(self):
+        url = '/api/2/collections/%s/diagrams' % self.col.id
         res = self.client.post(url, json=self.input_data, headers=self.headers_x)  # noqa
         assert res.status_code == 403, res

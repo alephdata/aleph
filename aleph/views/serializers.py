@@ -343,7 +343,7 @@ class VisDiagramEntitySerializer(EntitySerializer):
 class DiagramSerializer(Serializer):
     def _collect(self, obj):
         self.queue(Collection, obj.get('collection_id'))
-        ent_ids = obj['data']['layout']['entities']
+        ent_ids = obj['entities']
         for ent_id in ensure_list(ent_ids):
             self.queue(Entity, ent_id)
 
@@ -354,7 +354,7 @@ class DiagramSerializer(Serializer):
         obj['writeable'] = request.authz.can(collection_id, request.authz.WRITE)  # noqa
         obj['collection'] = self.resolve(Collection, collection_id, CollectionSerializer)  # noqa
         layout = obj['data']['layout']
-        ent_ids = layout.pop('entities')
+        ent_ids = obj.pop('entities')
         layout['entities'] = []
         for ent_id in ent_ids:
             entity = self.resolve(Entity, ent_id, VisDiagramEntitySerializer)

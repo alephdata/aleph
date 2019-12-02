@@ -41,7 +41,7 @@ Collection:
       type: object
     secret:
       type: boolean
-    writable:
+    writeable:
       type: boolean
 
 CollectionCreate:

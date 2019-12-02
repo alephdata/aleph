@@ -15,7 +15,7 @@ Alert:
     normalized:
       type: string
       readOnly: true
-    writable:
+    writeable:
       type: boolean
     links:
       type: object

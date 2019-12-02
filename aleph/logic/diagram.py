@@ -16,31 +16,42 @@ log = logging.getLogger(__name__)
 
 
 def create_diagram(data, collection, role_id):
-    data = data.get('data')
-    data = _normalize_data(data)
-    entities = data['layout']['entities']
+    diagram_data = _normalize_data(data.pop('data'))
+    layout = diagram_data.pop('layout')
+    entities = layout.pop('entities')
+
+    # Replace entitiy ids given by VIS with our own newly created signed
+    # entity ids.
     signed_entity_ids = {}
     for ent in entities:
         ent = json.dumps(ent)
         for old_id, new_id in signed_entity_ids.items():
             ent = ent.replace(old_id, new_id)
         ent = json.loads(ent)
+        # clear existing id if any
+        ent.pop('foreign_id', None)
         signed_entity_id = create_entity(ent, collection)
         signed_entity_ids[ent['id']] = signed_entity_id
-    data = json.dumps(data)
+    data['entities'] = list(signed_entity_ids.values())
+
+    # Do the same replacement in layout
+    layout = json.dumps(layout)
     for old_id, new_id in signed_entity_ids.items():
-        data = data.replace(old_id, new_id)
-    data = json.loads(data)
-    data["layout"]['entities'] = list(signed_entity_ids.values())
+        layout = layout.replace(old_id, new_id)
+    layout = json.loads(layout)
+    entities = list(signed_entity_ids.values())
+    data['layout'] = layout
+
     diagram = Diagram.create(data, collection, role_id)
     return diagram
 
 
 def update_diagram(diagram, data, collection):
-    data = data.get('data')
-    data = _normalize_data(data)
-    entities = data['layout']['entities']
-    existing_ids = diagram.entity_ids
+    diagram_data = _normalize_data(data.pop('data'))
+    layout = diagram_data.pop('layout')
+    entities = layout.pop('entities')
+
+    existing_ids = diagram.entities
     signed_entity_ids = {}
     for ent in entities:
         ent = json.dumps(ent)
@@ -48,29 +59,40 @@ def update_diagram(diagram, data, collection):
             ent = ent.replace(old_id, new_id)
         ent = json.loads(ent)
         ent_id = ent.get('id')
+        # if it's an existing entity, update it
         if ent_id in existing_ids:
             entity = Entity.by_id(ent_id)
             entity.update(ent)
             update_entity(ent)
             signed_entity_ids[ent_id] = ent_id
+        # if it's a new entity, create it
         else:
+            # clear existing id if any
+            ent.pop('foreign_id', None)
             signed_entity_id = create_entity(ent, collection)
             signed_entity_ids[ent_id] = signed_entity_id
-    data = json.dumps(data)
+    data['entities'] = list(signed_entity_ids.values())
+
+    # Replace ids with signed ids in layout
+    layout = json.dumps(layout)
     for old_id, new_id in signed_entity_ids.items():
-        data = data.replace(old_id, new_id)
-    data = json.loads(data)
+        layout = layout.replace(old_id, new_id)
+    layout = json.loads(layout)
+    data['layout'] = layout
+
     diagram.update(data=data)
+
     # If any of the existing entities are not in the current diagram, delete
     # them. Ideally we should store the diagram_id on entities created by the
     # diagram, so that we know which entities are orphaned.
     for ent_id in existing_ids:
-        if ent_id not in diagram.entity_ids:
+        if ent_id not in diagram.entities:
             _delete_entity(ent_id)
     return diagram
 
 
 def _normalize_data(data):
+    """Turn entities in properties into entity ids"""
     entities = data['layout']['entities']
     for obj in entities:
         schema = model.get(obj.get('schema'))
@@ -83,8 +105,8 @@ def _normalize_data(data):
                 if values:
                     properties[prop.name] = []
                     for value in values:
-                        entity = get_entity_id(value)
-                        properties[prop.name].append(entity)
+                        entity_id = get_entity_id(value)
+                        properties[prop.name].append(entity_id)
     return data
 
 
@@ -97,9 +119,10 @@ def _delete_entity(entity_id):
         refresh_entity(proxy)
 
 
-def delete_diagram(diagram):
-    existing_ids = diagram.entity_ids
+def delete_diagram(diagram, flush_entities=False):
     # Clean up created entities
-    for ent_id in existing_ids:
-        _delete_entity(ent_id)
+    if flush_entities:
+        existing_ids = diagram.entities
+        for ent_id in existing_ids:
+            _delete_entity(ent_id)
     diagram.delete()
