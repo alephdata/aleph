@@ -42,20 +42,11 @@ def get_collection(collection_id):
         return
 
     data = collection.to_dict()
-    # query = {'term': {'collection_id': collection_id}}
-    # query = {'query': {'bool': {'filter': [query]}}}
-    # index = entities_read_index(schema=Entity.THING)
-    # result = es.count(index=index, body=query)
-    # data['count'] = result.get('count', 0)
     statistics = get_collection_statistics(collection.id)
-    schemata = statistics.get('schema', {})
+    schemata = statistics.get('schema', {}).get('values', {})
     data['count'] = sum(schemata.values())
     data['schemata'] = schemata
 
-    # countries = ensure_list(collection.countries)
-    # data['countries'] = registry.country.normalize_set(countries)
-    # languages = ensure_list(collection.languages)
-    # data['languages'] = registry.language.normalize_set(languages)
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
@@ -73,7 +64,10 @@ def get_collection_statistics(collection_id):
               'countries', 'languages', 'ibans']
 
     log.info("Generating statistics: %s", collection_id)
-    aggs = {f: {'terms': {'field': f, 'size': 300}} for f in facets}
+    aggs = {}
+    for facet in facets:
+        aggs[facet] = {'terms': {'field': facet, 'size': 300}}
+        aggs['%s.card' % facet] = {'cardinality': {'field': facet}}
     query = {'term': {'collection_id': collection_id}}
     query = {
         'size': 0,
@@ -85,9 +79,14 @@ def get_collection_statistics(collection_id):
     aggregations = result.get('aggregations', {})
     data = {}
     for facet in facets:
-        data[facet] = {}
+        values = {}
         for bucket in aggregations.get(facet, {}).get('buckets', []):
-            data[facet][bucket['key']] = bucket['doc_count']
+            values[bucket['key']] = bucket['doc_count']
+        totals = aggregations.get('%s.card' % facet, {})
+        data[facet] = {
+            'values': values,
+            'total': totals.get('value', 0)
+        }
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
