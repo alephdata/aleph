@@ -29,7 +29,7 @@ xlrd==1.2.0
 openpyxl==3.0.2
 odfpy==1.4.0
 cchardet==2.1.5
-lxml==4.4.1
+lxml==4.4.2
 olefile==0.46
 pillow==6.2.1
 vobject==0.9.6.1
