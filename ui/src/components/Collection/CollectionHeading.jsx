@@ -3,7 +3,6 @@ import { FormattedMessage } from 'react-intl';
 import { Category, Collection } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
-import './CollectionHeading.scss';
 import 'src/components/common/ItemOverview.scss';
 
 
