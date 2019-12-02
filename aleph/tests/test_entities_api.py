@@ -1,12 +1,7 @@
-import os
 import json
-# from pprint import pprint
-from followthemoney.cli.util import load_mapping_file
 
 from aleph.core import db
 from aleph.model import Entity
-from aleph.queues import get_stage, OP_BULKLOAD
-from aleph.logic.bulkload import bulk_load
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
@@ -18,17 +13,28 @@ class EntitiesApiTestCase(TestCase):
         super(EntitiesApiTestCase, self).setUp()
         self.rolex = self.create_user(foreign_id='user_3')
         self.col = self.create_collection()
+        book = {
+            'schema': 'PlainText',
+            'properties': {
+                'name': 'The Book',
+                'fileName': 'book.txt',
+            }
+        }
+        self.book = Entity.create(book, self.col)
+        self.book_id = self.col.ns.sign(self.book.id)
         self.data = {
             'schema': 'LegalEntity',
             'properties': {
                 'name': 'Winnie the Pooh',
                 'country': 'pa',
+                'proof': self.book_id
             }
         }
         self.ent = Entity.create(self.data, self.col)
         self.id = self.col.ns.sign(self.ent.id)
         db.session.commit()
         self.col_id = str(self.col.id)
+        index_entity(self.book)
         index_entity(self.ent)
 
     def test_index(self):
@@ -41,7 +47,7 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         res = self.client.get(url+'&facet=collection_id', headers=headers)
         assert res.status_code == 200, res
-        assert res.json['total'] == 1, res.json
+        assert res.json['total'] == 2, res.json
         assert len(res.json['facets']['collection_id']['values']) == 1, \
             res.json
         col0 = res.json['facets']['collection_id']['values'][0]
@@ -303,25 +309,14 @@ class EntitiesApiTestCase(TestCase):
         validate(data['results'][0], 'Entity')
 
     def test_entity_references(self):
-        db_uri = self.get_fixture_path('experts.csv').as_uri()
-        os.environ['ALEPH_TEST_BULK_CSV'] = db_uri
-        yml_path = self.get_fixture_path('experts.yml')
-        config = load_mapping_file(yml_path)
-        coll = self.create_collection()
-        stage = get_stage(coll, OP_BULKLOAD)
-        bulk_load(stage, coll, config.get('experts'))
         _, headers = self.login(is_admin=True)
-
-        query = '/api/2/entities?filter:schemata=Thing&q=Climate'
-        res = self.client.get(query, headers=headers)
-        assert res.json['total'] == 1, res.json
-        grp_id = res.json['results'][0]['id']
-
-        res = self.client.get('/api/2/entities/%s/references' % grp_id,
-                              headers=headers)
+        url = '/api/2/entities/%s/references' % self.book_id
+        res = self.client.get(url)
+        assert res.status_code == 403, res.status_code
+        res = self.client.get(url, headers=headers)
         results = res.json['results']
         assert len(results) == 1, results
-        assert results[0]['count'] == 3, results
+        assert results[0]['count'] == 1, results
         validate(res.json['results'][0], 'EntityReference')
 
     def test_entity_tags(self):

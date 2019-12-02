@@ -16,6 +16,7 @@ from aleph.views.querylog_api import blueprint as querylog_api
 from aleph.views.stream_api import blueprint as stream_api
 from aleph.views.archive_api import blueprint as archive_api
 from aleph.views.status_api import blueprint as status_api
+from aleph.views.mappings_api import blueprint as mappings_api
 
 
 def mount_app_blueprints(app):
@@ -36,4 +37,5 @@ def mount_app_blueprints(app):
     app.register_blueprint(stream_api)
     app.register_blueprint(archive_api)
     app.register_blueprint(status_api)
+    app.register_blueprint(mappings_api)
     signals.register_blueprints.send(app=app)

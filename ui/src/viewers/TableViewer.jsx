@@ -83,6 +83,7 @@ export class TableViewer extends Component {
     }
     const columnsJson = document.getProperty('columns').toString();
     const columns = columnsJson ? JSON.parse(columnsJson) : [];
+
     return (
       <div className="TableViewer">
         <Table

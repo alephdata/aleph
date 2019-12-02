@@ -1,0 +1,17 @@
+@import "src/app/variables.scss";
+
+.MappingSchemaSelect {
+  display: flex;
+  margin-bottom: 20px;
+
+  &__item {
+    flex: 1 1 50%;
+
+    &:first-child {
+      margin-right: 15px;
+    }
+    &:last-child {
+      margin-left: 15px;
+    }
+  }
+}

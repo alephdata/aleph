@@ -74,7 +74,6 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
     def update(self, data, authz):
         self.label = data.get('label', self.label)
         self.summary = data.get('summary', self.summary)
-        self.summary = data.get('summary', self.summary)
         self.publisher = data.get('publisher', self.publisher)
         self.publisher_url = data.get('publisher_url', self.publisher_url)
         if self.publisher_url is not None:

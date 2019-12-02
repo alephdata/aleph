@@ -13,6 +13,7 @@ class CollectionContextLoader extends PureComponent {
   }
 
   componentDidMount() {
+    this.fetchStatus();
     this.fetchIfNeeded();
   }
 
@@ -34,11 +35,7 @@ class CollectionContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const { collectionId, collection, status } = this.props;
-
-    if (!status || status.shouldLoad) {
-      this.fetchStatus();
-    }
+    const { collectionId, collection } = this.props;
 
     if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
@@ -51,12 +48,12 @@ class CollectionContextLoader extends PureComponent {
   }
 
   fetchStatus() {
-    const { collection } = this.props;
-    if (!collection || !collection.id || collection.isLoading) { return; }
-    this.props.fetchCollectionStatus(collection)
+    const { collectionId } = this.props;
+    this.props.fetchCollectionStatus({ id: collectionId })
       .finally(() => {
         const { status } = this.props;
         const duration = status.pending === 0 ? 6000 : 2000;
+        clearTimeout(this.timeout);
         this.timeout = setTimeout(this.fetchStatus, duration);
       });
   }
