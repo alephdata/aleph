@@ -10,7 +10,7 @@ DiagramCreate:
       type: object
       allOf:
       - $ref: '#/components/schemas/DiagramData'
-  required: ["label", "data"]
+  required: ["label"]
 
 DiagramUpdate:
   type: object
@@ -47,6 +47,7 @@ DiagramData:
   properties:
     layout:
       type: object
+      required: ["entities", "vertices", "edges", "groupings"]
       properties:
         entities:
           type: array

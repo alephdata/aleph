@@ -40,8 +40,14 @@ class DiagramAPITest(TestCase):
             list
         ), res.json['data']['layout']['entities'][2]['properties']['person']
         assert res.json['data']['layout']['entities'][2]['properties']['person'][0]['schema']  == 'Person'  # noqa
-
         diagram_id = res.json['id']
+
+        url = '/api/2/diagrams'
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
+        assert len(res.json['results']) == 1
+
         url = '/api/2/collections/%s/diagrams/%s' % (self.col.id, diagram_id)
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
@@ -74,6 +80,14 @@ class DiagramAPITest(TestCase):
         assert res.status_code == 204, res
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 404, res
+
+    def test_create_empty(self):
+        data = {
+            'label': 'hello',
+        }
+        url = '/api/2/collections/%s/diagrams' % self.col.id
+        res = self.client.post(url, json=data, headers=self.headers)  # noqa
+        assert res.status_code == 200, res
 
     def test_unauthorized_create(self):
         url = '/api/2/collections/%s/diagrams' % self.col.id

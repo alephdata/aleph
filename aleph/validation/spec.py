@@ -74,6 +74,16 @@ spec_tags = [
         'x-displayName': 'Collections API',
     },
     {
+        'description': 'Create and manage mappings.',
+        'name': 'Mapping',
+        'x-displayName': 'Mappings API',
+    },
+    {
+        'description': 'Create and manage VIS diagrams.',
+        'name': 'Diagram',
+        'x-displayName': 'VIS Diagrams API',
+    },
+    {
         'description': 'Create and manage alerts.',
         'name': 'Alert',
         'x-displayName': 'Alerts API',

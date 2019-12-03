@@ -18,31 +18,28 @@ log = logging.getLogger(__name__)
 
 
 def create_diagram(data, collection, role_id):
-    diagram_data = _normalize_data(data.pop('data'))
-    layout = diagram_data.pop('layout')
-    entities = layout.pop('entities')
+    diagram_data = data.pop('data', None)
+    if diagram_data:
+        diagram_data = _normalize_data(diagram_data)
+        layout = diagram_data.pop('layout')
+        entities = layout.pop('entities')
 
-    # Replace entitiy ids given by VIS with our own newly created signed
-    # entity ids.
-    signed_entity_ids = {}
-    for ent in entities:
-        ent = json.dumps(ent)
-        for old_id, new_id in signed_entity_ids.items():
-            ent = ent.replace(old_id, new_id)
-        ent = json.loads(ent)
-        # clear existing id if any
-        ent.pop('foreign_id', None)
-        signed_entity_id = create_entity(ent, collection)
-        signed_entity_ids[ent['id']] = signed_entity_id
-    data['entities'] = list(signed_entity_ids.values())
+        # Replace entitiy ids given by VIS with our own newly created signed
+        # entity ids.
+        signed_entity_ids = {}
+        for ent in entities:
+            ent = json.dumps(ent)
+            for old_id, new_id in signed_entity_ids.items():
+                ent = ent.replace(old_id, new_id)
+            ent = json.loads(ent)
+            # clear existing id if any
+            ent.pop('foreign_id', None)
+            signed_entity_id = create_entity(ent, collection)
+            signed_entity_ids[ent['id']] = signed_entity_id
+        data['entities'] = list(signed_entity_ids.values())
 
-    # Do the same replacement in layout
-    layout = json.dumps(layout)
-    for old_id, new_id in signed_entity_ids.items():
-        layout = layout.replace(old_id, new_id)
-    layout = json.loads(layout)
-    entities = list(signed_entity_ids.values())
-    data['layout'] = layout
+        # Do the same replacement in layout
+        data['layout'] = _replace_ids(layout, signed_entity_ids)
 
     diagram = Diagram.create(data, collection, role_id)
     return diagram
@@ -78,11 +75,7 @@ def update_diagram(diagram, data, collection):
         data['entities'] = list(signed_entity_ids.values())
 
         # Replace ids with signed ids in layout
-        layout = json.dumps(layout)
-        for old_id, new_id in signed_entity_ids.items():
-            layout = layout.replace(old_id, new_id)
-        layout = json.loads(layout)
-        data['layout'] = layout
+        data['layout'] = _replace_ids(layout, signed_entity_ids)
 
         diagram.update(data=data)
 
@@ -96,6 +89,14 @@ def update_diagram(diagram, data, collection):
         diagram.update(data=data)
 
     return diagram
+
+
+def _replace_ids(layout, signed_entity_ids):
+    layout = json.dumps(layout)
+    for old_id, new_id in signed_entity_ids.items():
+        layout = layout.replace(old_id, new_id)
+    layout = json.loads(layout)
+    return layout
 
 
 def _normalize_data(data):
