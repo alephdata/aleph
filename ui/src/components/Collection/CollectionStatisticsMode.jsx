@@ -2,7 +2,6 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import _ from 'lodash';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
 import CollectionStatistics from './CollectionStatistics';
@@ -21,15 +20,15 @@ class CollectionStatisticsMode extends React.PureComponent {
 
   renderStatisticsItem(statKey) {
     const { collection, statistics } = this.props;
-    const values = statistics[statKey];
+    const stats = statistics[statKey];
 
-    if (values && !_.isEmpty(values)) {
+    if (stats && stats.total) {
       return (
         <CollectionStatistics
           collection={collection}
           key={statKey}
           field={statKey}
-          statistics={values}
+          statistics={stats}
         />
       );
     }

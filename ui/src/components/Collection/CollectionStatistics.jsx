@@ -39,12 +39,14 @@ class CollectionStatistics extends PureComponent {
   render() {
     const { field, statistics } = this.props;
 
+    const { total, values } = statistics;
+
     return (
       <div className="CollectionStatistics">
         <div className="CollectionStatistics__inner-container">
           <div className="CollectionStatistics__heading">
             <h5 className="CollectionStatistics__heading__total">
-              <Numeric num={Object.keys(statistics).length} abbr={3} />
+              <Numeric num={total} abbr={3} />
             </h5>
             <h5 className="CollectionStatistics__heading__label">
               <Facet.Label field={field} />
@@ -57,8 +59,8 @@ class CollectionStatistics extends PureComponent {
                 defaultMessage="Show more"
               />
             )}
-            statistic={statistics}
-            isLoading={!statistics}
+            statistic={values}
+            isLoading={!values}
             ItemContentContainer={this.renderItem}
             styleType="dark"
           />
