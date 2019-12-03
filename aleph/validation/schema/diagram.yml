@@ -1,6 +1,5 @@
 DiagramCreate:
   type: object
-  required: ["data"]
   properties:
     label:
       type: string
@@ -12,6 +11,12 @@ DiagramCreate:
       allOf:
       - $ref: '#/components/schemas/DiagramData'
   required: ["label", "data"]
+
+DiagramUpdate:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/DiagramCreate'
+  required: []
 
 Diagram:
   type: object

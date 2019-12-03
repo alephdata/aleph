@@ -166,7 +166,7 @@ def update(collection_id, diagram_id):
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     diagram = obj_or_404(Diagram.by_id(diagram_id))
-    data = parse_request('DiagramCreate')
+    data = parse_request('DiagramUpdate')
     diagram = update_diagram(diagram, data, collection)
     return DiagramSerializer.jsonify(diagram)
 
