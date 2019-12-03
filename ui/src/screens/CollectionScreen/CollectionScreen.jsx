@@ -4,6 +4,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Card } from '@blueprintjs/core';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
@@ -13,8 +14,10 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
-import { selectCollection, selectCollectionStatus, selectCollectionView } from 'src/selectors';
+import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
+import { selectCollection, selectCollectionStatus } from 'src/selectors';
+
+import 'src/components/common/ItemOverview.scss';
 
 
 export class CollectionScreen extends Component {
@@ -87,21 +90,23 @@ export class CollectionScreen extends Component {
           searchScopes={[searchScope]}
         >
           {breadcrumbs}
-          <DualPane itemScope itemType="https://schema.org/Dataset">
-            <DualPane.InfoPane className="with-heading">
-              <CollectionHeading collection={collection} />
-              <div className="pane-content">
+          <SinglePane itemScope itemType="https://schema.org/Dataset">
+            <Card className="ItemOverview horizontal">
+              <div className="ItemOverview__heading">
+                <div className="ItemOverview__heading__centered-container">
+                  <CollectionHeading collection={collection} />
+                </div>
+              </div>
+              <div className="ItemOverview__content">
                 <CollectionInfoMode collection={collection} />
               </div>
-            </DualPane.InfoPane>
-            <DualPane.ContentPane>
-              <CollectionViews
-                collection={collection}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </DualPane.ContentPane>
-          </DualPane>
+            </Card>
+            <CollectionViews
+              collection={collection}
+              activeMode={activeMode}
+              isPreview={false}
+            />
+          </SinglePane>
         </Screen>
       </CollectionContextLoader>
     );
@@ -118,7 +123,7 @@ const mapStateToProps = (state, ownProps) => {
     collectionId,
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
-    activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
+    activeMode: hashQuery.mode || 'Overview',
   };
 };
 

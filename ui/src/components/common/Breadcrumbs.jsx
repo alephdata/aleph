@@ -92,11 +92,15 @@ export default class Breadcrumbs extends Component {
 
     return (
       <nav className="Breadcrumbs">
-        <ul className="bp3-breadcrumbs">
-          {collectionCrumbs}
-          {children}
-        </ul>
-        {operation}
+        <div className="Breadcrumbs__main">
+          <ul className="bp3-breadcrumbs">
+            {collectionCrumbs}
+            {children}
+          </ul>
+        </div>
+        <div className="Breadcrumbs__right">
+          {operation}
+        </div>
       </nav>
     );
   }

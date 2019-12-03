@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import c from 'classnames';
-import { Button } from '@blueprintjs/core';
+import { Button, InputGroup } from '@blueprintjs/core';
 
 import './Statistics.scss';
 
@@ -22,8 +22,12 @@ class Statistics extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = { listLen: 15 };
+    this.state = {
+      listLen: 15,
+      filterVal: '',
+    };
     this.onExpand = this.onExpand.bind(this);
+    this.onFilterChange = this.onFilterChange.bind(this);
   }
 
   onExpand() {
@@ -31,25 +35,58 @@ class Statistics extends PureComponent {
     this.setState(prevState => ({ listLen: prevState.listLen + expandIncrement }));
   }
 
+  onFilterChange(event) {
+    const filterVal = event.target.value;
+    this.setState({ filterVal });
+  }
+
+  getItemsList() {
+    const { hasFilter, isLoading, statistic } = this.props;
+    const { filterVal } = this.state;
+    if (isLoading) {
+      return Array.from({ length: 40 }, (i, ii) => ([ii]));
+    }
+    const list = Object.entries(statistic);
+
+    if (hasFilter) {
+      return list.filter(([label]) => (
+        label.toLowerCase().includes(filterVal.toLowerCase())
+      ));
+    }
+
+    return list;
+  }
+
   render() {
     const {
-      statistic,
       seeMoreButtonText,
+      filterPlaceholder,
+      hasFilter,
       headline,
       isLoading,
+      styleType,
       children = isLoading ? Statistics.Noop : Statistics.Item,
       ItemContentContainer = Statistics.ItemContentContainer,
     } = this.props;
     const {
       listLen,
+      filterVal,
     } = this.state;
-    const list = isLoading ? Array.from(
-      { length: 40 }, (i, ii) => ([ii]),
-    ) : Object.entries(statistic);
+    const list = this.getItemsList();
+
     const rest = list.length - listLen;
     return (
-      <div className="Statistics bp3-callout">
+      <div className={c('Statistics bp3-callout', styleType)}>
         <h5 className={c('bp3-heading', 'Statistics__headline', { 'bp3-skeleton': isLoading })}>{headline}</h5>
+        {hasFilter && (
+          <InputGroup
+            className="Statistics__filter"
+            leftIcon="search"
+            placeholder={filterPlaceholder}
+            onChange={this.onFilterChange}
+            value={filterVal}
+          />
+        )}
         <ul className="Statistics__list">
           {_.sortBy(list, [1]).splice(-listLen).reverse().map(item => children({
             className: c('Statistics__list-item', { 'bp3-skeleton': isLoading }),

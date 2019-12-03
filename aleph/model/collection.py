@@ -157,7 +157,9 @@ class Collection(db.Model, IdModel, SoftDeleteModel):
             'info_url': self.info_url,
             'data_url': self.data_url,
             'casefile': self.casefile,
-            'secret': self.secret
+            'secret': self.secret,
+            'countries': registry.country.normalize_set(self.countries),
+            'languages': registry.language.normalize_set(self.languages),
         })
         return data
 
