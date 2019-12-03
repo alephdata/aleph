@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { Facet, Language, Numeric, Schema } from 'src/components/common';
+import { Country, Facet, Numeric, Schema } from 'src/components/common';
 import Statistics from 'src/components/StatisticsGroup/Statistics';
 
 import './CollectionStatistics.scss';
@@ -20,8 +20,8 @@ class CollectionStatistics extends PureComponent {
 
     if (field === 'schema') {
       label = <Schema.Smart.Label schema={name} plural icon />;
-    } else if (field === 'languages') {
-      label = <Language.Name code={name} />;
+    } else if (field === 'countries') {
+      label = <Country.Name code={name} />;
     }
 
     return (
