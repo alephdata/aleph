@@ -47,7 +47,7 @@ class CollectionStatistics extends PureComponent {
               <Numeric num={total} abbr={3} />
             </h5>
             <h5 className="CollectionStatistics__heading__label">
-              <Facet.Label field={field} />
+              <Facet.Label field={field} count={total} />
             </h5>
           </div>
           <Statistics

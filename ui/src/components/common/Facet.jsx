@@ -6,7 +6,7 @@ import getFacetLabel from 'src/util/getFacetLabel';
 
 class FacetLabel extends PureComponent {
   render() {
-    const { field, intl } = this.props;
+    const { field, intl, count = 0 } = this.props;
     const labelObject = getFacetLabel(field);
     if (!field || !labelObject) { return null; }
 
@@ -15,7 +15,7 @@ class FacetLabel extends PureComponent {
     return (
       <>
         <Icon icon={icon} className="left-icon" />
-        {intl.formatMessage(label)}
+        {intl.formatMessage(label, { count })}
       </>
     );
   }

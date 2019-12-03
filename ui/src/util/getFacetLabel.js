@@ -5,47 +5,47 @@ import {
 const messages = defineMessages({
   facet_schema: {
     id: 'facet.schema',
-    defaultMessage: 'Types',
+    defaultMessage: '{count, plural, one {Type} other {Types}}',
   },
   facet_collection_id: {
     id: 'facet.collection_id',
-    defaultMessage: 'Datasets',
+    defaultMessage: '{count, plural, one {Dataset} other {Datasets}}',
   },
   facet_ibans: {
     id: 'facet.ibans',
-    defaultMessage: 'Iban numbers',
+    defaultMessage: '{count, plural, one {Iban number} other {Iban numbers}}',
   },
   facet_languages: {
     id: 'facet.languages',
-    defaultMessage: 'Languages',
+    defaultMessage: '{count, plural, one {Language} other {Languages}}',
   },
   facet_emails: {
     id: 'facet.emails',
-    defaultMessage: 'E-Mails',
+    defaultMessage: '{count, plural, one {E-Mail} other {E-Mails}}',
   },
   facet_phones: {
     id: 'facet.phones',
-    defaultMessage: 'Phones',
+    defaultMessage: '{count, plural, one {Phone number} other {Phone numbers}}',
   },
   facet_countries: {
     id: 'facet.countries',
-    defaultMessage: 'Countries',
+    defaultMessage: '{count, plural, one {Country} other {Countries}}',
   },
   facet_names: {
     id: 'facet.names',
-    defaultMessage: 'Names',
+    defaultMessage: '{count, plural, one {Name} other {Names}}',
   },
   facet_addresses: {
     id: 'facet.addresses',
-    defaultMessage: 'Addresses',
+    defaultMessage: '{count, plural, one {Address} other {Addresses}}',
   },
   facet_mime_type: {
     id: 'facet.mimetypes',
-    defaultMessage: 'File types',
+    defaultMessage: '{count, plural, one {File type} other {File types}}',
   },
   facet_category: {
     id: 'facet.category',
-    defaultMessage: 'Categories',
+    defaultMessage: '{count, plural, one {Category} other {Categories}}',
   },
 });
 
