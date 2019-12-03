@@ -22,7 +22,7 @@ const messages = defineMessages({
   },
   diagrams: {
     id: 'nav.diagrams',
-    defaultMessage: 'Diagrams',
+    defaultMessage: 'Network diagrams',
   },
   settings: {
     id: 'nav.settings',

@@ -29,7 +29,7 @@ const messages = defineMessages({
   },
   diagrams: {
     id: 'dashboard.diagrams',
-    defaultMessage: 'Diagrams',
+    defaultMessage: 'Network diagrams',
   },
   settings: {
     id: 'dashboard.settings',
@@ -107,7 +107,7 @@ class Dashboard extends React.Component {
             <MenuDivider />
             <li className="bp3-menu-header">
               <h6 className="bp3-heading">
-                <FormattedMessage id="dashboard.data" defaultMessage="Data" />
+                <FormattedMessage id="dashboard.workspace" defaultMessage="Workspace" />
               </h6>
             </li>
             <MenuItem

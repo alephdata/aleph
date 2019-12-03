@@ -15,11 +15,11 @@ import DiagramCreateButton from 'src/components/Toolbar/DiagramCreateButton';
 const messages = defineMessages({
   title: {
     id: 'diagrams.title',
-    defaultMessage: 'Diagrams',
+    defaultMessage: 'Network diagrams',
   },
   no_results_title: {
     id: 'diagrams.no_results_title',
-    defaultMessage: 'You do not have any diagrams yet',
+    defaultMessage: 'You do not have any network diagrams yet',
   },
 });
 
@@ -73,7 +73,7 @@ export class DiagramsIndexScreen extends Component {
             <p className="Dashboard__subheading">
               <FormattedMessage
                 id="diagram.description"
-                defaultMessage="Diagrams let you visualize complex relationships within a dataset."
+                defaultMessage="Network diagrams let you visualize complex relationships within a dataset."
               />
             </p>
           </div>
