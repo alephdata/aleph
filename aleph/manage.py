@@ -267,6 +267,8 @@ def publish(foreign_id):
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_system()
+    update_roles()
+    index_collections()
 
 
 @cli.command()
