@@ -14,6 +14,7 @@ export const fetchCollectionDiagram = asyncActionCreator((collectionId, diagramI
 
 export const createCollectionDiagram = asyncActionCreator((collectionId, diagram) => async () => {
   const response = await endpoint.post(`collections/${collectionId}/diagrams`, diagram);
+  const diagramId = response.data.id;
   return { diagramId, data: [response.data] };
 }, { name: 'CREATE_COLLECTION_DIAGRAM' });
 

@@ -6,29 +6,24 @@ import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection } from 'src/components/common';
-import {
-  createCollection,
-  updateCollectionPermissions,
-} from 'src/actions';
-import { showWarningToast } from 'src/app/toast';
-// import { Collection } from 'src/components/common';
-import getCollectionLink from 'src/util/getCollectionLink';
+import { createCollectionDiagram } from 'src/actions';
+import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 const messages = defineMessages({
   label_placeholder: {
-    id: 'diagram.label_placeholder',
+    id: 'diagram.create.label_placeholder',
     defaultMessage: 'Untitled diagram',
   },
   summary_placeholder: {
-    id: 'diagram.summary',
+    id: 'diagram.create.summary',
     defaultMessage: 'A brief description of the diagram',
   },
   save: {
-    id: 'diagram.save',
-    defaultMessage: 'Save',
+    id: 'diagram.create.submit',
+    defaultMessage: 'Create',
   },
   title: {
-    id: 'diagram.title',
+    id: 'diagram.create.title',
     defaultMessage: 'Create a diagram',
   },
 });
@@ -55,15 +50,16 @@ class CreateDiagramDialog extends Component {
     const { label, summary, collection, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
+    const diagram = {
+      label,
+      summary,
+      data: {},
+    };
     this.setState({ processing: true });
     try {
-      const response = await createCollection(collection);
-      // const collectionId = response.data.id;
-      // await updateCollectionPermissions(collectionId, permissions);
+      await this.props.createCollectionDiagram(collection.id, diagram);
       this.setState({ processing: false });
-      history.push({
-        pathname: getCollectionLink(response.data)
-      });
+      showSuccessToast("success");
     } catch (e) {
       this.setState({ processing: false });
       showWarningToast(e.message);
@@ -83,7 +79,8 @@ class CreateDiagramDialog extends Component {
   }
 
   checkValid() {
-    return true;
+    const { collection } = this.state;
+    return collection !== null;
   }
 
   getCollectionOptionsQuery() {
@@ -114,7 +111,7 @@ class CreateDiagramDialog extends Component {
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="label">
                 <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
-                <div className="bp3-input-group bp3-large bp3-fill">
+                <div className="bp3-input-group bp3-fill">
                   <input
                     id="label"
                     type="text"
@@ -179,4 +176,4 @@ const mapStateToProps = (state, ownProps) => ({});
 
 CreateDiagramDialog = injectIntl(CreateDiagramDialog);
 CreateDiagramDialog = withRouter(CreateDiagramDialog);
-export default connect(mapStateToProps, { createCollection, updateCollectionPermissions })(CreateDiagramDialog);
+export default connect(mapStateToProps, { createCollectionDiagram })(CreateDiagramDialog);

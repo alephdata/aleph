@@ -104,6 +104,12 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
             />
+            <MenuDivider />
+            <li className="bp3-menu-header">
+              <h6 className="bp3-heading">
+                <FormattedMessage id="dashboard.data" defaultMessage="Data" />
+              </h6>
+            </li>
             <MenuItem
               icon="briefcase"
               text={intl.formatMessage(messages.cases)}

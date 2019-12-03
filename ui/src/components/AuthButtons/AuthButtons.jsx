@@ -20,6 +20,10 @@ const messages = defineMessages({
     id: 'nav.casefiles',
     defaultMessage: 'Personal datasets',
   },
+  diagrams: {
+    id: 'nav.diagrams',
+    defaultMessage: 'Diagrams',
+  },
   settings: {
     id: 'nav.settings',
     defaultMessage: 'Settings',
@@ -86,10 +90,17 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.alerts)}
                   </div>
                 </Link>
+                <MenuDivider />
                 <Link to="/cases" className="bp3-menu-item">
                   <Icon icon="briefcase" />
                   <div className="bp3-text-overflow-ellipsis bp3-fill">
                     {intl.formatMessage(messages.casefiles)}
+                  </div>
+                </Link>
+                <Link to="/diagrams" className="bp3-menu-item">
+                  <Icon icon="graph" />
+                  <div className="bp3-text-overflow-ellipsis bp3-fill">
+                    {intl.formatMessage(messages.diagrams)}
                   </div>
                 </Link>
                 <MenuDivider />
