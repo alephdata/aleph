@@ -25,7 +25,7 @@ class DiagramAPITest(TestCase):
                 'summary': '...'
             }
 
-    def test_diagram_create(self):
+    def test_diagram_crud(self):
         url = '/api/2/collections/%s/diagrams' % self.col.id
         res = self.client.post(url, json=self.input_data, headers=self.headers)  # noqa
         assert res.status_code == 200, res
@@ -40,13 +40,54 @@ class DiagramAPITest(TestCase):
             list
         ), res.json['data']['layout']['entities'][2]['properties']['person']
         assert res.json['data']['layout']['entities'][2]['properties']['person'][0]['schema']  == 'Person'  # noqa
-
         diagram_id = res.json['id']
+
+        url = '/api/2/diagrams'
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
+        assert len(res.json['results']) == 1
+
         url = '/api/2/collections/%s/diagrams/%s' % (self.col.id, diagram_id)
-        res = self.client.get(url, headers=self.headers)  # noqa
+        res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'Diagram')
         assert res.json['label'] == 'Royal Family'
+
+        updated_diagram = self.get_fixture_path('royal-family-v2.vis')
+        with open(updated_diagram, 'r') as fp:
+            updated_data = {
+                'data': json.load(fp),
+                'label': 'Royal Family v2',
+            }
+        res = self.client.post(url, json=updated_data, headers=self.headers)
+        assert res.status_code == 200, res
+        validate(res.json, 'Diagram')
+        signed_id = res.json['data']['layout']['entities'][0]['id']
+        assert self.col.ns.verify(signed_id)
+        assert isinstance(
+            res.json['data']['layout']['entities'][3]['properties']['person'],
+            list
+        ), res.json['data']['layout']['entities']
+        assert res.json['data']['layout']['entities'][3]['properties']['person'][0]['schema']  == 'Person'  # noqa
+        assert res.json['label'] == 'Royal Family v2'
+        assert res.json['summary'] == '...'
+        res_str = json.dumps(res.json)
+        assert 'Philip' not in res_str
+        assert 'Charles' in res_str
+
+        res = self.client.delete(url, headers=self.headers)
+        assert res.status_code == 204, res
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 404, res
+
+    def test_create_empty(self):
+        data = {
+            'label': 'hello',
+        }
+        url = '/api/2/collections/%s/diagrams' % self.col.id
+        res = self.client.post(url, json=data, headers=self.headers)  # noqa
+        assert res.status_code == 200, res
 
     def test_unauthorized_create(self):
         url = '/api/2/collections/%s/diagrams' % self.col.id

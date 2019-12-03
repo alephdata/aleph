@@ -61,13 +61,17 @@ class Diagram(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
+    def by_role_id(cls, role_id):
+        return cls.all().filter(cls.role_id == role_id)
+
+    @classmethod
     def create(cls, data,  collection, role_id):
         diagram = cls()
         diagram.role_id = role_id
         diagram.label = data.get('label')
         diagram.summary = data.get('summary')
-        diagram.entities = data.get('entities')
-        diagram.layout = data.get('layout')
+        diagram.entities = data.get('entities') or []
+        diagram.layout = data.get('layout') or {}
         diagram.collection_id = collection.id
         diagram.update()
         return diagram

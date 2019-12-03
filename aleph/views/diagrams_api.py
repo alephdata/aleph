@@ -5,12 +5,42 @@ from aleph.model import Diagram
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import DiagramSerializer
 from aleph.views.util import get_db_collection, parse_request
-from aleph.views.util import obj_or_404
+from aleph.views.util import obj_or_404, require
 from aleph.logic.diagram import create_diagram, update_diagram, delete_diagram
 
 
 blueprint = Blueprint('diagrams_api', __name__)
 log = logging.getLogger(__name__)
+
+
+@blueprint.route('/api/2/diagrams', methods=['GET'])
+def user_diagrams():
+    """Returns a list of diagrams for the role
+    ---
+    get:
+      summary: List diagrams
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - $ref: '#/components/schemas/QueryResponse'
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Diagram'
+          description: OK
+      tags:
+        - Collection
+        - Diagram
+    """
+    require(request.authz.logged_in)
+    q = Diagram.by_role_id(request.authz.id)
+    result = DatabaseQueryResult(request, q)
+    return DiagramSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/diagrams', methods=['GET'])  # noqa
@@ -44,6 +74,7 @@ def index(collection_id):
           description: OK
       tags:
         - Collection
+        - Diagram
     """
     collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
@@ -81,6 +112,7 @@ def create(collection_id):
           description: OK
       tags:
       - Collection
+      - Diagram
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request('DiagramCreate')
@@ -120,6 +152,7 @@ def view(collection_id, diagram_id):
           description: OK
       tags:
       - Collection
+      - Diagram
     """
     get_db_collection(collection_id, request.authz.WRITE)
     diagram = obj_or_404(Diagram.by_id(diagram_id))
@@ -163,10 +196,11 @@ def update(collection_id, diagram_id):
           description: OK
       tags:
       - Collection
+      - Diagram
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     diagram = obj_or_404(Diagram.by_id(diagram_id))
-    data = parse_request('DiagramCreate')
+    data = parse_request('DiagramUpdate')
     diagram = update_diagram(diagram, data, collection)
     return DiagramSerializer.jsonify(diagram)
 
@@ -199,6 +233,7 @@ def delete(collection_id, diagram_id):
           description: No Content
       tags:
       - Collection
+      - Diagram
     """
     get_db_collection(collection_id, request.authz.WRITE)
     diagram = obj_or_404(Diagram.by_id(diagram_id))
