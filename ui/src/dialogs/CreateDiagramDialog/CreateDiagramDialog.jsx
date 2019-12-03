@@ -24,7 +24,7 @@ const messages = defineMessages({
   },
   title: {
     id: 'diagram.create.title',
-    defaultMessage: 'Create a diagram',
+    defaultMessage: 'Create a network diagram',
   },
 });
 

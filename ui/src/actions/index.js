@@ -30,6 +30,7 @@ export {
   deleteCollectionDiagram,
   fetchCollectionDiagram,
   fetchCollectionDiagrams,
+  fetchRoleDiagrams,
   updateCollectionDiagram,
 } from './diagramActions';
 export {

@@ -138,6 +138,7 @@ export class CasesIndexScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state);
   const { location } = ownProps;
   const context = {
     facet: ['countries', 'team.name'],

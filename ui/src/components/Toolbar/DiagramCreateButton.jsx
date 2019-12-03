@@ -9,7 +9,7 @@ import { selectSession } from 'src/selectors';
 const messages = defineMessages({
   login: {
     id: 'diagram.create.login',
-    defaultMessage: 'You must sign in to create a diagram.',
+    defaultMessage: 'You must sign in to create a network diagram.',
   },
 });
 

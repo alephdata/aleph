@@ -1,6 +1,10 @@
 import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 
+export const fetchRoleDiagrams = asyncActionCreator(() => async () => {
+  const response = await endpoint.get('/diagrams');
+  return { data: response.data.results };
+}, { name: 'FETCH_ROLE_DIAGRAMS' });
 
 export const fetchCollectionDiagrams = asyncActionCreator((collectionId) => async () => {
   const response = await endpoint.get(`collections/${collectionId}/diagrams`);

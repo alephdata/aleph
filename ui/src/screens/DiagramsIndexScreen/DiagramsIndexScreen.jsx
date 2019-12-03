@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 // import queryString from 'query-string';
 import { compose } from 'redux';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
+import { fetchRoleDiagrams } from 'src/actions';
+// import { selectCollectionDiagrams, selectRoleDiagrams } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import {
@@ -28,23 +30,25 @@ export class DiagramsIndexScreen extends Component {
   //   super(props);
   // }
 
-  // componentDidMount() {
-  //   this.fetchIfNeeded();
-  // }
-  //
-  // componentDidUpdate() {
-  //   this.fetchIfNeeded();
-  // }
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
 
-  // fetchIfNeeded() {
-  //   const { query, result } = this.props;
-  //   if (result.shouldLoad) {
-  //     this.props.queryCollections({ query });
-  //   }
-  // }
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { diagrams } = this.props;
+    if (!diagrams || diagrams.shouldLoad) {
+      this.props.fetchRoleDiagrams();
+    }
+  }
 
   render() {
-    const { intl } = this.props;
+    const { diagrams, intl } = this.props;
+
+    console.log(diagrams);
 
     const breadcrumbs = (
       <Breadcrumbs>
@@ -83,24 +87,15 @@ export class DiagramsIndexScreen extends Component {
   }
 }
 
-// const mapStateToProps = (state, ownProps) => {
-//   const { location } = ownProps;
-//   const context = {
-//     facet: ['countries', 'team.name'],
-//     'filter:kind': 'casefile',
-//   };
-//   const query = Query.fromLocation('collections', location, context, 'collections')
-//     .sortBy('updated_at', 'desc')
-//     .limit(30);
-//
-//   return {
-//     query,
-//     result: selectCollectionsResult(state, query),
-//   };
-// };
+const mapStateToProps = () => {
+  console.log('hello');
+  return {
+    // diagrams: selectRoleDiagrams(state),
+  };
+};
 
 
 export default compose(
-  // connect(mapStateToProps, { queryCollections }),
+  connect(mapStateToProps, { fetchRoleDiagrams }),
   injectIntl,
 )(DiagramsIndexScreen);

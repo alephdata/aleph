@@ -80,6 +80,10 @@ export function selectSystemStatus(state) {
   return selectObject(state, 'systemStatus');
 }
 
+export function selectRoleDiagrams(state, collectionId) {
+  return selectObject(state.collectionMappings, collectionId);
+}
+
 export function selectCollection(state, collectionId) {
   return selectObject(state.collections, collectionId);
 }
@@ -213,6 +217,10 @@ export function selectCollectionPermissions(state, collectionId) {
 }
 
 export function selectCollectionMappings(state, collectionId) {
+  return selectObject(state.collectionMappings, collectionId);
+}
+
+export function selectCollectionDiagrams(state, collectionId) {
   return selectObject(state.collectionMappings, collectionId);
 }
 
