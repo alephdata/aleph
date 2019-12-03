@@ -42,8 +42,8 @@ def get_collection(collection_id):
         return
 
     data = collection.to_dict()
-    statistics = get_collection_statistics(collection.id)
-    schemata = statistics.get('schema', {}).get('values', {})
+    schemata = get_facet_values(collection.id, 'schema')
+    schemata = schemata.get('values', {})
     data['count'] = sum(schemata.values())
     data['schemata'] = schemata
 
@@ -51,42 +51,44 @@ def get_collection(collection_id):
     return data
 
 
-def get_collection_statistics(collection_id):
+def get_collection_stats(collection_id, refresh=False):
     """Compute some statistics on the content of a collection."""
-    if collection_id is None:
-        return
-    key = cache.object_key(Collection, collection_id, 'stats')
+    log.info("Generating collection statistics: %s", collection_id)
+    facets = ['schema', 'names', 'addresses', 'phones',
+              'emails', 'countries', 'languages', 'ibans']
+    data = {}
+    for facet in facets:
+        data[facet] = get_facet_values(collection_id, facet,
+                                       refresh=refresh)
+    return data
+
+
+def get_facet_values(collection_id, facet, refresh=False):
+    """Compute some statistics on the content of a collection."""
+    key = cache.object_key(Collection, collection_id, facet)
     data = cache.get_complex(key)
-    if data is not None:
+    if not refresh and data is not None:
         return data
 
-    facets = ['schema', 'names', 'addresses', 'phones', 'emails',
-              'countries', 'languages', 'ibans']
-
-    log.info("Generating statistics: %s", collection_id)
-    aggs = {}
-    for facet in facets:
-        aggs[facet] = {'terms': {'field': facet, 'size': 300}}
-        aggs['%s.card' % facet] = {'cardinality': {'field': facet}}
     query = {'term': {'collection_id': collection_id}}
     query = {
         'size': 0,
         'query': {'bool': {'filter': [query]}},
-        'aggs': aggs
+        'aggs': {
+            'values': {'terms': {'field': facet, 'size': 300}},
+            'total': {'cardinality': {'field': facet}}
+        }
     }
     index = entities_read_index(schema=Entity.THING)
     result = es.search(index=index, body=query)
-    aggregations = result.get('aggregations', {})
-    data = {}
-    for facet in facets:
-        values = {}
-        for bucket in aggregations.get(facet, {}).get('buckets', []):
-            values[bucket['key']] = bucket['doc_count']
-        totals = aggregations.get('%s.card' % facet, {})
-        data[facet] = {
-            'values': values,
-            'total': totals.get('value', 0)
-        }
+    aggregations = result.get('aggregations')
+    values = {}
+    for bucket in aggregations.get('values').get('buckets', []):
+        values[bucket['key']] = bucket['doc_count']
+    data = {
+        'values': values,
+        'total': aggregations.get('total').get('value', 0)
+    }
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 

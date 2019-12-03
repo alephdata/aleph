@@ -7,7 +7,7 @@ from aleph.model import Collection
 from aleph.search import CollectionsQuery
 from aleph.queues import queue_task, get_status, cancel_queue
 from aleph.queues import OP_PROCESS
-from aleph.index.collections import get_collection_statistics
+from aleph.index.collections import get_collection_stats
 from aleph.logic.collections import create_collection, refresh_collection
 from aleph.logic.collections import delete_collection, update_collection
 from aleph.logic.processing import bulk_write
@@ -226,7 +226,7 @@ def statistics(collection_id):
       - Collection
     """
     collection = get_db_collection(collection_id, request.authz.READ)
-    return jsonify(get_collection_statistics(collection.id))
+    return jsonify(get_collection_stats(collection.id))
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/process', methods=['POST', 'PUT'])  # noqa

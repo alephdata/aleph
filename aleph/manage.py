@@ -30,9 +30,8 @@ from aleph.logic.processing import index_aggregate, process_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import update_role, update_roles
-from aleph.logic.rdf import export_collection
 from aleph.logic.permissions import update_permission
-
+from aleph.logic.rdf import export_collection
 
 log = logging.getLogger('aleph')
 
@@ -141,10 +140,10 @@ def flushdeleted():
 
 
 @cli.command()
-def update(index=False, process=False, reset=False):
+def update():
     """Re-index all the collections and clear some caches."""
     update_roles()
-    index_collections(refresh=True)
+    index_collections()
 
 
 @cli.command('namefreq')
