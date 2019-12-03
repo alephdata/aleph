@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
-// import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import {
   ControlGroup, InputGroup,
 } from '@blueprintjs/core';
@@ -60,7 +60,7 @@ export class HomeScreen extends Component {
   render() {
     const { intl, metadata, statistics = {}, session } = this.props;
     if (session.loggedIn) {
-      // return <Redirect to="/notifications" />;
+      return <Redirect to="/notifications" />;
     }
 
     const appDescription = metadata.app.description;
