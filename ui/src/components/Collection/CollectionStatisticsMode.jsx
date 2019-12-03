@@ -18,27 +18,29 @@ class CollectionStatisticsMode extends React.PureComponent {
     this.props.fetchCollectionStatistics(collection);
   }
 
-  renderStatisticsItem(statKey) {
-    const { collection, statistics } = this.props;
-    const stats = statistics[statKey];
+  renderStatisticsItem({ key, values, total }) {
+    const { collection } = this.props;
 
-    if (stats && stats.total) {
-      return (
-        <CollectionStatistics
-          collection={collection}
-          key={statKey}
-          field={statKey}
-          statistics={stats}
-        />
-      );
-    }
-    return null;
+    return (
+      <CollectionStatistics
+        collection={collection}
+        key={key}
+        field={key}
+        values={values}
+        total={total}
+      />
+    );
   }
 
   render() {
+    const { statistics } = this.props;
+
+    const toRender = statFields.map(key => ({ key, ...statistics[key] }))
+      .filter(stat => stat && stat.total);
+
     return (
       <div className="CollectionStatisticsMode">
-        {statFields.map(stat => this.renderStatisticsItem(stat))}
+        {toRender.map((stat) => this.renderStatisticsItem(stat))}
       </div>
     );
   }

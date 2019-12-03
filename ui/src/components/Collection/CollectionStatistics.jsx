@@ -37,9 +37,7 @@ class CollectionStatistics extends PureComponent {
   }
 
   render() {
-    const { field, statistics } = this.props;
-
-    const { total, values } = statistics;
+    const { field, total, values } = this.props;
 
     return (
       <div className="CollectionStatistics">
