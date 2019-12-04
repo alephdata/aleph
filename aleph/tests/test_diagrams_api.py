@@ -20,13 +20,14 @@ class DiagramAPITest(TestCase):
         self.fixture = self.get_fixture_path('royal-family.vis')
         with open(self.fixture, 'r') as fp:
             self.input_data = {
+                'collection_id': self.col.id,
                 'data': json.load(fp),
                 'label': 'Royal Family',
                 'summary': '...'
             }
 
     def test_diagram_crud(self):
-        url = '/api/2/collections/%s/diagrams' % self.col.id
+        url = '/api/2/diagrams'
         res = self.client.post(url, json=self.input_data, headers=self.headers)  # noqa
         assert res.status_code == 200, res
         # pprint(res.json)
@@ -48,7 +49,7 @@ class DiagramAPITest(TestCase):
         validate(res.json, 'QueryResponse')
         assert len(res.json['results']) == 1
 
-        url = '/api/2/collections/%s/diagrams/%s' % (self.col.id, diagram_id)
+        url = '/api/2/diagrams/%s' % diagram_id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
         validate(res.json, 'Diagram')
@@ -84,12 +85,21 @@ class DiagramAPITest(TestCase):
     def test_create_empty(self):
         data = {
             'label': 'hello',
+            'collection_id': self.col.id,
         }
-        url = '/api/2/collections/%s/diagrams' % self.col.id
-        res = self.client.post(url, json=data, headers=self.headers)  # noqa
+        url = '/api/2/diagrams'
+        res = self.client.post(url, json=data, headers=self.headers)
         assert res.status_code == 200, res
 
+    def test_create_without_collection_id(self):
+        data = {
+            'label': 'hello',
+        }
+        url = '/api/2/diagrams'
+        res = self.client.post(url, json=data, headers=self.headers)
+        assert res.status_code == 400, res
+
     def test_unauthorized_create(self):
-        url = '/api/2/collections/%s/diagrams' % self.col.id
+        url = '/api/2/diagrams'
         res = self.client.post(url, json=self.input_data, headers=self.headers_x)  # noqa
         assert res.status_code == 403, res

@@ -34,7 +34,6 @@ def user_diagrams():
                       $ref: '#/components/schemas/Diagram'
           description: OK
       tags:
-        - Collection
         - Diagram
     """
     require(request.authz.logged_in)
@@ -83,21 +82,12 @@ def index(collection_id):
     return DiagramSerializer.jsonify_result(result)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/diagrams', methods=['POST', 'PUT'])  # noqa
-def create(collection_id):
+@blueprint.route('/api/2/diagrams', methods=['POST', 'PUT'])
+def create():
     """Create a diagram.
     ---
     post:
       summary: Create a diagram
-      parameters:
-      - description: The collection id.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-        example: 2
       requestBody:
         content:
           application/json:
@@ -111,30 +101,22 @@ def create(collection_id):
                 $ref: '#/components/schemas/Diagram'
           description: OK
       tags:
-      - Collection
       - Diagram
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request('DiagramCreate')
+    collection_id = data.pop('collection_id')
+    collection = get_db_collection(collection_id, request.authz.WRITE)
     diagram = create_diagram(data, collection, request.authz.id)
     return DiagramSerializer.jsonify(diagram)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/diagrams/<int:diagram_id>', methods=['GET'])  # noqa
-def view(collection_id, diagram_id):
+@blueprint.route('/api/2/diagrams/<int:diagram_id>', methods=['GET'])
+def view(diagram_id):
     """Return the diagram with id `diagram_id`.
     ---
     get:
       summary: Fetch a diagram
       parameters:
-      - description: The collection id.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-        example: 2
       - description: The diagram id.
         in: path
         name: diagram_id
@@ -151,29 +133,20 @@ def view(collection_id, diagram_id):
                 $ref: '#/components/schemas/Diagram'
           description: OK
       tags:
-      - Collection
       - Diagram
     """
-    get_db_collection(collection_id, request.authz.WRITE)
     diagram = obj_or_404(Diagram.by_id(diagram_id))
+    get_db_collection(diagram.collection_id, request.authz.READ)
     return DiagramSerializer.jsonify(diagram)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/diagrams/<int:diagram_id>', methods=['POST', 'PUT'])  # noqa
-def update(collection_id, diagram_id):
+@blueprint.route('/api/2/diagrams/<int:diagram_id>', methods=['POST', 'PUT'])
+def update(diagram_id):
     """Update the diagram with id `diagram_id`.
     ---
     post:
       summary: Update a diagram
       parameters:
-      - description: The collection id.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-        example: 2
       - description: The diagram id.
         in: path
         name: diagram_id
@@ -195,31 +168,22 @@ def update(collection_id, diagram_id):
                 $ref: '#/components/schemas/Diagram'
           description: OK
       tags:
-      - Collection
       - Diagram
     """
-    collection = get_db_collection(collection_id, request.authz.WRITE)
     diagram = obj_or_404(Diagram.by_id(diagram_id))
+    collection = get_db_collection(diagram.collection_id, request.authz.WRITE)
     data = parse_request('DiagramUpdate')
     diagram = update_diagram(diagram, data, collection)
     return DiagramSerializer.jsonify(diagram)
 
 
-@blueprint.route('/api/2/collections/<int:collection_id>/diagrams/<int:diagram_id>', methods=['DELETE'])  # noqa
-def delete(collection_id, diagram_id):
+@blueprint.route('/api/2/diagrams/<int:diagram_id>', methods=['DELETE'])
+def delete(diagram_id):
     """Delete a diagram.
     ---
     delete:
       summary: Delete a diagram
       parameters:
-      - description: The collection id.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-        example: 2
       - description: The diagram id.
         in: path
         name: diagram_id
@@ -232,10 +196,9 @@ def delete(collection_id, diagram_id):
         '204':
           description: No Content
       tags:
-      - Collection
       - Diagram
     """
-    get_db_collection(collection_id, request.authz.WRITE)
     diagram = obj_or_404(Diagram.by_id(diagram_id))
+    get_db_collection(diagram.collection_id, request.authz.WRITE)
     delete_diagram(diagram)
     return ('', 204)
