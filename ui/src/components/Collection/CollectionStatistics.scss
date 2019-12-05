@@ -1,13 +1,11 @@
 @import "src/app/variables.scss";
 
 .CollectionStatistics {
-  padding: $aleph-content-padding/2;
+  margin: $aleph-content-padding/2;
   flex: auto;
-  width: 33%;
   max-width: 33%;
 
   @media screen and (max-width: $aleph-screen-lg-max-width) {
-    width: 50%;
     max-width: 50%;
   }
 
@@ -34,7 +32,7 @@
     }
 
     &__total {
-      font-size: 52px;
+      font-size: 40px;
       margin-bottom: 0;
     }
 
