@@ -2,9 +2,10 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { defineMessages, injectIntl } from 'react-intl';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
-import { SectionLoading } from 'src/components/common';
+import { ErrorSection, SectionLoading } from 'src/components/common';
 import CollectionStatistics from './CollectionStatistics';
 
 import './CollectionStatisticsMode.scss';
@@ -12,6 +13,13 @@ import './CollectionStatisticsMode.scss';
 const statFields = [
   'schema', 'countries', 'names', 'emails', 'addresses', 'ibans', 'phones',
 ];
+
+const messages = defineMessages({
+  empty: {
+    id: 'collection.statistics.empty',
+    defaultMessage: 'No statistics available for this dataset',
+  },
+});
 
 class CollectionStatisticsMode extends React.PureComponent {
   componentDidMount() {
@@ -34,13 +42,22 @@ class CollectionStatisticsMode extends React.PureComponent {
   }
 
   render() {
-    const { statistics } = this.props;
+    const { intl, statistics } = this.props;
     if (statistics.shouldLoad || statistics.isLoading) {
       return <SectionLoading />;
     }
 
     const toRender = statFields.map(key => ({ key, ...statistics[key] }))
       .filter(stat => stat && stat.total);
+
+    if (toRender.length === 0) {
+      return (
+        <ErrorSection
+          icon="grouped-bar-chart"
+          title={intl.formatMessage(messages.empty)}
+        />
+      );
+    }
 
     return (
       <div className="CollectionStatisticsMode">
@@ -62,4 +79,5 @@ const mapDispatchToProps = { fetchCollectionStatistics };
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(CollectionStatisticsMode);
