@@ -1,7 +1,8 @@
 @import "src/app/variables.scss";
 
 $dual-pane-padding: $aleph-content-padding;
-$dual-pane-padding-mobile: $aleph-grid-size*2;
+$dual-pane-mobile-padding: $aleph-mobile-content-padding;
+
 
 .DualPane {
   flex-grow: 1;
@@ -12,7 +13,7 @@ $dual-pane-padding-mobile: $aleph-grid-size*2;
   padding: $dual-pane-padding;
   @media screen and (max-width: $aleph-screen-sm-max-width) {
     flex-flow: column;
-    padding: $dual-pane-padding-mobile;
+    padding: $dual-pane-mobile-padding;
   }
 }
 

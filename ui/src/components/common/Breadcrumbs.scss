@@ -8,10 +8,13 @@
   justify-content: space-between;
   background-color: $aleph-breadcrumbs-background;
 
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    padding-left: $aleph-mobile-content-padding;
+    padding-right: $aleph-mobile-content-padding;
+  }
+
   &__main, &__right {
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      margin: 3px auto;
-    }
+    margin: 2px 0;
   }
 
   .bp3-breadcrumbs {
