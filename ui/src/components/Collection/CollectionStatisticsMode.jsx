@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
+import { SectionLoading } from 'src/components/common';
 import CollectionStatistics from './CollectionStatistics';
 
 import './CollectionStatisticsMode.scss';
@@ -34,6 +35,9 @@ class CollectionStatisticsMode extends React.PureComponent {
 
   render() {
     const { statistics } = this.props;
+    if (statistics.shouldLoad || statistics.isLoading) {
+      return <SectionLoading />;
+    }
 
     const toRender = statFields.map(key => ({ key, ...statistics[key] }))
       .filter(stat => stat && stat.total);

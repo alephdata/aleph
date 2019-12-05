@@ -25,7 +25,6 @@ class CollectionStatistics extends PureComponent {
       label = <Country.Name code={name} />;
     }
 
-
     return (
       <Link to={`/search?filter:collection_id=${collection.id}&filter:${field}=${linkFilterVal}`}>
         <div className="inner-container">
