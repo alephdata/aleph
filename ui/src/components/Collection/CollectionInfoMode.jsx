@@ -5,8 +5,6 @@ import {
 } from 'src/components/common';
 import ClipboardInput from 'src/components/common/ClipboardInput';
 
-import './CollectionInfoMode.scss';
-
 class CollectionInfoMode extends PureComponent {
   render() {
     const { collection } = this.props;

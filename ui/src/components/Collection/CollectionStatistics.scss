@@ -3,20 +3,15 @@
 .CollectionStatistics {
   padding: $aleph-content-padding/2;
   flex: auto;
-  width: 25%;
-  max-width: 25%;
+  width: 33%;
+  max-width: 33%;
 
   @media screen and (max-width: $aleph-screen-lg-max-width) {
-    width: 33%;
-    max-width: 33%;
-  }
-
-  @media screen and (max-width: $aleph-screen-md-max-width) {
     width: 50%;
     max-width: 50%;
   }
 
-  @media screen and (max-width: $aleph-screen-sm-max-width) {
+  @media screen and (max-width: $aleph-screen-md-max-width) {
     width: 100%;
     max-width: 100%;
   }

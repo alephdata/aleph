@@ -4,7 +4,6 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Card } from '@blueprintjs/core';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
@@ -14,7 +13,7 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
+import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionStatus } from 'src/selectors';
 
 import 'src/components/common/ItemOverview.scss';
@@ -90,23 +89,23 @@ export class CollectionScreen extends Component {
           searchScopes={[searchScope]}
         >
           {breadcrumbs}
-          <SinglePane itemScope itemType="https://schema.org/Dataset">
-            <Card className="ItemOverview horizontal">
+          <DualPane>
+            <DualPane.SidePane className="ItemOverview">
               <div className="ItemOverview__heading">
-                <div className="ItemOverview__heading__centered-container">
-                  <CollectionHeading collection={collection} />
-                </div>
+                <CollectionHeading collection={collection} />
               </div>
               <div className="ItemOverview__content">
                 <CollectionInfoMode collection={collection} />
               </div>
-            </Card>
-            <CollectionViews
-              collection={collection}
-              activeMode={activeMode}
-              isPreview={false}
-            />
-          </SinglePane>
+            </DualPane.SidePane>
+            <DualPane.ContentPane>
+              <CollectionViews
+                collection={collection}
+                activeMode={activeMode}
+                isPreview={false}
+              />
+            </DualPane.ContentPane>
+          </DualPane>
         </Screen>
       </CollectionContextLoader>
     );
