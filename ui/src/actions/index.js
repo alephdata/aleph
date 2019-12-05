@@ -10,6 +10,7 @@ export {
   deleteCollection,
   deleteCollectionMapping,
   fetchCollection,
+  fetchCollectionStatistics,
   fetchCollectionStatus,
   fetchCollectionPermissions,
   fetchCollectionMappings,

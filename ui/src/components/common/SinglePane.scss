@@ -1,11 +1,5 @@
 @import "src/app/variables.scss";
 
-
 .SinglePane {
-  // flex-grow: 1;
-  // display: flex;
-  // flex-flow: row nowrap;
-  // align-content: stretch;
-  // align-items: stretch;
-  padding: $aleph-grid-size * 2;
+  padding: $aleph-content-padding;
 }

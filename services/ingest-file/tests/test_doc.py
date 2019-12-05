@@ -72,11 +72,3 @@ class DocumentIngestorTest(TestCase):
         self.assertEqual(
             entity.first('processingStatus'), self.manager.STATUS_SUCCESS
         )
-
-    def test_ingest_virus_macros_doc(self):
-        fixture_path, entity = self.fixture('INV-IN174074-2016-386.doc')
-        self.manager.ingest(fixture_path, entity)
-        self.assertEqual(
-            entity.first('processingStatus'), self.manager.STATUS_SUCCESS
-        )
-        self.assertEqual(len(self.get_emitted()), 2)

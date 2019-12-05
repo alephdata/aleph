@@ -78,7 +78,7 @@ class SearchFacet extends Component {
 
   render() {
     const {
-      query, facetSize, isOpen, result, field, label, icon, intl, isCollapsible,
+      query, facetSize, isOpen, result, field, label, intl, isCollapsible,
     } = this.props;
     const { facet, isExpanding } = this.state;
     const current = query.getFilter(field);
@@ -103,7 +103,6 @@ class SearchFacet extends Component {
             <Icon icon="caret-right" className={c('caret', { rotate: isOpen })} />
           )}
           <span className="FacetName">
-            <span className={`FacetIcon bp3-icon bp3-icon-${icon}`} />
             {label}
           </span>
 
@@ -161,7 +160,15 @@ class SearchFacet extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { query, field, defaultSize } = ownProps;
+  const { query, field } = ownProps;
+  let defaultSize;
+  if (field === 'category') {
+    defaultSize = 20;
+  } else if (field === 'countries') {
+    defaultSize = 300;
+  } else if (field === 'schema') {
+    defaultSize = 30;
+  }
   const facetSize = query.getInt(`facet_size:${field}`, defaultSize);
   const isOpen = query.hasFacet(field) && facetSize > 0;
   return {

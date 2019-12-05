@@ -9,6 +9,7 @@ import queryString from 'query-string';
 import {
   Count, TextLoading, Schema,
 } from 'src/components/common';
+import CollectionStatisticsMode from 'src/components/Collection/CollectionStatisticsMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
@@ -76,10 +77,18 @@ class CollectionViews extends React.Component {
         renderActiveTabPanelOnly
         className="info-tabs-padding"
       >
+        <Tab
+          id="Overview"
+          title={
+            <>
+              <Icon icon="grouped-bar-chart" className="left-icon" />
+              <FormattedMessage id="entity.info.overview" defaultMessage="Overview" />
+            </>}
+          panel={<CollectionStatisticsMode collection={collection} />}
+        />
         {hasBrowse && (
           <Tab
             id="Document"
-            disabled={numOfDocs === 0}
             title={
               <>
                 <Icon icon="folder" className="left-icon" />

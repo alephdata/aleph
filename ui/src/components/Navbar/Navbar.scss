@@ -7,6 +7,10 @@
     justify-content: space-between;
     background-color: $dark-gray1 !important;
 
+    @media screen and (max-width: $aleph-screen-sm-max-width) {
+      padding: 0 $aleph-mobile-content-padding;
+    }
+
     .back-button {
       display: none;
     }

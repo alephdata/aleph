@@ -8,6 +8,7 @@ import Numeric from './Numeric';
 import Date from './Date';
 import DualPane from './DualPane';
 import Entity from './Entity';
+import Facet from './Facet';
 import FileSize from './FileSize';
 import Language from './Language';
 import Role from './Role';
@@ -37,6 +38,7 @@ export {
   Date,
   DualPane,
   Entity,
+  Facet,
   FileSize,
   Language,
   Role,
