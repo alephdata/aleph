@@ -16,6 +16,7 @@ class CollectionStatistics extends PureComponent {
 
   renderItem({ name, count }) {
     const { collection, field } = this.props;
+    const linkFilterVal = encodeURIComponent(name);
     let label = name;
 
     if (field === 'schema') {
@@ -24,8 +25,9 @@ class CollectionStatistics extends PureComponent {
       label = <Country.Name code={name} />;
     }
 
+
     return (
-      <Link to={`/search?filter:collection_id=${collection.id}&filter:${field}=${name}`}>
+      <Link to={`/search?filter:collection_id=${collection.id}&filter:${field}=${linkFilterVal}`}>
         <div className="inner-container">
           <span className="label">{label}</span>
           <span className="value">
