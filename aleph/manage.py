@@ -116,7 +116,7 @@ def reset(foreign_id, sync=False):
 @cli.command()
 @click.argument('foreign_id')
 def reindex(foreign_id):
-    """Clear the search index and entity cache or a collection."""
+    """Index all the aggregator contents for a collection."""
     collection = get_collection(foreign_id)
     stage = get_stage(collection, OP_PROCESS)
     index_aggregate(stage, collection)
@@ -141,13 +141,14 @@ def flushdeleted():
 
 @cli.command()
 def update():
-    """Re-index all the collections and clear some caches."""
+    """Re-index all collections and clear some caches."""
     update_roles()
     index_collections()
 
 
 @cli.command('namefreq')
 def namefreq():
+    """Compute frequency distribution of name tokens."""
     compute_name_frequencies()
     # from aleph.logic.names import name_frequency
     # name_frequency("John Smith")
