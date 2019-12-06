@@ -20,8 +20,8 @@ from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, get_stage
 from aleph.queues import OP_PROCESS, OP_XREF
-from aleph.index.entities import iter_entities
 from aleph.index.admin import delete_index
+from aleph.index.entities import iter_proxies
 from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
@@ -196,8 +196,9 @@ def load_entities(foreign_id, infile, unsafe=False):
 def dump_entities(foreign_id, outfile):
     """Export FtM entities for the given collection."""
     collection = get_collection(foreign_id)
-    for entity in iter_entities(collection_id=collection.id,
-                                includes=['schema', 'properties.*']):
+    for entity in iter_proxies(collection_id=collection.id,
+                               excludes=['text']):
+        entity.context = {}
         write_object(outfile, entity)
 
 
