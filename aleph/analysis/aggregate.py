@@ -1,10 +1,10 @@
 import logging
-from Levenshtein import setmedian
+from collections import defaultdict
+from followthemoney.types import registry
 
 from aleph.analysis.util import tag_key
-from aleph.analysis.util import TAG_COUNTRY, TAG_LANGUAGE, TAG_PHONE
+from aleph.analysis.util import TAG_COUNTRY, TAG_PHONE
 from aleph.analysis.util import TAG_PERSON, TAG_COMPANY
-
 
 log = logging.getLogger(__name__)
 
@@ -12,48 +12,43 @@ log = logging.getLogger(__name__)
 class TagAggregator(object):
     MAX_TAGS = 10000
     CUTOFFS = {
-        TAG_COUNTRY: .2,
-        TAG_LANGUAGE: .3,
+        TAG_COUNTRY: .3,
         TAG_PERSON: .003,
         TAG_COMPANY: .003,
         TAG_PHONE: .05,
     }
 
     def __init__(self):
-        self.tags = {}
-        self.types = {}
+        self.values = defaultdict(list)
+        self.types = defaultdict(int)
 
-    def add(self, type_, tag):
-        key = tag_key(tag)
+    def add(self, prop, value):
+        key = tag_key(value)
         if key is None:
             return
 
-        if (key, type_) not in self.tags:
-            self.tags[(key, type_)] = []
-        self.tags[(key, type_)].append(tag)
-
-        if type_ not in self.types:
-            if len(self.types) > self.MAX_TAGS:
+        if (key, prop) not in self.values:
+            if len(self.values) > self.MAX_TAGS:
                 return
-            self.types[type_] = 0
-        self.types[type_] += 1
+        self.values[(key, prop)].append(value)
+        self.types[prop] += 1
 
-    def type_cutoff(self, type_):
-        freq = self.CUTOFFS.get(type_, 0)
-        return self.types.get(type_, 0) * freq
+    def prop_cutoff(self, prop):
+        freq = self.CUTOFFS.get(prop, 0)
+        return self.types.get(prop, 0) * freq
 
     @property
     def entities(self):
-        for (key, type_), tags in self.tags.items():
+        for (_, prop), tags in self.values.items():
             # skip entities that do not meet a threshold of relevance:
-            cutoff = self.type_cutoff(type_)
+            cutoff = self.prop_cutoff(prop)
             if len(tags) < cutoff:
                 continue
 
             label = tags[0]
-            if type_ in (TAG_COMPANY, TAG_PERSON) and len(set(tags)) > 0:
-                label = setmedian(tags)
-            yield label, type_
+            if prop in (TAG_COMPANY, TAG_PERSON):
+                label = registry.name.pick(tags)
+            yield label, prop
 
     def __len__(self):
-        return len(self.tags)
+        return len(self.values)
