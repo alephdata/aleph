@@ -36,7 +36,7 @@ def process_collection(stage, collection, ingest=True, sync=False):
             aggregator.put(proxy, fragment='db')
             queue_task(collection, OP_INDEX,
                        job_id=stage.job.id,
-                       payload={'entity_id': proxy.id},
+                       payload={'entity_ids': [proxy.id]},
                        context={'sync': sync})
     aggregator.close()
 
@@ -73,8 +73,8 @@ def index_aggregate(stage, collection, sync=False, entity_ids=None,
     entities = _fetch_entities(stage, collection, entity_ids=entity_ids)
     entities = (_process_entity(e, sync=sync) for e in entities)
     extra = {'job_id': stage.job.id, 'mapping_id': mapping_id}
-    index_bulk(collection, entities, extra)
-    refresh_collection(collection.id)
+    index_bulk(collection, entities, extra, sync=sync)
+    refresh_collection(collection.id, sync=sync)
 
 
 def bulk_write(collection, entities, job_id=None, unsafe=False):
