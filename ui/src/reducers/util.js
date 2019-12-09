@@ -13,13 +13,12 @@ export function mergeResults(previous, current) {
   return previous;
 }
 
+export function loadComplete(data) {
+  return { ...data, isLoading: false, isError: false, shouldLoad: false };
+}
+
 export function objectLoadComplete(state, id, data = {}) {
-  /* eslint-disable no-param-reassign */
-  data.isLoading = false;
-  data.isError = false;
-  data.shouldLoad = false;
-  /* eslint-enable no-param-reassign */
-  return { ...state, [id]: data };
+  return { ...state, [id]: loadComplete(data) };
 }
 
 export function updateResults(state, { query, result }) {
@@ -32,31 +31,35 @@ export function invalidateResults() {
   return {};
 }
 
+export function loadState(data) {
+  const state = data || {};
+  return { ...state, isLoading: false, shouldLoad: true, isError: true };
+}
+
+export function loadStart(state) {
+  const prevState = state || {};
+  return { ...prevState, isLoading: true, shouldLoad: false, isError: false };
+}
+
 export function objectLoadStart(state, id) {
-  const object = { isLoading: true, shouldLoad: false };
-  return { ...state, [id]: _.assign({}, state[id], object) };
+  return { ...state, [id]: loadStart(state[id]) };
 }
 
 export function resultLoadStart(state, query) {
-  const key = query ? query.toKey() : undefined;
-  return objectLoadStart(state, key);
+  return objectLoadStart(state, query.toKey());
+}
+
+export function loadError(state, error) {
+  const prevState = state || {};
+  return { ...prevState, isLoading: false, shouldLoad: false, isError: false, error };
 }
 
 export function objectLoadError(state, id, error) {
-  return {
-    ...state,
-    [id]: {
-      isLoading: false,
-      isError: true,
-      shouldLoad: false,
-      error,
-    },
-  };
+  return { ...state, [id]: loadError(state[id], error) };
 }
 
 export function resultLoadError(state, query, error) {
-  const key = query ? query.toKey() : undefined;
-  return objectLoadError(state, key, error);
+  return objectLoadError(state, query.toKey(), error);
 }
 
 export function objectReload(state, id) {
