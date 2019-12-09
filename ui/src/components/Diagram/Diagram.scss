@@ -1,3 +1,12 @@
+@import "src/app/variables.scss";
+
 .Diagram {
-  
+  .VisGraph {
+    height: calc(100vh - 80px);
+    overflow: hidden;
+  }
+
+  .Toolbar {
+    padding-left: $aleph-grid-size;
+  }
 }
