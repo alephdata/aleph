@@ -1,5 +1,5 @@
-import Diagram from './Diagram';
+import DiagramEditor from './DiagramEditor';
 
 export {
-  Diagram,
+  DiagramEditor,
 };

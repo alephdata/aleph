@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Button, AnchorButton, Intent, Tooltip, Position } from '@blueprintjs/core';
 
-import CreateDiagramDialog from 'src/dialogs/CreateDiagramDialog/CreateDiagramDialog';
+import DiagramEditDialog from 'src/dialogs/DiagramEditDialog/DiagramEditDialog';
 import { selectSession } from 'src/selectors';
 
 const messages = defineMessages({
@@ -46,7 +46,7 @@ class DiagramCreateButton extends React.Component {
         <Button onClick={this.toggle} icon="send-to-graph" intent={Intent.PRIMARY}>
           <FormattedMessage id="diagrams.index.create" defaultMessage="New diagram" />
         </Button>
-        <CreateDiagramDialog
+        <DiagramEditDialog
           isOpen={this.state.isOpen}
           toggleDialog={this.toggle}
         />

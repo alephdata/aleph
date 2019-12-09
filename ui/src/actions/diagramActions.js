@@ -18,7 +18,7 @@ export const fetchCollectionDiagrams = asyncActionCreator((collectionId) => asyn
 
 export const fetchDiagram = asyncActionCreator((diagramId) => async () => {
   const response = await endpoint.get(`diagrams/${diagramId}`);
-  return { diagramId, data: response.data.results };
+  return { diagramId, data: response.data };
 }, { name: 'FETCH_DIAGRAM' });
 
 export const createDiagram = asyncActionCreator((diagram) => async () => {

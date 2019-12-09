@@ -1,11 +1,11 @@
 import React from 'react';
 import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 
-import './Diagram.scss';
+import './DiagramEditor.scss';
 
 const config = new GraphConfig();
 
-class Diagram extends React.Component {
+class DiagramEditor extends React.Component {
   constructor(props) {
     super(props);
 
@@ -38,7 +38,7 @@ class Diagram extends React.Component {
   render() {
     const { layout, viewport } = this.state;
     return (
-      <div className="Diagram">
+      <div className="DiagramEditor">
         <VisGraph
           config={config}
           layout={layout}
@@ -53,4 +53,4 @@ class Diagram extends React.Component {
   }
 }
 
-export default Diagram;
+export default DiagramEditor;

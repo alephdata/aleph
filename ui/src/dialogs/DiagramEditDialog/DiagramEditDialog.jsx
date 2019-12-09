@@ -30,7 +30,7 @@ const messages = defineMessages({
 
 /* eslint-disable */
 
-class CreateDiagramDialog extends Component {
+class DiagramEditDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -102,7 +102,7 @@ class CreateDiagramDialog extends Component {
     return (
       <Dialog
         icon="graph"
-        className="CreateDiagramDialog"
+        className="DiagramEditDialog"
         isOpen={isOpen}
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
@@ -175,6 +175,6 @@ class CreateDiagramDialog extends Component {
 
 const mapStateToProps = (state, ownProps) => ({});
 
-CreateDiagramDialog = injectIntl(CreateDiagramDialog);
-CreateDiagramDialog = withRouter(CreateDiagramDialog);
-export default connect(mapStateToProps, { createDiagram })(CreateDiagramDialog);
+DiagramEditDialog = injectIntl(DiagramEditDialog);
+DiagramEditDialog = withRouter(DiagramEditDialog);
+export default connect(mapStateToProps, { createDiagram })(DiagramEditDialog);
