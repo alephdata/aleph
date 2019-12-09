@@ -19,25 +19,22 @@ export default createReducer({
 
   [queryCollections.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryCollections.ERROR]: (state, {
-    error, args: { query },
-  }) => resultLoadError(state, query, error),
+  [queryCollections.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryCollections.COMPLETE]: updateResults,
 
   [queryEntities.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryEntities.ERROR]: (state, {
-    error, args: { query },
-  }) => resultLoadError(state, query, error),
+  [queryEntities.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryEntities.COMPLETE]: updateResults,
 
   [queryNotifications.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryNotifications.ERROR]: (state, {
-    error, args: { query },
-  }) => resultLoadError(state, query, error),
+  [queryNotifications.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryNotifications.COMPLETE]: updateResults,
 

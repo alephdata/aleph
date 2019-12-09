@@ -1,12 +1,12 @@
 import _ from 'lodash';
 
+import { loadState } from 'src/reducers/util';
+
 
 function selectResult(state, query, expand) {
   const key = query.toKey();
   const result = {
-    isLoading: false,
-    isError: false,
-    shouldLoad: true,
+    ...loadState(),
     results: [],
     ...state.results[key],
   };
@@ -16,11 +16,7 @@ function selectResult(state, query, expand) {
 
 function selectObject(objects, id) {
   if (!id || !_.has(objects, id)) {
-    return {
-      isLoading: false,
-      isError: false,
-      shouldLoad: true,
-    };
+    return loadState();
   }
   return objects[id];
 }

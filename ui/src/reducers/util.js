@@ -33,7 +33,7 @@ export function invalidateResults() {
 
 export function loadState(data) {
   const state = data || {};
-  return { ...state, isLoading: false, shouldLoad: true, isError: true };
+  return { ...state, isLoading: false, shouldLoad: true, isError: false };
 }
 
 export function loadStart(state) {
