@@ -6,6 +6,7 @@ import Collection from './Collection';
 import Country from './Country';
 import Numeric from './Numeric';
 import Date from './Date';
+import Diagram from './Diagram';
 import DualPane from './DualPane';
 import Entity from './Entity';
 import FileSize from './FileSize';
@@ -35,6 +36,7 @@ export {
   Country,
   Numeric,
   Date,
+  Diagram,
   DualPane,
   Entity,
   FileSize,

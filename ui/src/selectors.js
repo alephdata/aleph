@@ -80,8 +80,8 @@ export function selectSystemStatus(state) {
   return selectObject(state, 'systemStatus');
 }
 
-export function selectRoleDiagrams(state, collectionId) {
-  return selectObject(state.collectionMappings, collectionId);
+export function selectDiagrams(state) {
+  return state.diagrams;
 }
 
 export function selectCollection(state, collectionId) {
@@ -101,6 +101,10 @@ export function selectEntity(state, entityId) {
   result.collection = entity.collection;
   result.highlight = entity.highlight;
   return result;
+}
+
+export function selectDiagram(state, diagramId) {
+  return selectObject(state.diagrams, diagramId);
 }
 
 export function selectDocumentContent(state, documentId) {
@@ -126,6 +130,10 @@ export function selectNotificationsResult(state, query) {
     });
   });
   return result;
+}
+
+export function selectDiagramsResult(state, query) {
+  return selectResult(state, query, selectDiagram);
 }
 
 export function selectEntityTags(state, entityId) {

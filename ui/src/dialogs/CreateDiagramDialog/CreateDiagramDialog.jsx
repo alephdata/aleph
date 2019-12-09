@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection } from 'src/components/common';
-import { createCollectionDiagram } from 'src/actions';
+import { createDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 const messages = defineMessages({
@@ -54,10 +54,11 @@ class CreateDiagramDialog extends Component {
       label,
       summary,
       data: {},
+      collection_id: parseInt(collection.id),
     };
     this.setState({ processing: true });
     try {
-      await this.props.createCollectionDiagram(collection.id, diagram);
+      await this.props.createDiagram(diagram);
       this.setState({ processing: false });
       showSuccessToast("success");
     } catch (e) {
@@ -176,4 +177,4 @@ const mapStateToProps = (state, ownProps) => ({});
 
 CreateDiagramDialog = injectIntl(CreateDiagramDialog);
 CreateDiagramDialog = withRouter(CreateDiagramDialog);
-export default connect(mapStateToProps, { createCollectionDiagram })(CreateDiagramDialog);
+export default connect(mapStateToProps, { createDiagram })(CreateDiagramDialog);

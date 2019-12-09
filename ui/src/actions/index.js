@@ -26,12 +26,13 @@ export {
   updateCollectionPermissions,
 } from './collectionActions';
 export {
-  createCollectionDiagram,
-  deleteCollectionDiagram,
-  fetchCollectionDiagram,
+  createDiagram,
+  deleteDiagram,
   fetchCollectionDiagrams,
-  fetchRoleDiagrams,
-  updateCollectionDiagram,
+  fetchDiagram,
+  fetchDiagrams,
+  queryDiagrams,
+  updateDiagram,
 } from './diagramActions';
 export {
   fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,

@@ -6,6 +6,7 @@ import {
 
 import {
   queryCollections,
+  queryDiagrams,
   queryEntities,
   queryNotifications,
   createCollection,
@@ -40,6 +41,14 @@ export default createReducer({
   }) => resultLoadError(state, query, error),
 
   [queryNotifications.COMPLETE]: updateResults,
+
+  [queryDiagrams.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryDiagrams.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+
+  [queryDiagrams.COMPLETE]: updateResults,
 
   // Clear out the results cache when operations are performed that
   // may affect the content of the results.

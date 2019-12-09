@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+// import _ from 'lodash';
 // import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import { fetchRoleDiagrams } from 'src/actions';
-// import { selectCollectionDiagrams, selectRoleDiagrams } from 'src/selectors';
+import { queryDiagrams } from 'src/actions';
+import { selectDiagramsResult } from 'src/selectors';
+import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import {
   Breadcrumbs,
 } from 'src/components/common';
+import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DiagramCreateButton from 'src/components/Toolbar/DiagramCreateButton';
+import DiagramList from 'src/components/Diagram/DiagramList';
 
+
+import './DiagramsIndexScreen.scss';
 
 const messages = defineMessages({
   title: {
@@ -30,25 +36,25 @@ export class DiagramsIndexScreen extends Component {
   //   super(props);
   // }
 
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  fetchIfNeeded() {
-    const { diagrams } = this.props;
-    if (!diagrams || diagrams.shouldLoad) {
-      this.props.fetchRoleDiagrams();
-    }
-  }
+  // componentDidUpdate() {
+  //   this.fetchIfNeeded();
+  // }
+  //
+  // fetchIfNeeded() {
+  //   const { diagrams } = this.props;
+  //   if (!diagrams || _.isEmpty(diagrams)) {
+  //     this.props.fetchDiagrams();
+  //   }
+  // }
 
   render() {
-    const { diagrams, intl } = this.props;
+    const { intl, query, result } = this.props;
 
-    console.log(diagrams);
+    console.log(result);
+
+    if (result.isError) {
+      return <ErrorScreen error={result.error} />;
+    }
 
     const breadcrumbs = (
       <Breadcrumbs>
@@ -81,21 +87,27 @@ export class DiagramsIndexScreen extends Component {
               />
             </p>
           </div>
+          <DiagramList query={query} />
         </Dashboard>
       </Screen>
     );
   }
 }
 
-const mapStateToProps = () => {
-  console.log('hello');
+const mapStateToProps = (state, ownProps) => {
+  console.log('hello', state);
+  const { location } = ownProps;
+  const query = Query.fromLocation('diagrams', location, {}, 'diagrams');
+  const result = selectDiagramsResult(state, query);
+
   return {
-    // diagrams: selectRoleDiagrams(state),
+    query,
+    result,
   };
 };
 
 
 export default compose(
-  connect(mapStateToProps, { fetchRoleDiagrams }),
+  connect(mapStateToProps, { queryDiagrams }),
   injectIntl,
 )(DiagramsIndexScreen);

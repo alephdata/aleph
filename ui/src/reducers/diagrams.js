@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 
-import { fetchCollectionDiagrams, fetchCollectionDiagram, fetchRoleDiagrams, updateCollectionDiagram, createCollectionDiagram, deleteCollectionDiagram } from 'src/actions';
-import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete, resultObjects } from 'src/reducers/util';
+import { queryDiagrams, fetchCollectionDiagrams, fetchDiagram, fetchDiagrams, updateDiagram, createDiagram, deleteDiagram } from 'src/actions';
+import { objectLoadComplete, objectDelete, resultObjects } from 'src/reducers/util';
 
 const initialState = {};
 
@@ -12,24 +12,26 @@ export default createReducer({
   //   error, args: { diagramId },
   // }) => objectLoadError(state, diagramId, error),
 
-  [fetchRoleDiagrams.COMPLETE]: (state, { data }) => resultObjects(state, data),
+  [queryDiagrams.COMPLETE]: (state, { result }) => resultObjects(state, result),
+
+  [fetchDiagrams.COMPLETE]: (state, { data }) => resultObjects(state, data),
 
   [fetchCollectionDiagrams.COMPLETE]: (state, { data }) => resultObjects(state, data),
 
-  [fetchCollectionDiagram.COMPLETE]: (state, {
+  [fetchDiagram.COMPLETE]: (state, {
     diagramId, data,
   }) => objectLoadComplete(state, diagramId, data),
 
-  [createCollectionDiagram.COMPLETE]: (state, {
+  [createDiagram.COMPLETE]: (state, {
     diagramId, data,
   }) => objectLoadComplete(state, diagramId, data),
 
-  [updateCollectionDiagram.COMPLETE]: (state, {
+  [updateDiagram.COMPLETE]: (state, {
     diagramId, data,
   }) => objectLoadComplete(state, diagramId, data),
 
-  [deleteCollectionDiagram.COMPLETE]: (state, {
+  [deleteDiagram.COMPLETE]: (state, {
     diagramId,
-  }) => objectDelete(state, collectionId),
+  }) => objectDelete(state, diagramId),
 
 }, initialState);

@@ -1,0 +1,39 @@
+@import "src/app/variables.scss";
+
+.DiagramListItem {
+    padding: $aleph-grid-size*2.5 0;
+    border-bottom: 1px solid $table-border-color;
+
+    h4 {
+        font-weight: bold;
+
+        .bp3-tag {
+            float: right;
+            display: block;
+        }
+
+        .bp3-icon {
+            padding-bottom: 2px;
+        }
+    }
+
+    .summary {
+        font-size: $pt-font-size;
+        margin-bottom: $aleph-grid-size;
+    }
+
+    .details {
+        margin-bottom: 0;
+        color: $aleph-greyed-text;
+    }
+
+    .details-item {
+        display: inline-block;
+        min-width: 8em;
+        margin-right: 2em;
+
+        .bp3-icon {
+            margin-right: $aleph-icon-padding;
+        }
+    }
+}
