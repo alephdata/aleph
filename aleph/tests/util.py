@@ -153,8 +153,8 @@ class TestCase(FlaskTestCase):
         stage = get_stage(self.private_coll, OP_PROCESS)
         for sample in read_entities(self.get_fixture_path('samples.ijson')):
             aggregator.put(sample, fragment='sample')
-            index_aggregate(stage, self.private_coll,
-                            entity_id=sample.id, sync=True)
+
+        index_aggregate(stage, self.private_coll, sync=True)
         aggregator.close()
         process_collection(stage, self.private_coll, ingest=False, sync=True)
 

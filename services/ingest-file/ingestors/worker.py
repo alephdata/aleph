@@ -16,8 +16,7 @@ class IngestWorker(Worker):
             return
         stage = task.job.get_stage(next_stage)
         log.info("Sending %s entities to: %s", len(entities), next_stage)
-        for entity_id in entities:
-            stage.queue({'entity_id': entity_id}, task.context)
+        stage.queue({'entity_ids': entities}, task.context)
 
     def handle(self, task):
         manager = Manager(task.stage, task.context)
