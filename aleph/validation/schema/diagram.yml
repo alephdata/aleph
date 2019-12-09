@@ -1,4 +1,4 @@
-DiagramCreate:
+DiagramUpdate:
   type: object
   properties:
     label:
@@ -10,13 +10,16 @@ DiagramCreate:
       type: object
       allOf:
       - $ref: '#/components/schemas/DiagramData'
-  required: ["label"]
+  required: []
 
-DiagramUpdate:
+DiagramCreate:
   type: object
   allOf:
-    - $ref: '#/components/schemas/DiagramCreate'
-  required: []
+    - $ref: '#/components/schemas/DiagramUpdate'
+  properties:
+    collection_id:
+      type: integer
+  required: ["label", "collection_id"]
 
 Diagram:
   type: object
