@@ -85,7 +85,7 @@ export class CollectionXrefIndexMode extends React.PureComponent {
 
   render() {
     const { session, collection, xrefIndex } = this.props;
-    if (xrefIndex.isLoading || xrefIndex.shouldLoad) {
+    if (xrefIndex.status === undefined) {
       return <SectionLoading />;
     }
     return (

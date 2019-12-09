@@ -115,7 +115,6 @@ export class SearchScreen extends React.Component {
         onSearch: queryText => this.updateQuery(query.set('q', queryText)),
       });
     }
-
     return collectionScopeList;
   }
 

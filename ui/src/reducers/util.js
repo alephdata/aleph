@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 
 export function mergeResults(previous, current) {
-  if (previous === undefined || previous.results === undefined) {
+  if (previous === undefined || previous.results === undefined || current.offset === 0) {
     return current;
   }
   const expectedOffset = (previous.limit + previous.offset);
@@ -13,8 +13,19 @@ export function mergeResults(previous, current) {
   return previous;
 }
 
+export function timestamp() {
+  return new Date().toISOString();
+}
+
 export function loadComplete(data) {
-  return { ...data, isLoading: false, isError: false, shouldLoad: false };
+  return {
+    ...data,
+    isLoading: false,
+    isError: false,
+    shouldLoad: false,
+    loadedAt: timestamp(),
+    error: undefined,
+  };
 }
 
 export function objectLoadComplete(state, id, data = {}) {
@@ -27,10 +38,6 @@ export function updateResults(state, { query, result }) {
   return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
 
-export function invalidateResults() {
-  return {};
-}
-
 export function loadState(data) {
   const state = data || {};
   return { ...state, isLoading: false, shouldLoad: true, isError: false };
@@ -38,7 +45,7 @@ export function loadState(data) {
 
 export function loadStart(state) {
   const prevState = state || {};
-  return { ...prevState, isLoading: true, shouldLoad: false, isError: false };
+  return { ...prevState, isLoading: true, shouldLoad: false, isError: false, loadedAt: null };
 }
 
 export function objectLoadStart(state, id) {
@@ -51,7 +58,14 @@ export function resultLoadStart(state, query) {
 
 export function loadError(state, error) {
   const prevState = state || {};
-  return { ...prevState, isLoading: false, shouldLoad: false, isError: false, error };
+  return {
+    ...prevState,
+    isLoading: false,
+    shouldLoad: false,
+    isError: false,
+    loadedAt: undefined,
+    error,
+  };
 }
 
 export function objectLoadError(state, id, error) {

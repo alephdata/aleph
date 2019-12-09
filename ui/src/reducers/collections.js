@@ -27,7 +27,4 @@ export default createReducer({
   [createCollection.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
   [deleteCollection.COMPLETE]: (state, { id }) => objectDelete(state, id),
-
-  TRIGGER_COLLECTION_RELOAD: (state, { id }) => objectDelete(state, id),
-
 }, initialState);

@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 
-import Query from 'src/app/Query';
 import { queryEntities } from 'src/actions';
 import { selectEntitiesResult } from 'src/selectors';
 import EntityTable from 'src/components/EntityTable/EntityTable';
@@ -129,7 +128,7 @@ export class EntitySearch extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        {result.isLoading && (
+        {result.total === undefined && (
           <SectionLoading />
         )}
       </div>
@@ -137,26 +136,13 @@ export class EntitySearch extends Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const {
-    location, context = {}, prefix, query,
-  } = ownProps;
-
-  // We normally only want Things, not Intervals (relations between things).
-  const contextWithDefaults = {
-    'filter:schemata': context['filter:schemata'] || 'Thing',
-    ...context,
-  };
-  const searchQuery = query !== undefined ? query : Query.fromLocation('entities', location, contextWithDefaults, prefix);
-  return {
-    query: searchQuery,
-    result: selectEntitiesResult(state, searchQuery),
-  };
+  const { query } = ownProps;
+  const result = selectEntitiesResult(state, query);
+  return { query, result };
 };
-
-const mapDispatchToProps = { queryEntities };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, { queryEntities }),
   injectIntl,
 )(EntitySearch);

@@ -127,7 +127,7 @@ class EntityScreen extends Component {
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
     }
-    if (entity.shouldLoad || entity.isLoading) {
+    if (entity.id === undefined) {
       return (
         <EntityContextLoader entityId={entityId}>
           <LoadingScreen />

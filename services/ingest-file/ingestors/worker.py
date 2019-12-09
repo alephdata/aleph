@@ -12,7 +12,7 @@ class IngestWorker(Worker):
 
     def dispatch_next(self, task, entities):
         next_stage = task.context.get('next_stage')
-        if next_stage is None:
+        if next_stage is None or not len(entities):
             return
         stage = task.job.get_stage(next_stage)
         log.info("Sending %s entities to: %s", len(entities), next_stage)

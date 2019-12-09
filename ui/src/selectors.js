@@ -3,22 +3,29 @@ import _ from 'lodash';
 import { loadState } from 'src/reducers/util';
 
 
-function selectResult(state, query, expand) {
-  const key = query.toKey();
-  const result = {
-    ...loadState(),
-    results: [],
-    ...state.results[key],
-  };
-  result.results = result.results.map(id => expand(state, id));
-  return result;
+function selectTimestamp(state) {
+  return state.mutation;
 }
 
-function selectObject(objects, id) {
+function selectObject(state, objects, id) {
   if (!id || !_.has(objects, id)) {
     return loadState();
   }
-  return objects[id];
+  const obj = objects[id];
+  const outdated = obj.loadedAt && obj.loadedAt < selectTimestamp(state);
+  obj.shouldLoad = obj.shouldLoad || outdated;
+  return obj;
+}
+
+function selectResult(state, query, expand) {
+  const result = {
+    results: [],
+    ...selectObject(state, state.results, query.toKey()),
+  };
+  result.results = result.results
+    .map(id => expand(state, id))
+    .filter((r) => r.id !== undefined);
+  return result;
 }
 
 export function selectLocale(state) {
@@ -40,10 +47,10 @@ export function selectLocale(state) {
 }
 
 export function selectMetadata(state) {
-  const metadata = selectObject(state, 'metadata');
+  const metadata = selectObject(state, state, 'metadata');
   const locale = selectLocale(state);
   if (metadata.app && metadata.app.locale !== locale) {
-    return selectObject(state, undefined);
+    return loadState();
   }
   return metadata;
 }
@@ -57,31 +64,31 @@ export function selectSchema(state, schemaName) {
 }
 
 export function selectSession(state) {
-  return selectObject(state, 'session');
+  return selectObject(state, state, 'session');
 }
 
 export function selectAlerts(state) {
-  return selectObject(state, 'alerts');
+  return selectObject(state, state, 'alerts');
 }
 
 export function selectGroups(state) {
-  return state.groups;
+  return selectObject(state, state, 'groups');
 }
 
 export function selectStatistics(state) {
-  return selectObject(state, 'statistics');
+  return selectObject(state, state, 'statistics');
 }
 
 export function selectSystemStatus(state) {
-  return selectObject(state, 'systemStatus');
+  return selectObject(state, state, 'systemStatus');
 }
 
 export function selectCollection(state, collectionId) {
-  return selectObject(state.collections, collectionId);
+  return selectObject(state, state.collections, collectionId);
 }
 
 export function selectEntity(state, entityId) {
-  const entity = selectObject(state.entities, entityId);
+  const entity = selectObject(state, state.entities, entityId);
   const model = selectModel(state);
   const hasModel = entity.schema !== undefined && model !== undefined;
   const result = hasModel ? model.getEntity(entity) : {};
@@ -96,7 +103,7 @@ export function selectEntity(state, entityId) {
 }
 
 export function selectDocumentContent(state, documentId) {
-  return selectObject(state.documentContent, documentId);
+  return selectObject(state, state.documentContent, documentId);
 }
 
 export function selectCollectionsResult(state, query) {
@@ -121,7 +128,7 @@ export function selectNotificationsResult(state, query) {
 }
 
 export function selectEntityTags(state, entityId) {
-  return selectObject(state.entityTags, entityId);
+  return selectObject(state, state.entityTags, entityId);
 }
 
 export function selectValueCount(state, prop, value) {
@@ -133,7 +140,7 @@ export function selectValueCount(state, prop, value) {
 
 export function selectEntityReferences(state, entityId) {
   const model = selectModel(state);
-  const references = selectObject(state.entityReferences, entityId);
+  const references = selectObject(state, state.entityReferences, entityId);
   references.results = references.results || [];
   references.results = references.results.map((ref) => {
     const schema = model.getSchema(ref.schema);
@@ -179,28 +186,28 @@ export function selectEntityView(state, entityId, mode, isPreview) {
 }
 
 export function selectCollectionStatistics(state, collectionId) {
-  return selectObject(state.collectionStatistics, collectionId);
+  return selectObject(state, state.collectionStatistics, collectionId);
 }
 
 export function selectCollectionStatus(state, collectionId) {
-  return selectObject(state.collectionStatus, collectionId);
+  return selectObject(state, state.collectionStatus, collectionId);
 }
 
 export function selectCollectionPermissions(state, collectionId) {
-  return selectObject(state.collectionPermissions, collectionId);
+  return selectObject(state, state.collectionPermissions, collectionId);
 }
 
 export function selectCollectionMappings(state, collectionId) {
-  return selectObject(state.collectionMappings, collectionId);
+  return selectObject(state, state.collectionMappings, collectionId);
 }
 
 export function selectCollectionXrefIndex(state, collectionId) {
-  return selectObject(state.collectionXrefIndex, collectionId);
+  return selectObject(state, state.collectionXrefIndex, collectionId);
 }
 
 export function selectCollectionXrefMatches(state, query) {
   const model = selectModel(state);
-  const matches = selectObject(state.collectionXrefMatches, query.toKey());
+  const matches = selectObject(state, state.collectionXrefMatches, query.toKey());
   if (matches.results !== undefined) {
     matches.results.forEach((result) => {
       result.match = model.getEntity(result.match);
@@ -211,7 +218,7 @@ export function selectCollectionXrefMatches(state, query) {
 }
 
 export function selectQueryLog(state) {
-  return selectObject(state, 'queryLogs');
+  return selectObject(state, state, 'queryLogs');
 }
 
 export function selectQueryLogsLimited(state, limit = 9) {

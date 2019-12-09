@@ -21,10 +21,20 @@ const messages = defineMessages({
   },
 });
 
-class CollectionStatisticsMode extends React.PureComponent {
+class CollectionStatisticsMode extends React.Component {
   componentDidMount() {
-    const { collection } = this.props;
-    this.props.fetchCollectionStatistics(collection);
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  fetchIfNeeded() {
+    const { collection, statistics } = this.props;
+    if (statistics.shouldLoad) {
+      this.props.fetchCollectionStatistics(collection);
+    }
   }
 
   renderStatisticsItem({ key, values, total }) {
@@ -43,7 +53,7 @@ class CollectionStatisticsMode extends React.PureComponent {
 
   render() {
     const { intl, statistics } = this.props;
-    if (statistics.shouldLoad || statistics.isLoading) {
+    if (statistics.names === undefined) {
       return <SectionLoading />;
     }
 

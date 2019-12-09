@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import metadata from './metadata';
+import mutation from './mutation';
 import session from './session';
 import config from './config';
 import statistics from './statistics';
@@ -26,6 +27,7 @@ import queryLogs from './queryLogs';
 
 const rootReducer = combineReducers({
   metadata,
+  mutation,
   session,
   config,
   statistics,
