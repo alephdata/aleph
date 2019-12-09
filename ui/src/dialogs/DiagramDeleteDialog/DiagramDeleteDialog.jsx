@@ -27,9 +27,8 @@ class DiagramDeleteDialog extends Component {
 
   async onDelete() {
     const { diagram, history } = this.props;
-    const path = diagram.casefile ? '/cases' : '/datasets';
-    await this.props.deleteDiagram(diagram);
-    history.push({ pathname: path });
+    await this.props.deleteDiagram(diagram.id);
+    history.push('/diagrams');
   }
 
   render() {

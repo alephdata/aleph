@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection } from 'src/components/common';
-import { createDiagram } from 'src/actions';
+import { createDiagram, updateDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 
 const messages = defineMessages({
@@ -15,16 +15,36 @@ const messages = defineMessages({
     defaultMessage: 'Untitled diagram',
   },
   summary_placeholder: {
-    id: 'diagram.create.summary',
+    id: 'diagram.create.summary_placeholder',
     defaultMessage: 'A brief description of the diagram',
   },
   save: {
     id: 'diagram.create.submit',
     defaultMessage: 'Create',
   },
-  title: {
+  title_create: {
     id: 'diagram.create.title',
     defaultMessage: 'Create a network diagram',
+  },
+  submit_create: {
+    id: 'diagram.create.submit',
+    defaultMessage: 'Create',
+  },
+  success_create: {
+    id: 'diagram.create.success',
+    defaultMessage: 'Your diagram has been created successfully.',
+  },
+  title_update: {
+    id: 'diagram.update.title',
+    defaultMessage: 'Diagram settings',
+  },
+  submit_update: {
+    id: 'diagram.update.submit',
+    defaultMessage: 'Submit',
+  },
+  success_update: {
+    id: 'diagram.update.success',
+    defaultMessage: 'Your diagram has been successfully updated.',
   },
 });
 
@@ -33,34 +53,44 @@ const messages = defineMessages({
 class DiagramEditDialog extends Component {
   constructor(props) {
     super(props);
+    const { diagram } = this.props;
     this.state = {
-      label: '',
-      summary: '',
-      collection: null,
+      label: diagram ? diagram.label : '',
+      summary: diagram ? diagram.summary : '',
+      collection: diagram ? diagram.collection : null,
       processing: false,
     };
 
-    this.onAddDiagram = this.onAddDiagram.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.onChangeLabel = this.onChangeLabel.bind(this);
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onChangeCollection = this.onChangeCollection.bind(this);
   }
 
-  async onAddDiagram(event) {
-    const { label, summary, collection, processing } = this.state;
+  async onSubmit(event) {
+    const { diagram, intl, isCreate } = this.props;
+    const { data, id, label, summary, collection, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
-    const diagram = {
-      label,
-      summary,
-      data: {},
-      collection_id: parseInt(collection.id),
-    };
     this.setState({ processing: true });
     try {
-      await this.props.createDiagram(diagram);
+      if (isCreate) {
+        const newDiagram = {
+          label,
+          summary,
+          collection_id: parseInt(collection.id),
+        };
+        await this.props.createDiagram(newDiagram);
+      } else {
+        const updatedDiagram = diagram;
+        diagram.label = label;
+        diagram.summary = summary;
+
+        await this.props.updateDiagram(diagram.id, updatedDiagram);
+      }
       this.setState({ processing: false });
-      showSuccessToast("success");
+      showSuccessToast(intl.formatMessage(isCreate ? messages.success_create : messages.success_update));
+      this.props.toggleDialog();
     } catch (e) {
       this.setState({ processing: false });
       showWarningToast(e.message);
@@ -95,7 +125,7 @@ class DiagramEditDialog extends Component {
   }
 
   render() {
-    const { intl, isOpen, toggleDialog } = this.props;
+    const { intl, isCreate, isOpen, toggleDialog } = this.props;
     const { collection, label, summary, processing } = this.state;
     const disabled = processing || !this.checkValid();
 
@@ -104,10 +134,10 @@ class DiagramEditDialog extends Component {
         icon="graph"
         className="DiagramEditDialog"
         isOpen={isOpen}
-        title={intl.formatMessage(messages.title)}
+        title={intl.formatMessage(isCreate ? messages.title_create : messages.title_update)}
         onClose={toggleDialog}
       >
-        <form onSubmit={this.onAddDiagram}>
+        <form onSubmit={this.onSubmit}>
           <div className="bp3-dialog-body">
             <div className="bp3-form-group">
               <label className="bp3-label" htmlFor="label">
@@ -142,20 +172,22 @@ class DiagramEditDialog extends Component {
                 </div>
               </label>
             </div>
-            <div className="bp3-form-group">
-              <label className="bp3-label">
-                <FormattedMessage
-                  id="diagram.collectionSelect"
-                  defaultMessage="Select a dataset"
-                />
-                <Collection.Select
-                  collection={collection}
-                  onSelect={this.onChangeCollection}
-                  query={this.getCollectionOptionsQuery()}
-                />
+            {isCreate && (
+              <div className="bp3-form-group">
+                <label className="bp3-label">
+                  <FormattedMessage
+                    id="diagram.collectionSelect"
+                    defaultMessage="Select a dataset"
+                  />
+                  <Collection.Select
+                    collection={collection}
+                    onSelect={this.onChangeCollection}
+                    query={this.getCollectionOptionsQuery()}
+                  />
 
-              </label>
-            </div>
+                </label>
+              </div>
+            )}
           </div>
           <div className="bp3-dialog-footer">
             <div className="bp3-dialog-footer-actions">
@@ -163,7 +195,7 @@ class DiagramEditDialog extends Component {
                 type="submit"
                 intent={Intent.PRIMARY}
                 disabled={disabled}
-                text={intl.formatMessage(messages.save)}
+                text={intl.formatMessage(isCreate ? messages.submit_create : messages.submit_update)}
               />
             </div>
           </div>
@@ -177,4 +209,4 @@ const mapStateToProps = (state, ownProps) => ({});
 
 DiagramEditDialog = injectIntl(DiagramEditDialog);
 DiagramEditDialog = withRouter(DiagramEditDialog);
-export default connect(mapStateToProps, { createDiagram })(DiagramEditDialog);
+export default connect(mapStateToProps, { createDiagram, updateDiagram })(DiagramEditDialog);

@@ -13,8 +13,6 @@ class DiagramListItem extends PureComponent {
   render() {
     const { diagram } = this.props;
 
-    console.log('diagram is', diagram);
-
     return (
       <li className="DiagramListItem" key={diagram.id}>
         <H4>

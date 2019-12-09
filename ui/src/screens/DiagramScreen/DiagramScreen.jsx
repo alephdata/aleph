@@ -23,8 +23,6 @@ export class DiagramScreen extends Component {
   fetchIfNeeded() {
     const { diagram, diagramId } = this.props;
 
-    console.log('diagram id', diagramId);
-
     if (diagram.shouldLoad) {
       this.props.fetchDiagram(diagramId);
     }
@@ -68,9 +66,6 @@ export class DiagramScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { diagramId } = ownProps.match.params;
-
-
-  console.log(state, diagramId, selectDiagram(state, diagramId));
 
   return {
     diagramId,

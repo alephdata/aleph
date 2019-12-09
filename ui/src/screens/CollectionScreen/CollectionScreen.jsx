@@ -114,8 +114,6 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
 
-  console.log(state);
-
   return {
     collectionId,
     collection: selectCollection(state, collectionId),

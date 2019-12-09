@@ -31,7 +31,9 @@ class DiagramList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
+    const { result } = this.props;
+
+    if (result.shouldLoad && !prevProps.result.shouldLoad) {
       this.fetchIfNeeded();
     }
   }

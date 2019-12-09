@@ -5,13 +5,15 @@ import {
 } from 'src/reducers/util';
 
 import {
+  createCollection,
+  createDiagram,
+  deleteCollection,
+  deleteDiagram,
+  deleteEntity,
   queryCollections,
   queryDiagrams,
   queryEntities,
   queryNotifications,
-  createCollection,
-  deleteCollection,
-  deleteEntity,
 } from 'src/actions';
 
 const initialState = {};
@@ -53,9 +55,10 @@ export default createReducer({
   // Clear out the results cache when operations are performed that
   // may affect the content of the results.
   [createCollection.COMPLETE]: invalidateResults,
+  [createDiagram.COMPLETE]: invalidateResults,
   [deleteCollection.COMPLETE]: invalidateResults,
+  [deleteDiagram.COMPLETE]: invalidateResults,
   [deleteEntity.COMPLETE]: invalidateResults,
   TRIGGER_COLLECTION_RELOAD: invalidateResults,
-
 
 }, initialState);

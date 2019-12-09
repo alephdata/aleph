@@ -24,13 +24,13 @@ export const fetchDiagram = asyncActionCreator((diagramId) => async () => {
 export const createDiagram = asyncActionCreator((diagram) => async () => {
   const response = await endpoint.post('diagrams', diagram);
   const diagramId = response.data.id;
-  return { diagramId, data: [response.data] };
+  return { diagramId, data: response.data };
 }, { name: 'CREATE_DIAGRAM' });
 
 export const updateDiagram = (
   asyncActionCreator((diagramId, diagram) => async () => {
     const response = await endpoint.put(`diagrams/${diagramId}`, diagram);
-    return { diagramId, data: [response.data] };
+    return { diagramId, data: response.data };
   }, { name: 'UPDATE_DIAGRAM' })
 );
 

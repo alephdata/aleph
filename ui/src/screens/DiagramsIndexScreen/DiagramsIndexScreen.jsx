@@ -32,25 +32,8 @@ const messages = defineMessages({
 });
 
 export class DiagramsIndexScreen extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-
-  // componentDidUpdate() {
-  //   this.fetchIfNeeded();
-  // }
-  //
-  // fetchIfNeeded() {
-  //   const { diagrams } = this.props;
-  //   if (!diagrams || _.isEmpty(diagrams)) {
-  //     this.props.fetchDiagrams();
-  //   }
-  // }
-
   render() {
     const { intl, query, result } = this.props;
-
-    console.log(result);
 
     if (result.isError) {
       return <ErrorScreen error={result.error} />;
@@ -95,7 +78,6 @@ export class DiagramsIndexScreen extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('hello', state);
   const { location } = ownProps;
   const query = Query.fromLocation('diagrams', location, {}, 'diagrams');
   const result = selectDiagramsResult(state, query);

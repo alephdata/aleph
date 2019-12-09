@@ -47,6 +47,7 @@ class DiagramCreateButton extends React.Component {
           <FormattedMessage id="diagrams.index.create" defaultMessage="New diagram" />
         </Button>
         <DiagramEditDialog
+          isCreate
           isOpen={this.state.isOpen}
           toggleDialog={this.toggle}
         />
