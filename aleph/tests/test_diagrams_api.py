@@ -14,6 +14,7 @@ class DiagramAPITest(TestCase):
     def setUp(self):
         super(DiagramAPITest, self).setUp()
         self.col = self.create_collection(data={'foreign_id': 'diagram1'})
+        self.col2 = self.create_collection(data={'foreign_id': 'diagram2'})
         _, self.headers = self.login(is_admin=True)
         self.rolex = self.create_user(foreign_id='user_3')
         _, self.headers_x = self.login(foreign_id='user_3')
@@ -48,6 +49,19 @@ class DiagramAPITest(TestCase):
         assert res.status_code == 200, res
         validate(res.json, 'QueryResponse')
         assert len(res.json['results']) == 1
+
+        url = '/api/2/diagrams?filter:collection_id=%s' % self.col.id
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
+        assert len(res.json['results']) == 1
+        res = self.client.get(url, headers=self.headers_x)
+        assert res.status_code == 403, res
+        url = '/api/2/diagrams?filter:collection_id=%s' % self.col2.id
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        validate(res.json, 'QueryResponse')
+        assert len(res.json['results']) == 0
 
         url = '/api/2/diagrams/%s' % diagram_id
         res = self.client.get(url, headers=self.headers)
