@@ -57,6 +57,10 @@ jobs:
         docker push alephdata/aleph:${GITHUB_SHA}
   test-aleph:
     runs-on: ubuntu-latest
+    needs:
+    - docker-aleph
+    - docker-elasticsearch
+    - docker-ingest-file
     steps:
     - uses: actions/checkout@v1
     - name: Set up
@@ -65,18 +69,15 @@ jobs:
         sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
         docker --version
         docker-compose --version
-    - name: Docker pull
-      run: make docker-pull
     - name: Docker build
       run: |
         echo "${GITHUB_REF}"
-        make build
-        make services
-        sleep 5
+        make ALEPH_TAG=${GITHUB_SHA} services
+        sleep 10
     - name: Run ingest tests
-      run: make ingest-test
+      run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
     - name: Run aleph tests
-      run: make test
+      run: make ALEPH_TAG=${GITHUB_SHA} test
     - name: Push docker images for master
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
