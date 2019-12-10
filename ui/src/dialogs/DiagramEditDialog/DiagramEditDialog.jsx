@@ -78,6 +78,7 @@ class DiagramEditDialog extends Component {
         const newDiagram = {
           label,
           summary,
+          data: {"layout":{"entities":[],"vertices":[],"edges":[],"groupings":[],"selection":[]},"viewport":{"zoomLevel":0.4,"ratio":0.738,"center":{"x":0,"y":0}}},
           collection_id: parseInt(collection.id),
         };
         await this.props.createDiagram(newDiagram);

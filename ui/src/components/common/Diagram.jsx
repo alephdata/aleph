@@ -53,7 +53,7 @@ const DiagramSummary = ({ className, diagram, truncate }) => {
 class DiagramLink extends PureComponent {
   render() {
     const { diagram, className } = this.props;
-    const link = `diagrams/${diagram.id}`;
+    const link = `/diagrams/${diagram.id}`;
     const content = <Diagram.Label {...this.props} />;
 
     return <Link to={link} className={c('DiagramLink', className)}>{content}</Link>;

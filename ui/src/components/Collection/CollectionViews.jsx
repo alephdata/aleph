@@ -10,6 +10,7 @@ import {
   Count, TextLoading, Schema,
 } from 'src/components/common';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
+import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import { selectCollectionXrefIndex, selectModel } from 'src/selectors';
@@ -101,6 +102,18 @@ class CollectionViews extends React.Component {
             panel={<CollectionEntitiesMode collection={collection} activeMode={activeMode} />}
           />
         ))}
+        {collection.casefile && (
+          <Tab
+            id="diagrams"
+            title={
+              <>
+                <Icon className="left-icon" icon="graph" />
+                <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
+              </>
+            }
+            panel={<CollectionDiagramsIndexMode collection={collection} />}
+          />
+        )}
         <Tab
           id="xref"
           title={
@@ -119,6 +132,7 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
+  console.log(state);
   return {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),

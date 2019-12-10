@@ -229,7 +229,7 @@ export function selectCollectionMappings(state, collectionId) {
 }
 
 export function selectCollectionDiagrams(state, collectionId) {
-  return selectObject(state.collectionMappings, collectionId);
+  return selectObject(state.collectionDiagrams, collectionId);
 }
 
 export function selectCollectionXrefIndex(state, collectionId) {

@@ -11,7 +11,7 @@ import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
 import {
-  Breadcrumbs,
+  Breadcrumbs, SectionLoading,
 } from 'src/components/common';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DiagramCreateButton from 'src/components/Toolbar/DiagramCreateButton';
@@ -32,8 +32,39 @@ const messages = defineMessages({
 });
 
 export class DiagramsIndexScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.getMoreResults = this.getMoreResults.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { result } = this.props;
+
+    if (result.shouldLoad && !prevProps.result.shouldLoad) {
+      this.fetchIfNeeded();
+    }
+  }
+
+  getMoreResults() {
+    const { query, result } = this.props;
+    if (result && !result.isLoading && result.next && !result.isError) {
+      this.props.queryDiagrams({ query, next: result.next });
+    }
+  }
+
+  fetchIfNeeded() {
+    const { result, query } = this.props;
+    if (!result.isLoading) {
+      this.props.queryDiagrams({ query });
+    }
+  }
+
   render() {
-    const { intl, query, result } = this.props;
+    const { intl, result } = this.props;
 
     if (result.isError) {
       return <ErrorScreen error={result.error} />;
@@ -70,7 +101,12 @@ export class DiagramsIndexScreen extends Component {
               />
             </p>
           </div>
-          <DiagramList query={query} />
+          { result.isLoading && (
+            <SectionLoading />
+          )}
+          { !result.isLoading && (
+            <DiagramList items={result.results} getMoreItems={this.getMoreResults} />
+          )}
         </Dashboard>
       </Screen>
     );
