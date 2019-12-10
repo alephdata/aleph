@@ -69,7 +69,7 @@ jobs:
         sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
         docker --version
         docker-compose --version
-    - name: Docker build
+    - name: Docker pull and start
       run: |
         echo "${GITHUB_REF}"
         ALEPH_TAG=${GITHUB_SHA} docker-compose pull elasticsearch convert-document ingest-file worker
