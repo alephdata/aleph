@@ -12,8 +12,10 @@ function selectObject(state, objects, id) {
     return loadState();
   }
   const obj = objects[id];
-  const outdated = obj.loadedAt && obj.loadedAt < selectTimestamp(state);
-  obj.shouldLoad = obj.shouldLoad || outdated;
+  if (!obj.isError && !obj.isLoading) {
+    const outdated = obj.loadedAt && obj.loadedAt < selectTimestamp(state);
+    obj.shouldLoad = obj.shouldLoad || outdated;
+  }
   return obj;
 }
 
