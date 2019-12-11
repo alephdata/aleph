@@ -20,6 +20,7 @@ import collectionXrefMatches from './collectionXrefMatches';
 import results from './results';
 import alerts from './alerts';
 import groups from './groups';
+import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
 import queryLogs from './queryLogs';
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   documentContent,
   alerts,
   groups,
+  roles,
   notifications,
   collections,
   collectionStatistics,

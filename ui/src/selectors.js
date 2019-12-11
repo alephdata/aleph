@@ -85,6 +85,10 @@ export function selectSystemStatus(state) {
   return selectObject(state, state, 'systemStatus');
 }
 
+export function selectRole(state, roleId) {
+  return selectObject(state, state.roles, roleId);
+}
+
 export function selectCollection(state, collectionId) {
   return selectObject(state, state.collections, collectionId);
 }
