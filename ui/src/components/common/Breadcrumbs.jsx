@@ -84,7 +84,6 @@ export default class Breadcrumbs extends Component {
     const { text, intent } = this.props.status;
     let icon;
 
-    console.log(text, intent);
     if (intent === Intent.PRIMARY) {
       icon = <Spinner size="16" intent={intent} />;
     } else if (intent === Intent.SUCCESS) {

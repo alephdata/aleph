@@ -51,7 +51,6 @@ export class DiagramScreen extends Component {
   }
 
   onStatusChange(updateStatus) {
-    console.log(updateStatus);
     this.setState({ updateStatus });
   }
 
@@ -124,8 +123,6 @@ export class DiagramScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { diagramId } = ownProps.match.params;
-
-  console.log(state);
 
   return {
     diagramId,

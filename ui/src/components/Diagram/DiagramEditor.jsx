@@ -27,25 +27,50 @@ class DiagramEditor extends React.Component {
     this.updateLayout = this.updateLayout.bind(this);
     this.updateViewport = this.updateViewport.bind(this);
     this.exportSvg = this.exportSvg.bind(this);
+    this.dispatchLayoutUpdate = this.dispatchLayoutUpdate.bind(this);
+  }
+
+  componentWillUnmount() {
+    if (!this.layoutToSend) {
+      this.dispatchLayoutUpdate();
+    }
   }
 
   updateLayout(layout, historyModified = false) {
-    const { diagram, onStatusChange } = this.props;
+    const { onStatusChange } = this.props;
     this.setState({ layout });
-    console.log(historyModified);
+
     if (historyModified) {
-      onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
-      const updatedDiagram = diagram;
-      updatedDiagram.data = { layout };
-      this.props.updateDiagram(diagram.id, updatedDiagram)
-        .then(() => {
-          onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
-        })
-        .catch((e) => {
-          console.log(e);
-          onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
-        });
+      onStatusChange();
+      console.log('history modified');
+      if (!this.layoutToSend) {
+        console.log('setting timeout');
+        setTimeout(this.dispatchLayoutUpdate, 3000);
+      }
+
+      this.layoutToSend = layout;
     }
+  }
+
+  dispatchLayoutUpdate() {
+    const { diagram, onStatusChange } = this.props;
+
+    console.log('dispatching', diagram);
+    onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
+
+    const updatedDiagram = diagram;
+    updatedDiagram.data = { layout: this.layoutToSend };
+    this.props.updateDiagram(diagram.id, updatedDiagram)
+      .then(() => {
+        console.log('finished');
+        this.layoutToSend = null;
+        onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
+      })
+      .catch(() => {
+        console.log('error');
+        this.layoutToSend = null;
+        onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+      });
   }
 
   updateViewport(viewport) {
