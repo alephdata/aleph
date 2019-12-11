@@ -6,6 +6,8 @@ import { updateDiagram } from 'src/actions';
 
 import './DiagramEditor.scss';
 
+const fileDownload = require('js-file-download');
+
 const config = new GraphConfig({ toolbarPosition: 'left', toolbarColor: '#2e363d' });
 
 class DiagramEditor extends React.Component {
@@ -78,7 +80,8 @@ class DiagramEditor extends React.Component {
   }
 
   exportSvg(data) {
-    console.log('exporting', data, this);
+    const { diagram } = this.props;
+    fileDownload(data, `${diagram.label}.svg`);
   }
 
   render() {
