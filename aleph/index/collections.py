@@ -7,6 +7,8 @@ from aleph.model import Entity, Collection
 from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, index_safe, refresh_sync
 
+STATS_FACETS = ['schema', 'names', 'addresses', 'phones', 'emails',
+                'countries', 'languages', 'ibans']
 log = logging.getLogger(__name__)
 
 
@@ -46,7 +48,6 @@ def get_collection(collection_id):
     schemata = schemata.get('values', {})
     data['count'] = sum(schemata.values())
     data['schemata'] = schemata
-
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
@@ -54,10 +55,8 @@ def get_collection(collection_id):
 def get_collection_stats(collection_id, refresh=False):
     """Compute some statistics on the content of a collection."""
     log.info("Generating collection statistics: %s", collection_id)
-    facets = ['schema', 'names', 'addresses', 'phones',
-              'emails', 'countries', 'languages', 'ibans']
     data = {}
-    for facet in facets:
+    for facet in STATS_FACETS:
         data[facet] = get_facet_values(collection_id, facet,
                                        refresh=refresh)
     return data
@@ -80,7 +79,10 @@ def get_facet_values(collection_id, facet, refresh=False):
         }
     }
     index = entities_read_index(schema=Entity.THING)
-    result = es.search(index=index, body=query)
+    result = es.search(index=index,
+                       body=query,
+                       request_timeout=3600,
+                       timeout='60m')
     aggregations = result.get('aggregations')
     values = {}
     for bucket in aggregations.get('values').get('buckets', []):
