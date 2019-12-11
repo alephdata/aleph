@@ -3,7 +3,7 @@ import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib'
 
 import './DiagramEditor.scss';
 
-const config = new GraphConfig();
+const config = new GraphConfig({ toolbarPosition: 'left', toolbarColor: '#2e363d' });
 
 class DiagramEditor extends React.Component {
   constructor(props) {
