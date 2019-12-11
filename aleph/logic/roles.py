@@ -48,6 +48,19 @@ def create_system_roles():
     db.session.commit()
 
 
+def create_user(email, name, password, is_admin=False):
+    """Create a password-based user."""
+    foreign_id = 'password:{}'.format(email)
+    role = Role.load_or_create(foreign_id, Role.USER, name,
+                               email=email, is_admin=is_admin)
+    if password is not None:
+        role.set_password(password)
+    db.session.add(role)
+    db.session.commit()
+    update_role(role)
+    return role
+
+
 def update_role(role):
     """Synchronize denormalised role configuration."""
     refresh_role(role)

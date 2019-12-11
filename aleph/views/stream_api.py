@@ -46,7 +46,7 @@ def entities(collection_id=None):
     log.debug("Stream entities [%r] begins... (coll: %s)",
               request.authz, collection_id)
     schemata = ensure_list(request.args.getlist('schema'))
-    excludes = ['text', 'roles', 'fingerprints']
+    excludes = ['text', 'fingerprints']
     includes = ensure_list(request.args.getlist('include'))
     includes = [f for f in includes if f not in excludes]
     if collection_id is not None:

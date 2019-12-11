@@ -67,8 +67,9 @@ export const tiggerXrefMatches = asyncActionCreator((id, againstCollectionIds) =
   return { data: response.data };
 }, { name: 'TRIGGER_XREF_MATCHES' });
 
-export const triggerCollectionAnalyze = asyncActionCreator(id => async () => {
-  const response = await endpoint.post(`collections/${id}/process`);
+export const triggerCollectionAnalyze = asyncActionCreator((id, reset) => async () => {
+  const config = { params: { reset } };
+  const response = await endpoint.post(`collections/${id}/process`, null, config);
   return { data: response.data };
 }, { name: 'TRIGGER_COLLECTION_ANALYZE' });
 
@@ -116,7 +117,3 @@ export const fetchCollectionMappings = asyncActionCreator((collectionId) => asyn
   const response = await endpoint.get(`collections/${collectionId}/mappings`);
   return { collectionId, data: response.data.results };
 }, { name: 'FETCH_COLLECTION_MAPPINGS' });
-
-export const triggerCollectionReload = id => (
-  { type: 'TRIGGER_COLLECTION_RELOAD', payload: { id } }
-);

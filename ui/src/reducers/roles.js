@@ -1,10 +1,10 @@
 import { createReducer } from 'redux-act';
 
-import { queryNotifications } from 'src/actions';
+import { fetchGroups } from 'src/actions';
 import { resultObjects } from './util';
 
 const initialState = {};
 
 export default createReducer({
-  [queryNotifications.COMPLETE]: (state, { result }) => resultObjects(state, result),
+  [fetchGroups.COMPLETE]: (state, { data }) => resultObjects(state, data),
 }, initialState);

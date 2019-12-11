@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Alert, Intent } from '@blueprintjs/core';
+import { Alert, Intent, Checkbox } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { triggerCollectionAnalyze } from 'src/actions';
@@ -10,7 +10,7 @@ import { showSuccessToast } from 'src/app/toast';
 const messages = defineMessages({
   processing: {
     id: 'collection.analyze.processing',
-    defaultMessage: 'Re-analyzing started.',
+    defaultMessage: 'Re-processing started.',
   },
   cancel: {
     id: 'collection.analyze.cancel',
@@ -18,21 +18,31 @@ const messages = defineMessages({
   },
   confirm: {
     id: 'collection.analyze.confirm',
-    defaultMessage: 'Start re-analyzing',
+    defaultMessage: 'Start processing',
+  },
+  reset: {
+    id: 'collection.analyze.reset',
+    defaultMessage: 'Clear index before processing',
   },
 });
 
 class CollectionAnalyzeAlert extends Component {
   constructor(props) {
     super(props);
+    this.state = { reset: true };
+    this.onToggleReset = this.onToggleReset.bind(this);
     this.onConfirm = this.onConfirm.bind(this);
   }
 
   onConfirm() {
     const { collection, intl } = this.props;
-    this.props.triggerCollectionAnalyze(collection.id);
+    this.props.triggerCollectionAnalyze(collection.id, this.state.reset);
     showSuccessToast(intl.formatMessage(messages.processing));
     this.props.toggleAlert();
+  }
+
+  onToggleReset() {
+    this.setState((state) => ({ reset: !state.reset }));
   }
 
   render() {
@@ -52,17 +62,20 @@ class CollectionAnalyzeAlert extends Component {
         <p>
           <FormattedMessage
             id="collection.analyze.alert.text"
-            defaultMessage="Re-analyzing the dataset will take some time. Start the process only once and allow time for it to complete."
+            defaultMessage="Re-processing the dataset will take some time. Start the process only once and allow time for it to complete."
           />
         </p>
+        <Checkbox
+          checked={this.state.reset}
+          label={intl.formatMessage(messages.reset)}
+          onChange={this.onToggleReset}
+        />
       </Alert>
     );
   }
 }
-const mapDispatchToProps = { triggerCollectionAnalyze };
-
 
 export default compose(
-  connect(null, mapDispatchToProps),
+  connect(null, { triggerCollectionAnalyze }),
   injectIntl,
 )(CollectionAnalyzeAlert);

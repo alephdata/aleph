@@ -1,16 +1,12 @@
 import { createReducer } from 'redux-act';
 
 import { fetchSystemStatus } from 'src/actions';
+import { loadState, loadStart, loadError, loadComplete } from 'src/reducers/util';
 
-const initialState = {
-  isLoaded: false,
-  shouldLoad: true,
-};
+const initialState = loadState();
 
 export default createReducer({
-  [fetchSystemStatus.START]: state => ({
-    ...state, isLoading: true, shouldLoad: false,
-  }),
-
-  [fetchSystemStatus.COMPLETE]: (state, { status }) => (status),
+  [fetchSystemStatus.START]: state => loadStart(state),
+  [fetchSystemStatus.ERROR]: (state, { error }) => loadError(state, error),
+  [fetchSystemStatus.COMPLETE]: (state, { status }) => loadComplete(status),
 }, initialState);

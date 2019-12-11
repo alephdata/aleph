@@ -30,10 +30,8 @@ class NotificationList extends Component {
     this.fetchIfNeeded();
   }
 
-  componentDidUpdate(prevProps) {
-    if (!this.props.query.sameAs(prevProps.query)) {
-      this.fetchIfNeeded();
-    }
+  componentDidUpdate() {
+    this.fetchIfNeeded();
   }
 
   getMoreResults() {
@@ -45,7 +43,7 @@ class NotificationList extends Component {
 
   fetchIfNeeded() {
     const { result, query } = this.props;
-    if (!result.isLoading) {
+    if (result.shouldLoad) {
       this.props.queryNotifications({ query });
     }
   }

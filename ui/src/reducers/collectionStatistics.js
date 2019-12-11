@@ -10,15 +10,9 @@ import {
 const initialState = {};
 
 export default createReducer({
-
   [fetchCollectionStatistics.START]: (state, { id }) => objectLoadStart(state, id),
-
-  [fetchCollectionStatistics.ERROR]: (state, { error, args: { id } }) => (
-    objectLoadError(state, id, error)
-  ),
-
-  [fetchCollectionStatistics.COMPLETE]: (state, { id, data }) => (
-    objectLoadComplete(state, id, data)
-  ),
-
+  [fetchCollectionStatistics.ERROR]:
+    (state, { error, args: { id } }) => objectLoadError(state, id, error),
+  [fetchCollectionStatistics.COMPLETE]:
+    (state, { id, data }) => objectLoadComplete(state, id, data),
 }, initialState);

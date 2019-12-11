@@ -2,6 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Entity
+from aleph.logic.collections import compute_collection
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
@@ -161,6 +162,7 @@ class CollectionsApiTestCase(TestCase):
 
     def test_statistics(self):
         self.load_fixtures()
+        compute_collection(self.private_coll, sync=True)
         _, headers = self.login(is_admin=True)
         url = '/api/2/collections/%s/statistics' % self.private_coll.id
         res = self.client.get(url)

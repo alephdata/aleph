@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 
 export function mergeResults(previous, current) {
-  if (previous === undefined || previous.results === undefined) {
+  if (previous === undefined || previous.results === undefined || current.offset === 0) {
     return current;
   }
   const expectedOffset = (previous.limit + previous.offset);
@@ -13,13 +13,23 @@ export function mergeResults(previous, current) {
   return previous;
 }
 
+export function timestamp() {
+  return new Date().toISOString();
+}
+
+export function loadComplete(data) {
+  return {
+    ...data,
+    isLoading: false,
+    isError: false,
+    shouldLoad: false,
+    loadedAt: timestamp(),
+    error: undefined,
+  };
+}
+
 export function objectLoadComplete(state, id, data = {}) {
-  /* eslint-disable no-param-reassign */
-  data.isLoading = false;
-  data.isError = false;
-  data.shouldLoad = false;
-  /* eslint-enable no-param-reassign */
-  return { ...state, [id]: data };
+  return { ...state, [id]: loadComplete(data) };
 }
 
 export function updateResults(state, { query, result }) {
@@ -28,35 +38,42 @@ export function updateResults(state, { query, result }) {
   return objectLoadComplete(state, key, mergeResults(state[key], res));
 }
 
-export function invalidateResults() {
-  return {};
+export function loadState(data) {
+  const state = data || {};
+  return { ...state, isLoading: false, shouldLoad: true, isError: false };
+}
+
+export function loadStart(state) {
+  const prevState = state || {};
+  return { ...prevState, isLoading: true, shouldLoad: false, isError: false, loadedAt: null };
 }
 
 export function objectLoadStart(state, id) {
-  const object = { isLoading: true, shouldLoad: false };
-  return { ...state, [id]: _.assign({}, state[id], object) };
+  return { ...state, [id]: loadStart(state[id]) };
 }
 
 export function resultLoadStart(state, query) {
-  const key = query ? query.toKey() : undefined;
-  return objectLoadStart(state, key);
+  return objectLoadStart(state, query.toKey());
 }
 
-export function objectLoadError(state, id, error) {
+export function loadError(state, error) {
+  const prevState = state || {};
   return {
-    ...state,
-    [id]: {
-      isLoading: false,
-      isError: true,
-      shouldLoad: false,
-      error,
-    },
+    ...prevState,
+    isLoading: false,
+    shouldLoad: false,
+    isError: false,
+    loadedAt: undefined,
+    error,
   };
 }
 
+export function objectLoadError(state, id, error) {
+  return { ...state, [id]: loadError(state[id], error) };
+}
+
 export function resultLoadError(state, query, error) {
-  const key = query ? query.toKey() : undefined;
-  return objectLoadError(state, key, error);
+  return objectLoadError(state, query.toKey(), error);
 }
 
 export function objectReload(state, id) {

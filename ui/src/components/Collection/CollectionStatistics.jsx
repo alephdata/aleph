@@ -10,7 +10,6 @@ import './CollectionStatistics.scss';
 class CollectionStatistics extends PureComponent {
   constructor(props) {
     super(props);
-
     this.renderItem = this.renderItem.bind(this);
   }
 

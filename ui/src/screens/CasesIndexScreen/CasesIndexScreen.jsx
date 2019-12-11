@@ -103,19 +103,19 @@ export class CasesIndexScreen extends Component {
               />
             </p>
           </div>
+          <CollectionIndexSearch
+            query={query}
+            updateQuery={this.updateQuery}
+            placeholder={intl.formatMessage(messages.placeholder)}
+          />
           {!result.isLoading && result.total === 0 && (
             <ErrorSection
               icon="search"
               title={intl.formatMessage(messages.no_results_title)}
             />
           )}
-          {!result.isLoading && result.total !== 0 && (
+          {result.total !== undefined && result.total !== 0 && (
             <>
-              <CollectionIndexSearch
-                query={query}
-                updateQuery={this.updateQuery}
-                placeholder={intl.formatMessage(messages.placeholder)}
-              />
               <ul className="results">
                 {result.results !== undefined && result.results
                   .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}
