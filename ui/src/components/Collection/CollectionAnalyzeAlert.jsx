@@ -59,10 +59,8 @@ class CollectionAnalyzeAlert extends Component {
     );
   }
 }
-const mapDispatchToProps = { triggerCollectionAnalyze };
-
 
 export default compose(
-  connect(null, mapDispatchToProps),
+  connect(null, { triggerCollectionAnalyze }),
   injectIntl,
 )(CollectionAnalyzeAlert);

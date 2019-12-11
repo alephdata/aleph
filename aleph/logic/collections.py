@@ -5,7 +5,7 @@ from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue
 from aleph.model import Collection, Entity, Document, Match
-from aleph.model import Permission, Events
+from aleph.model import Permission, Events, Mapping
 from aleph.index import collections as index
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.aggregator import drop_aggregator
@@ -62,6 +62,7 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
     Document.delete_by_collection(collection.id)
+    Mapping.delete_by_collection(collection.id)
     if not keep_metadata:
         Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
         collection.delete(deleted_at=deleted_at)

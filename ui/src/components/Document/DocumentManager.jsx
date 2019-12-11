@@ -13,7 +13,6 @@ import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeA
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
 import { ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
-import { selectEntitiesResult } from 'src/selectors';
 
 import './DocumentManager.scss';
 
@@ -42,28 +41,6 @@ export class DocumentManager extends Component {
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
     this.toggleUpload = this.toggleUpload.bind(this);
     this.toggleAnalyze = this.toggleAnalyze.bind(this);
-  }
-
-  componentDidMount() {
-    this.refreshPending();
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
-  }
-
-  scheduleNextRefresh() {
-    this.timeout = setTimeout(() => this.refreshPending(), 2000);
-  }
-
-  refreshPending() {
-    const { hasPending, query, result } = this.props;
-    if (!result.isLoading && result.total !== undefined && hasPending) {
-      const updateQuery = query.limit(result.results.length);
-      this.props.queryEntities({ query: updateQuery }).finally(() => this.scheduleNextRefresh());
-    } else {
-      this.scheduleNextRefresh();
-    }
   }
 
   updateSelection(document) {
@@ -213,17 +190,10 @@ const mapStateToProps = (state, ownProps) => {
   if (!query.hasSort()) {
     query = query.sortBy('name', 'asc');
   }
-
   if (collection.writeable) {
     query = query.set('cache', 'false');
   }
-
-  const result = selectEntitiesResult(state, query);
-  const status = _.map(result.results || [], 'status');
-  const hasPending = status.indexOf('pending') !== -1;
-  return {
-    query, result, hasPending,
-  };
+  return { query };
 };
 
 export default compose(

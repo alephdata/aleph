@@ -1,27 +1,12 @@
 import { createReducer } from 'redux-act';
 
 import { fetchGroups } from 'src/actions';
+import { loadState, loadStart, loadError, loadComplete } from 'src/reducers/util';
 
-const initialState = {
-  shouldLoad: true,
-  isLoading: false,
-  isError: false,
-};
+const initialState = loadState();
 
 export default createReducer({
-  [fetchGroups.START]: () => ({ isLoading: true, shouldLoad: false }),
-
-  [fetchGroups.ERROR]: (state, { error }) => ({
-    shouldLoad: false,
-    isLoading: false,
-    isError: true,
-    error,
-  }),
-
-  [fetchGroups.COMPLETE]: (state, { data }) => ({
-    ...data,
-    shouldLoad: false,
-    isLoading: false,
-    isError: false,
-  }),
+  [fetchGroups.START]: (state) => loadStart(state),
+  [fetchGroups.ERROR]: (state, { error }) => loadError(state, error),
+  [fetchGroups.COMPLETE]: (state, { data }) => loadComplete(data),
 }, initialState);

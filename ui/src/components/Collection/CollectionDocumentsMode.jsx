@@ -6,7 +6,7 @@ import DocumentManager from 'src/components/Document/DocumentManager';
 import { queryCollectionDocuments } from 'src/queries';
 
 
-class CollectionDocumentsMode extends React.PureComponent {
+class CollectionDocumentsMode extends React.Component {
   render() {
     const { collection, query } = this.props;
     return <DocumentManager query={query} collection={collection} />;

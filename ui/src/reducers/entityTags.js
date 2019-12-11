@@ -7,9 +7,8 @@ const initialState = {};
 
 export default createReducer({
   [fetchEntityTags.START]: (state, { id }) => objectLoadStart(state, id),
-
-  [fetchEntityTags.ERROR]: (state, { error, args: { id } }) => objectLoadError(state, id, error),
-
-  [fetchEntityTags.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
-
+  [fetchEntityTags.ERROR]:
+    (state, { error, args: { id } }) => objectLoadError(state, id, error),
+  [fetchEntityTags.COMPLETE]:
+    (state, { id, data }) => objectLoadComplete(state, id, data),
 }, initialState);

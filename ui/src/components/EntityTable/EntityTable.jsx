@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { SortableTH, ErrorSection } from 'src/components/common';
 import EntityTableRow from './EntityTableRow';
+
 import './EntityTable.scss';
 
 const messages = defineMessages({
@@ -36,18 +37,6 @@ const messages = defineMessages({
 });
 
 class EntityTable extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      result: props.result,
-    };
-  }
-
-  static getDerivedStateFromProps(nextProps) {
-    const { result } = nextProps;
-    return (!result.isLoading) ? { result } : null;
-  }
-
   sortColumn(newField) {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
@@ -64,11 +53,9 @@ class EntityTable extends Component {
   }
 
   render() {
-    const { query, intl, location } = this.props;
+    const { query, intl, location, result } = this.props;
     const { hideCollection = false, documentMode = false, showPreview = true } = this.props;
     const { updateSelection, selection } = this.props;
-    const isLoading = this.props.result.total === undefined;
-    const { result } = this.state;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -78,6 +65,7 @@ class EntityTable extends Component {
       return null;
     }
 
+    const results = result.results.filter((e) => e.id !== undefined);
     const TH = ({
       sortable, field, className, ...otherProps
     }) => {
@@ -112,8 +100,8 @@ class EntityTable extends Component {
             )}
           </tr>
         </thead>
-        <tbody className={c({ updating: isLoading })}>
-          {result.results !== undefined && result.results.map(entity => (
+        <tbody className={c({ updating: result.isLoading })}>
+          {results.map(entity => (
             <EntityTableRow
               key={entity.id}
               entity={entity}

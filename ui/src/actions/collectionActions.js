@@ -116,7 +116,3 @@ export const fetchCollectionMappings = asyncActionCreator((collectionId) => asyn
   const response = await endpoint.get(`collections/${collectionId}/mappings`);
   return { collectionId, data: response.data.results };
 }, { name: 'FETCH_COLLECTION_MAPPINGS' });
-
-export const triggerCollectionReload = id => (
-  { type: 'TRIGGER_COLLECTION_RELOAD', payload: { id } }
-);

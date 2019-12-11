@@ -21,7 +21,6 @@ export {
   tiggerXrefMatches,
   triggerCollectionAnalyze,
   triggerCollectionCancel,
-  triggerCollectionReload,
   updateCollection,
   updateCollectionMapping,
   updateCollectionPermissions,
@@ -34,3 +33,4 @@ export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');
+export const mutate = createAction('MUTATE');
