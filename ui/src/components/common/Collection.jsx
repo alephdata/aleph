@@ -39,6 +39,7 @@ class CollectionLabel extends PureComponent {
     const {
       collection, icon = true, label = true, updating = false, truncate,
     } = this.props;
+
     if (!collection || !collection.id) {
       return null;
     }

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import queryString from 'query-string';
 
 import { fetchDiagram } from 'src/actions';
 import { selectDiagram } from 'src/selectors';
@@ -12,12 +13,57 @@ import DiagramManageMenu from 'src/components/Diagram/DiagramManageMenu';
 import DiagramEditor from 'src/components/Diagram/DiagramEditor';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Breadcrumbs, Diagram } from 'src/components/common';
+import { Breadcrumbs, Collection, Diagram } from 'src/components/common';
 
 
 export class DiagramScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filterText: '',
+    };
+
+    this.onCollectionSearch = this.onCollectionSearch.bind(this);
+    this.onDiagramSearch = this.onDiagramSearch.bind(this);
+  }
+
   componentDidMount() {
     this.fetchIfNeeded();
+  }
+
+  onCollectionSearch(queryText) {
+    const { history, diagram } = this.props;
+    const query = {
+      q: queryText,
+      'filter:collection_id': diagram.collection.id,
+    };
+    history.push({
+      pathname: '/search',
+      search: queryString.stringify(query),
+    });
+  }
+
+  onDiagramSearch(filterText) {
+    this.setState({ filterText });
+  }
+
+  getSearchScopes() {
+    const { diagram } = this.props;
+    const scopes = [
+      {
+        listItem: <Collection.Label collection={diagram.collection} icon truncate={30} />,
+        label: diagram.collection.label,
+        onSearch: this.onCollectionSearch,
+      },
+      {
+        listItem: <Diagram.Label diagram={diagram} icon truncate={30} />,
+        label: diagram.label,
+        onSearch: this.onDiagramSearch,
+      },
+    ];
+
+    return scopes;
   }
 
   fetchIfNeeded() {
@@ -30,6 +76,7 @@ export class DiagramScreen extends Component {
 
   render() {
     const { diagram } = this.props;
+    const { filterText } = this.state;
 
     if (diagram.isError) {
       return <ErrorScreen error={diagram.error} />;
@@ -55,10 +102,10 @@ export class DiagramScreen extends Component {
       <Screen
         title="placeholder"
         description="placeholder"
-        searchScopes={[]}
+        searchScopes={this.getSearchScopes()}
       >
         {breadcrumbs}
-        <DiagramEditor />
+        <DiagramEditor filterText={filterText} />
       </Screen>
     );
   }

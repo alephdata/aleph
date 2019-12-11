@@ -36,7 +36,9 @@ class DiagramEditor extends React.Component {
   }
 
   render() {
+    const { filterText } = this.props;
     const { layout, viewport } = this.state;
+
     return (
       <div className="DiagramEditor">
         <VisGraph
@@ -46,6 +48,7 @@ class DiagramEditor extends React.Component {
           updateLayout={this.updateLayout}
           updateViewport={this.updateViewport}
           exportSvg={this.exportSvg}
+          externalFilterText={filterText}
           writeable
         />
       </div>

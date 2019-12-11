@@ -31,8 +31,6 @@ export class CollectionDiagramsIndexMode extends Component {
   render() {
     const { diagrams, state } = this.props;
 
-    console.log(diagrams, state);
-
     // if (result.isError) {
     //   return <ErrorScreen error={result.error} />;
     // }

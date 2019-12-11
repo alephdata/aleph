@@ -132,7 +132,6 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
-  console.log(state);
   return {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
