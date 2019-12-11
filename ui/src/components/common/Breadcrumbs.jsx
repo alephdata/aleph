@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from 'react';
-import { Icon } from '@blueprintjs/core';
+import { Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
 import c from 'classnames';
 import { Category, Collection, Entity } from 'src/components/common';
 
@@ -80,8 +80,28 @@ export default class Breadcrumbs extends Component {
 
   static Text = TextBreadcrumb;
 
+  renderStatus() {
+    const { text, intent } = this.props.status;
+    let icon;
+
+    console.log(text, intent);
+    if (intent === Intent.PRIMARY) {
+      icon = <Spinner size="16" intent={intent} />;
+    } else if (intent === Intent.SUCCESS) {
+      icon = 'tick';
+    } else {
+      icon = 'error';
+    }
+
+    return (
+      <Tag large minimal intent={intent} className="Breadcrumbs__status" icon={icon}>
+        {text}
+      </Tag>
+    );
+  }
+
   render() {
-    const { collection, children, operation } = this.props;
+    const { collection, children, operation, status } = this.props;
 
     const collectionCrumbs = [];
     if (collection) {
@@ -96,7 +116,10 @@ export default class Breadcrumbs extends Component {
           {collectionCrumbs}
           {children}
         </ul>
-        {operation}
+        <div className="Breadcrumbs__right">
+          {status && this.renderStatus()}
+          {operation}
+        </div>
       </nav>
     );
   }

@@ -1,5 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Intent } from '@blueprintjs/core';
 import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
+import { updateDiagram } from 'src/actions';
 
 import './DiagramEditor.scss';
 
@@ -8,9 +11,16 @@ const config = new GraphConfig({ toolbarPosition: 'left', toolbarColor: '#2e363d
 class DiagramEditor extends React.Component {
   constructor(props) {
     super(props);
+    let storedLayout;
+
+    if (props?.diagram?.data?.layout?.entities) {
+      storedLayout = props.diagram.data.layout;
+    }
 
     this.state = {
-      layout: new GraphLayout(config),
+      layout: storedLayout
+        ? GraphLayout.fromJSON(config, storedLayout)
+        : new GraphLayout(config),
       viewport: new Viewport(config),
     };
 
@@ -20,11 +30,22 @@ class DiagramEditor extends React.Component {
   }
 
   updateLayout(layout, historyModified = false) {
+    const { diagram, onStatusChange } = this.props;
     this.setState({ layout });
-    console.log('updating', historyModified);
-    // if (historyModified) {
-    //   //send update
-    // }
+    console.log(historyModified);
+    if (historyModified) {
+      onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
+      const updatedDiagram = diagram;
+      updatedDiagram.data = { layout };
+      this.props.updateDiagram(diagram.id, updatedDiagram)
+        .then(() => {
+          onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
+        })
+        .catch((e) => {
+          console.log(e);
+          onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+        });
+    }
   }
 
   updateViewport(viewport) {
@@ -56,4 +77,6 @@ class DiagramEditor extends React.Component {
   }
 }
 
-export default DiagramEditor;
+const mapStateToProps = () => ({});
+
+export default connect(mapStateToProps, { updateDiagram })(DiagramEditor);

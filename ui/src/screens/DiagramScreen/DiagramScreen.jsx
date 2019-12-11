@@ -22,10 +22,12 @@ export class DiagramScreen extends Component {
 
     this.state = {
       filterText: '',
+      updateStatus: null,
     };
 
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onDiagramSearch = this.onDiagramSearch.bind(this);
+    this.onStatusChange = this.onStatusChange.bind(this);
   }
 
   componentDidMount() {
@@ -46,6 +48,11 @@ export class DiagramScreen extends Component {
 
   onDiagramSearch(filterText) {
     this.setState({ filterText });
+  }
+
+  onStatusChange(updateStatus) {
+    console.log(updateStatus);
+    this.setState({ updateStatus });
   }
 
   getSearchScopes() {
@@ -76,7 +83,7 @@ export class DiagramScreen extends Component {
 
   render() {
     const { diagram } = this.props;
-    const { filterText } = this.state;
+    const { filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
       return <ErrorScreen error={diagram.error} />;
@@ -91,7 +98,7 @@ export class DiagramScreen extends Component {
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation}>
+      <Breadcrumbs operation={operation} status={updateStatus}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.Text active>
           <Diagram.Label diagram={diagram} />
@@ -105,7 +112,11 @@ export class DiagramScreen extends Component {
         searchScopes={this.getSearchScopes()}
       >
         {breadcrumbs}
-        <DiagramEditor filterText={filterText} />
+        <DiagramEditor
+          diagram={diagram}
+          filterText={filterText}
+          onStatusChange={this.onStatusChange}
+        />
       </Screen>
     );
   }
@@ -113,6 +124,8 @@ export class DiagramScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { diagramId } = ownProps.match.params;
+
+  console.log(state);
 
   return {
     diagramId,
