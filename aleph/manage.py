@@ -143,7 +143,7 @@ def flushdeleted():
 def update():
     """Re-index all collections and clear some caches."""
     update_roles()
-    index_collections()
+    index_collections(sync=True)
 
 
 @cli.command('namefreq')
@@ -261,7 +261,7 @@ def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_system()
     update_roles()
-    index_collections()
+    index_collections(sync=True)
 
 
 @cli.command()

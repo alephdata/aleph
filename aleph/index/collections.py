@@ -53,13 +53,13 @@ def get_collection(collection_id):
 
 
 def get_collection_stats(collection_id, refresh=False):
-    """Compute some statistics on the content of a collection."""
-    log.info("Generating collection statistics: %s", collection_id)
-    data = {}
+    """Retrieve statistics on the content of a collection."""
+    return {f: get_facet_values(collection_id, f) for f in STATS_FACETS}
+
+
+def update_collection_stats(collection_id):
     for facet in STATS_FACETS:
-        data[facet] = get_facet_values(collection_id, facet,
-                                       refresh=refresh)
-    return data
+        get_facet_values(collection_id, facet, refresh=True)
 
 
 def get_facet_values(collection_id, facet, refresh=False):
@@ -82,7 +82,7 @@ def get_facet_values(collection_id, facet, refresh=False):
     result = es.search(index=index,
                        body=query,
                        request_timeout=3600,
-                       timeout='60m')
+                       timeout='20m')
     aggregations = result.get('aggregations')
     values = {}
     for bucket in aggregations.get('values').get('buckets', []):

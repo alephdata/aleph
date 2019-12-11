@@ -1,3 +1,4 @@
+from aleph.logic.collections import compute_collection
 from aleph.tests.util import TestCase
 
 
@@ -28,6 +29,8 @@ class BaseApiTestCase(TestCase):
         assert res.json['things'] == 0, res.json
 
         self.load_fixtures()
+        compute_collection(self.private_coll, sync=True)
+        compute_collection(self.public_coll, sync=True)
         res = self.client.get('/api/2/statistics')
         assert res.status_code == 200, res
         assert res.json['collections'] == 1, res.json

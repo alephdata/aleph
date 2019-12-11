@@ -36,7 +36,17 @@ def refresh_collection(collection_id, sync=False):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and re-index."""
     cache.kv.delete(cache.object_key(Collection, collection_id),
-                    cache.object_key(Collection, collection_id, 'schema'))
+                    cache.object_key(Collection, collection_id, 'stats'))
+
+
+def compute_collection(collection, sync=False):
+    key = cache.object_key(Collection, collection.id, 'stats')
+    if cache.get(key) and not sync:
+        return
+    cache.set(key, 'computed', expires=cache.EXPIRE - 60)
+    log.info("Collection [%s] changed, computing...", collection.id)
+    index.update_collection_stats(collection.id)
+    index.index_collection(collection, sync=sync)
 
 
 def reset_collection(collection, sync=False):
@@ -49,11 +59,9 @@ def reset_collection(collection, sync=False):
     db.session.commit()
 
 
-def index_collections():
+def index_collections(sync=False):
     for collection in Collection.all(deleted=True):
-        refresh_collection(collection.id, sync=True)
-        index.get_collection_stats(collection.id, refresh=True)
-        index.index_collection(collection)
+        compute_collection(collection, sync=sync)
 
 
 def delete_collection(collection, keep_metadata=False, sync=False):
