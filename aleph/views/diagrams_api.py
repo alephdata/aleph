@@ -1,4 +1,5 @@
 import logging
+from banal import first
 from flask import Blueprint, request
 
 from aleph.model import Diagram
@@ -14,11 +15,19 @@ log = logging.getLogger(__name__)
 
 
 @blueprint.route('/api/2/diagrams', methods=['GET'])
-def user_diagrams():
+def index():
     """Returns a list of diagrams for the role
     ---
     get:
       summary: List diagrams
+      parameters:
+      - description: The collection id.
+        in: query
+        name: 'filter:collection_id'
+        required: true
+        schema:
+          minimum: 1
+          type: integer
       responses:
         '200':
           content:
@@ -37,48 +46,14 @@ def user_diagrams():
         - Diagram
     """
     require(request.authz.logged_in)
-    q = Diagram.by_role_id(request.authz.id)
-    result = DatabaseQueryResult(request, q)
-    return DiagramSerializer.jsonify_result(result)
-
-
-@blueprint.route('/api/2/collections/<int:collection_id>/diagrams', methods=['GET'])  # noqa
-def index(collection_id):
-    """Returns a list of diagrams for the collection.
-    ---
-    get:
-      summary: List diagrams
-      parameters:
-      - description: The collection id.
-        in: path
-        name: collection_id
-        required: true
-        schema:
-          minimum: 1
-          type: integer
-      requestBody:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: object
-                allOf:
-                - $ref: '#/components/schemas/QueryResponse'
-                properties:
-                  results:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Diagram'
-          description: OK
-      tags:
-        - Collection
-        - Diagram
-    """
-    collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
-    q = Diagram.by_collection(collection.id)
-    result = DatabaseQueryResult(request, q, parser=parser)
+    collection_id = first(parser.filters.get('collection_id'))
+    if collection_id:
+        get_db_collection(collection_id)
+        q = Diagram.by_collection(collection_id).filter(Diagram.role_id == request.authz.id)  # noqa
+    else:
+        q = Diagram.by_role_id(request.authz.id)
+    result = DatabaseQueryResult(request, q)
     return DiagramSerializer.jsonify_result(result)
 
 
