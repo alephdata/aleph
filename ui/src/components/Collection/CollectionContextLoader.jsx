@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { fetchCollection, fetchCollectionStatus, fetchCollectionXrefIndex, triggerCollectionReload } from 'src/actions';
+import { fetchCollection, fetchCollectionStatus, fetchCollectionXrefIndex, mutate } from 'src/actions';
 import { selectCollection, selectCollectionStatus, selectCollectionXrefIndex } from 'src/selectors';
 
 
@@ -18,7 +18,7 @@ class CollectionContextLoader extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const { collectionId, status } = this.props;
+    const { status } = this.props;
     const prevStatus = prevProps.status;
     this.fetchIfNeeded();
 
@@ -26,7 +26,7 @@ class CollectionContextLoader extends PureComponent {
     const isUpdating = status.pending > 0 || status.running > 0;
 
     if (wasUpdating && !isUpdating) {
-      this.props.triggerCollectionReload(collectionId);
+      this.props.mutate();
     }
   }
 
@@ -35,10 +35,14 @@ class CollectionContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const { collectionId, collection } = this.props;
+    const { collectionId, collection, status } = this.props;
 
     if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
+    }
+
+    if (status.shouldLoad) {
+      this.fetchStatus();
     }
 
     const { xrefIndex } = this.props;
@@ -49,6 +53,7 @@ class CollectionContextLoader extends PureComponent {
 
   fetchStatus() {
     const { collectionId } = this.props;
+    clearTimeout(this.timeout);
     this.props.fetchCollectionStatus({ id: collectionId })
       .finally(() => {
         const { status } = this.props;
@@ -73,10 +78,10 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 const mapDispatchToProps = {
+  mutate,
   fetchCollection,
   fetchCollectionStatus,
   fetchCollectionXrefIndex,
-  triggerCollectionReload,
 };
 export default compose(
   withRouter,

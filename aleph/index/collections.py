@@ -1,14 +1,14 @@
 import logging
 from pprint import pprint  # noqa
-from banal import ensure_list
 from normality import normalize
-from followthemoney.types import registry
 
 from aleph.core import es, cache
 from aleph.model import Entity, Collection
 from aleph.index.indexes import collections_index, entities_read_index
 from aleph.index.util import query_delete, index_safe, refresh_sync
 
+STATS_FACETS = ['schema', 'names', 'addresses', 'phones', 'emails',
+                'countries', 'languages', 'ibans']
 log = logging.getLogger(__name__)
 
 
@@ -44,45 +44,54 @@ def get_collection(collection_id):
         return
 
     data = collection.to_dict()
-    stats = get_collection_stats(collection.id)
-    data['count'] = stats['count']
-    data['schemata'] = stats['schemata']
-
-    # if no countries or langs are given, take the most common from the data.
-    countries = ensure_list(collection.countries)
-    countries = countries or stats['countries'].keys()
-    data['countries'] = registry.country.normalize_set(countries)
-
-    languages = ensure_list(collection.languages)
-    languages = languages or stats['languages'].keys()
-    data['languages'] = registry.language.normalize_set(languages)
+    schemata = get_facet_values(collection.id, 'schema')
+    schemata = schemata.get('values', {})
+    data['count'] = sum(schemata.values())
+    data['schemata'] = schemata
     cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
 
-def get_collection_stats(collection_id):
+def get_collection_stats(collection_id, refresh=False):
+    """Retrieve statistics on the content of a collection."""
+    return {f: get_facet_values(collection_id, f) for f in STATS_FACETS}
+
+
+def update_collection_stats(collection_id):
+    for facet in STATS_FACETS:
+        get_facet_values(collection_id, facet, refresh=True)
+
+
+def get_facet_values(collection_id, facet, refresh=False):
     """Compute some statistics on the content of a collection."""
-    log.info("Generating collection stats: %s", collection_id)
+    key = cache.object_key(Collection, collection_id, facet)
+    data = cache.get_complex(key)
+    if not refresh and data is not None:
+        return data
+
     query = {'term': {'collection_id': collection_id}}
     query = {
         'size': 0,
         'query': {'bool': {'filter': [query]}},
         'aggs': {
-            'schemata': {'terms': {'field': 'schema', 'size': 1000}},
-            'countries': {'terms': {'field': 'countries', 'size': 1000}},
-            'languages': {'terms': {'field': 'languages', 'size': 1000}},
+            'values': {'terms': {'field': facet, 'size': 300}},
+            'total': {'cardinality': {'field': facet}}
         }
     }
     index = entities_read_index(schema=Entity.THING)
-    result = es.search(index=index, body=query)
-    aggregations = result.get('aggregations', {})
-    data = {'count': 0}
-    for facet in ['schemata', 'countries', 'languages']:
-        data[facet] = {}
-        for bucket in aggregations.get(facet, {}).get('buckets', []):
-            data[facet][bucket['key']] = bucket['doc_count']
-    if len(data['schemata']):
-        data['count'] = sum(data['schemata'].values())
+    result = es.search(index=index,
+                       body=query,
+                       request_timeout=3600,
+                       timeout='20m')
+    aggregations = result.get('aggregations')
+    values = {}
+    for bucket in aggregations.get('values').get('buckets', []):
+        values[bucket['key']] = bucket['doc_count']
+    data = {
+        'values': values,
+        'total': aggregations.get('total').get('value', 0)
+    }
+    cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
 
 

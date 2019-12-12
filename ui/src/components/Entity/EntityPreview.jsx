@@ -8,11 +8,12 @@ import EntityContextLoader from 'src/components/Entity/EntityContextLoader';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityToolbar from 'src/components/Entity/EntityToolbar';
 import EntityViews from 'src/components/Entity/EntityViews';
-import { DualPane, SectionLoading, ErrorSection } from 'src/components/common';
+import { SectionLoading, ErrorSection } from 'src/components/common';
 import { selectEntity, selectEntityView } from 'src/selectors';
 import queryString from 'query-string';
 import togglePreview from 'src/util/togglePreview';
 
+import 'src/components/common/ItemOverview.scss';
 import './EntityPreview.scss';
 
 
@@ -39,10 +40,14 @@ export class EntityPreview extends React.Component {
       return <SectionLoading />;
     }
     return (
-      <>
-        <EntityHeading entity={entity} isPreview />
-        <EntityViews entity={entity} activeMode={activeMode} isPreview />
-      </>
+      <div className="ItemOverview preview">
+        <div className="ItemOverview__heading">
+          <EntityHeading entity={entity} isPreview />
+        </div>
+        <div className="ItemOverview__content">
+          <EntityViews entity={entity} activeMode={activeMode} isPreview />
+        </div>
+      </div>
     );
   }
 
@@ -64,9 +69,9 @@ export class EntityPreview extends React.Component {
           // canOutsideClickClose={false}
           portalClassName="EntityPreview__overlay-container"
         >
-          <DualPane.InfoPane className="with-heading">
+          <div className="EntityPreview__content">
             {this.renderContext()}
-          </DualPane.InfoPane>
+          </div>
         </Drawer>
       </EntityContextLoader>
     );

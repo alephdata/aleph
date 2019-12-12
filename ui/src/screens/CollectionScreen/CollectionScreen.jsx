@@ -14,7 +14,9 @@ import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
-import { selectCollection, selectCollectionStatus, selectCollectionView } from 'src/selectors';
+import { selectCollection, selectCollectionStatus } from 'src/selectors';
+
+import 'src/components/common/ItemOverview.scss';
 
 
 export class CollectionScreen extends Component {
@@ -45,7 +47,7 @@ export class CollectionScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
-    if (!collection.id || !collection.links) {
+    if (collection.id === undefined) {
       return (
         <CollectionContextLoader collectionId={collectionId}>
           <LoadingScreen />
@@ -87,13 +89,15 @@ export class CollectionScreen extends Component {
           searchScopes={[searchScope]}
         >
           {breadcrumbs}
-          <DualPane itemScope itemType="https://schema.org/Dataset">
-            <DualPane.InfoPane className="with-heading">
-              <CollectionHeading collection={collection} />
-              <div className="pane-content">
+          <DualPane>
+            <DualPane.SidePane className="ItemOverview">
+              <div className="ItemOverview__heading">
+                <CollectionHeading collection={collection} />
+              </div>
+              <div className="ItemOverview__content">
                 <CollectionInfoMode collection={collection} />
               </div>
-            </DualPane.InfoPane>
+            </DualPane.SidePane>
             <DualPane.ContentPane>
               <CollectionViews
                 collection={collection}
@@ -118,7 +122,7 @@ const mapStateToProps = (state, ownProps) => {
     collectionId,
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
-    activeMode: selectCollectionView(state, collectionId, hashQuery.mode),
+    activeMode: hashQuery.mode || 'Overview',
   };
 };
 

@@ -79,6 +79,12 @@ class Mapping(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
+    def delete_by_collection(cls, collection_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq.delete(synchronize_session=False)
+
+    @classmethod
     def create(cls, query, table_id, collection, role_id):
         mapping = cls()
         mapping.role_id = role_id

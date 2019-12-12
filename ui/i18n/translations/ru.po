@@ -358,7 +358,7 @@ msgstr "Выберите файлы для загрузки"
 #. Citations
 #: i18n/messages.json
 msgid "Citations"
-msgstr "Цитаты"
+msgstr "Количество упоминаний"
 
 #. [queryFilters.clearAll]
 #. defaultMessage is:
@@ -1177,7 +1177,7 @@ msgstr "Требуется авторизация"
 #. Notifications
 #: i18n/messages.json i18n/messages.json
 msgid "Notifications"
-msgstr "Оповещения"
+msgstr "Уведомления"
 
 #. [document.upload.notice]
 #. defaultMessage is:
@@ -1365,14 +1365,14 @@ msgstr "Повторный анализ"
 #. Receive daily notification e-mails
 #: i18n/messages.json
 msgid "Receive daily notification e-mails"
-msgstr "Получать ежедневные оповещения по эл. почте"
+msgstr "Получать ежедневные уведомления по эл. почте"
 
 #. [notifications.title]
 #. defaultMessage is:
 #. Recent notifications
 #: i18n/messages.json
 msgid "Recent notifications"
-msgstr "Недавние оповещения"
+msgstr "Последние уведомления"
 
 #. [email.to]
 #. defaultMessage is:
@@ -1700,7 +1700,7 @@ msgstr "Краткое описание"
 #. System Status
 #: i18n/messages.json
 msgid "System Status"
-msgstr "Статус Системы"
+msgstr "Системный статус"
 
 #. [dashboard.status]
 #. defaultMessage is:
@@ -2160,7 +2160,7 @@ msgstr "У вас пока нет персональных наборов дан
 #. You have no unseen notifications
 #: i18n/messages.json
 msgid "You have no unseen notifications"
-msgstr "У вас нет непросмотренных оповещений"
+msgstr "У вас нет непросмотренных уведомлений"
 
 #. [collection.xref.select.selectStatus]
 #. defaultMessage is:
@@ -2191,7 +2191,7 @@ msgid ""
 "of the alerts you have set up below."
 msgstr ""
 "Укажите искомые слова и, в случае, если они будут найдены в новых "
-"документах, вы увидите оповещение."
+"документах, вы получите уведомление."
 
 #. [password_auth.name]
 #. defaultMessage is:

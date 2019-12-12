@@ -7,5 +7,4 @@ const initialState = {};
 
 export default createReducer({
   [queryNotifications.COMPLETE]: (state, { result }) => resultObjects(state, result),
-
 }, initialState);

@@ -4,19 +4,6 @@ import c from 'classnames';
 import './DualPane.scss';
 
 
-class InfoPane extends PureComponent {
-  render() {
-    const { children, className } = this.props;
-    return (
-      <aside className={c('InfoPane', className)} style={this.props.style}>
-        <div className="InfoPane__inner-container">
-          {children}
-        </div>
-      </aside>
-    );
-  }
-}
-
 class SidePane extends PureComponent {
   render() {
     const { children, className } = this.props;
@@ -40,8 +27,6 @@ class ContentPane extends PureComponent {
 }
 
 class DualPane extends PureComponent {
-  static InfoPane = InfoPane;
-
   static SidePane = SidePane;
 
   static ContentPane = ContentPane;

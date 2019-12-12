@@ -83,8 +83,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def clear_roles(self):
         """Removes any existing roles from group membership."""
         self.roles = []
-        db.session.add(self)
         self.updated_at = datetime.utcnow()
+        db.session.add(self)
+        db.session.flush()
 
     def add_role(self, role):
         """Adds an existing role as a membership of a group."""

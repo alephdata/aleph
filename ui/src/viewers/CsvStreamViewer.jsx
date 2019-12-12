@@ -50,8 +50,8 @@ class CSVStreamViewer extends React.Component {
       if (this.parser !== null) {
         this.parser.resume();
       } else {
-        // set chunk size to 500 KB
-        Papa.RemoteChunkSize = 1024 * 500;
+        // set chunk size to 100 KB
+        Papa.RemoteChunkSize = 1024 * 100;
         Papa.parse(url, {
           download: true,
           delimiter: ',',

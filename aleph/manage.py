@@ -12,7 +12,7 @@ from flask.cli import FlaskGroup
 from servicelayer.jobs import Job
 from followthemoney.cli.util import write_object
 
-from aleph.core import create_app, db, cache
+from aleph.core import create_app, cache
 from aleph.authz import Authz
 from aleph.model import Collection, Role
 from aleph.migration import upgrade_system, destroy_db, cleanup_deleted
@@ -20,8 +20,8 @@ from aleph.worker import get_worker
 from aleph.queues import get_status, queue_task, cancel_queue
 from aleph.queues import get_active_collection_status, get_stage
 from aleph.queues import OP_PROCESS, OP_XREF
-from aleph.index.entities import iter_entities
 from aleph.index.admin import delete_index
+from aleph.index.entities import iter_proxies
 from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
@@ -29,10 +29,9 @@ from aleph.logic.collections import index_collections
 from aleph.logic.processing import index_aggregate, process_collection
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
-from aleph.logic.roles import update_role, update_roles
-from aleph.logic.rdf import export_collection
+from aleph.logic.roles import create_user, update_roles
 from aleph.logic.permissions import update_permission
-
+from aleph.logic.rdf import export_collection
 
 log = logging.getLogger('aleph')
 
@@ -117,7 +116,7 @@ def reset(foreign_id, sync=False):
 @cli.command()
 @click.argument('foreign_id')
 def reindex(foreign_id):
-    """Clear the search index and entity cache or a collection."""
+    """Index all the aggregator contents for a collection."""
     collection = get_collection(foreign_id)
     stage = get_stage(collection, OP_PROCESS)
     index_aggregate(stage, collection)
@@ -141,14 +140,15 @@ def flushdeleted():
 
 
 @cli.command()
-def update(index=False, process=False, reset=False):
-    """Re-index all the collections and clear some caches."""
+def update():
+    """Re-index all collections and clear some caches."""
     update_roles()
-    index_collections(refresh=True)
+    index_collections(sync=True)
 
 
 @cli.command('namefreq')
 def namefreq():
+    """Compute frequency distribution of name tokens."""
     compute_name_frequencies()
     # from aleph.logic.names import name_frequency
     # name_frequency("John Smith")
@@ -197,8 +197,9 @@ def load_entities(foreign_id, infile, unsafe=False):
 def dump_entities(foreign_id, outfile):
     """Export FtM entities for the given collection."""
     collection = get_collection(foreign_id)
-    for entity in iter_entities(collection_id=collection.id,
-                                includes=['schema', 'properties.*']):
+    for entity in iter_proxies(collection_id=collection.id,
+                               excludes=['text']):
+        entity.context = {}
         write_object(outfile, entity)
 
 
@@ -234,23 +235,14 @@ def cancel(foreign_id):
 
 
 @cli.command()
-@click.argument('foreign_id')
-@click.option('-n', '--name')
-@click.option('-e', '--email')
-@click.option('-i', '--is_admin')
-@click.option('-p', '--password')
-def createuser(foreign_id, password=None, name=None, email=None, is_admin=False):  # noqa
+@click.argument('email')
+@click.option('-p', '--password', help="Set a user password")
+@click.option('-n', '--name', help="Set a label")
+@click.option('-a', '--admin', is_flag=True, default=False, help='Make the user an admin.')  # noqa
+def createuser(email, password=None, name=None, admin=False):  # noqa
     """Create a user and show their API key."""
-    role = Role.load_or_create(foreign_id, Role.USER,
-                               name or foreign_id,
-                               email=email or "user@example.com",
-                               is_admin=is_admin)
-    if password is not None:
-        role.set_password(password)
-    db.session.add(role)
-    db.session.commit()
-    update_role(role)
-    return role.api_key
+    role = create_user(email, name, password, is_admin=admin)
+    print("User created. ID: %s, API Key: %s" % (role.id, role.api_key))
 
 
 @cli.command()
@@ -268,6 +260,8 @@ def publish(foreign_id):
 def upgrade():
     """Create or upgrade the search index and database."""
     upgrade_system()
+    update_roles()
+    index_collections(sync=True)
 
 
 @cli.command()

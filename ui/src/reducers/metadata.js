@@ -1,23 +1,11 @@
 import { createReducer } from 'redux-act';
 import { fetchMetadata } from 'src/actions';
+import { loadState, loadStart, loadError, loadComplete } from 'src/reducers/util';
 
-const initialState = {
-  isLoaded: false,
-};
+const initialState = loadState();
 
 export default createReducer({
-  [fetchMetadata.START]: () => ({ isLoading: true, isError: false }),
-
-  [fetchMetadata.ERROR]: (state, { error }) => ({
-    isLoading: false,
-    isError: true,
-    error,
-  }),
-
-  [fetchMetadata.COMPLETE]: (state, { metadata }) => ({
-    ...metadata,
-    isLoading: false,
-    isError: false,
-  }),
-
+  [fetchMetadata.START]: (state) => loadStart(state),
+  [fetchMetadata.ERROR]: (state, { error }) => loadError(state, error),
+  [fetchMetadata.COMPLETE]: (state, { metadata }) => loadComplete(metadata),
 }, initialState);

@@ -50,13 +50,13 @@ def create():
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Alert'
+              $ref: '#/components/schemas/AlertCreate'
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AlertCreate'
+                $ref: '#/components/schemas/Alert'
           description: OK
       tags:
         - Alert

@@ -24,42 +24,6 @@ import togglePreview from 'src/util/togglePreview';
 import './SearchScreen.scss';
 
 const messages = defineMessages({
-  facet_schema: {
-    id: 'search.facets.facet.schema',
-    defaultMessage: 'Types',
-  },
-  facet_collection_id: {
-    id: 'search.facets.facet.collection_id',
-    defaultMessage: 'Datasets',
-  },
-  facet_languages: {
-    id: 'search.facets.facet.languages',
-    defaultMessage: 'Languages',
-  },
-  facet_emails: {
-    id: 'search.facets.facet.emails',
-    defaultMessage: 'E-Mails',
-  },
-  facet_phones: {
-    id: 'search.facets.facet.phones',
-    defaultMessage: 'Phones',
-  },
-  facet_countries: {
-    id: 'search.facets.facet.countries',
-    defaultMessage: 'Countries',
-  },
-  facet_names: {
-    id: 'search.facets.facet.names',
-    defaultMessage: 'Names',
-  },
-  facet_addresses: {
-    id: 'search.facets.facet.addresses',
-    defaultMessage: 'Addresses',
-  },
-  facet_mime_type: {
-    id: 'search.facets.facet.mimetypes',
-    defaultMessage: 'File types',
-  },
   no_results_title: {
     id: 'search.no_results_title',
     defaultMessage: 'No search results',
@@ -78,63 +42,17 @@ const messages = defineMessages({
   },
 });
 
+const facetKeys = [
+  'collection_id', 'schema', 'countries', 'languages', 'emails', 'phones', 'names', 'addresses', 'mimetypes',
+];
 
 export class SearchScreen extends React.Component {
   constructor(props) {
     super(props);
-    const { intl } = props;
 
-    const facets = [
-      {
-        field: 'collection_id',
-        label: intl.formatMessage(messages.facet_collection_id),
-        icon: 'database',
-      },
-      {
-        field: 'schema',
-        label: intl.formatMessage(messages.facet_schema),
-        icon: 'list-columns',
-        defaultSize: 20,
-      },
-      {
-        field: 'countries',
-        label: intl.formatMessage(messages.facet_countries),
-        icon: 'globe',
-      },
-      {
-        field: 'languages',
-        label: intl.formatMessage(messages.facet_languages),
-        icon: 'translate',
-      },
-      {
-        field: 'emails',
-        label: intl.formatMessage(messages.facet_emails),
-        icon: 'envelope',
-      },
-      {
-        field: 'phones',
-        label: intl.formatMessage(messages.facet_phones),
-        icon: 'phone',
-      },
-      {
-        field: 'names',
-        label: intl.formatMessage(messages.facet_names),
-        icon: 'id-number',
-      },
-      {
-        field: 'addresses',
-        label: intl.formatMessage(messages.facet_addresses),
-        icon: 'map',
-      },
-      {
-        field: 'mimetypes',
-        label: intl.formatMessage(messages.facet_mime_type),
-        icon: 'document',
-      },
-    ];
 
     this.state = {
-      facets,
+      facets: facetKeys,
       hideFacets: false,
     };
 
@@ -197,7 +115,6 @@ export class SearchScreen extends React.Component {
         onSearch: queryText => this.updateQuery(query.set('q', queryText)),
       });
     }
-
     return collectionScopeList;
   }
 
@@ -328,7 +245,7 @@ export class SearchScreen extends React.Component {
               />
             </div>
           </DualPane.SidePane>
-          <DualPane.ContentPane className="padded">
+          <DualPane.ContentPane>
             <SignInCallout />
             <QueryTags query={query} updateQuery={this.updateQuery} />
             <EntityTable

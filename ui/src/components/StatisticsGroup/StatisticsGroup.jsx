@@ -5,7 +5,7 @@ import {
   FormattedMessage, FormattedNumber,
 } from 'react-intl';
 import {
-  Category, Country, Schema, Numeric, DualPane,
+  Category, Country, Schema, Numeric, SinglePane,
 } from 'src/components/common';
 import Statistics from './Statistics';
 
@@ -16,8 +16,9 @@ class StatisticsGroup extends PureComponent {
   render() {
     const { statistics } = this.props;
     return (
-      <DualPane className="StatisticsGroup">
+      <SinglePane className="StatisticsGroup">
         <Statistics
+          styleType="light"
           headline={(
             <FormattedMessage
               id="home.statistics.schemata"
@@ -39,12 +40,20 @@ class StatisticsGroup extends PureComponent {
           statistic={statistics.schemata}
           isLoading={!statistics.schemata}
           ItemContentContainer={props => (
-            <Schema.Smart.Link url={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
-              <Numeric num={props.count} />
-            </Schema.Smart.Link>
+            <Link to={`/search?filter:schema=${props.name}`} schema={props.name} {...props}>
+              <div className="inner-container">
+                <span className="label">
+                  <Schema.Smart.Label schema={props.name} plural icon {...props} />
+                </span>
+                <span className="value">
+                  <Numeric num={props.count} />
+                </span>
+              </div>
+            </Link>
           )}
         />
         <Statistics
+          styleType="light"
           headline={(
             <FormattedMessage
               id="home.statistics.categories"
@@ -69,12 +78,19 @@ class StatisticsGroup extends PureComponent {
             <Link
               to={`/datasets?collectionsfilter:category=${props.name}`}
             >
-              <Category.Label category={props.name} />
-              <Numeric num={props.count} />
+              <div className="inner-container">
+                <span className="label">
+                  <Category.Label category={props.name} />
+                </span>
+                <span className="value">
+                  <Numeric num={props.count} />
+                </span>
+              </div>
             </Link>
           )}
         />
         <Statistics
+          styleType="light"
           headline={(
             <FormattedMessage
               id="home.statistics.countries"
@@ -97,12 +113,18 @@ class StatisticsGroup extends PureComponent {
           isLoading={!statistics.countries}
           ItemContentContainer={props => (
             <Link to={`/datasets?collectionsfilter:countries=${props.name}`}>
-              <Country.Name {...props} code={props.name} />
-              <Numeric num={props.count} />
+              <div className="inner-container">
+                <span className="label">
+                  <Country.Name {...props} code={props.name} />
+                </span>
+                <span className="value">
+                  <Numeric num={props.count} />
+                </span>
+              </div>
             </Link>
           )}
         />
-      </DualPane>
+      </SinglePane>
     );
   }
 }

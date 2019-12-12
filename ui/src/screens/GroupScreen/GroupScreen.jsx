@@ -13,7 +13,7 @@ import Screen from 'src/components/Screen/Screen';
 import CollectionListItem from 'src/components/Collection/CollectionListItem';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import { queryCollections, fetchGroups } from 'src/actions';
-import { selectCollectionsResult, selectGroups } from 'src/selectors';
+import { selectCollectionsResult, selectGroups, selectRole } from 'src/selectors';
 
 import './GroupScreen.scss';
 
@@ -116,16 +116,10 @@ const mapStateToProps = (state, ownProps) => {
     .setFilter('team_id', groupId)
     .sortBy('count', 'desc')
     .limit(20);
-
-  const groups = selectGroups(state);
-  const group = groups.results && groups.results.find(accessGroup => (
-    accessGroup.id === groupId
-  ));
-
   return {
     query,
-    group,
-    groups,
+    group: selectRole(state, groupId),
+    groups: selectGroups(state),
     result: selectCollectionsResult(state, query),
   };
 };

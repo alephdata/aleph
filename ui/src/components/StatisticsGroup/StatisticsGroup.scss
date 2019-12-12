@@ -3,4 +3,8 @@
 .StatisticsGroup {
   color: $aleph-content-background;
   padding: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: stretch;
+  align-items: stretch;
 }

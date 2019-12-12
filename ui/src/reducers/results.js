@@ -1,15 +1,10 @@
 import { createReducer } from 'redux-act';
 
 import {
-  resultLoadStart, resultLoadError, updateResults, invalidateResults,
+  resultLoadStart, resultLoadError, updateResults,
 } from 'src/reducers/util';
 
 import {
-  createCollection,
-  createDiagram,
-  deleteCollection,
-  deleteDiagram,
-  deleteEntity,
   queryCollections,
   queryDiagrams,
   queryEntities,
@@ -22,25 +17,22 @@ export default createReducer({
 
   [queryCollections.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryCollections.ERROR]: (state, {
-    error, args: { query },
-  }) => resultLoadError(state, query, error),
+  [queryCollections.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryCollections.COMPLETE]: updateResults,
 
   [queryEntities.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryEntities.ERROR]: (state, {
-    error, args: { query },
-  }) => resultLoadError(state, query, error),
+  [queryEntities.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryEntities.COMPLETE]: updateResults,
 
   [queryNotifications.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryNotifications.ERROR]: (state, {
-    error, args: { query },
-  }) => resultLoadError(state, query, error),
+  [queryNotifications.ERROR]:
+    (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryNotifications.COMPLETE]: updateResults,
 
@@ -51,14 +43,4 @@ export default createReducer({
   }) => resultLoadError(state, query, error),
 
   [queryDiagrams.COMPLETE]: updateResults,
-
-  // Clear out the results cache when operations are performed that
-  // may affect the content of the results.
-  [createCollection.COMPLETE]: invalidateResults,
-  [createDiagram.COMPLETE]: invalidateResults,
-  [deleteCollection.COMPLETE]: invalidateResults,
-  [deleteDiagram.COMPLETE]: invalidateResults,
-  [deleteEntity.COMPLETE]: invalidateResults,
-  TRIGGER_COLLECTION_RELOAD: invalidateResults,
-
 }, initialState);

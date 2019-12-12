@@ -28,40 +28,21 @@ const messages = defineMessages({
     id: 'collection.index.title',
     defaultMessage: 'Datasets',
   },
-  facet_category: {
-    id: 'collection.index.facet.category',
-    defaultMessage: 'Categories',
-  },
-  facet_countries: {
-    id: 'collection.index.facet.countries',
-    defaultMessage: 'Countries',
-  },
   placeholder: {
     id: 'collection.index.placeholder',
     defaultMessage: 'Search datasets...',
   },
 });
 
+const facetKeys = [
+  'category', 'countries',
+];
 
 export class CollectionIndexScreen extends Component {
   constructor(props) {
     super(props);
-    const { intl } = props;
     this.state = {
-      facets: [
-        {
-          field: 'category',
-          label: intl.formatMessage(messages.facet_category),
-          icon: 'list',
-          defaultSize: 20,
-        },
-        {
-          field: 'countries',
-          label: intl.formatMessage(messages.facet_countries),
-          icon: 'globe',
-          defaultSize: 300,
-        },
-      ],
+      facets: facetKeys,
     };
 
     this.updateQuery = this.updateQuery.bind(this);

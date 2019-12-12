@@ -22,6 +22,8 @@ import {
   selectEntity, selectEntityReference, selectEntityView,
 } from 'src/selectors';
 
+import 'src/components/common/ItemOverview.scss';
+
 const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
 
 
@@ -125,7 +127,7 @@ class EntityScreen extends Component {
     if (entity.isError) {
       return <ErrorScreen error={entity.error} />;
     }
-    if (entity.shouldLoad || entity.isLoading) {
+    if (entity.id === undefined) {
       return (
         <EntityContextLoader entityId={entityId}>
           <LoadingScreen />
@@ -150,12 +152,14 @@ class EntityScreen extends Component {
         <Screen title={entity.getCaption()} searchScopes={this.getSearchScopes()} query={query}>
           {breadcrumbs}
           <DualPane>
-            <DualPane.InfoPane className="with-heading">
-              <EntityHeading entity={entity} isPreview={false} />
-              <div className="pane-content">
+            <DualPane.SidePane className="ItemOverview">
+              <div className="ItemOverview__heading">
+                <EntityHeading entity={entity} isPreview={false} />
+              </div>
+              <div className="ItemOverview__content">
                 <EntityInfoMode entity={entity} isPreview={false} />
               </div>
-            </DualPane.InfoPane>
+            </DualPane.SidePane>
             <DualPane.ContentPane>
               <EntityViews
                 entity={entity}

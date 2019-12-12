@@ -18,6 +18,14 @@ jobs:
       run: |
         docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
         docker push alephdata/aleph-ui-production:${GITHUB_SHA}
+    # - name: Push docker release image (tag / latest)
+    #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    #   run: |
+    #     docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
+    #     docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:${GITHUB_REF/refs\/tags\//}
+    #     docker push alephdata/aleph-ui-production:${GITHUB_REF/refs\/tags\//}
+    #     docker tag alephdata/aleph-ui-production:${GITHUB_SHA} alephdata/aleph-ui-production:latest
+    #     docker push alephdata/aleph-ui-production:latest
   docker-elasticsearch:
     runs-on: ubuntu-latest
     steps:
@@ -57,6 +65,10 @@ jobs:
         docker push alephdata/aleph:${GITHUB_SHA}
   test-aleph:
     runs-on: ubuntu-latest
+    needs:
+    - docker-aleph
+    - docker-elasticsearch
+    - docker-ingest-file
     steps:
     - uses: actions/checkout@v1
     - name: Set up
@@ -65,28 +77,16 @@ jobs:
         sudo echo "ALEPH_SECRET=batman\n" >> aleph.env
         docker --version
         docker-compose --version
-    - name: Docker pull
-      run: make docker-pull
-    - name: Docker build
+    - name: Docker pull and start
       run: |
         echo "${GITHUB_REF}"
-        make build
-        make services
-        sleep 5
+        ALEPH_TAG=${GITHUB_SHA} docker-compose pull elasticsearch convert-document ingest-file worker
+        make ALEPH_TAG=${GITHUB_SHA} services
+        sleep 10
     - name: Run ingest tests
-      run: make ingest-test
+      run: make ALEPH_TAG=${GITHUB_SHA} ingest-test
     - name: Run aleph tests
-      run: make test
-    - name: Push docker images for master
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: |
-        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-        make ALEPH_TAG=master build-full docker-push
-    - name: Push docker images for develop
-      if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-      run: |
-        docker login -u ${{ secrets.docker_user }} -p ${{ secrets.docker_password }}
-        make ALEPH_TAG=develop build-full docker-push
+      run: make ALEPH_TAG=${GITHUB_SHA} test
     - name: Push docker images for tags
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
       run: |

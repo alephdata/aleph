@@ -31,16 +31,15 @@
       padding: $aleph-grid-size 0;
       font-size: 1.1em;
       font-weight: bold;
+
+      .bp3-icon {
+        margin-right: 10px !important;
+      }
     }
 
     .FilterCount {
       padding-left: $aleph-grid-size;
       font-weight: normal;
-    }
-
-    .FacetIcon {
-      margin-right: $aleph-grid-size;
-      line-height: 1.1em;
     }
 
     & > .ClearButton {

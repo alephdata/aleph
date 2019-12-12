@@ -2,6 +2,7 @@ import json
 
 from aleph.core import db
 from aleph.model import Entity
+from aleph.logic.collections import compute_collection
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
@@ -22,6 +23,7 @@ class CollectionsApiTestCase(TestCase):
             'schema': 'Person',
             'properties': {
                 'name': 'Winnie the Pooh',
+                'country': 'za'
             }
         }, self.col)
         db.session.add(self.ent)
@@ -157,6 +159,19 @@ class CollectionsApiTestCase(TestCase):
         ]
         res = self.client.post(url, headers=headers, data=json.dumps(data))
         assert res.status_code == 400, res
+
+    def test_statistics(self):
+        self.load_fixtures()
+        compute_collection(self.private_coll, sync=True)
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/collections/%s/statistics' % self.private_coll.id
+        res = self.client.get(url)
+        assert res.status_code == 403, res
+
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res
+        assert 'Folder' in res.json['schema']['values'], res.json
+        assert 'Vladimir Putin' in res.json['names']['values'], res.json
 
     def test_status(self):
         _, headers = self.login(is_admin=True)

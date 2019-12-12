@@ -1,9 +1,8 @@
 import React from 'react';
-
+import { Facet } from 'src/components/common';
 import SearchFacet from './SearchFacet';
 
 import './SearchFacets.scss';
-
 
 function SearchFacets(props) {
   const {
@@ -12,15 +11,13 @@ function SearchFacets(props) {
   return (
     <ul className="SearchFacets bp3-large">
       {facets.map(facet => (
-        <li className="facet" key={facet.field}>
+        <li className="facet" key={facet}>
           <SearchFacet
             query={query}
             result={result}
             updateQuery={updateQuery}
-            field={facet.field}
-            label={facet.label}
-            icon={facet.icon}
-            defaultSize={facet.defaultSize}
+            field={facet}
+            label={<Facet.Label field={facet} />}
             isCollapsible={isCollapsible}
           />
         </li>

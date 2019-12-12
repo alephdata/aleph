@@ -13,7 +13,6 @@ class Name extends PureComponent {
     const { code, languages } = this.props;
     const codeLabel = code ? code.toUpperCase() : <FormattedMessage id="language.unknown" defaultMessage="Unknown" />;
     const label = languages[code] || codeLabel;
-
     if (!code) return null;
     return label;
   }

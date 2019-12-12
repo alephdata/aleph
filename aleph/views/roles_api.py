@@ -8,7 +8,7 @@ from aleph.core import db, settings
 from aleph.authz import Authz
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.model import Role
-from aleph.logic.roles import challenge_role, update_role
+from aleph.logic.roles import challenge_role, update_role, create_user
 from aleph.views.serializers import RoleSerializer
 from aleph.views.util import require, jsonify, parse_request, obj_or_404
 from aleph.views.context import tag_request
@@ -147,16 +147,7 @@ def create():
             'message': gettext('Email is already registered')
         }, status=409)
 
-    role = Role.load_or_create(
-        foreign_id='password:{}'.format(email),
-        type=Role.USER,
-        name=data.get('name') or email,
-        email=email
-    )
-    role.set_password(data.get('password'))
-    db.session.add(role)
-    db.session.commit()
-    update_role(role)
+    role = create_user(email, data.get('name'), data.get('password'))
     # Let the serializer return more info about this user
     request.authz = Authz.from_role(role)
     tag_request(role_id=role.id)

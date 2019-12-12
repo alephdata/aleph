@@ -11,7 +11,7 @@ services:
       POSTGRES_DATABASE: aleph
 
   elasticsearch:
-    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-3.3.8}
+    image: alephdata/aleph-elasticsearch:${ALEPH_TAG:-3.4.2}
     hostname: elasticsearch
     environment:
       - discovery.type=single-node
@@ -26,14 +26,14 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:189c0e1d212b8f3adeaaae5b3c36b064954c76a5
+    image: alephdata/convert-document:d1bb21da2312c5862368d97368711e390b8668b9
     restart: on-failure
     tmpfs:
       - /tmp
       - /home/app/.config
 
   ingest-file:
-    image: alephdata/ingest-file:${ALEPH_TAG:-3.3.8}
+    image: alephdata/ingest-file:${ALEPH_TAG:-3.4.2}
     tmpfs: /tmp
     volumes:
       - archive-data:/data
@@ -46,7 +46,7 @@ services:
       - aleph.env
 
   worker:
-    image: alephdata/aleph:${ALEPH_TAG:-3.3.8}
+    image: alephdata/aleph:${ALEPH_TAG:-3.4.2}
     command: aleph worker
     restart: on-failure
     links:
@@ -62,7 +62,7 @@ services:
       - aleph.env
   
   shell:
-    image: alephdata/aleph:${ALEPH_TAG:-3.3.8}
+    image: alephdata/aleph:${ALEPH_TAG:-3.4.2}
     command: /bin/bash
     links:
       - postgres
@@ -80,7 +80,7 @@ services:
       - aleph.env
 
   api:
-    image: alephdata/aleph:${ALEPH_TAG:-3.3.8}
+    image: alephdata/aleph:${ALEPH_TAG:-3.4.2}
     command: gunicorn -w 6 -b 0.0.0.0:8000 --log-level debug --log-file - aleph.wsgi:app
     expose:
       - 8000
@@ -98,7 +98,7 @@ services:
       - aleph.env
 
   ui:
-    image: alephdata/aleph-ui-production:${ALEPH_TAG:-3.3.8}
+    image: alephdata/aleph-ui-production:${ALEPH_TAG:-3.4.2}
     links:
       - api
     ports:
