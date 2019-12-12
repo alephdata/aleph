@@ -15,7 +15,7 @@ class DiagramEditor extends React.Component {
     super(props);
     let storedLayout;
 
-    if (props?.diagram?.data?.layout?.entities) {
+    if (props.diagram?.data?.layout?.entities) {
       storedLayout = props.diagram.data.layout;
     }
 
@@ -30,6 +30,12 @@ class DiagramEditor extends React.Component {
     this.updateViewport = this.updateViewport.bind(this);
     this.exportSvg = this.exportSvg.bind(this);
     this.dispatchLayoutUpdate = this.dispatchLayoutUpdate.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.downloadTriggered && !prevProps.downloadTriggered) {
+      this.downloadDiagram();
+    }
   }
 
   componentWillUnmount() {
@@ -82,6 +88,18 @@ class DiagramEditor extends React.Component {
   exportSvg(data) {
     const { diagram } = this.props;
     fileDownload(data, `${diagram.label}.svg`);
+  }
+
+  downloadDiagram() {
+    const { diagram, onDownloadComplete } = this.props;
+    const { layout, viewport } = this.state;
+
+    const graphData = JSON.stringify({
+      layout: layout.toJSON(),
+      viewport: viewport.toJSON(),
+    });
+    fileDownload(graphData, `${diagram.label}.vis`);
+    onDownloadComplete();
   }
 
   render() {

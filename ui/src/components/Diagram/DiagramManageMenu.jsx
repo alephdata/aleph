@@ -22,7 +22,7 @@ class CollectionManageMenu extends Component {
   toggleEdit = () => this.setState(({ editIsOpen }) => ({ editIsOpen: !editIsOpen }));
 
   render() {
-    const { diagram } = this.props;
+    const { diagram, triggerDownload } = this.props;
     const {
       editIsOpen, deleteIsOpen,
     } = this.state;
@@ -36,6 +36,9 @@ class CollectionManageMenu extends Component {
         <ButtonGroup>
           <Button icon="cog" onClick={this.toggleEdit}>
             <FormattedMessage id="diagram.info.edit" defaultMessage="Settings" />
+          </Button>
+          <Button icon="download" onClick={triggerDownload}>
+            <FormattedMessage id="diagram.info.edit" defaultMessage="Download" />
           </Button>
           <Button icon="trash" onClick={this.toggleDelete}>
             <FormattedMessage id="diagram.info.delete" defaultMessage="Delete" />

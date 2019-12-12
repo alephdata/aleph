@@ -23,10 +23,13 @@ export class DiagramScreen extends Component {
     this.state = {
       filterText: '',
       updateStatus: null,
+      downloadTriggered: false,
     };
 
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onDiagramSearch = this.onDiagramSearch.bind(this);
+    this.onDiagramDownload = this.onDiagramDownload.bind(this);
+    this.onDownloadComplete = this.onDownloadComplete.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
   }
 
@@ -48,6 +51,14 @@ export class DiagramScreen extends Component {
 
   onDiagramSearch(filterText) {
     this.setState({ filterText });
+  }
+
+  onDiagramDownload() {
+    this.setState({ downloadTriggered: true });
+  }
+
+  onDownloadComplete() {
+    this.setState({ downloadTriggered: false });
   }
 
   onStatusChange(updateStatus) {
@@ -82,7 +93,7 @@ export class DiagramScreen extends Component {
 
   render() {
     const { diagram } = this.props;
-    const { filterText, updateStatus } = this.state;
+    const { downloadTriggered, filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
       return <ErrorScreen error={diagram.error} />;
@@ -93,7 +104,7 @@ export class DiagramScreen extends Component {
     }
 
     const operation = (
-      <DiagramManageMenu diagram={diagram} />
+      <DiagramManageMenu diagram={diagram} triggerDownload={this.onDiagramDownload} />
     );
 
     const breadcrumbs = (
@@ -113,8 +124,10 @@ export class DiagramScreen extends Component {
         {breadcrumbs}
         <DiagramEditor
           diagram={diagram}
+          downloadTriggered={downloadTriggered}
           filterText={filterText}
           onStatusChange={this.onStatusChange}
+          onDownloadComplete={this.onDownloadComplete}
         />
       </Screen>
     );

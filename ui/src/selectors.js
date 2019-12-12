@@ -113,7 +113,7 @@ export function selectEntity(state, entityId) {
 }
 
 export function selectDiagram(state, diagramId) {
-  return selectObject(state.diagrams, diagramId);
+  return selectObject(state, state.diagrams, diagramId);
 }
 
 export function selectDocumentContent(state, documentId) {
