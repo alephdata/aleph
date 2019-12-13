@@ -38,9 +38,9 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         """Converts an office document to PDF."""
         if UNOSERVICE_URL is None:
             raise RuntimeError("No UNOSERVICE_URL for document conversion.")
-        log.info('Converting [%s] to PDF...', entity.first('fileName'))
-        file_name = entity.first('fileName') or 'data'
-        mime_type = entity.first('mimeType') or DEFAULT
+        file_name = self.manager.make_filename(entity)
+        mime_type = entity.first('mimeType')
+        log.info('Converting [%s] to PDF...', file_name)
         attempt = 1
         for attempt in service_retries():
             fh = open(file_path, 'rb')

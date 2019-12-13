@@ -114,7 +114,7 @@ class Manager(object):
         mime_type = normalize_mimetype(mime_type)
         if file_path is not None and file_path.is_file():
             return self.archive.archive_file(file_path, mime_type=mime_type)
-    
+
     def make_filename(self, entity):
         """Some of the file importers actually care about the file
         extension, so this is trying to make sure we use a temporary
