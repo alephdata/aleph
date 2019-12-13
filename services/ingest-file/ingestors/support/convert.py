@@ -1,6 +1,5 @@
 import logging
 import requests
-from pantomime.types import DEFAULT
 from requests import RequestException, HTTPError
 from servicelayer.util import backoff, service_retries
 
