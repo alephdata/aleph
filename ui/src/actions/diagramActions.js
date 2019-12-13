@@ -5,11 +5,6 @@ import { queryEndpoint } from './util';
 
 export const queryDiagrams = asyncActionCreator(query => async () => queryEndpoint(query), { name: 'QUERY_DIAGRAMS' });
 
-export const fetchCollectionDiagrams = asyncActionCreator((collectionId) => async () => {
-  const response = await endpoint.get(`collections/${collectionId}/diagrams`);
-  return { id: collectionId, data: response.data };
-}, { name: 'FETCH_COLLECTION_DIAGRAMS' });
-
 export const fetchDiagram = asyncActionCreator((diagramId) => async () => {
   const response = await endpoint.get(`diagrams/${diagramId}`);
   return { diagramId, data: response.data };

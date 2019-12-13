@@ -126,7 +126,7 @@ class DiagramEditDialog extends Component {
   }
 
   render() {
-    const { intl, isCreate, isOpen, toggleDialog } = this.props;
+    const { canChangeCollection, intl, isCreate, isOpen, toggleDialog } = this.props;
     const { collection, label, summary, processing } = this.state;
     const disabled = processing || !this.checkValid();
 
@@ -173,7 +173,7 @@ class DiagramEditDialog extends Component {
                 </div>
               </label>
             </div>
-            {isCreate && (
+            {isCreate && canChangeCollection && (
               <div className="bp3-form-group">
                 <label className="bp3-label">
                   <FormattedMessage

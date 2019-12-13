@@ -28,7 +28,6 @@ export {
 export {
   createDiagram,
   deleteDiagram,
-  fetchCollectionDiagrams,
   fetchDiagram,
   queryDiagrams,
   updateDiagram,

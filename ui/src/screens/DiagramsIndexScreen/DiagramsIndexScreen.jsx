@@ -118,6 +118,8 @@ const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('diagrams', location, {}, 'diagrams');
   const result = selectDiagramsResult(state, query);
 
+  console.log(result);
+
   return {
     query,
     result,

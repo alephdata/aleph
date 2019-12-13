@@ -1,20 +1,12 @@
 import { createReducer } from 'redux-act';
 
-import { queryDiagrams, fetchCollectionDiagrams, fetchDiagram, updateDiagram, createDiagram, deleteDiagram } from 'src/actions';
+import { queryDiagrams, fetchDiagram, updateDiagram, createDiagram, deleteDiagram } from 'src/actions';
 import { objectLoadComplete, objectLoadError, objectDelete, resultObjects } from 'src/reducers/util';
 
 const initialState = {};
 
 export default createReducer({
-  // [fetchCollectionDiagrams.START]: (state, { data }) => resultObjects(state, data),
-  //
-  // [fetchCollectionDiagrams.ERROR]: (state, {
-  //   error, args: { diagramId },
-  // }) => objectLoadError(state, diagramId, error),
-
   [queryDiagrams.COMPLETE]: (state, { result }) => resultObjects(state, result),
-
-  [fetchCollectionDiagrams.COMPLETE]: (state, { data }) => resultObjects(state, data),
 
   [fetchDiagram.ERROR]: (state, {
     error, args,

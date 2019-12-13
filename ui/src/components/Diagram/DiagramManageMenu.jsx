@@ -48,6 +48,7 @@ class CollectionManageMenu extends Component {
           diagram={diagram}
           isOpen={editIsOpen}
           toggleDialog={this.toggleEdit}
+          canChangeCollection={false}
         />
         <DiagramDeleteDialog
           isOpen={deleteIsOpen}

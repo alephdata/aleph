@@ -28,7 +28,7 @@ class DiagramCreateButton extends React.Component {
   }
 
   render() {
-    const { intl, session } = this.props;
+    const { collection, intl, session } = this.props;
     if (!session.loggedIn) {
       return (
         <Tooltip
@@ -50,6 +50,8 @@ class DiagramCreateButton extends React.Component {
           isCreate
           isOpen={this.state.isOpen}
           toggleDialog={this.toggle}
+          diagram={{ collection }}
+          canChangeCollection={!collection}
         />
       </>
     );

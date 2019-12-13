@@ -11,7 +11,6 @@ import entityTags from './entityTags';
 import values from './values';
 import documentContent from './documentContent';
 import collections from './collections';
-import collectionDiagrams from './collectionDiagrams';
 import collectionStatistics from './collectionStatistics';
 import collectionStatus from './collectionStatus';
 import collectionMappings from './collectionMappings';
@@ -44,7 +43,6 @@ const rootReducer = combineReducers({
   roles,
   notifications,
   collections,
-  collectionDiagrams,
   collectionStatistics,
   collectionStatus,
   collectionMappings,
