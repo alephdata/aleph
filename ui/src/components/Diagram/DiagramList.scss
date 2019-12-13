@@ -1,0 +1,12 @@
+@import "src/app/variables.scss";
+
+.DiagramList {
+  &__items {
+    display: flex;
+    width: 100%;
+    margin: 0 -$aleph-content-padding/2;
+    justify-content: left;
+    flex-flow: row wrap;
+    align-content: flex-end;
+  }
+}

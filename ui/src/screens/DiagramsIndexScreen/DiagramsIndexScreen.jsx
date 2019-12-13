@@ -115,10 +115,9 @@ export class DiagramsIndexScreen extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
-  const query = Query.fromLocation('diagrams', location, {}, 'diagrams');
+  const query = Query.fromLocation('diagrams', location, {}, 'diagrams')
+    .sortBy('updated_at', 'desc');
   const result = selectDiagramsResult(state, query);
-
-  console.log(result);
 
   return {
     query,

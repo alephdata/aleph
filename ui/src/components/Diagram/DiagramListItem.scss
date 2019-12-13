@@ -1,39 +1,51 @@
 @import "src/app/variables.scss";
 
 .DiagramListItem {
-    padding: $aleph-grid-size*2.5 0;
-    border-bottom: 1px solid $table-border-color;
+  padding: $aleph-content-padding/2;
+  flex: auto;
+  width: 33.33%;
+  max-width: 33.33%;
 
-    h4 {
-        font-weight: bold;
+  @media screen and (max-width: $aleph-screen-lg-max-width) {
+    width: 50%;
+    max-width: 50%;
+  }
 
-        .bp3-tag {
-            float: right;
-            display: block;
-        }
+  @media screen and (max-width: $aleph-screen-md-max-width) {
+    width: 100%;
+    max-width: 100%;
+  }
 
-        .bp3-icon {
-            padding-bottom: 2px;
-        }
-    }
+  h4 {
+      font-weight: bold;
 
-    .summary {
-        font-size: $pt-font-size;
-        margin-bottom: $aleph-grid-size;
-    }
+      .bp3-tag {
+          float: right;
+          display: block;
+      }
 
-    .details {
-        margin-bottom: 0;
-        color: $aleph-greyed-text;
-    }
+      .bp3-icon {
+          padding-bottom: 2px;
+      }
+  }
 
-    .details-item {
-        display: inline-block;
-        min-width: 8em;
-        margin-right: 2em;
+  .summary {
+      font-size: $pt-font-size;
+      margin-bottom: $aleph-grid-size;
+  }
 
-        .bp3-icon {
-            margin-right: $aleph-icon-padding;
-        }
-    }
+  .details {
+      margin-bottom: 0;
+      color: $aleph-greyed-text;
+  }
+
+  .details-item {
+      display: inline-block;
+      min-width: 8em;
+      margin-right: 2em;
+
+      .bp3-icon {
+          margin-right: $aleph-icon-padding;
+      }
+  }
 }
