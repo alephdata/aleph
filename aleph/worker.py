@@ -11,12 +11,12 @@ from aleph.queues import (
 from aleph.queues import OPERATIONS
 from aleph.logic.alerts import check_alerts
 from aleph.logic.collections import index_collections, refresh_collection
-from aleph.logic.collections import reset_collection
+from aleph.logic.collections import reset_collection, process_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.mapping import load_mapping, flush_mapping
 from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
-from aleph.logic.processing import index_aggregate, process_collection
+from aleph.logic.processing import index_aggregate
 
 log = logging.getLogger(__name__)
 

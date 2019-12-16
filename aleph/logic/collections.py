@@ -3,12 +3,13 @@ from datetime import datetime
 
 from aleph.core import db, cache
 from aleph.authz import Authz
-from aleph.queues import cancel_queue
+from aleph.queues import cancel_queue, ingest_entity
+from aleph.queues import queue_task, OP_INDEX
 from aleph.model import Collection, Entity, Document, Match
 from aleph.model import Permission, Events, Mapping
 from aleph.index import collections as index
 from aleph.logic.notifications import publish, flush_notifications
-from aleph.logic.aggregator import drop_aggregator
+from aleph.logic.aggregator import get_aggregator, drop_aggregator
 
 log = logging.getLogger(__name__)
 
@@ -47,6 +48,30 @@ def compute_collection(collection, sync=False):
     log.info("Collection [%s] changed, computing...", collection.id)
     index.update_collection_stats(collection.id)
     index.index_collection(collection, sync=sync)
+
+
+def process_collection(stage, collection, ingest=True, sync=False):
+    """Trigger a full re-parse of all documents and re-build the
+    search index from the aggregator."""
+    def _proxies(collection):
+        for entity in Entity.by_collection(collection.id).yield_per(5000):
+            yield entity.to_proxy()
+        for document in Document.by_collection(collection.id).yield_per(5000):
+            yield document.to_proxy()
+
+    aggregator = get_aggregator(collection)
+    for proxy in _proxies(collection):
+        if ingest and proxy.schema.is_a(Document.SCHEMA):
+            ingest_entity(collection, proxy,
+                          job_id=stage.job.id,
+                          sync=sync)
+        else:
+            aggregator.put(proxy, fragment='db')
+            queue_task(collection, OP_INDEX,
+                       job_id=stage.job.id,
+                       payload={'entity_ids': [proxy.id]},
+                       context={'sync': sync})
+    aggregator.close()
 
 
 def reset_collection(collection, sync=False):

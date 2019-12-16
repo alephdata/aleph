@@ -25,8 +25,8 @@ from aleph.index.entities import iter_proxies
 from aleph.logic.names import compute_name_frequencies
 from aleph.logic.collections import create_collection, update_collection
 from aleph.logic.collections import reset_collection, delete_collection
-from aleph.logic.collections import index_collections
-from aleph.logic.processing import index_aggregate, process_collection
+from aleph.logic.collections import index_collections, process_collection
+from aleph.logic.processing import index_aggregate
 from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import create_user, update_roles

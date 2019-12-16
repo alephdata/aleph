@@ -4,41 +4,13 @@ from followthemoney import model
 from followthemoney.exc import InvalidData
 from followthemoney.pragma import remove_checksums
 
-from aleph.model import Entity, Document
-from aleph.queues import ingest_entity
 from aleph.analysis import analyze_entity
-from aleph.queues import queue_task, OP_INDEX
 from aleph.index.entities import index_bulk
 from aleph.logic.entities import refresh_entity_id
 from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
 
 log = logging.getLogger(__name__)
-
-
-def _collection_proxies(collection):
-    for entity in Entity.by_collection(collection.id).yield_per(5000):
-        yield entity.to_proxy()
-    for document in Document.by_collection(collection.id).yield_per(5000):
-        yield document.to_proxy()
-
-
-def process_collection(stage, collection, ingest=True, sync=False):
-    """Trigger a full re-parse of all documents and re-build the
-    search index from the aggregator."""
-    aggregator = get_aggregator(collection)
-    for proxy in _collection_proxies(collection):
-        if ingest and proxy.schema.is_a(Document.SCHEMA):
-            ingest_entity(collection, proxy,
-                          job_id=stage.job.id,
-                          sync=sync)
-        else:
-            aggregator.put(proxy, fragment='db')
-            queue_task(collection, OP_INDEX,
-                       job_id=stage.job.id,
-                       payload={'entity_ids': [proxy.id]},
-                       context={'sync': sync})
-    aggregator.close()
 
 
 def _process_entity(entity, sync=False):
