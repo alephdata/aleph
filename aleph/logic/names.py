@@ -61,7 +61,7 @@ def compute_name_frequencies():
             pipe.execute()
             pipe = kv.pipeline(transaction=False)
     pipe.execute()
-    log.info("Names: %d", names_count)
+    log.info("Names: %d, unique: %d", names_count, kv.hlen(TOKEN_KEY))
 
     # Next, count how often each count occurs, i.e. make a histogram
     # of name frequency.
@@ -83,9 +83,12 @@ def compute_name_frequencies():
     total = 0
     pipe = kv.pipeline(transaction=False)
     pipe.delete(DIST_KEY)
-    for count in range(max_count, 1, -1):
-        total += counts.get(count, 0)
-        pipe.hset(DIST_KEY, count, total)
+    for idx in range(max_count, 1, -1):
+        total += counts.get(idx, 0)
+        pipe.hset(DIST_KEY, idx, total)
+        if idx > 0 and idx % 10000 == 0:
+            pipe.execute()
+            pipe = kv.pipeline(transaction=False)
     log.info("Total: %d", total)
     pipe.set(TOTAL_KEY, total)
     pipe.execute()
