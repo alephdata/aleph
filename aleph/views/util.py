@@ -172,6 +172,11 @@ def jsonify(obj, status=200, headers=None, encoder=JSONEncoder):
         data = '%s && %s(%s)' % (cb, cb, data)
         # mime cf. https://stackoverflow.com/questions/24528211/
         mimetype = 'application/javascript'
+    headers = headers or {}
+    # CORS support
+    headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+    headers['Access-Control-Allow-Origin'] = '*'
     return Response(data,
                     headers=headers,
                     status=status,
