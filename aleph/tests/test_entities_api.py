@@ -351,3 +351,50 @@ class EntitiesApiTestCase(TestCase):
         assert len(results) == 1, results
         assert results[0]['value'] == '+491769817271', results
         validate(res.json['results'][0], 'EntityTag')
+
+    def test_bulk_delete_entity(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        ent_ids = []
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Osama bin Laden",
+            },
+            'collection_id': self.col_id
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        ent_ids.append(res.json['id'])
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Mr. Banana",
+            },
+            'collection_id': self.col_id
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        ent_ids.append(res.json['id'])
+        assert res.status_code == 200, (res.status_code, res.json)
+        for ent_id in ent_ids:
+            url = '/api/2/entities/%s' % ent_id
+            res = self.client.get(url, headers=headers)
+            assert res.status_code == 200, res.status_code
+
+        url = '/api/2/entities/delete'
+        res = self.client.post(url,
+                               data=json.dumps({'entity_ids': ent_ids}),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 204, res.status_code
+
+        for ent_id in ent_ids:
+            url = '/api/2/entities/%s' % ent_id
+            res = self.client.get(url, headers=headers)
+            assert res.status_code == 404, res.status_code
