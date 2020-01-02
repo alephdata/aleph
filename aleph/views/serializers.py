@@ -353,13 +353,12 @@ class DiagramSerializer(Serializer):
         collection_id = obj.pop('collection_id')
         obj['writeable'] = request.authz.can(collection_id, request.authz.WRITE)  # noqa
         obj['collection'] = self.resolve(Collection, collection_id, CollectionSerializer)  # noqa
-        layout = obj['data']['layout']
         ent_ids = obj.pop('entities')
-        layout['entities'] = []
+        obj['entities'] = []
         for ent_id in ent_ids:
             entity = self.resolve(Entity, ent_id, VisDiagramEntitySerializer)
-            layout['entities'].append(entity)
-        for ent in layout['entities']:
+            obj['entities'].append(entity)
+        for ent in obj['entities']:
             schema = model.get(ent.get('schema'))
             properties = ent.get('properties', {})
             for prop in schema.properties.values():

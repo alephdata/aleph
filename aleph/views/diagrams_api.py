@@ -7,7 +7,6 @@ from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import DiagramSerializer
 from aleph.views.util import get_db_collection, parse_request
 from aleph.views.util import obj_or_404, require
-from aleph.logic.diagram import create_diagram, update_diagram, delete_diagram
 
 
 blueprint = Blueprint('diagrams_api', __name__)
@@ -81,7 +80,7 @@ def create():
     data = parse_request('DiagramCreate')
     collection_id = data.pop('collection_id')
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    diagram = create_diagram(data, collection, request.authz.id)
+    diagram = Diagram.create(data, collection, request.authz.id)
     return DiagramSerializer.jsonify(diagram)
 
 
@@ -146,9 +145,9 @@ def update(diagram_id):
       - Diagram
     """
     diagram = obj_or_404(Diagram.by_id(diagram_id))
-    collection = get_db_collection(diagram.collection_id, request.authz.WRITE)
+    get_db_collection(diagram.collection_id, request.authz.WRITE)
     data = parse_request('DiagramUpdate')
-    diagram = update_diagram(diagram, data, collection)
+    diagram.update(data=data)
     return DiagramSerializer.jsonify(diagram)
 
 
@@ -175,5 +174,5 @@ def delete(diagram_id):
     """
     diagram = obj_or_404(Diagram.by_id(diagram_id))
     get_db_collection(diagram.collection_id, request.authz.WRITE)
-    delete_diagram(diagram)
+    diagram.delete()
     return ('', 204)
