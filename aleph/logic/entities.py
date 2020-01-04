@@ -6,6 +6,7 @@ from aleph.core import es, db, cache
 from aleph.model import Entity, Document
 from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
+from aleph.logic.collections import refresh_collection
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
 
@@ -17,14 +18,15 @@ def create_entity(data, collection, role=None, sync=False):
     collection.touch()
     db.session.commit()
     index.index_entity(entity, sync=sync)
-    entity_id = collection.ns.sign(entity.id)
-    refresh_entity(entity_id, sync=sync)
-    return entity_id
+    refresh_entity(entity.signed_id, sync=sync)
+    refresh_collection(collection.id, sync=sync)
+    return entity.signed_id
 
 
 def update_entity(entity, sync=False):
     index.index_entity(entity, sync=sync)
-    refresh_entity(entity.id, sync=sync)
+    refresh_entity(entity.signed_id, sync=sync)
+    refresh_collection(entity.collection_id, sync=sync)
 
 
 def refresh_entity(entity_id, sync=False):
@@ -49,6 +51,7 @@ def delete_entity(entity, deleted_at=None, sync=False):
         doc.delete(deleted_at=deleted_at)
     index.delete_entity(entity.get('id'), sync=sync)
     refresh_entity(entity.get('id'), sync=sync)
+    refresh_collection(entity.get('collection_id'), sync=sync)
 
 
 def entity_references(entity, authz=None):
@@ -116,13 +119,13 @@ def _filters_faceted_query(facets, authz=None):
         shoulds = []
         for field, values in filters[idx].items():
             shoulds.append(field_filter_query(field, values))
-        filters = []
+        query = []
         if authz is not None:
-            filters.append(authz_query(authz))
+            query.append(authz_query(authz))
         query = {
             'bool': {
                 'should': shoulds,
-                'filter': filters,
+                'filter': query,
                 'minimum_should_match': 1
             }
         }

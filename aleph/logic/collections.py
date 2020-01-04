@@ -29,16 +29,22 @@ def create_collection(data, authz, sync=False):
 def update_collection(collection, sync=False):
     """Create or update a collection."""
     Authz.flush()
-    refresh_collection(collection.id)
+    refresh_collection(collection.id, sync=sync)
     return index.index_collection(collection, sync=sync)
 
 
-def refresh_collection(collection_id, sync=False):
+def refresh_collection(collection_id, sync=True):
     """Operations to execute after updating a collection-related
-    domain object. This will refresh stats and re-index."""
-    cache.kv.delete(cache.object_key(Collection, collection_id),
-                    cache.object_key(Collection, collection_id, 'schema'),
-                    cache.object_key(Collection, collection_id, 'stats'))
+    domain object. This will refresh stats and flush cache."""
+    if collection_id is None:
+        return
+    keys = [
+        cache.object_key(Collection, collection_id),
+        cache.object_key(Collection, collection_id, 'stats')
+    ]
+    if sync:
+        keys.append(cache.object_key(Collection, collection_id, 'schema'))
+    cache.kv.delete(*keys)
 
 
 def compute_collection(collection, sync=False):
@@ -81,7 +87,7 @@ def reset_collection(collection, sync=False):
     Match.delete_by_collection(collection.id)
     cancel_queue(collection)
     index.delete_entities(collection.id, sync=sync)
-    refresh_collection(collection.id)
+    refresh_collection(collection.id, sync=sync)
     db.session.commit()
 
 
@@ -104,3 +110,4 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     if not keep_metadata:
         index.delete_collection(collection.id, sync=sync)
         Authz.flush()
+    refresh_collection(collection.id, sync=True)
