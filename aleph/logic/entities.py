@@ -3,11 +3,11 @@ from followthemoney import model
 from followthemoney.types import registry
 
 from aleph.core import es, db, cache
-from aleph.model import Entity, Document, Collection
+from aleph.model import Entity, Document
 from aleph.index import entities as index
+from aleph.logic.notifications import flush_notifications
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import authz_query, field_filter_query
-from aleph.logic.notifications import flush_notifications
 
 log = logging.getLogger(__name__)
 
@@ -17,28 +17,19 @@ def create_entity(data, collection, role=None, sync=False):
     collection.touch()
     db.session.commit()
     index.index_entity(entity, sync=sync)
-    refresh_entity(entity)
-    return collection.ns.sign(entity.id)
+    entity_id = collection.ns.sign(entity.id)
+    refresh_entity(entity_id, sync=sync)
+    return entity_id
 
 
 def update_entity(entity, sync=False):
     index.index_entity(entity, sync=sync)
-    refresh_entity(entity)
+    refresh_entity(entity.id, sync=sync)
 
 
-def refresh_entity(entity, sync=False):
-    if isinstance(entity, (Document, Entity)):
-        entity_id = entity.collection.ns.sign(entity.id)
-        collection_id = entity.collection_id
-    else:
-        entity_id = entity.get('id')
-        collection_id = entity.get('collection_id')
-    cache.kv.delete(cache.object_key(Entity, entity_id),
-                    cache.object_key(Collection, collection_id))
-
-
-def refresh_entity_id(entity_id, sync=False):
-    cache.kv.delete(cache.object_key(Entity, entity_id))
+def refresh_entity(entity_id, sync=False):
+    if sync:
+        cache.kv.delete(cache.object_key(Entity, entity_id))
 
 
 def delete_entity(entity, deleted_at=None, sync=False):
@@ -57,14 +48,13 @@ def delete_entity(entity, deleted_at=None, sync=False):
     if doc is not None:
         doc.delete(deleted_at=deleted_at)
     index.delete_entity(entity.get('id'), sync=sync)
-    refresh_entity(entity)
+    refresh_entity(entity.get('id'), sync=sync)
 
 
-def entity_references(entity, authz):
+def entity_references(entity, authz=None):
     """Given a particular entity, find all the references to it from other
     entities, grouped by the property where they are used."""
     schema = model.get(entity.get('schema'))
-    group = registry.entity.group
     facets = []
     for prop in model.properties:
         if prop.type != registry.entity:
@@ -75,15 +65,15 @@ def entity_references(entity, authz):
         index = entities_read_index(prop.schema)
         field = 'properties.%s' % prop.name
         value = entity.get('id')
-        facets.append((index, prop.qname, group, field, value))
+        facets.append((index, prop.qname, registry.entity.group, field, value))
 
-    res = _filters_faceted_query(authz, facets)
+    res = _filters_faceted_query(facets, authz=authz)
     for (qname, total) in res.items():
         if total > 0:
             yield (model.get_qname(qname), total)
 
 
-def entity_tags(entity, authz):
+def entity_tags(entity, authz=None):
     """Do a search on tags of an entity."""
     proxy = model.get_proxy(entity)
     Thing = model.get(Entity.THING)
@@ -104,14 +94,14 @@ def entity_tags(entity, authz):
             alias = '%s_%s' % (type_.name, fidx)
             facets.append((index, alias, type_.group, type_.group, value))
 
-    res = _filters_faceted_query(authz, facets)
+    res = _filters_faceted_query(facets, authz=authz)
     for (_, alias, field, _, value) in facets:
         total = res.get(alias, 0)
         if total > 1:
             yield (field, value, total)
 
 
-def _filters_faceted_query(authz, facets):
+def _filters_faceted_query(facets, authz=None):
     filters = {}
     indexed = {}
     for (idx, alias, group, field, value) in facets:
@@ -126,10 +116,13 @@ def _filters_faceted_query(authz, facets):
         shoulds = []
         for field, values in filters[idx].items():
             shoulds.append(field_filter_query(field, values))
+        filters = []
+        if authz is not None:
+            filters.append(authz_query(authz))
         query = {
             'bool': {
                 'should': shoulds,
-                'filter': [authz_query(authz)],
+                'filter': filters,
                 'minimum_should_match': 1
             }
         }

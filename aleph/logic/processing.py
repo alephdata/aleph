@@ -6,7 +6,7 @@ from followthemoney.pragma import remove_checksums
 
 from aleph.analysis import analyze_entity
 from aleph.index.entities import index_bulk
-from aleph.logic.entities import refresh_entity_id
+from aleph.logic.entities import refresh_entity
 from aleph.logic.collections import refresh_collection
 from aleph.logic.aggregator import get_aggregator
 
@@ -17,8 +17,7 @@ def _process_entity(entity, sync=False):
     """Perform pre-index processing on an entity, includes running the
     NLP pipeline."""
     analyze_entity(entity)
-    if sync:
-        refresh_entity_id(entity.id)
+    refresh_entity(entity.id, sync=sync)
     # log.debug("Index: %r", entity)
     return entity
 
