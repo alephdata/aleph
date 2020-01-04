@@ -37,6 +37,7 @@ def refresh_collection(collection_id, sync=False):
     """Operations to execute after updating a collection-related
     domain object. This will refresh stats and re-index."""
     cache.kv.delete(cache.object_key(Collection, collection_id),
+                    cache.object_key(Collection, collection_id, 'schema'),
                     cache.object_key(Collection, collection_id, 'stats'))
 
 
