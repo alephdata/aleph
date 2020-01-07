@@ -319,7 +319,6 @@ def bulk(collection_id):
     bulk_write(collection, entities, job_id=job_id, unsafe=unsafe)
     collection.touch()
     db.session.commit()
-    refresh_collection(collection_id)
     return ('', 204)
 
 

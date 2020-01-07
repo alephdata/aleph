@@ -5,7 +5,7 @@ from pprint import pprint  # noqa
 from aleph.model import Document
 from aleph.tests.util import TestCase
 from aleph.queues import get_status, get_stage, OP_INGEST, OP_PROCESS
-from aleph.logic.processing import process_collection
+from aleph.logic.collections import process_collection
 
 
 class IngestApiTestCase(TestCase):
