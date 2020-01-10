@@ -73,7 +73,10 @@ class Authz(object):
         if collection is None:
             return False
 
-        collection = int(collection)
+        try:
+            collection = int(collection)
+        except ValueError:
+            return False
         return collection in self.collections(action)
 
     def can_stream(self):
