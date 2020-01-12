@@ -51,7 +51,7 @@ export function loadStart(state) {
     shouldLoad: false,
     isError: false,
     loadedAt: undefined,
-    error: undefined
+    error: undefined,
   };
 }
 
