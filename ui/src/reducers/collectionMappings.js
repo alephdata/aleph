@@ -18,14 +18,6 @@ export default createReducer({
     collectionId, data,
   }) => objectLoadComplete(state, collectionId, data),
 
-  [createCollectionMapping.COMPLETE]: (state, {
-    collectionId, data,
-  }) => objectLoadComplete(state, collectionId, data),
-
-  [updateCollectionMapping.COMPLETE]: (state, {
-    collectionId, data,
-  }) => objectLoadComplete(state, collectionId, data),
-
   [deleteCollectionMapping.COMPLETE]: (state, {
     collectionId,
   }) => objectDelete(state, collectionId),

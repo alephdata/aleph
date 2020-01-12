@@ -20,6 +20,7 @@ import {
 import { assignMappingColor } from './util';
 
 import './EntityMappingMode.scss';
+import { SectionLoading } from 'src/components/common';
 
 
 const messages = defineMessages({
@@ -66,21 +67,28 @@ export class EntityMappingMode extends Component {
   }
 
   componentDidMount() {
-    const { entity, existingMapping } = this.props;
-
+    const { existingMapping } = this.props;
     this.fetchCsvData();
+    this.fetchIfNeeded();
     if (existingMapping) {
       this.loadFromMapping(existingMapping);
-    } else {
-      this.props.fetchCollectionMappings(entity.collection.id);
     }
+    
   }
 
   componentDidUpdate(prevProps) {
     const { existingMapping } = this.props;
-
+    
+    // this.fetchIfNeeded();
     if (existingMapping && prevProps.existingMapping !== existingMapping) {
       this.loadFromMapping(existingMapping);
+    }
+  }
+
+  fetchIfNeeded() {
+    const { entity, collectionMappings } = this.props;
+    if (entity.id && collectionMappings.shouldLoad) {
+      this.props.fetchCollectionMappings(entity.collection.id);
     }
   }
 
@@ -230,11 +238,11 @@ export class EntityMappingMode extends Component {
   }
 
   render() {
-    const { entity, intl, model, existingMapping } = this.props;
+    const { entity, intl, model, existingMapping, collectionMappings } = this.props;
     const { mappings, csvData, csvHeader, previewIsOpen } = this.state;
 
-    if (!csvData || !csvHeader) {
-      return null;
+    if (!csvData || !csvHeader || collectionMappings.isLoading) {
+      return <SectionLoading />;
     }
 
     const schemaSelectOptions = Object.keys(model.schemata)
@@ -364,14 +372,14 @@ export class EntityMappingMode extends Component {
 const mapDispatchToProps = { fetchCollectionMappings };
 
 const mapStateToProps = (state, ownProps) => {
-  const collectionId = ownProps.entity.collection.id;
-  const entityId = ownProps.entity.id;
-  const collectionMappings = selectCollectionMappings(state, collectionId);
-  const entityMapping = collectionMappings && collectionMappings.length > 0
-    ? collectionMappings.find(mapping => mapping.table_id === entityId) : undefined;
+  const { entity } = ownProps;
+  const collectionMappings = selectCollectionMappings(state, entity.collection.id);
+  const entityMapping = collectionMappings.results && collectionMappings.results.length > 0
+    ? collectionMappings.results.find(mapping => mapping.table_id === entity.id) : undefined;
 
   return {
-    model: selectModel(state),
+    collectionMappings,
+    model: selectModel(state),  
     existingMapping: entityMapping,
   };
 };

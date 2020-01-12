@@ -22,17 +22,15 @@ class EntityContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const { entityId, entity } = this.props;
+    const { entityId, entity, tagsResult, referencesResult } = this.props;
     if (entity.shouldLoad) {
       this.props.fetchEntity({ id: entityId });
     }
 
-    const { tagsResult } = this.props;
     if (tagsResult.shouldLoad) {
       this.props.fetchEntityTags({ id: entityId });
     }
 
-    const { referencesResult } = this.props;
     if (referencesResult.shouldLoad) {
       this.props.fetchEntityReferences({ id: entityId });
     }
