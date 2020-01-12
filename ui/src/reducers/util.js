@@ -45,7 +45,14 @@ export function loadState(data) {
 
 export function loadStart(state) {
   const prevState = state || {};
-  return { ...prevState, isLoading: true, shouldLoad: false, isError: false, loadedAt: null, error: null };
+  return {
+    ...prevState,
+    isLoading: true,
+    shouldLoad: false,
+    isError: false,
+    loadedAt: undefined,
+    error: undefined
+  };
 }
 
 export function objectLoadStart(state, id) {
