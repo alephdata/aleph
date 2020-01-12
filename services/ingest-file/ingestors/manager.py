@@ -150,13 +150,13 @@ class Manager(object):
         if file_path.is_file() and not entity.has('fileSize'):
             entity.add('fileSize', file_path.stat().st_size)
 
+        entity.set('processingStatus', self.STATUS_FAILURE)
         try:
             ingestor_class = self.auction(file_path, entity)
             log.info("Ingestor [%r]: %s", entity, ingestor_class.__name__)
             self.delegate(ingestor_class, file_path, entity)
             entity.set('processingStatus', self.STATUS_SUCCESS)
         except ProcessingException as pexc:
-            entity.set('processingStatus', self.STATUS_FAILURE)
             entity.set('processingError', stringify(pexc))
             log.error("[%r] Failed to process: %s", entity, pexc)
         finally:
