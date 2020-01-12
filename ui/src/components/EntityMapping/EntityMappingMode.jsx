@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
 import { Button, ButtonGroup } from '@blueprintjs/core';
+import { SectionLoading } from 'src/components/common';
 import { showErrorToast } from 'src/app/toast';
 import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
@@ -20,7 +21,6 @@ import {
 import { assignMappingColor } from './util';
 
 import './EntityMappingMode.scss';
-import { SectionLoading } from 'src/components/common';
 
 
 const messages = defineMessages({
@@ -73,22 +73,14 @@ export class EntityMappingMode extends Component {
     if (existingMapping) {
       this.loadFromMapping(existingMapping);
     }
-    
   }
 
   componentDidUpdate(prevProps) {
     const { existingMapping } = this.props;
-    
+
     // this.fetchIfNeeded();
     if (existingMapping && prevProps.existingMapping !== existingMapping) {
       this.loadFromMapping(existingMapping);
-    }
-  }
-
-  fetchIfNeeded() {
-    const { entity, collectionMappings } = this.props;
-    if (entity.id && collectionMappings.shouldLoad) {
-      this.props.fetchCollectionMappings(entity.collection.id);
     }
   }
 
@@ -169,6 +161,13 @@ export class EntityMappingMode extends Component {
   togglePreview = () => this.setState(({ previewIsOpen }) => (
     { previewIsOpen: !previewIsOpen }
   ));
+
+  fetchIfNeeded() {
+    const { entity, collectionMappings } = this.props;
+    if (entity.id && collectionMappings.shouldLoad) {
+      this.props.fetchCollectionMappings(entity.collection.id);
+    }
+  }
 
   updateMappings(mappingId, updateToApply) {
     const { mappings } = this.state;
@@ -379,7 +378,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     collectionMappings,
-    model: selectModel(state),  
+    model: selectModel(state),
     existingMapping: entityMapping,
   };
 };

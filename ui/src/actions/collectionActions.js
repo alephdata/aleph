@@ -103,7 +103,7 @@ export const updateCollectionMapping = (
   asyncActionCreator((collectionId, mappingId, mapping) => async () => {
     const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}`, mapping);
     executeTrigger(collectionId, mappingId);
-    return { collectionId, mappingId };
+    return { collectionId, mappingId: response.data.id };
   }, { name: 'UPDATE_COLLECTION_MAPPING' })
 );
 

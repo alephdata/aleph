@@ -1,6 +1,6 @@
 import { createReducer } from 'redux-act';
 
-import { fetchCollectionMappings, updateCollectionMapping, createCollectionMapping, deleteCollectionMapping } from 'src/actions';
+import { fetchCollectionMappings, deleteCollectionMapping } from 'src/actions';
 import { objectLoadStart, objectLoadError, objectLoadComplete, objectDelete } from 'src/reducers/util';
 
 const initialState = {};
