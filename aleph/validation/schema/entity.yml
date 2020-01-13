@@ -134,3 +134,11 @@ EntityTag:
     count:
       type: integer
       example: 1
+
+EntityIDs:
+  type: object
+  properties:
+    entity_ids:
+      type: array
+      items:
+        type: string

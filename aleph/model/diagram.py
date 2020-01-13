@@ -34,6 +34,9 @@ class Diagram(db.Model, SoftDeleteModel):
             self.summary = data.get('summary', self.summary)
             self.entities = data.get('entities', self.entities)
             self.layout = data.get('layout', self.layout)
+        collection = Collection.by_id(self.collection_id)
+        for ent_id in self.entities:
+            collection.ns.verify(ent_id)
         db.session.add(self)
         db.session.commit()
 
@@ -49,7 +52,7 @@ class Diagram(db.Model, SoftDeleteModel):
             'label': self.label,
             'summary': self.summary,
             'entities': self.entities,
-            'data': {'layout': dict(self.layout)},
+            'layout': dict(self.layout),
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
         })

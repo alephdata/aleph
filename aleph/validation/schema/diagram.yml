@@ -6,10 +6,14 @@ DiagramUpdate:
     summary:
       type: string
       nullable: true
-    data:
+    layout:
       type: object
       allOf:
-      - $ref: '#/components/schemas/DiagramData'
+        - $ref: '#/components/schemas/Layout'
+    entities:
+      type: array
+      items:
+        type: string
   required: []
 
 DiagramCreate:
@@ -37,97 +41,92 @@ Diagram:
     summary:
       type: string
       nullable: true
-    data:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/DiagramData'
-    writeable:
-      type: boolean
-  required: ["collection", "role_id", "label", "data", "writeable"]
-
-DiagramData:
-  type: object
-  properties:
+    entities:
+      type: array
+      items:
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/EntityUpdate'
+        properties:
+          id:
+            type: string
+        required: ["id", "schema"]
     layout:
       type: object
-      required: ["entities", "vertices", "edges", "groupings"]
-      properties:
-        entities:
-          type: array
-          items:
-            type: object
-            allOf:
-            - $ref: '#/components/schemas/EntityUpdate'
-            properties:
-              id:
-                type: string
-            required: ["id", "schema"]
-        vertices:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              type:
-                type: string
-              label:
-                type: string
-              fixed:
-                type: boolean
-              hidden:
-                type: boolean
-              color:
-                type: string
-              position:
-                type: object
-                properties:
-                  x:
-                    type: number
-                  y:
-                    type: number
-              entityId:
-                type: string
-        edges:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              type:
-                type: string
-              label:
-                type: string
-              sourceId:
-                type: string
-              targetId:
-                type: string
-              entityId:
-                type: string
-              propertyQName:
-                type: string
-              labelPosition:
-                type: object
-                properties:
-                  x:
-                    type: number
-                  y:
-                    type: number
-        groupings:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-              label:
-                type: string
-              color:
-                type: string
-              vertices:
-                type: array
-                items:
-                  type: string
-    required: ["layout"]
+      allOf:
+        - $ref: '#/components/schemas/Layout'
+    writeable:
+      type: boolean
+  required: ["collection", "role_id", "label", "layout", "entities", "writeable"]
 
+Layout:
+  type: object
+  required: ["vertices", "edges", "groupings"]
+  properties:
+    vertices:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          type:
+            type: string
+          label:
+            type: string
+          fixed:
+            type: boolean
+          hidden:
+            type: boolean
+          color:
+            type: string
+          position:
+            type: object
+            properties:
+              x:
+                type: number
+              y:
+                type: number
+          entityId:
+            type: string
+    edges:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          type:
+            type: string
+          label:
+            type: string
+          sourceId:
+            type: string
+          targetId:
+            type: string
+          entityId:
+            type: string
+          propertyQName:
+            type: string
+          labelPosition:
+            type: object
+            properties:
+              x:
+                type: number
+              y:
+                type: number
+    groupings:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          label:
+            type: string
+          color:
+            type: string
+          vertices:
+            type: array
+            items:
+              type: string

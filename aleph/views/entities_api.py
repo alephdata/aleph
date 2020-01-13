@@ -554,3 +554,30 @@ def delete(entity_id):
     delete_entity(entity, sync=get_flag('sync', False))
     db.session.commit()
     return ('', 204)
+
+
+@blueprint.route('/api/2/entities/delete', methods=['PUT', 'POST'])
+def bulk_delete():
+    """
+    ---
+    post:
+      summary: Delete entities in bulk
+      description: Delete the entities with ids in `entity_ids`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityIDs'
+      responses:
+        '204':
+          description: No Content
+      tags:
+      - Entity
+    """
+    entity_ids = parse_request('EntityIDs')['entity_ids']
+    for ent_id in entity_ids:
+        entity = get_index_entity(ent_id, request.authz.WRITE)
+        tag_request(collection_id=entity.get('collection_id'))
+        delete_entity(entity, sync=get_flag('sync', False))
+        db.session.commit()
+    return ('', 204)
