@@ -26,7 +26,7 @@ python-magic==0.4.15
 pypdf2==1.26.0
 rarfile==3.1
 xlrd==1.2.0
-openpyxl==3.0.2
+openpyxl==3.0.3
 odfpy==1.4.0
 cchardet==2.1.5
 lxml==4.4.2
