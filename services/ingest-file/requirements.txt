@@ -10,7 +10,7 @@ pyicu==2.4.2
 
 grpcio==1.26.0
 google-cloud-vision==0.41.0
-google-cloud-storage==1.23.0
+google-cloud-storage==1.24.1
 
 tesserocr==2.5.0
 
