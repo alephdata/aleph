@@ -8,7 +8,7 @@ import './DiagramEditor.scss';
 
 const fileDownload = require('js-file-download');
 
-const config = new GraphConfig({ toolbarPosition: 'left', toolbarColor: '#2e363d' });
+const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left', writeable: true });
 
 class DiagramEditor extends React.Component {
   constructor(props) {
