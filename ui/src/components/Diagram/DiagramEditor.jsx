@@ -2,14 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Intent } from '@blueprintjs/core';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
-import { updateDiagram } from 'src/actions';
+import { createEntity, deleteEntity, updateDiagram, updateEntity } from 'src/actions';
 
 import './DiagramEditor.scss';
 
 const fileDownload = require('js-file-download');
 
 const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left', writeable: true });
-const entityManager = new EntityManager();
 
 class DiagramEditor extends React.Component {
   constructor(props) {
@@ -20,10 +19,16 @@ class DiagramEditor extends React.Component {
       storedLayout = props.diagram.data.layout;
     }
 
+    this.entityManager = new EntityManager({
+      createEntity: this.createEntity.bind(this),
+      updateEntity: this.updateEntity.bind(this),
+      deleteEntity: this.deleteEntity.bind(this),
+    });
+
     this.state = {
       layout: storedLayout
-        ? GraphLayout.fromJSON(config, entityManager, storedLayout)
-        : new GraphLayout(config, entityManager),
+        ? GraphLayout.fromJSON(config, this.entityManager, storedLayout)
+        : new GraphLayout(config, this.entityManager),
       viewport: new Viewport(config),
     };
 
@@ -82,6 +87,30 @@ class DiagramEditor extends React.Component {
       });
   }
 
+  async createEntity({ schema, properties }) {
+    const { diagram } = this.props;
+    console.log('CALLING CREATE ENTITY', schema, properties);
+    const entity = await this.props.createEntity({
+      schema: schema.name,
+      properties,
+      collection: diagram.collection,
+    })
+
+    console.log(entity);
+
+    return entity;
+  }
+
+  updateEntity(entity) {
+    console.log('CALLING UPDATE ENTITY', entity);
+
+  }
+
+  deleteEntity(entityId) {
+    console.log('CALLING DELETE ENTITY', entityId);
+
+  }
+
   updateViewport(viewport) {
     this.setState({ viewport });
   }
@@ -111,7 +140,7 @@ class DiagramEditor extends React.Component {
       <div className="DiagramEditor">
         <VisGraph
           config={config}
-          entityManager={entityManager}
+          entityManager={this.entityManager}
           layout={layout}
           viewport={viewport}
           updateLayout={this.updateLayout}
@@ -127,4 +156,4 @@ class DiagramEditor extends React.Component {
 
 const mapStateToProps = () => ({});
 
-export default connect(mapStateToProps, { updateDiagram })(DiagramEditor);
+export default connect(mapStateToProps, { createEntity, deleteEntity, updateDiagram, updateEntity })(DiagramEditor);

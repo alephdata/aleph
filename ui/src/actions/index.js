@@ -33,7 +33,13 @@ export {
   updateDiagram,
 } from './diagramActions';
 export {
-  fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,
+  createEntity,
+  deleteEntity,
+  fetchEntity,
+  fetchEntityReferences,
+  fetchEntityTags,
+  queryEntities,
+  updateEntity,
 } from './entityActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
