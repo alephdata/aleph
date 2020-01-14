@@ -35,7 +35,7 @@ class DiagramEditor extends React.Component {
     this.updateLayout = this.updateLayout.bind(this);
     this.updateViewport = this.updateViewport.bind(this);
     this.exportSvg = this.exportSvg.bind(this);
-    this.dispatchLayoutUpdate = this.dispatchLayoutUpdate.bind(this);
+    // this.dispatchLayoutUpdate = this.dispatchLayoutUpdate.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -46,69 +46,112 @@ class DiagramEditor extends React.Component {
 
   componentWillUnmount() {
     if (!this.layoutToSend) {
-      this.dispatchLayoutUpdate();
+      // this.dispatchLayoutUpdate();
     }
   }
 
-  updateLayout(layout, historyModified = false) {
-    const { onStatusChange } = this.props;
-    this.setState({ layout });
+  updateLayout(updatedLayout, historyModified = false) {
+    const { diagram, onStatusChange } = this.props;
+    this.setState({ layout: updatedLayout });
 
     if (historyModified) {
-      onStatusChange();
       console.log('history modified');
-      if (!this.layoutToSend) {
-        console.log('setting timeout');
-        setTimeout(this.dispatchLayoutUpdate, 3000);
-      }
 
-      this.layoutToSend = layout;
+      onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
+
+      const updatedDiagram = diagram;
+
+      // TODO - FIX THIS IN VISLIB, make sure that groupings key is always populated
+      console.log('updatedLayout is', updatedLayout);
+      const { entities, selection, ...updatedDiagramData } = updatedLayout.toJSON();
+      console.log('updatedDiagramData is', updatedDiagramData);
+
+      updatedDiagramData.groupings = [];
+      console.log('updatedDiagramData is after', updatedDiagramData);
+
+      updatedDiagram.layout = updatedDiagramData;
+      updatedDiagram.entities = diagram.entities.map(entity => entity.id);
+
+      console.log('updatedDiagram is', updatedDiagram);
+
+      this.props.updateDiagram(diagram.id, updatedDiagram)
+        .then(() => {
+          console.log('finished');
+          this.layoutToSend = null;
+          onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
+        })
+        .catch((e) => {
+          console.log('error', e);
+          this.layoutToSend = null;
+          onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+        });
+
+      // if (!this.layoutToSend) {
+      //   console.log('setting timeout');
+      //   setTimeout(this.dispatchLayoutUpdate, 3000);
+      // }
+      //
+      // this.layoutToSend = layout;
     }
   }
 
-  dispatchLayoutUpdate() {
-    const { diagram, onStatusChange } = this.props;
-
-    console.log('dispatching', diagram);
-    onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
-
-    const updatedDiagram = diagram;
-    updatedDiagram.data = { layout: this.layoutToSend };
-    this.props.updateDiagram(diagram.id, updatedDiagram)
-      .then(() => {
-        console.log('finished');
-        this.layoutToSend = null;
-        onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
-      })
-      .catch(() => {
-        console.log('error');
-        this.layoutToSend = null;
-        onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
-      });
-  }
+  // dispatchLayoutUpdate() {
+  //   const { diagram, onStatusChange } = this.props;
+  //
+  //   console.log('dispatching', diagram);
+  //   onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
+  //
+  //   const updatedDiagram = diagram;
+  //   delete this.layoutToSend.entities;
+  //   updatedDiagram.data = { layout: this.layoutToSend };
+  //   this.props.updateDiagram(diagram.id, updatedDiagram)
+  //     .then(() => {
+  //       console.log('finished');
+  //       this.layoutToSend = null;
+  //       onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
+  //     })
+  //     .catch((e) => {
+  //       console.log('error', e);
+  //       this.layoutToSend = null;
+  //       onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+  //     });
+  // }
 
   async createEntity({ schema, properties }) {
-    const { diagram } = this.props;
+    const { diagram, onStatusChange } = this.props;
     console.log('CALLING CREATE ENTITY', schema, properties);
-    const entity = await this.props.createEntity({
-      schema: schema.name,
-      properties,
-      collection: diagram.collection,
-    })
-
-    console.log(entity);
-
-    return entity;
+    try {
+      const entityData = await this.props.createEntity({
+        schema: schema.name,
+        properties,
+        collection: diagram.collection,
+      });
+      return entityData;
+    } catch {
+      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+    }
+    return false;
   }
 
-  updateEntity(entity) {
-    console.log('CALLING UPDATE ENTITY', entity);
-
+  async updateEntity(entity) {
+    const { diagram, onStatusChange } = this.props;
+    try {
+      await this.props.updateEntity(entity);
+    } catch {
+      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+    }
+    return false;
   }
 
   deleteEntity(entityId) {
-    console.log('CALLING DELETE ENTITY', entityId);
+    const { onStatusChange } = this.props;
 
+    console.log('CALLING DELETE ENTITY', entityId);
+    try {
+      this.props.deleteEntity(entityId);
+    } catch {
+      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+    }
   }
 
   updateViewport(viewport) {
@@ -156,4 +199,9 @@ class DiagramEditor extends React.Component {
 
 const mapStateToProps = () => ({});
 
-export default connect(mapStateToProps, { createEntity, deleteEntity, updateDiagram, updateEntity })(DiagramEditor);
+export default connect(mapStateToProps, {
+  createEntity,
+  deleteEntity,
+  updateDiagram,
+  updateEntity,
+})(DiagramEditor);
