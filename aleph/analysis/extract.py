@@ -6,7 +6,6 @@ from fingerprints import clean_entity_name
 from followthemoney.types import registry
 
 from aleph.core import settings, kv
-from aleph.analysis.util import check_text_length
 from aleph.analysis.util import tag_key, place_key
 from aleph.analysis.util import TAG_PERSON, TAG_COMPANY
 from aleph.analysis.util import TAG_LOCATION, TAG_COUNTRY
@@ -49,7 +48,8 @@ def _load_model(lang):
     if not hasattr(settings, attr_name):
         log.info("Loading spaCy model: %s..." % lang)
         try:
-            setattr(settings, attr_name, spacy.load(lang))
+            model = spacy.load(lang, disable=["tagger", "parser"])
+            setattr(settings, attr_name, model)
         except OSError:
             log.error("Cannot load spaCy model: %s", lang)
     return getattr(settings, attr_name)
@@ -68,8 +68,6 @@ def get_models(entity):
 
 
 def extract_entities(entity, text):
-    if not check_text_length(text):
-        return
     for model in get_models(entity):
         doc = model(text)
         for ent in doc.ents:

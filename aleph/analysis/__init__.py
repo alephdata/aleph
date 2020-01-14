@@ -7,7 +7,7 @@ from aleph.analysis.aggregate import TagAggregator
 from aleph.analysis.extract import extract_entities
 from aleph.analysis.patterns import extract_patterns
 from aleph.analysis.language import detect_languages
-from aleph.analysis.util import load_places
+from aleph.analysis.util import load_places, text_chunks
 
 # TODO: this doesn't really have that much to do with aleph and
 # could be it's own package, e.g. followthemoney-tagger.
@@ -28,8 +28,8 @@ def extract_named_entities(entity):
     load_places()
     aggregator = TagAggregator()
     texts = entity.get_type_values(registry.text)
-    detect_languages(entity, texts)
-    for text in texts:
+    for text in text_chunks(texts):
+        detect_languages(entity, text)
         for (prop, tag) in extract_entities(entity, text):
             aggregator.add(prop, tag)
         for (prop, tag) in extract_patterns(entity, text):

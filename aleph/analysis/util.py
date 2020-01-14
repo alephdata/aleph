@@ -1,7 +1,7 @@
 import io
 import csv
 import logging
-from normality import normalize
+from normality import normalize, collapse_spaces
 from servicelayer.cache import make_key
 
 from aleph.core import settings, kv
@@ -19,15 +19,22 @@ TAG_IBAN = 'ibanMentioned'
 TAG_LOCATION = 'location'
 
 TEXT_MIN_LENGTH = 60
-TEXT_MAX_LENGTH = 900000
+TEXT_MAX_LENGTH = 100000
 
 
-def check_text_length(text):
-    if text is None:
-        return False
-    if len(text) < TEXT_MIN_LENGTH or len(text) > TEXT_MAX_LENGTH:
-        return False
-    return True
+def text_chunks(texts, sep=' '):
+    chunk, total = [], 0
+    for text in texts:
+        text = collapse_spaces(text)
+        if text is None:
+            continue
+        chunk.append(text)
+        total += len(text)
+        if total > TEXT_MAX_LENGTH:
+            yield sep.join(chunk)
+            chunk, total = [], 0
+    if total > TEXT_MIN_LENGTH:
+        yield sep.join(chunk)
 
 
 def tag_key(label):
