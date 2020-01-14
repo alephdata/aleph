@@ -52,7 +52,10 @@ def create_app(config={}):
     mail.init_app(app)
     db.init_app(app)
     babel.init_app(app)
-    CORS(app, origins=settings.CORS_ORIGINS)
+    CORS(app,
+         resources=r'/api/*',
+         origins=settings.CORS_ORIGINS,
+         supports_credentials=True)
     feature_policy = {
         'accelerometer': NONE,
         'camera': NONE,

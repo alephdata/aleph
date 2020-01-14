@@ -44,7 +44,7 @@ RUN apt-get -qq -y update \
         tesseract-ocr-fin \
         tesseract-ocr-fra \
         tesseract-ocr-frk \
-        tesseract-ocr-frm \
+        # tesseract-ocr-frm \
         # tesseract-ocr-glg \
         # tesseract-ocr-grc \
         tesseract-ocr-heb \

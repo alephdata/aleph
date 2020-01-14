@@ -1,7 +1,6 @@
 import logging
 from banal import ensure_list
 from normality import normalize
-from servicelayer.cache import make_key
 from elasticsearch.helpers import scan
 
 from aleph.core import es, kv
@@ -21,19 +20,26 @@ def name_tokens(name):
     return [n for n in name.split(' ') if len(n) > 1]
 
 
-def iter_tokens(limit=100000):
+def iter_tokens(limit=1000000000):
     """Go through all the names in the index."""
     query = {'_source': {'include': 'names'}}
     index = entities_read_index(schema=Entity.LEGAL_ENTITY)
     seen = 0
-    for res in scan(es, index=index, query=query, scroll='1410m'):
-        seen += 1
-        if seen % 1000 == 0:
-            log.info("Names: %s", seen)
-        if limit is not None and seen > limit:
-            return
-        for name in ensure_list(res.get('_source', {}).get('names')):
-            yield from name_tokens(name)
+    try:
+        for res in scan(es, index=index, query=query, scroll='1440m'):
+            names = ensure_list(res.get('_source', {}).get('names'))
+            tokens = set()
+            for name in names:
+                tokens.update(name_tokens(name))
+            yield from tokens
+
+            seen += 1
+            if seen % 1000 == 0:
+                log.info("Entities: %s", seen)
+            if limit is not None and seen > limit:
+                return
+    except Exception as ex:
+        log.warning("Token iterator aborted: %s", ex)
 
 
 def compute_name_frequencies():
@@ -47,12 +53,15 @@ def compute_name_frequencies():
     # structure here?
     pipe = kv.pipeline(transaction=False)
     pipe.delete(TOKEN_KEY)
+    names_count = 0
     for idx, token in enumerate(iter_tokens()):
         pipe.hincrby(TOKEN_KEY, token, 1)
-        if idx > 0 and idx % 1000 == 0:
+        names_count += 1
+        if idx > 0 and idx % 10000 == 0:
             pipe.execute()
             pipe = kv.pipeline(transaction=False)
     pipe.execute()
+    log.info("Names: %d, unique: %d", names_count, kv.hlen(TOKEN_KEY))
 
     # Next, count how often each count occurs, i.e. make a histogram
     # of name frequency.
@@ -70,12 +79,17 @@ def compute_name_frequencies():
         # Find out what the maximum count is.
         max_count = max((count, max_count))
 
+    log.info("Counts: %d, max: %d", len(counts), max_count)
     total = 0
     pipe = kv.pipeline(transaction=False)
     pipe.delete(DIST_KEY)
-    for count in range(max_count, 1, -1):
-        total += counts.get(count, 0)
-        pipe.hset(DIST_KEY, count, total)
+    for idx in range(max_count, 1, -1):
+        total += counts.get(idx, 0)
+        pipe.hset(DIST_KEY, idx, total)
+        if idx > 0 and idx % 10000 == 0:
+            pipe.execute()
+            pipe = kv.pipeline(transaction=False)
+    log.info("Total: %d", total)
     pipe.set(TOTAL_KEY, total)
     pipe.execute()
 

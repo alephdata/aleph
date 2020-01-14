@@ -3,6 +3,7 @@ import json
 from aleph.core import db
 from aleph.model import Entity
 from aleph.index.entities import index_entity
+from aleph.logic.entities import refresh_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
@@ -84,8 +85,7 @@ class EntitiesApiTestCase(TestCase):
     def test_update(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities/%s' % self.id
-        res = self.client.get(url,
-                              headers=headers)
+        res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
 
         data = res.json
@@ -95,8 +95,8 @@ class EntitiesApiTestCase(TestCase):
                                headers=headers,
                                content_type='application/json')
         assert res.status_code == 200, res.json
-        assert 'little' in res.json['name'], res.json
         validate(res.json, 'Entity')
+        assert 'little' in res.json['name'], res.json
 
         data['properties'].pop('name', None)
         res = self.client.post(url,

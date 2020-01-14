@@ -14,8 +14,8 @@ from aleph.queues import get_stage, OP_PROCESS
 from aleph.model import Role, Collection, Permission, Entity
 from aleph.index.admin import delete_index, upgrade_search, clear_index
 from aleph.logic.aggregator import drop_aggregator, get_aggregator
-from aleph.logic.collections import update_collection
-from aleph.logic.processing import process_collection, index_aggregate
+from aleph.logic.collections import update_collection, process_collection
+from aleph.logic.processing import index_aggregate
 from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app

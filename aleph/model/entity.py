@@ -33,6 +33,10 @@ class Entity(db.Model, SoftDeleteModel):
     def model(self):
         return model.get(self.schema)
 
+    @property
+    def signed_id(self):
+        return self.collection.ns.sign(self.id)
+
     def delete_matches(self):
         pq = db.session.query(Match)
         pq = pq.filter(or_(

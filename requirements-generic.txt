@@ -6,19 +6,19 @@ Flask-Migrate==2.5.2
 Flask-Cors==3.0.8
 Flask_Babel==0.12.2
 flask-talisman==0.7.0
-SQLAlchemy==1.3.11
-alembic==1.3.1
+SQLAlchemy==1.3.12
+alembic==1.3.2
 authlib==0.13
 
 elasticsearch==7.1.0
 marshmallow==2.19.2
 gunicorn==20.0.4
 jsonschema==3.2.0
-apispec==3.1.0
+apispec==3.2.0
 apispec-webframeworks==0.5.2
 blinker==1.4
-Babel==2.7.0
-PyYAML==5.2
+Babel==2.8.0
+PyYAML==5.3
 pyjwt==1.7.1
 rdflib==4.2.2
 requests[security]==2.22.0
@@ -30,8 +30,8 @@ zipstream==1.1.4
 fasttext==0.9.1
 tabulate==0.8.6
 
-grpcio==1.25.0
-google-cloud-storage==1.23.0
+grpcio==1.26.0
+google-cloud-storage==1.24.1
 google-cloud-logging==1.14.0
 
 # Testing dependencies

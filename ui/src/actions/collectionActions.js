@@ -96,14 +96,14 @@ export const createCollectionMapping = asyncActionCreator((collectionId, mapping
   if (response && response.data && response.data.id) {
     executeTrigger(collectionId, response.data.id);
   }
-  return { collectionId, data: [response.data] };
+  return { collectionId, mappingId: response.data.id };
 }, { name: 'CREATE_COLLECTION_MAPPING' });
 
 export const updateCollectionMapping = (
   asyncActionCreator((collectionId, mappingId, mapping) => async () => {
     const response = await endpoint.put(`collections/${collectionId}/mappings/${mappingId}`, mapping);
     executeTrigger(collectionId, mappingId);
-    return { collectionId, mappingId, data: [response.data] };
+    return { collectionId, mappingId: response.data.id };
   }, { name: 'UPDATE_COLLECTION_MAPPING' })
 );
 
@@ -114,6 +114,7 @@ export const deleteCollectionMapping = asyncActionCreator((collectionId, mapping
 }, { name: 'DELETE_COLLECTION_MAPPING' });
 
 export const fetchCollectionMappings = asyncActionCreator((collectionId) => async () => {
-  const response = await endpoint.get(`collections/${collectionId}/mappings`);
-  return { collectionId, data: response.data.results };
+  const config = { params: { limit: MAX_RESULTS } };
+  const response = await endpoint.get(`collections/${collectionId}/mappings`, config);
+  return { collectionId, data: response.data };
 }, { name: 'FETCH_COLLECTION_MAPPINGS' });

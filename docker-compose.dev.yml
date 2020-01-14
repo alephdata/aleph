@@ -35,7 +35,7 @@ services:
         - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:d1bb21da2312c5862368d97368711e390b8668b9
+    image: alephdata/convert-document:bb01e4e79519ae45ca1e317cf6db060aab01b510
     restart: on-failure
     tmpfs:
       - /tmp
@@ -53,7 +53,6 @@ services:
       - archive-data:/data
       - "./services/ingest-file/ingestors:/ingestors/ingestors"
       - "./services/ingest-file/tests:/ingestors/tests"
-      - "./services/ingest-file/requirements.in:/ingestors/requirements.in"
       - "./services/ingest-file/requirements.txt:/ingestors/requirements.txt"
       - "/:/host"
     links:

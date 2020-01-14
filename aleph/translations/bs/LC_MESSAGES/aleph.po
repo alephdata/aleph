@@ -1,7 +1,7 @@
 # Translations template for PROJECT.
-# Copyright (C) 2019 ORGANIZATION
+# Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 # 
 # Translators:
 # pudo <friedrich@pudo.org>, 2018
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-12-03 21:13+0100\n"
+"POT-Creation-Date: 2020-01-13 16:34+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: Tajna Biscevic <tajna@occrp.org>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/aleph/teams/76591/bs/)\n"
@@ -266,7 +266,7 @@ msgstr "Nevažeći kod"
 msgid "Email is already registered"
 msgstr "Email je već registrovan"
 
-#: aleph/views/roles_api.py:239
+#: aleph/views/roles_api.py:230
 msgid "Incorrect password."
 msgstr ""
 
