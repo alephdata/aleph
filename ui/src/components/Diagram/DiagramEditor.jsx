@@ -6,8 +6,6 @@ import { updateDiagram } from 'src/actions';
 
 import './DiagramEditor.scss';
 
-console.log(EntityManager);
-
 const fileDownload = require('js-file-download');
 
 const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left', writeable: true });
@@ -24,8 +22,8 @@ class DiagramEditor extends React.Component {
 
     this.state = {
       layout: storedLayout
-        ? GraphLayout.fromJSON(config, storedLayout)
-        : new GraphLayout(config),
+        ? GraphLayout.fromJSON(config, entityManager, storedLayout)
+        : new GraphLayout(config, entityManager),
       viewport: new Viewport(config),
     };
 
@@ -120,6 +118,7 @@ class DiagramEditor extends React.Component {
           updateViewport={this.updateViewport}
           exportSvg={this.exportSvg}
           externalFilterText={filterText}
+          writeable
         />
       </div>
     );
