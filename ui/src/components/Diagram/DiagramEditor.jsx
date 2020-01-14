@@ -1,14 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Intent } from '@blueprintjs/core';
-import { VisGraph, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
+import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 import { updateDiagram } from 'src/actions';
 
 import './DiagramEditor.scss';
 
+console.log(EntityManager);
+
 const fileDownload = require('js-file-download');
 
 const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left', writeable: true });
+const entityManager = new EntityManager();
 
 class DiagramEditor extends React.Component {
   constructor(props) {
@@ -110,13 +113,13 @@ class DiagramEditor extends React.Component {
       <div className="DiagramEditor">
         <VisGraph
           config={config}
+          entityManager={entityManager}
           layout={layout}
           viewport={viewport}
           updateLayout={this.updateLayout}
           updateViewport={this.updateViewport}
           exportSvg={this.exportSvg}
           externalFilterText={filterText}
-          writeable
         />
       </div>
     );
