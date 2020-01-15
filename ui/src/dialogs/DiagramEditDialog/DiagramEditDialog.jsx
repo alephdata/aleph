@@ -8,6 +8,7 @@ import Query from 'src/app/Query';
 import { Collection } from 'src/components/common';
 import { createDiagram, updateDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
+import getDiagramLink from 'src/util/getDiagramLink';
 
 const messages = defineMessages({
   label_placeholder: {
@@ -68,7 +69,7 @@ class DiagramEditDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { diagram, intl, isCreate } = this.props;
+    const { diagram, history, intl, isCreate } = this.props;
     const { data, id, label, summary, collection, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;
@@ -81,7 +82,10 @@ class DiagramEditDialog extends Component {
           data: {"layout":{"entities":[],"vertices":[],"edges":[],"groupings":[],"selection":[]},"viewport":{"zoomLevel":0.4,"ratio":0.738,"center":{"x":0,"y":0}}},
           collection_id: parseInt(collection.id),
         };
-        await this.props.createDiagram(newDiagram);
+        const response = await this.props.createDiagram(newDiagram);
+        history.push({
+          pathname: getDiagramLink(response.data)
+        });
       } else {
         const updatedDiagram = diagram;
         diagram.label = label;

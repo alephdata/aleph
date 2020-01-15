@@ -13,11 +13,6 @@ const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left', 
 class DiagramEditor extends React.Component {
   constructor(props) {
     super(props);
-    let storedLayout;
-
-    if (props.diagram?.data?.layout?.entities) {
-      storedLayout = props.diagram.data.layout;
-    }
 
     this.entityManager = new EntityManager({
       createEntity: this.createEntity.bind(this),
@@ -25,10 +20,20 @@ class DiagramEditor extends React.Component {
       deleteEntity: this.deleteEntity.bind(this),
     });
 
+    let initialLayout;
+
+    if (props.diagram?.layout) {
+      const { layout, entities } = props.diagram;
+      console.log({ ...layout, entities });
+      initialLayout = GraphLayout.fromJSON(config, this.entityManager, { ...layout, entities, selection: [] });
+    } else {
+      initialLayout = new GraphLayout(config, this.entityManager);
+    }
+
+    console.log('stored layout is', props.diagram, initialLayout);
+
     this.state = {
-      layout: storedLayout
-        ? GraphLayout.fromJSON(config, this.entityManager, storedLayout)
-        : new GraphLayout(config, this.entityManager),
+      layout: initialLayout,
       viewport: new Viewport(config),
     };
 
@@ -65,12 +70,13 @@ class DiagramEditor extends React.Component {
       console.log('updatedLayout is', updatedLayout);
       const { entities, selection, ...updatedDiagramData } = updatedLayout.toJSON();
       console.log('updatedDiagramData is', updatedDiagramData);
+      console.log('diagram is', diagram);
 
       updatedDiagramData.groupings = [];
       console.log('updatedDiagramData is after', updatedDiagramData);
 
       updatedDiagram.layout = updatedDiagramData;
-      updatedDiagram.entities = diagram.entities.map(entity => entity.id);
+      updatedDiagram.entities = entities ? entities.map(entity => entity.id) : [];
 
       console.log('updatedDiagram is', updatedDiagram);
 
@@ -134,7 +140,7 @@ class DiagramEditor extends React.Component {
   }
 
   async updateEntity(entity) {
-    const { diagram, onStatusChange } = this.props;
+    const { onStatusChange } = this.props;
     try {
       await this.props.updateEntity(entity);
     } catch {
