@@ -26,14 +26,15 @@ def text_chunks(texts, sep=' '):
     chunk, total = [], 0
     for text in texts:
         text = collapse_spaces(text)
-        if text is None:
+        if text is None or len(text) < 5:
             continue
         chunk.append(text)
         total += len(text)
         if total > TEXT_MAX_LENGTH:
             yield sep.join(chunk)
             chunk, total = [], 0
-    if total > TEXT_MIN_LENGTH:
+    # if total > TEXT_MIN_LENGTH:
+    if len(chunk):
         yield sep.join(chunk)
 
 
