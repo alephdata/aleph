@@ -357,7 +357,8 @@ class DiagramSerializer(Serializer):
         obj['entities'] = []
         for ent_id in ent_ids:
             entity = self.resolve(Entity, ent_id, VisDiagramEntitySerializer)
-            obj['entities'].append(entity)
+            if entity is not None:
+                obj['entities'].append(entity)
         for ent in obj['entities']:
             schema = model.get(ent.get('schema'))
             properties = ent.get('properties', {})
