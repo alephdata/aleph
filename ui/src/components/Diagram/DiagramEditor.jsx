@@ -20,12 +20,15 @@ class DiagramEditor extends React.Component {
       deleteEntity: this.deleteEntity.bind(this),
     });
 
+    const viewport = new Viewport(config)
     let initialLayout;
 
     if (props.diagram?.layout) {
       const { layout, entities } = props.diagram;
       console.log({ ...layout, entities });
       initialLayout = GraphLayout.fromJSON(config, this.entityManager, { ...layout, entities, selection: [] });
+      const initialBounds = initialLayout.getVisibleVertexRect();
+      viewport.fitToRect(initialBounds);
     } else {
       initialLayout = new GraphLayout(config, this.entityManager);
     }
@@ -34,7 +37,7 @@ class DiagramEditor extends React.Component {
 
     this.state = {
       layout: initialLayout,
-      viewport: new Viewport(config),
+      viewport,
     };
 
     this.updateLayout = this.updateLayout.bind(this);
@@ -186,6 +189,8 @@ class DiagramEditor extends React.Component {
   render() {
     const { filterText } = this.props;
     const { layout, viewport } = this.state;
+
+    console.log(filterText);
 
     return (
       <div className="DiagramEditor">

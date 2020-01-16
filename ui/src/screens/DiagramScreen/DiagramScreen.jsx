@@ -50,6 +50,7 @@ export class DiagramScreen extends Component {
   }
 
   onDiagramSearch(filterText) {
+    console.log('searching!', filterText);
     this.setState({ filterText });
   }
 
