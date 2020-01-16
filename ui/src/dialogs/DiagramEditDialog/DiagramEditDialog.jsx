@@ -115,8 +115,9 @@ class DiagramEditDialog extends Component {
   }
 
   checkValid() {
-    const { collection } = this.state;
-    return collection !== null;
+    const { label, collection } = this.state;
+
+    return collection !== undefined && label?.length > 0;
   }
 
   getCollectionOptionsQuery() {
