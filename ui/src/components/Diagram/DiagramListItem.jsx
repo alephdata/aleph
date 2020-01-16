@@ -11,13 +11,21 @@ import './DiagramListItem.scss';
 
 class DiagramListItem extends PureComponent {
   render() {
-    const { diagram } = this.props;
+    const { diagram, showCollection } = this.props;
+
+    console.log('DIAGRAM', diagram);
 
     return (
       <div className="DiagramListItem" key={diagram.id}>
-        <Card>
+        <Card elevation={0}>
+          {showCollection && (
+            <div className="DiagramListItem__collection">
+              <Collection.Link collection={diagram.collection} icon />
+            </div>
+          )}
+          <Icon className="DiagramListItem__icon" icon="graph" iconSize={42} />
           <H4>
-            <Diagram.Link diagram={diagram} icon />
+            <Diagram.Link diagram={diagram} />
           </H4>
           {diagram.summary && (
             <Diagram.Summary diagram={diagram} className="summary" truncate={2} />
@@ -32,9 +40,6 @@ class DiagramListItem extends PureComponent {
                   date: <Date value={diagram.updated_at} />,
                 }}
               />
-            </span>
-            <span className="details-item">
-              <Collection.Link collection={diagram.collection} icon />
             </span>
           </p>
         </Card>

@@ -105,7 +105,11 @@ export class DiagramsIndexScreen extends Component {
             <SectionLoading />
           )}
           { !result.isLoading && (
-            <DiagramList items={result.results} getMoreItems={this.getMoreResults} />
+            <DiagramList
+              items={result.results}
+              getMoreItems={this.getMoreResults}
+              showCollection
+            />
           )}
         </Dashboard>
       </Screen>

@@ -6,12 +6,12 @@ import './DiagramList.scss';
 
 class DiagramList extends Component {
   render() {
-    const { getMoreItems, items } = this.props;
+    const { getMoreItems, items, showCollection } = this.props;
 
     return (
       <div className="DiagramList">
         <div className="DiagramList__items">
-          {items.map(diagram => <DiagramListItem key={diagram.id} diagram={diagram} />)}
+          {items.map(diagram => <DiagramListItem key={diagram.id} diagram={diagram} showCollection={showCollection} />)}
         </div>
         <Waypoint
           onEnter={getMoreItems}

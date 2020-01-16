@@ -2,24 +2,27 @@
 
 .DiagramListItem {
   padding: $aleph-content-padding/2;
-  flex: auto;
-  width: 33.33%;
-  max-width: 33.33%;
+  flex: 1 1;
+  width: 25%;
+  // max-width: 25%;
+  min-width: 250px;
+  text-align: center;
 
   @media screen and (max-width: $aleph-screen-lg-max-width) {
+    width: 33.33%;
+    // max-width: 33.33%;
+  }
+
+  @media screen and (max-width: $aleph-screen-md-max-width) {
     width: 50%;
-    max-width: 50%;
+    // max-width: 50%;
   }
 
   @media screen and (max-width: $aleph-screen-md-max-width) {
     width: 100%;
-    max-width: 100%;
+    // max-width: 50%;
   }
 
-  .bp3-card {
-    border: 1px solid #d8e1e8;
-    box-shadow: none;
-  }
 
   h4 {
       font-weight: bold;
@@ -32,6 +35,31 @@
       .bp3-icon {
           padding-bottom: 2px;
       }
+  }
+
+  .bp3-card {
+    border: 1px solid $blue2;
+    box-shadow: none;
+    height: 100%;
+    padding: 35px $aleph-content-padding;
+    background-color: #ebf1f5;
+    position: relative;
+  }
+
+  &__icon {
+    color: $blue2;
+    margin-bottom: $aleph-content-padding/2;
+  }
+
+  &__collection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    padding: 2px 5px;
+    border: 1px solid #ebf1f5;
+    border-radius: 3px;
+    margin: 3px;
   }
 
   .summary {
@@ -47,7 +75,6 @@
   .details-item {
       display: inline-block;
       min-width: 8em;
-      margin-right: 2em;
 
       .bp3-icon {
           margin-right: $aleph-icon-padding;

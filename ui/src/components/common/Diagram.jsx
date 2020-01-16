@@ -16,14 +16,14 @@ const simpleRenderer = ({ children }) => (
 
 class DiagramLabel extends PureComponent {
   render() {
-    const { diagram } = this.props;
+    const { diagram, icon } = this.props;
     if (!diagram || !diagram.id) {
       return null;
     }
 
     return (
       <span className="DiagramLabel" title={diagram.label}>
-        <Icon icon="graph" className="left-icon" />
+        {icon && <Icon icon="graph" className="left-icon" />}
         <span>{diagram.label}</span>
       </span>
     );
