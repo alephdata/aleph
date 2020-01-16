@@ -59,6 +59,8 @@ class DiagramEditor extends React.Component {
     const { diagram, onStatusChange } = this.props;
     this.setState({ layout: updatedLayout });
 
+    console.log(updatedLayout);
+
     if (historyModified) {
       console.log('history modified');
 
@@ -139,10 +141,10 @@ class DiagramEditor extends React.Component {
     return false;
   }
 
-  async updateEntity(entity) {
+  updateEntity(entity) {
     const { onStatusChange } = this.props;
     try {
-      await this.props.updateEntity(entity);
+      this.props.updateEntity(entity);
     } catch {
       onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
     }
