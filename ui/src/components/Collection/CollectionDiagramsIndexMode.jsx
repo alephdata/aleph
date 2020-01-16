@@ -59,8 +59,9 @@ export class CollectionDiagramsIndexMode extends Component {
 
     return (
       <div>
-        <DiagramCreateButton collection={collection} />
-
+        <div style={{ marginBottom: "10px" }}>
+          <DiagramCreateButton collection={collection} />
+        </div>
         { result.isLoading && (
           <SectionLoading />
         )}

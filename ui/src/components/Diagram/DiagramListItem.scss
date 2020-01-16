@@ -25,25 +25,30 @@
 
 
   h4 {
-      font-weight: bold;
-
-      .bp3-tag {
-          float: right;
-          display: block;
-      }
-
-      .bp3-icon {
-          padding-bottom: 2px;
-      }
+    font-weight: bold;
+    color: $blue2;
+    text-decoration: none !important;
   }
 
   .bp3-card {
     // border: 1px solid $blue2;
-    box-shadow: none;
+    // box-shadow: none;
     height: 100%;
     padding: 35px $aleph-content-padding;
-    background-color: #ebf1f5;
+    // background-color: white;
     position: relative;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
+        0 0 0 rgba(16, 22, 26, 0),
+        0 1px 7px rgba(16, 22, 26, 0.2);
+
+    }
+  }
+
+  &__link:hover {
+    text-decoration: none;
   }
 
   &__icon {
@@ -63,21 +68,23 @@
   }
 
   .summary {
-      font-size: $pt-font-size;
-      margin-bottom: $aleph-grid-size;
+    font-size: $pt-font-size;
+    margin-bottom: $aleph-grid-size;
   }
 
   .details {
-      margin-bottom: 0;
-      color: $aleph-greyed-text;
+    margin-bottom: 0;
+    color: $aleph-greyed-text;
+    font-size: 12px;
+    margin-top: 15px;
   }
 
   .details-item {
-      display: inline-block;
-      min-width: 8em;
+    display: inline-block;
+    min-width: 8em;
 
-      .bp3-icon {
-          margin-right: $aleph-icon-padding;
-      }
+    .bp3-icon {
+        margin-right: $aleph-icon-padding;
+    }
   }
 }

@@ -1,6 +1,7 @@
 @import "src/app/variables.scss";
 
 .DiagramList {
+  margin-right: 1px;
   &__items {
     display: flex;
     margin: -$aleph-content-padding/2;
