@@ -11,18 +11,13 @@ import './DiagramListItem.scss';
 
 class DiagramListItem extends PureComponent {
   render() {
-    const { diagram, showCollection } = this.props;
+    const { diagram } = this.props;
 
     console.log('DIAGRAM', diagram);
 
     return (
       <div className="DiagramListItem" key={diagram.id}>
         <Card elevation={0}>
-          {showCollection && (
-            <div className="DiagramListItem__collection">
-              <Collection.Link collection={diagram.collection} icon />
-            </div>
-          )}
           <Icon className="DiagramListItem__icon" icon="graph" iconSize={42} />
           <H4>
             <Diagram.Link diagram={diagram} />
