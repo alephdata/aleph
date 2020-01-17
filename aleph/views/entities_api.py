@@ -530,6 +530,45 @@ def update(entity_id):
     return EntitySerializer.jsonify(entity)
 
 
+@blueprint.route('/api/2/entities/update', methods=['POST', 'PUT'])
+def bulk_update():
+    """
+    ---
+    post:
+      summary: Update entities in bulk
+      description: >
+        Update the entities mentioned in `entities`. This only applies to
+        entities which are backed by a database row, i.e. not any
+        entities resulting from a mapping or bulk load.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityBulkUpdate'
+      responses:
+        '204':
+          description: No Content
+      tags:
+      - Entity
+    """
+    entities = parse_request('EntityBulkUpdate')['entities']
+    db_entities = []
+    merge = get_flag('merge')
+    sync = get_flag('sync', True)
+    for ent in entities:
+        entity = get_db_entity(ent['id'], request.authz.WRITE)
+        db_entities.append(entity)
+        tag_request(collection_id=entity.collection_id)
+        if merge:
+            props = merge_data(ent.get('properties'), entity.data)
+            ent['properties'] = props
+        entity.update(ent)
+    db.session.commit()
+    for entity in db_entities:
+        update_entity(entity, sync=sync)
+    return ('', 204)
+
+
 @blueprint.route('/api/2/entities/<entity_id>', methods=['DELETE'])
 def delete(entity_id):
     """

@@ -398,3 +398,69 @@ class EntitiesApiTestCase(TestCase):
             url = '/api/2/entities/%s' % ent_id
             res = self.client.get(url, headers=headers)
             assert res.status_code == 404, res.status_code
+
+    def test_bulk_update_entity(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Mr. Mango",
+            },
+            'collection_id': self.col_id
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, (res.status_code, res.json)
+        id1 = res.json['id']
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Mr. Banana",
+            },
+            'collection_id': self.col_id
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        id2 = res.json['id']
+        assert res.status_code == 200, (res.status_code, res.json)
+
+        url = '/api/2/entities/update?merge=true'
+        data = {
+            'entities': [
+                {
+                    'id': id1,
+                    'schema': 'Person',
+                    'properties': {
+                        'status': 'raw'
+                    }
+                },
+                {
+                    'id': id2,
+                    'schema': 'Person',
+                    'properties': {
+                        'status': 'ripe'
+                    }
+                }
+            ]
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 204, res.status_code
+
+        url = '/api/2/entities/%s' % id1
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
+        assert res.json['properties']['status'] == ['raw'], res.json
+        url = '/api/2/entities/%s' % id2
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        assert res.json['properties']['name'] == ['Mr. Banana'], res.json
+        assert res.json['properties']['status'] == ['ripe'], res.json

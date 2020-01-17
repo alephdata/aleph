@@ -142,3 +142,18 @@ EntityIDs:
       type: array
       items:
         type: string
+  required: ["entity_ids"]
+
+EntityBulkUpdate:
+  type: object
+  properties:
+    entities:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/EntityUpdate'
+        properties:
+          id:
+            type: string
+        required: ["id", "schema"]
