@@ -19,18 +19,19 @@ TAG_IBAN = 'ibanMentioned'
 TAG_LOCATION = 'location'
 
 TEXT_MIN_LENGTH = 60
-TEXT_MAX_LENGTH = 100000
+TEXT_MAX_LENGTH = 50000
 
 
-def text_chunks(texts, sep=' '):
+def text_chunks(texts, sep=' ', step=5000):
     chunk, total = [], 0
     for text in texts:
         text = collapse_spaces(text)
         if text is None or len(text) < 5:
             continue
+        text = text[:TEXT_MAX_LENGTH]
         chunk.append(text)
         total += len(text)
-        if total > TEXT_MAX_LENGTH:
+        if total > step:
             yield sep.join(chunk)
             chunk, total = [], 0
     # if total > TEXT_MIN_LENGTH:
