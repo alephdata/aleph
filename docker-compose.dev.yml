@@ -39,6 +39,7 @@ services:
     restart: on-failure
     tmpfs:
       - /tmp
+      - /root/.config
       - /home/app/.config
 
   ingest-file:
