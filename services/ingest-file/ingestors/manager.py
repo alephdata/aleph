@@ -17,6 +17,7 @@ from servicelayer.extensions import get_extensions
 from ingestors.directory import DirectoryIngestor
 from ingestors.exc import ProcessingException
 from ingestors.util import filter_text, remove_directory
+from ingestors.analysis import analyze_entity
 from ingestors import settings
 
 log = logging.getLogger(__name__)
@@ -76,6 +77,7 @@ class Manager(object):
 
     def emit_entity(self, entity, fragment=None):
         # pprint(entity.to_dict())
+        analyze_entity(entity)
         self.writer.put(entity.to_dict(), fragment)
         self.emitted.add(entity.id)
 

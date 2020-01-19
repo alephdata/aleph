@@ -10,6 +10,7 @@ from servicelayer.jobs import Job, Stage
 from servicelayer.archive.util import ensure_path
 from servicelayer import settings as service_settings
 from balkhash import settings as balkhash_settings
+from ingestors import settings as ingestors_settings
 from ingestors.manager import Manager
 
 
@@ -26,6 +27,7 @@ class TestCase(unittest.TestCase):
 
     def setUp(self):
         # Force tests to use fake configuration
+        ingestors_settings.TESTING = True
         service_settings.REDIS_URL = None
         service_settings.ARCHIVE_TYPE = 'file'
         service_settings.ARCHIVE_PATH = mkdtemp()

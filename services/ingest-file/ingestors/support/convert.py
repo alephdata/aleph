@@ -3,7 +3,7 @@ import requests
 from requests import RequestException, HTTPError
 from servicelayer.util import backoff, service_retries
 
-from ingestors.settings import UNOSERVICE_URL
+from ingestors.settings import CONVERT_URL
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.exc import ProcessingException
@@ -35,8 +35,8 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
 
     def _document_to_pdf(self, file_path, entity):
         """Converts an office document to PDF."""
-        if UNOSERVICE_URL is None:
-            raise RuntimeError("No UNOSERVICE_URL for document conversion.")
+        if CONVERT_URL is None:
+            raise RuntimeError("No service for document conversion.")
         file_name = self.manager.make_filename(entity)
         mime_type = entity.first('mimeType')
         log.info('Converting [%s] to PDF...', file_name)
@@ -45,7 +45,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
             fh = open(file_path, 'rb')
             try:
                 files = {'file': (file_name, fh, mime_type)}
-                res = requests.post(UNOSERVICE_URL,
+                res = requests.post(CONVERT_URL,
                                     files=files,
                                     timeout=(5, 305),
                                     stream=True)
