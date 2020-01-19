@@ -1,7 +1,7 @@
 # Translations template for PROJECT.
-# Copyright (C) 2019 ORGANIZATION
+# Copyright (C) 2020 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 # 
 # Translators:
 # jen occrp, 2019
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2019-12-03 21:13+0100\n"
+"POT-Creation-Date: 2020-01-13 16:34+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
@@ -137,11 +137,11 @@ msgstr ""
 
 #: aleph/model/mapping.py:22
 msgid "success"
-msgstr ""
+msgstr "успех"
 
 #: aleph/model/mapping.py:23
 msgid "failed"
-msgstr ""
+msgstr "неудача"
 
 #: aleph/search/__init__.py:39
 msgid "No schema is specified for the query."
@@ -264,7 +264,7 @@ msgstr "Неверный код"
 msgid "Email is already registered"
 msgstr "Этот электронный адрес уже зарегистрирован"
 
-#: aleph/views/roles_api.py:239
+#: aleph/views/roles_api.py:230
 msgid "Incorrect password."
 msgstr "Неверный пароль."
 

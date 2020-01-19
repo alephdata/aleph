@@ -26,10 +26,11 @@ services:
       - redis-data:/data
 
   convert-document:
-    image: alephdata/convert-document:55f2daac733959df68aa76a17778d3f4acf83648
+    image: alephdata/convert-document:bb01e4e79519ae45ca1e317cf6db060aab01b510
     restart: on-failure
     tmpfs:
       - /tmp
+      - /root/.config
       - /home/app/.config
 
   ingest-file:

@@ -1,5 +1,7 @@
 import logging
 import mailbox
+from email.policy import default
+from email.generator import BytesGenerator
 from pantomime.types import RFC822
 from followthemoney import model
 
@@ -26,7 +28,8 @@ class MboxFileIngestor(RFC822Ingestor, TempFileSupport):
             try:
                 msg_path = self.make_work_file('%s.eml' % i)
                 with open(msg_path, 'wb') as fh:
-                    fh.write(msg.as_bytes())
+                    gen = BytesGenerator(fh, policy=default)
+                    gen.flatten(msg)
                 checksum = self.manager.store(msg_path, mime_type=RFC822)
                 msg_path.unlink()
                 child = self.manager.make_entity('Email', parent=entity)

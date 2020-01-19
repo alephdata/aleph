@@ -173,9 +173,9 @@ class Role(db.Model, IdModel, SoftDeleteModel):
         if not hasattr(settings, '_roles'):
             settings._roles = {}
         if foreign_id not in settings._roles:
-            role_id, = cls.all_ids().filter_by(foreign_id=foreign_id).first()
+            role_id = cls.all_ids().filter_by(foreign_id=foreign_id).first()
             if role_id is not None:
-                settings._roles[foreign_id] = role_id
+                settings._roles[foreign_id] = role_id[0]
         return settings._roles.get(foreign_id)
 
     @classmethod
