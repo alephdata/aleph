@@ -8,7 +8,7 @@ from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
-from aleph.model import QueryLog
+from aleph.model import QueryLog, Entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags
@@ -17,7 +17,7 @@ from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
-from aleph.views.util import require
+from aleph.views.util import require, obj_or_404
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
 
@@ -556,28 +556,48 @@ def delete(entity_id):
     return ('', 204)
 
 
-@blueprint.route('/api/2/entities/delete', methods=['PUT', 'POST'])
-def bulk_delete():
+@blueprint.route('/api/2/entities/<entity_id>/undelete', methods=['POST', 'PUT'])  # noqa
+def undelete(entity_id):
     """
     ---
     post:
-      summary: Delete entities in bulk
-      description: Delete the entities with ids in `entity_ids`
+      summary: Undelete an entity
+      description: >
+        Undelete the entity with id `entity_id`; and optionally update its
+        data. This only applies to entities which are backed by a database row,
+        i.e. not any entities resulting from a mapping or bulk load.
+      parameters:
+      - in: path
+        name: entity_id
+        required: true
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EntityIDs'
+              $ref: '#/components/schemas/EntityUndelete'
       responses:
-        '204':
-          description: No Content
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
       tags:
       - Entity
     """
-    entity_ids = parse_request('EntityIDs')['entity_ids']
-    for ent_id in entity_ids:
-        entity = get_index_entity(ent_id, request.authz.WRITE)
-        tag_request(collection_id=entity.get('collection_id'))
-        delete_entity(entity, sync=get_flag('sync', False))
-        db.session.commit()
-    return ('', 204)
+    entity = obj_or_404(Entity.by_id(entity_id, deleted=True))
+    require(request.authz.can(entity.collection_id, request.authz.WRITE))
+    tag_request(collection_id=entity.collection_id)
+    data = parse_request('EntityUndelete')
+    if data:
+        if get_flag('merge'):
+            props = merge_data(data.get('properties'), entity.data)
+            data['properties'] = props
+        entity.update(data)
+    entity.undelete()
+    db.session.commit()
+    update_entity(entity, sync=get_flag('sync', True))
+    entity = get_index_entity(entity_id, request.authz.READ)
+    return EntitySerializer.jsonify(entity)

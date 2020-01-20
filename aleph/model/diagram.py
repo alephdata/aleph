@@ -25,7 +25,9 @@ class Diagram(db.Model, SoftDeleteModel):
     role = db.relationship(Role, backref=db.backref('diagrams', lazy='dynamic'))  # noqa
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
-    collection = db.relationship(Collection, backref=db.backref('diagrams', lazy='dynamic'))  # noqa
+    collection = db.relationship(Collection, backref=db.backref(
+        'diagrams', lazy='dynamic', cascade="all, delete-orphan"
+    ))
 
     def update(self, data=None):
         self.updated_at = datetime.utcnow()
@@ -62,6 +64,12 @@ class Diagram(db.Model, SoftDeleteModel):
     def by_collection(cls, collection_id):
         q = cls.all().filter(cls.collection_id == collection_id)
         return q
+
+    @classmethod
+    def delete_by_collection(cls, collection_id):
+        pq = db.session.query(cls)
+        pq = pq.filter(cls.collection_id == collection_id)
+        pq.delete(synchronize_session=False)
 
     @classmethod
     def by_role_id(cls, role_id):

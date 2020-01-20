@@ -92,6 +92,16 @@ EntityUpdate:
     properties:
       type: object
 
+EntityUndelete:
+  type: object
+  nullable: true
+  properties:
+    schema:
+      type: string
+      format: schema
+    properties:
+      type: object
+
 EntityCreate:
   type: object
   allOf:
@@ -134,11 +144,3 @@ EntityTag:
     count:
       type: integer
       example: 1
-
-EntityIDs:
-  type: object
-  properties:
-    entity_ids:
-      type: array
-      items:
-        type: string

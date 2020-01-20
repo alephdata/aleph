@@ -12,6 +12,7 @@ from followthemoney.exc import InvalidData
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
 from aleph.logic.entities import create_entity
+from aleph.logic.collections import delete_collection
 
 log = logging.getLogger(__name__)
 
@@ -169,3 +170,17 @@ class DiagramAPITest(TestCase):
         url = '/api/2/diagrams'
         res = self.client.post(url, json=self.input_data, headers=self.headers_x)  # noqa
         assert res.status_code == 403, res
+
+    def test_delete_when_collection_deleted(self):
+        data = {
+            'label': 'hello',
+            'collection_id': self.col.id,
+        }
+        url = '/api/2/diagrams'
+        res = self.client.post(url, json=data, headers=self.headers)
+        assert res.status_code == 200, res
+        diagram_id = res.json['id']
+        delete_collection(self.col)
+        url = '/api/2/diagrams/%s' % diagram_id
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 404, res
