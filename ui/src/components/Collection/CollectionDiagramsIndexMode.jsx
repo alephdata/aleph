@@ -62,10 +62,10 @@ export class CollectionDiagramsIndexMode extends Component {
         <div style={{ marginBottom: "10px" }}>
           <DiagramCreateButton collection={collection} />
         </div>
-        { result.isLoading && (
+        { !result.results && (
           <SectionLoading />
         )}
-        { !result.isLoading && (
+        { result.results && (
           <DiagramList
             items={result.results}
             getMoreItems={this.getMoreResults}
@@ -83,8 +83,7 @@ const mapStateToProps = (state, ownProps) => {
     'filter:collection_id': collection.id,
   };
   const query = new Query('diagrams', {}, context, 'diagrams')
-    .sortBy('updated_at', 'desc')
-    .limit(30);
+    .sortBy('updated_at', 'desc');
   const result = selectDiagramsResult(state, query);
 
   return {

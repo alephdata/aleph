@@ -101,10 +101,10 @@ export class DiagramsIndexScreen extends Component {
               />
             </p>
           </div>
-          { result.isLoading && (
+          { !result.results && (
             <SectionLoading />
           )}
-          { !result.isLoading && (
+          { result.results && (
             <DiagramList
               items={result.results}
               getMoreItems={this.getMoreResults}

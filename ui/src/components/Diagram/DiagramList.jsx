@@ -15,7 +15,7 @@ class DiagramList extends Component {
         </div>
         <Waypoint
           onEnter={getMoreItems}
-          bottomOffset="-300px"
+          bottomOffset="0"
           scrollableAncestor={window}
         />
       </div>
