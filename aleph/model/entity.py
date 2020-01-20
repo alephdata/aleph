@@ -47,6 +47,10 @@ class Entity(db.Model, SoftDeleteModel):
         deleted_at = deleted_at or datetime.utcnow()
         super(Entity, self).delete(deleted_at=deleted_at)
 
+    def undelete(self):
+        self.deleted_at = None
+        db.session.add(self)
+
     def update(self, entity):
         proxy = model.get_proxy(entity)
         proxy.schema.validate(entity)
@@ -87,9 +91,9 @@ class Entity(db.Model, SoftDeleteModel):
         return ent
 
     @classmethod
-    def by_id(cls, entity_id, collection_id=None):
+    def by_id(cls, entity_id, collection_id=None, deleted=False):
         entity_id, _ = Namespace.parse(entity_id)
-        q = cls.all()
+        q = cls.all(deleted=deleted)
         q = q.filter(cls.id == entity_id)
         return q.first()
 

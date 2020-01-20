@@ -352,54 +352,7 @@ class EntitiesApiTestCase(TestCase):
         assert results[0]['value'] == '+491769817271', results
         validate(res.json['results'][0], 'EntityTag')
 
-    def test_bulk_delete_entity(self):
-        _, headers = self.login(is_admin=True)
-        url = '/api/2/entities'
-        ent_ids = []
-        data = {
-            'schema': 'Person',
-            'properties': {
-                'name': "Osama bin Laden",
-            },
-            'collection_id': self.col_id
-        }
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 200, (res.status_code, res.json)
-        ent_ids.append(res.json['id'])
-        data = {
-            'schema': 'Person',
-            'properties': {
-                'name': "Mr. Banana",
-            },
-            'collection_id': self.col_id
-        }
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        ent_ids.append(res.json['id'])
-        assert res.status_code == 200, (res.status_code, res.json)
-        for ent_id in ent_ids:
-            url = '/api/2/entities/%s' % ent_id
-            res = self.client.get(url, headers=headers)
-            assert res.status_code == 200, res.status_code
-
-        url = '/api/2/entities/delete'
-        res = self.client.post(url,
-                               data=json.dumps({'entity_ids': ent_ids}),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 204, res.status_code
-
-        for ent_id in ent_ids:
-            url = '/api/2/entities/%s' % ent_id
-            res = self.client.get(url, headers=headers)
-            assert res.status_code == 404, res.status_code
-
-    def test_bulk_update_entity(self):
+    def test_undelete(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
         data = {
@@ -415,52 +368,48 @@ class EntitiesApiTestCase(TestCase):
                                content_type='application/json')
         assert res.status_code == 200, (res.status_code, res.json)
         id1 = res.json['id']
+
+        url = '/api/2/entities/%s' % id1
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res.status_code
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 404, res.status_code
+
+        url = '/api/2/entities/%s/undelete' % id1
+        res = self.client.post(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
+
+        url = '/api/2/entities/%s' % id1
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        validate(res.json, 'Entity')
+        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
+
+        url = '/api/2/entities/%s' % id1
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res.status_code
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 404, res.status_code
+
+        url = '/api/2/entities/%s/undelete?merge=true' % id1
         data = {
             'schema': 'Person',
             'properties': {
-                'name': "Mr. Banana",
-            },
-            'collection_id': self.col_id
+                'status': 'ripe',
+            }
         }
         res = self.client.post(url,
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
-        id2 = res.json['id']
-        assert res.status_code == 200, (res.status_code, res.json)
-
-        url = '/api/2/entities/update?merge=true'
-        data = {
-            'entities': [
-                {
-                    'id': id1,
-                    'schema': 'Person',
-                    'properties': {
-                        'status': 'raw'
-                    }
-                },
-                {
-                    'id': id2,
-                    'schema': 'Person',
-                    'properties': {
-                        'status': 'ripe'
-                    }
-                }
-            ]
-        }
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 204, res.status_code
+        assert res.status_code == 200, res.status_code
+        validate(res.json, 'Entity')
+        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
+        assert res.json['properties']['status'] == ['ripe'], res.json
 
         url = '/api/2/entities/%s' % id1
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.status_code
         assert res.json['properties']['name'] == ['Mr. Mango'], res.json
-        assert res.json['properties']['status'] == ['raw'], res.json
-        url = '/api/2/entities/%s' % id2
-        res = self.client.get(url, headers=headers)
-        assert res.status_code == 200, res.status_code
-        assert res.json['properties']['name'] == ['Mr. Banana'], res.json
         assert res.json['properties']['status'] == ['ripe'], res.json
