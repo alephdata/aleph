@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Intent } from '@blueprintjs/core';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
-import { createEntity, deleteEntity, updateDiagram, updateEntity } from 'src/actions';
+import { createEntity, deleteEntity, undeleteEntity, updateDiagram, updateEntity } from 'src/actions';
 
 import './DiagramEditor.scss';
 
@@ -18,6 +18,7 @@ class DiagramEditor extends React.Component {
       createEntity: this.createEntity.bind(this),
       updateEntity: this.updateEntity.bind(this),
       deleteEntity: this.deleteEntity.bind(this),
+      undeleteEntity: this.undeleteEntity.bind(this),
     });
 
     const viewport = new Viewport(config)
@@ -154,6 +155,17 @@ class DiagramEditor extends React.Component {
     return false;
   }
 
+  undeleteEntity(entityId) {
+    const { onStatusChange } = this.props;
+
+    console.log('CALLING UNDELETE ENTITY', entityId);
+    try {
+      this.props.undeleteEntity(entityId);
+    } catch {
+      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+    }
+  }
+
   deleteEntity(entityId) {
     const { onStatusChange } = this.props;
 
@@ -215,6 +227,7 @@ const mapStateToProps = () => ({});
 export default connect(mapStateToProps, {
   createEntity,
   deleteEntity,
+  undeleteEntity,
   updateDiagram,
   updateEntity,
 })(DiagramEditor);
