@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Card, Icon, H4 } from '@blueprintjs/core';
+import c from 'classnames';
 
 import {
   Collection, Date, Diagram,
@@ -12,14 +13,16 @@ import './DiagramListItem.scss';
 
 class DiagramListItem extends PureComponent {
   render() {
-    const { diagram } = this.props;
-
-    console.log('DIAGRAM', diagram);
-
+    const { diagram, showCollection } = this.props;
     return (
       <div className="DiagramListItem" key={diagram.id}>
         <Link className="DiagramListItem__link" to={`/diagrams/${diagram.id}`}>
-          <Card elevation={1}>
+          <Card elevation={1} className="DiagramListItem__content">
+            {showCollection && (
+              <div className="DiagramListItem__collection">
+                <Collection.Link collection={diagram.collection} className="bp3-text-muted" />
+              </div>
+            )}
             <Icon className="DiagramListItem__icon" icon="graph" iconSize={42} />
             <H4>
               <Diagram.Label diagram={diagram} />

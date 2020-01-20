@@ -2,27 +2,7 @@
 
 .DiagramListItem {
   padding: $aleph-content-padding/2;
-  flex: 1 1;
-  width: 25%;
-  // max-width: 25%;
-  min-width: 250px;
   text-align: center;
-
-  @media screen and (max-width: $aleph-screen-lg-max-width) {
-    width: 33.33%;
-    // max-width: 33.33%;
-  }
-
-  @media screen and (max-width: $aleph-screen-md-max-width) {
-    width: 50%;
-    // max-width: 50%;
-  }
-
-  @media screen and (max-width: $aleph-screen-md-max-width) {
-    width: 100%;
-    // max-width: 50%;
-  }
-
 
   h4 {
     font-weight: bold;
@@ -30,20 +10,16 @@
     text-decoration: none !important;
   }
 
-  .bp3-card {
-    // border: 1px solid $blue2;
-    // box-shadow: none;
+  &__content.bp3-card {
     height: 100%;
     padding: 35px $aleph-content-padding;
-    // background-color: white;
     position: relative;
     cursor: pointer;
 
     &:hover {
       box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
         0 0 0 rgba(16, 22, 26, 0),
-        0 1px 7px rgba(16, 22, 26, 0.2);
-
+        0 1px 10px rgba(16, 22, 26, 0.2);
     }
   }
 
@@ -57,14 +33,7 @@
   }
 
   &__collection {
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: white;
-    padding: 2px 5px;
-    border: 1px solid #ebf1f5;
-    border-radius: 3px;
-    margin: 3px;
+    margin-bottom: $aleph-grid-size*1.5;
   }
 
   .summary {
@@ -84,7 +53,7 @@
     min-width: 8em;
 
     .bp3-icon {
-        margin-right: $aleph-icon-padding;
+      margin-right: $aleph-icon-padding;
     }
   }
 }

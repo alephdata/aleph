@@ -27,8 +27,8 @@ class DiagramEditor extends React.Component {
       const { layout, entities } = props.diagram;
       console.log({ ...layout, entities });
       initialLayout = GraphLayout.fromJSON(config, this.entityManager, { ...layout, entities, selection: [] });
-      const initialBounds = initialLayout.getVisibleVertexRect();
-      viewport.fitToRect(initialBounds);
+      // const initialBounds = initialLayout.getVisibleVertexRect();
+      // viewport.fitToRect(initialBounds);
     } else {
       initialLayout = new GraphLayout(config, this.entityManager);
     }

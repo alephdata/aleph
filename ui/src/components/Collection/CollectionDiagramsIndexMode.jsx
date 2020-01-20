@@ -69,6 +69,7 @@ export class CollectionDiagramsIndexMode extends Component {
           <DiagramList
             items={result.results}
             getMoreItems={this.getMoreResults}
+            showCollection={false}
           />
         )}
       </div>
