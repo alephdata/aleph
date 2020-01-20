@@ -112,7 +112,7 @@ export class DiagramScreen extends Component {
       <Breadcrumbs operation={operation} status={updateStatus}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.Text active>
-          <Diagram.Label diagram={diagram} />
+          <Diagram.Label diagram={diagram} icon />
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
