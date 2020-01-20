@@ -29,8 +29,6 @@ export class CollectionDiagramsIndexMode extends Component {
   componentDidUpdate(prevProps) {
     const { result } = this.props;
 
-    console.log('updated', result);
-
     if (result.shouldLoad && !prevProps.result.shouldLoad) {
       this.fetchIfNeeded();
     }

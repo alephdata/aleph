@@ -56,8 +56,8 @@ class DiagramEditDialog extends Component {
     super(props);
     const { diagram } = this.props;
     this.state = {
-      label: diagram ? diagram.label : '',
-      summary: diagram ? diagram.summary : '',
+      label: diagram ? diagram.label : null,
+      summary: diagram ? diagram.summary : null,
       collection: diagram ? diagram.collection : null,
       processing: false,
     };
