@@ -82,8 +82,9 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'filter:collection_id': collection.id,
   };
-  const query = new Query('diagrams', state, context, '')
-    .sortBy('updated_at', 'desc');
+  const query = new Query('diagrams', {}, context, 'diagrams')
+    .sortBy('updated_at', 'desc')
+    .limit(30);
   const result = selectDiagramsResult(state, query);
 
   return {
