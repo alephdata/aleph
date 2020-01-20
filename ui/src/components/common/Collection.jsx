@@ -37,7 +37,7 @@ const simpleRenderer = ({ children }) => (
 class CollectionLabel extends PureComponent {
   render() {
     const {
-      collection, icon = true, label = true, updating = false, truncate,
+      collection, icon = true, label = true, updating = false, truncate, className,
     } = this.props;
 
     if (!collection || !collection.id) {
@@ -64,7 +64,7 @@ class CollectionLabel extends PureComponent {
     }
 
     return (
-      <span className="CollectionLabel" title={collection.label}>
+      <span className={c('CollectionLabel', className)} title={collection.label}>
         { renderedIcon }
         <span>{ label && text }</span>
       </span>

@@ -20,7 +20,7 @@ class DiagramListItem extends PureComponent {
           <Card elevation={1} className="DiagramListItem__content">
             {showCollection && (
               <div className="DiagramListItem__collection">
-                <Collection.Link collection={diagram.collection} className="bp3-text-muted" />
+                <Collection.Label collection={diagram.collection} className="bp3-text-muted" />
               </div>
             )}
             <Icon className="DiagramListItem__icon" icon="graph" iconSize={42} />
