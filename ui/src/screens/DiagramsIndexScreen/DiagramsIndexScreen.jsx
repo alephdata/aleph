@@ -101,7 +101,7 @@ export class DiagramsIndexScreen extends Component {
               />
             </p>
           </div>
-          { !result.results && (
+          { result.isLoading && !result.results?.length && (
             <SectionLoading />
           )}
           { result.results && (
@@ -121,6 +121,7 @@ const mapStateToProps = (state, ownProps) => {
   const { location } = ownProps;
   const query = Query.fromLocation('diagrams', location, {}, 'diagrams')
     .sortBy('updated_at', 'desc');
+
   const result = selectDiagramsResult(state, query);
 
   return {
