@@ -118,8 +118,6 @@ export class DiagramScreen extends Component {
       </Breadcrumbs>
     );
 
-    console.log('fitler text is', filterText);
-
     return (
       <Screen
         title="placeholder"

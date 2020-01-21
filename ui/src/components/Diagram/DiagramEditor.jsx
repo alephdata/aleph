@@ -8,7 +8,7 @@ import './DiagramEditor.scss';
 
 const fileDownload = require('js-file-download');
 
-const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left', writeable: true });
+const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left' });
 
 class DiagramEditor extends React.Component {
   constructor(props) {
@@ -22,6 +22,7 @@ class DiagramEditor extends React.Component {
     });
 
     const viewport = new Viewport(config)
+    const writeable = props.diagram?.writeable
     let initialLayout;
 
     if (props.diagram?.layout) {
@@ -36,6 +37,7 @@ class DiagramEditor extends React.Component {
     this.state = {
       layout: initialLayout,
       viewport,
+      writeable,
     };
 
     this.updateLayout = this.updateLayout.bind(this);
@@ -195,7 +197,7 @@ class DiagramEditor extends React.Component {
 
   render() {
     const { filterText } = this.props;
-    const { layout, viewport } = this.state;
+    const { layout, viewport, writeable } = this.state;
 
     return (
       <div className="DiagramEditor">
@@ -208,7 +210,7 @@ class DiagramEditor extends React.Component {
           updateViewport={this.updateViewport}
           exportSvg={this.exportSvg}
           externalFilterText={filterText}
-          writeable
+          writeable={writeable}
         />
       </div>
     );
