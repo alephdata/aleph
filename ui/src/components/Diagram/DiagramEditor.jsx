@@ -42,7 +42,6 @@ class DiagramEditor extends React.Component {
     this.updateLayout = this.updateLayout.bind(this);
     this.updateViewport = this.updateViewport.bind(this);
     this.exportSvg = this.exportSvg.bind(this);
-    // this.dispatchLayoutUpdate = this.dispatchLayoutUpdate.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -51,82 +50,32 @@ class DiagramEditor extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    if (!this.layoutToSend) {
-      // this.dispatchLayoutUpdate();
-    }
-  }
-
-  updateLayout(updatedLayout, historyModified = false) {
+  updateLayout(layout, propagateUpdate = false) {
     const { diagram, onStatusChange } = this.props;
-    this.setState({ layout: updatedLayout });
+    this.setState({ layout });
 
-    console.log(updatedLayout);
-
-    if (historyModified) {
-
+    if (propagateUpdate) {
       onStatusChange(updateStates.IN_PROGRESS);
+      const { entities, selection, ...layoutData } = layout.toJSON();
 
-      const updatedDiagram = diagram;
+      const updatedDiagram = {
+        ...diagram,
+        layout: layoutData,
+        entities: entities ? entities.map(entity => entity.id) : [],
+      }
 
-      // TODO - FIX THIS IN VISLIB, make sure that groupings key is always populated
-      const { entities, selection, ...updatedDiagramData } = updatedLayout.toJSON();
-      console.log('updatedDiagramData is', updatedDiagramData);
-      console.log('diagram is', diagram);
-
-      updatedDiagramData.groupings = updatedDiagramData.groupings || [];
-      console.log('updatedDiagramData is after', updatedDiagramData);
-
-      updatedDiagram.layout = updatedDiagramData;
-      updatedDiagram.entities = entities ? entities.map(entity => entity.id) : [];
-
-      console.log('updatedDiagram is', updatedDiagram);
-
-      this.props.updateDiagram(diagram.id, updatedDiagram)
+      this.props.updateDiagram(updatedDiagram.id, updatedDiagram)
         .then(() => {
-          console.log('finished');
-          // this.layoutToSend = null;
           onStatusChange(updateStates.SUCCESS);
         })
         .catch(() => {
-          // this.layoutToSend = null;
           onStatusChange(updateStates.ERROR);
         });
-
-      // if (!this.layoutToSend) {
-      //   console.log('setting timeout');
-      //   setTimeout(this.dispatchLayoutUpdate, 3000);
-      // }
-      //
-      // this.layoutToSend = layout;
     }
   }
 
-  // dispatchLayoutUpdate() {
-  //   const { diagram, onStatusChange } = this.props;
-  //
-  //   console.log('dispatching', diagram);
-  //   onStatusChange(updateStates.IN_PROGRESS);
-  //
-  //   const updatedDiagram = diagram;
-  //   delete this.layoutToSend.entities;
-  //   updatedDiagram.data = { layout: this.layoutToSend };
-  //   this.props.updateDiagram(diagram.id, updatedDiagram)
-  //     .then(() => {
-  //       console.log('finished');
-  //       this.layoutToSend = null;
-  //       onStatusChange(updateStates.SUCCESS);
-  //     })
-  //     .catch((e) => {
-  //       console.log('error', e);
-  //       this.layoutToSend = null;
-  //       onStatusChange(updateStates.ERROR);
-  //     });
-  // }
-
   async createEntity({ schema, properties }) {
     const { diagram, onStatusChange } = this.props;
-    console.log('CALLING CREATE ENTITY', schema, properties);
     onStatusChange(updateStates.IN_PROGRESS);
     try {
       const entityData = await this.props.createEntity({
@@ -138,7 +87,6 @@ class DiagramEditor extends React.Component {
 
       return entityData;
     } catch {
-      console.log('error is', e);
       onStatusChange(updateStates.ERROR);
     }
     return false;
@@ -161,7 +109,6 @@ class DiagramEditor extends React.Component {
     const { onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
 
-    console.log('CALLING UNDELETE ENTITY', entityId);
     try {
       await this.props.undeleteEntity(entityId);
       onStatusChange(updateStates.SUCCESS);
@@ -173,7 +120,6 @@ class DiagramEditor extends React.Component {
   async deleteEntity(entityId) {
     const { onStatusChange } = this.props;
 
-    console.log('CALLING DELETE ENTITY', entityId);
     onStatusChange(updateStates.IN_PROGRESS);
     try {
       await this.props.deleteEntity(entityId);
