@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-// import { FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 // import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { Prompt, withRouter } from 'react-router';
 import queryString from 'query-string';
+import { Intent } from '@blueprintjs/core';
 
 import { fetchDiagram } from 'src/actions';
 import { selectDiagram } from 'src/selectors';
@@ -14,7 +15,30 @@ import DiagramEditor from 'src/components/Diagram/DiagramEditor';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import { Breadcrumbs, Collection, Diagram } from 'src/components/common';
+import diagramUpdateStates from 'src/components/Diagram/diagramUpdateStates';
 
+const messages = defineMessages({
+  status_success: {
+    id: 'diagram.status_success',
+    defaultMessage: 'Saved',
+  },
+  status_error: {
+    id: 'diagram.status_error',
+    defaultMessage: 'Error saving'
+  },
+  status_in_progress: {
+    id: 'diagram.status_in_progress',
+    defaultMessage: 'Saving...'
+  },
+  error_warning: {
+    id: 'diagram.error_warning',
+    defaultMessage: 'There was an error saving your latest changes, are you sure you want to leave?',
+  },
+  in_progress_warning: {
+    id: 'diagram.in_progress_warning',
+    defaultMessage: 'Changes are still being saved, are you sure you want to leave?',
+  },
+});
 
 export class DiagramScreen extends Component {
   constructor(props) {
@@ -93,8 +117,22 @@ export class DiagramScreen extends Component {
     }
   }
 
+  formatStatus() {
+    const { intl } = this.props;
+    const { updateStatus } = this.state;
+
+    switch(updateStatus) {
+      case diagramUpdateStates.SUCCESS:
+        return { text: intl.formatMessage(messages.status_success), intent: Intent.SUCCESS };
+      case diagramUpdateStates.IN_PROGRESS:
+        return { text: intl.formatMessage(messages.status_in_progress), intent: Intent.PRIMARY };
+      case diagramUpdateStates.ERROR:
+        return { text: intl.formatMessage(messages.status_error), intent: Intent.DANGER };
+    }
+  }
+
   render() {
-    const { diagram } = this.props;
+    const { diagram, intl } = this.props;
     const { downloadTriggered, filterText, updateStatus } = this.state;
 
     if (diagram.isError) {
@@ -110,7 +148,7 @@ export class DiagramScreen extends Component {
     );
 
     const breadcrumbs = (
-      <Breadcrumbs operation={operation} status={updateStatus}>
+      <Breadcrumbs operation={operation} status={this.formatStatus()}>
         <Breadcrumbs.Collection key="collection" collection={diagram.collection} />
         <Breadcrumbs.Text active>
           <Diagram.Label diagram={diagram} icon />
@@ -119,20 +157,30 @@ export class DiagramScreen extends Component {
     );
 
     return (
-      <Screen
-        title="placeholder"
-        description="placeholder"
-        searchScopes={this.getSearchScopes()}
-      >
-        {breadcrumbs}
-        <DiagramEditor
-          diagram={diagram}
-          downloadTriggered={downloadTriggered}
-          filterText={filterText}
-          onStatusChange={this.onStatusChange}
-          onDownloadComplete={this.onDownloadComplete}
+      <>
+        <Prompt
+          when={updateStatus === diagramUpdateStates.IN_PROGRESS}
+          message={intl.formatMessage(messages.in_progress_warning)}
         />
-      </Screen>
+        <Prompt
+          when={updateStatus === diagramUpdateStates.ERROR}
+          message={intl.formatMessage(messages.error_warning)}
+        />
+        <Screen
+          title="placeholder"
+          description="placeholder"
+          searchScopes={this.getSearchScopes()}
+        >
+          {breadcrumbs}
+          <DiagramEditor
+            diagram={diagram}
+            downloadTriggered={downloadTriggered}
+            filterText={filterText}
+            onStatusChange={this.onStatusChange}
+            onDownloadComplete={this.onDownloadComplete}
+          />
+        </Screen>
+      </>
     );
   }
 }
@@ -149,5 +197,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
+  injectIntl,
   connect(mapStateToProps, { fetchDiagram }),
 )(DiagramScreen);

@@ -1,9 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Intent } from '@blueprintjs/core';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 import { createEntity, deleteEntity, undeleteEntity, updateDiagram, updateEntity } from 'src/actions';
-
+import updateStates from './diagramUpdateStates';
 import './DiagramEditor.scss';
 
 const fileDownload = require('js-file-download');
@@ -66,7 +65,7 @@ class DiagramEditor extends React.Component {
 
     if (historyModified) {
 
-      onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
+      onStatusChange(updateStates.IN_PROGRESS);
 
       const updatedDiagram = diagram;
 
@@ -87,12 +86,11 @@ class DiagramEditor extends React.Component {
         .then(() => {
           console.log('finished');
           this.layoutToSend = null;
-          onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
+          onStatusChange(updateStates.SUCCESS);
         })
-        .catch((e) => {
-          console.log('error', e);
+        .catch(
           this.layoutToSend = null;
-          onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+          onStatusChange(updateStates.ERROR);
         });
 
       // if (!this.layoutToSend) {
@@ -108,7 +106,7 @@ class DiagramEditor extends React.Component {
   //   const { diagram, onStatusChange } = this.props;
   //
   //   console.log('dispatching', diagram);
-  //   onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
+  //   onStatusChange(updateStates.IN_PROGRESS);
   //
   //   const updatedDiagram = diagram;
   //   delete this.layoutToSend.entities;
@@ -117,60 +115,71 @@ class DiagramEditor extends React.Component {
   //     .then(() => {
   //       console.log('finished');
   //       this.layoutToSend = null;
-  //       onStatusChange({ text: 'Saved', intent: Intent.SUCCESS });
+  //       onStatusChange(updateStates.SUCCESS);
   //     })
   //     .catch((e) => {
   //       console.log('error', e);
   //       this.layoutToSend = null;
-  //       onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+  //       onStatusChange(updateStates.ERROR);
   //     });
   // }
 
   async createEntity({ schema, properties }) {
     const { diagram, onStatusChange } = this.props;
     console.log('CALLING CREATE ENTITY', schema, properties);
+    onStatusChange(updateStates.IN_PROGRESS);
     try {
       const entityData = await this.props.createEntity({
         schema: schema.name,
         properties,
         collection: diagram.collection,
       });
+      onStatusChange(updateStates.SUCCESS);
+
       return entityData;
-    } catch {
-      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+    } catch(e) {
+      console.log('error is', e);
+      onStatusChange(updateStates.ERROR);
     }
     return false;
   }
 
-  updateEntity(entity) {
+  async updateEntity(entity) {
     const { onStatusChange } = this.props;
+    onStatusChange(updateStates.IN_PROGRESS);
+
     try {
-      this.props.updateEntity(entity);
+      await this.props.updateEntity(entity);
+      onStatusChange(updateStates.SUCCESS);
     } catch {
-      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+      onStatusChange(updateStates.ERROR);
     }
     return false;
   }
 
-  undeleteEntity(entityId) {
+  async undeleteEntity(entityId) {
     const { onStatusChange } = this.props;
+    onStatusChange(updateStates.IN_PROGRESS);
 
     console.log('CALLING UNDELETE ENTITY', entityId);
     try {
-      this.props.undeleteEntity(entityId);
+      await this.props.undeleteEntity(entityId);
+      onStatusChange(updateStates.SUCCESS);
     } catch {
-      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+      onStatusChange(updateStates.ERROR);
     }
   }
 
-  deleteEntity(entityId) {
+  async deleteEntity(entityId) {
     const { onStatusChange } = this.props;
 
     console.log('CALLING DELETE ENTITY', entityId);
+    onStatusChange(updateStates.IN_PROGRESS);
     try {
-      this.props.deleteEntity(entityId);
+      await this.props.deleteEntity(entityId);
+      onStatusChange(updateStates.SUCCESS);
     } catch {
-      onStatusChange({ text: 'Error saving', intent: Intent.DANGER });
+      onStatusChange(updateStates.ERROR);
     }
   }
 
