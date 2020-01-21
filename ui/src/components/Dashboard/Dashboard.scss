@@ -14,7 +14,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
         flex-direction: column;
         flex-grow: 0;
         width: 20%;
-        border-right: 1px solid rgba(16, 22, 26, 0.15);
+        border-right: 1px solid $aleph-border-color;
         margin-right: $dashboard-padding;
         padding-right: $dashboard-padding;
         min-width: 220px;
@@ -58,6 +58,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
 
         .bp3-menu-divider {
           margin: $aleph-grid-size * 1.5 0;
+          border-color:$aleph-border-color;
         }
 
         .bp3-heading {
