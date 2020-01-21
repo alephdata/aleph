@@ -10,7 +10,7 @@ pyicu==2.4.2
 
 grpcio==1.26.0
 google-cloud-vision==0.41.0
-google-cloud-storage==1.24.1
+google-cloud-storage==1.25.0
 
 tesserocr==2.5.0
 
@@ -27,7 +27,7 @@ pypdf2==1.26.0
 rarfile==3.1
 xlrd==1.2.0
 openpyxl==3.0.3
-odfpy==1.4.0
+odfpy==1.4.1
 cchardet==2.1.5
 lxml==4.4.2
 olefile==0.46
