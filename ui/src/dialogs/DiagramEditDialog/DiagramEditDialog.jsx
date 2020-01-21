@@ -55,10 +55,11 @@ class DiagramEditDialog extends Component {
   constructor(props) {
     super(props);
     const { diagram } = this.props;
+
     this.state = {
-      label: diagram ? diagram.label : null,
-      summary: diagram ? diagram.summary : null,
-      collection: diagram ? diagram.collection : null,
+      label: diagram.label || '',
+      summary: diagram.summary || '',
+      collection: diagram.collection || '',
       processing: false,
     };
 
@@ -91,10 +92,11 @@ class DiagramEditDialog extends Component {
         updatedDiagram.summary = summary;
 
         await this.props.updateDiagram(updatedDiagram.id, updatedDiagram);
+        this.setState({ processing: false });
+        this.props.toggleDialog();
       }
-      this.setState({ processing: false });
+
       showSuccessToast(intl.formatMessage(isCreate ? messages.success_create : messages.success_update));
-      this.props.toggleDialog();
     } catch (e) {
       this.setState({ processing: false });
       showWarningToast(e.message);
@@ -116,7 +118,7 @@ class DiagramEditDialog extends Component {
   checkValid() {
     const { label, collection } = this.state;
 
-    return collection !== undefined && label?.length > 0;
+    return collection && label?.length > 0;
   }
 
   getCollectionOptionsQuery() {
