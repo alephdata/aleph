@@ -53,7 +53,7 @@
     "dotenv-expand": "^5.1.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb": "^18.0.1",
-    "eslint-loader": "3.0.2",
+    "eslint-loader": "3.0.3",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.15.1",
