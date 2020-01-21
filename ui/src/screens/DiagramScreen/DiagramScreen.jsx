@@ -78,6 +78,7 @@ export class DiagramScreen extends Component {
         listItem: <Diagram.Label diagram={diagram} icon truncate={30} />,
         label: diagram.label,
         onSearch: this.onDiagramSearch,
+        submitOnQueryChange: true,
       },
     ];
 
@@ -116,6 +117,9 @@ export class DiagramScreen extends Component {
         </Breadcrumbs.Text>
       </Breadcrumbs>
     );
+
+    console.log('fitler text is', filterText);
+
     return (
       <Screen
         title="placeholder"

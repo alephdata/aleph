@@ -26,15 +26,12 @@ class DiagramEditor extends React.Component {
 
     if (props.diagram?.layout) {
       const { layout, entities } = props.diagram;
-      console.log({ ...layout, entities });
       initialLayout = GraphLayout.fromJSON(config, this.entityManager, { ...layout, entities, selection: [] });
       const initialBounds = initialLayout.getVisibleVertexRect();
       viewport.fitToRect(initialBounds);
     } else {
       initialLayout = new GraphLayout(config, this.entityManager);
     }
-
-    console.log('stored layout is', props.diagram, initialLayout);
 
     this.state = {
       layout: initialLayout,
@@ -66,19 +63,17 @@ class DiagramEditor extends React.Component {
     console.log(updatedLayout);
 
     if (historyModified) {
-      console.log('history modified');
 
       onStatusChange({ text: 'Saving...', intent: Intent.PRIMARY });
 
       const updatedDiagram = diagram;
 
       // TODO - FIX THIS IN VISLIB, make sure that groupings key is always populated
-      console.log('updatedLayout is', updatedLayout);
       const { entities, selection, ...updatedDiagramData } = updatedLayout.toJSON();
       console.log('updatedDiagramData is', updatedDiagramData);
       console.log('diagram is', diagram);
 
-      updatedDiagramData.groupings = [];
+      updatedDiagramData.groupings = updatedDiagramData.groupings || [];
       console.log('updatedDiagramData is after', updatedDiagramData);
 
       updatedDiagram.layout = updatedDiagramData;
@@ -201,8 +196,6 @@ class DiagramEditor extends React.Component {
   render() {
     const { filterText } = this.props;
     const { layout, viewport } = this.state;
-
-    console.log(filterText);
 
     return (
       <div className="DiagramEditor">

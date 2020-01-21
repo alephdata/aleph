@@ -79,7 +79,6 @@ class DiagramEditDialog extends Component {
         const newDiagram = {
           label,
           summary,
-          data: {"layout":{"entities":[],"vertices":[],"edges":[],"groupings":[],"selection":[]},"viewport":{"zoomLevel":0.4,"ratio":0.738,"center":{"x":0,"y":0}}},
           collection_id: parseInt(collection.id),
         };
         const response = await this.props.createDiagram(newDiagram);
@@ -88,10 +87,10 @@ class DiagramEditDialog extends Component {
         });
       } else {
         const updatedDiagram = diagram;
-        diagram.label = label;
-        diagram.summary = summary;
+        updatedDiagram.label = label;
+        updatedDiagram.summary = summary;
 
-        await this.props.updateDiagram(diagram.id, updatedDiagram);
+        await this.props.updateDiagram(updatedDiagram.id, updatedDiagram);
       }
       this.setState({ processing: false });
       showSuccessToast(intl.formatMessage(isCreate ? messages.success_create : messages.success_update));
