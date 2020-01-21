@@ -58,9 +58,9 @@ class SearchBox extends React.Component {
     this.onSearchSubmit();
   }
 
-  onSearchSubmit({scope, queryText}) {
-    const nextScope = scope || this.state.activeScope;
-    const nextQueryText = queryText === undefined ? this.state.queryText : queryText;
+  onSearchSubmit(override) {
+    const nextScope = override?.scope || this.state.activeScope;
+    const nextQueryText = override?.queryText === undefined ? this.state.queryText : override.queryText;
 
     nextScope.onSearch(nextQueryText);
   }

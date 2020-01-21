@@ -85,11 +85,11 @@ class DiagramEditor extends React.Component {
       this.props.updateDiagram(diagram.id, updatedDiagram)
         .then(() => {
           console.log('finished');
-          this.layoutToSend = null;
+          // this.layoutToSend = null;
           onStatusChange(updateStates.SUCCESS);
         })
-        .catch(
-          this.layoutToSend = null;
+        .catch(() => {
+          // this.layoutToSend = null;
           onStatusChange(updateStates.ERROR);
         });
 
@@ -137,7 +137,7 @@ class DiagramEditor extends React.Component {
       onStatusChange(updateStates.SUCCESS);
 
       return entityData;
-    } catch(e) {
+    } catch {
       console.log('error is', e);
       onStatusChange(updateStates.ERROR);
     }
