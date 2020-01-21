@@ -11,8 +11,12 @@ import './TableViewer.scss';
 class CSVStreamViewer extends React.Component {
   constructor(props) {
     super(props);
-    this.parser = null;
-    this.state = { requestedRow: 400, rows: [] };
+    this.state = {
+      requestedRow: 400,
+      rows: [],
+      isLoading: false,
+      parser: null
+    };
     this.renderCell = this.renderCell.bind(this);
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
   }
@@ -22,34 +26,37 @@ class CSVStreamViewer extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.parser !== null) this.fetchRecords();
+    this.fetchRecords();
   }
 
   onVisibleCellsChange(row) {
-    if (this.parser) {
-      // If we are scrolling to the end. Time to load more rows.
-      if ((row.rowIndexEnd + 50) > this.state.requestedRow) {
-        const { document } = this.props;
-        const rowCount = parseInt(document.getFirst('rowCount'), 10);
-        // Max row count should not exceed the number of rows in the csv file
-        let requestedRow = Math.min(rowCount, this.state.requestedRow + 100);
-        if (requestedRow !== this.state.requestedRow) {
-          this.setState((previousState) => {
-            requestedRow = Math.min(rowCount, previousState.requestedRow + 100);
-            return { requestedRow };
-          });
-        }
+    const { isLoading, requestedRow } = this.state;
+    // If we are scrolling to the end. Time to load more rows.
+    if (isLoading && (row.rowIndexEnd + 50) > requestedRow) {
+      const { document } = this.props;
+      const rowCount = parseInt(document.getFirst('rowCount'), 10);
+      // Max row count should not exceed the number of rows in the csv file
+      let nextRow = Math.min(rowCount, requestedRow + 100);
+      if (nextRow > requestedRow) {
+        this.setState((previousState) => {
+          requestedRow = Math.min(rowCount, previousState.requestedRow + 100);
+          return { requestedRow };
+        });
       }
     }
   }
 
   fetchRecords() {
     const { document } = this.props;
-    const url = document.links.csv;
-    if (this.state.rows.length < this.state.requestedRow) {
-      if (this.parser !== null) {
-        this.parser.resume();
+    const { rows, requestedRow, isLoading, parser } = this.state;
+    if (!isLoading) {
+      this.setState({ isLoading: true });
+    }
+    if (rows.length < requestedRow) {
+      if (isLoading && parser !== null) {
+        parser.resume();
       } else {
+        const url = document.links.csv;
         // set chunk size to 100 KB
         Papa.RemoteChunkSize = 1024 * 100;
         Papa.parse(url, {
@@ -57,16 +64,14 @@ class CSVStreamViewer extends React.Component {
           delimiter: ',',
           newline: '\n',
           encoding: 'utf-8',
-          // header: true,
           chunk: (results, parser) => {
-            this.parser = parser;
             this.setState((previousState) => {
               const rows = previousState.rows.concat(results.data);
               const rowIndex = rows.length;
               if (rowIndex > previousState.requestedRow) {
                 parser.pause();
               }
-              return { rows };
+              return { rows, parser };
             });
           },
         });
@@ -76,14 +81,9 @@ class CSVStreamViewer extends React.Component {
 
   renderCell(rowIndex, colIndex) {
     const row = this.state.rows[rowIndex];
-    const loading = !row;
-    let value;
-    if (row) {
-      value = row[colIndex];
-    }
-
+    const value = row ? row[colIndex] : undefined;
     return (
-      <Cell loading={loading}>
+      <Cell loading={value === undefined}>
         <TruncatedFormat detectTruncation>
           {value || ''}
         </TruncatedFormat>
