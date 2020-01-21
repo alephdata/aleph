@@ -14,7 +14,7 @@ class CSVStreamViewer extends React.Component {
     this.state = {
       requestedRow: 400,
       rows: [],
-      parser: null
+      parser: null,
     };
     this.renderCell = this.renderCell.bind(this);
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
@@ -57,13 +57,11 @@ class CSVStreamViewer extends React.Component {
       const { document } = this.props;
       const rowCount = parseInt(document.getFirst('rowCount'), 10);
       // Max row count should not exceed the number of rows in the csv file
-      let nextRow = Math.min(rowCount, requestedRow + 100);
+      const nextRow = Math.min(rowCount, requestedRow + 100);
       if (nextRow > requestedRow) {
-        this.setState((previousState) => {
-          return {
-            requestedRow: Math.min(rowCount, previousState.requestedRow + 100)
-          };
-        });
+        this.setState((previousState) => ({
+          requestedRow: Math.min(rowCount, previousState.requestedRow + 100),
+        }));
       }
     }
   }
