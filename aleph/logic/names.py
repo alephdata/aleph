@@ -1,4 +1,6 @@
 import logging
+from functools import reduce
+import math
 from banal import ensure_list
 from normality import normalize
 from elasticsearch.helpers import scan
@@ -11,6 +13,8 @@ log = logging.getLogger(__name__)
 TOKEN_KEY = 'namefreq:tokens'
 DIST_KEY = 'namefreq:dist'
 TOTAL_KEY = 'namefreq:total'
+HIGHEST_KEY = 'namefreq:highest'
+LOWEST_KEY = 'namefreq:lowest'
 
 
 def name_tokens(name):
@@ -67,6 +71,7 @@ def compute_name_frequencies():
     # of name frequency.
     counts = {}
     max_count = 0
+    min_count = 1
     for _, count in kv.hscan_iter(TOKEN_KEY):
         count = int(count)
         # Leave out one-offs because they skew and aren't really
@@ -76,10 +81,13 @@ def compute_name_frequencies():
         if count not in counts:
             counts[count] = 0
         counts[count] += 1
-        # Find out what the maximum count is.
+        # Find out what the maximum and minimum count is.
         max_count = max((count, max_count))
+        min_count = min((count, min_count))
 
-    log.info("Counts: %d, max: %d", len(counts), max_count)
+    log.info("Counts: %d, max: %d, min: %d", len(counts), max_count, min_count)  # noqa
+    pipe.set(HIGHEST_KEY, max_count)
+    pipe.set(LOWEST_KEY, min_count)
     total = 0
     pipe = kv.pipeline(transaction=False)
     pipe.delete(DIST_KEY)
@@ -101,7 +109,15 @@ def name_frequency(name):
     counts = [int(c or 1) for c in counts]
     dists = kv.hmget(DIST_KEY, counts)
     dists = [int(d or 0) / total for d in dists]
-    score = 1 - sum(dists)
+    # score = 1 - sum(dists)
+    probabilities = [count/total for count in counts]
+    product = reduce(lambda x, y: x*y, probabilities)
+    max_count = float(kv.get(HIGHEST_KEY) or 2)
+    min_count = float(kv.get(LOWEST_KEY) or 1)
+    max_prob = max_count / total
+    min_prob = math.pow(min_count / total, 2)
+    product = max((product, min_prob))
+    score = (math.log(max_prob) - math.log(product)) / (math.log(max_prob) - math.log(min_prob))  # noqa
     # TODO: maybe we can normalise this over the number of
     # characters in the string such that it biases towards
     # longer names with rare name parts.
