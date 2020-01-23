@@ -80,7 +80,7 @@ class DiagramEditor extends React.Component {
     try {
       const entityData = await this.props.createEntity({
         schema: schema.name,
-        properties,
+        properties: properties || {},
         collection: diagram.collection,
       });
       onStatusChange(updateStates.SUCCESS);
