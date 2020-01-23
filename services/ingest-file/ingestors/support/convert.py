@@ -2,7 +2,7 @@ import logging
 import requests
 from requests import RequestException, HTTPError
 from servicelayer.util import backoff, service_retries
-from followthemoney.helper import entity_filename
+from followthemoney.helpers import entity_filename
 
 from ingestors.settings import UNOSERVICE_URL
 from ingestors.support.cache import CacheSupport
@@ -41,15 +41,15 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         file_name = entity_filename(entity)
         mime_type = entity.first('mimeType')
         log.info('Converting [%s] to PDF...', file_name)
-        attempt = 1
+        failed = ProcessingException("Document could not be converted to PDF.")
         for attempt in service_retries():
-            fh = open(file_path, 'rb')
             try:
-                files = {'file': (file_name, fh, mime_type)}
-                res = requests.post(UNOSERVICE_URL,
-                                    files=files,
-                                    timeout=(5, 305),
-                                    stream=True)
+                with open(file_path, 'rb') as fh:
+                    files = {'file': (file_name, fh, mime_type)}
+                    res = requests.post(UNOSERVICE_URL,
+                                        files=files,
+                                        timeout=(5, 305),
+                                        stream=True)
                 res.raise_for_status()
                 out_path = self.make_work_file('out.pdf')
                 with open(out_path, 'wb') as fh:
@@ -59,12 +59,11 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                         fh.write(chunk)
                     if bytes_written > 50:
                         return out_path
+                raise failed
             except RequestException as exc:
                 if isinstance(exc, HTTPError) and \
                         exc.response.status_code == 400:
                     raise ProcessingException(res.text)
                 log.error("Conversion failed: %s", exc)
                 backoff(failures=attempt)
-            finally:
-                fh.close()
-        raise ProcessingException("Document could not be converted to PDF.")
+        raise failed
