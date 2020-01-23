@@ -11,7 +11,9 @@ class DiagramList extends Component {
     return (
       <div className="DiagramList">
         <div className="DiagramList__items">
-          {items.map(diagram => <DiagramListItem key={diagram.id} diagram={diagram} showCollection={showCollection}/>)}
+          {items.map(diagram => (
+            <DiagramListItem key={diagram.id} diagram={diagram} showCollection={showCollection} />
+          ))}
         </div>
         <Waypoint
           onEnter={getMoreItems}

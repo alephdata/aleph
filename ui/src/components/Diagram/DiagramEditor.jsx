@@ -20,13 +20,17 @@ class DiagramEditor extends React.Component {
       undeleteEntity: this.undeleteEntity.bind(this),
     });
 
-    let viewport = new Viewport(config)
-    const writeable = props.diagram?.writeable
+    let viewport = new Viewport(config);
+    const writeable = props.diagram?.writeable;
     let initialLayout;
 
     if (props.diagram?.layout) {
       const { layout, entities } = props.diagram;
-      initialLayout = GraphLayout.fromJSON(config, this.entityManager, { ...layout, entities, selection: [] });
+      initialLayout = GraphLayout.fromJSON(
+        config,
+        this.entityManager,
+        { ...layout, entities, selection: [] },
+      );
       const initialBounds = initialLayout.getVisibleVertexRect();
       viewport = viewport.fitToRect(initialBounds);
     } else {
@@ -62,7 +66,7 @@ class DiagramEditor extends React.Component {
         ...diagram,
         layout: layoutData,
         entities: entities ? entities.map(entity => entity.id) : [],
-      }
+      };
 
       this.props.updateDiagram(updatedDiagram.id, updatedDiagram)
         .then(() => {

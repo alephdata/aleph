@@ -24,11 +24,11 @@ const messages = defineMessages({
   },
   status_error: {
     id: 'diagram.status_error',
-    defaultMessage: 'Error saving'
+    defaultMessage: 'Error saving',
   },
   status_in_progress: {
     id: 'diagram.status_in_progress',
-    defaultMessage: 'Saving...'
+    defaultMessage: 'Saving...',
   },
   error_warning: {
     id: 'diagram.error_warning',
@@ -121,13 +121,13 @@ export class DiagramScreen extends Component {
     const { intl } = this.props;
     const { updateStatus } = this.state;
 
-    switch(updateStatus) {
-      case diagramUpdateStates.SUCCESS:
-        return { text: intl.formatMessage(messages.status_success), intent: Intent.SUCCESS };
+    switch (updateStatus) {
       case diagramUpdateStates.IN_PROGRESS:
         return { text: intl.formatMessage(messages.status_in_progress), intent: Intent.PRIMARY };
       case diagramUpdateStates.ERROR:
         return { text: intl.formatMessage(messages.status_error), intent: Intent.DANGER };
+      default:
+        return { text: intl.formatMessage(messages.status_success), intent: Intent.SUCCESS };
     }
   }
 

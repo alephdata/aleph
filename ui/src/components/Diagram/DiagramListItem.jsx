@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Card, Icon, H4 } from '@blueprintjs/core';
-import c from 'classnames';
 
 import {
   Collection, Date, Diagram,
