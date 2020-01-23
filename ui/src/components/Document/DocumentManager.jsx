@@ -148,7 +148,9 @@ export class DocumentManager extends Component {
               acceptedFiles && acceptedFiles.length ? this.toggleUpload(acceptedFiles) : null
             )}
           >
-            {({ getRootProps, getInputProps }) => (
+            {({ getRootProps, getInputProps }) => {
+              console.log(getRootProps(), getInputProps());
+              return (
               <div {...getRootProps()}>
                 <input
                   {...getInputProps()}
@@ -156,7 +158,7 @@ export class DocumentManager extends Component {
                 />
                 {contents}
               </div>
-            )}
+            )}}
           </Dropzone>
         )}
         { !canUpload && contents }
