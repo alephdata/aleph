@@ -2,6 +2,7 @@ import logging
 import requests
 from requests import RequestException, HTTPError
 from servicelayer.util import backoff, service_retries
+from followthemoney.helper import entity_filename
 
 from ingestors.settings import UNOSERVICE_URL
 from ingestors.support.cache import CacheSupport
@@ -37,7 +38,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         """Converts an office document to PDF."""
         if UNOSERVICE_URL is None:
             raise RuntimeError("No UNOSERVICE_URL for document conversion.")
-        file_name = self.manager.make_filename(entity)
+        file_name = entity_filename(entity)
         mime_type = entity.first('mimeType')
         log.info('Converting [%s] to PDF...', file_name)
         attempt = 1
