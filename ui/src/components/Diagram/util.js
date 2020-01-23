@@ -1,28 +1,28 @@
 const bulkCreateEntities = async ({collection, layout, createEntity}) => {
   console.log('in create from layout, entities are', layout.entities);
   const { entities } = layout;
-  let outputLayout = { vertices:layout.vertices, edges: layout.edges };
+  let generatedLayout = { vertices:layout.vertices, edges: layout.edges, groupings: layout.groupings || [] };
   const entityPromises = [];
 
-  console.log('output layout it', outputLayout);
+  console.log('output layout it', generatedLayout);
 
   entities.forEach(({id, schema, properties}) => {
     console.log('looping thru entities, entity is', schema, properties);
     const createdEntity = createEntity({ schema, properties, collection }).then((newEntity) => {
       console.log('entity created, calling repalce function', newEntity);
-      outputLayout = replaceEntityIdInLayout({ layout: outputLayout, oldId: id, newId: newEntity.id });
-      console.log('entity id replaced', outputLayout);
+      generatedLayout = replaceEntityIdInLayout({ layout: generatedLayout, oldId: id, newId: newEntity.id });
+      console.log('entity id replaced', generatedLayout);
 
       return newEntity;
     });
     entityPromises.push(createdEntity);
   });
   console.log('createdentities array is before promise resolve', entityPromises);
-  const outputEntities = await Promise.all(entityPromises)
-  console.log('completed createdentities array is', outputEntities);
-  console.log('completed outputlayout is', outputLayout);
+  const generatedEntities = await Promise.all(entityPromises)
+  console.log('completed createdentities array is', generatedEntities);
+  console.log('completed outputlayout is', generatedLayout);
 
-  return outputEntities;
+  return { generatedEntities, generatedLayout };
 }
 
 const replaceEntityIdInLayout = ({ layout, oldId, newId }) => {
@@ -42,6 +42,7 @@ const replaceEntityIdInLayout = ({ layout, oldId, newId }) => {
       }
       return e;
     }),
+    groupings: layout.groupings,
   }
 }
 

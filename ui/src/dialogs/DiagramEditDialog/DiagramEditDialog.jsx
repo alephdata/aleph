@@ -86,16 +86,21 @@ class DiagramEditDialog extends Component {
     this.setState({ processing: true });
     try {
       if (isCreate) {
-        if (layout) {
-          await bulkCreateEntities({ collection, layout, createEntity});
-        }
-
         const newDiagram = {
           label,
           summary,
           collection_id: parseInt(collection.id),
-          layout: layout,
         };
+        if (layout) {
+          const { generatedEntities, generatedLayout } = await bulkCreateEntities(
+            { collection, layout, createEntity}
+          );
+          newDiagram.layout = generatedLayout;
+          newDiagram.entities = generatedEntities.map(e => e.id);
+        }
+
+        console.log("CREATING DIAGRAM WITH", newDiagram);
+
         const response = await this.props.createDiagram(newDiagram);
 
         history.push({
