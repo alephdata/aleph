@@ -1,10 +1,11 @@
 import logging
 from flask import request
-from normality import stringify, safe_filename
+from normality import stringify
 from pantomime.types import PDF, CSV
 from banal import ensure_list, is_listish, is_mapping, first
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events, Alert
@@ -205,12 +206,10 @@ class EntitySerializer(Serializer):
         collection_id = obj.pop('collection_id', None)
         obj['collection'] = self.resolve(Collection, collection_id,
                                          CollectionSerializer)
-        schema = model.get(obj.get('schema'))
-        if schema is None:
-            return None
-        obj['schemata'] = schema.names
+        proxy = model.get_proxy(obj)
+        obj['schemata'] = proxy.schema.names
         properties = obj.get('properties', {})
-        for prop in schema.properties.values():
+        for prop in proxy.iterprops():
             if prop.type != registry.entity:
                 continue
             values = ensure_list(properties.get(prop.name))
@@ -225,25 +224,24 @@ class EntitySerializer(Serializer):
             'tags': url_for('entities_api.tags', entity_id=pk),
             'ui': entity_url(pk)
         }
-        if schema.is_a(Document.SCHEMA):
+        if proxy.schema.is_a(Document.SCHEMA):
             links['content'] = url_for('entities_api.content', entity_id=pk)
-            file_name = first(properties.get('fileName'))
             content_hash = first(properties.get('contentHash'))
             if content_hash:
+                name = entity_filename(proxy)
                 mime_type = first(properties.get('mimeType'))
-                name = safe_filename(file_name, default=pk)
                 links['file'] = archive_url(request.authz.id, content_hash,
                                             file_name=name,
                                             mime_type=mime_type)
 
             pdf_hash = first(properties.get('pdfHash'))
             if pdf_hash:
-                name = safe_filename(file_name, default=pk, extension='.pdf')
+                name = entity_filename(proxy, extension='pdf')
                 links['pdf'] = archive_url(request.authz.id, pdf_hash,
                                            file_name=name, mime_type=PDF)
             csv_hash = first(properties.get('csvHash'))
             if csv_hash:
-                name = safe_filename(file_name, default=pk, extension='.csv')
+                name = entity_filename(proxy, extension='csv')
                 links['csv'] = archive_url(request.authz.id, csv_hash,
                                            file_name=name, mime_type=CSV)
 

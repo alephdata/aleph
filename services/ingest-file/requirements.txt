@@ -3,7 +3,7 @@ normality==2.0.0
 pantomime==0.4.0
 servicelayer[google,amazon]==1.9.6
 balkhash[leveldb,sql]==1.1.2
-followthemoney==1.23.5
+followthemoney==1.24.1
 languagecodes==1.0.5
 psycopg2-binary==2.8.4
 pyicu==2.4.2
