@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent } from '@blueprintjs/core';
+import { Dialog, Button, Intent, ProgressBar } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -12,6 +12,8 @@ import getDiagramLink from 'src/util/getDiagramLink';
 import { bulkCreateEntities } from 'src/components/Diagram/util';
 
 import DiagramImport from 'src/components/Diagram/DiagramImport'
+
+import './DiagramEditDialog.scss';
 
 const messages = defineMessages({
   label_placeholder: {
@@ -56,7 +58,6 @@ const messages = defineMessages({
   },
 });
 
-/* eslint-disable */
 
 class DiagramEditDialog extends Component {
   constructor(props) {
@@ -69,7 +70,7 @@ class DiagramEditDialog extends Component {
       collection: diagram.collection || '',
       layout: diagram.layout || null,
       importedFileName: null,
-      processing: false,
+      processingProgress: 1,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -77,14 +78,26 @@ class DiagramEditDialog extends Component {
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onChangeCollection = this.onChangeCollection.bind(this);
     this.onImport = this.onImport.bind(this);
+    this.onProgress = this.onProgress.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      label: '',
+      summary: '',
+      collection: '',
+      layout: null,
+      importedFileName: null,
+      processingProgress: 1,
+    });
   }
 
   async onSubmit(event) {
     const { diagram, history, intl, isCreate, createEntity } = this.props;
-    const { data, id, label, summary, collection, layout, processing } = this.state;
+    const { data, id, label, summary, collection, layout, processingProgress } = this.state;
     event.preventDefault();
-    if (processing || !this.checkValid()) return;
-    this.setState({ processing: true });
+    if (processingProgress !== 1 || !this.checkValid()) return;
+    this.setState({ processingProgress: 0 });
     try {
       if (isCreate) {
         const newDiagram = {
@@ -94,7 +107,7 @@ class DiagramEditDialog extends Component {
         };
         if (layout) {
           const { generatedEntities, generatedLayout } = await bulkCreateEntities(
-            { collection, layout, createEntity}
+            { createEntity, collection, layout, onProgress: this.onProgress }
           );
           newDiagram.layout = generatedLayout;
           newDiagram.entities = generatedEntities.map(e => e.id);
@@ -113,13 +126,13 @@ class DiagramEditDialog extends Component {
         updatedDiagram.summary = summary;
 
         await this.props.updateDiagram(updatedDiagram.id, updatedDiagram);
-        this.setState({ processing: false });
+        this.setState({ processingProgress: 1 });
         this.props.toggleDialog();
       }
 
       showSuccessToast(intl.formatMessage(isCreate ? messages.success_create : messages.success_update));
     } catch (e) {
-      this.setState({ processing: false });
+      this.setState({ processingProgress: 1 });
       showWarningToast(e.message);
     }
   }
@@ -137,8 +150,12 @@ class DiagramEditDialog extends Component {
   }
 
   onImport({ fileName, label, layout }) {
-    console.log('importing!', label, layout);
     this.setState({ label, layout, importedFileName: fileName });
+  }
+
+  onProgress(processingProgress) {
+    console.log('progress', processingProgress);
+    this.setState({ processingProgress });
   }
 
   checkValid() {
@@ -159,8 +176,8 @@ class DiagramEditDialog extends Component {
 
   render() {
     const { canChangeCollection, importEnabled, intl, isCreate, isOpen, toggleDialog } = this.props;
-    const { collection, importedFileName, label, summary, processing, layout } = this.state;
-    const disabled = processing || !this.checkValid();
+    const { collection, importedFileName, label, summary, processingProgress, layout } = this.state;
+    const disabled = processingProgress !== 1 || !this.checkValid();
 
     let titleKey;
     if (isCreate) {
@@ -184,75 +201,81 @@ class DiagramEditDialog extends Component {
         title={intl.formatMessage(titleKey)}
         onClose={toggleDialog}
       >
-        <form onSubmit={this.onSubmit}>
-          <div className="bp3-dialog-body">
-            {importEnabled && (
-              <DiagramImport onImport={this.onImport} importedFile={importedFileName} />
-            )}
-            {showTextFields && (
-              <>
-                <div className="bp3-form-group">
-                  <label className="bp3-label" htmlFor="label">
-                    <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
-                    <div className="bp3-input-group bp3-fill">
-                      <input
-                        id="label"
-                        type="text"
-                        className="bp3-input"
-                        autoComplete="off"
-                        placeholder={intl.formatMessage(messages.label_placeholder)}
-                        onChange={this.onChangeLabel}
-                        value={label}
+        <div className="DiagramEditDialog__contents">
+          {processingProgress !== 1 && <div className="DiagramEditDialog__overlay" />}
+          <form onSubmit={this.onSubmit}>
+            <div className="bp3-dialog-body">
+              {importEnabled && (
+                <DiagramImport onImport={this.onImport} importedFile={importedFileName} />
+              )}
+              {showTextFields && (
+                <>
+                  <div className="bp3-form-group">
+                    <label className="bp3-label" htmlFor="label">
+                      <FormattedMessage id="diagram.choose.name" defaultMessage="Title" />
+                      <div className="bp3-input-group bp3-fill">
+                        <input
+                          id="label"
+                          type="text"
+                          className="bp3-input"
+                          autoComplete="off"
+                          placeholder={intl.formatMessage(messages.label_placeholder)}
+                          onChange={this.onChangeLabel}
+                          value={label}
+                        />
+                      </div>
+                    </label>
+                  </div>
+                  <div className="bp3-form-group">
+                    <label className="bp3-label" htmlFor="summary">
+                      <FormattedMessage
+                        id="diagram.choose.summary"
+                        defaultMessage="Summary"
                       />
-                    </div>
-                  </label>
-                </div>
+                      <div className="bp3-input-group bp3-fill">
+                        <textarea
+                          id="summary"
+                          className="bp3-input"
+                          placeholder={intl.formatMessage(messages.summary_placeholder)}
+                          onChange={this.onChangeSummary}
+                          value={summary}
+                        />
+                      </div>
+                    </label>
+                  </div>
+                </>
+              )}
+              {showCollectionField && (
                 <div className="bp3-form-group">
-                  <label className="bp3-label" htmlFor="summary">
+                  <label className="bp3-label">
                     <FormattedMessage
-                      id="diagram.choose.summary"
-                      defaultMessage="Summary"
+                      id="diagram.collectionSelect"
+                      defaultMessage="Select a dataset"
                     />
-                    <div className="bp3-input-group bp3-fill">
-                      <textarea
-                        id="summary"
-                        className="bp3-input"
-                        placeholder={intl.formatMessage(messages.summary_placeholder)}
-                        onChange={this.onChangeSummary}
-                        value={summary}
-                      />
-                    </div>
+                    <Collection.Select
+                      collection={collection}
+                      onSelect={this.onChangeCollection}
+                      query={this.getCollectionOptionsQuery()}
+                    />
                   </label>
                 </div>
-              </>
-            )}
-            {showCollectionField && (
-              <div className="bp3-form-group">
-                <label className="bp3-label">
-                  <FormattedMessage
-                    id="diagram.collectionSelect"
-                    defaultMessage="Select a dataset"
-                  />
-                  <Collection.Select
-                    collection={collection}
-                    onSelect={this.onChangeCollection}
-                    query={this.getCollectionOptionsQuery()}
-                  />
-                </label>
-              </div>
-            )}
-          </div>
-          <div className="bp3-dialog-footer">
-            <div className="bp3-dialog-footer-actions">
-              <Button
-                type="submit"
-                intent={Intent.PRIMARY}
-                disabled={disabled}
-                text={intl.formatMessage(isCreate ? messages.submit_create : messages.submit_update)}
-              />
+              )}
             </div>
-          </div>
-        </form>
+            <div className="bp3-dialog-footer">
+              <div className="bp3-dialog-footer-actions">
+                <Button
+                  type="submit"
+                  intent={Intent.PRIMARY}
+                  disabled={disabled}
+                  text={intl.formatMessage(isCreate ? messages.submit_create : messages.submit_update)}
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        {processingProgress !== 1 && (
+          <ProgressBar value={processingProgress} intent={Intent.PRIMARY} />
+        )}
       </Dialog>
     );
   }

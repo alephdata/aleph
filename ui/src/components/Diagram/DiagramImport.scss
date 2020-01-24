@@ -1,3 +1,5 @@
+@import "src/app/variables.scss";
+
 .DiagramImport {
   &__file-name {
     font-weight: bold;
@@ -12,7 +14,12 @@
 
   &__placeholder {
     padding: 20px;
-    border: 1px dashed rgba(92, 112, 128, 0.6);
+    border: 1px dashed $aleph-border-color;
     cursor: pointer;
+    transition: background .1s ease-in-out; 
+
+    &:hover {
+      background: $light-gray3;
+    }
   }
 }

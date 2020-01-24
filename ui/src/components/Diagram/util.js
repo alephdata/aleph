@@ -1,8 +1,10 @@
-const bulkCreateEntities = async ({collection, layout, createEntity}) => {
+const bulkCreateEntities = async ({createEntity, collection, layout, onProgress}) => {
   console.log('in create from layout, entities are', layout.entities);
   const { entities } = layout;
   let generatedLayout = { vertices:layout.vertices, edges: layout.edges, groupings: layout.groupings || [] };
   const entityPromises = [];
+  const entityCount = entities.length;
+  let i = 0;
 
   console.log('output layout it', generatedLayout);
 
@@ -16,6 +18,8 @@ const bulkCreateEntities = async ({collection, layout, createEntity}) => {
       return newEntity;
     });
     entityPromises.push(createdEntity);
+    onProgress(i/entityCount);
+    i++;
   });
   console.log('createdentities array is before promise resolve', entityPromises);
   const generatedEntities = await Promise.all(entityPromises)
