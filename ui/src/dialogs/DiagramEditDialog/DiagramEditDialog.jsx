@@ -68,6 +68,7 @@ class DiagramEditDialog extends Component {
       summary: diagram.summary || '',
       collection: diagram.collection || '',
       layout: diagram.layout || null,
+      importedFileName: null,
       processing: false,
     };
 
@@ -135,9 +136,9 @@ class DiagramEditDialog extends Component {
     this.setState({ collection });
   }
 
-  onImport({ label, layout }) {
+  onImport({ fileName, label, layout }) {
     console.log('importing!', label, layout);
-    this.setState({ label, layout });
+    this.setState({ label, layout, importedFileName: fileName });
   }
 
   checkValid() {
@@ -158,7 +159,7 @@ class DiagramEditDialog extends Component {
 
   render() {
     const { canChangeCollection, importEnabled, intl, isCreate, isOpen, toggleDialog } = this.props;
-    const { collection, label, summary, processing, layout } = this.state;
+    const { collection, importedFileName, label, summary, processing, layout } = this.state;
     const disabled = processing || !this.checkValid();
 
     let titleKey;
@@ -186,7 +187,7 @@ class DiagramEditDialog extends Component {
         <form onSubmit={this.onSubmit}>
           <div className="bp3-dialog-body">
             {importEnabled && (
-              <DiagramImport onImport={this.onImport} />
+              <DiagramImport onImport={this.onImport} importedFile={importedFileName} />
             )}
             {showTextFields && (
               <>

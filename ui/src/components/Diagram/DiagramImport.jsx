@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent } from '@blueprintjs/core';
+import { Button, Dialog, Icon, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -34,18 +34,19 @@ class DiagramImport extends Component {
 
   onDrop([file]) {
     console.log(file);
-    const label = file.name;
+    const fileName = file.name;
+    const label = fileName.match(/^([^.]+)/)[0];
     const reader = new FileReader()
     reader.onload = async (e) => {
       const data = (e.target.result)
       console.log(data)
-      this.props.onImport({ label, layout: JSON.parse(data).layout })
+      this.props.onImport({ fileName, label, layout: JSON.parse(data).layout })
     };
     reader.readAsText(file);
   }
 
   render() {
-    // const { canChangeCollection, intl, isCreate, isOpen, toggleDialog } = this.props;
+    const { importedFile } = this.props;
     // const { collection, label, summary, processing } = this.state;
     // const disabled = processing || !this.checkValid();
 
@@ -61,12 +62,20 @@ class DiagramImport extends Component {
             <input
               {...getInputProps()}
             />
-            <div className="DiagramImport__placeholder">
-              <FormattedMessage
-                id="diagramImport.placeholderText"
-                defaultMessage="Drop a .vis file here or click to import an existing diagram layout"
-              />
-            </div>
+            {importedFile && (
+              <a className="DiagramImport__file-name">
+                <Icon icon="document-open" iconSize={14} />
+                <span>{importedFile}</span>
+              </a>
+            )}
+            {!importedFile && (
+              <div className="DiagramImport__placeholder">
+                <FormattedMessage
+                  id="diagramImport.placeholderText"
+                  defaultMessage="Drop a .vis file here or click to import an existing diagram layout"
+                />
+              </div>
+            )}
           </div>
         )}
       </Dropzone>

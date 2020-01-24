@@ -1,4 +1,15 @@
 .DiagramImport {
+  &__file-name {
+    font-weight: bold;
+    cursor: pointer;
+    padding-bottom: 20px;
+    display: block;
+
+    .bp3-icon {
+      padding-right: 5px;
+    }
+  }
+
   &__placeholder {
     padding: 20px;
     border: 1px dashed rgba(92, 112, 128, 0.6);

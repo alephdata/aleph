@@ -92,9 +92,6 @@ export class CasesIndexScreen extends Component {
       >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <div className="Dashboard__actions">
-              <CaseCreateButton />
-            </div>
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
@@ -102,6 +99,9 @@ export class CasesIndexScreen extends Component {
                 defaultMessage="Personal datasets let you upload and share documents and data which belong to a particular story. You can upload PDFs, email archives or spreadsheets, and they will be made easy to search and browse."
               />
             </p>
+            <div className="Dashboard__actions">
+              <CaseCreateButton />
+            </div>
           </div>
           <CollectionIndexSearch
             query={query}

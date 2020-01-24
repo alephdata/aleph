@@ -91,9 +91,6 @@ export class DiagramsIndexScreen extends Component {
       >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <div className="Dashboard__actions">
-              <DiagramCreateMenu />
-            </div>
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
@@ -101,6 +98,9 @@ export class DiagramsIndexScreen extends Component {
                 defaultMessage="Network diagrams let you visualize complex relationships within a dataset."
               />
             </p>
+            <div className="Dashboard__actions">
+              <DiagramCreateMenu />
+            </div>
           </div>
           { result.isLoading && !result.results?.length && (
             <SectionLoading />

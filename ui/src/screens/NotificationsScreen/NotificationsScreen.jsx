@@ -55,14 +55,6 @@ export class NotificationsScreen extends React.Component {
       <Screen title={intl.formatMessage(messages.title)} requireSession>
         <Dashboard>
           <div className="Dashboard__title-container">
-            <div className="Dashboard__actions">
-              <Button icon="tick" className="mark-read bp3-intent-primary" onClick={this.onMarkRead} disabled={!canMarkRead}>
-                <FormattedMessage
-                  id="notifications.mark.read"
-                  defaultMessage="Clear all"
-                />
-              </Button>
-            </div>
             <h5 className="Dashboard__title">
               {intl.formatMessage(messages.greeting, { role: role ? role.name : '' })}
             </h5>
@@ -72,6 +64,14 @@ export class NotificationsScreen extends React.Component {
                 defaultMessage="View the latest updates to datasets, groups and tracking alerts you follow."
               />
             </p>
+            <div className="Dashboard__actions">
+              <Button icon="tick" className="mark-read bp3-intent-primary" onClick={this.onMarkRead} disabled={!canMarkRead}>
+                <FormattedMessage
+                  id="notifications.mark.read"
+                  defaultMessage="Clear all"
+                />
+              </Button>
+            </div>
           </div>
           <NotificationList query={query} />
         </Dashboard>
