@@ -61,7 +61,7 @@ services:
       - archive-data:/data
     env_file:
       - aleph.env
-  
+
   shell:
     image: alephdata/aleph:${ALEPH_TAG:-3.4.4}
     command: /bin/bash
