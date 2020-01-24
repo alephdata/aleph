@@ -70,7 +70,7 @@ export class CollectionScreen extends Component {
       <Breadcrumbs operation={operation}>
         <Breadcrumbs.Collection key="collection" collection={collection} showCategory active={active} />
         {activeMode === 'xref' && (
-          <Breadcrumbs.Text icon="search-around" active>
+          <Breadcrumbs.Text icon="comparison" active>
             <FormattedMessage
               id="collections.xref.title"
               defaultMessage="Cross-reference"

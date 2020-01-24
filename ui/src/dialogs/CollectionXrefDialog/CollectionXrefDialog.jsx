@@ -107,7 +107,7 @@ class CollectionXrefDialog extends Component {
 
     return (
       <Dialog
-        icon="search-around"
+        icon="comparison"
         className="CollectionXrefDialog"
         isOpen={this.props.isOpen}
         onClose={this.props.toggleDialog}

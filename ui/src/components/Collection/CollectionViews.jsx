@@ -14,7 +14,11 @@ import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefInd
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
+import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
+
 import { selectCollectionXrefIndex, selectModel } from 'src/selectors';
+
+import './CollectionViews.scss';
 
 /* eslint-disable */
 class CollectionViews extends React.Component {
@@ -70,16 +74,23 @@ class CollectionViews extends React.Component {
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
     const hasBrowse = (numOfDocs > 0 || collection.casefile);
+
+    let selectedTab = activeMode;
+
+    if (activeMode !== 'overview' && activeMode !== 'diagrams' && activeMode !== 'xref') {
+      selectedTab = 'browse';
+    }
     return (
       <Tabs
-        id="EntityInfoTabs"
+        id="CollectionInfoTabs"
+        className="CollectionViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={activeMode}
+        selectedTabId={selectedTab}
         renderActiveTabPanelOnly
-        className="info-tabs-padding"
       >
         <Tab
-          id="Overview"
+          id="overview"
+          className="CollectionViews__tab"
           title={
             <>
               <Icon icon="grouped-bar-chart" className="left-icon" />
@@ -87,33 +98,31 @@ class CollectionViews extends React.Component {
             </>}
           panel={<CollectionStatisticsMode collection={collection} />}
         />
-        {hasBrowse && (
-          <Tab
-            id="Document"
-            title={
-              <>
-                <Icon icon="folder" className="left-icon" />
-                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                <Count count={numOfDocs} />
-              </>}
-            panel={<CollectionDocumentsMode collection={collection} />}
-          />
-        )}
-        {entitySchemata.map(ref => (
-          <Tab
-            id={ref.schema}
-            key={ref.schema}
-            title={
-              <>
-                <Schema.Smart.Label schema={ref.schema} plural icon />
-                <Count count={ref.count} />
-              </>}
-            panel={<CollectionEntitiesMode collection={collection} activeMode={activeMode} />}
-          />
-        ))}
+        <Tab
+          id="browse"
+          className="CollectionViews__tab"
+          title={
+            <>
+              <Icon icon="inbox-search" className="left-icon" />
+              <FormattedMessage id="entity.info.contents" defaultMessage="Browse" />
+            </>}
+          panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
+        />
+        <Tab
+          id="xref"
+          className="CollectionViews__tab"
+          title={
+            <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
+              <Icon className="left-icon" icon="comparison" />
+              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
+              <Count count={xrefIndex.total} />
+            </TextLoading>}
+          panel={<CollectionXrefIndexMode collection={collection} />}
+        />
         {collection.casefile && (
           <Tab
             id="diagrams"
+            className="CollectionViews__tab"
             title={
               <>
                 <Icon className="left-icon" icon="graph" />
@@ -123,16 +132,6 @@ class CollectionViews extends React.Component {
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />
         )}
-        <Tab
-          id="xref"
-          title={
-            <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
-              <Icon className="left-icon" icon="search-around" />
-              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
-              <Count count={xrefIndex.total} />
-            </TextLoading>}
-          panel={<CollectionXrefIndexMode collection={collection} />}
-        />
       </Tabs>
     );
   }

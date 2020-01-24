@@ -1,0 +1,22 @@
+@import "src/app/variables.scss";
+
+.CollectionContentViews {
+  &__tabs {
+    .bp3-tab-list > *:not(:last-child) {
+      margin-right: 10px;
+    }
+    .bp3-tab-indicator-wrapper {
+      display: none;
+    }
+  }
+  &__tab.bp3-tab {
+    border: 1px solid $aleph-border-color;
+    border-radius: 15px !important;
+    padding: 0 10px;
+    box-shadow: none !important;
+
+    &[aria-selected="true"] {
+      border: 1px solid $blue2;
+    }
+  }
+}

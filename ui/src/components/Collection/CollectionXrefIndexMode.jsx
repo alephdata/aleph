@@ -37,7 +37,7 @@ export class CollectionXrefIndexMode extends React.PureComponent {
     if (xrefIndex.total === 0) {
       return (
         <ErrorSection
-          icon="search-around"
+          icon="comparison"
           title={intl.formatMessage(messages.empty)}
         />
       );
