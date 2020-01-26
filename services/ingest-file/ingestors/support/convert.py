@@ -19,12 +19,11 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         key = self.cache_key('pdf', entity.first('contentHash'))
         pdf_hash = self.get_cache_value(key)
         if pdf_hash is not None:
-            log.info("Using [%s] PDF from cache", entity.first('fileName'))
-            entity.set('pdfHash', pdf_hash)
-            work_path = self.manager.work_path
-            path = self.manager.archive.load_file(pdf_hash,
-                                                  temp_path=work_path)
+            file_name = entity_filename(entity, extension='pdf')
+            path = self.manager.load(pdf_hash, file_name=file_name)
             if path is not None:
+                log.info("Using PDF cache: %s", file_name)
+                entity.set('pdfHash', pdf_hash)
                 return path
 
         pdf_file = self._document_to_pdf(file_path, entity)

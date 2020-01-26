@@ -114,13 +114,16 @@ class Manager(object):
         if file_path is not None and file_path.is_file():
             return self.archive.archive_file(file_path, mime_type=mime_type)
 
+    def load(self, content_hash, file_name=None):
+        # log.info("Local archive name: %s", file_name)
+        return self.archive.load_file(content_hash,
+                                      file_name=file_name,
+                                      temp_path=self.work_path)
+
     def ingest_entity(self, entity):
         for content_hash in entity.get('contentHash', quiet=True):
             file_name = entity_filename(entity)
-            # log.info("Local archive name: %s", file_name)
-            file_path = self.archive.load_file(content_hash,
-                                               file_name=file_name,
-                                               temp_path=self.work_path)
+            file_path = self.load(content_hash, file_name=file_name)
             if file_path is None or not file_path.exists():
                 continue
             self.ingest(file_path, entity)
@@ -148,6 +151,7 @@ class Manager(object):
     def finalize(self, entity):
         self.emit_entity(entity)
         self.writer.flush()
+        remove_directory(self.work_path)
 
     def delegate(self, ingestor_class, file_path, entity):
         ingestor_class(self).ingest(file_path, entity)
