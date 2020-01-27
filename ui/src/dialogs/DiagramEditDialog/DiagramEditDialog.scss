@@ -1,0 +1,29 @@
+@import "src/app/variables.scss";
+
+.DiagramEditDialog {
+  position: relative;
+
+  &__contents {
+    position: relative;
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: $light-gray5;
+    opacity: .7;
+    z-index: 2;
+  }
+
+  .bp3-progress-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 80%;
+    z-index: 3;
+  }
+}

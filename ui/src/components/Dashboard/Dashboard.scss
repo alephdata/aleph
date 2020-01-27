@@ -69,7 +69,7 @@ $dashboard-padding: $aleph-grid-size * 2.5;
     }
 
     &__actions {
-      float: right;
+      margin-top: $aleph-grid-size*2;
     }
 
     &__title-container {

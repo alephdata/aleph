@@ -109,12 +109,12 @@ class DiagramEditor extends React.Component {
     return false;
   }
 
-  async undeleteEntity(entityId) {
+  async undeleteEntity(entity) {
     const { onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
 
     try {
-      await this.props.undeleteEntity(entityId);
+      await this.props.undeleteEntity(entity);
       onStatusChange(updateStates.SUCCESS);
     } catch {
       onStatusChange(updateStates.ERROR);

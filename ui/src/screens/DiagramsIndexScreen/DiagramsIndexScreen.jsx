@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+
 // import _ from 'lodash';
 // import queryString from 'query-string';
 import { compose } from 'redux';
@@ -14,7 +15,7 @@ import {
   Breadcrumbs, SectionLoading,
 } from 'src/components/common';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import DiagramCreateButton from 'src/components/Toolbar/DiagramCreateButton';
+import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
 
 
@@ -90,9 +91,6 @@ export class DiagramsIndexScreen extends Component {
       >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <div className="Dashboard__actions">
-              <DiagramCreateButton />
-            </div>
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
@@ -100,6 +98,9 @@ export class DiagramsIndexScreen extends Component {
                 defaultMessage="Network diagrams let you visualize complex relationships within a dataset."
               />
             </p>
+            <div className="Dashboard__actions">
+              <DiagramCreateMenu />
+            </div>
           </div>
           { result.isLoading && !result.results?.length && (
             <SectionLoading />

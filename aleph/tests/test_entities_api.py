@@ -375,6 +375,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res.status_code
 
+        # Test undelete deleted entity
         url = '/api/2/entities/%s/undelete' % id1
         res = self.client.post(url, headers=headers)
         assert res.status_code == 200, res.status_code
@@ -392,6 +393,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res.status_code
 
+        # test undelete with property update
         url = '/api/2/entities/%s/undelete?merge=true' % id1
         data = {
             'schema': 'Person',
@@ -413,3 +415,45 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res.status_code
         assert res.json['properties']['name'] == ['Mr. Mango'], res.json
         assert res.json['properties']['status'] == ['ripe'], res.json
+
+        # Test undelete existing entity
+        url = '/api/2/entities/%s/undelete?merge=true' % id1
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'email': 'mango@mango.yum',
+            }
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, res.status_code
+        validate(res.json, 'Entity')
+        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
+        assert res.json['properties']['status'] == ['ripe'], res.json
+        assert res.json['properties']['email'] == ['mango@mango.yum'], res.json  # noqa
+
+        # test create entity with undelete
+        id2 = "random-id"
+        url = '/api/2/entities/%s/undelete?merge=true' % id2
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': 'Mr. Banana',
+            },
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 400, res.status_code
+        data['collection_id'] = self.col_id
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, res.status_code
+        validate(res.json, 'Entity')
+        assert res.json['id'] != id2, res.json
+        assert res.json['properties']['name'] == ['Mr. Banana'], res.json

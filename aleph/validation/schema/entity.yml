@@ -96,6 +96,8 @@ EntityUndelete:
   type: object
   nullable: true
   properties:
+    collection_id:
+      type: string
     schema:
       type: string
       format: schema
