@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection } from 'src/components/common';
-import { createDiagram, createEntity, updateDiagram } from 'src/actions';
+import { createDiagram, undeleteEntity, updateDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
 import { bulkCreateEntities } from 'src/components/Diagram/util';
@@ -93,7 +93,7 @@ class DiagramEditDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { diagram, history, intl, isCreate, createEntity } = this.props;
+    const { diagram, history, intl, isCreate, undeleteEntity } = this.props;
     const { data, id, label, summary, collection, layout, processingProgress } = this.state;
     event.preventDefault();
     if (processingProgress !== 1 || !this.checkValid()) return;
@@ -107,7 +107,7 @@ class DiagramEditDialog extends Component {
         };
         if (layout) {
           const { generatedEntities, generatedLayout } = await bulkCreateEntities(
-            { createEntity, collection, layout, onProgress: this.onProgress }
+            { undeleteEntity, collection, layout, onProgress: this.onProgress }
           );
           newDiagram.layout = generatedLayout;
           newDiagram.entities = generatedEntities.map(e => e.id);
@@ -285,4 +285,4 @@ const mapStateToProps = (state, ownProps) => ({});
 
 DiagramEditDialog = injectIntl(DiagramEditDialog);
 DiagramEditDialog = withRouter(DiagramEditDialog);
-export default connect(mapStateToProps, { createDiagram, updateDiagram, createEntity })(DiagramEditDialog);
+export default connect(mapStateToProps, { createDiagram, updateDiagram, undeleteEntity })(DiagramEditDialog);

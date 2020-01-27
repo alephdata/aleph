@@ -1,4 +1,4 @@
-const bulkCreateEntities = async ({createEntity, collection, layout, onProgress}) => {
+const bulkCreateEntities = async ({undeleteEntity, collection, layout, onProgress}) => {
   console.log('in create from layout, entities are', layout.entities);
   const { entities } = layout;
   let generatedLayout = { vertices:layout.vertices, edges: layout.edges, groupings: layout.groupings || [] };
@@ -10,7 +10,7 @@ const bulkCreateEntities = async ({createEntity, collection, layout, onProgress}
 
   entities.forEach(({id, schema, properties}) => {
     console.log('looping thru entities, entity is', schema, properties);
-    const createdEntity = createEntity({ schema, properties, collection }).then((newEntity) => {
+    const createdEntity = undeleteEntity({ schema, properties, collection_id: collection.id }).then((newEntity) => {
       console.log('entity created, calling repalce function', newEntity);
       generatedLayout = replaceEntityIdInLayout({ layout: generatedLayout, oldId: id, newId: newEntity.id });
       console.log('entity id replaced', generatedLayout);
