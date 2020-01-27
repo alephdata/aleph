@@ -61,7 +61,7 @@ Diagram:
 
 Layout:
   type: object
-  required: ["vertices", "edges", "groupings"]
+  required: ["vertices", "edges"]
   properties:
     vertices:
       type: array
