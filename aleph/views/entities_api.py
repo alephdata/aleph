@@ -1,6 +1,7 @@
 import logging
 from banal import ensure_dict
 from flask import Blueprint, request, Response
+from werkzeug.exceptions import BadRequest
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.util import merge_data
@@ -17,7 +18,7 @@ from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
-from aleph.views.util import require, obj_or_404
+from aleph.views.util import require
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
 
@@ -564,8 +565,9 @@ def undelete(entity_id):
       summary: Undelete an entity
       description: >
         Undelete the entity with id `entity_id`; and optionally update its
-        data. This only applies to entities which are backed by a database row,
-        i.e. not any entities resulting from a mapping or bulk load.
+        data. If the entity doesn't exist, create it. This only applies to
+        entities which are backed by a database row, i.e. not any entities
+        resulting from a mapping or bulk load.
       parameters:
       - in: path
         name: entity_id
@@ -587,17 +589,27 @@ def undelete(entity_id):
       tags:
       - Entity
     """
-    entity = obj_or_404(Entity.by_id(entity_id, deleted=True))
-    require(request.authz.can(entity.collection_id, request.authz.WRITE))
-    tag_request(collection_id=entity.collection_id)
     data = parse_request('EntityUndelete')
-    if data:
-        if get_flag('merge'):
-            props = merge_data(data.get('properties'), entity.data)
-            data['properties'] = props
-        entity.update(data)
-    entity.undelete()
+    entity = Entity.by_id(entity_id, deleted=True)
+    # If the entity exists, undelete and update it. Otherwise create it.
+    if entity is not None:
+        require(request.authz.can(entity.collection_id, request.authz.WRITE))
+        tag_request(entity_id=entity_id, collection_id=entity.collection_id)
+        if entity.deleted_at is not None:
+            entity.undelete()
+        if data.get('properties'):
+            if get_flag('merge'):
+                props = merge_data(data.get('properties'), entity.data)
+                data['properties'] = props
+            entity.update(data)
+        update_entity(entity, sync=get_flag('sync', True))
+    else:
+        collection_id = data.get('collection_id')
+        if collection_id is None:
+            raise BadRequest("Missing collection_id. Can not create entity")
+        collection = get_db_collection(collection_id, request.authz.WRITE)
+        entity_id = create_entity(data, collection, sync=True)
+        tag_request(entity_id=entity_id, collection_id=str(collection.id))
     db.session.commit()
-    update_entity(entity, sync=get_flag('sync', True))
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
