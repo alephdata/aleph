@@ -1,4 +1,4 @@
-const bulkCreateEntities = async ({undeleteEntity, collection, layout, onProgress}) => {
+const createEntitiesFromDiagram = async ({undeleteEntity, collection, layout, onProgress}) => {
   console.log('in create from layout, entities are', layout.entities);
   const { entities } = layout;
   let generatedLayout = { vertices:layout.vertices, edges: layout.edges, groupings: layout.groupings || [] };
@@ -51,5 +51,5 @@ const replaceEntityIdInLayout = ({ layout, oldId, newId }) => {
 }
 
 export {
-  bulkCreateEntities,
+  createEntitiesFromDiagram,
 }

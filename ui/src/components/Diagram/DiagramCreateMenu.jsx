@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
-import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
+import { Button, ButtonGroup, Intent, Position, Tooltip } from '@blueprintjs/core';
+import { selectSession } from 'src/selectors';
 
 import DiagramEditDialog from 'src/dialogs/DiagramEditDialog/DiagramEditDialog';
 
+const messages = defineMessages({
+  login: {
+    id: 'diagram.create.login',
+    defaultMessage: 'You must log in to create a diagram',
+  },
+});
 
 class DiagramCreateMenu extends Component {
   constructor(props) {
@@ -22,29 +31,30 @@ class DiagramCreateMenu extends Component {
     const {
       isOpen, importEnabled,
     } = this.state;
+    const canAdd = session?.loggedIn;
 
-    // if (!session.loggedIn) {
-    //   return (
-    //     <Tooltip
-    //       content={intl.formatMessage(messages.login)}
-    //       position={Position.BOTTOM}
-    //     >
-    //       <AnchorButton icon="send-to-graph" intent={Intent.PRIMARY} disabled>
-    //         <FormattedMessage id="diagrams.index.create" defaultMessage="New diagram" />
-    //       </AnchorButton>
-    //     </Tooltip>
-    //   );
-    // }
+    const buttonContent = (
+      <ButtonGroup>
+        <Button onClick={() => this.toggleDialog(false)} icon="send-to-graph" intent={Intent.PRIMARY} disabled={!canAdd}>
+          <FormattedMessage id="diagrams.index.create" defaultMessage="New diagram" />
+        </Button>
+        <Button onClick={() => this.toggleDialog(true)} icon="import" disabled={!canAdd}>
+          <FormattedMessage id="diagrams.index.import" defaultMessage="Import diagram" />
+        </Button>
+      </ButtonGroup>
+    );
+
     return (
       <>
-        <ButtonGroup>
-          <Button onClick={() => this.toggleDialog(false)} icon="send-to-graph" intent={Intent.PRIMARY}>
-            <FormattedMessage id="diagrams.index.create" defaultMessage="New diagram" />
-          </Button>
-          <Button onClick={() => this.toggleDialog(true)} icon="import">
-            <FormattedMessage id="diagrams.index.import" defaultMessage="Import diagram" />
-          </Button>
-        </ButtonGroup>
+        {canAdd && buttonContent}
+        {!canAdd && (
+          <Tooltip
+            content={intl.formatMessage(messages.login)}
+            position={Position.BOTTOM}
+          >
+            {buttonContent}
+          </Tooltip>
+        )}
         <DiagramEditDialog
           isCreate
           importEnabled={importEnabled}
@@ -58,5 +68,11 @@ class DiagramCreateMenu extends Component {
   }
 }
 
-DiagramCreateMenu = injectIntl(DiagramCreateMenu);
-export default DiagramCreateMenu;
+const mapStateToProps = (state) => ({
+  session: selectSession(state),
+});
+
+export default compose(
+  connect(mapStateToProps),
+  injectIntl,
+)(DiagramCreateMenu);

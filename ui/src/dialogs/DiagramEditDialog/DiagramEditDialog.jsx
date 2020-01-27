@@ -9,7 +9,7 @@ import { Collection } from 'src/components/common';
 import { createDiagram, undeleteEntity, updateDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
-import { bulkCreateEntities } from 'src/components/Diagram/util';
+import { createEntitiesFromDiagram } from 'src/components/Diagram/util';
 
 import DiagramImport from 'src/components/Diagram/DiagramImport'
 
@@ -98,6 +98,7 @@ class DiagramEditDialog extends Component {
     event.preventDefault();
     if (processingProgress !== 1 || !this.checkValid()) return;
     this.setState({ processingProgress: 0 });
+
     try {
       if (isCreate) {
         const newDiagram = {
@@ -106,14 +107,12 @@ class DiagramEditDialog extends Component {
           collection_id: parseInt(collection.id),
         };
         if (layout) {
-          const { generatedEntities, generatedLayout } = await bulkCreateEntities(
+          const { generatedEntities, generatedLayout } = await createEntitiesFromDiagram(
             { undeleteEntity, collection, layout, onProgress: this.onProgress }
           );
           newDiagram.layout = generatedLayout;
           newDiagram.entities = generatedEntities.map(e => e.id);
         }
-
-        console.log("CREATING DIAGRAM WITH", newDiagram);
 
         const response = await this.props.createDiagram(newDiagram);
 
@@ -154,7 +153,6 @@ class DiagramEditDialog extends Component {
   }
 
   onProgress(processingProgress) {
-    console.log('progress', processingProgress);
     this.setState({ processingProgress });
   }
 
@@ -191,7 +189,7 @@ class DiagramEditDialog extends Component {
     }
 
     const showTextFields = (!importEnabled || (importEnabled && layout));
-    const showCollectionField = isCreate && canChangeCollection && (!importEnabled || (importEnabled && layout));
+    const showCollectionField = isCreate && canChangeCollection && showTextFields;
 
     return (
       <Dialog

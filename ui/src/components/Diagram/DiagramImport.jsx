@@ -5,13 +5,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Dropzone from 'react-dropzone';
 
-//
-// import Query from 'src/app/Query';
-// import { Collection } from 'src/components/common';
-// import { createDiagram, updateDiagram } from 'src/actions';
-// import { showSuccessToast, showWarningToast } from 'src/app/toast';
-// import getDiagramLink from 'src/util/getDiagramLink';
-
 import './DiagramImport.scss';
 
 const messages = defineMessages({
@@ -24,10 +17,6 @@ const messages = defineMessages({
 class DiagramImport extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      processing: false,
-    };
 
     this.onDrop = this.onDrop.bind(this);
   }
@@ -47,8 +36,6 @@ class DiagramImport extends Component {
 
   render() {
     const { importedFile } = this.props;
-    // const { collection, label, summary, processing } = this.state;
-    // const disabled = processing || !this.checkValid();
 
     return (
       <Dropzone
