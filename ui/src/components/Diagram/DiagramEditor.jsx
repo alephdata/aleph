@@ -158,6 +158,8 @@ class DiagramEditor extends React.Component {
     const { filterText } = this.props;
     const { layout, viewport, writeable } = this.state;
 
+    console.log(layout);
+
     return (
       <div className="DiagramEditor">
         <VisGraph

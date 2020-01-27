@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteDiagram } from 'src/actions';
+import getCollectionLink from 'src/util/getCollectionLink';
 
 
 const messages = defineMessages({
@@ -28,7 +29,9 @@ class DiagramDeleteDialog extends Component {
   async onDelete() {
     const { diagram, history } = this.props;
     await this.props.deleteDiagram(diagram.id);
-    history.push('/diagrams');
+    history.push({
+      pathname: `${getCollectionLink(diagram.collection)}#mode=diagrams`,
+    });
   }
 
   render() {

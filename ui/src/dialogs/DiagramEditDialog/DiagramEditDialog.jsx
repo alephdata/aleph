@@ -237,6 +237,7 @@ class DiagramEditDialog extends Component {
                           placeholder={intl.formatMessage(messages.summary_placeholder)}
                           onChange={this.onChangeSummary}
                           value={summary}
+                          rows={5}
                         />
                       </div>
                     </label>
