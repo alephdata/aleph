@@ -16,10 +16,10 @@ def get_role(role_id):
     key = cache.object_key(Role, role_id)
     data = cache.get_complex(key)
     if data is None:
-        log.debug("Role [%s]: object cache miss", role_id)
         role = Role.by_id(role_id)
         if role is None:
             return
+        log.debug("Role cache refresh: %r", role)
         data = role.to_dict()
         cache.set_complex(key, data, expires=cache.EXPIRE)
     return data
