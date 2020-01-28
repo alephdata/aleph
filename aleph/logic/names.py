@@ -1,6 +1,6 @@
+import math
 import logging
 from functools import reduce
-import math
 from banal import ensure_list
 from normality import normalize
 from elasticsearch.helpers import scan
@@ -11,10 +11,8 @@ from aleph.index.indexes import entities_read_index
 
 log = logging.getLogger(__name__)
 TOKEN_KEY = 'namefreq:tokens'
-DIST_KEY = 'namefreq:dist'
 TOTAL_KEY = 'namefreq:total'
-HIGHEST_KEY = 'namefreq:highest'
-LOWEST_KEY = 'namefreq:lowest'
+MAX_KEY = 'namefreq:max'
 
 
 def name_tokens(name):
@@ -50,11 +48,6 @@ def compute_name_frequencies():
     """Compute a numeric distribution of name frequencies."""
     # Count how often each name part (i.e. token) shows up across
     # the whole of the dataset or a sample.
-    # This is very memory-intense and could be sent out to redis.
-    # Doing it in redis is also icky because of the need to iterate
-    # the data later, and because it would need to be fully reset
-    # before each run of this. Maybe a hash would be a useful
-    # structure here?
     pipe = kv.pipeline(transaction=False)
     pipe.delete(TOKEN_KEY)
     names_count = 0
@@ -65,64 +58,40 @@ def compute_name_frequencies():
             pipe.execute()
             pipe = kv.pipeline(transaction=False)
     pipe.execute()
-    log.info("Names: %d, unique: %d", names_count, kv.hlen(TOKEN_KEY))
+    log.info("Names: %d", names_count)
 
-    # Next, count how often each count occurs, i.e. make a histogram
-    # of name frequency.
-    counts = {}
+    total = 0
+    distinct = 0
     max_count = 0
-    min_count = 1
-    for _, count in kv.hscan_iter(TOKEN_KEY):
+    for name, count in kv.hscan_iter(TOKEN_KEY):
         count = int(count)
-        # Leave out one-offs because they skew and aren't really
-        # useful in any way.
         if count == 1:
             continue
-        if count not in counts:
-            counts[count] = 0
-        counts[count] += 1
-        # Find out what the maximum and minimum count is.
+        distinct += 1
+        total += count
         max_count = max((count, max_count))
-        min_count = min((count, min_count))
 
-    log.info("Counts: %d, max: %d, min: %d", len(counts), max_count, min_count)  # noqa
-    pipe.set(HIGHEST_KEY, max_count)
-    pipe.set(LOWEST_KEY, min_count)
-    total = 0
-    pipe = kv.pipeline(transaction=False)
-    pipe.delete(DIST_KEY)
-    for idx in range(max_count, 1, -1):
-        total += counts.get(idx, 0)
-        pipe.hset(DIST_KEY, idx, total)
-        if idx > 0 and idx % 10000 == 0:
-            pipe.execute()
-            pipe = kv.pipeline(transaction=False)
-    log.info("Total: %d", total)
+    log.info("Total: %d, distinct: %d, max: %d", total, distinct, max_count)
+    pipe.set(MAX_KEY, max_count)
     pipe.set(TOTAL_KEY, total)
     pipe.execute()
 
 
 def name_frequency(name):
-    total = float(kv.get(TOTAL_KEY) or 1)
-    tokens = name_tokens(name)
-    counts = kv.hmget(TOKEN_KEY, tokens)
-    counts = [int(c or 1) for c in counts]
-    dists = kv.hmget(DIST_KEY, counts)
-    dists = [int(d or 0) / total for d in dists]
-    # score = 1 - sum(dists)
-    probabilities = [count/total for count in counts]
-    product = reduce(lambda x, y: x*y, probabilities)
-    max_count = float(kv.get(HIGHEST_KEY) or 2)
-    min_count = float(kv.get(LOWEST_KEY) or 1)
-    max_prob = max_count / total
-    min_prob = math.pow(min_count / total, 2)
-    product = max((product, min_prob))
-    score = (math.log(max_prob) - math.log(product)) / (math.log(max_prob) - math.log(min_prob))  # noqa
     # TODO: maybe we can normalise this over the number of
     # characters in the string such that it biases towards
     # longer names with rare name parts.
-    print(tokens, counts, dists, score)
-    # dist = kv.hgetall(DIST_KEY).items()
-    # dist = ((int(k), int(v)) for k, v in dist)
-    # for count, num in sorted(dist):
-    #     print(count, num)
+    total, max_count = kv.mget(TOTAL_KEY, MAX_KEY)
+    total = float(total or 1)
+    max_count = float(max_count or 2)
+    max_prob = max_count / total
+    min_prob = math.pow(1 / total, 2)
+    counts = kv.hmget(TOKEN_KEY, name_tokens(name))
+    counts = [int(c or 1) for c in counts]
+    probabilities = [count/total for count in counts]
+    product = reduce(lambda x, y: x*y, probabilities)
+    product = max((product, min_prob))
+    norm = (math.log(max_prob) - math.log(min_prob))
+    score = (math.log(max_prob) - math.log(product)) / norm
+    # print(name, counts, score)
+    return score
