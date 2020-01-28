@@ -457,3 +457,78 @@ class EntitiesApiTestCase(TestCase):
         validate(res.json, 'Entity')
         assert res.json['id'] != id2, res.json
         assert res.json['properties']['name'] == ['Mr. Banana'], res.json
+
+    def test_recursive_delete(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Osama bin Laden",
+            },
+            'collection_id': self.col_id
+        }
+        res1 = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        id1 = res1.json['id']
+        data = {
+            'schema': 'Organization',
+            'properties': {
+                'name': 'Al-Qaeda',
+            },
+            'collection_id': self.col_id
+        }
+        res2 = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        id2 = res2.json['id']
+        data = {
+            'schema': 'Membership',
+            'properties': {
+                'member': id1,
+                'organization': id2,
+            },
+            'collection_id': self.col_id
+        }
+        res3 = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        id3 = res3.json['id']
+
+        # Deleting a thing, deletes associated edge.
+        url = '/api/2/entities/%s' % id1
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res.status_code
+        url = '/api/2/entities/%s' % id3
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 404, res.status_code
+        url = '/api/2/entities/%s' % id2
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+
+        # undelete
+        url = '/api/2/entities/%s/undelete' % id1
+        self.client.post(url, headers=headers)
+        url = '/api/2/entities/%s/undelete' % id3
+        self.client.post(url, headers=headers)
+        url = '/api/2/entities/%s' % id1
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        url = '/api/2/entities/%s' % id3
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+
+        # Deleting a edge, should not delete associated things
+        url = '/api/2/entities/%s' % id3
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res.status_code
+        url = '/api/2/entities/%s' % id1
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        url = '/api/2/entities/%s' % id2
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
