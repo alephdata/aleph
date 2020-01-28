@@ -5,7 +5,7 @@
   background-color: $aleph-breadcrumbs-background;
   padding: 3px;
 
-  .paging-text {
+  &__middle {
     background: none;
     flex: 100 1 auto !important;
     cursor: auto;
@@ -15,10 +15,21 @@
   &__input {
     display: inline-block;
     width: 40px;
-    margin: 0 3px;
     input {
-      padding: 5px 0 5px 5px !important;
+      padding: 5px !important;
       text-align: center;
+
+      /* Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      &[type=number] {
+        -moz-appearance:textfield;
+      }
     }
   }
 }

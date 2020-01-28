@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { ButtonGroup, Button, AnchorButton, Divider, InputGroup } from '@blueprintjs/core';
+import { ButtonGroup, AnchorButton, Divider, InputGroup } from '@blueprintjs/core';
 
 import './PagingButtons.scss';
 
@@ -19,9 +19,10 @@ class PagingButtons extends React.Component {
   componentDidUpdate(prevProps) {
     const { page } = this.props;
     if (prevProps.page !== page) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         pageInputVal: page,
-      })
+      });
     }
   }
 
@@ -72,8 +73,7 @@ class PagingButtons extends React.Component {
       return (
         <ButtonGroup className="PagingButtons" fill>
           <AnchorButton minimal href={`#${this.getPageLink(page - 1)}`} icon="arrow-left" disabled={page <= 1} />
-          <div className="paging-text">
-
+          <div className="PagingButtons__middle">
             <FormattedMessage
               id="document.paging"
               defaultMessage="Page {pageInput} of {numberOfPages}"
@@ -94,10 +94,10 @@ class PagingButtons extends React.Component {
               }}
             />
           </div>
-          <AnchorButton minimal href={`#${this.getPageLink(page + 1)}`} icon="arrow-right" disabled={page >= numberOfPages} />
-          <Divider />
           <AnchorButton minimal href={`#${this.getRotateLink(rotate - 90)}`} icon="image-rotate-left" />
           <AnchorButton minimal href={`#${this.getRotateLink(rotate + 90)}`} icon="image-rotate-right" />
+          <Divider />
+          <AnchorButton minimal href={`#${this.getPageLink(page + 1)}`} icon="arrow-right" disabled={page >= numberOfPages} />
         </ButtonGroup>
       );
     }
