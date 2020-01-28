@@ -82,16 +82,21 @@ def name_frequency(name):
     # characters in the string such that it biases towards
     # longer names with rare name parts.
     total, max_count = kv.mget(TOTAL_KEY, MAX_KEY)
-    total = float(total or 1)
+    if total is None:
+        return 1
+    total = float(total)
     max_count = float(max_count or 2)
     max_prob = max_count / total
     min_prob = math.pow(1 / total, 2)
-    counts = kv.hmget(TOKEN_KEY, name_tokens(name))
+    tokens = name_tokens(name)
+    if not len(tokens):
+        return 0
+    counts = kv.hmget(TOKEN_KEY, tokens)
     counts = [int(c or 1) for c in counts]
     probabilities = [count/total for count in counts]
     product = reduce(lambda x, y: x*y, probabilities)
     product = max((product, min_prob))
     norm = (math.log(max_prob) - math.log(min_prob))
     score = (math.log(max_prob) - math.log(product)) / norm
-    # print(name, counts, score)
+    print(name, counts, score)
     return score
