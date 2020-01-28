@@ -3,7 +3,6 @@ import json
 from aleph.core import db
 from aleph.model import Entity
 from aleph.index.entities import index_entity
-from aleph.logic.entities import refresh_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
