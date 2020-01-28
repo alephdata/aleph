@@ -1,12 +1,15 @@
-@import "~@blueprintjs/core/lib/scss/variables";
+@import "src/app/variables.scss";
 
 .PagingButtons {
   width: 100%;
+  background-color: $aleph-breadcrumbs-background;
 
   button.bp3-button.paging-text {
     // min-width: 112px;
-    color: $dark-gray1 !important;
+    // color: $dark-gray1 !important;
+    background: none;
     flex: 100 1 auto !important;
+    cursor: auto;
     // margin: 0;
   }
 }
