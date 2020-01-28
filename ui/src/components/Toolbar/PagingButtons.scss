@@ -3,13 +3,22 @@
 .PagingButtons {
   width: 100%;
   background-color: $aleph-breadcrumbs-background;
+  padding: 3px;
 
-  button.bp3-button.paging-text {
-    // min-width: 112px;
-    // color: $dark-gray1 !important;
+  .paging-text {
     background: none;
     flex: 100 1 auto !important;
     cursor: auto;
-    // margin: 0;
+    text-align: center;
+  }
+
+  &__input {
+    display: inline-block;
+    width: 40px;
+    margin: 0 3px;
+    input {
+      padding: 5px 0 5px 5px !important;
+      text-align: center;
+    }
   }
 }

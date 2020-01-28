@@ -2,12 +2,29 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
-import { ButtonGroup, Button, AnchorButton, Divider } from '@blueprintjs/core';
+import { ButtonGroup, Button, AnchorButton, Divider, InputGroup } from '@blueprintjs/core';
 
 import './PagingButtons.scss';
 
 
-class PagingButtons extends React.PureComponent {
+class PagingButtons extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pageInputVal: props.page,
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    const { page } = this.props;
+    if (prevProps.page !== page) {
+      this.setState({
+        pageInputVal: page,
+      })
+    }
+  }
+
   getPageLink(page) {
     const { location } = this.props;
 
@@ -24,44 +41,63 @@ class PagingButtons extends React.PureComponent {
     return queryString.stringify(parsedHash);
   }
 
+  changePageInput = (e) => {
+    this.setState({ pageInputVal: e.target.value });
+  }
+
+  goToPage = (e) => {
+    e.preventDefault();
+    const { history, location } = this.props;
+
+    const parsedHash = queryString.parse(location.hash);
+    parsedHash.page = this.state.pageInputVal;
+
+    history.push({
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
   render() {
-    const { document, location, numberOfPages, onRotate } = this.props;
+    const { document, numberOfPages, page, rotate } = this.props;
+    const { pageInputVal } = this.state;
 
     if (document.isLoading || !document.links) {
       return null;
     }
 
-    const parsedHash = queryString.parse(location.hash);
-
-    const currentPage = (
-      parsedHash.page && parseInt(parsedHash.page, 10) <= numberOfPages
-    ) ? parseInt(parsedHash.page, 10) : 1;
-
-    const currentRotation = (
-      parsedHash.rotate && parseInt(parsedHash.rotate, 10) % 90 === 0
-    ) ? parseInt(parsedHash.rotate, 10) : 0;
-
     // Only displays paging buttons on PDF docs
     // Having the logic here makes it easier to use this component.
-    if (currentPage && currentPage > 0
+    if (page && page > 0
         && numberOfPages && numberOfPages > 0) {
       return (
         <ButtonGroup className="PagingButtons" fill>
-          <AnchorButton minimal href={`#${this.getPageLink(currentPage - 1)}`} icon="arrow-left" disabled={currentPage <= 1} />
-          <Button disabled className="paging-text">
+          <AnchorButton minimal href={`#${this.getPageLink(page - 1)}`} icon="arrow-left" disabled={page <= 1} />
+          <div className="paging-text">
+
             <FormattedMessage
               id="document.paging"
-              defaultMessage="Page {currentPage} of {numberOfPages}"
+              defaultMessage="Page {pageInput} of {numberOfPages}"
               values={{
-                currentPage,
+                pageInput: (
+                  <form className="PagingButtons__input" onSubmit={this.goToPage} autoComplete="off">
+                    <InputGroup
+                      id="page"
+                      onChange={this.changePageInput}
+                      value={pageInputVal}
+                      type="number"
+                      min={0}
+                      max={numberOfPages}
+                    />
+                  </form>
+                ),
                 numberOfPages,
               }}
             />
-          </Button>
-          <AnchorButton minimal href={`#${this.getPageLink(currentPage + 1)}`} icon="arrow-right" disabled={currentPage >= numberOfPages} />
+          </div>
+          <AnchorButton minimal href={`#${this.getPageLink(page + 1)}`} icon="arrow-right" disabled={page >= numberOfPages} />
           <Divider />
-          <AnchorButton minimal href={`#${this.getRotateLink(currentRotation - 90)}`} icon="image-rotate-left" />
-          <AnchorButton minimal href={`#${this.getRotateLink(currentRotation + 90)}`} icon="image-rotate-right" />
+          <AnchorButton minimal href={`#${this.getRotateLink(rotate - 90)}`} icon="image-rotate-left" />
+          <AnchorButton minimal href={`#${this.getRotateLink(rotate + 90)}`} icon="image-rotate-right" />
         </ButtonGroup>
       );
     }

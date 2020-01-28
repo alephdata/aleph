@@ -113,7 +113,7 @@ export class PdfViewer extends Component {
     return (
       <>
         {numPages !== null && numPages > 0 && (
-          <PagingButtons document={document} numberOfPages={numPages} />
+          <PagingButtons page={page} rotate={rotate} document={document} numberOfPages={numPages} />
         )}
         <div>
           <Document
