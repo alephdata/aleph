@@ -2,7 +2,7 @@ import logging
 from banal import is_mapping, ensure_list
 from followthemoney import model
 from followthemoney.exc import InvalidData
-from followthemoney.pragma import remove_checksums
+from followthemoney.helpers import remove_checksums
 
 from aleph.analysis import analyze_entity
 from aleph.index.entities import index_bulk

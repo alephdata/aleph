@@ -1,8 +1,9 @@
 import logging
 from followthemoney.types import registry
+from followthemoney.helpers import name_entity
 
 from aleph.core import settings
-from aleph.model import Document, Entity
+from aleph.model import Document
 from aleph.analysis.aggregate import TagAggregator
 from aleph.analysis.extract import extract_entities
 from aleph.analysis.patterns import extract_patterns
@@ -41,21 +42,6 @@ def extract_named_entities(entity):
     if len(aggregator):
         log.debug("Extracted %d tags [%s]: %s", len(aggregator),
                   entity.id, entity.caption)
-
-
-def name_entity(entity):
-    """If an entity has multiple names, pick the most central one
-    and set all the others as aliases. This is awkward given that
-    names aren't special and may not always be the caption."""
-    if not entity.schema.is_a(Entity.THING):
-        return
-    names = entity.get('name')
-    if len(names) <= 1:
-        return
-    name = registry.name.pick(names)
-    names.remove(name)
-    entity.set('name', name)
-    entity.add('alias', names)
 
 
 def analyze_entity(entity):
