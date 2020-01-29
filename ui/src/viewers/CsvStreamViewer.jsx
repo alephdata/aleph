@@ -11,79 +11,66 @@ import './TableViewer.scss';
 class CSVStreamViewer extends React.Component {
   constructor(props) {
     super(props);
-    this.parser = null;
-    this.state = { requestedRow: 400, rows: [] };
+    this.state = {
+      requestedRow: 400,
+      rows: [],
+      parser: null,
+    };
     this.renderCell = this.renderCell.bind(this);
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
   }
 
   componentDidMount() {
-    this.fetchRecords();
+    const { document } = this.props;
+    const url = document.links.csv;
+    // set chunk size to 100 KB
+    Papa.RemoteChunkSize = 1024 * 100;
+    Papa.parse(url, {
+      download: true,
+      delimiter: ',',
+      newline: '\n',
+      encoding: 'utf-8',
+      chunk: (results, parser) => {
+        this.setState((previousState) => {
+          const rows = previousState.rows.concat(results.data);
+          const rowIndex = rows.length;
+          if (rowIndex > previousState.requestedRow) {
+            parser.pause();
+          }
+          return { rows, parser };
+        });
+      },
+    });
   }
 
   componentDidUpdate() {
-    if (this.parser !== null) this.fetchRecords();
-  }
-
-  onVisibleCellsChange(row) {
-    if (this.parser) {
-      // If we are scrolling to the end. Time to load more rows.
-      if ((row.rowIndexEnd + 50) > this.state.requestedRow) {
-        const { document } = this.props;
-        const rowCount = parseInt(document.getFirst('rowCount'), 10);
-        // Max row count should not exceed the number of rows in the csv file
-        let requestedRow = Math.min(rowCount, this.state.requestedRow + 100);
-        if (requestedRow !== this.state.requestedRow) {
-          this.setState((previousState) => {
-            requestedRow = Math.min(rowCount, previousState.requestedRow + 100);
-            return { requestedRow };
-          });
-        }
-      }
+    const { rows, requestedRow, parser } = this.state;
+    if (rows.length < requestedRow && parser !== null) {
+      parser.resume();
     }
   }
 
-  fetchRecords() {
-    const { document } = this.props;
-    const url = document.links.csv;
-    if (this.state.rows.length < this.state.requestedRow) {
-      if (this.parser !== null) {
-        this.parser.resume();
-      } else {
-        // set chunk size to 100 KB
-        Papa.RemoteChunkSize = 1024 * 100;
-        Papa.parse(url, {
-          download: true,
-          delimiter: ',',
-          newline: '\n',
-          encoding: 'utf-8',
-          // header: true,
-          chunk: (results, parser) => {
-            this.parser = parser;
-            this.setState((previousState) => {
-              const rows = previousState.rows.concat(results.data);
-              const rowIndex = rows.length;
-              if (rowIndex > previousState.requestedRow) {
-                parser.pause();
-              }
-              return { rows };
-            });
-          },
-        });
+  onVisibleCellsChange(row) {
+    const { requestedRow } = this.state;
+    // If we are scrolling to the end. Time to load more rows.
+    if ((row.rowIndexEnd + 50) > requestedRow) {
+      const { document } = this.props;
+      const rowCount = parseInt(document.getFirst('rowCount'), 10);
+      // Max row count should not exceed the number of rows in the csv file
+      const nextRow = Math.min(rowCount, requestedRow + 100);
+      if (nextRow > requestedRow) {
+        this.setState((previousState) => ({
+          requestedRow: Math.min(rowCount, previousState.requestedRow + 100),
+        }));
       }
     }
   }
 
   renderCell(rowIndex, colIndex) {
     const row = this.state.rows[rowIndex];
-    const loading = !row;
-    let value;
-    if (row) {
-      value = row[colIndex];
-    }
-
+    const value = row ? row[colIndex] : undefined;
     return (
-      <Cell loading={loading}>
+      <Cell loading={value === undefined}>
         <TruncatedFormat detectTruncation>
           {value || ''}
         </TruncatedFormat>

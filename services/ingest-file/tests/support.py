@@ -50,6 +50,8 @@ class TestCase(unittest.TestCase):
         cur_path = cur_path.joinpath('fixtures')
         path = cur_path.joinpath(fixture_path)
         entity = self.manager.make_entity('Document')
+        if not path.exists():
+            raise RuntimeError(path)
         if path.is_file():
             checksum = self.manager.store(path)
             entity.make_id(path.name, checksum)
