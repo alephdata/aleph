@@ -62,7 +62,7 @@
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "4.0.0-beta.11",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "24.9.0",
+    "jest": "25.1.0",
     "jest-pnp-resolver": "^1.2.0",
     "jest-resolve": "^24.9.0",
     "mini-css-extract-plugin": "^0.9.0",
