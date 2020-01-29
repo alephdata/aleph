@@ -87,7 +87,7 @@
     "webpack": "^4.41.0",
     "webpack-dev-server": "^3.8.2",
     "webpack-manifest-plugin": "^2.2.0",
-    "workbox-webpack-plugin": "^4.3.1"
+    "workbox-webpack-plugin": "^5.0.0"
   },
   "proxy": "http://api:5000/",
   "browserslist": [
