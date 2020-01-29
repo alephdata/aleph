@@ -12,6 +12,7 @@ from flask_cors import CORS
 from flask_babel import Babel
 from flask_talisman import Talisman
 from followthemoney import set_model_locale
+from followthemoney.types import registry
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
 from servicelayer.cache import get_redis
@@ -75,13 +76,15 @@ def create_app(config={}):
     from aleph.views import mount_app_blueprints
     mount_app_blueprints(app)
 
+    # Monkey-patch followthemoney
+    # from aleph.logic.names import name_frequency
+    # registry.name._specificity = name_frequency
+
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
 
-    from aleph.views import mount_app_blueprints
-    mount_app_blueprints(app)
     return app
 
 

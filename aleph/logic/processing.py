@@ -3,7 +3,7 @@ from banal import is_mapping, ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from followthemoney.exc import InvalidData
-from followthemoney.pragma import remove_checksums
+from followthemoney.helpers import remove_checksums
 
 from aleph.model import Entity
 from aleph.index.entities import index_bulk

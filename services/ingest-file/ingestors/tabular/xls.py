@@ -1,7 +1,6 @@
 import xlrd
 import logging
-from time import time
-from datetime import datetime
+from datetime import datetime, time
 from xlrd.biffh import XLRDError
 from followthemoney import model
 

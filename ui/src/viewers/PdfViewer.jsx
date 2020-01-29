@@ -106,14 +106,14 @@ export class PdfViewer extends Component {
 
   renderPdf() {
     const {
-      document, page, numPages,
+      document, page, rotate, numPages,
     } = this.props;
     const { width } = this.state;
     const { Document, Page } = this.state.components;
     return (
       <>
         {numPages !== null && numPages > 0 && (
-          <PagingButtons document={document} numberOfPages={numPages} />
+          <PagingButtons page={page} rotate={rotate} document={document} numberOfPages={numPages} />
         )}
         <div>
           <Document
@@ -131,6 +131,7 @@ export class PdfViewer extends Component {
               pageNumber={page}
               className="page"
               width={width}
+              rotate={rotate}
             />
             )}
           </Document>
@@ -182,6 +183,8 @@ const mapStateToProps = (state, ownProps) => {
   const { document, location } = ownProps;
   const hashQuery = queryString.parse(location.hash);
   const page = parseInt(hashQuery.page, 10) || 1;
+  const rotate = parseInt(hashQuery.rotate, 10) || 0;
+
   const baseQuery = Query.fromLocation('entities', location, {}, 'document')
     .setFilter('properties.document', document.id)
     .setFilter('schema', 'Page');
@@ -193,6 +196,7 @@ const mapStateToProps = (state, ownProps) => {
   const numPages = countResult.total;
   return {
     page,
+    rotate,
     numPages,
     baseQuery,
     countQuery,
