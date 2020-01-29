@@ -85,6 +85,8 @@ class DiagramEditor extends React.Component {
   async createEntity({ schema, properties }) {
     const { diagram, onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
+
+    console.log('sending create request', schema, properties);
     try {
       const entityData = await this.props.createEntity({
         schema: schema.name,
@@ -93,6 +95,18 @@ class DiagramEditor extends React.Component {
       });
       onStatusChange(updateStates.SUCCESS);
 
+      if (schema.isEdge) {
+        console.log('is edge');
+        const { source, target } = schema.edge;
+
+        const sourceEntity = entityData.properties[source][0];
+        const targetEntity = entityData.properties[target][0];
+
+        entityData.properties[source] = [sourceEntity.id]
+        entityData.properties[target] = [targetEntity.id]
+      }
+
+      console.log('returned entity data', entityData);
       return entityData;
     } catch {
       onStatusChange(updateStates.ERROR);
@@ -103,6 +117,9 @@ class DiagramEditor extends React.Component {
   async updateEntity(entity) {
     const { onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
+
+    console.log('sending update request', entity);
+
 
     try {
       await this.props.updateEntity(entity);
@@ -116,6 +133,8 @@ class DiagramEditor extends React.Component {
   async undeleteEntity(entity) {
     const { onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
+
+    console.log('sending undelete request', entity);
 
     try {
       await this.props.undeleteEntity(entity);
@@ -161,6 +180,8 @@ class DiagramEditor extends React.Component {
   render() {
     const { filterText } = this.props;
     const { layout, viewport, writeable } = this.state;
+
+    console.log(layout);
 
     return (
       <div className="DiagramEditor">
