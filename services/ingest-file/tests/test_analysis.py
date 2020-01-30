@@ -1,7 +1,7 @@
 from followthemoney import model
 from followthemoney.types import registry
 
-from ingestors.analysis import analyze_entity
+from ingestors.analysis import Analyzer
 from ingestors.analysis.patterns import EMAIL_REGEX, PHONE_REGEX
 from ingestors.analysis.patterns import IBAN_REGEX
 
@@ -10,20 +10,28 @@ from .support import TestCase
 
 class TestAnalysis(TestCase):
 
+    def _tagged_entity(self, entity):
+        a = Analyzer(self.manager.dataset, entity)
+        a.feed(entity)
+        a.flush()
+        return self.get_emitted_by_id(entity.id)
+
     def test_ner_extract(self):
         text = 'Das ist der Pudel von Angela Merkel. '
         text = text * 5
         entity = model.make_entity('PlainText')
+        entity.id = 'test1'
         entity.add('bodyText', text)
-        analyze_entity(entity)
+        entity = self._tagged_entity(entity)
         names = entity.get_type_values(registry.name)
         assert 'Angela Merkel' in names, names
 
     def test_language_tagging(self):
         text = "C'est le caniche d'Emmanuel Macron. " * 2
         entity = model.make_entity('PlainText')
+        entity.id = 'test2'
         entity.add('bodyText', text)
-        analyze_entity(entity)
+        entity = self._tagged_entity(entity)
         names = entity.get_type_values(registry.name)
         assert "Emmanuel Macron" in names, names
         assert entity.get('detectedLanguage') == ['fra'], entity.get('detectedLanguage')  # noqa
@@ -31,8 +39,9 @@ class TestAnalysis(TestCase):
     def test_pattern_extract(self):
         text = "Mr. Flubby Flubber called the number tel:+919988111222 twice"
         entity = model.make_entity('PlainText')
+        entity.id = 'test3'
         entity.add('bodyText', text)
-        analyze_entity(entity)
+        entity = self._tagged_entity(entity)
         phones = entity.get_type_values(registry.phone)
         assert '+919988111222' in phones
         countries = entity.get_type_values(registry.country)
