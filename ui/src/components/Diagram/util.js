@@ -1,3 +1,6 @@
+// import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
+// const config = new GraphConfig({ editorTheme: 'light', toolbarPosition: 'left' });
+
 const createEntitiesFromDiagram = async ({undeleteEntity, collection, layout, onProgress}) => {
   console.log('in create from layout, entities are', layout.entities);
   const { entities } = layout;
@@ -10,10 +13,12 @@ const createEntitiesFromDiagram = async ({undeleteEntity, collection, layout, on
 
   entities.forEach(({id, schema, properties}) => {
     console.log('looping thru entities, entity is', schema, properties);
-    const createdEntity = undeleteEntity({ schema, properties, collection_id: collection.id }).then((newEntity) => {
+    const createdEntity = undeleteEntity({ id, schema, properties, collection_id: collection.id }).then((newEntity) => {
       console.log('entity created, calling repalce function', newEntity);
-      generatedLayout = replaceEntityIdInLayout({ layout: generatedLayout, oldId: id, newId: newEntity.id });
-      console.log('entity id replaced', generatedLayout);
+      if (!schema.isEdge) {
+        generatedLayout = replaceEntityIdInLayout({ layout: generatedLayout, oldId: id, newId: newEntity.id });
+        console.log('entity id replaced', generatedLayout);
+      }
 
       return newEntity;
     });
@@ -26,6 +31,17 @@ const createEntitiesFromDiagram = async ({undeleteEntity, collection, layout, on
   console.log('completed createdentities array is', generatedEntities);
   console.log('completed outputlayout is', generatedLayout);
 
+
+  // const graphLayout = GraphLayout.fromJSON(
+  //   config,
+  //   new EntityManager(),
+  //   { ...generatedLayout, entities: generatedEntities, selection: [] },
+  // );
+  //
+  // graphLayout.layout();
+
+  // console.log(graphLayout);
+
   return { generatedEntities, generatedLayout };
 }
 
@@ -35,17 +51,12 @@ const replaceEntityIdInLayout = ({ layout, oldId, newId }) => {
     vertices: layout.vertices.map(v => {
       if (v.entityId === oldId) {
         v.entityId = newId;
+        v.id = `entity:${newId}`
         console.log('replacing! v')
       }
       return v;
     }),
-    edges: layout.edges.map(e => {
-      if (e.entityId === oldId) {
-        e.entityId = newId;
-        console.log('replacing! e')
-      }
-      return e;
-    }),
+    edges: layout.edges,
     groupings: layout.groupings,
   }
 }
