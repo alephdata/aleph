@@ -22,7 +22,7 @@ TEXT_MIN_LENGTH = 60
 TEXT_MAX_LENGTH = 50000
 
 
-def text_chunks(texts, sep=' ', step=5000):
+def text_chunks(texts, sep=' ', step=2000):
     chunk, total = [], 0
     for text in texts:
         text = collapse_spaces(text)

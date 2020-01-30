@@ -1,12 +1,13 @@
 import logging
 from servicelayer.rate_limit import RateLimit
-from servicelayer.jobs import Job, Stage, Dataset
+from servicelayer.jobs import Job, Dataset
 
 from aleph.core import kv, settings
 
 log = logging.getLogger(__name__)
 
-OP_INGEST = Stage.INGEST
+OP_INGEST = 'ingest'
+OP_ANALYZE = 'analyze'
 OP_INDEX = 'index'
 OP_XREF = 'xref'
 OP_XREF_ITEM = 'xitem'
@@ -59,7 +60,7 @@ def ingest_entity(collection, proxy, job_id=None, sync=False):
     context = {
         'languages': collection.languages,
         'balkhash_name': get_aggregator_name(collection),
-        'next_stage': OP_INDEX,
+        'pipeline': [OP_ANALYZE, OP_INDEX],
         'sync': sync
     }
     stage.queue(proxy.to_dict(), context)
