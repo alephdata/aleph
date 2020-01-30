@@ -3,6 +3,9 @@ import { connect } from 'react-redux';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 import { createEntity, deleteEntity, undeleteEntity, updateDiagram, updateEntity } from 'src/actions';
 import updateStates from './diagramUpdateStates';
+import { processApiEntity } from 'src/components/Diagram/util';
+
+
 import './DiagramEditor.scss';
 
 const fileDownload = require('js-file-download');
@@ -24,10 +27,13 @@ class DiagramEditor extends React.Component {
 
     if (props.diagram?.layout) {
       const { layout, entities } = props.diagram;
+
+      const processedEntities = entities.map(processApiEntity);
+
       initialLayout = GraphLayout.fromJSON(
         config,
         this.entityManager,
-        { ...layout, entities, selection: [] },
+        { ...layout, entities: processedEntities, selection: [] },
       );
     } else {
       initialLayout = new GraphLayout(config, this.entityManager);
@@ -95,19 +101,7 @@ class DiagramEditor extends React.Component {
       });
       onStatusChange(updateStates.SUCCESS);
 
-      if (schema.isEdge) {
-        console.log('is edge');
-        const { source, target } = schema.edge;
-
-        const sourceEntity = entityData.properties[source][0];
-        const targetEntity = entityData.properties[target][0];
-
-        entityData.properties[source] = [sourceEntity.id]
-        entityData.properties[target] = [targetEntity.id]
-      }
-
-      console.log('returned entity data', entityData);
-      return entityData;
+      return processApiEntity(entityData);
     } catch {
       onStatusChange(updateStates.ERROR);
     }
@@ -180,8 +174,6 @@ class DiagramEditor extends React.Component {
   render() {
     const { filterText } = this.props;
     const { layout, viewport, writeable } = this.state;
-
-    // console.log(layout);
 
     return (
       <div className="DiagramEditor">
