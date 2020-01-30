@@ -3,11 +3,11 @@ from servicelayer import env
 TESTING = False
 
 # Document conversion service
-UNOSERVICE_URL = env.get('UNOSERVICE_URL')
-CONVERT_URL = env.get('INGESTORS_CONVERT_DOCUMENT_URL', UNOSERVICE_URL)
+CONVERT_URL = env.get('UNOSERVICE_URL', 'http://convert-document:3000/convert')
+CONVERT_URL = env.get('INGESTORS_CONVERT_DOCUMENT_URL', CONVERT_URL)
 
 # Enable (expensive!) Google Cloud API
-OCR_VISION_API = env.to_bool('ALEPH_OCR_VISION_API', False)
+OCR_VISION_API = env.to_bool('INGESTORS_OCR_VISION_API', False)
 
 # Geonames data file
 GEONAMES_PATH = env.get('INGESTORS_GEONAMES_PATH',
