@@ -1,6 +1,11 @@
 @import "src/app/variables.scss";
 
 .EntityInfoMode {
+  .collection-info.bp3-card {
+    border: 1px solid $aleph-border-color;
+    box-shadow: none;
+  }
+
   .collection-info__item {
     display: block;
     padding: 5px 0;
