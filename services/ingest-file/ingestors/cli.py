@@ -7,7 +7,7 @@ from servicelayer.archive.util import ensure_path
 from ingestors.manager import Manager
 from ingestors.directory import DirectoryIngestor
 from ingestors.worker import IngestWorker, OP_ANALYZE, OP_INGEST
-from ingestors.analysis.util import load_places
+from ingestors.analysis.country import load_places
 
 log = logging.getLogger(__name__)
 

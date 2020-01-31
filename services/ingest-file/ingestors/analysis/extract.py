@@ -1,13 +1,11 @@
 import spacy
 import logging
-from banal import ensure_list
 from normality import collapse_spaces
-from servicelayer.cache import get_redis
 from fingerprints import clean_entity_name
 from followthemoney.types import registry
 
 from ingestors import settings
-from ingestors.analysis.util import tag_key, place_key
+from ingestors.analysis.country import location_country
 from ingestors.analysis.util import TAG_PERSON, TAG_COMPANY
 from ingestors.analysis.util import TAG_LOCATION, TAG_COUNTRY
 
@@ -32,16 +30,6 @@ def clean_name(text):
     if text is None or len(text) <= NAME_MIN_LENGTH or ' ' not in text:
         return
     return text
-
-
-def location_country(location):
-    conn = get_redis()
-    try:
-        key = tag_key(location)
-        value = conn.lrange(place_key(key), 0, -1)
-        return ensure_list(value)
-    except KeyError:
-        return []
 
 
 def _load_model(lang):
