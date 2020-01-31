@@ -1,12 +1,35 @@
-@import "~@blueprintjs/core/lib/scss/variables";
+@import "src/app/variables.scss";
 
 .PagingButtons {
   width: 100%;
+  background-color: $aleph-breadcrumbs-background;
+  padding: 3px;
 
-  button.bp3-button.paging-text {
-    // min-width: 112px;
-    color: $dark-gray1 !important;
+  &__middle {
+    background: none;
     flex: 100 1 auto !important;
-    // margin: 0;
+    cursor: auto;
+    text-align: center;
+  }
+
+  &__input {
+    display: inline-block;
+    width: 40px;
+    input {
+      padding: 5px !important;
+      text-align: center;
+
+      /* Chrome, Safari, Edge, Opera */
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      &[type=number] {
+        -moz-appearance:textfield;
+      }
+    }
   }
 }
