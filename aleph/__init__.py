@@ -3,17 +3,19 @@ import warnings
 from pkg_resources import get_distribution
 from sqlalchemy.exc import SAWarning
 
+from servicelayer.logs import configure_logging
+
 __version__ = get_distribution('aleph').version
 
 from yaml import YAMLLoadWarning
-warnings.filterwarnings("ignore", category=YAMLLoadWarning)
+warnings.filterwarnings('ignore', category=YAMLLoadWarning)
 
 # shut up useless SA warning:
 warnings.filterwarnings('ignore', 'Unicode type received non-unicode bind param value.')  # noqa
 warnings.filterwarnings('ignore', category=SAWarning)
 
-# loggers.
-logging.basicConfig(level=logging.DEBUG)
+# global logging settings
+configure_logging()
 
 # specific loggers
 logging.getLogger('faker').setLevel(logging.WARNING)
@@ -34,7 +36,7 @@ logging.getLogger('pdfminer').setLevel(logging.WARNING)
 logging.getLogger('httpstream').setLevel(logging.WARNING)
 logging.getLogger('factory').setLevel(logging.WARNING)
 logging.getLogger('polyglot').setLevel(logging.WARNING)
-# logging.getLogger('sqlalchemy').setLevel(logging.INFO)
+# logging.getLogger('sqlalchemy').setLevel(log_level)
 
 # Log all SQL statements:
-# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+# logging.getLogger('sqlalchemy.engine').setLevel(log_level)
