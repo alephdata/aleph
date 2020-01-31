@@ -71,11 +71,10 @@ def get_models(entity):
 
 def extract_entities(entity, text):
     for model in get_models(entity):
+        log.debug("NER tagging %d chars (%s)", len(text), model.lang)
         doc = model(text)
         for ent in doc.ents:
             prop_name = SPACY_TYPES.get(ent.label_)
-            if prop_name is None:
-                continue
             if prop_name in (TAG_COMPANY, TAG_PERSON):
                 name = clean_name(ent.text)
                 yield (prop_name, name)
