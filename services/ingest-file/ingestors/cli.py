@@ -2,7 +2,7 @@ import click
 import logging
 from servicelayer.cache import get_redis
 from servicelayer.logs import configure_logging
-from servicelayer.jobs import Job, Stage, Dataset
+from servicelayer.jobs import Job, Dataset
 from servicelayer.archive.util import ensure_path
 
 from ingestors.manager import Manager
@@ -58,7 +58,7 @@ def ingest(path, dataset, languages=None):
     context = {'languages': languages}
     conn = get_redis()
     job = Job.create(conn, dataset)
-    stage = job.get_stage(Stage.INGEST)
+    stage = job.get_stage(OP_INGEST)
     manager = Manager(stage, context)
     path = ensure_path(path)
     if path is not None:
