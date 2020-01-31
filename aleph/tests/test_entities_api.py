@@ -531,3 +531,23 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities/%s' % id2
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.status_code
+
+    def test_maintain_property_order(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        countries = ['gb', 'us', 'nl', 'in', 'jp', 'au', 'nz', 'sl']
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Mr. Banana",
+                'country': countries
+            },
+            'collection_id': self.col_id
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        url = '/api/2/entities/%s' % res.json['id']
+        res = self.client.get(url, headers=headers)
+        assert res.json['properties']['country'] == countries, res.json['properties']['country']  # noqa
