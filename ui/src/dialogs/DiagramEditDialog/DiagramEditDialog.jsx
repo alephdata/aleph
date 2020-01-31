@@ -11,7 +11,7 @@ import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
 import { createEntitiesFromDiagram } from 'src/components/Diagram/util';
 
-import DiagramImport from 'src/components/Diagram/DiagramImport'
+import DiagramImport from 'src/components/Diagram/DiagramImport';
 
 import './DiagramEditDialog.scss';
 
@@ -93,8 +93,8 @@ class DiagramEditDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { diagram, history, intl, isCreate, undeleteEntity } = this.props;
-    const { data, id, label, summary, collection, layout, processingProgress } = this.state;
+    const { diagram, history, intl, isCreate } = this.props;
+    const { label, summary, collection, layout, processingProgress } = this.state;
     event.preventDefault();
     if (processingProgress !== 1 || !this.checkValid()) return;
     this.setState({ processingProgress: 0 });
@@ -104,12 +104,15 @@ class DiagramEditDialog extends Component {
         const newDiagram = {
           label,
           summary,
-          collection_id: parseInt(collection.id),
+          collection_id: parseInt(collection.id, 10),
         };
         if (layout) {
-          const { generatedEntities, generatedLayout } = await createEntitiesFromDiagram(
-            { undeleteEntity, collection, layout, onProgress: this.onProgress }
-          );
+          const { generatedEntities, generatedLayout } = await createEntitiesFromDiagram({
+            undeleteEntity: this.props.undeleteEntity,
+            collection,
+            layout,
+            onProgress: this.onProgress,
+          });
           newDiagram.layout = generatedLayout;
           newDiagram.entities = generatedEntities.map(e => e.id);
         }
@@ -117,7 +120,7 @@ class DiagramEditDialog extends Component {
         const response = await this.props.createDiagram(newDiagram);
 
         history.push({
-          pathname: getDiagramLink(response.data)
+          pathname: getDiagramLink(response.data),
         });
       } else {
         const updatedDiagram = diagram;
@@ -129,7 +132,9 @@ class DiagramEditDialog extends Component {
         this.props.toggleDialog();
       }
 
-      showSuccessToast(intl.formatMessage(isCreate ? messages.success_create : messages.success_update));
+      showSuccessToast(
+        intl.formatMessage(isCreate ? messages.success_create : messages.success_update),
+      );
     } catch (e) {
       this.setState({ processingProgress: 1 });
       showWarningToast(e.message);
@@ -156,12 +161,6 @@ class DiagramEditDialog extends Component {
     this.setState({ processingProgress });
   }
 
-  checkValid() {
-    const { label, collection } = this.state;
-
-    return collection && label?.length > 0;
-  }
-
   getCollectionOptionsQuery() {
     const { location } = this.props;
 
@@ -170,6 +169,12 @@ class DiagramEditDialog extends Component {
     };
     return Query.fromLocation('collections', location, context, 'collections')
       .sortBy('label', 'asc');
+  }
+
+  checkValid() {
+    const { label, collection } = this.state;
+
+    return collection && label?.length > 0;
   }
 
   render() {
@@ -185,7 +190,7 @@ class DiagramEditDialog extends Component {
         titleKey = messages.title_create;
       }
     } else {
-      titleKey = messages.title_update
+      titleKey = messages.title_update;
     }
 
     const showTextFields = (!importEnabled || (importEnabled && layout));
@@ -246,7 +251,7 @@ class DiagramEditDialog extends Component {
               )}
               {showCollectionField && (
                 <div className="bp3-form-group">
-                  <label className="bp3-label">
+                  <div className="bp3-label">
                     <FormattedMessage
                       id="diagram.collectionSelect"
                       defaultMessage="Select a dataset"
@@ -256,7 +261,7 @@ class DiagramEditDialog extends Component {
                       onSelect={this.onChangeCollection}
                       query={this.getCollectionOptionsQuery()}
                     />
-                  </label>
+                  </div>
                 </div>
               )}
             </div>
@@ -266,7 +271,9 @@ class DiagramEditDialog extends Component {
                   type="submit"
                   intent={Intent.PRIMARY}
                   disabled={disabled}
-                  text={intl.formatMessage(isCreate ? messages.submit_create : messages.submit_update)}
+                  text={(
+                    intl.formatMessage(isCreate ? messages.submit_create : messages.submit_update)
+                  )}
                 />
               </div>
             </div>
@@ -280,8 +287,12 @@ class DiagramEditDialog extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({});
+const mapStateToProps = () => ({});
 
 DiagramEditDialog = injectIntl(DiagramEditDialog);
 DiagramEditDialog = withRouter(DiagramEditDialog);
-export default connect(mapStateToProps, { createDiagram, updateDiagram, undeleteEntity })(DiagramEditDialog);
+export default connect(mapStateToProps, {
+  createDiagram,
+  updateDiagram,
+  undeleteEntity,
+})(DiagramEditDialog);

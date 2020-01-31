@@ -11,7 +11,6 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
 
-
 export class CollectionDiagramsIndexMode extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +52,7 @@ export class CollectionDiagramsIndexMode extends Component {
 
     return (
       <div>
-        <div style={{ marginBottom: "10px" }}>
+        <div style={{ marginBottom: '10px' }}>
           <DiagramCreateMenu collection={collection} />
         </div>
         { !result.results && (

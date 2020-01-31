@@ -2,21 +2,17 @@
 
 .DiagramImport {
   &__file-name {
-    font-weight: bold;
-    cursor: pointer;
-    padding-bottom: 20px;
-    display: block;
+    // font-weight: bold;
+    // cursor: pointer;
+    margin-bottom: 20px;
 
-    .bp3-icon {
-      padding-right: 5px;
-    }
   }
 
   &__placeholder {
     padding: 20px;
     border: 1px dashed $aleph-border-color;
     cursor: pointer;
-    transition: background .1s ease-in-out; 
+    transition: background .1s ease-in-out;
 
     &:hover {
       background: $light-gray3;

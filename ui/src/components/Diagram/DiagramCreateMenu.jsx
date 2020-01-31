@@ -24,7 +24,9 @@ class DiagramCreateMenu extends Component {
     this.toggleDialog = this.toggleDialog.bind(this);
   }
 
-  toggleDialog = (importEnabled) => this.setState(({ isOpen }) => ({ isOpen: !isOpen, importEnabled }));
+  toggleDialog = (importEnabled) => this.setState(({ isOpen }) => (
+    { isOpen: !isOpen, importEnabled }
+  ));
 
   render() {
     const { collection, intl, session } = this.props;

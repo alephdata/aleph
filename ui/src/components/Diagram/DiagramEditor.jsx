@@ -2,9 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 import { createEntity, deleteEntity, undeleteEntity, updateDiagram, updateEntity } from 'src/actions';
-import updateStates from './diagramUpdateStates';
 import { processApiEntity } from 'src/components/Diagram/util';
-
+import updateStates from './diagramUpdateStates';
 
 import './DiagramEditor.scss';
 

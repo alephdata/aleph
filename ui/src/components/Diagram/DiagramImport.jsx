@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Dialog, Icon, Intent } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { Button, Intent } from '@blueprintjs/core';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Dropzone from 'react-dropzone';
 
 import './DiagramImport.scss';
 
-const messages = defineMessages({
-  title: {
-    id: 'diagram.import.title',
-    defaultMessage: 'Diagram import',
-  },
-});
 
 class DiagramImport extends Component {
   constructor(props) {
@@ -24,10 +16,10 @@ class DiagramImport extends Component {
   onDrop([file]) {
     const fileName = file.name;
     const label = fileName.match(/^([^.]+)/)[0];
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = async (e) => {
-      const data = (e.target.result)
-      this.props.onImport({ fileName, label, layout: JSON.parse(data).layout })
+      const data = (e.target.result);
+      this.props.onImport({ fileName, label, layout: JSON.parse(data).layout });
     };
     reader.readAsText(file);
   }
@@ -37,7 +29,7 @@ class DiagramImport extends Component {
 
     return (
       <Dropzone
-        accept='.vis'
+        accept=".vis"
         onDrop={acceptedFiles => (
           acceptedFiles && acceptedFiles.length ? this.onDrop(acceptedFiles) : null
         )}
@@ -48,10 +40,13 @@ class DiagramImport extends Component {
               {...getInputProps()}
             />
             {importedFile && (
-              <a className="DiagramImport__file-name">
-                <Icon icon="document-open" iconSize={14} />
-                <span>{importedFile}</span>
-              </a>
+              <Button
+                className="DiagramImport__file-name"
+                icon="document-open"
+                text={importedFile}
+                intent={Intent.PRIMARY}
+                minimal
+              />
             )}
             {!importedFile && (
               <div className="DiagramImport__placeholder">
