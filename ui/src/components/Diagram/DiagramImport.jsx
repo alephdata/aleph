@@ -22,13 +22,11 @@ class DiagramImport extends Component {
   }
 
   onDrop([file]) {
-    console.log(file);
     const fileName = file.name;
     const label = fileName.match(/^([^.]+)/)[0];
     const reader = new FileReader()
     reader.onload = async (e) => {
       const data = (e.target.result)
-      console.log(data)
       this.props.onImport({ fileName, label, layout: JSON.parse(data).layout })
     };
     reader.readAsText(file);

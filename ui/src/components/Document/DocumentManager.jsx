@@ -149,7 +149,6 @@ export class DocumentManager extends Component {
             )}
           >
             {({ getRootProps, getInputProps }) => {
-              console.log(getRootProps(), getInputProps());
               return (
               <div {...getRootProps()}>
                 <input

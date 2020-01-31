@@ -92,7 +92,6 @@ class DiagramEditor extends React.Component {
     const { diagram, onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
 
-    console.log('sending create request', schema, properties);
     try {
       const entityData = await this.props.createEntity({
         schema: schema.name,
@@ -112,9 +111,6 @@ class DiagramEditor extends React.Component {
     const { onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
 
-    console.log('sending update request', entity);
-
-
     try {
       await this.props.updateEntity(entity);
       onStatusChange(updateStates.SUCCESS);
@@ -127,8 +123,6 @@ class DiagramEditor extends React.Component {
   async undeleteEntity(entity) {
     const { onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
-
-    console.log('sending undelete request', entity);
 
     try {
       await this.props.undeleteEntity(entity);
