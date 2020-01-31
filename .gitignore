@@ -15,7 +15,7 @@ ui/i18n/messages.json
 ui/i18n/messages.pot
 ui/**/*.css
 
-contrib/allCountries.zip
+services/ingest-file/data/allCountries.zip
 services/elasticsearch/secrets
 
 celerybeat-schedule*

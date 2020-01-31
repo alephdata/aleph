@@ -49,10 +49,14 @@ class Manager(object):
     @property
     def dataset(self):
         if self._dataset is None:
-            dataset = self.stage.job.dataset.name
-            name = self.context.get('balkhash_name', dataset)
-            self._dataset = balkhash.init(name)
+            self._dataset = self.get_dataset(self.stage, self.context)
         return self._dataset
+
+    @classmethod
+    def get_dataset(cls, stage, context):
+        dataset = stage.job.dataset.name
+        name = context.get('balkhash_name', dataset)
+        return balkhash.init(name)
 
     @property
     def writer(self):

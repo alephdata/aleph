@@ -33,7 +33,7 @@ class RARIngestor(PackageSupport, Ingestor):
                                             encoding=encoding)
                     except Exception as exc:
                         # TODO: should this be a fatal error?
-                        log.warning("Failed to unpack [%r]: %s", name, exc)
+                        log.warning("Failed to unpack [%s]: %s", name, exc)
         except rarfile.NeedFirstVolume as nfv:
             raise ProcessingException('Cannot load RAR partials') from nfv
         except rarfile.PasswordRequired as pr:

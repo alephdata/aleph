@@ -16,10 +16,9 @@ class BaseApiTestCase(TestCase):
     def test_metadata(self):
         res = self.client.get('/api/2/metadata')
         assert res.status_code == 200, res
-        assert 'countries' in res.json, res.json
-        countries = res.json['countries']
-        assert 'ar' in countries, countries
-        assert countries['ar'] == 'Argentina', countries
+        assert 'categories' in res.json, res.json
+        categories = res.json['categories']
+        assert 'leak' in categories, categories
 
     def test_statistics(self):
         res = self.client.get('/api/2/statistics')

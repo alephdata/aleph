@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-01-27T18:43:02.360Z\n"
+"POT-Creation-Date: 2020-01-31T15:16:18.960Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -135,7 +135,7 @@ msgstr "API-Zugangsschlüssel"
 #. Accessible to
 #: i18n/messages.json
 msgid "Accessible to"
-msgstr "Zugänglich für"
+msgstr "Zugang"
 
 #. [password_auth.activate]
 #. defaultMessage is:
@@ -163,7 +163,7 @@ msgstr "Tätigkeiten"
 #. Add a fixed value
 #: i18n/messages.json
 msgid "Add a fixed value"
-msgstr "Einen fixen Wert zuweisen"
+msgstr "Einen fixen Wert setzen"
 
 #. [mapping.schemaSelect.button.thing]
 #. defaultMessage is:
@@ -373,7 +373,7 @@ msgstr "Vorgang abbrechen"
 #. Cannot export more than 10,000 results at a time
 #: i18n/messages.json
 msgid "Cannot export more than 10,000 results at a time"
-msgstr "Es können jeweils nur 10,000 Resultate auf einmal exportiert werden"
+msgstr "Es können nur 10,000 Resultate auf einmal exportiert werden"
 
 #. [cases.browser.breadcrumb]
 #. defaultMessage is:
@@ -471,20 +471,12 @@ msgstr "Erhalten sie Benachrichtigungen über neue Treffer zu dieser Suche."
 msgid "Code"
 msgstr "Code"
 
-#. [collection.status.collection]
-#. defaultMessage is:
-#. Collection
-#: i18n/messages.json
-msgid "Collection"
-msgstr "Sammlung"
-
 #. [mapping.propAssign.errorDuplicate]
 #. defaultMessage is:
 #. Columns with duplicate headers cannot be assigned
 #: i18n/messages.json
 msgid "Columns with duplicate headers cannot be assigned"
-msgstr ""
-"Spalten mit mehrfach genutzten Kopfzeilen können nicht zugewiesen werden"
+msgstr "Mehrfach genutzte Kopfzeilen können nicht zugewiesen werden"
 
 #. [mapping.propAssign.errorBlank]
 #. defaultMessage is:
@@ -501,7 +493,7 @@ msgstr "Spalten ohne Kopfzeile können nicht zugewiesen weden"
 #. Compare entities between collections
 #: i18n/messages.json i18n/messages.json
 msgid "Compare entities between collections"
-msgstr "Querverweis mit Entitäten in anderen Datensätzen"
+msgstr "Rasterfahndung mit anderen Datensätzen"
 
 #. [searchTips.composite.title]
 #. defaultMessage is:
@@ -604,7 +596,7 @@ msgstr "Persönlichen Datensatz anlegen"
 #. Cross-reference
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cross-reference"
-msgstr "Querverweis"
+msgstr "Rasterfahndung"
 
 #. [collection.xref.xrefAll]
 #. defaultMessage is:
@@ -673,7 +665,10 @@ msgstr "Quelldaten-URL"
 #. [entity.column.collection_id]
 #. defaultMessage is:
 #. Dataset
-#: i18n/messages.json i18n/messages.json
+#. [collection.status.collection]
+#. defaultMessage is:
+#. Dataset
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Dataset"
 msgstr "Datensatz"
 
@@ -1039,7 +1034,7 @@ msgstr "Informations-URL"
 #. It's official, your profile is updated.
 #: i18n/messages.json
 msgid "It's official, your profile is updated."
-msgstr "Nach meiner Erkenntnis tritt das unverzüglich in Kraft."
+msgstr "Nach meiner Kenntnis tritt das sofort, unverzüglich in Kraft."
 
 #. [collection.status.jobs]
 #. defaultMessage is:
@@ -1098,14 +1093,14 @@ msgstr "Sprachen"
 #. Last updated
 #: i18n/messages.json
 msgid "Last updated"
-msgstr "Zuletzt aktualisiert"
+msgstr "Aktualisiert"
 
 #. [mapping.status.updated]
 #. defaultMessage is:
 #. Last updated:
 #: i18n/messages.json
 msgid "Last updated:"
-msgstr "Zuletzt aktualisiert: "
+msgstr "Aktualisiert: "
 
 #. [collection.edit.info.placeholder_info_url]
 #. defaultMessage is:
@@ -1407,10 +1402,10 @@ msgstr "Übersicht"
 
 #. [document.paging]
 #. defaultMessage is:
-#. Page {currentPage} of {numberOfPages}
+#. Page {pageInput} of {numberOfPages}
 #: i18n/messages.json
-msgid "Page {currentPage} of {numberOfPages}"
-msgstr "Seite {currentPage} von {numberOfPages}"
+msgid "Page {pageInput} of {numberOfPages}"
+msgstr ""
 
 #. [document.pdf.search.page]
 #. defaultMessage is:
@@ -2041,7 +2036,7 @@ msgstr ""
 #. There are no cross-referencing results.
 #: i18n/messages.json
 msgid "There are no cross-referencing results."
-msgstr "Er gibt keine Querverweis-Ergebnisse."
+msgstr "Er gibt keine Rasterfahndungsergebnisse."
 
 #. [collection.status.no_active]
 #. defaultMessage is:

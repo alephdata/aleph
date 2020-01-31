@@ -5,7 +5,7 @@ import { MenuItem, Classes, Position } from '@blueprintjs/core';
 import { MultiSelect as BlueprintMultiSelect } from '@blueprintjs/select';
 
 import wordList from 'src/util/wordList';
-import { selectMetadata } from 'src/selectors';
+import { selectModel } from 'src/selectors';
 
 import './Country.scss';
 
@@ -25,7 +25,7 @@ class Name extends PureComponent {
   render() {
     const { code, countries, short = false } = this.props;
     const codeLabel = code ? code.toUpperCase() : <FormattedMessage id="country.unknown" defaultMessage="Unknown" />;
-    const label = short ? codeLabel : (countries[code] || codeLabel);
+    const label = short ? codeLabel : (countries.get(code) || codeLabel);
 
     if (!code) return null;
     return label;
@@ -90,7 +90,7 @@ class MultiSelect extends Component {
     if (!query.length || this.state.codes.indexOf(item) !== -1) {
       return false;
     }
-    const label = this.props.countries[item].toLowerCase();
+    const label = this.props.countries.get(item).toLowerCase();
     return label.includes(query.toLowerCase());
   }
 
@@ -101,7 +101,7 @@ class MultiSelect extends Component {
           key={item}
           className={modifiers.active ? Classes.ACTIVE : ''}
           onClick={handleClick}
-          text={this.props.countries[item]}
+          text={this.props.countries.get(item)}
         />
       );
     }
@@ -111,7 +111,7 @@ class MultiSelect extends Component {
   render() {
     const { codes } = this.state;
     const { intl, countries } = this.props;
-    const items = Object.keys(countries);
+    const items = [...countries.keys()];
 
     return (
       <BlueprintMultiSelect
@@ -143,9 +143,10 @@ class MultiSelect extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  countries: selectMetadata(state).countries,
-});
+const mapStateToProps = (state) => {
+  const model = selectModel(state);
+  return { countries: model.types.country.values };
+};
 
 class Country extends Component {
   static Name = connect(mapStateToProps)(Name);

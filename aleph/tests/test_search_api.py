@@ -66,7 +66,7 @@ class SearchApiTestCase(TestCase):
         assert res.status_code == 200, res
         assert res.json['total'] == 0, res.json
 
-        res = self.client.get(self.url+'&filter:names=Vladimir+Putin',
+        res = self.client.get(self.url+'&filter:emails=vladimir_l@example.com',
                               headers=headers)
         assert res.status_code == 200, res
-        assert res.json['total'] == 1, res.json
+        assert res.json['total'] == 2, res.json

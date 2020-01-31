@@ -23,6 +23,9 @@ class TableSupport(EncodingSupport, TempFileSupport):
                 if headers is None:
                     headers = list(row.keys())
                 values = [sanitize_text(row.get(h)) for h in headers]
+                length = sum((len(v) for v in values if v is not None))
+                if length == 0:
+                    continue
                 csv_writer.writerow(values)
                 self.manager.emit_text_fragment(table, values, row_count)
                 row_count += 1
