@@ -19,7 +19,7 @@ import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
 
 
-import './DiagramsIndexScreen.scss';
+import './DiagramIndexScreen.scss';
 
 const messages = defineMessages({
   title: {
@@ -32,7 +32,7 @@ const messages = defineMessages({
   },
 });
 
-export class DiagramsIndexScreen extends Component {
+export class DiagramIndexScreen extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -84,7 +84,7 @@ export class DiagramsIndexScreen extends Component {
 
     return (
       <Screen
-        className="DiagramsIndexScreen"
+        className="DiagramIndexScreen"
         breadcrumbs={breadcrumbs}
         title={intl.formatMessage(messages.title)}
         requireSession
@@ -135,4 +135,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps, { queryDiagrams }),
   injectIntl,
-)(DiagramsIndexScreen);
+)(DiagramIndexScreen);
