@@ -1,6 +1,7 @@
 import click
 import logging
 from servicelayer.cache import get_redis
+from servicelayer.logs import configure_logging
 from servicelayer.jobs import Job, Stage, Dataset
 from servicelayer.archive.util import ensure_path
 
@@ -14,7 +15,7 @@ log = logging.getLogger(__name__)
 
 @click.group()
 def cli():
-    logging.basicConfig(level=logging.DEBUG)
+    configure_logging()
 
 
 @cli.command()

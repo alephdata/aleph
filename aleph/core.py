@@ -12,11 +12,11 @@ from flask_cors import CORS
 from flask_babel import Babel
 from flask_talisman import Talisman
 from followthemoney import set_model_locale
-from followthemoney.types import registry
 from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
 from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
+from servicelayer.logs import configure_logging
 from servicelayer.extensions import get_extensions
 
 from aleph import settings, signals
@@ -34,6 +34,7 @@ talisman = Talisman()
 
 
 def create_app(config={}):
+    configure_logging()
     app = Flask('aleph')
     app.config.from_object(settings)
     app.config.update(config)
