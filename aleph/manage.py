@@ -31,7 +31,6 @@ from aleph.logic.processing import bulk_write
 from aleph.logic.documents import crawl_directory
 from aleph.logic.roles import create_user, update_roles
 from aleph.logic.permissions import update_permission
-from aleph.logic.rdf import export_collection
 
 log = logging.getLogger('aleph')
 
@@ -201,16 +200,6 @@ def dump_entities(foreign_id, outfile):
                                excludes=['text']):
         entity.context = {}
         write_object(outfile, entity)
-
-
-@cli.command('dump-rdf')
-@click.argument('foreign_id')
-@click.option('-o', '--outfile', type=click.File('wb'), default='-')  # noqa
-def dump_rdf(foreign_id, outfile):
-    """Export RDF triples for the given collection."""
-    collection = get_collection(foreign_id)
-    for line in export_collection(collection):
-        outfile.write(line)
 
 
 @cli.command()

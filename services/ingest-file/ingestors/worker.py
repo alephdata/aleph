@@ -40,8 +40,7 @@ class IngestWorker(Worker):
         entity_ids = task.payload.get('entity_ids')
         dataset = Manager.get_dataset(task.stage, task.context)
         analyzer = None
-        for fragment in dataset.fragments(entity_ids=entity_ids):
-            entity = model.get_proxy(fragment)
+        for entity in dataset.partials(entity_id=entity_ids):
             if analyzer is None or analyzer.entity.id != entity.id:
                 if analyzer is not None:
                     analyzer.flush()
