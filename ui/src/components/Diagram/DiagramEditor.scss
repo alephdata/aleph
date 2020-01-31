@@ -5,10 +5,8 @@ $breadcrumb-height: 44px;
 $footer-height: 30px;
 
 .DiagramEditor {
-  // background: #ebf1f5;
   .VisGraph {
     height: calc(100vh - #{$top-nav-height + $breadcrumb-height + $footer-height});
-    // margin: $aleph-content-padding $aleph-content-padding;
     background: white;
     overflow: hidden;
     box-shadow:

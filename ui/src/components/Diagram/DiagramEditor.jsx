@@ -24,7 +24,7 @@ class DiagramEditor extends React.Component {
 
     let initialLayout;
 
-    if (props.diagram?.layout) {
+    if (props.diagram?.entities && props.diagram?.layout) {
       const { layout, entities } = props.diagram;
 
       const processedEntities = entities.map(processApiEntity);
@@ -41,7 +41,6 @@ class DiagramEditor extends React.Component {
     this.state = {
       layout: initialLayout,
       viewport: new Viewport(config),
-      writeable: props.diagram?.writeable,
     };
 
     this.updateLayout = this.updateLayout.bind(this);
@@ -51,6 +50,8 @@ class DiagramEditor extends React.Component {
 
   componentDidMount() {
     const { layout } = this.state;
+
+    // set viewport to fit all vertices present in layout
     const initialBounds = layout.getVisibleVertexRect();
     this.setState(({ viewport }) => ({
       viewport: viewport.fitToRect(initialBounds),
@@ -103,7 +104,7 @@ class DiagramEditor extends React.Component {
     } catch {
       onStatusChange(updateStates.ERROR);
     }
-    return false;
+    return null;
   }
 
   async updateEntity(entity) {
@@ -116,7 +117,6 @@ class DiagramEditor extends React.Component {
     } catch {
       onStatusChange(updateStates.ERROR);
     }
-    return false;
   }
 
   async undeleteEntity(entity) {
@@ -165,8 +165,8 @@ class DiagramEditor extends React.Component {
   }
 
   render() {
-    const { filterText } = this.props;
-    const { layout, viewport, writeable } = this.state;
+    const { diagram, filterText } = this.props;
+    const { layout, viewport } = this.state;
 
     return (
       <div className="DiagramEditor">
@@ -179,7 +179,7 @@ class DiagramEditor extends React.Component {
           updateViewport={this.updateViewport}
           exportSvg={this.exportSvg}
           externalFilterText={filterText}
-          writeable={writeable}
+          writeable={diagram.writeable}
         />
       </div>
     );

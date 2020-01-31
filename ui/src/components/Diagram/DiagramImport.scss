@@ -1,11 +1,13 @@
 @import "src/app/variables.scss";
 
 .DiagramImport {
-  &__file-name {
-    // font-weight: bold;
-    // cursor: pointer;
+  &__file-name.bp3-button {
     margin-bottom: 20px;
+    border: 1px solid;
 
+    &:hover {
+      border-color: transparent;
+    }
   }
 
   &__placeholder {

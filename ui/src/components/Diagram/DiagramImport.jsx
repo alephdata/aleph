@@ -1,25 +1,31 @@
 import React, { Component } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Dropzone from 'react-dropzone';
+import { showWarningToast } from 'src/app/toast';
 
 import './DiagramImport.scss';
 
+const messages = defineMessages({
+  import_error: {
+    id: 'diagram.import_error',
+    defaultMessage: 'Error importing file',
+  },
+});
 
 class DiagramImport extends Component {
-  constructor(props) {
-    super(props);
+  onDrop = ([file]) => {
+    const { intl } = this.props;
 
-    this.onDrop = this.onDrop.bind(this);
-  }
-
-  onDrop([file]) {
     const fileName = file.name;
     const label = fileName.match(/^([^.]+)/)[0];
     const reader = new FileReader();
     reader.onload = async (e) => {
       const data = (e.target.result);
       this.props.onImport({ fileName, label, layout: JSON.parse(data).layout });
+    };
+    reader.onerror = async () => {
+      showWarningToast(intl.formatMessage(messages.import_error));
     };
     reader.readAsText(file);
   }

@@ -55,7 +55,7 @@ export class CollectionDiagramsIndexMode extends Component {
         <div style={{ marginBottom: '10px' }}>
           <DiagramCreateMenu collection={collection} />
         </div>
-        { !result.results && (
+        { result.isLoading && !result.results?.length && (
           <SectionLoading />
         )}
         { result.results && (

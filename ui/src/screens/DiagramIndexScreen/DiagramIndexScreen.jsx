@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-
-// import _ from 'lodash';
-// import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -75,7 +72,7 @@ export class DiagramIndexScreen extends Component {
       <Breadcrumbs>
         <li>
           <FormattedMessage
-            id="cases.browser.breadcrumb"
+            id="diagrams.browser.breadcrumb"
             defaultMessage="Diagrams"
           />
         </li>

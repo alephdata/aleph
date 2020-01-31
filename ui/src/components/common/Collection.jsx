@@ -210,7 +210,6 @@ class CollectionSelect extends Component {
         popoverProps={{
           minimal: true,
           fill: true,
-          // position: Position.BOTTOM_LEFT,
         }}
         inputProps={{
           fill: true,
