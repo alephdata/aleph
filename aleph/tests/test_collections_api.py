@@ -171,7 +171,8 @@ class CollectionsApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res
         assert 'Folder' in res.json['schema']['values'], res.json
-        assert 'Vladimir Putin' in res.json['names']['values'], res.json
+        assert 'vladimir_l@example.com' in res.json['emails']['values'], \
+            res.json
 
     def test_status(self):
         _, headers = self.login(is_admin=True)

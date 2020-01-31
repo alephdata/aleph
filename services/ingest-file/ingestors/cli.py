@@ -6,7 +6,8 @@ from servicelayer.archive.util import ensure_path
 
 from ingestors.manager import Manager
 from ingestors.directory import DirectoryIngestor
-from ingestors.worker import IngestWorker
+from ingestors.worker import IngestWorker, OP_ANALYZE, OP_INGEST
+from ingestors.analysis.country import load_places
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +21,8 @@ def cli():
 @click.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
 def process(sync):
     """Start the queue and process tasks as they come. Blocks while waiting"""
-    worker = IngestWorker(stages=[Stage.INGEST])
+    load_places()
+    worker = IngestWorker(stages=[OP_ANALYZE, OP_INGEST])
     if sync:
         worker.sync()
     else:

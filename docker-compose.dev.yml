@@ -54,6 +54,7 @@ services:
       - archive-data:/data
       - "./services/ingest-file/ingestors:/ingestors/ingestors"
       - "./services/ingest-file/tests:/ingestors/tests"
+      - "./services/ingest-file/data:/ingestors/data"
       - "./services/ingest-file/requirements.txt:/ingestors/requirements.txt"
       - "/:/host"
     links:
