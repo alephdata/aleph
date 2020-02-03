@@ -1,0 +1,44 @@
+@import "src/app/variables.scss";
+
+.CollectionOverviewMode {
+  &__section {
+    margin: $aleph-content-padding 0;
+
+    &.summary-container {
+      display: flex;
+      padding-bottom: $aleph-grid-size*2;
+      border-bottom: 1px solid $aleph-border-color;
+    }
+
+    &.statistics-container {
+      margin: 0 -$aleph-content-padding/2;
+      display: flex;
+      align-items: left;
+      justify-content: left;
+      flex-direction: row;
+      flex-wrap: wrap;
+      flex-flow: row wrap;
+      align-content: flex-end;
+    }
+  }
+
+  &__description, &__metadata {
+    flex: 1 1;
+    padding: $aleph-grid-size 0;
+  }
+
+  &__description {
+    flex-basis: 70%;
+    padding-right: 35px;
+    border-right: 1px solid $aleph-border-color;
+    & > * {
+      max-width: 750px;
+    }
+  }
+
+  &__metadata {
+    flex-basis: 200px;
+    padding-left: 35px;
+    max-width: 300px;
+  }
+}

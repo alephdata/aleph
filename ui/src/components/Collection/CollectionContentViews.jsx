@@ -3,13 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { Tabs, Tab, Icon } from '@blueprintjs/core';
+import { MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import {
   Count, TextLoading, Schema,
 } from 'src/components/common';
-import CollectionStatisticsMode from 'src/components/Collection/CollectionStatisticsMode';
+import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
@@ -22,10 +22,7 @@ import './CollectionContentViews.scss';
 class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount() {
-    this.props.onChange('Documents');
+    this.handleTabChange = this.handleTabChange.bind(this);
   }
 
   getEntitySchemata() {
@@ -53,9 +50,20 @@ class CollectionViews extends React.Component {
     return totalCount;
   }
 
+  handleTabChange(type) {
+    const { history, location, isPreview } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+    parsedHash.type = type;
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
+    });
+  }
+
   render() {
     const {
-      collection, activeMode, xrefIndex, onChange,
+      collection, activeType, xrefIndex, onChange,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
@@ -64,9 +72,11 @@ class CollectionViews extends React.Component {
       <Tabs
         id="CollectionContentTabs"
         className="CollectionContentViews__tabs info-tabs-padding"
-        onChange={onChange}
-        selectedTabId={activeMode}
+        onChange={this.handleTabChange}
+        selectedTabId={activeType}
         renderActiveTabPanelOnly
+        animate={false}
+        vertical
       >
         {hasBrowse && (
           <Tab
@@ -81,6 +91,7 @@ class CollectionViews extends React.Component {
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
+        <MenuDivider />
         {entitySchemata.map(ref => (
           <Tab
             id={ref.schema}
@@ -91,7 +102,7 @@ class CollectionViews extends React.Component {
                 <Schema.Smart.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
-            panel={<CollectionEntitiesMode collection={collection} activeMode={activeMode} />}
+            panel={<CollectionEntitiesMode collection={collection} activeType={activeType} />}
           />
         ))}
       </Tabs>
@@ -102,9 +113,13 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
+  const { location } = ownProps;
+  const hashQuery = queryString.parse(location.hash);
+
   return {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
+    activeType: hashQuery.type || 'Document',
   };
 };
 

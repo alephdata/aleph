@@ -1,0 +1,26 @@
+@import "src/app/variables.scss";
+
+.CollectionInfoMode {
+  // text-align: right;
+  &__item {
+    margin-bottom: 15px;
+    display: flex;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    .key, .value {
+      flex: 1 1 50%;
+    }
+
+    .key {
+      margin-right: 5px;
+
+    }
+
+    .value {
+      text-align: right;
+    }
+  }
+}

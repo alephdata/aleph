@@ -6,9 +6,11 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
 import { ErrorSection, SectionLoading } from 'src/components/common';
+import { Collection } from 'src/components/common';
+import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionStatistics from './CollectionStatistics';
 
-import './CollectionStatisticsMode.scss';
+import './CollectionOverviewMode.scss';
 
 const statFields = [
   'schema', 'countries', 'names', 'emails', 'addresses', 'ibans', 'phones',
@@ -21,7 +23,7 @@ const messages = defineMessages({
   },
 });
 
-class CollectionStatisticsMode extends React.Component {
+class CollectionOverviewMode extends React.Component {
   componentDidMount() {
     this.fetchIfNeeded();
   }
@@ -52,7 +54,7 @@ class CollectionStatisticsMode extends React.Component {
   }
 
   render() {
-    const { intl, statistics } = this.props;
+    const { collection, intl, statistics } = this.props;
     if (statistics.names === undefined) {
       return <SectionLoading />;
     }
@@ -70,8 +72,24 @@ class CollectionStatisticsMode extends React.Component {
     }
 
     return (
-      <div className="CollectionStatisticsMode">
-        {toRender.map((stat) => this.renderStatisticsItem(stat))}
+      <div className="CollectionOverviewMode">
+        {collection.summary && (
+          <div className="CollectionOverviewMode__section summary-container">
+            <div className="CollectionOverviewMode__description">
+              <Collection.Summary collection={collection} />
+            </div>
+            <div className="CollectionOverviewMode__metadata">
+              <CollectionInfoMode collection={collection} />
+            </div>
+          </div>
+        )}
+
+        <div className="CollectionOverviewMode__section statistics-container">
+          {toRender.map((stat) => this.renderStatisticsItem(stat))}
+        </div>
+        <div className="CollectionOverviewMode__section">
+
+        </div>
       </div>
     );
   }
@@ -90,4 +108,4 @@ export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
-)(CollectionStatisticsMode);
+)(CollectionOverviewMode);

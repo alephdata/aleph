@@ -20,9 +20,9 @@ class CollectionEntitiesMode extends React.PureComponent {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { location, collection, activeMode } = ownProps;
+  const { location, collection, activeType } = ownProps;
   const context = {
-    'filter:schema': activeMode,
+    'filter:schema': activeType,
     'filter:collection_id': collection.id,
   };
   const query = Query.fromLocation('entities', location, context, 'entities');

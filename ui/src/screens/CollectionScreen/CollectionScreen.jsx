@@ -4,6 +4,7 @@ import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { Card } from '@blueprintjs/core';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
@@ -13,10 +14,8 @@ import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import { Collection, DualPane, Breadcrumbs } from 'src/components/common';
+import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionStatus } from 'src/selectors';
-
-import 'src/components/common/ItemOverview.scss';
 
 
 export class CollectionScreen extends Component {
@@ -65,18 +64,9 @@ export class CollectionScreen extends Component {
       <CollectionManageMenu collection={collection} />
     );
 
-    const active = activeMode !== 'xref';
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active={active} />
-        {activeMode === 'xref' && (
-          <Breadcrumbs.Text icon="comparison" active>
-            <FormattedMessage
-              id="collections.xref.title"
-              defaultMessage="Cross-reference"
-            />
-          </Breadcrumbs.Text>
-        )}
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active={true} />
         {extraBreadcrumbs}
       </Breadcrumbs>
     );
@@ -89,23 +79,16 @@ export class CollectionScreen extends Component {
           searchScopes={[searchScope]}
         >
           {breadcrumbs}
-          <DualPane>
-            <DualPane.SidePane className="ItemOverview">
-              <div className="ItemOverview__heading">
-                <CollectionHeading collection={collection} />
-              </div>
-              <div className="ItemOverview__content">
-                <CollectionInfoMode collection={collection} />
-              </div>
-            </DualPane.SidePane>
-            <DualPane.ContentPane>
+          <SinglePane>
+            <CollectionHeading collection={collection} />
+            <div>
               <CollectionViews
                 collection={collection}
                 activeMode={activeMode}
                 isPreview={false}
               />
-            </DualPane.ContentPane>
-          </DualPane>
+            </div>
+          </SinglePane>
         </Screen>
       </CollectionContextLoader>
     );
@@ -122,7 +105,7 @@ const mapStateToProps = (state, ownProps) => {
     collectionId,
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
-    activeMode: hashQuery.mode || 'Overview',
+    activeMode: hashQuery.mode || 'overview',
   };
 };
 

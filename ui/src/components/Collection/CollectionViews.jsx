@@ -9,7 +9,7 @@ import queryString from 'query-string';
 import {
   Count, TextLoading, Schema,
 } from 'src/components/common';
-import CollectionStatisticsMode from 'src/components/Collection/CollectionStatisticsMode';
+import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
@@ -59,6 +59,7 @@ class CollectionViews extends React.Component {
       parsedHash['preview:mode'] = mode;
     } else {
       parsedHash.mode = mode;
+      delete parsedHash.type;
     }
     history.replace({
       pathname: location.pathname,
@@ -77,9 +78,9 @@ class CollectionViews extends React.Component {
 
     let selectedTab = activeMode;
 
-    if (activeMode !== 'overview' && activeMode !== 'diagrams' && activeMode !== 'xref') {
-      selectedTab = 'browse';
-    }
+    // if (activeMode !== 'overview' && activeMode !== 'diagrams' && activeMode !== 'xref') {
+    //   selectedTab = 'browse';
+    // }
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -96,7 +97,7 @@ class CollectionViews extends React.Component {
               <Icon icon="grouped-bar-chart" className="left-icon" />
               <FormattedMessage id="entity.info.overview" defaultMessage="Overview" />
             </>}
-          panel={<CollectionStatisticsMode collection={collection} />}
+          panel={<CollectionOverviewMode collection={collection} />}
         />
         <Tab
           id="browse"
@@ -121,7 +122,7 @@ class CollectionViews extends React.Component {
         />
         {collection.casefile && (
           <Tab
-            id="diagrams"
+            id="diagram"
             className="CollectionViews__tab"
             title={
               <>
