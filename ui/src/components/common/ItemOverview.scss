@@ -60,7 +60,7 @@
 
   &__content {
     padding: 0 0 0 ($aleph-content-padding * 2);
-    border-left: 1px solid $aleph-border-color;
+    // border-left: 1px solid $aleph-border-color;
 
     .preview & {
       padding: 0;
