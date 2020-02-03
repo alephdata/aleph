@@ -37,8 +37,8 @@ class CollectionManageMenu extends Component {
           <Button icon="cog" onClick={this.toggleEdit}>
             <FormattedMessage id="diagram.info.edit" defaultMessage="Settings" />
           </Button>
-          <Button icon="download" onClick={triggerDownload}>
-            <FormattedMessage id="diagram.info.edit" defaultMessage="Download" />
+          <Button icon="export" onClick={triggerDownload}>
+            <FormattedMessage id="diagram.info.edit" defaultMessage="Export" />
           </Button>
           <Button icon="trash" onClick={this.toggleDelete}>
             <FormattedMessage id="diagram.info.delete" defaultMessage="Delete" />

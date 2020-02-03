@@ -5,6 +5,7 @@ from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
+from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import es, cache
 from aleph.model import Entity
@@ -63,7 +64,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
-    for res in scan(es, index=index, query=query, scroll='1410m'):
+    for res in scan(es, index=index, query=query, scroll='1410m', raise_on_error=False):  # noqa
         entity = unpack_result(res)
         if entity is not None:
             if cached:
@@ -201,7 +202,16 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get('_index')
         if index == exclude:
             continue
-        es.delete(index=index, id=entity_id,
-                  refresh=refresh_sync(sync))
-        q = {'term': {'entities': entity_id}}
-        query_delete(entities_read_index(), q, sync=sync)
+        try:
+            es.delete(index=index, id=entity_id,
+                      refresh=refresh_sync(sync))
+            q = {'term': {'entities': entity_id}}
+            query_delete(entities_read_index(), q, sync=sync)
+        except NotFoundError:
+            # This is expected in some cases. For example, when 2 Things are
+            # connected by an Interval and all the 3 entities get deleted
+            # simultaneously, Aleph tries to delete the Interval thrice due to
+            # recursive deletion of adjacent entities. ElasticSearch throws a
+            # 404 in that case.
+            log.warning("Delete failed for entity %s - not found", entity_id)
+            continue

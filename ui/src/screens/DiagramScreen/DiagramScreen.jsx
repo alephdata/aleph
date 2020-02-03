@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-// import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Prompt, withRouter } from 'react-router';
@@ -74,7 +73,6 @@ export class DiagramScreen extends Component {
   }
 
   onDiagramSearch(filterText) {
-    console.log('searching!', filterText);
     this.setState({ filterText });
   }
 

@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
 import { createEntity, deleteEntity, undeleteEntity, updateDiagram, updateEntity } from 'src/actions';
+import { processApiEntity } from 'src/components/Diagram/util';
 import updateStates from './diagramUpdateStates';
+
 import './DiagramEditor.scss';
 
 const fileDownload = require('js-file-download');
@@ -20,32 +22,40 @@ class DiagramEditor extends React.Component {
       undeleteEntity: this.undeleteEntity.bind(this),
     });
 
-    let viewport = new Viewport(config);
-    const writeable = props.diagram?.writeable;
     let initialLayout;
 
-    if (props.diagram?.layout) {
+    if (props.diagram?.entities && props.diagram?.layout) {
       const { layout, entities } = props.diagram;
+
+      const processedEntities = entities.map(processApiEntity);
+
       initialLayout = GraphLayout.fromJSON(
         config,
         this.entityManager,
-        { ...layout, entities, selection: [] },
+        { ...layout, entities: processedEntities, selection: [] },
       );
-      const initialBounds = initialLayout.getVisibleVertexRect();
-      viewport = viewport.fitToRect(initialBounds);
     } else {
       initialLayout = new GraphLayout(config, this.entityManager);
     }
 
     this.state = {
       layout: initialLayout,
-      viewport,
-      writeable,
+      viewport: new Viewport(config),
     };
 
     this.updateLayout = this.updateLayout.bind(this);
     this.updateViewport = this.updateViewport.bind(this);
     this.exportSvg = this.exportSvg.bind(this);
+  }
+
+  componentDidMount() {
+    const { layout } = this.state;
+
+    // set viewport to fit all vertices present in layout
+    const initialBounds = layout.getVisibleVertexRect();
+    this.setState(({ viewport }) => ({
+      viewport: viewport.fitToRect(initialBounds),
+    }));
   }
 
   componentDidUpdate(prevProps) {
@@ -81,6 +91,7 @@ class DiagramEditor extends React.Component {
   async createEntity({ schema, properties }) {
     const { diagram, onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
+
     try {
       const entityData = await this.props.createEntity({
         schema: schema.name,
@@ -89,11 +100,11 @@ class DiagramEditor extends React.Component {
       });
       onStatusChange(updateStates.SUCCESS);
 
-      return entityData;
+      return processApiEntity(entityData);
     } catch {
       onStatusChange(updateStates.ERROR);
     }
-    return false;
+    return null;
   }
 
   async updateEntity(entity) {
@@ -106,15 +117,14 @@ class DiagramEditor extends React.Component {
     } catch {
       onStatusChange(updateStates.ERROR);
     }
-    return false;
   }
 
-  async undeleteEntity(entityId) {
+  async undeleteEntity(entity) {
     const { onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
 
     try {
-      await this.props.undeleteEntity(entityId);
+      await this.props.undeleteEntity(entity);
       onStatusChange(updateStates.SUCCESS);
     } catch {
       onStatusChange(updateStates.ERROR);
@@ -155,8 +165,8 @@ class DiagramEditor extends React.Component {
   }
 
   render() {
-    const { filterText } = this.props;
-    const { layout, viewport, writeable } = this.state;
+    const { diagram, filterText } = this.props;
+    const { layout, viewport } = this.state;
 
     return (
       <div className="DiagramEditor">
@@ -169,7 +179,7 @@ class DiagramEditor extends React.Component {
           updateViewport={this.updateViewport}
           exportSvg={this.exportSvg}
           externalFilterText={filterText}
-          writeable={writeable}
+          writeable={diagram.writeable}
         />
       </div>
     );

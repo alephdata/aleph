@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-// import _ from 'lodash';
-// import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
@@ -14,11 +12,11 @@ import {
   Breadcrumbs, SectionLoading,
 } from 'src/components/common';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import DiagramCreateButton from 'src/components/Toolbar/DiagramCreateButton';
+import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
 
 
-import './DiagramsIndexScreen.scss';
+import './DiagramIndexScreen.scss';
 
 const messages = defineMessages({
   title: {
@@ -31,7 +29,7 @@ const messages = defineMessages({
   },
 });
 
-export class DiagramsIndexScreen extends Component {
+export class DiagramIndexScreen extends Component {
   constructor(props) {
     super(props);
     this.getMoreResults = this.getMoreResults.bind(this);
@@ -74,7 +72,7 @@ export class DiagramsIndexScreen extends Component {
       <Breadcrumbs>
         <li>
           <FormattedMessage
-            id="cases.browser.breadcrumb"
+            id="diagrams.browser.breadcrumb"
             defaultMessage="Diagrams"
           />
         </li>
@@ -83,16 +81,13 @@ export class DiagramsIndexScreen extends Component {
 
     return (
       <Screen
-        className="DiagramsIndexScreen"
+        className="DiagramIndexScreen"
         breadcrumbs={breadcrumbs}
         title={intl.formatMessage(messages.title)}
         requireSession
       >
         <Dashboard>
           <div className="Dashboard__title-container">
-            <div className="Dashboard__actions">
-              <DiagramCreateButton />
-            </div>
             <h5 className="Dashboard__title">{intl.formatMessage(messages.title)}</h5>
             <p className="Dashboard__subheading">
               <FormattedMessage
@@ -100,6 +95,9 @@ export class DiagramsIndexScreen extends Component {
                 defaultMessage="Network diagrams let you visualize complex relationships within a dataset."
               />
             </p>
+            <div className="Dashboard__actions">
+              <DiagramCreateMenu />
+            </div>
           </div>
           { result.isLoading && !result.results?.length && (
             <SectionLoading />
@@ -134,4 +132,4 @@ const mapStateToProps = (state, ownProps) => {
 export default compose(
   connect(mapStateToProps, { queryDiagrams }),
   injectIntl,
-)(DiagramsIndexScreen);
+)(DiagramIndexScreen);

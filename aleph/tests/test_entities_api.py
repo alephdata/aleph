@@ -3,7 +3,6 @@ import json
 from aleph.core import db
 from aleph.model import Entity
 from aleph.index.entities import index_entity
-from aleph.logic.entities import refresh_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
@@ -375,6 +374,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res.status_code
 
+        # Test undelete deleted entity
         url = '/api/2/entities/%s/undelete' % id1
         res = self.client.post(url, headers=headers)
         assert res.status_code == 200, res.status_code
@@ -392,6 +392,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res.status_code
 
+        # test undelete with property update
         url = '/api/2/entities/%s/undelete?merge=true' % id1
         data = {
             'schema': 'Person',
@@ -413,3 +414,140 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res.status_code
         assert res.json['properties']['name'] == ['Mr. Mango'], res.json
         assert res.json['properties']['status'] == ['ripe'], res.json
+
+        # Test undelete existing entity
+        url = '/api/2/entities/%s/undelete?merge=true' % id1
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'email': 'mango@mango.yum',
+            }
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, res.status_code
+        validate(res.json, 'Entity')
+        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
+        assert res.json['properties']['status'] == ['ripe'], res.json
+        assert res.json['properties']['email'] == ['mango@mango.yum'], res.json  # noqa
+
+        # test create entity with undelete
+        id2 = "random-id"
+        url = '/api/2/entities/%s/undelete?merge=true' % id2
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': 'Mr. Banana',
+            },
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 400, res.status_code
+        data['collection_id'] = self.col_id
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        assert res.status_code == 200, res.status_code
+        validate(res.json, 'Entity')
+        assert res.json['id'] != id2, res.json
+        assert res.json['properties']['name'] == ['Mr. Banana'], res.json
+
+    def test_recursive_delete(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Osama bin Laden",
+            },
+            'collection_id': self.col_id
+        }
+        res1 = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        id1 = res1.json['id']
+        data = {
+            'schema': 'Organization',
+            'properties': {
+                'name': 'Al-Qaeda',
+            },
+            'collection_id': self.col_id
+        }
+        res2 = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        id2 = res2.json['id']
+        data = {
+            'schema': 'Membership',
+            'properties': {
+                'member': id1,
+                'organization': id2,
+            },
+            'collection_id': self.col_id
+        }
+        res3 = self.client.post(url,
+                                data=json.dumps(data),
+                                headers=headers,
+                                content_type='application/json')
+        id3 = res3.json['id']
+
+        # Deleting a thing, deletes associated edge.
+        url = '/api/2/entities/%s' % id1
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res.status_code
+        url = '/api/2/entities/%s' % id3
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 404, res.status_code
+        url = '/api/2/entities/%s' % id2
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+
+        # undelete
+        url = '/api/2/entities/%s/undelete' % id1
+        self.client.post(url, headers=headers)
+        url = '/api/2/entities/%s/undelete' % id3
+        self.client.post(url, headers=headers)
+        url = '/api/2/entities/%s' % id1
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        url = '/api/2/entities/%s' % id3
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+
+        # Deleting a edge, should not delete associated things
+        url = '/api/2/entities/%s' % id3
+        res = self.client.delete(url, headers=headers)
+        assert res.status_code == 204, res.status_code
+        url = '/api/2/entities/%s' % id1
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+        url = '/api/2/entities/%s' % id2
+        res = self.client.get(url, headers=headers)
+        assert res.status_code == 200, res.status_code
+
+    def test_maintain_property_order(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities'
+        countries = ['gb', 'us', 'nl', 'in', 'jp', 'au', 'nz', 'sl']
+        data = {
+            'schema': 'Person',
+            'properties': {
+                'name': "Mr. Banana",
+                'country': countries
+            },
+            'collection_id': self.col_id
+        }
+        res = self.client.post(url,
+                               data=json.dumps(data),
+                               headers=headers,
+                               content_type='application/json')
+        url = '/api/2/entities/%s' % res.json['id']
+        res = self.client.get(url, headers=headers)
+        assert res.json['properties']['country'] == countries, res.json['properties']['country']  # noqa

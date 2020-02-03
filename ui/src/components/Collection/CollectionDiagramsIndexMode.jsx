@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// import _ from 'lodash';
-// import queryString from 'query-string';
 import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -10,11 +8,8 @@ import { SectionLoading } from 'src/components/common';
 import { queryDiagrams } from 'src/actions';
 import { selectDiagramsResult } from 'src/selectors';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
-import DiagramCreateButton from 'src/components/Toolbar/DiagramCreateButton';
+import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
 import DiagramList from 'src/components/Diagram/DiagramList';
-
-
-// import './CollectionDiagramsIndexMode.scss';
 
 export class CollectionDiagramsIndexMode extends Component {
   constructor(props) {
@@ -58,9 +53,9 @@ export class CollectionDiagramsIndexMode extends Component {
     return (
       <div>
         <div style={{ marginBottom: '10px' }}>
-          <DiagramCreateButton collection={collection} />
+          <DiagramCreateMenu collection={collection} />
         </div>
-        { !result.results && (
+        { result.isLoading && !result.results?.length && (
           <SectionLoading />
         )}
         { result.results && (

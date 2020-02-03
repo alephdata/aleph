@@ -3,7 +3,8 @@ from datetime import datetime
 
 from aleph.core import db, cache
 from aleph.authz import Authz
-from aleph.queues import cancel_queue
+from aleph.queues import cancel_queue, ingest_entity
+from aleph.queues import queue_task, OP_INDEX
 from aleph.model import Collection, Entity, Document, Match, Diagram
 from aleph.model import Permission, Events
 from aleph.index import collections as index
