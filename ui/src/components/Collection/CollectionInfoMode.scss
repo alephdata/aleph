@@ -2,6 +2,7 @@
 
 .CollectionInfoMode {
   // text-align: right;
+  max-width: 350px;
   &__item {
     margin-bottom: 15px;
     display: flex;
@@ -11,15 +12,17 @@
     }
 
     .key, .value {
-      flex: 1 1 50%;
+      flex: 1 1;
     }
 
     .key {
-      margin-right: 5px;
-
+      margin-right: 10px;
+      flex-basis: 35%;
+      min-width: 95px;
     }
 
     .value {
+      flex-basis: 65%;
       text-align: right;
     }
   }

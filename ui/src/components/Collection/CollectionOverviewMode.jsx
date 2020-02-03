@@ -2,13 +2,15 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
 import { ErrorSection, SectionLoading } from 'src/components/common';
 import { Collection } from 'src/components/common';
 import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
 import CollectionStatistics from './CollectionStatistics';
+import ClipboardInput from 'src/components/common/ClipboardInput';
+import c from 'classnames';
 
 import './CollectionOverviewMode.scss';
 
@@ -73,22 +75,52 @@ class CollectionOverviewMode extends React.Component {
 
     return (
       <div className="CollectionOverviewMode">
-        {collection.summary && (
-          <div className="CollectionOverviewMode__section summary-container">
-            <div className="CollectionOverviewMode__description">
-              <Collection.Summary collection={collection} />
-            </div>
-            <div className="CollectionOverviewMode__metadata">
+        <div className="CollectionOverviewMode__section">
+          <div className="CollectionOverviewMode__summary">
+            {collection.summary && (
+              <div className={c('CollectionOverviewMode__summary__description', { expanded: collection.summary.length > 300 })}>
+                <Collection.Summary collection={collection} />
+              </div>
+            )}
+            <div className="CollectionOverviewMode__summary__metadata">
               <CollectionInfoMode collection={collection} />
             </div>
           </div>
-        )}
-
-        <div className="CollectionOverviewMode__section statistics-container">
-          {toRender.map((stat) => this.renderStatisticsItem(stat))}
         </div>
         <div className="CollectionOverviewMode__section">
-
+          <div className="CollectionOverviewMode__statistics">
+            {toRender.map((stat) => this.renderStatisticsItem(stat))}
+          </div>
+        </div>
+        <div className="CollectionOverviewMode__section">
+          <div className="CollectionOverviewMode__reference">
+            <div className="CollectionOverviewMode__reference__section">
+              <div className="key text-muted">
+                <FormattedMessage id="collection.foreign_id" defaultMessage="Foreign ID" />
+              </div>
+              <div className="value">
+                <code>{collection.foreign_id}</code>
+              </div>
+            </div>
+            <div className="CollectionOverviewMode__reference__section">
+              <div className="key text-muted">
+                <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
+              </div>
+              <div className="value bp3-callout">
+                <ClipboardInput value={collection.links.reconcile} />
+                <span className="bp3-text-small bp3-text-muted">
+                  <FormattedMessage
+                    id="collection.reconcile.description"
+                    defaultMessage="Match your own data against the entities in this collection using the free {openrefine}
+                  tool by adding the reconciliation endpoint."
+                    values={{
+                      openrefine: <a href="http://openrefine.org">OpenRefine</a>,
+                    }}
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

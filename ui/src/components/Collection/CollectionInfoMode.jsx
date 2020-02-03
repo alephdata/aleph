@@ -16,7 +16,7 @@ class CollectionInfoMode extends PureComponent {
     }
 
     return (
-      <div className="CollectionInfoMode">
+      <div className="CollectionInfoMode bp3-card bp3-elevation-1">
         { (collection.publisher || collection.publisher_url) && (
           <div className="CollectionInfoMode__item">
             <span className="key text-muted">
@@ -95,37 +95,6 @@ class CollectionInfoMode extends PureComponent {
             <Date value={collection.updated_at} />
           </span>
         </div>
-        {/*<div className="CollectionInfoMode__item">
-          <ul className="info-sheet">
-            <li>
-              <span className="key text-muted">
-                <FormattedMessage id="collection.foreign_id" defaultMessage="Foreign ID" />
-              </span>
-              <span className="value">
-                <code>{collection.foreign_id}</code>
-              </span>
-            </li>
-            <li>
-              <span className="key text-muted">
-                <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
-              </span>
-              <span className="value bp3-callout">
-                <ClipboardInput value={collection.links.reconcile} />
-                <span className="bp3-text-small bp3-text-muted">
-                  <FormattedMessage
-                    id="collection.reconcile.description"
-                    defaultMessage="Match your own data against the entities in this collection using the free {openrefine}
-                  tool by adding the reconciliation endpoint."
-                    values={{
-                      openrefine: <a href="http://openrefine.org">OpenRefine</a>,
-                    }}
-                  />
-                </span>
-              </span>
-            </li>
-          </ul>
-        </div>
-        */}
       </div>
     );
   }
