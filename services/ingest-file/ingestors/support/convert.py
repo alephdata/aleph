@@ -1,10 +1,11 @@
+import math
 import logging
 import requests
 from requests import RequestException, HTTPError
 from servicelayer.util import backoff, service_retries
 from followthemoney.helpers import entity_filename
 
-from ingestors.settings import UNOSERVICE_URL
+from ingestors.settings import CONVERT_URL
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.exc import ProcessingException
@@ -35,19 +36,24 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
 
     def _document_to_pdf(self, file_path, entity):
         """Converts an office document to PDF."""
-        if UNOSERVICE_URL is None:
-            raise RuntimeError("No UNOSERVICE_URL for document conversion.")
+        # Attempt to guess an appropriate time for processing
+        # Guessed: 15s per MB of data, max.
+        file_size = (file_path.stat().st_size / 1024) / 1024  # megabyte
+        timeout = int(min(600, max(20, file_size * 15)))
+
         file_name = entity_filename(entity)
         mime_type = entity.first('mimeType')
-        log.info('Converting [%s] to PDF...', file_name)
+        log.info('Converting [%s] to PDF (%ds timeout)...',
+                 file_name, timeout)
         failed = ProcessingException("Document could not be converted to PDF.")
         for attempt in service_retries():
             try:
                 with open(file_path, 'rb') as fh:
                     files = {'file': (file_name, fh, mime_type)}
-                    res = requests.post(UNOSERVICE_URL,
+                    res = requests.post(CONVERT_URL,
+                                        params={'timeout': timeout},
                                         files=files,
-                                        timeout=(5, 305),
+                                        timeout=timeout + 3,
                                         stream=True)
                 res.raise_for_status()
                 out_path = self.make_work_file('out.pdf')
@@ -64,5 +70,5 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                         exc.response.status_code == 400:
                     raise ProcessingException(res.text)
                 log.error("Conversion failed: %s", exc)
-                backoff(failures=attempt)
+                backoff(failures=math.sqrt(attempt))
         raise failed

@@ -1,10 +1,8 @@
 import logging
 from banal import ensure_list
-from flask.wrappers import Response
 from flask import Blueprint, request
 
 from aleph.index.entities import iter_entities
-from aleph.logic.rdf import export_collection
 from aleph.views.util import get_db_collection
 from aleph.views.util import require, stream_ijson
 
@@ -57,35 +55,3 @@ def entities(collection_id=None):
                              excludes=excludes,
                              includes=includes)
     return stream_ijson(entities)
-
-
-@blueprint.route('/api/2/collections/<int:collection_id>/_rdf')
-def triples(collection_id):
-    """
-    ---
-    get:
-      summary: Linked data stream of the collection
-      description: >-
-        This will return a list of triples that describe each entity
-        in the given collection. The format is `ntriples`.
-      parameters:
-      - in: path
-        name: collection_id
-        required: true
-        schema:
-          type: integer
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
-      tags:
-      - Entity
-    """
-    require(request.authz.can_stream())
-    log.debug("Stream triples [%r] begins... (coll: %s)",
-              request.authz, collection_id)
-    collection = get_db_collection(collection_id, request.authz.READ)
-    return Response(export_collection(collection), mimetype='text/plain')

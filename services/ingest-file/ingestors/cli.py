@@ -1,26 +1,29 @@
 import click
 import logging
 from servicelayer.cache import get_redis
-from servicelayer.jobs import Job, Stage, Dataset
+from servicelayer.logs import configure_logging
+from servicelayer.jobs import Job, Dataset
 from servicelayer.archive.util import ensure_path
 
 from ingestors.manager import Manager
 from ingestors.directory import DirectoryIngestor
-from ingestors.worker import IngestWorker
+from ingestors.worker import IngestWorker, OP_ANALYZE, OP_INGEST
+from ingestors.analysis.country import load_places
 
 log = logging.getLogger(__name__)
 
 
 @click.group()
 def cli():
-    logging.basicConfig(level=logging.DEBUG)
+    configure_logging()
 
 
 @cli.command()
 @click.option('-s', '--sync', is_flag=True, default=False, help='Run without threads')  # noqa
 def process(sync):
     """Start the queue and process tasks as they come. Blocks while waiting"""
-    worker = IngestWorker(stages=[Stage.INGEST])
+    load_places()
+    worker = IngestWorker(stages=[OP_ANALYZE, OP_INGEST])
     if sync:
         worker.sync()
     else:
@@ -55,7 +58,7 @@ def ingest(path, dataset, languages=None):
     context = {'languages': languages}
     conn = get_redis()
     job = Job.create(conn, dataset)
-    stage = job.get_stage(Stage.INGEST)
+    stage = job.get_stage(OP_INGEST)
     manager = Manager(stage, context)
     path = ensure_path(path)
     if path is not None:

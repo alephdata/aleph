@@ -102,7 +102,7 @@ export class CollectionXrefMatchesScreen extends Component {
                         {' '}
                         (
                         {res.matches}
-)
+                        )
                       </option>
                     ))}
                   </select>

@@ -10,7 +10,9 @@ from servicelayer.jobs import Job, Stage
 from servicelayer.archive.util import ensure_path
 from servicelayer import settings as service_settings
 from balkhash import settings as balkhash_settings
+from ingestors import settings as ingestors_settings
 from ingestors.manager import Manager
+from ingestors.worker import OP_INGEST, OP_ANALYZE
 
 
 def emit_entity(self, entity, fragment=None):
@@ -26,6 +28,7 @@ class TestCase(unittest.TestCase):
 
     def setUp(self):
         # Force tests to use fake configuration
+        ingestors_settings.TESTING = True
         service_settings.REDIS_URL = None
         service_settings.ARCHIVE_TYPE = 'file'
         service_settings.ARCHIVE_PATH = mkdtemp()
@@ -33,7 +36,7 @@ class TestCase(unittest.TestCase):
         balkhash_settings.LEVELDB_PATH = mkdtemp()
         conn = get_fakeredis()
         job = Job.create(conn, 'test')
-        stage = Stage(job, Stage.INGEST)
+        stage = Stage(job, OP_INGEST)
         self.manager = Manager(stage, {})
         self.manager.entities = []
         self.manager.emit_entity = types.MethodType(emit_entity, self.manager)

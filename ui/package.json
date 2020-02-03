@@ -1,9 +1,9 @@
 {
   "name": "aleph-ui",
-  "version": "3.4.5",
+  "version": "3.4.6",
   "private": true,
   "dependencies": {
-    "@alephdata/followthemoney": "^1.24.2",
+    "@alephdata/followthemoney": "^1.25.0",
     "@alephdata/vislib": "^1.4.8",
     "@blueprintjs/core": "^3.18.1",
     "@blueprintjs/datetime": "^3.15.1",
@@ -67,7 +67,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "25.1.0",
     "jest-pnp-resolver": "^1.2.0",
-    "jest-resolve": "^24.9.0",
+    "jest-resolve": "^25.1.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.11.0",
     "node-sass-package-importer": "^5.3.1",
@@ -90,7 +90,7 @@
     "webpack": "^4.41.0",
     "webpack-dev-server": "^3.8.2",
     "webpack-manifest-plugin": "^2.2.0",
-    "workbox-webpack-plugin": "^4.3.1"
+    "workbox-webpack-plugin": "^5.0.0"
   },
   "proxy": "http://api:5000/",
   "browserslist": [
