@@ -9,6 +9,10 @@
       border: none;
       min-width: 220px;
       border-radius: $aleph-border-radius;
+
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        margin-bottom: $aleph-content-padding;
+      }
     }
 
     .bp3-menu-divider {
@@ -17,10 +21,22 @@
       border-color: $aleph-breadcrumbs-background !important;
       margin: 10px 0;
     }
+
+    &.bp3-tabs.bp3-vertical {
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        display: block;
+      }
+    }
   }
 
   &__tab {
     width: 100%;
+
+    &.bp3-tab-panel {
+      @media screen and (max-width: $aleph-screen-sm-max-width) {
+        padding-left: 0 !important;
+      }
+    }
 
     &.bp3-tab {
       margin: 0 !important;
