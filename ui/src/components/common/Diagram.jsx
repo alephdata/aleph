@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import Truncate from 'react-truncate';
 import c from 'classnames';
+import getDiagramLink from 'src/util/getDiagramLink';
+
 
 // formats markdown elements to plain text
 const simpleRenderer = ({ children }) => (
@@ -53,10 +55,9 @@ const DiagramSummary = ({ className, diagram, truncate }) => {
 class DiagramLink extends PureComponent {
   render() {
     const { diagram, className } = this.props;
-    const link = `/diagrams/${diagram.id}`;
     const content = <Diagram.Label {...this.props} />;
 
-    return <Link to={link} className={c('DiagramLink', className)}>{content}</Link>;
+    return <Link to={getDiagramLink(diagram)} className={c('DiagramLink', className)}>{content}</Link>;
   }
 }
 
