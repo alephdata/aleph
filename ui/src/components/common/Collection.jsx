@@ -2,7 +2,6 @@ import React, { Component, PureComponent } from 'react';
 import { Alignment, Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { defineMessages, injectIntl } from 'react-intl';
-import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
@@ -24,15 +23,6 @@ const messages = defineMessages({
     defaultMessage: 'Select a dataset',
   },
 });
-
-// formats markdown elements to plain text
-const simpleRenderer = ({ children }) => (
-  <>
-    <span>{children}</span>
-    <span> </span>
-  </>
-);
-
 
 class CollectionLabel extends PureComponent {
   render() {
@@ -71,26 +61,6 @@ class CollectionLabel extends PureComponent {
     );
   }
 }
-
-const CollectionSummary = ({ className, collection, truncate }) => {
-  const content = (
-    <ReactMarkdown
-      skipHtml
-      linkTarget="_blank"
-      renderers={truncate ? { paragraph: simpleRenderer, listItem: simpleRenderer } : {}}
-    >
-      { collection.summary }
-    </ReactMarkdown>
-  );
-
-  return (
-    <div className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}>
-      {truncate && <Truncate lines={truncate}>{content}</Truncate>}
-      {!truncate && content}
-    </div>
-  );
-};
-
 
 class CollectionLink extends PureComponent {
   render() {
@@ -252,8 +222,6 @@ class Collection {
 
   static Status =
     connect(statusMapStateToProps, { fetchCollectionStatus })(CollectionUpdateStatus);
-
-  static Summary = CollectionSummary;
 
   static Link = withRouter(CollectionLink);
 

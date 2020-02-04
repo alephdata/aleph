@@ -1,20 +1,11 @@
 import React, { PureComponent } from 'react';
 import { Icon } from '@blueprintjs/core';
-import ReactMarkdown from 'react-markdown';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import Truncate from 'react-truncate';
 import c from 'classnames';
 import getDiagramLink from 'src/util/getDiagramLink';
 
-
-// formats markdown elements to plain text
-const simpleRenderer = ({ children }) => (
-  <>
-    <span>{children}</span>
-    <span> </span>
-  </>
-);
 
 class DiagramLabel extends PureComponent {
   render() {
@@ -32,26 +23,6 @@ class DiagramLabel extends PureComponent {
   }
 }
 
-const DiagramSummary = ({ className, diagram, truncate }) => {
-  const content = (
-    <ReactMarkdown
-      skipHtml
-      linkTarget="_blank"
-      renderers={truncate ? { paragraph: simpleRenderer, listItem: simpleRenderer } : {}}
-    >
-      { diagram.summary }
-    </ReactMarkdown>
-  );
-
-  return (
-    <div className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}>
-      {truncate && <Truncate lines={truncate}>{content}</Truncate>}
-      {!truncate && content}
-    </div>
-  );
-};
-
-
 class DiagramLink extends PureComponent {
   render() {
     const { diagram, className } = this.props;
@@ -63,8 +34,6 @@ class DiagramLink extends PureComponent {
 
 class Diagram {
   static Label = DiagramLabel;
-
-  static Summary = DiagramSummary;
 
   static Link = withRouter(DiagramLink);
 }

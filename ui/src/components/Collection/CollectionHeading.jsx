@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Category, Collection } from 'src/components/common';
+import { Category, Collection, Summary } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 import 'src/components/common/ItemOverview.scss';
@@ -26,7 +26,7 @@ class CollectionHeading extends PureComponent {
         <CollectionStatus collection={collection} showCancel />
         {collection.summary && (
           <div className="ItemOverview__heading__description">
-            <Collection.Summary collection={collection} />
+            <Summary text={collection.summary} />
           </div>
         )}
       </>

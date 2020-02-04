@@ -5,7 +5,7 @@ import { Card, Icon, H4 } from '@blueprintjs/core';
 import getDiagramLink from 'src/util/getDiagramLink';
 
 import {
-  Collection, Date, Diagram,
+  Collection, Date, Diagram, Summary,
 } from 'src/components/common';
 
 import './DiagramListItem.scss';
@@ -24,7 +24,7 @@ const DiagramListItem = ({ diagram, showCollection }) => (
           <Diagram.Label diagram={diagram} />
         </H4>
         {diagram.summary && (
-          <Diagram.Summary diagram={diagram} className="summary" truncate={2} />
+          <Summary text={diagram.summary} className="summary" truncate={2} />
         )}
         <p className="details">
           <span className="details-item">
