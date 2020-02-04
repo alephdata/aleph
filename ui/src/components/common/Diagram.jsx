@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import { Icon } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import Truncate from 'react-truncate';
 import c from 'classnames';
 import getDiagramLink from 'src/util/getDiagramLink';
 

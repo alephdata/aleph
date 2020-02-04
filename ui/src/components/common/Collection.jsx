@@ -5,7 +5,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
-import Truncate from 'react-truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 

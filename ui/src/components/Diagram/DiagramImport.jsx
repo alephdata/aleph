@@ -20,6 +20,7 @@ class DiagramImport extends Component {
     }
 
     const { intl } = this.props;
+    const file = acceptedFiles[0];
     const fileName = file.name;
     const label = fileName.match(/^([^.]+)/)[0];
     const reader = new FileReader();

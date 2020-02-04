@@ -1,4 +1,7 @@
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import Truncate from 'react-truncate';
+import c from 'classnames';
 
 // formats markdown elements to plain text
 const simpleRenderer = ({ children }) => (
