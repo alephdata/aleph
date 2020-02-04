@@ -1,0 +1,18 @@
+@import "src/app/variables.scss";
+
+.CollectionReference {
+  // margin: 0;
+  // display: flex;
+  // max-width: 800px;
+  //
+  &__section {
+
+    &:first-child {
+      margin-bottom: $aleph-grid-size*2;
+    }
+
+    .key {
+      margin-bottom: 5px;
+    }
+  }
+}

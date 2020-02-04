@@ -6,10 +6,10 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
 import { ErrorSection, SectionLoading } from 'src/components/common';
-import { Collection } from 'src/components/common';
-import CollectionInfoMode from 'src/components/Collection/CollectionInfoMode';
+import { Collection, Summary } from 'src/components/common';
+import CollectionInfo from 'src/components/Collection/CollectionInfo';
 import CollectionStatistics from './CollectionStatistics';
-import ClipboardInput from 'src/components/common/ClipboardInput';
+import CollectionReference from './CollectionReference';
 import c from 'classnames';
 
 import './CollectionOverviewMode.scss';
@@ -45,13 +45,15 @@ class CollectionOverviewMode extends React.Component {
     const { collection } = this.props;
 
     return (
-      <CollectionStatistics
-        collection={collection}
-        key={key}
-        field={key}
-        values={values}
-        total={total}
-      />
+      <div className="CollectionOverviewMode__item">
+        <CollectionStatistics
+          collection={collection}
+          key={key}
+          field={key}
+          values={values}
+          total={total}
+        />
+      </div>
     );
   }
 
@@ -64,62 +66,20 @@ class CollectionOverviewMode extends React.Component {
     const toRender = statFields.map(key => ({ key, ...statistics[key] }))
       .filter(stat => stat && stat.total);
 
-    if (toRender.length === 0) {
-      return (
-        <ErrorSection
-          icon="grouped-bar-chart"
-          title={intl.formatMessage(messages.empty)}
-        />
-      );
-    }
-
     return (
       <div className="CollectionOverviewMode">
-        <div className="CollectionOverviewMode__section">
-          <div className="CollectionOverviewMode__summary">
+        <div className="CollectionOverviewMode__item">
+          <div className="CollectionOverviewMode__item__text-content">
             {collection.summary && (
-              <div className={c('CollectionOverviewMode__summary__description', { expanded: collection.summary.length > 300 })}>
-                <Collection.Summary collection={collection} />
-              </div>
+              <Summary text={collection.summary} />
             )}
-            <div className="CollectionOverviewMode__summary__metadata">
-              <CollectionInfoMode collection={collection} />
-            </div>
+            <CollectionInfo collection={collection} />
           </div>
         </div>
-        <div className="CollectionOverviewMode__section">
-          <div className="CollectionOverviewMode__statistics">
-            {toRender.map((stat) => this.renderStatisticsItem(stat))}
-          </div>
-        </div>
-        <div className="CollectionOverviewMode__section">
-          <div className="CollectionOverviewMode__reference">
-            <div className="CollectionOverviewMode__reference__section">
-              <div className="key text-muted">
-                <FormattedMessage id="collection.foreign_id" defaultMessage="Foreign ID" />
-              </div>
-              <div className="value">
-                <code>{collection.foreign_id}</code>
-              </div>
-            </div>
-            <div className="CollectionOverviewMode__reference__section">
-              <div className="key text-muted">
-                <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
-              </div>
-              <div className="value bp3-callout">
-                <ClipboardInput value={collection.links.reconcile} />
-                <span className="bp3-text-small bp3-text-muted">
-                  <FormattedMessage
-                    id="collection.reconcile.description"
-                    defaultMessage="Match your own data against the entities in this collection using the free {openrefine}
-                  tool by adding the reconciliation endpoint."
-                    values={{
-                      openrefine: <a href="http://openrefine.org">OpenRefine</a>,
-                    }}
-                  />
-                </span>
-              </div>
-            </div>
+        {toRender.map((stat) => this.renderStatisticsItem(stat))}
+        <div className="CollectionOverviewMode__item">
+          <div className="CollectionOverviewMode__item__text-content">
+            <CollectionReference collection={collection} />
           </div>
         </div>
       </div>

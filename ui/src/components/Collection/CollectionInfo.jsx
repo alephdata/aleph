@@ -6,9 +6,9 @@ import {
 
 import ClipboardInput from 'src/components/common/ClipboardInput';
 
-import './CollectionInfoMode.scss';
+import './CollectionInfo.scss';
 
-class CollectionInfoMode extends PureComponent {
+class CollectionInfo extends PureComponent {
   render() {
     const { collection } = this.props;
     if (!collection) {
@@ -16,9 +16,9 @@ class CollectionInfoMode extends PureComponent {
     }
 
     return (
-      <div className="CollectionInfoMode bp3-card bp3-elevation-1">
+      <div className="CollectionInfo">
         { (collection.publisher || collection.publisher_url) && (
-          <div className="CollectionInfoMode__item">
+          <div className="CollectionInfo__item">
             <span className="key text-muted">
               <FormattedMessage id="collection.publisher" defaultMessage="Publisher" />
             </span>
@@ -38,7 +38,7 @@ class CollectionInfoMode extends PureComponent {
           </div>
         )}
         { collection.info_url && (
-          <div className="CollectionInfoMode__item">
+          <div className="CollectionInfo__item">
             <span className="key text-muted">
               <FormattedMessage id="collection.info_url" defaultMessage="Information URL" />
             </span>
@@ -48,7 +48,7 @@ class CollectionInfoMode extends PureComponent {
           </div>
         )}
         { collection.data_url && (
-          <div className="CollectionInfoMode__item">
+          <div className="CollectionInfo__item">
             <span className="key text-muted">
               <FormattedMessage id="collection.data_url" defaultMessage="Data URL" />
             </span>
@@ -58,7 +58,7 @@ class CollectionInfoMode extends PureComponent {
           </div>
         )}
         { collection.creator && (
-          <div className="CollectionInfoMode__item">
+          <div className="CollectionInfo__item">
             <span className="key text-muted">
               <FormattedMessage id="collection.creator" defaultMessage="Manager" />
             </span>
@@ -68,7 +68,7 @@ class CollectionInfoMode extends PureComponent {
           </div>
         )}
         { (collection.team && collection.team.length > 1) && (
-          <div className="CollectionInfoMode__item">
+          <div className="CollectionInfo__item">
             <span className="key text-muted">
               <FormattedMessage id="collection.team" defaultMessage="Accessible to" />
             </span>
@@ -78,7 +78,7 @@ class CollectionInfoMode extends PureComponent {
           </div>
         )}
         { collection.countries && !!collection.countries.length && (
-          <div className="CollectionInfoMode__item">
+          <div className="CollectionInfo__item">
             <span className="key text-muted">
               <FormattedMessage id="collection.countries" defaultMessage="Country" />
             </span>
@@ -87,7 +87,7 @@ class CollectionInfoMode extends PureComponent {
             </span>
           </div>
         )}
-        <div className="CollectionInfoMode__item">
+        <div className="CollectionInfo__item">
           <span className="key text-muted">
             <FormattedMessage id="collection.updated_at" defaultMessage="Last updated" />
           </span>
@@ -100,4 +100,4 @@ class CollectionInfoMode extends PureComponent {
   }
 }
 
-export default CollectionInfoMode;
+export default CollectionInfo;

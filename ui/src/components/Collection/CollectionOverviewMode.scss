@@ -1,101 +1,107 @@
 @import "src/app/variables.scss";
 
 .CollectionOverviewMode {
-  &__section {
-    padding: $aleph-content-padding*2 0;
-    border-bottom: 1px solid $aleph-border-color;
+  column-count: 4;
+  column-gap: 1.5em;
 
-    &:first-child {
-      padding-top: $aleph-content-padding;
-    }
-
-    &:last-child {
-      border: none;
-    }
-
-    &__title.bp3-heading {
-      // margin: $aleph-content-padding 0;
-    }
+  @media screen and (max-width: $aleph-screen-lg-max-width) {
+    column-count: 3;
   }
 
-  &__summary {
-    $side-padding: 35px;
-    display: flex;
-
-    @media screen and (max-width: $aleph-screen-sm-max-width) {
-      display: block;
-    }
-
-    &__description, &__metadata {
-      flex: 1 1;
-    }
-
-    &__description {
-      padding-right: $side-padding;
-      max-width: 500px;
-
-      &.expanded {
-        flex-basis: 700px;
-        max-width: none;
-      }
-
-      @media screen and (max-width: $aleph-screen-sm-max-width) {
-        padding: 0;
-        border: none;
-      }
-
-      p:last-child {
-        margin-bottom: 0 !important;
-      }
-    }
-
-    &__metadata {
-      padding-left: $side-padding;
-      min-width: 300px;
-
-      @media screen and (max-width: $aleph-screen-sm-max-width) {
-        padding-left: 0;
-        padding-top: $aleph-content-padding;
-        max-width: none;
-      }
-
-      &:first-child {
-        padding: 0;
-      }
-    }
+  @media screen and (max-width: $aleph-screen-md-max-width) {
+    column-count: 2;
   }
 
-  &__statistics {
-    margin: (-$aleph-content-padding/2) !important;
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex-flow: row wrap;
-    align-content: flex-end;
+  @media screen and (max-width: $aleph-screen-sm-max-width) {
+    column-count: 1;
   }
 
-  &__reference {
-    margin: 0;
-    display: flex;
-    max-width: 800px;
+  &__item {
+    -webkit-column-break-inside: avoid;
+            page-break-inside: avoid;
+                 break-inside: avoid;
+    padding-bottom: 1.5em;
+    padding-top: 1px;
 
-    &__section {
-      flex: 1 1;
-
-      &:first-child {
-        flex-basis: 30%;
-      }
-      &:last-child {
-        margin-left: $aleph-content-padding*2;
-        flex-basis: 70%;
-      }
-
-      .key {
-        margin-bottom: 7px;
-      }
+    &__text-content {
+      background-color: $aleph-breadcrumbs-background;
+      padding: $aleph-grid-size*2;
+      border-radius: $aleph-border-radius;
     }
-
   }
 }
+//
+//   &__summary {
+//     $side-padding: 35px;
+//     display: flex;
+//
+//     @media screen and (max-width: $aleph-screen-sm-max-width) {
+//       display: block;
+//     }
+//
+//     &__description, &__metadata {
+//       flex: 1 1;
+//     }
+//
+//     &__description {
+//       padding-right: $side-padding;
+//       max-width: 500px;
+//
+//       &.expanded {
+//         flex-basis: 700px;
+//         max-width: none;
+//       }
+//
+//       @media screen and (max-width: $aleph-screen-sm-max-width) {
+//         padding: 0;
+//         border: none;
+//       }
+//
+//       p:last-child {
+//         margin-bottom: 0 !important;
+//       }
+//     }
+//
+//     &__metadata {
+//       padding-left: $side-padding;
+//       min-width: 300px;
+//
+//       @media screen and (max-width: $aleph-screen-sm-max-width) {
+//         padding-left: 0;
+//         padding-top: $aleph-content-padding;
+//         max-width: none;
+//       }
+//
+//       &:first-child {
+//         padding: 0;
+//       }
+//     }
+//   }
+//
+//   &__statistics {
+//     c
+//   }
+//
+//   &__reference {
+//     margin: 0;
+//     display: flex;
+//     max-width: 800px;
+//
+//     &__section {
+//       flex: 1 1;
+//
+//       &:first-child {
+//         flex-basis: 30%;
+//       }
+//       &:last-child {
+//         margin-left: $aleph-content-padding*2;
+//         flex-basis: 70%;
+//       }
+//
+//       .key {
+//         margin-bottom: 7px;
+//       }
+//     }
+//
+//   }
+// }
