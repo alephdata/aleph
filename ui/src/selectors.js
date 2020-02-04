@@ -219,10 +219,6 @@ export function selectCollectionMappings(state, collectionId) {
   return selectObject(state, state.collectionMappings, collectionId);
 }
 
-export function selectCollectionDiagrams(state, collectionId) {
-  return selectObject(state.collectionDiagrams, collectionId);
-}
-
 export function selectCollectionXrefIndex(state, collectionId) {
   return selectObject(state, state.collectionXrefIndex, collectionId);
 }
