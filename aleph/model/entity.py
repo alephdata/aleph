@@ -81,12 +81,12 @@ class Entity(db.Model, SoftDeleteModel):
         return proxy
 
     @classmethod
-    def create(cls, data, collection):
+    def create(cls, data, collection, entity_id=None):
         foreign_id = data.get('foreign_id')
         ent = cls.by_foreign_id(foreign_id, collection.id, deleted=True)
         if ent is None:
             ent = cls()
-            ent.id = make_textid()
+            ent.id = entity_id or make_textid()
             ent.collection = collection
             ent.foreign_id = foreign_id
             ent.data = {}

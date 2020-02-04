@@ -1,4 +1,4 @@
-DiagramUpdate:
+DiagramBase:
   type: object
   properties:
     label:
@@ -10,6 +10,12 @@ DiagramUpdate:
       type: object
       allOf:
         - $ref: '#/components/schemas/Layout'
+
+DiagramUpdate:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/DiagramBase'
+  properties:
     entities:
       type: array
       items:
@@ -19,16 +25,28 @@ DiagramUpdate:
 DiagramCreate:
   type: object
   allOf:
-    - $ref: '#/components/schemas/DiagramUpdate'
+    - $ref: '#/components/schemas/DiagramBase'
   properties:
     collection_id:
       type: integer
+    entities:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/EntityUpdate'
+        properties:
+          id:
+            type: string
+        required: ['id', 'schema', 'properties']
   required: ["label", "collection_id"]
 
 Diagram:
   type: object
   allOf:
   - $ref: '#/components/schemas/DatedModel'
+  allOf:
+    - $ref: '#/components/schemas/DiagramBase'
   properties:
     collection:
       type: object
@@ -36,11 +54,6 @@ Diagram:
       - $ref: '#/components/schemas/Collection'
     role_id:
       type: string
-    label:
-      type: string
-    summary:
-      type: string
-      nullable: true
     entities:
       type: array
       items:
@@ -51,10 +64,6 @@ Diagram:
           id:
             type: string
         required: ["id", "schema"]
-    layout:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/Layout'
     writeable:
       type: boolean
   required: ["collection", "role_id", "label", "layout", "entities", "writeable"]

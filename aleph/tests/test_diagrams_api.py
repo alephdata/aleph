@@ -53,10 +53,24 @@ class DiagramAPITest(TestCase):
         _, self.headers = self.login(is_admin=True)
         self.rolex = self.create_user(foreign_id='user_3')
         _, self.headers_x = self.login(foreign_id='user_3')
-        self.input_data = self._load_data('royal-family.vis')
+        self.input_data = self._load_data_for_import('royal-family.vis')
         # pprint(self.input_data)
 
-    def _load_data(self, fixture):
+    def _load_data_for_import(self, fixture):
+        fixture = self.get_fixture_path(fixture)
+        with open(fixture, 'r') as fp:
+            data = json.load(fp)
+        layout = data.pop('layout')
+        entities = layout.pop('entities')
+        return {
+            'collection_id': self.col.id,
+            'layout': layout,
+            'entities': entities,
+            'label': 'Royal Family',
+            'summary': '...'
+        }
+
+    def _load_data_for_update(self, fixture):
         fixture = self.get_fixture_path(fixture)
         with open(fixture, 'r') as fp:
             data = json.load(fp)
@@ -90,9 +104,8 @@ class DiagramAPITest(TestCase):
         url = '/api/2/diagrams'
         res = self.client.post(url, json=self.input_data, headers=self.headers)  # noqa
         assert res.status_code == 200, res
-        # pprint(res.json)
         validate(res.json, 'Diagram')
-        ent_id = self.input_data['entities'][0]
+        ent_id = self.input_data['entities'][0]['id']
         assert ent_id in str(res.json), res.json
         assert isinstance(
             res.json['entities'][2]['properties']['person'],
@@ -126,7 +139,7 @@ class DiagramAPITest(TestCase):
         validate(res.json, 'Diagram')
         assert res.json['label'] == 'Royal Family'
 
-        updated_data = self._load_data('royal-family-v2.vis')
+        updated_data = self._load_data_for_update('royal-family-v2.vis')
         updated_data['label'] = 'Royal Family v2'
         res = self.client.post(url, json=updated_data, headers=self.headers)
         assert res.status_code == 200, res

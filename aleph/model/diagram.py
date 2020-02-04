@@ -18,6 +18,7 @@ class Diagram(db.Model, SoftDeleteModel):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.Unicode)
     summary = db.Column(db.Unicode, nullable=True)
+    # list of entity ids
     entities = db.Column('entities', db.ARRAY(db.Unicode))
     layout = db.Column('layout', JSONB)
 
