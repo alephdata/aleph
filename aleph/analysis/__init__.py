@@ -1,13 +1,14 @@
 import logging
 from followthemoney.types import registry
+from followthemoney.helpers import name_entity
 
 from aleph.core import settings
-from aleph.model import Document, Entity
+from aleph.model import Document
 from aleph.analysis.aggregate import TagAggregator
 from aleph.analysis.extract import extract_entities
 from aleph.analysis.patterns import extract_patterns
 from aleph.analysis.language import detect_languages
-from aleph.analysis.util import load_places
+from aleph.analysis.util import load_places, text_chunks
 
 # TODO: this doesn't really have that much to do with aleph and
 # could be it's own package, e.g. followthemoney-tagger.
@@ -28,8 +29,8 @@ def extract_named_entities(entity):
     load_places()
     aggregator = TagAggregator()
     texts = entity.get_type_values(registry.text)
-    detect_languages(entity, texts)
-    for text in texts:
+    for text in text_chunks(texts):
+        detect_languages(entity, text)
         for (prop, tag) in extract_entities(entity, text):
             aggregator.add(prop, tag)
         for (prop, tag) in extract_patterns(entity, text):
@@ -41,21 +42,6 @@ def extract_named_entities(entity):
     if len(aggregator):
         log.debug("Extracted %d tags [%s]: %s", len(aggregator),
                   entity.id, entity.caption)
-
-
-def name_entity(entity):
-    """If an entity has multiple names, pick the most central one
-    and set all the others as aliases. This is awkward given that
-    names aren't special and may not always be the caption."""
-    if not entity.schema.is_a(Entity.THING):
-        return
-    names = entity.get('name')
-    if len(names) <= 1:
-        return
-    name = registry.name.pick(names)
-    names.remove(name)
-    entity.set('name', name)
-    entity.add('alias', names)
 
 
 def analyze_entity(entity):

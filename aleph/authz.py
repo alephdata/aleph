@@ -1,4 +1,5 @@
 import jwt
+import json
 import logging
 from banal import ensure_list
 from datetime import datetime, timedelta
@@ -18,7 +19,7 @@ class Authz(object):
     """
     READ = 'read'
     WRITE = 'write'
-    PREFIX = 'authz'
+    PREFIX = 'aauthz'
 
     def __init__(self, role_id, roles, is_admin=False):
         self.id = role_id
@@ -32,11 +33,10 @@ class Authz(object):
     def collections(self, action):
         if action in self._collections:
             return self._collections.get(action)
-        prefix_key = cache.key(self.PREFIX)
-        key = cache.key(self.PREFIX, action, self.id)
-        collections = cache.get_list(key)
-        if len(collections):
-            collections = [int(c) for c in collections]
+        key = cache.key(action, self.id)
+        collections = cache.kv.hget(self.PREFIX, key)
+        if collections:
+            collections = json.loads(collections)
             self._collections[action] = collections
             log.debug("[C] Authz: %s (%s): %s", self, action, collections)
             return collections
@@ -55,8 +55,7 @@ class Authz(object):
             # log.info("Query: %s - roles: %s", q, self.roles)
         collections = [c for (c,) in q.all()]
         log.debug("Authz: %s (%s): %s", self, action, collections)
-        cache.kv.sadd(prefix_key, key)
-        cache.set_list(key, collections)
+        cache.kv.hset(self.PREFIX, key, json.dumps(collections))
         self._collections[action] = collections
         return collections
 
@@ -157,9 +156,4 @@ class Authz(object):
 
     @classmethod
     def flush(cls):
-        pipe = cache.kv.pipeline()
-        prefix_key = cache.key(cls.PREFIX)
-        for key in cache.kv.sscan_iter(prefix_key):
-            pipe.delete(key)
-        pipe.delete(prefix_key)
-        pipe.execute()
+        cache.kv.delete(cls.PREFIX)

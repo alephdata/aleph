@@ -17,7 +17,7 @@ class TabularIngestorTest(TestCase):
         self.assertIn('Sheet1', titles)
         table = [t for t in tables if '1' in t.first('title')][0]
         self.assertTrue(table.has('csvHash'))
-        self.assertEqual(int(table.first('rowCount')), 4)
+        self.assertEqual(int(table.first('rowCount')), 3)
         self.assertIn('Mihai Viteazul', table.get('indexText'))
 
     def test_unicode_xls(self):

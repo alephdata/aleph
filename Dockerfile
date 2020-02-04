@@ -24,7 +24,7 @@ RUN groupadd -g 1000 -r app \
 RUN pip3 install --no-cache-dir -q -U pip setuptools six
 
 # Install spaCy and link models to three-letter language codes
-RUN pip3 install --no-cache-dir -q spacy==2.2.2
+RUN pip3 install --no-cache-dir -q spacy==2.2.3
 RUN python3 -m spacy download xx_ent_wiki_sm \
     && python3 -m spacy link xx_ent_wiki_sm xx
 RUN python3 -m spacy download en_core_web_sm \
