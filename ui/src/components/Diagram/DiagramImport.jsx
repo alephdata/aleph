@@ -14,12 +14,17 @@ const messages = defineMessages({
 });
 
 class DiagramImport extends Component {
-  onDrop = ([file]) => {
-    const { intl } = this.props;
+  onDrop = (acceptedFiles) => {
+    if (!acceptedFiles || !acceptedFiles.length) {
+      return;
+    }
 
+    const { intl } = this.props;
+    const file = acceptedFiles[0];
     const fileName = file.name;
     const label = fileName.match(/^([^.]+)/)[0];
     const reader = new FileReader();
+
     reader.onload = async (e) => {
       const data = (e.target.result);
       this.props.onImport({ fileName, label, layout: JSON.parse(data).layout });
@@ -36,9 +41,7 @@ class DiagramImport extends Component {
     return (
       <Dropzone
         accept=".vis"
-        onDrop={acceptedFiles => (
-          acceptedFiles && acceptedFiles.length ? this.onDrop(acceptedFiles) : null
-        )}
+        onDrop={this.onDrop}
       >
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()}>

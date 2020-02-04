@@ -6,7 +6,7 @@ import DiagramEditDialog from 'src/dialogs/DiagramEditDialog/DiagramEditDialog';
 import DiagramDeleteDialog from 'src/dialogs/DiagramDeleteDialog/DiagramDeleteDialog';
 
 
-class CollectionManageMenu extends Component {
+class DiagramManageMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,5 +60,5 @@ class CollectionManageMenu extends Component {
   }
 }
 
-CollectionManageMenu = injectIntl(CollectionManageMenu);
-export default CollectionManageMenu;
+DiagramManageMenu = injectIntl(DiagramManageMenu);
+export default DiagramManageMenu;

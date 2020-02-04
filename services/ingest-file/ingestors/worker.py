@@ -22,6 +22,8 @@ class IngestWorker(Worker):
         manager = Manager(task.stage, task.context)
         entity = model.get_proxy(task.payload)
         log.debug("Ingest: %r", entity)
-        manager.ingest_entity(entity)
-        manager.close()
+        try:
+            manager.ingest_entity(entity)
+        finally:
+            manager.close()
         self.dispatch_next(task, manager.emitted)

@@ -15,6 +15,8 @@ BULK_PAGE = 500
 # cf. https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-from-size.html  # noqa
 MAX_PAGE = 9999
 NUMERIC_TYPES = (registry.number, registry.date,)
+MAX_TIMEOUT = '700m'
+MAX_REQUEST_TIMEOUT = 84600
 
 SHARDS_LIGHT = 1
 SHARDS_DEFAULT = 5
@@ -129,8 +131,8 @@ def query_delete(index, query, sync=False, **kwargs):
                                conflicts='proceed',
                                wait_for_completion=sync,
                                refresh=refresh_sync(sync),
-                               request_timeout=84600,
-                               timeout='700m',
+                               request_timeout=MAX_REQUEST_TIMEOUT,
+                               timeout=MAX_TIMEOUT,
                                **kwargs)
             return
         except TransportError as exc:
@@ -148,8 +150,8 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
                             yield_ok=False,
                             raise_on_error=False,
                             refresh=refresh_sync(sync),
-                            request_timeout=84600,
-                            timeout='700m')
+                            request_timeout=MAX_REQUEST_TIMEOUT,
+                            timeout=MAX_TIMEOUT)
     for _, details in stream:
         if details.get('delete', {}).get('status') == 404:
             continue
@@ -171,6 +173,15 @@ def index_safe(index, id, body, **kwargs):
             backoff(failures=attempt)
 
 
+def _check_response(index, res):
+    """Check if a request succeeded."""
+    if res.get('status', 0) > 399 and not res.get('acknowledged'):
+        error = res.get('error', {}).get('reason')
+        log.error("Index [%s] error: %s", index, error)
+        return False
+    return True
+
+
 def configure_index(index, mapping, settings):
     """Create or update a search index with the given mapping and
     settings. This will try to make a new index, or update an
@@ -178,16 +189,24 @@ def configure_index(index, mapping, settings):
     """
     if es.indices.exists(index=index):
         log.info("Configuring index: %s...", index)
-        res = es.indices.put_mapping(index=index,
-                                     body=mapping,
-                                     ignore=[400])
-        es.indices.close(index=index)
+        options = {
+            'index': index,
+            'timeout': MAX_TIMEOUT,
+            'master_timeout': MAX_TIMEOUT
+        }
+        res = es.indices.close(ignore_unavailable=True,
+                               **options)
+        res = es.indices.put_mapping(body=mapping,
+                                     ignore=[400],
+                                     **options)
+        _check_response(index, res)
         settings.get('index').pop('number_of_shards')
-        res = es.indices.put_settings(index=index,
-                                      body=settings,
-                                      ignore=[400])
-        es.indices.open(index=index)
-        return res.get('status') != 400
+        res = es.indices.put_settings(body=settings,
+                                      ignore=[400],
+                                      **options)
+        _check_response(index, res)
+        res = es.indices.open(**options)
+        return True
     log.info("Creating index: %s...", index)
     res = es.indices.create(index, body={
         'settings': settings,

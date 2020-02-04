@@ -5,7 +5,7 @@ import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent, Position, Tooltip } from '@blueprintjs/core';
 import { selectSession } from 'src/selectors';
 
-import DiagramEditDialog from 'src/dialogs/DiagramEditDialog/DiagramEditDialog';
+import DiagramCreateDialog from 'src/dialogs/DiagramCreateDialog/DiagramCreateDialog';
 
 const messages = defineMessages({
   login: {
@@ -57,8 +57,7 @@ class DiagramCreateMenu extends Component {
             {buttonContent}
           </Tooltip>
         )}
-        <DiagramEditDialog
-          isCreate
+        <DiagramCreateDialog
           importEnabled={importEnabled}
           isOpen={isOpen}
           toggleDialog={this.toggleDialog}

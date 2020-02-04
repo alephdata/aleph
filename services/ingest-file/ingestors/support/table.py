@@ -6,22 +6,26 @@ from followthemoney.types import registry
 from followthemoney.util import sanitize_text
 
 from ingestors.support.temp import TempFileSupport
+from ingestors.support.encoding import EncodingSupport
 
 log = logging.getLogger(__name__)
 
 
-class TableSupport(TempFileSupport):
+class TableSupport(EncodingSupport, TempFileSupport):
     """Handle creating rows from an ingestor."""
 
     def emit_row_dicts(self, table, rows, headers=None):
         csv_path = self.make_work_file(table.id)
         row_count = 0
-        with open(csv_path, 'w', encoding='utf-8') as fp:
+        with open(csv_path, 'w', encoding=self.DEFAULT_ENCODING) as fp:
             csv_writer = csv.writer(fp, dialect='unix')
             for row in rows:
                 if headers is None:
                     headers = list(row.keys())
                 values = [sanitize_text(row.get(h)) for h in headers]
+                length = sum((len(v) for v in values if v is not None))
+                if length == 0:
+                    continue
                 csv_writer.writerow(values)
                 self.manager.emit_text_fragment(table, values, row_count)
                 row_count += 1
