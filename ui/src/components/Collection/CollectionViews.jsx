@@ -20,11 +20,26 @@ import { selectCollectionXrefIndex, selectModel } from 'src/selectors';
 
 import './CollectionViews.scss';
 
+const viewIds = {
+  OVERVIEW: 'overview',
+  BROWSE: 'browse',
+  XREF: 'xref',
+  DIAGRAMS: 'diagrams',
+};
+
 /* eslint-disable */
 class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
+  }
+
+  componentDidUpdate() {
+    const { activeMode } = this.props;
+
+    if (Object.values(viewIds).indexOf(activeMode) < 0) {
+      this.handleTabChange(viewIds.OVERVIEW);
+    }
   }
 
   getEntitySchemata() {
@@ -55,12 +70,10 @@ class CollectionViews extends React.Component {
   handleTabChange(mode) {
     const { history, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
-    if (isPreview) {
-      parsedHash['preview:mode'] = mode;
-    } else {
-      parsedHash.mode = mode;
-      delete parsedHash.type;
-    }
+
+    parsedHash.mode = mode;
+    delete parsedHash.type;
+
     history.replace({
       pathname: location.pathname,
       search: location.search,
@@ -78,9 +91,6 @@ class CollectionViews extends React.Component {
 
     let selectedTab = activeMode;
 
-    // if (activeMode !== 'overview' && activeMode !== 'diagrams' && activeMode !== 'xref') {
-    //   selectedTab = 'browse';
-    // }
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -90,7 +100,7 @@ class CollectionViews extends React.Component {
         renderActiveTabPanelOnly
       >
         <Tab
-          id="overview"
+          id={viewIds.OVERVIEW}
           className="CollectionViews__tab"
           title={
             <>
@@ -100,7 +110,7 @@ class CollectionViews extends React.Component {
           panel={<CollectionOverviewMode collection={collection} />}
         />
         <Tab
-          id="browse"
+          id={viewIds.BROWSE}
           className="CollectionViews__tab"
           title={
             <>
@@ -110,7 +120,7 @@ class CollectionViews extends React.Component {
           panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
         />
         <Tab
-          id="xref"
+          id={viewIds.XREF}
           className="CollectionViews__tab"
           title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
@@ -122,7 +132,7 @@ class CollectionViews extends React.Component {
         />
         {collection.casefile && (
           <Tab
-            id="diagram"
+            id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
             title={
               <>
