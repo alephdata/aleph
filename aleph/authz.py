@@ -151,7 +151,7 @@ class Authz(object):
             return cls(data.get('u'),
                        data.get('r'),
                        data.get('a', False))
-        except jwt.DecodeError:
+        except (jwt.DecodeError, TypeError):
             return
 
     @classmethod
