@@ -164,33 +164,6 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res.json
         assert 2 == len(res.json['properties'].get('alias', [])), res.json
 
-    def test_merge_nested(self):
-        _, headers = self.login(is_admin=True)
-        url = '/api/2/entities'
-        data = {
-            'schema': 'Person',
-            'collection_id': self.col_id,
-            'properties': {
-                'name': "Osama bin Laden",
-                'alias': ["Usama bin Laden", "Osama bin Ladin"],
-                'address': 'Home, Netherlands'
-            }
-        }
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 200, (res.status_code, res.json)
-        data = res.json
-        data['properties']['alias'] = ["Usama bin Laden", "Usama bin Ladin"]
-        url = '/api/2/entities/%s?merge=true' % data['id']
-        res = self.client.post(url,
-                               data=json.dumps(data),
-                               headers=headers,
-                               content_type='application/json')
-        assert res.status_code == 200, (res.status_code, res.json)
-        assert 3 == len(res.json['properties'].get('alias', [])), res.json
-
     def test_remove_nested(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
@@ -393,10 +366,11 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 404, res.status_code
 
         # test undelete with property update
-        url = '/api/2/entities/%s/undelete?merge=true' % id1
+        url = '/api/2/entities/%s/undelete' % id1
         data = {
             'schema': 'Person',
             'properties': {
+                'name': "Mr. Mango",
                 'status': 'ripe',
             }
         }
@@ -416,10 +390,12 @@ class EntitiesApiTestCase(TestCase):
         assert res.json['properties']['status'] == ['ripe'], res.json
 
         # Test undelete existing entity
-        url = '/api/2/entities/%s/undelete?merge=true' % id1
+        url = '/api/2/entities/%s/undelete' % id1
         data = {
             'schema': 'Person',
             'properties': {
+                'name': "Mr. Mango",
+                'status': 'ripe',
                 'email': 'mango@mango.yum',
             }
         }
@@ -435,7 +411,7 @@ class EntitiesApiTestCase(TestCase):
 
         # test create entity with undelete
         id2 = "random-id"
-        url = '/api/2/entities/%s/undelete?merge=true' % id2
+        url = '/api/2/entities/%s/undelete' % id2
         data = {
             'schema': 'Person',
             'properties': {

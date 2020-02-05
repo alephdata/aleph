@@ -4,7 +4,6 @@ from flask import Blueprint, request, Response
 from werkzeug.exceptions import BadRequest
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.util import merge_data
 from urllib.parse import quote
 from urlnormalizer import query_string
 
@@ -521,9 +520,6 @@ def update(entity_id):
     entity = get_db_entity(entity_id, request.authz.WRITE)
     tag_request(collection_id=entity.collection_id)
     data = parse_request('EntityUpdate')
-    if get_flag('merge'):
-        props = merge_data(data.get('properties'), entity.data)
-        data['properties'] = props
     entity.update(data)
     db.session.commit()
     update_entity(entity, sync=get_flag('sync', True))
@@ -564,7 +560,7 @@ def undelete(entity_id):
     post:
       summary: Undelete an entity
       description: >
-        Undelete the entity with id `entity_id`; and optionally update its
+        Undelete the entity with id `entity_id` and update its
         data. If the entity doesn't exist, create it. This only applies to
         entities which are backed by a database row, i.e. not any entities
         resulting from a mapping or bulk load.
@@ -598,9 +594,6 @@ def undelete(entity_id):
         if entity.deleted_at is not None:
             entity.undelete()
         if data.get('properties'):
-            if get_flag('merge'):
-                props = merge_data(data.get('properties'), entity.data)
-                data['properties'] = props
             entity.update(data)
         update_entity(entity, sync=get_flag('sync', True))
     else:
