@@ -1,10 +1,10 @@
 # Translators:
-# jen occrp, 2019
+# jen occrp, 2020
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-09-25T14:53:45.568Z\n"
-"Last-Translator: jen occrp, 2019\n"
+"POT-Creation-Date: 2020-01-31T15:16:18.960Z\n"
+"Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +33,27 @@ msgstr "(подтверждение)"
 #: i18n/messages.json
 msgid "(missing)"
 msgstr "(отсутствует)"
+
+#. [mapping.section1.title]
+#. defaultMessage is:
+#. 1. Select entity types to map
+#: i18n/messages.json
+msgid "1. Select entity types to map"
+msgstr "1. Выберите типы сущностей для маппинга"
+
+#. [mapping.section2.title]
+#. defaultMessage is:
+#. 2. Map columns to entity properties
+#: i18n/messages.json
+msgid "2. Map columns to entity properties"
+msgstr "2. Соотнесите колонки свойствам сущностей"
+
+#. [mapping.section3.title]
+#. defaultMessage is:
+#. 3. Verify
+#: i18n/messages.json
+msgid "3. Verify"
+msgstr "3. Проверьте результат"
 
 #. [searchTips.composite.2]
 #. defaultMessage is:
@@ -110,13 +131,6 @@ msgstr "Название"
 msgid "API Secret Access Key"
 msgstr "API-ключ"
 
-#. [collection.edit.title]
-#. defaultMessage is:
-#. Access control
-#: i18n/messages.json
-msgid "Access control"
-msgstr "Права доступа"
-
 #. [collection.team]
 #. defaultMessage is:
 #. Accessible to
@@ -145,12 +159,40 @@ msgstr "Активирируйте аккаунт"
 msgid "Activity"
 msgstr "События"
 
-#. [search.facets.facet.addresses]
+#. [mapping.propAssign.literalButtonText]
 #. defaultMessage is:
-#. Addresses
+#. Add a fixed value
 #: i18n/messages.json
-msgid "Addresses"
-msgstr "Адреса"
+msgid "Add a fixed value"
+msgstr "Добавить заданное значение"
+
+#. [mapping.schemaSelect.button.thing]
+#. defaultMessage is:
+#. Add a new object
+#: i18n/messages.json
+msgid "Add a new object"
+msgstr "Добавить новый объект"
+
+#. [mapping.schemaSelect.button.relationship]
+#. defaultMessage is:
+#. Add a new relationship
+#: i18n/messages.json
+msgid "Add a new relationship"
+msgstr "Добавить новую связь"
+
+#. [mapping.propAssign.literalPlaceholder]
+#. defaultMessage is:
+#. Add fixed value text
+#: i18n/messages.json
+msgid "Add fixed value text"
+msgstr "Задать значение"
+
+#. [mapping.infoLink]
+#. defaultMessage is:
+#. Aleph data mapping documentation
+#: i18n/messages.json
+msgid "Aleph data mapping documentation"
+msgstr "Маппинг данных в Алефе"
 
 #. [footer.aleph]
 #. defaultMessage is:
@@ -176,6 +218,15 @@ msgstr "Оповещения"
 msgid "All"
 msgstr "Все"
 
+#. [mapping.keyAssign.helpText]
+#. defaultMessage is:
+#. All keys combined specify the id of the entity. The id must be unique.
+#: i18n/messages.json
+msgid "All keys combined specify the id of the entity. The id must be unique."
+msgstr ""
+"ID каждой сущности определяется суммой всех ключей. ID должен быть "
+"уникальным."
+
 #. [signup.login]
 #. defaultMessage is:
 #. Already have account? Sign in!
@@ -197,6 +248,13 @@ msgstr "При удалении сущности возникла ошибка."
 msgid "An unexpected error occured"
 msgstr "Произошла ошибка"
 
+#. [mapping.create.question]
+#. defaultMessage is:
+#. Are you sure you are ready to generate entities using this mapping?
+#: i18n/messages.json
+msgid "Are you sure you are ready to generate entities using this mapping?"
+msgstr "Вы уверены, что готовы создать сущности, используя этот маппинг?"
+
 #. [collection.delete.question]
 #. defaultMessage is:
 #. Are you sure you want to delete this dataset and all contained items?
@@ -211,6 +269,30 @@ msgstr "Вы хотите удалить этот набор данных и в�
 msgid "Are you sure you want to delete this entity?"
 msgstr "Вы уверены, что хотите удалить эту сущность?"
 
+#. [mapping.delete.question]
+#. defaultMessage is:
+#. Are you sure you want to delete this mapping and all generated entities?
+#: i18n/messages.json
+msgid ""
+"Are you sure you want to delete this mapping and all generated entities?"
+msgstr "Вы уверены, что хотите удалить этот маппинг и все созданные сущности?"
+
+#. [mapping.flush.question]
+#. defaultMessage is:
+#. Are you sure you want to remove entities generated using this mapping?
+#: i18n/messages.json
+msgid "Are you sure you want to remove entities generated using this mapping?"
+msgstr ""
+"Вы уверены, что хотите удалить все созданные с помощью этого маппинга "
+"сущности?"
+
+#. [mapping.propAssign.placeholder]
+#. defaultMessage is:
+#. Assign a property
+#: i18n/messages.json
+msgid "Assign a property"
+msgstr "Назначить свойство"
+
 #. [entity.info.attachments]
 #. defaultMessage is:
 #. Attachments
@@ -224,18 +306,6 @@ msgstr "Вложения"
 #: i18n/messages.json
 msgid "BCC"
 msgstr "Скрытая копия"
-
-#. [dashboard.subheading]
-#. defaultMessage is:
-#. Below is a list of your most recent searches. You have the option to delete
-#. specific searches so they do not show up in our records.
-#: i18n/messages.json
-msgid ""
-"Below is a list of your most recent searches. You have the option to delete "
-"specific searches so they do not show up in our records."
-msgstr ""
-"Это история вашего поиска. Вы можете удалить отдельные запросы, чтобы они не"
-" отображались в наших лог-файлах."
 
 #. [email.cc]
 #. defaultMessage is:
@@ -265,9 +335,22 @@ msgstr "Копия"
 #. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
+#. [mapping.create.cancel]
+#. defaultMessage is:
+#. Cancel
+#. [mapping.delete.cancel]
+#. defaultMessage is:
+#. Cancel
+#. [mapping.flush.cancel]
+#. defaultMessage is:
+#. Cancel
+#. [mapping.save.cancel]
+#. defaultMessage is:
+#. Cancel
 #. [collection.cancel.button]
 #. defaultMessage is:
 #. Cancel
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cancel"
@@ -276,10 +359,7 @@ msgstr "Отменить"
 #. [collection.status.cancel_button]
 #. defaultMessage is:
 #. Cancel the process
-#. [collection.status.cancel_button]
-#. defaultMessage is:
-#. Cancel the process
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel the process"
 msgstr "Отменить процесс"
 
@@ -300,20 +380,14 @@ msgstr "Обзор кейсов"
 #. [collection.xref.filter.categories]
 #. defaultMessage is:
 #. Categories
-#. [collection.index.facet.category]
-#. defaultMessage is:
-#. Categories
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Categories"
 msgstr "Категории"
 
-#. [collection.category]
-#. defaultMessage is:
-#. Category
 #. [collection.edit.info.category]
 #. defaultMessage is:
 #. Category
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Category"
 msgstr "Категория"
 
@@ -370,6 +444,13 @@ msgstr "Количество упоминаний"
 msgid "Clear all"
 msgstr "Очистить все"
 
+#. [collection.analyze.reset]
+#. defaultMessage is:
+#. Clear index before processing
+#: i18n/messages.json
+msgid "Clear index before processing"
+msgstr "Очистить индекс"
+
 #. [navbar.alert_add]
 #. defaultMessage is:
 #. Click to receive alerts about new results for this search.
@@ -385,12 +466,19 @@ msgstr ""
 msgid "Code"
 msgstr "Исходный код"
 
-#. [collection.status.collection]
+#. [mapping.propAssign.errorDuplicate]
 #. defaultMessage is:
-#. Collection
+#. Columns with duplicate headers cannot be assigned
 #: i18n/messages.json
-msgid "Collection"
-msgstr "Коллекция"
+msgid "Columns with duplicate headers cannot be assigned"
+msgstr "Нельзя назначить свойства колонкам с неуникальными заголовками"
+
+#. [mapping.propAssign.errorBlank]
+#. defaultMessage is:
+#. Columns with no header cannot be assigned
+#: i18n/messages.json
+msgid "Columns with no header cannot be assigned"
+msgstr "Нельзя назначить свойства колонкам без заголовка"
 
 #. [collections.xref.title]
 #. defaultMessage is:
@@ -457,17 +545,10 @@ msgstr "Скопировать в буфер"
 #. [collection.edit.info.countries]
 #. defaultMessage is:
 #. Countries
-#. [collection.index.facet.countries]
-#. defaultMessage is:
-#. Countries
 #. [xref.countries]
 #. defaultMessage is:
 #. Countries
-#. [search.facets.facet.countries]
-#. defaultMessage is:
-#. Countries
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Countries"
 msgstr "Страны"
 
@@ -505,13 +586,10 @@ msgstr "Создать персональный набор данных"
 #. [collection.xref.title]
 #. defaultMessage is:
 #. Cross-reference
-#. [collections.xref.title]
-#. defaultMessage is:
-#. Cross-reference
 #. [matches.screen.xref]
 #. defaultMessage is:
 #. Cross-reference
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Cross-reference"
 msgstr "Перекрёстное сравнение"
 
@@ -576,13 +654,13 @@ msgstr "Ссылка на данные"
 msgid "Data source URL"
 msgstr "Ссылка на исходные данные"
 
-#. [collection.info.collection]
-#. defaultMessage is:
-#. Dataset
 #. [infoMode.collection]
 #. defaultMessage is:
 #. Dataset
 #. [entity.column.collection_id]
+#. defaultMessage is:
+#. Dataset
+#. [collection.status.collection]
 #. defaultMessage is:
 #. Dataset
 #: i18n/messages.json i18n/messages.json i18n/messages.json
@@ -612,10 +690,7 @@ msgstr "Настройки набора данных"
 #. [collection.index.breadcrumb]
 #. defaultMessage is:
 #. Datasets
-#. [search.facets.facet.collection_id]
-#. defaultMessage is:
-#. Datasets
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Datasets"
 msgstr "Наборы данных"
 
@@ -638,6 +713,9 @@ msgstr "Дата"
 #. [document.viewer.delete]
 #. defaultMessage is:
 #. Delete
+#. [mapping.actions.delete]
+#. defaultMessage is:
+#. Delete
 #. [collection.delete.confirm]
 #. defaultMessage is:
 #. Delete
@@ -647,18 +725,25 @@ msgstr "Дата"
 #. [entity.delete.confirm]
 #. defaultMessage is:
 #. Delete
+#. [mapping.delete.confirm]
+#. defaultMessage is:
+#. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Delete"
 msgstr "Удалить"
+
+#. [mapping.actions.delete.toast]
+#. defaultMessage is:
+#. Deleting mapping and generated entities...
+#: i18n/messages.json
+msgid "Deleting mapping and generated entities..."
+msgstr "Удаление маппинга и созданных сущностей..."
 
 #. [entity.info.documents]
 #. defaultMessage is:
 #. Documents
-#. [entity.info.documents]
-#. defaultMessage is:
-#. Documents
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Documents"
 msgstr "Документы"
 
@@ -704,13 +789,6 @@ msgstr "Скачать в формате Excel"
 msgid "Download the original document"
 msgstr "Скачать оригинальный документ"
 
-#. [search.facets.facet.emails]
-#. defaultMessage is:
-#. E-Mails
-#: i18n/messages.json
-msgid "E-Mails"
-msgstr "Эл. адреса"
-
 #. [settings.email]
 #. defaultMessage is:
 #. E-mail Address
@@ -739,19 +817,19 @@ msgstr "Электронный адрес"
 msgid "Enter your current password to set a new one."
 msgstr "Введите текущий пароль для установки нового."
 
-#. [collection.entity_types]
-#. defaultMessage is:
-#. Entity types
-#: i18n/messages.json
-msgid "Entity types"
-msgstr "Типы сущностей"
-
 #. [result.error]
 #. defaultMessage is:
 #. Error
 #: i18n/messages.json
 msgid "Error"
 msgstr "Ошибка"
+
+#. [mapping.status.error]
+#. defaultMessage is:
+#. Error:
+#: i18n/messages.json
+msgid "Error:"
+msgstr "Ошибка:"
 
 #. [searchTips.exact.title]
 #. defaultMessage is:
@@ -780,13 +858,6 @@ msgstr "Экспорт"
 #: i18n/messages.json
 msgid "Extracted selectors"
 msgstr "Найденные селекторы"
-
-#. [search.facets.facet.mimetypes]
-#. defaultMessage is:
-#. File types
-#: i18n/messages.json
-msgid "File types"
-msgstr "Типы файлов"
 
 #. [search.filterTag.role]
 #. defaultMessage is:
@@ -830,6 +901,18 @@ msgstr "Готово"
 msgid "Folder title"
 msgstr "Название папки"
 
+#. [mapping.info]
+#. defaultMessage is:
+#. Follow the steps below to map items in this dataset to structured Follow
+#. the Money entites. For more information, please refer to the {link}
+#: i18n/messages.json
+msgid ""
+"Follow the steps below to map items in this dataset to structured Follow the"
+" Money entites. For more information, please refer to the {link}"
+msgstr ""
+"Выполните нижследующие действия для маппинга ваших данных с сущностями "
+"модели Follow the Money. Подробнее см. {link}"
+
 #. [collection.foreign_id]
 #. defaultMessage is:
 #. Foreign ID
@@ -852,12 +935,14 @@ msgid ""
 "Found {resultCount}\n"
 "                {resultCount, plural, one {similar entity} other {similar entities}}\n"
 "                from {datasetCount}\n"
-"                {datasetCount, plural, one {dataset} other {datasets}}"
+"                {datasetCount, plural, one {dataset} other {datasets}}\n"
+"              "
 msgstr ""
 "Найдено {resultCount}\n"
-"                    {resultCount, plural, one {похожая запись} прочих {похожих записей}}\n"
-"                    из {datasetCount}\n"
-"                    {datasetCount, plurla, one {набор данных} из {наборов данных}}"
+"                {resultCount, plural, one {похожих сущностей} other {similar entities}}\n"
+"                из {datasetCount}\n"
+"                {datasetCount, plural, one {dataset} прочих {datasets}}\n"
+"              "
 
 #. [result.results]
 #. defaultMessage is:
@@ -872,6 +957,37 @@ msgstr "Результатов поиска: {total}"
 #: i18n/messages.json
 msgid "From"
 msgstr "От"
+
+#. [mapping.create.confirm]
+#. defaultMessage is:
+#. Generate
+#: i18n/messages.json
+msgid "Generate"
+msgstr "Создать"
+
+#. [entity.mapping.view]
+#. defaultMessage is:
+#. Generate entities
+#. [mapping.actions.create]
+#. defaultMessage is:
+#. Generate entities
+#: i18n/messages.json i18n/messages.json
+msgid "Generate entities"
+msgstr "Создать сущности"
+
+#. [mapping.title]
+#. defaultMessage is:
+#. Generate structured entities
+#: i18n/messages.json
+msgid "Generate structured entities"
+msgstr "Создать структурированные сущности"
+
+#. [mapping.actions.create.toast]
+#. defaultMessage is:
+#. Generating entities...
+#: i18n/messages.json
+msgid "Generating entities..."
+msgstr "Создание сущностей..."
 
 #. [dashboard.groups]
 #. defaultMessage is:
@@ -928,6 +1044,20 @@ msgstr "Задачи"
 msgid "Keep track of searches..."
 msgstr "Оповещать о новых результатах поиска..."
 
+#. [mapping.error.keyMissing]
+#. defaultMessage is:
+#. Key Error: {id} entity must have at least one key
+#: i18n/messages.json
+msgid "Key Error: {id} entity must have at least one key"
+msgstr "Ошибка ключа: для сущности {id} должен быть задан хотя бы один ключ"
+
+#. [mapping.keys]
+#. defaultMessage is:
+#. Keys
+#: i18n/messages.json
+msgid "Keys"
+msgstr "Ключи"
+
 #. [collection.edit.info.label]
 #. defaultMessage is:
 #. Label
@@ -948,10 +1078,7 @@ msgstr "Язык"
 #. [case.chose.languages]
 #. defaultMessage is:
 #. Languages
-#. [search.facets.facet.languages]
-#. defaultMessage is:
-#. Languages
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Languages"
 msgstr "Языки"
 
@@ -961,6 +1088,13 @@ msgstr "Языки"
 #: i18n/messages.json
 msgid "Last updated"
 msgstr "Последнее изменение"
+
+#. [mapping.status.updated]
+#. defaultMessage is:
+#. Last updated:
+#: i18n/messages.json
+msgid "Last updated:"
+msgstr "Последнее обновление:"
 
 #. [collection.edit.info.placeholder_info_url]
 #. defaultMessage is:
@@ -1015,11 +1149,11 @@ msgstr "Автор"
 #. defaultMessage is:
 #. Match your own data against the entities in this collection using the free
 #. {openrefine}
-#.                 tool by adding the reconciliation endpoint.
+#.                   tool by adding the reconciliation endpoint.
 #: i18n/messages.json
 msgid ""
 "Match your own data against the entities in this collection using the free {openrefine}\n"
-"                tool by adding the reconciliation endpoint."
+"                  tool by adding the reconciliation endpoint."
 msgstr ""
 "Сопоставить пользовательские данные с сущностями из этой коллекции с помощью свободного инструмента {openrefine}\n"
 "путём добавления следующих точек совмещения:"
@@ -1057,13 +1191,6 @@ msgstr "Найдено результатов: более {}"
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Name"
 msgstr "Название"
-
-#. [search.facets.facet.names]
-#. defaultMessage is:
-#. Names
-#: i18n/messages.json
-msgid "Names"
-msgstr "Имена"
 
 #. [cases.index.create]
 #. defaultMessage is:
@@ -1103,6 +1230,22 @@ msgstr "Не найдено"
 msgid "No files or directories."
 msgstr "Здесь ничего нет."
 
+#. [entity.document.manager.emptyCanUpload]
+#. defaultMessage is:
+#. No files or directories. Drop files here or click to upload.
+#: i18n/messages.json
+msgid "No files or directories. Drop files here or click to upload."
+msgstr ""
+"Файлы или папки отсутствуют. Перетащите файлы сюда или кликните, чтобы "
+"загрузить."
+
+#. [mapping.entityAssign.noResults]
+#. defaultMessage is:
+#. No matching objects available
+#: i18n/messages.json
+msgid "No matching objects available"
+msgstr "Нет совпадений с другими объектами"
+
 #. [email.body.empty]
 #. defaultMessage is:
 #. No message body.
@@ -1123,6 +1266,13 @@ msgstr "Варианты отсутствуют"
 #: i18n/messages.json
 msgid "No preview is available for this document"
 msgstr "Просмотр документа невозможен"
+
+#. [mapping.keyAssign.noResults]
+#. defaultMessage is:
+#. No results
+#: i18n/messages.json
+msgid "No results"
+msgstr "Результатов нет"
 
 #. [result.none]
 #. defaultMessage is:
@@ -1162,6 +1312,13 @@ msgstr "В данной записи селекторов нет"
 msgid "No single page within this document matches all your search terms."
 msgstr "Искомых слов в документе не найдено."
 
+#. [collection.statistics.empty]
+#. defaultMessage is:
+#. No statistics available for this dataset
+#: i18n/messages.json
+msgid "No statistics available for this dataset"
+msgstr "Статистика отсутствует"
+
 #. [auth.unauthorized]
 #. defaultMessage is:
 #. Not authorized
@@ -1178,6 +1335,13 @@ msgstr "Требуется авторизация"
 #: i18n/messages.json i18n/messages.json
 msgid "Notifications"
 msgstr "Уведомления"
+
+#. [mapping.types.objects]
+#. defaultMessage is:
+#. Objects
+#: i18n/messages.json
+msgid "Objects"
+msgstr "Объекты"
 
 #. [document.upload.notice]
 #. defaultMessage is:
@@ -1215,16 +1379,26 @@ msgstr "Организация или лицо, опубликовавшее д�
 #. [category.other]
 #. defaultMessage is:
 #. Other
-#: i18n/messages.json
+#. [mapping.propAssign.other]
+#. defaultMessage is:
+#. Other
+#: i18n/messages.json i18n/messages.json
 msgid "Other"
 msgstr "Прочее"
 
+#. [entity.info.overview]
+#. defaultMessage is:
+#. Overview
+#: i18n/messages.json
+msgid "Overview"
+msgstr "Информация"
+
 #. [document.paging]
 #. defaultMessage is:
-#. Page {currentPage} of {numberOfPages}
+#. Page {pageInput} of {numberOfPages}
 #: i18n/messages.json
-msgid "Page {currentPage} of {numberOfPages}"
-msgstr "Страница {currentPage} из {numberOfPages}"
+msgid "Page {pageInput} of {numberOfPages}"
+msgstr ""
 
 #. [document.pdf.search.page]
 #. defaultMessage is:
@@ -1290,12 +1464,19 @@ msgstr ""
 "архивы или таблицы будут проиндексированы и доступны для полнотекстового "
 "поиска."
 
-#. [search.facets.facet.phones]
+#. [mapping.actions.preview]
 #. defaultMessage is:
-#. Phones
+#. Preview mapping
 #: i18n/messages.json
-msgid "Phones"
-msgstr "Номера телефонов"
+msgid "Preview mapping"
+msgstr "Предпросмотр маппинга"
+
+#. [mapping.props]
+#. defaultMessage is:
+#. Properties
+#: i18n/messages.json
+msgid "Properties"
+msgstr "Свойства"
 
 #. [searchTips.proximity.title]
 #. defaultMessage is:
@@ -1331,24 +1512,12 @@ msgstr "Издатель"
 msgid "Publisher URL"
 msgstr "Ссылка на издателя"
 
-#. [collection.analyze.processing]
+#. [mapping.actions.save.toast]
 #. defaultMessage is:
-#. Re-analyzing started.
+#. Re-generating entities...
 #: i18n/messages.json
-msgid "Re-analyzing started."
-msgstr "Повторный анализ запущен."
-
-#. [collection.analyze.alert.text]
-#. defaultMessage is:
-#. Re-analyzing the dataset will take some time. Start the process only once
-#. and allow time for it to complete.
-#: i18n/messages.json
-msgid ""
-"Re-analyzing the dataset will take some time. Start the process only once "
-"and allow time for it to complete."
-msgstr ""
-"На повторный анализ коллекции потребуется время. Запустите и дождитесь "
-"завершения."
+msgid "Re-generating entities..."
+msgstr "Пересоздать сущности..."
 
 #. [document.manager.analyze]
 #. defaultMessage is:
@@ -1359,6 +1528,25 @@ msgstr ""
 #: i18n/messages.json i18n/messages.json
 msgid "Re-process"
 msgstr "Повторный анализ"
+
+#. [collection.analyze.processing]
+#. defaultMessage is:
+#. Re-processing started.
+#: i18n/messages.json
+msgid "Re-processing started."
+msgstr "Повторный анализ запущен."
+
+#. [collection.analyze.alert.text]
+#. defaultMessage is:
+#. Re-processing the dataset will take some time. Start the process only once
+#. and allow time for it to complete.
+#: i18n/messages.json
+msgid ""
+"Re-processing the dataset will take some time. Start the process only once "
+"and allow time for it to complete."
+msgstr ""
+"На повторный анализ данных потребуется время. Запустите и дождитесь "
+"завершения."
 
 #. [settings.email.muted]
 #. defaultMessage is:
@@ -1395,12 +1583,56 @@ msgstr "Объединение данных"
 msgid "Register"
 msgstr "Зарегистрироваться"
 
+#. [mapping.error.relationshipMissing]
+#. defaultMessage is:
+#. Relationship Error: {id} entity must have a {source} and {target} assigned
+#: i18n/messages.json
+msgid ""
+"Relationship Error: {id} entity must have a {source} and {target} assigned"
+msgstr ""
+"Ошибка связи: для сущности {id} должны быть заданы {source} и {target}."
+
+#. [mapping.types.relationships]
+#. defaultMessage is:
+#. Relationships
+#: i18n/messages.json
+msgid "Relationships"
+msgstr "Связи"
+
+#. [mapping.flush.confirm]
+#. defaultMessage is:
+#. Remove
+#: i18n/messages.json
+msgid "Remove"
+msgstr "Удалить"
+
 #. [queryLogs.query.delete.tooltip]
 #. defaultMessage is:
 #. Remove from {listType}
 #: i18n/messages.json
 msgid "Remove from {listType}"
 msgstr "Удалить из {listType}"
+
+#. [mapping.actions.flush]
+#. defaultMessage is:
+#. Remove generated entities
+#: i18n/messages.json
+msgid "Remove generated entities"
+msgstr "Удалить созданные сущности"
+
+#. [mapping.propRemove]
+#. defaultMessage is:
+#. Remove this property from mapping
+#: i18n/messages.json
+msgid "Remove this property from mapping"
+msgstr "Удалить свойство из маппинга"
+
+#. [mapping.actions.flush.toast]
+#. defaultMessage is:
+#. Removing generated entities...
+#: i18n/messages.json
+msgid "Removing generated entities..."
+msgstr "Удаление созданных сущностей"
 
 #. [collection.xref.select.showSelected]
 #. defaultMessage is:
@@ -1416,13 +1648,16 @@ msgstr "Показать выбранное"
 msgid "Save"
 msgstr "Сохранить"
 
+#. [mapping.actions.save]
+#. defaultMessage is:
+#. Save changes
 #. [collection.edit.save_button]
 #. defaultMessage is:
 #. Save changes
 #. [collection.edit.info.save]
 #. defaultMessage is:
 #. Save changes
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Save changes"
 msgstr "Сохранить изменения"
 
@@ -1522,19 +1757,26 @@ msgstr "Всего записей: {things}"
 msgid "Searching..."
 msgstr "Поиск..."
 
-#. [search.placeholder]
-#. defaultMessage is:
-#. Search…
-#: i18n/messages.json
-msgid "Search…"
-msgstr "Искать..."
-
 #. [language.multiselect.select]
 #. defaultMessage is:
 #. Select
 #: i18n/messages.json
 msgid "Select"
 msgstr "Выбрать"
+
+#. [mapping.entityAssign.placeholder]
+#. defaultMessage is:
+#. Select an object
+#: i18n/messages.json
+msgid "Select an object"
+msgstr "Выбрать объект"
+
+#. [mapping.keyAssign.placeholder]
+#. defaultMessage is:
+#. Select keys from available columns
+#: i18n/messages.json
+msgid "Select keys from available columns"
+msgstr "Выбрать ключи из доступных колонок"
 
 #. [auth.server_error]
 #. defaultMessage is:
@@ -1573,6 +1815,13 @@ msgstr "Доступ"
 msgid "Share with"
 msgstr "Предоставить доступ"
 
+#. [collection.statistics.showmore]
+#. defaultMessage is:
+#. Show more
+#: i18n/messages.json
+msgid "Show more"
+msgstr "Ещё"
+
 #. [search.facets.showMore]
 #. defaultMessage is:
 #. Show more…
@@ -1589,10 +1838,7 @@ msgstr "Ещё..."
 #. [search.callout_message.button_text]
 #. defaultMessage is:
 #. Sign in
-#. [signup.title]
-#. defaultMessage is:
-#. Sign in
-#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Sign in"
 msgstr "Войти"
 
@@ -1666,10 +1912,17 @@ msgstr "Запустить"
 
 #. [collection.analyze.confirm]
 #. defaultMessage is:
-#. Start re-analyzing
+#. Start processing
 #: i18n/messages.json
-msgid "Start re-analyzing"
-msgstr "Запустить повторный анализ"
+msgid "Start processing"
+msgstr "Запустить анализ"
+
+#. [mapping.status.status]
+#. defaultMessage is:
+#. Status:
+#: i18n/messages.json
+msgid "Status:"
+msgstr "Статус:"
 
 #. [email.subject]
 #. defaultMessage is:
@@ -1929,13 +2182,6 @@ msgstr "Например, {samples}"
 msgid "Type"
 msgstr "Тип"
 
-#. [search.facets.facet.schema]
-#. defaultMessage is:
-#. Types
-#: i18n/messages.json
-msgid "Types"
-msgstr "Типы"
-
 #. [country.unknown]
 #. defaultMessage is:
 #. Unknown
@@ -1970,12 +2216,31 @@ msgstr "Обновить"
 msgid "Update in progress ({percent}%)"
 msgstr "Обновлено {percent}%"
 
+#. [mapping.save.confirm]
+#. defaultMessage is:
+#. Update mapping & re-generate
+#: i18n/messages.json
+msgid "Update mapping & re-generate"
+msgstr "Обновить маппинг и пересоздать сущности"
+
 #. [collection.last_updated]
 #. defaultMessage is:
 #. Updated {date}
 #: i18n/messages.json
 msgid "Updated {date}"
 msgstr "Обновлено {date}"
+
+#. [mapping.save.question]
+#. defaultMessage is:
+#. Updating this mapping will delete any previously generated entities and re-
+#. generate them. Are you sure you would like to continue?
+#: i18n/messages.json
+msgid ""
+"Updating this mapping will delete any previously generated entities and re-"
+"generate them. Are you sure you would like to continue?"
+msgstr ""
+"При обновлении маппинга ранее созданные сущности будет удалены и созданы "
+"снова. Продолжить?"
 
 #. [document.upload.button]
 #. defaultMessage is:
@@ -2054,10 +2319,7 @@ msgstr "API-ключ для редактирования данных через
 #. [case.languages.helper]
 #. defaultMessage is:
 #. Used for optical text recognition in non-Latin alphabets.
-#. [case.languages.helper]
-#. defaultMessage is:
-#. Used for optical text recognition in non-Latin alphabets.
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Used for optical text recognition in non-Latin alphabets."
 msgstr "Для распознавания текстов нелатинских алфавитов."
 
@@ -2164,15 +2426,28 @@ msgstr "У вас нет непросмотренных уведомлений"
 
 #. [collection.xref.select.selectStatus]
 #. defaultMessage is:
-#. You have selected {selectedCount, number} {selectedCount, plural, one
-#. {collection} other {collections}}
+#. You have selected {selectedCount, number} {selectedCount, plural,
+#.                       one {collection}
+#.                       other {collections}
+#.                     }
 #: i18n/messages.json
 msgid ""
-"You have selected {selectedCount, number} {selectedCount, plural, one "
-"{collection} other {collections}}"
+"You have selected {selectedCount, number} {selectedCount, plural,\n"
+"                      one {collection}\n"
+"                      other {collections}\n"
+"                    }"
 msgstr ""
-"Вы выбрали {selectedCount, number} {selectedCount, plural, one {collection} "
-"остальных {collections}}"
+"Вы выбрали {selectedCount, number} {selectedCount, plural,\n"
+"                      one {коллекцию}\n"
+"                      other {коллекций}\n"
+"                    }"
+
+#. [mapping.entityAssign.helpText]
+#. defaultMessage is:
+#. You must create an object of type "{range}" to be the {property}
+#: i18n/messages.json
+msgid "You must create an object of type \"{range}\" to be the {property}"
+msgstr "Необходимо создать объект типа \"{range}\" для {property}"
 
 #. [case.create.login]
 #. defaultMessage is:
@@ -2203,10 +2478,7 @@ msgstr "Ваше имя"
 #. [collection.edit.save_success]
 #. defaultMessage is:
 #. Your changes are saved.
-#. [collection.edit.save_success]
-#. defaultMessage is:
-#. Your changes are saved.
-#: i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Your changes are saved."
 msgstr "Изменения сохранены"
 
@@ -2265,6 +2537,83 @@ msgstr "не:"
 #: i18n/messages.json
 msgid "unknown"
 msgstr "что-то неизвестное"
+
+#. [facet.addresses]
+#. defaultMessage is:
+#. {count, plural, one {Address} other {Addresses}}
+#: i18n/messages.json
+msgid "{count, plural, one {Address} other {Addresses}}"
+msgstr "{count, plural, one {Адрес} other {Адресов}}"
+
+#. [facet.category]
+#. defaultMessage is:
+#. {count, plural, one {Category} other {Categories}}
+#: i18n/messages.json
+msgid "{count, plural, one {Category} other {Categories}}"
+msgstr "{count, plural, one {Категория} other {Категорий}}"
+
+#. [facet.countries]
+#. defaultMessage is:
+#. {count, plural, one {Country} other {Countries}}
+#: i18n/messages.json
+msgid "{count, plural, one {Country} other {Countries}}"
+msgstr "{count, plural, one {Страна} other {Стран}}"
+
+#. [facet.collection_id]
+#. defaultMessage is:
+#. {count, plural, one {Dataset} other {Datasets}}
+#: i18n/messages.json
+msgid "{count, plural, one {Dataset} other {Datasets}}"
+msgstr "{count, plural, one {Набор данных} other {Наборов данных}}"
+
+#. [facet.emails]
+#. defaultMessage is:
+#. {count, plural, one {E-Mail} other {E-Mails}}
+#: i18n/messages.json
+msgid "{count, plural, one {E-Mail} other {E-Mails}}"
+msgstr "{count, plural, one {E-мэйл} other {E-мэйлов}}"
+
+#. [facet.mimetypes]
+#. defaultMessage is:
+#. {count, plural, one {File type} other {File types}}
+#: i18n/messages.json
+msgid "{count, plural, one {File type} other {File types}}"
+msgstr "{count, plural, one {Тип файла} other {Типов файлов}}"
+
+#. [facet.ibans]
+#. defaultMessage is:
+#. {count, plural, one {Iban number} other {Iban numbers}}
+#: i18n/messages.json
+msgid "{count, plural, one {Iban number} other {Iban numbers}}"
+msgstr "{count, plural, one {Iban-код} other {Iban-кодов}}"
+
+#. [facet.languages]
+#. defaultMessage is:
+#. {count, plural, one {Language} other {Languages}}
+#: i18n/messages.json
+msgid "{count, plural, one {Language} other {Languages}}"
+msgstr "{count, plural, one {Язык} other {Языков}}"
+
+#. [facet.names]
+#. defaultMessage is:
+#. {count, plural, one {Name} other {Names}}
+#: i18n/messages.json
+msgid "{count, plural, one {Name} other {Names}}"
+msgstr "{count, plural, one {Имя} other {Имён}}"
+
+#. [facet.phones]
+#. defaultMessage is:
+#. {count, plural, one {Phone number} other {Phone numbers}}
+#: i18n/messages.json
+msgid "{count, plural, one {Phone number} other {Phone numbers}}"
+msgstr "{count, plural, one {Номер телефона} other {Номеров телефона}}"
+
+#. [facet.schema]
+#. defaultMessage is:
+#. {count, plural, one {Type} other {Types}}
+#: i18n/messages.json
+msgid "{count, plural, one {Type} other {Types}}"
+msgstr "{count, plural, one {Тип} other {Типов}}"
 
 #. [infoMode.collection.entries]
 #. defaultMessage is:

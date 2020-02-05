@@ -6,7 +6,6 @@ from flask_babel import gettext, get_locale
 from elasticsearch import TransportError
 from followthemoney import model
 from followthemoney.exc import InvalidData
-from followthemoney.types import registry
 from jwt import ExpiredSignatureError, DecodeError
 
 from aleph import __version__
@@ -70,8 +69,6 @@ def metadata():
             'locales': locales
         },
         'categories': Collection.CATEGORIES,
-        'countries': registry.country.names,
-        'languages': registry.language.names,
         'model': model,
         'auth': auth
     }

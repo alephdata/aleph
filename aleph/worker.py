@@ -74,5 +74,5 @@ class AlephWorker(Worker):
 
 
 def get_worker():
-    log.info("Listen: %s, stages: %s", kv, OPERATIONS)
+    log.info("Worker active, stages: %s", OPERATIONS)
     return AlephWorker(conn=kv, stages=OPERATIONS, num_threads=None)

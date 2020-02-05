@@ -4,14 +4,13 @@ import logging
 from followthemoney import model
 
 from ingestors.ingestor import Ingestor
-from ingestors.support.encoding import EncodingSupport
 from ingestors.support.table import TableSupport
 from ingestors.exc import ProcessingException
 
 log = logging.getLogger(__name__)
 
 
-class CSVIngestor(Ingestor, EncodingSupport, TableSupport):
+class CSVIngestor(Ingestor, TableSupport):
     """Decode and ingest a CSV file.
 
     This expects a properly formatted CSV file with a header in the first row.

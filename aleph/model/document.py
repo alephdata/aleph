@@ -76,6 +76,9 @@ class Document(db.Model, DatedModel):
             else:
                 self.meta[prop] = sanitize_text(text)
 
+            if self.meta.get(prop) is None:
+                self.meta.pop(prop, None)
+
         flag_modified(self, 'meta')
 
     def delete(self, deleted_at=None):

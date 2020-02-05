@@ -75,7 +75,7 @@ class CollectionXrefDialog extends Component {
       });
     } else {
       this.setState({
-        selectedCollections: Array.concat([collection], selectedCollections),
+        selectedCollections: [...[collection], ...selectedCollections],
       });
     }
   }

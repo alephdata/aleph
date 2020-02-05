@@ -16,6 +16,7 @@ from elasticsearch import Elasticsearch
 from urlnormalizer import query_string
 from servicelayer.cache import get_redis
 from servicelayer.archive import init_archive
+from servicelayer.logs import configure_logging
 from servicelayer.extensions import get_extensions
 
 from aleph import settings, signals
@@ -33,6 +34,7 @@ talisman = Talisman()
 
 
 def create_app(config={}):
+    configure_logging()
     app = Flask('aleph')
     app.config.from_object(settings)
     app.config.update(config)
@@ -75,13 +77,15 @@ def create_app(config={}):
     from aleph.views import mount_app_blueprints
     mount_app_blueprints(app)
 
+    # Monkey-patch followthemoney
+    # from aleph.logic.names import name_frequency
+    # registry.name._specificity = name_frequency
+
     # This executes all registered init-time plugins so that other
     # applications can register their behaviour.
     for plugin in get_extensions('aleph.init'):
         plugin(app=app)
 
-    from aleph.views import mount_app_blueprints
-    mount_app_blueprints(app)
     return app
 
 

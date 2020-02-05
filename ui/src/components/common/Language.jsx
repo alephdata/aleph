@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 
 import wordList from 'src/util/wordList';
-import { selectMetadata } from 'src/selectors';
+import { selectModel } from 'src/selectors';
 import { Classes, MenuItem, Position } from '@blueprintjs/core';
 import { MultiSelect as BlueprintMultiSelect } from '@blueprintjs/select';
 
@@ -12,7 +12,7 @@ class Name extends PureComponent {
   render() {
     const { code, languages } = this.props;
     const codeLabel = code ? code.toUpperCase() : <FormattedMessage id="language.unknown" defaultMessage="Unknown" />;
-    const label = languages[code] || codeLabel;
+    const label = languages.get(code) || codeLabel;
     if (!code) return null;
     return label;
   }
@@ -68,7 +68,7 @@ class MultiSelect extends Component {
     if (!query.length || this.state.codes.indexOf(item) !== -1) {
       return false;
     }
-    const label = this.props.languages[item].toLowerCase();
+    const label = this.props.languages.get(item).toLowerCase();
     return label.includes(query.toLowerCase());
   }
 
@@ -79,7 +79,7 @@ class MultiSelect extends Component {
           key={item}
           className={modifiers.active ? Classes.ACTIVE : ''}
           onClick={handleClick}
-          text={this.props.languages[item]}
+          text={this.props.languages.get(item)}
         />
       );
     }
@@ -89,7 +89,7 @@ class MultiSelect extends Component {
   render() {
     const { codes } = this.state;
     const { languages } = this.props;
-    const items = Object.keys(languages);
+    const items = [...languages.keys()];
 
     return (
       <BlueprintMultiSelect
@@ -122,9 +122,10 @@ class MultiSelect extends Component {
 }
 
 
-const mapStateToProps = state => ({
-  languages: selectMetadata(state).languages,
-});
+const mapStateToProps = (state) => {
+  const model = selectModel(state);
+  return { languages: model.types.language.values };
+};
 
 class Language extends Component {
   static Name = connect(mapStateToProps)(Name);
