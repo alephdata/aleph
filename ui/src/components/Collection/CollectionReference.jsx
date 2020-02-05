@@ -21,7 +21,7 @@ class CollectionReference extends React.PureComponent {
           <div className="key text-muted">
             <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />
           </div>
-          <div className="value bp3-callout">
+          <div className="value">
             <ClipboardInput value={collection.links.reconcile} />
             <span className="bp3-text-small bp3-text-muted">
               <FormattedMessage

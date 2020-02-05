@@ -71,7 +71,9 @@ class CollectionOverviewMode extends React.Component {
         <div className="CollectionOverviewMode__item">
           <div className="CollectionOverviewMode__item__text-content">
             {collection.summary && (
-              <Summary text={collection.summary} />
+              <div className="CollectionOverviewMode__summary">
+                <Summary text={collection.summary} />
+              </div>
             )}
             <CollectionInfo collection={collection} />
           </div>
