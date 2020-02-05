@@ -115,8 +115,7 @@ class CollectionInfoMode extends PureComponent {
                 <span className="bp3-text-small bp3-text-muted">
                   <FormattedMessage
                     id="collection.reconcile.description"
-                    defaultMessage="Match your own data against the entities in this collection using the free {openrefine}
-                  tool by adding the reconciliation endpoint."
+                    defaultMessage="Match your own data against the entities in this collection using the free {openrefine} tool by adding the reconciliation endpoint."
                     values={{
                       openrefine: <a href="http://openrefine.org">OpenRefine</a>,
                     }}

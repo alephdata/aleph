@@ -38,7 +38,10 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         """Converts an office document to PDF."""
         # Attempt to guess an appropriate time for processing
         # Guessed: 15s per MB of data, max.
-        file_size = (file_path.stat().st_size / 1024) / 1024  # megabyte
+        file_size = file_path.stat().st_size
+        if file_size < 100:
+            return ProcessingException("Document too small.")
+        file_size = (file_size / 1024) / 1024  # megabyte
         timeout = int(min(600, max(20, file_size * 15)))
 
         file_name = entity_filename(entity)
