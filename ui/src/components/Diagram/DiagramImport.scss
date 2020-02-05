@@ -2,11 +2,11 @@
 
 .DiagramImport {
   &__file-name.bp3-button {
-    margin-bottom: 20px;
-    border: 1px solid;
+    margin: 0 0 $aleph-grid-size*2 (-$aleph-grid-size);
 
     &:hover {
-      border-color: transparent;
+      text-decoration: underline !important;
+      background: none !important;
     }
   }
 

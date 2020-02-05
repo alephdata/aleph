@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent, ProgressBar } from '@blueprintjs/core';
+import { Dialog, Button, Intent, Spinner } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -9,7 +9,7 @@ import { Collection } from 'src/components/common';
 import { createDiagram, undeleteEntity } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
-import { createEntitiesFromDiagram } from 'src/components/Diagram/util';
+import { processApiEntity } from 'src/components/Diagram/util';
 
 import DiagramImport from 'src/components/Diagram/DiagramImport';
 
@@ -58,7 +58,7 @@ class DiagramCreateDialog extends Component {
       collection: diagram.collection || '',
       layout: diagram.layout || null,
       importedFileName: null,
-      processingProgress: 1,
+      processing: false,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -66,7 +66,6 @@ class DiagramCreateDialog extends Component {
     this.onChangeSummary = this.onChangeSummary.bind(this);
     this.onChangeCollection = this.onChangeCollection.bind(this);
     this.onImport = this.onImport.bind(this);
-    this.onProgress = this.onProgress.bind(this);
   }
 
   componentWillUnmount() {
@@ -76,16 +75,16 @@ class DiagramCreateDialog extends Component {
       collection: '',
       layout: null,
       importedFileName: null,
-      processingProgress: 1,
+      processing: false,
     });
   }
 
   async onSubmit(event) {
     const { diagram, history, intl } = this.props;
-    const { label, summary, collection, layout, processingProgress } = this.state;
+    const { label, summary, collection, layout, processing } = this.state;
     event.preventDefault();
-    if (processingProgress !== 1 || !this.checkValid()) return;
-    this.setState({ processingProgress: 0 });
+    if (processing || !this.checkValid()) return;
+    this.setState({ processing: true });
 
     try {
       const newDiagram = {
@@ -93,15 +92,11 @@ class DiagramCreateDialog extends Component {
         summary,
         collection_id: parseInt(collection.id, 10),
       };
+
       if (layout) {
-        const { generatedEntities, generatedLayout } = await createEntitiesFromDiagram({
-          undeleteEntity: this.props.undeleteEntity,
-          collection,
-          layout,
-          onProgress: this.onProgress,
-        });
-        newDiagram.layout = generatedLayout;
-        newDiagram.entities = generatedEntities.map(e => e.id);
+        const { entities, selection, ...rest } = layout;
+        newDiagram.entities = entities.map(processApiEntity);
+        newDiagram.layout = rest;
       }
 
       const response = await this.props.createDiagram(newDiagram);
@@ -113,9 +108,10 @@ class DiagramCreateDialog extends Component {
       showSuccessToast(
         intl.formatMessage(messages.success_create),
       );
+      this.setState({ processing: false });
     } catch (e) {
-      this.setState({ processingProgress: 1 });
       showWarningToast(e.message);
+      this.setState({ processing: false });
     }
   }
 
@@ -133,10 +129,6 @@ class DiagramCreateDialog extends Component {
 
   onImport({ fileName, label, layout }) {
     this.setState({ label, layout, importedFileName: fileName });
-  }
-
-  onProgress(processingProgress) {
-    this.setState({ processingProgress });
   }
 
   getCollectionOptionsQuery() {
@@ -157,8 +149,8 @@ class DiagramCreateDialog extends Component {
 
   render() {
     const { canChangeCollection, importEnabled, intl, isOpen, toggleDialog } = this.props;
-    const { collection, importedFileName, label, summary, processingProgress, layout } = this.state;
-    const disabled = processingProgress !== 1 || !this.checkValid();
+    const { collection, importedFileName, label, summary, processing, layout } = this.state;
+    const disabled = processing || !this.checkValid();
 
     const showTextFields = (!importEnabled || (importEnabled && layout));
     const showCollectionField = canChangeCollection && showTextFields;
@@ -172,7 +164,7 @@ class DiagramCreateDialog extends Component {
         onClose={toggleDialog}
       >
         <div className="DiagramCreateDialog__contents">
-          {processingProgress !== 1 && <div className="DiagramCreateDialog__overlay" />}
+          {processing && <div className="DiagramCreateDialog__overlay" />}
           <form onSubmit={this.onSubmit}>
             <div className="bp3-dialog-body">
               {importEnabled && (
@@ -246,8 +238,8 @@ class DiagramCreateDialog extends Component {
             </div>
           </form>
         </div>
-        {processingProgress !== 1 && (
-          <ProgressBar value={processingProgress} intent={Intent.PRIMARY} />
+        {processing && (
+          <Spinner className="bp3-large" />
         )}
       </Dialog>
     );
