@@ -8,17 +8,17 @@
 
 .ItemOverview {
   &.horizontal {
-    margin: $aleph-content-padding*2 0 $aleph-content-padding*3;
+    margin-bottom: $aleph-content-padding;
 
     @include large {
       display: flex;
-      // padding: $aleph-content-padding;
+      padding: $aleph-content-padding;
     }
   }
 
   &__heading {
     border-bottom: 1px solid $aleph-border-color;
-    padding: ($aleph-content-padding * 2) 0;
+    padding: ($aleph-grid-size * 4) 0;
 
     .preview & {
       background-color: $aleph-breadcrumbs-background;
@@ -28,18 +28,17 @@
 
     .horizontal & {
       @include large {
-        flex: 1 1 65%;
-        padding: 0;
+        flex: 1 1 35%;
+        padding: $aleph-grid-size*4;
         padding-left: 0;
-        padding-right: $aleph-content-padding*2;
         border-bottom: none;
         max-width: 800px;
-        // border-right: 1px solid $aleph-border-color;
+        border-right: 1px solid $aleph-border-color;
       }
 
-      // @media screen and (max-width: $aleph-screen-lg-max-width) {
-      //   flex-basis: 50%;
-      // }
+      @media screen and (max-width: $aleph-screen-lg-max-width) {
+        flex-basis: 50%;
+      }
     }
 
     &__title, &__subtitle, &__description {
@@ -50,17 +49,10 @@
     &__title {
       line-height: 1.5;
     }
-
-    &__inner-container {
-      // position: relative;
-      // top: 50%;
-      // transform: translateY(-50%);
-    }
   }
 
   &__content {
-    padding: 0 0 0 ($aleph-content-padding * 2);
-    // border-left: 1px solid $aleph-border-color;
+    padding: ($aleph-grid-size * 4) 0;
 
     .preview & {
       padding: 0;
@@ -68,22 +60,13 @@
 
     .horizontal & {
       @include large {
-        flex: 1 1 35%;
-        // padding: 0;
-        // padding-left: ($aleph-grid-size * 4);
+        flex: 1 1 65%;
+        padding-left: ($aleph-grid-size * 4);
       }
 
-      .info-sheet {
-        margin: 0;
-
-        li:last-child {
-          padding: 0;
-        }
+      @media screen and (max-width: $aleph-screen-lg-max-width) {
+        flex-basis: 50%;
       }
-
-      // @media screen and (max-width: $aleph-screen-lg-max-width) {
-      //   flex-basis: 50%;
-      // }
     }
   }
 }
