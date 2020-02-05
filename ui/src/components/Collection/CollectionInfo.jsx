@@ -1,10 +1,8 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  Collection, Country, Role, Date, URL,
+  Country, Role, Date, URL,
 } from 'src/components/common';
-
-import ClipboardInput from 'src/components/common/ClipboardInput';
 
 import './CollectionInfo.scss';
 

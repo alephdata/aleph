@@ -2,15 +2,13 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
-import { ErrorSection, SectionLoading } from 'src/components/common';
-import { Collection, Summary } from 'src/components/common';
+import { Summary } from 'src/components/common';
 import CollectionInfo from 'src/components/Collection/CollectionInfo';
 import CollectionStatistics from './CollectionStatistics';
 import CollectionReference from './CollectionReference';
-import c from 'classnames';
 
 import './CollectionOverviewMode.scss';
 
@@ -18,12 +16,6 @@ const statFields = [
   'schema', 'countries', 'names', 'emails', 'addresses', 'ibans', 'phones',
 ];
 
-const messages = defineMessages({
-  empty: {
-    id: 'collection.statistics.empty',
-    defaultMessage: 'No statistics available for this dataset',
-  },
-});
 
 class CollectionOverviewMode extends React.Component {
   componentDidMount() {
@@ -45,10 +37,9 @@ class CollectionOverviewMode extends React.Component {
     const { collection } = this.props;
 
     return (
-      <div className="CollectionOverviewMode__item">
+      <div className="CollectionOverviewMode__item" key={key}>
         <CollectionStatistics
           collection={collection}
-          key={key}
           field={key}
           values={values}
           total={total}
@@ -58,13 +49,12 @@ class CollectionOverviewMode extends React.Component {
   }
 
   render() {
-    const { collection, intl, statistics } = this.props;
-    if (statistics.names === undefined) {
-      return <SectionLoading />;
-    }
+    const { collection, statistics } = this.props;
 
-    const toRender = statFields.map(key => ({ key, ...statistics[key] }))
-      .filter(stat => stat && stat.total);
+    const toRender = statistics
+      ? statFields.map(key => ({ key, ...statistics[key] }))
+        .filter(stat => stat && stat.total)
+      : [];
 
     return (
       <div className="CollectionOverviewMode">

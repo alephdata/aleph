@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Card } from '@blueprintjs/core';
 
 import Screen from 'src/components/Screen/Screen';
 import CollectionManageMenu from 'src/components/Collection/CollectionManageMenu';
 import CollectionContextLoader from 'src/components/Collection/CollectionContextLoader';
 import CollectionHeading from 'src/components/Collection/CollectionHeading';
-import CollectionInfo from 'src/components/Collection/CollectionInfo';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -66,7 +63,7 @@ export class CollectionScreen extends Component {
 
     const breadcrumbs = (
       <Breadcrumbs operation={operation}>
-        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active={true} />
+        <Breadcrumbs.Collection key="collection" collection={collection} showCategory active />
         {extraBreadcrumbs}
       </Breadcrumbs>
     );

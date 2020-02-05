@@ -80,7 +80,7 @@ class DiagramCreateDialog extends Component {
   }
 
   async onSubmit(event) {
-    const { diagram, history, intl } = this.props;
+    const { history, intl } = this.props;
     const { label, summary, collection, layout, processing } = this.state;
     event.preventDefault();
     if (processing || !this.checkValid()) return;

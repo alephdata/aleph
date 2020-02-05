@@ -6,12 +6,7 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import {
-  Count, TextLoading, Schema,
-} from 'src/components/common';
-import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
-import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
-import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
+import { Count, Schema } from 'src/components/common';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
 import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
 import { selectCollectionXrefIndex, selectModel } from 'src/selectors';

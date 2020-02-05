@@ -36,7 +36,7 @@ class CollectionReference extends React.PureComponent {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
