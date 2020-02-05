@@ -2,7 +2,7 @@
     "layout": {
         "entities": [
             {
-                "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "id": "c6409d9d9e484bd7be3db29530f99239",
                 "schema": "Person",
                 "properties": {
                     "name": [
@@ -14,7 +14,7 @@
                 }
             },
             {
-                "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "id": "4645490522b141e3ba916faefbd7ddc1",
                 "schema": "Person",
                 "properties": {
                     "name": [
@@ -29,12 +29,12 @@
                 }
             },
             {
-                "id": "07e0f724-2b96-45fb-af61-b68ac4d72b6c",
+                "id": "07e0f7242b9645fbaf61b68ac4d72b6c",
                 "schema": "Family",
                 "properties": {
                     "person": [
                         {
-                            "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                            "id": "c6409d9d9e484bd7be3db29530f99239",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -48,7 +48,7 @@
                     ],
                     "relative": [
                         {
-                            "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                            "id": "4645490522b141e3ba916faefbd7ddc1",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -69,7 +69,7 @@
                 }
             },
             {
-                "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "id": "44fd487555564a319639e17d1fa4574a",
                 "schema": "Person",
                 "properties": {
                     "name": [
@@ -84,12 +84,12 @@
                 }
             },
             {
-                "id": "3c990875-c494-4d3f-94d5-61eee6cb09cd",
+                "id": "3c990875c4944d3f94d561eee6cb09cd",
                 "schema": "Succession",
                 "properties": {
                     "predecessor": [
                         {
-                            "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                            "id": "c6409d9d9e484bd7be3db29530f99239",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -103,7 +103,7 @@
                     ],
                     "successor": [
                         {
-                            "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                            "id": "44fd487555564a319639e17d1fa4574a",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -121,12 +121,12 @@
                 }
             },
             {
-                "id": "c6ef2610-4d72-4a0a-bb69-852befef39a2",
+                "id": "c6ef26104d724a0abb69852befef39a2",
                 "schema": "Family",
                 "properties": {
                     "person": [
                         {
-                            "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                            "id": "c6409d9d9e484bd7be3db29530f99239",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -140,7 +140,7 @@
                     ],
                     "relative": [
                         {
-                            "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                            "id": "44fd487555564a319639e17d1fa4574a",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -161,12 +161,12 @@
                 }
             },
             {
-                "id": "0a6a7f48-7eaa-4167-a0b9-465ff238d0a3",
+                "id": "0a6a7f487eaa4167a0b9465ff238d0a3",
                 "schema": "Family",
                 "properties": {
                     "person": [
                         {
-                            "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                            "id": "4645490522b141e3ba916faefbd7ddc1",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -183,7 +183,7 @@
                     ],
                     "relative": [
                         {
-                            "id": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                            "id": "44fd487555564a319639e17d1fa4574a",
                             "schema": "Person",
                             "properties": {
                                 "name": [
@@ -206,7 +206,7 @@
         ],
         "vertices": [
             {
-                "id": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "id": "entity:c6409d9d9e484bd7be3db29530f99239",
                 "type": "entity",
                 "label": "Queen Elizabeth II",
                 "fixed": true,
@@ -216,7 +216,7 @@
                     "x": 0,
                     "y": 0
                 },
-                "entityId": "c6409d9d-9e48-4bd7-be3d-b29530f99239"
+                "entityId": "c6409d9d9e484bd7be3db29530f99239"
             },
             {
                 "id": "name:Queen Elizabeth II",
@@ -238,22 +238,22 @@
                 "hidden": false,
                 "color": "GRAY",
                 "position": {
-                    "x": -4,
+                    "x": 4,
                     "y": 4
                 }
             },
             {
-                "id": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "id": "entity:4645490522b141e3ba916faefbd7ddc1",
                 "type": "entity",
                 "label": "Prince Philip",
                 "fixed": true,
                 "hidden": false,
                 "color": "#106BA3",
                 "position": {
-                    "x": -9,
+                    "x": 9,
                     "y": 0
                 },
-                "entityId": "46454905-22b1-41e3-ba91-6faefbd7ddc1"
+                "entityId": "4645490522b141e3ba916faefbd7ddc1"
             },
             {
                 "id": "name:Prince Philip",
@@ -268,7 +268,7 @@
                 }
             },
             {
-                "id": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "id": "entity:44fd487555564a319639e17d1fa4574a",
                 "type": "entity",
                 "label": "Prince Charles",
                 "fixed": true,
@@ -278,7 +278,7 @@
                     "x": 0,
                     "y": 10
                 },
-                "entityId": "44fd4875-5556-4a31-9639-e17d1fa4574a"
+                "entityId": "44fd487555564a319639e17d1fa4574a"
             },
             {
                 "id": "name:Prince Charles",
@@ -295,125 +295,125 @@
         ],
         "edges": [
             {
-                "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239:Thing:name(name:Queen Elizabeth II)",
+                "id": "c6409d9d9e484bd7be3db29530f99239:Thing:name(name:Queen Elizabeth II)",
                 "type": "name",
                 "label": "Name",
-                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "sourceId": "entity:c6409d9d9e484bd7be3db29530f99239",
                 "targetId": "name:Queen Elizabeth II",
-                "entityId": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "entityId": "c6409d9d9e484bd7be3db29530f99239",
                 "propertyQName": "Thing:name"
             },
             {
-                "id": "c6409d9d-9e48-4bd7-be3d-b29530f99239:Person:nationality(country:gb)",
+                "id": "c6409d9d9e484bd7be3db29530f99239:Person:nationality(country:gb)",
                 "type": "country",
                 "label": "Nationality",
-                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "sourceId": "entity:c6409d9d9e484bd7be3db29530f99239",
                 "targetId": "country:gb",
-                "entityId": "c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                "entityId": "c6409d9d9e484bd7be3db29530f99239",
                 "propertyQName": "Person:nationality"
             },
             {
-                "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1:Thing:name(name:Prince Philip)",
+                "id": "4645490522b141e3ba916faefbd7ddc1:Thing:name(name:Prince Philip)",
                 "type": "name",
                 "label": "Name",
-                "sourceId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "sourceId": "entity:4645490522b141e3ba916faefbd7ddc1",
                 "targetId": "name:Prince Philip",
-                "entityId": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "entityId": "4645490522b141e3ba916faefbd7ddc1",
                 "propertyQName": "Thing:name"
             },
             {
-                "id": "46454905-22b1-41e3-ba91-6faefbd7ddc1:Person:nationality(country:gb)",
+                "id": "4645490522b141e3ba916faefbd7ddc1:Person:nationality(country:gb)",
                 "type": "country",
                 "label": "Nationality",
-                "sourceId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "sourceId": "entity:4645490522b141e3ba916faefbd7ddc1",
                 "targetId": "country:gb",
-                "entityId": "46454905-22b1-41e3-ba91-6faefbd7ddc1",
+                "entityId": "4645490522b141e3ba916faefbd7ddc1",
                 "propertyQName": "Person:nationality"
             },
             {
-                "id": "07e0f724-2b96-45fb-af61-b68ac4d72b6c(entity:c6409d9d-9e48-4bd7-be3d-b29530f99239, entity:46454905-22b1-41e3-ba91-6faefbd7ddc1)",
+                "id": "07e0f7242b9645fbaf61b68ac4d72b6c(entity:c6409d9d9e484bd7be3db29530f99239, entity:4645490522b141e3ba916faefbd7ddc1)",
                 "type": "entity",
                 "label": "Husband",
-                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
-                "targetId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
-                "entityId": "07e0f724-2b96-45fb-af61-b68ac4d72b6c"
+                "sourceId": "entity:c6409d9d9e484bd7be3db29530f99239",
+                "targetId": "entity:4645490522b141e3ba916faefbd7ddc1",
+                "entityId": "07e0f7242b9645fbaf61b68ac4d72b6c"
             },
             {
-                "id": "44fd4875-5556-4a31-9639-e17d1fa4574a:Thing:name(name:Prince Charles)",
+                "id": "44fd487555564a319639e17d1fa4574a:Thing:name(name:Prince Charles)",
                 "type": "name",
                 "label": "Name",
-                "sourceId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "sourceId": "entity:44fd487555564a319639e17d1fa4574a",
                 "targetId": "name:Prince Charles",
-                "entityId": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "entityId": "44fd487555564a319639e17d1fa4574a",
                 "propertyQName": "Thing:name"
             },
             {
-                "id": "44fd4875-5556-4a31-9639-e17d1fa4574a:Person:nationality(country:gb)",
+                "id": "44fd487555564a319639e17d1fa4574a:Person:nationality(country:gb)",
                 "type": "country",
                 "label": "Nationality",
-                "sourceId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "sourceId": "entity:44fd487555564a319639e17d1fa4574a",
                 "targetId": "country:gb",
-                "entityId": "44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "entityId": "44fd487555564a319639e17d1fa4574a",
                 "propertyQName": "Person:nationality"
             },
             {
-                "id": "3c990875-c494-4d3f-94d5-61eee6cb09cd(entity:c6409d9d-9e48-4bd7-be3d-b29530f99239, entity:44fd4875-5556-4a31-9639-e17d1fa4574a)",
+                "id": "3c990875c4944d3f94d561eee6cb09cd(entity:c6409d9d9e484bd7be3db29530f99239, entity:44fd487555564a319639e17d1fa4574a)",
                 "type": "entity",
                 "label": "Succession",
-                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
-                "targetId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
-                "entityId": "3c990875-c494-4d3f-94d5-61eee6cb09cd"
+                "sourceId": "entity:c6409d9d9e484bd7be3db29530f99239",
+                "targetId": "entity:44fd487555564a319639e17d1fa4574a",
+                "entityId": "3c990875c4944d3f94d561eee6cb09cd"
             },
             {
-                "id": "c6ef2610-4d72-4a0a-bb69-852befef39a2(entity:c6409d9d-9e48-4bd7-be3d-b29530f99239, entity:44fd4875-5556-4a31-9639-e17d1fa4574a)",
+                "id": "c6ef26104d724a0abb69852befef39a2(entity:c6409d9d9e484bd7be3db29530f99239, entity:44fd487555564a319639e17d1fa4574a)",
                 "type": "entity",
                 "label": "Son",
-                "sourceId": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
-                "targetId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
-                "entityId": "c6ef2610-4d72-4a0a-bb69-852befef39a2",
+                "sourceId": "entity:c6409d9d9e484bd7be3db29530f99239",
+                "targetId": "entity:44fd487555564a319639e17d1fa4574a",
+                "entityId": "c6ef26104d724a0abb69852befef39a2",
                 "labelPosition": {
                     "x": 2.9189189189189175,
                     "y": 5.135135135135137
                 }
             },
             {
-                "id": "0a6a7f48-7eaa-4167-a0b9-465ff238d0a3(entity:46454905-22b1-41e3-ba91-6faefbd7ddc1, entity:44fd4875-5556-4a31-9639-e17d1fa4574a)",
+                "id": "0a6a7f487eaa4167a0b9465ff238d0a3(entity:4645490522b141e3ba916faefbd7ddc1, entity:44fd487555564a319639e17d1fa4574a)",
                 "type": "entity",
                 "label": "Son",
-                "sourceId": "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
-                "targetId": "entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
-                "entityId": "0a6a7f48-7eaa-4167-a0b9-465ff238d0a3",
+                "sourceId": "entity:4645490522b141e3ba916faefbd7ddc1",
+                "targetId": "entity:44fd487555564a319639e17d1fa4574a",
+                "entityId": "0a6a7f487eaa4167a0b9465ff238d0a3",
                 "labelPosition": {
-                    "x": -5.95945945945946,
+                    "x": 5.95945945945946,
                     "y": 6.324324324324324
                 }
             }
         ],
         "groupings": [
             {
-                "id": "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239,country:gb,entity:46454905-22b1-41e3-ba91-6faefbd7ddc1,entity:44fd4875-5556-4a31-9639-e17d1fa4574a",
+                "id": "entity:c6409d9d9e484bd7be3db29530f99239,country:gb,entity:4645490522b141e3ba916faefbd7ddc1,entity:44fd487555564a319639e17d1fa4574a",
                 "label": "Royal Family",
                 "color": "#106BA3",
                 "vertices": [
-                    "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+                    "entity:c6409d9d9e484bd7be3db29530f99239",
                     "country:gb",
-                    "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
-                    "entity:44fd4875-5556-4a31-9639-e17d1fa4574a"
+                    "entity:4645490522b141e3ba916faefbd7ddc1",
+                    "entity:44fd487555564a319639e17d1fa4574a"
                 ]
             }
         ],
         "selection": [
-            "entity:c6409d9d-9e48-4bd7-be3d-b29530f99239",
+            "entity:c6409d9d9e484bd7be3db29530f99239",
             "country:gb",
-            "entity:46454905-22b1-41e3-ba91-6faefbd7ddc1",
-            "entity:44fd4875-5556-4a31-9639-e17d1fa4574a"
+            "entity:4645490522b141e3ba916faefbd7ddc1",
+            "entity:44fd487555564a319639e17d1fa4574a"
         ]
     },
     "viewport": {
         "zoomLevel": 0.4,
         "ratio": 0.735,
         "center": {
-            "x": -4.5,
+            "x": 4.5,
             "y": 5
         }
     }
