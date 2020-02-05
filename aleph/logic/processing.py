@@ -1,10 +1,11 @@
 import logging
 from banal import is_mapping, ensure_list
 from followthemoney import model
+from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 from followthemoney.helpers import remove_checksums
 
-from aleph.analysis import analyze_entity
+from aleph.model import Entity
 from aleph.index.entities import index_bulk
 from aleph.logic.entities import refresh_entity
 from aleph.logic.collections import refresh_collection
@@ -16,10 +17,25 @@ log = logging.getLogger(__name__)
 def _process_entity(entity, sync=False):
     """Perform pre-index processing on an entity, includes running the
     NLP pipeline."""
-    analyze_entity(entity)
+    name_entity(entity)
     refresh_entity(entity.id, sync=sync)
     # log.debug("Index: %r", entity)
     return entity
+
+
+def name_entity(entity):
+    """If an entity has multiple names, pick the most central one
+    and set all the others as aliases. This is awkward given that
+    names aren't special and may not always be the caption."""
+    if not entity.schema.is_a(Entity.THING):
+        return
+    names = entity.get('name')
+    if len(names) <= 1:
+        return
+    name = registry.name.pick(names)
+    names.remove(name)
+    entity.set('name', name)
+    entity.add('alias', names)
 
 
 def _fetch_entities(stage, collection, entity_ids=None, batch=100):

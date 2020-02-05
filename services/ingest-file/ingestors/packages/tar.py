@@ -35,7 +35,7 @@ class TarIngestor(PackageSupport, Ingestor):
                                             encoding=encoding)
                     except Exception:
                         # TODO: should this be a fatal error?
-                        log.exception("Failed to unpack [%r]: %s", name)
+                        log.exception("Failed to unpack: %r", name)
         except (tarfile.TarError, IOError, EOFError) as err:
             raise ProcessingException('Invalid Tar file: %s' % err) from err
 

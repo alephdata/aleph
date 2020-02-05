@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-01-27T18:43:02.360Z\n"
+"POT-Creation-Date: 2020-01-31T15:16:18.960Z\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -466,13 +466,6 @@ msgstr ""
 msgid "Code"
 msgstr "Исходный код"
 
-#. [collection.status.collection]
-#. defaultMessage is:
-#. Collection
-#: i18n/messages.json
-msgid "Collection"
-msgstr "Коллекция"
-
 #. [mapping.propAssign.errorDuplicate]
 #. defaultMessage is:
 #. Columns with duplicate headers cannot be assigned
@@ -667,7 +660,10 @@ msgstr "Ссылка на исходные данные"
 #. [entity.column.collection_id]
 #. defaultMessage is:
 #. Dataset
-#: i18n/messages.json i18n/messages.json
+#. [collection.status.collection]
+#. defaultMessage is:
+#. Dataset
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Dataset"
 msgstr "Набор данных"
 
@@ -1399,10 +1395,10 @@ msgstr "Информация"
 
 #. [document.paging]
 #. defaultMessage is:
-#. Page {currentPage} of {numberOfPages}
+#. Page {pageInput} of {numberOfPages}
 #: i18n/messages.json
-msgid "Page {currentPage} of {numberOfPages}"
-msgstr "Страница {currentPage} из {numberOfPages}"
+msgid "Page {pageInput} of {numberOfPages}"
+msgstr ""
 
 #. [document.pdf.search.page]
 #. defaultMessage is:

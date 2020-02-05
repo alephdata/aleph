@@ -77,11 +77,11 @@ fixtures:
 	aleph crawldir --wait -f fixtures aleph/tests/fixtures/samples
 	balkhash iterate -d fixtures >aleph/tests/fixtures/samples.ijson
 
-contrib/allCountries.zip:
-	curl -s -o contrib/allCountries.zip https://download.geonames.org/export/dump/allCountries.zip
+services/ingest-file/data/allCountries.zip:
+	curl -s -o services/ingest-file/data/allCountries.zip https://download.geonames.org/export/dump/allCountries.zip
 
-geonames: contrib/allCountries.zip
-	unzip -p contrib/allCountries.zip | grep "ADM1\|PCLI\|PCLD\|PPLC\|PPLA" >contrib/geonames.txt
+geonames: services/ingest-file/data/allCountries.zip
+	unzip -p services/ingest-file/data/allCountries.zip | grep "ADM1\|ADM2\|PCLI\|PPLC" >services/ingest-file/data/geonames.txt
 
 # pybabel init -i aleph/translations/messages.pot -d aleph/translations -l de -D aleph
 translate: dev
