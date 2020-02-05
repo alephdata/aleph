@@ -64,11 +64,11 @@ class DiagramEditor extends React.Component {
     }
   }
 
-  updateLayout(layout, propagateUpdate = false) {
+  updateLayout(layout, options) {
     const { diagram, onStatusChange } = this.props;
     this.setState({ layout });
 
-    if (propagateUpdate) {
+    if (options?.propagate) {
       onStatusChange(updateStates.IN_PROGRESS);
       const { entities, selection, ...layoutData } = layout.toJSON();
 
