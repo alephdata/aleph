@@ -1,5 +1,5 @@
 import logging
-from banal import first
+from banal import ensure_list
 from flask import Blueprint, request
 
 from aleph.core import db
@@ -9,7 +9,7 @@ from aleph.logic.diagrams import replace_layout_ids, replace_entity_ids
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import DiagramSerializer
 from aleph.views.util import get_db_collection, parse_request
-from aleph.views.util import obj_or_404, require
+from aleph.views.util import obj_or_404
 
 
 blueprint = Blueprint('diagrams_api', __name__)
@@ -47,13 +47,11 @@ def index():
       tags:
         - Diagram
     """
-    require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz)
-    collection_id = first(parser.filters.get('collection_id'))
-    q = Diagram.by_role_id(request.authz.id)
-    if collection_id:
-        get_db_collection(collection_id)
-        q = q.filter(Diagram.collection_id == collection_id)
+    q = Diagram.by_authz(request.authz)
+    collection_ids = ensure_list(parser.filters.get('collection_id'))
+    if len(collection_ids):
+        q = q.filter(Diagram.collection_id.in_(collection_ids))
     result = DatabaseQueryResult(request, q)
     return DiagramSerializer.jsonify_result(result)
 
@@ -177,9 +175,10 @@ def update(diagram_id):
       - Diagram
     """
     diagram = obj_or_404(Diagram.by_id(diagram_id))
-    get_db_collection(diagram.collection_id, request.authz.WRITE)
+    collection = get_db_collection(diagram.collection_id, request.authz.WRITE)
     data = parse_request('DiagramUpdate')
     diagram.update(data=data)
+    collection.touch()
     db.session.commit()
     return DiagramSerializer.jsonify(diagram)
 
@@ -206,7 +205,8 @@ def delete(diagram_id):
       - Diagram
     """
     diagram = obj_or_404(Diagram.by_id(diagram_id))
-    get_db_collection(diagram.collection_id, request.authz.WRITE)
+    collection = get_db_collection(diagram.collection_id, request.authz.WRITE)
     diagram.delete()
+    collection.touch()
     db.session.commit()
     return ('', 204)

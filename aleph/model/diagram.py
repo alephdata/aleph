@@ -65,8 +65,10 @@ class Diagram(db.Model, SoftDeleteModel):
         return data
 
     @classmethod
-    def by_collection(cls, collection_id):
-        q = cls.all().filter(cls.collection_id == collection_id)
+    def by_authz(cls, authz):
+        ids = authz.collections(authz.READ)
+        q = cls.all()
+        q = q.filter(cls.collection_id.in_(ids))
         return q
 
     @classmethod
@@ -74,10 +76,6 @@ class Diagram(db.Model, SoftDeleteModel):
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
         pq.delete(synchronize_session=False)
-
-    @classmethod
-    def by_role_id(cls, role_id):
-        return cls.all().filter(cls.role_id == role_id)
 
     @classmethod
     def create(cls, data,  collection, role_id):

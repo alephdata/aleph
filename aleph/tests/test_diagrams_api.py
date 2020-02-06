@@ -126,7 +126,8 @@ class DiagramAPITest(TestCase):
         validate(res.json, 'QueryResponse')
         assert len(res.json['results']) == 1
         res = self.client.get(url, headers=self.headers_x)
-        assert res.status_code == 403, res
+        assert res.status_code == 200, res
+        assert len(res.json['results']) == 0
         url = '/api/2/diagrams?filter:collection_id=%s' % self.col2.id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
