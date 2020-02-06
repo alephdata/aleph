@@ -80,10 +80,9 @@ def create():
     data = parse_request('DiagramCreate')
     collection_id = data.pop('collection_id')
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    entities = data.pop('entities', [])
     old_to_new_id_map = {}
     entity_ids = []
-    for ent_data in entities:
+    for ent_data in data.pop('entities', []):
         old_id = ent_data.pop('id')
         # check that every entity id is namespaced properly
         entity_id = old_id

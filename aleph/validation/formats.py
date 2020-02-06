@@ -29,6 +29,14 @@ def check_country_code(value):
     return True
 
 
+@checker.checks("entity_id", raises=ValueError)
+def check_entity_id(value):
+    if not registry.entity.validate(value):
+        msg = gettext('Invalid entity ID: %s')
+        raise ValueError(msg % value)
+    return True
+
+
 @checker.checks("category", raises=ValueError)
 def check_category(value):
     if value not in Collection.CATEGORIES.keys():

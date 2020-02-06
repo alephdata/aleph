@@ -38,11 +38,8 @@ class Diagram(db.Model, SoftDeleteModel):
         self.entities = data.get('entities', self.entities)
         self.layout = data.get('layout', self.layout)
         entities = []
-        for ent_id in self.entities:
-            signed_ent_id = collection.ns.sign(ent_id)
-            if signed_ent_id is None:
-                raise ValueError("Invalid ent_id: %s" % ent_id)
-            entities.append(signed_ent_id)
+        for entity_id in self.entities:
+            entities.append(collection.ns.sign(entity_id))
         self.entities = entities
         db.session.add(self)
 
