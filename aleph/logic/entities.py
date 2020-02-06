@@ -13,8 +13,20 @@ from aleph.index.util import authz_query, field_filter_query
 log = logging.getLogger(__name__)
 
 
-def create_entity(data, collection, role=None, sync=False):
-    entity = Entity.create(data, collection)
+def upsert_entity(data, collection, sync=False):
+    entity = None
+    proxy = model.get_proxy(data, cleaned=False)
+    proxy = collection.ns.apply(proxy)
+    proxy.schema.validate(data)
+    if proxy.id is not None:
+        entity = Entity.by_id(proxy.id,
+                              collection=collection,
+                              deleted=True)
+    # TODO: migrate softly from index.
+    if entity is None:
+        entity = Entity.create(proxy, collection)
+    else:
+        entity.update(proxy)
     collection.touch()
     db.session.commit()
     index.index_entity(entity, sync=sync)

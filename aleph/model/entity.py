@@ -4,7 +4,6 @@ from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.namespace import Namespace
 
 from aleph.core import db
 from aleph.model.collection import Collection
@@ -23,7 +22,6 @@ class Entity(db.Model, SoftDeleteModel):
                    default=make_textid, nullable=False, unique=False)
     name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
-    foreign_id = db.Column(db.Unicode)
     data = db.Column('data', JSONB)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
@@ -55,18 +53,19 @@ class Entity(db.Model, SoftDeleteModel):
         self.deleted_at = None
         db.session.add(self)
 
-    def update(self, entity):
-        proxy = model.get_proxy(entity)
-        proxy.schema.validate(entity)
+    def update(self, proxy, collection=None):
+        # proxy.schema.validate(entity)
         self.schema = proxy.schema.name
         previous = self.to_proxy()
         for prop in proxy.iterprops():
             # Do not allow the user to overwrite hashes because this could
             # lead to a user accessing random objects.
             if prop.type == registry.checksum:
-                proxy.set(prop, previous.get(prop), cleaned=True, quiet=True)
+                prev = previous.get(prop)
+                proxy.set(prop, prev, cleaned=True, quiet=True)
         self.data = proxy.properties
         self.updated_at = datetime.utcnow()
+        self.deleted_at = None
         db.session.add(self)
 
     def to_proxy(self):
@@ -81,24 +80,27 @@ class Entity(db.Model, SoftDeleteModel):
         return proxy
 
     @classmethod
-    def create(cls, data, collection, entity_id=None):
-        foreign_id = data.get('foreign_id')
-        ent = cls.by_foreign_id(foreign_id, collection.id, deleted=True)
-        if ent is None:
-            ent = cls()
-            ent.id = entity_id or make_textid()
-            ent.collection = collection
-            ent.foreign_id = foreign_id
-            ent.data = {}
-        ent.deleted_at = None
-        ent.update(data)
-        return ent
+    def create(cls, proxy, collection):
+        entity = None
+        if proxy.id is not None:
+            entity = cls.by_id(proxy.id, collection=collection, deleted=True)
+        if entity is None:
+            if proxy.id is None:
+                proxy.make_id(make_textid())
+                proxy.id = collection.ns.sign(proxy.id)
+            entity = cls()
+            entity.id = proxy.id
+            entity.collection_id = collection.id
+            entity.data = {}
+        entity.update(proxy)
+        return entity
 
     @classmethod
-    def by_id(cls, entity_id, collection_id=None, deleted=False):
-        entity_id, _ = Namespace.parse(entity_id)
+    def by_id(cls, entity_id, collection=None, deleted=False):
         q = cls.all(deleted=deleted)
         q = q.filter(cls.id == entity_id)
+        if collection is not None:
+            q = q.filter(cls.collection_id == collection.id)
         return q.first()
 
     @classmethod

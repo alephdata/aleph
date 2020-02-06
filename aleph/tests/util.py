@@ -5,6 +5,7 @@ from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
 from flask_testing import TestCase as FlaskTestCase
+from followthemoney import model
 from followthemoney.cli.util import read_entity
 from faker import Factory
 
@@ -97,6 +98,10 @@ class TestCase(FlaskTestCase):
         update_collection(collection, sync=True)
         return collection
 
+    def create_entity(self, data, collection):
+        proxy = model.get_proxy(data, cleaned=False)
+        return Entity.create(proxy, collection)
+
     def grant(self, collection, role, read, write):
         Permission.grant(collection, role, read, write)
         db.session.commit()
@@ -118,7 +123,7 @@ class TestCase(FlaskTestCase):
             casefile=False,
             creator=self.admin
         )
-        self._banana = Entity.create({
+        self._banana = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': ['Banana'],
@@ -133,7 +138,7 @@ class TestCase(FlaskTestCase):
             casefile=False,
             creator=self.admin
         )
-        self._kwazulu = Entity.create({
+        self._kwazulu = self.create_entity({
             'schema': 'Company',
             'properties': {
                 'name': ['KwaZulu'],

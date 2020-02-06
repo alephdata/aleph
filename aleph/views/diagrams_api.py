@@ -3,13 +3,13 @@ from banal import ensure_list
 from flask import Blueprint, request
 
 from aleph.core import db
-from aleph.model import Diagram, Entity
-from aleph.logic.entities import update_entity
-from aleph.logic.diagrams import replace_layout_ids, replace_entity_ids
+from aleph.model import Diagram
+from aleph.logic.entities import upsert_entity
+from aleph.logic.diagrams import replace_layout_ids
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import DiagramSerializer
-from aleph.views.util import get_db_collection, parse_request
-from aleph.views.util import obj_or_404
+from aleph.views.util import get_nested_collection, get_db_collection
+from aleph.views.util import obj_or_404, parse_request
 
 
 blueprint = Blueprint('diagrams_api', __name__)
@@ -78,36 +78,17 @@ def create():
       - Diagram
     """
     data = parse_request('DiagramCreate')
-    collection_id = data.pop('collection_id')
-    collection = get_db_collection(collection_id, request.authz.WRITE)
+    collection = get_nested_collection(data, request.authz.WRITE)
     old_to_new_id_map = {}
     entity_ids = []
-    for ent_data in data.pop('entities', []):
-        old_id = ent_data.pop('id')
-        # check that every entity id is namespaced properly
-        entity_id = old_id
-        if not collection.ns.verify(entity_id):
-            entity_id = collection.ns.sign(entity_id)
-            old_to_new_id_map[old_id] = entity_id
-        entity_ids.append(entity_id)
-        ent_data = replace_entity_ids(ent_data, old_to_new_id_map)
-        # If an entity exists already, undelete and update it
-        # FIXME - collection limit.
-        entity = Entity.by_id(entity_id, deleted=True)
-        if entity is not None:
-            if entity.deleted_at is not None:
-                entity.undelete()
-            entity.update(ent_data)
-        # else create it with the supplied id
-        else:
-            entity = Entity.create(ent_data, collection, entity_id=entity_id)
-            collection.touch()
-        update_entity(entity, sync=True)
-        db.session.commit()
+    for entity in data.pop('entities', []):
+        old_id = entity.get('id')
+        new_id = upsert_entity(entity, collection, sync=True)
+        old_to_new_id_map[old_id] = new_id
+        entity_ids.append(new_id)
     data['entities'] = entity_ids
     layout = data.get('layout', {})
-    if layout:
-        data['layout'] = replace_layout_ids(data['layout'], old_to_new_id_map)
+    data['layout'] = replace_layout_ids(layout, old_to_new_id_map)
     diagram = Diagram.create(data, collection, request.authz.id)
     db.session.commit()
     return DiagramSerializer.jsonify(diagram)

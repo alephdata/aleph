@@ -1,7 +1,6 @@
 import json
 
 from aleph.core import db
-from aleph.model import Entity
 from aleph.index.entities import index_entity
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
@@ -20,7 +19,7 @@ class EntitiesApiTestCase(TestCase):
                 'fileName': 'book.txt',
             }
         }
-        self.book = Entity.create(book, self.col)
+        self.book = self.create_entity(book, self.col)
         self.book_id = self.col.ns.sign(self.book.id)
         self.data = {
             'schema': 'LegalEntity',
@@ -30,7 +29,7 @@ class EntitiesApiTestCase(TestCase):
                 'proof': self.book_id
             }
         }
-        self.ent = Entity.create(self.data, self.col)
+        self.ent = self.create_entity(self.data, self.col)
         self.id = self.col.ns.sign(self.ent.id)
         db.session.commit()
         self.col_id = str(self.col.id)
@@ -347,32 +346,15 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         assert res.status_code == 404, res.status_code
 
-        # Test undelete deleted entity
-        url = '/api/2/entities/%s/undelete' % id1
-        res = self.client.post(url, headers=headers)
-        assert res.status_code == 200, res.status_code
-        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
-
-        url = '/api/2/entities/%s' % id1
-        res = self.client.get(url, headers=headers)
-        assert res.status_code == 200, res.status_code
-        validate(res.json, 'Entity')
-        assert res.json['properties']['name'] == ['Mr. Mango'], res.json
-
-        url = '/api/2/entities/%s' % id1
-        res = self.client.delete(url, headers=headers)
-        assert res.status_code == 204, res.status_code
-        res = self.client.get(url, headers=headers)
-        assert res.status_code == 404, res.status_code
-
         # test undelete with property update
-        url = '/api/2/entities/%s/undelete' % id1
+        url = '/api/2/entities/%s' % id1
         data = {
             'schema': 'Person',
             'properties': {
                 'name': "Mr. Mango",
                 'status': 'ripe',
-            }
+            },
+            'collection_id': self.col_id
         }
         res = self.client.post(url,
                                data=json.dumps(data),
@@ -390,7 +372,7 @@ class EntitiesApiTestCase(TestCase):
         assert res.json['properties']['status'] == ['ripe'], res.json
 
         # Test undelete existing entity
-        url = '/api/2/entities/%s/undelete' % id1
+        url = '/api/2/entities/%s' % id1
         data = {
             'schema': 'Person',
             'properties': {
@@ -410,8 +392,8 @@ class EntitiesApiTestCase(TestCase):
         assert res.json['properties']['email'] == ['mango@mango.yum'], res.json  # noqa
 
         # test create entity with undelete
-        id2 = "random-id"
-        url = '/api/2/entities/%s/undelete' % id2
+        id2 = "randomid"
+        url = '/api/2/entities/%s' % id2
         data = {
             'schema': 'Person',
             'properties': {
@@ -422,7 +404,7 @@ class EntitiesApiTestCase(TestCase):
                                data=json.dumps(data),
                                headers=headers,
                                content_type='application/json')
-        assert res.status_code == 400, res.status_code
+        assert res.status_code == 404, res.status_code
         data['collection_id'] = self.col_id
         res = self.client.post(url,
                                data=json.dumps(data),
@@ -436,42 +418,34 @@ class EntitiesApiTestCase(TestCase):
     def test_recursive_delete(self):
         _, headers = self.login(is_admin=True)
         url = '/api/2/entities'
-        data = {
+        headers['Content-Type'] = 'application/json'
+        data1 = json.dumps({
             'schema': 'Person',
             'properties': {
                 'name': "Osama bin Laden",
             },
             'collection_id': self.col_id
-        }
-        res1 = self.client.post(url,
-                                data=json.dumps(data),
-                                headers=headers,
-                                content_type='application/json')
+        })
+        res1 = self.client.post(url, data=data1, headers=headers)
         id1 = res1.json['id']
-        data = {
+        data2 = json.dumps({
             'schema': 'Organization',
             'properties': {
                 'name': 'Al-Qaeda',
             },
             'collection_id': self.col_id
-        }
-        res2 = self.client.post(url,
-                                data=json.dumps(data),
-                                headers=headers,
-                                content_type='application/json')
+        })
+        res2 = self.client.post(url, data=data2, headers=headers)
         id2 = res2.json['id']
-        data = {
+        data3 = json.dumps({
             'schema': 'Membership',
             'properties': {
                 'member': id1,
                 'organization': id2,
             },
             'collection_id': self.col_id
-        }
-        res3 = self.client.post(url,
-                                data=json.dumps(data),
-                                headers=headers,
-                                content_type='application/json')
+        })
+        res3 = self.client.post(url, data=data3, headers=headers)
         id3 = res3.json['id']
 
         # Deleting a thing, deletes associated edge.
@@ -486,10 +460,11 @@ class EntitiesApiTestCase(TestCase):
         assert res.status_code == 200, res.status_code
 
         # undelete
-        url = '/api/2/entities/%s/undelete' % id1
-        self.client.post(url, headers=headers)
-        url = '/api/2/entities/%s/undelete' % id3
-        self.client.post(url, headers=headers)
+        url = '/api/2/entities/%s' % id1
+        res = self.client.post(url, data=data1, headers=headers)
+        assert res.json['id'] == id1, (res.json['id'], id1)
+        url = '/api/2/entities/%s' % id3
+        self.client.post(url, data=data3, headers=headers)
         url = '/api/2/entities/%s' % id1
         res = self.client.get(url, headers=headers)
         assert res.status_code == 200, res.status_code

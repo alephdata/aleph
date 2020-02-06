@@ -3,6 +3,7 @@ from flask_babel import gettext
 from urlnormalizer import normalize_url
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.namespace import Namespace
 from jsonschema import FormatChecker
 
 from aleph import settings
@@ -31,6 +32,7 @@ def check_country_code(value):
 
 @checker.checks("entity_id", raises=ValueError)
 def check_entity_id(value):
+    value, _ = Namespace.parse(value)
     if not registry.entity.validate(value):
         msg = gettext('Invalid entity ID: %s')
         raise ValueError(msg % value)
