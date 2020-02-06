@@ -50,11 +50,10 @@ def index():
     require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz)
     collection_id = first(parser.filters.get('collection_id'))
+    q = Diagram.by_role_id(request.authz.id)
     if collection_id:
         get_db_collection(collection_id)
-        q = Diagram.by_collection(collection_id).filter(Diagram.role_id == request.authz.id)  # noqa
-    else:
-        q = Diagram.by_role_id(request.authz.id)
+        q = q.filter(Diagram.collection_id == collection_id)
     result = DatabaseQueryResult(request, q)
     return DiagramSerializer.jsonify_result(result)
 
