@@ -9,7 +9,7 @@ from werkzeug.urls import url_parse, url_join
 from werkzeug.exceptions import MethodNotAllowed, Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
 from lxml.etree import tostring
-from lxml.html import document_fromstring
+from lxml import html
 from lxml.html.clean import Cleaner
 from servicelayer.jobs import Job
 
@@ -124,15 +124,17 @@ CLEANER = Cleaner(
 )
 
 
-def sanitize_html(html_text, base_url):
+def sanitize_html(html_text, base_url, encoding='utf-8'):
     """Remove anything from the given HTML that must not show up in the UI."""
     # TODO: circumvent encoding declarations?
     if html_text is None or not len(html_text.strip()):
         return
     try:
         cleaned = CLEANER.clean_html(html_text)
-        html = document_fromstring(cleaned)
-        for (el, attr, href, _) in html.iterlinks():
+        parser = html.HTMLParser(encoding=encoding)
+        data = cleaned.encode(encoding, 'replace')
+        doc = html.document_fromstring(data, parser=parser)
+        for (el, attr, href, _) in doc.iterlinks():
             href = normalize_href(href, base_url)
             if href is not None:
                 el.set(attr, href)
@@ -141,7 +143,7 @@ def sanitize_html(html_text, base_url):
                 rel = set(el.get('rel', '').lower().split())
                 rel.update(['nofollow', 'noreferrer', 'external', 'noopener'])
                 el.set('rel', ' '.join(rel))
-        return tostring(html)
+        return tostring(doc)
     except Exception as exc:
         log.warning("HTML sanitizer failure [%s]: %s", type(exc), exc)
         return gettext("[HTML removed: could not be sanitized]")

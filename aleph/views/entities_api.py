@@ -327,8 +327,10 @@ def content(entity_id):
                                   schemata=entity.get('schema'),
                                   excludes=['text']):
         proxy = model.get_proxy(entity)
-        html = sanitize_html(proxy.first('bodyHtml', quiet=True),
-                             proxy.first('sourceUrl', quiet=True))
+        html = proxy.first('bodyHtml', quiet=True)
+        source_url = proxy.first('sourceUrl', quiet=True)
+        encoding = proxy.first('encoding', quiet=True)
+        html = sanitize_html(html, source_url, encoding=encoding)
         headers = proxy.first('headers', quiet=True)
         headers = registry.json.unpack(headers)
         return jsonify({
