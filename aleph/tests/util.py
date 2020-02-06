@@ -4,7 +4,6 @@ from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
-from flask_testing import TestCase as FlaskTestCase
 from followthemoney.cli.util import read_entity
 from faker import Factory
 
@@ -20,6 +19,7 @@ from aleph.logic.roles import create_system_roles
 from aleph.migration import destroy_db
 from aleph.core import db, kv, create_app
 from aleph.oauth import oauth
+from aleph.tests.testing import FlaskTestCase
 
 APP_NAME = 'aleph-test'
 UI_URL = 'http://aleph.ui/'
