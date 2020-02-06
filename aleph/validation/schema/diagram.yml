@@ -68,6 +68,71 @@ Diagram:
       type: boolean
   required: ["collection", "role_id", "label", "layout", "entities", "writeable"]
 
+
+DiagramVertex:
+  type: object
+  properties:
+    id:
+      type: string
+    type:
+      type: string
+    label:
+      type: string
+    fixed:
+      type: boolean
+    hidden:
+      type: boolean
+    color:
+      type: string
+    position:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+    entityId:
+      type: string
+
+DiagramEdge:
+  type: object
+  properties:
+    id:
+      type: string
+    type:
+      type: string
+    label:
+      type: string
+    sourceId:
+      type: string
+    targetId:
+      type: string
+    entityId:
+      type: string
+    propertyQName:
+      type: string
+    labelPosition:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+
+DiagramGrouping:
+  type: object
+  properties:
+    id:
+      type: string
+    label:
+      type: string
+    color:
+      type: string
+    vertices:
+      type: array
+      items:
+        type: string
+
 Layout:
   type: object
   required: ["vertices", "edges"]
@@ -76,66 +141,17 @@ Layout:
       type: array
       items:
         type: object
-        properties:
-          id:
-            type: string
-          type:
-            type: string
-          label:
-            type: string
-          fixed:
-            type: boolean
-          hidden:
-            type: boolean
-          color:
-            type: string
-          position:
-            type: object
-            properties:
-              x:
-                type: number
-              y:
-                type: number
-          entityId:
-            type: string
+        allOf:
+          - $ref: '#/components/schemas/DiagramVertex'
     edges:
       type: array
       items:
         type: object
-        properties:
-          id:
-            type: string
-          type:
-            type: string
-          label:
-            type: string
-          sourceId:
-            type: string
-          targetId:
-            type: string
-          entityId:
-            type: string
-          propertyQName:
-            type: string
-          labelPosition:
-            type: object
-            properties:
-              x:
-                type: number
-              y:
-                type: number
+        allOf:
+          - $ref: '#/components/schemas/DiagramEdge'
     groupings:
       type: array
       items:
         type: object
-        properties:
-          id:
-            type: string
-          label:
-            type: string
-          color:
-            type: string
-          vertices:
-            type: array
-            items:
-              type: string
+        allOf:
+          - $ref: '#/components/schemas/DiagramGrouping'
