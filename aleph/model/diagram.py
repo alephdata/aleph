@@ -46,12 +46,10 @@ class Diagram(db.Model, SoftDeleteModel):
             entities.append(signed_ent_id)
         self.entities = entities
         db.session.add(self)
-        db.session.commit()
 
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
-        db.session.commit()
 
     def to_dict(self):
         data = self.to_dict_dates()

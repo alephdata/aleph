@@ -95,6 +95,7 @@ def create():
         entity_ids.append(entity_id)
         ent_data = replace_entity_ids(ent_data, old_to_new_id_map)
         # If an entity exists already, undelete and update it
+        # FIXME - collection limit.
         entity = Entity.by_id(entity_id, deleted=True)
         if entity is not None:
             if entity.deleted_at is not None:
@@ -179,6 +180,7 @@ def update(diagram_id):
     get_db_collection(diagram.collection_id, request.authz.WRITE)
     data = parse_request('DiagramUpdate')
     diagram.update(data=data)
+    db.session.commit()
     return DiagramSerializer.jsonify(diagram)
 
 
@@ -206,4 +208,5 @@ def delete(diagram_id):
     diagram = obj_or_404(Diagram.by_id(diagram_id))
     get_db_collection(diagram.collection_id, request.authz.WRITE)
     diagram.delete()
+    db.session.commit()
     return ('', 204)
