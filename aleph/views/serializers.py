@@ -315,7 +315,7 @@ class MappingSerializer(Serializer):
     pass
 
 
-class VisDiagramEntitySerializer(EntitySerializer):
+class DiagramEntitySerializer(EntitySerializer):
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['id'] = str(pk)
@@ -330,7 +330,7 @@ class VisDiagramEntitySerializer(EntitySerializer):
             if values:
                 properties[prop.name] = []
                 for value in values:
-                    entity = self.resolve(Entity, value, VisDiagramEntitySerializer)  # noqa
+                    entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
                     if entity is None:
                         entity = value
                     properties[prop.name].append(entity)
@@ -354,7 +354,7 @@ class DiagramSerializer(Serializer):
         ent_ids = obj.pop('entities')
         obj['entities'] = []
         for ent_id in ent_ids:
-            entity = self.resolve(Entity, ent_id, VisDiagramEntitySerializer)
+            entity = self.resolve(Entity, ent_id, DiagramEntitySerializer)
             if entity is not None:
                 obj['entities'].append(entity)
         for ent in obj['entities']:
@@ -367,6 +367,6 @@ class DiagramSerializer(Serializer):
                 if values:
                     properties[prop.name] = []
                     for value in values:
-                        entity = self.resolve(Entity, value, VisDiagramEntitySerializer)  # noqa
+                        entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
                         properties[prop.name].append(entity)
         return self._clean_response(obj)
