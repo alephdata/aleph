@@ -19,6 +19,9 @@
 
   .bp3-breadcrumbs {
     height: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 
     & > li {
       margin: 5px 0;
