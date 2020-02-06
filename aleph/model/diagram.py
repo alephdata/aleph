@@ -30,14 +30,13 @@ class Diagram(db.Model, SoftDeleteModel):
         'diagrams', lazy='dynamic', cascade="all, delete-orphan"
     ))
 
-    def update(self, data=None):
+    def update(self, data, collection):
         self.updated_at = datetime.utcnow()
-        if data:
-            self.label = data.get('label', self.label)
-            self.summary = data.get('summary', self.summary)
-            self.entities = data.get('entities', self.entities)
-            self.layout = data.get('layout', self.layout)
-        collection = Collection.by_id(self.collection_id)
+        self.deleted_at = None
+        self.label = data.get('label', self.label)
+        self.summary = data.get('summary', self.summary)
+        self.entities = data.get('entities', self.entities)
+        self.layout = data.get('layout', self.layout)
         entities = []
         for ent_id in self.entities:
             signed_ent_id = collection.ns.sign(ent_id)
@@ -58,7 +57,7 @@ class Diagram(db.Model, SoftDeleteModel):
             'label': self.label,
             'summary': self.summary,
             'entities': self.entities,
-            'layout': dict(self.layout),
+            'layout': self.layout,
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
         })
@@ -80,13 +79,11 @@ class Diagram(db.Model, SoftDeleteModel):
     @classmethod
     def create(cls, data,  collection, role_id):
         diagram = cls()
+        diagram.layout = {}
+        diagram.entities = []
         diagram.role_id = role_id
-        diagram.label = data.get('label')
-        diagram.summary = data.get('summary')
-        diagram.entities = data.get('entities') or []
-        diagram.layout = data.get('layout') or {}
         diagram.collection_id = collection.id
-        diagram.update()
+        diagram.update(data, collection)
         return diagram
 
     def __repr__(self):
