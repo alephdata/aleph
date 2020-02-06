@@ -229,7 +229,7 @@ export class CollectionXrefMatchesScreen extends Component {
           <Breadcrumbs.Collection collection={collection} />
           <li>
             <Link className="bp3-breadcrumb" to={indexPath}>
-              <Icon icon="search-around" />
+              <Icon icon="comparison" />
               <FormattedMessage id="matches.screen.xref" defaultMessage="Cross-reference" />
             </Link>
           </li>

@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Icon, H4 } from '@blueprintjs/core';
 import Count from 'src/components/common/Count';
 import {
-  Date, Role, Category, Country, Collection,
+  Date, Role, Category, Country, Collection, Summary,
 } from 'src/components/common';
 
 import './CollectionListItem.scss';
@@ -22,7 +22,7 @@ class CollectionListItem extends PureComponent {
           <Collection.Link preview={preview} collection={collection} icon />
         </H4>
         {collection.summary && (
-          <Collection.Summary collection={collection} className="summary" truncate={2} />
+          <Summary text={collection.summary} className="summary" truncate={2} />
         )}
         <p className="details">
           { !collection.casefile && (

@@ -1,0 +1,157 @@
+DiagramBase:
+  type: object
+  properties:
+    label:
+      type: string
+    summary:
+      type: string
+      nullable: true
+    layout:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Layout'
+
+DiagramUpdate:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/DiagramBase'
+  properties:
+    entities:
+      type: array
+      items:
+        type: string
+  required: []
+
+DiagramCreate:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/DiagramBase'
+  properties:
+    collection_id:
+      type: integer
+    entities:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/EntityUpdate'
+        properties:
+          id:
+            type: string
+        required: ['id', 'schema', 'properties']
+  required: ["label", "collection_id"]
+
+Diagram:
+  type: object
+  allOf:
+  - $ref: '#/components/schemas/DatedModel'
+  allOf:
+    - $ref: '#/components/schemas/DiagramBase'
+  properties:
+    collection:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Collection'
+    role_id:
+      type: string
+    entities:
+      type: array
+      items:
+        type: object
+        allOf:
+        - $ref: '#/components/schemas/EntityUpdate'
+        properties:
+          id:
+            type: string
+        required: ["id", "schema"]
+    writeable:
+      type: boolean
+  required: ["collection", "role_id", "label", "layout", "entities", "writeable"]
+
+
+DiagramVertex:
+  type: object
+  properties:
+    id:
+      type: string
+    type:
+      type: string
+    label:
+      type: string
+    fixed:
+      type: boolean
+    hidden:
+      type: boolean
+    color:
+      type: string
+    position:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+    entityId:
+      type: string
+
+DiagramEdge:
+  type: object
+  properties:
+    id:
+      type: string
+    type:
+      type: string
+    label:
+      type: string
+    sourceId:
+      type: string
+    targetId:
+      type: string
+    entityId:
+      type: string
+    propertyQName:
+      type: string
+    labelPosition:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+
+DiagramGrouping:
+  type: object
+  properties:
+    id:
+      type: string
+    label:
+      type: string
+    color:
+      type: string
+    vertices:
+      type: array
+      items:
+        type: string
+
+Layout:
+  type: object
+  required: ["vertices", "edges"]
+  properties:
+    vertices:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/DiagramVertex'
+    edges:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/DiagramEdge'
+    groupings:
+      type: array
+      items:
+        type: object
+        allOf:
+          - $ref: '#/components/schemas/DiagramGrouping'

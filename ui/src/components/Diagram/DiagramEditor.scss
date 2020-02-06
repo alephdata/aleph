@@ -1,0 +1,20 @@
+@import "src/app/variables.scss";
+
+$top-nav-height: 50px;
+$breadcrumb-height: 44px;
+$footer-height: 30px;
+
+.DiagramEditor {
+  .VisGraph {
+    height: calc(100vh - #{$top-nav-height + $breadcrumb-height + $footer-height});
+    background: white;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(16, 22, 26, 0.1),
+      0 2px 6px rgba(16, 22, 26, 0.2);
+  }
+
+  .Sidebar__search-text {
+    font-style: normal;
+  }
+}

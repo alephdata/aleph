@@ -27,6 +27,10 @@ const messages = defineMessages({
     id: 'dashboard.cases',
     defaultMessage: 'Personal datasets',
   },
+  diagrams: {
+    id: 'dashboard.diagrams',
+    defaultMessage: 'Network diagrams',
+  },
   settings: {
     id: 'dashboard.settings',
     defaultMessage: 'Settings',
@@ -100,11 +104,23 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
             />
+            <MenuDivider />
+            <li className="bp3-menu-header">
+              <h6 className="bp3-heading">
+                <FormattedMessage id="dashboard.workspace" defaultMessage="Workspace" />
+              </h6>
+            </li>
             <MenuItem
               icon="briefcase"
               text={intl.formatMessage(messages.cases)}
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
+            />
+            <MenuItem
+              icon="graph"
+              text={intl.formatMessage(messages.diagrams)}
+              onClick={() => this.navigate('/diagrams')}
+              active={current === '/diagrams'}
             />
             { groups.total > 0 && (
               <>

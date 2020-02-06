@@ -1,14 +1,14 @@
 import logging
 from banal import ensure_dict
 from flask import Blueprint, request, Response
+from werkzeug.exceptions import BadRequest
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.util import merge_data
 from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
-from aleph.model import QueryLog
+from aleph.model import QueryLog, Entity
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import create_entity, update_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags
@@ -522,9 +522,6 @@ def update(entity_id):
     entity = get_db_entity(entity_id, request.authz.WRITE)
     tag_request(collection_id=entity.collection_id)
     data = parse_request('EntityUpdate')
-    if get_flag('merge'):
-        props = merge_data(data.get('properties'), entity.data)
-        data['properties'] = props
     entity.update(data)
     db.session.commit()
     update_entity(entity, sync=get_flag('sync', True))
@@ -556,3 +553,58 @@ def delete(entity_id):
     delete_entity(entity, sync=get_flag('sync', True))
     db.session.commit()
     return ('', 204)
+
+
+@blueprint.route('/api/2/entities/<entity_id>/undelete', methods=['POST', 'PUT'])  # noqa
+def undelete(entity_id):
+    """
+    ---
+    post:
+      summary: Undelete an entity
+      description: >
+        Undelete the entity with id `entity_id` and update its
+        data. If the entity doesn't exist, create it. This only applies to
+        entities which are backed by a database row, i.e. not any entities
+        resulting from a mapping or bulk load.
+      parameters:
+      - in: path
+        name: entity_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityUndelete'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+      tags:
+      - Entity
+    """
+    data = parse_request('EntityUndelete')
+    entity = Entity.by_id(entity_id, deleted=True)
+    # If the entity exists, undelete and update it. Otherwise create it.
+    if entity is not None:
+        require(request.authz.can(entity.collection_id, request.authz.WRITE))
+        tag_request(entity_id=entity_id, collection_id=entity.collection_id)
+        if entity.deleted_at is not None:
+            entity.undelete()
+        if data.get('properties'):
+            entity.update(data)
+        update_entity(entity, sync=get_flag('sync', True))
+    else:
+        collection_id = data.get('collection_id')
+        if collection_id is None:
+            raise BadRequest("Missing collection_id. Can not create entity")
+        collection = get_db_collection(collection_id, request.authz.WRITE)
+        entity_id = create_entity(data, collection, sync=True)
+        tag_request(entity_id=entity_id, collection_id=str(collection.id))
+    db.session.commit()
+    entity = get_index_entity(entity_id, request.authz.READ)
+    return EntitySerializer.jsonify(entity)

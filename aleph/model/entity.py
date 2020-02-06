@@ -51,6 +51,10 @@ class Entity(db.Model, SoftDeleteModel):
         deleted_at = deleted_at or datetime.utcnow()
         super(Entity, self).delete(deleted_at=deleted_at)
 
+    def undelete(self):
+        self.deleted_at = None
+        db.session.add(self)
+
     def update(self, entity):
         proxy = model.get_proxy(entity)
         proxy.schema.validate(entity)
@@ -71,17 +75,18 @@ class Entity(db.Model, SoftDeleteModel):
             'schema': self.schema,
             'properties': self.data
         })
-        proxy.add('name', self.name)
-        proxy.set('indexUpdatedAt', self.updated_at)
+        if self.name:
+            proxy.add('name', self.name)
+        proxy.set('indexUpdatedAt', self.updated_at, quiet=True)
         return proxy
 
     @classmethod
-    def create(cls, data, collection):
+    def create(cls, data, collection, entity_id=None):
         foreign_id = data.get('foreign_id')
         ent = cls.by_foreign_id(foreign_id, collection.id, deleted=True)
         if ent is None:
             ent = cls()
-            ent.id = make_textid()
+            ent.id = entity_id or make_textid()
             ent.collection = collection
             ent.foreign_id = foreign_id
             ent.data = {}
@@ -90,9 +95,9 @@ class Entity(db.Model, SoftDeleteModel):
         return ent
 
     @classmethod
-    def by_id(cls, entity_id, collection_id=None):
+    def by_id(cls, entity_id, collection_id=None, deleted=False):
         entity_id, _ = Namespace.parse(entity_id)
-        q = cls.all()
+        q = cls.all(deleted=deleted)
         q = q.filter(cls.id == entity_id)
         return q.first()
 

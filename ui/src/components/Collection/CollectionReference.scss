@@ -1,0 +1,18 @@
+@import "src/app/variables.scss";
+
+.CollectionReference {
+  &__section {
+    &:first-child {
+      margin-bottom: $aleph-grid-size*2;
+    }
+
+    .key {
+      margin-bottom: 5px;
+      color: $gray1 !important;
+    }
+
+    .bp3-input-group {
+      margin-bottom: 5px;
+    }
+  }
+}

@@ -6,6 +6,7 @@ import Collection from './Collection';
 import Country from './Country';
 import Numeric from './Numeric';
 import Date from './Date';
+import Diagram from './Diagram';
 import DualPane from './DualPane';
 import Entity from './Entity';
 import Facet from './Facet';
@@ -24,6 +25,7 @@ import Tag from './Tag';
 import URL from './URL';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
+import Summary from './Summary';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
 
@@ -36,6 +38,7 @@ export {
   Country,
   Numeric,
   Date,
+  Diagram,
   DualPane,
   Entity,
   Facet,
@@ -49,6 +52,7 @@ export {
   ErrorSection,
   SinglePane,
   SortableTH,
+  Summary,
   Count,
   Tag,
   URL,

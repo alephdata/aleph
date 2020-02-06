@@ -3,15 +3,15 @@ import { FormattedMessage } from 'react-intl';
 import { Category, Collection } from 'src/components/common';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
-import 'src/components/common/ItemOverview.scss';
+import './CollectionHeading.scss';
 
 
 class CollectionHeading extends PureComponent {
   render() {
     const { collection } = this.props;
     return (
-      <>
-        <span className="bp3-text-muted ItemOverview__heading__subtitle">
+      <div className="CollectionHeading">
+        <span className="bp3-text-muted ">
           <Collection.Label collection={collection} label={false} />
           { collection.casefile && (
             <FormattedMessage id="collection.info.case" defaultMessage="Personal dataset" />
@@ -20,16 +20,11 @@ class CollectionHeading extends PureComponent {
             <Category.Label collection={collection} />
           )}
         </span>
-        <h1 itemProp="name" className="ItemOverview__heading__title">
+        <h1 itemProp="name" className="CollectionHeading__title">
           {collection.label}
         </h1>
         <CollectionStatus collection={collection} showCancel />
-        {collection.summary && (
-          <div className="ItemOverview__heading__description">
-            <Collection.Summary collection={collection} />
-          </div>
-        )}
-      </>
+      </div>
     );
   }
 }

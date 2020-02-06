@@ -6,20 +6,36 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
-import {
-  Count, TextLoading, Schema,
-} from 'src/components/common';
-import CollectionStatisticsMode from 'src/components/Collection/CollectionStatisticsMode';
+import { Count, TextLoading } from 'src/components/common';
+import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
-import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
-import CollectionEntitiesMode from 'src/components/Collection/CollectionEntitiesMode';
+import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
+import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
+
 import { selectCollectionXrefIndex, selectModel } from 'src/selectors';
+
+import './CollectionViews.scss';
+
+const viewIds = {
+  OVERVIEW: 'overview',
+  BROWSE: 'browse',
+  XREF: 'xref',
+  DIAGRAMS: 'diagrams',
+};
 
 /* eslint-disable */
 class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
+  }
+
+  componentDidUpdate() {
+    const { activeMode } = this.props;
+
+    if (Object.values(viewIds).indexOf(activeMode) < 0) {
+      this.handleTabChange(viewIds.OVERVIEW);
+    }
   }
 
   getEntitySchemata() {
@@ -50,11 +66,10 @@ class CollectionViews extends React.Component {
   handleTabChange(mode) {
     const { history, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
-    if (isPreview) {
-      parsedHash['preview:mode'] = mode;
-    } else {
-      parsedHash.mode = mode;
-    }
+
+    parsedHash.mode = mode;
+    delete parsedHash.type;
+
     history.replace({
       pathname: location.pathname,
       search: location.search,
@@ -69,57 +84,61 @@ class CollectionViews extends React.Component {
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
     const hasBrowse = (numOfDocs > 0 || collection.casefile);
+
+    let selectedTab = activeMode;
+
     return (
       <Tabs
-        id="EntityInfoTabs"
+        id="CollectionInfoTabs"
+        className="CollectionViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={activeMode}
+        selectedTabId={selectedTab}
         renderActiveTabPanelOnly
-        className="info-tabs-padding"
       >
         <Tab
-          id="Overview"
+          id={viewIds.OVERVIEW}
+          className="CollectionViews__tab"
           title={
             <>
               <Icon icon="grouped-bar-chart" className="left-icon" />
               <FormattedMessage id="entity.info.overview" defaultMessage="Overview" />
             </>}
-          panel={<CollectionStatisticsMode collection={collection} />}
+          panel={<CollectionOverviewMode collection={collection} />}
         />
-        {hasBrowse && (
-          <Tab
-            id="Document"
-            title={
-              <>
-                <Icon icon="folder" className="left-icon" />
-                <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
-                <Count count={numOfDocs} />
-              </>}
-            panel={<CollectionDocumentsMode collection={collection} />}
-          />
-        )}
-        {entitySchemata.map(ref => (
-          <Tab
-            id={ref.schema}
-            key={ref.schema}
-            title={
-              <>
-                <Schema.Smart.Label schema={ref.schema} plural icon />
-                <Count count={ref.count} />
-              </>}
-            panel={<CollectionEntitiesMode collection={collection} activeMode={activeMode} />}
-          />
-        ))}
         <Tab
-          id="xref"
+          id={viewIds.BROWSE}
+          className="CollectionViews__tab"
+          title={
+            <>
+              <Icon icon="inbox-search" className="left-icon" />
+              <FormattedMessage id="entity.info.contents" defaultMessage="Browse" />
+            </>}
+          panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
+        />
+        <Tab
+          id={viewIds.XREF}
+          className="CollectionViews__tab"
           title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
-              <Icon className="left-icon" icon="search-around" />
+              <Icon className="left-icon" icon="comparison" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xrefIndex.total} />
             </TextLoading>}
           panel={<CollectionXrefIndexMode collection={collection} />}
         />
+        {collection.casefile && (
+          <Tab
+            id={viewIds.DIAGRAMS}
+            className="CollectionViews__tab"
+            title={
+              <>
+                <Icon className="left-icon" icon="graph" />
+                <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
+              </>
+            }
+            panel={<CollectionDiagramsIndexMode collection={collection} />}
+          />
+        )}
       </Tabs>
     );
   }

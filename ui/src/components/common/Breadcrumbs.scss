@@ -17,6 +17,10 @@
     margin: 2px 0;
   }
 
+  &__status {
+    margin-right: $aleph-grid-size;
+  }
+
   .bp3-breadcrumbs {
     height: auto;
     position: relative;

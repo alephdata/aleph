@@ -22,6 +22,8 @@ import GroupScreen from 'src/screens/GroupScreen/GroupScreen';
 import CasesIndexScreen from 'src/screens/CasesIndexScreen/CasesIndexScreen';
 import CollectionIndexScreen from 'src/screens/CollectionIndexScreen/CollectionIndexScreen';
 import CollectionScreen from 'src/screens/CollectionScreen/CollectionScreen';
+import DiagramScreen from 'src/screens/DiagramScreen/DiagramScreen';
+import DiagramIndexScreen from 'src/screens/DiagramIndexScreen/DiagramIndexScreen';
 import CollectionXrefMatchesScreen from 'src/screens/CollectionXrefMatchesScreen/CollectionXrefMatchesScreen';
 import EntityScreen from 'src/screens/EntityScreen/EntityScreen';
 
@@ -65,6 +67,8 @@ class Router extends Component {
           <Redirect from="/collections/:collectionId" to="/datasets/:collectionId" />
           <Redirect from="/collections/:collectionId/xref/:otherId" to="/datasets/:collectionId/xref/:otherId" />
           <Route path="/datasets/:collectionId/xref/:otherId" exact component={CollectionXrefMatchesScreen} />
+          <Route path="/diagrams/:diagramId" exact component={DiagramScreen} />
+          <Route path="/diagrams" exact component={DiagramIndexScreen} />
           <Route path="/search" exact component={SearchScreen} />
           <Route path="/notifications" exact component={NotificationsScreen} />
           <Route path="/history" exact component={HistoryScreen} />

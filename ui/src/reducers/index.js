@@ -19,6 +19,7 @@ import collectionXrefIndex from './collectionXrefIndex';
 import collectionXrefMatches from './collectionXrefMatches';
 import results from './results';
 import alerts from './alerts';
+import diagrams from './diagrams';
 import groups from './groups';
 import roles from './roles';
 import notifications from './notifications';
@@ -48,6 +49,7 @@ const rootReducer = combineReducers({
   collectionPermissions,
   collectionXrefIndex,
   collectionXrefMatches,
+  diagrams,
   queryLogs,
   results,
   systemStatus,

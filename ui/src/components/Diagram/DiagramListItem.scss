@@ -1,0 +1,59 @@
+@import "src/app/variables.scss";
+
+.DiagramListItem {
+  padding: $aleph-content-padding/2;
+  text-align: center;
+
+  h4 {
+    font-weight: bold;
+    color: $blue2;
+    text-decoration: none !important;
+  }
+
+  &__content.bp3-card {
+    height: 100%;
+    padding: 35px $aleph-content-padding;
+    position: relative;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1),
+        0 1px 1px rgba(16, 22, 26, 0.2),
+        0 2px 6px rgba(16, 22, 26, 0.2);
+    }
+  }
+
+  &__link:hover {
+    text-decoration: none;
+  }
+
+  &__icon {
+    color: $blue2;
+    margin-bottom: $aleph-content-padding/2;
+  }
+
+  &__collection {
+    margin-bottom: $aleph-grid-size*1.5;
+  }
+
+  .summary {
+    font-size: $pt-font-size;
+    margin-bottom: $aleph-grid-size;
+  }
+
+  .details {
+    margin-bottom: 0;
+    color: $aleph-greyed-text;
+    font-size: 12px;
+    margin-top: 15px;
+  }
+
+  .details-item {
+    display: inline-block;
+    min-width: 8em;
+
+    .bp3-icon {
+      margin-right: $aleph-icon-padding;
+    }
+  }
+}

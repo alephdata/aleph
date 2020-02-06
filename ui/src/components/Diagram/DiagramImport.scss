@@ -1,0 +1,23 @@
+@import "src/app/variables.scss";
+
+.DiagramImport {
+  &__file-name.bp3-button {
+    margin: 0 0 $aleph-grid-size*2 (-$aleph-grid-size);
+
+    &:hover {
+      text-decoration: underline !important;
+      background: none !important;
+    }
+  }
+
+  &__placeholder {
+    padding: 20px;
+    border: 1px dashed $aleph-border-color;
+    cursor: pointer;
+    transition: background .1s ease-in-out;
+
+    &:hover {
+      background: $light-gray3;
+    }
+  }
+}

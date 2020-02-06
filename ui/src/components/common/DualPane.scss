@@ -22,11 +22,7 @@ $dual-pane-mobile-padding: $aleph-mobile-content-padding;
   flex-direction: column;
   flex-grow: 1;
   padding: 0 0 0 $dual-pane-padding;
-  overflow: hidden;
-
-  &.allow-overflow {
-    overflow: visible;
-  }
+  overflow: visible;
 
   .info-tabs-padding {
     padding: 0;

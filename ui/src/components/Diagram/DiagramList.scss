@@ -1,0 +1,12 @@
+@import "src/app/variables.scss";
+
+.DiagramList {
+  margin-right: 1px;
+  &__items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(260px, 1fr));
+    margin: -$aleph-content-padding/2;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}

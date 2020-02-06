@@ -2,7 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Card } from '@blueprintjs/core';
 
-import { Count, Collection } from 'src/components/common';
+import { Count, Collection, Summary } from 'src/components/common';
 import EntityProperties from 'src/components/Entity/EntityProperties';
 
 import './EntityInfoMode.scss';
@@ -26,7 +26,7 @@ function EntityInfoMode(props) {
             <Collection.Status collection={entity.collection} showPopover icon />
           </span>
           {entity.collection.summary && (
-            <Collection.Summary collection={entity.collection} className="collection-info__item" truncate={4} />
+            <Summary text={entity.collection.summary} className="collection-info__item" truncate={4} />
           )}
           <span className="collection-info__item">
             <FormattedMessage
