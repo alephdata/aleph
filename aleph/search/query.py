@@ -168,6 +168,7 @@ class Query(object):
         if not self.parser.highlight:
             return {}
         return {
+            'encoder': 'html',
             'fields': {
                 'text': {
                     'type': 'fvh',

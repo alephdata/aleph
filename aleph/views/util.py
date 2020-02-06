@@ -124,13 +124,13 @@ CLEANER = Cleaner(
 )
 
 
-def sanitize_html(html_text, base_url, encoding='utf-8'):
+def sanitize_html(html_text, base_url, encoding=None):
     """Remove anything from the given HTML that must not show up in the UI."""
-    # TODO: circumvent encoding declarations?
     if html_text is None or not len(html_text.strip()):
         return
     try:
         cleaned = CLEANER.clean_html(html_text)
+        encoding = encoding or 'utf-8'
         parser = html.HTMLParser(encoding=encoding)
         data = cleaned.encode(encoding, 'replace')
         doc = html.document_fromstring(data, parser=parser)
