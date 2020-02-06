@@ -192,13 +192,15 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         :param str pattern: Pattern to match.
         """
+        query = prefix.replace('%', ' ').replace('_', ' ')
+        query = '%%%s%%' % query
         q = cls.all()
         q = q.filter(Role.type == Role.USER)
         if len(exclude):
             q = q.filter(not_(Role.id.in_(exclude)))
         q = q.filter(or_(
             func.lower(cls.email) == prefix.lower(),
-            cls.name.ilike('%' + prefix + '%')
+            cls.name.ilike(query)
         ))
         q = q.order_by(Role.id.asc())
         return q

@@ -1,11 +1,14 @@
 import os
+import gc
 import shutil
+import unittest
+from flask import json
 from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
-from flask_testing import TestCase as FlaskTestCase
 from followthemoney.cli.util import read_entity
+from werkzeug.utils import cached_property
 from faker import Factory
 
 from aleph import settings
@@ -38,7 +41,23 @@ def read_entities(file_name):
             yield entity
 
 
-class TestCase(FlaskTestCase):
+class JsonResponseMixin(object):
+    """
+    Mixin with testing helper methods
+    """
+
+    @cached_property
+    def json(self):
+        return json.loads(self.data)
+
+
+def _make_test_response(response_class):
+    class TestResponse(response_class, JsonResponseMixin):
+        pass
+    return TestResponse
+
+
+class TestCase(unittest.TestCase):
 
     # Expose faker since it should be easy to use
     fake = Factory.create()
@@ -189,3 +208,48 @@ class TestCase(FlaskTestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.temp_dir)
+
+    def __call__(self, result=None):
+        """
+        Does the required setup, doing it here
+        means you don't have to call super.setUp
+        in subclasses.
+        """
+        try:
+            self._pre_setup()
+            super(TestCase, self).__call__(result)
+        finally:
+            self._post_teardown()
+
+    def debug(self):
+        try:
+            self._pre_setup()
+            super(TestCase, self).debug()
+        finally:
+            self._post_teardown()
+
+    def _pre_setup(self):
+        self.app = self.create_app()
+
+        self._orig_response_class = self.app.response_class
+        self.app.response_class = _make_test_response(self.app.response_class)
+
+        self.client = self.app.test_client()
+
+        self._ctx = self.app.test_request_context()
+        self._ctx.push()
+
+    def _post_teardown(self):
+        if getattr(self, '_ctx', None) is not None:
+            self._ctx.pop()
+            del self._ctx
+
+        if getattr(self, 'app', None) is not None:
+            if getattr(self, '_orig_response_class', None) is not None:
+                self.app.response_class = self._orig_response_class
+            del self.app
+
+        if hasattr(self, 'client'):
+            del self.client
+
+        gc.collect()
