@@ -213,5 +213,7 @@ def delete_entity(entity_id, exclude=None, sync=False):
             # simultaneously, Aleph tries to delete the Interval thrice due to
             # recursive deletion of adjacent entities. ElasticSearch throws a
             # 404 in that case.
+            # In those cases, we want to skip both the `es.delete` step and
+            # the `query_delete` step.
             log.warning("Delete failed for entity %s - not found", entity_id)
             continue
