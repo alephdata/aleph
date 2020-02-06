@@ -23,8 +23,8 @@ class ScopeSelect extends React.Component {
         itemRenderer={this.renderItem}
         popoverProps={{
           minimal: true,
-          className: 'SearchBox__scoped-input__popover',
-          usePortal: false,
+          popoverClassName: 'SearchBox__scoped-input__popover',
+          usePortal: true,
         }}
         disabled={!multipleScopes}
       >

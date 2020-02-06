@@ -9,7 +9,7 @@ countrytagger==0.1.2
 psycopg2-binary==2.8.4
 pyicu==2.4.2
 
-grpcio==1.27.0
+grpcio==1.26.0
 google-cloud-vision==0.42.0
 google-cloud-storage==1.25.0
 

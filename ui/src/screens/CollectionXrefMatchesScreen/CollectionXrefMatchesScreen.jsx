@@ -100,9 +100,7 @@ export class CollectionXrefMatchesScreen extends Component {
                       <option key={res.collection.id} value={res.collection.id}>
                         {res.collection.label}
                         {' '}
-                        (
                         {res.matches}
-                        )
                       </option>
                     ))}
                   </select>
