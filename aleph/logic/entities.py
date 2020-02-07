@@ -8,6 +8,7 @@ from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
 from aleph.index.indexes import entities_read_index
+from aleph.logic.aggregator import delete_aggregator_entity
 from aleph.index.util import authz_query, field_filter_query
 
 log = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ def upsert_entity(data, collection, sync=False):
         entity.update(proxy)
     collection.touch()
     db.session.commit()
-    # TODO: delete from balkhash
+    delete_aggregator_entity(collection, entity.id)
     index.index_entity(entity, sync=sync)
     refresh_entity(entity.id, sync=sync)
     refresh_collection(collection.id, sync=sync)
@@ -41,24 +42,26 @@ def refresh_entity(entity_id, sync=False):
         cache.kv.delete(cache.object_key(Entity, entity_id))
 
 
-def delete_entity(entity, deleted_at=None, sync=False):
+def delete_entity(collection, entity, deleted_at=None, sync=False):
     # This is recursive and will also delete any entities which
     # reference the given entity. Usually this is going to be child
     # documents, or directoships referencing a person. It's a pretty
     # dangerous operation, though.
+    entity_id = collection.ns.sign(entity.get('id'))
     for adjacent in index.iter_adjacent(entity):
         log.warning("Recursive delete: %r", adjacent)
-        delete_entity(adjacent, deleted_at=deleted_at, sync=sync)
-    flush_notifications(entity.get('id'), clazz=Entity)
-    obj = Entity.by_id(entity.get('id'))
+        delete_entity(collection, adjacent, deleted_at=deleted_at, sync=sync)
+    flush_notifications(entity_id, clazz=Entity)
+    obj = Entity.by_id(entity_id, collection=collection)
     if obj is not None:
         obj.delete(deleted_at=deleted_at)
-    doc = Document.by_id(entity.get('id'))
+    doc = Document.by_id(entity_id, collection=collection)
     if doc is not None:
         doc.delete(deleted_at=deleted_at)
-    index.delete_entity(entity.get('id'), sync=sync)
-    refresh_entity(entity.get('id'), sync=sync)
-    refresh_collection(entity.get('collection_id'), sync=sync)
+    index.delete_entity(entity_id, sync=sync)
+    delete_aggregator_entity(collection, entity_id)
+    refresh_entity(entity_id, sync=sync)
+    refresh_collection(collection.id, sync=sync)
 
 
 def entity_references(entity, authz=None):

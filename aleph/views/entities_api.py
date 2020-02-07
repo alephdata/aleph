@@ -556,7 +556,9 @@ def delete(entity_id):
       - Entity
     """
     entity = get_index_entity(entity_id, request.authz.WRITE)
-    tag_request(collection_id=entity.get('collection_id'))
-    delete_entity(entity, sync=get_flag('sync', True))
+    collection = get_db_collection(entity.get('collection_id'),
+                                   request.authz.WRITE)
+    tag_request(collection_id=collection.id)
+    delete_entity(collection, entity, sync=get_flag('sync', True))
     db.session.commit()
     return ('', 204)
