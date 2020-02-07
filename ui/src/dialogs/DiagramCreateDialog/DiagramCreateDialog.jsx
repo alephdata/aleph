@@ -100,6 +100,7 @@ class DiagramCreateDialog extends Component {
       }
 
       const response = await this.props.createDiagram(newDiagram);
+      this.setState({ processing: false });
 
       history.push({
         pathname: getDiagramLink(response.data),
@@ -108,7 +109,7 @@ class DiagramCreateDialog extends Component {
       showSuccessToast(
         intl.formatMessage(messages.success_create),
       );
-      this.setState({ processing: false });
+
     } catch (e) {
       showWarningToast(e.message);
       this.setState({ processing: false });
