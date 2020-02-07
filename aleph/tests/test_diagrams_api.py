@@ -63,7 +63,7 @@ class DiagramAPITest(TestCase):
         layout = data.pop('layout')
         entities = layout.pop('entities')
         return {
-            'collection_id': self.col.id,
+            'collection_id': str(self.col.id),
             'layout': layout,
             'entities': entities,
             'label': 'Royal Family',
@@ -93,7 +93,7 @@ class DiagramAPITest(TestCase):
         # Do the same replacement in layout
         layout = _replace_ids(layout, signed_entity_ids)
         return {
-            'collection_id': self.col.id,
+            'collection_id': str(self.col.id),
             'layout': layout,
             'entities': list(signed_entity_ids.values()),
             'label': 'Royal Family',
@@ -166,7 +166,7 @@ class DiagramAPITest(TestCase):
     def test_create_empty(self):
         data = {
             'label': 'hello',
-            'collection_id': self.col.id,
+            'collection_id': str(self.col.id),
         }
         url = '/api/2/diagrams'
         res = self.client.post(url, json=data, headers=self.headers)
@@ -188,7 +188,7 @@ class DiagramAPITest(TestCase):
     def test_delete_when_collection_deleted(self):
         data = {
             'label': 'hello',
-            'collection_id': self.col.id,
+            'collection_id': str(self.col.id),
         }
         url = '/api/2/diagrams'
         res = self.client.post(url, json=data, headers=self.headers)

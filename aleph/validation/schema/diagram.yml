@@ -28,7 +28,7 @@ DiagramCreate:
     - $ref: '#/components/schemas/DiagramBase'
   properties:
     collection_id:
-      type: integer
+      type: string
     entities:
       type: array
       items:

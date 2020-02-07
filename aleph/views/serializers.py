@@ -320,6 +320,7 @@ class MappingSerializer(Serializer):
 
 
 class DiagramEntitySerializer(EntitySerializer):
+
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['id'] = str(pk)
@@ -339,10 +340,13 @@ class DiagramEntitySerializer(EntitySerializer):
                         entity = value
                     properties[prop.name].append(entity)
         obj.pop('_index', None)
+        collection_id = obj.pop('collection_id', None)
+        obj['collection_id'] = str(collection_id)
         return self._clean_response(obj)
 
 
 class DiagramSerializer(Serializer):
+
     def _collect(self, obj):
         self.queue(Collection, obj.get('collection_id'))
         ent_ids = obj['entities']
@@ -352,7 +356,7 @@ class DiagramSerializer(Serializer):
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['id'] = str(pk)
-        collection_id = obj.pop('collection_id')
+        collection_id = obj.pop('collection_id', None)
         obj['writeable'] = request.authz.can(collection_id, request.authz.WRITE)  # noqa
         obj['collection'] = self.resolve(Collection, collection_id, CollectionSerializer)  # noqa
         ent_ids = obj.pop('entities')
