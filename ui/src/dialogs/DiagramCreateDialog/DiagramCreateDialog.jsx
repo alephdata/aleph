@@ -109,7 +109,6 @@ class DiagramCreateDialog extends Component {
       showSuccessToast(
         intl.formatMessage(messages.success_create),
       );
-
     } catch (e) {
       showWarningToast(e.message);
       this.setState({ processing: false });
