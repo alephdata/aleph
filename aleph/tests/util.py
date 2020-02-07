@@ -116,6 +116,9 @@ class TestCase(unittest.TestCase):
         update_collection(collection, sync=True)
         return collection
 
+    def create_entity(self, data, collection):
+        return Entity.create(data, collection)
+
     def grant(self, collection, role, read, write):
         Permission.grant(collection, role, read, write)
         db.session.commit()
@@ -137,7 +140,7 @@ class TestCase(unittest.TestCase):
             casefile=False,
             creator=self.admin
         )
-        self._banana = Entity.create({
+        self._banana = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': ['Banana'],
@@ -152,7 +155,7 @@ class TestCase(unittest.TestCase):
             casefile=False,
             creator=self.admin
         )
-        self._kwazulu = Entity.create({
+        self._kwazulu = self.create_entity({
             'schema': 'Company',
             'properties': {
                 'name': ['KwaZulu'],

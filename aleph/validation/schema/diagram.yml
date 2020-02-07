@@ -9,7 +9,7 @@ DiagramBase:
     layout:
       type: object
       allOf:
-        - $ref: '#/components/schemas/Layout'
+        - $ref: '#/components/schemas/DiagramLayout'
 
 DiagramUpdate:
   type: object
@@ -38,6 +38,7 @@ DiagramCreate:
         properties:
           id:
             type: string
+            format: entity_id
         required: ['id', 'schema', 'properties']
   required: ["label", "collection_id"]
 
@@ -45,8 +46,7 @@ Diagram:
   type: object
   allOf:
   - $ref: '#/components/schemas/DatedModel'
-  allOf:
-    - $ref: '#/components/schemas/DiagramBase'
+  - $ref: '#/components/schemas/DiagramBase'
   properties:
     collection:
       type: object
@@ -63,11 +63,11 @@ Diagram:
         properties:
           id:
             type: string
+            format: entity_id
         required: ["id", "schema"]
     writeable:
       type: boolean
   required: ["collection", "role_id", "label", "layout", "entities", "writeable"]
-
 
 DiagramVertex:
   type: object
@@ -133,7 +133,7 @@ DiagramGrouping:
       items:
         type: string
 
-Layout:
+DiagramLayout:
   type: object
   required: ["vertices", "edges"]
   properties:

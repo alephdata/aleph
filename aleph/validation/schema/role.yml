@@ -32,6 +32,9 @@ RoleUpdate:
     is_muted:
       type: boolean
       example: false
+    is_tester:
+      type: boolean
+      example: false
     password:
       type: string
       minLength: 6

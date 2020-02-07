@@ -1,7 +1,6 @@
 import json
 
 from aleph.core import db
-from aleph.model import Entity
 from aleph.logic.collections import compute_collection
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
@@ -19,7 +18,7 @@ class CollectionsApiTestCase(TestCase):
             countries=['usa'],
             languages=['en'],
         )
-        self.ent = Entity.create({
+        self.ent = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'Winnie the Pooh',

@@ -1,5 +1,4 @@
 from aleph.core import db
-from aleph.model import Entity
 from aleph.queues import get_stage, OP_XREF
 from aleph.index.entities import index_entity
 from aleph.logic.xref import xref_collection
@@ -22,21 +21,19 @@ class XrefApiTestCase(TestCase):
         )
         self.grant_publish(self.residents)
 
-        self.ent = Entity.create({
+        self.ent = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'Elim Garak',
             }
         }, self.residents)
-        db.session.add(self.ent)
 
-        self.ent2 = Entity.create({
+        self.ent2 = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'Leeta',
             }
         }, self.residents)
-        db.session.add(self.ent2)
 
         # Second public collection and entities
         self.dabo = self.create_collection(
@@ -46,29 +43,26 @@ class XrefApiTestCase(TestCase):
         )
         self.grant_publish(self.dabo)
 
-        self.ent3 = Entity.create({
+        self.ent3 = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'MPella',
             }
         }, self.dabo)
-        db.session.add(self.ent3)
 
-        self.ent4 = Entity.create({
+        self.ent4 = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'Leeta',
             }
         }, self.dabo)
-        db.session.add(self.ent4)
 
-        self.ent5 = Entity.create({
+        self.ent5 = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'Mardah',
             }
         }, self.dabo)
-        db.session.add(self.ent5)
 
         # Private collection and entities
         self.obsidian = self.create_collection(
@@ -77,21 +71,19 @@ class XrefApiTestCase(TestCase):
             creator=self.creator
         )
 
-        self.ent6 = Entity.create({
+        self.ent6 = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'Elim Garak',
             }
         }, self.obsidian)
-        db.session.add(self.ent6)
 
-        self.ent7 = Entity.create({
+        self.ent7 = self.create_entity({
             'schema': 'Person',
             'properties': {
                 'name': 'Enabran Tain',
             }
         }, self.obsidian)
-        db.session.add(self.ent7)
 
         db.session.commit()
         index_entity(self.ent)

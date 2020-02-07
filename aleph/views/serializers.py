@@ -111,8 +111,12 @@ class RoleSerializer(Serializer):
         if not obj['writeable']:
             obj.pop('has_password', None)
             obj.pop('is_muted', None)
+            obj.pop('is_tester', None)
+            obj.pop('is_blocked', None)
             obj.pop('api_key', None)
             obj.pop('email', None)
+            obj.pop('created_at', None)
+            obj.pop('updated_at', None)
         if obj['type'] != Role.USER:
             obj.pop('api_key', None)
             obj.pop('email', None)

@@ -27,7 +27,7 @@ def _load_parent(collection, meta):
     parent_id = meta.get('parent_id', parent.get('id'))
     if parent_id is None:
         return
-    parent = Document.by_id(parent_id, collection_id=collection.id)
+    parent = Document.by_id(parent_id, collection=collection)
     if parent is None:
         raise BadRequest(response=jsonify({
             'status': 'error',

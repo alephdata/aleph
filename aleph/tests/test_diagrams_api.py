@@ -11,7 +11,7 @@ from followthemoney.exc import InvalidData
 
 from aleph.tests.util import TestCase
 from aleph.views.util import validate
-from aleph.logic.entities import create_entity
+from aleph.logic.entities import upsert_entity
 from aleph.logic.collections import delete_collection
 
 log = logging.getLogger(__name__)
@@ -87,7 +87,7 @@ class DiagramAPITest(TestCase):
             ent = json.loads(ent)
             # clear existing id if any
             ent.pop('foreign_id', None)
-            signed_entity_id = create_entity(ent, self.col)
+            signed_entity_id = upsert_entity(ent, self.col)
             signed_entity_ids[ent['id']] = signed_entity_id
 
         # Do the same replacement in layout
@@ -111,7 +111,7 @@ class DiagramAPITest(TestCase):
             res.json['entities'][2]['properties']['person'],
             list
         ), res.json['entities']
-        assert res.json['entities'][2]['properties']['person'][0]['schema']  == 'Person'  # noqa
+        assert res.json['entities'][2]['properties']['person'][0]['schema'] == 'Person'  # noqa
         diagram_id = res.json['id']
 
         url = '/api/2/diagrams'
@@ -126,7 +126,8 @@ class DiagramAPITest(TestCase):
         validate(res.json, 'QueryResponse')
         assert len(res.json['results']) == 1
         res = self.client.get(url, headers=self.headers_x)
-        assert res.status_code == 403, res
+        assert res.status_code == 200, res
+        assert len(res.json['results']) == 0
         url = '/api/2/diagrams?filter:collection_id=%s' % self.col2.id
         res = self.client.get(url, headers=self.headers)
         assert res.status_code == 200, res
@@ -150,7 +151,7 @@ class DiagramAPITest(TestCase):
             res.json['entities'][3]['properties']['person'],
             list
         ), res.json['entities']
-        assert res.json['entities'][3]['properties']['person'][0]['schema']  == 'Person'  # noqa
+        assert res.json['entities'][3]['properties']['person'][0]['schema'] == 'Person'  # noqa
         assert res.json['label'] == 'Royal Family v2'
         assert res.json['summary'] == '...'
         res_str = json.dumps(res.json)
