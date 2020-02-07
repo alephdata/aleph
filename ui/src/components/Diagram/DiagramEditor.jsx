@@ -107,11 +107,11 @@ class DiagramEditor extends React.Component {
   }
 
   async updateEntity(entity) {
-    const { onStatusChange } = this.props;
+    const { diagram, onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
 
     try {
-      await this.props.updateEntity(entity);
+      await this.props.updateEntity({ entity, collectionId: diagram.collection.id });
       onStatusChange(updateStates.SUCCESS);
     } catch {
       onStatusChange(updateStates.ERROR);

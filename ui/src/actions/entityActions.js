@@ -28,8 +28,10 @@ export const createEntity = asyncActionCreator(entity => async () => {
   return response.data;
 }, { name: 'CREATE_ENTITY' });
 
-export const updateEntity = asyncActionCreator(entity => async () => {
-  const response = await endpoint.put(`entities/${entity.id}`, entity, {});
+export const updateEntity = asyncActionCreator(({ entity, collectionId }) => async () => {
+  const payload = entity.toJSON();
+  payload.collection_id = collectionId;
+  const response = await endpoint.put(`entities/${entity.id}`, payload, {});
   return response.data;
 }, { name: 'UPDATE_ENTITY' });
 
