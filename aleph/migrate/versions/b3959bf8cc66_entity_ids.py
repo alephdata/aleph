@@ -1,4 +1,4 @@
-"""Mirgate entity IDs and simplfy schema.
+"""Migrate entity IDs and simplify schema.
 
 Revision ID: b3959bf8cc66
 Revises: 1519391870a0
