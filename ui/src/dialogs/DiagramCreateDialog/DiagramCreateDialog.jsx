@@ -90,7 +90,7 @@ class DiagramCreateDialog extends Component {
       const newDiagram = {
         label,
         summary,
-        collection_id: parseInt(collection.id, 10),
+        collection_id: collection.id,
       };
 
       if (layout) {
@@ -143,7 +143,6 @@ class DiagramCreateDialog extends Component {
 
   checkValid() {
     const { label, collection } = this.state;
-
     return collection && label?.length > 0;
   }
 

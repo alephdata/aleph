@@ -80,7 +80,6 @@ class DiagramEditDialog extends Component {
 
   checkValid() {
     const { label } = this.state;
-
     return label?.length > 0;
   }
 

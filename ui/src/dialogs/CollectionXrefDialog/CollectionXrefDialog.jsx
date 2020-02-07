@@ -59,7 +59,7 @@ class CollectionXrefDialog extends Component {
     } = this.props;
     let againstCollectionIds = null;
     if (xrefAgainst === 'specific') {
-      againstCollectionIds = selectedCollections.map(c => parseInt(c.id, 10));
+      againstCollectionIds = selectedCollections.map(c => c.id);
     }
     await this.props.tiggerXrefMatches(collection.id, againstCollectionIds);
     toggleDialog();
