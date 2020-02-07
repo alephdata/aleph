@@ -38,7 +38,7 @@ class DiagramManageMenu extends Component {
             <FormattedMessage id="diagram.info.edit" defaultMessage="Settings" />
           </Button>
           <Button icon="export" onClick={triggerDownload}>
-            <FormattedMessage id="diagram.info.edit" defaultMessage="Export" />
+            <FormattedMessage id="diagram.info.export" defaultMessage="Export" />
           </Button>
           <Button icon="trash" onClick={this.toggleDelete}>
             <FormattedMessage id="diagram.info.delete" defaultMessage="Delete" />

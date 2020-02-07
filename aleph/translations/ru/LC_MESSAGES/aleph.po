@@ -11,14 +11,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-31 16:16+0100\n"
+"POT-Creation-Date: 2020-02-07 13:02+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
 "Last-Translator: jen occrp, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.7.0\n"
+"Generated-By: Babel 2.8.0\n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
@@ -114,6 +114,10 @@ msgstr "Персональные наборы данных"
 msgid "Other material"
 msgstr "Прочие материалы"
 
+#: aleph/model/entity.py:85
+msgid "Invalid entity ID"
+msgstr ""
+
 #: aleph/model/event.py:48
 msgid "{{actor}} created {{collection}}"
 msgstr "{{actor}} создал(а) {{collection}}"
@@ -197,33 +201,38 @@ msgstr ""
 "\n"
 "    Для завершения регистрации, пожалуйста, перейдите на <a href=\"%(url)s\"> страницу регистрации </a>."
 
-#: aleph/validation/formats.py:19 aleph/views/forms.py:67
+#: aleph/validation/formats.py:20
 msgid "Invalid user locale."
 msgstr "Неверные региональные настройки."
 
-#: aleph/validation/formats.py:27 aleph/views/forms.py:78
+#: aleph/validation/formats.py:28
 #, python-format
 msgid "Invalid country code: %s"
 msgstr "Некорректный код страны: %s"
 
-#: aleph/validation/formats.py:35 aleph/views/forms.py:35
+#: aleph/validation/formats.py:37
+#, python-format
+msgid "Invalid entity ID: %s"
+msgstr ""
+
+#: aleph/validation/formats.py:45
 msgid "Invalid category."
 msgstr "Неверная категория"
 
-#: aleph/validation/formats.py:43 aleph/views/forms.py:45
+#: aleph/validation/formats.py:53
 msgid "Invalid URL."
 msgstr "Некорректная ссылка."
 
-#: aleph/validation/formats.py:51 aleph/views/forms.py:56
+#: aleph/validation/formats.py:61
 msgid "Invalid language code."
 msgstr "Некорректный языковой код."
 
-#: aleph/validation/formats.py:59 aleph/views/forms.py:95
+#: aleph/validation/formats.py:69
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr "Некорректное имя схемы: %s"
 
-#: aleph/validation/formats.py:67 aleph/views/forms.py:87
+#: aleph/validation/formats.py:77
 #, python-format
 msgid "Invalid date: %s"
 msgstr "Неверная дата: %s"
