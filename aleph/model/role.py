@@ -42,6 +42,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     api_key = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_muted = db.Column(db.Boolean, nullable=False, default=False)
+    is_tester = db.Column(db.Boolean, nullable=False, default=False)
+    is_blocked = db.Column(db.Boolean, nullable=False, default=False)
     type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
     password_digest = db.Column(db.Unicode, nullable=True)
     password = None
@@ -75,6 +77,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     def update(self, data):
         self.name = data.get('name', self.name)
         self.is_muted = data.get('is_muted', self.is_muted)
+        self.is_tester = data.get('is_tester', self.is_tester)
         if data.get('password'):
             self.set_password(data.get('password'))
         self.locale = stringify(data.get('locale', self.locale))
@@ -106,6 +109,7 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             'api_key': self.api_key,
             'is_admin': self.is_admin,
             'is_muted': self.is_muted,
+            'is_tester': self.is_tester,
             'has_password': self.has_password,
             # 'notified_at': self.notified_at
         })
@@ -140,6 +144,8 @@ class Role(db.Model, IdModel, SoftDeleteModel):
             role.type = type
             role.is_admin = False
             role.is_muted = False
+            role.is_tester = False
+            role.is_blocked = False
             role.notified_at = datetime.utcnow()
 
         if role.api_key is None:
@@ -192,13 +198,15 @@ class Role(db.Model, IdModel, SoftDeleteModel):
 
         :param str pattern: Pattern to match.
         """
+        query = prefix.replace('%', ' ').replace('_', ' ')
+        query = '%%%s%%' % query
         q = cls.all()
         q = q.filter(Role.type == Role.USER)
         if len(exclude):
             q = q.filter(not_(Role.id.in_(exclude)))
         q = q.filter(or_(
             func.lower(cls.email) == prefix.lower(),
-            cls.name.ilike('%' + prefix + '%')
+            cls.name.ilike(query)
         ))
         q = q.order_by(Role.id.asc())
         return q

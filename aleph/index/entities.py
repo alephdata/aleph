@@ -128,7 +128,7 @@ def get_entity(entity_id, **kwargs):
 def index_entity(entity, sync=False):
     """Index an entity."""
     if entity.deleted_at is not None:
-        return delete_entity(entity.signed_id, sync=sync)
+        return delete_entity(entity.id, sync=sync)
     proxy = entity.to_proxy()
     return index_proxy(entity.collection, proxy, sync=sync)
 

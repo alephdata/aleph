@@ -115,7 +115,7 @@ class Authz(object):
             'u': self.id,
             'exp': exp,
             'r': list(self.roles),
-            'a': self.is_admin
+            'a': self.is_admin,
         }
         if scope is not None:
             payload['s'] = scope
@@ -136,8 +136,9 @@ class Authz(object):
             return cls(None, roles)
 
         roles.add(role.id)
-        roles.add(Role.load_id(Role.SYSTEM_USER))
-        roles.update([g.id for g in role.roles])
+        if not role.is_blocked:
+            roles.add(Role.load_id(Role.SYSTEM_USER))
+            roles.update([g.id for g in role.roles])
         return cls(role.id, roles, is_admin=role.is_admin)
 
     @classmethod

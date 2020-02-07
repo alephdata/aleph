@@ -30,28 +30,22 @@ class Diagram(db.Model, SoftDeleteModel):
         'diagrams', lazy='dynamic', cascade="all, delete-orphan"
     ))
 
-    def update(self, data=None):
+    def update(self, data, collection):
         self.updated_at = datetime.utcnow()
-        if data:
-            self.label = data.get('label', self.label)
-            self.summary = data.get('summary', self.summary)
-            self.entities = data.get('entities', self.entities)
-            self.layout = data.get('layout', self.layout)
-        collection = Collection.by_id(self.collection_id)
+        self.deleted_at = None
+        self.label = data.get('label', self.label)
+        self.summary = data.get('summary', self.summary)
+        self.entities = data.get('entities', self.entities)
+        self.layout = data.get('layout', self.layout)
         entities = []
-        for ent_id in self.entities:
-            signed_ent_id = collection.ns.sign(ent_id)
-            if signed_ent_id is None:
-                raise ValueError("Invalid ent_id: %s" % ent_id)
-            entities.append(signed_ent_id)
+        for entity_id in self.entities:
+            entities.append(collection.ns.sign(entity_id))
         self.entities = entities
         db.session.add(self)
-        db.session.commit()
 
     def delete(self, deleted_at=None):
         self.deleted_at = deleted_at or datetime.utcnow()
         db.session.add(self)
-        db.session.commit()
 
     def to_dict(self):
         data = self.to_dict_dates()
@@ -60,15 +54,17 @@ class Diagram(db.Model, SoftDeleteModel):
             'label': self.label,
             'summary': self.summary,
             'entities': self.entities,
-            'layout': dict(self.layout),
+            'layout': self.layout,
             'role_id': stringify(self.role_id),
             'collection_id': stringify(self.collection_id),
         })
         return data
 
     @classmethod
-    def by_collection(cls, collection_id):
-        q = cls.all().filter(cls.collection_id == collection_id)
+    def by_authz(cls, authz):
+        ids = authz.collections(authz.READ)
+        q = cls.all()
+        q = q.filter(cls.collection_id.in_(ids))
         return q
 
     @classmethod
@@ -78,19 +74,13 @@ class Diagram(db.Model, SoftDeleteModel):
         pq.delete(synchronize_session=False)
 
     @classmethod
-    def by_role_id(cls, role_id):
-        return cls.all().filter(cls.role_id == role_id)
-
-    @classmethod
     def create(cls, data,  collection, role_id):
         diagram = cls()
+        diagram.layout = {}
+        diagram.entities = []
         diagram.role_id = role_id
-        diagram.label = data.get('label')
-        diagram.summary = data.get('summary')
-        diagram.entities = data.get('entities') or []
-        diagram.layout = data.get('layout') or {}
         diagram.collection_id = collection.id
-        diagram.update()
+        diagram.update(data, collection)
         return diagram
 
     def __repr__(self):

@@ -52,6 +52,10 @@ const messages = defineMessages({
     id: 'settings.email.muted',
     defaultMessage: 'Receive daily notification e-mails',
   },
+  beta_tester: {
+    id: 'settings.email.tester',
+    defaultMessage: 'Test new features before they are finished',
+  },
   current_password: {
     id: 'settings.current_password',
     defaultMessage: 'Current password',
@@ -92,6 +96,7 @@ export class SettingsScreen extends React.Component {
     this.onSave = this.onSave.bind(this);
     this.onChangeInput = this.onChangeInput.bind(this);
     this.onToggleMuted = this.onToggleMuted.bind(this);
+    this.onToggleTester = this.onToggleTester.bind(this);
     this.onSelectLocale = this.onSelectLocale.bind(this);
     this.renderLocale = this.renderLocale.bind(this);
   }
@@ -128,6 +133,12 @@ export class SettingsScreen extends React.Component {
   onToggleMuted() {
     const { role } = this.state;
     role.is_muted = !role.is_muted;
+    this.setState({ role });
+  }
+
+  onToggleTester() {
+    const { role } = this.state;
+    role.is_tester = !role.is_tester;
     this.setState({ role });
   }
 
@@ -312,6 +323,11 @@ export class SettingsScreen extends React.Component {
               checked={!role.is_muted}
               label={intl.formatMessage(messages.email_muted)}
               onChange={this.onToggleMuted}
+            />
+            <Checkbox
+              checked={role.is_tester}
+              label={intl.formatMessage(messages.beta_tester)}
+              onChange={this.onToggleTester}
             />
             {this.renderPassword()}
             <FormGroup>

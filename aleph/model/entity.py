@@ -1,10 +1,11 @@
 import logging
 from datetime import datetime
+from flask_babel import gettext
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.namespace import Namespace
+from followthemoney.exc import InvalidData
 
 from aleph.core import db
 from aleph.model.collection import Collection
@@ -21,9 +22,7 @@ class Entity(db.Model, SoftDeleteModel):
 
     id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True,
                    default=make_textid, nullable=False, unique=False)
-    name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
-    foreign_id = db.Column(db.Unicode)
     data = db.Column('data', JSONB)
 
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), index=True)  # noqa
@@ -32,10 +31,6 @@ class Entity(db.Model, SoftDeleteModel):
     @property
     def model(self):
         return model.get(self.schema)
-
-    @property
-    def signed_id(self):
-        return self.collection.ns.sign(self.id)
 
     def delete_matches(self):
         pq = db.session.query(Match)
@@ -55,18 +50,22 @@ class Entity(db.Model, SoftDeleteModel):
         self.deleted_at = None
         db.session.add(self)
 
-    def update(self, entity):
-        proxy = model.get_proxy(entity)
-        proxy.schema.validate(entity)
+    def update(self, data, collection):
+        proxy = model.get_proxy(data, cleaned=False)
+        proxy.schema.validate(data)
+        proxy = collection.ns.apply(proxy)
+        self.id = collection.ns.sign(self.id)
         self.schema = proxy.schema.name
         previous = self.to_proxy()
         for prop in proxy.iterprops():
             # Do not allow the user to overwrite hashes because this could
             # lead to a user accessing random objects.
             if prop.type == registry.checksum:
-                proxy.set(prop, previous.get(prop), cleaned=True, quiet=True)
+                prev = previous.get(prop)
+                proxy.set(prop, prev, cleaned=True, quiet=True)
         self.data = proxy.properties
         self.updated_at = datetime.utcnow()
+        self.deleted_at = None
         db.session.add(self)
 
     def to_proxy(self):
@@ -75,40 +74,26 @@ class Entity(db.Model, SoftDeleteModel):
             'schema': self.schema,
             'properties': self.data
         })
-        if self.name:
-            proxy.add('name', self.name)
         proxy.set('indexUpdatedAt', self.updated_at, quiet=True)
         return proxy
 
     @classmethod
-    def create(cls, data, collection, entity_id=None):
-        foreign_id = data.get('foreign_id')
-        ent = cls.by_foreign_id(foreign_id, collection.id, deleted=True)
-        if ent is None:
-            ent = cls()
-            ent.id = entity_id or make_textid()
-            ent.collection = collection
-            ent.foreign_id = foreign_id
-            ent.data = {}
-        ent.deleted_at = None
-        ent.update(data)
-        return ent
+    def create(cls, data, collection):
+        entity = cls()
+        entity_id = data.get('id') or make_textid()
+        if not registry.entity.validate(entity_id):
+            raise InvalidData(gettext("Invalid entity ID"))
+        entity.id = collection.ns.sign(entity_id)
+        entity.collection_id = collection.id
+        entity.update(data, collection)
+        return entity
 
     @classmethod
-    def by_id(cls, entity_id, collection_id=None, deleted=False):
-        entity_id, _ = Namespace.parse(entity_id)
+    def by_id(cls, entity_id, collection=None, deleted=False):
         q = cls.all(deleted=deleted)
         q = q.filter(cls.id == entity_id)
-        return q.first()
-
-    @classmethod
-    def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
-        if foreign_id is None:
-            return None
-        q = cls.all(deleted=deleted)
-        q = q.filter(Entity.collection_id == collection_id)
-        q = q.filter(cls.foreign_id == foreign_id)
-        q = q.order_by(Entity.deleted_at.desc().nullsfirst())
+        if collection is not None:
+            q = q.filter(cls.collection_id == collection.id)
         return q.first()
 
     @classmethod
@@ -138,4 +123,4 @@ class Entity(db.Model, SoftDeleteModel):
                   synchronize_session=False)
 
     def __repr__(self):
-        return '<Entity(%r, %r)>' % (self.id, self.name)
+        return '<Entity(%r, %r)>' % (self.id, self.schema)

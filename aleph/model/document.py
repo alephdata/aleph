@@ -132,7 +132,7 @@ class Document(db.Model, DatedModel):
         return document
 
     @classmethod
-    def by_id(cls, document_id, collection_id=None):
+    def by_id(cls, document_id, collection=None):
         try:
             document_id, _ = Namespace.parse(document_id)
             document_id = int(document_id)
@@ -140,8 +140,8 @@ class Document(db.Model, DatedModel):
             return
         q = cls.all()
         q = q.filter(cls.id == document_id)
-        if collection_id is not None:
-            q = q.filter(cls.collection_id == collection_id)
+        if collection is not None:
+            q = q.filter(cls.collection_id == collection.id)
         return q.first()
 
     @classmethod

@@ -1,15 +1,15 @@
 import logging
-from banal import first
+from banal import ensure_list
 from flask import Blueprint, request
 
 from aleph.core import db
-from aleph.model import Diagram, Entity
-from aleph.logic.entities import update_entity
-from aleph.logic.diagrams import replace_layout_ids, replace_entity_ids
+from aleph.model import Diagram
+from aleph.logic.entities import upsert_entity
+from aleph.logic.diagrams import replace_layout_ids
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import DiagramSerializer
-from aleph.views.util import get_db_collection, parse_request
-from aleph.views.util import obj_or_404, require
+from aleph.views.util import get_nested_collection, get_db_collection
+from aleph.views.util import obj_or_404, parse_request
 
 
 blueprint = Blueprint('diagrams_api', __name__)
@@ -47,13 +47,11 @@ def index():
       tags:
         - Diagram
     """
-    require(request.authz.logged_in)
     parser = QueryParser(request.args, request.authz)
-    collection_id = first(parser.filters.get('collection_id'))
-    q = Diagram.by_role_id(request.authz.id)
-    if collection_id:
-        get_db_collection(collection_id)
-        q = q.filter(Diagram.collection_id == collection_id)
+    q = Diagram.by_authz(request.authz)
+    collection_ids = ensure_list(parser.filters.get('collection_id'))
+    if len(collection_ids):
+        q = q.filter(Diagram.collection_id.in_(collection_ids))
     result = DatabaseQueryResult(request, q)
     return DiagramSerializer.jsonify_result(result)
 
@@ -80,36 +78,17 @@ def create():
       - Diagram
     """
     data = parse_request('DiagramCreate')
-    collection_id = data.pop('collection_id')
-    collection = get_db_collection(collection_id, request.authz.WRITE)
-    entities = data.pop('entities', [])
+    collection = get_nested_collection(data, request.authz.WRITE)
     old_to_new_id_map = {}
     entity_ids = []
-    for ent_data in entities:
-        old_id = ent_data.pop('id')
-        # check that every entity id is namespaced properly
-        entity_id = old_id
-        if not collection.ns.verify(entity_id):
-            entity_id = collection.ns.sign(entity_id)
-            old_to_new_id_map[old_id] = entity_id
-        entity_ids.append(entity_id)
-        ent_data = replace_entity_ids(ent_data, old_to_new_id_map)
-        # If an entity exists already, undelete and update it
-        entity = Entity.by_id(entity_id, deleted=True)
-        if entity is not None:
-            if entity.deleted_at is not None:
-                entity.undelete()
-            entity.update(ent_data)
-        # else create it with the supplied id
-        else:
-            entity = Entity.create(ent_data, collection, entity_id=entity_id)
-            collection.touch()
-        update_entity(entity, sync=True)
-        db.session.commit()
+    for entity in data.pop('entities', []):
+        old_id = entity.get('id')
+        new_id = upsert_entity(entity, collection, sync=True)
+        old_to_new_id_map[old_id] = new_id
+        entity_ids.append(new_id)
     data['entities'] = entity_ids
     layout = data.get('layout', {})
-    if layout:
-        data['layout'] = replace_layout_ids(data['layout'], old_to_new_id_map)
+    data['layout'] = replace_layout_ids(layout, old_to_new_id_map)
     diagram = Diagram.create(data, collection, request.authz.id)
     db.session.commit()
     return DiagramSerializer.jsonify(diagram)
@@ -176,9 +155,11 @@ def update(diagram_id):
       - Diagram
     """
     diagram = obj_or_404(Diagram.by_id(diagram_id))
-    get_db_collection(diagram.collection_id, request.authz.WRITE)
+    collection = get_db_collection(diagram.collection_id, request.authz.WRITE)
     data = parse_request('DiagramUpdate')
-    diagram.update(data=data)
+    diagram.update(data, collection)
+    collection.touch()
+    db.session.commit()
     return DiagramSerializer.jsonify(diagram)
 
 
@@ -204,6 +185,8 @@ def delete(diagram_id):
       - Diagram
     """
     diagram = obj_or_404(Diagram.by_id(diagram_id))
-    get_db_collection(diagram.collection_id, request.authz.WRITE)
+    collection = get_db_collection(diagram.collection_id, request.authz.WRITE)
     diagram.delete()
+    collection.touch()
+    db.session.commit()
     return ('', 204)
