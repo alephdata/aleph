@@ -7,6 +7,7 @@ from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
+from followthemoney import model
 from followthemoney.cli.util import read_entity
 from werkzeug.utils import cached_property
 from faker import Factory
