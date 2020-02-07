@@ -63,12 +63,14 @@ class CollectionViews extends React.Component {
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
     const hasBrowse = (numOfDocs > 0 || collection.writeable);
+
+    const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0].schema)
     return (
       <Tabs
         id="CollectionContentTabs"
         className="CollectionContentViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={activeType}
+        selectedTabId={selectedTab}
         renderActiveTabPanelOnly
         animate={false}
         vertical
@@ -86,7 +88,7 @@ class CollectionViews extends React.Component {
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}
-        <MenuDivider />
+        {hasBrowse && <MenuDivider />}
         {entitySchemata.map(ref => (
           <Tab
             id={ref.schema}
@@ -97,7 +99,7 @@ class CollectionViews extends React.Component {
                 <Schema.Smart.Label schema={ref.schema} plural icon />
                 <Count count={ref.count} />
               </>}
-            panel={<CollectionEntitiesMode collection={collection} activeType={activeType} />}
+            panel={<CollectionEntitiesMode collection={collection} schema={selectedTab} />}
           />
         ))}
       </Tabs>
@@ -114,7 +116,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
-    activeType: hashQuery.type || 'Document',
+    activeType: hashQuery.type,
   };
 };
 

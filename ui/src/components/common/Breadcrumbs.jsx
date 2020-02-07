@@ -18,7 +18,7 @@ class CollectionBreadcrumb extends PureComponent {
           </li>
         )}
         <li key={collection.id}>
-          <Collection.Status collection={collection} showPopover={true} className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
+          <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
         </li>
       </>
     );

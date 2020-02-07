@@ -113,7 +113,6 @@ class CollectionViews extends React.Component {
             <>
               <Icon icon="inbox-search" className="left-icon" />
               <FormattedMessage id="entity.info.contents" defaultMessage="Browse" />
-              <Count count={collection.count} />
             </>}
           panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
         />
