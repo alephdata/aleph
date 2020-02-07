@@ -13,7 +13,7 @@ import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefInd
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 
-import { selectCollectionXrefIndex, selectModel, selectDiagramsResult } from 'src/selectors';
+import { selectCollectionXrefIndex, selectModel, selectDiagramsResult, selectSessionIsTester } from 'src/selectors';
 
 import './CollectionViews.scss';
 
@@ -80,20 +80,17 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, xrefIndex,
+      collection, activeMode, diagrams, showDiagramsTab, xrefIndex,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
-    const hasBrowse = (numOfDocs > 0 || collection.casefile);
-
-    let selectedTab = activeMode;
 
     return (
       <Tabs
         id="CollectionInfoTabs"
         className="CollectionViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={selectedTab}
+        selectedTabId={activeMode}
         renderActiveTabPanelOnly
       >
         <Tab
@@ -127,7 +124,7 @@ class CollectionViews extends React.Component {
             </TextLoading>}
           panel={<CollectionXrefIndexMode collection={collection} />}
         />
-        {collection.casefile && (
+        {showDiagramsTab && (
           <Tab
             id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
@@ -159,6 +156,7 @@ const mapStateToProps = (state, ownProps) => {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
     diagrams: selectDiagramsResult(state, diagramsQuery),
+    showDiagramsTab: collection.writeable && selectSessionIsTester(state),
   };
 };
 
