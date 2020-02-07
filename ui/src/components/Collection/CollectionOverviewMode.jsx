@@ -9,6 +9,8 @@ import { Summary } from 'src/components/common';
 import CollectionInfo from 'src/components/Collection/CollectionInfo';
 import CollectionStatistics from './CollectionStatistics';
 import CollectionReference from './CollectionReference';
+import CollectionStatus from './CollectionStatus';
+
 
 import './CollectionOverviewMode.scss';
 
@@ -61,11 +63,16 @@ class CollectionOverviewMode extends React.Component {
         <div className="CollectionOverviewMode__item">
           <div className="CollectionOverviewMode__item__text-content">
             {collection.summary && (
-              <div className="CollectionOverviewMode__summary">
-                <Summary text={collection.summary} />
-              </div>
+              <>
+                <div className="CollectionOverviewMode__summary">
+                  <Summary text={collection.summary} />
+                </div>
+                <div className="CollectionOverviewMode__item__text-content__divider" />
+              </>
             )}
             <CollectionInfo collection={collection} />
+            <div className="CollectionOverviewMode__item__text-content__divider" />
+            <CollectionStatus collection={collection} showCancel />
           </div>
         </div>
         {toRender.map((stat) => this.renderStatisticsItem(stat))}

@@ -33,6 +33,17 @@
       background-color: $aleph-breadcrumbs-background !important;
       padding: $aleph-grid-size*2;
       border-radius: $aleph-border-radius;
+
+      &__divider {
+        height: 1px;
+        width: 100%;
+        border-bottom: 1px solid $aleph-border-color;
+        margin: 15px 0;
+
+        &:last-child {
+          display: none;
+        }
+      }
     }
 
     & > * {

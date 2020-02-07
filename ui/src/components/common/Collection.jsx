@@ -98,7 +98,7 @@ class CollectionUpdateStatus extends PureComponent {
           enforceFocus={false}
           popoverClassName="CollectionUpdateStatus__popover"
           target={collectionLink}
-          content={<CollectionStatus collection={collection} showCancel={false} />}
+          content={<CollectionStatus collection={collection} showCancel={false} className="bp3-callout bp3-intent-primary" />}
         />
       );
     }

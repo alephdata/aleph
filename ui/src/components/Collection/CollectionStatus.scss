@@ -1,8 +1,10 @@
 @import "src/app/variables.scss";
 
+$vertical-spacing: 5px;
+
 .CollectionStatus {
     background-color: $light-gray4 !important;
-    color: black;
+    color: $gray1;
 
     .total-count {
       font-size: 12px;
@@ -14,10 +16,16 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
+        margin-bottom: $vertical-spacing !important;
 
         .bp3-progress-bar {
             flex-grow: 10;
             margin-right: $aleph-grid-size;
         }
+    }
+
+    .bp3-heading {
+      color: $blue1 !important;
+      margin-bottom: $vertical-spacing !important;
     }
 }

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Category, Collection } from 'src/components/common';
-import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 import './CollectionHeading.scss';
 
@@ -23,7 +22,6 @@ class CollectionHeading extends PureComponent {
         <h1 itemProp="name" className="CollectionHeading__title">
           {collection.label}
         </h1>
-        <CollectionStatus collection={collection} showCancel />
       </div>
     );
   }
