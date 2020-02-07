@@ -17,29 +17,10 @@ export class CollectionDiagramsIndexMode extends Component {
     this.getMoreResults = this.getMoreResults.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate(prevProps) {
-    const { result } = this.props;
-
-    if (result.shouldLoad && !prevProps.result.shouldLoad) {
-      this.fetchIfNeeded();
-    }
-  }
-
   getMoreResults() {
     const { query, result } = this.props;
     if (result && !result.isLoading && result.next && !result.isError) {
       this.props.queryDiagrams({ query, next: result.next });
-    }
-  }
-
-  fetchIfNeeded() {
-    const { result, query } = this.props;
-    if (!result.isLoading) {
-      this.props.queryDiagrams({ query });
     }
   }
 

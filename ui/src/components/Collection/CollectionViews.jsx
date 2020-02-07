@@ -113,6 +113,7 @@ class CollectionViews extends React.Component {
             <>
               <Icon icon="inbox-search" className="left-icon" />
               <FormattedMessage id="entity.info.contents" defaultMessage="Browse" />
+              <Count count={collection.count} />
             </>}
           panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
         />
@@ -132,11 +133,10 @@ class CollectionViews extends React.Component {
             id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
             title={
-              <>
-                <Icon className="left-icon" icon="graph" />
+              <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>                <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
                 <Count count={diagrams.total} />
-              </>
+              </TextLoading>
             }
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />
@@ -156,7 +156,6 @@ const mapStateToProps = (state, ownProps) => {
   const diagramsQuery = new Query('diagrams', {}, context, 'diagrams')
     .sortBy('updated_at', 'desc');
 
-  console.log('state is', state);
   return {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
