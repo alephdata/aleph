@@ -20,7 +20,6 @@ class Entity(db.Model, SoftDeleteModel):
 
     id = db.Column(db.String(ENTITY_ID_LEN), primary_key=True,
                    default=make_textid, nullable=False, unique=False)
-    name = db.Column(db.Unicode)
     schema = db.Column(db.String(255), index=True)
     data = db.Column('data', JSONB)
 
@@ -30,10 +29,6 @@ class Entity(db.Model, SoftDeleteModel):
     @property
     def model(self):
         return model.get(self.schema)
-
-    @property
-    def signed_id(self):
-        return self.collection.ns.sign(self.id)
 
     def delete_matches(self):
         pq = db.session.query(Match)
@@ -54,7 +49,6 @@ class Entity(db.Model, SoftDeleteModel):
         db.session.add(self)
 
     def update(self, proxy, collection=None):
-        # proxy.schema.validate(entity)
         self.schema = proxy.schema.name
         previous = self.to_proxy()
         for prop in proxy.iterprops():
@@ -74,8 +68,6 @@ class Entity(db.Model, SoftDeleteModel):
             'schema': self.schema,
             'properties': self.data
         })
-        if self.name:
-            proxy.add('name', self.name)
         proxy.set('indexUpdatedAt', self.updated_at, quiet=True)
         return proxy
 
@@ -101,16 +93,6 @@ class Entity(db.Model, SoftDeleteModel):
         q = q.filter(cls.id == entity_id)
         if collection is not None:
             q = q.filter(cls.collection_id == collection.id)
-        return q.first()
-
-    @classmethod
-    def by_foreign_id(cls, foreign_id, collection_id, deleted=False):
-        if foreign_id is None:
-            return None
-        q = cls.all(deleted=deleted)
-        q = q.filter(Entity.collection_id == collection_id)
-        q = q.filter(cls.foreign_id == foreign_id)
-        q = q.order_by(Entity.deleted_at.desc().nullsfirst())
         return q.first()
 
     @classmethod
@@ -140,4 +122,4 @@ class Entity(db.Model, SoftDeleteModel):
                   synchronize_session=False)
 
     def __repr__(self):
-        return '<Entity(%r, %r)>' % (self.id, self.name)
+        return '<Entity(%r, %r)>' % (self.id, self.schema)

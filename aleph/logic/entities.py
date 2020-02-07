@@ -29,16 +29,11 @@ def upsert_entity(data, collection, sync=False):
         entity.update(proxy)
     collection.touch()
     db.session.commit()
+    # TODO: delete from balkhash
     index.index_entity(entity, sync=sync)
-    refresh_entity(entity.signed_id, sync=sync)
+    refresh_entity(entity.id, sync=sync)
     refresh_collection(collection.id, sync=sync)
-    return entity.signed_id
-
-
-def update_entity(entity, sync=False):
-    index.index_entity(entity, sync=sync)
-    refresh_entity(entity.signed_id, sync=sync)
-    refresh_collection(entity.collection_id, sync=sync)
+    return entity.id
 
 
 def refresh_entity(entity_id, sync=False):
