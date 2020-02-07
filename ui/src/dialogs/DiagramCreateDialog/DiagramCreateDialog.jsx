@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection } from 'src/components/common';
-import { createDiagram, undeleteEntity } from 'src/actions';
+import { createDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
 import { processApiEntity } from 'src/components/Diagram/util';
@@ -100,6 +100,7 @@ class DiagramCreateDialog extends Component {
       }
 
       const response = await this.props.createDiagram(newDiagram);
+      this.setState({ processing: false });
 
       history.push({
         pathname: getDiagramLink(response.data),
@@ -108,7 +109,7 @@ class DiagramCreateDialog extends Component {
       showSuccessToast(
         intl.formatMessage(messages.success_create),
       );
-      this.setState({ processing: false });
+
     } catch (e) {
       showWarningToast(e.message);
       this.setState({ processing: false });
@@ -135,7 +136,7 @@ class DiagramCreateDialog extends Component {
     const { location } = this.props;
 
     const context = {
-      'filter:kind': 'casefile',
+      'filter:writeable': true,
     };
     return Query.fromLocation('collections', location, context, 'collections')
       .sortBy('label', 'asc');
@@ -252,5 +253,4 @@ DiagramCreateDialog = injectIntl(DiagramCreateDialog);
 DiagramCreateDialog = withRouter(DiagramCreateDialog);
 export default connect(mapStateToProps, {
   createDiagram,
-  undeleteEntity,
 })(DiagramCreateDialog);

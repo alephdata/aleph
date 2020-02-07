@@ -39,7 +39,6 @@ export {
   fetchEntityReferences,
   fetchEntityTags,
   queryEntities,
-  undeleteEntity,
   updateEntity,
 } from './entityActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';

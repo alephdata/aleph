@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Count } from 'src/components/common';
 
 import { fetchGroups } from 'src/actions';
-import { selectAlerts, selectGroups } from 'src/selectors';
+import { selectAlerts, selectGroups, selectSessionIsTester } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -69,7 +69,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, intl, location, groups } = this.props;
+    const { alerts, intl, location, groups, showDiagrams } = this.props;
     const current = location.pathname;
 
     return (
@@ -116,12 +116,14 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
             />
-            <MenuItem
-              icon="graph"
-              text={intl.formatMessage(messages.diagrams)}
-              onClick={() => this.navigate('/diagrams')}
-              active={current === '/diagrams'}
-            />
+            {showDiagrams && (
+              <MenuItem
+                icon="graph"
+                text={intl.formatMessage(messages.diagrams)}
+                onClick={() => this.navigate('/diagrams')}
+                active={current === '/diagrams'}
+              />
+            )}
             { groups.total > 0 && (
               <>
                 <MenuDivider />
@@ -167,7 +169,9 @@ class Dashboard extends React.Component {
 const mapStateToProps = (state) => {
   const alerts = selectAlerts(state);
   const groups = selectGroups(state);
-  return { alerts, groups };
+  const showDiagrams = selectSessionIsTester(state);
+
+  return { alerts, groups, showDiagrams };
 };
 
 Dashboard = injectIntl(Dashboard);

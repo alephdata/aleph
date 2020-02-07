@@ -6,8 +6,8 @@
   }
 
   &__heading {
-    padding-bottom: 20px;
-    margin-bottom: 10px;
+    padding-bottom: $aleph-grid-size*2;
+    margin-bottom: $aleph-grid-size;
     border-bottom: 1px solid $aleph-border-color;
 
     &__total, &__label, &__icon {

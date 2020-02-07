@@ -2,8 +2,9 @@ import { PureComponent } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { fetchCollection, fetchCollectionStatus, fetchCollectionXrefIndex, mutate } from 'src/actions';
-import { selectCollection, selectCollectionStatus, selectCollectionXrefIndex } from 'src/selectors';
+import Query from 'src/app/Query';
+import { fetchCollection, fetchCollectionStatus, fetchCollectionXrefIndex, queryDiagrams, mutate } from 'src/actions';
+import { selectCollection, selectCollectionStatus, selectCollectionXrefIndex, selectDiagramsResult } from 'src/selectors';
 
 
 class CollectionContextLoader extends PureComponent {
@@ -35,7 +36,7 @@ class CollectionContextLoader extends PureComponent {
   }
 
   fetchIfNeeded() {
-    const { collectionId, collection, status } = this.props;
+    const { collectionId, collection, status, diagramsQuery, diagramsResult } = this.props;
 
     if (collection.shouldLoad) {
       this.props.fetchCollection({ id: collectionId });
@@ -48,6 +49,10 @@ class CollectionContextLoader extends PureComponent {
     const { xrefIndex } = this.props;
     if (xrefIndex.shouldLoad) {
       this.props.fetchCollectionXrefIndex({ id: collectionId });
+    }
+
+    if (diagramsResult.shouldLoad) {
+      this.props.queryDiagrams({ query: diagramsQuery });
     }
   }
 
@@ -71,10 +76,19 @@ class CollectionContextLoader extends PureComponent {
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps;
+
+  const context = {
+    'filter:collection_id': collectionId,
+  };
+  const diagramsQuery = new Query('diagrams', {}, context, 'diagrams')
+    .sortBy('updated_at', 'desc');
+
   return {
     collection: selectCollection(state, collectionId),
     status: selectCollectionStatus(state, collectionId),
     xrefIndex: selectCollectionXrefIndex(state, collectionId),
+    diagramsQuery,
+    diagramsResult: selectDiagramsResult(state, diagramsQuery),
   };
 };
 const mapDispatchToProps = {
@@ -82,6 +96,7 @@ const mapDispatchToProps = {
   fetchCollection,
   fetchCollectionStatus,
   fetchCollectionXrefIndex,
+  queryDiagrams,
 };
 export default compose(
   withRouter,

@@ -3,7 +3,6 @@ import { createReducer } from 'redux-act';
 import {
   queryEntities,
   fetchEntity,
-  undeleteEntity,
   deleteEntity,
 } from 'src/actions';
 import {
@@ -20,8 +19,6 @@ export default createReducer({
   [fetchEntity.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
   [queryEntities.COMPLETE]: (state, { result }) => resultObjects(state, result),
-
-  [undeleteEntity.COMPLETE]: (state, { id, data }) => objectLoadComplete(state, id, data),
 
   [deleteEntity.COMPLETE]: (state, { id }) => objectDelete(state, id),
 

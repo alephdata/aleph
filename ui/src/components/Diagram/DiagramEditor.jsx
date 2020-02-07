@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@alephdata/vislib';
-import { createEntity, deleteEntity, undeleteEntity, updateDiagram, updateEntity } from 'src/actions';
+import { createEntity, deleteEntity, updateDiagram, updateEntity } from 'src/actions';
 import { processApiEntity } from 'src/components/Diagram/util';
 import updateStates from './diagramUpdateStates';
 
@@ -19,7 +19,6 @@ class DiagramEditor extends React.Component {
       createEntity: this.createEntity.bind(this),
       updateEntity: this.updateEntity.bind(this),
       deleteEntity: this.deleteEntity.bind(this),
-      undeleteEntity: this.undeleteEntity.bind(this),
     });
 
     let initialLayout;
@@ -108,23 +107,11 @@ class DiagramEditor extends React.Component {
   }
 
   async updateEntity(entity) {
-    const { onStatusChange } = this.props;
+    const { diagram, onStatusChange } = this.props;
     onStatusChange(updateStates.IN_PROGRESS);
 
     try {
-      await this.props.updateEntity(entity);
-      onStatusChange(updateStates.SUCCESS);
-    } catch {
-      onStatusChange(updateStates.ERROR);
-    }
-  }
-
-  async undeleteEntity(entity) {
-    const { onStatusChange } = this.props;
-    onStatusChange(updateStates.IN_PROGRESS);
-
-    try {
-      await this.props.undeleteEntity(entity);
+      await this.props.updateEntity({ entity, collectionId: diagram.collection.id });
       onStatusChange(updateStates.SUCCESS);
     } catch {
       onStatusChange(updateStates.ERROR);
@@ -191,7 +178,6 @@ const mapStateToProps = () => ({});
 export default connect(mapStateToProps, {
   createEntity,
   deleteEntity,
-  undeleteEntity,
   updateDiagram,
   updateEntity,
 })(DiagramEditor);

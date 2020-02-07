@@ -69,6 +69,12 @@ export function selectSession(state) {
   return selectObject(state, state, 'session');
 }
 
+export function selectSessionIsTester(state) {
+  const session = selectSession(state);
+  /* eslint-disable camelcase */
+  return session?.role?.is_tester || false;
+}
+
 export function selectAlerts(state) {
   return selectObject(state, state, 'alerts');
 }

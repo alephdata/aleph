@@ -28,15 +28,12 @@ export const createEntity = asyncActionCreator(entity => async () => {
   return response.data;
 }, { name: 'CREATE_ENTITY' });
 
-export const updateEntity = asyncActionCreator(entity => async () => {
-  const response = await endpoint.put(`entities/${entity.id}`, entity, {});
+export const updateEntity = asyncActionCreator(({ entity, collectionId }) => async () => {
+  const payload = entity.toJSON();
+  payload.collection_id = collectionId;
+  const response = await endpoint.put(`entities/${entity.id}`, payload, {});
   return response.data;
 }, { name: 'UPDATE_ENTITY' });
-
-export const undeleteEntity = asyncActionCreator(entity => async () => {
-  const response = await endpoint.post(`entities/${entity.id}/undelete`, entity, {});
-  return response.data;
-}, { name: 'UNDELETE_ENTITY' });
 
 export const deleteEntity = asyncActionCreator(id => async () => {
   await endpoint.delete(`entities/${id}`, {});

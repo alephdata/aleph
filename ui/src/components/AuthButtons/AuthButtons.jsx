@@ -97,12 +97,14 @@ export class AuthButtons extends Component {
                     {intl.formatMessage(messages.casefiles)}
                   </div>
                 </Link>
-                <Link to="/diagrams" className="bp3-menu-item">
-                  <Icon icon="graph" />
-                  <div className="bp3-text-overflow-ellipsis bp3-fill">
-                    {intl.formatMessage(messages.diagrams)}
-                  </div>
-                </Link>
+                {role.is_tester && (
+                  <Link to="/diagrams" className="bp3-menu-item">
+                    <Icon icon="graph" />
+                    <div className="bp3-text-overflow-ellipsis bp3-fill">
+                      {intl.formatMessage(messages.diagrams)}
+                    </div>
+                  </Link>
+                )}
                 <MenuDivider />
                 <Link to="/settings" className="bp3-menu-item">
                   <Icon icon="cog" />
@@ -114,7 +116,7 @@ export class AuthButtons extends Component {
                 </Link>
                 <MenuItem icon="log-out" href="/logout" text={intl.formatMessage(messages.signout)} />
               </Menu>
-)}
+            )}
             position={Position.BOTTOM_LEFT}
             fill
           >

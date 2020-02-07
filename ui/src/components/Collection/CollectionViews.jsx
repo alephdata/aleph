@@ -6,13 +6,14 @@ import { injectIntl, FormattedMessage } from 'react-intl';
 import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
+import Query from 'src/app/Query';
 import { Count, TextLoading } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
 import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 
-import { selectCollectionXrefIndex, selectModel } from 'src/selectors';
+import { selectCollectionXrefIndex, selectModel, selectDiagramsResult, selectSessionIsTester } from 'src/selectors';
 
 import './CollectionViews.scss';
 
@@ -79,20 +80,17 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, xrefIndex,
+      collection, activeMode, diagrams, showDiagramsTab, xrefIndex,
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
-    const hasBrowse = (numOfDocs > 0 || collection.casefile);
-
-    let selectedTab = activeMode;
 
     return (
       <Tabs
         id="CollectionInfoTabs"
         className="CollectionViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
-        selectedTabId={selectedTab}
+        selectedTabId={activeMode}
         renderActiveTabPanelOnly
       >
         <Tab
@@ -126,15 +124,15 @@ class CollectionViews extends React.Component {
             </TextLoading>}
           panel={<CollectionXrefIndexMode collection={collection} />}
         />
-        {collection.casefile && (
+        {showDiagramsTab && (
           <Tab
             id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
             title={
-              <>
-                <Icon className="left-icon" icon="graph" />
+              <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>                <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
-              </>
+                <Count count={diagrams.total} />
+              </TextLoading>
             }
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />
@@ -147,9 +145,18 @@ class CollectionViews extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;
+
+  const context = {
+    'filter:collection_id': collection.id,
+  };
+  const diagramsQuery = new Query('diagrams', {}, context, 'diagrams')
+    .sortBy('updated_at', 'desc');
+
   return {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
+    diagrams: selectDiagramsResult(state, diagramsQuery),
+    showDiagramsTab: collection.writeable && selectSessionIsTester(state),
   };
 };
 
