@@ -7,7 +7,6 @@ from pathlib import Path
 from tempfile import mkdtemp
 from datetime import datetime
 from servicelayer import settings as sls
-from followthemoney import model
 from followthemoney.cli.util import read_entity
 from werkzeug.utils import cached_property
 from faker import Factory
@@ -118,8 +117,7 @@ class TestCase(unittest.TestCase):
         return collection
 
     def create_entity(self, data, collection):
-        proxy = model.get_proxy(data, cleaned=False)
-        return Entity.create(proxy, collection)
+        return Entity.create(data, collection)
 
     def grant(self, collection, role, read, write):
         Permission.grant(collection, role, read, write)

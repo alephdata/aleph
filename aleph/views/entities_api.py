@@ -1,7 +1,6 @@
 import logging
-from flask_babel import gettext
 from flask import Blueprint, request, Response
-from werkzeug.exceptions import NotFound, BadRequest
+from werkzeug.exceptions import NotFound
 from followthemoney import model
 from followthemoney.types import registry
 from urllib.parse import quote
@@ -527,8 +526,6 @@ def update(entity_id):
     except NotFound:
         collection = get_nested_collection(data, request.authz.WRITE)
     tag_request(collection_id=collection.id)
-    if not registry.entity.validate(entity_id):
-        raise BadRequest(gettext("Invalid entity ID"))
     data['id'] = entity_id
     entity_id = upsert_entity(data, collection, sync=get_flag('sync', True))
     db.session.commit()

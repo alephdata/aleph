@@ -1,9 +1,11 @@
 import logging
 from datetime import datetime
+from flask_babel import gettext
 from sqlalchemy import or_
 from sqlalchemy.dialects.postgresql import JSONB
 from followthemoney import model
 from followthemoney.types import registry
+from followthemoney.exc import InvalidData
 
 from aleph.core import db
 from aleph.model.collection import Collection
@@ -48,7 +50,11 @@ class Entity(db.Model, SoftDeleteModel):
         self.deleted_at = None
         db.session.add(self)
 
-    def update(self, proxy, collection=None):
+    def update(self, data, collection):
+        proxy = model.get_proxy(data, cleaned=False)
+        proxy.schema.validate(data)
+        proxy = collection.ns.apply(proxy)
+        self.id = collection.ns.sign(self.id)
         self.schema = proxy.schema.name
         previous = self.to_proxy()
         for prop in proxy.iterprops():
@@ -72,19 +78,14 @@ class Entity(db.Model, SoftDeleteModel):
         return proxy
 
     @classmethod
-    def create(cls, proxy, collection):
-        entity = None
-        if proxy.id is not None:
-            entity = cls.by_id(proxy.id, collection=collection, deleted=True)
-        if entity is None:
-            if proxy.id is None:
-                proxy.make_id(make_textid())
-                proxy.id = collection.ns.sign(proxy.id)
-            entity = cls()
-            entity.id = proxy.id
-            entity.collection_id = collection.id
-            entity.data = {}
-        entity.update(proxy)
+    def create(cls, data, collection):
+        entity = cls()
+        entity_id = data.get('id') or make_textid()
+        if not registry.entity.validate(entity_id):
+            raise InvalidData(gettext("Invalid entity ID"))
+        entity.id = collection.ns.sign(entity_id)
+        entity.collection_id = collection.id
+        entity.update(data, collection)
         return entity
 
     @classmethod
