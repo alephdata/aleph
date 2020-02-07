@@ -16,7 +16,7 @@ $vertical-spacing: 5px;
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        margin-bottom: $vertical-spacing !important;
+        min-height: $aleph-grid-size*2;
 
         .bp3-progress-bar {
             flex-grow: 10;
@@ -25,7 +25,7 @@ $vertical-spacing: 5px;
     }
 
     .bp3-heading {
-      color: $blue1 !important;
+      color: $blue2 !important;
       margin-bottom: $vertical-spacing !important;
     }
 }

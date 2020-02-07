@@ -17,6 +17,7 @@ class CollectionReference extends React.PureComponent {
             <code>{collection.foreign_id}</code>
           </div>
         </div>
+        <div className="CollectionOverviewMode__item__text-content__divider" />
         <div className="CollectionReference__section">
           <div className="key text-muted">
             <FormattedMessage id="collection.reconcile" defaultMessage="Reconciliation" />

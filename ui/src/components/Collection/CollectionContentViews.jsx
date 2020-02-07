@@ -62,7 +62,7 @@ class CollectionViews extends React.Component {
     } = this.props;
     const numOfDocs = this.countDocuments();
     const entitySchemata = this.getEntitySchemata();
-    const hasBrowse = (numOfDocs > 0 || collection.casefile);
+    const hasBrowse = (numOfDocs > 0 || collection.writeable);
     return (
       <Tabs
         id="CollectionContentTabs"
