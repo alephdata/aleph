@@ -86,16 +86,6 @@ EntityUpdate:
   required: ["schema"]
   type: object
   properties:
-    schema:
-      type: string
-      format: schema
-    properties:
-      type: object
-
-EntityUndelete:
-  type: object
-  nullable: true
-  properties:
     collection_id:
       type: string
     schema:
