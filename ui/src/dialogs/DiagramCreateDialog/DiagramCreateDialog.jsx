@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 
 import Query from 'src/app/Query';
 import { Collection } from 'src/components/common';
-import { createDiagram, undeleteEntity } from 'src/actions';
+import { createDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
 import { processApiEntity } from 'src/components/Diagram/util';
@@ -252,5 +252,4 @@ DiagramCreateDialog = injectIntl(DiagramCreateDialog);
 DiagramCreateDialog = withRouter(DiagramCreateDialog);
 export default connect(mapStateToProps, {
   createDiagram,
-  undeleteEntity,
 })(DiagramCreateDialog);

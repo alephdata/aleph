@@ -33,11 +33,6 @@ export const updateEntity = asyncActionCreator(entity => async () => {
   return response.data;
 }, { name: 'UPDATE_ENTITY' });
 
-export const undeleteEntity = asyncActionCreator(entity => async () => {
-  const response = await endpoint.post(`entities/${entity.id}/undelete`, entity, {});
-  return response.data;
-}, { name: 'UNDELETE_ENTITY' });
-
 export const deleteEntity = asyncActionCreator(id => async () => {
   await endpoint.delete(`entities/${id}`, {});
   return true;
