@@ -65,7 +65,7 @@ class CollectionViews extends React.Component {
   }
 
   handleTabChange(mode) {
-    const { history, location, isPreview } = this.props;
+    const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
 
     parsedHash.mode = mode;
@@ -82,9 +82,8 @@ class CollectionViews extends React.Component {
     const {
       collection, activeMode, diagrams, showDiagramsTab, xrefIndex,
     } = this.props;
-    const numOfDocs = this.countDocuments();
-    const entitySchemata = this.getEntitySchemata();
-
+    // const numOfDocs = this.countDocuments();
+    // const entitySchemata = this.getEntitySchemata();
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -156,7 +155,7 @@ const mapStateToProps = (state, ownProps) => {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
     diagrams: selectDiagramsResult(state, diagramsQuery),
-    showDiagramsTab: collection.writeable && selectSessionIsTester(state),
+    showDiagramsTab: collection.casefile && selectSessionIsTester(state),
   };
 };
 

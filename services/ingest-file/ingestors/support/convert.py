@@ -40,7 +40,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         # Guessed: 15s per MB of data, max.
         file_size = file_path.stat().st_size
         if file_size < 100:
-            return ProcessingException("Document too small.")
+            raise ProcessingException("Document too small.")
         file_size = (file_size / 1024) / 1024  # megabyte
         timeout = int(min(600, max(20, file_size * 15)))
 
