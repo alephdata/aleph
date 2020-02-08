@@ -136,7 +136,7 @@ class DiagramCreateDialog extends Component {
 
     const context = {
       'filter:writeable': true,
-      'filter:casefile': true
+      'filter:casefile': true,
     };
     return Query.fromLocation('collections', location, context, 'collections')
       .sortBy('label', 'asc');
