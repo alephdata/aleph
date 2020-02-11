@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from aleph.core import db
 from aleph.index.entities import index_entity
@@ -26,15 +27,28 @@ class EntitiesApiTestCase(TestCase):
             'properties': {
                 'name': 'Winnie the Pooh',
                 'country': 'pa',
-                'proof': self.book_id
+                'proof': self.book_id,
+                'incorporationDate': datetime.datetime(1926, 12, 24).isoformat()  # noqa
             }
         }
         self.ent = self.create_entity(self.data, self.col)
         self.id = self.col.ns.sign(self.ent.id)
+        self.data2 = {
+            'schema': 'LegalEntity',
+            'properties': {
+                'name': 'Tom & Jerry',
+                'country': 'pa',
+                'proof': self.book_id,
+                'incorporationDate': datetime.datetime(1940, 2, 10).isoformat()  # noqa
+            }
+        }
+        self.ent2 = self.create_entity(self.data2, self.col)
+        self.id2 = self.col.ns.sign(self.ent.id)
         db.session.commit()
         self.col_id = str(self.col.id)
         index_entity(self.book)
         index_entity(self.ent)
+        index_entity(self.ent2)
 
     def test_index(self):
         url = '/api/2/entities?filter:schemata=Thing'
@@ -46,7 +60,7 @@ class EntitiesApiTestCase(TestCase):
         _, headers = self.login(is_admin=True)
         res = self.client.get(url+'&facet=collection_id', headers=headers)
         assert res.status_code == 200, res
-        assert res.json['total'] == 2, res.json
+        assert res.json['total'] == 3, res.json
         assert len(res.json['facets']['collection_id']['values']) == 1, \
             res.json
         col0 = res.json['facets']['collection_id']['values'][0]
@@ -287,7 +301,7 @@ class EntitiesApiTestCase(TestCase):
         res = self.client.get(url, headers=headers)
         results = res.json['results']
         assert len(results) == 1, results
-        assert results[0]['count'] == 1, results
+        assert results[0]['count'] == 2, results
         validate(res.json['results'][0], 'EntityReference')
 
     def test_entity_tags(self):
@@ -502,3 +516,16 @@ class EntitiesApiTestCase(TestCase):
         url = '/api/2/entities/%s' % res.json['id']
         res = self.client.get(url, headers=headers)
         assert res.json['properties']['country'] == countries, res.json['properties']['country']  # noqa
+
+    def test_sort_by_date(self):
+        _, headers = self.login(is_admin=True)
+        url = '/api/2/entities?filter:schemata=Thing&sort=dates%3Aasc'
+        res = self.client.get(url, headers=headers, content_type='application/json')  # noqa
+        assert res.json['results'][0]['id'] == self.ent.id, res.json
+        assert res.json['results'][1]['id'] == self.ent2.id, res.json
+        assert res.json['results'][2]['id'] == self.book.id, res.json
+        url = '/api/2/entities?filter:schemata=Thing&sort=dates%3Adesc'
+        res = self.client.get(url, headers=headers, content_type='application/json')  # noqa
+        assert res.json['results'][0]['id'] == self.ent2.id, res.json
+        assert res.json['results'][1]['id'] == self.ent.id, res.json
+        assert res.json['results'][2]['id'] == self.book.id, res.json
