@@ -159,6 +159,7 @@ class Query(object):
             config = {'order': direction, 'missing': '_last'}
             if field == registry.date.group:
                 field = 'numeric.dates'
+                config['mode'] = 'min'
             if type_ in NUMERIC_TYPES:
                 field = field.replace('properties.', 'numeric.')
             sort_fields.append({field: config})
