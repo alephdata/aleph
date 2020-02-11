@@ -1,6 +1,6 @@
 import logging
 import fingerprints
-from pprint import pprint  # noqa
+from pprint import pprint, pformat  # noqa
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
@@ -153,6 +153,9 @@ def format_proxy(proxy, collection, extra):
     """Apply final denormalisations to the index."""
     proxy.context = {}
     proxy = collection.ns.apply(proxy)
+    # Pull `indexUpdatedAt` before constructing `data`, so that it doesn't
+    # creep into `data['dates']` and mess up date sorting afterwards
+    index_updated_at = proxy.pop('indexUpdatedAt')
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
 
@@ -169,7 +172,7 @@ def format_proxy(proxy, collection, extra):
     data['text'] = text
 
     data['updated_at'] = collection.updated_at
-    for updated_at in properties.pop('indexUpdatedAt', []):
+    for updated_at in index_updated_at:
         data['updated_at'] = updated_at
 
     # integer casting
@@ -185,7 +188,7 @@ def format_proxy(proxy, collection, extra):
     # add possible overrides
     data.update(extra)
 
-    # pprint(data)
+    # log.info("%s", pformat(data))
     entity_id = data.pop('id')
     return {
         '_id': entity_id,
