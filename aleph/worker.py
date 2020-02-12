@@ -6,7 +6,7 @@ from aleph.model import Collection
 from aleph.queues import get_rate_limit
 from aleph.queues import (
     OP_INDEX, OP_PROCESS, OP_XREF, OP_XREF_ITEM,
-    OP_LOAD_MAPPING, OP_FLUSH_MAPPING
+    OP_LOAD_MAPPING, OP_FLUSH_MAPPING, OP_REPORT
 )
 from aleph.queues import OPERATIONS
 from aleph.logic.alerts import check_alerts
@@ -14,6 +14,7 @@ from aleph.logic.collections import index_collections, refresh_collection
 from aleph.logic.collections import reset_collection, process_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.mapping import load_mapping, flush_mapping
+from aleph.logic.reports import index_reports, collect_report_tasks
 from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
 from aleph.logic.processing import index_aggregate
@@ -22,10 +23,12 @@ log = logging.getLogger(__name__)
 
 
 class AlephWorker(Worker):
+    task_reporting_enabled = True
 
     def boot(self):
         self.hourly = get_rate_limit('hourly', unit=3600, interval=1, limit=1)
         self.daily = get_rate_limit('daily', unit=3600, interval=24, limit=1)
+        self.frequent = get_rate_limit('frequent', unit=300, interval=1, limit=1)
 
     def periodic(self):
         db.session.remove()
@@ -41,6 +44,11 @@ class AlephWorker(Worker):
             generate_digest()
             update_roles()
 
+        if self.frequent.check():
+            self.frequent.update()
+            log.info("Running frequent tasks...")
+            collect_report_tasks()
+
     def handle(self, task):
         stage = task.stage
         payload = task.payload
@@ -49,8 +57,9 @@ class AlephWorker(Worker):
             log.error("Collection not found: %s", task.job.dataset)
             return
         sync = task.context.get('sync', False)
+
         if stage.stage == OP_INDEX:
-            index_aggregate(stage, collection, sync=sync, **payload)
+            index_aggregate(stage, collection, sync=sync, report=self.should_report(task), **payload)
         if stage.stage == OP_LOAD_MAPPING:
             load_mapping(stage, collection, **payload)
         if stage.stage == OP_FLUSH_MAPPING:
@@ -63,6 +72,8 @@ class AlephWorker(Worker):
             xref_collection(stage, collection, **payload)
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
+        if stage.stage == OP_REPORT:
+            index_reports(stage, sync=sync)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
     def after_task(self, task):

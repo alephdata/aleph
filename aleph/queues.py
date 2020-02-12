@@ -3,21 +3,25 @@ from servicelayer.rate_limit import RateLimit
 from servicelayer.jobs import Job, Dataset
 
 from aleph.core import kv, settings
+from aleph.model import Document
+
 
 log = logging.getLogger(__name__)
 
 OP_INGEST = 'ingest'
 OP_ANALYZE = 'analyze'
+OP_CRAWL = 'crawl'
 OP_INDEX = 'index'
 OP_XREF = 'xref'
 OP_XREF_ITEM = 'xitem'
 OP_PROCESS = 'process'
 OP_LOAD_MAPPING = 'loadmapping'
 OP_FLUSH_MAPPING = 'flushmapping'
+OP_REPORT = 'report'
 
 # All stages that aleph should listen for. Does not include ingest,
 # which is received and processed by the ingest-file service.
-OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_XREF_ITEM, OP_LOAD_MAPPING, OP_FLUSH_MAPPING)  # noqa
+OPERATIONS = (OP_INDEX, OP_XREF, OP_PROCESS, OP_XREF_ITEM, OP_LOAD_MAPPING, OP_FLUSH_MAPPING, OP_REPORT)  # noqa
 
 
 def get_rate_limit(resource, limit=100, interval=60, unit=1):
@@ -25,8 +29,9 @@ def get_rate_limit(resource, limit=100, interval=60, unit=1):
 
 
 def get_stage(collection, stage, job_id=None):
+    foreign_id = collection if isinstance(collection, str) else collection.foreign_id
     job_id = job_id or Job.random_id()
-    job = Job(kv, collection.foreign_id, job_id)
+    job = Job(kv, foreign_id, job_id)
     return job.get_stage(stage)
 
 
@@ -43,6 +48,11 @@ def get_status(collection):
     return Dataset(kv, collection.foreign_id).get_status()
 
 
+def get_active_collections():
+    data = Dataset.get_active_datasets(kv)
+    return data
+
+
 def get_active_collection_status():
     data = Dataset.get_active_dataset_status(kv)
     return data
@@ -54,13 +64,18 @@ def cancel_queue(collection):
 
 def ingest_entity(collection, proxy, job_id=None, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
+    from aleph.logic.aggregator import get_aggregator_name
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
     stage = get_stage(collection, OP_INGEST, job_id=job_id)
-    from aleph.logic.aggregator import get_aggregator_name
     context = {
         'languages': collection.languages,
         'balkhash_name': get_aggregator_name(collection),
         'pipeline': [OP_ANALYZE, OP_INDEX],
         'sync': sync
     }
+    if proxy.schema.is_a(Document.SCHEMA):
+        context['report'] = True
+        context['report_extra_data'] = {
+            'document': proxy.id,
+        }
     stage.queue(proxy.to_dict(), context)
