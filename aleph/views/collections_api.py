@@ -261,7 +261,7 @@ def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
     data = {'reset': get_flag('reset', True)}
-    queue_task(collection, OP_PROCESS, job_id=get_session_id(), payload=data)
+    queue_task(collection, OP_PROCESS, payload=data)
     collection.touch()
     db.session.commit()
     refresh_collection(collection_id)
