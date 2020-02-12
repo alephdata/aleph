@@ -2,12 +2,14 @@
 
 .EntityToolbar {
   font-weight: normal;
-  // &__buttons {
-  //   float: right;
-  //   padding-right: $aleph-grid-size;
-  // }
+
   .button-close {
     margin: 0;
     float: right;
+  }
+
+  .bp3-icon {
+    margin: 0 $aleph-icon-padding 0 0 !important;
+    color: inherit !important;
   }
 }

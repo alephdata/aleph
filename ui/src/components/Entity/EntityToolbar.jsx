@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { ButtonGroup } from '@blueprintjs/core';
+import { ButtonGroup, Icon } from '@blueprintjs/core';
 
 import { DownloadButton } from 'src/components/Toolbar';
 import getEntityLink from 'src/util/getEntityLink';
@@ -24,7 +24,7 @@ class EntityToolbar extends React.Component {
         <ButtonGroup minimal className="EntityToolbar__buttons bp3-intent-primary">
           {isThing && (
             <Link to={getEntityLink(entity)} className="bp3-button">
-              <span className="bp3-icon-fullscreen left-icon" />
+              <Icon icon="fullscreen" className="left-icon" />
               <FormattedMessage id="sidebar.open" defaultMessage="Expand" />
             </Link>
           )}
