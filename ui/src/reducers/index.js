@@ -10,9 +10,11 @@ import entityReferences from './entityReferences';
 import entityTags from './entityTags';
 import values from './values';
 import documentContent from './documentContent';
+import documentReport from './documentReport';
 import collections from './collections';
 import collectionStatistics from './collectionStatistics';
 import collectionStatus from './collectionStatus';
+import collectionReport from './collectionReport';
 import collectionMappings from './collectionMappings';
 import collectionPermissions from './collectionPermissions';
 import collectionXrefIndex from './collectionXrefIndex';
@@ -21,6 +23,7 @@ import results from './results';
 import alerts from './alerts';
 import diagrams from './diagrams';
 import groups from './groups';
+import reports from './reports';
 import roles from './roles';
 import notifications from './notifications';
 import systemStatus from './systemStatus';
@@ -38,6 +41,7 @@ const rootReducer = combineReducers({
   entityTags,
   values,
   documentContent,
+  documentReport,
   alerts,
   groups,
   roles,
@@ -45,6 +49,7 @@ const rootReducer = combineReducers({
   collections,
   collectionStatistics,
   collectionStatus,
+  collectionReport,
   collectionMappings,
   collectionPermissions,
   collectionXrefIndex,
@@ -52,6 +57,7 @@ const rootReducer = combineReducers({
   diagrams,
   queryLogs,
   results,
+  reports,
   systemStatus,
 });
 

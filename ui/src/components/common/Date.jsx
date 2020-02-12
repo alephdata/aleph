@@ -9,7 +9,6 @@ class Earliest extends PureComponent {
   }
 }
 
-
 class Date extends PureComponent {
   static Earliest = Earliest;
 
@@ -17,6 +16,9 @@ class Date extends PureComponent {
     const { value: dateString, showTime } = this.props;
     if (!dateString) {
       return null;
+    }
+    if (dateString[-1] === 'Z') {
+      dateString.slice(-1);
     }
     const availableChunks = dateString.split(/-/);
     const dateObject = Reflect.construct(window.Date, [dateString]);

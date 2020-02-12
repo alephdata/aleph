@@ -118,12 +118,20 @@ export function selectEntity(state, entityId) {
   return result;
 }
 
+export function selectReports(state, reportId) {
+  return selectObject(state, state.reports, reportId);
+}
+
 export function selectDiagram(state, diagramId) {
   return selectObject(state, state.diagrams, diagramId);
 }
 
 export function selectDocumentContent(state, documentId) {
   return selectObject(state, state.documentContent, documentId);
+}
+
+export function selectDocumentReport(state, documentId) {
+  return selectObject(state, state.documentReport, documentId);
 }
 
 export function selectCollectionsResult(state, query) {
@@ -217,6 +225,10 @@ export function selectCollectionStatus(state, collectionId) {
   return selectObject(state, state.collectionStatus, collectionId);
 }
 
+export function selectCollectionReport(state, collectionId) {
+  return selectObject(state, state.collectionReport, collectionId);
+}
+
 export function selectCollectionPermissions(state, collectionId) {
   return selectObject(state, state.collectionPermissions, collectionId);
 }
@@ -255,4 +267,8 @@ export function selectQueryLogsLimited(state, limit = 9) {
     ...queryLogs,
     results,
   };
+}
+
+export function selectReportsResult(state, query) {
+  return selectResult(state, query, selectReports);
 }

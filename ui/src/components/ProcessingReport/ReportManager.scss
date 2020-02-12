@@ -1,0 +1,7 @@
+@import "src/app/variables.scss";
+
+.ReportManager {
+  &__content {
+    margin-top: $aleph-grid-size*2;
+  }
+}

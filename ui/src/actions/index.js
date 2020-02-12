@@ -1,9 +1,18 @@
 import { createAction } from 'redux-act';
 
-export { fetchRole, suggestRoles, updateRole, fetchGroups } from './roleActions';
+export {
+  fetchRole,
+  suggestRoles,
+  updateRole,
+  fetchGroups,
+} from './roleActions';
 export { addAlert, deleteAlert, fetchAlerts } from './alertActions';
 export { queryNotifications } from './notificationActions';
-export { fetchDocumentContent, ingestDocument } from './documentActions';
+export {
+  fetchDocumentContent,
+  ingestDocument,
+  fetchDocumentReport,
+} from './documentActions';
 export {
   createCollection,
   createCollectionMapping,
@@ -12,6 +21,7 @@ export {
   fetchCollection,
   fetchCollectionStatistics,
   fetchCollectionStatus,
+  fetchCollectionReport,
   fetchCollectionPermissions,
   fetchCollectionMappings,
   fetchCollectionXrefIndex,
@@ -41,8 +51,17 @@ export {
   queryEntities,
   updateEntity,
 } from './entityActions';
-export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
+export {
+  fetchMetadata,
+  fetchStatistics,
+  fetchSystemStatus,
+} from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
+export {
+  queryReports,
+  triggerReprocessing,
+  deleteJobReport,
+} from './reportActions';
 
 export { createAction };
 export const setLocale = createAction('SET_LOCALE');

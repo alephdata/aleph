@@ -28,3 +28,9 @@ export const ingestDocument = asyncActionCreator(
     return { ...response.data };
   }, { name: 'INGEST_DOCUMENT' },
 );
+
+
+export const fetchDocumentReport = asyncActionCreator(({ id }) => async () => {
+  const response = await endpoint.get(`reports/document/${id}`);
+  return { id, data: response.data };
+}, { name: 'FETCH_DOCUMENT_REPORT' });

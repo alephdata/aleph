@@ -118,3 +118,8 @@ export const fetchCollectionMappings = asyncActionCreator((collectionId) => asyn
   const response = await endpoint.get(`collections/${collectionId}/mappings`, config);
   return { collectionId, data: response.data };
 }, { name: 'FETCH_COLLECTION_MAPPINGS' });
+
+export const fetchCollectionReport = asyncActionCreator(({ id }) => async () => {
+  const response = await endpoint.get(`reports/${id}`);
+  return { id, data: response.data };
+}, { name: 'FETCH_COLLECTION_REPORT' });

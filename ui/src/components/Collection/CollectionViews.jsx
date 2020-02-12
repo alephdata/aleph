@@ -7,10 +7,12 @@ import { Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import Query from 'src/app/Query';
+
 import { Count, TextLoading } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
+import CollectionReportViews from 'src/components/Collection/CollectionReportViews';
 import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 
 import { selectCollectionXrefIndex, selectModel, selectDiagramsResult, selectSessionIsTester } from 'src/selectors';
@@ -22,6 +24,7 @@ const viewIds = {
   BROWSE: 'browse',
   XREF: 'xref',
   DIAGRAMS: 'diagrams',
+  PROCESSING: 'processing',
 };
 
 /* eslint-disable */
@@ -84,6 +87,7 @@ class CollectionViews extends React.Component {
     } = this.props;
     // const numOfDocs = this.countDocuments();
     // const entitySchemata = this.getEntitySchemata();
+
     return (
       <Tabs
         id="CollectionInfoTabs"
@@ -120,7 +124,8 @@ class CollectionViews extends React.Component {
               <Icon className="left-icon" icon="comparison" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xrefIndex.total} />
-            </TextLoading>}
+            </TextLoading>
+          }
           panel={<CollectionXrefIndexMode collection={collection} />}
         />
         {showDiagramsTab && (
@@ -128,7 +133,8 @@ class CollectionViews extends React.Component {
             id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
             title={
-              <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>                <Icon className="left-icon" icon="graph" />
+              <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>
+                <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
                 <Count count={diagrams.total} />
               </TextLoading>
@@ -136,11 +142,25 @@ class CollectionViews extends React.Component {
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />
         )}
+        <Tab
+          id={viewIds.PROCESSING}
+          className="CollectionViews__tab"
+          title={
+            <>
+              <Icon icon="dashboard" className="left-icon" />
+              <FormattedMessage
+                id="report.collection.documents"
+                defaultMessage="Processing reports"
+              />
+              {/* <Count count={numOfDocs} /> */}
+            </>
+          }
+          panel={<CollectionReportViews collection={collection} />}
+        />
       </Tabs>
     );
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const { collection } = ownProps;

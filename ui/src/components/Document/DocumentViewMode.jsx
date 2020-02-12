@@ -3,6 +3,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
+import { fetchDocumentReport } from 'src/actions';
+import { selectDocumentReport } from 'src/selectors';
 import DefaultViewer from 'src/viewers/DefaultViewer';
 import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import TableViewer from 'src/viewers/TableViewer';
@@ -18,11 +20,25 @@ const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/
 
 
 export class DocumentViewMode extends React.Component {
-  renderContent() {
-    const { document, queryText, activeMode } = this.props;
-    const processingError = document.getProperty('processingError');
+  componentDidMount() {
+    this.fetchReportIfNeeded();
+  }
 
-    if (processingError && processingError.length) {
+  componentDidUpdate() {
+    this.fetchReportIfNeeded();
+  }
+
+  fetchReportIfNeeded() {
+    const { document, report } = this.props;
+    if (report.shouldLoad) {
+      this.props.fetchDocumentReport(document);
+    }
+  }
+
+  renderContent() {
+    const { document, queryText, activeMode, report } = this.props;
+
+    if (report.loadedAt && report.has_error) {
       return <DefaultViewer document={document} queryText={queryText} />;
     }
 
@@ -121,14 +137,17 @@ export class DocumentViewMode extends React.Component {
 
 
 const mapStateToProps = (state, ownProps) => {
-  const { location } = ownProps;
+  const { location, document } = ownProps;
   const query = Query.fromLocation('entities', location, {}, '');
   return {
     queryText: query.getString('q'),
+    report: selectDocumentReport(state, document.id),
   };
 };
 
+const mapDispatchToProps = { fetchDocumentReport };
+
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
 )(DocumentViewMode);

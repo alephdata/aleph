@@ -1,0 +1,40 @@
+@import "src/app/variables.scss";
+
+.ReportTable {
+  border-color: $aleph-border-color;
+  .schema {
+    max-width: 8em;
+    @media screen and (max-width: $aleph-screen-md-max-width) {
+      display: none;
+    }
+  }
+
+  .updating {
+    opacity: 0.4;
+  }
+
+  .bp3-control {
+    margin-bottom: 0 !important;
+  }
+
+  .bp3-control-indicator {
+    margin-left: 0px !important;
+  }
+}
+
+.ReportTableRow {
+  &.active {
+    em {
+      background: inherit;
+    }
+  }
+
+  &.error {
+    background-color: lighten($aleph-error-highlight-color, 50%);
+  }
+
+  em {
+    background: $aleph-text-highlight-color;
+    font-style: normal;
+  }
+}
