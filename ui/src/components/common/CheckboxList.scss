@@ -17,37 +17,18 @@
       color: $aleph-greyed-text;
     }
 
-    & > .Tick {
+    .tick {
       position: absolute;
       left: ($aleph-grid-size / 2);
-      line-height: $aleph-line-height;
-
-
-
-      &::before {
-        content: $pt-icon-circle;
-
-        .multi-select & {
-          content: $pt-icon-square;
-        }
-      }
-
+      top: 3px;
       opacity: 0.1;
       transition: opacity 0.2s ease-out, color .2s ease-out;
     }
 
     &.active {
-      .Tick {
+      .tick {
         opacity: 1;
         color: $pt-intent-primary;
-
-        &::before {
-          content: $pt-icon-symbol-circle;
-
-          .multi-select & {
-            content: $pt-icon-symbol-square;
-          }
-        }
       }
 
       .label {
