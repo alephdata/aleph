@@ -104,18 +104,19 @@ def determine_locale():
 @signals.handle_request_log.connect
 def stackdriver_log(sender, payload={}):
     if not hasattr(settings, '_gcp_logger'):
-        try:
-            from google.cloud import logging
-            google.auth.default()
-            client = logging.Client()
-            logger_name = '%s-api' % settings.APP_NAME
-            settings._gcp_logger = client.logger(logger_name)
-            log.debug("Enabled Stackdriver request logging.")
-        except Exception as exc:
-            log.debug("Disable Stackdriver: %s", exc)
-            settings._gcp_logger = None
-    if settings._gcp_logger is not None:
-        settings._gcp_logger.log_struct(payload)
+        settings._gcp_logger = None
+        if getattr(settings, 'GOOGLE_APPLICATION_CREDENTIALS', None):
+            try:
+                from google.cloud import logging
+                google.auth.default()
+                client = logging.Client()
+                logger_name = '%s-api' % settings.APP_NAME
+                settings._gcp_logger = client.logger(logger_name)
+                log.debug("Enabled Stackdriver request logging.")
+            except Exception as exc:
+                log.debug("Disable Stackdriver: %s", exc)
+        if settings._gcp_logger is not None:
+            settings._gcp_logger.log_struct(payload)
 
 
 @migrate.configure
