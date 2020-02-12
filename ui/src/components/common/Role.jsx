@@ -51,7 +51,7 @@ class RoleLink extends PureComponent {
 
 class RoleList extends PureComponent {
   render() {
-    const { roles, truncate = Infinity } = this.props;
+    const { roles, separateItems, truncate = Infinity } = this.props;
     if (!roles) return null;
 
     let names = roles.map(role => <RoleLink key={role.id} role={role} {...this.props} />);
@@ -60,7 +60,7 @@ class RoleList extends PureComponent {
     if (names.length > truncate) {
       names = [...names.slice(0, truncate), '…'];
     }
-    return names;
+    return separateItems ? wordList(names, ' · ') : names;
   }
 }
 

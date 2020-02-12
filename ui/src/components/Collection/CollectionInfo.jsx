@@ -71,7 +71,7 @@ class CollectionInfo extends PureComponent {
               <FormattedMessage id="collection.team" defaultMessage="Accessible to" />
             </div>
             <div className="value">
-              <Role.List roles={collection.team} />
+              <Role.List roles={collection.team} separateItems={false} />
             </div>
           </div>
         )}
