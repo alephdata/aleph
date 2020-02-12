@@ -250,8 +250,6 @@ class EntitySerializer(Serializer):
                 links['csv'] = archive_url(request.authz.id, csv_hash,
                                            file_name=name, mime_type=CSV)
 
-            links['processing_report'] = url_for('reports_api.document_report', collection_id=1, document_id=pk)
-
         obj['links'] = links
         write = request.authz.WRITE
         obj['writeable'] = request.authz.can(collection_id, write)
