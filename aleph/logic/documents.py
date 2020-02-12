@@ -1,10 +1,12 @@
 import os
 import logging
+from datetime import datetime
 from servicelayer.jobs import Job
 
 from aleph.core import db, archive
+from aleph.logic.reports import create_report_task
 from aleph.model import Document
-from aleph.queues import ingest_entity
+from aleph.queues import ingest_entity, OP_CRAWL
 
 log = logging.getLogger(__name__)
 
@@ -12,6 +14,7 @@ log = logging.getLogger(__name__)
 def crawl_directory(collection, path, parent=None, job_id=None):
     """Crawl the contents of the given path."""
     try:
+        start_at = datetime.utcnow().isoformat()
         content_hash = None
         if not path.is_dir():
             content_hash = archive.archive_file(path)
@@ -26,6 +29,10 @@ def crawl_directory(collection, path, parent=None, job_id=None):
                                  meta=meta)
         db.session.commit()
         job_id = job_id or Job.random_id()
+        create_report_task(OP_CRAWL, collection.foreign_id, job_id, lifecycle='start',
+                           extra_data={'document': document.id, 'start_at': start_at})
+        create_report_task(OP_CRAWL, collection.foreign_id, job_id, lifecycle='end',
+                           extra_data={'document': document.id})
         ingest_entity(collection, document.to_proxy(), job_id=job_id)
         log.info("Crawl [%s]: %s -> %s", collection.id, path, document.id)
         if path.is_dir():
