@@ -165,8 +165,8 @@ export class DiagramScreen extends Component {
           message={intl.formatMessage(messages.error_warning)}
         />
         <Screen
-          title="placeholder"
-          description="placeholder"
+          title={diagram.label}
+          description={diagram.summary || ''}
           searchScopes={this.getSearchScopes()}
         >
           {breadcrumbs}
