@@ -31,6 +31,10 @@
 
   &.error {
     background-color: lighten($aleph-error-highlight-color, 50%);
+
+    td {
+      color: $aleph-error-highlight-color;
+    }
   }
 
   em {

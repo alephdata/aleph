@@ -91,6 +91,7 @@ class ReportTable extends Component {
             <TH className="header-stage" field="stage" sortable />
             <TH className="header-dates" field="start_at" sortable />
             <TH className="header-dates" field="end_at" sortable />
+            <TH className="header-dates" field="error_at" sortable />
           </tr>
         </thead>
         <tbody className={c({ updating: result.isLoading })}>

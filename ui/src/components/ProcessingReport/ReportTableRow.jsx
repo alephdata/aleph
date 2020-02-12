@@ -29,6 +29,7 @@ class ReportTableRow extends Component {
       has_error: hasError,
       end_at: endAt,
       start_at: startAt,
+      error_at: errorAt,
       document,
     } = report;
 
@@ -59,6 +60,9 @@ class ReportTableRow extends Component {
           </td>
           <td className="date">
             <Date value={endAt} />
+          </td>
+          <td className="date">
+            <Date value={errorAt} />
           </td>
         </tr>
       </>
