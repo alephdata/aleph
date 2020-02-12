@@ -18,8 +18,12 @@
     .bp3-menu-divider {
       width: 100%;
       // height: 40px;
-      border-color: $aleph-breadcrumbs-background !important;
+      border-color: $aleph-border-color !important;
       margin: 10px 0;
+
+      &:last-child {
+        display: none;
+      }
     }
 
     &.bp3-tabs.bp3-vertical {
