@@ -8,6 +8,7 @@ from aleph.queues import queue_task, OP_INDEX
 from aleph.model import Collection, Entity, Document, Match, Diagram, Mapping
 from aleph.model import Permission, Events
 from aleph.index import collections as index
+from aleph.index.reports import delete_collection_report
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.aggregator import get_aggregator, drop_aggregator
 
@@ -88,6 +89,7 @@ def reset_collection(collection, sync=False):
     cancel_queue(collection)
     index.delete_entities(collection.id, sync=sync)
     refresh_collection(collection.id, sync=sync)
+    delete_collection_report(collection.foreign_id, sync=sync)
     db.session.commit()
 
 
