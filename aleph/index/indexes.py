@@ -12,6 +12,9 @@ from aleph.index.util import LATIN_TEXT, NUMERIC
 
 log = logging.getLogger(__name__)
 
+
+NOT_ANALYZED = {"type": "string", "index": "not_analyzed"}
+
 TYPE_MAPPINGS = {
     registry.text: {"type": "text", "index": False},
     registry.html: {"type": "text", "index": False},
@@ -146,4 +149,32 @@ def configure_schema(schema, version):
     }
     index = schema_index(model.get(schema), version)
     settings = index_settings(shards=get_shard_weight(schema))
+    return configure_index(index, mapping, settings)
+
+
+def reports_index():
+    """index to query for status / stages of jobs from the workers"""
+    return index_name('reports', settings.INDEX_WRITE)
+
+
+def configure_reports():
+    index = reports_index()
+    settings = index_settings(shards=1)
+    mapping = {
+        "properties": {
+            "job": KEYWORD,
+            "start_at": {"type": "date"},
+            "end_at": {"type": "date"},
+            "error_at": {"type": "date"},
+            "stage": KEYWORD,
+            "status": KEYWORD,
+            "dataset": KEYWORD,
+            "has_error": {"type": "boolean"},
+            "error_name": {"type": "text"},
+            "error_msg": {"type": "text"},
+            "document": NUMERIC,
+            "document_name": {"type": "text"},
+            "original_dump": NOT_ANALYZED
+        }
+    }
     return configure_index(index, mapping, settings)
