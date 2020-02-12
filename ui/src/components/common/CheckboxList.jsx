@@ -1,11 +1,13 @@
 import React from 'react';
 import c from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
+import { Icon } from '@blueprintjs/core';
+
 
 import './CheckboxList.scss';
 
 const CheckboxList = ({
-  items, selectedItems, onItemClick, children,
+  items, selectedItems, onItemClick, children, isMultiSelect,
 }) => (
   <ul className="CheckboxList">
     {items && items.length === 0 && (
@@ -18,6 +20,8 @@ const CheckboxList = ({
     )}
     {items && items.map((item) => {
       const isChecked = selectedItems.includes(item.id);
+      const iconShape = isMultiSelect ? 'square' : 'circle';
+      const icon = isChecked ? `symbol-${iconShape}` : iconShape;
       /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
       return (
         <li
@@ -26,7 +30,7 @@ const CheckboxList = ({
           onKeyDown={() => onItemClick(item.id)}
           key={item.id}
         >
-          <span className={c('bp3-icon-small', 'Tick')} />
+          <Icon icon={icon} iconSize={12} className="tick" />
           <span className="label" title={item.label}>{item.label}</span>
           {item.count !== undefined && (
           <span className="count">
