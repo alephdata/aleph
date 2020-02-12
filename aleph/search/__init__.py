@@ -2,7 +2,7 @@ import logging
 from flask_babel import gettext
 from werkzeug.exceptions import BadRequest
 
-from aleph.index.indexes import entities_read_index
+from aleph.index.indexes import entities_read_index, reports_index
 from aleph.index.collections import collections_index
 from aleph.index.entities import EXCLUDE_DEFAULT
 from aleph.logic.matching import match_query
@@ -71,3 +71,15 @@ class MatchQuery(EntitiesQuery):
         return match_query(self.entity,
                            collection_ids=self.collection_ids,
                            query=query)
+
+
+class ProcessingReportQuery(Query):
+    TEXT_FIELDS = ['error_msg']
+    SORT_FIELDS = {
+        'start': 'start_at',
+        'end': 'end_at'
+    }
+    SORT_DEFAULT = ['start_at']
+
+    def get_index(self):
+        return reports_index()

@@ -250,6 +250,8 @@ class EntitySerializer(Serializer):
                 links['csv'] = archive_url(request.authz.id, csv_hash,
                                            file_name=name, mime_type=CSV)
 
+            links['processing_report'] = url_for('reports_api.document_report', collection_id=1, document_id=pk)
+
         obj['links'] = links
         write = request.authz.WRITE
         obj['writeable'] = request.authz.can(collection_id, write)
@@ -354,3 +356,129 @@ class NotificationSerializer(Serializer):
 
 class MappingSerializer(Serializer):
     pass
+
+
+class DiagramEntitySerializer(EntitySerializer):
+
+    def _serialize(self, obj):
+        pk = obj.get('id')
+        obj['id'] = str(pk)
+        schema = model.get(obj.get('schema'))
+        if schema is None:
+            return None
+        properties = obj.get('properties', {})
+        for prop in schema.properties.values():
+            if prop.type != registry.entity:
+                continue
+            values = ensure_list(properties.get(prop.name))
+            if values:
+                properties[prop.name] = []
+                for value in values:
+                    entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
+                    if entity is None:
+                        entity = value
+                    properties[prop.name].append(entity)
+        obj.pop('_index', None)
+        collection_id = obj.pop('collection_id', None)
+        obj['collection_id'] = str(collection_id)
+        return self._clean_response(obj)
+
+
+class DiagramSerializer(Serializer):
+
+    def _collect(self, obj):
+        self.queue(Collection, obj.get('collection_id'))
+        ent_ids = obj['entities']
+        for ent_id in ensure_list(ent_ids):
+            self.queue(Entity, ent_id)
+
+    def _serialize(self, obj):
+        pk = obj.get('id')
+        obj['id'] = str(pk)
+        collection_id = obj.pop('collection_id', None)
+        obj['writeable'] = request.authz.can(collection_id, request.authz.WRITE)  # noqa
+        obj['collection'] = self.resolve(Collection, collection_id, CollectionSerializer)  # noqa
+        ent_ids = obj.pop('entities')
+        obj['entities'] = []
+        for ent_id in ent_ids:
+            entity = self.resolve(Entity, ent_id, DiagramEntitySerializer)
+            if entity is not None:
+                obj['entities'].append(entity)
+        for ent in obj['entities']:
+            schema = model.get(ent.get('schema'))
+            properties = ent.get('properties', {})
+            for prop in schema.properties.values():
+                if prop.type != registry.entity:
+                    continue
+                values = ensure_list(properties.get(prop.name))
+                if values:
+                    properties[prop.name] = []
+                    for value in values:
+                        entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
+                        properties[prop.name].append(entity)
+        return self._clean_response(obj)
+
+
+# Processing Reports
+
+class _BucketSerializer(Serializer):
+    def _serialize(self, obj):
+        data = []
+        for bucket in obj:
+            name = bucket.pop('key')
+            count = bucket.pop('doc_count')
+            _data = {
+                'name': name,
+                'count': count
+            }
+            for k, v in bucket.items():
+                if k in ('start_at', 'end_at', 'error_at'):
+                    _data[k] = v.get('value_as_string')
+                if k == 'status':
+                    _data['status'] = _BucketSerializer().serialize(v['buckets'])
+                    _data['has_errors'] = any(s['name'] == 'error' for s in _data['status'])
+                    _data['finished'] = all(s['name'] in ('error', 'end') for s in _data['status'])
+            data.append(_data)
+        return data
+
+
+class JobReportSerializer(Serializer):
+    def _serialize(self, obj):
+        bucket = _BucketSerializer().serialize
+        data = {
+            'job_id': obj['key'],
+            'start_at': obj['start_at'].get('value_as_string', ''),
+            'end_at': obj['end_at'].get('value_as_string', ''),
+            'stages': bucket(obj['stages']['buckets']),
+            'errors': bucket(obj['errors']['buckets']),
+        }
+        data['finished'] = all(s.get('finished', False) for s in data['stages'])
+        return data
+
+
+class CollectionProcessingReportSerializer(Serializer):
+    def _serialize(self, obj):
+        serialize = JobReportSerializer().serialize
+        jobs = sorted([serialize(job) for job in obj['aggregations']['jobs']['buckets']],
+                      key=lambda j: j['start_at'], reverse=True)
+        count = len(jobs)
+        jobs = [{**job, **{'i': count - i}} for i, job in enumerate(jobs)]
+        return {'jobs': jobs}
+
+
+class ProcessingReportSerializer(Serializer):
+    pass
+
+
+class DocumentProcessingReportSerializer(Serializer):
+    def _serialize(self, obj):
+        serialize = ProcessingReportSerializer().serialize
+        hits = obj['hits']['hits']
+        if hits:
+            # reports = sorted((h['_source'] for h in hits), key=lambda x: x['start_at'])  # FIXME
+            reports = [serialize(h) for h in hits]
+            data = {
+                'reports': reports,
+                'has_error': any(r.get('has_error') for r in reports) if reports else False
+            }
+            return data
