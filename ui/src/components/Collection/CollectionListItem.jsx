@@ -50,7 +50,7 @@ class CollectionListItem extends PureComponent {
           { collection.casefile && (
             <span className="details-item">
               <Icon icon="social-media" />
-              <Role.List roles={collection.team} icon={false} truncate={3} />
+              <Role.List roles={collection.team} icon={false} truncate={3} separateItems />
             </span>
           )}
         </p>

@@ -17,10 +17,10 @@ class CollectionInfo extends PureComponent {
       <div className="CollectionInfo">
         { (collection.publisher || collection.publisher_url) && (
           <div className="CollectionInfo__item">
-            <span className="key text-muted">
+            <div className="key text-muted">
               <FormattedMessage id="collection.publisher" defaultMessage="Publisher" />
-            </span>
-            <span className="value">
+            </div>
+            <div className="value">
               { !collection.publisher && (
                 <URL value={collection.publisher_url} />
               )}
@@ -32,66 +32,66 @@ class CollectionInfo extends PureComponent {
                   {collection.publisher}
                 </a>
               )}
-            </span>
+            </div>
           </div>
         )}
         { collection.info_url && (
           <div className="CollectionInfo__item">
-            <span className="key text-muted">
+            <div className="key text-muted">
               <FormattedMessage id="collection.info_url" defaultMessage="Information URL" />
-            </span>
-            <span className="value">
+            </div>
+            <div className="value">
               <URL value={collection.info_url} itemProp="identifier" />
-            </span>
+            </div>
           </div>
         )}
         { collection.data_url && (
           <div className="CollectionInfo__item">
-            <span className="key text-muted">
+            <div className="key text-muted">
               <FormattedMessage id="collection.data_url" defaultMessage="Data URL" />
-            </span>
-            <span className="value">
+            </div>
+            <div className="value">
               <URL value={collection.data_url} />
-            </span>
+            </div>
           </div>
         )}
         { collection.creator && (
           <div className="CollectionInfo__item">
-            <span className="key text-muted">
+            <div className="key text-muted">
               <FormattedMessage id="collection.creator" defaultMessage="Manager" />
-            </span>
-            <span className="value">
+            </div>
+            <div className="value">
               <Role.Link role={collection.creator} />
-            </span>
+            </div>
           </div>
         )}
         { (collection.team && collection.team.length > 1) && (
           <div className="CollectionInfo__item">
-            <span className="key text-muted">
+            <div className="key text-muted">
               <FormattedMessage id="collection.team" defaultMessage="Accessible to" />
-            </span>
-            <span className="value">
-              <Role.List roles={collection.team} />
-            </span>
+            </div>
+            <div className="value">
+              <Role.List roles={collection.team} separateItems={false} />
+            </div>
           </div>
         )}
         { collection.countries && !!collection.countries.length && (
           <div className="CollectionInfo__item">
-            <span className="key text-muted">
+            <div className="key text-muted">
               <FormattedMessage id="collection.countries" defaultMessage="Country" />
-            </span>
-            <span className="value" itemProp="spatialCoverage">
+            </div>
+            <div className="value" itemProp="spatialCoverage">
               <Country.List codes={collection.countries} />
-            </span>
+            </div>
           </div>
         )}
         <div className="CollectionInfo__item">
-          <span className="key text-muted">
+          <div className="key text-muted">
             <FormattedMessage id="collection.updated_at" defaultMessage="Last updated" />
-          </span>
-          <span className="value" itemProp="dateModified">
+          </div>
+          <div className="value" itemProp="dateModified">
             <Date value={collection.updated_at} />
-          </span>
+          </div>
         </div>
       </div>
     );
