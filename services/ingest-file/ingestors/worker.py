@@ -11,6 +11,8 @@ OP_ANALYZE = 'analyze'
 
 
 class IngestWorker(Worker):
+    task_reporting_enabled = True
+
     """A long running task runner that uses Redis as a task queue"""
 
     def dispatch_next(self, task, entity_ids):
@@ -27,7 +29,8 @@ class IngestWorker(Worker):
         stage.queue({'entity_ids': entity_ids}, task.context)
 
     def _ingest(self, task):
-        manager = Manager(task.stage, task.context)
+        report = task.report if self.should_report(task) else False
+        manager = Manager(task.stage, task.context, report=report)
         entity = model.get_proxy(task.payload)
         log.debug('Ingest: %r', entity)
         try:

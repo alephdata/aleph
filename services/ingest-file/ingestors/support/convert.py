@@ -15,8 +15,12 @@ log = logging.getLogger(__name__)
 
 class DocumentConvertSupport(CacheSupport, TempFileSupport):
     """Provides helpers for UNO document conversion via HTTP."""
+    OP_CONVERT = 'convert'
 
     def document_to_pdf(self, file_path, entity):
+        if self.manager.report:
+            self.manager.report('start', stage=self.OP_CONVERT)
+
         key = self.cache_key('pdf', entity.first('contentHash'))
         pdf_hash = self.get_cache_value(key)
         if pdf_hash is not None:
@@ -25,6 +29,8 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
             if path is not None:
                 log.info("Using PDF cache: %s", file_name)
                 entity.set('pdfHash', pdf_hash)
+                if self.manager.report:
+                    self.manager.report('end', stage=self.OP_CONVERT, from_pdf_cache=True)
                 return path
 
         pdf_file = self._document_to_pdf(file_path, entity)
@@ -32,6 +38,8 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
             content_hash = self.manager.store(pdf_file)
             entity.set('pdfHash', content_hash)
             self.set_cache_value(key, content_hash)
+            if self.manager.report:
+                self.manager.report('end', stage=self.OP_CONVERT)
         return pdf_file
 
     def _document_to_pdf(self, file_path, entity):
@@ -67,8 +75,12 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                         fh.write(chunk)
                     if bytes_written > 50:
                         return out_path
+                if self.manager.report:
+                    self.manager.report('error', stage=self.OP_CONVERT, exception=failed)
                 raise failed
             except RequestException as exc:
+                if self.manager.report:
+                    self.manager.report('error', stage=self.OP_CONVERT, exception=exc)
                 if isinstance(exc, HTTPError) and \
                         exc.response.status_code == 400:
                     raise ProcessingException(res.text)

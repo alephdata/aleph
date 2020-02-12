@@ -32,13 +32,14 @@ class Manager(object):
 
     MAGIC = magic.Magic(mime=True)
 
-    def __init__(self, stage, context):
+    def __init__(self, stage, context, report=False):
         self.stage = stage
         self.context = context
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
         self.emitted = set()
         self._writer = None
         self._dataset = None
+        self.report = report
 
     @property
     def archive(self):
@@ -141,6 +142,9 @@ class Manager(object):
 
     def ingest(self, file_path, entity, **kwargs):
         """Main execution step of an ingestor."""
+        if self.report:
+            self.report()
+
         file_path = ensure_path(file_path)
         if file_path.is_file() and not entity.has('fileSize'):
             entity.add('fileSize', file_path.stat().st_size)
@@ -151,9 +155,13 @@ class Manager(object):
             log.info("Ingestor [%r]: %s", entity, ingestor_class.__name__)
             self.delegate(ingestor_class, file_path, entity)
             entity.set('processingStatus', self.STATUS_SUCCESS)
+            if self.report:
+                self.report(lifecycle='end')
         except ProcessingException as pexc:
             entity.set('processingError', stringify(pexc))
             log.error("[%r] Failed to process: %s", entity, pexc)
+            if self.report:
+                self.report(lifecycle='error', exception=pexc)
         finally:
             self.finalize(entity)
 
