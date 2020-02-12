@@ -60,7 +60,7 @@ class RoleList extends PureComponent {
     if (names.length > truncate) {
       names = [...names.slice(0, truncate), '…'];
     }
-    return wordList(names, ' · ');
+    return names;
   }
 }
 
