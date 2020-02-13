@@ -4,6 +4,7 @@ import { VisGraph, EntityManager, GraphConfig, GraphLayout, Viewport } from '@al
 import { createEntity, deleteEntity, updateDiagram, updateEntity } from 'src/actions';
 import { processApiEntity } from 'src/components/Diagram/util';
 import updateStates from './diagramUpdateStates';
+import { selectLocale, selectModel } from 'src/selectors';
 
 import './DiagramEditor.scss';
 
@@ -16,6 +17,7 @@ class DiagramEditor extends React.Component {
     super(props);
 
     this.entityManager = new EntityManager({
+      model: props.model,
       createEntity: this.createEntity.bind(this),
       updateEntity: this.updateEntity.bind(this),
       deleteEntity: this.deleteEntity.bind(this),
@@ -152,7 +154,7 @@ class DiagramEditor extends React.Component {
   }
 
   render() {
-    const { diagram, filterText } = this.props;
+    const { diagram, filterText, locale } = this.props;
     const { layout, viewport } = this.state;
 
     return (
@@ -167,13 +169,17 @@ class DiagramEditor extends React.Component {
           exportSvg={this.exportSvg}
           externalFilterText={filterText}
           writeable={diagram.writeable}
+          locale={locale}
         />
       </div>
     );
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  model: selectModel(state),
+  locale: selectLocale(state),
+});
 
 export default connect(mapStateToProps, {
   createEntity,
