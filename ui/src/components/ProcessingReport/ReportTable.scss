@@ -20,6 +20,12 @@
   .bp3-control-indicator {
     margin-left: 0px !important;
   }
+
+  th.select {
+    label {
+      padding-left: 0;
+    }
+  }
 }
 
 .ReportTableRow {

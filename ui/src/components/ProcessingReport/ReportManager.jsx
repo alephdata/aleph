@@ -5,7 +5,7 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { ErrorSection } from 'src/components/common';
+import { Count, ErrorSection } from 'src/components/common';
 import { queryReports } from 'src/actions';
 import ReportSearch from './ReportSearch';
 import ReprocessingDialog from './ReprocessingDialog';
@@ -36,21 +36,31 @@ export class ReportManager extends Component {
       reprocessingIsOpen: false,
     };
     this.updateSelection = this.updateSelection.bind(this);
+    this.toggleSelectAll = this.toggleSelectAll.bind(this);
     this.toggleReprocessingDialog = this.toggleReprocessingDialog.bind(this);
   }
 
-  updateSelection(document) {
+  updateSelection(report) {
     const { selection } = this.state;
     this.setState({
-      selection: _.xorBy(selection, [document], 'id'),
+      selection: _.xorBy(selection, [report], 'id'),
     });
+  }
+
+  toggleSelectAll(selection) {
+    const { allSelected } = this.state;
+    if (allSelected) {
+      this.setState({ allSelected: false, selection: [] });
+    } else {
+      this.setState({ allSelected: true, selection });
+    }
   }
 
   toggleReprocessingDialog() {
     const { reprocessingIsOpen } = this.state;
-    if (reprocessingIsOpen) {
-      this.setState({ selection: [] });
-    }
+    // if (reprocessingIsOpen) {
+    //   this.setState({ selection: [] });
+    // }
     this.setState({ reprocessingIsOpen: !reprocessingIsOpen });
   }
 
@@ -72,6 +82,7 @@ export class ReportManager extends Component {
         <div className="bp3-button-group">
           <Button icon="automatic-updates" onClick={this.toggleReprocessingDialog} disabled={!selection.length}>
             <FormattedMessage id="report.manager.reprocess" defaultMessage="Re-process" />
+            {selection.length > 0 && <Count count={selection.length} />}
           </Button>
         </div>
         { hasPending && (
@@ -88,6 +99,8 @@ export class ReportManager extends Component {
             selection={selection}
             updateSelection={this.updateSelection}
             emptyComponent={emptyComponent}
+            toggleSelectAll={this.toggleSelectAll}
+            allSelected={this.state.allSelected}
           />
         </div>
         <ReprocessingDialog

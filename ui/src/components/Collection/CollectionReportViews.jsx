@@ -48,7 +48,7 @@ class CollectionReportViews extends React.Component {
           className="CollectionReportViews__tab"
           title={
             <>
-              <Icon icon="folder" className="left-icon" />
+              <Icon icon="heat-grid" className="left-icon" />
               <FormattedMessage
                 id="report.info.overview"
                 defaultMessage="Jobs overview"
@@ -58,14 +58,14 @@ class CollectionReportViews extends React.Component {
           panel={<CollectionReportMode collection={collection} />}
         />
         <Tab
-          id="Documents"
+          id="Reports"
           className="CollectionReportViews__tab"
           title={
             <>
-              <Icon icon="dashboard" className="left-icon" />
+              <Icon icon="stacked-chart" className="left-icon" />
               <FormattedMessage
                 id="report.info.documents"
-                defaultMessage="Documents Status"
+                defaultMessage="Document reports"
               />
             </>
           }

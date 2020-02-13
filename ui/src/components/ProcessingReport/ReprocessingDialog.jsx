@@ -37,7 +37,7 @@ class ReprocessingDialog extends Component {
 
   render() {
     const { intl, isOpen, tasks } = this.props;
-    const headline = `Re-process ${tasks.length} Documents`;
+    const headline = `Re-process ${tasks.length} document tasks`;
 
     return (
       <Alert

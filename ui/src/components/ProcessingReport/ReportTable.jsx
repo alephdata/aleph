@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { compose } from 'redux';
@@ -54,7 +55,7 @@ class ReportTable extends Component {
 
   render() {
     const { query, intl, result } = this.props;
-    const { updateSelection, selection } = this.props;
+    const { updateSelection, selection, allSelected, toggleSelectAll } = this.props;
 
     if (result.isError) {
       return <ErrorSection error={result.error} />;
@@ -81,11 +82,19 @@ class ReportTable extends Component {
         </SortableTH>
       );
     };
+
     return (
       <table className="ReportTable data-table">
         <thead>
           <tr>
-            {updateSelection && (<th className="select" />)}
+            {updateSelection && (
+              <th className="select">
+                <Checkbox
+                  checked={!!allSelected}
+                  onChange={() => toggleSelectAll(results)}
+                />
+              </th>
+            )}
             <TH className="header-status" field="status" sortable />
             <TH className="header-document" field="document" sortable />
             <TH className="header-stage" field="stage" sortable />

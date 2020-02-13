@@ -56,13 +56,13 @@ class ReportTableRow extends Component {
             <Stage stage={stage} />
           </td>
           <td className="date">
-            <Date value={startAt} />
+            <Date value={startAt} showTime />
           </td>
           <td className="date">
-            <Date value={endAt} />
+            <Date value={endAt} showTime />
           </td>
           <td className="date">
-            <Date value={errorAt} />
+            <Date value={errorAt} showTime />
           </td>
         </tr>
       </>

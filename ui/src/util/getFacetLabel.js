@@ -47,6 +47,18 @@ const messages = defineMessages({
     id: 'facet.category',
     defaultMessage: '{count, plural, one {Category} other {Categories}}',
   },
+  facet_job: {
+    id: 'facet.job',
+    defaultMessage: '{count, plural, one {Job} other {Jobs}}',
+  },
+  facet_stage: {
+    id: 'facet.stage',
+    defaultMessage: '{count, plural, one {Stage} other {Stages}}',
+  },
+  facet_status: {
+    id: 'facet.status',
+    defaultMessage: '{count, plural, one {Status} other {Status}}',
+  },
 });
 
 const propLabels = {
@@ -105,6 +117,21 @@ const propLabels = {
     field: 'schema',
     label: messages.facet_schema,
     icon: 'list-columns',
+  },
+  job: {
+    field: 'job',
+    label: messages.facet_job,
+    icon: 'database',
+  },
+  stage: {
+    field: 'stage',
+    label: messages.facet_stage,
+    icon: 'database',
+  },
+  status: {
+    field: 'status',
+    label: messages.facet_status,
+    icon: 'database',
   },
 };
 

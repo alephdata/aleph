@@ -1,11 +1,38 @@
 import React, { PureComponent } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
+import queryString from 'query-string';
 import { Button, Tag } from '@blueprintjs/core/';
 import { Count, Date } from 'src/components/common';
 import JobReportDeleteDialog from 'src/components/ProcessingReport/JobReportDeleteDialog';
+import { queryDocumentReports } from 'src/queries';
 import CollectionAnalyzeAlert from './CollectionAnalyzeAlert';
 
 import './CollectionJobReport.scss';
+
+const REPORTS_TYPE = 'Reports';
+
+const getJumpToQuery = ({ query, context }) => {
+  let newQuery = query.clone();
+  // eslint-disable-next-line
+  Object.keys(context).map((k) => {
+    newQuery = newQuery.setFilter(k, context[k]);
+  });
+  return newQuery;
+};
+
+const jumpToDetails = ({ query, context, location, history }) => {
+  const newQuery = getJumpToQuery({ query, context });
+  const hash = queryString.parse(location.hash);
+  hash.type = REPORTS_TYPE;
+  history.push({
+    pathname: location.pathname,
+    search: newQuery.toLocation(),
+    hash: queryString.stringify(hash),
+  });
+};
 
 const renderDate = (dateString) => <Date value={dateString} showTime />;
 
@@ -15,29 +42,43 @@ const renderState = (finished) => (
   </Tag>
 );
 
-const renderCount = (count) => (
-  <>
-    <Count count={count} />
-    &nbsp;Documents
-  </>
-);
-
 const renderStatus = ({ name, count }) => (
   <div key={name} className="CollectionStageReport__status">
-    <span className="CollectionStageReport__status-name">{name}</span>
-    {renderCount(count)}
+    <span className="CollectionStageReport__status-name">
+      <strong>
+        {name}
+        :
+      </strong>
+      {count}
+      Documents
+    </span>
   </div>
 );
 
 class StageReport extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.viewDetails = this.viewDetails.bind(this);
+  }
+
+  viewDetails() {
+    const { stage, jumpToContext } = this.props;
+    let { context } = jumpToContext;
+    context = { stage: stage.name, ...context };
+    jumpToDetails({ ...jumpToContext, context });
+  }
+
   renderActions() {
     const { finished } = this.props.stage;
     return (
-      <Button
-        icon={finished ? 'automatic-updates' : 'cross'}
-        text={finished ? 'Re-run' : 'Stop'}
-        intent={finished ? null : 'danger'}
-      />
+      <>
+        <Button icon="info-sign" text="Details" onClick={this.viewDetails} />
+        <Button
+          icon={finished ? 'automatic-updates' : 'cross'}
+          text={finished ? 'Re-run' : 'Stop'}
+          intent={finished ? null : 'danger'}
+        />
+      </>
     );
   }
 
@@ -91,6 +132,7 @@ class StageReport extends PureComponent {
             </div>
           </div>
           <div className="CollectionStageReport__content">
+            <h4 className="CollectionStageReport__content__title">Status</h4>
             {status.map(renderStatus)}
           </div>
         </div>
@@ -108,6 +150,14 @@ class CollectionJobReport extends PureComponent {
     };
     this.toggleAnalyze = this.toggleAnalyze.bind(this);
     this.toggleDelete = this.toggleDelete.bind(this);
+    this.getJumpToContext = this.getJumpToContext.bind(this);
+    this.viewDetails = this.viewDetails.bind(this);
+  }
+
+  getJumpToContext() {
+    const { query, history, location } = this.props;
+    const context = { job: this.props.job.job_id };
+    return { query, history, location, context };
   }
 
   toggleAnalyze() {
@@ -118,10 +168,15 @@ class CollectionJobReport extends PureComponent {
     this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
   }
 
+  viewDetails() {
+    jumpToDetails(this.getJumpToContext());
+  }
+
   renderActions() {
     const { finished } = this.props.job;
     return (
       <>
+        <Button icon="info-sign" text="Details" onClick={this.viewDetails} />
         <Button
           icon={finished ? 'automatic-updates' : 'cross'}
           text={finished ? 'Re-run' : 'Stop'}
@@ -172,7 +227,15 @@ class CollectionJobReport extends PureComponent {
           </div>
         </div>
         <div className="CollectionJobReport__content">
-          {job.stages.map((s) => <StageReport stage={s} key={s.name} />)}
+          {job.stages.map((s) => (
+            <StageReport
+              job={job}
+              stage={s}
+              key={s.name}
+              viewDetails={this.viewDetails}
+              jumpToContext={this.getJumpToContext()}
+            />
+          ))}
         </div>
         <CollectionAnalyzeAlert
           collection={collection}
@@ -184,4 +247,13 @@ class CollectionJobReport extends PureComponent {
   }
 }
 
-export default injectIntl(CollectionJobReport);
+const mapStateToProps = (state, ownProps) => {
+  const { collection, location } = ownProps;
+  return {
+    query: queryDocumentReports(location, collection.foreign_id),
+  };
+};
+
+export default compose(withRouter, connect(mapStateToProps), injectIntl)(
+  CollectionJobReport,
+);

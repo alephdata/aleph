@@ -9,6 +9,7 @@ import c from 'classnames';
 
 import { queryReports } from 'src/actions';
 import { selectReportsResult } from 'src/selectors';
+import SearchFacets from 'src/components/Facet/SearchFacets';
 import ReportTable from 'src/components/ProcessingReport/ReportTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 
@@ -26,6 +27,9 @@ export class ReportSearch extends Component {
     super(props);
     this.updateQuery = this.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
+    this.state = {
+      facets: ['job', 'stage', 'status'],
+    };
   }
 
   componentDidMount() {
@@ -59,6 +63,7 @@ export class ReportSearch extends Component {
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
+      hash: location.hash,
     });
     return undefined;
   }
@@ -66,8 +71,7 @@ export class ReportSearch extends Component {
   generateFoundText() {
     const { result } = this.props;
 
-    if (result.isLoading || result.total === 0
-      || !result.facets || !result.facets.collection_id) {
+    if (result.isLoading || result.total === 0 || !result.facets) {
       return null;
     }
 
@@ -87,6 +91,8 @@ export class ReportSearch extends Component {
       intl,
       className,
       updateSelection,
+      allSelected,
+      toggleSelectAll,
       selection,
       emptyComponent,
     } = this.props;
@@ -106,12 +112,22 @@ export class ReportSearch extends Component {
             {isEmpty && emptyComponent}
           </section>
         )}
+        {result.total > 0 && (
+          <SearchFacets
+            facets={this.state.facets}
+            query={query}
+            result={result}
+            updateQuery={this.updateQuery}
+          />
+        )}
         {foundText}
         <ReportTable
           query={query}
           result={result}
           updateQuery={this.updateQuery}
           updateSelection={updateSelection}
+          toggleSelectAll={toggleSelectAll}
+          allSelected={allSelected}
           selection={selection}
         />
         <Waypoint
