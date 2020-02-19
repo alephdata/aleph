@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { getDroppedOrSelectedFiles } from 'html5-file-selector';
 import { Callout, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import Dropzone from 'react-dropzone';
@@ -59,6 +60,7 @@ export class DocumentManager extends Component {
   }
 
   toggleUpload(files = []) {
+    console.log('files are', files);
     this.setState(({ uploadIsOpen }) => ({
       uploadIsOpen: !uploadIsOpen,
       filesToUpload: files,
@@ -144,6 +146,15 @@ export class DocumentManager extends Component {
         )}
         { canUpload && (
           <Dropzone
+            getDataTransferItems={evt => {
+              console.log('evt is', evt);
+              return getDroppedOrSelectedFiles(evt).then(list => {
+                console.log('in getdropped', list)
+                return (
+                  list.map(({ fileObject, ...rest }) => fileObject)
+                )
+              })
+            }}
             onDrop={acceptedFiles => (
               acceptedFiles && acceptedFiles.length ? this.toggleUpload(acceptedFiles) : null
             )}
