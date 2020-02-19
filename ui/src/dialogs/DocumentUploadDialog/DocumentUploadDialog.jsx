@@ -26,6 +26,10 @@ const messages = defineMessages({
     id: 'document.upload.choose_file',
     defaultMessage: 'Choose files to upload...',
   },
+  choose_folder: {
+    id: 'document.upload.choose_folder',
+    defaultMessage: 'Choose folders to upload...',
+  },
   success: {
     id: 'document.upload.success',
     defaultMessage: 'Documents are being processed...',
@@ -33,6 +37,10 @@ const messages = defineMessages({
   error: {
     id: 'document.upload.error',
     defaultMessage: 'There was an error while uploading the file.',
+  },
+  input_or: {
+    id: 'document.upload.input_or',
+    defaultMessage: 'or',
   },
 });
 
@@ -87,10 +95,45 @@ export class DocumentUploadDialog extends Component {
     this.setState({ percentCompleted });
   }
 
+  renderInput({ isDirectoryUpload }) {
+    const { intl } = this.props;
+    const { files } = this.state;
+    const fileNames = files.map(file => file.name);
+
+    const placeholder = isDirectoryUpload
+      ? intl.formatMessage(messages.choose_folder)
+      : intl.formatMessage(messages.choose_file);
+
+    const id = isDirectoryUpload
+      ? "document-upload-input"
+      : "folder-upload-input";
+
+    return (
+      <div className="bp3-input-group bp3-large bp3-fill">
+        <label
+          className="bp3-file-input bp3-large bp3-fill"
+          htmlFor={id}
+        >
+          <input
+            id={id}
+            type="file"
+            multiple
+            webkitdirectory={isDirectoryUpload ? "" : false}
+            directory={isDirectoryUpload ? "" : false}
+            onChange={this.onFilesChange}
+          />
+          <span className="bp3-file-upload-input">
+            {wordList(fileNames, ', ')}
+            { fileNames.length === 0 && placeholder}
+          </span>
+        </label>
+      </div>
+    );
+  }
+
   render() {
     const { intl, toggleDialog, isOpen } = this.props;
-    const { percentCompleted, uploadingFile, files } = this.state;
-    const fileNames = files.map(file => file.name);
+    const { percentCompleted, uploadingFile } = this.state;
 
     return (
       <Dialog
@@ -100,6 +143,7 @@ export class DocumentUploadDialog extends Component {
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
       >
+
         { uploadingFile && (
           <div className="bp3-dialog-body">
             <p>
@@ -127,24 +171,9 @@ export class DocumentUploadDialog extends Component {
           <form onSubmit={this.onFormSubmit}>
             <div className="bp3-dialog-body">
               <div className="bp3-form-group">
-                <div className="bp3-input-group bp3-large bp3-fill">
-                  <label
-                    className="bp3-file-input bp3-large bp3-fill"
-                    htmlFor="document-upload-input"
-                  >
-                    <input
-                      id="document-upload-input"
-                      type="file"
-                      multiple
-                      className="bp3-large bp3-fill"
-                      onChange={this.onFilesChange}
-                    />
-                    <span className="bp3-file-upload-input">
-                      {wordList(fileNames, ', ')}
-                      { fileNames.length === 0 && intl.formatMessage(messages.choose_file)}
-                    </span>
-                  </label>
-                </div>
+                {this.renderInput({ isDirectoryUpload: false })}
+                <span className="DocumentUploadDialog__divider">-- {intl.formatMessage(messages.input_or)} --</span>
+                {this.renderInput({ isDirectoryUpload: true })}
               </div>
             </div>
             <div className="bp3-dialog-footer">
