@@ -6,17 +6,17 @@ import c from 'classnames';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { SortableTH, ErrorSection } from 'src/components/common';
-import ReportTableRow from './ReportTableRow';
+import ProcessingTaskReportTableRow from './ProcessingTaskReportTableRow';
 
-import './ReportTable.scss';
+import './ProcessingTaskReportTable.scss';
 
 const messages = defineMessages({
   column_status: {
     id: 'report.column.status',
     defaultMessage: 'Status',
   },
-  column_document: {
-    id: 'report.column.document',
+  column_document_name: {
+    id: 'report.column.document_name',
     defaultMessage: 'Document',
   },
   column_stage: {
@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
 });
 
-class ReportTable extends Component {
+class ProcessingTaskReportTable extends Component {
   sortColumn(newField) {
     const { query, updateQuery } = this.props;
     const { field: currentField, direction } = query.getSort();
@@ -84,7 +84,7 @@ class ReportTable extends Component {
     };
 
     return (
-      <table className="ReportTable data-table">
+      <table className="ProcessingTaskReportTable data-table">
         <thead>
           <tr>
             {updateSelection && (
@@ -96,7 +96,7 @@ class ReportTable extends Component {
               </th>
             )}
             <TH className="header-status" field="status" sortable />
-            <TH className="header-document" field="document" sortable />
+            <TH className="header-document" field="document_name" sortable />
             <TH className="header-stage" field="stage" sortable />
             <TH className="header-dates" field="start_at" sortable />
             <TH className="header-dates" field="end_at" sortable />
@@ -105,7 +105,7 @@ class ReportTable extends Component {
         </thead>
         <tbody className={c({ updating: result.isLoading })}>
           {results.map(report => (
-            <ReportTableRow
+            <ProcessingTaskReportTableRow
               key={report.id}
               report={report}
               updateSelection={updateSelection}
@@ -121,4 +121,4 @@ class ReportTable extends Component {
 export default compose(
   withRouter,
   injectIntl,
-)(ReportTable);
+)(ProcessingTaskReportTable);

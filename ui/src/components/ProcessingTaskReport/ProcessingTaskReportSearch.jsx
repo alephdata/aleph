@@ -7,13 +7,12 @@ import { withRouter } from 'react-router';
 import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { queryReports } from 'src/actions';
-import { selectReportsResult } from 'src/selectors';
-import SearchFacets from 'src/components/Facet/SearchFacets';
-import ReportTable from 'src/components/ProcessingReport/ReportTable';
+import { queryProcessingTaskReports } from 'src/actions';
+import { selectProcessingTaskReportsResult } from 'src/selectors';
+import ProcessingTaskReportTable from 'src/components/ProcessingTaskReport/ProcessingTaskReportTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 
-import './ReportSearch.scss';
+import './ProcessingTaskReportSearch.scss';
 
 const messages = defineMessages({
   no_results_title: {
@@ -22,50 +21,18 @@ const messages = defineMessages({
   },
 });
 
-export class ReportSearch extends Component {
+export class ProcessingTaskReportSearch extends Component {
   constructor(props) {
     super(props);
-    this.updateQuery = this.updateQuery.bind(this);
+    this.updateQuery = this.props.updateQuery.bind(this);
     this.getMoreResults = this.getMoreResults.bind(this);
-    this.state = {
-      facets: ['job', 'stage', 'status'],
-    };
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
   }
 
   getMoreResults() {
     const { query, result } = this.props;
     if (result && result.next && !result.isLoading && !result.isError) {
-      this.props.queryReports({ query, next: result.next });
+      this.props.queryProcessingTaskReports({ query, next: result.next });
     }
-  }
-
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryReports({ query });
-    }
-  }
-
-  updateQuery(newQuery) {
-    const { updateQuery } = this.props;
-    if (updateQuery !== undefined) {
-      return updateQuery(newQuery);
-    }
-    const { history, location } = this.props;
-    history.push({
-      pathname: location.pathname,
-      search: newQuery.toLocation(),
-      hash: location.hash,
-    });
-    return undefined;
   }
 
   generateFoundText() {
@@ -78,7 +45,11 @@ export class ReportSearch extends Component {
     const text = `Found ${result.total} reports`;
 
     return (
-      <Callout icon={null} intent="primary" className="ReportSearch__foundText">
+      <Callout
+        icon={null}
+        intent="primary"
+        className="ProcessingTaskReportSearch__foundText"
+      >
         {text}
       </Callout>
     );
@@ -100,7 +71,7 @@ export class ReportSearch extends Component {
     const foundText = this.generateFoundText();
 
     return (
-      <div className={c('ReportSearch', className)}>
+      <div className={c('ProcessingTaskReportSearch', className)}>
         {result.total === 0 && (
           <section className="PartialError">
             {!isEmpty && (
@@ -112,16 +83,8 @@ export class ReportSearch extends Component {
             {isEmpty && emptyComponent}
           </section>
         )}
-        {result.total > 0 && (
-          <SearchFacets
-            facets={this.state.facets}
-            query={query}
-            result={result}
-            updateQuery={this.updateQuery}
-          />
-        )}
         {foundText}
-        <ReportTable
+        <ProcessingTaskReportTable
           query={query}
           result={result}
           updateQuery={this.updateQuery}
@@ -140,14 +103,14 @@ export class ReportSearch extends Component {
     );
   }
 }
+
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
-  const result = selectReportsResult(state, query);
+  const result = selectProcessingTaskReportsResult(state, query);
   return { query, result };
 };
-
 export default compose(
   withRouter,
-  connect(mapStateToProps, { queryReports }),
+  connect(mapStateToProps, { queryProcessingTaskReports }),
   injectIntl,
-)(ReportSearch);
+)(ProcessingTaskReportSearch);

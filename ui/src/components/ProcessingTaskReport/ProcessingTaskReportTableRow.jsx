@@ -19,7 +19,7 @@ class Status extends React.PureComponent {
   }
 }
 
-class ReportTableRow extends Component {
+class ProcessingTaskReportTableRow extends Component {
   render() {
     const { report } = this.props;
     const {
@@ -30,13 +30,13 @@ class ReportTableRow extends Component {
       end_at: endAt,
       start_at: startAt,
       error_at: errorAt,
-      document,
+      document_name: documentName,
     } = report;
 
     const { updateSelection, selection } = this.props;
     const selectedIds = _.map(selection || [], 'id');
     const isSelected = selectedIds.indexOf(report.id) > -1;
-    const rowClass = c('ReportTableRow', 'nowrap', { error: hasError });
+    const rowClass = c('ProcessingTaskReportTableRow', 'nowrap', { error: hasError });
     return (
       <>
         <tr key={report.id} className={rowClass}>
@@ -51,7 +51,7 @@ class ReportTableRow extends Component {
           <td className="status">
             <Status status={status} />
           </td>
-          <td className="document">{document}</td>
+          <td className="document">{documentName}</td>
           <td className="stage">
             <Stage stage={stage} />
           </td>
@@ -70,4 +70,4 @@ class ReportTableRow extends Component {
   }
 }
 
-export default ReportTableRow;
+export default ProcessingTaskReportTableRow;

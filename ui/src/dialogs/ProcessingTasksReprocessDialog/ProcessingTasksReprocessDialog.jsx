@@ -3,7 +3,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { triggerReprocessing } from 'src/actions';
+import { triggerTaskReprocess } from 'src/actions';
 import { showSuccessToast } from 'src/app/toast';
 
 
@@ -30,7 +30,7 @@ class ReprocessingDialog extends Component {
 
   onConfirm() {
     const { intl, tasks } = this.props;
-    this.props.triggerReprocessing(tasks);
+    this.props.triggerTaskReprocess(tasks);
     showSuccessToast(intl.formatMessage(messages.processing));
     this.props.toggleDialog();
   }
@@ -64,6 +64,6 @@ class ReprocessingDialog extends Component {
 }
 
 export default compose(
-  connect(null, { triggerReprocessing }),
+  connect(null, { triggerTaskReprocess }),
   injectIntl,
 )(ReprocessingDialog);

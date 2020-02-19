@@ -118,8 +118,8 @@ export function selectEntity(state, entityId) {
   return result;
 }
 
-export function selectReports(state, reportId) {
-  return selectObject(state, state.reports, reportId);
+export function selectProcessingTaskReports(state, reportId) {
+  return selectObject(state, state.processingTaskReports, reportId);
 }
 
 export function selectDiagram(state, diagramId) {
@@ -130,8 +130,8 @@ export function selectDocumentContent(state, documentId) {
   return selectObject(state, state.documentContent, documentId);
 }
 
-export function selectDocumentReport(state, documentId) {
-  return selectObject(state, state.documentReport, documentId);
+export function selectDocumentProcessingReport(state, documentId) {
+  return selectObject(state, state.documentProcessingReport, documentId);
 }
 
 export function selectCollectionsResult(state, query) {
@@ -225,8 +225,8 @@ export function selectCollectionStatus(state, collectionId) {
   return selectObject(state, state.collectionStatus, collectionId);
 }
 
-export function selectCollectionReport(state, collectionId) {
-  return selectObject(state, state.collectionReport, collectionId);
+export function selectCollectionProcessingReport(state, collectionId) {
+  return selectObject(state, state.collectionProcessingReport, collectionId);
 }
 
 export function selectCollectionPermissions(state, collectionId) {
@@ -269,6 +269,6 @@ export function selectQueryLogsLimited(state, limit = 9) {
   };
 }
 
-export function selectReportsResult(state, query) {
-  return selectResult(state, query, selectReports);
+export function selectProcessingTaskReportsResult(state, query) {
+  return selectResult(state, query, selectProcessingTaskReports);
 }

@@ -6,13 +6,13 @@ import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
 import { Button, Tag } from '@blueprintjs/core/';
 import { Count, Date } from 'src/components/common';
-import JobReportDeleteDialog from 'src/components/ProcessingReport/JobReportDeleteDialog';
-import { queryDocumentReports } from 'src/queries';
-import CollectionAnalyzeAlert from './CollectionAnalyzeAlert';
+import ProcessingJobReportDeleteDialog from 'src/dialogs/ProcessingJobReportDeleteDialog/ProcessingJobReportDeleteDialog';
+import { processingTaskReportsQuery } from 'src/queries';
+import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 
-import './CollectionJobReport.scss';
+import './ProcessingJobReport.scss';
 
-const REPORTS_TYPE = 'Reports';
+const REPORTS_TYPE = 'ProcessingTaskReports';
 
 const getJumpToQuery = ({ query, context }) => {
   let newQuery = query.clone();
@@ -141,7 +141,7 @@ class StageReport extends PureComponent {
   }
 }
 
-class CollectionJobReport extends PureComponent {
+class ProcessingJobReport extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -199,7 +199,7 @@ class CollectionJobReport extends PureComponent {
     return (
       <div className="CollectionJobReport">
         {this.state.deleteIsOpen && (
-          <JobReportDeleteDialog
+          <ProcessingJobReportDeleteDialog
             jobId={job.job_id}
             isOpen={this.state.deleteIsOpen}
             toggleDialog={this.toggleDelete}
@@ -250,10 +250,10 @@ class CollectionJobReport extends PureComponent {
 const mapStateToProps = (state, ownProps) => {
   const { collection, location } = ownProps;
   return {
-    query: queryDocumentReports(location, collection.foreign_id),
+    query: processingTaskReportsQuery(location, collection.foreign_id),
   };
 };
 
 export default compose(withRouter, connect(mapStateToProps), injectIntl)(
-  CollectionJobReport,
+  ProcessingJobReport,
 );

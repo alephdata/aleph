@@ -12,12 +12,20 @@ import { Count, TextLoading } from 'src/components/common';
 import CollectionOverviewMode from 'src/components/Collection/CollectionOverviewMode';
 import CollectionXrefIndexMode from 'src/components/Collection/CollectionXrefIndexMode';
 import CollectionDiagramsIndexMode from 'src/components/Collection/CollectionDiagramsIndexMode';
-import CollectionReportViews from 'src/components/Collection/CollectionReportViews';
+import CollectionProcessingReportViews from 'src/components/Collection/CollectionProcessingReportViews';
 import CollectionContentViews from 'src/components/Collection/CollectionContentViews';
 
-import { selectCollectionXrefIndex, selectModel, selectDiagramsResult, selectSessionIsTester } from 'src/selectors';
+import {
+  selectCollectionXrefIndex,
+  selectModel,
+  selectDiagramsResult,
+  selectSessionIsTester,
+  selectCollectionProcessingReport,
+} from 'src/selectors';
 
 import './CollectionViews.scss';
+
+/* eslint-disable */
 
 const viewIds = {
   OVERVIEW: 'overview',
@@ -27,7 +35,6 @@ const viewIds = {
   PROCESSING: 'processing',
 };
 
-/* eslint-disable */
 class CollectionViews extends React.Component {
   constructor(props) {
     super(props);
@@ -67,6 +74,12 @@ class CollectionViews extends React.Component {
     return totalCount;
   }
 
+  countProcessingJobs() {
+    const { processingReport } = this.props;
+    const { jobs } = processingReport;
+    return !!jobs ? jobs.length : 0;
+  }
+
   handleTabChange(mode) {
     const { history, location } = this.props;
     const parsedHash = queryString.parse(location.hash);
@@ -83,10 +96,16 @@ class CollectionViews extends React.Component {
 
   render() {
     const {
-      collection, activeMode, diagrams, showDiagramsTab, xrefIndex,
+      collection,
+      activeMode,
+      diagrams,
+      showDiagramsTab,
+      processingReport,
+      xrefIndex,
     } = this.props;
     // const numOfDocs = this.countDocuments();
     // const entitySchemata = this.getEntitySchemata();
+    const numOfProcessingJobs = this.countProcessingJobs();
 
     return (
       <Tabs
@@ -102,8 +121,12 @@ class CollectionViews extends React.Component {
           title={
             <>
               <Icon icon="grouped-bar-chart" className="left-icon" />
-              <FormattedMessage id="entity.info.overview" defaultMessage="Overview" />
-            </>}
+              <FormattedMessage
+                id="entity.info.overview"
+                defaultMessage="Overview"
+              />
+            </>
+          }
           panel={<CollectionOverviewMode collection={collection} />}
         />
         <Tab
@@ -112,9 +135,19 @@ class CollectionViews extends React.Component {
           title={
             <>
               <Icon icon="inbox-search" className="left-icon" />
-              <FormattedMessage id="entity.info.contents" defaultMessage="Browse" />
-            </>}
-          panel={<CollectionContentViews collection={collection} activeMode={activeMode} onChange={this.handleTabChange} />}
+              <FormattedMessage
+                id="entity.info.contents"
+                defaultMessage="Browse"
+              />
+            </>
+          }
+          panel={
+            <CollectionContentViews
+              collection={collection}
+              activeMode={activeMode}
+              onChange={this.handleTabChange}
+            />
+          }
         />
         <Tab
           id={viewIds.XREF}
@@ -122,7 +155,10 @@ class CollectionViews extends React.Component {
           title={
             <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
               <Icon className="left-icon" icon="comparison" />
-              <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
+              <FormattedMessage
+                id="entity.info.xref"
+                defaultMessage="Cross-reference"
+              />
               <Count count={xrefIndex.total} />
             </TextLoading>
           }
@@ -135,7 +171,10 @@ class CollectionViews extends React.Component {
             title={
               <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>
                 <Icon className="left-icon" icon="graph" />
-                <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
+                <FormattedMessage
+                  id="collection.info.diagrams"
+                  defaultMessage="Network diagrams"
+                />
                 <Count count={diagrams.total} />
               </TextLoading>
             }
@@ -146,16 +185,16 @@ class CollectionViews extends React.Component {
           id={viewIds.PROCESSING}
           className="CollectionViews__tab"
           title={
-            <>
+            <TextLoading loading={processingReport.shouldLoad || processingReport.isLoading}>
               <Icon icon="dashboard" className="left-icon" />
               <FormattedMessage
-                id="report.collection.documents"
+                id="report.collection.reports"
                 defaultMessage="Processing reports"
               />
-              {/* <Count count={numOfDocs} /> */}
-            </>
+              <Count count={numOfProcessingJobs} />
+            </TextLoading>
           }
-          panel={<CollectionReportViews collection={collection} />}
+          panel={<CollectionProcessingReportViews collection={collection} />}
         />
       </Tabs>
     );
@@ -168,13 +207,16 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     'filter:collection_id': collection.id,
   };
-  const diagramsQuery = new Query('diagrams', {}, context, 'diagrams')
-    .sortBy('updated_at', 'desc');
+  const diagramsQuery = new Query('diagrams', {}, context, 'diagrams').sortBy(
+    'updated_at',
+    'desc',
+  );
 
   return {
     model: selectModel(state),
     xrefIndex: selectCollectionXrefIndex(state, collection.id),
     diagrams: selectDiagramsResult(state, diagramsQuery),
+    processingReport: selectCollectionProcessingReport(state, collection.id),
     showDiagramsTab: collection.casefile && selectSessionIsTester(state),
   };
 };

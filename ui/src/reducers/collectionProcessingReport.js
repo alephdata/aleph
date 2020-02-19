@@ -1,17 +1,17 @@
 import { createReducer } from 'redux-act';
 
-import { fetchDocumentReport } from 'src/actions';
+import { fetchCollectionProcessingReport } from 'src/actions';
 import { objectLoadStart, objectLoadError, objectLoadComplete } from 'src/reducers/util';
 
 const initialState = {};
 
 export default createReducer({
-  [fetchDocumentReport.START]:
+  [fetchCollectionProcessingReport.START]:
     (state, { id }) => objectLoadStart(state, id),
 
-  [fetchDocumentReport.ERROR]:
+  [fetchCollectionProcessingReport.ERROR]:
     (state, { error, args: { id } }) => objectLoadError(state, id, error),
 
-  [fetchDocumentReport.COMPLETE]:
+  [fetchCollectionProcessingReport.COMPLETE]:
     (state, { id, data }) => objectLoadComplete(state, id, data),
 }, initialState);

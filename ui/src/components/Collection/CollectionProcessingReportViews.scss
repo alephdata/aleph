@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 
-.CollectionReportViews {
+.CollectionProcessingReportViews {
   &__tabs {
     .bp3-tab-list {
       // margin-right: $aleph-content-padding;
@@ -82,5 +82,9 @@
       }
 
     }
+  }
+
+  &__facets {
+    margin-top: $aleph-content-padding;
   }
 }

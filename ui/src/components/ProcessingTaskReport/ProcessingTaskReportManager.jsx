@@ -3,14 +3,11 @@ import React, { Component } from 'react';
 import { Callout, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { Count, ErrorSection } from 'src/components/common';
-import { queryReports } from 'src/actions';
-import ReportSearch from './ReportSearch';
-import ReprocessingDialog from './ReprocessingDialog';
+import ProcessingTasksReprocessingDialog from 'src/dialogs/ProcessingTasksReprocessDialog/ProcessingTasksReprocessDialog';
+import ProcessingTaskReportSearch from './ProcessingTaskReportSearch';
 
-import './ReportManager.scss';
+import './ProcessingTaskReportManager.scss';
 
 const messages = defineMessages({
   reprocess: {
@@ -28,7 +25,7 @@ const messages = defineMessages({
 });
 
 
-export class ReportManager extends Component {
+export class ProcessingTaskReportManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,18 +55,15 @@ export class ReportManager extends Component {
 
   toggleReprocessingDialog() {
     const { reprocessingIsOpen } = this.state;
-    // if (reprocessingIsOpen) {
-    //   this.setState({ selection: [] });
-    // }
     this.setState({ reprocessingIsOpen: !reprocessingIsOpen });
   }
 
   render() {
-    const { query, hasPending, intl } = this.props;
+    const { query, result, hasPending, intl } = this.props;
     const { selection } = this.state;
 
     const emptyComponent = (
-      <div className="ReportManager__content__empty">
+      <div className="ProcessingTaskReportManager__content__empty">
         <ErrorSection
           icon="grouped-bar-chart"
           title={intl.formatMessage(messages.empty)}
@@ -78,7 +72,7 @@ export class ReportManager extends Component {
     );
 
     return (
-      <div className="ReportManager">
+      <div className="ProcessingTaskReportManager">
         <div className="bp3-button-group">
           <Button icon="automatic-updates" onClick={this.toggleReprocessingDialog} disabled={!selection.length}>
             <FormattedMessage id="report.manager.reprocess" defaultMessage="Re-process" />
@@ -93,17 +87,19 @@ export class ReportManager extends Component {
             />
           </Callout>
         )}
-        <div className="ReportManager__content">
-          <ReportSearch
+        <div className="ProcessingTaskReportManager__content">
+          <ProcessingTaskReportSearch
             query={query}
+            result={result}
             selection={selection}
             updateSelection={this.updateSelection}
+            updateQuery={this.props.updateQuery}
             emptyComponent={emptyComponent}
             toggleSelectAll={this.toggleSelectAll}
             allSelected={this.state.allSelected}
           />
         </div>
-        <ReprocessingDialog
+        <ProcessingTasksReprocessingDialog
           tasks={selection}
           isOpen={this.state.reprocessingIsOpen}
           toggleDialog={this.toggleReprocessingDialog}
@@ -113,16 +109,4 @@ export class ReportManager extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  let { query } = ownProps;
-  if (!query.hasSort()) {
-    query = query.sortBy('start_at', 'desc');
-  }
-  return { query };
-};
-
-export default compose(
-  withRouter,
-  connect(mapStateToProps, { queryReports }),
-  injectIntl,
-)(ReportManager);
+export default compose(injectIntl)(ProcessingTaskReportManager);

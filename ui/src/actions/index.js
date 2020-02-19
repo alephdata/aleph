@@ -11,7 +11,7 @@ export { queryNotifications } from './notificationActions';
 export {
   fetchDocumentContent,
   ingestDocument,
-  fetchDocumentReport,
+  fetchDocumentProcessingReport,
 } from './documentActions';
 export {
   createCollection,
@@ -21,7 +21,7 @@ export {
   fetchCollection,
   fetchCollectionStatistics,
   fetchCollectionStatus,
-  fetchCollectionReport,
+  fetchCollectionProcessingReport,
   fetchCollectionPermissions,
   fetchCollectionMappings,
   fetchCollectionXrefIndex,
@@ -58,9 +58,9 @@ export {
 } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';
 export {
-  queryReports,
-  triggerReprocessing,
-  deleteJobReport,
+  queryProcessingTaskReports,
+  triggerTaskReprocess,
+  deleteProcessingJobReport,
 } from './reportActions';
 
 export { createAction };

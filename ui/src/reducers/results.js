@@ -9,7 +9,7 @@ import {
   queryDiagrams,
   queryEntities,
   queryNotifications,
-  queryReports,
+  queryProcessingTaskReports,
 } from 'src/actions';
 
 const initialState = {};
@@ -45,11 +45,11 @@ export default createReducer({
 
   [queryDiagrams.COMPLETE]: updateResults,
 
-  [queryReports.START]: (state, { query }) => resultLoadStart(state, query),
+  [queryProcessingTaskReports.START]: (state, { query }) => resultLoadStart(state, query),
 
-  [queryReports.ERROR]: (state, {
+  [queryProcessingTaskReports.ERROR]: (state, {
     error, args: { query },
   }) => resultLoadError(state, query, error),
 
-  [queryReports.COMPLETE]: updateResults,
+  [queryProcessingTaskReports.COMPLETE]: updateResults,
 }, initialState);

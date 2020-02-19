@@ -3,8 +3,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import { fetchDocumentReport } from 'src/actions';
-import { selectDocumentReport } from 'src/selectors';
+// import { fetchDocumentProcessingReport } from 'src/actions';
+// import { selectDocumentProcessingReport } from 'src/selectors';
 import DefaultViewer from 'src/viewers/DefaultViewer';
 import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import TableViewer from 'src/viewers/TableViewer';
@@ -18,7 +18,7 @@ import './DocumentViewMode.scss';
 
 const PdfViewer = lazy(() => import(/* webpackChunkName: 'base' */ 'src/viewers/PdfViewer'));
 
-
+/*eslint-disable*/
 export class DocumentViewMode extends React.Component {
   componentDidMount() {
     this.fetchReportIfNeeded();
@@ -29,18 +29,18 @@ export class DocumentViewMode extends React.Component {
   }
 
   fetchReportIfNeeded() {
-    const { document, report } = this.props;
-    if (report.shouldLoad) {
-      this.props.fetchDocumentReport(document);
-    }
+    const { document, processingReport } = this.props;
+    // if (processingReport.shouldLoad) {
+    //   this.props.fetchDocumentProcessingReport(document);
+    // }
   }
 
   renderContent() {
-    const { document, queryText, activeMode, report } = this.props;
+    const { document, queryText, activeMode, processingReport } = this.props;
 
-    if (report.loadedAt && report.has_error) {
-      return <DefaultViewer document={document} queryText={queryText} />;
-    }
+    // if (processingReport.loadedAt && processingReport.has_error) {
+    //   return <DefaultViewer document={document} queryText={queryText} />;
+    // }
 
     if (document.schema.isA('Email')) {
       if (activeMode === 'browse') {
@@ -141,13 +141,14 @@ const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('entities', location, {}, '');
   return {
     queryText: query.getString('q'),
-    report: selectDocumentReport(state, document.id),
+    // processingReport: selectDocumentProcessingReport(state, document.id),
   };
 };
 
-const mapDispatchToProps = { fetchDocumentReport };
+// const mapDispatchToProps = { fetchDocumentProcessingReport };
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
+  // connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, {})
 )(DocumentViewMode);

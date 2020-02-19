@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, Intent } from '@blueprintjs/core';
+import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { Alert, Intent } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { deleteJobReport } from 'src/actions';
+import { deleteProcessingJobReport } from 'src/actions';
 
 const messages = defineMessages({
   button_confirm: {
@@ -21,15 +22,18 @@ const messages = defineMessages({
   },
 });
 
-export class JobReportDeleteDialog extends Component {
+export class ProcessingJobReportDeleteDialog extends Component {
   constructor(props) {
     super(props);
     this.onDelete = this.onDelete.bind(this);
   }
 
   async onDelete() {
-    const { jobId } = this.props;
-    this.props.deleteJobReport(jobId);
+    const { jobId, history, location } = this.props;
+    this.props.deleteProcessingJobReport(jobId);
+    history.push({
+      pathname: `${location.pathname}#mode=processing`,
+    });
   }
 
   render() {
@@ -54,6 +58,8 @@ export class JobReportDeleteDialog extends Component {
   }
 }
 
-export default compose(connect(null, { deleteJobReport }), injectIntl)(
-  JobReportDeleteDialog,
-);
+export default compose(
+  withRouter,
+  connect(null, { deleteProcessingJobReport }),
+  injectIntl,
+)(ProcessingJobReportDeleteDialog);

@@ -54,7 +54,7 @@ export function queryEntitySimilar(location, entityId) {
   return Query.fromLocation(path, location, context, 'similar');
 }
 
-export function queryDocumentReports(location, foreignId) {
+export function processingTaskReportsQuery(location, foreignId) {
   const context = {
     'filter:dataset': foreignId,
     facet: ['job', 'stage', 'status'],

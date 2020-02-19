@@ -1,6 +1,6 @@
 @import "src/app/variables.scss";
 
-.ReportTable {
+.ProcessingTaskReportTable {
   border-color: $aleph-border-color;
   .schema {
     max-width: 8em;
@@ -28,7 +28,7 @@
   }
 }
 
-.ReportTableRow {
+.ProcessingTaskReportTableRow {
   &.active {
     em {
       background: inherit;
