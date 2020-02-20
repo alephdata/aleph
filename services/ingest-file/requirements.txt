@@ -1,11 +1,7 @@
 banal==0.4.2
 normality==2.0.0
 pantomime==0.4.0
-<<<<<<< HEAD
 servicelayer[google,amazon]==1.9.13
-=======
-# servicelayer[google,amazon]==1.9.12
->>>>>>> Rewrite task reporting logic
 balkhash[leveldb,sql]==1.2.1
 followthemoney==1.26.0
 languagecodes==1.0.5
@@ -25,7 +21,6 @@ fasttext==0.9.1
 # Development
 nose==1.3.7
 click==7.0
-ipdb
 
 # File format support
 dbf==0.98.3
