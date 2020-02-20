@@ -1,6 +1,10 @@
 @import "src/app/variables.scss";
 
 .DocumentUploadDialog {
+  &.bp3-dialog {
+    padding-bottom: 0;
+  }
+
   &__divider {
     text-align: center;
     padding: $aleph-grid-size 0;

@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import {
-  Button, Dialog, Intent, ProgressBar,
+  Classes, Dialog,
 } from '@blueprintjs/core';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { ingestDocument as ingestDocumentAction } from 'src/actions';
 import { showErrorToast } from 'src/app/toast';
-import wordList from 'src/util/wordList';
+import convertPathsToTree from 'src/util/convertPathsToTree';
+import DocumentUploadForm from './DocumentUploadForm';
+import DocumentUploadStatus from './DocumentUploadStatus';
+import DocumentUploadView from './DocumentUploadView';
+
 
 import './DocumentUploadDialog.scss';
 
@@ -18,18 +22,6 @@ const messages = defineMessages({
     id: 'document.upload.title',
     defaultMessage: 'Upload documents',
   },
-  save: {
-    id: 'document.upload.save',
-    defaultMessage: 'Upload',
-  },
-  choose_file: {
-    id: 'document.upload.choose_file',
-    defaultMessage: 'Choose files to upload...',
-  },
-  choose_folder: {
-    id: 'document.upload.choose_folder',
-    defaultMessage: 'Choose folders to upload...',
-  },
   success: {
     id: 'document.upload.success',
     defaultMessage: 'Documents are being processed...',
@@ -37,10 +29,6 @@ const messages = defineMessages({
   error: {
     id: 'document.upload.error',
     defaultMessage: 'There was an error while uploading the file.',
-  },
-  input_or: {
-    id: 'document.upload.input_or',
-    defaultMessage: 'or',
   },
 });
 
@@ -52,7 +40,7 @@ export class DocumentUploadDialog extends Component {
     this.state = {
       files: props.filesToUpload || [],
       percentCompleted: 0,
-      uploadingFile: null,
+      uploading: null,
     };
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -60,32 +48,26 @@ export class DocumentUploadDialog extends Component {
     this.onUploadProgress = this.onUploadProgress.bind(this);
   }
 
-  onFilesChange(event) {
-    this.setState({ files: Array.from(event.target.files) });
+  onFilesChange(files) {
+    this.setState({ files });
   }
 
-  async onFormSubmit(event) {
-    event.preventDefault();
+  async onFormSubmit(files) {
     const {
-      intl, collection, parent, ingestDocument, toggleDialog,
+      intl, parent, toggleDialog,
     } = this.props;
-    const { files } = this.state;
+
+    console.log('parent is', parent);
+
+    const fileTree = convertPathsToTree(files);
+
     try {
-      const ingestPromises = [];
-      files.forEach((file) => {
-        this.setState({ percentCompleted: 0, uploadingFile: file });
-        const metadata = {
-          file_name: file.name,
-          mime_type: file.type,
-        };
-        if (parent && parent.id) {
-          metadata.parent_id = parent.id;
-        }
-        ingestPromises.push(ingestDocument(collection.id, metadata, file, this.onUploadProgress));
-      });
-      await Promise.all(ingestPromises);
+      const filePromises = this.traverseFileTree(fileTree, parent, []);
+      console.log('file promises are', filePromises);
+      await Promise.all(filePromises);
       toggleDialog();
     } catch (e) {
+      console.log('error!', e);
       showErrorToast(intl.formatMessage(messages.error));
     }
   }
@@ -95,45 +77,76 @@ export class DocumentUploadDialog extends Component {
     this.setState({ percentCompleted });
   }
 
-  renderInput({ isDirectoryUpload }) {
-    const { intl } = this.props;
-    const { files } = this.state;
-    const fileNames = files.map(file => file.name);
+  traverseFileTree(tree, parent, filePromises) {
+    console.log('traversing', tree, parent);
+    return Object.entries(tree).map(([key, value]) => {
+      if (value instanceof File) {
+        return this.uploadFile(value, parent, filePromises);
+      }
 
-    const placeholder = isDirectoryUpload
-      ? intl.formatMessage(messages.choose_folder)
-      : intl.formatMessage(messages.choose_file);
+      return this.uploadFolder(key, parent).then(({ id }) => (
+        this.traverseFileTree(value, { id, foreign_id: key }, filePromises)
+      ));
+    });
+  }
 
-    const id = isDirectoryUpload
-      ? "document-upload-input"
-      : "folder-upload-input";
+  uploadFile(file, parent, filePromises) {
+    const { collection, ingestDocument } = this.props;
+    console.log('uploading file', file, parent);
+    this.setState({ percentCompleted: 0, uploading: file.name });
 
-    return (
-      <div className="bp3-input-group bp3-large bp3-fill">
-        <label
-          className="bp3-file-input bp3-large bp3-fill"
-          htmlFor={id}
-        >
-          <input
-            id={id}
-            type="file"
-            multiple
-            webkitdirectory={isDirectoryUpload ? "" : false}
-            directory={isDirectoryUpload ? "" : false}
-            onChange={this.onFilesChange}
-          />
-          <span className="bp3-file-upload-input">
-            {wordList(fileNames, ', ')}
-            { fileNames.length === 0 && placeholder}
-          </span>
-        </label>
-      </div>
-    );
+    const metadata = {
+      file_name: file.name,
+      mime_type: file.type,
+    };
+    if (parent?.id) {
+      metadata.parent_id = parent.id;
+    }
+    const promise = ingestDocument(collection.id, metadata, file, this.onUploadProgress);
+
+    return [...filePromises, ...[promise]];
+  }
+
+  uploadFolder(title, parent) {
+    const { collection, ingestDocument } = this.props;
+    console.log('uploading folder', title, parent);
+    this.setState({ percentCompleted: 0, uploading: title });
+
+    const metadata = {
+      file_name: title,
+      foreign_id: title,
+    };
+    if (parent?.id) {
+      metadata.foreign_id = `${parent.id}/${title}`;
+      metadata.parent_id = parent.id;
+    }
+
+    return ingestDocument(collection.id, metadata, null, this.onUploadProgress);
+  }
+
+
+  renderContent() {
+    const { files, percentCompleted, uploading } = this.state;
+
+    if (uploading) {
+      return (
+        <DocumentUploadStatus
+          percentCompleted={percentCompleted}
+          uploading={uploading}
+        />
+      );
+    }
+    if (files && files.length) {
+      return <DocumentUploadView files={files} onSubmit={this.onFormSubmit} />;
+    }
+
+    return <DocumentUploadForm onFilesChange={this.onFilesChange} />;
   }
 
   render() {
     const { intl, toggleDialog, isOpen } = this.props;
-    const { percentCompleted, uploadingFile } = this.state;
+
+    console.log('parent!', this.props.parent);
 
     return (
       <Dialog
@@ -143,50 +156,9 @@ export class DocumentUploadDialog extends Component {
         title={intl.formatMessage(messages.title)}
         onClose={toggleDialog}
       >
-
-        { uploadingFile && (
-          <div className="bp3-dialog-body">
-            <p>
-              <FormattedMessage
-                id="document.upload.progress"
-                defaultMessage="Uploading: {file}..."
-                values={{ file: uploadingFile.name }}
-              />
-            </p>
-            <ProgressBar
-              value={percentCompleted}
-              animate={false}
-              stripes={false}
-              className="bp3-intent-success document-upload-progress-bar"
-            />
-            <p className="text-muted">
-              <FormattedMessage
-                id="document.upload.notice"
-                defaultMessage="Once the upload is complete, it will take a few moments for the document to be processed and become searchable."
-              />
-            </p>
-          </div>
-        )}
-        { !uploadingFile && (
-          <form onSubmit={this.onFormSubmit}>
-            <div className="bp3-dialog-body">
-              <div className="bp3-form-group">
-                {this.renderInput({ isDirectoryUpload: false })}
-                <span className="DocumentUploadDialog__divider">-- {intl.formatMessage(messages.input_or)} --</span>
-                {this.renderInput({ isDirectoryUpload: true })}
-              </div>
-            </div>
-            <div className="bp3-dialog-footer">
-              <div className="bp3-dialog-footer-actions">
-                <Button
-                  type="submit"
-                  intent={Intent.PRIMARY}
-                  text={intl.formatMessage(messages.save)}
-                />
-              </div>
-            </div>
-          </form>
-        )}
+        <div className={Classes.DIALOG_BODY}>
+          {this.renderContent()}
+        </div>
       </Dialog>
     );
   }
