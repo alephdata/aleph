@@ -14,15 +14,23 @@ log = logging.getLogger(__name__)
 
 
 def clean_report_payload(payload):
-    # sign entity ids
+    # sign entity ids, get name as extra field
     entity = payload['entity']
-    if not isinstance(entity, dict):
+    if isinstance(entity, dict):
+        entity_name = entity.get('properties', {}).get('fileName')
+        if entity_name is None:
+            entity_name = entity.get('schema', {}).get('label')
+            if entity_name is None:
+                entity_name = entity['id']
+    else:
+        entity_name = entity.caption
         entity = entity.to_dict()
     ns = payload.pop('ns', None)
     if ns is None:
         ns = Namespace(payload['dataset'])
     entity['id'] = ns.sign(entity['id'])
     payload['entity'] = entity
+    payload['entity_name'] = entity_name
     return payload
 
 

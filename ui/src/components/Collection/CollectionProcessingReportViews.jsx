@@ -8,7 +8,7 @@ import queryString from 'query-string';
 
 import { queryProcessingTaskReports } from 'src/actions';
 import { processingTaskReportsQuery } from 'src/queries';
-import { selectModel, selectProcessingTaskReportsResult } from 'src/selectors';
+import { selectProcessingTaskReportsResult } from 'src/selectors';
 
 import SearchFacets from 'src/components/Facet/SearchFacets';
 import ProcessingJobReportMode from 'src/components/ProcessingJobReport/ProcessingJobReportMode';
@@ -134,7 +134,6 @@ const mapStateToProps = (state, ownProps) => {
   const result = selectProcessingTaskReportsResult(state, query);
 
   return {
-    model: selectModel(state),
     activeType: hashQuery.type,
     query,
     result,

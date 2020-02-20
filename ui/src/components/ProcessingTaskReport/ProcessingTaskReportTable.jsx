@@ -15,25 +15,17 @@ const messages = defineMessages({
     id: 'report.column.status',
     defaultMessage: 'Status',
   },
-  column_document_name: {
-    id: 'report.column.document_name',
+  column_entity_name: {
+    id: 'report.column.entity_name',
     defaultMessage: 'Document',
   },
   column_stage: {
     id: 'report.column.stage',
     defaultMessage: 'Stage',
   },
-  column_start_at: {
-    id: 'report.column.start_at',
-    defaultMessage: 'Started at',
-  },
-  column_end_at: {
-    id: 'report.column.end_at',
-    defaultMessage: 'End at',
-  },
-  column_error_at: {
-    id: 'report.column.error_at',
-    defaultMessage: 'Error at',
+  column_updated_at: {
+    id: 'report.column.updated_at',
+    defaultMessage: 'Last activity',
   },
 });
 
@@ -54,7 +46,7 @@ class ProcessingTaskReportTable extends Component {
   }
 
   render() {
-    const { query, intl, result } = this.props;
+    const { query, intl, result, model } = this.props;
     const { updateSelection, selection, allSelected, toggleSelectAll } = this.props;
 
     if (result.isError) {
@@ -96,16 +88,15 @@ class ProcessingTaskReportTable extends Component {
               </th>
             )}
             <TH className="header-status" field="status" sortable />
-            <TH className="header-document" field="document_name" sortable />
+            <TH className="header-document" field="entity_name" sortable />
             <TH className="header-stage" field="stage" sortable />
-            <TH className="header-dates" field="start_at" sortable />
-            <TH className="header-dates" field="end_at" sortable />
-            <TH className="header-dates" field="error_at" sortable />
+            <TH className="header-dates" field="updated_at" sortable />
           </tr>
         </thead>
         <tbody className={c({ updating: result.isLoading })}>
           {results.map(report => (
             <ProcessingTaskReportTableRow
+              model={model}
               key={report.id}
               report={report}
               updateSelection={updateSelection}

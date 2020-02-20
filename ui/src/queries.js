@@ -64,6 +64,7 @@ export function processingTaskReportsQuery(location, foreignId) {
     'facet_size:job': 10,
     'facet_size:stage': 10,
     'facet_size:status': 3,
+    // 'sort': 'updated_at:desc',
   };
   return Query.fromLocation('reports', location, context, 'report');
 }

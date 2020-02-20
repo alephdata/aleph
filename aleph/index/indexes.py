@@ -174,7 +174,7 @@ def configure_reports():
             "error_name": {"type": "text"},
             "error_msg": {"type": "text"},
             "entity.id": KEYWORD,
-            "entity.caption": KEYWORD,
+            "entity_name": KEYWORD,
             "original_dump": NOT_ANALYZED
         }
     }

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Checkbox } from '@blueprintjs/core';
 import c from 'classnames';
 
-import { Date } from 'src/components/common';
+import { Date, Entity } from 'src/components/common';
 
 class Stage extends React.PureComponent {
   render() {
@@ -21,18 +21,22 @@ class Status extends React.PureComponent {
 
 class ProcessingTaskReportTableRow extends Component {
   render() {
-    const { report } = this.props;
+    const { report, model } = this.props;
     const {
       stage,
       status,
       // job,
       has_error: hasError,
-      end_at: endAt,
-      start_at: startAt,
-      error_at: errorAt,
-      document_name: documentName,
+      updated_at: updatedAt,
+      entity,
     } = report;
 
+    let entityDisplay;
+    try {
+      entityDisplay = <Entity.Link entity={model.getEntity(entity)} icon />;
+    } catch {
+      entityDisplay = entity.id;
+    }
     const { updateSelection, selection } = this.props;
     const selectedIds = _.map(selection || [], 'id');
     const isSelected = selectedIds.indexOf(report.id) > -1;
@@ -51,18 +55,12 @@ class ProcessingTaskReportTableRow extends Component {
           <td className="status">
             <Status status={status} />
           </td>
-          <td className="document">{documentName}</td>
+          <td className="entity">{entityDisplay}</td>
           <td className="stage">
             <Stage stage={stage} />
           </td>
           <td className="date">
-            <Date value={startAt} showTime />
-          </td>
-          <td className="date">
-            <Date value={endAt} showTime />
-          </td>
-          <td className="date">
-            <Date value={errorAt} showTime />
+            <Date value={updatedAt} showTime />
           </td>
         </tr>
       </>

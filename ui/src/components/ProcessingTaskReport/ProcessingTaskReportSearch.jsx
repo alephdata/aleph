@@ -8,7 +8,7 @@ import { Callout } from '@blueprintjs/core';
 import c from 'classnames';
 
 import { queryProcessingTaskReports } from 'src/actions';
-import { selectProcessingTaskReportsResult } from 'src/selectors';
+import { selectModel, selectProcessingTaskReportsResult } from 'src/selectors';
 import ProcessingTaskReportTable from 'src/components/ProcessingTaskReport/ProcessingTaskReportTable';
 import { SectionLoading, ErrorSection } from 'src/components/common';
 
@@ -59,6 +59,7 @@ export class ProcessingTaskReportSearch extends Component {
     const {
       query,
       result,
+      model,
       intl,
       className,
       updateSelection,
@@ -87,6 +88,7 @@ export class ProcessingTaskReportSearch extends Component {
         <ProcessingTaskReportTable
           query={query}
           result={result}
+          model={model}
           updateQuery={this.updateQuery}
           updateSelection={updateSelection}
           toggleSelectAll={toggleSelectAll}
@@ -107,7 +109,8 @@ export class ProcessingTaskReportSearch extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
   const result = selectProcessingTaskReportsResult(state, query);
-  return { query, result };
+  const model = selectModel(state);
+  return { query, result, model };
 };
 export default compose(
   withRouter,
