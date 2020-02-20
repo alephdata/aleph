@@ -1,0 +1,10 @@
+@import "src/app/variables.scss";
+
+.DocumentUploadForm {
+  margin: $aleph-grid-size 0;
+  
+  &__divider {
+    text-align: center;
+    padding: $aleph-grid-size 0;
+  }
+}

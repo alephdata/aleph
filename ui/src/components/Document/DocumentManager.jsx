@@ -146,15 +146,6 @@ export class DocumentManager extends Component {
         )}
         { canUpload && (
           <Dropzone
-            getDataTransferItems={evt => {
-              console.log('evt is', evt);
-              return getDroppedOrSelectedFiles(evt).then(list => {
-                console.log('in getdropped', list)
-                return (
-                  list.map(({ fileObject, ...rest }) => fileObject)
-                )
-              })
-            }}
             onDrop={acceptedFiles => (
               acceptedFiles && acceptedFiles.length ? this.toggleUpload(acceptedFiles) : null
             )}
