@@ -2,8 +2,10 @@ import logging
 from followthemoney import model
 from servicelayer.worker import Worker
 
-from ingestors.manager import Manager
 from ingestors.analysis import Analyzer
+from ingestors.manager import Manager
+from ingestors.report import clean_report_payload
+
 
 log = logging.getLogger(__name__)
 OP_INGEST = 'ingest'
@@ -11,8 +13,6 @@ OP_ANALYZE = 'analyze'
 
 
 class IngestWorker(Worker):
-    task_reporting_enabled = True
-
     """A long running task runner that uses Redis as a task queue"""
 
     def dispatch_next(self, task, entity_ids):
@@ -27,10 +27,15 @@ class IngestWorker(Worker):
         context['pipeline'] = pipeline
         log.info('Sending %s entities to: %s', len(entity_ids), next_stage)
         stage.queue({'entity_ids': entity_ids}, task.context)
+        if self.should_report(task):
+            reporter = self.get_task_reporter(task)
+            for entity_id in entity_ids:
+                reporter.end(entity={'id': entity_id})  # mark current as end
+                reporter.start(stage=next_stage, entity={'id': entity_id})  # start next task reporting
 
     def _ingest(self, task):
-        report = task.report if self.should_report(task) else False
-        manager = Manager(task.stage, task.context, report=report)
+        reporter = self.get_task_reporter(task) if self.should_report(task) else False
+        manager = Manager(task.stage, task.context, reporter=reporter)
         entity = model.get_proxy(task.payload)
         log.debug('Ingest: %r', entity)
         try:
@@ -63,3 +68,8 @@ class IngestWorker(Worker):
             self.dispatch_next(task, entity_ids)
         else:
             log.error('Unknown task: %r', task)
+
+    def get_task_reporter(self, task):
+        reporter = super().get_task_reporter(task)
+        reporter.clean_payload = clean_report_payload
+        return reporter

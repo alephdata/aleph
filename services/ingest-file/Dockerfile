@@ -69,8 +69,9 @@ RUN apt-get -qq -y update \
         tesseract-ocr-aze \
         tesseract-ocr-bel \
     && apt-get -qq -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && apt-get clean
+    # && apt-get clean \
+    # && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Enable non-free archive for `unrar`.
 # RUN echo "deb http://http.us.debian.org/debian stretch non-free" >/etc/apt/sources.list.d/nonfree.list
@@ -94,8 +95,9 @@ RUN apt-get -qq -y update \
         # pdf processing toolkit
         poppler-utils poppler-data pst-utils \
     && apt-get -qq -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && apt-get clean
+    # && apt-get clean \
+    # && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set up the locale and make sure the system uses unicode for the file system.
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
@@ -110,9 +112,19 @@ ENV LANG='en_US.UTF-8' \
 RUN groupadd -g 1000 -r app \
     && useradd -m -u 1000 -s /bin/false -g app app
 
-RUN pip3 install --no-cache-dir -q -U pip setuptools six wheel nose coverage
+# RUN pip3 install --no-cache-dir -q -U pip setuptools six wheel nose coverage
+RUN pip3 install -q -U pip setuptools six wheel nose coverage
+
 COPY requirements.txt /tmp/
-RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+# RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt
+
+# local servicelayer
+# RUN pip3 install --no-cache-dir -e /servicelayer
+COPY ./servicelayer/ /servicelayer/
+WORKDIR /servicelayer
+RUN pip3 install -e /servicelayer
+WORKDIR .
 
 # Install spaCy and link models to three-letter language codes
 RUN python3 -m spacy download xx_ent_wiki_sm \
@@ -131,7 +143,8 @@ ENV INGESTORS_NER_MODELS=eng:deu:fra:spa:por
 
 COPY . /ingestors
 WORKDIR /ingestors
-RUN pip3 install --no-cache-dir -e /ingestors
+# RUN pip3 install --no-cache-dir -e /ingestors
+RUN pip3 install -e /ingestors
 RUN chown -R app:app /ingestors
 
 ENV ARCHIVE_TYPE=file \

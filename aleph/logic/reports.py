@@ -1,7 +1,9 @@
 import logging
 
+from followthemoney.namespace import Namespace
+
 from servicelayer.jobs import Job, Task
-from servicelayer.util import dump_json
+from servicelayer.task_reporting import TaskReporter
 
 from aleph.core import kv
 from aleph.index.reports import index_bulk
@@ -9,6 +11,23 @@ from aleph.queues import get_active_collections, queue_task, OP_REPORT
 
 
 log = logging.getLogger(__name__)
+
+
+def clean_report_payload(payload):
+    # sign entity ids
+    entity = payload['entity']
+    if not isinstance(entity, dict):
+        entity = entity.to_dict()
+    ns = payload.pop('ns', None)
+    if ns is None:
+        ns = Namespace(payload['dataset'])
+    entity['id'] = ns.sign(entity['id'])
+    payload['entity'] = entity
+    return payload
+
+
+def get_reporter(**defaults):
+    return TaskReporter(conn=kv, clean_payload=clean_report_payload, **defaults)
 
 
 def index_reports(stage, batch=1000, sync=False):
@@ -25,18 +44,6 @@ def collect_report_tasks(batch=1000, sync=False):
         for job in collection.get_jobs():
             stage = job.get_stage(OP_REPORT)
             index_reports(stage, batch, sync)
-
-
-def create_report_task(stage, dataset, job, lifecycle='start', extra_data={}, exception=None):
-    """queue an index report task about something that is not a `servicelayer.jobs.Task` """
-    data = {
-        'stage': stage,
-        'dataset': dataset,
-        'job': job,
-        'context': {'report_extra_data': extra_data}
-    }
-    task = Task.unpack(kv, dump_json(data))
-    task.report(lifecycle, exception)
 
 
 def queue_task_from_report(report, job_id=None):

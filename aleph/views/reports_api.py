@@ -138,7 +138,7 @@ def reprocess():
       - Report
     """
     task_reports = request.json['tasks']
-    job_id = datetime.utcnow().timestamp()
+    job_id = 'reprocess-%s' % datetime.utcnow().timestamp()
     for report in task_reports:
         queue_task_from_report(report, job_id=job_id)
     return ('', 204)

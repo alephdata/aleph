@@ -166,14 +166,15 @@ def configure_reports():
             "start_at": {"type": "date"},
             "end_at": {"type": "date"},
             "error_at": {"type": "date"},
+            "updated_at": {"type": "date"},
             "stage": KEYWORD,
             "status": KEYWORD,
             "dataset": KEYWORD,
             "has_error": {"type": "boolean"},
             "error_name": {"type": "text"},
             "error_msg": {"type": "text"},
-            "document": NUMERIC,
-            "document_name": {"type": "text"},
+            "entity.id": KEYWORD,
+            "entity.caption": KEYWORD,
             "original_dump": NOT_ANALYZED
         }
     }

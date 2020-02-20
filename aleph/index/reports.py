@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 
 def get_report_id(payload):
-    return make_key(payload['stage'], payload['dataset'], payload['job'], payload['document'])
+    return make_key(payload['stage'], payload['dataset'], payload['job'], payload['entity']['id'])
 
 
 def serialize_task_report(task):
@@ -44,11 +44,10 @@ def delete_collection_report(foreign_id, sync=False):
 
 
 def get_document_processing_report(document):
-    document_id, job_id = document['id'], document['job_id']
+    entity_id, job_id = document['id'], document['job_id']
     index = reports_index()
-    document_id = document_id.split('.')[0]  # FIXME
     query = {'query': {'bool': {'filter': [
-        field_filter_query('document', document_id),
+        field_filter_query('entity.id', entity_id),
         field_filter_query('job', job_id),
     ]}}}
     res = es.search(index=index, body=query)
@@ -60,7 +59,8 @@ def get_collection_processing_report(foreign_id):
     query = {'query': {'term': {'dataset': foreign_id}}, 'size': 0}
     time_range_agg = {
         'start_at': {'min': {'field': 'start_at'}},
-        'end_at': {'max': {'field': 'end_at'}}
+        'end_at': {'max': {'field': 'end_at'}},
+        'updated_at': {'max': {'field': 'updated_at'}}
     }
     status_agg = {**{'status': {'terms': {'field': 'status'}}}, **time_range_agg}
     query['aggs'] = {
@@ -70,8 +70,8 @@ def get_collection_processing_report(foreign_id):
                 'errors': {
                     'terms': {'field': 'has_error'},
                     'aggs': {
-                        'documents': {
-                            'terms': {'field': 'document', 'size': 1000}
+                        'entities': {
+                            'terms': {'field': 'entity', 'size': 1000}
                         }
                     }
                 },

@@ -10,6 +10,7 @@ from followthemoney.helpers import entity_filename
 from aleph.core import url_for
 from aleph.model import Role, Collection, Document, Entity, Events
 from aleph.model import Alert, Diagram
+from aleph.index.entities import get_entity
 from aleph.logic import resolver
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
@@ -430,7 +431,7 @@ class _BucketSerializer(Serializer):
                 'count': count
             }
             for k, v in bucket.items():
-                if k in ('start_at', 'end_at', 'error_at'):
+                if k in ('start_at', 'end_at', 'error_at', 'updated_at'):
                     _data[k] = v.get('value_as_string')
                 if k == 'status':
                     _data['status'] = _BucketSerializer().serialize(v['buckets'])
@@ -447,6 +448,7 @@ class JobReportSerializer(Serializer):
             'job_id': obj['key'],
             'start_at': obj['start_at'].get('value_as_string', ''),
             'end_at': obj['end_at'].get('value_as_string', ''),
+            'updated_at': obj['updated_at'].get('value_as_string', ''),
             'stages': bucket(obj['stages']['buckets']),
             'errors': bucket(obj['errors']['buckets']),
         }
@@ -465,7 +467,10 @@ class CollectionProcessingReportSerializer(Serializer):
 
 
 class ProcessingReportSerializer(Serializer):
-    pass
+    def _serialize(self, obj):
+        entity_id = obj['entity']['id']
+        obj['entity'] = get_entity(entity_id) or obj['entity']
+        return obj
 
 
 class DocumentProcessingReportSerializer(Serializer):

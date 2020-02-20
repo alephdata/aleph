@@ -10,6 +10,7 @@ from aleph.model import Permission, Events
 from aleph.index import collections as index
 from aleph.index.reports import delete_collection_report
 from aleph.logic.notifications import publish, flush_notifications
+from aleph.logic.reports import get_reporter
 from aleph.logic.aggregator import get_aggregator, drop_aggregator
 
 log = logging.getLogger(__name__)
@@ -68,11 +69,19 @@ def process_collection(stage, collection, ingest=True, sync=False):
             yield document.to_proxy()
 
     aggregator = get_aggregator(collection)
+
+    reporter = get_reporter(
+        job=stage.job.id,
+        stage=stage.stage,
+        dataset=collection.foreign_id,
+        ns=collection.ns
+    )
+
     for proxy in _proxies(collection):
         if ingest and proxy.schema.is_a(Document.SCHEMA):
             ingest_entity(collection, proxy,
                           job_id=stage.job.id,
-                          sync=sync)
+                          sync=sync, reporter=reporter)
         else:
             aggregator.put(proxy, fragment='db')
             queue_task(collection, OP_INDEX,
@@ -82,14 +91,15 @@ def process_collection(stage, collection, ingest=True, sync=False):
     aggregator.close()
 
 
-def reset_collection(collection, sync=False):
+def reset_collection(collection, sync=False, delete_reports=True):
     """Reset the collection by deleting any derived data."""
     drop_aggregator(collection)
     Match.delete_by_collection(collection.id)
     cancel_queue(collection)
     index.delete_entities(collection.id, sync=sync)
     refresh_collection(collection.id, sync=sync)
-    delete_collection_report(collection.foreign_id, sync=sync)
+    if delete_reports:
+        delete_collection_report(collection.foreign_id, sync=sync)
     db.session.commit()
 
 

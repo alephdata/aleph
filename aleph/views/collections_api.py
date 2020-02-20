@@ -1,4 +1,5 @@
 from banal import ensure_list
+from datetime import datetime
 from flask import Blueprint, request
 
 from aleph.core import db, settings
@@ -261,7 +262,8 @@ def process(collection_id):
     collection = get_db_collection(collection_id, request.authz.WRITE)
     # re-process the documents
     data = {'reset': get_flag('reset', True)}
-    queue_task(collection, OP_PROCESS, payload=data)
+    job_id = 'reprocess-%s' % datetime.utcnow().timestamp()
+    queue_task(collection, OP_PROCESS, job_id=job_id, payload=data)
     collection.touch()
     db.session.commit()
     refresh_collection(collection_id)

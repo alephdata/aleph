@@ -18,8 +18,15 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
     OP_CONVERT = 'convert'
 
     def document_to_pdf(self, file_path, entity):
-        if self.manager.report:
-            self.manager.report('start', stage=self.OP_CONVERT)
+        reporter = self.manager.reporter
+        if reporter:
+            report_data = {
+                'entity': entity,
+                'file_path': str(file_path),
+                'stage': self.OP_CONVERT
+            }
+            reporter.set(**report_data)
+            reporter.start()
 
         key = self.cache_key('pdf', entity.first('contentHash'))
         pdf_hash = self.get_cache_value(key)
@@ -29,20 +36,20 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
             if path is not None:
                 log.info("Using PDF cache: %s", file_name)
                 entity.set('pdfHash', pdf_hash)
-                if self.manager.report:
-                    self.manager.report('end', stage=self.OP_CONVERT, from_pdf_cache=True)
+                if reporter:
+                    reporter.end(from_pdf_cache=True)
                 return path
 
-        pdf_file = self._document_to_pdf(file_path, entity)
+        pdf_file = self._document_to_pdf(file_path, entity, reporter)
         if pdf_file is not None:
             content_hash = self.manager.store(pdf_file)
             entity.set('pdfHash', content_hash)
             self.set_cache_value(key, content_hash)
-            if self.manager.report:
-                self.manager.report('end', stage=self.OP_CONVERT)
+            if reporter:
+                reporter.end()
         return pdf_file
 
-    def _document_to_pdf(self, file_path, entity):
+    def _document_to_pdf(self, file_path, entity, reporter=None):
         """Converts an office document to PDF."""
         # Attempt to guess an appropriate time for processing
         # Guessed: 15s per MB of data, max.
@@ -57,6 +64,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         log.info('Converting [%s] to PDF (%ds timeout)...',
                  file_name, timeout)
         failed = ProcessingException("Document could not be converted to PDF.")
+
         for attempt in service_retries():
             try:
                 with open(file_path, 'rb') as fh:
@@ -75,12 +83,12 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
                         fh.write(chunk)
                     if bytes_written > 50:
                         return out_path
-                if self.manager.report:
-                    self.manager.report('error', stage=self.OP_CONVERT, exception=failed)
+                if reporter:
+                    reporter.error(exception=failed)
                 raise failed
             except RequestException as exc:
-                if self.manager.report:
-                    self.manager.report('error', stage=self.OP_CONVERT, exception=exc)
+                if reporter:
+                    reporter.error(exception=exc)
                 if isinstance(exc, HTTPError) and \
                         exc.response.status_code == 400:
                     raise ProcessingException(res.text)
