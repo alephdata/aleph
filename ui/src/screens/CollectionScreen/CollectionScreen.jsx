@@ -43,13 +43,13 @@ export class CollectionScreen extends Component {
       return <ErrorScreen error={collection.error} />;
     }
 
-    if (collection.id === undefined) {
-      return (
-        <CollectionContextLoader collectionId={collectionId}>
-          <LoadingScreen />
-        </CollectionContextLoader>
-      );
-    }
+    // if (collection.id === undefined) {
+    //   return (
+    //     <CollectionContextLoader collectionId={collectionId}>
+    //       <LoadingScreen />
+    //     </CollectionContextLoader>
+    //   );
+    // }
 
     const searchScope = {
       listItem: <Collection.Label collection={collection} icon truncate={30} />,

@@ -12,8 +12,6 @@ class CollectionBreadcrumb extends PureComponent {
 
     const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.label;
 
-    console.log(collection, isLoading);
-
     return (
       <>
         {showCategory && (
@@ -21,7 +19,6 @@ class CollectionBreadcrumb extends PureComponent {
             <Skeleton
               type="span"
               width="100px"
-              height="18px"
               isLoading={isLoading}
             >
               <Category.Link collection={collection} className="bp3-breadcrumb" icon />
@@ -32,7 +29,6 @@ class CollectionBreadcrumb extends PureComponent {
           <Skeleton
             type="span"
             width="100px"
-            height="18px"
             isLoading={isLoading}
           >
             <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active, 'bp3-skeleton': isLoading })} icon truncate={30} />

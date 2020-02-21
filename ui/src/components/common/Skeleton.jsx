@@ -5,23 +5,23 @@ import c from 'classnames';
 // import './Skeleton.scss';
 
 class Skeleton extends PureComponent {
-  renderTextSkeleton() {
-    const { width, height } = this.props;
-
-    return (
-      <span style={{ width, height }} className={Classes.SKELETON} />
-    );
-  }
   render() {
-    const { type, isLoading, children } = this.props;
+    const { type, width, isLoading, children } = this.props;
 
     if (!isLoading) {
       return children;
     }
 
     switch(type) {
+      case 'h1':
+        return <h1 style={{ width, height: '35px' }} className={Classes.SKELETON} />;
+
+      case 'p':
+        return <p style={{ width, height: '18px' }} className={Classes.SKELETON} />;
+
       case 'span':
-        return this.renderTextSkeleton();
+        return <span style={{ width, height: '18px' }} className={Classes.SKELETON} />;
+
     }
 
   }
