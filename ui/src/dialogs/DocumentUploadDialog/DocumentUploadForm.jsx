@@ -23,8 +23,9 @@ const messages = defineMessages({
 
 export class DocumentUploadForm extends PureComponent {
   onFilesChange(event) {
-    console.log('changing', event);
     const files = Array.from(event.target.files).filter(file => file.type !== "");
+    console.log('FILES', files);
+
     this.props.onFilesChange(files);
   }
 

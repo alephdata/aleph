@@ -1,13 +1,16 @@
 const convertPathsToTree = files => {
   const retVal = {};
 
+  console.log('in convert', files);
+
   files.forEach(file => {
-    const path = file.path || file.webkitRelativePath;
-    path.split('/')
-      // filter out empty string path segments (i.e. leading / )
-      .filter(segment => segment && segment !== '')
+    const path = file.path || file.webkitRelativePath || file.name;
+
+    // remove leading slash if present, then split into path segments and reduce to object
+    path
+      .replace(/^\/+/g, '')
+      .split('/')
       .reduce((r, e, i, sourceArray) => {
-        console.log(r, e);
         if (i === sourceArray.length - 1) {
           r[e] = file;
           return r[e];
