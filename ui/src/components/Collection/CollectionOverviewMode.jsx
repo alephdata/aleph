@@ -36,7 +36,13 @@ class CollectionOverviewMode extends React.Component {
   }
 
   renderStatisticsItem({ key, values, total }) {
-    const { collection } = this.props;
+    const { collection, statistics } = this.props;
+
+    console.log('rendering', key, values, total);
+
+    if (!statistics.isLoading && !total) {
+      return null;
+    }
 
     return (
       <div className="CollectionOverviewMode__item" key={key}>
@@ -53,12 +59,14 @@ class CollectionOverviewMode extends React.Component {
   render() {
     const { collection, statistics } = this.props;
 
-    if (statistics.isLoading || statistics.shouldLoad) {
-      return <SectionLoading />;
-    }
+    // const statsToRender =
 
-    const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
-      .filter(stat => stat && stat.total);
+    // if (statistics.isLoading || statistics.shouldLoad) {
+    //   return <SectionLoading />;
+    // }
+
+    // const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
+    //   .filter(stat => stat && stat.total);
 
     return (
       <div className="CollectionOverviewMode">
@@ -77,7 +85,7 @@ class CollectionOverviewMode extends React.Component {
             <CollectionStatus collection={collection} showCancel />
           </div>
         </div>
-        {statsToRender.map((stat) => this.renderStatisticsItem(stat))}
+        {statFields.map((key) => this.renderStatisticsItem({ key, ...statistics[key] }))}
         <div className="CollectionOverviewMode__item">
           <div className="CollectionOverviewMode__item__text-content">
             <CollectionReference collection={collection} />
