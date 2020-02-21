@@ -1,6 +1,6 @@
 @import 'src/app/variables.scss';
 
-.CollectionJobReport {
+.ProcessingJobReport {
   display: block;
   padding-bottom: $aleph-content-padding;
   border-bottom: 1px $aleph-border-color;
@@ -12,48 +12,6 @@
     &__date {
       display: block;
       color: $gray2;
-    }
-
-    &__control {
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-
-    &__status {
-      display: inline-block;
-      padding-right: $aleph-content-padding / 2;
-    }
-
-    &__actions {
-      display: inline-block;
-    }
-  }
-}
-
-.CollectionStageReport {
-  display: block;
-  padding: $aleph-content-padding / 2;
-  margin: $aleph-content-padding 0 $aleph-content-padding 0;
-  background-color: $light-gray4;
-
-  &--error {
-    background-color: lighten($aleph-error-highlight-color, 50%);
-  }
-
-  &__heading {
-    position: relative;
-    width: 100%;
-
-    &__error {
-      display: block;
-      color: $aleph-error-highlight-color;
-    }
-
-    &__date {
-      display: block;
-      color: $gray1;
     }
 
     &__control {

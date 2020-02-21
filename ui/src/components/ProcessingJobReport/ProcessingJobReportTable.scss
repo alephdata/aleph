@@ -1,0 +1,75 @@
+@import "src/app/variables.scss";
+
+.ProcessingJobReportTable {
+  border-color: $aleph-border-color;
+
+  .updating {
+    opacity: 0.4;
+  }
+
+  .bp3-control {
+    margin-bottom: 0 !important;
+  }
+
+  .bp3-control-indicator {
+    margin-left: 0px !important;
+  }
+
+  th.select {
+    label {
+      padding-left: 0;
+    }
+  }
+}
+
+.ProcessingJobReportTableRow {
+  &.active {
+    em {
+      background: inherit;
+    }
+  }
+
+  &.finished {
+    background-color: transparentize($pt-intent-success, .9);
+  }
+
+  &.error {
+    background-color: lighten($aleph-error-highlight-color, 50%);
+
+    td {
+      color: $aleph-error-highlight-color;
+    }
+  }
+
+  em {
+    background: $aleph-text-highlight-color;
+    font-style: normal;
+  }
+
+  td {
+    &.tag {
+      min-width: 40px;
+    }
+
+    .bp3-button {
+      padding: 0;
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      background-color: inherit;
+      background-image: none;
+      min-height: auto;
+
+      &:hover {
+        border: none;
+        box-shadow: none;
+        background-color: inherit;
+        background-image: none;
+      }
+
+      &-text {
+        text-decoration: underline;
+      }
+    }
+  }
+}
