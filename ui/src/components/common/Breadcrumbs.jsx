@@ -1,7 +1,7 @@
 import React, { PureComponent, Component } from 'react';
 import { Icon, Intent, Spinner, Tag } from '@blueprintjs/core';
 import c from 'classnames';
-import { Category, Collection, Entity } from 'src/components/common';
+import { Category, Collection, Entity, Skeleton } from 'src/components/common';
 
 import './Breadcrumbs.scss';
 
@@ -10,15 +10,33 @@ class CollectionBreadcrumb extends PureComponent {
   render() {
     const { collection, active, showCategory } = this.props;
 
+    const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.label;
+
+    console.log(collection, isLoading);
+
     return (
       <>
         {showCategory && (
           <li key={collection.category}>
-            <Category.Link collection={collection} className="bp3-breadcrumb" icon />
+            <Skeleton
+              type="span"
+              width="100px"
+              height="18px"
+              isLoading={isLoading}
+            >
+              <Category.Link collection={collection} className="bp3-breadcrumb" icon />
+            </Skeleton>
           </li>
         )}
         <li key={collection.id}>
-          <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
+          <Skeleton
+            type="span"
+            width="100px"
+            height="18px"
+            isLoading={isLoading}
+          >
+            <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active, 'bp3-skeleton': isLoading })} icon truncate={30} />
+          </Skeleton>
         </li>
       </>
     );

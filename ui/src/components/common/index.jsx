@@ -25,6 +25,7 @@ import Tag from './Tag';
 import URL from './URL';
 import SearchBox from './SearchBox';
 import SearchListings from './SearchListings';
+import Skeleton from './Skeleton';
 import Summary from './Summary';
 import QueryText from './QueryText';
 import ResultCount from './ResultCount';
@@ -58,6 +59,7 @@ export {
   URL,
   SearchBox,
   SearchListings,
+  Skeleton,
   QueryText,
   ResultCount,
 };
