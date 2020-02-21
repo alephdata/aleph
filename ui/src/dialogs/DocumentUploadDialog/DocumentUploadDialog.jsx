@@ -57,15 +57,19 @@ export class DocumentUploadDialog extends Component {
       intl, parent, toggleDialog,
     } = this.props;
 
-    console.log('parent is', parent);
+    // console.log('parent is', parent);
 
     const fileTree = convertPathsToTree(files);
 
     try {
-      const filePromises = this.traverseFileTree(fileTree, parent, []);
-      console.log('file promises are', filePromises);
-      await Promise.all(filePromises);
+      await this.traverseFileTree(fileTree, parent);
+      // Promise.all(promises).then(() => {
+      //   console.log('finished, toggling dialog', this.state);
+      // });
+      console.log('finished, toggling dialog', this.state);
+
       toggleDialog();
+
     } catch (e) {
       console.log('error!', e);
       showErrorToast(intl.formatMessage(messages.error));
@@ -73,26 +77,36 @@ export class DocumentUploadDialog extends Component {
   }
 
   onUploadProgress(progressEvent) {
+    // console.log('in on upload progress')
     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
     this.setState({ percentCompleted });
   }
 
-  traverseFileTree(tree, parent, filePromises) {
-    console.log('traversing', tree, parent);
-    return Object.entries(tree).map(([key, value]) => {
+  async traverseFileTree(tree, parent) {
+    const filePromises = [];
+    Object.entries(tree).map(([key, value]) => {
+      let promise;
       if (value instanceof File) {
-        return this.uploadFile(value, parent, filePromises);
+        promise = this.uploadFile(value, parent);
+      } else {
+        promise = new Promise((resolve, reject) => {
+          this.uploadFolder(key, parent).then(async ({ id }) => {
+            await this.traverseFileTree(value, { id, foreign_id: key });
+            resolve();
+          })
+        });
       }
 
-      return this.uploadFolder(key, parent).then(({ id }) => (
-        this.traverseFileTree(value, { id, foreign_id: key }, filePromises)
-      ));
+      filePromises.push(promise);
     });
+
+    await Promise.all(filePromises);
+    return;
   }
 
   uploadFile(file, parent, filePromises) {
     const { collection, ingestDocument } = this.props;
-    console.log('uploading file', file, parent);
+    // console.log('uploading file', file, parent);
     this.setState({ percentCompleted: 0, uploading: file.name });
 
     const metadata = {
@@ -102,14 +116,11 @@ export class DocumentUploadDialog extends Component {
     if (parent?.id) {
       metadata.parent_id = parent.id;
     }
-    const promise = ingestDocument(collection.id, metadata, file, this.onUploadProgress);
-
-    return [...filePromises, ...[promise]];
+    return ingestDocument(collection.id, metadata, file, this.onUploadProgress);
   }
 
   uploadFolder(title, parent) {
     const { collection, ingestDocument } = this.props;
-    console.log('uploading folder', title, parent);
     this.setState({ percentCompleted: 0, uploading: title });
 
     const metadata = {
@@ -145,8 +156,6 @@ export class DocumentUploadDialog extends Component {
 
   render() {
     const { intl, toggleDialog, isOpen } = this.props;
-
-    console.log('parent!', this.props.parent);
 
     return (
       <Dialog
