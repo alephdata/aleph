@@ -20,7 +20,7 @@ Babel==2.8.0
 PyYAML==5.3
 pyjwt==1.7.1
 rdflib==4.2.2
-requests[security]==2.22.0
+requests[security]==2.23.0
 urllib3==1.25.8
 redis==3.4.1
 fakeredis==1.2.0
