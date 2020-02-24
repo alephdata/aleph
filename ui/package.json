@@ -79,7 +79,7 @@
     "postcss-preset-env": "^6.5.0",
     "postcss-safe-parser": "^4.0.1",
     "react-app-polyfill": "^1.0.4",
-    "react-dev-utils": "~10.0.0",
+    "react-dev-utils": "^10.0.0",
     "react-intl-po": "^2.2.2",
     "redux-logger": "^3.0.6",
     "resolve": "^1.10.0",
