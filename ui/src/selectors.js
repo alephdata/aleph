@@ -69,6 +69,12 @@ export function selectSession(state) {
   return selectObject(state, state, 'session');
 }
 
+export function selectSessionIsTester(state) {
+  const session = selectSession(state);
+  /* eslint-disable camelcase */
+  return session?.role?.is_tester || false;
+}
+
 export function selectAlerts(state) {
   return selectObject(state, state, 'alerts');
 }
@@ -89,6 +95,10 @@ export function selectRole(state, roleId) {
   return selectObject(state, state.roles, roleId);
 }
 
+export function selectDiagrams(state) {
+  return state.diagrams;
+}
+
 export function selectCollection(state, collectionId) {
   return selectObject(state, state.collections, collectionId);
 }
@@ -106,6 +116,10 @@ export function selectEntity(state, entityId) {
   result.collection = entity.collection;
   result.highlight = entity.highlight;
   return result;
+}
+
+export function selectDiagram(state, diagramId) {
+  return selectObject(state, state.diagrams, diagramId);
 }
 
 export function selectDocumentContent(state, documentId) {
@@ -131,6 +145,10 @@ export function selectNotificationsResult(state, query) {
     });
   });
   return result;
+}
+
+export function selectDiagramsResult(state, query) {
+  return selectResult(state, query, selectDiagram);
 }
 
 export function selectEntityTags(state, entityId) {

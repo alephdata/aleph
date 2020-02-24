@@ -17,7 +17,15 @@ log = logging.getLogger(__name__)
 class CollectionsQuery(Query):
     TEXT_FIELDS = ['label^3', 'text']
     SORT_DEFAULT = ['_score', {'label.kw': 'asc'}]
+    SKIP_FILTERS = ['writeable']
     PREFIX_FIELD = 'label'
+
+    def get_filters(self):
+        filters = super(CollectionsQuery, self).get_filters()
+        if self.parser.getbool('filter:writeable'):
+            ids = self.parser.authz.collections(self.parser.authz.WRITE)
+            filters.append({'ids': {'values': ids}})
+        return filters
 
     def get_index(self):
         return collections_index()

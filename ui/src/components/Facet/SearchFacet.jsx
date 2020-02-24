@@ -89,7 +89,7 @@ class SearchFacet extends Component {
     const isMultiSelect = field !== 'schema';
 
     return (
-      <div className={c('SearchFacet', { 'multi-select': isMultiSelect })}>
+      <div className="SearchFacet">
         <div
           className={c('opener', { clickable: isCollapsible, active: !isUpdating && isFiltered })}
           onClick={this.onToggleOpen}
@@ -138,6 +138,7 @@ class SearchFacet extends Component {
               items={facet.values}
               selectedItems={current}
               onItemClick={this.onSelect}
+              isMultiSelect={isMultiSelect}
             >
               {!isUpdating && hasMoreValues && (
                 <a className="ShowMore" onClick={this.showMore} href="/">

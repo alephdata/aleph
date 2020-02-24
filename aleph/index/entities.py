@@ -1,10 +1,11 @@
 import logging
 import fingerprints
-from pprint import pprint  # noqa
+from pprint import pprint, pformat  # noqa
 from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
+from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import es, cache
 from aleph.model import Entity
@@ -63,7 +64,7 @@ def iter_entities(authz=None, collection_id=None, schemata=None,
         '_source': _source_spec(includes, excludes)
     }
     index = entities_read_index(schema=schemata)
-    for res in scan(es, index=index, query=query, scroll='1410m'):
+    for res in scan(es, index=index, query=query, scroll='1410m', raise_on_error=False):  # noqa
         entity = unpack_result(res)
         if entity is not None:
             if cached:
@@ -127,7 +128,7 @@ def get_entity(entity_id, **kwargs):
 def index_entity(entity, sync=False):
     """Index an entity."""
     if entity.deleted_at is not None:
-        return delete_entity(entity.signed_id, sync=sync)
+        return delete_entity(entity.id, sync=sync)
     proxy = entity.to_proxy()
     return index_proxy(entity.collection, proxy, sync=sync)
 
@@ -152,6 +153,9 @@ def format_proxy(proxy, collection, extra):
     """Apply final denormalisations to the index."""
     proxy.context = {}
     proxy = collection.ns.apply(proxy)
+    # Pull `indexUpdatedAt` before constructing `data`, so that it doesn't
+    # creep into `data['dates']` and mess up date sorting afterwards
+    index_updated_at = proxy.pop('indexUpdatedAt')
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
 
@@ -168,7 +172,7 @@ def format_proxy(proxy, collection, extra):
     data['text'] = text
 
     data['updated_at'] = collection.updated_at
-    for updated_at in properties.pop('indexUpdatedAt', []):
+    for updated_at in index_updated_at:
         data['updated_at'] = updated_at
 
     # integer casting
@@ -184,7 +188,7 @@ def format_proxy(proxy, collection, extra):
     # add possible overrides
     data.update(extra)
 
-    # pprint(data)
+    # log.info("%s", pformat(data))
     entity_id = data.pop('id')
     return {
         '_id': entity_id,
@@ -201,7 +205,18 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get('_index')
         if index == exclude:
             continue
-        es.delete(index=index, id=entity_id,
-                  refresh=refresh_sync(sync))
-        q = {'term': {'entities': entity_id}}
-        query_delete(entities_read_index(), q, sync=sync)
+        try:
+            es.delete(index=index, id=entity_id,
+                      refresh=refresh_sync(sync))
+            q = {'term': {'entities': entity_id}}
+            query_delete(entities_read_index(), q, sync=sync)
+        except NotFoundError:
+            # This is expected in some cases. For example, when 2 Things are
+            # connected by an Interval and all the 3 entities get deleted
+            # simultaneously, Aleph tries to delete the Interval thrice due to
+            # recursive deletion of adjacent entities. ElasticSearch throws a
+            # 404 in that case.
+            # In those cases, we want to skip both the `es.delete` step and
+            # the `query_delete` step.
+            log.warning("Delete failed for entity %s - not found", entity_id)
+            continue

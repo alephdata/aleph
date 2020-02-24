@@ -6,7 +6,7 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Count } from 'src/components/common';
 
 import { fetchGroups } from 'src/actions';
-import { selectAlerts, selectGroups } from 'src/selectors';
+import { selectAlerts, selectGroups, selectSessionIsTester } from 'src/selectors';
 
 import './Dashboard.scss';
 
@@ -26,6 +26,10 @@ const messages = defineMessages({
   cases: {
     id: 'dashboard.cases',
     defaultMessage: 'Personal datasets',
+  },
+  diagrams: {
+    id: 'dashboard.diagrams',
+    defaultMessage: 'Network diagrams',
   },
   settings: {
     id: 'dashboard.settings',
@@ -65,7 +69,7 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { alerts, intl, location, groups } = this.props;
+    const { alerts, intl, location, groups, showDiagrams } = this.props;
     const current = location.pathname;
 
     return (
@@ -100,12 +104,26 @@ class Dashboard extends React.Component {
               onClick={() => this.navigate('/alerts')}
               active={current === '/alerts'}
             />
+            <MenuDivider />
+            <li className="bp3-menu-header">
+              <h6 className="bp3-heading">
+                <FormattedMessage id="dashboard.workspace" defaultMessage="Workspace" />
+              </h6>
+            </li>
             <MenuItem
               icon="briefcase"
               text={intl.formatMessage(messages.cases)}
               onClick={() => this.navigate('/cases')}
               active={current === '/cases'}
             />
+            {showDiagrams && (
+              <MenuItem
+                icon="graph"
+                text={intl.formatMessage(messages.diagrams)}
+                onClick={() => this.navigate('/diagrams')}
+                active={current === '/diagrams'}
+              />
+            )}
             { groups.total > 0 && (
               <>
                 <MenuDivider />
@@ -151,7 +169,9 @@ class Dashboard extends React.Component {
 const mapStateToProps = (state) => {
   const alerts = selectAlerts(state);
   const groups = selectGroups(state);
-  return { alerts, groups };
+  const showDiagrams = selectSessionIsTester(state);
+
+  return { alerts, groups, showDiagrams };
 };
 
 Dashboard = injectIntl(Dashboard);

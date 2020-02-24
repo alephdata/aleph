@@ -1,12 +1,12 @@
 import io
 import csv
 import logging
-from banal import as_bool
+from banal import as_bool, ensure_dict
 from normality import stringify
 from flask import Response, request, render_template
 from flask_babel import gettext
 from werkzeug.urls import url_parse, url_join
-from werkzeug.exceptions import MethodNotAllowed, Forbidden
+from werkzeug.exceptions import Forbidden
 from werkzeug.exceptions import BadRequest, NotFound
 from lxml.etree import tostring
 from lxml import html
@@ -14,7 +14,7 @@ from lxml.html.clean import Cleaner
 from servicelayer.jobs import Job
 
 from aleph.authz import Authz
-from aleph.model import Collection, Entity
+from aleph.model import Collection
 from aleph.validation import get_validator
 from aleph.index.entities import get_entity as _get_index_entity
 from aleph.index.collections import get_collection as _get_index_collection
@@ -79,14 +79,6 @@ def validate(data, schema):
     raise BadRequest(response=resp)
 
 
-def get_db_entity(entity_id, action=Authz.READ):
-    get_index_entity(entity_id, action=action)
-    entity = Entity.by_id(entity_id)
-    if entity is None:
-        raise MethodNotAllowed(description="Cannot write this entity")
-    return entity
-
-
 def get_index_entity(entity_id, action=Authz.READ):
     entity = obj_or_404(_get_index_entity(entity_id))
     require(request.authz.can(entity['collection_id'], action))
@@ -97,6 +89,12 @@ def get_db_collection(collection_id, action=Authz.READ):
     collection = obj_or_404(Collection.by_id(collection_id))
     require(request.authz.can(collection.id, action))
     return collection
+
+
+def get_nested_collection(data, action=Authz.READ):
+    collection = ensure_dict(data.get('collection'))
+    collection_id = data.get('collection_id', collection.get('id'))
+    return get_db_collection(collection_id, action)
 
 
 def get_index_collection(collection_id, action=Authz.READ):

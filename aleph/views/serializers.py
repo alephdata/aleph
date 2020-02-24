@@ -1,4 +1,5 @@
 import logging
+# from pprint import pprint
 from flask import request
 from normality import stringify
 from pantomime.types import PDF, CSV
@@ -110,8 +111,12 @@ class RoleSerializer(Serializer):
         if not obj['writeable']:
             obj.pop('has_password', None)
             obj.pop('is_muted', None)
+            obj.pop('is_tester', None)
+            obj.pop('is_blocked', None)
             obj.pop('api_key', None)
             obj.pop('email', None)
+            obj.pop('created_at', None)
+            obj.pop('updated_at', None)
         if obj['type'] != Role.USER:
             obj.pop('api_key', None)
             obj.pop('email', None)
@@ -312,3 +317,64 @@ class NotificationSerializer(Serializer):
 
 class MappingSerializer(Serializer):
     pass
+
+
+class DiagramEntitySerializer(EntitySerializer):
+
+    def _serialize(self, obj):
+        pk = obj.get('id')
+        obj['id'] = str(pk)
+        schema = model.get(obj.get('schema'))
+        if schema is None:
+            return None
+        properties = obj.get('properties', {})
+        for prop in schema.properties.values():
+            if prop.type != registry.entity:
+                continue
+            values = ensure_list(properties.get(prop.name))
+            if values:
+                properties[prop.name] = []
+                for value in values:
+                    entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
+                    if entity is None:
+                        entity = value
+                    properties[prop.name].append(entity)
+        obj.pop('_index', None)
+        collection_id = obj.pop('collection_id', None)
+        obj['collection_id'] = str(collection_id)
+        return self._clean_response(obj)
+
+
+class DiagramSerializer(Serializer):
+
+    def _collect(self, obj):
+        self.queue(Collection, obj.get('collection_id'))
+        ent_ids = obj['entities']
+        for ent_id in ensure_list(ent_ids):
+            self.queue(Entity, ent_id)
+
+    def _serialize(self, obj):
+        pk = obj.get('id')
+        obj['id'] = str(pk)
+        collection_id = obj.pop('collection_id', None)
+        obj['writeable'] = request.authz.can(collection_id, request.authz.WRITE)  # noqa
+        obj['collection'] = self.resolve(Collection, collection_id, CollectionSerializer)  # noqa
+        ent_ids = obj.pop('entities')
+        obj['entities'] = []
+        for ent_id in ent_ids:
+            entity = self.resolve(Entity, ent_id, DiagramEntitySerializer)
+            if entity is not None:
+                obj['entities'].append(entity)
+        for ent in obj['entities']:
+            schema = model.get(ent.get('schema'))
+            properties = ent.get('properties', {})
+            for prop in schema.properties.values():
+                if prop.type != registry.entity:
+                    continue
+                values = ensure_list(properties.get(prop.name))
+                if values:
+                    properties[prop.name] = []
+                    for value in values:
+                        entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
+                        properties[prop.name].append(entity)
+        return self._clean_response(obj)

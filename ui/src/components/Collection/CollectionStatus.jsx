@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import { ProgressBar, Intent, Button, Tooltip } from '@blueprintjs/core';
+import c from 'classnames';
 
 import { Numeric } from 'src/components/common';
 import { triggerCollectionCancel } from 'src/actions';
@@ -28,7 +29,7 @@ class CollectionStatus extends Component {
   }
 
   render() {
-    const { collection, intl, showCancel, status } = this.props;
+    const { className, collection, intl, showCancel, status } = this.props;
     const pending = status.pending || 0;
     const running = status.running || 0;
     const finished = status.finished || 0;
@@ -40,7 +41,7 @@ class CollectionStatus extends Component {
     const progress = finished / total;
     const percent = Math.round(progress * 100);
     return (
-      <div className="CollectionStatus bp3-callout bp3-intent-primary">
+      <div className={c('CollectionStatus', className)}>
         <h4 className="bp3-heading">
           <FormattedMessage
             id="collection.status.title"
@@ -48,13 +49,6 @@ class CollectionStatus extends Component {
             values={{ percent: <Numeric num={percent} /> }}
           />
         </h4>
-        <h6 className="bp3-heading total-count">
-          <FormattedMessage
-            id="collection.status.remaining"
-            defaultMessage="{finished} of {total} completed"
-            values={{ finished: <Numeric num={finished} />, total: <Numeric num={total} /> }}
-          />
-        </h6>
         <div className="progress-area">
           <ProgressBar animate intent={Intent.PRIMARY} value={progress} />
           {showCancel && (

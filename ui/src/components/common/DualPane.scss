@@ -24,10 +24,6 @@ $dual-pane-mobile-padding: $aleph-mobile-content-padding;
   padding: 0 0 0 $dual-pane-padding;
   overflow: hidden;
 
-  &.allow-overflow {
-    overflow: visible;
-  }
-
   .info-tabs-padding {
     padding: 0;
   }

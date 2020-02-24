@@ -1,35 +1,34 @@
 import React, { Component, PureComponent } from 'react';
-import { Icon, Popover, Spinner } from '@blueprintjs/core';
-import ReactMarkdown from 'react-markdown';
+import { Alignment, Button, Icon, MenuItem, Popover, Spinner } from '@blueprintjs/core';
+import { Select } from '@blueprintjs/select';
+import { defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
-import Truncate from 'react-truncate';
 import { connect } from 'react-redux';
 import c from 'classnames';
 
-import { fetchCollection, fetchCollectionStatus } from 'src/actions';
-import { selectCollection, selectCollectionStatus } from 'src/selectors';
+import { fetchCollection, fetchCollectionStatus, queryCollections } from 'src/actions';
+import { selectCollection, selectCollectionsResult, selectCollectionStatus } from 'src/selectors';
 import getCollectionLink from 'src/util/getCollectionLink';
 import CollectionStatus from 'src/components/Collection/CollectionStatus';
 
 
 import './Collection.scss';
 
-// formats markdown elements to plain text
-const simpleRenderer = ({ children }) => (
-  <>
-    <span>{children}</span>
-    <span> </span>
-  </>
-);
-
+const messages = defineMessages({
+  label: {
+    id: 'collection.select',
+    defaultMessage: 'Select a dataset',
+  },
+});
 
 class CollectionLabel extends PureComponent {
   render() {
     const {
-      collection, icon = true, label = true, updating = false, truncate,
+      collection, icon = true, label = true, updating = false, truncate, className,
     } = this.props;
+
     if (!collection || !collection.id) {
       return null;
     }
@@ -54,33 +53,13 @@ class CollectionLabel extends PureComponent {
     }
 
     return (
-      <span className="CollectionLabel" title={collection.label}>
+      <span className={c('CollectionLabel', className)} title={collection.label}>
         { renderedIcon }
         <span>{ label && text }</span>
       </span>
     );
   }
 }
-
-const CollectionSummary = ({ className, collection, truncate }) => {
-  const content = (
-    <ReactMarkdown
-      skipHtml
-      linkTarget="_blank"
-      renderers={truncate ? { paragraph: simpleRenderer, listItem: simpleRenderer } : {}}
-    >
-      { collection.summary }
-    </ReactMarkdown>
-  );
-
-  return (
-    <div className={c(className, 'bp3-running-text bp3-text-muted text-markdown')}>
-      {truncate && <Truncate lines={truncate}>{content}</Truncate>}
-      {!truncate && content}
-    </div>
-  );
-};
-
 
 class CollectionLink extends PureComponent {
   render() {
@@ -119,7 +98,7 @@ class CollectionUpdateStatus extends PureComponent {
           enforceFocus={false}
           popoverClassName="CollectionUpdateStatus__popover"
           target={collectionLink}
-          content={<CollectionStatus collection={collection} showCancel={false} />}
+          content={<CollectionStatus collection={collection} showCancel={false} className="bp3-callout bp3-intent-primary" />}
         />
       );
     }
@@ -153,6 +132,73 @@ class CollectionLoad extends Component {
   }
 }
 
+class CollectionSelect extends Component {
+  constructor(props) {
+    super(props);
+    this.renderCollection = this.renderCollection.bind(this);
+    this.onSelectCollection = this.onSelectCollection.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  onSelectCollection(collection, event) {
+    event.stopPropagation();
+    this.props.onSelect(collection);
+  }
+
+  renderCollection = (collection, { handleClick }) => (
+    <MenuItem
+      key={collection.id}
+      onClick={handleClick}
+      text={collection.label}
+    />
+  )
+
+  fetchIfNeeded() {
+    const { query, result } = this.props;
+    if (result.shouldLoad) {
+      this.props.queryCollections({ query });
+    }
+  }
+
+  render() {
+    const { collection, intl, result } = this.props;
+    const label = collection ? collection.label : intl.formatMessage(messages.label);
+
+    return (
+      <Select
+        itemRenderer={this.renderCollection}
+        items={result.results}
+        onItemSelect={this.onSelectCollection}
+        popoverProps={{
+          minimal: true,
+          fill: true,
+        }}
+        inputProps={{
+          fill: true,
+        }}
+        filterable={false}
+        resetOnClose
+        resetOnSelect
+      >
+        <Button
+          fill
+          text={label}
+          icon="user"
+          rightIcon="search"
+          alignText={Alignment.LEFT}
+        />
+      </Select>
+    );
+  }
+}
+
 const statusMapStateToProps = (state, ownProps) => ({
   status: selectCollectionStatus(state, ownProps.collection.id),
 });
@@ -161,17 +207,29 @@ const loadMapStateToProps = (state, ownProps) => ({
   collection: selectCollection(state, ownProps.id),
 });
 
+const selectMapStateToProps = (state, ownProps) => {
+  const { query } = ownProps;
+
+  return {
+    query,
+    result: selectCollectionsResult(state, query),
+  };
+};
+
 class Collection {
   static Label = CollectionLabel;
 
   static Status =
     connect(statusMapStateToProps, { fetchCollectionStatus })(CollectionUpdateStatus);
 
-  static Summary = CollectionSummary;
-
   static Link = withRouter(CollectionLink);
 
   static Load = connect(loadMapStateToProps, { fetchCollection })(CollectionLoad);
+
+  static Select = connect(
+    selectMapStateToProps,
+    { queryCollections },
+  )(injectIntl(CollectionSelect));
 }
 
 export default Collection;

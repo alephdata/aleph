@@ -26,7 +26,20 @@ export {
   updateCollectionPermissions,
 } from './collectionActions';
 export {
-  fetchEntity, fetchEntityReferences, fetchEntityTags, queryEntities, deleteEntity,
+  createDiagram,
+  deleteDiagram,
+  fetchDiagram,
+  queryDiagrams,
+  updateDiagram,
+} from './diagramActions';
+export {
+  createEntity,
+  deleteEntity,
+  fetchEntity,
+  fetchEntityReferences,
+  fetchEntityTags,
+  queryEntities,
+  updateEntity,
 } from './entityActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';

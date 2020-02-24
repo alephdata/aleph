@@ -64,6 +64,7 @@ def index(collection_id):
           description: OK
       tags:
         - Collection
+        - Mapping
     """
     collection = get_db_collection(collection_id)
     parser = QueryParser(request.args, request.authz)
@@ -102,6 +103,7 @@ def create(collection_id):
           description: OK
       tags:
       - Collection
+      - Mapping
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     data = parse_request('MappingCreate')
@@ -144,6 +146,7 @@ def view(collection_id, mapping_id):
           description: OK
       tags:
       - Collection
+      - Mapping
     """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
@@ -187,6 +190,7 @@ def update(collection_id, mapping_id):
           description: OK
       tags:
       - Collection
+      - Mapping
     """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
@@ -226,6 +230,7 @@ def delete(collection_id, mapping_id):
           description: No Content
       tags:
       - Collection
+      - Mapping
     """
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
@@ -263,6 +268,7 @@ def trigger(collection_id, mapping_id):
           description: No Content
       tags:
       - Collection
+      - Mapping
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
@@ -303,6 +309,7 @@ def flush(collection_id, mapping_id):
           description: No Content
       tags:
       - Collection
+      - Mapping
     """
     collection = get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))

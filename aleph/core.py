@@ -103,17 +103,15 @@ def determine_locale():
 
 @signals.handle_request_log.connect
 def stackdriver_log(sender, payload={}):
+    if settings.GOOGLE_REQUEST_LOGGING is False:
+        return
     if not hasattr(settings, '_gcp_logger'):
-        try:
-            from google.cloud import logging
-            google.auth.default()
-            client = logging.Client()
-            logger_name = '%s-api' % settings.APP_NAME
-            settings._gcp_logger = client.logger(logger_name)
-            log.debug("Enabled Stackdriver request logging.")
-        except Exception as exc:
-            log.debug("Disable Stackdriver: %s", exc)
-            settings._gcp_logger = None
+        from google.cloud import logging
+        google.auth.default()
+        client = logging.Client()
+        logger_name = '%s-api' % settings.APP_NAME
+        log.debug("Enabled Stackdriver request logging.")
+        settings._gcp_logger = client.logger(logger_name)
     if settings._gcp_logger is not None:
         settings._gcp_logger.log_struct(payload)
 

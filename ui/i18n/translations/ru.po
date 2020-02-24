@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-01-31T15:16:18.960Z\n"
+"POT-Creation-Date: 2020-02-24T09:44:35.532Z\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -109,6 +109,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "A brief description of the dataset"
 msgstr "Краткое описание набора данных"
+
+#. [diagram.create.summary_placeholder]
+#. defaultMessage is:
+#. A brief description of the diagram
+#: i18n/messages.json
+msgid "A brief description of the diagram"
+msgstr "Краткое описание диаграммы"
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
@@ -262,6 +269,13 @@ msgstr "Вы уверены, что готовы создать сущности
 msgid "Are you sure you want to delete this dataset and all contained items?"
 msgstr "Вы хотите удалить этот набор данных и всё содержимое?"
 
+#. [diagram.delete.question]
+#. defaultMessage is:
+#. Are you sure you want to delete this diagram?
+#: i18n/messages.json
+msgid "Are you sure you want to delete this diagram?"
+msgstr "Удалить эту диаграмму?"
+
 #. [entity.delete.question]
 #. defaultMessage is:
 #. Are you sure you want to delete this entity?
@@ -307,6 +321,13 @@ msgstr "Вложения"
 msgid "BCC"
 msgstr "Скрытая копия"
 
+#. [entity.info.contents]
+#. defaultMessage is:
+#. Browse
+#: i18n/messages.json
+msgid "Browse"
+msgstr "Просмотр"
+
 #. [email.cc]
 #. defaultMessage is:
 #. CC
@@ -332,6 +353,9 @@ msgstr "Копия"
 #. [collection.xref.cancel_button]
 #. defaultMessage is:
 #. Cancel
+#. [diagram.delete.cancel]
+#. defaultMessage is:
+#. Cancel
 #. [entity.delete.cancel]
 #. defaultMessage is:
 #. Cancel
@@ -353,6 +377,7 @@ msgstr "Копия"
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -397,6 +422,13 @@ msgstr "Категория"
 #: i18n/messages.json
 msgid "Change your password"
 msgstr "Поменять пароль"
+
+#. [diagram.in_progress_warning]
+#. defaultMessage is:
+#. Changes are still being saved, are you sure you want to leave?
+#: i18n/messages.json
+msgid "Changes are still being saved, are you sure you want to leave?"
+msgstr "Вы уверены, что не хотите дождаться сохранения изменений?"
 
 #. [dashboard.subheading]
 #. defaultMessage is:
@@ -559,12 +591,22 @@ msgstr "Страны"
 msgid "Country"
 msgstr "Страна"
 
+#. [diagram.create.submit]
+#. defaultMessage is:
+#. Create
 #. [document.folder.save]
 #. defaultMessage is:
 #. Create
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Create"
 msgstr "Создать"
+
+#. [diagram.create.title]
+#. defaultMessage is:
+#. Create a network diagram
+#: i18n/messages.json
+msgid "Create a network diagram"
+msgstr "Создать диаграмму"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
@@ -710,6 +752,9 @@ msgstr "Дата"
 #. [collection.info.delete]
 #. defaultMessage is:
 #. Delete
+#. [diagram.info.delete]
+#. defaultMessage is:
+#. Delete
 #. [document.viewer.delete]
 #. defaultMessage is:
 #. Delete
@@ -722,6 +767,9 @@ msgstr "Дата"
 #. [collection.edit.info.delete]
 #. defaultMessage is:
 #. Delete
+#. [diagram.delete.confirm]
+#. defaultMessage is:
+#. Delete
 #. [entity.delete.confirm]
 #. defaultMessage is:
 #. Delete
@@ -729,7 +777,8 @@ msgstr "Дата"
 #. defaultMessage is:
 #. Delete
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
-#: i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Delete"
 msgstr "Удалить"
 
@@ -739,6 +788,20 @@ msgstr "Удалить"
 #: i18n/messages.json
 msgid "Deleting mapping and generated entities..."
 msgstr "Удаление маппинга и созданных сущностей..."
+
+#. [diagram.update.title]
+#. defaultMessage is:
+#. Diagram settings
+#: i18n/messages.json
+msgid "Diagram settings"
+msgstr "Настройки диаграммы"
+
+#. [diagrams.browser.breadcrumb]
+#. defaultMessage is:
+#. Diagrams
+#: i18n/messages.json
+msgid "Diagrams"
+msgstr "Диаграммы"
 
 #. [entity.info.documents]
 #. defaultMessage is:
@@ -789,6 +852,15 @@ msgstr "Скачать в формате Excel"
 msgid "Download the original document"
 msgstr "Скачать оригинальный документ"
 
+#. [diagramImport.placeholderText]
+#. defaultMessage is:
+#. Drop a .vis file here or click to import an existing diagram layout
+#: i18n/messages.json
+msgid "Drop a .vis file here or click to import an existing diagram layout"
+msgstr ""
+"Перенесите .vis файл сюда или кликните, чтобы импортировать готовую "
+"диаграмму"
+
 #. [settings.email]
 #. defaultMessage is:
 #. E-mail Address
@@ -824,6 +896,20 @@ msgstr "Введите текущий пароль для установки н�
 msgid "Error"
 msgstr "Ошибка"
 
+#. [diagram.import_error]
+#. defaultMessage is:
+#. Error importing file
+#: i18n/messages.json
+msgid "Error importing file"
+msgstr "Ошибка импорта файла"
+
+#. [diagram.status_error]
+#. defaultMessage is:
+#. Error saving
+#: i18n/messages.json
+msgid "Error saving"
+msgstr "Ошибка сохранения"
+
 #. [mapping.status.error]
 #. defaultMessage is:
 #. Error:
@@ -845,10 +931,13 @@ msgstr "Точные соответствия"
 msgid "Expand"
 msgstr "Развернуть"
 
+#. [diagram.info.export]
+#. defaultMessage is:
+#. Export
 #. [search.screen.export]
 #. defaultMessage is:
 #. Export
-#: i18n/messages.json
+#: i18n/messages.json i18n/messages.json
 msgid "Export"
 msgstr "Экспорт"
 
@@ -980,7 +1069,7 @@ msgstr "Создать сущности"
 #. Generate structured entities
 #: i18n/messages.json
 msgid "Generate structured entities"
-msgstr "Создать структурированные сущности"
+msgstr "Создание структурированных сущностей"
 
 #. [mapping.actions.create.toast]
 #. defaultMessage is:
@@ -1005,6 +1094,20 @@ msgstr "Группы"
 #: i18n/messages.json
 msgid "Help"
 msgstr "Помощь"
+
+#. [diagram.import.title]
+#. defaultMessage is:
+#. Import a network diagram
+#: i18n/messages.json
+msgid "Import a network diagram"
+msgstr "Импортировать диаграмму"
+
+#. [diagrams.index.import]
+#. defaultMessage is:
+#. Import diagram
+#: i18n/messages.json
+msgid "Import diagram"
+msgstr "Импортировать диаграмму"
 
 #. [entity.info.info]
 #. defaultMessage is:
@@ -1149,11 +1252,11 @@ msgstr "Автор"
 #. defaultMessage is:
 #. Match your own data against the entities in this collection using the free
 #. {openrefine}
-#.                   tool by adding the reconciliation endpoint.
+#.               tool by adding the reconciliation endpoint.
 #: i18n/messages.json
 msgid ""
 "Match your own data against the entities in this collection using the free {openrefine}\n"
-"                  tool by adding the reconciliation endpoint."
+"              tool by adding the reconciliation endpoint."
 msgstr ""
 "Сопоставить пользовательские данные с сущностями из этой коллекции с помощью свободного инструмента {openrefine}\n"
 "путём добавления следующих точек совмещения:"
@@ -1192,12 +1295,45 @@ msgstr "Найдено результатов: более {}"
 msgid "Name"
 msgstr "Название"
 
+#. [nav.diagrams]
+#. defaultMessage is:
+#. Network diagrams
+#. [collection.info.diagrams]
+#. defaultMessage is:
+#. Network diagrams
+#. [dashboard.diagrams]
+#. defaultMessage is:
+#. Network diagrams
+#. [diagrams.title]
+#. defaultMessage is:
+#. Network diagrams
+#: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+msgid "Network diagrams"
+msgstr "Диаграммы"
+
+#. [diagram.description]
+#. defaultMessage is:
+#. Network diagrams let you visualize complex relationships within a dataset.
+#: i18n/messages.json
+msgid ""
+"Network diagrams let you visualize complex relationships within a dataset."
+msgstr ""
+"С помощью диаграмм вы можете визуализировать сложные связи внутри набора "
+"данных."
+
 #. [cases.index.create]
 #. defaultMessage is:
 #. New dataset
 #: i18n/messages.json
 msgid "New dataset"
 msgstr "Новый набор данных"
+
+#. [diagrams.index.create]
+#. defaultMessage is:
+#. New diagram
+#: i18n/messages.json
+msgid "New diagram"
+msgstr "Новая диаграмма"
 
 #. [document.folder.button]
 #. defaultMessage is:
@@ -1312,13 +1448,6 @@ msgstr "В данной записи селекторов нет"
 msgid "No single page within this document matches all your search terms."
 msgstr "Искомых слов в документе не найдено."
 
-#. [collection.statistics.empty]
-#. defaultMessage is:
-#. No statistics available for this dataset
-#: i18n/messages.json
-msgid "No statistics available for this dataset"
-msgstr "Статистика отсутствует"
-
 #. [auth.unauthorized]
 #. defaultMessage is:
 #. Not authorized
@@ -1398,7 +1527,7 @@ msgstr "Информация"
 #. Page {pageInput} of {numberOfPages}
 #: i18n/messages.json
 msgid "Page {pageInput} of {numberOfPages}"
-msgstr ""
+msgstr "Страница {pageInput} из {numberOfPages}"
 
 #. [document.pdf.search.page]
 #. defaultMessage is:
@@ -1604,7 +1733,7 @@ msgstr "Связи"
 #. Remove
 #: i18n/messages.json
 msgid "Remove"
-msgstr "Удалить"
+msgstr "Удалить маппинг"
 
 #. [queryLogs.query.delete.tooltip]
 #. defaultMessage is:
@@ -1660,6 +1789,20 @@ msgstr "Сохранить"
 #: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Save changes"
 msgstr "Сохранить изменения"
+
+#. [diagram.status_success]
+#. defaultMessage is:
+#. Saved
+#: i18n/messages.json
+msgid "Saved"
+msgstr "Сохранено"
+
+#. [diagram.status_in_progress]
+#. defaultMessage is:
+#. Saving...
+#: i18n/messages.json
+msgid "Saving..."
+msgstr "Сохраняется..."
 
 #. [xref.score]
 #. defaultMessage is:
@@ -1764,6 +1907,16 @@ msgstr "Поиск..."
 msgid "Select"
 msgstr "Выбрать"
 
+#. [collection.select]
+#. defaultMessage is:
+#. Select a dataset
+#. [diagram.collectionSelect]
+#. defaultMessage is:
+#. Select a dataset
+#: i18n/messages.json i18n/messages.json
+msgid "Select a dataset"
+msgstr "Выберите набор данных"
+
 #. [mapping.entityAssign.placeholder]
 #. defaultMessage is:
 #. Select an object
@@ -1794,10 +1947,14 @@ msgstr "Ошибка сервера"
 #. [dashboard.settings]
 #. defaultMessage is:
 #. Settings
+#. [diagram.info.edit]
+#. defaultMessage is:
+#. Settings
 #. [settings.title]
 #. defaultMessage is:
 #. Settings
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
+#: i18n/messages.json
 msgid "Settings"
 msgstr "Настройки"
 
@@ -1931,6 +2088,13 @@ msgstr "Статус:"
 msgid "Subject"
 msgstr "Тема"
 
+#. [diagram.update.submit]
+#. defaultMessage is:
+#. Submit
+#: i18n/messages.json
+msgid "Submit"
+msgstr "Сохранить"
+
 #. [auth.success]
 #. defaultMessage is:
 #. Success
@@ -1944,7 +2108,10 @@ msgstr "Вы успешно авторизованы"
 #. [case.choose.summary]
 #. defaultMessage is:
 #. Summary
-#: i18n/messages.json i18n/messages.json
+#. [diagram.choose.summary]
+#. defaultMessage is:
+#. Summary
+#: i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Summary"
 msgstr "Краткое описание"
 
@@ -1968,6 +2135,13 @@ msgstr "Системный статус"
 #: i18n/messages.json
 msgid "Tasks"
 msgstr "Задачи"
+
+#. [settings.email.tester]
+#. defaultMessage is:
+#. Test new features before they are finished
+#: i18n/messages.json
+msgid "Test new features before they are finished"
+msgstr "Принимать участие в тестировании новых функций"
 
 #. [entity.info.text]
 #. defaultMessage is:
@@ -2052,6 +2226,16 @@ msgstr "Нет похожих записей"
 msgid "There was an error creating the folder."
 msgstr "При создании папки возникла ошибка."
 
+#. [diagram.error_warning]
+#. defaultMessage is:
+#. There was an error saving your latest changes, are you sure you want to
+#. leave?
+#: i18n/messages.json
+msgid ""
+"There was an error saving your latest changes, are you sure you want to "
+"leave?"
+msgstr "Произошла ошибка при сохранении последних изменений, вы хотите уйти?"
+
 #. [document.upload.error]
 #. defaultMessage is:
 #. There was an error while uploading the file.
@@ -2108,7 +2292,10 @@ msgstr "Эта группа не привязана к какому-либо н�
 #. [case.choose.name]
 #. defaultMessage is:
 #. Title
-#: i18n/messages.json
+#. [diagram.choose.name]
+#. defaultMessage is:
+#. Title
+#: i18n/messages.json i18n/messages.json
 msgid "Title"
 msgstr "Название"
 
@@ -2199,6 +2386,13 @@ msgstr "Что-то неизвестное"
 msgid "Untitled dataset"
 msgstr "Безымянный набор данных"
 
+#. [diagram.create.label_placeholder]
+#. defaultMessage is:
+#. Untitled diagram
+#: i18n/messages.json
+msgid "Untitled diagram"
+msgstr "Безымянная диаграмма"
+
 #. [alerts.save]
 #. defaultMessage is:
 #. Update
@@ -2226,7 +2420,10 @@ msgstr "Обновить маппинг и пересоздать сущност
 #. [collection.last_updated]
 #. defaultMessage is:
 #. Updated {date}
-#: i18n/messages.json
+#. [diagram.last_updated]
+#. defaultMessage is:
+#. Updated {date}
+#: i18n/messages.json i18n/messages.json
 msgid "Updated {date}"
 msgstr "Обновлено {date}"
 
@@ -2374,6 +2571,13 @@ msgstr "Мы отправили вам письмо с ссылкой для з�
 msgid "What's new, {role}?"
 msgstr "Что нового, {role}?"
 
+#. [dashboard.workspace]
+#. defaultMessage is:
+#. Workspace
+#: i18n/messages.json
+msgid "Workspace"
+msgstr "Рабочая среда"
+
 #. [alerts.no_alerts]
 #. defaultMessage is:
 #. You are not tracking any searches
@@ -2409,6 +2613,13 @@ msgstr ""
 #: i18n/messages.json
 msgid "You are receiving alerts about this search."
 msgstr "Вы подписаны на оповещения для этого поискового запроса."
+
+#. [diagrams.no_results_title]
+#. defaultMessage is:
+#. You do not have any network diagrams yet
+#: i18n/messages.json
+msgid "You do not have any network diagrams yet"
+msgstr "У вас пока нет диаграмм"
 
 #. [cases.no_results_title]
 #. defaultMessage is:
@@ -2449,6 +2660,13 @@ msgstr ""
 msgid "You must create an object of type \"{range}\" to be the {property}"
 msgstr "Необходимо создать объект типа \"{range}\" для {property}"
 
+#. [diagram.create.login]
+#. defaultMessage is:
+#. You must log in to create a diagram
+#: i18n/messages.json
+msgid "You must log in to create a diagram"
+msgstr "Для создания диаграмм необходимо авторизоваться."
+
 #. [case.create.login]
 #. defaultMessage is:
 #. You must sign in to upload your own data.
@@ -2481,6 +2699,20 @@ msgstr "Ваше имя"
 #: i18n/messages.json
 msgid "Your changes are saved."
 msgstr "Изменения сохранены"
+
+#. [diagram.create.success]
+#. defaultMessage is:
+#. Your diagram has been created successfully.
+#: i18n/messages.json
+msgid "Your diagram has been created successfully."
+msgstr "Вы создали диаграмму."
+
+#. [diagram.update.success]
+#. defaultMessage is:
+#. Your diagram has been successfully updated.
+#: i18n/messages.json
+msgid "Your diagram has been successfully updated."
+msgstr "Вы обновили диаграмму."
 
 #. [settings.email.no_change]
 #. defaultMessage is:
@@ -2536,84 +2768,84 @@ msgstr "не:"
 #. unknown
 #: i18n/messages.json
 msgid "unknown"
-msgstr "что-то неизвестное"
+msgstr "неизвестно"
 
 #. [facet.addresses]
 #. defaultMessage is:
 #. {count, plural, one {Address} other {Addresses}}
 #: i18n/messages.json
 msgid "{count, plural, one {Address} other {Addresses}}"
-msgstr "{count, plural, one {Адрес} other {Адресов}}"
+msgstr "{count, plural, one {Адрес} other {Адреса}}"
 
 #. [facet.category]
 #. defaultMessage is:
 #. {count, plural, one {Category} other {Categories}}
 #: i18n/messages.json
 msgid "{count, plural, one {Category} other {Categories}}"
-msgstr "{count, plural, one {Категория} other {Категорий}}"
+msgstr "{count, plural, one {Категория} other {Категории}}"
 
 #. [facet.countries]
 #. defaultMessage is:
 #. {count, plural, one {Country} other {Countries}}
 #: i18n/messages.json
 msgid "{count, plural, one {Country} other {Countries}}"
-msgstr "{count, plural, one {Страна} other {Стран}}"
+msgstr "{count, plural, one {Страна} other {Страны}}"
 
 #. [facet.collection_id]
 #. defaultMessage is:
 #. {count, plural, one {Dataset} other {Datasets}}
 #: i18n/messages.json
 msgid "{count, plural, one {Dataset} other {Datasets}}"
-msgstr "{count, plural, one {Набор данных} other {Наборов данных}}"
+msgstr "{count, plural, one {Набор данных} other {Наборы данных}}"
 
 #. [facet.emails]
 #. defaultMessage is:
 #. {count, plural, one {E-Mail} other {E-Mails}}
 #: i18n/messages.json
 msgid "{count, plural, one {E-Mail} other {E-Mails}}"
-msgstr "{count, plural, one {E-мэйл} other {E-мэйлов}}"
+msgstr "{count, plural, one {E-мэйл} other {E-мэйлы}}"
 
 #. [facet.mimetypes]
 #. defaultMessage is:
 #. {count, plural, one {File type} other {File types}}
 #: i18n/messages.json
 msgid "{count, plural, one {File type} other {File types}}"
-msgstr "{count, plural, one {Тип файла} other {Типов файлов}}"
+msgstr "{count, plural, one {Тип файла} other {Типы файлов}}"
 
 #. [facet.ibans]
 #. defaultMessage is:
 #. {count, plural, one {Iban number} other {Iban numbers}}
 #: i18n/messages.json
 msgid "{count, plural, one {Iban number} other {Iban numbers}}"
-msgstr "{count, plural, one {Iban-код} other {Iban-кодов}}"
+msgstr "{count, plural, one {Iban-код} other {Iban-коды}}"
 
 #. [facet.languages]
 #. defaultMessage is:
 #. {count, plural, one {Language} other {Languages}}
 #: i18n/messages.json
 msgid "{count, plural, one {Language} other {Languages}}"
-msgstr "{count, plural, one {Язык} other {Языков}}"
+msgstr "{count, plural, one {Язык} other {Языки}}"
 
 #. [facet.names]
 #. defaultMessage is:
 #. {count, plural, one {Name} other {Names}}
 #: i18n/messages.json
 msgid "{count, plural, one {Name} other {Names}}"
-msgstr "{count, plural, one {Имя} other {Имён}}"
+msgstr "{count, plural, one {Имя} other {Имена}}"
 
 #. [facet.phones]
 #. defaultMessage is:
 #. {count, plural, one {Phone number} other {Phone numbers}}
 #: i18n/messages.json
 msgid "{count, plural, one {Phone number} other {Phone numbers}}"
-msgstr "{count, plural, one {Номер телефона} other {Номеров телефона}}"
+msgstr "{count, plural, one {Номер телефона} other {Номера телефонов}}"
 
 #. [facet.schema]
 #. defaultMessage is:
 #. {count, plural, one {Type} other {Types}}
 #: i18n/messages.json
 msgid "{count, plural, one {Type} other {Types}}"
-msgstr "{count, plural, one {Тип} other {Типов}}"
+msgstr "{count, plural, one {Тип} other {Типы}}"
 
 #. [infoMode.collection.entries]
 #. defaultMessage is:
@@ -2656,10 +2888,3 @@ msgstr "Прочих записей: {count}"
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} выбрано"
-
-#. [collection.status.remaining]
-#. defaultMessage is:
-#. {finished} of {total} completed
-#: i18n/messages.json
-msgid "{finished} of {total} completed"
-msgstr "Завершено {finished} из {total}"

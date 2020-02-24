@@ -23,9 +23,19 @@ export const fetchEntityTags = asyncActionCreator(({ id }) => async () => {
   return { id, data: response.data };
 }, { name: 'FETCH_ENTITY_TAGS' });
 
+export const createEntity = asyncActionCreator(entity => async () => {
+  const response = await endpoint.post('entities', entity, {});
+  return response.data;
+}, { name: 'CREATE_ENTITY' });
 
-export const deleteEntity = asyncActionCreator(({ id }) => async () => {
-  const config = { params: { sync: true } };
-  await endpoint.delete(`entities/${id}`, config);
-  return { id };
+export const updateEntity = asyncActionCreator(({ entity, collectionId }) => async () => {
+  const payload = entity.toJSON();
+  payload.collection_id = collectionId;
+  const response = await endpoint.put(`entities/${entity.id}`, payload, {});
+  return response.data;
+}, { name: 'UPDATE_ENTITY' });
+
+export const deleteEntity = asyncActionCreator(id => async () => {
+  await endpoint.delete(`entities/${id}`, {});
+  return true;
 }, { name: 'DELETE_ENTITY' });

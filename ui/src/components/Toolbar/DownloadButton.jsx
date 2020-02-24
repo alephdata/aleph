@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip, Position } from '@blueprintjs/core';
+import { Icon, Tooltip, Position } from '@blueprintjs/core';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
 import c from 'classnames';
 
@@ -23,7 +23,7 @@ class DownloadButton extends React.PureComponent {
         position={Position.BOTTOM_RIGHT}
       >
         <a href={document.links.file} download type="button" target="_blank" className={c('DownloadButton', 'bp3-button', { 'bp3-intent-primary': !isPreview })} rel="nofollow noopener noreferrer">
-          <span className="bp3-icon-download left-icon" />
+          <Icon icon="download" className="left-icon" />
           <FormattedMessage id="document.download" defaultMessage="Download" />
         </a>
       </Tooltip>

@@ -44,7 +44,13 @@ class SearchBox extends React.Component {
   }
 
   onQueryChange({ target }) {
-    this.setState({ queryText: target.value });
+    const { activeScope } = this.state;
+    const queryText = target.value;
+    this.setState({ queryText });
+
+    if (activeScope.submitOnQueryChange) {
+      this.onSearchSubmit({ queryText });
+    }
   }
 
   onSubmit(event) {
@@ -52,14 +58,17 @@ class SearchBox extends React.Component {
     this.onSearchSubmit();
   }
 
-  onSearchSubmit(scope) {
-    const { queryText, activeScope } = this.state;
-    const nextScope = scope || activeScope;
-    nextScope.onSearch(queryText);
+  onSearchSubmit(override) {
+    const nextScope = override?.scope || this.state.activeScope;
+    const nextQueryText = override?.queryText === undefined
+      ? this.state.queryText
+      : override.queryText;
+
+    nextScope.onSearch(nextQueryText);
   }
 
   onChangeScope(newScope) {
-    this.onSearchSubmit(newScope);
+    this.onSearchSubmit({ scope: newScope });
   }
 
   render() {

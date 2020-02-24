@@ -1,23 +1,22 @@
 import logging
-from banal import ensure_dict
 from flask import Blueprint, request, Response
+from werkzeug.exceptions import NotFound
 from followthemoney import model
 from followthemoney.types import registry
-from followthemoney.util import merge_data
 from urllib.parse import quote
 from urlnormalizer import query_string
 
 from aleph.core import db, url_for
 from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
-from aleph.logic.entities import create_entity, update_entity, delete_entity
+from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags
 from aleph.index.entities import entities_by_ids
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
-from aleph.views.util import get_index_entity, get_db_entity, get_db_collection
+from aleph.views.util import get_index_entity, get_db_collection
 from aleph.views.util import jsonify, parse_request, get_flag, sanitize_html
-from aleph.views.util import require
+from aleph.views.util import require, get_nested_collection
 from aleph.views.context import enable_cache, tag_request
 from aleph.views.serializers import EntitySerializer
 
@@ -248,10 +247,9 @@ def create():
         - Entity
     """
     data = parse_request('EntityCreate')
-    collection = ensure_dict(data.get('collection'))
-    collection_id = data.get('collection_id', collection.get('id'))
-    collection = get_db_collection(collection_id, request.authz.WRITE)
-    entity_id = create_entity(data, collection, sync=True)
+    collection = get_nested_collection(data, request.authz.WRITE)
+    data.pop('id', None)
+    entity_id = upsert_entity(data, collection, sync=True)
     tag_request(entity_id=entity_id, collection_id=str(collection.id))
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
@@ -504,6 +502,7 @@ def update(entity_id):
         required: true
         schema:
           type: string
+          format: entity_id
       requestBody:
         content:
           application/json:
@@ -519,15 +518,17 @@ def update(entity_id):
       tags:
       - Entity
     """
-    entity = get_db_entity(entity_id, request.authz.WRITE)
-    tag_request(collection_id=entity.collection_id)
     data = parse_request('EntityUpdate')
-    if get_flag('merge'):
-        props = merge_data(data.get('properties'), entity.data)
-        data['properties'] = props
-    entity.update(data)
+    try:
+        entity = get_index_entity(entity_id, request.authz.WRITE)
+        collection = get_db_collection(entity.get('collection_id'),
+                                       request.authz.WRITE)
+    except NotFound:
+        collection = get_nested_collection(data, request.authz.WRITE)
+    tag_request(collection_id=collection.id)
+    data['id'] = entity_id
+    entity_id = upsert_entity(data, collection, sync=get_flag('sync', True))
     db.session.commit()
-    update_entity(entity, sync=get_flag('sync', True))
     entity = get_index_entity(entity_id, request.authz.READ)
     return EntitySerializer.jsonify(entity)
 
@@ -552,7 +553,9 @@ def delete(entity_id):
       - Entity
     """
     entity = get_index_entity(entity_id, request.authz.WRITE)
-    tag_request(collection_id=entity.get('collection_id'))
-    delete_entity(entity, sync=get_flag('sync', True))
+    collection = get_db_collection(entity.get('collection_id'),
+                                   request.authz.WRITE)
+    tag_request(collection_id=collection.id)
+    delete_entity(collection, entity, sync=get_flag('sync', True))
     db.session.commit()
     return ('', 204)

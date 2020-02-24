@@ -6,6 +6,7 @@ import {
 
 import {
   queryCollections,
+  queryDiagrams,
   queryEntities,
   queryNotifications,
 } from 'src/actions';
@@ -34,4 +35,12 @@ export default createReducer({
     (state, { error, args: { query } }) => resultLoadError(state, query, error),
 
   [queryNotifications.COMPLETE]: updateResults,
+
+  [queryDiagrams.START]: (state, { query }) => resultLoadStart(state, query),
+
+  [queryDiagrams.ERROR]: (state, {
+    error, args: { query },
+  }) => resultLoadError(state, query, error),
+
+  [queryDiagrams.COMPLETE]: updateResults,
 }, initialState);

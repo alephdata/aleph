@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-01-31 16:16+0100\n"
+"POT-Creation-Date: 2020-02-24 10:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,6 +109,10 @@ msgstr ""
 msgid "Other material"
 msgstr ""
 
+#: aleph/model/entity.py:85
+msgid "Invalid entity ID"
+msgstr ""
+
 #: aleph/model/event.py:48
 msgid "{{actor}} created {{collection}}"
 msgstr ""
@@ -137,7 +141,7 @@ msgstr ""
 msgid "failed"
 msgstr ""
 
-#: aleph/search/__init__.py:39
+#: aleph/search/__init__.py:47
 msgid "No schema is specified for the query."
 msgstr ""
 
@@ -184,33 +188,38 @@ msgid ""
 "    "
 msgstr ""
 
-#: aleph/validation/formats.py:19 aleph/views/forms.py:67
+#: aleph/validation/formats.py:20
 msgid "Invalid user locale."
 msgstr ""
 
-#: aleph/validation/formats.py:27 aleph/views/forms.py:78
+#: aleph/validation/formats.py:28
 #, python-format
 msgid "Invalid country code: %s"
 msgstr ""
 
-#: aleph/validation/formats.py:35 aleph/views/forms.py:35
+#: aleph/validation/formats.py:37
+#, python-format
+msgid "Invalid entity ID: %s"
+msgstr ""
+
+#: aleph/validation/formats.py:45
 msgid "Invalid category."
 msgstr ""
 
-#: aleph/validation/formats.py:43 aleph/views/forms.py:45
+#: aleph/validation/formats.py:53
 msgid "Invalid URL."
 msgstr ""
 
-#: aleph/validation/formats.py:51 aleph/views/forms.py:56
+#: aleph/validation/formats.py:61
 msgid "Invalid language code."
 msgstr ""
 
-#: aleph/validation/formats.py:59 aleph/views/forms.py:95
+#: aleph/validation/formats.py:69
 #, python-format
 msgid "Invalid schema name: %s"
 msgstr ""
 
-#: aleph/validation/formats.py:67 aleph/views/forms.py:87
+#: aleph/validation/formats.py:77
 #, python-format
 msgid "Invalid date: %s"
 msgstr ""

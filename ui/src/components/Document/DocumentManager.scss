@@ -6,8 +6,9 @@
 
     &__empty {
       padding: 0 $aleph-grid-size*2 $aleph-grid-size*2;
-      border: 2px dashed rgba(92, 112, 128, 0.6);
+      border: 1px dashed rgba(92, 112, 128, 0.6);
       cursor: pointer;
+      max-width: $aleph-content-width-limit;
 
       .bp3-heading {
         color: rgba(92, 112, 128, 0.6);

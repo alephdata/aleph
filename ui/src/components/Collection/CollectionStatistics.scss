@@ -1,42 +1,24 @@
 @import "src/app/variables.scss";
 
 .CollectionStatistics {
-  padding: $aleph-content-padding/2;
-  flex: auto;
-  width: 33.33%;
-  max-width: 33.33%;
-
-  @media screen and (max-width: $aleph-screen-lg-max-width) {
-    width: 50%;
-    max-width: 50%;
-  }
-
-  @media screen and (max-width: $aleph-screen-md-max-width) {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  &__inner-container {
-    border: 1px solid #ebf1f5;
-    border-radius: 5px;
-    height: 100%;
+  .Statistics {
+    padding: 0;
   }
 
   &__heading {
-    background-color: #ebf1f5;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    padding: 15px;
+    padding-bottom: $aleph-grid-size*2;
+    margin-bottom: $aleph-grid-size;
+    border-bottom: 1px solid $aleph-border-color;
 
-    &__total, &__label {
+    &__total, &__label, &__icon {
       color: $blue1;
       text-align: center;
-      margin: 10px;
+      margin-top: 0;
+      margin-bottom: 2px;
     }
 
     &__total {
       font-size: 40px;
-      margin-bottom: 0;
     }
 
     &__label {

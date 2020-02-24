@@ -40,29 +40,27 @@ class CollectionStatistics extends PureComponent {
     const { field, total, values } = this.props;
 
     return (
-      <div className="CollectionStatistics">
-        <div className="CollectionStatistics__inner-container">
-          <div className="CollectionStatistics__heading">
-            <h5 className="CollectionStatistics__heading__total">
-              <Numeric num={total} abbr={3} />
-            </h5>
-            <h5 className="CollectionStatistics__heading__label">
-              <Facet.Label field={field} count={total} />
-            </h5>
-          </div>
-          <Statistics
-            seeMoreButtonText={() => (
-              <FormattedMessage
-                id="collection.statistics.showmore"
-                defaultMessage="Show more"
-              />
-            )}
-            statistic={values}
-            isLoading={!values}
-            ItemContentContainer={this.renderItem}
-            styleType="dark"
-          />
+      <div className="CollectionStatistics bp3-card bp3-elevation-1">
+        <div className="CollectionStatistics__heading">
+          <h5 className="CollectionStatistics__heading__total">
+            <Numeric num={total} abbr={3} />
+          </h5>
+          <h5 className="CollectionStatistics__heading__label">
+            <Facet.Label field={field} count={total} />
+          </h5>
         </div>
+        <Statistics
+          seeMoreButtonText={() => (
+            <FormattedMessage
+              id="collection.statistics.showmore"
+              defaultMessage="Show more"
+            />
+          )}
+          statistic={values}
+          isLoading={!values}
+          ItemContentContainer={this.renderItem}
+          styleType="dark"
+        />
       </div>
     );
   }

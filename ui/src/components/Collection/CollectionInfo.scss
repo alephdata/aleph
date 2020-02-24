@@ -1,0 +1,39 @@
+@import "src/app/variables.scss";
+
+.CollectionInfo {
+  max-width: 350px;
+  &__item {
+    margin-bottom: 15px;
+    display: flex;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    .key, .value {
+      flex: 1 1;
+    }
+
+    .key {
+      margin-right: $aleph-grid-size*2;
+      flex-basis: 35%;
+      min-width: 90px;
+      color: $gray1 !important;
+    }
+
+    .value {
+      flex-basis: 65%;
+      text-align: right;
+
+      & > * {
+        display: block;
+        margin-bottom: $aleph-grid-size/2;
+        white-space: normal;
+
+        &:last-child {
+          margin: 0;
+        }
+      }
+    }
+  }
+}

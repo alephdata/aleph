@@ -78,7 +78,7 @@ Entity:
         format: schema
     score:
       type: number
-    writable:
+    writeable:
       type: boolean
       example: false
 
@@ -86,6 +86,9 @@ EntityUpdate:
   required: ["schema"]
   type: object
   properties:
+    collection_id:
+      type: string
+      nullable: true
     schema:
       type: string
       format: schema
