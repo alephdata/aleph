@@ -1,8 +1,6 @@
 const convertPathsToTree = files => {
   const retVal = {};
 
-  console.log('in convert', files);
-
   files.forEach(file => {
     const path = file.path || file.webkitRelativePath || file.name;
 
@@ -24,15 +22,3 @@ const convertPathsToTree = files => {
 };
 
 export default convertPathsToTree;
-//
-// export const traverseFileTree = (tree, baseFunc, recursiveFunc) => {
-//   return Object.entries(tree).map(([key, value]) => {
-//     if (value instanceof File) {
-//       return baseFunc(value);
-//     } else {
-//       return recursiveFunc(key);
-//
-//       traverseFileTree(value, baseFunc, recursiveFunc);
-//     }
-//   }
-// }

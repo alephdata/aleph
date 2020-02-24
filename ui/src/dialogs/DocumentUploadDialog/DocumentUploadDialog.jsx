@@ -39,17 +39,16 @@ export class DocumentUploadDialog extends Component {
 
     this.state = {
       files: props.filesToUpload || [],
-      percentCompleted: 0,
-      uploading: null,
+      uploadCount: 0,
+      currUploading: null,
     };
 
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onFilesChange = this.onFilesChange.bind(this);
-    this.onUploadProgress = this.onUploadProgress.bind(this);
+    this.incrementProgress = this.incrementProgress.bind(this);
   }
 
   onFilesChange(files) {
-    console.log('in on onFilesChange')
     this.setState({ files });
   }
 
@@ -62,53 +61,53 @@ export class DocumentUploadDialog extends Component {
 
     try {
       await this.traverseFileTree(fileTree, parent);
-      console.log('finished, toggling dialog', this.state);
-
+      console.log('finished, toggling');
       toggleDialog();
       return;
     } catch (e) {
-      console.log('error!', e);
       showErrorToast(intl.formatMessage(messages.error));
     }
   }
 
-  onUploadProgress(progressEvent) {
-    console.log('in on upload progress')
-    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-    this.setState({ percentCompleted });
+  incrementProgress(file) {
+    this.setState(({ uploadCount }) => ({
+      currUploading: file,
+      uploadCount: uploadCount + 1,
+    }));
   }
 
   async traverseFileTree(tree, parent) {
-    console.log('starting traverse');
-
-    const filePromises = [];
-    Object.entries(tree).map(([key, value]) => {
-      let promise;
-      if (value instanceof File) {
-        promise = this.uploadFile(value, parent);
-      } else {
-        promise = new Promise((resolve, reject) => {
-          this.uploadFolder(key, parent).then(async ({ id }) => {
-            await this.traverseFileTree(value, { id, foreign_id: key });
-            console.log('resolving promise');
-            resolve();
-          })
+    console.log('traversing');
+    const filePromises = Object.entries(tree)
+      .map(([key, value]) => {
+        // base case
+        if (value instanceof File) {
+          return this.uploadFile(value, parent);
+        }
+        // recursive case
+        return new Promise((resolve, reject) => {
+          this.uploadFolder(key, parent)
+            .then(async ({ id }) => {
+              if (id) {
+                await this.traverseFileTree(value, { id, foreign_id: key });
+                resolve();
+                return;
+              }
+              reject();
+            });
         });
-      }
+      });
 
-      filePromises.push(promise);
-    });
+    console.log('awaiting,', filePromises);
 
-    console.log('finished traversing, awaiting', filePromises);
     await Promise.all(filePromises);
-    console.log('returning frmo traverse');
-    return;
+    console.log('returning');
   }
 
-  uploadFile(file, parent, filePromises) {
+  uploadFile(file, parent) {
+    console.log('uploading file', file.name);
     const { collection, ingestDocument } = this.props;
-    console.log('uploading file', file, parent);
-    this.setState({ percentCompleted: 0, uploading: file.name });
+    this.incrementProgress(file.name);
 
     const metadata = {
       file_name: file.name,
@@ -117,14 +116,12 @@ export class DocumentUploadDialog extends Component {
     if (parent?.id) {
       metadata.parent_id = parent.id;
     }
-    return ingestDocument(collection.id, metadata, file, this.onUploadProgress);
+    return ingestDocument(collection.id, metadata, file);
   }
 
   uploadFolder(title, parent) {
+    console.log('uploading folder', title);
     const { collection, ingestDocument } = this.props;
-    console.log('uploading folder', title, parent);
-
-    this.setState({ percentCompleted: 0, uploading: title });
 
     const metadata = {
       file_name: title,
@@ -135,18 +132,18 @@ export class DocumentUploadDialog extends Component {
       metadata.parent_id = parent.id;
     }
 
-    return ingestDocument(collection.id, metadata, null, this.onUploadProgress);
+    return ingestDocument(collection.id, metadata, null);
   }
 
 
   renderContent() {
-    const { files, percentCompleted, uploading } = this.state;
+    const { files, uploadCount, currUploading } = this.state;
 
-    if (uploading) {
+    if (currUploading) {
       return (
         <DocumentUploadStatus
-          percentCompleted={percentCompleted}
-          uploading={uploading}
+          percentCompleted={uploadCount / files.length}
+          uploading={currUploading}
         />
       );
     }
