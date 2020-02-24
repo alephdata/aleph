@@ -4,15 +4,14 @@ import DocumentUploadInput from './DocumentUploadInput';
 
 import './DocumentUploadForm.scss';
 
-
 const messages = defineMessages({
   choose_file: {
     id: 'document.upload.choose_file',
-    defaultMessage: 'Choose files to upload...',
+    defaultMessage: 'Select files to upload',
   },
   choose_folder: {
     id: 'document.upload.choose_folder',
-    defaultMessage: 'Choose folders to upload...',
+    defaultMessage: 'Select folders to upload',
   },
   input_or: {
     id: 'document.upload.input_or',
@@ -23,8 +22,7 @@ const messages = defineMessages({
 
 export class DocumentUploadForm extends PureComponent {
   onFilesChange(event) {
-    const files = Array.from(event.target.files).filter(file => file.type !== "");
-    console.log('FILES', files);
+    const files = Array.from(event.target.files).filter(file => file.type !== '');
 
     this.props.onFilesChange(files);
   }
@@ -35,19 +33,15 @@ export class DocumentUploadForm extends PureComponent {
     return (
       <div className="DocumentUploadForm">
         <DocumentUploadInput
-          id="file-upload-input"
-          allowDirectories={false}
+          type="file"
           placeholder={intl.formatMessage(messages.choose_file)}
           onFilesChange={files => this.onFilesChange(files)}
         />
-        <div className="DocumentUploadForm__divider">
-          <span>-- </span>
+        <span className="DocumentUploadForm__divider">
           {intl.formatMessage(messages.input_or)}
-          <span> --</span>
-        </div>
+        </span>
         <DocumentUploadInput
-          id="folder-upload-input"
-          allowDirectories
+          type="folder"
           placeholder={intl.formatMessage(messages.choose_folder)}
           onFilesChange={files => this.onFilesChange(files)}
         />
