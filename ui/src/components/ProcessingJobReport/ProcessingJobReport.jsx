@@ -81,7 +81,7 @@ class ProcessingJobReport extends PureComponent {
 
   render() {
     const { job, counter } = this.props;
-    const jobName = `Job #${counter}`;
+    const jobName = `Job #${counter} (${job.invocation})`;
 
     return (
       <div className="ProcessingJobReport">
