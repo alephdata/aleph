@@ -4,21 +4,21 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
 # 
 # Translators:
-# jen occrp, 2019
+# jen occrp, 2020
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2020-02-07 13:02+0100\n"
+"POT-Creation-Date: 2020-02-24 10:44+0100\n"
 "PO-Revision-Date: 2018-03-15 07:37+0000\n"
-"Last-Translator: jen occrp, 2019\n"
+"Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.8.0\n"
+"Generated-By: Babel 2.7.0\n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
@@ -116,7 +116,7 @@ msgstr "Прочие материалы"
 
 #: aleph/model/entity.py:85
 msgid "Invalid entity ID"
-msgstr ""
+msgstr "Неверный ID сущности"
 
 #: aleph/model/event.py:48
 msgid "{{actor}} created {{collection}}"
@@ -141,13 +141,13 @@ msgstr ""
 
 #: aleph/model/mapping.py:22
 msgid "success"
-msgstr "успех"
+msgstr "успешно"
 
 #: aleph/model/mapping.py:23
 msgid "failed"
 msgstr "неудача"
 
-#: aleph/search/__init__.py:39
+#: aleph/search/__init__.py:47
 msgid "No schema is specified for the query."
 msgstr "Отсутствует схема данных для запроса."
 
@@ -213,7 +213,7 @@ msgstr "Некорректный код страны: %s"
 #: aleph/validation/formats.py:37
 #, python-format
 msgid "Invalid entity ID: %s"
-msgstr ""
+msgstr "Неверный ID сущности: %s"
 
 #: aleph/validation/formats.py:45
 msgid "Invalid category."

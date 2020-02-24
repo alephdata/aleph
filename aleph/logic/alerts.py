@@ -67,7 +67,8 @@ def alert_query(alert, authz):
     queries = [{
         'query_string': {
             'query': alert.query,
-            'fields': ['fingerprints.text^3', 'text'],
+            'lenient': True,
+            'default_field': 'text',
             'default_operator': 'AND',
             'minimum_should_match': '90%'
         }

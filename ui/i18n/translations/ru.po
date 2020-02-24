@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-02-07T11:07:54.733Z\n"
+"POT-Creation-Date: 2020-02-24T09:44:35.532Z\n"
 "Last-Translator: jen occrp, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/aleph/teams/76591/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "Краткое описание набора данных"
 #. A brief description of the diagram
 #: i18n/messages.json
 msgid "A brief description of the diagram"
-msgstr ""
+msgstr "Краткое описание диаграммы"
 
 #. [collection.edit.info.placeholder_summary]
 #. defaultMessage is:
@@ -274,7 +274,7 @@ msgstr "Вы хотите удалить этот набор данных и в�
 #. Are you sure you want to delete this diagram?
 #: i18n/messages.json
 msgid "Are you sure you want to delete this diagram?"
-msgstr ""
+msgstr "Удалить эту диаграмму?"
 
 #. [entity.delete.question]
 #. defaultMessage is:
@@ -326,7 +326,7 @@ msgstr "Скрытая копия"
 #. Browse
 #: i18n/messages.json
 msgid "Browse"
-msgstr ""
+msgstr "Просмотр"
 
 #. [email.cc]
 #. defaultMessage is:
@@ -428,7 +428,7 @@ msgstr "Поменять пароль"
 #. Changes are still being saved, are you sure you want to leave?
 #: i18n/messages.json
 msgid "Changes are still being saved, are you sure you want to leave?"
-msgstr ""
+msgstr "Вы уверены, что не хотите дождаться сохранения изменений?"
 
 #. [dashboard.subheading]
 #. defaultMessage is:
@@ -606,7 +606,7 @@ msgstr "Создать"
 #. Create a network diagram
 #: i18n/messages.json
 msgid "Create a network diagram"
-msgstr ""
+msgstr "Создать диаграмму"
 
 #. [alerts.add_placeholder]
 #. defaultMessage is:
@@ -794,14 +794,14 @@ msgstr "Удаление маппинга и созданных сущносте
 #. Diagram settings
 #: i18n/messages.json
 msgid "Diagram settings"
-msgstr ""
+msgstr "Настройки диаграммы"
 
 #. [diagrams.browser.breadcrumb]
 #. defaultMessage is:
 #. Diagrams
 #: i18n/messages.json
 msgid "Diagrams"
-msgstr ""
+msgstr "Диаграммы"
 
 #. [entity.info.documents]
 #. defaultMessage is:
@@ -858,6 +858,8 @@ msgstr "Скачать оригинальный документ"
 #: i18n/messages.json
 msgid "Drop a .vis file here or click to import an existing diagram layout"
 msgstr ""
+"Перенесите .vis файл сюда или кликните, чтобы импортировать готовую "
+"диаграмму"
 
 #. [settings.email]
 #. defaultMessage is:
@@ -899,14 +901,14 @@ msgstr "Ошибка"
 #. Error importing file
 #: i18n/messages.json
 msgid "Error importing file"
-msgstr ""
+msgstr "Ошибка импорта файла"
 
 #. [diagram.status_error]
 #. defaultMessage is:
 #. Error saving
 #: i18n/messages.json
 msgid "Error saving"
-msgstr ""
+msgstr "Ошибка сохранения"
 
 #. [mapping.status.error]
 #. defaultMessage is:
@@ -1067,7 +1069,7 @@ msgstr "Создать сущности"
 #. Generate structured entities
 #: i18n/messages.json
 msgid "Generate structured entities"
-msgstr "Создать структурированные сущности"
+msgstr "Создание структурированных сущностей"
 
 #. [mapping.actions.create.toast]
 #. defaultMessage is:
@@ -1098,14 +1100,14 @@ msgstr "Помощь"
 #. Import a network diagram
 #: i18n/messages.json
 msgid "Import a network diagram"
-msgstr ""
+msgstr "Импортировать диаграмму"
 
 #. [diagrams.index.import]
 #. defaultMessage is:
 #. Import diagram
 #: i18n/messages.json
 msgid "Import diagram"
-msgstr ""
+msgstr "Импортировать диаграмму"
 
 #. [entity.info.info]
 #. defaultMessage is:
@@ -1256,6 +1258,8 @@ msgid ""
 "Match your own data against the entities in this collection using the free {openrefine}\n"
 "              tool by adding the reconciliation endpoint."
 msgstr ""
+"Сопоставить пользовательские данные с сущностями из этой коллекции с помощью свободного инструмента {openrefine}\n"
+"путём добавления следующих точек совмещения:"
 
 #. [xref.matches]
 #. defaultMessage is:
@@ -1305,7 +1309,7 @@ msgstr "Название"
 #. Network diagrams
 #: i18n/messages.json i18n/messages.json i18n/messages.json i18n/messages.json
 msgid "Network diagrams"
-msgstr ""
+msgstr "Диаграммы"
 
 #. [diagram.description]
 #. defaultMessage is:
@@ -1314,6 +1318,8 @@ msgstr ""
 msgid ""
 "Network diagrams let you visualize complex relationships within a dataset."
 msgstr ""
+"С помощью диаграмм вы можете визуализировать сложные связи внутри набора "
+"данных."
 
 #. [cases.index.create]
 #. defaultMessage is:
@@ -1327,7 +1333,7 @@ msgstr "Новый набор данных"
 #. New diagram
 #: i18n/messages.json
 msgid "New diagram"
-msgstr ""
+msgstr "Новая диаграмма"
 
 #. [document.folder.button]
 #. defaultMessage is:
@@ -1727,7 +1733,7 @@ msgstr "Связи"
 #. Remove
 #: i18n/messages.json
 msgid "Remove"
-msgstr "Удалить"
+msgstr "Удалить маппинг"
 
 #. [queryLogs.query.delete.tooltip]
 #. defaultMessage is:
@@ -1789,14 +1795,14 @@ msgstr "Сохранить изменения"
 #. Saved
 #: i18n/messages.json
 msgid "Saved"
-msgstr ""
+msgstr "Сохранено"
 
 #. [diagram.status_in_progress]
 #. defaultMessage is:
 #. Saving...
 #: i18n/messages.json
 msgid "Saving..."
-msgstr ""
+msgstr "Сохраняется..."
 
 #. [xref.score]
 #. defaultMessage is:
@@ -1909,7 +1915,7 @@ msgstr "Выбрать"
 #. Select a dataset
 #: i18n/messages.json i18n/messages.json
 msgid "Select a dataset"
-msgstr ""
+msgstr "Выберите набор данных"
 
 #. [mapping.entityAssign.placeholder]
 #. defaultMessage is:
@@ -2087,7 +2093,7 @@ msgstr "Тема"
 #. Submit
 #: i18n/messages.json
 msgid "Submit"
-msgstr ""
+msgstr "Сохранить"
 
 #. [auth.success]
 #. defaultMessage is:
@@ -2135,7 +2141,7 @@ msgstr "Задачи"
 #. Test new features before they are finished
 #: i18n/messages.json
 msgid "Test new features before they are finished"
-msgstr ""
+msgstr "Принимать участие в тестировании новых функций"
 
 #. [entity.info.text]
 #. defaultMessage is:
@@ -2228,7 +2234,7 @@ msgstr "При создании папки возникла ошибка."
 msgid ""
 "There was an error saving your latest changes, are you sure you want to "
 "leave?"
-msgstr ""
+msgstr "Произошла ошибка при сохранении последних изменений, вы хотите уйти?"
 
 #. [document.upload.error]
 #. defaultMessage is:
@@ -2385,7 +2391,7 @@ msgstr "Безымянный набор данных"
 #. Untitled diagram
 #: i18n/messages.json
 msgid "Untitled diagram"
-msgstr ""
+msgstr "Безымянная диаграмма"
 
 #. [alerts.save]
 #. defaultMessage is:
@@ -2570,7 +2576,7 @@ msgstr "Что нового, {role}?"
 #. Workspace
 #: i18n/messages.json
 msgid "Workspace"
-msgstr ""
+msgstr "Рабочая среда"
 
 #. [alerts.no_alerts]
 #. defaultMessage is:
@@ -2613,7 +2619,7 @@ msgstr "Вы подписаны на оповещения для этого по
 #. You do not have any network diagrams yet
 #: i18n/messages.json
 msgid "You do not have any network diagrams yet"
-msgstr ""
+msgstr "У вас пока нет диаграмм"
 
 #. [cases.no_results_title]
 #. defaultMessage is:
@@ -2659,7 +2665,7 @@ msgstr "Необходимо создать объект типа \"{range}\" д
 #. You must log in to create a diagram
 #: i18n/messages.json
 msgid "You must log in to create a diagram"
-msgstr ""
+msgstr "Для создания диаграмм необходимо авторизоваться."
 
 #. [case.create.login]
 #. defaultMessage is:
@@ -2699,14 +2705,14 @@ msgstr "Изменения сохранены"
 #. Your diagram has been created successfully.
 #: i18n/messages.json
 msgid "Your diagram has been created successfully."
-msgstr ""
+msgstr "Вы создали диаграмму."
 
 #. [diagram.update.success]
 #. defaultMessage is:
 #. Your diagram has been successfully updated.
 #: i18n/messages.json
 msgid "Your diagram has been successfully updated."
-msgstr ""
+msgstr "Вы обновили диаграмму."
 
 #. [settings.email.no_change]
 #. defaultMessage is:
@@ -2762,7 +2768,7 @@ msgstr "не:"
 #. unknown
 #: i18n/messages.json
 msgid "unknown"
-msgstr "что-то неизвестное"
+msgstr "неизвестно"
 
 #. [facet.addresses]
 #. defaultMessage is:
@@ -2882,10 +2888,3 @@ msgstr "Прочих записей: {count}"
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} выбрано"
-
-#. [collection.status.remaining]
-#. defaultMessage is:
-#. {finished} of {total} completed
-#: i18n/messages.json
-msgid "{finished} of {total} completed"
-msgstr "Завершено {finished} из {total}"
