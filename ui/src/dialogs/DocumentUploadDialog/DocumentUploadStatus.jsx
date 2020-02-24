@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { ProgressBar } from '@blueprintjs/core';
 
-// import './DocumentUploadStatus.scss';
-
 
 export class DocumentUploadStatus extends PureComponent {
   render() {
