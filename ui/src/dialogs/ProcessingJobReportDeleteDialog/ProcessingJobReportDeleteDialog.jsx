@@ -51,7 +51,7 @@ export class ProcessingJobReportDeleteDialog extends Component {
       >
         <FormattedMessage
           id="report.job.delete.question"
-          defaultMessage="Are you sure you want to delete this job report?"
+          defaultMessage="Are you sure you want to delete this job report? This action only deletes the reporting data, but nothing from the collections index itself."
         />
       </Alert>
     );
