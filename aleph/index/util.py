@@ -182,6 +182,24 @@ def _check_response(index, res):
     return True
 
 
+def rewrite_mapping_safe(pending, existing):
+    """This re-writes mappings for ElasticSearch in such a way that
+    immutable values are kept to their existing setting, while other
+    fields are updated."""
+    IMMUTABLE = ('type', 'analyzer', 'normalizer')
+    # This is a pretty bad idea long-term. We need to make it easier
+    # to use multiple index generations instead.
+    if not isinstance(pending, dict) or not isinstance(existing, dict):
+        return pending
+    for key, value in list(pending.items()):
+        old_value = existing.get(key)
+        value = rewrite_mapping_safe(value, old_value)
+        if key in IMMUTABLE and old_value is not None:
+            value = old_value
+        pending[key] = value
+    return pending
+
+
 def configure_index(index, mapping, settings):
     """Create or update a search index with the given mapping and
     settings. This will try to make a new index, or update an
@@ -194,16 +212,14 @@ def configure_index(index, mapping, settings):
             'timeout': MAX_TIMEOUT,
             'master_timeout': MAX_TIMEOUT
         }
-        res = es.indices.close(ignore_unavailable=True,
-                               **options)
-        res = es.indices.put_mapping(body=mapping,
-                                     ignore=[400],
-                                     **options)
+        res = es.indices.close(ignore_unavailable=True, **options)
+        existing = es.indices.get_mapping(index=index)
+        existing = existing.get(index, {}).get('mappings')
+        mapping = rewrite_mapping_safe(mapping, existing)
+        res = es.indices.put_mapping(body=mapping, **options)
         _check_response(index, res)
         settings.get('index').pop('number_of_shards')
-        res = es.indices.put_settings(body=settings,
-                                      ignore=[400],
-                                      **options)
+        res = es.indices.put_settings(body=settings, **options)
         _check_response(index, res)
         res = es.indices.open(**options)
         return True
