@@ -1,10 +1,24 @@
 @import "src/app/variables.scss";
 
 .DocumentUploadForm {
-  margin: $aleph-grid-size 0;
-  
+  margin: $aleph-grid-size;
+  display: flex;
+  justify-content: center;
+
   &__divider {
     text-align: center;
-    padding: $aleph-grid-size 0;
+    display: inline-block;
+    padding: $aleph-grid-size/2 $aleph-grid-size*1.5;
+    flex: 0 0;
+  }
+
+  .DocumentUploadInput {
+    flex: 1 0;
+    &:first-child {
+      text-align: right;
+    }
+    &:last-child {
+      text-align: left;
+    }
   }
 }

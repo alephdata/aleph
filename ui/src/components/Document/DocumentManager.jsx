@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { getDroppedOrSelectedFiles } from 'html5-file-selector';
 import { Callout, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import Dropzone from 'react-dropzone';

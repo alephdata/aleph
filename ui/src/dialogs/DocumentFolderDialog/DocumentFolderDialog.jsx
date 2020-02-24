@@ -74,8 +74,6 @@ export class DocumentFolderDialog extends Component {
     const { intl, toggleDialog, isOpen } = this.props;
     const { title, blocking } = this.state;
 
-    console.log('the parent for this new folder is', this.props.parent);
-
     return (
       <Dialog
         icon="folder-new"

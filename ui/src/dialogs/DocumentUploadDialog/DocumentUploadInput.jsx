@@ -1,29 +1,32 @@
 import React, { PureComponent } from 'react';
+import { Icon } from '@blueprintjs/core';
 
-import './DocumentUploadDialog.scss';
+import './DocumentUploadInput.scss';
 
 
 export class DocumentUploadInput extends PureComponent {
   render() {
-    const { allowDirectories, id, placeholder, onFilesChange } = this.props;
+    const { type, placeholder, onFilesChange } = this.props;
+
+    const allowDirectories = type === 'folder';
 
     return (
-      <div className="bp3-input-group bp3-large bp3-fill">
+      <div className="DocumentUploadInput">
+        <input
+          id={type}
+          type="file"
+          multiple
+          webkitdirectory={allowDirectories ? '' : null}
+          directory={allowDirectories ? '' : null}
+          onChange={onFilesChange}
+          className="DocumentUploadInput__hidden-input"
+        />
         <label
-          className="bp3-file-input bp3-large bp3-fill"
-          htmlFor={id}
+          htmlFor={type}
+          className="DocumentUploadInput__label bp3-button bp3-intent-primary"
         >
-          <input
-            id={id}
-            type="file"
-            multiple
-            webkitdirectory={allowDirectories ? '' : null}
-            directory={allowDirectories ? '' : null}
-            onChange={onFilesChange}
-          />
-          <span className="bp3-file-upload-input">
-            { placeholder}
-          </span>
+          <Icon icon={allowDirectories ? 'folder-shared' : 'document-share'} className="left-icon" />
+          { placeholder }
         </label>
       </div>
     );

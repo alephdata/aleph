@@ -27,7 +27,7 @@ export class DocumentUploadStatus extends PureComponent {
         <p className="text-muted">
           <FormattedMessage
             id="document.upload.notice"
-            defaultMessage="Once the upload is complete, it will take a few moments for the document to be processed and become searchable."
+            defaultMessage="Once the upload is complete, it will take a few moments for the documents to be processed and become searchable."
           />
         </p>
       </div>
