@@ -61,7 +61,6 @@ export class DocumentUploadDialog extends Component {
 
     try {
       await this.traverseFileTree(fileTree, parent);
-      console.log('finished, toggling');
       toggleDialog();
       return;
     } catch (e) {
@@ -77,7 +76,6 @@ export class DocumentUploadDialog extends Component {
   }
 
   async traverseFileTree(tree, parent) {
-    console.log('traversing');
     const filePromises = Object.entries(tree)
       .map(([key, value]) => {
         // base case
@@ -98,14 +96,10 @@ export class DocumentUploadDialog extends Component {
         });
       });
 
-    console.log('awaiting,', filePromises);
-
     await Promise.all(filePromises);
-    console.log('returning');
   }
 
   uploadFile(file, parent) {
-    console.log('uploading file', file.name);
     const { collection, ingestDocument } = this.props;
     this.incrementProgress(file.name);
 
@@ -120,7 +114,6 @@ export class DocumentUploadDialog extends Component {
   }
 
   uploadFolder(title, parent) {
-    console.log('uploading folder', title);
     const { collection, ingestDocument } = this.props;
 
     const metadata = {
