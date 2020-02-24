@@ -20,6 +20,10 @@
       padding-left: 0;
     }
   }
+
+  .header-light {
+    font-weight: normal;
+  }
 }
 
 .ProcessingJobReportTableRow {
@@ -48,7 +52,7 @@
 
   td {
     &.tag {
-      min-width: 40px;
+      min-width: 50px;
     }
 
     .bp3-button {
@@ -59,12 +63,14 @@
       background-color: inherit;
       background-image: none;
       min-height: auto;
+      color: $aleph-link-color;
 
       &:hover {
         border: none;
         box-shadow: none;
         background-color: inherit;
         background-image: none;
+        color: $gray2;
       }
 
       &-text {

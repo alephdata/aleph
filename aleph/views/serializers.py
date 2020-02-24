@@ -443,14 +443,15 @@ class _BucketSerializer(Serializer):
 
 class JobReportSerializer(Serializer):
     def _serialize(self, obj):
-        bucket = _BucketSerializer().serialize
+        serialize = _BucketSerializer().serialize
         data = {
             'job_id': obj['key'],
             'start_at': obj['start_at'].get('value_as_string', ''),
             'end_at': obj['end_at'].get('value_as_string', ''),
             'updated_at': obj['updated_at'].get('value_as_string', ''),
-            'stages': bucket(obj['stages']['buckets']),
-            'errors': bucket(obj['errors']['buckets']),
+            'stages': serialize(obj['stages']['buckets']),
+            'errors': serialize(obj['errors']['buckets']),
+            'invocation': 'reprocess' if 'reprocess' in obj['key'] else 'crawldir'
         }
         data['finished'] = all(s.get('finished', False) for s in data['stages'])
         return data

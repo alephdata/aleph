@@ -1,6 +1,12 @@
 @import "src/app/variables.scss";
 
 .ProcessingTaskReportManager {
+  &__header {
+    .QueryTags {
+      margin-top: $aleph-grid-size;
+    }
+  }
+
   &__content {
     margin-top: $aleph-grid-size*2;
   }

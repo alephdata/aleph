@@ -13,7 +13,7 @@ const messages = defineMessages({
   },
   column_total: {
     id: 'report.job.column.total',
-    defaultMessage: 'Tasks',
+    defaultMessage: 'Total tasks',
   },
   column_start: {
     id: 'report.job.column.start',
@@ -33,11 +33,14 @@ const messages = defineMessages({
   },
 });
 
-
 class ProcessingJobReportTable extends Component {
   render() {
     const { stages, intl, viewDetails, jumpToContext } = this.props;
-    const TH = ({ field }) => <th>{intl.formatMessage(messages[`column_${field}`])}</th>;
+    const TH = ({ field, className }) => (
+      <th className={className}>
+        {intl.formatMessage(messages[`column_${field}`])}
+      </th>
+    );
 
     return (
       <table className="ProcessingJobReportTable data-table">
@@ -46,14 +49,14 @@ class ProcessingJobReportTable extends Component {
             <th />
             <TH className="header" field="stage" />
             <TH className="header" field="total" />
-            <TH className="header" field="start" />
-            <TH className="header" field="end" />
-            <TH className="header" field="error" />
+            <TH className="header-light" field="start" />
+            <TH className="header-light" field="end" />
+            <TH className="header-light" field="error" />
             <TH className="header" field="updated_at" />
           </tr>
         </thead>
         <tbody>
-          {stages.map(stage => (
+          {stages.map((stage) => (
             <ProcessingJobReportTableRow
               stage={stage}
               key={stage.name}
@@ -67,6 +70,4 @@ class ProcessingJobReportTable extends Component {
   }
 }
 
-export default compose(
-  injectIntl,
-)(ProcessingJobReportTable);
+export default compose(injectIntl)(ProcessingJobReportTable);

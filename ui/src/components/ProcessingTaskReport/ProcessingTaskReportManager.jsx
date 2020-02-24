@@ -4,6 +4,7 @@ import { Callout, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
 import { Count, ErrorSection } from 'src/components/common';
+import QueryTags from 'src/components/QueryTags/QueryTags';
 import ProcessingTasksReprocessingDialog from 'src/dialogs/ProcessingTasksReprocessDialog/ProcessingTasksReprocessDialog';
 import ProcessingTaskReportSearch from './ProcessingTaskReportSearch';
 
@@ -73,11 +74,18 @@ export class ProcessingTaskReportManager extends Component {
 
     return (
       <div className="ProcessingTaskReportManager">
-        <div className="bp3-button-group">
-          <Button icon="automatic-updates" onClick={this.toggleReprocessingDialog} disabled={!selection.length}>
-            <FormattedMessage id="report.manager.reprocess" defaultMessage="Re-process" />
-            {selection.length > 0 && <Count count={selection.length} />}
-          </Button>
+        <div className="ProcessingTaskReportManager__header">
+          <div className="bp3-button-group">
+            <Button icon="automatic-updates" onClick={this.toggleReprocessingDialog} disabled={!selection.length}>
+              <FormattedMessage id="report.manager.reprocess" defaultMessage="Re-process" />
+              {selection.length > 0 && <Count count={selection.length} />}
+            </Button>
+            <Button icon="automatic-updates" onClick={this.toggleReprocessingDialog} disabled={!result.total}>
+              <FormattedMessage id="report.manager.reprocess" defaultMessage="Re-process all" />
+              {result.total > 0 && <Count count={result.total} />}
+            </Button>
+          </div>
+          <QueryTags query={query} updateQuery={this.props.updateQuery} />
         </div>
         { hasPending && (
           <Callout className="bp3-icon-info-sign bp3-intent-warning">

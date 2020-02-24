@@ -6,7 +6,6 @@ import { injectIntl } from 'react-intl';
 import { Button, Tag } from '@blueprintjs/core/';
 import { Date } from 'src/components/common';
 import ProcessingJobReportDeleteDialog from 'src/dialogs/ProcessingJobReportDeleteDialog/ProcessingJobReportDeleteDialog';
-import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import { processingTaskReportsQuery } from 'src/queries';
 import ProcessingJobReportTable from './ProcessingJobReportTable';
 import { jumpToDetails } from './util';
@@ -72,8 +71,16 @@ class ProcessingJobReport extends PureComponent {
     );
   }
 
+  renderInvocationMessage() {
+    const { invocation } = this.props.job;
+    if (invocation === 'reprocess') {
+      return 'Triggered via "Re-process" in the Aleph-frontend';
+    }
+    return 'Trigerred via the `crawldir` cli command';
+  }
+
   render() {
-    const { job, counter, collection } = this.props;
+    const { job, counter } = this.props;
     const jobName = `Job #${counter}`;
 
     return (
@@ -88,6 +95,7 @@ class ProcessingJobReport extends PureComponent {
         <div className="ProcessingJobReport__heading">
           <h2 className="ProcessingJobReport__heading__text">{jobName}</h2>
           <span className="ProcessingJobReport__heading__meta">
+            {this.renderInvocationMessage()}
             <span className="ProcessingJobReport__heading__date">
               Started at:
               {renderDate(job.start_at)}
@@ -113,11 +121,6 @@ class ProcessingJobReport extends PureComponent {
             jumpToContext={this.getJumpToContext()}
           />
         </div>
-        <CollectionAnalyzeAlert
-          collection={collection}
-          isOpen={this.state.analyzeIsOpen}
-          toggleAlert={this.toggleAnalyze}
-        />
       </div>
     );
   }

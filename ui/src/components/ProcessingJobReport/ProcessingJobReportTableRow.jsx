@@ -1,29 +1,20 @@
 import React, { Component } from 'react';
 import c from 'classnames';
-// import { Icon, Spinner } from '@blueprintjs/core';
-import { Button, Tag } from '@blueprintjs/core';
+import { Icon, Spinner, Button, Tag } from '@blueprintjs/core';
 
 import { Date, Count } from 'src/components/common';
 
 import { jumpToDetails } from './util';
 
-// class Stage extends React.PureComponent {
-//   render() {
-//     const { name, finished, has_errors: errors } = this.props.stage;
-//     let renderedIcon = <Spinner size="14" />;
-//     if (errors) {
-//       renderedIcon = <Icon icon="error" />;
-//     } else if (finished) {
-//       renderedIcon = <Icon icon="tick-circle" />;
-//     }
-//     return (
-//       <>
-//         {renderedIcon}
-//         {name}
-//       </>
-//     );
-//   }
-// }
+const StageIcon = ({ finished, errors }) => {
+  let renderedIcon = <Spinner size="14" />;
+  if (errors) {
+    renderedIcon = <Icon icon="error" />;
+  } else if (finished) {
+    renderedIcon = <Icon icon="tick-circle" />;
+  }
+  return renderedIcon;
+};
 
 class ProcessingJobReportTableRow extends Component {
   constructor(props) {
@@ -56,7 +47,7 @@ class ProcessingJobReportTableRow extends Component {
 
     const renderStatus = (key) => (
       <td className={key}>
-        <Button onClick={() => this.viewDetails({ status: key })}>
+        <Button title="Show details" onClick={() => this.viewDetails({ status: key })}>
           {selectCount(key)}
         </Button>
       </td>
@@ -69,11 +60,12 @@ class ProcessingJobReportTableRow extends Component {
 
     const intent = finished ? 'success' : 'warning';
     const label = finished ? 'Finished' : 'Running';
+    const icon = <StageIcon finished={finished} errors={!!errors} />;
 
     return (
       <tr className={rowClass}>
         <td className="tag">
-          <Tag intent={intent}>
+          <Tag intent={intent} icon={icon}>
             {label}
           </Tag>
         </td>
