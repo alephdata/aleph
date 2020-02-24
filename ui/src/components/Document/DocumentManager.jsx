@@ -59,7 +59,6 @@ export class DocumentManager extends Component {
   }
 
   toggleUpload(files = []) {
-    console.log('files are', files);
     this.setState(({ uploadIsOpen }) => ({
       uploadIsOpen: !uploadIsOpen,
       filesToUpload: files,
