@@ -20,7 +20,7 @@ import './DocumentUploadDialog.scss';
 const messages = defineMessages({
   title: {
     id: 'document.upload.title',
-    defaultMessage: 'Upload',
+    defaultMessage: 'Upload Documents',
   },
   success: {
     id: 'document.upload.success',
