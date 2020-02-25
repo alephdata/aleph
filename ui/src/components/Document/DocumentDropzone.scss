@@ -1,9 +1,20 @@
 @import "src/app/variables.scss";
 
 .DocumentDropzone {
-  &__contents {
+  &__content {
     &.active {
-      box-shadow: inset 1px 1px 15px $blue2;
+      position: relative;
+      &:after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        position: absolute;
+        background: rgba($aleph-breadcrumbs-background, .4);
+        box-shadow: inset 0 0 3px $blue1;
+        border-radius: $aleph-border-radius;
+      }
     }
   }
 }

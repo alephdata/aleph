@@ -16,7 +16,6 @@ class DocumentDropzone extends Component {
   }
 
   toggleUpload(files = []) {
-    console.log('toggling upload', files);
     this.setState(({ uploadIsOpen }) => ({
       uploadIsOpen: !uploadIsOpen,
       filesToUpload: files,
@@ -24,13 +23,11 @@ class DocumentDropzone extends Component {
   }
 
   render() {
-    const { canDrop, children, collection } = this.props;
+    const { canDrop, children, collection, onUploadSuccess } = this.props;
 
     if (!canDrop) {
       return children;
     }
-
-    console.log('RENDERINFF');
 
     return (
       <>
@@ -45,7 +42,7 @@ class DocumentDropzone extends Component {
                 {...getInputProps()}
                 onClick={e => { e.preventDefault(); e.stopPropagation(); }}
               />
-              <div className={c('DocumentDropzone__contents', { active: isDragActive })}>
+              <div className={c('DocumentDropzone__content', { active: isDragActive })}>
                 {children}
               </div>
             </div>
@@ -57,6 +54,7 @@ class DocumentDropzone extends Component {
             isOpen={this.state.uploadIsOpen}
             toggleDialog={this.toggleUpload}
             filesToUpload={this.state.filesToUpload}
+            onUploadSuccess={onUploadSuccess}
           />
         )}
       </>
