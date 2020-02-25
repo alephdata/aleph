@@ -27,13 +27,14 @@ class PdfViewerPage extends Component {
   }
 
   render() {
-    const { document, entity, numPages } = this.props;
+    const { document, entity, numPages, page } = this.props;
+
     if (!entity || numPages === undefined) {
       return <SectionLoading />;
     }
     return (
       <>
-        <PagingButtons document={document} numberOfPages={numPages} />
+        <PagingButtons document={document} numberOfPages={numPages} page={page} />
         <TextViewer document={entity} noStyle />
       </>
     );
