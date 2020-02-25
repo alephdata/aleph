@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { Callout, Button } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import Dropzone from 'react-dropzone';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -39,8 +38,8 @@ export class DocumentManager extends Component {
     };
     this.updateSelection = this.updateSelection.bind(this);
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
-    this.toggleUpload = this.toggleUpload.bind(this);
     this.toggleAnalyze = this.toggleAnalyze.bind(this);
+    this.toggleUpload = this.toggleUpload.bind(this);
   }
 
   updateSelection(document) {
@@ -58,15 +57,14 @@ export class DocumentManager extends Component {
     this.setState(({ deleteIsOpen: !deleteIsOpen }));
   }
 
-  toggleUpload(files = []) {
-    this.setState(({ uploadIsOpen }) => ({
-      uploadIsOpen: !uploadIsOpen,
-      filesToUpload: files,
-    }));
-  }
-
   toggleAnalyze() {
     this.setState(({ analyzeIsOpen }) => ({ analyzeIsOpen: !analyzeIsOpen }));
+  }
+
+  toggleUpload() {
+    this.setState(({ uploadIsOpen }) => ({
+      uploadIsOpen: !uploadIsOpen,
+    }));
   }
 
   canUpload() {
@@ -92,24 +90,10 @@ export class DocumentManager extends Component {
 
     const emptyComponent = (
       // eslint-disable-next-line
-      <div className="DocumentManager__content__empty" onClick={() => this.toggleUpload()}>
+      <div className="DocumentManager__content__empty" onClick={this.toggleUpload}>
         <ErrorSection
           icon={canUpload ? 'plus' : 'folder-open'}
           title={intl.formatMessage(canUpload ? messages.emptyCanUpload : messages.empty)}
-        />
-      </div>
-    );
-
-    const contents = (
-      <div className="DocumentManager__content">
-        <EntitySearch
-          query={query}
-          hideCollection
-          documentMode
-          showPreview={false}
-          selection={selection}
-          updateSelection={updateSelection}
-          emptyComponent={emptyComponent}
         />
       </div>
     );
@@ -119,7 +103,7 @@ export class DocumentManager extends Component {
         { showActions && (
           <div className="bp3-button-group">
             { canUpload && (
-              <Button icon="upload" onClick={() => this.toggleUpload()}>
+              <Button icon="upload" onClick={this.toggleUpload}>
                 <FormattedMessage id="document.upload.button" defaultMessage="Upload" />
               </Button>
             )}
@@ -142,38 +126,27 @@ export class DocumentManager extends Component {
             />
           </Callout>
         )}
-        { canUpload && (
-          <Dropzone
-            onDrop={acceptedFiles => (
-              acceptedFiles && acceptedFiles.length ? this.toggleUpload(acceptedFiles) : null
-            )}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps()}>
-                <input
-                  {...getInputProps()}
-                  onClick={e => { e.preventDefault(); e.stopPropagation(); }}
-                />
-                {contents}
-              </div>
-            )}
-          </Dropzone>
-        )}
-        { !canUpload && contents }
+        <div className="DocumentManager__content">
+          <EntitySearch
+            query={query}
+            hideCollection
+            documentMode
+            showPreview={false}
+            selection={selection}
+            updateSelection={updateSelection}
+            emptyComponent={emptyComponent}
+          />
+        </div>
         <EntityDeleteDialog
           entities={selection}
           isOpen={this.state.deleteIsOpen}
           toggleDialog={this.toggleDeleteSelection}
         />
-        {this.state.uploadIsOpen && (
-          <DocumentUploadDialog
-            collection={collection}
-            parent={document}
-            isOpen={this.state.uploadIsOpen}
-            toggleDialog={this.toggleUpload}
-            filesToUpload={this.state.filesToUpload}
-          />
-        )}
+        <DocumentUploadDialog
+          collection={collection}
+          isOpen={this.state.uploadIsOpen}
+          toggleDialog={this.toggleUpload}
+        />
         <CollectionAnalyzeAlert
           collection={collection}
           isOpen={this.state.analyzeIsOpen}

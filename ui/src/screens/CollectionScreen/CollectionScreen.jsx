@@ -11,6 +11,7 @@ import CollectionHeading from 'src/components/Collection/CollectionHeading';
 import CollectionViews from 'src/components/Collection/CollectionViews';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
+import DocumentDropzone from 'src/components/Document/DocumentDropzone';
 import { Collection, SinglePane, Breadcrumbs } from 'src/components/common';
 import { selectCollection, selectCollectionStatus } from 'src/selectors';
 
@@ -18,6 +19,8 @@ import { selectCollection, selectCollectionStatus } from 'src/selectors';
 export class CollectionScreen extends Component {
   constructor(props) {
     super(props);
+
+    this.onUploadSuccess = this.onUploadSuccess.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
@@ -30,6 +33,20 @@ export class CollectionScreen extends Component {
     history.push({
       pathname: '/search',
       search: queryString.stringify(query),
+    });
+  }
+
+  onUploadSuccess() {
+    const { history, location } = this.props;
+    const parsedHash = queryString.parse(location.hash);
+
+    parsedHash.mode = 'browse';
+    delete parsedHash.type;
+
+    history.replace({
+      pathname: location.pathname,
+      search: location.search,
+      hash: queryString.stringify(parsedHash),
     });
   }
 
@@ -76,22 +93,27 @@ export class CollectionScreen extends Component {
           searchScopes={[searchScope]}
         >
           {breadcrumbs}
-          <SinglePane>
-            <CollectionHeading collection={collection} />
-            <div>
-              <CollectionViews
-                collection={collection}
-                activeMode={activeMode}
-                isPreview={false}
-              />
-            </div>
-          </SinglePane>
+          <DocumentDropzone
+            canDrop={collection.writeable}
+            collection={collection}
+            onUploadSuccess={this.onUploadSuccess}
+          >
+            <SinglePane>
+              <CollectionHeading collection={collection} />
+              <div>
+                <CollectionViews
+                  collection={collection}
+                  activeMode={activeMode}
+                  isPreview={false}
+                />
+              </div>
+            </SinglePane>
+          </DocumentDropzone>
         </Screen>
       </CollectionContextLoader>
     );
   }
 }
-
 
 const mapStateToProps = (state, ownProps) => {
   const { collectionId } = ownProps.match.params;

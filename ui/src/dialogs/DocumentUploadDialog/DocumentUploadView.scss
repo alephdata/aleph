@@ -1,0 +1,17 @@
+@import "src/app/variables.scss";
+
+.DocumentUploadView {
+  &__content {
+    margin-bottom: $aleph-grid-size*2;
+  }
+  &__folder {
+    padding-top: 5px;
+    &__label {
+      color: $blue2 !important;
+    }
+    &__content {
+      padding-left: $aleph-grid-size;
+      border-left: 1px solid $aleph-border-color;
+    }
+  }
+}
