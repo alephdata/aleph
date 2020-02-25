@@ -65,6 +65,7 @@ class PagingButtons extends React.Component {
     if (document.isLoading || !document.links) {
       return null;
     }
+    const showRotateButtons = rotate !== undefined;
 
     // Only displays paging buttons on PDF docs
     // Having the logic here makes it easier to use this component.
@@ -94,9 +95,13 @@ class PagingButtons extends React.Component {
               }}
             />
           </div>
-          <AnchorButton minimal href={`#${this.getRotateLink(rotate - 90)}`} icon="image-rotate-left" />
-          <AnchorButton minimal href={`#${this.getRotateLink(rotate + 90)}`} icon="image-rotate-right" />
-          <Divider />
+          {showRotateButtons && (
+            <>
+              <AnchorButton minimal href={`#${this.getRotateLink(rotate - 90)}`} icon="image-rotate-left" />
+              <AnchorButton minimal href={`#${this.getRotateLink(rotate + 90)}`} icon="image-rotate-right" />
+              <Divider />
+            </>
+          )}
           <AnchorButton minimal href={`#${this.getPageLink(page + 1)}`} icon="arrow-right" disabled={page >= numberOfPages} />
         </ButtonGroup>
       );
