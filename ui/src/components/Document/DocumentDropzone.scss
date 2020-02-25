@@ -1,0 +1,9 @@
+@import "src/app/variables.scss";
+
+.DocumentDropzone {
+  &__contents {
+    &.active {
+      box-shadow: inset 1px 1px 15px $blue2;
+    }
+  }
+}

@@ -5,7 +5,6 @@ import {
 import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import { ingestDocument as ingestDocumentAction } from 'src/actions';
 import { showErrorToast } from 'src/app/toast';
 import convertPathsToTree from 'src/util/convertPathsToTree';
@@ -54,7 +53,7 @@ export class DocumentUploadDialog extends Component {
 
   async onFormSubmit(files) {
     const {
-      intl, parent, toggleDialog,
+      intl, onUploadSuccess, parent, toggleDialog,
     } = this.props;
 
     const fileTree = convertPathsToTree(files);
@@ -62,6 +61,9 @@ export class DocumentUploadDialog extends Component {
     try {
       await this.traverseFileTree(fileTree, parent);
       toggleDialog();
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
       return;
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
@@ -168,7 +170,6 @@ export class DocumentUploadDialog extends Component {
 const mapDispatchToProps = { ingestDocument: ingestDocumentAction };
 
 export default compose(
-  withRouter,
   connect(null, mapDispatchToProps),
   injectIntl,
 )(DocumentUploadDialog);
