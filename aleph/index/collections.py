@@ -19,6 +19,8 @@ def index_collection(collection, sync=False):
 
     log.info("Index [%s]: %s", collection.id, collection.label)
     data = get_collection(collection.id)
+    if data is None:
+        return
     text = [data.get('label')]
     text.append(normalize(data.get('label')))
     text.append(normalize(data.get('foreign_id')))
