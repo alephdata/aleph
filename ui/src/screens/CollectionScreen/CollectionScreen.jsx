@@ -43,8 +43,6 @@ export class CollectionScreen extends Component {
     parsedHash.mode = 'browse';
     delete parsedHash.type;
 
-    console.log('in upload success', parsedHash);
-
     history.replace({
       pathname: location.pathname,
       search: location.search,

@@ -60,10 +60,10 @@ export class DocumentUploadDialog extends Component {
 
     try {
       await this.traverseFileTree(fileTree, parent);
-      toggleDialog();
       if (onUploadSuccess) {
         onUploadSuccess();
       }
+      toggleDialog();
       return;
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
