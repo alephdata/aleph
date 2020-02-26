@@ -1,0 +1,29 @@
+@import "src/app/variables.scss";
+
+.SortingBar {
+  &__label, &__controls {
+    display: inline-block !important;
+  }
+
+  &__label {
+    margin-right: 5px;
+  }
+  &__controls {
+
+    .bp3-button {
+      // color: $blue2 !important;
+
+      &:hover {
+        // background: $aleph-breadcrumbs-background !important;
+      }
+
+      // border: 2px solid $aleph-breadcrumbs-background;
+    }
+
+    &__select.bp3-button {
+      // border-right: none;
+      // border-bottom: 1px solid $aleph-border-color;
+
+    }
+  }
+}
