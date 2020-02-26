@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {
-  defineMessages,
+  // defineMessages,
   // FormattedMessage,
   injectIntl,
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
 // import { ButtonGroup } from '@blueprintjs/core';
 
@@ -21,12 +22,12 @@ import CollectionIndexSearch from './CollectionIndexSearch';
 
 import './CollectionIndex.scss';
 
-const messages = defineMessages({
-  placeholder: {
-    id: 'cases.placeholder',
-    defaultMessage: 'Search personal datasets...',
-  },
-});
+// const messages = defineMessages({
+//   // placeholder: {
+//   //   id: 'cases.placeholder',
+//   //   defaultMessage: 'Search personal datasets...',
+//   // },
+// });
 
 export class CollectionIndex extends Component {
   constructor(props) {
@@ -67,23 +68,25 @@ export class CollectionIndex extends Component {
   }
 
   render() {
-    const { result, query, intl } = this.props;
+    const { noResultsText, placeholder, query, result, showQueryTags } = this.props;
 
     return (
       <div className="CollectionIndex">
         <CollectionIndexSearch
           query={query}
           updateQuery={this.updateQuery}
-          placeholder={intl.formatMessage(messages.placeholder)}
+          placeholder={placeholder}
         />
-        <QueryTags query={query} updateQuery={this.updateQuery} />
+        {showQueryTags && (
+          <QueryTags query={query} updateQuery={this.updateQuery} />
+        )}
         {result.isError && (
           <ErrorSection error={result.error} />
         )}
         {result.total === 0 && (
           <ErrorSection
             icon="shield"
-            title={intl.formatMessage(messages.empty)}
+            title={noResultsText}
           />
         )}
         <ul className="results">
@@ -112,6 +115,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 export default compose(
+  withRouter,
   connect(mapStateToProps, { queryCollections }),
   injectIntl,
 )(CollectionIndex);

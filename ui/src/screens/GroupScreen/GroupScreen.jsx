@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  // defineMessages,
+  defineMessages,
   injectIntl,
   FormattedMessage,
 } from 'react-intl';
@@ -18,12 +18,12 @@ import { selectGroups, selectRole } from 'src/selectors';
 import './GroupScreen.scss';
 
 
-// const messages = defineMessages({
-//   empty: {
-//     id: 'sources.index.empty',
-//     defaultMessage: 'This group is not linked to any datasets.',
-//   },
-// });
+const messages = defineMessages({
+  empty: {
+    id: 'sources.index.empty',
+    defaultMessage: 'This group is not linked to any datasets.',
+  },
+});
 
 
 export class GroupScreen extends Component {
@@ -43,7 +43,7 @@ export class GroupScreen extends Component {
   }
 
   render() {
-    const { query, group } = this.props;
+    const { group, query, intl } = this.props;
     if (!group || !group.id) {
       return <LoadingScreen />;
     }
@@ -61,6 +61,7 @@ export class GroupScreen extends Component {
           </div>
           <CollectionIndex
             query={query}
+            noResultsText={intl.formatMessage(messages.empty)}
           />
         </Dashboard>
       </Screen>
