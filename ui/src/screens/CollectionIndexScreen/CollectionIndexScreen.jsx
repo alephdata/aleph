@@ -29,6 +29,10 @@ const messages = defineMessages({
     id: 'collection.index.placeholder',
     defaultMessage: 'Search datasets...',
   },
+  empty: {
+    id: 'collection.index.empty',
+    defaultMessage: 'No datasets were found',
+  },
 });
 
 const facetKeys = [
@@ -93,6 +97,9 @@ export class CollectionIndexScreen extends Component {
             <SignInCallout />
             <CollectionIndex
               query={query}
+              showQueryTags
+              placeholder={intl.formatMessage(messages.placeholder)}
+              noResultsText={intl.formatMessage(messages.empty)}
             />
           </DualPane.ContentPane>
         </DualPane>
