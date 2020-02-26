@@ -32,8 +32,8 @@ export class CollectionIndexSearch extends Component {
     const { placeholder } = this.props;
     const { queryText } = this.state;
     return (
-      <form onSubmit={this.onSubmit} className="CollectionIndexSearch">
-        <ControlGroup fill>
+      <ControlGroup fill className="CollectionIndexSearch">
+        <form onSubmit={this.onSubmit} className="CollectionIndexSearch">
           <InputGroup
             large
             fill
@@ -43,8 +43,8 @@ export class CollectionIndexSearch extends Component {
             placeholder={placeholder}
             value={queryText}
           />
-        </ControlGroup>
-      </form>
+        </form>
+      </ControlGroup>
     );
   }
 }

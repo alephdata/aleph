@@ -8,7 +8,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
-// import { ButtonGroup } from '@blueprintjs/core';
+import { ControlGroup } from '@blueprintjs/core';
 
 // import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
@@ -117,17 +117,19 @@ export class CollectionIndex extends Component {
 
     return (
       <div className="CollectionIndex">
-        <CollectionIndexSearch
-          query={query}
-          updateQuery={this.updateQuery}
-          placeholder={placeholder}
-        />
-        <SortingBar
-          sortingOptions={sortingOptions}
-          onSort={this.onSort}
-          activeSort={activeSort.length ? activeSort[0] : sortingOptions[0]}
-          activeDirection={sortDirection}
-        />
+        <ControlGroup className="CollectionIndex__controls">
+          <CollectionIndexSearch
+            query={query}
+            updateQuery={this.updateQuery}
+            placeholder={placeholder}
+          />
+          <SortingBar
+            sortingOptions={sortingOptions}
+            onSort={this.onSort}
+            activeSort={activeSort.length ? activeSort[0] : sortingOptions[0]}
+            activeDirection={sortDirection}
+          />
+        </ControlGroup>
         {showQueryTags && (
           <QueryTags query={query} updateQuery={this.updateQuery} />
         )}

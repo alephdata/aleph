@@ -1,6 +1,13 @@
 @import "src/app/variables.scss";
 
 .SortingBar {
+  position: relative;
+  &__content {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   &__label, &__controls {
     display: inline-block !important;
   }
@@ -11,10 +18,10 @@
   &__controls {
 
     .bp3-button {
-      // color: $blue2 !important;
+      color: $blue2 !important;
 
       &:hover {
-        // background: $aleph-breadcrumbs-background !important;
+        background: $aleph-breadcrumbs-background !important;
       }
 
       // border: 2px solid $aleph-breadcrumbs-background;
@@ -22,8 +29,9 @@
 
     &__select.bp3-button {
       // border-right: none;
-      // border-bottom: 1px solid $aleph-border-color;
 
+      border-bottom: 1px solid $aleph-border-color;
+      // border-right: 1px solid $aleph-border-color;
     }
   }
 }
