@@ -71,7 +71,7 @@ class CollectionViews extends React.Component {
     parsedHash.mode = mode;
     delete parsedHash.type;
 
-    history.replace({
+    history.push({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),
