@@ -4,20 +4,17 @@ import {
 } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { Waypoint } from 'react-waypoint';
 import { ButtonGroup } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
-  Breadcrumbs, DualPane, SectionLoading, SignInCallout, ErrorSection, ResultCount,
+  Breadcrumbs, DualPane, SignInCallout, ResultCount,
 } from 'src/components/common';
 import SearchFacets from 'src/components/Facet/SearchFacets';
-import QueryTags from 'src/components/QueryTags/QueryTags';
 import Screen from 'src/components/Screen/Screen';
-import CollectionListItem from 'src/components/Collection/CollectionListItem';
-import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
+import CollectionIndex from 'src/components/CollectionIndex/CollectionIndex';
 import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
 
 import './CollectionIndexScreen.scss';
@@ -46,29 +43,6 @@ export class CollectionIndexScreen extends Component {
     };
 
     this.updateQuery = this.updateQuery.bind(this);
-    this.getMoreResults = this.getMoreResults.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && !result.isLoading && result.next && !result.isError) {
-      this.props.queryCollections({ query, result, next: result.next });
-    }
-  }
-
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryCollections({ query });
-    }
   }
 
   updateQuery(newQuery) {
@@ -117,28 +91,9 @@ export class CollectionIndexScreen extends Component {
           </DualPane.SidePane>
           <DualPane.ContentPane>
             <SignInCallout />
-            <CollectionIndexSearch
+            <CollectionIndex
               query={query}
-              updateQuery={this.updateQuery}
-              placeholder={intl.formatMessage(messages.placeholder)}
             />
-            <QueryTags query={query} updateQuery={this.updateQuery} />
-            {result.isError && (
-              <ErrorSection error={result.error} />
-            )}
-            <ul className="results">
-              {result.results !== undefined && result.results.map(
-                res => <CollectionListItem key={res.id} collection={res} />,
-              )}
-            </ul>
-            <Waypoint
-              onEnter={this.getMoreResults}
-              bottomOffset="-300px"
-              scrollableAncestor={window}
-            />
-            {result.isLoading && (
-              <SectionLoading />
-            )}
           </DualPane.ContentPane>
         </DualPane>
       </Screen>
@@ -153,6 +108,7 @@ const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('collections', location, context, 'collections')
     .sortBy('count', 'desc')
     .limit(40);
+
   return {
     query,
     result: selectCollectionsResult(state, query),

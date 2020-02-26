@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
-import { Waypoint } from 'react-waypoint';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
-import { selectCollectionsResult } from 'src/selectors';
 import Screen from 'src/components/Screen/Screen';
 import Dashboard from 'src/components/Dashboard/Dashboard';
-import {
-  Breadcrumbs, ErrorSection, SectionLoading,
-} from 'src/components/common';
-import CollectionListItem from 'src/components/Collection/CollectionListItem';
-import CollectionIndexSearch from 'src/components/Collection/CollectionIndexSearch';
+import { Breadcrumbs } from 'src/components/common';
+import CollectionIndex from 'src/components/CollectionIndex/CollectionIndex';
 import CaseCreateButton from 'src/components/Toolbar/CaseCreateButton';
 
 import './CasesIndexScreen.scss';
@@ -35,43 +30,8 @@ const messages = defineMessages({
 
 
 export class CasesIndexScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.updateQuery = this.updateQuery.bind(this);
-  }
-
-  componentDidMount() {
-    this.fetchIfNeeded();
-  }
-
-  componentDidUpdate() {
-    this.fetchIfNeeded();
-  }
-
-  getMoreResults() {
-    const { query, result } = this.props;
-    if (result && result.next && !result.isLoading && !result.isError) {
-      this.props.queryCollections({ query, next: result.next });
-    }
-  }
-
-  updateQuery(newQuery) {
-    const { history, location } = this.props;
-    history.push({
-      pathname: location.pathname,
-      search: newQuery.toLocation(),
-    });
-  }
-
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryCollections({ query });
-    }
-  }
-
   render() {
-    const { query, result, intl } = this.props;
+    const { query, intl } = this.props;
     const breadcrumbs = (
       <Breadcrumbs>
         <li>
@@ -103,34 +63,11 @@ export class CasesIndexScreen extends Component {
               <CaseCreateButton />
             </div>
           </div>
-          <CollectionIndexSearch
+          <CollectionIndex
             query={query}
-            updateQuery={this.updateQuery}
             placeholder={intl.formatMessage(messages.placeholder)}
+            noResultsText={intl.formatMessage(messages.no_results_title)}
           />
-          {!result.isLoading && result.total === 0 && (
-            <ErrorSection
-              icon="search"
-              title={intl.formatMessage(messages.no_results_title)}
-            />
-          )}
-          {result.total !== undefined && result.total !== 0 && (
-            <>
-              <ul className="results">
-                {result.results !== undefined && result.results
-                  .map(res => <CollectionListItem key={res.id} collection={res} preview={false} />)}
-              </ul>
-
-              <Waypoint
-                onEnter={this.getMoreResults}
-                bottomOffset="-300px"
-                scrollableAncestor={window}
-              />
-            </>
-          )}
-          {result.isLoading && (
-            <SectionLoading />
-          )}
         </Dashboard>
       </Screen>
     );
@@ -149,7 +86,6 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     query,
-    result: selectCollectionsResult(state, query),
   };
 };
 
