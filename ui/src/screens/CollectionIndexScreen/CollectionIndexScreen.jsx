@@ -112,9 +112,12 @@ const mapStateToProps = (state, ownProps) => {
   const context = {
     facet: ['category', 'countries'],
   };
-  const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('count', 'desc')
+  let query = Query.fromLocation('collections', location, context, 'collections')
     .limit(40);
+
+  if (!query.hasSort()) {
+    query = query.sortBy('created_at', 'desc');
+  }
 
   return {
     query,

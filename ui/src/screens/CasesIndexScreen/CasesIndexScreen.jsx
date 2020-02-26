@@ -80,9 +80,12 @@ const mapStateToProps = (state, ownProps) => {
     facet: ['countries', 'team.name'],
     'filter:kind': 'casefile',
   };
-  const query = Query.fromLocation('collections', location, context, 'collections')
-    .sortBy('updated_at', 'desc')
+  let query = Query.fromLocation('collections', location, context, 'collections')
     .limit(30);
+
+  if (!query.hasSort()) {
+    query = query.sortBy('created_at', 'desc');
+  }
 
   return {
     query,

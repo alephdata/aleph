@@ -70,10 +70,13 @@ export class GroupScreen extends Component {
 }
 const mapStateToProps = (state, ownProps) => {
   const { groupId } = ownProps.match.params;
-  const query = Query.fromLocation('collections', {}, {}, 'collections')
+  let query = Query.fromLocation('collections', {}, {}, 'collections')
     .setFilter('team_id', groupId)
-    .sortBy('count', 'desc')
     .limit(20);
+
+  if (!query.hasSort()) {
+    query = query.sortBy('created_at', 'desc');
+  }
 
   return {
     query,
