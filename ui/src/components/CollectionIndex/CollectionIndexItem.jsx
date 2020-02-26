@@ -6,17 +6,17 @@ import {
   Date, Role, Category, Country, Collection, Summary,
 } from 'src/components/common';
 
-import './CollectionListItem.scss';
+import './CollectionIndexItem.scss';
 
 
-class CollectionListItem extends PureComponent {
+class CollectionIndexItem extends PureComponent {
   render() {
     const { collection, preview = true } = this.props;
     if (!collection.id) {
       return null;
     }
     return (
-      <li className="CollectionListItem" key={collection.id}>
+      <li className="CollectionIndexItem" key={collection.id}>
         <H4>
           <Count className="bp3-intent-primary" count={collection.count} full />
           <Collection.Link preview={preview} collection={collection} icon />
@@ -59,4 +59,4 @@ class CollectionListItem extends PureComponent {
   }
 }
 
-export default CollectionListItem;
+export default CollectionIndexItem;

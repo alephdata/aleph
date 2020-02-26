@@ -56,8 +56,8 @@ class CollectionXrefSelect extends Component {
     const { queryResult, showSelected } = this.state;
     const { collectionSelectFn, selectedCollections } = this.props;
 
-    const collectionList = showSelected ? selectedCollections : queryResult.results;
-    const matchingCollection = collectionList.find(c => c.id === id);
+    const CollectionIndex = showSelected ? selectedCollections : queryResult.results;
+    const matchingCollection = CollectionIndex.find(c => c.id === id);
     if (matchingCollection) {
       collectionSelectFn(matchingCollection);
     }
