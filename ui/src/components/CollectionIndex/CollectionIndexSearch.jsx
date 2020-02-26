@@ -33,7 +33,7 @@ export class CollectionIndexSearch extends Component {
     const { queryText } = this.state;
     return (
       <ControlGroup fill className="CollectionIndexSearch">
-        <form onSubmit={this.onSubmit} className="CollectionIndexSearch">
+        <form onSubmit={this.onSubmit}>
           <InputGroup
             large
             fill

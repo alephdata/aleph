@@ -2,36 +2,35 @@
 
 .SortingBar {
   position: relative;
-  &__content {
+  white-space: nowrap;
+
+  &__item {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    display: inline-block;
+    margin: 0 10px;
+
+    &:last-child {
+      margin: 0;
+    }
   }
 
-  &__label, &__controls {
+  &__label, &__control {
     display: inline-block !important;
   }
 
   &__label {
     margin-right: 5px;
   }
-  &__controls {
-
+  &__control {
     .bp3-button {
       color: $blue2 !important;
+      border-bottom: 1px solid $aleph-border-color;
 
       &:hover {
         background: $aleph-breadcrumbs-background !important;
       }
-
-      // border: 2px solid $aleph-breadcrumbs-background;
-    }
-
-    &__select.bp3-button {
-      // border-right: none;
-
-      border-bottom: 1px solid $aleph-border-color;
-      // border-right: 1px solid $aleph-border-color;
     }
   }
 }
