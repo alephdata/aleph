@@ -26,45 +26,47 @@ class SortingBar extends PureComponent {
     const { activeDirection, activeSort, onSort, sortingOptions } = this.props;
     return (
       <div className="SortingBar">
-        <span className="SortingBar__label">
-          <FormattedMessage
-            id="collection.index.sort.label"
-            defaultMessage="Sort by:"
-          />
-        </span>
-        <ControlGroup fill={false} className="SortingBar__controls">
-          <Select
-            itemRenderer={this.renderOption}
-            items={sortingOptions}
-            onItemSelect={onSort}
-            activeItem={activeSort}
-            popoverProps={{
-              minimal: true,
-              fill: false,
-            }}
-            inputProps={{
-              fill: false,
-            }}
-            filterable={false}
-            resetOnClose
-            resetOnSelect
-          >
-            <Button
-              text={activeSort.label}
-              rightIcon="caret"
-              alignText={Alignment.LEFT}
-              // minimal
-              // intent={Intent.PRIMARY}
-              className="SortingBar__controls__select"
+        <div className="SortingBar__content">
+          <span className="SortingBar__label">
+            <FormattedMessage
+              id="collection.index.sort.label"
+              defaultMessage="Sort by:"
             />
-          </Select>
-          <Button
-            icon={activeDirection === 'desc' ? 'caret-down' : 'caret-up'}
-            onClick={() => onSort({ direction: activeDirection === 'desc' ? 'asc' : 'desc' })}
-            // minimal
-            // intent={Intent.PRIMARY}
-          />
-        </ControlGroup>
+          </span>
+          <ControlGroup fill={false} className="SortingBar__controls">
+            <Select
+              itemRenderer={this.renderOption}
+              items={sortingOptions}
+              onItemSelect={onSort}
+              activeItem={activeSort}
+              popoverProps={{
+                minimal: true,
+                fill: false,
+              }}
+              inputProps={{
+                fill: false,
+              }}
+              filterable={false}
+              resetOnClose
+              resetOnSelect
+            >
+              <Button
+                text={activeSort.label}
+                rightIcon="caret"
+                alignText={Alignment.LEFT}
+                minimal
+                intent={Intent.PRIMARY}
+                className="SortingBar__controls__select"
+              />
+            </Select>
+            <Button
+              icon={activeDirection === 'desc' ? 'caret-down' : 'caret-up'}
+              onClick={() => onSort({ direction: activeDirection === 'desc' ? 'asc' : 'desc' })}
+              minimal
+              intent={Intent.PRIMARY}
+            />
+          </ControlGroup>
+        </div>
       </div>
     );
   }
