@@ -79,8 +79,8 @@ def validate(data, schema):
     raise BadRequest(response=resp)
 
 
-def get_index_entity(entity_id, action=Authz.READ):
-    entity = obj_or_404(_get_index_entity(entity_id))
+def get_index_entity(entity_id, action=Authz.READ, **kwargs):
+    entity = obj_or_404(_get_index_entity(entity_id, **kwargs))
     require(request.authz.can(entity['collection_id'], action))
     return entity
 
