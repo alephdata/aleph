@@ -99,7 +99,7 @@ export class CollectionIndexScreen extends Component {
               query={query}
               showQueryTags
               placeholder={intl.formatMessage(messages.placeholder)}
-              noResultsText={intl.formatMessage(messages.empty)}
+              emptyText={intl.formatMessage(messages.empty)}
             />
           </DualPane.ContentPane>
         </DualPane>

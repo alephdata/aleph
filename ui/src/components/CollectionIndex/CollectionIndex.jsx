@@ -33,6 +33,10 @@ const messages = defineMessages({
     id: 'collection.index.sort.label',
     defaultMessage: 'Title',
   },
+  no_results: {
+    id: 'collection.index.no_results',
+    defaultMessage: 'No datasets were found matching this search',
+  },
 });
 
 export class CollectionIndex extends Component {
@@ -65,11 +69,14 @@ export class CollectionIndex extends Component {
     }
   }
 
-  fetchIfNeeded() {
-    const { query, result } = this.props;
-    if (result.shouldLoad) {
-      this.props.queryCollections({ query });
-    }
+  getSortingOptions() {
+    const { intl } = this.props;
+    return [
+      { field: 'created_at', label: intl.formatMessage(messages.sort_created_at) },
+      { field: 'count', label: intl.formatMessage(messages.sort_count) },
+      { field: 'label', label: intl.formatMessage(messages.sort_label) },
+      { field: 'updated_at', label: intl.formatMessage(messages.sort_updated_at) },
+    ];
   }
 
   updateQuery(newQuery) {
@@ -81,25 +88,57 @@ export class CollectionIndex extends Component {
     });
   }
 
+  fetchIfNeeded() {
+    const { query, result } = this.props;
+    if (result.shouldLoad) {
+      this.props.queryCollections({ query });
+    }
+  }
+
+  renderErrors() {
+    const { emptyText, intl, query, result } = this.props;
+    const hasQuery = query.hasQuery();
+
+    if (result.isError) {
+      return <ErrorSection error={result.error} />;
+    }
+    if (result.total === 0) {
+      if (hasQuery) {
+        return <ErrorSection icon="shield" title={intl.formatMessage(messages.no_results)} />;
+      }
+
+      return <ErrorSection icon="shield" title={emptyText} />;
+    }
+
+    return null;
+  }
+
+  renderResults() {
+    const { result } = this.props;
+
+    return (
+      <>
+        <ul className="results">
+          {result.results !== undefined && result.results.map(
+            res => <CollectionIndexItem key={res.id} collection={res} />,
+          )}
+        </ul>
+        <Waypoint
+          onEnter={this.getMoreResults}
+          bottomOffset="-300px"
+          scrollableAncestor={window}
+        />
+        {result.isLoading && (
+          <SectionLoading />
+        )}
+      </>
+    );
+  }
+
   render() {
-    const {
-      intl,
-      noResultsText,
-      placeholder,
-      query,
-      result,
-      showQueryTags,
-      sortField,
-      sortDirection,
-    } = this.props;
+    const { placeholder, query, showQueryTags, sortField, sortDirection } = this.props;
 
-    const sortingOptions = [
-      { field: 'created_at', label: intl.formatMessage(messages.sort_created_at) },
-      { field: 'count', label: intl.formatMessage(messages.sort_count) },
-      { field: 'label', label: intl.formatMessage(messages.sort_label) },
-      { field: 'updated_at', label: intl.formatMessage(messages.sort_updated_at) },
-    ];
-
+    const sortingOptions = this.getSortingOptions();
     const activeSort = sortingOptions.filter(({ field }) => field === sortField);
 
     return (
@@ -116,32 +155,12 @@ export class CollectionIndex extends Component {
             activeSort={activeSort.length ? activeSort[0] : sortingOptions[0]}
             activeDirection={sortDirection}
           />
-        </div>
-        {showQueryTags && (
-          <QueryTags query={query} updateQuery={this.updateQuery} />
-        )}
-        {result.isError && (
-          <ErrorSection error={result.error} />
-        )}
-        {result.total === 0 && (
-          <ErrorSection
-            icon="shield"
-            title={noResultsText}
-          />
-        )}
-        <ul className="results">
-          {result.results !== undefined && result.results.map(
-            res => <CollectionIndexItem key={res.id} collection={res} />,
+          {showQueryTags && (
+            <QueryTags query={query} updateQuery={this.updateQuery} />
           )}
-        </ul>
-        <Waypoint
-          onEnter={this.getMoreResults}
-          bottomOffset="-300px"
-          scrollableAncestor={window}
-        />
-        {result.isLoading && (
-          <SectionLoading />
-        )}
+        </div>
+        {this.renderErrors()}
+        {this.renderResults()}
       </div>
     );
   }
