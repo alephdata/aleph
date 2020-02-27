@@ -101,9 +101,9 @@ def delete_collection(collection, keep_metadata=False, sync=False):
     flush_notifications(collection)
     deleted_at = collection.deleted_at or datetime.utcnow()
     Entity.delete_by_collection(collection.id, deleted_at=deleted_at)
+    Mapping.delete_by_collection(collection.id, deleted_at=deleted_at)
+    Diagram.delete_by_collection(collection.id, deleted_at=deleted_at)
     Document.delete_by_collection(collection.id)
-    Mapping.delete_by_collection(collection.id)
-    Diagram.delete_by_collection(collection.id)
     if not keep_metadata:
         Permission.delete_by_collection(collection.id, deleted_at=deleted_at)
         collection.delete(deleted_at=deleted_at)
