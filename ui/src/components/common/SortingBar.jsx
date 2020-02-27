@@ -34,6 +34,7 @@ class SortingBar extends PureComponent {
               popoverProps={{
                 minimal: true,
                 fill: false,
+                className: "SortingBar__item__popover",
               }}
               inputProps={{
                 fill: false,

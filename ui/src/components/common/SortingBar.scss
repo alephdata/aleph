@@ -1,5 +1,7 @@
 @import "src/app/variables.scss";
 
+$font-size: $pt-font-size-small;
+
 .SortingBar {
   position: relative;
   white-space: nowrap;
@@ -11,6 +13,10 @@
     &:last-child {
       margin: 0;
     }
+
+    &__popover {
+      font-size: $font-size;
+    }
   }
 
   &__label, &__control {
@@ -18,16 +24,23 @@
   }
 
   &__label {
-    margin-right: 5px;
+    margin-right: $aleph-grid-size/2;
+    font-size: $font-size;
   }
   &__control {
     .bp3-button {
       color: $blue2 !important;
       border-bottom: 1px solid $aleph-border-color;
       border-radius: 0;
+      font-size: $font-size;
 
       &:hover {
         background: $aleph-breadcrumbs-background !important;
+      }
+
+      svg {
+        height: 14px;
+        width: 14px;
       }
     }
   }
