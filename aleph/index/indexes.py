@@ -5,92 +5,19 @@ from followthemoney.types import registry
 from followthemoney.exc import InvalidData
 
 from aleph.core import settings
+from aleph.index.util import index_name
 from aleph.index.util import index_settings, configure_index, get_shard_weight
-from aleph.index.util import NUMERIC_TYPES
+from aleph.index.util import NUMERIC_TYPES, PARTIAL_DATE, KEYWORD
+from aleph.index.util import LATIN_TEXT, NUMERIC
 
 log = logging.getLogger(__name__)
 
-
-DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
-PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
-LATIN_TEXT = {"type": "text", "analyzer": "latin_index"}
-KEYWORD = {"type": "keyword"}
-KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
-NUMERIC = {"type": "double"}
 TYPE_MAPPINGS = {
     registry.text: {"type": "text", "index": False},
     registry.html: {"type": "text", "index": False},
     registry.json: {"type": "text", "index": False},
     registry.date: PARTIAL_DATE,
 }
-
-
-def index_name(name, version):
-    return '-'.join((settings.INDEX_PREFIX, name, version))
-
-
-def collections_index():
-    """Combined index to run all queries against."""
-    return index_name('collection', settings.INDEX_WRITE)
-
-
-def configure_collections():
-    mapping = {
-        "date_detection": False,
-        "dynamic": False,
-        "dynamic_templates": [
-            {
-                "fields": {
-                    "match": "schemata.*",
-                    "mapping": {"type": "long"}
-                }
-            }
-        ],
-        "_source": {"excludes": ["text"]},
-        "properties": {
-            "label": {
-                "type": "text",
-                "copy_to": "text",
-                "analyzer": "latin_index",
-                "fields": {"kw": KEYWORD}
-            },
-            "collection_id": KEYWORD,
-            "foreign_id": KEYWORD_COPY,
-            "languages": KEYWORD_COPY,
-            "countries": KEYWORD_COPY,
-            "category": KEYWORD_COPY,
-            "summary": {
-                "type": "text",
-                "copy_to": "text",
-                "index": False
-            },
-            "publisher": KEYWORD_COPY,
-            "publisher_url": KEYWORD_COPY,
-            "data_url": KEYWORD_COPY,
-            "info_url": KEYWORD_COPY,
-            "kind": KEYWORD,
-            "creator_id": KEYWORD,
-            "team_id": KEYWORD,
-            "text": {
-                "type": "text",
-                "analyzer": "latin_index",
-                "term_vector": "with_positions_offsets",
-                "store": True
-            },
-            "casefile": {"type": "boolean"},
-            "secret": {"type": "boolean"},
-            "created_at": {"type": "date"},
-            "updated_at": {"type": "date"},
-            "count": {"type": "long"},
-            "schemata": {
-                "dynamic": True,
-                "type": "object"
-            }
-        }
-    }
-    index = collections_index()
-    settings = index_settings(shards=1)
-    return configure_index(index, mapping, settings)
 
 
 def schema_index(schema, version):
