@@ -111,7 +111,6 @@ class DiagramAPITest(TestCase):
             res.json['entities'][2]['properties']['person'],
             list
         ), res.json['entities']
-        assert res.json['entities'][2]['properties']['person'][0]['schema'] == 'Person'  # noqa
         diagram_id = res.json['id']
 
         url = '/api/2/diagrams'
@@ -151,7 +150,6 @@ class DiagramAPITest(TestCase):
             res.json['entities'][3]['properties']['person'],
             list
         ), res.json['entities']
-        assert res.json['entities'][3]['properties']['person'][0]['schema'] == 'Person'  # noqa
         assert res.json['label'] == 'Royal Family v2'
         assert res.json['summary'] == '...'
         res_str = json.dumps(res.json)
