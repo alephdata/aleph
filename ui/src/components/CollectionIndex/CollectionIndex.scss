@@ -2,23 +2,16 @@
 
 .CollectionIndex {
   &__controls {
-    display: flex;
-    flex-flow: row wrap;
-
-    .CollectionIndexSearch, .SortingBar {
-      flex: 1 1;
-      margin-top: $aleph-grid-size;
-      margin-bottom: $aleph-grid-size;
-    }
 
     .CollectionIndexSearch {
-      min-width: 350px;
-      margin-right: 0 !important;
+      // min-width: 350px;
+      // margin-right: 0 !important;
     }
 
     .SortingBar {
-      vertical-align: middle;
-      margin-left: $aleph-grid-size*2;
+      // vertical-align: middle;
+      // margin-left: $aleph-grid-size*2;
+      margin-top: 10px;
       text-align: right;
     }
   }

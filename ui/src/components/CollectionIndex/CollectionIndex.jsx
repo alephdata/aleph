@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import {
-  defineMessages,
-  // FormattedMessage,
-  injectIntl,
-} from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
-import { ControlGroup } from '@blueprintjs/core';
 
-// import Query from 'src/app/Query';
 import { queryCollections } from 'src/actions';
 import { selectCollectionsResult } from 'src/selectors';
 import {
@@ -25,11 +19,11 @@ import './CollectionIndex.scss';
 const messages = defineMessages({
   sort_created_at: {
     id: 'collection.index.sort.created_at',
-    defaultMessage: 'Creation date',
+    defaultMessage: 'Creation Date',
   },
   sort_updated_at: {
     id: 'collection.index.sort.updated_at',
-    defaultMessage: 'Last update date',
+    defaultMessage: 'Update Date',
   },
   sort_count: {
     id: 'collection.index.sort.count',
@@ -38,10 +32,6 @@ const messages = defineMessages({
   sort_label: {
     id: 'collection.index.sort.label',
     defaultMessage: 'Title',
-  },
-  sort_score: {
-    id: 'collection.index.sort.score',
-    defaultMessage: 'Relevance',
   },
 });
 
@@ -63,11 +53,8 @@ export class CollectionIndex extends Component {
   }
 
   onSort({ field, direction }) {
-    console.log('new sort is', field);
-    const { query } = this.props;
-    const { field: currentField, direction: currentDirection } = query.getSort();
-
-    const newQuery = query.sortBy(field || currentField, direction || currentDirection);
+    const { query, sortDirection, sortField } = this.props;
+    const newQuery = query.sortBy(field || sortField, direction || sortDirection);
     this.updateQuery(newQuery);
   }
 
@@ -87,6 +74,7 @@ export class CollectionIndex extends Component {
 
   updateQuery(newQuery) {
     const { history, location } = this.props;
+
     history.push({
       pathname: location.pathname,
       search: newQuery.toLocation(),
@@ -107,17 +95,16 @@ export class CollectionIndex extends Component {
 
     const sortingOptions = [
       { field: 'created_at', label: intl.formatMessage(messages.sort_created_at) },
-      { field: 'updated_at', label: intl.formatMessage(messages.sort_updated_at) },
       { field: 'count', label: intl.formatMessage(messages.sort_count) },
       { field: 'label', label: intl.formatMessage(messages.sort_label) },
-      { field: 'score', label: intl.formatMessage(messages.sort_score) },
+      { field: 'updated_at', label: intl.formatMessage(messages.sort_updated_at) },
     ];
 
     const activeSort = sortingOptions.filter(({ field }) => field === sortField);
 
     return (
       <div className="CollectionIndex">
-        <ControlGroup className="CollectionIndex__controls">
+        <div className="CollectionIndex__controls">
           <CollectionIndexSearch
             query={query}
             updateQuery={this.updateQuery}
@@ -129,7 +116,7 @@ export class CollectionIndex extends Component {
             activeSort={activeSort.length ? activeSort[0] : sortingOptions[0]}
             activeDirection={sortDirection}
           />
-        </ControlGroup>
+        </div>
         {showQueryTags && (
           <QueryTags query={query} updateQuery={this.updateQuery} />
         )}
@@ -162,9 +149,6 @@ export class CollectionIndex extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { query } = ownProps;
   const { field, direction } = query.getSort();
-
-  console.log('in map state to props');
-  console.log(query, query.getSort());
 
   return {
     sortField: field,
