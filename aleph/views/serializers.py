@@ -127,9 +127,6 @@ class RoleSerializer(Serializer):
 
 class AlertSerializer(Serializer):
 
-    # def _collect(self, obj):
-    #     self.queue(Role, obj.get('role_id'))
-
     def _serialize(self, obj):
         pk = obj.get('id')
         obj['id'] = str(pk)
@@ -138,7 +135,6 @@ class AlertSerializer(Serializer):
         }
         role_id = obj.pop('role_id', None)
         obj['writeable'] = role_id == stringify(request.authz.id)
-        # obj['role'] = self.resolve(Role, role_id, RoleSerializer)
         return obj
 
 
@@ -192,7 +188,6 @@ class EntitySerializer(Serializer):
 
     def _collect(self, obj):
         self.queue(Collection, obj.get('collection_id'))
-        self.queue(Role, obj.get('uploader_id'))
         schema = model.get(obj.get('schema'))
         if schema is None:
             return
