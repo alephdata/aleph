@@ -116,12 +116,13 @@ def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
     if entity_id is None:
         return
-    key = cache.object_key(Entity, entity_id)
-    entity = cache.get_complex(key)
-    if entity is not None:
-        return entity
-    log.debug("Entity [%s]: object cache miss", entity_id)
-    for entity in entities_by_ids(entity_id, cached=True):
+    if kwargs.get('includes') is None and kwargs.get('excludes') is None:
+        key = cache.object_key(Entity, entity_id)
+        entity = cache.get_complex(key)
+        if entity is not None:
+            return entity
+        log.debug("Entity [%s]: cache miss", entity_id)
+    for entity in entities_by_ids(entity_id, cached=True, **kwargs):
         return entity
 
 

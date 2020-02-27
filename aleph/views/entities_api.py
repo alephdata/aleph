@@ -11,7 +11,6 @@ from aleph.model import QueryLog
 from aleph.search import EntitiesQuery, MatchQuery, SearchQueryParser
 from aleph.logic.entities import upsert_entity, delete_entity
 from aleph.logic.entities import entity_references, entity_tags
-from aleph.index.entities import entities_by_ids
 from aleph.logic.export import export_entities
 from aleph.index.util import MAX_PAGE
 from aleph.views.util import get_index_entity, get_db_collection
@@ -319,24 +318,21 @@ def content(entity_id):
       - Entity
     """
     enable_cache()
-    entity = get_index_entity(entity_id, request.authz.READ)
+    entity = get_index_entity(entity_id, request.authz.READ,
+                              excludes=['text'])
     tag_request(collection_id=entity.get('collection_id'))
-    for entity in entities_by_ids([entity_id],
-                                  schemata=entity.get('schema'),
-                                  excludes=['text']):
-        proxy = model.get_proxy(entity)
-        html = proxy.first('bodyHtml', quiet=True)
-        source_url = proxy.first('sourceUrl', quiet=True)
-        encoding = proxy.first('encoding', quiet=True)
-        html = sanitize_html(html, source_url, encoding=encoding)
-        headers = proxy.first('headers', quiet=True)
-        headers = registry.json.unpack(headers)
-        return jsonify({
-            'headers': headers,
-            'text': proxy.first('bodyText', quiet=True),
-            'html': html
-        })
-    return ('', 404)
+    proxy = model.get_proxy(entity)
+    html = proxy.first('bodyHtml', quiet=True)
+    source_url = proxy.first('sourceUrl', quiet=True)
+    encoding = proxy.first('encoding', quiet=True)
+    html = sanitize_html(html, source_url, encoding=encoding)
+    headers = proxy.first('headers', quiet=True)
+    headers = registry.json.unpack(headers)
+    return jsonify({
+        'headers': headers,
+        'text': proxy.first('bodyText', quiet=True),
+        'html': html
+    })
 
 
 @blueprint.route('/api/2/entities/<entity_id>/similar', methods=['GET'])
