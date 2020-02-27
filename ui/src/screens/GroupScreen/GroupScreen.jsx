@@ -65,7 +65,7 @@ export class GroupScreen extends Component {
           </div>
           <CollectionIndex
             query={query}
-            noResultsText={intl.formatMessage(messages.empty)}
+            emptyText={intl.formatMessage(messages.empty)}
             placeholder={intl.formatMessage(messages.placeholder, { group: group.label })}
           />
         </Dashboard>

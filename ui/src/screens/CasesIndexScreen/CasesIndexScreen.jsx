@@ -20,7 +20,7 @@ const messages = defineMessages({
   },
   no_results_title: {
     id: 'cases.no_results_title',
-    defaultMessage: 'You do not have any personal datasets yet',
+    defaultMessage: 'You do not have any personal datasets yet.',
   },
   placeholder: {
     id: 'cases.placeholder',

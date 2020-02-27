@@ -3,8 +3,11 @@
 .CollectionIndex {
   &__controls {
     .SortingBar {
-      margin-top: 10px;
+      margin-top: $aleph-grid-size;
       text-align: right;
+    }
+    .QueryTags {
+      margin-top: $aleph-grid-size;
     }
   }
 }
