@@ -18,6 +18,14 @@ NUMERIC_TYPES = (registry.number, registry.date,)
 MAX_TIMEOUT = '700m'
 MAX_REQUEST_TIMEOUT = 84600
 
+# Mapping shortcuts
+DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
+PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
+LATIN_TEXT = {"type": "text", "analyzer": "latin_index"}
+KEYWORD = {"type": "keyword"}
+KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
+NUMERIC = {"type": "double"}
+
 SHARDS_LIGHT = 1
 SHARDS_DEFAULT = 5
 SHARDS_HEAVY = 10
@@ -51,6 +59,10 @@ def refresh_sync(sync):
     if settings.TESTING:
         return True
     return True if sync else False
+
+
+def index_name(name, version):
+    return '-'.join((settings.INDEX_PREFIX, name, version))
 
 
 def unpack_result(res):

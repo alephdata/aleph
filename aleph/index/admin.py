@@ -2,8 +2,8 @@ import logging
 from pprint import pprint, pformat  # noqa
 
 from aleph.core import es
-from aleph.index.indexes import collections_index, configure_collections
 from aleph.index.indexes import entities_read_index, configure_entities
+from aleph.index.collections import collections_index, configure_collections
 
 log = logging.getLogger(__name__)
 

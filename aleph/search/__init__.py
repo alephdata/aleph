@@ -3,7 +3,7 @@ from flask_babel import gettext
 from werkzeug.exceptions import BadRequest
 
 from aleph.index.indexes import entities_read_index
-from aleph.index.indexes import collections_index
+from aleph.index.collections import collections_index
 from aleph.index.entities import EXCLUDE_DEFAULT
 from aleph.logic.matching import match_query
 from aleph.search.parser import QueryParser, SearchQueryParser  # noqa
