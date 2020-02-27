@@ -87,7 +87,7 @@ class Authz(object):
         return self.logged_in
 
     def can_write_role(self, role_id):
-        if not self.session_write:
+        if not self.session_write or role_id is None:
             return False
         # if self.is_admin:
         #     return True
