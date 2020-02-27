@@ -68,10 +68,13 @@ class Diagram(db.Model, SoftDeleteModel):
         return q
 
     @classmethod
-    def delete_by_collection(cls, collection_id):
+    def delete_by_collection(cls, collection_id, deleted_at=None):
+        deleted_at = deleted_at or datetime.utcnow()
         pq = db.session.query(cls)
         pq = pq.filter(cls.collection_id == collection_id)
-        pq.delete(synchronize_session=False)
+        pq = pq.filter(cls.deleted_at == None)  # noqa
+        pq.update({cls.deleted_at: deleted_at},
+                  synchronize_session=False)
 
     @classmethod
     def create(cls, data,  collection, role_id):
