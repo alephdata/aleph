@@ -5,9 +5,6 @@
   white-space: nowrap;
 
   &__item {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
     display: inline-block;
     margin: 0 10px;
 
@@ -27,6 +24,7 @@
     .bp3-button {
       color: $blue2 !important;
       border-bottom: 1px solid $aleph-border-color;
+      border-radius: 0;
 
       &:hover {
         background: $aleph-breadcrumbs-background !important;

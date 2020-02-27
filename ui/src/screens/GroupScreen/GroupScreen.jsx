@@ -23,6 +23,10 @@ const messages = defineMessages({
     id: 'sources.index.empty',
     defaultMessage: 'This group is not linked to any datasets.',
   },
+  placeholder: {
+    id: 'sources.index.placeholder',
+    defaultMessage: 'Search datasets belonging to {group}...',
+  },
 });
 
 
@@ -62,6 +66,7 @@ export class GroupScreen extends Component {
           <CollectionIndex
             query={query}
             noResultsText={intl.formatMessage(messages.empty)}
+            placeholder={intl.formatMessage(messages.placeholder, { group: group.label })}
           />
         </Dashboard>
       </Screen>
@@ -69,9 +74,14 @@ export class GroupScreen extends Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  const { groupId } = ownProps.match.params;
-  let query = Query.fromLocation('collections', {}, {}, 'collections')
-    .setFilter('team_id', groupId)
+  const { location, match } = ownProps;
+  const { groupId } = match.params;
+
+  const context = {
+    'filter:team_id': groupId,
+  };
+
+  let query = Query.fromLocation('collections', location, context, 'collections')
     .limit(20);
 
   if (!query.hasSort()) {
