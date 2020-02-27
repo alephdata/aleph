@@ -137,7 +137,7 @@ export class DiagramScreen extends Component {
       return <ErrorScreen error={diagram.error} />;
     }
 
-    if (!diagram.id || diagram.shallow) {
+    if ((!diagram.id) || diagram.shallow) {
       return <LoadingScreen />;
     }
 

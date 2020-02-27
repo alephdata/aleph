@@ -393,7 +393,7 @@ class DiagramIndexSerializer(Serializer):
         collection_id = obj.pop('collection_id', None)
         obj.update({
             'id': str(pk),
-            'shallow': False,
+            'shallow': True,
             'writeable': request.authz.can(collection_id, request.authz.WRITE),
             'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
         })
