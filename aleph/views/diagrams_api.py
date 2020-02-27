@@ -7,7 +7,7 @@ from aleph.model import Diagram
 from aleph.logic.entities import upsert_entity
 from aleph.logic.diagrams import replace_layout_ids
 from aleph.search import QueryParser, DatabaseQueryResult
-from aleph.views.serializers import DiagramSerializer
+from aleph.views.serializers import DiagramSerializer, DiagramIndexSerializer
 from aleph.views.util import get_nested_collection, get_db_collection
 from aleph.views.util import obj_or_404, parse_request
 
@@ -53,7 +53,7 @@ def index():
     if len(collection_ids):
         q = q.filter(Diagram.collection_id.in_(collection_ids))
     result = DatabaseQueryResult(request, q)
-    return DiagramSerializer.jsonify_result(result)
+    return DiagramIndexSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/diagrams', methods=['POST', 'PUT'])
