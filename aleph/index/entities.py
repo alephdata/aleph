@@ -155,7 +155,7 @@ def format_proxy(proxy, collection, extra):
     proxy = collection.ns.apply(proxy)
     # Pull `indexUpdatedAt` before constructing `data`, so that it doesn't
     # creep into `data['dates']` and mess up date sorting afterwards
-    updated_at = proxy.pop('indexUpdatedAt')
+    updated_at = proxy.pop('indexUpdatedAt', quiet=True)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
 
@@ -173,7 +173,7 @@ def format_proxy(proxy, collection, extra):
 
     data['updated_at'] = collection.updated_at
     for value in updated_at:
-        data['updated_at'] = updated_at
+        data['updated_at'] = value
 
     # integer casting
     numeric = {}
