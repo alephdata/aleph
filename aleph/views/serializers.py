@@ -1,7 +1,6 @@
 import logging
-# from pprint import pprint
+from pprint import pprint, pformat  # noqa
 from flask import request
-from normality import stringify
 from pantomime.types import PDF, CSV
 from banal import ensure_list, is_listish, is_mapping, first
 from followthemoney import model
@@ -28,6 +27,16 @@ class Serializer(object):
     def _serialize(self, obj):
         return obj
 
+    def _serialize_common(self, obj):
+        id_ = obj.pop('id', None)
+        if id_ is not None:
+            obj['id'] = str(id_)
+        obj.pop('_index', None)
+        obj['writeable'] = False
+        obj['links'] = {}
+        obj = self._serialize(obj)
+        return self._clean_response(obj)
+
     def queue(self, clazz, key, schema=None):
         if not self.reference:
             resolver.queue(request, clazz, key, schema=schema)
@@ -46,7 +55,7 @@ class Serializer(object):
         if obj is not None:
             self._collect(obj)
             resolver.resolve(request)
-            return self._serialize(obj)
+            return self._serialize_common(obj)
 
     def serialize_many(self, objs):
         collected = []
@@ -58,7 +67,7 @@ class Serializer(object):
         resolver.resolve(request)
         serialized = []
         for obj in collected:
-            obj = self._serialize(obj)
+            obj = self._serialize_common(obj)
             if obj is not None:
                 serialized.append(obj)
         return serialized
@@ -103,7 +112,6 @@ class Serializer(object):
 class RoleSerializer(Serializer):
 
     def _serialize(self, obj):
-        obj['id'] = str(obj.get('id'))
         obj['links'] = {
             'self': url_for('roles_api.view', id=obj.get('id'))
         }
@@ -122,19 +130,17 @@ class RoleSerializer(Serializer):
             obj.pop('email', None)
             obj.pop('locale', None)
         obj.pop('password', None)
-        return self._clean_response(obj)
+        return obj
 
 
 class AlertSerializer(Serializer):
 
     def _serialize(self, obj):
-        pk = obj.get('id')
-        obj['id'] = str(pk)
         obj['links'] = {
-            'self': url_for('alerts_api.view', alert_id=pk)
+            'self': url_for('alerts_api.view', alert_id=obj.get('id'))
         }
         role_id = obj.pop('role_id', None)
-        obj['writeable'] = role_id == stringify(request.authz.id)
+        obj['writeable'] = request.authz.can_write_role(role_id)
         return obj
 
 
@@ -142,12 +148,12 @@ class CollectionSerializer(Serializer):
 
     def _collect(self, obj):
         self.queue(Role, obj.get('creator_id'))
-        for role_id in ensure_list(obj.get('team_id')):
-            self.queue(Role, role_id)
+        if request.authz.can(obj.get('id'), request.authz.WRITE):
+            for role_id in ensure_list(obj.get('team_id')):
+                self.queue(Role, role_id)
 
     def _serialize(self, obj):
         pk = obj.get('id')
-        obj['id'] = str(pk)
         obj['links'] = {
             'self': url_for('collections_api.view', collection_id=pk),
             'xref': url_for('xref_api.index', collection_id=pk),
@@ -168,8 +174,7 @@ class CollectionSerializer(Serializer):
                 role = self.resolve(Role, role_id, RoleSerializer)
                 if role is not None:
                     obj['team'].append(role)
-        obj.pop('_index', None)
-        return self._clean_response(obj)
+        return obj
 
 
 class PermissionSerializer(Serializer):
@@ -180,6 +185,7 @@ class PermissionSerializer(Serializer):
     def _serialize(self, obj):
         obj.pop('collection_id', None)
         role_id = obj.pop('role_id', None)
+        obj['writeable'] = request.authz.can_read_role(role_id)  # wat
         obj['role'] = self.resolve(Role, role_id, RoleSerializer)
         return obj
 
@@ -201,8 +207,6 @@ class EntitySerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get('id')
-        obj['id'] = str(pk)
-        authz = request.authz
         collection_id = obj.pop('collection_id', None)
         obj['collection'] = self.resolve(Collection, collection_id,
                                          CollectionSerializer)
@@ -216,7 +220,7 @@ class EntitySerializer(Serializer):
             properties[prop.name] = []
             for value in values:
                 entity = self.resolve(Entity, value, EntitySerializer)
-                properties[prop.name].append(entity)
+                properties[prop.name].append(entity or value)
 
         links = {
             'self': url_for('entities_api.view', entity_id=pk),
@@ -246,9 +250,9 @@ class EntitySerializer(Serializer):
                                            file_name=name, mime_type=CSV)
 
         obj['links'] = links
-        obj['writeable'] = authz.can(collection_id, authz.WRITE)
-        obj.pop('_index', None)
-        return self._clean_response(obj)
+        write = request.authz.WRITE
+        obj['writeable'] = request.authz.can(collection_id, write)
+        return obj
 
 
 class MatchCollectionsSerializer(Serializer):
@@ -267,7 +271,6 @@ class MatchSerializer(Serializer):
         self.queue(Entity, obj.get('match_id'), matchable)
 
     def _serialize(self, obj):
-        obj['id'] = str(obj['id'])
         entity_id = obj.pop('entity_id', None)
         obj['entity'] = self.resolve(Entity, entity_id, EntitySerializer)
         match_id = obj.pop('match_id', None)
@@ -296,7 +299,6 @@ class NotificationSerializer(Serializer):
             self.queue(clazz, key, Entity.THING)
 
     def _serialize(self, obj):
-        obj['id'] = str(obj['id'])
         event = Events.get(obj.get('event'))
         params = {
             'actor': self.resolve(Role, obj.get('actor_id'), RoleSerializer)
@@ -314,68 +316,27 @@ class MappingSerializer(Serializer):
     pass
 
 
-class DiagramEntitySerializer(EntitySerializer):
-
-    def _serialize(self, obj):
-        pk = obj.get('id')
-        obj['id'] = str(pk)
-        schema = model.get(obj.get('schema'))
-        if schema is None:
-            return None
-        properties = obj.get('properties', {})
-        for prop in schema.properties.values():
-            if prop.type != registry.entity:
-                continue
-            values = ensure_list(properties.get(prop.name))
-            if values:
-                properties[prop.name] = []
-                for value in values:
-                    entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
-                    if entity is None:
-                        entity = value
-                    properties[prop.name].append(entity)
-        obj.pop('_index', None)
-        collection_id = obj.pop('collection_id', None)
-        obj['collection_id'] = str(collection_id)
-        return self._clean_response(obj)
-
-
 class DiagramSerializer(Serializer):
 
     def _collect(self, obj):
         self.queue(Collection, obj.get('collection_id'))
-        ent_ids = obj['entities']
-        for ent_id in ensure_list(ent_ids):
-            self.queue(Entity, ent_id)
+        for entity_id in ensure_list(obj.get('entities', [])):
+            self.queue(Entity, entity_id)
 
     def _serialize(self, obj):
-        pk = obj.get('id')
         collection_id = obj.pop('collection_id', None)
         entity_ids = obj.pop('entities', [])
         obj.update({
-            'id': str(pk),
             'shallow': False,
             'writeable': request.authz.can(collection_id, request.authz.WRITE),
             'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
             'entities': []
         })
         for ent_id in entity_ids:
-            entity = self.resolve(Entity, ent_id, DiagramEntitySerializer)
+            entity = self.resolve(Entity, ent_id, EntitySerializer)
             if entity is not None:
                 obj['entities'].append(entity)
-        for ent in obj['entities']:
-            schema = model.get(ent.get('schema'))
-            properties = ent.get('properties', {})
-            for prop in schema.properties.values():
-                if prop.type != registry.entity:
-                    continue
-                values = ensure_list(properties.get(prop.name))
-                if values:
-                    properties[prop.name] = []
-                    for value in values:
-                        entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
-                        properties[prop.name].append(entity)
-        return self._clean_response(obj)
+        return obj
 
 
 class DiagramIndexSerializer(Serializer):
@@ -384,12 +345,10 @@ class DiagramIndexSerializer(Serializer):
         self.queue(Collection, obj.get('collection_id'))
 
     def _serialize(self, obj):
-        pk = obj.get('id')
         collection_id = obj.pop('collection_id', None)
         obj.update({
-            'id': str(pk),
             'shallow': True,
             'writeable': request.authz.can(collection_id, request.authz.WRITE),
             'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
         })
-        return self._clean_response(obj)
+        return obj
