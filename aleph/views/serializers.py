@@ -355,13 +355,16 @@ class DiagramSerializer(Serializer):
 
     def _serialize(self, obj):
         pk = obj.get('id')
-        obj['id'] = str(pk)
         collection_id = obj.pop('collection_id', None)
-        obj['writeable'] = request.authz.can(collection_id, request.authz.WRITE)  # noqa
-        obj['collection'] = self.resolve(Collection, collection_id, CollectionSerializer)  # noqa
-        ent_ids = obj.pop('entities')
-        obj['entities'] = []
-        for ent_id in ent_ids:
+        entity_ids = obj.pop('entities', [])
+        obj.update({
+            'id': str(pk),
+            'shallow': False,
+            'writeable': request.authz.can(collection_id, request.authz.WRITE),
+            'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
+            'entities': []
+        })
+        for ent_id in entity_ids:
             entity = self.resolve(Entity, ent_id, DiagramEntitySerializer)
             if entity is not None:
                 obj['entities'].append(entity)
@@ -377,4 +380,21 @@ class DiagramSerializer(Serializer):
                     for value in values:
                         entity = self.resolve(Entity, value, DiagramEntitySerializer)  # noqa
                         properties[prop.name].append(entity)
+        return self._clean_response(obj)
+
+
+class DiagramIndexSerializer(Serializer):
+
+    def _collect(self, obj):
+        self.queue(Collection, obj.get('collection_id'))
+
+    def _serialize(self, obj):
+        pk = obj.get('id')
+        collection_id = obj.pop('collection_id', None)
+        obj.update({
+            'id': str(pk),
+            'shallow': False,
+            'writeable': request.authz.can(collection_id, request.authz.WRITE),
+            'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
+        })
         return self._clean_response(obj)
