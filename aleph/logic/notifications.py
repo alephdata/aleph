@@ -4,15 +4,17 @@ from flask import render_template
 from datetime import datetime, timedelta
 from followthemoney.util import get_entity_id
 
-from aleph.core import db, cache, settings
+from aleph.core import cache, settings
 from aleph.authz import Authz
 from aleph.mail import email_role
-from aleph.model import Role, Alert, Event, Notification
 from aleph.model import Collection, Entity
+from aleph.model import Role, Alert, Event, Notification
 from aleph.logic.util import collection_url, entity_url, ui_url
+from aleph.index import notifications as index
 from aleph.util import html_link
 
 log = logging.getLogger(__name__)
+GLOBAL = 'Global'
 
 
 def channel_tag(obj, clazz=None):
@@ -32,19 +34,19 @@ def publish(event, actor_id=None, params=None, channels=None):
     params = params or {}
     outparams = {}
     channels = [channel_tag(c) for c in ensure_list(channels)]
+    channels = [c for c in channels if c is not None]
     for name, clazz in event.params.items():
         obj = params.get(name)
         outparams[name] = get_entity_id(obj)
-    Notification.publish(event,
-                         actor_id=actor_id,
-                         params=outparams,
-                         channels=channels)
-    db.session.flush()
+    index.index_notification(event,
+                             actor_id=actor_id,
+                             params=params,
+                             channels=channels)
 
 
 def flush_notifications(obj, clazz=None):
     channel_ = channel_tag(obj, clazz=clazz)
-    Notification.delete_by_channel(channel_)
+    index.delete_notifications(channel_)
 
 
 def get_role_channels(role):
@@ -54,7 +56,7 @@ def get_role_channels(role):
     channels = cache.get_list(key)
     if len(channels):
         return channels
-    channels = [Notification.GLOBAL]
+    channels = [GLOBAL]
     if role.deleted_at is None and role.type == Role.USER:
         authz = Authz.from_role(role)
         for role_id in authz.roles:
@@ -65,17 +67,34 @@ def get_role_channels(role):
     return channels
 
 
+def get_notifications(role, offset=0, limit=20, since=None):
+    pass
+
+
+def _iter_params(data):
+    if data.get('actor_id') is not None:
+        yield 'actor', Role, data.get('actor_id')
+    event = Event.get(data.get('event'))
+    if event is None:
+        return
+    params = data.get('params', {})
+    for name, clazz in event.params.items():
+        value = params.get(name)
+        if value is not None:
+            yield name, clazz, value
+
+
 def render_notification(stub, notification):
     """Generate a text version of the notification, suitable for use
     in an email or text message."""
     from aleph.logic import resolver
-    for name, clazz, value in notification.iterparams():
+    for name, clazz, value in _iter_params(notification):
         resolver.queue(stub, clazz, value)
     resolver.resolve(stub)
 
     plain = str(notification.event.template)
     html = str(notification.event.template)
-    for name, clazz, value in notification.iterparams():
+    for name, clazz, value in _iter_params(notification):
         data = resolver.get(stub, clazz, value)
         if data is None:
             return
