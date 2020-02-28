@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
+import { Button, ButtonGroup } from '@blueprintjs/core';
 
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
@@ -11,6 +12,7 @@ import { connect } from 'react-redux';
 import EntityHeading from 'src/components/Entity/EntityHeading';
 import EntityInfoMode from 'src/components/Entity/EntityInfoMode';
 import EntityViews from 'src/components/Entity/EntityViews';
+import EntityDeleteDialog from 'src/dialogs/EntityDeleteDialog/EntityDeleteDialog';
 import LoadingScreen from 'src/components/Screen/LoadingScreen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Property from 'src/components/Property';
@@ -30,8 +32,14 @@ const SEARCHABLES = ['Pages', 'Folder', 'Package', 'Workbook'];
 class EntityScreen extends Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      deleteIsOpen: false,
+    };
+
     this.onCollectionSearch = this.onCollectionSearch.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.toggleDeleteDialog = this.toggleDeleteDialog.bind(this);
   }
 
   onCollectionSearch(queryText) {
@@ -61,6 +69,7 @@ class EntityScreen extends Component {
   }
 
   getEntitySearchScope(entity) {
+    console.log(entity);
     const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
     if (!hasSearch) {
       return null;
@@ -120,6 +129,10 @@ class EntityScreen extends Component {
     return scopes.reverse();
   }
 
+  toggleDeleteDialog() {
+    this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
+  }
+
   render() {
     const {
       entity, entityId, activeMode, query, isDocument,
@@ -136,8 +149,17 @@ class EntityScreen extends Component {
     }
 
     const showDownloadButton = isDocument && entity && entity.links && entity.links.file;
-    const operation = showDownloadButton && (
-      <DownloadButton document={entity} />
+    const showDeleteButton = entity.collection.writeable;
+
+    const operation = (
+      <ButtonGroup>
+        {showDownloadButton && <DownloadButton document={entity} /> }
+        {showDeleteButton && (
+          <Button icon="delete" onClick={this.toggleDeleteDialog}>
+            <FormattedMessage id="entity.delete" defaultMessage="Delete" />
+          </Button>
+        )}
+      </ButtonGroup>
     );
 
     const breadcrumbs = (
@@ -166,6 +188,11 @@ class EntityScreen extends Component {
                 activeMode={activeMode}
                 isPreview={false}
               />
+              <EntityDeleteDialog
+                entities={[entity]}
+                isOpen={this.state.deleteIsOpen}
+                toggleDialog={this.toggleDeleteDialog}
+              />
             </DualPane.ContentPane>
           </DualPane>
         </Screen>
@@ -184,6 +211,8 @@ const mapStateToProps = (state, ownProps) => {
   const reference = selectEntityReference(state, entityId, activeMode);
   const referenceQuery = queryEntityReference(location, entity, reference);
   const documentQuery = Query.fromLocation('entities', location, {}, 'document');
+
+  console.log(state, entityId, selectEntity(state, entityId));
   return {
     entity,
     entityId,
