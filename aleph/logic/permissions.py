@@ -2,9 +2,8 @@ import logging
 
 from aleph.core import db
 from aleph.authz import Authz
-from aleph.model import Permission, Events
-from aleph.model import Notification, Role
-from aleph.logic.notifications import publish
+from aleph.model import Permission, Events, Role
+from aleph.logic.notifications import GLOBAL, publish
 from aleph.logic.roles import refresh_role
 
 log = logging.getLogger(__name__)
@@ -20,7 +19,7 @@ def update_permission(role, collection, read, write, editor_id=None):
             publish(Events.PUBLISH_COLLECTION,
                     actor_id=editor_id,
                     params=params,
-                    channels=[Notification.GLOBAL])
+                    channels=[GLOBAL])
         else:
             publish(Events.GRANT_COLLECTION,
                     actor_id=editor_id,

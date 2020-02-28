@@ -12,8 +12,6 @@ log = logging.getLogger(__name__)
 
 
 class Notification(db.Model, IdModel, DatedModel):
-    GLOBAL = 'Global'
-
     _event = db.Column('event', db.String(255), nullable=False)
     channels = db.Column(ARRAY(db.String(255)), index=True)
     params = db.Column(JSONB)
