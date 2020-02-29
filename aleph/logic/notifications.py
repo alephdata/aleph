@@ -4,11 +4,10 @@ from flask import render_template
 from datetime import datetime, timedelta
 from followthemoney.util import get_entity_id
 
-from aleph.core import cache, settings
+from aleph.core import cache, es, settings
 from aleph.authz import Authz
 from aleph.mail import email_role
-from aleph.model import Collection, Entity
-from aleph.model import Role, Alert, Event, Notification
+from aleph.model import Collection, Entity, Role, Alert, Event
 from aleph.logic.util import collection_url, entity_url, ui_url
 from aleph.index import notifications as index
 from aleph.util import html_link
@@ -40,7 +39,7 @@ def publish(event, actor_id=None, params=None, channels=None):
         outparams[name] = get_entity_id(obj)
     index.index_notification(event,
                              actor_id=actor_id,
-                             params=params,
+                             params=outparams,
                              channels=channels)
 
 
@@ -63,12 +62,31 @@ def get_role_channels(role):
             channels.append(channel_tag(role_id, Role))
         for coll_id in authz.collections(authz.READ):
             channels.append(channel_tag(coll_id, Collection))
-    cache.set_list(key, channels, expires=cache.EXPIRE)
+    cache.set_list(key, channels, expires=3600 * 2)
     return channels
 
 
-def get_notifications(role, offset=0, limit=20, since=None):
-    pass
+def get_notifications(role, since=None, parser=None):
+    channels = get_role_channels(role)
+    filters = [{'terms': {'channels': channels}}]
+    filters = []
+    if since is not None:
+        filters.append({'range': {'created_at': {'gt': since}}})
+    query = {
+        'size': 30,
+        'query': {
+            'bool': {
+                'filter': filters,
+                'must_not': [{'term': {'actor_id': role.id}}]
+            }
+        },
+        'sort': [{'created_at': {'order': 'desc'}}]
+    }
+    if parser is not None:
+        query['size'] = parser.limit
+        query['from'] = parser.offset
+    log.info('%r', query)
+    return es.search(index=index.notifications_index(), body=query)
 
 
 def _iter_params(data):
@@ -129,12 +147,13 @@ def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
     since = datetime.utcnow() - timedelta(hours=26)
-    q = Notification.by_channels(get_role_channels(role), role, since=since)
-    total_count = q.count()
+    result = get_notifications(role, since=since)
+    hits = result.get('hits', {})
+    total_count = hits.get('total', {}).get('value')
     log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:
         return
-    notifications = [render_notification(role, n) for n in q.limit(20)]
+    notifications = [render_notification(role, n) for n in hits.get('hits')]
     notifications = [n for n in notifications if n is not None]
     params = dict(notifications=notifications,
                   role=role,

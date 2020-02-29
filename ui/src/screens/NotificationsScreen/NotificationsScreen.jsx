@@ -1,11 +1,9 @@
 import React from 'react';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-import { deleteNotifications } from 'src/actions';
 import NotificationList from 'src/components/Notification/NotificationList';
 import Screen from 'src/components/Screen/Screen';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
@@ -30,22 +28,8 @@ const messages = defineMessages({
 
 
 export class NotificationsScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { isMarkedRead: false };
-    this.onMarkRead = this.onMarkRead.bind(this);
-  }
-
-  async onMarkRead(event) {
-    event.preventDefault();
-    this.setState({ isMarkedRead: true });
-    await this.props.deleteNotifications();
-  }
-
   render() {
     const { query, result, intl, role } = this.props;
-    const { isMarkedRead } = this.state;
-    const canMarkRead = !isMarkedRead && result.total !== undefined && result.total > 0;
 
     if (result.isError) {
       return <ErrorScreen error={result.error} />;
@@ -64,14 +48,6 @@ export class NotificationsScreen extends React.Component {
                 defaultMessage="View the latest updates to datasets, groups and tracking alerts you follow."
               />
             </p>
-            <div className="Dashboard__actions">
-              <Button icon="tick" className="mark-read bp3-intent-primary" onClick={this.onMarkRead} disabled={!canMarkRead}>
-                <FormattedMessage
-                  id="notifications.mark.read"
-                  defaultMessage="Clear all"
-                />
-              </Button>
-            </div>
           </div>
           <NotificationList query={query} />
         </Dashboard>
@@ -95,6 +71,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps, { deleteNotifications }),
+  connect(mapStateToProps, {}),
   injectIntl,
 )(NotificationsScreen);

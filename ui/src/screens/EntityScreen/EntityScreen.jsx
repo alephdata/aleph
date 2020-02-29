@@ -61,6 +61,9 @@ class EntityScreen extends Component {
   }
 
   getEntitySearchScope(entity) {
+    if (!entity || !entity.schema) {
+      return null;
+    }
     const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
     if (!hasSearch) {
       return null;
