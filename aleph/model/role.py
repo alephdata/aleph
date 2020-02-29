@@ -39,16 +39,15 @@ class Role(db.Model, IdModel, SoftDeleteModel):
     foreign_id = db.Column(db.Unicode(2048), nullable=False, unique=True)
     name = db.Column(db.Unicode, nullable=False)
     email = db.Column(db.Unicode, nullable=True)
+    type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
     api_key = db.Column(db.Unicode, nullable=True)
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     is_muted = db.Column(db.Boolean, nullable=False, default=False)
     is_tester = db.Column(db.Boolean, nullable=False, default=False)
     is_blocked = db.Column(db.Boolean, nullable=False, default=False)
-    type = db.Column(db.Enum(*TYPES, name='role_type'), nullable=False)
     password_digest = db.Column(db.Unicode, nullable=True)
     password = None
     reset_token = db.Column(db.Unicode, nullable=True)
-    notified_at = db.Column(db.DateTime, nullable=True)
     locale = db.Column(db.Unicode, nullable=True)
 
     permissions = db.relationship('Permission', backref='role')

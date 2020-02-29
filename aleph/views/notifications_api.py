@@ -1,12 +1,10 @@
-from datetime import datetime
 from flask import Blueprint, request
 
-from aleph.core import db
-from aleph.model import Notification, Role
-from aleph.search import DatabaseQueryResult
-from aleph.logic.notifications import get_role_channels
+from aleph.model import Role
+from aleph.search import SearchQueryResult, SearchQueryParser
+from aleph.logic.notifications import get_notifications
 from aleph.views.serializers import NotificationSerializer
-from aleph.views.util import jsonify, require
+from aleph.views.util import require
 
 
 blueprint = Blueprint('notifications_api', __name__)
@@ -38,6 +36,7 @@ def index():
     """
     require(request.authz.logged_in)
     role = Role.by_id(request.authz.id)
-    query = Notification.by_channels(get_role_channels(role), role)
-    result = DatabaseQueryResult(request, query)
+    parser = SearchQueryParser(request.args, request.authz)
+    result = get_notifications(role, parser=parser)
+    result = SearchQueryResult(request, parser, result)
     return NotificationSerializer.jsonify_result(result)
