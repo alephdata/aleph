@@ -1,4 +1,3 @@
-import { endpoint } from 'src/app/api';
 import asyncActionCreator from './asyncActionCreator';
 import { queryEndpoint } from './util';
 
