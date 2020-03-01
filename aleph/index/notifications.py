@@ -1,7 +1,8 @@
 import logging
-from uuid import uuid4
 from pprint import pprint  # noqa
 from datetime import datetime
+from servicelayer.cache import make_key
+from followthemoney.util import get_entity_id
 
 from aleph.core import settings
 from aleph.index.util import index_name, index_settings, configure_index
@@ -35,18 +36,22 @@ def configure_notifications():
     return configure_index(index, mapping, settings)
 
 
-def index_notification(event, actor_id=None, params=None,
-                       channels=None, sync=False):
+def index_notification(event, actor_id, params, channels, sync=False):
     """Index a notification."""
+    params = params or {}
+    params = {n: get_entity_id(params.get(n)) for n in event.params.keys()}
+    channels = list(set([c for c in channels if c is not None]))
     data = {
         'actor_id': actor_id,
         'params': params,
         'event': event.name,
-        'channels': list(set([c for c in channels if c is not None])),
+        'channels': channels,
         'created_at': datetime.utcnow(),
     }
     index = notifications_index()
-    return index_safe(index, uuid4().hex, data, refresh=refresh_sync(sync))
+    keys = [':'.join(i) for i in params.items()]
+    id_ = make_key(actor_id, event.name, *channels, *keys)
+    return index_safe(index, id_, data, refresh=refresh_sync(sync))
 
 
 def delete_notifications(channel, sync=False):

@@ -7,9 +7,10 @@ from followthemoney.util import get_entity_id
 from aleph.core import cache, es, settings
 from aleph.authz import Authz
 from aleph.mail import email_role
-from aleph.model import Collection, Entity, Role, Alert, Event
+from aleph.model import Collection, Entity, Role, Alert, Event, Events
 from aleph.logic.util import collection_url, entity_url, ui_url
 from aleph.index import notifications as index
+from aleph.index.util import unpack_result
 from aleph.util import html_link
 
 log = logging.getLogger(__name__)
@@ -30,22 +31,13 @@ def publish(event, actor_id=None, params=None, channels=None):
     """ Publish a notification to the given channels, while storing
     the parameters and initiating actor for the event. """
     assert isinstance(event, Event), event
-    params = params or {}
-    outparams = {}
     channels = [channel_tag(c) for c in ensure_list(channels)]
-    channels = [c for c in channels if c is not None]
-    for name, clazz in event.params.items():
-        obj = params.get(name)
-        outparams[name] = get_entity_id(obj)
-    index.index_notification(event,
-                             actor_id=actor_id,
-                             params=outparams,
-                             channels=channels)
+    index.index_notification(event, actor_id, params, channels)
 
 
 def flush_notifications(obj, clazz=None):
-    channel_ = channel_tag(obj, clazz=clazz)
-    index.delete_notifications(channel_)
+    """Delete all notifications in a given channel."""
+    index.delete_notifications(channel_tag(obj, clazz=clazz))
 
 
 def get_role_channels(role):
@@ -67,34 +59,26 @@ def get_role_channels(role):
 
 
 def get_notifications(role, since=None, parser=None):
+    """Fetch a stream of notifications for the given role."""
     channels = get_role_channels(role)
     filters = [{'terms': {'channels': channels}}]
-    filters = []
     if since is not None:
         filters.append({'range': {'created_at': {'gt': since}}})
+    must_not = [{'term': {'actor_id': role.id}}]
     query = {
         'size': 30,
-        'query': {
-            'bool': {
-                'filter': filters,
-                'must_not': [{'term': {'actor_id': role.id}}]
-            }
-        },
+        'query': {'bool': {'filter': filters, 'must_not': must_not}},
         'sort': [{'created_at': {'order': 'desc'}}]
     }
     if parser is not None:
         query['size'] = parser.limit
         query['from'] = parser.offset
-    log.info('%r', query)
     return es.search(index=index.notifications_index(), body=query)
 
 
-def _iter_params(data):
+def _iter_params(data, event):
     if data.get('actor_id') is not None:
         yield 'actor', Role, data.get('actor_id')
-    event = Event.get(data.get('event'))
-    if event is None:
-        return
     params = data.get('params', {})
     for name, clazz in event.params.items():
         value = params.get(name)
@@ -106,13 +90,17 @@ def render_notification(stub, notification):
     """Generate a text version of the notification, suitable for use
     in an email or text message."""
     from aleph.logic import resolver
-    for name, clazz, value in _iter_params(notification):
+    notification = unpack_result(notification)
+    event = Events.get(notification.get('event'))
+    if event is None:
+        return
+
+    for name, clazz, value in _iter_params(notification, event):
         resolver.queue(stub, clazz, value)
     resolver.resolve(stub)
-
-    plain = str(notification.event.template)
-    html = str(notification.event.template)
-    for name, clazz, value in _iter_params(notification):
+    plain = str(event.template)
+    html = str(event.template)
+    for name, clazz, value in _iter_params(notification, event):
         data = resolver.get(stub, clazz, value)
         if data is None:
             return
@@ -131,7 +119,7 @@ def render_notification(stub, notification):
         template = '{{%s}}' % name
         html = html.replace(template, html_link(title, link))
         plain = plain.replace(template, "'%s'" % title)
-        if name == notification.event.link_to:
+        if name == event.link_to:
             plain = '%s (%s)' % (plain, link)
     return {'plain': plain, 'html': html}
 
