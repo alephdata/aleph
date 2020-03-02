@@ -6,6 +6,7 @@ import Role from 'src/components/common/Role';
 import Collection from 'src/components/common/Collection';
 import QueryText from 'src/components/common/QueryText';
 import Entity from 'src/components/common/Entity';
+import Diagram from 'src/components/common/Diagram';
 
 import './Notification.scss';
 
@@ -18,8 +19,11 @@ class Notification extends PureComponent {
     if (type === 'collection') {
       return <Collection.Link collection={object} preview icon />;
     }
-    if (type === 'document' || type === 'entity') {
+    if (type === 'entity') {
       return <Entity.Link entity={object} preview icon />;
+    }
+    if (type === 'diagram') {
+      return <Diagram.Link diagram={object} />;
     }
     if (type === 'alert') {
       return object ? <QueryText query={object.query} /> : null;

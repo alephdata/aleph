@@ -4,8 +4,7 @@ from flask import Blueprint, request
 
 from aleph.core import db
 from aleph.model import Diagram
-from aleph.logic.entities import upsert_entity
-from aleph.logic.diagrams import replace_layout_ids
+from aleph.logic.diagrams import create_diagram
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.views.serializers import DiagramSerializer, DiagramIndexSerializer
 from aleph.views.util import get_nested_collection, get_db_collection
@@ -79,18 +78,7 @@ def create():
     """
     data = parse_request('DiagramCreate')
     collection = get_nested_collection(data, request.authz.WRITE)
-    old_to_new_id_map = {}
-    entity_ids = []
-    for entity in data.pop('entities', []):
-        old_id = entity.get('id')
-        new_id = upsert_entity(entity, collection, sync=True)
-        old_to_new_id_map[old_id] = new_id
-        entity_ids.append(new_id)
-    data['entities'] = entity_ids
-    layout = data.get('layout', {})
-    data['layout'] = replace_layout_ids(layout, old_to_new_id_map)
-    diagram = Diagram.create(data, collection, request.authz.id)
-    db.session.commit()
+    diagram = create_diagram(collection, data, request.authz)
     return DiagramSerializer.jsonify(diagram)
 
 
