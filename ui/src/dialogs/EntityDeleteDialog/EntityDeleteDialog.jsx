@@ -10,6 +10,8 @@ import { showErrorToast, showSuccessToast } from 'src/app/toast';
 import getCollectionLink from 'src/util/getCollectionLink';
 import getEntityLink from 'src/util/getEntityLink';
 
+import './EntityDeleteDialog.scss';
+
 const messages = defineMessages({
   button_confirm: {
     id: 'entity.delete.confirm',
@@ -29,8 +31,6 @@ const messages = defineMessages({
   },
 });
 
-import './EntityDeleteDialog.scss';
-
 export class EntityDeleteDialog extends Component {
   constructor(props) {
     super(props);
@@ -42,28 +42,26 @@ export class EntityDeleteDialog extends Component {
     const { entities, history, intl, redirectOnSuccess, toggleDialog } = this.props;
     const { blocking } = this.state;
 
-    if (blocking) return false;
+    if (!blocking) {
+      try {
+        this.setState({ blocking: true });
+        await Promise.all(
+          entities.map(async entity => this.props.deleteEntity(entity)),
+        );
+        showSuccessToast(intl.formatMessage(messages.delete_success));
+        if (redirectOnSuccess) {
+          const parent = entities[0]?.getFirst('parent');
+          const collection = entities[0]?.collection;
+          const pathname = parent ? getEntityLink(parent) : getCollectionLink(collection);
 
-    try {
-      this.setState({ blocking: true });
-      await Promise.all(
-        entities.map(async entity => this.props.deleteEntity(entity)),
-      );
-      showSuccessToast(intl.formatMessage(messages.delete_success));
-      if (redirectOnSuccess) {
-        const parent = entities[0]?.getFirst('parent');
-        const collection = entities[0]?.collection;
-        const pathname = parent ? getEntityLink(parent) : getCollectionLink(collection);
-
-        history.push({
-          pathname,
-        });
+          history.push({ pathname });
+        }
+        this.setState({ blocking: false });
+        toggleDialog();
+      } catch (e) {
+        showErrorToast(intl.formatMessage(messages.delete_error));
+        this.setState({ blocking: false });
       }
-      this.setState({ blocking: false });
-      toggleDialog();
-    } catch (e) {
-      showErrorToast(intl.formatMessage(messages.delete_error));
-      this.setState({ blocking: false });
     }
   }
 
