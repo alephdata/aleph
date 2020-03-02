@@ -235,12 +235,14 @@ def configure_index(index, mapping, settings):
         _check_response(index, res)
         res = es.indices.open(**options)
         return True
-    log.info("Creating index: %s...", index)
-    res = es.indices.create(index, body={
-        'settings': settings,
-        'mappings': mapping
-    }, ignore=[400])
-    return True
+    else:
+        log.info("Creating index: %s...", index)
+        body = {
+            'settings': settings,
+            'mappings': mapping
+        }
+        res = es.indices.create(index, body=body, ignore=[400])
+        return True
 
 
 def index_settings(shards=5, replicas=2):
@@ -249,9 +251,14 @@ def index_settings(shards=5, replicas=2):
         "index": {
             "number_of_shards": shards,
             "number_of_replicas": replicas,
+            # "refresh_interval": refresh,
             "analysis": {
                 "analyzer": {
                     "latin_index": {
+                        "tokenizer": "standard",
+                        "filter": ["latinize"]
+                    },
+                    "icu_latin": {
                         "tokenizer": "standard",
                         "filter": ["latinize"]
                     },

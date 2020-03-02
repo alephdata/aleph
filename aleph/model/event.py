@@ -3,6 +3,7 @@ from flask_babel import lazy_gettext
 from aleph.model.role import Role
 from aleph.model.alert import Alert
 from aleph.model.entity import Entity
+from aleph.model.diagram import Diagram
 from aleph.model.collection import Collection
 
 
@@ -65,6 +66,26 @@ class Events(object, metaclass=EventsRegistry):
             'collection': Collection
         },
         link_to='document'
+    )
+
+    # EXECUTE MAPPING (document)
+    LOAD_MAPPING = Event(
+        template=lazy_gettext('{{actor}} generated entities from {{table}} in {{collection}}'),  # noqa
+        params={
+            'table': Entity,
+            'collection': Collection
+        },
+        link_to='table'
+    )
+
+    # CREATE DIAGRAM (document)
+    CREATE_DIAGRAM = Event(
+        template=lazy_gettext('{{actor}} began diagramming {{diagram}} in {{collection}}'),  # noqa
+        params={
+            'diagram': Diagram,
+            'collection': Collection
+        },
+        link_to='table'
     )
 
     # ALERT MATCH (entity)

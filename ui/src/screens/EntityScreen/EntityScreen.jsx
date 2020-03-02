@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
 import queryString from 'query-string';
+import { Entity as EntityObject } from '@alephdata/followthemoney';
 
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
@@ -61,6 +62,9 @@ class EntityScreen extends Component {
   }
 
   getEntitySearchScope(entity) {
+    if (!entity || !entity.schema) {
+      return null;
+    }
     const hasSearch = entity.schema.isAny(SEARCHABLES) && !entity.schema.isA('Email');
     if (!hasSearch) {
       return null;
@@ -103,9 +107,9 @@ class EntityScreen extends Component {
     }
 
     let currEntity = entity;
-    while (currEntity) {
+    while (currEntity && EntityObject.isEntity(currEntity)) {
       const entityScope = this.getEntitySearchScope(currEntity);
-      if (entityScope) {
+      if (entityScope !== null) {
         scopes.push(entityScope);
       }
       currEntity = currEntity.getFirst('parent');

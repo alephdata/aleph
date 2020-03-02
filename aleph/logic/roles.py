@@ -6,6 +6,7 @@ from aleph.core import db, settings, cache
 from aleph.authz import Authz
 from aleph.mail import email_role
 from aleph.model import Role
+from aleph.logic.notifications import get_role_channels
 
 log = logging.getLogger(__name__)
 
@@ -65,6 +66,7 @@ def update_role(role):
     """Synchronize denormalised role configuration."""
     refresh_role(role)
     get_role(role.id)
+    get_role_channels(role)
 
 
 def refresh_role(role, sync=False):
