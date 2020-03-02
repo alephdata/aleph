@@ -10,7 +10,7 @@ psycopg2-binary==2.8.4
 pyicu==2.4.2
 
 grpcio==1.27.2
-google-cloud-vision==0.42.0
+google-cloud-vision==1.0.0
 google-cloud-storage==1.26.0
 
 tesserocr==2.5.0
