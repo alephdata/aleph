@@ -3,6 +3,7 @@ import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 import { Button, ButtonGroup } from '@blueprintjs/core';
+import { Entity as EntityObject } from '@alephdata/followthemoney';
 
 import Query from 'src/app/Query';
 import Screen from 'src/components/Screen/Screen';
@@ -115,13 +116,13 @@ class EntityScreen extends Component {
     }
 
     let currEntity = entity;
-    // while (currEntity) {
-    //   const entityScope = this.getEntitySearchScope(currEntity);
-    //   if (entityScope) {
-    //     scopes.push(entityScope);
-    //   }
-    //   currEntity = currEntity.getFirst('parent');
-    // }
+    while (currEntity && EntityObject.isEntity(currEntity)) {
+      const entityScope = this.getEntitySearchScope(currEntity);
+      if (entityScope !== null) {
+        scopes.push(entityScope);
+      }
+      currEntity = currEntity.getFirst('parent');
+    }
 
     scopes.push({
       listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
