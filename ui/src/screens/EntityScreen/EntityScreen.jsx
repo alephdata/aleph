@@ -18,6 +18,7 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Property from 'src/components/Property';
 import { Collection, DualPane, Entity, Breadcrumbs } from 'src/components/common';
 import { DownloadButton } from 'src/components/Toolbar';
+import getCollectionLink from 'src/util/getCollectionLink';
 import getEntityLink from 'src/util/getEntityLink';
 import { queryEntityReference } from 'src/queries';
 import {
@@ -112,13 +113,13 @@ class EntityScreen extends Component {
     }
 
     let currEntity = entity;
-    while (currEntity) {
-      const entityScope = this.getEntitySearchScope(currEntity);
-      if (entityScope) {
-        scopes.push(entityScope);
-      }
-      currEntity = currEntity.getFirst('parent');
-    }
+    // while (currEntity) {
+    //   const entityScope = this.getEntitySearchScope(currEntity);
+    //   if (entityScope) {
+    //     scopes.push(entityScope);
+    //   }
+    //   currEntity = currEntity.getFirst('parent');
+    // }
 
     scopes.push({
       listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
@@ -130,6 +131,7 @@ class EntityScreen extends Component {
   }
 
   toggleDeleteDialog() {
+    console.log('toggling')
     this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
   }
 
@@ -155,7 +157,7 @@ class EntityScreen extends Component {
       <ButtonGroup>
         {showDownloadButton && <DownloadButton document={entity} /> }
         {showDeleteButton && (
-          <Button icon="delete" onClick={this.toggleDeleteDialog}>
+          <Button icon="trash" onClick={this.toggleDeleteDialog}>
             <FormattedMessage id="entity.delete" defaultMessage="Delete" />
           </Button>
         )}
@@ -192,6 +194,7 @@ class EntityScreen extends Component {
                 entities={[entity]}
                 isOpen={this.state.deleteIsOpen}
                 toggleDialog={this.toggleDeleteDialog}
+                redirectOnSuccess
               />
             </DualPane.ContentPane>
           </DualPane>
@@ -212,7 +215,6 @@ const mapStateToProps = (state, ownProps) => {
   const referenceQuery = queryEntityReference(location, entity, reference);
   const documentQuery = Query.fromLocation('entities', location, {}, 'document');
 
-  console.log(state, entityId, selectEntity(state, entityId));
   return {
     entity,
     entityId,
