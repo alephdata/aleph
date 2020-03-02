@@ -13,12 +13,14 @@ def get_diagram(diagram_id):
 
 
 def create_diagram(collection, data, authz):
-    """Create a network diagram."""
+    """Create a network diagram. This will create or update any entities
+    that already exist in the diagram and sign their IDs into the collection.
+    """
     old_to_new_id_map = {}
     entity_ids = []
     for entity in data.pop('entities', []):
         old_id = entity.get('id')
-        new_id = upsert_entity(entity, collection, sync=True)
+        new_id = upsert_entity(entity, collection, validate=False, sync=True)
         old_to_new_id_map[old_id] = new_id
         entity_ids.append(new_id)
     data['entities'] = entity_ids
