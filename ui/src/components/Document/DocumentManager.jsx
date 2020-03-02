@@ -10,7 +10,7 @@ import DocumentUploadDialog from 'src/dialogs/DocumentUploadDialog/DocumentUploa
 import DocumentFolderButton from 'src/components/Toolbar/DocumentFolderButton';
 import CollectionAnalyzeAlert from 'src/components/Collection/CollectionAnalyzeAlert';
 import EntitySearch from 'src/components/EntitySearch/EntitySearch';
-import { ErrorSection } from 'src/components/common';
+import { Count, ErrorSection } from 'src/components/common';
 import { queryEntities } from 'src/actions';
 
 import './DocumentManager.scss';
@@ -108,8 +108,11 @@ export class DocumentManager extends Component {
               </Button>
             )}
             <DocumentFolderButton collection={collection} parent={document} />
-            <Button icon="delete" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
-              <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
+            <Button icon="trash" onClick={this.toggleDeleteSelection} disabled={!selection.length}>
+              <span className="align-middle">
+                <FormattedMessage id="document.viewer.delete" defaultMessage="Delete" />
+              </span>
+              <Count count={selection.length} />
             </Button>
             { mutableCollection && !document && (
               <Button icon="automatic-updates" onClick={this.toggleAnalyze}>
