@@ -40,6 +40,7 @@ export class DocumentManager extends Component {
     this.toggleDeleteSelection = this.toggleDeleteSelection.bind(this);
     this.toggleAnalyze = this.toggleAnalyze.bind(this);
     this.toggleUpload = this.toggleUpload.bind(this);
+    this.onUploadSuccess = this.onUploadSuccess.bind(this);
   }
 
   updateSelection(document) {
@@ -65,6 +66,10 @@ export class DocumentManager extends Component {
     this.setState(({ uploadIsOpen }) => ({
       uploadIsOpen: !uploadIsOpen,
     }));
+  }
+
+  onUploadSuccess() {
+    this.setState({ uploadIsOpen: false });
   }
 
   canUpload() {
@@ -149,6 +154,7 @@ export class DocumentManager extends Component {
           collection={collection}
           isOpen={this.state.uploadIsOpen}
           toggleDialog={this.toggleUpload}
+          onUploadSuccess={this.onUploadSuccess}
           parent={document}
         />
         <CollectionAnalyzeAlert

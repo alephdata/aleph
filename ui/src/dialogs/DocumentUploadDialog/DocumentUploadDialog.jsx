@@ -6,7 +6,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { ingestDocument as ingestDocumentAction } from 'src/actions';
-import { showErrorToast } from 'src/app/toast';
+import { showErrorToast, showSuccessToast } from 'src/app/toast';
 import convertPathsToTree from 'src/util/convertPathsToTree';
 import DocumentUploadForm from './DocumentUploadForm';
 import DocumentUploadStatus from './DocumentUploadStatus';
@@ -60,10 +60,9 @@ export class DocumentUploadDialog extends Component {
 
     try {
       await this.traverseFileTree(fileTree, parent);
-      if (onUploadSuccess) {
-        onUploadSuccess();
+      showSuccessToast(intl.formatMessage(messages.success));
+      if (onUploadSuccess) onUploadSuccess();
       }
-      toggleDialog();
       return;
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
