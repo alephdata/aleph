@@ -1,0 +1,11 @@
+@import "src/app/variables.scss";
+
+.EntityDeleteDialog {
+  &__file-list {
+    padding-left: $aleph-grid-size*2;
+  }
+
+  .EntityLabel {
+    white-space: nowrap;
+  }
+}

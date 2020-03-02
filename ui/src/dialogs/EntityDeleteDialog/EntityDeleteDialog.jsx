@@ -3,8 +3,9 @@ import { withRouter } from 'react-router';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedPlural, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { deleteEntity } from 'src/actions';
+import { Entity } from 'src/components/common';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 import getCollectionLink from 'src/util/getCollectionLink';
 import getEntityLink from 'src/util/getEntityLink';
@@ -27,6 +28,8 @@ const messages = defineMessages({
     defaultMessage: 'An error occured while attempting to delete this entity.',
   },
 });
+
+import './EntityDeleteDialog.scss';
 
 export class EntityDeleteDialog extends Component {
   constructor(props) {
@@ -66,9 +69,11 @@ export class EntityDeleteDialog extends Component {
 
   render() {
     const { entities, intl } = this.props;
+
     return (
       <Alert
         isOpen={this.props.isOpen}
+        className="EntityDeleteDialog"
         icon="trash"
         intent={Intent.DANGER}
         cancelButtonText={intl.formatMessage(messages.button_cancel)}
@@ -76,12 +81,28 @@ export class EntityDeleteDialog extends Component {
         onCancel={this.props.toggleDialog}
         onConfirm={this.onDelete}
       >
-        <FormattedPlural
-          id="entity.delete.question"
-          value={entities.length}
-          one="Are you sure you want to delete this entity?"
-          other="Are you sure you want to delete these entities?"
-        />
+        {entities.length === 1 && (
+          <FormattedMessage
+            id="entity.delete.question.one"
+            defaultMessage="Are you sure you want to delete {entityLabel}?"
+            values={{ entityLabel: <Entity.Label entity={entities[0]} truncate={30} icon /> }}
+          />
+        )}
+        {entities.length !== 1 && (
+          <>
+            <FormattedMessage
+              id="entity.delete.question.multiple"
+              defaultMessage="Are you sure you want to delete the following items?"
+            />
+            <ul className="EntityDeleteDialog__file-list">
+              {entities.map(entity => (
+                <li>
+                  <Entity.Label entity={entity} truncate={30} icon />
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </Alert>
     );
   }
