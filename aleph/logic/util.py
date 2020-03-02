@@ -18,6 +18,10 @@ def collection_url(collection_id=None, **query):
     return ui_url('datasets', id=collection_id, **query)
 
 
+def diagram_url(diagram_id=None, **query):
+    return ui_url('diagrams', id=diagram_id, **query)
+
+
 def entity_url(entity_id=None, **query):
     return ui_url('entities', id=entity_id, **query)
 

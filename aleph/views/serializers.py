@@ -8,7 +8,8 @@ from followthemoney.types import registry
 from followthemoney.helpers import entity_filename
 
 from aleph.core import url_for
-from aleph.model import Role, Collection, Document, Entity, Events, Alert
+from aleph.model import Role, Collection, Document, Entity, Events
+from aleph.model import Alert, Diagram
 from aleph.logic import resolver
 from aleph.logic.util import collection_url, entity_url, archive_url
 from aleph.views.util import jsonify
@@ -283,39 +284,6 @@ class QueryLogSerializer(Serializer):
     pass
 
 
-class NotificationSerializer(Serializer):
-    SERIALIZERS = {
-        Alert: AlertSerializer,
-        Entity: EntitySerializer,
-        Collection: CollectionSerializer,
-        Role: RoleSerializer
-    }
-
-    def _collect(self, obj):
-        self.queue(Role, obj.get('actor_id'))
-        event = Events.get(obj.get('event'))
-        for name, clazz in event.params.items():
-            key = obj.get('params', {}).get(name)
-            self.queue(clazz, key, Entity.THING)
-
-    def _serialize(self, obj):
-        event = Events.get(obj.get('event'))
-        params = {
-            'actor': self.resolve(Role, obj.get('actor_id'), RoleSerializer)
-        }
-        for name, clazz in event.params.items():
-            key = obj.get('params', {}).get(name)
-            serializer = self.SERIALIZERS.get(clazz)
-            params[name] = self.resolve(clazz, key, serializer)
-        obj['params'] = params
-        obj['event'] = event.to_dict()
-        return obj
-
-
-class MappingSerializer(Serializer):
-    pass
-
-
 class DiagramSerializer(Serializer):
 
     def _collect(self, obj):
@@ -352,3 +320,37 @@ class DiagramIndexSerializer(Serializer):
             'collection': self.resolve(Collection, collection_id, CollectionSerializer),  # noqa
         })
         return obj
+
+
+class NotificationSerializer(Serializer):
+    SERIALIZERS = {
+        Alert: AlertSerializer,
+        Entity: EntitySerializer,
+        Collection: CollectionSerializer,
+        Diagram: DiagramSerializer,
+        Role: RoleSerializer,
+    }
+
+    def _collect(self, obj):
+        self.queue(Role, obj.get('actor_id'))
+        event = Events.get(obj.get('event'))
+        for name, clazz in event.params.items():
+            key = obj.get('params', {}).get(name)
+            self.queue(clazz, key, Entity.THING)
+
+    def _serialize(self, obj):
+        event = Events.get(obj.get('event'))
+        params = {
+            'actor': self.resolve(Role, obj.get('actor_id'), RoleSerializer)
+        }
+        for name, clazz in event.params.items():
+            key = obj.get('params', {}).get(name)
+            serializer = self.SERIALIZERS.get(clazz)
+            params[name] = self.resolve(clazz, key, serializer)
+        obj['params'] = params
+        obj['event'] = event.to_dict()
+        return obj
+
+
+class MappingSerializer(Serializer):
+    pass
