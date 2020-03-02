@@ -23,7 +23,7 @@ class DocumentDropzone extends Component {
   }
 
   render() {
-    const { canDrop, children, collection, onUploadSuccess } = this.props;
+    const { canDrop, children, collection, document, onUploadSuccess } = this.props;
 
     if (!canDrop) {
       return children;
@@ -55,6 +55,7 @@ class DocumentDropzone extends Component {
             toggleDialog={this.toggleUpload}
             filesToUpload={this.state.filesToUpload}
             onUploadSuccess={onUploadSuccess}
+            parent={document}
           />
         )}
       </>

@@ -19,6 +19,7 @@ class FolderViewer extends Component {
         <DocumentDropzone
           canDrop={document.collection.writeable}
           collection={document.collection}
+          document={document}
         >
           {document.status === 'fail' && (
             <div className="warning-folder">

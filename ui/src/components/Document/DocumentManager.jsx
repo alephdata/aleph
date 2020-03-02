@@ -146,6 +146,7 @@ export class DocumentManager extends Component {
           collection={collection}
           isOpen={this.state.uploadIsOpen}
           toggleDialog={this.toggleUpload}
+          parent={document}
         />
         <CollectionAnalyzeAlert
           collection={collection}
