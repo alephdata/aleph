@@ -50,9 +50,14 @@ class Entity(db.Model, SoftDeleteModel):
         self.deleted_at = None
         db.session.add(self)
 
-    def update(self, data, collection):
+    def update(self, data, collection, validate=True):
         proxy = model.get_proxy(data, cleaned=False)
-        proxy.schema.validate(data)
+        if validate:
+            # This isn't strictly required because the proxy will contain
+            # only those values that can be inserted for each property,
+            # making it valid -- all this does, therefore, is to raise an
+            # exception that notifies the user.
+            proxy.schema.validate(data)
         proxy = collection.ns.apply(proxy)
         self.id = collection.ns.sign(self.id)
         self.schema = proxy.schema.name
@@ -78,14 +83,14 @@ class Entity(db.Model, SoftDeleteModel):
         return proxy
 
     @classmethod
-    def create(cls, data, collection):
+    def create(cls, data, collection, validate=True):
         entity = cls()
         entity_id = data.get('id') or make_textid()
         if not registry.entity.validate(entity_id):
             raise InvalidData(gettext("Invalid entity ID"))
         entity.id = collection.ns.sign(entity_id)
         entity.collection_id = collection.id
-        entity.update(data, collection)
+        entity.update(data, collection, validate=validate)
         return entity
 
     @classmethod
