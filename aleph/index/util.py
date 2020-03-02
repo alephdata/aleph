@@ -88,7 +88,7 @@ def unpack_result(res):
     return data
 
 
-def authz_query(authz):
+def authz_query(authz, field='collection_id'):
     """Generate a search query filter from an authz object."""
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
@@ -96,7 +96,7 @@ def authz_query(authz):
     collections = authz.collections(authz.READ)
     if not len(collections):
         return {'match_none': {}}
-    return {'terms': {'collection_id': collections}}
+    return {'terms': {field: collections}}
 
 
 def bool_query():
