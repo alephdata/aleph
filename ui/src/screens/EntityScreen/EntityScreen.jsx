@@ -116,9 +116,9 @@ class EntityScreen extends Component {
     }
 
     let currEntity = entity;
-    while (currEntity && EntityObject.isEntity(currEntity)) {
+    while (currEntity) {
       const entityScope = this.getEntitySearchScope(currEntity);
-      if (entityScope !== null) {
+      if (entityScope) {
         scopes.push(entityScope);
       }
       currEntity = currEntity.getFirst('parent');
@@ -134,7 +134,6 @@ class EntityScreen extends Component {
   }
 
   toggleDeleteDialog() {
-    console.log('toggling')
     this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
   }
 
