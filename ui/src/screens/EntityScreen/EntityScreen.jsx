@@ -19,7 +19,6 @@ import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import Property from 'src/components/Property';
 import { Collection, DualPane, Entity, Breadcrumbs } from 'src/components/common';
 import { DownloadButton } from 'src/components/Toolbar';
-import getCollectionLink from 'src/util/getCollectionLink';
 import getEntityLink from 'src/util/getEntityLink';
 import { queryEntityReference } from 'src/queries';
 import {

@@ -1,7 +1,6 @@
 import React from 'react';
-import { AnchorButton, Icon, Tooltip, Position } from '@blueprintjs/core';
+import { AnchorButton, Tooltip, Position } from '@blueprintjs/core';
 import { injectIntl, defineMessages } from 'react-intl';
-import c from 'classnames';
 
 const messages = defineMessages({
   download: {
@@ -17,7 +16,7 @@ const messages = defineMessages({
 
 class DownloadButton extends React.PureComponent {
   render() {
-    const { intl, document, isPreview } = this.props;
+    const { intl, document } = this.props;
     if (!document || !document.links || !document.links.file) {
       return null;
     }
@@ -31,7 +30,7 @@ class DownloadButton extends React.PureComponent {
           icon="download"
           download
           target="_blank"
-          className='DownloadButton'
+          className="DownloadButton"
           rel="nofollow noopener noreferrer"
           text={intl.formatMessage(messages.download)}
         />
