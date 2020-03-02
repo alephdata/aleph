@@ -94,7 +94,7 @@ export class EntityDeleteDialog extends Component {
             />
             <ul className="EntityDeleteDialog__file-list">
               {entities.map(entity => (
-                <li>
+                <li key={entity.id}>
                   <Entity.Label entity={entity} truncate={30} icon />
                 </li>
               ))}
