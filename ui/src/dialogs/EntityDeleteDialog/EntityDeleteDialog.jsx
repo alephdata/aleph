@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { deleteEntity } from 'src/actions';
+import { showErrorToast, showSuccessToast } from 'src/app/toast';
+import getCollectionLink from 'src/util/getCollectionLink';
+import getEntityLink from 'src/util/getEntityLink';
 
 const messages = defineMessages({
   button_confirm: {
@@ -13,6 +17,10 @@ const messages = defineMessages({
   button_cancel: {
     id: 'entity.delete.cancel',
     defaultMessage: 'Cancel',
+  },
+  delete_success: {
+    id: 'entity.delete.success',
+    defaultMessage: 'Successfully deleted',
   },
   delete_error: {
     id: 'entity.delete.error',
@@ -28,10 +36,29 @@ export class EntityDeleteDialog extends Component {
   }
 
   async onDelete() {
-    const { entities } = this.props;
-    await Promise.all(
-      entities.map(async entity => this.props.deleteEntity(entity)),
-    );
+    const { entities, history, intl, redirectOnSuccess } = this.props;
+    try {
+      await Promise.all(
+        entities.map(async entity => this.props.deleteEntity(entity)),
+      );
+      showSuccessToast(intl.formatMessage(messages.delete_success));
+      if (redirectOnSuccess) {
+        const parent = entities[0]?.getFirst('parent');
+        const collection = entities[0]?.collection;
+
+        if (parent) {
+          history.push({
+            pathname: getEntityLink(parent),
+          });
+        } else {
+          history.push({
+            pathname: getCollectionLink(collection),
+          });
+        }
+      }
+    } catch (e) {
+      showErrorToast(intl.formatMessage(messages.delete_error));
+    }
   }
 
   render() {
@@ -39,7 +66,6 @@ export class EntityDeleteDialog extends Component {
     return (
       <Alert
         isOpen={this.props.isOpen}
-        onClose={this.props.toggleDialog}
         icon="trash"
         intent={Intent.DANGER}
         cancelButtonText={intl.formatMessage(messages.button_cancel)}
@@ -56,4 +82,8 @@ export class EntityDeleteDialog extends Component {
   }
 }
 
-export default compose(connect(null, { deleteEntity }), injectIntl)(EntityDeleteDialog);
+export default compose(
+  withRouter,
+  connect(null, { deleteEntity }),
+  injectIntl,
+)(EntityDeleteDialog);
