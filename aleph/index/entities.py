@@ -5,13 +5,12 @@ from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
-from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import es, cache
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
-from aleph.index.util import authz_query, query_delete, bulk_actions
+from aleph.index.util import authz_query, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 
 
@@ -206,18 +205,5 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get('_index')
         if index == exclude:
             continue
-        try:
-            es.delete(index=index, id=entity_id,
-                      refresh=refresh_sync(sync))
-            q = {'term': {'entities': entity_id}}
-            query_delete(entities_read_index(), q, sync=sync)
-        except NotFoundError:
-            # This is expected in some cases. For example, when 2 Things are
-            # connected by an Interval and all the 3 entities get deleted
-            # simultaneously, Aleph tries to delete the Interval thrice due to
-            # recursive deletion of adjacent entities. ElasticSearch throws a
-            # 404 in that case.
-            # In those cases, we want to skip both the `es.delete` step and
-            # the `query_delete` step.
-            log.warning("Delete failed for entity %s - not found", entity_id)
-            continue
+        es.delete(index=index, id=entity_id, ignore=[404],
+                  refresh=refresh_sync(sync))

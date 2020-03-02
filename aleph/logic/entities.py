@@ -15,6 +15,10 @@ log = logging.getLogger(__name__)
 
 
 def upsert_entity(data, collection, validate=True, sync=False):
+    """Create or update an entity in the database. This has a side hustle
+    of migrating entities created via the _bulk API or a mapper to a
+    database entity in the event that it gets edited by the user.
+    """
     entity = None
     entity_id = collection.ns.sign(data.get('id'))
     if entity_id is not None:
