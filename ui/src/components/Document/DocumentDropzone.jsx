@@ -12,18 +12,27 @@ class DocumentDropzone extends Component {
       uploadIsOpen: false,
     };
 
-    this.toggleUpload = this.toggleUpload.bind(this);
+    this.openDialog = this.openDialog.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
+    this.onUploadSuccess = this.onUploadSuccess.bind(this);
   }
 
-  toggleUpload(files = []) {
-    this.setState(({ uploadIsOpen }) => ({
-      uploadIsOpen: !uploadIsOpen,
-      filesToUpload: files,
-    }));
+  onUploadSuccess() {
+    const { onUploadSuccess } = this.props;
+    this.closeDialog();
+    if (onUploadSuccess) onUploadSuccess();
+  }
+
+  openDialog(files = []) {
+    this.setState({ uploadIsOpen: true, filesToUpload: files });
+  }
+
+  closeDialog() {
+    this.setState({ uploadIsOpen: false, filesToUpload: null });
   }
 
   render() {
-    const { canDrop, children, collection, onUploadSuccess } = this.props;
+    const { canDrop, children, collection, document } = this.props;
 
     if (!canDrop) {
       return children;
@@ -33,7 +42,7 @@ class DocumentDropzone extends Component {
       <>
         <Dropzone
           onDrop={acceptedFiles => (
-            acceptedFiles && acceptedFiles.length ? this.toggleUpload(acceptedFiles) : null
+            acceptedFiles && acceptedFiles.length ? this.openDialog(acceptedFiles) : null
           )}
         >
           {({ getRootProps, getInputProps, isDragActive }) => (
@@ -52,9 +61,10 @@ class DocumentDropzone extends Component {
           <DocumentUploadDialog
             collection={collection}
             isOpen={this.state.uploadIsOpen}
-            toggleDialog={this.toggleUpload}
+            toggleDialog={this.closeDialog}
             filesToUpload={this.state.filesToUpload}
-            onUploadSuccess={onUploadSuccess}
+            onUploadSuccess={this.onUploadSuccess}
+            parent={document}
           />
         )}
       </>
