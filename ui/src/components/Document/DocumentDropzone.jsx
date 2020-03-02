@@ -17,18 +17,18 @@ class DocumentDropzone extends Component {
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
   }
 
+  onUploadSuccess() {
+    const { onUploadSuccess } = this.props;
+    this.closeDialog();
+    if (onUploadSuccess) onUploadSuccess();
+  }
+
   openDialog(files = []) {
     this.setState({ uploadIsOpen: true, filesToUpload: files });
   }
 
   closeDialog() {
     this.setState({ uploadIsOpen: false, filesToUpload: null });
-  }
-
-  onUploadSuccess() {
-    const { onUploadSuccess } = this.props;
-    this.closeDialog();
-    if (onUploadSuccess) onUploadSuccess();
   }
 
   render() {
