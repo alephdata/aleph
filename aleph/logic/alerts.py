@@ -51,11 +51,9 @@ def check_alert(alert_id):
             'entity': entity.get('id')
         }
         publish(Events.MATCH_ALERT, params=params, channels=[alert.role])
-        db.session.flush()
 
     alert.update()
     db.session.commit()
-    db.session.close()
 
 
 def alert_query(alert, authz):

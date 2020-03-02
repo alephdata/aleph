@@ -18,4 +18,9 @@
     .EntityLabel {
       vertical-align: inherit;
     }
+
+    .bp3-icon, .bp3-icon svg {
+        margin-right: 0 !important;
+        padding-right: $aleph-grid-size/6 !important;
+    }
 }

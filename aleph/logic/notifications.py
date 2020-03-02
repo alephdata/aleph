@@ -4,15 +4,18 @@ from flask import render_template
 from datetime import datetime, timedelta
 from followthemoney.util import get_entity_id
 
-from aleph.core import db, cache, settings
+from aleph.core import cache, es, settings
 from aleph.authz import Authz
 from aleph.mail import email_role
-from aleph.model import Role, Alert, Event, Notification
-from aleph.model import Collection, Entity
-from aleph.logic.util import collection_url, entity_url, ui_url
+from aleph.model import Collection, Entity, Role, Alert, Diagram
+from aleph.model import Event, Events
+from aleph.logic.util import collection_url, entity_url, ui_url, diagram_url
+from aleph.index import notifications as index
+from aleph.index.util import unpack_result
 from aleph.util import html_link
 
 log = logging.getLogger(__name__)
+GLOBAL = 'Global'
 
 
 def channel_tag(obj, clazz=None):
@@ -29,22 +32,13 @@ def publish(event, actor_id=None, params=None, channels=None):
     """ Publish a notification to the given channels, while storing
     the parameters and initiating actor for the event. """
     assert isinstance(event, Event), event
-    params = params or {}
-    outparams = {}
     channels = [channel_tag(c) for c in ensure_list(channels)]
-    for name, clazz in event.params.items():
-        obj = params.get(name)
-        outparams[name] = get_entity_id(obj)
-    Notification.publish(event,
-                         actor_id=actor_id,
-                         params=outparams,
-                         channels=channels)
-    db.session.flush()
+    index.index_notification(event, actor_id, params, channels)
 
 
 def flush_notifications(obj, clazz=None):
-    channel_ = channel_tag(obj, clazz=clazz)
-    Notification.delete_by_channel(channel_)
+    """Delete all notifications in a given channel."""
+    index.delete_notifications(channel_tag(obj, clazz=clazz))
 
 
 def get_role_channels(role):
@@ -54,28 +48,60 @@ def get_role_channels(role):
     channels = cache.get_list(key)
     if len(channels):
         return channels
-    channels = [Notification.GLOBAL]
+    channels = [GLOBAL]
     if role.deleted_at is None and role.type == Role.USER:
         authz = Authz.from_role(role)
         for role_id in authz.roles:
             channels.append(channel_tag(role_id, Role))
         for coll_id in authz.collections(authz.READ):
             channels.append(channel_tag(coll_id, Collection))
-    cache.set_list(key, channels, expires=cache.EXPIRE)
+    cache.set_list(key, channels, expires=3600 * 2)
     return channels
+
+
+def get_notifications(role, since=None, parser=None):
+    """Fetch a stream of notifications for the given role."""
+    channels = get_role_channels(role)
+    filters = [{'terms': {'channels': channels}}]
+    if since is not None:
+        filters.append({'range': {'created_at': {'gt': since}}})
+    must_not = [{'term': {'actor_id': role.id}}]
+    query = {
+        'size': 30,
+        'query': {'bool': {'filter': filters, 'must_not': must_not}},
+        'sort': [{'created_at': {'order': 'desc'}}]
+    }
+    if parser is not None:
+        query['size'] = parser.limit
+        query['from'] = parser.offset
+    return es.search(index=index.notifications_index(), body=query)
+
+
+def _iter_params(data, event):
+    if data.get('actor_id') is not None:
+        yield 'actor', Role, data.get('actor_id')
+    params = data.get('params', {})
+    for name, clazz in event.params.items():
+        value = params.get(name)
+        if value is not None:
+            yield name, clazz, value
 
 
 def render_notification(stub, notification):
     """Generate a text version of the notification, suitable for use
     in an email or text message."""
     from aleph.logic import resolver
-    for name, clazz, value in notification.iterparams():
+    notification = unpack_result(notification)
+    event = Events.get(notification.get('event'))
+    if event is None:
+        return
+
+    for name, clazz, value in _iter_params(notification, event):
         resolver.queue(stub, clazz, value)
     resolver.resolve(stub)
-
-    plain = str(notification.event.template)
-    html = str(notification.event.template)
-    for name, clazz, value in notification.iterparams():
+    plain = str(event.template)
+    html = str(event.template)
+    for name, clazz, value in _iter_params(notification, event):
         data = resolver.get(stub, clazz, value)
         if data is None:
             return
@@ -90,11 +116,14 @@ def render_notification(stub, notification):
         elif clazz == Entity:
             title = data.get('name')
             link = entity_url(value)
+        elif clazz == Diagram:
+            title = data.label
+            link = diagram_url(data.id)
 
         template = '{{%s}}' % name
         html = html.replace(template, html_link(title, link))
         plain = plain.replace(template, "'%s'" % title)
-        if name == notification.event.link_to:
+        if name == event.link_to:
             plain = '%s (%s)' % (plain, link)
     return {'plain': plain, 'html': html}
 
@@ -110,12 +139,13 @@ def generate_role_digest(role):
     """Generate notification digest emails for the given user."""
     # TODO: get and use the role's locale preference.
     since = datetime.utcnow() - timedelta(hours=26)
-    q = Notification.by_channels(get_role_channels(role), role, since=since)
-    total_count = q.count()
+    result = get_notifications(role, since=since)
+    hits = result.get('hits', {})
+    total_count = hits.get('total', {}).get('value')
     log.info("Daily digest: %r (%s notifications)", role, total_count)
     if total_count == 0:
         return
-    notifications = [render_notification(role, n) for n in q.limit(20)]
+    notifications = [render_notification(role, n) for n in hits.get('hits')]
     notifications = [n for n in notifications if n is not None]
     params = dict(notifications=notifications,
                   role=role,

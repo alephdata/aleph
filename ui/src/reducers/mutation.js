@@ -19,7 +19,6 @@ import {
   updateCollectionPermissions,
   ingestDocument,
   deleteEntity,
-  deleteNotifications,
   deleteQueryLog,
   updateRole,
 } from 'src/actions';
@@ -48,7 +47,6 @@ export default createReducer({
   [updateEntity.COMPLETE]: update,
   [deleteEntity.COMPLETE]: update,
   [ingestDocument.COMPLETE]: update,
-  [deleteNotifications.COMPLETE]: update,
   [deleteQueryLog.COMPLETE]: update,
   [updateRole.COMPLETE]: update,
 

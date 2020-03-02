@@ -1,9 +1,9 @@
 from pprint import pprint  # noqa
 
 from aleph.core import db
-from aleph.model import Events, Notification, Role
+from aleph.model import Events, Role
 from aleph.logic.roles import update_role
-from aleph.logic.notifications import publish
+from aleph.logic.notifications import publish, GLOBAL
 from aleph.views.util import validate
 from aleph.tests.util import TestCase
 
@@ -20,7 +20,7 @@ class NotificationsApiTestCase(TestCase):
         event = Events.PUBLISH_COLLECTION
         publish(event, self.admin.id, params={
             'collection': self.col
-        }, channels=[Notification.GLOBAL])
+        }, channels=[GLOBAL])
         event = Events.GRANT_COLLECTION
         publish(event, self.admin.id, params={
             'collection': self.col,
@@ -49,10 +49,3 @@ class NotificationsApiTestCase(TestCase):
         role = not0['params']['role']
         assert isinstance(role, dict), not0
         assert 'actor' in not0['params'], not0['params']
-
-        res = self.client.delete('/api/2/notifications', headers=headers)
-        assert res.status_code == 202, res
-
-        res = self.client.get('/api/2/notifications', headers=headers)
-        assert res.status_code == 200, res
-        assert res.json['total'] == 0, res.json
