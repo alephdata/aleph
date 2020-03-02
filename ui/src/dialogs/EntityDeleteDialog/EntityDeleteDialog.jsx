@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { Alert, Intent } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedPlural, injectIntl } from 'react-intl';
 import { deleteEntity } from 'src/actions';
 import { showErrorToast, showSuccessToast } from 'src/app/toast';
 import getCollectionLink from 'src/util/getCollectionLink';
@@ -31,13 +31,18 @@ const messages = defineMessages({
 export class EntityDeleteDialog extends Component {
   constructor(props) {
     super(props);
-    // this.state = { blocking: false };
+    this.state = { blocking: false };
     this.onDelete = this.onDelete.bind(this);
   }
 
   async onDelete() {
-    const { entities, history, intl, redirectOnSuccess } = this.props;
+    const { entities, history, intl, redirectOnSuccess, toggleDialog } = this.props;
+    const { blocking } = this.state;
+
+    if (blocking) return false;
+
     try {
+      this.setState({ blocking: true });
       await Promise.all(
         entities.map(async entity => this.props.deleteEntity(entity)),
       );
@@ -45,24 +50,22 @@ export class EntityDeleteDialog extends Component {
       if (redirectOnSuccess) {
         const parent = entities[0]?.getFirst('parent');
         const collection = entities[0]?.collection;
+        const pathname = parent ? getEntityLink(parent) : getCollectionLink(collection);
 
-        if (parent) {
-          history.push({
-            pathname: getEntityLink(parent),
-          });
-        } else {
-          history.push({
-            pathname: getCollectionLink(collection),
-          });
-        }
+        history.push({
+          pathname,
+        });
       }
+      this.setState({ blocking: false });
+      toggleDialog();
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.delete_error));
+      this.setState({ blocking: false });
     }
   }
 
   render() {
-    const { intl } = this.props;
+    const { entities, intl } = this.props;
     return (
       <Alert
         isOpen={this.props.isOpen}
@@ -73,9 +76,11 @@ export class EntityDeleteDialog extends Component {
         onCancel={this.props.toggleDialog}
         onConfirm={this.onDelete}
       >
-        <FormattedMessage
+        <FormattedPlural
           id="entity.delete.question"
-          defaultMessage="Are you sure you want to delete this entity?"
+          value={entities.length}
+          one="Are you sure you want to delete this entity?"
+          other="Are you sure you want to delete these entities?"
         />
       </Alert>
     );

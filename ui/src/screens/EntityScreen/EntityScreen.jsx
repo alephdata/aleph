@@ -113,13 +113,13 @@ class EntityScreen extends Component {
     }
 
     let currEntity = entity;
-    // while (currEntity) {
-    //   const entityScope = this.getEntitySearchScope(currEntity);
-    //   if (entityScope) {
-    //     scopes.push(entityScope);
-    //   }
-    //   currEntity = currEntity.getFirst('parent');
-    // }
+    while (currEntity) {
+      const entityScope = this.getEntitySearchScope(currEntity);
+      if (entityScope) {
+        scopes.push(entityScope);
+      }
+      currEntity = currEntity.getFirst('parent');
+    }
 
     scopes.push({
       listItem: <Collection.Label collection={entity.collection} icon truncate={30} />,
@@ -131,7 +131,6 @@ class EntityScreen extends Component {
   }
 
   toggleDeleteDialog() {
-    console.log('toggling')
     this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
   }
 
