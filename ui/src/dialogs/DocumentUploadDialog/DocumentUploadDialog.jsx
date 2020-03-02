@@ -53,7 +53,7 @@ export class DocumentUploadDialog extends Component {
 
   async onFormSubmit(files) {
     const {
-      intl, onUploadSuccess, parent, toggleDialog,
+      intl, onUploadSuccess, parent,
     } = this.props;
 
     const fileTree = convertPathsToTree(files);
@@ -62,8 +62,6 @@ export class DocumentUploadDialog extends Component {
       await this.traverseFileTree(fileTree, parent);
       showSuccessToast(intl.formatMessage(messages.success));
       if (onUploadSuccess) onUploadSuccess();
-      }
-      return;
     } catch (e) {
       showErrorToast(intl.formatMessage(messages.error));
     }

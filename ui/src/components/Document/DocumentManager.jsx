@@ -43,6 +43,10 @@ export class DocumentManager extends Component {
     this.onUploadSuccess = this.onUploadSuccess.bind(this);
   }
 
+  onUploadSuccess() {
+    this.setState({ uploadIsOpen: false });
+  }
+
   updateSelection(document) {
     const { selection } = this.state;
     this.setState({
@@ -66,10 +70,6 @@ export class DocumentManager extends Component {
     this.setState(({ uploadIsOpen }) => ({
       uploadIsOpen: !uploadIsOpen,
     }));
-  }
-
-  onUploadSuccess() {
-    this.setState({ uploadIsOpen: false });
   }
 
   canUpload() {
