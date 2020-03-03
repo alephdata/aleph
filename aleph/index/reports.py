@@ -17,17 +17,20 @@ def get_report_id(payload):
 
 
 def clean_report_payload(payload):
-    # sign entity ids, get name as extra field
+    """sign entity ids, get name as extra field"""
     entity = payload['entity']
+
     entity_name = entity.get('properties', {}).get('fileName')
     if entity_name is None:
         entity_name = entity.get('schema')
         if entity_name is None:
             entity_name = entity['id']
+    payload['entity_name'] = entity_name
+
     ns = Namespace(payload['dataset'])
     entity['id'] = ns.sign(entity['id'])
     payload['entity'] = entity
-    payload['entity_name'] = entity_name
+
     return payload
 
 
