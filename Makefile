@@ -1,4 +1,4 @@
-COMPOSE=docker-compose -f docker-compose.dev.yml 
+COMPOSE=docker-compose -f docker-compose.dev.yml
 APPDOCKER=$(COMPOSE) run --rm app
 INGESTDOCKER=$(COMPOSE) run --rm ingest-file
 ALEPH_TAG=latest
@@ -10,7 +10,7 @@ services:
 		postgres elasticsearch ingest-file \
 		convert-document
 
-ingest-shell: services    
+ingest-shell: services
 	$(INGESTDOCKER) /bin/bash
 
 ingest-tail:
@@ -56,7 +56,11 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
+	cp -r ../servicelayer/ .
+	cp -r ../servicelayer/ ./services/ingest-file/
 	$(COMPOSE) build
+	rm -rf ./servicelayer/
+	rm -rf ./services/ingest-file/servicelayer
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
@@ -73,7 +77,7 @@ docker-push:
 	docker push alephdata/aleph-ui:$(ALEPH_TAG)
 	docker push alephdata/aleph-ui-production:$(ALEPH_TAG)
 
-dev: 
+dev:
 	pip install -q bumpversion babel jinja2
 
 fixtures:

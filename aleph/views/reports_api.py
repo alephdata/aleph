@@ -11,7 +11,7 @@ from aleph.views.serializers import (
     DocumentProcessingReportSerializer,
     ProcessingReportSerializer
 )
-from aleph.views.util import get_index_entity
+from aleph.views.util import get_index_entity, get_index_collection
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('reports_api', __name__)
@@ -69,10 +69,9 @@ def collection_report(collection_id):
       - Collection
       - Report
     """
-    collections = request.authz.collections(request.authz.READ)
-    if collection_id in collections:
-        data = get_collection_processing_report(collection_id)
-        return CollectionProcessingReportSerializer.jsonify(data)
+    collection = get_index_collection(collection_id)
+    data = get_collection_processing_report(collection['id'])
+    return CollectionProcessingReportSerializer.jsonify(data)
 
 
 @blueprint.route('/api/2/reports/document/<document_id>', methods=['GET'])

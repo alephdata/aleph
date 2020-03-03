@@ -28,6 +28,10 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements-generic.txt
 COPY requirements-toolkit.txt /tmp/
 RUN pip3 install --no-cache-dir -r /tmp/requirements-toolkit.txt
 
+# local servicelayer
+COPY ./servicelayer/ /servicelayer
+RUN pip install -e /servicelayer
+
 # Install aleph
 COPY . /aleph
 WORKDIR /aleph

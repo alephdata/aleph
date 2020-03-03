@@ -94,31 +94,24 @@
     "workbox-webpack-plugin": "^5.0.0"
   },
   "proxy": "http://api:5000/",
-  "browserslist": [
-    "chrome > 40",
-    "Firefox ESR",
-    "not ie < 11",
-    "defaults"
-  ],
+  "browserslist": ["chrome > 40", "Firefox ESR", "not ie < 11", "defaults"],
   "scripts": {
     "translate": "npm run messages && npm run json2pot && npm run po2json",
-    "messages": "formatjs extract --out-file i18n/messages.json 'src/**/*.{js,jsx}'",
-    "json2pot": "react-intl-po json2pot 'i18n/messages.json' -o 'i18n/messages.pot'",
-    "po2json": "react-intl-po po2json 'i18n/translations/*.po' -m 'i18n/messages.json' -o src/content/translations.json",
+    "messages":
+      "formatjs extract --out-file i18n/messages.json 'src/**/*.{js,jsx}'",
+    "json2pot":
+      "react-intl-po json2pot 'i18n/messages.json' -o 'i18n/messages.pot'",
+    "po2json":
+      "react-intl-po po2json 'i18n/translations/*.po' -m 'i18n/messages.json' -o src/content/translations.json",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "start-mocks": "node mocks/server.js"
   },
   "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
+    "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}", "!src/**/*.d.ts"],
     "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
+    "setupFiles": ["react-app-polyfill/jsdom"],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
@@ -128,7 +121,8 @@
     "transform": {
       "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)":
+        "<rootDir>/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
@@ -152,14 +146,10 @@
     ]
   },
   "babel": {
-    "presets": [
-      "react-app"
-    ]
+    "presets": ["react-app"]
   },
   "eslintConfig": {
-    "extends": [
-      "airbnb"
-    ],
+    "extends": ["airbnb"],
     "env": {
       "browser": true
     },
@@ -185,7 +175,11 @@
       "jsx-a11y/control-has-associated-label": "off"
     }
   },
-  "sideEffects": [
-    "*.css"
-  ]
+  "sideEffects": ["*.css"],
+  "prettier": {
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "singleQuote": true,
+    "trailingComma": "es5"
+  }
 }

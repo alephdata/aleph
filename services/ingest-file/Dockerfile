@@ -130,6 +130,10 @@ RUN python3 -m spacy download pt_core_news_sm \
     && python3 -m spacy link pt_core_news_sm por
 ENV INGESTORS_NER_MODELS=eng:deu:fra:spa:por
 
+# local servicelayer
+COPY ./servicelayer/ /servicelayer
+RUN pip install -e /servicelayer
+
 COPY . /ingestors
 WORKDIR /ingestors
 RUN pip3 install --no-cache-dir -e /ingestors
@@ -143,4 +147,4 @@ ENV ARCHIVE_TYPE=file \
     INGESTORS_CONVERT_DOCUMENT_URL=http://convert-document:3000/convert
 
 # USER app
-CMD ingestors process
+#CMD ingestors process

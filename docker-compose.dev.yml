@@ -31,6 +31,8 @@ services:
   redis:
       image: redis:alpine
       command: ["redis-server", "--appendonly", "yes"]
+      ports:
+        - "127.0.0.1:16379:6379"
       volumes:
         - redis-data:/data
 
@@ -57,6 +59,7 @@ services:
       - "./services/ingest-file/data:/ingestors/data"
       - "./services/ingest-file/requirements.txt:/ingestors/requirements.txt"
       - "/:/host"
+      # - "${ALEPH_LOCAL_SERVICELAYER}:/servicelayer/"
     links:
       - postgres
       - redis
@@ -64,6 +67,8 @@ services:
     restart: on-failure
     env_file:
       - aleph.env
+    stdin_open: true
+    tty: true
 
   app:
     build:
@@ -85,6 +90,7 @@ services:
       - "./contrib:/aleph/contrib"
       - "./mappings:/aleph/mappings"
       - "/:/host"
+      # - "${ALEPH_LOCAL_SERVICELAYER}:/servicelayer/"
     cap_add:
       - SYS_PTRACE
     environment:
@@ -92,6 +98,8 @@ services:
       ALEPH_SECRET_KEY: 'development'
     env_file:
       - aleph.env
+    stdin_open: true
+    tty: true
 
   api:
     build:
@@ -112,11 +120,14 @@ services:
     volumes:
       - archive-data:/data
       - "./aleph:/aleph/aleph"
+      # - "${ALEPH_LOCAL_SERVICELAYER}:/servicelayer/"
     environment:
       ALEPH_DEBUG: 'true'
       ALEPH_SECRET_KEY: 'development'
     env_file:
       - aleph.env
+    stdin_open: true
+    tty: true
 
   ui:
     build:
