@@ -69,8 +69,10 @@ def collection_report(collection_id):
       - Collection
       - Report
     """
-    data = get_collection_processing_report(collection_id)
-    return CollectionProcessingReportSerializer.jsonify(data)
+    collections = request.authz.collections(request.authz.READ)
+    if collection_id in collections:
+        data = get_collection_processing_report(collection_id)
+        return CollectionProcessingReportSerializer.jsonify(data)
 
 
 @blueprint.route('/api/2/reports/document/<document_id>', methods=['GET'])
