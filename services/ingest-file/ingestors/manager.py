@@ -121,13 +121,13 @@ class Manager(object):
         self.stage.queue(entity.to_dict(), self.context)
 
     def store(self, file_path, mime_type=None):
-        entity = model.get_proxy(self.reporter.task.payload)
-        self.reporter.start(stage=self.OP_STORE, file_path=str(file_path), entity=entity)
+        entity = model.get_proxy(self.reporter.task.payload).to_dict()
+        self.reporter.start(operation=self.OP_STORE, file_path=str(file_path), entity=entity)
         file_path = ensure_path(file_path)
         mime_type = normalize_mimetype(mime_type)
         if file_path is not None and file_path.is_file():
             res = self.archive.archive_file(file_path, mime_type=mime_type)
-            self.reporter.end(stage=self.OP_STORE, file_path=str(file_path), entity=entity)
+            self.reporter.end(operation=self.OP_STORE, file_path=str(file_path), entity=entity)
             return res
 
     def load(self, content_hash, file_name=None):
@@ -148,7 +148,7 @@ class Manager(object):
 
     def ingest(self, file_path, entity, **kwargs):
         """Main execution step of an ingestor."""
-        self.reporter.start(file_path=str(file_path), entity=entity)
+        self.reporter.start(file_path=str(file_path), entity=entity.to_dict())
 
         file_path = ensure_path(file_path)
         if file_path.is_file() and not entity.has('fileSize'):
@@ -160,11 +160,11 @@ class Manager(object):
             log.info("Ingestor [%r]: %s", entity, ingestor_class.__name__)
             self.delegate(ingestor_class, file_path, entity)
             entity.set('processingStatus', self.STATUS_SUCCESS)
-            self.reporter.end(entity=entity)
+            self.reporter.end(entity=entity.to_dict())
         except ProcessingException as pexc:
             entity.set('processingError', stringify(pexc))
             log.error("[%r] Failed to process: %s", entity, pexc)
-            self.reporter.error(exception=pexc, entity=entity)
+            self.reporter.error(exception=pexc, entity=entity.to_dict())
         finally:
             self.finalize(entity)
 

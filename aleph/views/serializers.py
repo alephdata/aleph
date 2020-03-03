@@ -419,8 +419,17 @@ class DiagramSerializer(Serializer):
 
 
 # Processing Reports
+class ReportSerializer(Serializer):
+    def serialize(self, obj):  # FIXME [de7de6adc] Refactor and clean up serializers a bit
+        obj = self._to_dict(obj)
+        if obj is not None:
+            self._collect(obj)
+            resolver.resolve(request)
+            obj = self._serialize(obj)
+            return self._clean_response(obj)
 
-class _BucketSerializer(Serializer):
+
+class _BucketSerializer(ReportSerializer):
     def _serialize(self, obj):
         data = []
         for bucket in obj:
@@ -441,7 +450,7 @@ class _BucketSerializer(Serializer):
         return data
 
 
-class JobReportSerializer(Serializer):
+class JobReportSerializer(ReportSerializer):
     def _serialize(self, obj):
         serialize = _BucketSerializer().serialize
         data = {
@@ -449,15 +458,15 @@ class JobReportSerializer(Serializer):
             'start_at': obj['start_at'].get('value_as_string', ''),
             'end_at': obj['end_at'].get('value_as_string', ''),
             'updated_at': obj['updated_at'].get('value_as_string', ''),
-            'stages': serialize(obj['stages']['buckets']),
+            'operations': serialize(obj['operations']['buckets']),
             'errors': serialize(obj['errors']['buckets']),
             'invocation': 'reprocess' if 'reprocess' in obj['key'] else 'crawldir'
         }
-        data['finished'] = all(s.get('finished', False) for s in data['stages'])
+        data['finished'] = all(s.get('finished', False) for s in data['operations'])
         return data
 
 
-class CollectionProcessingReportSerializer(Serializer):
+class CollectionProcessingReportSerializer(ReportSerializer):
     def _serialize(self, obj):
         serialize = JobReportSerializer().serialize
         jobs = sorted([serialize(job) for job in obj['aggregations']['jobs']['buckets']],
@@ -467,14 +476,14 @@ class CollectionProcessingReportSerializer(Serializer):
         return {'jobs': jobs}
 
 
-class ProcessingReportSerializer(Serializer):
+class ProcessingReportSerializer(ReportSerializer):
     def _serialize(self, obj):
         entity_id = obj['entity']['id']
         obj['entity'] = get_entity(entity_id) or obj['entity']
         return obj
 
 
-class DocumentProcessingReportSerializer(Serializer):
+class DocumentProcessingReportSerializer(ReportSerializer):
     def _serialize(self, obj):
         serialize = ProcessingReportSerializer().serialize
         hits = obj['hits']['hits']

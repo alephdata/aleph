@@ -3,8 +3,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import Query from 'src/app/Query';
-// import { fetchDocumentProcessingReport } from 'src/actions';
-// import { selectDocumentProcessingReport } from 'src/selectors';
+import { fetchDocumentProcessingReport } from 'src/actions';
+import { selectDocumentProcessingReport } from 'src/selectors';
 import DefaultViewer from 'src/viewers/DefaultViewer';
 import CSVStreamViewer from 'src/viewers/CsvStreamViewer';
 import TableViewer from 'src/viewers/TableViewer';
@@ -30,17 +30,17 @@ export class DocumentViewMode extends React.Component {
 
   fetchReportIfNeeded() {
     const { document, processingReport } = this.props;
-    // if (processingReport.shouldLoad) {
-    //   this.props.fetchDocumentProcessingReport(document);
-    // }
+    if (processingReport.shouldLoad) {
+      this.props.fetchDocumentProcessingReport(document);
+    }
   }
 
   renderContent() {
     const { document, queryText, activeMode, processingReport } = this.props;
 
-    // if (processingReport.loadedAt && processingReport.has_error) {
-    //   return <DefaultViewer document={document} queryText={queryText} />;
-    // }
+    if (processingReport.loadedAt && processingReport.has_error) {
+      return <DefaultViewer document={document} queryText={queryText} />;
+    }
 
     if (document.schema.isA('Email')) {
       if (activeMode === 'browse') {
@@ -141,14 +141,14 @@ const mapStateToProps = (state, ownProps) => {
   const query = Query.fromLocation('entities', location, {}, '');
   return {
     queryText: query.getString('q'),
-    // processingReport: selectDocumentProcessingReport(state, document.id),
+    processingReport: selectDocumentProcessingReport(state, document.id),
   };
 };
 
-// const mapDispatchToProps = { fetchDocumentProcessingReport };
+const mapDispatchToProps = { fetchDocumentProcessingReport };
 
 export default compose(
   withRouter,
-  // connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   connect(mapStateToProps, {})
 )(DocumentViewMode);

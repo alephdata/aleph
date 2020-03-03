@@ -22,7 +22,7 @@ class CollectionProcessingReportViews extends React.Component {
     super(props);
     this.handleTabChange = this.handleTabChange.bind(this);
     this.state = {
-      facets: ['job', 'stage', 'status'],
+      facets: ['job', 'operation', 'status'],
     };
     this.updateQuery = this.updateQuery.bind(this);
   }

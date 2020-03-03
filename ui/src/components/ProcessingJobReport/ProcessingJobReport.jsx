@@ -116,7 +116,7 @@ class ProcessingJobReport extends PureComponent {
         </div>
         <div className="ProcessingJobReport__table">
           <ProcessingJobReportTable
-            stages={job.stages}
+            operations={job.operations}
             viewDetails={this.viewDetails}
             jumpToContext={this.getJumpToContext()}
           />

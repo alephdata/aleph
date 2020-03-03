@@ -6,7 +6,7 @@ import { Date, Count } from 'src/components/common';
 
 import { jumpToDetails } from './util';
 
-const StageIcon = ({ finished, errors }) => {
+const OperationIcon = ({ finished, errors }) => {
   let renderedIcon = <Spinner size="14" />;
   if (errors) {
     renderedIcon = <Icon icon="error" />;
@@ -23,14 +23,14 @@ class ProcessingJobReportTableRow extends Component {
   }
 
   viewDetails({ status }) {
-    const { stage, jumpToContext } = this.props;
+    const { operation, jumpToContext } = this.props;
     let { context } = jumpToContext;
-    context = { stage: stage.name, ...context, status };
+    context = { operation: operation.name, ...context, status };
     jumpToDetails({ ...jumpToContext, context });
   }
 
   render() {
-    const { stage } = this.props;
+    const { operation } = this.props;
     const {
       name,
       count,
@@ -38,7 +38,7 @@ class ProcessingJobReportTableRow extends Component {
       updated_at: updatedAt,
       has_errors: errors,
       finished,
-    } = stage;
+    } = operation;
 
     const selectCount = (key) => {
       const res = status.filter((s) => s.name === key)[0];
@@ -60,7 +60,7 @@ class ProcessingJobReportTableRow extends Component {
 
     const intent = finished ? 'success' : 'warning';
     const label = finished ? 'Finished' : 'Running';
-    const icon = <StageIcon finished={finished} errors={!!errors} />;
+    const icon = <OperationIcon finished={finished} errors={!!errors} />;
 
     return (
       <tr className={rowClass}>
@@ -69,7 +69,7 @@ class ProcessingJobReportTableRow extends Component {
             {label}
           </Tag>
         </td>
-        <td className="stage">
+        <td className="operation">
           {name}
         </td>
         <td className="total">

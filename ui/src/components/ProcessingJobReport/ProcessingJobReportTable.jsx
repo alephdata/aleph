@@ -7,9 +7,9 @@ import ProcessingJobReportTableRow from './ProcessingJobReportTableRow';
 import './ProcessingJobReportTable.scss';
 
 const messages = defineMessages({
-  column_stage: {
-    id: 'report.job.column.stage',
-    defaultMessage: 'Stage',
+  column_operation: {
+    id: 'report.job.column.operation',
+    defaultMessage: 'Operation',
   },
   column_total: {
     id: 'report.job.column.total',
@@ -35,7 +35,7 @@ const messages = defineMessages({
 
 class ProcessingJobReportTable extends Component {
   render() {
-    const { stages, intl, viewDetails, jumpToContext } = this.props;
+    const { operations, intl, viewDetails, jumpToContext } = this.props;
     const TH = ({ field, className }) => (
       <th className={className}>
         {intl.formatMessage(messages[`column_${field}`])}
@@ -47,7 +47,7 @@ class ProcessingJobReportTable extends Component {
         <thead>
           <tr>
             <th />
-            <TH className="header" field="stage" />
+            <TH className="header" field="operation" />
             <TH className="header" field="total" />
             <TH className="header-light" field="start" />
             <TH className="header-light" field="end" />
@@ -56,10 +56,10 @@ class ProcessingJobReportTable extends Component {
           </tr>
         </thead>
         <tbody>
-          {stages.map((stage) => (
+          {operations.map((operation) => (
             <ProcessingJobReportTableRow
-              stage={stage}
-              key={stage.name}
+              operation={operation}
+              key={operation.name}
               viewDetails={viewDetails}
               jumpToContext={jumpToContext}
             />

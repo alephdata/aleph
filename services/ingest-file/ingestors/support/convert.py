@@ -19,9 +19,9 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
 
     def document_to_pdf(self, file_path, entity):
         report_data = {
-            'entity': entity,
+            'entity': entity.to_dict(),
             'file_path': str(file_path),
-            'stage': self.OP_CONVERT
+            'operation': self.OP_CONVERT
         }
         reporter = self.manager.reporter.copy(**report_data)
         reporter.start()

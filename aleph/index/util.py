@@ -25,6 +25,7 @@ LATIN_TEXT = {"type": "text", "analyzer": "latin_index"}
 KEYWORD = {"type": "keyword"}
 KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
 NUMERIC = {"type": "double"}
+NOT_ANALYZED = {"type": "text", "index": False}
 
 SHARDS_LIGHT = 1
 SHARDS_DEFAULT = 5

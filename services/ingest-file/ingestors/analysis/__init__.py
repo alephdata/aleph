@@ -33,7 +33,7 @@ class Analyzer(object):
         if entity.schema.is_a('Table'):
             return
 
-        self.reporter.start(entity=self.entity)
+        self.reporter.start(entity=self.entity.to_dict())
 
         texts = entity.get_type_values(registry.text)
         for text in text_chunks(texts):
@@ -52,4 +52,4 @@ class Analyzer(object):
                       len(self.aggregator), self.entity)
             self.dataset.put(self.entity, self.FRAGMENT)
 
-        self.reporter.end(entity=self.entity)
+        self.reporter.end(entity=self.entity.to_dict())

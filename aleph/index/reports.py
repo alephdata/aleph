@@ -1,5 +1,7 @@
 import logging
 
+from followthemoney.namespace import Namespace
+
 from servicelayer.cache import make_key
 
 from aleph.core import es
@@ -11,7 +13,22 @@ log = logging.getLogger(__name__)
 
 
 def get_report_id(payload):
-    return make_key(payload['stage'], payload['dataset'], payload['job'], payload['entity']['id'])
+    return make_key(payload['operation'], payload['dataset'], payload['job'], payload['entity']['id'])
+
+
+def clean_report_payload(payload):
+    # sign entity ids, get name as extra field
+    entity = payload['entity']
+    entity_name = entity.get('properties', {}).get('fileName')
+    if entity_name is None:
+        entity_name = entity.get('schema')
+        if entity_name is None:
+            entity_name = entity['id']
+    ns = Namespace(payload['dataset'])
+    entity['id'] = ns.sign(entity['id'])
+    payload['entity'] = entity
+    payload['entity_name'] = entity_name
+    return payload
 
 
 def serialize_task_report(task):
@@ -19,7 +36,7 @@ def serialize_task_report(task):
         '_id': get_report_id(task.payload),
         '_index': reports_index(),
         '_op_type': 'update',
-        'doc': task.payload,
+        'doc': clean_report_payload(task.payload),
         'doc_as_upsert': True
     }
 
@@ -75,8 +92,8 @@ def get_collection_processing_report(foreign_id):
                         }
                     }
                 },
-                'stages': {
-                    'terms': {'field': 'stage'},
+                'operations': {
+                    'terms': {'field': 'operation'},
                     'aggs': status_agg
                 },
                 **status_agg

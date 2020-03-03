@@ -51,9 +51,9 @@ const messages = defineMessages({
     id: 'facet.job',
     defaultMessage: '{count, plural, one {Job} other {Jobs}}',
   },
-  facet_stage: {
-    id: 'facet.stage',
-    defaultMessage: '{count, plural, one {Stage} other {Stages}}',
+  facet_operation: {
+    id: 'facet.operation',
+    defaultMessage: '{count, plural, one {Operation} other {Operations}}',
   },
   facet_status: {
     id: 'facet.status',
@@ -123,9 +123,9 @@ const propLabels = {
     label: messages.facet_job,
     icon: 'database',
   },
-  stage: {
-    field: 'stage',
-    label: messages.facet_stage,
+  operation: {
+    field: 'operation',
+    label: messages.facet_operation,
     icon: 'database',
   },
   status: {

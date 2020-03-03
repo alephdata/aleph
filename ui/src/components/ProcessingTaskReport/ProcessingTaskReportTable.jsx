@@ -19,9 +19,9 @@ const messages = defineMessages({
     id: 'report.column.entity_name',
     defaultMessage: 'Document',
   },
-  column_stage: {
-    id: 'report.column.stage',
-    defaultMessage: 'Stage',
+  column_operation: {
+    id: 'report.column.operation',
+    defaultMessage: 'Operation',
   },
   column_updated_at: {
     id: 'report.column.updated_at',
@@ -89,7 +89,7 @@ class ProcessingTaskReportTable extends Component {
             )}
             <TH className="header-status" field="status" sortable />
             <TH className="header-document" field="entity_name" sortable />
-            <TH className="header-stage" field="stage" sortable />
+            <TH className="header-operation" field="operation" sortable />
             <TH className="header-dates" field="updated_at" sortable />
           </tr>
         </thead>

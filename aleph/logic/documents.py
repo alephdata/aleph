@@ -18,16 +18,16 @@ def crawl_directory(collection, path, parent=None, job_id=None, reporter=None):
     if reporter is None:
         reporter = get_reporter(
             job=job_id,
-            stage=OP_CRAWL,
+            operation=OP_CRAWL,
             dataset=collection.foreign_id,
-            ns=collection.ns,
+            collection_id=collection.id
         )
 
     # FIXME
     start_at = datetime.utcnow()
 
     def start_report(entity):
-        reporter.start(entity=entity, start_at=start_at)
+        reporter.start(entity=entity.to_dict(), start_at=start_at)
 
     try:
         content_hash = None
@@ -45,7 +45,7 @@ def crawl_directory(collection, path, parent=None, job_id=None, reporter=None):
         db.session.commit()
         proxy = document.to_proxy()
 
-        start_report(proxy)
+        start_report(proxy)  # FIXME
 
         ingest_entity(collection, proxy, job_id=job_id)
         log.info("Crawl [%s]: %s -> %s", collection.id, path, document.id)
@@ -53,7 +53,8 @@ def crawl_directory(collection, path, parent=None, job_id=None, reporter=None):
             for child in path.iterdir():
                 crawl_directory(collection, child, document, job_id, reporter)
 
-        reporter.end(entity=proxy)
+        reporter.end(entity=proxy.to_dict())
     except OSError as e:
         log.exception("Cannot crawl directory: %s", path)
-        reporter.error(e, path=str(path))
+        if parent:
+            reporter.error(e, entity=parent.to_proxy().to_dict(), path=str(path))

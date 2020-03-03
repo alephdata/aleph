@@ -4,7 +4,6 @@ from servicelayer.worker import Worker
 
 from ingestors.analysis import Analyzer
 from ingestors.manager import Manager
-from ingestors.report import clean_report_payload
 
 
 log = logging.getLogger(__name__)
@@ -32,7 +31,7 @@ class IngestWorker(Worker):
         reporter = self.get_task_reporter(task)
         for entity_id in entity_ids:
             reporter.end(entity={'id': entity_id})  # mark current as end
-            reporter.start(stage=next_stage, entity={'id': entity_id})  # start next task reporting
+            reporter.start(operation=next_stage, entity={'id': entity_id})  # start next task reporting
 
     def _ingest(self, task):
         reporter = self.get_task_reporter(task)
@@ -70,8 +69,3 @@ class IngestWorker(Worker):
             self.dispatch_next(task, entity_ids)
         else:
             log.error('Unknown task: %r', task)
-
-    def get_task_reporter(self, task):
-        reporter = super().get_task_reporter(task)
-        reporter.clean_payload = clean_report_payload
-        return reporter

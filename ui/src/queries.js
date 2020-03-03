@@ -57,12 +57,12 @@ export function queryEntitySimilar(location, entityId) {
 export function processingTaskReportsQuery(location, foreignId) {
   const context = {
     'filter:dataset': foreignId,
-    facet: ['job', 'stage', 'status'],
+    facet: ['job', 'operation', 'status'],
     'facet_total:job': true,
-    'facet_total:stage': true,
+    'facet_total:operation': true,
     'facet_total:status': true,
     'facet_size:job': 10,
-    'facet_size:stage': 10,
+    'facet_size:operation': 10,
     'facet_size:status': 3,
     // 'sort': 'updated_at:desc',
   };

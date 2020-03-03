@@ -8,12 +8,10 @@ from aleph.core import settings
 from aleph.index.util import index_name
 from aleph.index.util import index_settings, configure_index, get_shard_weight
 from aleph.index.util import NUMERIC_TYPES, PARTIAL_DATE, KEYWORD
-from aleph.index.util import LATIN_TEXT, NUMERIC
+from aleph.index.util import LATIN_TEXT, NUMERIC, NOT_ANALYZED
 
 log = logging.getLogger(__name__)
 
-
-NOT_ANALYZED = {"type": "string", "index": "not_analyzed"}
 
 TYPE_MAPPINGS = {
     registry.text: {"type": "text", "index": False},
@@ -167,15 +165,16 @@ def configure_reports():
             "end_at": {"type": "date"},
             "error_at": {"type": "date"},
             "updated_at": {"type": "date"},
-            "stage": KEYWORD,
+            "operation": KEYWORD,
             "status": KEYWORD,
             "dataset": KEYWORD,
+            "collection_id": KEYWORD,
             "has_error": {"type": "boolean"},
             "error_name": {"type": "text"},
             "error_msg": {"type": "text"},
             "entity.id": KEYWORD,
             "entity_name": KEYWORD,
-            "original_dump": NOT_ANALYZED
+            "task": NOT_ANALYZED
         }
     }
     return configure_index(index, mapping, settings)

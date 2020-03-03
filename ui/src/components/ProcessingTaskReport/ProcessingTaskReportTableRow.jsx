@@ -5,10 +5,10 @@ import c from 'classnames';
 
 import { Date, Entity } from 'src/components/common';
 
-class Stage extends React.PureComponent {
+class Operation extends React.PureComponent {
   render() {
-    const { stage } = this.props;
-    return <span>{stage}</span>;
+    const { operation } = this.props;
+    return <span>{operation}</span>;
   }
 }
 
@@ -23,7 +23,7 @@ class ProcessingTaskReportTableRow extends Component {
   render() {
     const { report, model } = this.props;
     const {
-      stage,
+      operation,
       status,
       // job,
       has_error: hasError,
@@ -56,8 +56,8 @@ class ProcessingTaskReportTableRow extends Component {
             <Status status={status} />
           </td>
           <td className="entity">{entityDisplay}</td>
-          <td className="stage">
-            <Stage stage={stage} />
+          <td className="operation">
+            <Operation operation={operation} />
           </td>
           <td className="date">
             <Date value={updatedAt} showTime />
