@@ -91,7 +91,7 @@ export class EntityMappingMode extends Component {
     const mappingsOfSchema = Array.from(mappings.values()).filter(({ schema }) => { console.log(schema, schemaToAssign); return schema === schemaToAssign; });
     const schemaMappingsCount = mappingsOfSchema.length;
 
-    return `${schemaToAssign.name}${schemaMappingsCount + 1}`;
+    return schemaMappingsCount ? `${schemaToAssign.label} ${schemaMappingsCount + 1}` : schemaToAssign.label;
   }
 
   onMappingAdd(schema) {
