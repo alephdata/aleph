@@ -70,9 +70,6 @@ def ingest_entity(collection, proxy, job_id=None, sync=False):
         'languages': collection.languages,
         'balkhash_name': get_aggregator_name(collection),
         'pipeline': [OP_ANALYZE, OP_INDEX],
-        'sync': sync,
-        'report_payload': {
-            'collection_id': collection.id
-        }
+        'sync': sync
     }
     stage.queue(proxy.to_dict(), context)

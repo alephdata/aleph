@@ -69,7 +69,7 @@ class AlephWorker(Worker):
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
         if stage.stage == OP_REPORT:
-            index_reports(task, sync=sync)
+            index_reports(task, collection, sync=sync)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
     def after_task(self, task):

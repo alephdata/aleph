@@ -1,7 +1,5 @@
 import logging
 
-from followthemoney.namespace import Namespace
-
 from servicelayer.cache import make_key
 
 from aleph.core import es
@@ -16,7 +14,7 @@ def get_report_id(payload):
     return make_key(payload['operation'], payload['dataset'], payload['job'], payload['entity']['id'])
 
 
-def clean_report_payload(payload):
+def clean_report_payload(payload, collection):
     """sign entity ids, get name as extra field"""
     entity = payload['entity']
 
@@ -27,25 +25,25 @@ def clean_report_payload(payload):
             entity_name = entity['id']
     payload['entity_name'] = entity_name
 
-    ns = Namespace(payload['dataset'])
-    entity['id'] = ns.sign(entity['id'])
+    entity['id'] = collection.ns.sign(entity['id'])
     payload['entity'] = entity
+    payload['collection_id'] = collection.id
 
     return payload
 
 
-def serialize_task_report(task):
+def serialize_task_report(task, collection):
     return {
         '_id': get_report_id(task.payload),
         '_index': reports_index(),
         '_op_type': 'update',
-        'doc': clean_report_payload(task.payload),
+        'doc': clean_report_payload(task.payload, collection),
         'doc_as_upsert': True
     }
 
 
-def index_bulk(tasks, sync=False):
-    tasks = (serialize_task_report(t) for t in tasks)
+def index_bulk(tasks, collection, sync=False):
+    tasks = (serialize_task_report(t, collection) for t in tasks)
     bulk_actions(tasks, sync=sync)
 
 
