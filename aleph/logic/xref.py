@@ -6,7 +6,7 @@ from followthemoney.compare import compare
 from followthemoney.export.excel import ExcelWriter
 
 from aleph.core import db, es
-from aleph.model import Match, Collection
+from aleph.model import Collection
 from aleph.logic import resolver
 from aleph.queues import queue_task, OP_XREF_ITEM
 from aleph.index import xref as index
@@ -42,6 +42,8 @@ def xref_query_item(proxy, collection_ids=None):
             other = model.get_proxy(result)
             score = compare(model, proxy, other)
             if score >= SCORE_CUTOFF:
+                log.debug('Xref match: %r <-[%.3f]-> %r',
+                          proxy.caption, score, other.caption)
                 yield score, result.get('collection_id'), other
 
 

@@ -5,9 +5,10 @@ from aleph.core import db, cache
 from aleph.authz import Authz
 from aleph.queues import cancel_queue, ingest_entity
 from aleph.queues import queue_task, OP_INDEX
-from aleph.model import Collection, Entity, Document, Match, Diagram, Mapping
+from aleph.model import Collection, Entity, Document, Diagram, Mapping
 from aleph.model import Permission, Events
 from aleph.index import collections as index
+from aleph.index import xref as xref_index
 from aleph.logic.notifications import publish, flush_notifications
 from aleph.logic.aggregator import get_aggregator, drop_aggregator
 
@@ -84,9 +85,9 @@ def process_collection(stage, collection, ingest=True, sync=False):
 def reset_collection(collection, sync=False):
     """Reset the collection by deleting any derived data."""
     drop_aggregator(collection)
-    Match.delete_by_collection(collection.id)
     cancel_queue(collection)
     index.delete_entities(collection.id, sync=sync)
+    xref_index.delete_xref(collection, sync=sync)
     refresh_collection(collection.id, sync=sync)
     db.session.commit()
 

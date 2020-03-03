@@ -1,5 +1,4 @@
 import logging
-from time import time
 from pprint import pprint  # noqa
 from banal import ensure_list
 from elasticsearch import TransportError
@@ -76,7 +75,7 @@ def unpack_result(res):
     data['id'] = res.get('_id')
 
     _score = res.get('_score')
-    if _score is not None and _score != 0.0:
+    if _score is not None and _score != 0.0 and 'score' not in data:
         data['score'] = _score
 
     data['_index'] = res.get('_index')
@@ -154,7 +153,7 @@ def query_delete(index, query, sync=False, **kwargs):
 
 def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
     """Bulk indexing with timeouts, bells and whistles."""
-    start_time = time()
+    # start_time = time()
     stream = streaming_bulk(es, actions,
                             chunk_size=chunk_size,
                             max_retries=10,
@@ -168,8 +167,8 @@ def bulk_actions(actions, chunk_size=BULK_PAGE, sync=False):
         if details.get('delete', {}).get('status') == 404:
             continue
         log.warning("Error during index: %r", details)
-    duration = (time() - start_time)
-    log.debug("Bulk write: %.4fs", duration)
+    # duration = (time() - start_time)
+    # log.debug("Bulk write: %.4fs", duration)
 
 
 def index_safe(index, id, body, **kwargs):

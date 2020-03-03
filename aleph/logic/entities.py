@@ -8,6 +8,7 @@ from aleph.index import entities as index
 from aleph.logic.notifications import flush_notifications
 from aleph.logic.collections import refresh_collection
 from aleph.index.indexes import entities_read_index
+from aleph.index import xref as xref_index
 from aleph.logic.aggregator import delete_aggregator_entity
 from aleph.index.util import authz_query, field_filter_query
 
@@ -61,6 +62,7 @@ def delete_entity(collection, entity, deleted_at=None, sync=False):
     if doc is not None:
         doc.delete(deleted_at=deleted_at)
     index.delete_entity(entity_id, sync=sync)
+    xref_index.delete_xref(collection, entity_id=entity_id, sync=sync)
     delete_aggregator_entity(collection, entity_id)
     refresh_entity(entity_id, sync=sync)
     refresh_collection(collection.id, sync=sync)

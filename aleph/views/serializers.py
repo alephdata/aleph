@@ -256,14 +256,6 @@ class EntitySerializer(Serializer):
         return obj
 
 
-class MatchCollectionsSerializer(Serializer):
-
-    def _serialize(self, obj):
-        serializer = CollectionSerializer(reference=True)
-        obj['collection'] = serializer.serialize(obj.get('collection'))
-        return obj
-
-
 class MatchSerializer(Serializer):
 
     def _collect(self, obj):

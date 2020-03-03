@@ -7,7 +7,7 @@ from followthemoney.types import registry
 from aleph.core import settings
 from aleph.index.util import index_name, index_settings, configure_index
 from aleph.index.util import query_delete, bulk_actions
-from aleph.index.util import KEYWORD
+from aleph.index.util import KEYWORD, SHARDS_HEAVY
 
 log = logging.getLogger(__name__)
 
@@ -18,21 +18,22 @@ def xref_index():
 
 def configure_xref():
     mapping = {
-        "date_detection": False,
-        "dynamic": False,
-        "properties": {
-            "score": {"type": "float"},
-            "entity_id": KEYWORD,
-            "collection_id": KEYWORD,
-            "match_id": KEYWORD,
-            "match_collection_id": KEYWORD,
+        'date_detection': False,
+        'dynamic': False,
+        'properties': {
+            'score': {'type': 'float'},
+            'entity_id': KEYWORD,
+            'collection_id': KEYWORD,
+            'match_id': KEYWORD,
+            'match_collection_id': KEYWORD,
             registry.country.group: KEYWORD,
-            "created_at": {"type": "date"},
+            'schema': KEYWORD,
+            'text': {'type': 'text', 'analyzer': 'latin_index'},
+            'created_at': {'type': 'date'},
         }
     }
-    index = xref_index()
-    settings = index_settings(shards=5)
-    return configure_index(index, mapping, settings)
+    settings = index_settings(shards=SHARDS_HEAVY)
+    return configure_index(xref_index(), mapping, settings)
 
 
 def index_matches(collection, entity, matches, sync=False):
@@ -48,6 +49,8 @@ def index_matches(collection, entity, matches, sync=False):
                 'collection_id': collection.id,
                 'match_id': match.id,
                 'match_collection_id': match_collection_id,
+                'countries': match.get_type_values(registry.country),
+                'schema': match.schema.name,
                 'created_at': datetime.utcnow(),
             }
         })
@@ -55,12 +58,17 @@ def index_matches(collection, entity, matches, sync=False):
         bulk_actions(actions, sync=sync)
 
 
-def delete_xref(collection, sync=False):
+def delete_xref(collection, entity_id=None, sync=False):
     """Delete xref matches of an entity or a collection."""
     shoulds = [
         {'term': {'collection_id': collection.id}},
         {'term': {'match_collection_id': collection.id}},
     ]
+    if entity_id is not None:
+        shoulds = [
+            {'term': {'entity_id': entity_id}},
+            {'term': {'match_id': entity_id}},
+        ]
     query = {
         'bool': {
             'should': shoulds,
