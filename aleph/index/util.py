@@ -212,6 +212,18 @@ def rewrite_mapping_safe(pending, existing):
     return pending
 
 
+def check_settings_changed(updated, existing):
+    """Since updating the settings requires closing the index, we don't
+    want to do it unless it's really needed. This will check if all the
+    updated settings are already in effect."""
+    if not isinstance(updated, dict) or not isinstance(existing, dict):
+        return updated != existing
+    for key, value in list(updated.items()):
+        if check_settings_changed(value, existing.get(key)):
+            return True
+    return False
+
+
 def configure_index(index, mapping, settings):
     """Create or update a search index with the given mapping and
     settings. This will try to make a new index, or update an
@@ -224,16 +236,16 @@ def configure_index(index, mapping, settings):
             'timeout': MAX_TIMEOUT,
             'master_timeout': MAX_TIMEOUT
         }
-        res = es.indices.close(ignore_unavailable=True, **options)
-        existing = es.indices.get_mapping(index=index)
-        existing = existing.get(index, {}).get('mappings')
-        mapping = rewrite_mapping_safe(mapping, existing)
+        config = es.indices.get(index=index).get(index, {})
+        mapping = rewrite_mapping_safe(mapping, config.get('mappings'))
         res = es.indices.put_mapping(body=mapping, **options)
         _check_response(index, res)
         settings.get('index').pop('number_of_shards')
-        res = es.indices.put_settings(body=settings, **options)
-        _check_response(index, res)
-        res = es.indices.open(**options)
+        if check_settings_changed(settings, config.get('settings')):
+            res = es.indices.close(ignore_unavailable=True, **options)
+            res = es.indices.put_settings(body=settings, **options)
+            _check_response(index, res)
+            res = es.indices.open(**options)
         return True
     else:
         log.info("Creating index: %s...", index)
@@ -249,8 +261,8 @@ def index_settings(shards=5, replicas=2):
     """Configure an index in ES with support for text transliteration."""
     return {
         "index": {
-            "number_of_shards": shards,
-            "number_of_replicas": replicas,
+            "number_of_shards": str(shards),
+            "number_of_replicas": str(replicas),
             # "refresh_interval": refresh,
             "analysis": {
                 "analyzer": {
@@ -280,7 +292,7 @@ def index_settings(shards=5, replicas=2):
                     },
                     "synonames": {
                         "type": "synonym",
-                        "lenient": True,
+                        "lenient": "true",
                         "synonyms_path": "synonames.txt"
                     }
                 }
