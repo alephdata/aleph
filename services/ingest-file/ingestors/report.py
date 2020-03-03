@@ -1,7 +1,14 @@
+import logging
+
 from followthemoney.namespace import Namespace
 
 
+log = logging.getLogger(__name__)
+
+
 def clean_report_payload(payload):
+    if 'entity' not in payload:
+        log.error(payload)
     # sign entity ids
     entity = payload['entity']
     if not isinstance(entity, dict):

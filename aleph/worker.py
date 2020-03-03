@@ -14,7 +14,7 @@ from aleph.logic.collections import index_collections, refresh_collection
 from aleph.logic.collections import reset_collection, process_collection
 from aleph.logic.notifications import generate_digest
 from aleph.logic.mapping import load_mapping, flush_mapping
-from aleph.logic.reports import index_reports, collect_report_tasks, get_reporter
+from aleph.logic.reports import index_reports, get_reporter
 from aleph.logic.roles import update_roles
 from aleph.logic.xref import xref_collection, xref_item
 from aleph.logic.processing import index_aggregate
@@ -44,11 +44,6 @@ class AlephWorker(Worker):
             generate_digest()
             update_roles()
 
-        if self.frequent.check():
-            self.frequent.update()
-            log.info("Running frequent tasks...")
-            collect_report_tasks()
-
     def handle(self, task):
         stage = task.stage
         payload = task.payload
@@ -58,11 +53,8 @@ class AlephWorker(Worker):
             return
         sync = task.context.get('sync', False)
 
-        reporter = None
-        if self.should_report(task):
-            reporter = self.get_task_reporter(task)
-
         if stage.stage == OP_INDEX:
+            reporter = self.get_task_reporter(task)
             index_aggregate(stage, collection, sync=sync, reporter=reporter, **payload)
         if stage.stage == OP_LOAD_MAPPING:
             load_mapping(stage, collection, **payload)
@@ -77,7 +69,7 @@ class AlephWorker(Worker):
         if stage.stage == OP_XREF_ITEM:
             xref_item(stage, collection, **payload)
         if stage.stage == OP_REPORT:
-            index_reports(stage, sync=sync)
+            index_reports(task, sync=sync)
         log.info("Task [%s]: %s (done)", task.job.dataset, stage.stage)
 
     def after_task(self, task):

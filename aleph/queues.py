@@ -61,7 +61,7 @@ def cancel_queue(collection):
     Dataset(kv, collection.foreign_id).cancel()
 
 
-def ingest_entity(collection, proxy, job_id=None, sync=False, reporter=None):
+def ingest_entity(collection, proxy, job_id=None, sync=False):
     """Send the given FtM entity proxy to the ingest-file service."""
     from aleph.logic.aggregator import get_aggregator_name
     log.debug("Ingest entity [%s]: %s", proxy.id, proxy.caption)
@@ -72,6 +72,4 @@ def ingest_entity(collection, proxy, job_id=None, sync=False, reporter=None):
         'pipeline': [OP_ANALYZE, OP_INDEX],
         'sync': sync
     }
-    if reporter:
-        context['reporter'] = reporter.serialize(entity=proxy.to_dict())
     stage.queue(proxy.to_dict(), context)

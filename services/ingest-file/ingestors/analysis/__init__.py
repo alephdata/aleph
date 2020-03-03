@@ -15,11 +15,12 @@ log = logging.getLogger(__name__)
 class Analyzer(object):
     FRAGMENT = 'analysis'
 
-    def __init__(self, dataset, entity):
+    def __init__(self, dataset, entity, reporter):
         self.dataset = dataset
         self.entity = model.make_entity(entity.schema)
         self.entity.id = entity.id
         self.aggregator = TagAggregator()
+        self.reporter = reporter
 
     def feed(self, entity):
         if not settings.ANALYZE_ENTITIES:
@@ -31,6 +32,8 @@ class Analyzer(object):
         # HACK: Tables will be mapped, don't try to tag them here.
         if entity.schema.is_a('Table'):
             return
+
+        self.reporter.start(entity=self.entity)
 
         texts = entity.get_type_values(registry.text)
         for text in text_chunks(texts):
@@ -48,3 +51,5 @@ class Analyzer(object):
             log.debug("Extracted %d tags: %r",
                       len(self.aggregator), self.entity)
             self.dataset.put(self.entity, self.FRAGMENT)
+
+        self.reporter.end(entity=self.entity)

@@ -65,7 +65,7 @@ def get_collection_processing_report(foreign_id):
     status_agg = {**{'status': {'terms': {'field': 'status'}}}, **time_range_agg}
     query['aggs'] = {
         'jobs': {
-            'terms': {'field': 'job'},
+            'terms': {'field': 'job', 'size': 1000},
             'aggs': {
                 'errors': {
                     'terms': {'field': 'has_error'},

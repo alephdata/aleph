@@ -12,8 +12,24 @@ log = logging.getLogger(__name__)
 
 def crawl_directory(collection, path, parent=None, job_id=None, reporter=None):
     """Crawl the contents of the given path."""
+    if job_id is None:
+        job_id = 'crawl-directory-%s' % datetime.utcnow().timestamp()
+
+    if reporter is None:
+        reporter = get_reporter(
+            job=job_id,
+            stage=OP_CRAWL,
+            dataset=collection.foreign_id,
+            ns=collection.ns,
+        )
+
+    # FIXME
+    start_at = datetime.utcnow()
+
+    def start_report(entity):
+        reporter.start(entity=entity, start_at=start_at)
+
     try:
-        start_at = datetime.utcnow()
         content_hash = None
         if not path.is_dir():
             content_hash = archive.archive_file(path)
@@ -29,24 +45,15 @@ def crawl_directory(collection, path, parent=None, job_id=None, reporter=None):
         db.session.commit()
         proxy = document.to_proxy()
 
-        if job_id is None:
-            job_id = 'crawl-directory-%s' % datetime.utcnow().timestamp()
+        start_report(proxy)
 
-        if reporter is None:
-            reporter = get_reporter(
-                job=job_id,
-                stage=OP_CRAWL,
-                dataset=collection.foreign_id,
-                ns=collection.ns,
-            )
-
-        reporter.start(entity=proxy, start_at=start_at)
-        reporter.end(entity=proxy)
-
-        ingest_entity(collection, proxy, job_id=job_id, reporter=reporter)
+        ingest_entity(collection, proxy, job_id=job_id)
         log.info("Crawl [%s]: %s -> %s", collection.id, path, document.id)
         if path.is_dir():
             for child in path.iterdir():
                 crawl_directory(collection, child, document, job_id, reporter)
-    except OSError:
+
+        reporter.end(entity=proxy)
+    except OSError as e:
         log.exception("Cannot crawl directory: %s", path)
+        reporter.error(e, path=str(path))

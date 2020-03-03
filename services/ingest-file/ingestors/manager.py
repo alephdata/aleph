@@ -30,9 +30,11 @@ class Manager(object):
     #: Indicates occurance of errors during the processing.
     STATUS_FAILURE = u'failure'
 
+    OP_STORE = 'store'
+
     MAGIC = magic.Magic(mime=True)
 
-    def __init__(self, stage, context, reporter=False):
+    def __init__(self, stage, context, reporter):
         self.stage = stage
         self.context = context
         self.work_path = ensure_path(mkdtemp(prefix='ingestor-'))
@@ -119,14 +121,13 @@ class Manager(object):
         self.stage.queue(entity.to_dict(), self.context)
 
     def store(self, file_path, mime_type=None):
-        if self.reporter:
-            self.reporter.start(stage='store', file_path=str(file_path))
+        entity = model.get_proxy(self.reporter.task.payload)
+        self.reporter.start(stage=self.OP_STORE, file_path=str(file_path), entity=entity)
         file_path = ensure_path(file_path)
         mime_type = normalize_mimetype(mime_type)
         if file_path is not None and file_path.is_file():
             res = self.archive.archive_file(file_path, mime_type=mime_type)
-            if self.reporter:
-                self.reporter.end(stage='store', file_path=str(file_path))
+            self.reporter.end(stage=self.OP_STORE, file_path=str(file_path), entity=entity)
             return res
 
     def load(self, content_hash, file_name=None):
@@ -147,8 +148,7 @@ class Manager(object):
 
     def ingest(self, file_path, entity, **kwargs):
         """Main execution step of an ingestor."""
-        if self.reporter:
-            self.reporter.start(file_path=str(file_path), entity=entity.to_dict())
+        self.reporter.start(file_path=str(file_path), entity=entity)
 
         file_path = ensure_path(file_path)
         if file_path.is_file() and not entity.has('fileSize'):
@@ -160,13 +160,11 @@ class Manager(object):
             log.info("Ingestor [%r]: %s", entity, ingestor_class.__name__)
             self.delegate(ingestor_class, file_path, entity)
             entity.set('processingStatus', self.STATUS_SUCCESS)
-            if self.reporter:
-                self.reporter.end(entity=entity.to_dict())
+            self.reporter.end(entity=entity)
         except ProcessingException as pexc:
             entity.set('processingError', stringify(pexc))
             log.error("[%r] Failed to process: %s", entity, pexc)
-            if self.reporter:
-                self.reporter.error(exception=pexc, entity=entity.to_dict())
+            self.reporter.error(exception=pexc, entity=entity)
         finally:
             self.finalize(entity)
 

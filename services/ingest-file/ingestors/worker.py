@@ -8,6 +8,8 @@ from ingestors.report import clean_report_payload
 
 
 log = logging.getLogger(__name__)
+
+
 OP_INGEST = 'ingest'
 OP_ANALYZE = 'analyze'
 
@@ -27,14 +29,13 @@ class IngestWorker(Worker):
         context['pipeline'] = pipeline
         log.info('Sending %s entities to: %s', len(entity_ids), next_stage)
         stage.queue({'entity_ids': entity_ids}, task.context)
-        if self.should_report(task):
-            reporter = self.get_task_reporter(task)
-            for entity_id in entity_ids:
-                reporter.end(entity={'id': entity_id})  # mark current as end
-                reporter.start(stage=next_stage, entity={'id': entity_id})  # start next task reporting
+        reporter = self.get_task_reporter(task)
+        for entity_id in entity_ids:
+            reporter.end(entity={'id': entity_id})  # mark current as end
+            reporter.start(stage=next_stage, entity={'id': entity_id})  # start next task reporting
 
     def _ingest(self, task):
-        reporter = self.get_task_reporter(task) if self.should_report(task) else False
+        reporter = self.get_task_reporter(task)
         manager = Manager(task.stage, task.context, reporter=reporter)
         entity = model.get_proxy(task.payload)
         log.debug('Ingest: %r', entity)
@@ -45,6 +46,7 @@ class IngestWorker(Worker):
         return manager.emitted
 
     def _analyze(self, task):
+        reporter = self.get_task_reporter(task)
         entity_ids = task.payload.get('entity_ids')
         dataset = Manager.get_dataset(task.stage, task.context)
         analyzer = None
@@ -53,7 +55,7 @@ class IngestWorker(Worker):
                 if analyzer is not None:
                     analyzer.flush()
                 # log.debug("Analyze: %r", entity)
-                analyzer = Analyzer(dataset, entity)
+                analyzer = Analyzer(dataset, entity, reporter)
             analyzer.feed(entity)
         if analyzer is not None:
             analyzer.flush()
