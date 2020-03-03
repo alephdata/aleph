@@ -28,7 +28,7 @@ class Document(db.Model, DatedModel):
     meta = db.Column(JSONB, default={})
 
     uploader_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=True)  # noqa
-    parent_id = db.Column(db.BigInteger, db.ForeignKey('document.id'), nullable=True, index=True)  # noqa
+    parent_id = db.Column(db.BigInteger, nullable=True, index=True)  # noqa
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=False, index=True)  # noqa
     collection = db.relationship(Collection, backref=db.backref('documents', lazy='dynamic'))  # noqa
 
