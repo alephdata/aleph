@@ -256,7 +256,7 @@ class EntitySerializer(Serializer):
         return obj
 
 
-class MatchSerializer(Serializer):
+class XrefSerializer(Serializer):
 
     def _collect(self, obj):
         matchable = tuple([s.matchable for s in model])

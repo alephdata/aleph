@@ -5,7 +5,7 @@ from followthemoney.types import registry
 from followthemoney.compare import compare
 from followthemoney.export.excel import ExcelWriter
 
-from aleph.core import db, es
+from aleph.core import es
 from aleph.model import Collection
 from aleph.logic import resolver
 from aleph.queues import queue_task, OP_XREF_ITEM
@@ -95,24 +95,25 @@ def _iter_match_batch(stub, sheet, batch):
     matchable = [s.name for s in model if s.matchable]
     entities = set()
     for match in batch:
-        entities.add(match.entity_id)
-        entities.add(match.match_id)
-        resolver.queue(stub, Collection, match.match_collection_id)
+        entities.add(match.get('entity_id'))
+        entities.add(match.get('match_id'))
+        resolver.queue(stub, Collection, match.get('match_collection_id'))
 
     resolver.resolve(stub)
     entities = entities_by_ids(list(entities), schemata=matchable)
     entities = {e.get('id'): e for e in entities}
 
     for obj in batch:
-        entity = entities.get(str(obj.entity_id))
-        match = entities.get(str(obj.match_id))
-        collection = resolver.get(stub, Collection, obj.match_collection_id)
+        entity = entities.get(str(obj.get('entity_id')))
+        match = entities.get(str(obj.get('match_id')))
+        collection_id = obj.get('match_collection_id')
+        collection = resolver.get(stub, Collection, collection_id)
         if entity is None or match is None or collection is None:
             continue
         eproxy = model.get_proxy(entity)
         mproxy = model.get_proxy(match)
         sheet.append([
-            obj.score,
+            obj.get('score'),
             eproxy.caption,
             _format_date(eproxy),
             _format_country(eproxy),
@@ -125,14 +126,9 @@ def _iter_match_batch(stub, sheet, batch):
         ])
 
 
-def export_matches(collection_id, authz):
+def export_matches(collection, authz):
     """Export the top N matches of cross-referencing for the given collection
     to an Excel formatted export."""
-    collections = authz.collections(authz.READ)
-    dq = db.session.query(Match)
-    dq = dq.filter(Match.collection_id == collection_id)
-    dq = dq.filter(Match.match_collection_id.in_(collections))
-    dq = dq.order_by(Match.score.desc())
     excel = ExcelWriter()
     headers = [
         'Score',
@@ -148,7 +144,7 @@ def export_matches(collection_id, authz):
     ]
     sheet = excel.make_sheet('Cross-reference', headers)
     batch = []
-    for match in dq.yield_per(BULK_PAGE * 10):
+    for match in index.iter_matches(collection, authz):
         batch.append(match)
         if len(batch) >= BULK_PAGE:
             _iter_match_batch(excel, sheet, batch)

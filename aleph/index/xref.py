@@ -3,11 +3,13 @@ from pprint import pprint  # noqa
 from datetime import datetime
 from servicelayer.cache import make_key
 from followthemoney.types import registry
+from elasticsearch.helpers import scan
 
-from aleph.core import settings
+from aleph.core import settings, es
 from aleph.index.util import index_name, index_settings, configure_index
-from aleph.index.util import query_delete, bulk_actions
-from aleph.index.util import KEYWORD, SHARDS_HEAVY
+from aleph.index.util import query_delete, bulk_actions, unpack_result
+from aleph.index.util import authz_query
+from aleph.index.util import KEYWORD, SHARDS_HEAVY, MAX_TIMEOUT
 
 log = logging.getLogger(__name__)
 
@@ -56,6 +58,15 @@ def index_matches(collection, entity, matches, sync=False):
         })
     if len(actions):
         bulk_actions(actions, sync=sync)
+
+
+def iter_matches(collection, authz):
+    """Scan all matching xref results, does not support sorting."""
+    filters = [{'term': {'collection_id': collection.id}},
+               authz_query(authz, field='match_collection_id')]
+    query = {'query': {'bool': {'filter': filters}}}
+    for res in scan(es, index=xref_index(), query=query, scroll=MAX_TIMEOUT):
+        yield unpack_result(res)
 
 
 def delete_xref(collection, entity_id=None, sync=False):

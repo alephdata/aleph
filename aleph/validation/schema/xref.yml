@@ -1,14 +1,4 @@
-XrefCollection:
-  type: object
-  properties:
-    collection:
-      $ref: '#/components/schemas/Collection'
-    matches:
-      type: integer
-    parent:
-      type: integer
-
-XrefMatch:
+Xref:
   type: object
   allOf:
   - $ref: '#/components/schemas/DatedModel'
@@ -21,8 +11,33 @@ XrefMatch:
       $ref: '#/components/schemas/Entity'
     match_collection_id:
       type: string
+    schema:
+      type: string
+      format: schema
+      example: Person
+    countries:
+      type: array
+      items:
+        type: string
+        format: country
+        example: at
     score:
       type: number
+
+XrefResponse:
+  type: object
+  allOf:
+    - $ref: '#/components/schemas/QueryResponse'
+  properties:
+    links:
+      properties:
+        export:
+          type: string
+      type: object
+    results:
+      items:
+        $ref: '#/components/schemas/Xref'
+      type: array
 
 XrefGenerate:
   type: object

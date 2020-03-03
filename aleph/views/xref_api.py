@@ -3,7 +3,7 @@ from flask import Blueprint, request, send_file
 
 from aleph.search import XrefQuery
 from aleph.logic.xref import export_matches
-from aleph.views.serializers import MatchSerializer
+from aleph.views.serializers import XrefSerializer
 from aleph.queues import queue_task, OP_XREF
 from aleph.views.util import get_db_collection, get_index_collection, jsonify
 from aleph.views.util import parse_request
@@ -17,10 +17,10 @@ def index(collection_id):
     """
     ---
     get:
-      summary: Fetch cross-reference summary
+      summary: Fetch cross-reference results
       description: >-
-        Fetch cross-reference matches grouped by collection, for entities in
-        the collection with id `collection_id`
+        Fetch cross-reference matches for entities in the collection
+        with id `collection_id`
       parameters:
       - in: path
         name: collection_id
@@ -40,14 +40,14 @@ def index(collection_id):
                   results:
                     type: array
                     items:
-                      $ref: '#/components/schemas/XrefCollection'
+                      $ref: '#/components/schemas/XrefResponse'
       tags:
       - Xref
       - Collection
     """
     get_index_collection(collection_id)
     result = XrefQuery.handle(request, collection_id=collection_id)
-    return MatchSerializer.jsonify_result(result)
+    return XrefSerializer.jsonify_result(result)
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/xref', methods=['POST'])  # noqa
@@ -116,9 +116,9 @@ def export(collection_id):
       - Xref
       - Collection
     """
-    collection = get_index_collection(collection_id, request.authz.READ)
-    buffer = export_matches(collection_id, request.authz)
-    file_name = '%s - Crossreference.xlsx' % collection.get('label')
+    collection = get_db_collection(collection_id, request.authz.READ)
+    buffer = export_matches(collection, request.authz)
+    file_name = '%s - Crossreference.xlsx' % collection.label
     return send_file(buffer,
                      mimetype=XLSX_MIME,
                      as_attachment=True,
