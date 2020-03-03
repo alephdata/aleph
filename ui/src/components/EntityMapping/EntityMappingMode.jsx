@@ -84,10 +84,20 @@ export class EntityMappingMode extends Component {
     }
   }
 
+  assignId(schemaToAssign) {
+    const { mappings } = this.state;
+    const { name } = schemaToAssign;
+
+    const mappingsOfSchema = Array.from(mappings.values()).filter(({ schema }) => { console.log(schema, schemaToAssign); return schema === schemaToAssign; });
+    const schemaMappingsCount = mappingsOfSchema.length;
+
+    return `${schemaToAssign.name}${schemaMappingsCount + 1}`;
+  }
+
   onMappingAdd(schema) {
     const { mappings } = this.state;
     const clone = new Map(mappings);
-    const id = schema.name;
+    const id = this.assignId(schema);
 
     const newMapping = {
       id,
@@ -101,10 +111,10 @@ export class EntityMappingMode extends Component {
     this.setState({ mappings: clone });
   }
 
-  onMappingRemove(schema) {
+  onMappingRemove(id) {
     const { mappings } = this.state;
     const clone = new Map(mappings);
-    clone.delete(schema.name);
+    clone.delete(id);
 
     this.setState({ mappings: clone });
   }
@@ -123,6 +133,7 @@ export class EntityMappingMode extends Component {
   }
 
   onPropertyAdd(mappingId, propName, value) {
+    console.log('in prop add', mappingId, propName, value);
     this.updateMappings(mappingId, (mappingObj) => { mappingObj.properties[propName] = value; });
   }
 
@@ -223,9 +234,9 @@ export class EntityMappingMode extends Component {
     const { model } = this.props;
     const mappings = new Map();
 
-    Object.values(existingMapping.query).forEach(({ keys, schema, properties }) => {
-      mappings.set(schema, {
-        id: schema,
+    Object.entries(existingMapping.query).forEach(([id, { keys, schema, properties }]) => {
+      mappings.set(id, {
+        id,
         color: assignMappingColor(mappings),
         schema: model.getSchema(schema),
         keys,
@@ -246,13 +257,12 @@ export class EntityMappingMode extends Component {
 
     console.log('collectionMappings', collectionMappings);
     console.log('existingMapping', existingMapping);
-
     console.log('mappings', mappings);
 
 
     const schemaSelectOptions = Object.keys(model.schemata)
       .map(key => model.schemata[key])
-      .filter(item => item.isCreateable && !item.abstract && !mappings.has(item.name))
+      .filter(item => !item.generated && !item.abstract)
       .reduce((result, schema) => {
         result[schema.isEdge ? 1 : 0].push(schema);
         return result;

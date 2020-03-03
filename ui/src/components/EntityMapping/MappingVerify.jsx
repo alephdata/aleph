@@ -6,6 +6,7 @@ import { Select } from '@blueprintjs/select';
 import {
   Schema,
 } from 'src/components/common';
+import { mappingItemRenderer } from './util';
 
 import './MappingVerify.scss';
 
@@ -91,7 +92,7 @@ class MappingVerifyItem extends Component {
       if (referredEntity) {
         return (
           <td className="MappingVerify__listItem__value" style={{ color: referredEntity.color, fontWeight: 'bold' }}>
-            <Schema.Smart.Label schema={referredEntity.schema} icon />
+            {mappingItemRenderer(referredEntity)}
           </td>
         );
       }
@@ -107,7 +108,7 @@ class MappingVerifyItem extends Component {
     return (
       <Card className="MappingVerify__item" key={id} style={{ borderColor: color }}>
         <h6 className="MappingVerify__title bp3-heading" style={{ color }}>
-          <Schema.Smart.Label schema={schema} icon />
+          {mappingItemRenderer({ id, schema })}
         </h6>
         <div className="MappingVerify__section">
           <span className="MappingVerify__section__title">

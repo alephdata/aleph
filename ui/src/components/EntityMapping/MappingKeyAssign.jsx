@@ -3,9 +3,8 @@ import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select, MultiSelect } from '@blueprintjs/select';
-import {
-  Schema,
-} from 'src/components/common';
+import { Schema } from 'src/components/common';
+import { mappingItemRenderer } from './util';
 
 import './MappingKeyAssign.scss';
 
@@ -44,8 +43,8 @@ const keySelectItemRenderer = (item, { handleClick }) => (
 const entityItemRenderer = (item, { handleClick }) => (
   <MenuItem
     style={{ maxWidth: '30vw' }}
-    key={item}
-    text={<Schema.Smart.Label schema={item} icon />}
+    key={item.id}
+    text={mappingItemRenderer(item)}
     onClick={handleClick}
   />
 );
@@ -100,13 +99,12 @@ export class MappingKeyAssignItem extends Component {
 
     const items = Array.from(fullMappingsList.values())
       .filter(({ schema }) => !schema.isEdge && schema.isA(propertyRange))
-      .map(({ schema }) => schema.name)
-      .sort((a, b) => a.localeCompare(b));
+      .sort((a, b) => a.id.localeCompare(b.id));
 
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
-    const buttonText = currValue && currValue.entity
-      ? <Schema.Smart.Label schema={currValue.entity} icon />
+    const buttonText = currValue?.entity?.id
+      ? mappingItemRenderer(currValue.entity)
       : intl.formatMessage(messages.entityAssignPlaceholder);
 
     return (
@@ -132,7 +130,6 @@ export class MappingKeyAssignItem extends Component {
                 rightIcon="caret-down"
                 disabled={disabled}
               />
-
             </Select>
           </FormGroup>
         </span>
@@ -164,10 +161,10 @@ export class MappingKeyAssignItem extends Component {
           className="MappingKeyAssign__item__close"
           icon="cross"
           minimal
-          onClick={() => onMappingRemove(schema)}
+          onClick={() => onMappingRemove(id)}
         />
         <h6 className="MappingKeyAssign__item__title bp3-heading">
-          <Schema.Smart.Label schema={schema} icon />
+          {mappingItemRenderer({ id, schema })}
         </h6>
         <div className="MappingKeyAssign__item__property">
           <span className="MappingKeyAssign__item__property__label">

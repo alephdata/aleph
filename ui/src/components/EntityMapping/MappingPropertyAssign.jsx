@@ -4,6 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Schema } from 'src/components/common';
+import { mappingItemRenderer } from './util';
 import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
@@ -66,7 +67,7 @@ export class MappingPropertyAssign extends Component {
         Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
           if (propValue && propValue.column) {
             columnAssignments.set(propValue.column, {
-              mappingId: id, property: schema.getProperty(propKey),
+              id, schema, property: schema.getProperty(propKey),
             });
           }
         });
@@ -80,18 +81,18 @@ export class MappingPropertyAssign extends Component {
     const { intl } = this.props;
     return (
       <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
-        {items.map(({ schema }) => {
+        {items.map(({ id, schema }) => {
           const { featuredProps, otherProps } = this.getAssignableProps(schema);
 
           return (
-            <MenuItem key={schema.name} text={<Schema.Smart.Label schema={schema} icon />}>
+            <MenuItem key={id} text={mappingItemRenderer({ id, schema })}>
               {
-                featuredProps.map(prop => renderItem({ schema: schema.name, property: prop }))
+                featuredProps.map(prop => renderItem({ id, property: prop }))
               }
               {featuredProps.length > 0 && otherProps.length > 0 && <MenuDivider />}
               <MenuItem text={intl.formatMessage(messages.other)}>
                 {
-                  otherProps.map(prop => renderItem({ schema: schema.name, property: prop }))
+                  otherProps.map(prop => renderItem({ id, property: prop }))
                 }
               </MenuItem>
             </MenuItem>
@@ -129,7 +130,7 @@ export class MappingPropertyAssign extends Component {
           <div className="MappingPropertyAssign__headerSelect">
             {colValue && (
               <div className="MappingPropertyAssign__headerSelect__label">
-                <Schema.Smart.Label schema={colValue.mappingId} icon />
+                {mappingItemRenderer(colValue)}
               </div>
             )}
             <Select
@@ -139,10 +140,12 @@ export class MappingPropertyAssign extends Component {
               itemRenderer={itemRenderer}
               popoverProps={{ minimal: true }}
               filterable={false}
-              onItemSelect={({ schema, property }) => {
-                onPropertyAdd(schema, property.name, { column: colLabel });
+              onItemSelect={(item) => {
+                const { id, property } = item;
+                console.log(item);
+                onPropertyAdd(id, property.name, { column: colLabel });
                 if (colValue) {
-                  onPropertyRemove(colValue.mappingId, colValue.property.name);
+                  onPropertyRemove(colValue.id, colValue.property.name);
                 }
               }}
             >
@@ -200,8 +203,9 @@ export class MappingPropertyAssign extends Component {
               style.pointerEvents = 'none';
               style.cursor = 'not-allowed';
             } else if (colValue) {
+              console.log(colValue, mappings);
               style.color = 'white';
-              style.backgroundColor = mappings.get(colValue.mappingId).color;
+              style.backgroundColor = mappings.get(colValue.id).color;
             }
 
             return (
