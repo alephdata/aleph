@@ -9,6 +9,7 @@ from aleph.core import db, es
 from aleph.model import Match, Collection
 from aleph.logic import resolver
 from aleph.queues import queue_task, OP_XREF_ITEM
+from aleph.index import xref as index
 from aleph.index.entities import iter_entities, entities_by_ids
 from aleph.index.indexes import entities_read_index
 from aleph.index.util import unpack_result, none_query
@@ -17,7 +18,7 @@ from aleph.logic.matching import match_query
 from aleph.logic.util import entity_url
 
 log = logging.getLogger(__name__)
-SCORE_CUTOFF = 0.05
+SCORE_CUTOFF = 0.3
 
 
 def xref_query_item(proxy, collection_ids=None):
@@ -58,24 +59,12 @@ def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
         proxy = model.get_proxy(data)
         # log.info("XRef: %r", proxy)
         matches = xref_query_item(proxy, collection_ids=against_collection_ids)
-        for (score, other_id, other) in matches:
-            log.info("Xref [%.3f]: %s <=> %s", score, proxy, other)
-            obj = Match()
-            obj.entity_id = proxy.id
-            obj.collection_id = collection.id
-            obj.match_id = other.id
-            obj.match_collection_id = other_id
-            obj.score = score
-            db.session.add(obj)
-        db.session.commit()
+        index.index_matches(collection, proxy, matches, sync=False)
 
 
 def xref_collection(stage, collection, against_collection_ids=None):
     """Cross-reference all the entities and documents in a collection."""
-    dq = db.session.query(Match)
-    dq = dq.filter(Match.collection_id == collection.id)
-    dq.delete()
-    db.session.commit()
+    index.delete_xref(collection)
     matchable = [s.name for s in model if s.matchable]
     entities = iter_entities(collection_id=collection.id, schemata=matchable)
     for entity in entities:
