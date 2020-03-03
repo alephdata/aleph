@@ -1,20 +1,11 @@
 import React, { Component } from 'react';
 import c from 'classnames';
-import { Icon, Spinner, Button, Tag } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 
 import { Date, Count } from 'src/components/common';
 
+import StatusTag from './StatusTag';
 import { jumpToDetails } from './util';
-
-const OperationIcon = ({ finished, errors }) => {
-  let renderedIcon = <Spinner size="14" />;
-  if (errors) {
-    renderedIcon = <Icon icon="error" />;
-  } else if (finished) {
-    renderedIcon = <Icon icon="tick-circle" />;
-  }
-  return renderedIcon;
-};
 
 class ProcessingJobReportTableRow extends Component {
   constructor(props) {
@@ -58,16 +49,10 @@ class ProcessingJobReportTableRow extends Component {
       // finished,
     });
 
-    const intent = finished ? 'success' : 'warning';
-    const label = finished ? 'Finished' : 'Running';
-    const icon = <OperationIcon finished={finished} errors={!!errors} />;
-
     return (
       <tr className={rowClass}>
         <td className="tag">
-          <Tag intent={intent} icon={icon}>
-            {label}
-          </Tag>
+          <StatusTag finished={finished} errors={errors} />
         </td>
         <td className="operation">
           {name}

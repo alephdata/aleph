@@ -445,7 +445,7 @@ class _BucketSerializer(ReportSerializer):
                 if k == 'status':
                     _data['status'] = _BucketSerializer().serialize(v['buckets'])
                     _data['has_errors'] = any(s['name'] == 'error' for s in _data['status'])
-                    _data['finished'] = all(s['name'] == 'end' for s in _data['status'])
+                    _data['finished'] = all(s['name'] in ('end', 'error') for s in _data['status'])
             data.append(_data)
         return data
 

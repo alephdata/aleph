@@ -3,22 +3,17 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
-import { Button, Tag } from '@blueprintjs/core/';
+import { Button } from '@blueprintjs/core/';
 import { Date } from 'src/components/common';
 import ProcessingJobReportDeleteDialog from 'src/dialogs/ProcessingJobReportDeleteDialog/ProcessingJobReportDeleteDialog';
 import { processingTaskReportsQuery } from 'src/queries';
 import ProcessingJobReportTable from './ProcessingJobReportTable';
+import StatusTag from './StatusTag';
 import { jumpToDetails } from './util';
 
 import './ProcessingJobReport.scss';
 
 const renderDate = (dateString) => <Date value={dateString} showTime />;
-
-const renderState = (finished) => (
-  <Tag intent={finished ? 'success' : 'warning'} large>
-    {finished ? 'Finished' : 'Running'}
-  </Tag>
-);
 
 class ProcessingJobReport extends PureComponent {
   constructor(props) {
@@ -107,7 +102,7 @@ class ProcessingJobReport extends PureComponent {
           </span>
           <div className="ProcessingJobReport__heading__control">
             <span className="ProcessingJobReport__heading__status">
-              {renderState(job.finished)}
+              <StatusTag finished={job.finished} errors={job.errors} large />
             </span>
             <span className="ProcessingJobReport__heading__actions">
               {this.renderActions()}
