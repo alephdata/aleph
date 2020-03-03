@@ -61,13 +61,16 @@ export class MappingPropertyAssign extends Component {
     const columnAssignments = new Map();
 
     mappings.forEach(({ id, schema, properties }) => {
-      Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
-        if (propValue && propValue.column) {
-          columnAssignments.set(propValue.column, {
-            mappingId: id, property: schema.getProperty(propKey),
-          });
-        }
-      });
+      console.log(properties);
+      if (properties) {
+        Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
+          if (propValue && propValue.column) {
+            columnAssignments.set(propValue.column, {
+              mappingId: id, property: schema.getProperty(propKey),
+            });
+          }
+        });
+      }
     });
 
     return columnAssignments;

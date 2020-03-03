@@ -244,6 +244,12 @@ export class EntityMappingMode extends Component {
       return <SectionLoading />;
     }
 
+    console.log('collectionMappings', collectionMappings);
+    console.log('existingMapping', existingMapping);
+
+    console.log('mappings', mappings);
+
+
     const schemaSelectOptions = Object.keys(model.schemata)
       .map(key => model.schemata[key])
       .filter(item => item.isCreateable && !item.abstract && !mappings.has(item.name))

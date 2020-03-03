@@ -39,7 +39,7 @@ class MappingVerifyItem extends Component {
     const { id, schema, properties } = mapping;
 
     const items = schema.getEditableProperties()
-      .filter(prop => !properties[prop.name] && !prop.type.isEntity)
+      .filter(prop => !prop.type.isEntity && properties && !properties[prop.name])
       .sort((a, b) => (a.label > b.label ? 1 : -1));
 
     return (
@@ -122,21 +122,23 @@ class MappingVerifyItem extends Component {
             :
           </span>
           <HTMLTable className="MappingVerify__list">
-            <tbody>
-              {Array.from(Object.entries(properties)).map(([propName, propValue]) => (
-                <tr className="MappingVerify__listItem" key={propName}>
-                  <td className="MappingVerify__listItem__label">
-                    {schema.getProperty(propName).label}
-                  </td>
-                  {this.renderPropertyValue(propName, propValue)}
-                  <td className="MappingVerify__listItem__close">
-                    <Tooltip content={intl.formatMessage(messages.remove)}>
-                      <Button minimal icon="cross" onClick={() => onPropertyRemove(id, propName)} />
-                    </Tooltip>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            {properties && (
+              <tbody>
+                {Array.from(Object.entries(properties)).map(([propName, propValue]) => (
+                  <tr className="MappingVerify__listItem" key={propName}>
+                    <td className="MappingVerify__listItem__label">
+                      {schema.getProperty(propName).label}
+                    </td>
+                    {this.renderPropertyValue(propName, propValue)}
+                    <td className="MappingVerify__listItem__close">
+                      <Tooltip content={intl.formatMessage(messages.remove)}>
+                        <Button minimal icon="cross" onClick={() => onPropertyRemove(id, propName)} />
+                      </Tooltip>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
           </HTMLTable>
 
         </div>
