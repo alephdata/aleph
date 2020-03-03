@@ -74,9 +74,9 @@ def get_document_processing_report(document):
     return res
 
 
-def get_collection_processing_report(foreign_id):
+def get_collection_processing_report(collection_id):
     index = reports_index()
-    query = {'query': {'term': {'dataset': foreign_id}}, 'size': 0}
+    query = {'query': {'term': {'collection_id': collection_id}}, 'size': 0}
     time_range_agg = {
         'start_at': {'min': {'field': 'start_at'}},
         'end_at': {'max': {'field': 'end_at'}},

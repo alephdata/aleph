@@ -2,10 +2,8 @@ import logging
 from datetime import datetime
 from flask import Blueprint, request
 
-from aleph.core import db
 from aleph.index.reports import get_collection_processing_report, get_document_processing_report, delete_job_report
 from aleph.logic.reports import queue_task_from_report
-from aleph.model import QueryLog
 from aleph.search import ProcessingReportQuery, SearchQueryParser
 from aleph.views.context import tag_request
 from aleph.views.serializers import (
@@ -13,7 +11,7 @@ from aleph.views.serializers import (
     DocumentProcessingReportSerializer,
     ProcessingReportSerializer
 )
-from aleph.views.util import get_index_collection, get_index_entity
+from aleph.views.util import get_index_entity
 
 log = logging.getLogger(__name__)
 blueprint = Blueprint('reports_api', __name__)
@@ -40,11 +38,6 @@ def reports():
       - System
     """
     parser = SearchQueryParser(request.args, request.authz)
-    if parser.text:
-        QueryLog.save(request.authz.id,
-                      request._session_id,
-                      parser.text)
-        db.session.commit()
     tag_request(query=parser.text, prefix=parser.prefix)
     result = ProcessingReportQuery.handle(request, parser=parser)
     return ProcessingReportSerializer.jsonify_result(result)
@@ -76,8 +69,7 @@ def collection_report(collection_id):
       - Collection
       - Report
     """
-    collection = get_index_collection(collection_id)
-    data = get_collection_processing_report(collection['foreign_id'])
+    data = get_collection_processing_report(collection_id)
     return CollectionProcessingReportSerializer.jsonify(data)
 
 
