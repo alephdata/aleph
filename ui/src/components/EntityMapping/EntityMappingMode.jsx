@@ -10,7 +10,7 @@ import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import {
-  MappingImportMenu,
+  MappingImportButton,
   MappingKeyAssign,
   MappingManageMenu,
   MappingPropertyAssign,
@@ -232,6 +232,7 @@ export class EntityMappingMode extends Component {
   }
 
   loadFromMapping(existingMapping) {
+    console.log('in load from existing', existingMapping);
     const { model } = this.props;
     const mappings = new Map();
 
@@ -246,6 +247,31 @@ export class EntityMappingMode extends Component {
     });
 
     this.setState({ mappings });
+  }
+
+  loadFromMappingFile(mappingData) {
+    console.log('in load from existing', mappingData, Object.values(mappingData));
+    // const { model } = this.props;
+    const { queries } = Object.values(mappingData)[0];
+
+    console.log(queries)
+    // const mappings = new Map();
+    //
+    queries.forEach(({entities}) => {
+      console.log(entities);
+    });
+    //
+    // Object.entries(existingMapping.query).forEach(([id, { keys, schema, properties }]) => {
+    //   mappings.set(id, {
+    //     id,
+    //     color: assignMappingColor(mappings),
+    //     schema: model.getSchema(schema),
+    //     keys,
+    //     properties,
+    //   });
+    // });
+    //
+    // this.setState({ mappings });
   }
 
   render() {
@@ -295,7 +321,7 @@ export class EntityMappingMode extends Component {
               }}
             />
           </p>
-          <MappingImportMenu />
+          <MappingImportButton onImport={this.loadFromMappingFile} />
         </div>
         {existingMapping && (
           <MappingStatus

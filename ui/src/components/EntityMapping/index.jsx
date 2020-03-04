@@ -1,3 +1,4 @@
+import MappingImportButton from './MappingImportButton';
 import MappingKeyAssign from './MappingKeyAssign';
 import MappingManageMenu from './MappingManageMenu';
 import MappingPropertyAssign from './MappingPropertyAssign';
@@ -7,6 +8,7 @@ import MappingStatus from './MappingStatus';
 import MappingVerify from './MappingVerify';
 
 export {
+  MappingImportButton,
   MappingKeyAssign,
   MappingManageMenu,
   MappingPropertyAssign,

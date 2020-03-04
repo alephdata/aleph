@@ -38,7 +38,9 @@
     "redux-act": "^1.7.4",
     "redux-thunk": "^2.3.0",
     "truncate": "^2.0.1",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "yaml": "^1.7.2",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.6.0",

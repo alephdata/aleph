@@ -27,7 +27,7 @@ class FileImport extends Component {
 
     reader.onload = async (e) => {
       const data = (e.target.result);
-      this.props.onImport({ fileName, label, layout: JSON.parse(data).layout });
+      this.props.onImport({ fileName, label, data });
     };
     reader.onerror = async () => {
       showWarningToast(intl.formatMessage(messages.import_error));

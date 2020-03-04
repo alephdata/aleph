@@ -130,7 +130,7 @@ class DiagramCreateDialog extends Component {
   }
 
   onImport({ fileName, label, data }) {
-    const layout = JSON.parse(data).layout;
+    const { layout } = JSON.parse(data);
     this.setState({ label, layout, importedFileName: fileName });
   }
 
