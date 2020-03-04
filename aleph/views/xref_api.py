@@ -1,4 +1,3 @@
-from banal import ensure_list
 from flask import Blueprint, request, send_file
 
 from aleph.search import XrefQuery
@@ -6,7 +5,6 @@ from aleph.logic.xref import export_matches
 from aleph.views.serializers import XrefSerializer
 from aleph.queues import queue_task, OP_XREF
 from aleph.views.util import get_db_collection, get_index_collection, jsonify
-from aleph.views.util import parse_request
 
 XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'  # noqa
 blueprint = Blueprint('xref_api', __name__)
@@ -84,11 +82,8 @@ def generate(collection_id):
       - Xref
       - Collection
     """
-    data = parse_request('XrefGenerate')
     collection = get_db_collection(collection_id, request.authz.WRITE)
-    against = ensure_list(data.get("against_collection_ids"))
-    payload = {'against_collection_ids': against}
-    queue_task(collection, OP_XREF, payload=payload)
+    queue_task(collection, OP_XREF)
     return jsonify({'status': 'accepted'}, status=202)
 
 

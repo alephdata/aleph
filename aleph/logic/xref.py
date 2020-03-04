@@ -21,9 +21,9 @@ log = logging.getLogger(__name__)
 SCORE_CUTOFF = 0.3
 
 
-def xref_query_item(proxy, collection_ids=None):
+def xref_query_item(proxy):
     """Cross-reference an entity or document, given as an indexed document."""
-    query = match_query(proxy, collection_ids=collection_ids)
+    query = match_query(proxy)
     if query == none_query():
         return
 
@@ -35,8 +35,7 @@ def xref_query_item(proxy, collection_ids=None):
     matchable = list(proxy.schema.matchable_schemata)
     index = entities_read_index(schema=matchable)
     result = es.search(index=index, body=query)
-    results = result.get('hits').get('hits')
-    for result in results:
+    for result in result.get('hits').get('hits'):
         result = unpack_result(result)
         if result is not None:
             other = model.get_proxy(result)
@@ -47,7 +46,7 @@ def xref_query_item(proxy, collection_ids=None):
                 yield score, result.get('collection_id'), other
 
 
-def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
+def xref_item(stage, collection, entity_id=None):
     "Cross-reference an entity against others to generate potential matches."
     entity_ids = [entity_id]
     # This is running as a background job. In order to avoid running each
@@ -59,24 +58,18 @@ def xref_item(stage, collection, entity_id=None, against_collection_ids=None):
     # log.debug("Have %d entity IDs for xref", len(entity_ids))
     for data in entities_by_ids(entity_ids, includes=['schema', 'properties']):
         proxy = model.get_proxy(data)
-        # log.info("XRef: %r", proxy)
-        matches = xref_query_item(proxy, collection_ids=against_collection_ids)
+        matches = xref_query_item(proxy)
         index.index_matches(collection, proxy, matches, sync=False)
 
 
-def xref_collection(stage, collection, against_collection_ids=None):
+def xref_collection(stage, collection):
     """Cross-reference all the entities and documents in a collection."""
     index.delete_xref(collection)
     matchable = [s.name for s in model if s.matchable]
     entities = iter_entities(collection_id=collection.id, schemata=matchable)
     for entity in entities:
-        payload = {
-            'entity_id': entity.get('id'),
-            'against_collection_ids': against_collection_ids
-        }
-        queue_task(collection, OP_XREF_ITEM,
-                   job_id=stage.job.id,
-                   payload=payload)
+        queue_task(collection, OP_XREF_ITEM, job_id=stage.job.id,
+                   payload={'entity_id': entity.get('id')})
 
 
 def _format_date(proxy):

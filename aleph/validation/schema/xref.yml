@@ -41,12 +41,4 @@ XrefResponse:
 
 XrefGenerate:
   type: object
-  properties:
-    against_collection_ids:
-      description: >
-        Optional argument to specify collections agaist which
-        cross-referencing will be done
-      type: array
-      items:
-        type: integer
-        minimum: 1
+  properties: {}
