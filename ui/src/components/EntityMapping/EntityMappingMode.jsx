@@ -10,6 +10,7 @@ import { fetchCollectionMappings } from 'src/actions';
 import { selectCollectionMappings, selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import {
+  MappingImportMenu,
   MappingKeyAssign,
   MappingManageMenu,
   MappingPropertyAssign,
@@ -294,6 +295,7 @@ export class EntityMappingMode extends Component {
               }}
             />
           </p>
+          <MappingImportMenu />
         </div>
         {existingMapping && (
           <MappingStatus
