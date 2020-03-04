@@ -87,11 +87,3 @@ class XrefTestCase(TestCase):
         xref_collection(self.stage, self.coll_a)
         matches = list(iter_matches(self.coll_a, self.authz))
         assert 3 == len(matches), len(matches)
-
-    def test_xref_specific_collections(self):
-        matches = list(iter_matches(self.coll_a, self.authz))
-        assert 0 == len(matches), len(matches)
-        xref_collection(self.stage, self.coll_a,
-                        against_collection_ids=[self.coll_c.id])
-        matches = list(iter_matches(self.coll_a, self.authz))
-        assert 1 == len(matches), len(matches)
