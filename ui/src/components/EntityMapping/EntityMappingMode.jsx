@@ -3,6 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import Papa from 'papaparse';
+import YAML from 'yaml'
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { SectionLoading } from 'src/components/common';
 import { showErrorToast } from 'src/app/toast';
@@ -64,6 +65,7 @@ export class EntityMappingMode extends Component {
     this.onPropertyAdd = this.onPropertyAdd.bind(this);
     this.onPropertyRemove = this.onPropertyRemove.bind(this);
     this.onValidate = this.onValidate.bind(this);
+    this.exportMapping = this.exportMapping.bind(this);
     this.togglePreview = this.togglePreview.bind(this);
   }
 
@@ -274,6 +276,26 @@ export class EntityMappingMode extends Component {
     // this.setState({ mappings });
   }
 
+  exportMapping() {
+    const { entity, existingMapping } = this.props;
+    console.log('in export mapping. mapping is', existingMapping);
+    console.log('entity is', entity);
+
+    const retVal = {};
+    retVal[entity.id] = {
+      label: entity.getCaption(),
+      info_url: entity.links.self,
+      queries: [
+        {
+          csv_url: entity.links.csv,
+          entities: existingMapping.query
+        }
+      ]
+    }
+
+    console.log(YAML.stringify(retVal));
+  }
+
   render() {
     const { entity, intl, model, existingMapping, collectionMappings } = this.props;
     const { mappings, csvData, csvHeader, previewIsOpen } = this.state;
@@ -388,6 +410,9 @@ export class EntityMappingMode extends Component {
                 <ButtonGroup className="EntityMappingMode__preview">
                   <Button icon="eye-open" onClick={this.togglePreview}>
                     <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
+                  </Button>
+                  <Button icon="export" onClick={this.exportMapping}>
+                    <FormattedMessage id="mapping.actions.export" defaultMessage="Export mapping" />
                   </Button>
                 </ButtonGroup>
               </div>
