@@ -93,6 +93,8 @@ RUN apt-get -qq -y update \
         libtiff-tools ghostscript librsvg2-bin \
         # pdf processing toolkit
         poppler-utils poppler-data pst-utils \
+        # document conversion
+        pandoc texlive \
     && apt-get -qq -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

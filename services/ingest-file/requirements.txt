@@ -17,6 +17,7 @@ tesserocr==2.5.0
 spacy==2.2.3
 fingerprints==0.6.6
 fasttext==0.9.1
+pypandoc==1.4
 
 # Development
 nose==1.3.7

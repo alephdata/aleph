@@ -1,11 +1,10 @@
 import math
 import logging
 import requests
-from requests import RequestException, HTTPError
+import pypandoc
 from servicelayer.util import backoff, service_retries
 from followthemoney.helpers import entity_filename
 
-from ingestors.settings import CONVERT_URL
 from ingestors.support.cache import CacheSupport
 from ingestors.support.temp import TempFileSupport
 from ingestors.exc import ProcessingException
@@ -14,7 +13,7 @@ log = logging.getLogger(__name__)
 
 
 class DocumentConvertSupport(CacheSupport, TempFileSupport):
-    """Provides helpers for UNO document conversion via HTTP."""
+    """Provides helpers for document conversion via pandoc."""
 
     def document_to_pdf(self, file_path, entity):
         key = self.cache_key('pdf', entity.first('contentHash'))
@@ -35,7 +34,7 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         return pdf_file
 
     def _document_to_pdf(self, file_path, entity):
-        """Converts an office document to PDF."""
+        """Converts a document to PDF using pandoc."""
         # Attempt to guess an appropriate time for processing
         # Guessed: 15s per MB of data, max.
         file_size = file_path.stat().st_size
@@ -51,27 +50,10 @@ class DocumentConvertSupport(CacheSupport, TempFileSupport):
         failed = ProcessingException("Document could not be converted to PDF.")
         for attempt in service_retries():
             try:
-                with open(file_path, 'rb') as fh:
-                    files = {'file': (file_name, fh, mime_type)}
-                    res = requests.post(CONVERT_URL,
-                                        params={'timeout': timeout},
-                                        files=files,
-                                        timeout=timeout + 3,
-                                        stream=True)
-                res.raise_for_status()
                 out_path = self.make_work_file('out.pdf')
-                with open(out_path, 'wb') as fh:
-                    bytes_written = 0
-                    for chunk in res.iter_content(chunk_size=None):
-                        bytes_written += len(chunk)
-                        fh.write(chunk)
-                    if bytes_written > 50:
-                        return out_path
-                raise failed
-            except RequestException as exc:
-                if isinstance(exc, HTTPError) and \
-                        exc.response.status_code == 400:
-                    raise ProcessingException(res.text)
+                pypandoc.convert_file(file_path, 'pdf', outputfile=out_path)
+                return out_path
+            except Exception as exc:
                 log.error("Conversion failed: %s", exc)
                 backoff(failures=math.sqrt(attempt))
         raise failed
