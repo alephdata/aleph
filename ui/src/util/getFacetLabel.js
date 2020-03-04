@@ -65,6 +65,11 @@ const propLabels = {
     label: messages.facet_collection_id,
     icon: 'database',
   },
+  match_collection_id: {
+    field: 'match_collection_id',
+    label: messages.facet_collection_id,
+    icon: 'database',
+  },
   countries: {
     field: 'countries',
     label: messages.facet_countries,
