@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
-import { Button, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
+import { Button, Menu, MenuDivider, MenuItem, PopoverInteractionKind } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Schema } from 'src/components/common';
 import { mappingItemRenderer } from './util';
@@ -44,6 +44,7 @@ export class MappingPropertyAssign extends Component {
 
     this.renderCell = this.renderCell.bind(this);
     this.renderHeaderCell = this.renderHeaderCell.bind(this);
+    this.onItemSelect = this.onItemSelect.bind(this);
   }
 
   getAssignableProps = (schema) => {
@@ -77,28 +78,39 @@ export class MappingPropertyAssign extends Component {
     return columnAssignments;
   }
 
-  itemListRenderer({ items, itemsParentRef, renderItem }) {
-    const { intl } = this.props;
+  mappingListRenderer({ items, itemsParentRef, renderItem }) {
     return (
       <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
-        {items.map(({ id, schema }) => {
-          const { featuredProps, otherProps } = this.getAssignableProps(schema);
-
+        {items.map(({ color, id, schema }) => {
           return (
-            <MenuItem key={id} text={mappingItemRenderer({ id, schema })}>
-              {
-                featuredProps.map(prop => renderItem({ id, property: prop }))
-              }
-              {featuredProps.length > 0 && otherProps.length > 0 && <MenuDivider />}
-              <MenuItem text={intl.formatMessage(messages.other)}>
-                {
-                  otherProps.map(prop => renderItem({ id, property: prop }))
-                }
-              </MenuItem>
+            <MenuItem
+              key={id}
+              text={mappingItemRenderer({ id, schema })}
+              popoverProps={{ interactionKind: PopoverInteractionKind.CLICK }}
+              style={{ color }}
+              className="MappingPropertyAssign__headerSelect__item"
+            >
+              {this.propertyListRenderer({id, schema}, renderItem)}
             </MenuItem>
           );
         })}
       </Menu>
+    );
+  }
+
+  propertyListRenderer({ id, schema }, renderItem) {
+    const { featuredProps, otherProps } = this.getAssignableProps(schema);
+
+    return (
+      <>
+        {
+          featuredProps.map(prop => renderItem({ id, property: prop }))
+        }
+        {featuredProps.length > 0 && otherProps.length > 0 && <MenuDivider />}
+        {
+          otherProps.map(prop => renderItem({ id, property: prop }))
+        }
+      </>
     );
   }
 
@@ -115,8 +127,17 @@ export class MappingPropertyAssign extends Component {
     return null;
   }
 
+  onItemSelect({ id, property }) {
+    const { onPropertyAdd, onPropertyRemove } = this.props;
+
+    onPropertyAdd(id, property.name, { column: colLabel });
+    if (colValue) {
+      onPropertyRemove(colValue.id, colValue.property.name);
+    }
+  }
+
   renderHeaderCell(colLabel, colValue, style, colError) {
-    const { intl, onPropertyAdd, onPropertyRemove, mappings } = this.props;
+    const { intl, mappings } = this.props;
 
     return (
       <ColumnHeaderCell
@@ -129,32 +150,48 @@ export class MappingPropertyAssign extends Component {
         {!colError && (
           <div className="MappingPropertyAssign__headerSelect">
             {colValue && (
-              <div className="MappingPropertyAssign__headerSelect__label">
-                {mappingItemRenderer(colValue)}
-              </div>
+              <>
+                <div className="MappingPropertyAssign__headerSelect__label">
+                  {mappingItemRenderer(colValue)}
+                </div>
+                <Select
+                  id="entity-type"
+                  items={[]}
+                  itemListRenderer={({ itemsParentRef, renderItem }) => (
+                    <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
+                      {this.propertyListRenderer(colValue, renderItem)}
+                    </Menu>
+                  )}
+                  itemRenderer={itemRenderer}
+                  popoverProps={{ minimal: true }}
+                  filterable={true}
+                  onItemSelect={this.onItemSelect}
+                >
+                  <Button
+                    text={colValue.property.label}
+                    rightIcon="caret-down"
+                    className="MappingPropertyAssign__headerSelect__button"
+                  />
+                </Select>
+              </>
             )}
-            <Select
-              id="entity-type"
-              items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
-              itemListRenderer={listProps => this.itemListRenderer(listProps)}
-              itemRenderer={itemRenderer}
-              popoverProps={{ minimal: true }}
-              filterable={false}
-              onItemSelect={(item) => {
-                const { id, property } = item;
-                console.log(item);
-                onPropertyAdd(id, property.name, { column: colLabel });
-                if (colValue) {
-                  onPropertyRemove(colValue.id, colValue.property.name);
-                }
-              }}
-            >
-              <Button
-                text={colValue ? `${colValue.property.label}` : intl.formatMessage(messages.placeholder)}
-                rightIcon="caret-down"
-                className="MappingPropertyAssign__headerSelect__button"
-              />
-            </Select>
+            {!colValue && (
+              <Select
+                id="entity-type"
+                items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
+                itemListRenderer={listProps => this.mappingListRenderer(listProps)}
+                itemRenderer={itemRenderer}
+                popoverProps={{ minimal: true }}
+                filterable={false}
+                onItemSelect={this.onItemSelect}
+              >
+                <Button
+                  text={intl.formatMessage(messages.placeholder)}
+                  rightIcon="caret-down"
+                  className="MappingPropertyAssign__headerSelect__button"
+                />
+              </Select>
+            )}
           </div>
         )}
       </ColumnHeaderCell>

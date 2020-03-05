@@ -39,6 +39,14 @@
       white-space: nowrap;
       margin-bottom: 3px;
     }
+
+    &__item {
+      font-weight: bold;
+
+      .bp3-icon-caret-right {
+        // display: none;
+      }
+    }
   }
 
   &__error {
