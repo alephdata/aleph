@@ -13,7 +13,6 @@
     .bp3-table-header-content {
       padding: 0 3px 5px;
       text-align: center;
-      min-height: 80px;
     }
 
     .bp3-button-text {
@@ -30,10 +29,8 @@
   }
 
   &__headerSelect {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
+    position: relative;
+    padding: $aleph-grid-size;
 
     &__label {
       white-space: nowrap;
@@ -42,9 +39,14 @@
 
     &__item {
       font-weight: bold;
+    }
 
-      .bp3-icon-caret-right {
-        // display: none;
+    &__remove {
+      position: absolute;
+      top: 0;
+      right: 0;
+      .bp3-icon {
+        color: white !important;
       }
     }
   }

@@ -63,7 +63,6 @@ export class MappingPropertyAssign extends Component {
     const columnAssignments = new Map();
 
     mappings.forEach(({ id, schema, properties }) => {
-      console.log(properties);
       if (properties) {
         Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
           if (propValue && propValue.column) {
@@ -127,7 +126,7 @@ export class MappingPropertyAssign extends Component {
     return null;
   }
 
-  onItemSelect({ id, property }) {
+  onItemSelect({ id, property }, colLabel, colValue) {
     const { onPropertyAdd, onPropertyRemove } = this.props;
 
     onPropertyAdd(id, property.name, { column: colLabel });
@@ -137,7 +136,7 @@ export class MappingPropertyAssign extends Component {
   }
 
   renderHeaderCell(colLabel, colValue, style, colError) {
-    const { intl, mappings } = this.props;
+    const { intl, mappings, onPropertyRemove } = this.props;
 
     return (
       <ColumnHeaderCell
@@ -155,7 +154,7 @@ export class MappingPropertyAssign extends Component {
                   {mappingItemRenderer(colValue)}
                 </div>
                 <Select
-                  id="entity-type"
+                  id="property-select"
                   items={[]}
                   itemListRenderer={({ itemsParentRef, renderItem }) => (
                     <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
@@ -164,8 +163,8 @@ export class MappingPropertyAssign extends Component {
                   )}
                   itemRenderer={itemRenderer}
                   popoverProps={{ minimal: true }}
-                  filterable={true}
-                  onItemSelect={this.onItemSelect}
+                  filterable={false}
+                  onItemSelect={(item) => this.onItemSelect(item, colLabel, colValue)}
                 >
                   <Button
                     text={colValue.property.label}
@@ -173,17 +172,25 @@ export class MappingPropertyAssign extends Component {
                     className="MappingPropertyAssign__headerSelect__button"
                   />
                 </Select>
+                <div className="MappingPropertyAssign__headerSelect__remove">
+                  <Button
+                    icon="cross"
+                    minimal
+                    small
+                    onClick={() => onPropertyRemove(colValue.id, colValue.property.name)}
+                  />
+                </div>
               </>
             )}
             {!colValue && (
               <Select
-                id="entity-type"
+                id="mapping-select"
                 items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
                 itemListRenderer={listProps => this.mappingListRenderer(listProps)}
                 itemRenderer={itemRenderer}
                 popoverProps={{ minimal: true }}
                 filterable={false}
-                onItemSelect={this.onItemSelect}
+                onItemSelect={(item) => this.onItemSelect(item, colLabel, colValue)}
               >
                 <Button
                   text={intl.formatMessage(messages.placeholder)}
