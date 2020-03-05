@@ -174,7 +174,7 @@ export class MappingPropertyAssign extends Component {
                 </Select>
                 <div className="MappingPropertyAssign__headerSelect__remove">
                   <Button
-                    icon="cross"
+                    icon="remove"
                     minimal
                     small
                     onClick={() => onPropertyRemove(colValue.id, colValue.property.name)}
@@ -208,10 +208,9 @@ export class MappingPropertyAssign extends Component {
   renderCell(rowIndex, colIndex, style) {
     const { csvData } = this.props;
     const value = csvData[rowIndex][colIndex];
-    const loading = false;
 
     return (
-      <Cell loading={loading} style={style}>
+      <Cell style={style}>
         <TruncatedFormat detectTruncation>
           {value || ''}
         </TruncatedFormat>
@@ -228,7 +227,7 @@ export class MappingPropertyAssign extends Component {
         <Table
           numRows={10}
           enableGhostCells
-          enableRowHeader
+          enableRowHeader={false}
           enableRowResizing={false}
           enableColumnResizing={false}
           selectionModes="NONE"
@@ -247,7 +246,6 @@ export class MappingPropertyAssign extends Component {
               style.pointerEvents = 'none';
               style.cursor = 'not-allowed';
             } else if (colValue) {
-              console.log(colValue, mappings);
               style.color = 'white';
               style.backgroundColor = mappings.get(colValue.id).color;
             }
