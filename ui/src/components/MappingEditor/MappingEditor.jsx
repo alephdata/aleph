@@ -20,7 +20,7 @@ import {
 } from '.';
 import { assignMappingColor } from './util';
 
-import './EntityMappingMode.scss';
+import './MappingEditor.scss';
 
 
 const messages = defineMessages({
@@ -46,17 +46,15 @@ const messages = defineMessages({
   },
 });
 
-export class EntityMappingMode extends Component {
+export class MappingEditor extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       mappings: new Map(),
-      csvData: null,
       previewIsOpen: false,
     };
 
-    this.processCsvResults = this.processCsvResults.bind(this);
     this.onMappingAdd = this.onMappingAdd.bind(this);
     this.onMappingRemove = this.onMappingRemove.bind(this);
     this.onKeyAdd = this.onKeyAdd.bind(this);
@@ -68,23 +66,31 @@ export class EntityMappingMode extends Component {
   }
 
   componentDidMount() {
-    const { entity, existingMapping } = this.props;
-    fetchCsvData(entity.links.csv, this.processCsvResults);
-
-    if (entity.id && existingMapping.shouldLoad) {
-      this.props.fetchEntityMapping(entity);
-    } else if (entity.id && existingMapping.query) {
-      this.loadFromMapping(existingMapping);
-    }
+    this.loadFromMappingData();
   }
 
-  componentDidUpdate(prevProps) {
-    const { existingMapping } = this.props;
+  loadFromMappingData() {
+    const { mappingData, model } = this.props;
+    const mappings = new Map();
+    console.log('existing mapping is', mappingData)
 
-    if (existingMapping?.query && !prevProps.existingMapping?.query) {
-      this.loadFromMapping(existingMapping);
+    if (!mappingData?.query) {
+      return;
     }
+
+    Object.entries(mappingData.query).forEach(([id, { keys, schema, properties }]) => {
+      mappings.set(id, {
+        id,
+        color: assignMappingColor(mappings),
+        schema: model.getSchema(schema),
+        keys,
+        properties,
+      });
+    });
+
+    this.setState({ mappings });
   }
+
 
   assignId(schemaToAssign) {
     const { mappings } = this.state;
@@ -186,14 +192,6 @@ export class EntityMappingMode extends Component {
     }
   }
 
-  processCsvResults(results, parser) {
-    this.setState({
-      csvHeader: results.data[0],
-      csvData: results.data.slice(1, 15),
-    });
-    parser.abort();
-  }
-
   formatMappings() {
     const { entity } = this.props;
     const { mappings } = this.state;
@@ -213,35 +211,9 @@ export class EntityMappingMode extends Component {
     };
   }
 
-  loadFromMapping(existingMapping) {
-    console.log('existing mapping is', existingMapping)
-    const { model } = this.props;
-    const mappings = new Map();
-
-    Object.entries(existingMapping.query).forEach(([id, { keys, schema, properties }]) => {
-      mappings.set(id, {
-        id,
-        color: assignMappingColor(mappings),
-        schema: model.getSchema(schema),
-        keys,
-        properties,
-      });
-    });
-
-    this.setState({ mappings });
-  }
-
   render() {
-    const { entity, intl, model, existingMapping } = this.props;
-    const { mappings, csvData, csvHeader, previewIsOpen } = this.state;
-
-    if (!csvData || !csvHeader || existingMapping.isLoading) {
-      return <SectionLoading />;
-    }
-
-    console.log('existingMapping', existingMapping);
-    console.log('mappings', mappings);
-
+    const { entity, mappingData, csvData, csvHeader, intl, model } = this.props;
+    const { mappings, previewIsOpen } = this.state;
 
     const schemaSelectOptions = Object.keys(model.schemata)
       .map(key => model.schemata[key])
@@ -252,8 +224,8 @@ export class EntityMappingMode extends Component {
       }, [[], []]);
 
     return (
-      <div className="EntityMappingMode">
-        <div className="EntityMappingMode__title-container">
+      <div className="MappingEditor">
+        <div className="MappingEditor__title-container">
           <h1 className="text-page-title">
             <FormattedMessage id="mapping.title" defaultMessage="Generate structured entities" />
           </h1>
@@ -278,14 +250,14 @@ export class EntityMappingMode extends Component {
             />
           </p>
         </div>
-        {existingMapping.id && (
+        {mappingData.id && (
           <MappingStatus
-            mapping={existingMapping}
+            mapping={mappingData}
           />
         )}
-        <div className="EntityMappingMode__sections">
-          <div className="EntityMappingMode__section">
-            <h5 className="bp3-heading EntityMappingMode__section__title">
+        <div className="MappingEditor__sections">
+          <div className="MappingEditor__section">
+            <h5 className="bp3-heading MappingEditor__section__title">
               {intl.formatMessage(messages.section1Title)}
             </h5>
             <MappingSplitSection
@@ -312,8 +284,8 @@ export class EntityMappingMode extends Component {
           </div>
           {mappings.size > 0 && (
             <>
-              <div className="EntityMappingMode__section">
-                <h5 className="bp3-heading EntityMappingMode__section__title">
+              <div className="MappingEditor__section">
+                <h5 className="bp3-heading MappingEditor__section__title">
                   {intl.formatMessage(messages.section2Title)}
                 </h5>
                 <MappingPropertyAssign
@@ -324,8 +296,8 @@ export class EntityMappingMode extends Component {
                   onPropertyRemove={this.onPropertyRemove}
                 />
               </div>
-              <div className="EntityMappingMode__section">
-                <h5 className="bp3-heading EntityMappingMode__section__title">
+              <div className="MappingEditor__section">
+                <h5 className="bp3-heading MappingEditor__section__title">
                   {intl.formatMessage(messages.section3Title)}
                 </h5>
                 <MappingSplitSection
@@ -341,17 +313,17 @@ export class EntityMappingMode extends Component {
                     />
                   ))}
                 />
-                <ButtonGroup className="EntityMappingMode__preview">
+                <ButtonGroup className="MappingEditor__preview">
                   <Button icon="eye-open" onClick={this.togglePreview}>
                     <FormattedMessage id="mapping.actions.preview" defaultMessage="Preview mapping" />
                   </Button>
                 </ButtonGroup>
               </div>
-              <div className="EntityMappingMode__section">
+              <div className="MappingEditor__section">
                 <MappingManageMenu
                   mappings={this.formatMappings(mappings)}
                   entity={entity}
-                  mappingId={existingMapping && existingMapping.id}
+                  mappingId={mappingData && mappingData.id}
                   validate={this.onValidate}
                 />
               </div>
@@ -368,18 +340,13 @@ export class EntityMappingMode extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchEntityMapping };
-
 const mapStateToProps = (state, ownProps) => {
-  const { entity } = ownProps;
-
   return {
     model: selectModel(state),
-    existingMapping: selectEntityMapping(state, entity.id),
   };
 };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps),
   injectIntl,
-)(EntityMappingMode);
+)(MappingEditor);
