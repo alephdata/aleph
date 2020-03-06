@@ -6,8 +6,8 @@ import Papa from 'papaparse';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { SectionLoading } from 'src/components/common';
 import { showErrorToast } from 'src/app/toast';
-import { fetchEntityMapping } from 'src/actions';
-import { selectEntityMapping, selectModel } from 'src/selectors';
+import { fetchCollectionMappings, fetchEntityMapping } from 'src/actions';
+import { selectCollectionMappings, selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import {
   MappingKeyAssign,
@@ -70,7 +70,7 @@ export class EntityMappingMode extends Component {
     const { existingMapping } = this.props;
     this.fetchCsvData();
     this.fetchIfNeeded();
-    if (existingMapping?.query) {
+    if (existingMapping) {
       this.loadFromMapping(existingMapping);
     }
   }
@@ -79,7 +79,7 @@ export class EntityMappingMode extends Component {
     const { existingMapping } = this.props;
 
     // this.fetchIfNeeded();
-    if (existingMapping?.query && !prevProps.existingMapping?.query) {
+    if (existingMapping && prevProps.existingMapping !== existingMapping) {
       this.loadFromMapping(existingMapping);
     }
   }
@@ -174,9 +174,11 @@ export class EntityMappingMode extends Component {
   ));
 
   fetchIfNeeded() {
-    const { entity, existingMapping } = this.props;
-    if (entity.id && existingMapping.shouldLoad) {
-      this.props.fetchEntityMapping(entity);
+    const { entity, collectionMappings } = this.props;
+    if (entity.id && collectionMappings.shouldLoad) {
+      console.log('fetching entity mapping')
+      this.props.fetchEntityMapping(entity)
+      // this.props.fetchCollectionMappings(entity.collection.id);
     }
   }
 
@@ -231,7 +233,6 @@ export class EntityMappingMode extends Component {
   }
 
   loadFromMapping(existingMapping) {
-    console.log('existing mapping is', existingMapping)
     const { model } = this.props;
     const mappings = new Map();
 
@@ -249,13 +250,14 @@ export class EntityMappingMode extends Component {
   }
 
   render() {
-    const { entity, intl, model, existingMapping } = this.props;
+    const { entity, intl, model, existingMapping, collectionMappings } = this.props;
     const { mappings, csvData, csvHeader, previewIsOpen } = this.state;
 
-    if (!csvData || !csvHeader || existingMapping.isLoading) {
+    if (!csvData || !csvHeader || collectionMappings.isLoading) {
       return <SectionLoading />;
     }
 
+    console.log('collectionMappings', collectionMappings);
     console.log('existingMapping', existingMapping);
     console.log('mappings', mappings);
 
@@ -295,8 +297,9 @@ export class EntityMappingMode extends Component {
             />
           </p>
         </div>
-        {existingMapping.id && (
+        {existingMapping && (
           <MappingStatus
+            collection={entity.collection}
             mapping={existingMapping}
           />
         )}
@@ -367,7 +370,7 @@ export class EntityMappingMode extends Component {
               <div className="EntityMappingMode__section">
                 <MappingManageMenu
                   mappings={this.formatMappings(mappings)}
-                  entity={entity}
+                  collectionId={entity.collection.id}
                   mappingId={existingMapping && existingMapping.id}
                   validate={this.onValidate}
                 />
@@ -385,14 +388,18 @@ export class EntityMappingMode extends Component {
   }
 }
 
-const mapDispatchToProps = { fetchEntityMapping };
+const mapDispatchToProps = { fetchCollectionMappings, fetchEntityMapping };
 
 const mapStateToProps = (state, ownProps) => {
   const { entity } = ownProps;
+  const collectionMappings = selectCollectionMappings(state, entity.collection.id);
+  const entityMapping = collectionMappings.results && collectionMappings.results.length > 0
+    ? collectionMappings.results.find(mapping => mapping.table_id === entity.id) : undefined;
 
   return {
+    collectionMappings,
     model: selectModel(state),
-    existingMapping: selectEntityMapping(state, entity.id),
+    existingMapping: entityMapping,
   };
 };
 

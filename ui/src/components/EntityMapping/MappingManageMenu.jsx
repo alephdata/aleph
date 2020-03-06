@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { showErrorToast, showInfoToast } from 'src/app/toast';
-import { createCollectionMapping, flushCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
+import { createEntityMapping, flushEntityMapping, deleteEntityMapping, updateEntityMapping } from 'src/actions';
 
 import MappingCreateDialog from 'src/dialogs/MappingCreateDialog/MappingCreateDialog';
 import MappingFlushDialog from 'src/dialogs/MappingFlushDialog/MappingFlushDialog';
@@ -52,10 +52,10 @@ class MappingManageMenu extends Component {
   }
 
   onSave() {
-    const { collectionId, mappings, mappingId, validate, intl } = this.props;
+    const { entity, mappings, mappingId, validate, intl } = this.props;
     if (validate()) {
       try {
-        this.props.updateCollectionMapping(collectionId, mappingId, mappings);
+        this.props.updateEntityMapping(entity, mappingId, mappings);
         showInfoToast(intl.formatMessage(messages.save));
         this.toggleSave();
       } catch (e) {
@@ -65,10 +65,10 @@ class MappingManageMenu extends Component {
   }
 
   onCreate() {
-    const { collectionId, mappings, validate, intl } = this.props;
+    const { entity, mappings, validate, intl } = this.props;
     if (validate()) {
       try {
-        this.props.createCollectionMapping(collectionId, mappings);
+        this.props.createEntityMapping(entity, mappings);
         showInfoToast(intl.formatMessage(messages.create));
         this.toggleCreate();
       } catch (e) {
@@ -78,10 +78,10 @@ class MappingManageMenu extends Component {
   }
 
   onDelete() {
-    const { collectionId, mappingId, intl } = this.props;
+    const { entity, mappingId, intl } = this.props;
 
     try {
-      this.props.deleteCollectionMapping(collectionId, mappingId);
+      this.props.deleteEntityMapping(entity, mappingId);
       showInfoToast(intl.formatMessage(messages.delete));
       this.toggleDelete();
     } catch (e) {
@@ -90,10 +90,10 @@ class MappingManageMenu extends Component {
   }
 
   onFlush() {
-    const { collectionId, mappingId, intl } = this.props;
+    const { entity, mappingId, intl } = this.props;
 
     try {
-      this.props.flushCollectionMapping(collectionId, mappingId);
+      this.props.flushEntityMapping(entity, mappingId);
       showInfoToast(intl.formatMessage(messages.flush));
       this.toggleFlush();
     } catch (e) {
@@ -168,10 +168,10 @@ class MappingManageMenu extends Component {
 }
 
 const mapDispatchToProps = {
-  createCollectionMapping,
-  flushCollectionMapping,
-  deleteCollectionMapping,
-  updateCollectionMapping,
+  createEntityMapping,
+  flushEntityMapping,
+  deleteEntityMapping,
+  updateEntityMapping,
 };
 
 const mapStateToProps = state => ({ session: selectSession(state) });
