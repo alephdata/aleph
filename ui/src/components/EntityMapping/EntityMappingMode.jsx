@@ -70,8 +70,10 @@ export class EntityMappingMode extends Component {
   componentDidMount() {
     const { entity, existingMapping } = this.props;
     fetchCsvData(entity.links.csv, this.processCsvResults);
-    this.fetchIfNeeded();
-    if (existingMapping?.query) {
+
+    if (entity.id && existingMapping.shouldLoad) {
+      this.props.fetchEntityMapping(entity);
+    } else if (entity.id && existingMapping.query) {
       this.loadFromMapping(existingMapping);
     }
   }
@@ -79,7 +81,6 @@ export class EntityMappingMode extends Component {
   componentDidUpdate(prevProps) {
     const { existingMapping } = this.props;
 
-    // this.fetchIfNeeded();
     if (existingMapping?.query && !prevProps.existingMapping?.query) {
       this.loadFromMapping(existingMapping);
     }
@@ -173,13 +174,6 @@ export class EntityMappingMode extends Component {
   togglePreview = () => this.setState(({ previewIsOpen }) => (
     { previewIsOpen: !previewIsOpen }
   ));
-
-  fetchIfNeeded() {
-    const { entity, existingMapping } = this.props;
-    if (entity.id && existingMapping.shouldLoad) {
-      this.props.fetchEntityMapping(entity);
-    }
-  }
 
   updateMappings(mappingId, updateToApply) {
     const { mappings } = this.state;
