@@ -3,10 +3,14 @@ import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, HTMLTable, InputGroup, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
+import { Entity, Property } from '@alephdata/followthemoney';
+import { PropertyEditor, PropertyValues } from '@alephdata/vislib';
 import {
   Schema,
 } from 'src/components/common';
 import { mappingItemRenderer } from './util';
+import { selectModel } from 'src/selectors';
+
 
 import './MappingVerify.scss';
 
@@ -61,17 +65,39 @@ class MappingVerifyItem extends Component {
   }
 
   renderLiteralEdit(propertyName, value) {
-    const { intl, mapping, onPropertyAdd } = this.props;
+    const { entity, model, intl, mapping, onPropertyAdd } = this.props;
+    const { schema } = mapping;
 
-    return (
-      <InputGroup
-        id="text-input"
-        placeholder={intl.formatMessage(messages.literal_placeholder)}
-        onChange={e => onPropertyAdd(mapping.id, propertyName, { literal: e.target.value })}
-        value={value}
-        small
-      />
-    );
+    console.log('in literal edit', entity, mapping, propertyName, entity.getProperty(propertyName));
+
+
+    // const currValue = mapping.properties.get(propertyName);
+    console.log('value', schema.getProperty(propertyName), value);
+    if (value) {
+      return (
+        <PropertyValues prop={schema.getProperty(propertyName)} values={value}/>
+      );
+    } else {
+      return (
+        <PropertyEditor
+          locale="en"
+          entity={entity}
+          property={schema.getProperty(propertyName)}
+          onSubmit={entity => onPropertyAdd(mapping.id, propertyName, { literal: entity.getProperty(propertyName) })}
+        />
+      )
+    }
+
+
+    // return (
+    //   <InputGroup
+    //     id="text-input"
+    //     placeholder={intl.formatMessage(messages.literal_placeholder)}
+    //     onChange={e => onPropertyAdd(mapping.id, propertyName, { literal: e.target.value })}
+    //     value={value}
+    //     small
+    //   />
+    // );
   }
 
   renderPropertyValue(propName, propValue) {
@@ -161,7 +187,16 @@ const MappingVerify = ({ items, ...props }) => (
   </div>
 );
 
+// const mapStateToProps = (state, ownProps) => {
+//
+//   return {
+//     collectionMappings,
+//     model: selectModel(state),
+//     existingMapping: entityMapping,
+//   };
+// };
 
 export default compose(
+  // connect(mapStateToProps, {}),
   injectIntl,
 )(MappingVerify);

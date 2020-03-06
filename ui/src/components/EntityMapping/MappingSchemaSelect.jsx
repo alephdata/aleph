@@ -44,7 +44,6 @@ export class MappingSchemaSelect extends Component {
           <Button
             icon="plus"
             text={intl.formatMessage(messages[type])}
-            rightIcon="double-caret-vertical"
           />
         </Select>
       </div>

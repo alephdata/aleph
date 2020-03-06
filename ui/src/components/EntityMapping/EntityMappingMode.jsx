@@ -350,6 +350,8 @@ export class EntityMappingMode extends Component {
                   items={Array.from(mappings.values())}
                   sectionContentsRenderer={(subitems => (
                     <MappingVerify
+                      entity={entity}
+                      model={model}
                       items={subitems}
                       fullMappingsList={mappings}
                       onPropertyRemove={this.onPropertyRemove}

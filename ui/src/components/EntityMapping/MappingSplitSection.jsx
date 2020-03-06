@@ -7,7 +7,7 @@ import './MappingSplitSection.scss';
 const MappingSplitSection = (({ items, sectionContentsRenderer }) => {
   const [things, relationships] = items
     .reduce((result, item) => {
-      result[item.schema.isThing ? 0 : 1].push(item);
+      result[item.schema.isThing() ? 0 : 1].push(item);
       return result;
     }, [[], []]);
 
