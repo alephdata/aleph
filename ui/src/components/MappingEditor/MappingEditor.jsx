@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import fetchCsvData from 'src/util/fetchCsvData';
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { SectionLoading } from 'src/components/common';
 import { showErrorToast } from 'src/app/toast';
-import { fetchEntityMapping } from 'src/actions';
-import { selectEntityMapping, selectModel } from 'src/selectors';
+import { selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import {
   MappingKeyAssign,

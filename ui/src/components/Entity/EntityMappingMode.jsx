@@ -7,8 +7,6 @@ import { showErrorToast } from 'src/app/toast';
 import { fetchEntityMapping } from 'src/actions';
 import { selectEntityMapping, selectModel } from 'src/selectors';
 import MappingEditor from 'src/components/MappingEditor/MappingEditor';
-import { assignMappingColor } from 'src/components/MappingEditor/util';
-
 
 export class EntityMappingMode extends Component {
   constructor(props) {
@@ -46,9 +44,6 @@ export class EntityMappingMode extends Component {
     if (!csvData || !csvHeader || mappingData.isLoading) {
       return <SectionLoading />;
     }
-
-    console.log('mappingData', mappingData);
-    console.log('mappings', mappings);
 
     return (
       <MappingEditor
