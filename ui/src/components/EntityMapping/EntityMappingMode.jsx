@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import Papa from 'papaparse';
+import fetchCsvData from 'src/util/fetchCsvData';
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { SectionLoading } from 'src/components/common';
 import { showErrorToast } from 'src/app/toast';
@@ -56,6 +56,7 @@ export class EntityMappingMode extends Component {
       previewIsOpen: false,
     };
 
+    this.processCsvResults = this.processCsvResults.bind(this);
     this.onMappingAdd = this.onMappingAdd.bind(this);
     this.onMappingRemove = this.onMappingRemove.bind(this);
     this.onKeyAdd = this.onKeyAdd.bind(this);
@@ -67,8 +68,8 @@ export class EntityMappingMode extends Component {
   }
 
   componentDidMount() {
-    const { existingMapping } = this.props;
-    this.fetchCsvData();
+    const { entity, existingMapping } = this.props;
+    fetchCsvData(entity.links.csv, this.processCsvResults);
     this.fetchIfNeeded();
     if (existingMapping?.query) {
       this.loadFromMapping(existingMapping);
@@ -191,24 +192,12 @@ export class EntityMappingMode extends Component {
     }
   }
 
-  fetchCsvData() {
-    const { entity } = this.props;
-    const url = entity.links.csv;
-    // set chunk size to 100 KB
-    Papa.RemoteChunkSize = 1024 * 100;
-    Papa.parse(url, {
-      download: true,
-      delimiter: ',',
-      newline: '\n',
-      encoding: 'utf-8',
-      chunk: (results, parser) => {
-        this.setState({
-          csvHeader: results.data[0],
-          csvData: results.data.slice(1, 15),
-        });
-        parser.abort();
-      },
+  processCsvResults(results, parser) {
+    this.setState({
+      csvHeader: results.data[0],
+      csvData: results.data.slice(1, 15),
     });
+    parser.abort();
   }
 
   formatMappings() {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Papa from 'papaparse';
+import fetchCsvData from 'src/util/fetchCsvData';
 import {
   Cell, Column, Table, TruncatedFormat,
 } from '@blueprintjs/table';
@@ -18,29 +18,13 @@ class CSVStreamViewer extends React.Component {
     };
     this.renderCell = this.renderCell.bind(this);
     this.onVisibleCellsChange = this.onVisibleCellsChange.bind(this);
+    this.processCsvResults = this.processCsvResults.bind(this);
   }
 
   componentDidMount() {
     const { document } = this.props;
     const url = document.links.csv;
-    // set chunk size to 100 KB
-    Papa.RemoteChunkSize = 1024 * 100;
-    Papa.parse(url, {
-      download: true,
-      delimiter: ',',
-      newline: '\n',
-      encoding: 'utf-8',
-      chunk: (results, parser) => {
-        this.setState((previousState) => {
-          const rows = previousState.rows.concat(results.data);
-          const rowIndex = rows.length;
-          if (rowIndex > previousState.requestedRow) {
-            parser.pause();
-          }
-          return { rows, parser };
-        });
-      },
-    });
+    fetchCsvData(url, this.processCsvResults);
   }
 
   componentDidUpdate() {
@@ -48,6 +32,17 @@ class CSVStreamViewer extends React.Component {
     if (rows.length < requestedRow && parser !== null) {
       parser.resume();
     }
+  }
+
+  processCsvResults(results, parser) {
+    this.setState((previousState) => {
+      const rows = previousState.rows.concat(results.data);
+      const rowIndex = rows.length;
+      if (rowIndex > previousState.requestedRow) {
+        parser.pause();
+      }
+      return { rows, parser };
+    });
   }
 
   onVisibleCellsChange(row) {
