@@ -97,7 +97,7 @@ export class MappingKeyAssignItem extends Component {
     const { id } = mapping;
     const propertyRange = property.getRange();
 
-    const items = Array.from(fullMappingsList.values())
+    const items = fullMappingsList.getValues()
       .filter(({ schema }) => !schema.isEdge && schema.isA(propertyRange))
       .sort((a, b) => a.id.localeCompare(b.id));
 

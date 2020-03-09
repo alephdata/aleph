@@ -34,17 +34,6 @@ class CSVStreamViewer extends React.Component {
     }
   }
 
-  processCsvResults(results, parser) {
-    this.setState((previousState) => {
-      const rows = previousState.rows.concat(results.data);
-      const rowIndex = rows.length;
-      if (rowIndex > previousState.requestedRow) {
-        parser.pause();
-      }
-      return { rows, parser };
-    });
-  }
-
   onVisibleCellsChange(row) {
     const { requestedRow } = this.state;
     // If we are scrolling to the end. Time to load more rows.
@@ -59,6 +48,17 @@ class CSVStreamViewer extends React.Component {
         }));
       }
     }
+  }
+
+  processCsvResults(results, parser) {
+    this.setState((previousState) => {
+      const rows = previousState.rows.concat(results.data);
+      const rowIndex = rows.length;
+      if (rowIndex > previousState.requestedRow) {
+        parser.pause();
+      }
+      return { rows, parser };
+    });
   }
 
   renderCell(rowIndex, colIndex) {

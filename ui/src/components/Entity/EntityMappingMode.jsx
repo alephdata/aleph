@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import fetchCsvData from 'src/util/fetchCsvData';
 import { SectionLoading } from 'src/components/common';
 import { showErrorToast } from 'src/app/toast';
 import { fetchEntityMapping } from 'src/actions';
-import { selectEntityMapping, selectModel } from 'src/selectors';
-import MappingEditor from 'src/components/MappingEditor/MappingEditor';
+import { selectEntityMapping } from 'src/selectors';
+import { MappingEditor, MappingStatus } from 'src/components/MappingEditor/.';
+
+import './EntityMappingMode.scss';
 
 export class EntityMappingMode extends Component {
   constructor(props) {
@@ -46,12 +49,44 @@ export class EntityMappingMode extends Component {
     }
 
     return (
-      <MappingEditor
-        entity={entity}
-        csvData={csvData}
-        csvHeader={csvHeader}
-        mappingData={mappingData}
-      />
+      <div className="EntityMappingMode">
+        <div className="EntityMappingMode__title-container">
+          <h1 className="text-page-title">
+            <FormattedMessage id="mapping.title" defaultMessage="Generate structured entities" />
+          </h1>
+          <p className="text-page-subtitle">
+            <FormattedMessage
+              id="mapping.info"
+              defaultMessage="Follow the steps below to map items in this dataset to structured Follow the Money entites. For more information, please refer to the {link}"
+              values={{
+                link: (
+                  <a
+                    href="https://docs.alephdata.org/developers/mappings"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FormattedMessage
+                      id="mapping.infoLink"
+                      defaultMessage="Aleph data mapping documentation"
+                    />
+                  </a>
+                ),
+              }}
+            />
+          </p>
+        </div>
+        {mappingData.id && (
+          <MappingStatus
+            mapping={mappingData}
+          />
+        )}
+        <MappingEditor
+          entity={entity}
+          csvData={csvData}
+          csvHeader={csvHeader}
+          mappingData={mappingData}
+        />
+      </div>
     );
   }
 }
@@ -68,4 +103,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
+  injectIntl,
 )(EntityMappingMode);

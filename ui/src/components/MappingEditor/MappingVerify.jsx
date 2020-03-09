@@ -70,7 +70,6 @@ class MappingVerifyItem extends Component {
 
     console.log('in literal edit', entity, mapping, propertyName, entity.getProperty(propertyName));
 
-
     // const currValue = mapping.properties.get(propertyName);
     console.log('value', schema.getProperty(propertyName), value);
     if (value) {
@@ -85,7 +84,7 @@ class MappingVerifyItem extends Component {
           property={schema.getProperty(propertyName)}
           onSubmit={entity => onPropertyAdd(mapping.id, propertyName, { literal: entity.getProperty(propertyName) })}
         />
-      )
+      );
     }
 
 
@@ -113,7 +112,7 @@ class MappingVerifyItem extends Component {
       return <td className="MappingVerify__listItem__value">{this.renderLiteralEdit(propName, propValue.literal)}</td>;
     }
     if (propValue.entity !== undefined) {
-      const referredEntity = fullMappingsList.get(propValue.entity);
+      const referredEntity = fullMappingsList.getMapping(propValue.entity);
 
       if (referredEntity) {
         return (

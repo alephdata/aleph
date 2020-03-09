@@ -28,6 +28,14 @@ const messages = defineMessages({
     id: 'mapping.actions.flush.toast',
     defaultMessage: 'Removing generated entities...',
   },
+  keyError: {
+    id: 'mapping.error.keyMissing',
+    defaultMessage: 'Key Error: {id} entity must have at least one key',
+  },
+  relationshipError: {
+    id: 'mapping.error.relationshipMissing',
+    defaultMessage: 'Relationship Error: {id} entity must have a {source} and {target} assigned',
+  },
 });
 
 
@@ -51,54 +59,81 @@ class MappingManageMenu extends Component {
     this.onSave = this.onSave.bind(this);
   }
 
+  formatMappings() {
+    const { entity, mappings } = this.props;
+
+    return {
+      table_id: entity.id,
+      mapping_query: mappings.toApiFormat(),
+    };
+  }
+
+  validateMappings() {
+    const { intl, mappings } = this.props;
+    const errors = mappings.validate();
+
+    console.log(errors);
+
+    if (errors.length) {
+      console.log('showing error toast')
+      showErrorToast({ message: errors.map(({ error, values }) => <li key={error}>{intl.formatMessage(messages[error], values)}</li>) });
+      return false;
+    }
+
+    return true;
+  }
+
   onSave() {
-    const { entity, mappings, mappingId, validate, intl } = this.props;
-    if (validate()) {
+    const { entity, mappingDataId, intl } = this.props;
+    if (this.validateMappings()) {
+      console.log('success')
       try {
-        this.props.updateEntityMapping(entity, mappingId, mappings);
+        this.props.updateEntityMapping(entity, mappingDataId, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.save));
-        this.toggleSave();
       } catch (e) {
+        console.log('catching', e)
         showErrorToast(e);
       }
     }
+    this.toggleSave();
   }
 
   onCreate() {
-    const { entity, mappings, validate, intl } = this.props;
-    if (validate()) {
+    const { entity, intl } = this.props;
+    if (this.validateMappings()) {
       try {
-        this.props.createEntityMapping(entity, mappings);
+        this.props.createEntityMapping(entity, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.create));
-        this.toggleCreate();
       } catch (e) {
+        console.log('catching', e)
         showErrorToast(e);
       }
     }
+    this.toggleCreate();
   }
 
   onDelete() {
-    const { entity, mappingId, intl } = this.props;
+    const { entity, mappingDataId, intl } = this.props;
 
     try {
-      this.props.deleteEntityMapping(entity, mappingId);
+      this.props.deleteEntityMapping(entity, mappingDataId);
       showInfoToast(intl.formatMessage(messages.delete));
-      this.toggleDelete();
     } catch (e) {
       showErrorToast(e);
     }
+    this.toggleDelete();
   }
 
   onFlush() {
-    const { entity, mappingId, intl } = this.props;
+    const { entity, mappingDataId, intl } = this.props;
 
     try {
-      this.props.flushEntityMapping(entity, mappingId);
+      this.props.flushEntityMapping(entity, mappingDataId);
       showInfoToast(intl.formatMessage(messages.flush));
-      this.toggleFlush();
     } catch (e) {
       showErrorToast(e);
     }
+    this.toggleFlush();
   }
 
   toggleCreate = () => this.setState(({ createIsOpen }) => (
@@ -116,24 +151,24 @@ class MappingManageMenu extends Component {
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
   render() {
-    const { mappingId } = this.props;
+    const { mappingDataId } = this.props;
     const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
 
     return (
       <>
         <ButtonGroup>
-          {mappingId && (
+          {mappingDataId && (
             <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
               <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
             </Button>
           )}
-          {!mappingId && (
+          {!mappingDataId && (
             <Button icon="add" intent={Intent.PRIMARY} onClick={this.toggleCreate}>
               <FormattedMessage id="mapping.actions.create" defaultMessage="Generate entities" />
             </Button>
           )}
 
-          {mappingId && (
+          {mappingDataId && (
             <Button icon="delete" onClick={this.toggleFlush}>
               <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />
             </Button>

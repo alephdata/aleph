@@ -1,17 +1,7 @@
-import MappingKeyAssign from './MappingKeyAssign';
-import MappingManageMenu from './MappingManageMenu';
-import MappingPropertyAssign from './MappingPropertyAssign';
-import MappingSchemaSelect from './MappingSchemaSelect';
-import MappingSplitSection from './MappingSplitSection';
+import MappingEditor from './MappingEditor';
 import MappingStatus from './MappingStatus';
-import MappingVerify from './MappingVerify';
 
 export {
-  MappingKeyAssign,
-  MappingManageMenu,
-  MappingPropertyAssign,
-  MappingSchemaSelect,
-  MappingSplitSection,
+  MappingEditor,
   MappingStatus,
-  MappingVerify,
 };

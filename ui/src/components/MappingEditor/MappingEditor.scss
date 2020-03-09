@@ -2,10 +2,6 @@
 $vertical-spacing: 50px;
 
 .MappingEditor {
-  &__title-container {
-    margin: $aleph-grid-size*4 0 $aleph-grid-size*3;
-  }
-
   &__section {
     margin: $vertical-spacing 0;
     padding-top: $vertical-spacing;

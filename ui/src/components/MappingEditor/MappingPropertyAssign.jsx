@@ -58,24 +58,6 @@ export class MappingPropertyAssign extends Component {
     return { featuredProps, otherProps };
   }
 
-  getColumnAssignments() {
-    const { mappings } = this.props;
-    const columnAssignments = new Map();
-
-    mappings.forEach(({ id, schema, properties }) => {
-      if (properties) {
-        Array.from(Object.entries(properties)).forEach(([propKey, propValue]) => {
-          if (propValue && propValue.column) {
-            columnAssignments.set(propValue.column, {
-              id, schema, property: schema.getProperty(propKey),
-            });
-          }
-        });
-      }
-    });
-
-    return columnAssignments;
-  }
 
   mappingListRenderer({ items, itemsParentRef, renderItem }) {
     return (
@@ -185,7 +167,7 @@ export class MappingPropertyAssign extends Component {
             {!colValue && (
               <Select
                 id="mapping-select"
-                items={Array.from(mappings.values()).sort((a, b) => (a.id > b.id ? 1 : -1))}
+                items={mappings.getValues().sort((a, b) => (a.id > b.id ? 1 : -1))}
                 itemListRenderer={listProps => this.mappingListRenderer(listProps)}
                 itemRenderer={itemRenderer}
                 popoverProps={{ minimal: true }}
@@ -220,7 +202,7 @@ export class MappingPropertyAssign extends Component {
 
   render() {
     const { columnLabels, mappings } = this.props;
-    const columnAssignments = this.getColumnAssignments();
+    const columnAssignments = mappings.getColumnAssignments();
 
     return (
       <div className="MappingPropertyAssign TableViewer">
@@ -247,7 +229,7 @@ export class MappingPropertyAssign extends Component {
               style.cursor = 'not-allowed';
             } else if (colValue) {
               style.color = 'white';
-              style.backgroundColor = mappings.get(colValue.id).color;
+              style.backgroundColor = mappings.getMapping(colValue.id).color;
             }
 
             return (

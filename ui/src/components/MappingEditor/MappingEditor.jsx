@@ -6,29 +6,18 @@ import { Button, ButtonGroup } from '@blueprintjs/core';
 import { showErrorToast } from 'src/app/toast';
 import { selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
-import {
-  MappingKeyAssign,
-  MappingManageMenu,
-  MappingPropertyAssign,
-  MappingSchemaSelect,
-  MappingSplitSection,
-  MappingStatus,
-  MappingVerify,
-} from '.';
-import { assignMappingColor } from './util';
+import MappingList from 'src/components/MappingEditor/MappingList';
+import MappingKeyAssign from 'src/components/MappingEditor/MappingKeyAssign';
+import MappingManageMenu from 'src/components/MappingEditor/MappingManageMenu';
+import MappingPropertyAssign from 'src/components/MappingEditor/MappingPropertyAssign';
+import MappingSchemaSelect from 'src/components/MappingEditor/MappingSchemaSelect';
+import MappingSplitSection from 'src/components/MappingEditor/MappingSplitSection';
+import MappingVerify from 'src/components/MappingEditor/MappingVerify';
 
 import './MappingEditor.scss';
 
 
 const messages = defineMessages({
-  keyError: {
-    id: 'mapping.error.keyMissing',
-    defaultMessage: 'Key Error: {id} entity must have at least one key',
-  },
-  relationshipError: {
-    id: 'mapping.error.relationshipMissing',
-    defaultMessage: 'Relationship Error: {id} entity must have a {source} and {target} assigned',
-  },
   section1Title: {
     id: 'mapping.section1.title',
     defaultMessage: '1. Select entity types to map',
@@ -48,7 +37,7 @@ export class MappingEditor extends Component {
     super(props);
 
     this.state = {
-      mappings: new Map(),
+      mappings: new MappingList(props.model),
       previewIsOpen: false,
     };
 
@@ -58,7 +47,6 @@ export class MappingEditor extends Component {
     this.onKeyRemove = this.onKeyRemove.bind(this);
     this.onPropertyAdd = this.onPropertyAdd.bind(this);
     this.onPropertyRemove = this.onPropertyRemove.bind(this);
-    this.onValidate = this.onValidate.bind(this);
     this.togglePreview = this.togglePreview.bind(this);
   }
 
@@ -68,201 +56,58 @@ export class MappingEditor extends Component {
 
   loadFromMappingData() {
     const { mappingData, model } = this.props;
-    const mappings = new Map();
-    console.log('existing mapping is', mappingData)
 
-    if (!mappingData?.query) {
-      return;
-    }
+    if (!mappingData?.query) return;
 
-    Object.entries(mappingData.query).forEach(([id, { keys, schema, properties }]) => {
-      mappings.set(id, {
-        id,
-        color: assignMappingColor(mappings),
-        schema: model.getSchema(schema),
-        keys,
-        properties,
-      });
+    this.setState({
+      mappings: MappingList.fromApiFormat(model, mappingData.query)
     });
-
-    this.setState({ mappings });
-  }
-
-
-  assignId(schemaToAssign) {
-    const { mappings } = this.state;
-    const { name } = schemaToAssign;
-
-    const mappingsOfSchema = Array.from(mappings.values()).filter(({ schema }) => { console.log(schema, schemaToAssign); return schema === schemaToAssign; });
-    const schemaMappingsCount = mappingsOfSchema.length;
-
-    return schemaMappingsCount ? `${schemaToAssign.label} ${schemaMappingsCount + 1}` : schemaToAssign.label;
   }
 
   onMappingAdd(schema) {
-    const { mappings } = this.state;
-    const clone = new Map(mappings);
-    const id = this.assignId(schema);
-
-    const newMapping = {
-      id,
-      color: assignMappingColor(mappings),
-      schema,
-      keys: [],
-      properties: {},
-    };
-    clone.set(id, newMapping);
-
-    this.setState({ mappings: clone });
+    this.setState(({ mappings }) => ({ mappings: mappings.addMapping(schema) }));
   }
 
   onMappingRemove(id) {
-    const { mappings } = this.state;
-    const clone = new Map(mappings);
-    clone.delete(id);
-
-    this.setState({ mappings: clone });
+    this.setState(({ mappings }) => ({ mappings: mappings.removeMapping(id) }));
   }
 
-  onKeyAdd(mappingId, key) {
-    this.updateMappings(mappingId, mappingObj => mappingObj.keys.push(key));
+  onKeyAdd(id, key) {
+    this.setState(({ mappings }) => ({ mappings: mappings.addKey(id, key) }));
   }
 
-  onKeyRemove(mappingId, key) {
-    this.updateMappings(mappingId, mappingObj => {
-      const index = mappingObj.keys.indexOf(key);
-      if (index !== -1) {
-        mappingObj.keys.splice(index, 1);
-      }
-    });
+  onKeyRemove(id, key) {
+    this.setState(({ mappings }) => ({ mappings: mappings.removeKey(id, key) }));
   }
 
-  onPropertyAdd(mappingId, propName, value) {
-    console.log('in prop add', mappingId, propName, value);
-    this.updateMappings(mappingId, (mappingObj) => { mappingObj.properties[propName] = value; });
+  onPropertyAdd(id, propName, value) {
+    this.setState(({ mappings }) => ({ mappings: mappings.addProperty(id, propName, value) }));
   }
 
-  onPropertyRemove(mappingId, propName) {
-    this.updateMappings(mappingId, (mappingObj) => { delete mappingObj.properties[propName]; });
-  }
-
-  onValidate() {
-    const { intl } = this.props;
-    const { mappings } = this.state;
-    const errors = [];
-    let isValid = true;
-
-    mappings.forEach(({ id, keys, properties, schema }) => {
-      if (keys.length === 0) {
-        errors.push(intl.formatMessage(messages.keyError, { id }));
-        isValid = false;
-      }
-      if (schema.isEdge) {
-        const { source, target } = schema.edge;
-
-        if (!properties[source] || !properties[target]) {
-          errors.push(intl.formatMessage(messages.relationshipError, { id, source, target }));
-          isValid = false;
-        }
-      }
-    });
-
-    if (!isValid) {
-      showErrorToast({ message: errors.map(error => <li key={error}>{error}</li>) });
-    }
-
-    return isValid;
+  onPropertyRemove(id, propName) {
+    this.setState(({ mappings }) => ({ mappings: mappings.removeProperty(id, propName) }));
   }
 
   togglePreview = () => this.setState(({ previewIsOpen }) => (
     { previewIsOpen: !previewIsOpen }
   ));
 
-  updateMappings(mappingId, updateToApply) {
-    const { mappings } = this.state;
-    const clone = new Map(mappings);
-
-    const newMappingObj = clone.get(mappingId);
-    if (newMappingObj) {
-      updateToApply(newMappingObj);
-      this.setState({ mappings: clone });
-    }
-  }
-
-  formatMappings() {
-    const { entity } = this.props;
-    const { mappings } = this.state;
-    const query = {};
-
-    mappings.forEach(({ id, schema, keys, properties }) => {
-      query[id] = {
-        schema: schema.name,
-        keys,
-        properties,
-      };
-    });
-
-    return {
-      table_id: entity.id,
-      mapping_query: query,
-    };
-  }
-
   render() {
     const { entity, mappingData, csvData, csvHeader, intl, model } = this.props;
     const { mappings, previewIsOpen } = this.state;
 
-    const schemaSelectOptions = Object.keys(model.schemata)
-      .map(key => model.schemata[key])
-      .filter(item => !item.generated && !item.abstract)
-      .reduce((result, schema) => {
-        result[schema.isEdge ? 1 : 0].push(schema);
-        return result;
-      }, [[], []]);
-
     return (
       <div className="MappingEditor">
-        <div className="MappingEditor__title-container">
-          <h1 className="text-page-title">
-            <FormattedMessage id="mapping.title" defaultMessage="Generate structured entities" />
-          </h1>
-          <p className="text-page-subtitle">
-            <FormattedMessage
-              id="mapping.info"
-              defaultMessage="Follow the steps below to map items in this dataset to structured Follow the Money entites. For more information, please refer to the {link}"
-              values={{
-                link: (
-                  <a
-                    href="https://docs.alephdata.org/developers/mappings"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FormattedMessage
-                      id="mapping.infoLink"
-                      defaultMessage="Aleph data mapping documentation"
-                    />
-                  </a>
-                ),
-              }}
-            />
-          </p>
-        </div>
-        {mappingData.id && (
-          <MappingStatus
-            mapping={mappingData}
-          />
-        )}
         <div className="MappingEditor__sections">
           <div className="MappingEditor__section">
             <h5 className="bp3-heading MappingEditor__section__title">
               {intl.formatMessage(messages.section1Title)}
             </h5>
             <MappingSplitSection
-              items={Array.from(mappings.values())}
+              mappings={mappings}
               sectionContentsRenderer={((subitems, type) => (
                 <>
                   <MappingSchemaSelect
-                    schemaSelectOptions={schemaSelectOptions}
                     type={type}
                     onSelect={this.onMappingAdd}
                   />
@@ -279,7 +124,7 @@ export class MappingEditor extends Component {
               ))}
             />
           </div>
-          {mappings.size > 0 && (
+          {mappings.getMappingsCount() > 0 && (
             <>
               <div className="MappingEditor__section">
                 <h5 className="bp3-heading MappingEditor__section__title">
@@ -293,12 +138,13 @@ export class MappingEditor extends Component {
                   onPropertyRemove={this.onPropertyRemove}
                 />
               </div>
+
               <div className="MappingEditor__section">
                 <h5 className="bp3-heading MappingEditor__section__title">
                   {intl.formatMessage(messages.section3Title)}
                 </h5>
                 <MappingSplitSection
-                  items={Array.from(mappings.values())}
+                  mappings={mappings}
                   sectionContentsRenderer={(subitems => (
                     <MappingVerify
                       entity={entity}
@@ -318,10 +164,9 @@ export class MappingEditor extends Component {
               </div>
               <div className="MappingEditor__section">
                 <MappingManageMenu
-                  mappings={this.formatMappings(mappings)}
+                  mappings={mappings}
                   entity={entity}
-                  mappingId={mappingData && mappingData.id}
-                  validate={this.onValidate}
+                  mappingDataId={mappingData && mappingData.id}
                 />
               </div>
             </>
@@ -329,7 +174,7 @@ export class MappingEditor extends Component {
         </div>
         <MappingPreviewDialog
           isOpen={previewIsOpen}
-          mappings={this.formatMappings(mappings)}
+          mappings={mappings}
           toggleDialog={this.togglePreview}
         />
       </div>
@@ -337,11 +182,9 @@ export class MappingEditor extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    model: selectModel(state),
-  };
-};
+const mapStateToProps = (state, ownProps) => ({
+  model: selectModel(state),
+});
 
 export default compose(
   connect(mapStateToProps),

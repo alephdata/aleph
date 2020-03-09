@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Button, MenuItem } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { defineMessages, injectIntl } from 'react-intl';
+import { selectModel } from 'src/selectors';
 import { Schema } from 'src/components/common';
 
 import './MappingSchemaSelect.scss';
@@ -27,15 +29,23 @@ const itemRenderer = (item, { handleClick }) => (
 );
 
 export class MappingSchemaSelect extends Component {
+  applyTypeFilter(schema) {
+    const { type } = this.props;
+    return type === "thing" ? schema.isThing() : !schema.isThing();
+  }
+
   render() {
-    const { intl, schemaSelectOptions, onSelect, type } = this.props;
-    const items = schemaSelectOptions[type === 'thing' ? 0 : 1];
+    const { intl, model, onSelect, type } = this.props;
+
+    const schemaSelectOptions = model.getSchemata()
+      .filter(schema => !schema.generated && !schema.abstract && this.applyTypeFilter(schema))
+      .sort((a, b) => a.label.localeCompare(b.label));
 
     return (
       <div className="MappingSchemaSelect">
         <Select
           id="entity-type"
-          items={items.sort((a, b) => a.label.localeCompare(b.label))}
+          items={schemaSelectOptions}
           filterable={false}
           itemRenderer={itemRenderer}
           onItemSelect={item => onSelect(item)}
@@ -51,7 +61,11 @@ export class MappingSchemaSelect extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+  model: selectModel(state),
+});
 
 export default compose(
+  connect(mapStateToProps),
   injectIntl,
 )(MappingSchemaSelect);
