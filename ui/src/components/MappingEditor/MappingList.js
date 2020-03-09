@@ -1,4 +1,4 @@
-import { Entity, Property } from '@alephdata/followthemoney';
+import { Entity } from '@alephdata/followthemoney';
 import { Colors } from '@blueprintjs/core';
 
 const colorOptions = [
@@ -11,7 +11,6 @@ class MappingList {
     this.mappingItems = new Map();
 
     if (mappingData) {
-      console.log('has mapping data!!!');
       Object.entries(mappingData).forEach(([id, { schema, keys, properties }], i) => {
         this.mappingItems.set(id, {
           color: this.assignColor(i),
@@ -64,16 +63,14 @@ class MappingList {
     return this.getValues().filter(({ schema }) => !schema?.isThing());
   }
 
-  getMappingsAsEntities() {
-    const toReturn = new Map();
-    this.getValues().forEach(({ id, schema, properties }) => {
-      console.log('iterating toReturn', id, schema, properties);
-      toReturn.set(id, new Entity(this.model, { id, schema }));
-    });
-
-    console.log('toReturn', toReturn);
-    return toReturn;
-  }
+  // getMappingsAsEntities() {
+  //   const toReturn = new Map();
+  //   this.getValues().forEach(({ id, schema, properties }) => {
+  //     toReturn.set(id, new Entity(this.model, { id, schema }));
+  //   });
+  //
+  //   return toReturn;
+  // }
 
   addMapping(schema) {
     const id = this.assignId(schema);
@@ -174,7 +171,7 @@ class MappingList {
     return query;
   }
 
-  static fromApiFormat(model, mappingData): Vertex {
+  static fromApiFormat(model, mappingData) {
     return new MappingList(model, mappingData);
   }
 }

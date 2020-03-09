@@ -3,7 +3,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, ButtonGroup } from '@blueprintjs/core';
-import { showErrorToast } from 'src/app/toast';
 import { selectModel } from 'src/selectors';
 import MappingPreviewDialog from 'src/dialogs/MappingPreviewDialog/MappingPreviewDialog';
 import MappingList from 'src/components/MappingEditor/MappingList';
@@ -54,16 +53,6 @@ export class MappingEditor extends Component {
     this.loadFromMappingData();
   }
 
-  loadFromMappingData() {
-    const { mappingData, model } = this.props;
-
-    if (!mappingData?.query) return;
-
-    this.setState({
-      mappings: MappingList.fromApiFormat(model, mappingData.query)
-    });
-  }
-
   onMappingAdd(schema) {
     this.setState(({ mappings }) => ({ mappings: mappings.addMapping(schema) }));
   }
@@ -91,6 +80,15 @@ export class MappingEditor extends Component {
   togglePreview = () => this.setState(({ previewIsOpen }) => (
     { previewIsOpen: !previewIsOpen }
   ));
+
+  loadFromMappingData() {
+    const { mappingData, model } = this.props;
+
+    if (!mappingData?.query) return;
+    this.setState({
+      mappings: MappingList.fromApiFormat(model, mappingData.query),
+    });
+  }
 
   render() {
     const { entity, mappingData, csvData, csvHeader, intl, model } = this.props;
@@ -182,7 +180,7 @@ export class MappingEditor extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
   model: selectModel(state),
 });
 

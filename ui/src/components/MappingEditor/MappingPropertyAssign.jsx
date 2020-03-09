@@ -3,11 +3,10 @@ import { compose } from 'redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Button, Menu, MenuDivider, MenuItem, PopoverInteractionKind } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
-import { Schema } from 'src/components/common';
-import { mappingItemRenderer } from './util';
 import {
   Cell, Column, ColumnHeaderCell, Table, TruncatedFormat,
 } from '@blueprintjs/table';
+import { mappingItemLabel } from './util';
 
 import './MappingPropertyAssign.scss';
 
@@ -47,6 +46,15 @@ export class MappingPropertyAssign extends Component {
     this.onItemSelect = this.onItemSelect.bind(this);
   }
 
+  onItemSelect({ id, property }, colLabel, colValue) {
+    const { onPropertyAdd, onPropertyRemove } = this.props;
+
+    onPropertyAdd(id, property.name, { column: colLabel });
+    if (colValue) {
+      onPropertyRemove(colValue.id, colValue.property.name);
+    }
+  }
+
   getAssignableProps = (schema) => {
     const featuredProps = schema.getFeaturedProperties()
       .filter(prop => !prop.type.isEntity)
@@ -58,23 +66,20 @@ export class MappingPropertyAssign extends Component {
     return { featuredProps, otherProps };
   }
 
-
   mappingListRenderer({ items, itemsParentRef, renderItem }) {
     return (
       <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
-        {items.map(({ color, id, schema }) => {
-          return (
-            <MenuItem
-              key={id}
-              text={mappingItemRenderer({ id, schema })}
-              popoverProps={{ interactionKind: PopoverInteractionKind.CLICK }}
-              style={{ color }}
-              className="MappingPropertyAssign__headerSelect__item"
-            >
-              {this.propertyListRenderer({id, schema}, renderItem)}
-            </MenuItem>
-          );
-        })}
+        {items.map(({ color, id, schema }) => (
+          <MenuItem
+            key={id}
+            text={mappingItemLabel({ id, schema })}
+            popoverProps={{ interactionKind: PopoverInteractionKind.CLICK }}
+            style={{ color }}
+            className="MappingPropertyAssign__headerSelect__item"
+          >
+            {this.propertyListRenderer({ id, schema }, renderItem)}
+          </MenuItem>
+        ))}
       </Menu>
     );
   }
@@ -108,15 +113,6 @@ export class MappingPropertyAssign extends Component {
     return null;
   }
 
-  onItemSelect({ id, property }, colLabel, colValue) {
-    const { onPropertyAdd, onPropertyRemove } = this.props;
-
-    onPropertyAdd(id, property.name, { column: colLabel });
-    if (colValue) {
-      onPropertyRemove(colValue.id, colValue.property.name);
-    }
-  }
-
   renderHeaderCell(colLabel, colValue, style, colError) {
     const { intl, mappings, onPropertyRemove } = this.props;
 
@@ -133,7 +129,7 @@ export class MappingPropertyAssign extends Component {
             {colValue && (
               <>
                 <div className="MappingPropertyAssign__headerSelect__label">
-                  {mappingItemRenderer(colValue)}
+                  {mappingItemLabel(colValue)}
                 </div>
                 <Select
                   id="property-select"

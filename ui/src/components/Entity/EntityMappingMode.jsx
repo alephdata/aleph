@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import fetchCsvData from 'src/util/fetchCsvData';
 import { SectionLoading } from 'src/components/common';
-import { showErrorToast } from 'src/app/toast';
 import { fetchEntityMapping } from 'src/actions';
 import { selectEntityMapping } from 'src/selectors';
 import { MappingEditor, MappingStatus } from 'src/components/MappingEditor/.';
@@ -16,6 +15,7 @@ export class EntityMappingMode extends Component {
     super(props);
 
     this.state = {
+      csvHeader: null,
       csvData: null,
     };
 
@@ -41,8 +41,8 @@ export class EntityMappingMode extends Component {
   }
 
   render() {
-    const { entity, model, mappingData } = this.props;
-    const { mappings, csvData, csvHeader } = this.state;
+    const { entity, mappingData } = this.props;
+    const { csvData, csvHeader } = this.state;
 
     if (!csvData || !csvHeader || mappingData.isLoading) {
       return <SectionLoading />;

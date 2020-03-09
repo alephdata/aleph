@@ -31,7 +31,7 @@ const itemRenderer = (item, { handleClick }) => (
 export class MappingSchemaSelect extends Component {
   applyTypeFilter(schema) {
     const { type } = this.props;
-    return type === "thing" ? schema.isThing() : !schema.isThing();
+    return type === 'thing' ? schema.isThing() : !schema.isThing();
   }
 
   render() {
@@ -61,7 +61,7 @@ export class MappingSchemaSelect extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
   model: selectModel(state),
 });
 

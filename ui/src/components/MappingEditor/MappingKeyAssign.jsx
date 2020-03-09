@@ -3,8 +3,7 @@ import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { Button, Card, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select, MultiSelect } from '@blueprintjs/select';
-import { Schema } from 'src/components/common';
-import { mappingItemRenderer } from './util';
+import { mappingItemLabel } from './util';
 
 import './MappingKeyAssign.scss';
 
@@ -44,7 +43,7 @@ const entityItemRenderer = (item, { handleClick }) => (
   <MenuItem
     style={{ maxWidth: '30vw' }}
     key={item.id}
-    text={mappingItemRenderer(item)}
+    text={mappingItemLabel(item)}
     onClick={handleClick}
   />
 );
@@ -104,7 +103,7 @@ export class MappingKeyAssignItem extends Component {
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
     const buttonText = currValue?.entity?.id
-      ? mappingItemRenderer(currValue.entity)
+      ? mappingItemLabel(currValue.entity)
       : intl.formatMessage(messages.entityAssignPlaceholder);
 
     return (
@@ -164,7 +163,7 @@ export class MappingKeyAssignItem extends Component {
           onClick={() => onMappingRemove(id)}
         />
         <h6 className="MappingKeyAssign__item__title bp3-heading">
-          {mappingItemRenderer({ id, schema })}
+          {mappingItemLabel({ id, schema })}
         </h6>
         <div className="MappingKeyAssign__item__property">
           <span className="MappingKeyAssign__item__property__label">

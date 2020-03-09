@@ -59,39 +59,13 @@ class MappingManageMenu extends Component {
     this.onSave = this.onSave.bind(this);
   }
 
-  formatMappings() {
-    const { entity, mappings } = this.props;
-
-    return {
-      table_id: entity.id,
-      mapping_query: mappings.toApiFormat(),
-    };
-  }
-
-  validateMappings() {
-    const { intl, mappings } = this.props;
-    const errors = mappings.validate();
-
-    console.log(errors);
-
-    if (errors.length) {
-      console.log('showing error toast')
-      showErrorToast({ message: errors.map(({ error, values }) => <li key={error}>{intl.formatMessage(messages[error], values)}</li>) });
-      return false;
-    }
-
-    return true;
-  }
-
   onSave() {
     const { entity, mappingDataId, intl } = this.props;
     if (this.validateMappings()) {
-      console.log('success')
       try {
         this.props.updateEntityMapping(entity, mappingDataId, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.save));
       } catch (e) {
-        console.log('catching', e)
         showErrorToast(e);
       }
     }
@@ -105,7 +79,6 @@ class MappingManageMenu extends Component {
         this.props.createEntityMapping(entity, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.create));
       } catch (e) {
-        console.log('catching', e)
         showErrorToast(e);
       }
     }
@@ -149,6 +122,31 @@ class MappingManageMenu extends Component {
   ));
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
+
+  formatMappings() {
+    const { entity, mappings } = this.props;
+
+    return {
+      table_id: entity.id,
+      mapping_query: mappings.toApiFormat(),
+    };
+  }
+
+  validateMappings() {
+    const { intl, mappings } = this.props;
+    const errors = mappings.validate();
+
+    if (errors.length) {
+      showErrorToast({
+        message: errors.map(({ error, values }) => (
+          <li key={error}>{intl.formatMessage(messages[error], values)}</li>
+        )),
+      });
+      return false;
+    }
+
+    return true;
+  }
 
   render() {
     const { mappingDataId } = this.props;
