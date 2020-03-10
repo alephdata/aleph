@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Button, ButtonGroup, Intent } from '@blueprintjs/core';
 import { showErrorToast, showInfoToast } from 'src/app/toast';
-import { createCollectionMapping, flushCollectionMapping, deleteCollectionMapping, updateCollectionMapping } from 'src/actions';
+import { createEntityMapping, flushEntityMapping, deleteEntityMapping, updateEntityMapping } from 'src/actions';
 
 import MappingCreateDialog from 'src/dialogs/MappingCreateDialog/MappingCreateDialog';
 import MappingFlushDialog from 'src/dialogs/MappingFlushDialog/MappingFlushDialog';
@@ -27,6 +27,14 @@ const messages = defineMessages({
   flush: {
     id: 'mapping.actions.flush.toast',
     defaultMessage: 'Removing generated entities...',
+  },
+  keyError: {
+    id: 'mapping.error.keyMissing',
+    defaultMessage: 'Key Error: {id} entity must have at least one key',
+  },
+  relationshipError: {
+    id: 'mapping.error.relationshipMissing',
+    defaultMessage: 'Relationship Error: {id} entity must have a {source} and {target} assigned',
   },
 });
 
@@ -52,53 +60,53 @@ class MappingManageMenu extends Component {
   }
 
   onSave() {
-    const { collectionId, mappings, mappingId, validate, intl } = this.props;
-    if (validate()) {
+    const { entity, mappingDataId, intl } = this.props;
+    if (this.validateMappings()) {
       try {
-        this.props.updateCollectionMapping(collectionId, mappingId, mappings);
+        this.props.updateEntityMapping(entity, mappingDataId, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.save));
-        this.toggleSave();
       } catch (e) {
         showErrorToast(e);
       }
     }
+    this.toggleSave();
   }
 
   onCreate() {
-    const { collectionId, mappings, validate, intl } = this.props;
-    if (validate()) {
+    const { entity, intl } = this.props;
+    if (this.validateMappings()) {
       try {
-        this.props.createCollectionMapping(collectionId, mappings);
+        this.props.createEntityMapping(entity, this.formatMappings());
         showInfoToast(intl.formatMessage(messages.create));
-        this.toggleCreate();
       } catch (e) {
         showErrorToast(e);
       }
     }
+    this.toggleCreate();
   }
 
   onDelete() {
-    const { collectionId, mappingId, intl } = this.props;
+    const { entity, mappingDataId, intl } = this.props;
 
     try {
-      this.props.deleteCollectionMapping(collectionId, mappingId);
+      this.props.deleteEntityMapping(entity, mappingDataId);
       showInfoToast(intl.formatMessage(messages.delete));
-      this.toggleDelete();
     } catch (e) {
       showErrorToast(e);
     }
+    this.toggleDelete();
   }
 
   onFlush() {
-    const { collectionId, mappingId, intl } = this.props;
+    const { entity, mappingDataId, intl } = this.props;
 
     try {
-      this.props.flushCollectionMapping(collectionId, mappingId);
+      this.props.flushEntityMapping(entity, mappingDataId);
       showInfoToast(intl.formatMessage(messages.flush));
-      this.toggleFlush();
     } catch (e) {
       showErrorToast(e);
     }
+    this.toggleFlush();
   }
 
   toggleCreate = () => this.setState(({ createIsOpen }) => (
@@ -115,25 +123,50 @@ class MappingManageMenu extends Component {
 
   toggleDelete = () => this.setState(({ deleteIsOpen }) => ({ deleteIsOpen: !deleteIsOpen }));
 
+  formatMappings() {
+    const { entity, mappings } = this.props;
+
+    return {
+      table_id: entity.id,
+      mapping_query: mappings.toApiFormat(),
+    };
+  }
+
+  validateMappings() {
+    const { intl, mappings } = this.props;
+    const errors = mappings.validate();
+
+    if (errors.length) {
+      showErrorToast({
+        message: errors.map(({ error, values }) => (
+          <li key={error}>{intl.formatMessage(messages[error], values)}</li>
+        )),
+      });
+      return false;
+    }
+
+    return true;
+  }
+
   render() {
-    const { mappingId } = this.props;
+    const { mappingDataId } = this.props;
     const { createIsOpen, deleteIsOpen, flushIsOpen, saveIsOpen } = this.state;
 
     return (
       <>
         <ButtonGroup>
-          {mappingId && (
+          {mappingDataId && (
             <Button icon="floppy-disk" intent={Intent.PRIMARY} onClick={this.toggleSave}>
               <FormattedMessage id="mapping.actions.save" defaultMessage="Save changes" />
             </Button>
           )}
-          {!mappingId && (
+          {!mappingDataId && (
             <Button icon="add" intent={Intent.PRIMARY} onClick={this.toggleCreate}>
               <FormattedMessage id="mapping.actions.create" defaultMessage="Generate entities" />
             </Button>
           )}
 
-          {mappingId && (
+          {mappingDataId && (
             <Button icon="delete" onClick={this.toggleFlush}>
               <FormattedMessage id="mapping.actions.flush" defaultMessage="Remove generated entities" />
             </Button>
@@ -168,10 +201,10 @@ class MappingManageMenu extends Component {
 }
 
 const mapDispatchToProps = {
-  createCollectionMapping,
-  flushCollectionMapping,
-  deleteCollectionMapping,
-  updateCollectionMapping,
+  createEntityMapping,
+  flushEntityMapping,
+  deleteEntityMapping,
+  updateEntityMapping,
 };
 
 const mapStateToProps = state => ({ session: selectSession(state) });

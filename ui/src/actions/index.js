@@ -6,23 +6,18 @@ export { queryNotifications } from './notificationActions';
 export { fetchDocumentContent, ingestDocument } from './documentActions';
 export {
   createCollection,
-  createCollectionMapping,
   deleteCollection,
-  deleteCollectionMapping,
   fetchCollection,
   fetchCollectionStatistics,
   fetchCollectionStatus,
   fetchCollectionPermissions,
-  fetchCollectionMappings,
   fetchCollectionXrefIndex,
-  flushCollectionMapping,
   queryCollections,
   queryXrefMatches,
   tiggerXrefMatches,
   triggerCollectionAnalyze,
   triggerCollectionCancel,
   updateCollection,
-  updateCollectionMapping,
   updateCollectionPermissions,
 } from './collectionActions';
 export {
@@ -34,12 +29,17 @@ export {
 } from './diagramActions';
 export {
   createEntity,
+  createEntityMapping,
   deleteEntity,
+  deleteEntityMapping,
   fetchEntity,
+  fetchEntityMapping,
   fetchEntityReferences,
   fetchEntityTags,
+  flushEntityMapping,
   queryEntities,
   updateEntity,
+  updateEntityMapping,
 } from './entityActions';
 export { fetchMetadata, fetchStatistics, fetchSystemStatus } from './metadataActions';
 export { fetchQueryLogs, deleteQueryLog } from './queryLogsActions';

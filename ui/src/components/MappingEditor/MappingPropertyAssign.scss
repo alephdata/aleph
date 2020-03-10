@@ -13,13 +13,14 @@
     .bp3-table-header-content {
       padding: 0 3px 5px;
       text-align: center;
-      min-height: 80px;
+      height: 90px;
+      position: relative;
     }
 
     .bp3-button-text {
       overflow: hidden;
       white-space: nowrap;
-      max-width: 100px;
+      max-width: 115px;
       text-overflow: ellipsis;
     }
   }
@@ -30,16 +31,45 @@
   }
 
   &__headerSelect {
+    position: relative;
+    padding: $aleph-grid-size;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
+    transform: translateY(-50%);
 
     &__label {
       white-space: nowrap;
       margin-bottom: 3px;
     }
+
+    &__item {
+      font-weight: bold;
+    }
+
+    &__remove {
+      position: absolute;
+      top: 0;
+      right: 0;
+      .bp3-icon {
+        color: white !important;
+      }
+    }
+
+    &__button.bp3-button {
+      // display: block !important;
+      // min-width: 160px;
+    }
+
+    &__propListHeading {
+      padding: $aleph-grid-size !important;
+      margin: 0 !important;
+
+      .bp3-heading {
+        color: inherit;
+      }
+    }
   }
+
+
 
   &__error {
     line-height: 1.4;

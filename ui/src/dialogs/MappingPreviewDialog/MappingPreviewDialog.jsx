@@ -2,16 +2,16 @@ import React from 'react';
 import { Dialog, Intent } from '@blueprintjs/core';
 import JSONPretty from 'react-json-pretty';
 
-const MappingPreviewDialog = props => (
+const MappingPreviewDialog = ({ isOpen, mappings, toggleDialog }) => (
   <Dialog
-    isOpen={props.isOpen}
+    isOpen={isOpen}
     title="Preview"
     icon="eye-open"
     intent={Intent.PRIMARY}
-    onClose={props.toggleDialog}
+    onClose={toggleDialog}
   >
     <div style={{ padding: '10px 30px' }}>
-      <JSONPretty data={props.mappings} />
+      <JSONPretty data={mappings.toApiFormat()} />
     </div>
   </Dialog>
 );
