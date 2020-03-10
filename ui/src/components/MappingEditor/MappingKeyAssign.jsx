@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Button, Card, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
+import { Button, Card, Collapse, FormGroup, Icon, MenuItem, Tooltip } from '@blueprintjs/core';
 import { Select, MultiSelect } from '@blueprintjs/select';
 import { mappingItemLabel } from './util';
 
@@ -28,6 +28,14 @@ const messages = defineMessages({
     id: 'mapping.entityAssign.helpText',
     defaultMessage: 'You must create an object of type "{range}" to be the {property}',
   },
+  moreToggleText: {
+    id: 'mapping.keyAssign.additionalHelpToggle.more',
+    defaultMessage: 'More about keys',
+  },
+  lessToggleText: {
+    id: 'mapping.keyAssign.additionalHelpToggle.less',
+    defaultMessage: 'Less',
+  }
 });
 
 const keySelectItemRenderer = (item, { handleClick }) => (
@@ -50,8 +58,23 @@ const entityItemRenderer = (item, { handleClick }) => (
 
 
 export class MappingKeyAssignItem extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      keyExplanationVisible: false,
+    };
+
+    this.toggleKeyExplanation = this.toggleKeyExplanation.bind(this);
+  }
+
+  toggleKeyExplanation() {
+    this.setState(({ keyExplanationVisible }) => ({ keyExplanationVisible: !keyExplanationVisible }))
+  }
+
   renderKeySelect({ id, keys }) {
     const { columnLabels, onKeyAdd, onKeyRemove, intl } = this.props;
+    const { keyExplanationVisible } = this.state;
 
     const items = columnLabels
       .filter((column) => column !== '' && keys.indexOf(column) === -1)
@@ -60,12 +83,31 @@ export class MappingKeyAssignItem extends Component {
     return (
       <FormGroup
         helperText={(
-          <span>
-            <FormattedMessage
-              id="mapping.keyAssign.helpText"
-              defaultMessage="All keys combined specify the id of the entity. The id must be unique."
+          <div className="MappingKeyAssign__item__keyHelp">
+            <div className="MappingKeyAssign__item__keyHelp__main">
+              <FormattedMessage
+                id="mapping.keyAssign.helpText"
+                defaultMessage="Specify which columns from the source data will be used to identify unique entities."
+              />
+            </div>
+            <Collapse isOpen={keyExplanationVisible} className="MappingKeyAssign__item__keyHelp__additional">
+              <FormattedMessage
+                id="mapping.keyAssign.additionalHelpText"
+                defaultMessage={`The best keys are columns from your data that contain id numbers, phone numbers, email addresses,
+                  or other uniquely identifying information. If no columns with unique values exist, select multiple columns to allow
+                  Aleph to generate unique entities correctly from your data.`
+                }
+              />
+            </Collapse>
+            <Button
+              small
+              minimal
+              text={keyExplanationVisible ? intl.formatMessage(messages.lessToggleText) : intl.formatMessage(messages.moreToggleText)}
+              className="bp3-form-helper-text MappingKeyAssign__item__keyHelp__toggle"
+              rightIcon={keyExplanationVisible ? 'caret-up' : 'caret-down'}
+              onClick={this.toggleKeyExplanation}
             />
-          </span>
+          </div>
         )}
       >
         <MultiSelect
