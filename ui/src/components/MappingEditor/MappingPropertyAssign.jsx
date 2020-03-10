@@ -152,7 +152,7 @@ export class MappingPropertyAssign extends Component {
                 </Select>
                 <div className="MappingPropertyAssign__headerSelect__remove">
                   <Button
-                    icon="remove"
+                    icon="delete"
                     minimal
                     small
                     onClick={() => onPropertyRemove(colValue.id, colValue.property.name)}
@@ -210,6 +210,7 @@ export class MappingPropertyAssign extends Component {
           enableColumnResizing={false}
           selectionModes="NONE"
           defaultColumnWidth={180}
+          renderMode="none"
         >
           {columnLabels.map((colLabel, i) => {
             const colValue = columnAssignments.get(colLabel);
