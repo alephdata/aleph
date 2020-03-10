@@ -77,18 +77,25 @@ export class MappingPropertyAssign extends Component {
             style={{ color }}
             className="MappingPropertyAssign__headerSelect__item"
           >
-            {this.propertyListRenderer({ id, schema }, renderItem)}
+            {this.propertyListRenderer({ id, schema }, renderItem, false)}
           </MenuItem>
         ))}
       </Menu>
     );
   }
 
-  propertyListRenderer({ id, schema }, renderItem) {
+  propertyListRenderer({ id, schema }, renderItem, showHeader) {
+    const { mappings } = this.props;
     const { featuredProps, otherProps } = this.getAssignableProps(schema);
+    const color = mappings.getMapping(id).color;
 
     return (
       <>
+        {showHeader && (
+          <li className="bp3-menu-header MappingPropertyAssign__headerSelect__propListHeading" style={{ color }}>
+            <h6 className="bp3-heading">{mappingItemLabel({ id, schema })}</h6>
+          </li>
+        )}
         {
           featuredProps.map(prop => renderItem({ id, property: prop }))
         }
@@ -136,7 +143,7 @@ export class MappingPropertyAssign extends Component {
                   items={[]}
                   itemListRenderer={({ itemsParentRef, renderItem }) => (
                     <Menu ulRef={itemsParentRef} onWheel={e => e.stopPropagation()}>
-                      {this.propertyListRenderer(colValue, renderItem)}
+                      {this.propertyListRenderer(colValue, renderItem, true)}
                     </Menu>
                   )}
                   itemRenderer={itemRenderer}
@@ -152,7 +159,7 @@ export class MappingPropertyAssign extends Component {
                 </Select>
                 <div className="MappingPropertyAssign__headerSelect__remove">
                   <Button
-                    icon="delete"
+                    icon="cross"
                     minimal
                     small
                     onClick={() => onPropertyRemove(colValue.id, colValue.property.name)}
@@ -163,6 +170,7 @@ export class MappingPropertyAssign extends Component {
             {!colValue && (
               <Select
                 id="mapping-select"
+                fill
                 items={mappings.getValues().sort((a, b) => (a.id > b.id ? 1 : -1))}
                 itemListRenderer={listProps => this.mappingListRenderer(listProps)}
                 itemRenderer={itemRenderer}
@@ -171,8 +179,8 @@ export class MappingPropertyAssign extends Component {
                 onItemSelect={(item) => this.onItemSelect(item, colLabel, colValue)}
               >
                 <Button
+                  fill
                   text={intl.formatMessage(messages.placeholder)}
-                  rightIcon="caret-down"
                   className="MappingPropertyAssign__headerSelect__button"
                 />
               </Select>
@@ -218,6 +226,7 @@ export class MappingPropertyAssign extends Component {
             const style = {
               color: 'black',
               backgroundColor: 'white',
+              // height: '100px',
             };
 
             if (colError) {

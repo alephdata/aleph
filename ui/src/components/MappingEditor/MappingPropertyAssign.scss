@@ -13,6 +13,8 @@
     .bp3-table-header-content {
       padding: 0 3px 5px;
       text-align: center;
+      height: 90px;
+      position: relative;
     }
 
     .bp3-button-text {
@@ -31,6 +33,8 @@
   &__headerSelect {
     position: relative;
     padding: $aleph-grid-size;
+    top: 50%;
+    transform: translateY(-50%);
 
     &__label {
       white-space: nowrap;
@@ -49,7 +53,22 @@
         color: white !important;
       }
     }
+
+    &__button.bp3-button {
+      display: block !important;
+    }
+
+    &__propListHeading {
+      padding: $aleph-grid-size !important;
+      margin: 0 !important;
+
+      .bp3-heading {
+        color: inherit;
+      }
+    }
   }
+
+
 
   &__error {
     line-height: 1.4;
