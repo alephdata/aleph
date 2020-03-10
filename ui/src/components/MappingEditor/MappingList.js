@@ -24,7 +24,13 @@ class MappingList {
   }
 
   assignColor(i) {
-    const colorIndex = i || this.getMappingsCount();
+    const colorIndex = this.getValues()
+      .map(mapping => colorOptions.indexOf(mapping.color))
+      .sort()
+      .reduce((acc, currentValue) => (
+        acc === currentValue ? acc + 1 : acc
+      ), 0);
+
     return colorOptions[colorIndex % colorOptions.length];
   }
 
