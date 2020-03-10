@@ -36,6 +36,18 @@ const itemRenderer = (item, { handleClick }) => (
 );
 
 class MappingVerifyItem extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currEditingLiteral: null,
+    };
+  }
+
+  openLiteralEdit(id) {
+    this.setState({ currEditingLiteral: id });
+  }
+
   renderLiteralSelect() {
     const { intl, mapping, onPropertyAdd } = this.props;
     const { id, schema, properties } = mapping;
@@ -64,21 +76,35 @@ class MappingVerifyItem extends Component {
   renderLiteralEdit(propertyName, value) {
     const { fullMappingsList, locale, mapping, onPropertyAdd } = this.props;
     const { id, schema } = mapping;
+    const { currEditingLiteral } = this.state;
 
-    if (value) {
+    if (value && currEditingLiteral !== propertyName) {
       return (
-        <PropertyValues prop={schema.getProperty(propertyName)} values={value} />
+        <div className="MappingVerify__literalEdit">
+          <Button
+            onClick={() => this.openLiteralEdit(propertyName)}
+            minimal
+            small
+          >
+            <PropertyValues prop={schema.getProperty(propertyName)} values={value} />
+          </Button>
+        </div>
       );
     }
     return (
-      <PropertyEditor
-        locale={locale}
-        entity={fullMappingsList.getMappingAsEntity(id)}
-        property={schema.getProperty(propertyName)}
-        onSubmit={entity => (
-          onPropertyAdd(mapping.id, propertyName, { literal: entity.getProperty(propertyName) })
-        )}
-      />
+      <div className="MappingVerify__literalEdit">
+        <PropertyEditor
+          locale={locale}
+          entity={fullMappingsList.getMappingAsEntity(id)}
+          property={schema.getProperty(propertyName)}
+          onSubmit={entity => {
+            onPropertyAdd(mapping.id, propertyName, { literal: entity.getProperty(propertyName) })
+            if (currEditingLiteral === propertyName) {
+              this.setState({ currEditingLiteral: null });
+            }
+          }}
+        />
+      </div>
     );
   }
 

@@ -27,8 +27,16 @@
     td {
       box-shadow: none !important;
       vertical-align: middle !important;
-      padding: 3px 10px !important;
+      padding: 3px $aleph-grid-size !important;
       border: 1px solid $aleph-border-color;
+
+      &.MappingVerify__listItem__value {
+        width: 60%;
+
+        .bp3-form-group {
+          margin: 0;
+        }
+      }
 
       &.MappingVerify__listItem__close {
         width: 10px !important;
@@ -36,4 +44,17 @@
       }
     }
   }
+
+  &__literalEdit {
+    margin: 0 -$aleph-grid-size/2 !important;
+  }
+
+  // &__listItem {
+  //   &__value {
+  //     .bp3-monospace-text {
+  //       padding-left: $aleph-grid-size;
+  //       padding-right: $aleph-grid-size;
+  //     }
+  //   }
+  // }
 }

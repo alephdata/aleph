@@ -50,8 +50,14 @@ class MappingList {
   }
 
   getMappingAsEntity(id) {
-    const { schema } = this.getMapping(id);
-    return new Entity(this.model, { id, schema });
+    const { properties, schema } = this.getMapping(id);
+    const formattedProps = {};
+
+    Object.entries(properties)
+      .filter(([key, value]) => value.literal)
+      .forEach(([key, value]) => { formattedProps[key] = value.literal });
+
+    return new Entity(this.model, { id, schema, properties: formattedProps });
   }
 
   getThingMappings() {
