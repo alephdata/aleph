@@ -20,7 +20,7 @@
     .bp3-button-text {
       overflow: hidden;
       white-space: nowrap;
-      max-width: 100px;
+      max-width: 115px;
       text-overflow: ellipsis;
     }
   }
@@ -55,7 +55,8 @@
     }
 
     &__button.bp3-button {
-      display: block !important;
+      // display: block !important;
+      // min-width: 160px;
     }
 
     &__propListHeading {
