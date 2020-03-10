@@ -32,6 +32,10 @@
       &__value {
         width: 75%;
         padding-left: 15px;
+
+        .bp3-button {
+          padding-left: $aleph-grid-size*1.5;
+        }
       }
 
       &__label {

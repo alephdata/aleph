@@ -29,8 +29,7 @@ class MappingList {
   }
 
   assignId(schema) {
-    const schemaCount = this.getSchemaCount(schema.name);
-
+    const schemaCount = this.getSchemaCount(schema);
     return schemaCount ? `${schema.label} ${schemaCount + 1}` : schema.label;
   }
 
@@ -38,8 +37,8 @@ class MappingList {
     return Array.from(this.mappingItems.values());
   }
 
-  getSchemaCount(schemaName) {
-    return this.getValues().filter(({ schema }) => schema === schemaName).length;
+  getSchemaCount(schemaToAssign) {
+    return this.getValues().filter(({ schema }) => schema === schemaToAssign).length;
   }
 
   getMappingsCount() {
