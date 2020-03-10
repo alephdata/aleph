@@ -102,8 +102,8 @@ export class MappingKeyAssignItem extends Component {
 
     const disabled = items.length < 1;
     const currValue = mapping.properties[property.name];
-    const buttonText = currValue?.entity?.id
-      ? mappingItemLabel(currValue.entity)
+    const buttonText = currValue?.entity
+      ? mappingItemLabel(fullMappingsList.getMapping(currValue.entity))
       : intl.formatMessage(messages.entityAssignPlaceholder);
 
     return (
@@ -119,7 +119,7 @@ export class MappingKeyAssignItem extends Component {
               id="entity-select"
               items={items}
               itemRenderer={entityItemRenderer}
-              onItemSelect={item => onPropertyAdd(id, property.name, { entity: item })}
+              onItemSelect={entity => onPropertyAdd(id, property.name, { entity: entity.id })}
               filterable={false}
               popoverProps={{ minimal: true }}
               activeItem={currValue}
