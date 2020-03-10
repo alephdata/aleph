@@ -117,7 +117,7 @@ export class MappingKeyAssignItem extends Component {
           tagRenderer={item => item}
           onItemSelect={item => onKeyAdd(id, item)}
           selectedItems={keys}
-          itemPredicate={() => true}
+          itemPredicate={(query, item) => item.includes(query.toLowerCase())}
           placeholder={intl.formatMessage(messages.keyAssignPlaceholder)}
           fill
           tagInputProps={{

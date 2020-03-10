@@ -49,10 +49,12 @@ class MappingList {
     return this.mappingItems.get(id);
   }
 
+  // returns pseudo-entity for mapping, in order to be allow Entity ftm components to be used
   getMappingAsEntity(id) {
     const { properties, schema } = this.getMapping(id);
     const formattedProps = {};
 
+    // convert properties to Entity > properties format
     Object.entries(properties)
       .filter(([key, value]) => value.literal)
       .forEach(([key, value]) => { formattedProps[key] = value.literal });
