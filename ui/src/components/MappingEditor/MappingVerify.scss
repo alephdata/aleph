@@ -27,7 +27,7 @@
     td {
       box-shadow: none !important;
       vertical-align: middle !important;
-      padding: 3px $aleph-grid-size !important;
+      padding: $aleph-grid-size !important;
       border: 1px solid $aleph-border-color;
 
       &.MappingVerify__listItem__value {
@@ -47,18 +47,5 @@
 
   &__literalEdit {
     margin: 0 -$aleph-grid-size/2 !important;
-
-    .bp3-button-text {
-      font-style: italic !important;
-    }
   }
-
-  // &__listItem {
-  //   &__value {
-  //     .bp3-monospace-text {
-  //       padding-left: $aleph-grid-size;
-  //       padding-right: $aleph-grid-size;
-  //     }
-  //   }
-  // }
 }
