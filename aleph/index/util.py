@@ -18,6 +18,14 @@ NUMERIC_TYPES = (registry.number, registry.date,)
 MAX_TIMEOUT = '700m'
 MAX_REQUEST_TIMEOUT = 84600
 
+# Mapping shortcuts
+DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss||yyyy-MM-dd||yyyy-MM||yyyy"
+PARTIAL_DATE = {"type": "date", "format": DATE_FORMAT}
+LATIN_TEXT = {"type": "text", "analyzer": "latin_index"}
+KEYWORD = {"type": "keyword"}
+KEYWORD_COPY = {"type": "keyword", "copy_to": "text"}
+NUMERIC = {"type": "double"}
+
 SHARDS_LIGHT = 1
 SHARDS_DEFAULT = 5
 SHARDS_HEAVY = 10
@@ -53,6 +61,10 @@ def refresh_sync(sync):
     return True if sync else False
 
 
+def index_name(name, version):
+    return '-'.join((settings.INDEX_PREFIX, name, version))
+
+
 def unpack_result(res):
     """Turn a document hit from ES into a more traditional JSON object."""
     error = res.get('error')
@@ -76,7 +88,7 @@ def unpack_result(res):
     return data
 
 
-def authz_query(authz):
+def authz_query(authz, field='collection_id'):
     """Generate a search query filter from an authz object."""
     # Hot-wire authorization entirely for admins.
     if authz.is_admin:
@@ -84,7 +96,7 @@ def authz_query(authz):
     collections = authz.collections(authz.READ)
     if not len(collections):
         return {'match_none': {}}
-    return {'terms': {'collection_id': collections}}
+    return {'terms': {field: collections}}
 
 
 def bool_query():
@@ -182,6 +194,36 @@ def _check_response(index, res):
     return True
 
 
+def rewrite_mapping_safe(pending, existing):
+    """This re-writes mappings for ElasticSearch in such a way that
+    immutable values are kept to their existing setting, while other
+    fields are updated."""
+    IMMUTABLE = ('type', 'analyzer', 'normalizer')
+    # This is a pretty bad idea long-term. We need to make it easier
+    # to use multiple index generations instead.
+    if not isinstance(pending, dict) or not isinstance(existing, dict):
+        return pending
+    for key, value in list(pending.items()):
+        old_value = existing.get(key)
+        value = rewrite_mapping_safe(value, old_value)
+        if key in IMMUTABLE and old_value is not None:
+            value = old_value
+        pending[key] = value
+    return pending
+
+
+def check_settings_changed(updated, existing):
+    """Since updating the settings requires closing the index, we don't
+    want to do it unless it's really needed. This will check if all the
+    updated settings are already in effect."""
+    if not isinstance(updated, dict) or not isinstance(existing, dict):
+        return updated != existing
+    for key, value in list(updated.items()):
+        if check_settings_changed(value, existing.get(key)):
+            return True
+    return False
+
+
 def configure_index(index, mapping, settings):
     """Create or update a search index with the given mapping and
     settings. This will try to make a new index, or update an
@@ -194,36 +236,41 @@ def configure_index(index, mapping, settings):
             'timeout': MAX_TIMEOUT,
             'master_timeout': MAX_TIMEOUT
         }
-        res = es.indices.close(ignore_unavailable=True,
-                               **options)
-        res = es.indices.put_mapping(body=mapping,
-                                     ignore=[400],
-                                     **options)
+        config = es.indices.get(index=index).get(index, {})
+        mapping = rewrite_mapping_safe(mapping, config.get('mappings'))
+        res = es.indices.put_mapping(body=mapping, **options)
         _check_response(index, res)
         settings.get('index').pop('number_of_shards')
-        res = es.indices.put_settings(body=settings,
-                                      ignore=[400],
-                                      **options)
-        _check_response(index, res)
-        res = es.indices.open(**options)
+        if check_settings_changed(settings, config.get('settings')):
+            res = es.indices.close(ignore_unavailable=True, **options)
+            res = es.indices.put_settings(body=settings, **options)
+            _check_response(index, res)
+            res = es.indices.open(**options)
         return True
-    log.info("Creating index: %s...", index)
-    res = es.indices.create(index, body={
-        'settings': settings,
-        'mappings': mapping
-    }, ignore=[400])
-    return True
+    else:
+        log.info("Creating index: %s...", index)
+        body = {
+            'settings': settings,
+            'mappings': mapping
+        }
+        res = es.indices.create(index, body=body, ignore=[400])
+        return True
 
 
 def index_settings(shards=5, replicas=2):
     """Configure an index in ES with support for text transliteration."""
     return {
         "index": {
-            "number_of_shards": shards,
-            "number_of_replicas": replicas,
+            "number_of_shards": str(shards),
+            "number_of_replicas": str(replicas),
+            # "refresh_interval": refresh,
             "analysis": {
                 "analyzer": {
                     "latin_index": {
+                        "tokenizer": "standard",
+                        "filter": ["latinize"]
+                    },
+                    "icu_latin": {
                         "tokenizer": "standard",
                         "filter": ["latinize"]
                     },
@@ -245,7 +292,7 @@ def index_settings(shards=5, replicas=2):
                     },
                     "synonames": {
                         "type": "synonym",
-                        "lenient": True,
+                        "lenient": "true",
                         "synonyms_path": "synonames.txt"
                     }
                 }

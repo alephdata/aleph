@@ -46,6 +46,8 @@ CONTENT_POLICY = env.get('ALEPH_CONTENT_POLICY', CONTENT_POLICY)
 # Cross-origin resource sharing
 CORS_ORIGINS = env.to_list('ALEPH_CORS_ORIGINS', ['*'], separator='|')
 
+# Google Cloud platform config
+GOOGLE_REQUEST_LOGGING = env.to_bool('ALEPH_GOOGLE_REQUEST_LOGGING', False)
 
 ##############################################################################
 # Security and authentication.

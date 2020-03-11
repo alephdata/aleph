@@ -42,6 +42,7 @@ class DiagramImport extends Component {
       <Dropzone
         accept=".vis"
         onDrop={this.onDrop}
+        noDragEventsBubbling
       >
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()}>

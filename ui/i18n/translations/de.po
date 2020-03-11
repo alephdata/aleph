@@ -3,7 +3,7 @@
 # 
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-02-07T11:07:54.733Z\n"
+"POT-Creation-Date: 2020-02-24T09:44:35.532Z\n"
 "Last-Translator: pudo <friedrich@pudo.org>, 2020\n"
 "Language-Team: German (https://www.transifex.com/aleph/teams/76591/de/)\n"
 "MIME-Version: 1.0\n"
@@ -2898,10 +2898,3 @@ msgstr "{count} weitere Typen"
 #: i18n/messages.json
 msgid "{count} selected"
 msgstr "{count} ausgewählt"
-
-#. [collection.status.remaining]
-#. defaultMessage is:
-#. {finished} of {total} completed
-#: i18n/messages.json
-msgid "{finished} of {total} completed"
-msgstr "{finished} von {total} erledigt"

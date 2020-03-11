@@ -5,13 +5,12 @@ from banal import ensure_list
 from followthemoney import model
 from followthemoney.types import registry
 from elasticsearch.helpers import scan
-from elasticsearch.exceptions import NotFoundError
 
 from aleph.core import es, cache
 from aleph.model import Entity
 from aleph.index.indexes import entities_write_index, entities_read_index
 from aleph.index.util import unpack_result, refresh_sync
-from aleph.index.util import authz_query, query_delete, bulk_actions
+from aleph.index.util import authz_query, bulk_actions
 from aleph.index.util import MAX_PAGE, NUMERIC_TYPES
 
 
@@ -116,12 +115,13 @@ def get_entity(entity_id, **kwargs):
     """Fetch an entity from the index."""
     if entity_id is None:
         return
-    key = cache.object_key(Entity, entity_id)
-    entity = cache.get_complex(key)
-    if entity is not None:
-        return entity
-    log.debug("Entity [%s]: object cache miss", entity_id)
-    for entity in entities_by_ids(entity_id, cached=True):
+    if kwargs.get('includes') is None and kwargs.get('excludes') is None:
+        key = cache.object_key(Entity, entity_id)
+        entity = cache.get_complex(key)
+        if entity is not None:
+            return entity
+        log.debug("Entity [%s]: cache miss", entity_id)
+    for entity in entities_by_ids(entity_id, cached=True, **kwargs):
         return entity
 
 
@@ -155,7 +155,7 @@ def format_proxy(proxy, collection, extra):
     proxy = collection.ns.apply(proxy)
     # Pull `indexUpdatedAt` before constructing `data`, so that it doesn't
     # creep into `data['dates']` and mess up date sorting afterwards
-    index_updated_at = proxy.pop('indexUpdatedAt')
+    updated_at = proxy.pop('indexUpdatedAt', quiet=True)
     data = proxy.to_full_dict()
     data['collection_id'] = collection.id
 
@@ -172,8 +172,8 @@ def format_proxy(proxy, collection, extra):
     data['text'] = text
 
     data['updated_at'] = collection.updated_at
-    for updated_at in index_updated_at:
-        data['updated_at'] = updated_at
+    for value in updated_at:
+        data['updated_at'] = value
 
     # integer casting
     numeric = {}
@@ -205,18 +205,5 @@ def delete_entity(entity_id, exclude=None, sync=False):
         index = entity.get('_index')
         if index == exclude:
             continue
-        try:
-            es.delete(index=index, id=entity_id,
-                      refresh=refresh_sync(sync))
-            q = {'term': {'entities': entity_id}}
-            query_delete(entities_read_index(), q, sync=sync)
-        except NotFoundError:
-            # This is expected in some cases. For example, when 2 Things are
-            # connected by an Interval and all the 3 entities get deleted
-            # simultaneously, Aleph tries to delete the Interval thrice due to
-            # recursive deletion of adjacent entities. ElasticSearch throws a
-            # 404 in that case.
-            # In those cases, we want to skip both the `es.delete` step and
-            # the `query_delete` step.
-            log.warning("Delete failed for entity %s - not found", entity_id)
-            continue
+        es.delete(index=index, id=entity_id, ignore=[404],
+                  refresh=refresh_sync(sync))

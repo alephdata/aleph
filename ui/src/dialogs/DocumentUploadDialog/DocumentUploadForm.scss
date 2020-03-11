@@ -1,0 +1,19 @@
+@import "src/app/variables.scss";
+
+.DocumentUploadForm {
+  &__secondary {
+    padding-top: $aleph-grid-size;
+  }
+
+  &__hidden-input {
+    visibility: hidden;
+    position: absolute;
+    height: 0;
+    width: 0;
+
+    &__label {
+      color: $blue2;
+      cursor: pointer;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+@import "src/app/variables.scss";
+
+.CollectionIndex {
+  &__controls {
+    .SortingBar {
+      margin-top: $aleph-grid-size;
+      text-align: right;
+    }
+    .QueryTags {
+      margin-top: $aleph-grid-size;
+    }
+  }
+}

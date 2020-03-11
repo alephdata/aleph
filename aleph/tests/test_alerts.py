@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 
 from aleph.core import db
-from aleph.model import Alert, Notification
+from aleph.model import Alert
 from aleph.logic.alerts import check_alerts
+from aleph.logic.notifications import get_notifications
 from aleph.tests.util import TestCase
 
 
@@ -25,7 +26,8 @@ class AlertsTestCase(TestCase):
         alert.notified_at = datetime.utcnow() + timedelta(hours=72)
         db.session.commit()
 
-        notcount = Notification.all().count()
+        res = get_notifications(self.role_email)
+        notcount = res.get('hits').get('total').get('value')
         assert notcount == 0, notcount
 
         db.session.refresh(alert)
@@ -34,9 +36,11 @@ class AlertsTestCase(TestCase):
         db.session.commit()
 
         check_alerts()
-        notcount = Notification.all().count()
-        assert notcount == 2, notcount
+        res = get_notifications(self.role_email)
+        notcount = res.get('hits').get('total').get('value')
+        assert notcount == 1, notcount
 
         check_alerts()
-        notcount = Notification.all().count()
-        assert notcount == 2, notcount
+        res = get_notifications(self.role_email)
+        notcount = res.get('hits').get('total').get('value')
+        assert notcount == 1, notcount

@@ -29,7 +29,7 @@ class EntityToolbar extends React.Component {
             </Link>
           )}
           {showDownloadButton && (
-            <DownloadButton document={entity} isPreview />
+            <DownloadButton document={entity} />
           )}
         </ButtonGroup>
       </div>

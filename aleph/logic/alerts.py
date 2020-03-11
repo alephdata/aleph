@@ -51,11 +51,9 @@ def check_alert(alert_id):
             'entity': entity.get('id')
         }
         publish(Events.MATCH_ALERT, params=params, channels=[alert.role])
-        db.session.flush()
 
     alert.update()
     db.session.commit()
-    db.session.close()
 
 
 def alert_query(alert, authz):
@@ -67,7 +65,8 @@ def alert_query(alert, authz):
     queries = [{
         'query_string': {
             'query': alert.query,
-            'fields': ['fingerprints.text^3', 'text'],
+            'lenient': True,
+            'default_field': 'text',
             'default_operator': 'AND',
             'minimum_should_match': '90%'
         }

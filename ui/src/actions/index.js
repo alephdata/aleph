@@ -2,7 +2,7 @@ import { createAction } from 'redux-act';
 
 export { fetchRole, suggestRoles, updateRole, fetchGroups } from './roleActions';
 export { addAlert, deleteAlert, fetchAlerts } from './alertActions';
-export { deleteNotifications, queryNotifications } from './notificationActions';
+export { queryNotifications } from './notificationActions';
 export { fetchDocumentContent, ingestDocument } from './documentActions';
 export {
   createCollection,

@@ -1,9 +1,12 @@
 import React from 'react';
-import { Icon, Tooltip, Position } from '@blueprintjs/core';
-import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
-import c from 'classnames';
+import { AnchorButton, Tooltip, Position } from '@blueprintjs/core';
+import { injectIntl, defineMessages } from 'react-intl';
 
 const messages = defineMessages({
+  download: {
+    id: 'document.download',
+    defaultMessage: 'Download',
+  },
   mode_download: {
     id: 'document.download.tooltip',
     defaultMessage: 'Download the original document',
@@ -13,7 +16,7 @@ const messages = defineMessages({
 
 class DownloadButton extends React.PureComponent {
   render() {
-    const { intl, document, isPreview } = this.props;
+    const { intl, document } = this.props;
     if (!document || !document.links || !document.links.file) {
       return null;
     }
@@ -22,10 +25,15 @@ class DownloadButton extends React.PureComponent {
         content={intl.formatMessage(messages.mode_download)}
         position={Position.BOTTOM_RIGHT}
       >
-        <a href={document.links.file} download type="button" target="_blank" className={c('DownloadButton', 'bp3-button', { 'bp3-intent-primary': !isPreview })} rel="nofollow noopener noreferrer">
-          <Icon icon="download" className="left-icon" />
-          <FormattedMessage id="document.download" defaultMessage="Download" />
-        </a>
+        <AnchorButton
+          href={document.links.file}
+          icon="download"
+          download
+          target="_blank"
+          className="DownloadButton"
+          rel="nofollow noopener noreferrer"
+          text={intl.formatMessage(messages.download)}
+        />
       </Tooltip>
     );
   }

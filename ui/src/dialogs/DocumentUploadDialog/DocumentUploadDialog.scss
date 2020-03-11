@@ -1,5 +1,19 @@
+@import "src/app/variables.scss";
+
 .DocumentUploadDialog {
-    .document-upload-progress-bar {
-        margin-bottom: 1em;
-    }
+  &.bp3-dialog {
+    padding-bottom: 0;
+  }
+
+  &__divider {
+    text-align: center;
+    padding: $aleph-grid-size 0;
+  }
+  .document-upload-progress-bar {
+      margin-bottom: 1em;
+  }
+
+  .bp3-form-group {
+    margin: $aleph-grid-size 0;
+  }
 }

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { ControlGroup, InputGroup } from '@blueprintjs/core';
 
-import './CollectionIndexSearch.scss';
-
 export class CollectionIndexSearch extends Component {
   constructor(props) {
     super(props);
