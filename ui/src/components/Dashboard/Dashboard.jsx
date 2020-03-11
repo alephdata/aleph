@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Classes, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { Count } from 'src/components/common';
+import { Count, Skeleton } from 'src/components/common';
+import c from 'classnames';
 
 import { fetchGroups } from 'src/actions';
 import { selectAlerts, selectGroups, selectSessionIsTester } from 'src/selectors';
@@ -72,6 +73,8 @@ class Dashboard extends React.Component {
     const { alerts, intl, location, groups, showDiagrams } = this.props;
     const current = location.pathname;
 
+    const groupsLoading = groups.isLoading || groups.shouldLoad;
+
     return (
       <div className="Dashboard">
         <div className="Dashboard__menu">
@@ -124,23 +127,29 @@ class Dashboard extends React.Component {
                 active={current === '/diagrams'}
               />
             )}
-            { groups.total > 0 && (
+            {(groupsLoading || groups.total > 0) && (
               <>
                 <MenuDivider />
-                <li className="bp3-menu-header">
+                <li className={c('bp3-menu-header', {[Classes.SKELETON]: groupsLoading })}>
                   <h6 className="bp3-heading">
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>
                 </li>
-                { groups.results.map(group => (
-                  <MenuItem
-                    key={group.id}
-                    icon="shield"
-                    text={group.label}
-                    onClick={() => this.navigate(`/groups/${group.id}`)}
-                    active={current === `/groups/${group.id}`}
-                  />
-                ))}
+                <Skeleton.Text
+                  type="li"
+                  width="100%"
+                  isLoading={groupsLoading}
+                >
+                  {!groupsLoading && groups.results.map(group => (
+                    <MenuItem
+                      key={group.id}
+                      icon="shield"
+                      text={group.label}
+                      onClick={() => this.navigate(`/groups/${group.id}`)}
+                      active={current === `/groups/${group.id}`}
+                    />
+                  ))}
+                </Skeleton.Text>
               </>
             )}
             <MenuDivider />

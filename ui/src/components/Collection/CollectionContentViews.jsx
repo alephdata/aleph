@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
-import { MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
+import { Classes, MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
 
 import { Count, Schema } from 'src/components/common';
@@ -64,11 +64,13 @@ class CollectionViews extends React.Component {
     const entitySchemata = this.getEntitySchemata();
     const hasBrowse = (numOfDocs > 0 || collection.writeable);
 
-    const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0].schema)
+    const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0]?.schema);
+    const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.id;
+
     return (
       <Tabs
         id="CollectionContentTabs"
-        className="CollectionContentViews__tabs info-tabs-padding"
+        className={c('CollectionContentViews__tabs', 'info-tabs-padding', { [Classes.SKELETON]: isLoading })}
         onChange={this.handleTabChange}
         selectedTabId={selectedTab}
         renderActiveTabPanelOnly

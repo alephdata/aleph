@@ -16,12 +16,17 @@ class TextSkeleton extends PureComponent {
       case 'h1':
         return <h1 style={{ width, height: '35px' }} className={Classes.SKELETON} />;
 
+      case 'h6':
+        return <h6 style={{ width, height: '25px' }} className={Classes.SKELETON} />;
+
       case 'p':
         return <p style={{ width, height: '18px' }} className={Classes.SKELETON} />;
 
       case 'span':
         return <span style={{ width, height: '18px' }} className={Classes.SKELETON} />;
 
+      case 'li':
+        return <li style={{ width, height: '50px' }} className={Classes.SKELETON} />;
     }
   }
 }
