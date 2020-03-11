@@ -19,7 +19,7 @@ import './MappingEditor.scss';
 const messages = defineMessages({
   section1Title: {
     id: 'mapping.section1.title',
-    defaultMessage: '1. Select entity types to map',
+    defaultMessage: '1. Select entity types to generate',
   },
   section2Title: {
     id: 'mapping.section2.title',

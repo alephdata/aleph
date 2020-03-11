@@ -76,15 +76,6 @@ class MappingList {
     return this.getValues().filter(({ schema }) => !schema?.isThing());
   }
 
-  // getMappingsAsEntities() {
-  //   const toReturn = new Map();
-  //   this.getValues().forEach(({ id, schema, properties }) => {
-  //     toReturn.set(id, new Entity(this.model, { id, schema }));
-  //   });
-  //
-  //   return toReturn;
-  // }
-
   addMapping(schema) {
     const id = this.assignId(schema);
 
@@ -99,8 +90,20 @@ class MappingList {
     return this;
   }
 
-  removeMapping(id) {
-    this.mappingItems.delete(id);
+  removeMapping(idToRemove) {
+    this.mappingItems.delete(idToRemove);
+
+    // remove any references to this mapping in other mappings' properties
+    this.getValues().forEach(mapping => {
+      if (mapping.properties) {
+        Object.entries(mapping.properties).forEach(([propName, propValue]) => {
+          if (propValue?.entity && propValue?.entity === idToRemove) {
+            this.removeProperty(mapping.id, propName);
+          }
+        })
+      }
+    })
+
     return this;
   }
 

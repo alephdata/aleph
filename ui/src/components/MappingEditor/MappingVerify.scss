@@ -47,6 +47,10 @@
 
   &__literalEdit {
     margin: 0 -$aleph-grid-size/2 !important;
+
+    .bp3-button-text {
+      font-style: italic !important;
+    }
   }
 
   // &__listItem {

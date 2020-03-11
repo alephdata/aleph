@@ -71,14 +71,16 @@ class MappingImportDialog extends Component {
     const firstEntry = Object.values(parsedData)[0];
 
     const mappingQueries = firstEntry.query ? [firstEntry.query] : firstEntry.queries;
-    const selectedQueryIndex = mappingQueries.length === 1 ? 0 : null;
+    const selectedQueryIndex = mappingQueries.length === 1 ? "0" : null;
     this.setState({ label, mappingQueries, importedFileName: fileName, selectedQueryIndex });
   }
 
   onSubmit() {
+    const { intl } = this.props;
     const { mappingQueries, selectedQueryIndex } = this.state;
 
     const selectedQuery = mappingQueries[selectedQueryIndex];
+    showSuccessToast(intl.formatMessage(messages.success));
     this.props.onSubmit(selectedQuery.entities);
     this.props.toggleDialog();
   }

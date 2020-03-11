@@ -50,12 +50,18 @@ export class EntityMappingMode extends Component {
       const processedKeys = keys.filter(key => csvHeader.indexOf(key) > -1);
       const processedProps = {};
 
-      Object.entries(properties).forEach(([propName, propVal]) => {
-        if (propVal.columns || (propVal.column && csvHeader.indexOf(propVal.column) === -1)) {
-          return;
-        }
-        processedProps[propName] = propVal;
-      })
+      if (properties) {
+        Object.entries(properties).forEach(([propName, propVal]) => {
+          if (propVal.columns || (propVal.column && csvHeader.indexOf(propVal.column) === -1)) {
+            return;
+          }
+          if (propVal.literal && typeof propVal.literal === 'string') {
+            processedProps[propName] = { literal: [propVal.literal] };
+            return;
+          }
+          processedProps[propName] = propVal;
+        });
+      }
 
       processed[id] = {
         schema,
@@ -111,7 +117,7 @@ export class EntityMappingMode extends Component {
           </p>
         </div>
 
-        {!existingMapping.shouldLoad && !existingMapping.isLoading && !existingMapping.id && (
+        {!importedMappingData && !existingMapping.shouldLoad && !existingMapping.isLoading && !existingMapping.id && (
           <MappingImportButton onImport={this.onImport} />
         )}
 
