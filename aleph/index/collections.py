@@ -2,14 +2,80 @@ import logging
 from pprint import pprint  # noqa
 from normality import normalize
 
-from aleph.core import es, cache
+from aleph.core import es, cache, settings
 from aleph.model import Entity, Collection
-from aleph.index.indexes import collections_index, entities_read_index
+from aleph.index.indexes import entities_read_index
+from aleph.index.util import index_name, index_settings, configure_index
 from aleph.index.util import query_delete, index_safe, refresh_sync
+from aleph.index.util import KEYWORD_COPY, KEYWORD
 
 STATS_FACETS = ['schema', 'names', 'addresses', 'phones', 'emails',
                 'countries', 'languages', 'ibans']
 log = logging.getLogger(__name__)
+
+
+def collections_index():
+    """Combined index to run all queries against."""
+    return index_name('collection', settings.INDEX_WRITE)
+
+
+def configure_collections():
+    mapping = {
+        "date_detection": False,
+        "dynamic": False,
+        "dynamic_templates": [
+            {
+                "fields": {
+                    "match": "schemata.*",
+                    "mapping": {"type": "long"}
+                }
+            }
+        ],
+        "_source": {"excludes": ["text"]},
+        "properties": {
+            "label": {
+                "type": "text",
+                "copy_to": "text",
+                "analyzer": "latin_index",
+                "fields": {"kw": KEYWORD}
+            },
+            "collection_id": KEYWORD,
+            "foreign_id": KEYWORD_COPY,
+            "languages": KEYWORD_COPY,
+            "countries": KEYWORD_COPY,
+            "category": KEYWORD_COPY,
+            "summary": {
+                "type": "text",
+                "copy_to": "text",
+                "index": False
+            },
+            "publisher": KEYWORD_COPY,
+            "publisher_url": KEYWORD_COPY,
+            "data_url": KEYWORD_COPY,
+            "info_url": KEYWORD_COPY,
+            "kind": KEYWORD,
+            "creator_id": KEYWORD,
+            "team_id": KEYWORD,
+            "text": {
+                "type": "text",
+                "analyzer": "latin_index",
+                "term_vector": "with_positions_offsets",
+                "store": True
+            },
+            "casefile": {"type": "boolean"},
+            "secret": {"type": "boolean"},
+            "created_at": {"type": "date"},
+            "updated_at": {"type": "date"},
+            "count": {"type": "long"},
+            "schemata": {
+                "dynamic": True,
+                "type": "object"
+            }
+        }
+    }
+    index = collections_index()
+    settings = index_settings(shards=1)
+    return configure_index(index, mapping, settings)
 
 
 def index_collection(collection, sync=False):
@@ -19,6 +85,8 @@ def index_collection(collection, sync=False):
 
     log.info("Index [%s]: %s", collection.id, collection.label)
     data = get_collection(collection.id)
+    if data is None:
+        return
     text = [data.get('label')]
     text.append(normalize(data.get('label')))
     text.append(normalize(data.get('foreign_id')))

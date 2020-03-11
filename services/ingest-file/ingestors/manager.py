@@ -72,10 +72,15 @@ class Manager(object):
         return entity
 
     def make_child(self, parent, child):
+        """Derive entity properties by knowing it's parent folder."""
         if parent is not None and child is not None:
+            # Folder hierarchy:
             child.add('parent', parent.id)
             child.add('ancestors', parent.get('ancestors'))
             child.add('ancestors', parent.id)
+            # Avoid re-ingest re-notification:
+            prop = 'indexUpdatedAt'
+            child.add(prop, parent.get(prop), quiet=True)
 
     def emit_entity(self, entity, fragment=None):
         # pprint(entity.to_dict())

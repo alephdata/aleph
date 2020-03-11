@@ -1,6 +1,7 @@
 from aleph.core import db, mail
-from aleph.model import Events, Notification
+from aleph.model import Events
 from aleph.logic.notifications import publish, generate_digest
+from aleph.logic.notifications import GLOBAL, get_notifications
 from aleph.logic.roles import update_role
 from aleph.tests.util import TestCase
 
@@ -21,14 +22,15 @@ class NotificationsTestCase(TestCase):
         event = Events.PUBLISH_COLLECTION
         publish(event, role.id,
                 params={'collection': collection},
-                channels=[Notification.GLOBAL])
+                channels=[GLOBAL])
         db.session.commit()
 
-        notifications = Notification.all().all()
-        assert 1 == len(notifications), notifications
-        not0 = notifications[0]
-        assert not0._event == event.name, not0._event
-        assert not0.params['collection'] == str(collection.id), not0.params
+        result = get_notifications(recipient)
+        notifications = result.get('hits', {})
+        assert 1 == notifications['total']['value'], notifications
+        not0 = notifications['hits'][0]['_source']
+        assert not0['event'] == event.name, not0['event']
+        assert not0['params']['collection'] == str(collection.id), not0['params']  # noqa
 
         with mail.record_messages() as outbox:
             assert len(outbox) == 0, outbox

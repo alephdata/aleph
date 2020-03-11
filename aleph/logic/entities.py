@@ -14,7 +14,11 @@ from aleph.index.util import authz_query, field_filter_query
 log = logging.getLogger(__name__)
 
 
-def upsert_entity(data, collection, sync=False):
+def upsert_entity(data, collection, validate=True, sync=False):
+    """Create or update an entity in the database. This has a side hustle
+    of migrating entities created via the _bulk API or a mapper to a
+    database entity in the event that it gets edited by the user.
+    """
     entity = None
     entity_id = collection.ns.sign(data.get('id'))
     if entity_id is not None:
@@ -23,9 +27,9 @@ def upsert_entity(data, collection, sync=False):
                               deleted=True)
     # TODO: migrate softly from index.
     if entity is None:
-        entity = Entity.create(data, collection)
+        entity = Entity.create(data, collection, validate=validate)
     else:
-        entity.update(data, collection)
+        entity.update(data, collection, validate=validate)
     collection.touch()
     db.session.commit()
     delete_aggregator_entity(collection, entity.id)

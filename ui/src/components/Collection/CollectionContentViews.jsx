@@ -49,7 +49,7 @@ class CollectionViews extends React.Component {
     const { history, location, isPreview } = this.props;
     const parsedHash = queryString.parse(location.hash);
     parsedHash.type = type;
-    history.replace({
+    history.push({
       pathname: location.pathname,
       search: location.search,
       hash: queryString.stringify(parsedHash),

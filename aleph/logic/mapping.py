@@ -3,12 +3,13 @@ from banal import first
 from followthemoney import model
 
 from aleph.core import db, archive
-from aleph.model import Mapping
+from aleph.model import Mapping, Events
 from aleph.queues import queue_task, OP_INDEX
 from aleph.index.entities import get_entity
 from aleph.index.collections import delete_entities
 from aleph.logic.collections import update_collection
 from aleph.logic.aggregator import get_aggregator, drop_aggregator
+from aleph.logic.notifications import publish
 
 log = logging.getLogger(__name__)
 
@@ -36,6 +37,10 @@ def load_mapping(stage, collection, mapping_id):
     if mapping is None:
         return log.error("Could not find mapping: %s", mapping_id)
     flush_mapping(stage, collection, mapping_id)
+    publish(Events.LOAD_MAPPING,
+            params={'collection': collection, 'table': mapping.table_id},
+            channels=[collection, mapping.role],
+            actor_id=mapping.role_id)
     mapper = make_mapper(collection, mapping)
     aggregator = get_aggregator(collection)
     try:

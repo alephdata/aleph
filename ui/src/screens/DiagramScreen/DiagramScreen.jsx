@@ -110,7 +110,7 @@ export class DiagramScreen extends Component {
   fetchIfNeeded() {
     const { diagram, diagramId } = this.props;
 
-    if (diagram.shouldLoad) {
+    if (diagram.shouldLoad || diagram.shallow) {
       this.props.fetchDiagram(diagramId);
     }
   }
@@ -137,7 +137,7 @@ export class DiagramScreen extends Component {
       return <ErrorScreen error={diagram.error} />;
     }
 
-    if (!diagram.id) {
+    if ((!diagram.id) || diagram.shallow) {
       return <LoadingScreen />;
     }
 

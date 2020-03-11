@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import truncateText from 'truncate';
 import c from 'classnames';
+import { Entity as EntityObject } from '@alephdata/followthemoney';
 
 import { Schema } from 'src/components/common';
 import togglePreview from 'src/util/togglePreview';
@@ -17,7 +18,7 @@ import './Entity.scss';
 class EntityLabel extends PureComponent {
   render() {
     const { entity, icon = false, truncate } = this.props;
-    if (!entity || !entity.id) {
+    if (!entity || !entity.id || !EntityObject.isEntity(entity)) {
       return null;
     }
     const caption = entity.getCaption();
