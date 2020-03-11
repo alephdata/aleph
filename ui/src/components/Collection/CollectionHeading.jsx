@@ -10,10 +10,10 @@ class CollectionHeading extends PureComponent {
   render() {
     const { collection } = this.props;
     const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.label;
-    console.log(collection);
+
     return (
       <div className="CollectionHeading">
-        <Skeleton
+        <Skeleton.Text
           type="p"
           width="100px"
           isLoading={isLoading}
@@ -27,8 +27,8 @@ class CollectionHeading extends PureComponent {
               <Category.Label collection={collection} />
             )}
           </span>
-        </Skeleton>
-        <Skeleton
+        </Skeleton.Text>
+        <Skeleton.Text
           type="h1"
           width="200px"
           isLoading={isLoading}
@@ -36,7 +36,7 @@ class CollectionHeading extends PureComponent {
           <h1 itemProp="name" className="CollectionHeading__title">
             {collection.label}
           </h1>
-        </Skeleton>
+        </Skeleton.Text>
       </div>
     );
   }

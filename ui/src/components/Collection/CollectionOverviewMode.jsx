@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 import { injectIntl } from 'react-intl';
 import { fetchCollectionStatistics } from 'src/actions';
 import { selectCollectionStatistics } from 'src/selectors';
-import { SectionLoading, Summary } from 'src/components/common';
+import { SectionLoading, Skeleton, Summary } from 'src/components/common';
 import CollectionInfo from 'src/components/Collection/CollectionInfo';
 import CollectionStatistics from './CollectionStatistics';
 import CollectionReference from './CollectionReference';
@@ -30,19 +30,13 @@ class CollectionOverviewMode extends React.Component {
 
   fetchIfNeeded() {
     const { collection, statistics } = this.props;
-    if (statistics.shouldLoad) {
+    if (!statistics.isLoading && statistics.shouldLoad && collection.id !== undefined) {
       this.props.fetchCollectionStatistics(collection);
     }
   }
 
-  renderStatisticsItem({ key, values, total }) {
-    const { collection, statistics } = this.props;
-
-    console.log('rendering', key, values, total);
-
-    if (!statistics.isLoading && !total) {
-      return null;
-    }
+  renderStatisticsItem({ key, total, values }) {
+    const { collection } = this.props;
 
     return (
       <div className="CollectionOverviewMode__item" key={key}>
@@ -59,14 +53,12 @@ class CollectionOverviewMode extends React.Component {
   render() {
     const { collection, statistics } = this.props;
 
-    // const statsToRender =
+    if (statistics.isLoading || statistics.shouldLoad) {
+      return <Skeleton.Layout type="column" />
+    }
 
-    // if (statistics.isLoading || statistics.shouldLoad) {
-    //   return <SectionLoading />;
-    // }
-
-    // const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
-    //   .filter(stat => stat && stat.total);
+    const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
+      .filter(stat => stat && stat.total);
 
     return (
       <div className="CollectionOverviewMode">
@@ -85,7 +77,7 @@ class CollectionOverviewMode extends React.Component {
             <CollectionStatus collection={collection} showCancel />
           </div>
         </div>
-        {statFields.map((key) => this.renderStatisticsItem({ key, ...statistics[key] }))}
+        {statsToRender.map((stat) => this.renderStatisticsItem(stat))}
         <div className="CollectionOverviewMode__item">
           <div className="CollectionOverviewMode__item__text-content">
             <CollectionReference collection={collection} />

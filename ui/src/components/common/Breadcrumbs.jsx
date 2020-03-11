@@ -16,23 +16,23 @@ class CollectionBreadcrumb extends PureComponent {
       <>
         {showCategory && (
           <li key={collection.category}>
-            <Skeleton
+            <Skeleton.Text
               type="span"
               width="100px"
               isLoading={isLoading}
             >
               <Category.Link collection={collection} className="bp3-breadcrumb" icon />
-            </Skeleton>
+            </Skeleton.Text>
           </li>
         )}
         <li key={collection.id}>
-          <Skeleton
+          <Skeleton.Text
             type="span"
             width="100px"
             isLoading={isLoading}
           >
             <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active, 'bp3-skeleton': isLoading })} icon truncate={30} />
-          </Skeleton>
+          </Skeleton.Text>
         </li>
       </>
     );
