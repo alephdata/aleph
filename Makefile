@@ -56,11 +56,7 @@ clean:
 	find ui/src -name '*.css' -exec rm -f {} +
 
 build:
-	cp -r ../servicelayer/ .
-	cp -r ../servicelayer/ ./services/ingest-file/
 	$(COMPOSE) build
-	rm -rf ./servicelayer/
-	rm -rf ./services/ingest-file/servicelayer
 
 build-ui:
 	docker build -t alephdata/aleph-ui-production:$(ALEPH_TAG) -f ui/Dockerfile.production ui
