@@ -6,13 +6,14 @@ import { withRouter } from 'react-router';
 import YAML from 'yaml'
 
 import Query from 'src/app/Query';
-import MappingQueryCounts from 'src/dialogs/MappingImportDialog/MappingQueryCounts';
+import MappingQueryLabel from 'src/dialogs/MappingImportDialog/MappingQueryLabel';
 import { Collection, FileImport } from 'src/components/common';
 import { createDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
 import getDiagramLink from 'src/util/getDiagramLink';
 import { processApiEntity } from 'src/components/Diagram/util';
 
+import './MappingImportDialog.scss';
 
 const messages = defineMessages({
   success: {
@@ -30,6 +31,10 @@ const messages = defineMessages({
   placeholder: {
     id: 'mapping.import.placeholder',
     defaultMessage: 'Drop a .yml file here or click to import an existing mapping file',
+  },
+  querySelect: {
+    id: 'mapping.import.querySelect',
+    defaultMessage: 'Select a mapping query from this file to import:',
   },
 });
 
@@ -57,10 +62,6 @@ class MappingImportDialog extends Component {
     });
   }
 
-  validate() {
-
-  }
-
   onQuerySelect(e) {
     this.setState({ selectedQueryIndex: e.target.value });
   }
@@ -86,8 +87,6 @@ class MappingImportDialog extends Component {
     const { intl, isOpen, toggleDialog } = this.props;
     const { importedFileName, mappingQueries, selectedQueryIndex } = this.state;
 
-    console.log(this.state);
-
     return (
       <Dialog
         icon="graph"
@@ -105,24 +104,24 @@ class MappingImportDialog extends Component {
                 onImport={this.onImport}
                 importedFile={importedFileName}
               />
+              {mappingQueries && (
+                <div className="MappingImportDialog__querySelect">
+                  <RadioGroup
+                    label={intl.formatMessage(messages.querySelect)}
+                    onChange={this.onQuerySelect}
+                    selectedValue={selectedQueryIndex}
+                  >
+                    {mappingQueries.map((query, i) => (
+                      <Radio
+                        value={`${i}`}
+                        key={query.csv_url || query.csv_urls[0]}
+                        label={<MappingQueryLabel query={query} />}
+                      />
+                    ))}
+                  </RadioGroup>
+                </div>
+              )}
             </div>
-            {mappingQueries && (
-              <div className="MappingImportDialog__querySelect">
-                <RadioGroup
-                  label={"test"}
-                  onChange={this.onQuerySelect}
-                  selectedValue={selectedQueryIndex}
-                >
-                  {mappingQueries.map((query, i) => (
-                    <Radio
-                      value={`${i}`}
-                      key={query.csv_url || query.csv_urls[0]}
-                      label={<MappingQueryCounts query={query} />}
-                    />
-                  ))}
-                </RadioGroup>
-              </div>
-            )}
             <div className="bp3-dialog-footer">
               <div className="bp3-dialog-footer-actions">
                 <Button

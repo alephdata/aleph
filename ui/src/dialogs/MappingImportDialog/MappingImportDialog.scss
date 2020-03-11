@@ -1,0 +1,20 @@
+@import "src/app/variables.scss";
+
+.MappingImportDialog {
+  .bp3-label {
+    font-weight: bold;
+    margin: $aleph-grid-size 0;
+  }
+
+  .bp3-radio {
+    display: -webkit-inline-box;
+    width: 100%;
+    border-bottom: 1px solid $aleph-border-color;
+    padding: $aleph-grid-size*1.5 0;
+    margin: 0;
+
+    &:last-child {
+      border: none;
+    }
+  }
+}
