@@ -24,8 +24,8 @@ class MappingImportButton extends Component {
 
     return (
       <>
-        <Button onClick={() => this.toggleDialog()} icon="import" intent={Intent.PRIMARY}>
-          <FormattedMessage id="mapping.import.button" defaultMessage="Import mapping" />
+        <Button onClick={() => this.toggleDialog()} icon="import">
+          <FormattedMessage id="mapping.import.button" defaultMessage="Import existing mapping" />
         </Button>
         <MappingImportDialog
           isOpen={isOpen}

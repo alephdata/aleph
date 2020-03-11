@@ -53,6 +53,14 @@ export class MappingEditor extends Component {
     this.loadFromMappingData();
   }
 
+  componentDidUpdate(prevProps) {
+    console.log(this.props.mappingData, prevProps.mappingData);
+
+    if (this.props.mappingData !== prevProps.mappingData) {
+      this.loadFromMappingData();
+    }
+  }
+
   onMappingAdd(schema) {
     this.setState(({ mappings }) => ({ mappings: mappings.addMapping(schema) }));
   }
@@ -84,14 +92,14 @@ export class MappingEditor extends Component {
   loadFromMappingData() {
     const { mappingData, model } = this.props;
 
-    if (!mappingData?.query) return;
+    if (!mappingData) return;
     this.setState({
-      mappings: MappingList.fromApiFormat(model, mappingData.query),
+      mappings: MappingList.fromApiFormat(model, mappingData),
     });
   }
 
   render() {
-    const { entity, mappingData, csvData, csvHeader, intl, model } = this.props;
+    const { entity, existingMappingId, csvData, csvHeader, intl, model } = this.props;
     const { mappings, previewIsOpen } = this.state;
 
     return (
@@ -164,7 +172,7 @@ export class MappingEditor extends Component {
                 <MappingManageMenu
                   mappings={mappings}
                   entity={entity}
-                  mappingDataId={mappingData && mappingData.id}
+                  mappingDataId={existingMappingId}
                 />
               </div>
             </>

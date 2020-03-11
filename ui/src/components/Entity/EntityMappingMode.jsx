@@ -6,7 +6,7 @@ import fetchCsvData from 'src/util/fetchCsvData';
 import { SectionLoading } from 'src/components/common';
 import { fetchEntityMapping } from 'src/actions';
 import { selectEntityMapping } from 'src/selectors';
-import { MappingEditor, MappingStatus } from 'src/components/MappingEditor/.';
+import { MappingEditor, MappingImportButton, MappingStatus } from 'src/components/MappingEditor/.';
 
 import './EntityMappingMode.scss';
 
@@ -17,17 +17,19 @@ export class EntityMappingMode extends Component {
     this.state = {
       csvHeader: null,
       csvData: null,
+      importedMappingData: null,
     };
 
     this.processCsvResults = this.processCsvResults.bind(this);
+    this.onImport = this.onImport.bind(this);
   }
 
   componentDidMount() {
-    const { entity, mappingData } = this.props;
+    const { entity, existingMapping } = this.props;
 
     fetchCsvData(entity.links.csv, this.processCsvResults);
 
-    if (entity.id && mappingData.shouldLoad) {
+    if (entity.id && existingMapping.shouldLoad) {
       this.props.fetchEntityMapping(entity);
     }
   }
@@ -40,11 +42,44 @@ export class EntityMappingMode extends Component {
     parser.abort();
   }
 
-  render() {
-    const { entity, mappingData } = this.props;
-    const { csvData, csvHeader } = this.state;
+  processImportedMappings(mappingData) {
+    const { csvHeader } = this.state;
 
-    if (!csvData || !csvHeader || mappingData.isLoading) {
+    const processed = {};
+    Object.entries(mappingData).forEach(([id, { schema, keys, properties }], i) => {
+      const processedKeys = keys.filter(key => csvHeader.indexOf(key) > -1);
+      const processedProps = {};
+
+      Object.entries(properties).forEach(([propName, propVal]) => {
+        if (propVal.columns || (propVal.column && csvHeader.indexOf(propVal.column) === -1)) {
+          return;
+        }
+        processedProps[propName] = propVal;
+      })
+
+      processed[id] = {
+        schema,
+        keys: processedKeys,
+        properties: processedProps,
+      };
+    });
+
+    return processed;
+  }
+
+  onImport(mappingData) {
+    console.log('in EntityMappingMode, mappingData is', mappingData);
+
+    const processedData = this.processImportedMappings(mappingData);
+
+    this.setState({ importedMappingData: processedData });
+  }
+
+  render() {
+    const { entity, existingMapping } = this.props;
+    const { csvData, csvHeader, importedMappingData } = this.state;
+
+    if (!csvData || !csvHeader || existingMapping.isLoading) {
       return <SectionLoading />;
     }
 
@@ -75,16 +110,22 @@ export class EntityMappingMode extends Component {
             />
           </p>
         </div>
-        {mappingData.id && (
+
+        {!existingMapping.shouldLoad && !existingMapping.isLoading && !existingMapping.id && (
+          <MappingImportButton onImport={this.onImport} />
+        )}
+
+        {existingMapping.id && (
           <MappingStatus
-            mapping={mappingData}
+            mapping={existingMapping}
           />
         )}
         <MappingEditor
           entity={entity}
           csvData={csvData}
           csvHeader={csvHeader}
-          mappingData={mappingData}
+          mappingData={importedMappingData || existingMapping?.query}
+          existingMappingId={existingMapping?.id}
         />
       </div>
     );
@@ -97,7 +138,7 @@ const mapStateToProps = (state, ownProps) => {
   const { entity } = ownProps;
 
   return {
-    mappingData: selectEntityMapping(state, entity.id),
+    existingMapping: selectEntityMapping(state, entity.id),
   };
 };
 

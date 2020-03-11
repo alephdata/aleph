@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Dialog, Button, Intent, Spinner } from '@blueprintjs/core';
+import { Dialog, Button, Intent, Radio, RadioGroup, Spinner } from '@blueprintjs/core';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import YAML from 'yaml'
 
 import Query from 'src/app/Query';
+import MappingQueryCounts from 'src/dialogs/MappingImportDialog/MappingQueryCounts';
 import { Collection, FileImport } from 'src/components/common';
 import { createDiagram } from 'src/actions';
 import { showSuccessToast, showWarningToast } from 'src/app/toast';
@@ -40,28 +41,52 @@ class MappingImportDialog extends Component {
 
     this.state = {
       importedFileName: null,
-      mappingData: null,
+      mappingQueries: null,
+      selectedQueryIndex: null,
     };
 
     this.onImport = this.onImport.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onQuerySelect = this.onQuerySelect.bind(this);
   }
 
   componentWillUnmount() {
     this.setState({
       importedFileName: null,
-      mappingData: null,
+      mappingQueries: null,
     });
   }
 
+  validate() {
+
+  }
+
+  onQuerySelect(e) {
+    this.setState({ selectedQueryIndex: e.target.value });
+  }
+
   onImport({ fileName, label, data }) {
-    console.log(YAML.parse(data));
-    const mappingData = YAML.parse(data);
-    this.setState({ label, mappingData, importedFileName: fileName });
+    const parsedData = YAML.parse(data);
+    const firstEntry = Object.values(parsedData)[0];
+
+    const mappingQueries = firstEntry.query ? [firstEntry.query] : firstEntry.queries;
+    const selectedQueryIndex = mappingQueries.length === 1 ? 0 : null;
+    this.setState({ label, mappingQueries, importedFileName: fileName, selectedQueryIndex });
+  }
+
+  onSubmit() {
+    const { mappingQueries, selectedQueryIndex } = this.state;
+
+    const selectedQuery = mappingQueries[selectedQueryIndex];
+    this.props.onSubmit(selectedQuery.entities);
+    this.props.toggleDialog();
   }
 
   render() {
-    const { intl, isOpen, onSubmit, toggleDialog } = this.props;
-    const { importedFileName, mappingData } = this.state;
+    const { intl, isOpen, toggleDialog } = this.props;
+    const { importedFileName, mappingQueries, selectedQueryIndex } = this.state;
+
+    console.log(this.state);
 
     return (
       <Dialog
@@ -81,15 +106,32 @@ class MappingImportDialog extends Component {
                 importedFile={importedFileName}
               />
             </div>
+            {mappingQueries && (
+              <div className="MappingImportDialog__querySelect">
+                <RadioGroup
+                  label={"test"}
+                  onChange={this.onQuerySelect}
+                  selectedValue={selectedQueryIndex}
+                >
+                  {mappingQueries.map((query, i) => (
+                    <Radio
+                      value={`${i}`}
+                      key={query.csv_url || query.csv_urls[0]}
+                      label={<MappingQueryCounts query={query} />}
+                    />
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
             <div className="bp3-dialog-footer">
               <div className="bp3-dialog-footer-actions">
                 <Button
-                  type="submit"
                   intent={Intent.PRIMARY}
+                  disabled={selectedQueryIndex === null}
                   text={(
                     intl.formatMessage(messages.submit)
                   )}
-                  onClick={() => onSubmit(mappingData)}
+                  onClick={this.onSubmit}
                 />
               </div>
             </div>
