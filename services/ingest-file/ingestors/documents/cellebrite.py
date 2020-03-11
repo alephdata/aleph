@@ -10,7 +10,7 @@ class CellebriteIngestor(Ingestor, EncodingSupport, CellebriteSupport):
 
     MIME_TYPES = ['text/xml']
     EXTENSIONS = ['xml']
-    SCORE = 5
+    SCORE = 0.5
 
     def ingest(self, file_path, entity):
         """Ingestor implementation."""
@@ -43,5 +43,5 @@ class CellebriteIngestor(Ingestor, EncodingSupport, CellebriteSupport):
     def match(cls, file_path, entity):
         score = super(CellebriteIngestor, cls).match(file_path, entity)
         if score > 0 and cls.inspect_metadata(file_path):
-            score = cls.SCORE * 2
+            score = cls.SCORE * 20
         return score
