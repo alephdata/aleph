@@ -1,7 +1,7 @@
 @import "src/app/variables.scss";
 
 .LayoutSkeleton {
-  &.column-container {
+  &.multi-column {
     column-count: 4;
     column-gap: 1.5em;
     table-layout : fixed;
@@ -23,6 +23,16 @@
 
     & > * {
       height: 100vh;
+    }
+  }
+
+  &.table {
+    width: 100%;
+
+    & > * {
+      height: 40px;
+      width: 100%;
+      margin: 3px 0;
     }
   }
 }

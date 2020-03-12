@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Waypoint } from 'react-waypoint';
-import { SectionLoading, ErrorSection } from 'src/components/common';
+import { SectionLoading, Skeleton, ErrorSection } from 'src/components/common';
 import { queryNotifications } from 'src/actions';
 import { selectNotificationsResult } from 'src/selectors';
 import Notification from 'src/components/Notification/Notification';
@@ -70,7 +70,10 @@ class NotificationList extends Component {
           scrollableAncestor={window}
         />
         { result.isLoading && (
-          <SectionLoading />
+          <Skeleton.Layout
+            type="table"
+            count={10}
+          />
         )}
       </>
     );

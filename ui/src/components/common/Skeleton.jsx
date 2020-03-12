@@ -33,14 +33,29 @@ class TextSkeleton extends PureComponent {
 
 class LayoutSkeleton extends PureComponent {
   render() {
-    return (
-      <div className="LayoutSkeleton column-container">
-        <div className={Classes.SKELETON} />
-        <div className={Classes.SKELETON} />
-        <div className={Classes.SKELETON} />
-        <div className={Classes.SKELETON} />
-      </div>
-    );
+    const { itemType, type, count } = this.props;
+    const childItems = [...Array(count).keys()]
+
+    console.log(itemType);
+
+    switch (type) {
+      case 'multi-column':
+        return (
+          <div className="LayoutSkeleton multi-column">
+            {childItems.map((i) => (
+              <div className={Classes.SKELETON} key={i} />
+            ))}
+          </div>
+        );
+      case 'table':
+        return (
+          <div className="LayoutSkeleton table">
+            {childItems.map((x, i) => (
+              <div className={Classes.SKELETON} key={i} />
+            ))}
+          </div>
+        );
+    }
   }
 }
 

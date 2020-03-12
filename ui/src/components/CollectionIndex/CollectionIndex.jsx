@@ -129,7 +129,11 @@ export class CollectionIndex extends Component {
           scrollableAncestor={window}
         />
         {result.isLoading && (
-          <SectionLoading />
+          <Skeleton.Layout
+            type="table"
+            itemType={CollectionIndexItem}
+            count={10}
+          />
         )}
       </>
     );

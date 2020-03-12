@@ -6,7 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { deleteQueryLog, fetchQueryLogs } from 'src/actions/queryLogsActions';
-import { SectionLoading, SearchListings } from 'src/components/common';
+import { Skeleton, SearchListings } from 'src/components/common';
 import { selectQueryLog } from 'src/selectors';
 import Query from 'src/app/Query';
 
@@ -67,7 +67,10 @@ export class QueryLogs extends PureComponent {
           bottomOffset="-30px"
           scrollableAncestor={window}
         />
-        {result.isLoading && <SectionLoading />}
+        {result.isLoading && <Skeleton.Layout
+          type="table"
+          count={5}
+        />}
       </div>
     );
   }

@@ -54,7 +54,7 @@ class CollectionOverviewMode extends React.Component {
     const { collection, statistics } = this.props;
 
     if (statistics.isLoading || statistics.shouldLoad) {
-      return <Skeleton.Layout type="column" />
+      return <Skeleton.Layout type="multi-column" count={4} />
     }
 
     const statsToRender = statFields.map(key => ({ key, ...statistics[key] }))
