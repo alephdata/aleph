@@ -43,7 +43,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.6.0",
     "@formatjs/cli": "^1.1.18",
-    "@svgr/webpack": "5.1.0",
+    "@svgr/webpack": "5.2.0",
     "babel-eslint": "^10.0.3",
     "babel-jest": "25.1.0",
     "babel-loader": "^8.0.5",
