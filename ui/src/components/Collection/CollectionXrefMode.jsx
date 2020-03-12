@@ -123,17 +123,17 @@ export class CollectionXrefMode extends React.Component {
         <tr key={`${xref.id}-prop-${prop.name}`} className="prefix">
           <td colSpan={2} />
           <td>
-            <Property.Values prop={prop} values={xref.entity.getProperty(prop)} />
-          </td>
-          <td>
-            <Property.Values prop={prop} values={xref.match.getProperty(prop)} />
+            <strong>
+              <Property.Values prop={prop} values={xref.entity.getProperty(prop)} />
+            </strong>
           </td>
           <td>
             <strong>
-              {'('}
-              <Property.Name prop={prop} />
-              {')'}
+              <Property.Values prop={prop} values={xref.match.getProperty(prop)} />
             </strong>
+          </td>
+          <td>
+            <Property.Name prop={prop} />
           </td>
         </tr>
       )),
