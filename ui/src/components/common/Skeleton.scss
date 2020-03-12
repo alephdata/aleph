@@ -29,10 +29,34 @@
   &.table {
     width: 100%;
 
-    & > * {
+    .table-row {
       height: 40px;
       width: 100%;
-      margin: 3px 0;
+      margin: 3px;
+      display: flex;
+    }
+
+    .table-item {
+      flex: 1 1;
+      height: 40px;
+      margin: 3px;
+    }
+  }
+
+  &.grid {
+    width: 100%;
+
+    .grid-row {
+      height: 40px;
+      width: 100%;
+      margin: 3px;
+      display: flex;
+    }
+
+    .grid-item {
+      flex: 1 1;
+      height: 40px;
+      margin: 3px;
     }
   }
 }

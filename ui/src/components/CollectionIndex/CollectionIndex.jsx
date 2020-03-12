@@ -131,8 +131,7 @@ export class CollectionIndex extends Component {
         {result.isLoading && (
           <Skeleton.Layout
             type="table"
-            itemType={CollectionIndexItem}
-            count={10}
+            rowCount={10}
           />
         )}
       </>

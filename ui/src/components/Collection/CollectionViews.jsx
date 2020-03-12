@@ -116,11 +116,11 @@ class CollectionViews extends React.Component {
           id={viewIds.XREF}
           className="CollectionViews__tab"
           title={
-            <TextLoading loading={xrefIndex.shouldLoad || xrefIndex.isLoading}>
+            <>
               <Icon className="left-icon" icon="comparison" />
               <FormattedMessage id="entity.info.xref" defaultMessage="Cross-reference" />
               <Count count={xrefIndex.total} />
-            </TextLoading>}
+            </>}
           panel={<CollectionXrefIndexMode collection={collection} />}
         />
         {showDiagramsTab && (
@@ -128,10 +128,11 @@ class CollectionViews extends React.Component {
             id={viewIds.DIAGRAMS}
             className="CollectionViews__tab"
             title={
-              <TextLoading loading={diagrams.shouldLoad || diagrams.isLoading}>                <Icon className="left-icon" icon="graph" />
+              <>
+                <Icon className="left-icon" icon="graph" />
                 <FormattedMessage id="collection.info.diagrams" defaultMessage="Network diagrams" />
                 <Count count={diagrams.total} />
-              </TextLoading>
+              </>
             }
             panel={<CollectionDiagramsIndexMode collection={collection} />}
           />

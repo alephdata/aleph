@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import { Classes, MenuDivider, Tabs, Tab, Icon } from '@blueprintjs/core';
 import queryString from 'query-string';
+import c from 'classnames';
 
 import { Count, Schema } from 'src/components/common';
 import CollectionDocumentsMode from 'src/components/Collection/CollectionDocumentsMode';
@@ -66,27 +67,28 @@ class CollectionViews extends React.Component {
 
     const selectedTab = activeType || (hasBrowse ? 'Document' : entitySchemata[0]?.schema);
     const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.id;
+    // const isLoading = true;
 
     return (
       <Tabs
         id="CollectionContentTabs"
-        className={c('CollectionContentViews__tabs', 'info-tabs-padding', { [Classes.SKELETON]: isLoading })}
+        className="CollectionContentViews__tabs info-tabs-padding"
         onChange={this.handleTabChange}
         selectedTabId={selectedTab}
         renderActiveTabPanelOnly
         animate={false}
         vertical
       >
-        {hasBrowse && (
+        {(isLoading || hasBrowse) && (
           <Tab
             id="Document"
-            className="CollectionContentViews__tab"
+            className={'CollectionContentViews__tab'}
             title={
-              <>
+              <span className={c({ [Classes.SKELETON]: isLoading })}>
                 <Icon icon="folder" className="left-icon" />
                 <FormattedMessage id="entity.info.documents" defaultMessage="Documents" />
                 <Count count={numOfDocs} />
-              </>}
+              </span>}
             panel={<CollectionDocumentsMode collection={collection} />}
           />
         )}

@@ -99,16 +99,12 @@ export class DiagramIndexScreen extends Component {
               <DiagramCreateMenu />
             </div>
           </div>
-          { result.isLoading && !result.results?.length && (
-            <SectionLoading />
-          )}
-          { result.results && (
-            <DiagramList
-              items={result.results}
-              getMoreItems={this.getMoreResults}
-              showCollection
-            />
-          )}
+          <DiagramList
+            isLoading={result.isLoading && !result.results?.length}
+            items={result.results}
+            getMoreItems={this.getMoreResults}
+            showCollection
+          />
         </Dashboard>
       </Screen>
     );

@@ -69,7 +69,8 @@ export class QueryLogs extends PureComponent {
         />
         {result.isLoading && <Skeleton.Layout
           type="table"
-          count={5}
+          rowCount={5}
+          colCount={3}
         />}
       </div>
     );
