@@ -1,17 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { ButtonGroup, AnchorButton, Button } from '@blueprintjs/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { Waypoint } from 'react-waypoint';
 import { withRouter } from 'react-router';
 import { defineMessages, injectIntl, FormattedNumber, FormattedMessage } from 'react-intl';
 
-import { SectionLoading, ErrorSection, DualPane } from 'src/components/common';
+import { SectionLoading, ErrorSection, DualPane, Entity, Date, Country, Collection } from 'src/components/common';
 import CollectionXrefDialog from 'src/dialogs/CollectionXrefDialog/CollectionXrefDialog';
 import SearchFacets from 'src/components/Facet/SearchFacets';
-import getCollectionLink from 'src/util/getCollectionLink';
 import { queryCollectionXrefFacets } from 'src/queries';
 import { selectSession, selectCollectionXrefResult } from 'src/selectors';
+import { queryCollectionXref } from 'src/actions';
 
 import './CollectionXrefMode.scss';
 
@@ -29,10 +29,24 @@ export class CollectionXrefMode extends React.Component {
     this.state = { xrefIsOpen: false };
     this.toggleXref = this.toggleXref.bind(this);
     this.updateQuery = this.updateQuery.bind(this);
+    this.getMoreResults = this.getMoreResults.bind(this);
+    this.renderTable = this.renderTable.bind(this);
   }
 
-  toggleXref() {
-    this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
+
+  componentDidMount() {
+    this.fetchIfNeeded();
+  }
+
+  componentDidUpdate() {
+    this.fetchIfNeeded();
+  }
+
+  getMoreResults() {
+    const { query, result } = this.props;
+    if (result && !result.isLoading && result.next && !result.isError) {
+      this.props.queryCollectionXref({ query, result, next: result.next });
+    }
   }
 
   updateQuery(newQuery) {
@@ -44,46 +58,96 @@ export class CollectionXrefMode extends React.Component {
     });
   }
 
+  fetchIfNeeded() {
+    const { query, result } = this.props;
+    if (result.shouldLoad) {
+      this.props.queryCollectionXref({ query });
+    }
+  }
+
+  static renderRow(xref) {
+    if (!xref.entity || !xref.match) {
+      return null;
+    }
+    return (
+      <tr key={xref.id}>
+        <td className="numeric narrow">
+          <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
+        </td>
+        <td className="entity">
+          <Entity.Link entity={xref.entity} preview icon />
+          {/* {'('}
+          <Date.Earliest values={xref.entity.getTypeValues('date')} />
+          <Country.List codes={xref.entity.getTypeValues('country')} short />
+          {')'} */}
+        </td>
+        <td className="entity">
+          <Entity.Link entity={xref.match} preview icon />
+          {/* {'('}
+          <Date.Earliest values={xref.match.getTypeValues('date')} />
+          <Country.List codes={xref.match.getTypeValues('country')} short />
+          {')'} */}
+        </td>
+        <td className="collection">
+          <Collection.Link preview collection={xref.match_collection} icon />
+        </td>
+      </tr>
+    );
+  }
+
+  toggleXref() {
+    this.setState(({ xrefIsOpen }) => ({ xrefIsOpen: !xrefIsOpen }));
+  }
+
   renderTable() {
-    const { intl, collection, result } = this.props;
-    const linkPath = `${getCollectionLink(collection)}/xref/`;
+    const { result } = this.props;
     return (
       <table className="data-table">
         <thead>
           <tr>
-            <th className="entity">
+            <th className="numeric narrow">
               <span className="value">
                 <FormattedMessage
-                  id="xref.collection"
-                  defaultMessage="Cross-referenced dataset"
+                  id="xref.score"
+                  defaultMessage="Score"
                 />
               </span>
             </th>
-            <th className="numeric">
+            <th className="entity">
               <span className="value">
                 <FormattedMessage
-                  id="xref.matches"
-                  defaultMessage="Matches"
+                  id="xref.entity"
+                  defaultMessage="Reference"
+                />
+              </span>
+            </th>
+            <th className="entity">
+              <span className="value">
+                <FormattedMessage
+                  id="xref.match"
+                  defaultMessage="Match"
+                />
+              </span>
+            </th>
+            <th className="entity">
+              <span className="value">
+                <FormattedMessage
+                  id="xref.match_collection"
+                  defaultMessage="Dataset"
                 />
               </span>
             </th>
           </tr>
         </thead>
         <tbody>
-          {result.results.map(xref => (
-            <tr key={xref.id}>
-              <td className="numeric">
-                <FormattedNumber value={xref.score} />
-              </td>
-            </tr>
-          ))}
+          {result.results.map(xref => CollectionXrefMode.renderRow(xref))}
         </tbody>
       </table>
     );
   }
 
   render() {
-    const { session, collection, query, result } = this.props;
+    const { session, collection, query, result, intl } = this.props;
     return (
       <section className="CollectionXrefMode">
         <DualPane>
@@ -99,28 +163,34 @@ export class CollectionXrefMode extends React.Component {
             { session.loggedIn && (
               <ButtonGroup>
                 <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXref}>
-                <FormattedMessage
+                  <FormattedMessage
                     id="xref.compute"
                     defaultMessage="Compute"
-                />
+                  />
                 </Button>
                 <AnchorButton icon="download" href={collection.links.xref_export} download disabled={!result.total}>
-                <FormattedMessage
+                  <FormattedMessage
                     id="xref.download"
                     defaultMessage="Download Excel"
-                />
+                  />
                 </AnchorButton>
               </ButtonGroup>
             )}
-            {result.total == 0 && (
+            {result.total === 0 && (
               <ErrorSection
                 icon="comparison"
                 title={intl.formatMessage(messages.empty)}
               />
             )}
-            {result.total === undefined && (
+            {this.renderTable()}
+            {result.isLoading && (
               <SectionLoading />
-            )} 
+            )}
+            <Waypoint
+              onEnter={this.getMoreResults}
+              bottomOffset="-300px"
+              scrollableAncestor={window}
+            />
           </DualPane.ContentPane>
         </DualPane>
         <CollectionXrefDialog
@@ -145,6 +215,6 @@ const mapStateToProps = (state, ownProps) => {
 
 export default compose(
   withRouter,
-  connect(mapStateToProps),
+  connect(mapStateToProps, { queryCollectionXref }),
   injectIntl,
 )(CollectionXrefMode);

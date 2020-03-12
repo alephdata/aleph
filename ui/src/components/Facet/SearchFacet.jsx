@@ -87,7 +87,6 @@ class SearchFacet extends Component {
     const hasMoreValues = facetSize < facet.total;
     const isUpdating = result.total === undefined;
     const isMultiSelect = field !== 'schema';
-    console.log(facet.values);
 
     return (
       <div className="SearchFacet">

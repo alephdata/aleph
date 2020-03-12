@@ -19,7 +19,7 @@ export function queryCollectionDiagrams(location, collectionId) {
 
 export function queryCollectionXrefFacets(location, collectionId) {
   const context = {
-    'facet': ['match_collection_id', 'countries', 'schema'],
+    facet: ['match_collection_id', 'countries', 'schema'],
     'facet_size:match_collection_id': 20,
     'facet_total:match_collection_id': true,
     'facet_size:countries': 1000,
