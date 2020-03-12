@@ -22,7 +22,7 @@ class EntityTableRow extends Component {
           </td>
         )}
         <td className="entity">
-          <Skeleton.Text type="span" length={20} />
+          <Skeleton.Text type="span" length={30} />
         </td>
         {!hideCollection && (
           <td className="collection">
@@ -35,7 +35,7 @@ class EntityTableRow extends Component {
           </td>
         )}
         <td className="date">
-          <Skeleton.Text type="span" length={20} />
+          <Skeleton.Text type="span" length={10} />
         </td>
         {documentMode && (
           <td className="file-size">

@@ -128,11 +128,6 @@ export class EntitySearch extends Component {
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-          <Skeleton.Layout
-            type="table"
-            rowCount={10}
-            colCount={1}
-          />
       </div>
     );
   }

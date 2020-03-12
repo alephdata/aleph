@@ -54,24 +54,17 @@ export class QueryLogs extends PureComponent {
 
     return (
       <div className="QueryLogs">
-        { result.page !== undefined && result.results.length > 0 && (
-          <SearchListings
-            listType="search history"
-            items={result.results}
-            onDelete={item => this.props.deleteQueryLog(item)}
-            onSearch={item => this.onSearch(item.query)}
-          />
-        )}
+        <SearchListings
+          listType="search history"
+          result={result}
+          onDelete={item => this.props.deleteQueryLog(item)}
+          onSearch={item => this.onSearch(item.query)}
+        />
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-30px"
           scrollableAncestor={window}
         />
-        {result.isLoading && <Skeleton.Layout
-          type="table"
-          rowCount={5}
-          colCount={3}
-        />}
       </div>
     );
   }

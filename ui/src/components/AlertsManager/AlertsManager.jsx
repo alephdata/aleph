@@ -82,6 +82,8 @@ class AlertsDialog extends Component {
     const { alerts, intl } = this.props;
     const { newAlert } = this.state;
 
+    console.log(alerts)
+
     return (
       <div className="AlertsManager">
         <form onSubmit={this.onAddAlert} className="add-form">
@@ -109,14 +111,12 @@ class AlertsDialog extends Component {
             title={intl.formatMessage(messages.no_alerts)}
           />
         )}
-        { alerts.page !== undefined && alerts.results.length > 0 && (
-          <SearchListings
-            listType="alerts"
-            items={alerts.results}
-            onDelete={item => this.onDeleteAlert(item.id)}
-            onSearch={item => this.onSearch(item.query)}
-          />
-        )}
+        <SearchListings
+          listType="alerts"
+          result={alerts}
+          onDelete={item => this.onDeleteAlert(item.id)}
+          onSearch={item => this.onSearch(item.query)}
+        />
       </div>
     );
   }
