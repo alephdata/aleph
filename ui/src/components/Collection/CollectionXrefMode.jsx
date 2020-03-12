@@ -88,15 +88,11 @@ export class CollectionXrefMode extends React.Component {
     }
     const { expandedId } = this.props;
     const isExpanded = xref.id === expandedId;
+    const expandIcon = isExpanded ? 'chevron-up' : 'chevron-down';
     const mainRow = (
       <tr key={xref.id} className={c({ prefix: isExpanded })}>
         <td className="expand">
-          <Button
-            onClick={() => this.toggleExpand(xref)}
-            small
-            minimal
-            icon={isExpanded ? 'chevron-up' : 'chevron-down'}
-          />
+          <Button onClick={() => this.toggleExpand(xref)} small minimal icon={expandIcon} />
         </td>
         <td className="numeric narrow">
           <FormattedNumber value={parseInt(parseFloat(xref.score) * 100, 10)} />
@@ -134,12 +130,14 @@ export class CollectionXrefMode extends React.Component {
           </td>
           <td>
             <strong>
-              {'('}<Property.Name prop={prop} />{')'} 
+              {'('}
+              <Property.Name prop={prop} />
+              {')'}
             </strong>
           </td>
         </tr>
       )),
-      <tr key={`${xref.id}-expanded-2`}>
+      <tr key={`${xref.id}-last`}>
         <td colSpan={5} />
       </tr>,
     ];
@@ -147,7 +145,7 @@ export class CollectionXrefMode extends React.Component {
 
   renderTable() {
     const { result } = this.props;
-    if (!result.total) {
+    if (!result.total || !result.results) {
       return null;
     }
     return (
