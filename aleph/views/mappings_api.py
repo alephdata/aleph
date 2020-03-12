@@ -9,8 +9,9 @@ from aleph.model import Mapping
 from aleph.search import QueryParser, DatabaseQueryResult
 from aleph.queues import queue_task, OP_FLUSH_MAPPING, OP_LOAD_MAPPING
 from aleph.views.serializers import MappingSerializer
-from aleph.views.util import get_db_collection, parse_request
+from aleph.views.util import get_db_collection, parse_request, jsonify
 from aleph.views.util import get_index_entity, get_session_id, obj_or_404
+from aleph.logic.mapping import export_mapping
 
 
 blueprint = Blueprint('mappings_api', __name__)
@@ -151,6 +152,48 @@ def view(collection_id, mapping_id):
     get_db_collection(collection_id, request.authz.WRITE)
     mapping = obj_or_404(Mapping.by_id(mapping_id))
     return MappingSerializer.jsonify(mapping)
+
+
+@blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>/export', methods=['GET'])  # noqa
+def export(collection_id, mapping_id):
+    """Export the mapping as a yaml file.
+    ---
+    get:
+      summary: Export the mapping as a yaml file.
+      parameters:
+      - description: The collection id.
+        in: path
+        name: collection_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      - description: The mapping id.
+        in: path
+        name: mapping_id
+        required: true
+        schema:
+          minimum: 1
+          type: integer
+        example: 2
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  yaml:
+                    type: string
+                type: object
+          description: OK
+      tags:
+      - Collection
+      - Mapping
+    """
+    collection = get_db_collection(collection_id, request.authz.WRITE)
+    mapping = obj_or_404(Mapping.by_id(mapping_id))
+    return jsonify({'yaml': export_mapping(collection, mapping)})
 
 
 @blueprint.route('/api/2/collections/<int:collection_id>/mappings/<int:mapping_id>', methods=['POST', 'PUT'])  # noqa

@@ -16,7 +16,7 @@ class MappingAPITest(TestCase):
 
     def setUp(self):
         super(MappingAPITest, self).setUp()
-        self.col = self.create_collection(data={'foreign_id': 'map1'})
+        self.col = self.create_collection(foreign_id='map1')
         _, self.headers = self.login(is_admin=True)
         self.rolex = self.create_user(foreign_id='user_3')
         _, self.headers_x = self.login(foreign_id='user_3')
@@ -178,6 +178,16 @@ class MappingAPITest(TestCase):
         url = "/api/2/entities?filter:collection_id=%s&filter:schemata=LegalEntity" % self.col.id  # noqa
         res = self.client.get(url, headers=self.headers)
         assert res.json['total'] == 15, res.json
+
+        url = "/api/2/collections/%s/mappings/%s/export" % (self.col.id, mapping_id)  # noqa
+        res = self.client.get(url, headers=self.headers)
+        assert res.status_code == 200, res
+        mapping_yaml = "entities:\n      person:\n        keys:\n        "
+        "- name\n        - nationality\n        properties:\n          "
+        "gender:\n            column: gender\n          name:\n            "
+        "column: name\n          nationality:\n            "
+        "column: nationality\n        schema: Person\n"
+        assert mapping_yaml in res.json['yaml'], res.json
 
         url = "/api/2/collections/%s/mappings/%s" % (self.col.id, mapping_id)  # noqa
         res = self.client.delete(url, headers=self.headers_x)
