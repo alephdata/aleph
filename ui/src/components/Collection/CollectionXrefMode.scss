@@ -1,5 +1,26 @@
 @import "src/app/variables.scss";
 
 .CollectionXrefMode {
+    .pane-layout-side {
+        margin-left: $aleph-content-padding;
+        width: $aleph-sidebar-width * 0.8;
+    }
+
+    table.data-table {
+        table-layout:fixed;
+        
+        th.numeric.narrow, td.numeric.narrow { 
+            width: 4em;
+        }
+        
+        td.entity, td.collection {
+            .EntityLink, .CollectionLink {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    }
     
 }

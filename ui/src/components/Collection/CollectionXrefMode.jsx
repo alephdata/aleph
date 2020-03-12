@@ -129,7 +129,7 @@ export class CollectionXrefMode extends React.Component {
                 />
               </span>
             </th>
-            <th className="entity">
+            <th className="collection">
               <span className="value">
                 <FormattedMessage
                   id="xref.match_collection"
@@ -150,16 +150,8 @@ export class CollectionXrefMode extends React.Component {
     const { session, collection, query, result, intl } = this.props;
     return (
       <section className="CollectionXrefMode">
-        <DualPane>
-          <DualPane.SidePane>
-            <SearchFacets
-              facets={['match_collection_id', 'schema', 'countries']}
-              query={query}
-              result={result}
-              updateQuery={this.updateQuery}
-            />
-          </DualPane.SidePane>
-          <DualPane.ContentPane>
+        <div className="pane-layout">
+          <div className="pane-layout-main">
             { session.loggedIn && (
               <ButtonGroup>
                 <Button icon="play" disabled={!collection.writeable} onClick={this.toggleXref}>
@@ -191,8 +183,16 @@ export class CollectionXrefMode extends React.Component {
               bottomOffset="-300px"
               scrollableAncestor={window}
             />
-          </DualPane.ContentPane>
-        </DualPane>
+          </div>
+          <div className="pane-layout-side">
+            <SearchFacets
+              facets={['match_collection_id', 'schema', 'countries']}
+              query={query}
+              result={result}
+              updateQuery={this.updateQuery}
+            />
+          </div>
+        </div>
         <CollectionXrefDialog
           collection={collection}
           isOpen={this.state.xrefIsOpen}
