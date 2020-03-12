@@ -10,6 +10,27 @@ export function queryCollectionDocuments(location, collectionId) {
   return Query.fromLocation('entities', location, context, 'document');
 }
 
+export function queryCollectionDiagrams(location, collectionId) {
+  const context = {
+    'filter:collection_id': collectionId,
+  };
+  return Query.fromLocation('diagrams', location, context, 'diagrams');
+}
+
+export function queryCollectionXrefFacets(location, collectionId) {
+  const context = {
+    facet: ['match_collection_id', 'countries', 'schema'],
+    'facet_size:match_collection_id': 20,
+    'facet_total:match_collection_id': true,
+    'facet_size:countries': 1000,
+    'facet_total:countries': true,
+    'facet_size:schema': 1000,
+    'facet_total:schema': true,
+  };
+  const path = `collections/${collectionId}/xref`;
+  return Query.fromLocation(path, location, context, 'xref');
+}
+
 export function queryFolderDocuments(location, documentId, queryText) {
   // when a query is defined, we switch to recursive folder search - otherwise
   // a flat listing of the immediate children of this directory is shown.

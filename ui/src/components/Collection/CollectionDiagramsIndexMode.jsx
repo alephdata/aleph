@@ -3,9 +3,9 @@ import { withRouter } from 'react-router';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import Query from 'src/app/Query';
 import { SectionLoading } from 'src/components/common';
 import { queryDiagrams } from 'src/actions';
+import { queryCollectionDiagrams } from 'src/queries';
 import { selectDiagramsResult } from 'src/selectors';
 import ErrorScreen from 'src/components/Screen/ErrorScreen';
 import DiagramCreateMenu from 'src/components/Diagram/DiagramCreateMenu';
@@ -52,22 +52,16 @@ export class CollectionDiagramsIndexMode extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { collection } = ownProps;
-  const context = {
-    'filter:collection_id': collection.id,
-  };
-  const query = new Query('diagrams', {}, context, 'diagrams')
-    .sortBy('updated_at', 'desc');
-  const result = selectDiagramsResult(state, query);
-
+  const { collection, location } = ownProps;
+  const query = queryCollectionDiagrams(location, collection.id);
   return {
     query,
-    result,
+    result: selectDiagramsResult(state, query),
   };
 };
 
 
 export default compose(
-  connect(mapStateToProps, { queryDiagrams }),
   withRouter,
+  connect(mapStateToProps, { queryDiagrams }),
 )(CollectionDiagramsIndexMode);

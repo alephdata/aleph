@@ -9,7 +9,6 @@ class FacetLabel extends PureComponent {
     const { field, intl, count = 0 } = this.props;
     const labelObject = getFacetLabel(field);
     if (!field || !labelObject) { return null; }
-
     const { icon, label } = labelObject;
 
     return (

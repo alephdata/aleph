@@ -256,26 +256,22 @@ class EntitySerializer(Serializer):
         return obj
 
 
-class MatchCollectionsSerializer(Serializer):
-
-    def _serialize(self, obj):
-        serializer = CollectionSerializer(reference=True)
-        obj['collection'] = serializer.serialize(obj.get('collection'))
-        return obj
-
-
-class MatchSerializer(Serializer):
+class XrefSerializer(Serializer):
 
     def _collect(self, obj):
         matchable = tuple([s.matchable for s in model])
         self.queue(Entity, obj.get('entity_id'), matchable)
         self.queue(Entity, obj.get('match_id'), matchable)
+        self.queue(Collection, obj.get('match_collection_id'))
 
     def _serialize(self, obj):
         entity_id = obj.pop('entity_id', None)
         obj['entity'] = self.resolve(Entity, entity_id, EntitySerializer)
         match_id = obj.pop('match_id', None)
         obj['match'] = self.resolve(Entity, match_id, EntitySerializer)
+        match_collection_id = obj.pop('match_collection_id', None)
+        obj['match_collection'] = self.resolve(Collection, match_collection_id,
+                                               CollectionSerializer)
         if obj['entity'] and obj['match']:
             return obj
 
