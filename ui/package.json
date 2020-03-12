@@ -24,7 +24,7 @@
     "react-dom": "^16.10.1",
     "react-dropzone": "^10.2.0",
     "react-helmet": "^6.0.0-beta",
-    "react-intl": "^3.3.2",
+    "react-intl": "^4.1.1",
     "react-json-pretty": "^2.2.0",
     "react-markdown": "^4.2.2",
     "react-pdf": "^4.1.0",
