@@ -30,7 +30,7 @@ tabulate==0.8.6
 
 grpcio==1.27.2
 google-cloud-storage==1.26.0
-google-cloud-logging==1.14.0
+google-cloud-logging==1.15.0
 
 # Testing dependencies
 factory-boy==2.12.0
