@@ -7,32 +7,40 @@ import './Breadcrumbs.scss';
 
 
 class CollectionBreadcrumb extends PureComponent {
+  renderSkeleton() {
+    const { showCategory } = this.props;
+
+    return (
+      <>
+        {showCategory && (
+          <li>
+            <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
+          </li>
+        )}
+        <li>
+          <Skeleton.Text type="span" length={20} className="bp3-breadcrumb" />
+        </li>
+      </>
+    );
+  }
+
   render() {
     const { collection, active, showCategory } = this.props;
 
     const isLoading = (collection.isLoading || collection.shouldLoad) && !collection.label;
+    if (isLoading) {
+      return this.renderSkeleton();
+    }
 
     return (
       <>
         {showCategory && (
           <li key={collection.category}>
-            <Skeleton.Text
-              type="span"
-              width="100px"
-              isLoading={isLoading}
-            >
-              <Category.Link collection={collection} className="bp3-breadcrumb" icon />
-            </Skeleton.Text>
+            <Category.Link collection={collection} className="bp3-breadcrumb" icon />
           </li>
         )}
         <li key={collection.id}>
-          <Skeleton.Text
-            type="span"
-            width="100px"
-            isLoading={isLoading}
-          >
-            <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active, 'bp3-skeleton': isLoading })} icon truncate={30} />
-          </Skeleton.Text>
+          <Collection.Status collection={collection} showPopover className={c('bp3-breadcrumb', { 'bp3-breadcrumb-current': active })} icon truncate={30} />
         </li>
       </>
     );

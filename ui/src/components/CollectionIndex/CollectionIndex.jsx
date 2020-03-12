@@ -124,19 +124,16 @@ export class CollectionIndex extends Component {
           {result.results !== undefined && result.results.map(
             res => <CollectionIndexItem key={res.id} collection={res} />,
           )}
+          {result.isLoading && skeletonItems.map(
+            item => <CollectionIndexItem key={item} isLoading />
+          )}
         </ul>
         <Waypoint
           onEnter={this.getMoreResults}
           bottomOffset="-300px"
           scrollableAncestor={window}
         />
-        {result.isLoading && (
-          <>
-            {skeletonItems.map(
-              item => <CollectionIndexItem key={item} isLoading />,
-            )}
-          </>
-        )}
+
       </>
     );
   }

@@ -4,12 +4,6 @@
     padding: $aleph-grid-size*2.5 0;
     border-bottom: 1px solid $aleph-border-color;
 
-    &.bp3-skeleton {
-      margin: 5px 0;
-      min-height: 100px;
-      border: none;
-    }
-
     h4 {
         font-weight: bold;
 
@@ -26,6 +20,7 @@
     .summary {
         font-size: $pt-font-size;
         margin-bottom: $aleph-grid-size;
+        max-width: 750px;
     }
 
     .details {

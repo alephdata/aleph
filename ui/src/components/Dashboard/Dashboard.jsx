@@ -135,21 +135,18 @@ class Dashboard extends React.Component {
                     <FormattedMessage id="dashboard.groups" defaultMessage="Groups" />
                   </h6>
                 </li>
-                <Skeleton.Text
-                  type="li"
-                  width="100%"
-                  isLoading={groupsLoading}
-                >
-                  {!groupsLoading && groups.results.map(group => (
-                    <MenuItem
-                      key={group.id}
-                      icon="shield"
-                      text={group.label}
-                      onClick={() => this.navigate(`/groups/${group.id}`)}
-                      active={current === `/groups/${group.id}`}
-                    />
-                  ))}
-                </Skeleton.Text>
+                {!groupsLoading && groups.results.map(group => (
+                  <MenuItem
+                    key={group.id}
+                    icon="shield"
+                    text={group.label}
+                    onClick={() => this.navigate(`/groups/${group.id}`)}
+                    active={current === `/groups/${group.id}`}
+                  />
+                ))}
+                {groupsLoading && (
+                  <Skeleton.Text type="li" length={20} className="bp3-menu-item" />
+                )}
               </>
             )}
             <MenuDivider />

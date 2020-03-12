@@ -6,27 +6,34 @@ import './Skeleton.scss';
 
 class TextSkeleton extends PureComponent {
   render() {
-    const { type, width, isLoading, children } = this.props;
-
-    if (!isLoading) {
-      return children;
-    }
+    const { className, length, type } = this.props;
+    const placeholder = "-".repeat(length);
 
     switch (type) {
       case 'h1':
-        return <h1 style={{ width, height: '35px' }} className={Classes.SKELETON} />;
+        return (
+          <h1 className={c(Classes.SKELETON, className)}>{placeholder}</h1>
+        );
 
       case 'h6':
-        return <h6 style={{ width, height: '25px' }} className={Classes.SKELETON} />;
+        return (
+          <h6 className={c(Classes.SKELETON, className)}>{placeholder}</h6>
+        );
 
       case 'p':
-        return <p style={{ width, height: '18px' }} className={Classes.SKELETON} />;
+        return (
+          <p className={c(Classes.SKELETON, className)}>{placeholder}</p>
+        );
 
       case 'span':
-        return <span style={{ width, height: '18px' }} className={Classes.SKELETON} />;
+        return (
+          <span className={c(Classes.SKELETON, className)}>{placeholder}</span>
+        );
 
       case 'li':
-        return <li style={{ width, height: '50px' }} className={Classes.SKELETON} />;
+        return (
+          <li className={c(Classes.SKELETON, className)}>{placeholder}</li>
+        );
     }
   }
 }

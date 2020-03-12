@@ -5,7 +5,7 @@ import { Checkbox, Classes } from '@blueprintjs/core';
 import c from 'classnames';
 
 import {
-  Country, Collection, Entity, FileSize, Date,
+  Country, Collection, Entity, FileSize, Date, Skeleton,
 } from 'src/components/common';
 /* eslint-disable */
 
@@ -18,28 +18,28 @@ class EntityTableRow extends Component {
       <tr className={c('EntityTableRow', 'nowrap')}>
         {updateSelection && (
           <td className="select">
-            <span className={Classes.SKELETON}>p</span>
+            <Skeleton.Text type="span" length={2} />
           </td>
         )}
         <td className="entity">
-          <span className={Classes.SKELETON}>placeholder</span>
+          <Skeleton.Text type="span" length={20} />
         </td>
         {!hideCollection && (
           <td className="collection">
-            <span className={Classes.SKELETON}>placeholder</span>
+            <Skeleton.Text type="span" length={20} />
           </td>
         )}
         {!documentMode && (
           <td className="country">
-            <span className={Classes.SKELETON}>placeholder</span>
+            <Skeleton.Text type="span" length={20} />
           </td>
         )}
         <td className="date">
-          <span className={Classes.SKELETON}>placeholder</span>
+          <Skeleton.Text type="span" length={20} />
         </td>
         {documentMode && (
           <td className="file-size">
-            <span className={Classes.SKELETON}>placeholder</span>
+            <Skeleton.Text type="span" length={20} />
           </td>
         )}
       </tr>
