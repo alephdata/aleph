@@ -38,10 +38,10 @@ def configure_xref():
     return configure_index(xref_index(), mapping, settings)
 
 
-def index_matches(collection, entity, matches, sync=False):
+def index_matches(collection, matches, sync=False):
     """Index cross-referencing matches."""
     actions = []
-    for (score, match_collection_id, match) in matches:
+    for (score, entity, match_collection_id, match) in matches:
         actions.append({
             '_id': make_key(entity.id, collection.id, match.id),
             '_index': xref_index(),
@@ -56,6 +56,7 @@ def index_matches(collection, entity, matches, sync=False):
                 'created_at': datetime.utcnow(),
             }
         })
+    log.info("Indexing %d xref matches...", len(actions))
     if len(actions):
         bulk_actions(actions, sync=sync)
 

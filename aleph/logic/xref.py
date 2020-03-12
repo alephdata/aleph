@@ -19,47 +19,53 @@ from aleph.logic.util import entity_url
 
 log = logging.getLogger(__name__)
 SCORE_CUTOFF = 0.3
+INCLUDES = ['schema', 'properties', 'collection_id']
 
 
-def xref_query_item(proxy):
+def _query_item(entity):
     """Cross-reference an entity or document, given as an indexed document."""
-    query = match_query(proxy)
+    query = match_query(entity)
     if query == none_query():
         return
 
     query = {
         'query': query,
         'size': 100,
-        '_source': {'includes': ['schema', 'properties', 'collection_id']}
+        '_source': {'includes': INCLUDES}
     }
-    matchable = list(proxy.schema.matchable_schemata)
+    matchable = list(entity.schema.matchable_schemata)
     index = entities_read_index(schema=matchable)
     result = es.search(index=index, body=query)
     for result in result.get('hits').get('hits'):
         result = unpack_result(result)
-        if result is not None:
-            other = model.get_proxy(result)
-            score = compare(model, proxy, other)
-            if score >= SCORE_CUTOFF:
-                log.debug('Xref match: %r <-[%.3f]-> %r',
-                          proxy.caption, score, other.caption)
-                yield score, result.get('collection_id'), other
+        if result is None:
+            continue
+        match = model.get_proxy(result)
+        score = compare(model, entity, match)
+        if score >= SCORE_CUTOFF:
+            # log.debug('Match: %r <-[%.3f]-> %r',
+            #           entity.caption, score, match.caption)
+            yield score, entity, result.get('collection_id'), match
 
 
-def xref_item(stage, collection, entity_id=None):
+def _query_matches(collection, entity_ids):
+    """Generate matches for indexing."""
+    for data in entities_by_ids(entity_ids, includes=INCLUDES):
+        entity = model.get_proxy(data)
+        yield from _query_item(entity)
+
+
+def xref_item(stage, collection, entity_id=None, batch=50):
     "Cross-reference an entity against others to generate potential matches."
     entity_ids = [entity_id]
     # This is running as a background job. In order to avoid running each
     # entity one by one, we do it 101 at a time. This avoids sending redudant
     # queries to the database and elasticsearch, making cross-ref much faster.
-    for task in stage.get_tasks(limit=50):
+    for task in stage.get_tasks(limit=batch):
         entity_ids.append(task.payload.get('entity_id'))
+    matches = _query_matches(collection, entity_ids)
+    index.index_matches(collection, matches, sync=False)
     stage.mark_done(len(entity_ids) - 1)
-    # log.debug("Have %d entity IDs for xref", len(entity_ids))
-    for data in entities_by_ids(entity_ids, includes=['schema', 'properties']):
-        proxy = model.get_proxy(data)
-        matches = xref_query_item(proxy)
-        index.index_matches(collection, proxy, matches, sync=False)
 
 
 def xref_collection(stage, collection):
